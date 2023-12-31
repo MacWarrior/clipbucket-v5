@@ -3,7 +3,7 @@ define('THIS_PAGE', 'ajax');
 
 include('../includes/config.inc.php');
 require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
-global $Cbucket, $cbvid, $Upload, $db, $eh;
+global $cbvid, $Upload, $db, $eh;
 
 $mode = '';
 if ($_FILES['Filedata']) {
@@ -60,7 +60,7 @@ switch ($mode) {
         break;
 
     case 'upload':
-        $ffmpegpath = $Cbucket->configs['ffmpegpath'];
+        $ffmpegpath = ClipBucket::getInstance()->configs['ffmpegpath'];
         $extension = getExt($_FILES['Filedata']['name']);
 
         #checking for if the right file is uploaded
@@ -82,8 +82,8 @@ switch ($mode) {
         $file_directory = date('Y/m/d');
         $targetFileName = $file_name . '.' . $extension;
 
-        create_dated_folder(LOGS_DIR);
-        $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $file_name . '.log';
+        create_dated_folder(DirPath::get('logs'));
+        $logFile = DirPath::get('logs') . $file_directory . DIRECTORY_SEPARATOR . $file_name . '.log';
 
         $log = new SLog($logFile);
         $log->newSection('Pre-Check Configurations');
@@ -137,7 +137,7 @@ switch ($mode) {
             exit(0);
         }
 
-        $targetFile = TEMP_DIR . DIRECTORY_SEPARATOR . $targetFileName;
+        $targetFile = DirPath::get('temp') . $targetFileName;
         $moved = move_uploaded_file($tempFile, $targetFile);
 
         if ($moved) {
@@ -174,11 +174,11 @@ switch ($mode) {
         $Upload->add_conversion_queue($targetFileName);
 
         if (stristr(PHP_OS, 'WIN')) {
-            exec(php_path() . ' -q ' . BASEDIR . '/actions/video_convert.php ' . $targetFileName);
+            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName);
         } elseif (stristr(PHP_OS, 'darwin')) {
-            exec(php_path() . ' -q ' . BASEDIR . '/actions/video_convert.php ' . $targetFileName . ' </dev/null >/dev/null &');
+            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' </dev/null >/dev/null &');
         } else { // for ubuntu or linux
-            exec(php_path() . ' -q ' . BASEDIR . '/actions/video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile . ' > /dev/null &');
+            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile . ' > /dev/null &');
         }
 
         $TempLogData = 'Video Converson File executed successfully with Target File > ' . $targetFileName;

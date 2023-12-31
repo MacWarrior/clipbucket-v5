@@ -1,14 +1,15 @@
 <?php
+define('THIS_PAGE', 'action_logs');
+
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages;
-$userquery->admin_login_check();
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Action Logs', 'url' => ADMIN_BASEURL . '/action_logs.php?type=login'];
+$breadcrumb[1] = ['title' => 'Action Logs', 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'];
 
 //Getting User List
 if (isset($_GET['clean'])) {

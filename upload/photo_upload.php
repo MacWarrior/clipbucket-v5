@@ -50,12 +50,12 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addJS([
+ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/photo_upload/photo_upload' . $min_suffixe . '.js'   => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

@@ -15,7 +15,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Mass Email', 'url' => ADMIN_BASEURL . '/mass_email.php'];
+$breadcrumb[1] = ['title' => 'Mass Email', 'url' => DirPath::getUrl('admin_area') . 'mass_email.php'];
 
 if (!empty($_GET['email'])) {
     Assign('email', $_GET['email']);

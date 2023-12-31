@@ -8,8 +8,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => ADMIN_BASEURL . '/category.php'];
-
+$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'category.php'];
 
 //Making Category as Default
 if (isset($_GET['make_default'])) {
@@ -54,7 +53,7 @@ if (!empty($_GET['category']) && is_numeric($_GET['category'])) {
     } else {
         $breadcrumb[2] = [
             'title' => 'Editing : ' . display_clean($cat_details['category_name']),
-            'url'   => ADMIN_BASEURL . '/category.php?category=' . display_clean($id_category)
+            'url'   => DirPath::getUrl('admin_area') . '/category.php?category=' . display_clean($id_category)
         ];
     }
 }

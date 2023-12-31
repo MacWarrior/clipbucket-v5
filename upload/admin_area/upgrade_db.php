@@ -10,7 +10,7 @@ global $userquery;
 $userquery->admin_login_check();
 
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
-$breadcrumb[1] = ['title' => 'DB Upgrade', 'url' => ADMIN_BASEURL . '/upgrade_db.php'];
+$breadcrumb[1] = ['title' => 'DB Upgrade', 'url' => DirPath::getUrl('admin_area') . 'upgrade_db.php'];
 
 assign('no_version', true);
 $revisions = getRevisions();

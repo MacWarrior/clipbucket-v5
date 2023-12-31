@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Language Settings', 'url' => ADMIN_BASEURL . '/language_settings.php'];
+$breadcrumb[1] = ['title' => 'Language Settings', 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'];
 
 $ll = Language::getInstance()->get_langs(false, true);
 foreach ($ll as &$language) {
@@ -29,7 +29,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     assign('edit_lang', 'yes');
     $detail = Language::getInstance()->getLangById($_GET['edit_language']);
     assign('lang_details', $detail);
-    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => ADMIN_BASEURL . '/language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
+    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => DirPath::getUrl('admin_area') . 'language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
     $edit_id = mysql_clean($_GET['edit_language']);
     $limit = RESULTS;
 
@@ -59,7 +59,7 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
 assign('client_id', $Cbucket->configs['clientid']);
 assign('secret_Id', $Cbucket->configs['secretId']);

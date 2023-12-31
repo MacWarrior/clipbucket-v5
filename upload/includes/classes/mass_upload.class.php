@@ -11,9 +11,12 @@ class mass_upload extends Upload
      * @throws \Predis\Connection\ConnectionException
      * @throws \Predis\Response\ServerException
      */
-    function get_video_files_list($listonly = false, $dir = MASS_UPLOAD_DIR)
+    function get_video_files_list($listonly = false, $dir = null)
     {
-        require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+        if( is_null($dir) ){
+            $dir = DirPath::get('mass_uploads');
+        }
+        require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
         $cache_key = 'vid_info:';
         $allowed_exts = get_vid_extensions();
         $FILES = scandir($dir);
@@ -24,7 +27,7 @@ class mass_upload extends Upload
                 continue;
             }
 
-            $filepath = $dir . DIRECTORY_SEPARATOR . $filename;
+            $filepath = $dir . $filename . DIRECTORY_SEPARATOR;
 
             if( !is_readable($filepath) ){
                 continue;
@@ -85,7 +88,7 @@ class mass_upload extends Upload
     {
         $file = $file_arr['file'];
         $mass_file = $file_arr['path'] . DIRECTORY_SEPARATOR . $file;
-        $temp_file = TEMP_DIR . DIRECTORY_SEPARATOR . $file_key . '.' . getExt($file);
+        $temp_file = DirPath::get('temp') . $file_key . '.' . getExt($file);
         if (file_exists($mass_file) && is_file($mass_file)) {
             copy($mass_file, $temp_file);
             return $file_key . '.' . getExt($file);

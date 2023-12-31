@@ -270,7 +270,7 @@ class Upload
             $ext = getExt($file['name'][$key]);
             if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
+                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
 
@@ -286,7 +286,7 @@ class Upload
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
+                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
                     $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
                     global $db;
                     $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
@@ -606,8 +606,6 @@ class Upload
      */
     function loadLocationFields($default = null): array
     {
-        global $Cbucket;
-
         if ($default == null) {
             $default = $_POST;
         }
@@ -617,18 +615,13 @@ class Upload
             $date_recorded = $default['datecreated'];
         }
 
-        $datecreated = DateTime::createFromFormat('Y-m-d', $date_recorded);
-        if ($datecreated) {
-            $datecreated = $datecreated->format(DATE_FORMAT);
-        }
-
         return [
             'country'       => [
                 'title'         => lang('country'),
                 'type'          => 'dropdown',
                 'name'          => 'country',
                 'id'            => 'country',
-                'value'         => $Cbucket->get_countries(),
+                'value'         => ClipBucket::getInstance()->get_countries(),
                 'checked'       => $default['country'],
                 'db_field'      => 'country',
                 'required'      => 'no',
@@ -687,7 +680,7 @@ class Upload
             $cqueue_name = $name;
         }
 
-        $tmp_filepath = TEMP_DIR . DIRECTORY_SEPARATOR . $sub_directory . $file;
+        $tmp_filepath = DirPath::get('temp') . $sub_directory . $file;
         //Checking file exists or not
         if (!file_exists($tmp_filepath)) {
             return false;
@@ -701,7 +694,7 @@ class Upload
                 $tmp_ext = $Cbucket->temp_exts;
                 $tmp_ext = $tmp_ext[rand(0, count($tmp_ext) - 1)];
                 //Creating New File Name
-                $dest_filepath = TEMP_DIR . DIRECTORY_SEPARATOR . $sub_directory . $name . '.' . $tmp_ext;
+                $dest_filepath = DirPath::get('temp') . $sub_directory . $name . '.' . $tmp_ext;
 
                 //Renaming File for security purpose
                 rename($tmp_filepath, $dest_filepath);
@@ -895,14 +888,14 @@ class Upload
 
                 $ext = getext($file['name']);
                 $file_name = $uid . '.' . $ext;
-                $file_path = AVATARS_DIR . DIRECTORY_SEPARATOR . $file_name;
+                $file_path = DirPath::get('avatars') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
                     if (!$imgObj->ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
                         @unlink($file_path);
                         return false;
                     }
-                    $small_size = AVATARS_DIR . DIRECTORY_SEPARATOR . $uid . '-small.' . $ext;
+                    $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
                     $cbphoto->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
                     $cbphoto->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
                     return $file_name;
@@ -929,7 +922,7 @@ class Upload
 
                 $ext = getext($file['name']);
                 $file_name = $uid . '.' . $ext;
-                $file_path = USER_BG_DIR . DIRECTORY_SEPARATOR . $file_name;
+                $file_path = DirPath::get('backgrounds') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
                     if (!$imgObj->ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
@@ -959,7 +952,7 @@ class Upload
             $ext = getExt($file['name']);
             $file_name = 'plaery-logo';
             if ($imgObj->ValidateImage($file['tmp_name'], $ext)) {
-                $file_path = BASEDIR . '/images/' . $file_name . '.' . $ext;
+                $file_path = DirPath::get('images') . $file_name . '.' . $ext;
                 if (file_exists($file_path)) {
                     if (!unlink($file_path)) {
                         e("Unable to remove '$file_path', please chmod it to 0777");

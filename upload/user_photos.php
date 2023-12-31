@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'user_photos');
 define('PARENT_PAGE', 'photos');
 
-global $pages,$userquery,$cbphoto,$Cbucket;
+global $pages,$userquery,$cbphoto;
 
 require 'includes/config.inc.php';
 $pages->page_redir();
@@ -51,10 +51,10 @@ if ($user) {
     $pages->paginate($total_pages, $page);
 } else {
     e(lang('usr_exist_err'));
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 }
 
-if ($Cbucket->show_page) {
+if (ClipBucket::getInstance()->show_page) {
     Template('user_photos.html');
 } else {
     display_it();

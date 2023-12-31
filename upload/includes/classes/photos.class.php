@@ -542,7 +542,7 @@ class CBPhotos
      */
     function photos_admin_menu()
     {
-        global $Cbucket, $userquery;
+        global $userquery;
         $per = $userquery->get_user_level(user_id());
 
         if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
@@ -552,31 +552,31 @@ class CBPhotos
                 , 'sub'   => [
                     [
                         'title' => 'Photo Manager'
-                        , 'url' => ADMIN_BASEURL . '/photo_manager.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
                         'title' => 'Inactive Photos'
-                        , 'url' => ADMIN_BASEURL . '/photo_manager.php?search=search&active=no'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'
                     ]
                     , [
                         'title' => 'Flagged Photos'
-                        , 'url' => ADMIN_BASEURL . '/flagged_photos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'
                     ]
                     , [
                         'title' => 'Orphan Photos'
-                        , 'url' => ADMIN_BASEURL . '/orphan_photos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
                     ]
                     , [
                         'title' => 'Watermark Settings'
-                        , 'url' => ADMIN_BASEURL . '/photo_settings.php?mode=watermark_settings'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
                         'title' => 'Recreate Thumbs'
-                        , 'url' => ADMIN_BASEURL . '/recreate_thumbs.php?mode=mass'
+                        , 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'
                     ]
                 ]
             ];
-            $Cbucket->addMenuAdmin($menu_photo, 90);
+            ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
     }
 
@@ -586,10 +586,10 @@ class CBPhotos
      */
     function setting_other_things()
     {
-        global $userquery, $Cbucket;
+        global $userquery;
         // Search type
         if (isSectionEnabled('photos')) {
-            $Cbucket->search_types['photos'] = "cbphoto";
+            ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
         }
 
         // My account links
@@ -602,14 +602,14 @@ class CBPhotos
         }
 
         //Setting Cbucket links
-        $Cbucket->links['photos'] = ['photos.php', 'photos/'];
-        $Cbucket->links['manage_photos'] = ['manage_photos.php', 'manage_photos.php'];
-        $Cbucket->links['edit_photo'] = ['edit_photo.php?photo=', 'edit_photo.php?photo='];
-        $Cbucket->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
-        $Cbucket->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
-        $Cbucket->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
-        $Cbucket->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
-        $Cbucket->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
+        ClipBucket::getInstance()->links['photos'] = ['photos.php', 'photos/'];
+        ClipBucket::getInstance()->links['manage_photos'] = ['manage_photos.php', 'manage_photos.php'];
+        ClipBucket::getInstance()->links['edit_photo'] = ['edit_photo.php?photo=', 'edit_photo.php?photo='];
+        ClipBucket::getInstance()->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
+        ClipBucket::getInstance()->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
+        ClipBucket::getInstance()->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
+        ClipBucket::getInstance()->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
+        ClipBucket::getInstance()->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
     }
 
     /**
@@ -617,8 +617,7 @@ class CBPhotos
      */
     function set_photo_max_size()
     {
-        global $Cbucket;
-        $adminSize = $Cbucket->configs['max_photo_size'];
+        $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
         if (!$adminSize) {
             $this->max_file_size = 2 * 1024 * 1024;
         } else {
@@ -1137,7 +1136,7 @@ class CBPhotos
         $files = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
         if (!empty($files)) {
             foreach ($files as $file) {
-                $file_dir = PHOTOS_DIR . DIRECTORY_SEPARATOR . $file;
+                $file_dir = DirPath::get('photos') . $file;
                 if (file_exists($file_dir)) {
                     unlink($file_dir);
                 }
@@ -1267,7 +1266,7 @@ class CBPhotos
      */
     function generate_photos($array)
     {
-        $path = PHOTOS_DIR . DIRECTORY_SEPARATOR;
+        $path = DirPath::get('photos');
 
         if (!is_array($array)) {
             $p = $this->get_photo($array);
@@ -1317,7 +1316,7 @@ class CBPhotos
 
             if ($images) {
                 foreach ($images as $image) {
-                    $imageFile = PHOTOS_DIR . DIRECTORY_SEPARATOR . $image;
+                    $imageFile = DirPath::get('photos') . $image;
 
                     if (file_exists($imageFile)) {
                         $imageDetails = getimagesize($imageFile);
@@ -1420,8 +1419,8 @@ class CBPhotos
      */
     function watermark_file()
     {
-        if (file_exists(BASEDIR . '/images/photo_watermark.png')) {
-            return '/images/photo_watermark.png';
+        if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
+            return DirPath::getUrl('images') . 'photo_watermark.png';
         }
         return false;
     }
@@ -1432,8 +1431,7 @@ class CBPhotos
      */
     function get_watermark_position()
     {
-        global $Cbucket;
-        return $Cbucket->configs['watermark_placement'];
+        return ClipBucket::getInstance()->configs['watermark_placement'];
     }
 
     /**
@@ -1759,7 +1757,7 @@ class CBPhotos
         if (empty($file)) {
             e(lang('no_watermark_found'));
         } else {
-            $oldW = BASEDIR . '/images/photo_watermark.png';
+            $oldW = DirPath::get('images') . 'photo_watermark.png';
             if (file_exists($oldW)) {
                 unset($oldW);
             }
@@ -1769,8 +1767,8 @@ class CBPhotos
             $type = $info[2];
 
             if ($type == 3) {
-                if (move_uploaded_file($file['tmp_name'], BASEDIR . '/images/photo_watermark.png')) {
-                    $wFile = BASEDIR . '/images/photo_watermark.png';
+                if (move_uploaded_file($file['tmp_name'], DirPath::get('images') . 'photo_watermark.png')) {
+                    $wFile = DirPath::get('images') . 'photo_watermark.png';
                     if ($width > $this->max_watermark_width) {
                         $this->createThumb($wFile, $wFile, 'png', $this->max_watermark_width);
                     }
@@ -2162,15 +2160,14 @@ class CBPhotos
      */
     function getFileSmarty($p)
     {
-        global $Cbucket;
         $details = $p['details'];
         $output = $p['output'];
         if (empty($details)) {
             return $this->default_thumb($size, $output);
         } else {
             //Calling Custom Functions
-            if (!empty($Cbucket->custom_get_photo_funcs)) {
-                foreach ($Cbucket->custom_get_photo_funcs as $funcs) {
+            if (!empty(ClipBucket::getInstance()->custom_get_photo_funcs)) {
+                foreach (ClipBucket::getInstance()->custom_get_photo_funcs as $funcs) {
                     if (function_exists($funcs)) {
                         $func_returned = $funcs($p);
                         if ($func_returned) {
@@ -2203,7 +2200,7 @@ class CBPhotos
             }
 
             if (!empty($photo['filename']) && !empty($photo['ext'])) {
-                $files = glob(PHOTOS_DIR . '/' . $photo['filename'] . '*.' . $photo['ext']);
+                $files = glob(DirPath::get('photos') . $photo['filename'] . '*.' . $photo['ext']);
                 if (!empty($files) && is_array($files)) {
                     $thumbs = [];
                     foreach ($files as $file) {
@@ -2213,13 +2210,13 @@ class CBPhotos
                         $type = $this->get_image_type($thumb_name);
                         if ($with_orig) {
                             if ($with_path) {
-                                $thumbs[] = PHOTOS_URL . '/' . $thumb_name;
+                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
                             } else {
                                 $thumbs[] = $thumb_name;
                             }
                         } elseif (!empty($type)) {
                             if ($with_path) {
-                                $thumbs[] = PHOTOS_URL . '/' . $thumb_name;
+                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
                             } else {
                                 $thumbs[] = $thumb_name;
                             }
@@ -2264,7 +2261,7 @@ class CBPhotos
                         }
 
                         if (empty($imgDetails) || empty($imgDetails[$p['size']])) {
-                            $dem = getimagesize(str_replace(PHOTOS_URL, PHOTOS_DIR, $src));
+                            $dem = getimagesize(str_replace(DirPath::getUrl('photos'), DirPath::get('photos'), $src));
                             $width = $dem[0];
                             $height = $dem[1];
                             /* UPDATING IMAGE DETAILS */
@@ -2558,7 +2555,7 @@ class CBPhotos
         if (file_exists(TEMPLATEDIR . '/images/thumbs/no-photo' . $size . '.png')) {
             $path = TEMPLATEURL . '/images/thumbs/no-photo' . $size . '.png';
         } else {
-            $path = PHOTOS_URL . '/no-photo' . $size . '.png';
+            $path = DirPath::getUrl('photos') . 'no-photo' . $size . '.png';
         }
 
         if (!empty($output) && $output == 'html') {

@@ -13,9 +13,9 @@ $c = $cbcollection->get_collection($id);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL . '/flagged_collections.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($c['collection_name']), 'url' => ADMIN_BASEURL . '/edit_collection.php?collection=' . display_clean($id)];
-$breadcrumb[3] = ['title' => lang('manage_collection_items'), 'url' => ADMIN_BASEURL . '/manage_items.php?collection=' . display_clean($id) . '&type=videos'];
+$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => DirPath::getUrl('admin_area') . 'flagged_collections.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($c['collection_name']), 'url' => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)];
+$breadcrumb[3] = ['title' => lang('manage_collection_items'), 'url' => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($id) . '&type=videos'];
 
 $type = mysql_clean($_GET['type']);
 $data = $cbcollection->get_collection_items($id);

@@ -771,6 +771,56 @@ abstract class CBCategory
 
 
     /**
+     * Function used to add category thumbnail
+     *
+     * @param $cid
+     * @param $file
+     *
+     * @throws Exception
+     * @internal param and $Cid Array
+     */
+    function add_category_thumb($cid, $file)
+    {
+        global $imgObj;
+        if ($this->category_exists($cid)) {
+            //Checking for category thumbs directory
+            $dir = $this->thumb_dir ?? $this->section_tbl;
+
+            //Checking File Extension
+            $ext = getext($file['name']);
+
+            if ($ext == 'jpg' || $ext == 'png' || $ext == 'gif') {
+                $dir_path = DirPath::get('category_thumbs') . $dir;
+                if (!is_dir($dir_path)) {
+                    @mkdir($dir_path, 0777);
+                }
+
+                if (is_dir($dir_path)) {
+                    $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
+
+                    //Removing File if already exists
+                    if (file_exists($path)) {
+                        unlink($path);
+                    }
+                    move_uploaded_file($file['tmp_name'], $path);
+
+                    //Now checking if file is really an image
+                    if (!@$imgObj->ValidateImage($path, $ext)) {
+                        e(lang('pic_upload_vali_err'));
+                        unlink($path);
+                    } else {
+                        $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height, true);
+                    }
+                } else {
+                    e(lang('cat_dir_make_err'));
+                }
+            } else {
+                e(lang('cat_img_error'));
+            }
+        }
+    }
+
+    /**
      * Function used to get category thumb
      *
      * @param        $cat_details
@@ -781,7 +831,7 @@ abstract class CBCategory
     function get_cat_thumb($cat_details, $dir = ''): string
     {
         $cid = $cat_details['category_id'];
-        $path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $cid . '.';
+        $path = DirPath::get('category_thumbs') . $dir . DIRECTORY_SEPARATOR . $cid . '.';
         $exts = ['jpg', 'png', 'gif'];
 
         $file_exists = false;
@@ -793,7 +843,7 @@ abstract class CBCategory
         }
 
         if ($file_exists) {
-            return CAT_THUMB_URL . '/' . $dir . '/' . $cid . '.' . $ext;
+            return DirPath::get('category_thumbs') . $dir . '/' . $cid . '.' . $ext;
         }
         return $this->default_thumb();
     }
@@ -811,7 +861,7 @@ abstract class CBCategory
         if (empty($this->default_thumb)) {
             $this->default_thumb = 'no_thumb.jpg';
         }
-        return CAT_THUMB_URL . '/' . $this->default_thumb;
+        return DirPath::get('category_thumbs') . $this->default_thumb;
     }
 
     /**

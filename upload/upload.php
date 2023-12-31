@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'upload');
 define('PARENT_PAGE', 'upload');
 require 'includes/config.inc.php';
-global $pages, $Upload, $eh, $userquery, $Cbucket;
+global $pages, $Upload, $eh, $userquery;
 $pages->page_redir();
 $userquery->logincheck('allow_video_upload', true);
 
@@ -10,7 +10,7 @@ subtitle('upload');
 
 if (empty($Upload->get_upload_options())) {
     e(lang('video_upload_disabled'));
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
     display_it();
     die();
 }
@@ -24,7 +24,7 @@ if (isset($_POST['submit_data'])) {
 }
 
 assign('step', $step);
-assign('extensions', $Cbucket->get_extensions('video'));
+assign('extensions', ClipBucket::getInstance()->get_extensions('video'));
 subtitle(lang('upload'));
 
 if (in_dev()) {
@@ -32,11 +32,13 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addJS([
+
+ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'              => 'admin',
     'pages/upload/upload' . $min_suffixe . '.js' => 'admin'
+
 ]);
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

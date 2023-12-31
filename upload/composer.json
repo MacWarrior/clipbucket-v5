@@ -2,8 +2,9 @@
   "require": {
     "filp/whoops": "2.15.3",
     "predis/predis": "^v1.1.10",
-    "psr/log": "1.1.4",
+    "psr/log": "3.0.0",
     "phpmailer/phpmailer": "^6.8.0",
-    "smarty/smarty": "3.1.48"
+    "smarty/smarty": "3.1.48",
+    "oxygenzsas/composer_lib_discord": "^0.3.0"
   }
 }

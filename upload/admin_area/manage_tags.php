@@ -10,7 +10,7 @@ $userquery->login_check('web_config_access');
 $pages->page_redir();
 
 $breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
-$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => ADMIN_BASEURL . '/manage_tags.php'];
+$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
 $limit = RESULTS;
 
@@ -49,7 +49,7 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
 
 subtitle(lang('manage_tags'));
 template_files('manage_tags.html');

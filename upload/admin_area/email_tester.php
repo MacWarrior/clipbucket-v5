@@ -1,13 +1,15 @@
 <?php
+define('THIS_PAGE', 'email_tester');
+
 require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Tester', 'url' => ADMIN_BASEURL . '/email_tester.php'];
+$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
+$breadcrumb[1] = ['title' => 'Email Tester', 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'];
 
 if (isset($_POST['start_test'])) {
     try {
@@ -40,7 +42,7 @@ if (isset($_POST['start_test'])) {
 
         $from_name = $_POST['from_name'];
         if (empty($from_name) || !is_string($from_name)) {
-            $from_name = $Cbucket->configs['site_title'];
+            $from_name = ClipBucket::getInstance()->configs['site_title'];
         }
 
         $code = $_POST['email_template'];
@@ -107,14 +109,14 @@ $macros = [
     '{date}'          => cbdate(),
     '{username}'      => user_name(),
     '{userid}'        => user_id(),
-    '{first_name}'    => $userquery->udetails['first_name'],
-    '{last_name}'     => $userquery->udetails['last_name'],
-    '{name}'          => name($userquery->udetails),
-    '{user}'          => name($userquery->udetails),
-    '{email}'         => $userquery->udetails['email'],
-    '{date_year}'     => cbdate("Y"),
-    '{date_month}'    => cbdate("m"),
-    '{date_day}'      => cbdate("d"),
+    '{first_name}'    => userquery::getInstance()->udetails['first_name'],
+    '{last_name}'     => userquery::getInstance()->udetails['last_name'],
+    '{name}'          => name(userquery::getInstance()->udetails),
+    '{user}'          => name(userquery::getInstance()->udetails),
+    '{email}'         => userquery::getInstance()->udetails['email'],
+    '{date_year}'     => cbdate('Y'),
+    '{date_month}'    => cbdate('m'),
+    '{date_day}'      => cbdate('d'),
     '{now}'           => NOW()
 ];
 
@@ -123,7 +125,7 @@ if (!empty($templates)) {
         $code = $template['email_template_code'];
         $list[$code] = $template['email_template_name'];
 
-        $HTML_template = BASEDIR . '/styles/global/v4/email_templates/' . $code . '.html';
+        $HTML_template = DirPath::get('styles') . 'global/v4/email_templates/' . $code . '.html';
 
         if (file_exists($HTML_template)) {
             $body = file_get_contents($HTML_template);

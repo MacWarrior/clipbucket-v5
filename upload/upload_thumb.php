@@ -27,7 +27,7 @@ if ($myquery->video_exists($video)) {
     }
 
     $data = get_video_details($video);
-    $vid_file = VIDEOS_DIR . DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
+    $vid_file = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {

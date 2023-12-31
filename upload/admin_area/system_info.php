@@ -1,13 +1,15 @@
 <?php
+define('THIS_PAGE', 'system_info');
+
 require_once '../includes/admin_config.php';
 
-global $db, $userquery, $myquery;
-$userquery->admin_login_check();
+global $db, $myquery;
+userquery::getInstance()->admin_login_check();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('system_info'), 'url' => ADMIN_BASEURL . '/cb_server_conf_info.php'];
+$breadcrumb[1] = ['title' => lang('system_info'), 'url' => DirPath::getUrl('admin_area') . 'cb_server_conf_info.php'];
 
 /** hosting */
 $post_max_size = ini_get('post_max_size');
@@ -59,7 +61,7 @@ assign('php_info', $phpinfo);
 
 /** php info cli */
 $row = $myquery->Get_Website_Details();
-$cmd = $row['php_path'] . ' ' . BASEDIR . DIRECTORY_SEPARATOR . 'phpinfo.php';
+$cmd = $row['php_path'] . ' ' . DirPath::get('root') . 'phpinfo.php';
 exec($cmd, $exec_output);
 assign('cli_php_info', implode('<br/>',$exec_output));
 

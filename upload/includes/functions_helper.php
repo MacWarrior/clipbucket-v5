@@ -27,10 +27,10 @@ function config($input)
 function website_logo(): string
 {
     $logo_file = config('player_logo_file');
-    if ($logo_file && file_exists(BASEDIR . '/images/' . $logo_file)) {
-        return '/images/' . $logo_file;
+    if ($logo_file && file_exists(DirPath::get('images') . $logo_file)) {
+        return DirPath::getUrl('images') . $logo_file;
     }
-    return '/images/logo.png';
+    return DirPath::getUrl('images') . 'logo.png';
 }
 
 /**
@@ -66,12 +66,12 @@ function create_dated_folder($headFolder = null, $custom_date = null)
     }
 
     if (!$headFolder) {
-        @mkdir(VIDEOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(THUMBS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(ORIGINAL_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(PHOTOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(LOGS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(SUBTITLES_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+        @mkdir(DirPath::get('videos') . $folder, 0777, true);
+        @mkdir(DirPath::get('thumbs') . $folder, 0777, true);
+        @mkdir(DirPath::get('original') . $folder, 0777, true);
+        @mkdir(DirPath::get('photos') . $folder, 0777, true);
+        @mkdir(DirPath::get('logs') . $folder, 0777, true);
+        @mkdir(DirPath::get('subtitles') . $folder, 0777, true);
     } else {
         if (!file_exists($headFolder . DIRECTORY_SEPARATOR . $folder)) {
             @mkdir($headFolder . DIRECTORY_SEPARATOR . $folder, 0777, true);
@@ -194,7 +194,7 @@ function devWitch($query, $query_type, $time, $cache = false): array
 
 function showDevWitch()
 {
-    $file = BASEDIR . '/styles/global/devmode.html';
+    $file = DirPath::get('styles') . 'global/devmode.html';
     Template($file, false);
 }
 

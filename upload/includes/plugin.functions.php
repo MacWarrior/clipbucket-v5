@@ -186,7 +186,7 @@ function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_
         ]
     ];
 
-    $Cbucket->addMenuAdmin($menu_plugin);
+    ClipBucket::getInstance()->addMenuAdmin($menu_plugin);
 }
 
 /**
@@ -488,7 +488,7 @@ function plug_url($file, $dir, $admin_base = false)
 {
     $url = 'plugin.php?folder=' . $dir . '&file=' . $file;
     if ($admin_base) {
-        $url = ADMIN_BASEURL . '/' . $url;
+        $url = DirPath::getUrl('admin_area') . '' . $url;
     }
     return $url;
 }

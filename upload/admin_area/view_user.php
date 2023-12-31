@@ -12,8 +12,8 @@ $udetails = $userquery->get_user_details($uid);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => ADMIN_BASEURL . '/view_user.php?uid=' . display_clean($uid)];
+$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => DirPath::getUrl('admin_area') . 'view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
     //Deactivating User
@@ -87,12 +87,12 @@ if (in_dev()) {
     $min_suffixe = '.min';
 }
 
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'pages/view_user/view_user' . $min_suffixe . '.js'         => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
     'tag-it' . $min_suffixe . '.js'                            => 'admin'
 ]);
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

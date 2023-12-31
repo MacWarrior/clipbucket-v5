@@ -13,7 +13,7 @@ $mode = $_GET['mode'];
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Flagged Collections', 'url' => ADMIN_BASEURL . '/flagged_collections.php'];
+$breadcrumb[1] = ['title' => 'Flagged Collections', 'url' => DirPath::getUrl('admin_area') . 'flagged_collections.php'];
 
 //Delete Photo
 if (isset($_GET['delete_collect'])) {

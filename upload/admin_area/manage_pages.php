@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Pages', 'url' => ADMIN_BASEURL . '/manage_pages.php'];
+$breadcrumb[1] = ['title' => 'Manage Pages', 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'];
 
 //Activating Page
 if (isset($_GET['activate'])) {

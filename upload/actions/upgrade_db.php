@@ -69,7 +69,7 @@ if ($need_to_create_version_table) {
         error_lang_cli('Revision provided is incorrect');
         return false;
     }
-    $table_version_path = DIR_SQL . 'table_version.sql';
+    $table_version_path = DirPath::get('sql') . 'table_version.sql';
     $lines = file($table_version_path);
     if (empty($lines)) {
         error_lang_cli('Version system initialisation failed because table_version.sql is missing or empty ; please make sure your code is up-to-date and table_version.sql file is correct.');

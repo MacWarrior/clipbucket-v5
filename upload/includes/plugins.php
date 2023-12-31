@@ -10,9 +10,9 @@ if (!empty($installed_plugins)) {
     foreach ($installed_plugins as $plugin) {
         $folder = '';
         if ($plugin['folder']) {
-            $folder = '/' . $plugin['folder'];
+            $folder = $plugin['folder'];
         }
-        $file = PLUG_DIR . $folder . DIRECTORY_SEPARATOR . $plugin['file'];
+        $file = DirPath::get('plugins') . $folder . DIRECTORY_SEPARATOR . $plugin['file'];
 
         $plugin_code = $plugin['file'] . $folder;
 
@@ -32,9 +32,9 @@ if (!empty($installed_plugins)) {
  */
 if ($Cbucket->configs['player_file'] != '') {
     if ($Cbucket->configs['player_dir']) {
-        $folder = '/' . $Cbucket->configs['player_dir'];
+        $folder = $Cbucket->configs['player_dir'];
     }
-    $file = PLAYER_DIR . $folder . DIRECTORY_SEPARATOR . $Cbucket->configs['player_file'];
+    $file = DirPath::get('player') . $folder . DIRECTORY_SEPARATOR . $Cbucket->configs['player_file'];
     if (file_exists($file)) {
         include_once($file);
     }

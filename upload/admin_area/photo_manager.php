@@ -13,9 +13,9 @@ $pages->page_redir();
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
 if (isset($_GET['search']) && isset($_GET['active']) && $_GET['active'] == 'no') {
-    $breadcrumb[1] = ['title' => 'Inactive Photos', 'url' => ADMIN_BASEURL . '/photo_manager.php?search=search&active=no'];
+    $breadcrumb[1] = ['title' => 'Inactive Photos', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'];
 } else {
-    $breadcrumb[1] = ['title' => 'Photo Manager', 'url' => ADMIN_BASEURL . '/photo_manager.php'];
+    $breadcrumb[1] = ['title' => 'Photo Manager', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
 }
 
 //Photo Actions are following

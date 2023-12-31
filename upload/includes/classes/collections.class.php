@@ -395,9 +395,8 @@ class Collections extends CBCategory
 
         $cb_columns->object('collections')->register_columns($fields);
 
-        global $Cbucket;
         if (isSectionEnabled('collections')) {
-            $Cbucket->search_types['collections'] = 'cbcollection';
+            ClipBucket::getInstance()->search_types['collections'] = 'cbcollection';
         }
 
         register_anchor_function('display_banner', 'in_collection_thumb', Collection::class);
@@ -425,7 +424,7 @@ class Collections extends CBCategory
      */
     function setting_up_collections()
     {
-        global $userquery, $Cbucket;
+        global $userquery;
         $per = $userquery->get_user_level(user_id());
         // Adding My Account Links    
         if (isSectionEnabled('collections') && !NEED_UPDATE) {
@@ -443,29 +442,29 @@ class Collections extends CBCategory
                     , 'sub'   => [
                         [
                             'title' => lang('manage_collections')
-                            , 'url' => ADMIN_BASEURL . '/collection_manager.php'
+                            , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                         , [
                             'title' => lang('manage_categories')
-                            , 'url' => ADMIN_BASEURL . '/collection_category.php'
+                            , 'url' => DirPath::getUrl('admin_area') . 'collection_category.php'
                         ]
                         , [
                             'title' => lang('flagged_collections')
-                            , 'url' => ADMIN_BASEURL . '/flagged_collections.php'
+                            , 'url' => DirPath::getUrl('admin_area') . 'flagged_collections.php'
                         ]
                     ]
                 ];
-                $Cbucket->addMenuAdmin($menu_collection, 80);
+                ClipBucket::getInstance()->addMenuAdmin($menu_collection, 80);
             }
 
             // Adding Collection links in Cbucket Class
-            $Cbucket->links['collections'] = ['collections.php', 'collections/'];
-            $Cbucket->links['manage_collections'] = ['manage_collections.php', 'manage_collections.php'];
-            $Cbucket->links['edit_collection'] = [
+            ClipBucket::getInstance()->links['collections'] = ['collections.php', 'collections/'];
+            ClipBucket::getInstance()->links['manage_collections'] = ['manage_collections.php', 'manage_collections.php'];
+            ClipBucket::getInstance()->links['edit_collection'] = [
                 'manage_collections.php?mode=edit_collection&amp;cid=',
                 'manage_collections.php?mode=edit_collection&amp;cid='
             ];
-            $Cbucket->links['manage_items'] = [
+            ClipBucket::getInstance()->links['manage_items'] = [
                 'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
                 'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s'
             ];
@@ -1598,7 +1597,7 @@ class Collections extends CBCategory
      */
     function delete_thumbs($cid)
     {
-        $glob = glob(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '*.jpg');
+        $glob = glob(DirPath::get('collection_thumbs') . $cid . '*.jpg');
         if( !$glob ){
             return false;
         }
@@ -1625,15 +1624,15 @@ class Collections extends CBCategory
 
         foreach ($exts as $ext) {
             if ($ext == $file_ext) {
-                $thumb = COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
+                $thumb = DirPath::get('collection_thumbs') . $cid . '.' . $ext;
 
-                $sThumb = COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '-small.' . $ext;
-                $oThumb = COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '-orignal.' . $ext;
+                $sThumb = DirPath::get('collection_thumbs') . $cid . '-small.' . $ext;
+                $oThumb = DirPath::get('collection_thumbs') . $cid . '-orignal.' . $ext;
                 foreach ($exts as $un_ext) {
-                    if (file_exists(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '.' . $un_ext) && file_exists(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '-small.' . $un_ext) && file_exists(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '-orignal.' . $un_ext)) {
-                        unlink(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '.' . $un_ext);
-                        unlink(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '-small.' . $un_ext);
-                        unlink(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . '-orignal.' . $un_ext);
+                    if (file_exists(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext) && file_exists(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext)) {
+                        unlink(DirPath::get('collection_thumbs') . $cid . '.' . $un_ext);
+                        unlink(DirPath::get('collection_thumbs') . $cid . '-small.' . $un_ext);
+                        unlink(DirPath::get('collection_thumbs') . $cid . '-orignal.' . $un_ext);
                     }
                 }
                 move_uploaded_file($file['tmp_name'], $thumb);
@@ -1758,9 +1757,9 @@ class Collections extends CBCategory
         }
 
         if ($size == 'small') {
-            $thumb = COLLECT_THUMBS_URL . DIRECTORY_SEPARATOR . 'no_thumb-small.png';
+            $thumb = DirPath::getUrl('collection_thumbs') . 'no_thumb-small.png';
         } else {
-            $thumb = COLLECT_THUMBS_URL . DIRECTORY_SEPARATOR . 'no_thumb.png';
+            $thumb = DirPath::getUrl('collection_thumbs') . 'no_thumb.png';
         }
 
         return $thumb;
@@ -1786,8 +1785,8 @@ class Collections extends CBCategory
                 if ($size == 'small') {
                     $s = '-small';
                 }
-                if (file_exists(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . $s . '.' . $ext)) {
-                    return COLLECT_THUMBS_URL . '/' . $cid . $s . '.' . $ext;
+                if (file_exists(DirPath::get('collection_thumbs') . $cid . $s . '.' . $ext)) {
+                    return DirPath::getUrl('collection_thumbs') . $cid . $s . '.' . $ext;
                 }
             }
         } else {
@@ -1813,8 +1812,8 @@ class Collections extends CBCategory
                 if ($size == 'small') {
                     $s = '-small';
                 }
-                if (file_exists(COLLECT_THUMBS_DIR . DIRECTORY_SEPARATOR . $cid . $s . '.' . $ext)) {
-                    return COLLECT_THUMBS_URL . '/' . $cid . $s . '.' . $ext;
+                if (file_exists(DirPath::get('collection_thumbs') . $cid . $s . '.' . $ext)) {
+                    return DirPath::getUrl('collection_thumbs') . $cid . $s . '.' . $ext;
                 }
             }
         }

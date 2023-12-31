@@ -14,9 +14,9 @@ class myquery
      */
     function Set_Website_Details($name, $value)
     {
-        global $db, $Cbucket;
+        global $db;
         $db->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
-        $Cbucket->configs[$name] = $value;
+        ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
     }
 
@@ -237,7 +237,7 @@ class myquery
     function set_template($template)
     {
         global $myquery;
-        if (is_dir(STYLES_DIR . DIRECTORY_SEPARATOR . $template) && $template) {
+        if (is_dir(DirPath::get('styles') . $template) && $template) {
             $myquery->Set_Website_Details('template_dir', $template);
             e(lang('template_activated'), 'm');
         } else {

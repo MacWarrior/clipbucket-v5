@@ -11,7 +11,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Flagged Photos', 'url' => ADMIN_BASEURL . '/flagged_photos.php'];
+$breadcrumb[1] = ['title' => 'Flagged Photos', 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'];
 
 $mode = $_GET['mode'];
 

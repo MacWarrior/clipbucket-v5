@@ -8,7 +8,7 @@ $userquery->perm_check('ad_manager_access', true);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Advertisement', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Advertisments', 'url' => ADMIN_BASEURL . '/ads_manager.php'];
+$breadcrumb[1] = ['title' => 'Manage Advertisments', 'url' => DirPath::getUrl('admin_area') . 'ads_manager.php'];
 
 //Adding
 if (isset($_POST['add'])) {

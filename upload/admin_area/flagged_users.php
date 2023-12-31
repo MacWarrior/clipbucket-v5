@@ -9,7 +9,7 @@ $userquery->login_check('video_moderation');
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Reported Users', 'url' => ADMIN_BASEURL . '/flagged_users.php'];
+$breadcrumb[1] = ['title' => 'Reported Users', 'url' => DirPath::getUrl('admin_area') . 'flagged_users.php'];
 
 $mode = $_GET['mode'];
 

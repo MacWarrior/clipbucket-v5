@@ -2196,6 +2196,28 @@
 									<span class="lbl"></span>
 								</div>
 							</div>
+							<hr/>
+						</div>
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-5">
+									<label class="nowrap" for="discord_error_log" title="{lang code='discord_error_log'}">{lang code='discord_error_log'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="discord_error_log" id="discord_error_log" {if $discord_error_log } checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="discord_webhook_url" title="{lang code='discord_webhook_url'}">{lang code='discord_webhook_url'}</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{$discord_webhook_url}" {if !$discord_error_log }disabled="disabled"{/if}/>
+								</div>
+							</div>
+							<hr/>
 						</div>
 					</div>
 				</div>

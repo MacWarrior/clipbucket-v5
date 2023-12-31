@@ -1,13 +1,11 @@
 <?php
-define('BASEDIR', dirname(__FILE__, 2));
-
-if (!file_exists(BASEDIR . '/files/temp/install.me')) {
-    if (!file_exists(BASEDIR . '/files/temp/install.me.not') && !file_exists(BASEDIR . '/files/temp/development.dev')) {
+if (!file_exists(DirPath::get('temp') . 'install.me')) {
+    if (!file_exists(DirPath::get('temp') . 'install.me.not') && !file_exists(DirPath::get('temp') . 'development.dev')) {
         header('Location: //' . $_SERVER['SERVER_NAME']);
         die();
     }
 
-    if (!file_exists(BASEDIR . '/files/temp/install.me.not')) {
+    if (!file_exists(DirPath::get('temp') . 'install.me.not')) {
         $mode = 'lock';
     }
 }
@@ -15,9 +13,8 @@ if (!file_exists(BASEDIR . '/files/temp/install.me')) {
 
 function get_cbla()
 {
-    $license = file_get_contents(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'LICENSE');
-    $license = str_replace("\n", '<BR>', $license);
-    return $license;
+    $license = file_get_contents(DirPath::get('root') . 'LICENSE');
+    return str_replace("\n", '<BR>', $license);
 }
 
 function button($text, $params, $class = 'btn-primary')
@@ -67,7 +64,7 @@ function check_module($type): array
             break;
         case 'php_cli':
             $php_path = exec('which php');
-            $cmd = $php_path . ' ' . BASEDIR . DIRECTORY_SEPARATOR . 'phpinfo.php';
+            $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php';
             if (empty($php_cli_info)) {
                 exec($cmd, $php_cli_info);
             }
@@ -310,13 +307,12 @@ function checkPermissions(): array
         'images/avatars',
         'images/category_thumbs',
         'images/collection_thumbs',
-        'images/groups_thumbs',
         'includes'
     ];
 
     $permsArray = [];
     foreach ($files as $file) {
-        if (is_writeable(BASEDIR . DIRECTORY_SEPARATOR . $file)) {
+        if (is_writeable(DirPath::get('root') . $file)) {
             $permsArray[] = [
                 'path' => $file,
                 'msg'  => 'writeable'

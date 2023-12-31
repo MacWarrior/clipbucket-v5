@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
-global $userquery, $pages, $cbvid, $Cbucket, $Upload, $eh;
+global $userquery, $pages, $cbvid, $Upload, $eh;
 
 $userquery->logincheck();
 $pages->page_redir();
@@ -20,7 +20,7 @@ $vdetails = $cbvid->get_video($vid);
 
 if ($vdetails['userid'] != $userid) {
     e(lang('no_edit_video'));
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 } else {
     //Updating Video Details
     if (isset($_POST['update_video'])) {
@@ -43,12 +43,12 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addJS([
+ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js' => 'admin'
 ]);
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
