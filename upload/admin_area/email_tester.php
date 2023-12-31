@@ -40,7 +40,7 @@ if (isset($_POST['start_test'])) {
 
         $from_name = $_POST['from_name'];
         if (empty($from_name) || !is_string($from_name)) {
-            $from_name = $Cbucket->configs['site_title'];
+            $from_name = ClipBucket::getInstance()->configs['site_title'];
         }
 
         $code = $_POST['email_template'];

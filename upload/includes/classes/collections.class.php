@@ -395,9 +395,8 @@ class Collections extends CBCategory
 
         $cb_columns->object('collections')->register_columns($fields);
 
-        global $Cbucket;
         if (isSectionEnabled('collections')) {
-            $Cbucket->search_types['collections'] = 'cbcollection';
+            ClipBucket::getInstance()->search_types['collections'] = 'cbcollection';
         }
 
         register_anchor_function('display_banner', 'in_collection_thumb', Collection::class);
@@ -425,7 +424,7 @@ class Collections extends CBCategory
      */
     function setting_up_collections()
     {
-        global $userquery, $Cbucket;
+        global $userquery;
         $per = $userquery->get_user_level(user_id());
         // Adding My Account Links    
         if (isSectionEnabled('collections') && !NEED_UPDATE) {
@@ -455,17 +454,17 @@ class Collections extends CBCategory
                         ]
                     ]
                 ];
-                $Cbucket->addMenuAdmin($menu_collection, 80);
+                ClipBucket::getInstance()->addMenuAdmin($menu_collection, 80);
             }
 
             // Adding Collection links in Cbucket Class
-            $Cbucket->links['collections'] = ['collections.php', 'collections/'];
-            $Cbucket->links['manage_collections'] = ['manage_collections.php', 'manage_collections.php'];
-            $Cbucket->links['edit_collection'] = [
+            ClipBucket::getInstance()->links['collections'] = ['collections.php', 'collections/'];
+            ClipBucket::getInstance()->links['manage_collections'] = ['manage_collections.php', 'manage_collections.php'];
+            ClipBucket::getInstance()->links['edit_collection'] = [
                 'manage_collections.php?mode=edit_collection&amp;cid=',
                 'manage_collections.php?mode=edit_collection&amp;cid='
             ];
-            $Cbucket->links['manage_items'] = [
+            ClipBucket::getInstance()->links['manage_items'] = [
                 'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s',
                 'manage_collections.php?mode=manage_items&amp;cid=%s&amp;type=%s'
             ];

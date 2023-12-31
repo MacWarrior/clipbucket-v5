@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'view_page');
 define('PARENT_PAGE', 'home');
 require 'includes/config.inc.php';
-global $pages, $cbpage, $Cbucket;
+global $pages, $cbpage;
 
 $pages->page_redir();
 
@@ -20,7 +20,7 @@ if ($page) {
     subtitle($page['page_title']);
 } else {
     e(lang('page_doesnt_exist'));
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 }
 
 //Displaying The Template

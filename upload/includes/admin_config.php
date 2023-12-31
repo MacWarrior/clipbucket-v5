@@ -8,14 +8,13 @@ $admin_area = true;
 
 /* Config.Inc.php */
 include('common.php');
-global $ClipBucket;
-$ClipBucket->initAdminMenu();
+ClipBucket::getInstance()->initAdminMenu();
 
 //Including Massuploader Class,
 require_once('classes/mass_upload.class.php');
 require_once('classes/ads.class.php');
 
-global $db, $ClipBucket, $Cbucket, $Smarty, $myquery;
+global $db, $Smarty, $myquery;
 
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
@@ -41,7 +40,7 @@ Assign('admin_pages', $admin_pages);
 define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('SITETEMPLATEDIR', DirPath::get('styles') . $row['template_dir']);
 define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
-define('TEMPLATEURLFO', DirPath::getUrl('styles') . $Cbucket->template);
+define('TEMPLATEURLFO', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', $row['template_dir']);
 

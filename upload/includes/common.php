@@ -55,17 +55,15 @@ require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
-
-# file with most frequently used functions
-
 require_once DirPath::get('includes') . 'clipbucket.php';
+
 check_install('before');
 if (file_exists(DirPath::get('includes') . '/config.php')) {
     require_once DirPath::get('includes') . '/config.php'; // New config file
 } else {
     require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
-# class for storing common ClipBucket functions
+
 require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
@@ -120,9 +118,9 @@ try {
 
 Language::getInstance()->init();
 $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
-$ClipBucket = $Cbucket = new ClipBucket();
+$Cbucket = new ClipBucket();
 
-$Cbucket->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
+ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
 $baseurl = $row['baseurl'];
 
 if (is_ssl()) {
@@ -325,17 +323,17 @@ if (!file_exists(DirPath::get('playlist_covers'))) {
     mkdir(DirPath::get('playlist_covers'), 0777);
 }
 
-$ClipBucket->upload_opt_list = [];
+ClipBucket::getInstance()->upload_opt_list = [];
 
 if (config('enable_video_file_upload') == 'yes') {
-    $ClipBucket->upload_opt_list['file_upload_div'] = [
+    ClipBucket::getInstance()->upload_opt_list['file_upload_div'] = [
         'title'      => lang('upload_file'),
         'function'  => 'enable_video_file_upload'
     ];
 }
 
 if (config('enable_video_remote_upload') == 'yes') {
-    $ClipBucket->upload_opt_list['remote_upload_div'] = [
+    ClipBucket::getInstance()->upload_opt_list['remote_upload_div'] = [
         'title'      => lang('remote_upload'),
         'function'  => 'enable_video_remote_upload'
     ];

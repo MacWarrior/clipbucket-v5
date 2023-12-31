@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'file_downloader');
 
-global $Cbucket, $cbvid, $Upload, $db;
+global $cbvid, $Upload, $db;
 
 include('../includes/config.inc.php');
 include('../includes/classes/curl/class.curl.php');
@@ -96,7 +96,7 @@ if (empty($file)) {
     exit();
 }
 //Checking if extension is wrong
-$types = strtolower($Cbucket->configs['allowed_video_types']);
+$types = strtolower(ClipBucket::getInstance()->configs['allowed_video_types']);
 $types_array = preg_replace('/,/', ' ', $types);
 $types_array = explode(' ', $types_array);
 

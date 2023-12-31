@@ -22,7 +22,7 @@ sendClientResponseAndContinue(function () use ($Cbucket) {
     } else {
         $min_suffixe = '.min';
     }
-    $Cbucket->addAdminJS(['pages/admin_tool/admin_tool' . $min_suffixe . '.js' => 'admin']);
+    ClipBucket::getInstance()->addAdminJS(['pages/admin_tool/admin_tool' . $min_suffixe . '.js' => 'admin']);
 
     subtitle(lang('admin_tool'));
     template_files('admin_tool.html');

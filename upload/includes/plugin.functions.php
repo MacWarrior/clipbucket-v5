@@ -186,7 +186,7 @@ function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_
         ]
     ];
 
-    $Cbucket->addMenuAdmin($menu_plugin);
+    ClipBucket::getInstance()->addMenuAdmin($menu_plugin);
 }
 
 /**

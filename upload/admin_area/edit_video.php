@@ -1,6 +1,6 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb, $Cbucket;
+global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once '../includes/admin_config.php';
 
 $userquery->admin_login_check();
@@ -96,13 +96,13 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

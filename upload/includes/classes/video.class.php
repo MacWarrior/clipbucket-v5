@@ -590,7 +590,7 @@ class CBvideo extends CBCategory
                 ]
             ];
 
-            $Cbucket->addMenuAdmin($menu_video, 70);
+            ClipBucket::getInstance()->addMenuAdmin($menu_video, 70);
         }
     }
 

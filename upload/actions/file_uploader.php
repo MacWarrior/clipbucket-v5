@@ -3,7 +3,7 @@ define('THIS_PAGE', 'ajax');
 
 include('../includes/config.inc.php');
 require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
-global $Cbucket, $cbvid, $Upload, $db, $eh;
+global $cbvid, $Upload, $db, $eh;
 
 $mode = '';
 if ($_FILES['Filedata']) {
@@ -60,7 +60,7 @@ switch ($mode) {
         break;
 
     case 'upload':
-        $ffmpegpath = $Cbucket->configs['ffmpegpath'];
+        $ffmpegpath = ClipBucket::getInstance()->configs['ffmpegpath'];
         $extension = getExt($_FILES['Filedata']['name']);
 
         #checking for if the right file is uploaded

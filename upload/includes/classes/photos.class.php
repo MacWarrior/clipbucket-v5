@@ -542,7 +542,7 @@ class CBPhotos
      */
     function photos_admin_menu()
     {
-        global $Cbucket, $userquery;
+        global $userquery;
         $per = $userquery->get_user_level(user_id());
 
         if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
@@ -576,7 +576,7 @@ class CBPhotos
                     ]
                 ]
             ];
-            $Cbucket->addMenuAdmin($menu_photo, 90);
+            ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
     }
 
@@ -586,10 +586,10 @@ class CBPhotos
      */
     function setting_other_things()
     {
-        global $userquery, $Cbucket;
+        global $userquery;
         // Search type
         if (isSectionEnabled('photos')) {
-            $Cbucket->search_types['photos'] = "cbphoto";
+            ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
         }
 
         // My account links
@@ -602,14 +602,14 @@ class CBPhotos
         }
 
         //Setting Cbucket links
-        $Cbucket->links['photos'] = ['photos.php', 'photos/'];
-        $Cbucket->links['manage_photos'] = ['manage_photos.php', 'manage_photos.php'];
-        $Cbucket->links['edit_photo'] = ['edit_photo.php?photo=', 'edit_photo.php?photo='];
-        $Cbucket->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
-        $Cbucket->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
-        $Cbucket->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
-        $Cbucket->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
-        $Cbucket->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
+        ClipBucket::getInstance()->links['photos'] = ['photos.php', 'photos/'];
+        ClipBucket::getInstance()->links['manage_photos'] = ['manage_photos.php', 'manage_photos.php'];
+        ClipBucket::getInstance()->links['edit_photo'] = ['edit_photo.php?photo=', 'edit_photo.php?photo='];
+        ClipBucket::getInstance()->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
+        ClipBucket::getInstance()->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
+        ClipBucket::getInstance()->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
+        ClipBucket::getInstance()->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
+        ClipBucket::getInstance()->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
     }
 
     /**
@@ -617,8 +617,7 @@ class CBPhotos
      */
     function set_photo_max_size()
     {
-        global $Cbucket;
-        $adminSize = $Cbucket->configs['max_photo_size'];
+        $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
         if (!$adminSize) {
             $this->max_file_size = 2 * 1024 * 1024;
         } else {
@@ -1432,8 +1431,7 @@ class CBPhotos
      */
     function get_watermark_position()
     {
-        global $Cbucket;
-        return $Cbucket->configs['watermark_placement'];
+        return ClipBucket::getInstance()->configs['watermark_placement'];
     }
 
     /**
@@ -2162,15 +2160,14 @@ class CBPhotos
      */
     function getFileSmarty($p)
     {
-        global $Cbucket;
         $details = $p['details'];
         $output = $p['output'];
         if (empty($details)) {
             return $this->default_thumb($size, $output);
         } else {
             //Calling Custom Functions
-            if (!empty($Cbucket->custom_get_photo_funcs)) {
-                foreach ($Cbucket->custom_get_photo_funcs as $funcs) {
+            if (!empty(ClipBucket::getInstance()->custom_get_photo_funcs)) {
+                foreach (ClipBucket::getInstance()->custom_get_photo_funcs as $funcs) {
                     if (function_exists($funcs)) {
                         $func_returned = $funcs($p);
                         if ($func_returned) {

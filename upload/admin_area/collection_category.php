@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $cbcollection, $Cbucket, $breadcrumb;
+global $userquery, $pages, $cbcollection, $breadcrumb;
 require_once '../includes/admin_config.php';
 
 $userquery->admin_login_check();
@@ -66,8 +66,8 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addAdminJS(['pages/collection_category/collection_category'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+ClipBucket::getInstance()->addAdminJS(['pages/collection_category/collection_category'.$min_suffixe.'.js' => 'admin']);
 
 template_files('collection_category.html');
 display_it();

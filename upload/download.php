@@ -1,9 +1,9 @@
 <?php
-define("THIS_PAGE", 'download');
-define("PARENT_PAGE", 'videos');
+define('THIS_PAGE', 'download');
+define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
-global $userquery, $pages, $cbvid, $Cbucket;
+global $userquery, $pages, $cbvid;
 
 $userquery->perm_check('download_video', true);
 $pages->page_redir();
@@ -21,7 +21,7 @@ if ($vdo && video_playable($vkey)) {
     if ($file) {
         $vdo['download_file'] = $file;
     } else {
-        $Cbucket->show_page = false;
+        ClipBucket::getInstance()->show_page = false;
         e(lang("unable_find_download_file"));
     }
     assign('vdo', $vdo);

@@ -616,8 +616,6 @@ class Upload
      */
     function loadLocationFields($default = null): array
     {
-        global $Cbucket;
-
         if ($default == null) {
             $default = $_POST;
         }
@@ -627,18 +625,13 @@ class Upload
             $date_recorded = $default['datecreated'];
         }
 
-        $datecreated = DateTime::createFromFormat('Y-m-d', $date_recorded);
-        if ($datecreated) {
-            $datecreated = $datecreated->format(DATE_FORMAT);
-        }
-
         return [
             'country'       => [
                 'title'         => lang('country'),
                 'type'          => 'dropdown',
                 'name'          => 'country',
                 'id'            => 'country',
-                'value'         => $Cbucket->get_countries(),
+                'value'         => ClipBucket::getInstance()->get_countries(),
                 'checked'       => $default['country'],
                 'db_field'      => 'country',
                 'required'      => 'no',

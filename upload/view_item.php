@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $cbcollection, $userquery, $Cbucket, $cbphoto;
+global $cbcollection, $userquery, $cbphoto;
 
 $item = (string)($_GET['item']);
 $cid = (int)($_GET['collection']);
@@ -15,7 +15,7 @@ if (empty($item) || empty($cid) || !isSectionEnabled('photos')) {
 }
 
 if (!$cbcollection->is_viewable($cid)) {
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 } else {
     $param = ['type' => 'photos', 'cid' => $cid];
     $cdetails = $cbcollection->get_collections($param);
@@ -59,15 +59,15 @@ if (!$cbcollection->is_viewable($cid)) {
                 Assign('c', $collect);
             } else {
                 e(lang('item_not_exist'));
-                $Cbucket->show_page = false;
+                ClipBucket::getInstance()->show_page = false;
             }
         } else {
             e(lang('error_age_restriction'));
-            $Cbucket->show_page = false;
+            ClipBucket::getInstance()->show_page = false;
         }
     } else {
         e(lang('item_not_exist'));
-        $Cbucket->show_page = false;
+        ClipBucket::getInstance()->show_page = false;
     }
 }
 
@@ -92,11 +92,11 @@ if(in_dev()){
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['readonly_tag'.$min_suffixe.'.css' => 'admin']);
+ClipBucket::getInstance()->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addJS(['init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
+ClipBucket::getInstance()->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+ClipBucket::getInstance()->addCSS(['readonly_tag'.$min_suffixe.'.css' => 'admin']);
 
 template_files('view_photo.html');
 display_it();

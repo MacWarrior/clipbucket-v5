@@ -9,10 +9,10 @@ if (!defined('PARENT_PAGE')) {
 require_once 'common.php';
 require_once 'plugins.php';
 
-global $Cbucket, $cbvid, $ClipBucket, $userquery;
+global $cbvid, $userquery;
 
-define('TEMPLATEDIR', DirPath::get('styles') . $Cbucket->template);
-define('TEMPLATEURL', DirPath::getUrl('styles') . $Cbucket->template);
+define('TEMPLATEDIR', DirPath::get('styles') . ClipBucket::getInstance()->template);
+define('TEMPLATEURL', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 Assign('baseurl', BASEURL);
 Assign('imageurl', TEMPLATEURL . '/images');
@@ -41,8 +41,8 @@ isSectionEnabled(PARENT_PAGE, true);
 
 cb_call_functions('clipbucket_init_completed');
 
-if (!$in_bg_cron && !in_array(THIS_PAGE, $ClipBucket->public_pages)) {
-    if ($Cbucket->configs['access_to_logged_in'] == 'yes') {
+if (!$in_bg_cron && !in_array(THIS_PAGE, ClipBucket::getInstance()->public_pages)) {
+    if (ClipBucket::getInstance()->configs['access_to_logged_in'] == 'yes') {
         $userquery->logincheck();
     }
 }

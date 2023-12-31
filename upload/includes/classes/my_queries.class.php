@@ -14,9 +14,9 @@ class myquery
      */
     function Set_Website_Details($name, $value)
     {
-        global $db, $Cbucket;
+        global $db;
         $db->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
-        $Cbucket->configs[$name] = $value;
+        ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
     }
 

@@ -1,7 +1,7 @@
 <?php
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages, $Cbucket;
+global $userquery, $pages;
 
 $userquery->admin_login_check();
 $userquery->login_check('member_moderation');
@@ -25,7 +25,7 @@ if(in_dev()){
     $min_suffixe = '.min';
 }
 
-$Cbucket->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
 
 subtitle('Add New Member');
 template_files('add_members.html');

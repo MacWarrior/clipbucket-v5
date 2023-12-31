@@ -1159,11 +1159,10 @@ function msg_list(): array
  */
 function template_files($file, $folder = false, $follow_show_page = true)
 {
-    global $ClipBucket;
     if (!$folder) {
-        $ClipBucket->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
+        ClipBucket::getInstance()->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
     } else {
-        $ClipBucket->template_files[] = ['file' => $file, 'folder' => $folder, 'follow_show_page' => $follow_show_page];
+        ClipBucket::getInstance()->template_files[] = ['file' => $file, 'folder' => $folder, 'follow_show_page' => $follow_show_page];
     }
 }
 
@@ -1494,7 +1493,6 @@ function getConstant($constantName = false)
  */
 function cblink($params, $fullurl = false)
 {
-    global $ClipBucket;
     $name = getArrayValue($params, 'name');
     if ($name == 'category') {
         return category_link($params['data'], $params['type']);
@@ -1523,11 +1521,11 @@ function cblink($params, $fullurl = false)
         $link = '';
     }
 
-    if (isset($ClipBucket->links[$name])) {
-        if (strpos(get_server_protocol(), $ClipBucket->links[$name][$val]) !== false) {
-            $link .= $ClipBucket->links[$name][$val];
+    if (isset(ClipBucket::getInstance()->links[$name])) {
+        if (strpos(get_server_protocol(), ClipBucket::getInstance()->links[$name][$val]) !== false) {
+            $link .= ClipBucket::getInstance()->links[$name][$val];
         } else {
-            $link .= '/' . $ClipBucket->links[$name][$val];
+            $link .= '/' . ClipBucket::getInstance()->links[$name][$val];
         }
     } else {
         $link = false;
@@ -1686,7 +1684,7 @@ function get_functions($name)
 function add_js($files)
 {
     global $Cbucket;
-    $Cbucket->addJS($files);
+    ClipBucket::getInstance()->addJS($files);
 }
 
 /**
@@ -1703,7 +1701,7 @@ function add_js($files)
 function add_header($files)
 {
     global $Cbucket;
-    $Cbucket->add_header($files);
+    ClipBucket::getInstance()->add_header($files);
 }
 
 /**
@@ -1715,7 +1713,7 @@ function add_header($files)
 function add_admin_header($files)
 {
     global $Cbucket;
-    $Cbucket->add_admin_header($files);
+    ClipBucket::getInstance()->add_admin_header($files);
 }
 
 /**

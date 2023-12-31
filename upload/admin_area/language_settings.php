@@ -59,7 +59,7 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
 assign('client_id', $Cbucket->configs['clientid']);
 assign('secret_Id', $Cbucket->configs['secretId']);

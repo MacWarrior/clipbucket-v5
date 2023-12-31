@@ -1,5 +1,5 @@
 <?php
-global $Cbucket, $cbphoto;
+global $cbphoto;
 define('THIS_PAGE', 'ajax');
 include('../includes/config.inc.php');
 

@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'photos');
 
 require 'includes/config.inc.php';
 
-global $userquery, $cbphoto, $Cbucket;
+global $userquery, $cbphoto;
 
 $userquery->login_check('edit_video');
 
@@ -19,7 +19,7 @@ if (empty($photo)) {
     e(lang('photo_not_exist'));
 } elseif ($photo['userid'] != user_id()) {
     e(lang('You can not edit this photo.'));
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 } else {
     if (isset($_POST['update_photo'])) {
         $cbphoto->update_photo();
@@ -34,12 +34,12 @@ if (in_dev()) {
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS([
+ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_photo/edit_photo' . $min_suffixe . '.js'       => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

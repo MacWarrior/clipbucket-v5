@@ -312,7 +312,7 @@ class userquery extends CBCategory
      */
     function init()
     {
-        global $sess, $Cbucket;
+        global $sess;
 
         $this->sess_salt = $sess->get('sess_salt');
         $this->sessions = $this->get_sessions();
@@ -370,7 +370,7 @@ class userquery extends CBCategory
         define('BACKGROUND_URL', config('background_url'));
         define('BACKGROUND_COLOR', config('background_color'));
         if (isSectionEnabled('channels')) {
-            $Cbucket->search_types['channels'] = 'userquery';
+            ClipBucket::getInstance()->search_types['channels'] = 'userquery';
         }
     }
 
@@ -380,8 +380,7 @@ class userquery extends CBCategory
     function create_session_key($session, $pass): string
     {
         $newkey = $session . $pass;
-        $newkey = md5($newkey);
-        return $newkey;
+        return md5($newkey);
     }
 
     /**
@@ -581,8 +580,6 @@ class userquery extends CBCategory
      */
     function login_check($access = null, $check_only = false, $verify_logged_user = true)
     {
-        global $Cbucket;
-
         if ($verify_logged_user) {
             //First check weather userid is here or not
             if (!user_id()) {
@@ -621,7 +618,7 @@ class userquery extends CBCategory
                 if (!$check_only) {
                     e(lang('insufficient_privileges'));
                 }
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
                 return false;
             }
 
@@ -631,7 +628,7 @@ class userquery extends CBCategory
 
             if (!$check_only) {
                 e(lang('insufficient_privileges'));
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
             }
             return false;
         }
@@ -2192,7 +2189,6 @@ class userquery extends CBCategory
      */
     function perm_check($access = '', $check_login = false, $control_page = true, $silent = false): bool
     {
-        global $Cbucket;
         $access_details = $this->permission;
         if (is_numeric($access)) {
             if ($access_details['level_id'] == $access) {
@@ -2204,7 +2200,7 @@ class userquery extends CBCategory
             }
 
             if ($control_page) {
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
             }
             return false;
         }
@@ -2222,7 +2218,7 @@ class userquery extends CBCategory
         }
 
         if ($control_page) {
-            $Cbucket->show_page(false);
+            ClipBucket::getInstance()->show_page(false);
         }
         return false;
     }
@@ -3170,8 +3166,6 @@ class userquery extends CBCategory
      */
     function load_signup_fields($input = null): array
     {
-        global $Cbucket;
-
         $default = [];
 
         if (isset($input)) {
@@ -3290,7 +3284,7 @@ class userquery extends CBCategory
         ];
 
         if( config('enable_country') == 'yes' ){
-            $countries = $Cbucket->get_countries();
+            $countries = ClipBucket::getInstance()->get_countries();
             $selected_cont = null;
             $pick_geo_country = config('pick_geo_country');
             if ($pick_geo_country == 'yes') {

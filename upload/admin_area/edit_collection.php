@@ -3,7 +3,7 @@ define('THIS_PAGE', 'edit_collection');
 
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid, $Cbucket;
+global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
 
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
@@ -72,13 +72,13 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                                => 'admin',
     'pages/edit_collection/edit_collection' . $min_suffixe . '.js' => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js'     => 'admin'
 ]);
 
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

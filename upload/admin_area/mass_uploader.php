@@ -104,16 +104,16 @@ if (isset($_POST['mass_upload_video'])) {
         }
     }
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
 if(in_dev()){
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['pages/mass_uploader/mass_uploader'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/mass_uploader/mass_uploader'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
+ClipBucket::getInstance()->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
 
 subtitle('Mass Uploader');
 template_files('mass_uploader.html');
