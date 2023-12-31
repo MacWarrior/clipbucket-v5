@@ -6,6 +6,9 @@ class reCaptchav2
     {
     }
 
+    /**
+     * @throws Exception
+     */
     function update_recaptcha_confs($param)
     {
         global $db;
@@ -31,11 +34,12 @@ class reCaptchav2
         return $response;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_recaptcha_confs()
     {
-        global $Cbucket;
-
-        $rec_config = $Cbucket->configs;
+        $rec_config = ClipBucket::getInstance()->configs;
         if (!empty($rec_config)) {
             return $rec_config;
         }

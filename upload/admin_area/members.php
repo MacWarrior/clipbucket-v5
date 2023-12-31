@@ -14,13 +14,13 @@ $userLevel = $udetails['level'];
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
 if ($_GET['view'] == 'search') {
-    $breadcrumb[1] = ['title' => 'Search Members', 'url' => ADMIN_BASEURL . '/members.php?search=Search'];
+    $breadcrumb[1] = ['title' => 'Search Members', 'url' => DirPath::getUrl('admin_area') . 'members.php?search=Search'];
 } elseif ($_GET['search'] == 'yes' && $_GET['status'] == 'ToActivate') {
-    $breadcrumb[1] = ['title' => 'Inactive Only', 'url' => ADMIN_BASEURL . '/members.php?status=ToActivate&search=Search'];
+    $breadcrumb[1] = ['title' => 'Inactive Only', 'url' => DirPath::getUrl('admin_area') . 'members.php?status=ToActivate&search=Search'];
 } elseif ($_GET['search'] == 'yes' && $_GET['status'] == 'Ok') {
-    $breadcrumb[1] = ['title' => 'Active Only', 'url' => ADMIN_BASEURL . '/members.php?status=Ok&search=Search'];
+    $breadcrumb[1] = ['title' => 'Active Only', 'url' => DirPath::getUrl('admin_area') . 'members.php?status=Ok&search=Search'];
 } else {
-    $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
+    $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 }
 
 //Delete User

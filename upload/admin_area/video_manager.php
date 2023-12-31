@@ -16,9 +16,9 @@ if (!empty($_GET['missing_video'])) {
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 if ($_GET['active'] == 'no') {
-    $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => ADMIN_BASEURL . '/video_manager.php'];
+    $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 } else {
-    $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL . '/video_manager.php'];
+    $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 }
 
 if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {

@@ -495,7 +495,7 @@ abstract class CBCategory
             $ext = getext($file['name']);
 
             if ($ext == 'jpg' || $ext == 'png' || $ext == 'gif') {
-                $dir_path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir;
+                $dir_path = DirPath::get('category_thumbs') . $dir;
                 if (!is_dir($dir_path)) {
                     @mkdir($dir_path, 0777);
                 }
@@ -536,7 +536,7 @@ abstract class CBCategory
     function get_cat_thumb($cat_details, $dir = ''): string
     {
         $cid = $cat_details['category_id'];
-        $path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir . DIRECTORY_SEPARATOR . $cid . '.';
+        $path = DirPath::get('category_thumbs') . $dir . DIRECTORY_SEPARATOR . $cid . '.';
         $exts = ['jpg', 'png', 'gif'];
 
         $file_exists = false;
@@ -548,7 +548,7 @@ abstract class CBCategory
         }
 
         if ($file_exists) {
-            return CAT_THUMB_URL . '/' . $dir . '/' . $cid . '.' . $ext;
+            return DirPath::get('category_thumbs') . $dir . '/' . $cid . '.' . $ext;
         }
         return $this->default_thumb();
     }
@@ -566,7 +566,7 @@ abstract class CBCategory
         if (empty($this->default_thumb)) {
             $this->default_thumb = 'no_thumb.jpg';
         }
-        return CAT_THUMB_URL . '/' . $this->default_thumb;
+        return DirPath::get('category_thumbs') . $this->default_thumb;
     }
 
     /**

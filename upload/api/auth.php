@@ -1,12 +1,12 @@
 <?php
 include('../includes/config.inc.php');
 include('global.php');
-global $Cbucket, $userquery;
+global $userquery;
 
 $request = $_REQUEST;
 $mode = strtolower($request['mode']);
 
-$api_keys = $Cbucket->api_keys;
+$api_keys = ClipBucket::getInstance()->api_keys;
 
 if ($api_keys) {
     if (!in_array($request['api_key'], $api_keys)) {

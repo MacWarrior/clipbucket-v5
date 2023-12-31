@@ -3,7 +3,7 @@
 	<div class="video_thumb">
 		<a href="{video_link($pop_video)}" class="no_overflow">
 			<img src="{getThumb vdetails=$pop_video size=168x105}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive {if Video::getInstance()->isToBlur($pop_video.videoid)}blur{/if}"/>
-			<time datetime="2016-15-03" class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</time>
+			<time class="duration">{if $pop_video.duration>1}{$pop_video.duration|SetTime}{else}00:00{/if}</time>
 		</a>
 	</div>
 	
@@ -99,18 +99,19 @@
 </div>
 {/if}
 
+{* Used by editor's pick only *}
 {if $display_type=='featuredVideos_sidebar'}
 	<div class="featured-video clearfix" data-id-video="{$video.videoid}">
 		<div class="video_thumb">
 			<a href="{video_link($video)}">
-				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive"/>
+				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}"/>
 				<time class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
 			</a>
 		</div>
 
 		<div class="details_block">
 			<strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>
-			<span class="author">{lang code="by"}
+			<span class="author">{lang code='by'}
 			{if isSectionEnabled('channels')}
 				<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
 			{else}

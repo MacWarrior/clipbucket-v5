@@ -1,5 +1,5 @@
 <?php
-global $Cbucket, $cbphoto;
+global $cbphoto;
 define('THIS_PAGE', 'ajax');
 include('../includes/config.inc.php');
 
@@ -48,7 +48,7 @@ switch ($mode) {
         $_POST['server_url'] = 'undefined';
         $_POST['active'] = config('photo_activation') ? 'no' : 'yes';
         $_POST['folder'] = str_replace('..', '', mysql_clean($_POST['folder']));
-        $_POST['folder'] = create_dated_folder(PHOTOS_DIR);
+        $_POST['folder'] = create_dated_folder(DirPath::get('photos'));
         $_POST['filename'] = mysql_clean($_POST['file_name']);
         $insert_id = $cbphoto->insert_photo();
 
@@ -91,7 +91,7 @@ switch ($mode) {
         $exts = $cbphoto->exts;
         $max_size = 1048576; // 2MB in bytes
         $form = 'photoUpload';
-        $path = PHOTOS_DIR . DIRECTORY_SEPARATOR;
+        $path = DirPath::get('photos');
 
         // These are found in $_FILES. We can access them like $_FILES['file']['error'].
         $upErrors = [
@@ -191,9 +191,9 @@ switch ($mode) {
             exit();
         }
 
-        $targetDir = PHOTOS_DIR;
-        $directory = create_dated_folder(PHOTOS_DIR);
-        $targetDir .= DIRECTORY_SEPARATOR . $directory;
+        $targetDir = DirPath::get('photos');
+        $directory = create_dated_folder(DirPath::get('photos'));
+        $targetDir .= $directory;
 
         $cleanupTargetDir = true; // Remove old files
         $maxFileAge = 5 * 3600; // Temp file age in seconds

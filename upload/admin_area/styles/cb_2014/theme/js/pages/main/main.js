@@ -84,4 +84,12 @@ $(document).ready(function () {
         }
     });
 
+    $('#discord_error_log').change(function () {
+        let parent = $('#discord_webhook_url');
+        if (!$(this).prop('checked')) {
+            parent.prop('disabled',true);
+        } else {
+            parent.prop('disabled',false);
+        }
+    });
 });

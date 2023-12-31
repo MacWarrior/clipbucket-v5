@@ -9,7 +9,7 @@ $userquery->login_check('video_moderation');
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Notification settings', 'url' => ADMIN_BASEURL . '/notification_settings.php'];
+$breadcrumb[1] = ['title' => 'Notification settings', 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'];
 
 $mode = $_GET['mode'];
 

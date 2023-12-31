@@ -337,8 +337,8 @@ class AdsManager
      */
     function get_placement_xml()
     {
-        if (file_exists(STYLES_DIR . '/' . TEMPLATE . '/ads_placement.xml')) {
-            $xml_file = STYLES_DIR . '/' . TEMPLATE . '/ads_placement.xml';
+        if (file_exists(DirPath::get('styles') . TEMPLATE . '/ads_placement.xml')) {
+            $xml_file = DirPath::get('styles') . TEMPLATE . '/ads_placement.xml';
             $xml_content = file_get_contents($xml_file);
             $xmlSimpleElement = simplexml_load_string($xml_content) or die("Error: Cannot create object");
             $jsonArray = json_encode($xmlSimpleElement);

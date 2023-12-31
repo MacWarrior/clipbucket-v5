@@ -11,7 +11,7 @@ function comment($comment): string
     global $Cbucket;
     $comment = nl2br($comment);
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('comment');
+    $func_list = ClipBucket::getInstance()->getFunctionList('comment');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {
@@ -32,7 +32,7 @@ function description($description): string
 {
     global $Cbucket;
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('description');
+    $func_list = ClipBucket::getInstance()->getFunctionList('description');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {
@@ -54,7 +54,7 @@ function title($title): string
 {
     global $Cbucket;
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('title');
+    $func_list = ClipBucket::getInstance()->getFunctionList('title');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {
@@ -74,7 +74,7 @@ function private_message($array)
     global $cbpm, $Cbucket;
     $array = $array['pm'];
     $message = $array['message_content'];
-    $func_list = $Cbucket->getFunctionList('private_message');
+    $func_list = ClipBucket::getInstance()->getFunctionList('private_message');
 
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
@@ -184,7 +184,7 @@ function page($content): string
 {
     global $Cbucket;
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('page');
+    $func_list = ClipBucket::getInstance()->getFunctionList('page');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {

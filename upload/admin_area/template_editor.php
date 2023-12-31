@@ -6,7 +6,7 @@ $userquery->perm_check('manage_template_access', true);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Templates Editor', 'url' => ADMIN_BASEURL . '/template_editor.php'];
+$breadcrumb[1] = ['title' => 'Templates Editor', 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'];
 
 /**
  * Getting List Of Templates
@@ -33,7 +33,7 @@ if (!$cbtpl->is_template($sel_dir)) {
 
     //Reading File
     if (isset($_GET['file']) && isset($_GET['folder'])) {
-        $file = STYLES_DIR . '/' . TEMPLATE . '/' . $_GET['folder'] . '/' . $_GET['file'];
+        $file = DirPath::get('styles') . TEMPLATE . '/' . $_GET['folder'] . '/' . $_GET['file'];
 
         if (file_exists($file)) {
             if (isset($_POST['update_file'])) {
@@ -61,11 +61,11 @@ if (!$cbtpl->is_template($sel_dir)) {
 }
 
 //Getting And Listing Files
-if (!file_exists(BASEDIR . '/' . TEMPLATEFOLDER . '/' . @$_GET['temp']) || @$_GET['temp'] == '') {
+if (!file_exists(DirPath::get('styles') . @$_GET['temp']) || @$_GET['temp'] == '') {
     $dir = SITETEMPLATEDIR . '/layout/';
     $cur_dir = TEMPLATE;
 } else {
-    $dir = BASEDIR . '/' . TEMPLATEFOLDER . '/' . $_GET['temp'] . '/layout/';
+    $dir = DirPath::get('styles') . $_GET['temp'] . '/layout/';
     $cur_dir = $_GET['temp'];
 }
 if (!($dp = opendir($dir))) {

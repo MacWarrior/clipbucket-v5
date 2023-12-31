@@ -5,7 +5,7 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'bootstrap.min.css'                          => 'admin',
     'font-awesome.min.css'                       => 'admin',
     'font-awesome-ie7.min.css'                   => 'admin',
@@ -17,14 +17,14 @@ $Cbucket->addAdminCSS([
 ]);
 
 if (!this_page('admin_login')) {
-    $Cbucket->addAdminCSS([
+    ClipBucket::getInstance()->addAdminCSS([
         'ace.min.css'       => 'admin',
         'ace-rtl.min.css'   => 'admin',
         'ace-skins.min.css' => 'admin'
     ]);
 }
 
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'jquery-3.7.1.min.js'                          => 'admin',
     'jquery-ui-1.13.2.min.js'                      => 'global',
     'html5shiv' . $min_suffixe . '.js'             => 'admin',

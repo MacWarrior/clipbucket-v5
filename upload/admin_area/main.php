@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
+$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => DirPath::getUrl('admin_area') . 'main.php'];
 
 if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
@@ -358,6 +358,7 @@ if (isset($_POST['update'])) {
         'cache_host',
         'cache_port',
         'cache_password',
+
         'hide_empty_collection',
         'display_video_comments',
         'display_photo_comments',
@@ -473,10 +474,10 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
-$filepath_dev_file = TEMP_DIR . '/development.dev';
 if (!empty($_POST)) {
+    $filepath_dev_file = DirPath::get('temp') . 'development.dev';
     if (!empty($_POST['enable_dev_mode'])) {
-        if (is_writable(TEMP_DIR)) {
+        if (is_writable(DirPath::get('temp'))) {
             file_put_contents($filepath_dev_file, '');
             if (file_exists($filepath_dev_file)) {
                 assign('DEVELOPMENT_MODE', true);
@@ -493,6 +494,21 @@ if (!empty($_POST)) {
 } else {
     assign('DEVELOPMENT_MODE', in_dev());
 }
+
+if( !empty($_POST['discord_error_log']) ){
+    if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
+            e(lang('discord_webhook_url_invalid'));
+        } else {
+            DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
+        }
+    } else {
+        DiscordLog::getInstance()->disable();
+    }
+}
+
+assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
+assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
 
 if(in_dev()){
     $min_suffixe = '';

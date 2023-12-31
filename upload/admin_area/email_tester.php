@@ -7,7 +7,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Tester', 'url' => ADMIN_BASEURL . '/email_tester.php'];
+$breadcrumb[1] = ['title' => 'Email Tester', 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'];
 
 if (isset($_POST['start_test'])) {
     try {
@@ -40,7 +40,7 @@ if (isset($_POST['start_test'])) {
 
         $from_name = $_POST['from_name'];
         if (empty($from_name) || !is_string($from_name)) {
-            $from_name = $Cbucket->configs['site_title'];
+            $from_name = ClipBucket::getInstance()->configs['site_title'];
         }
 
         $code = $_POST['email_template'];
@@ -123,7 +123,7 @@ if (!empty($templates)) {
         $code = $template['email_template_code'];
         $list[$code] = $template['email_template_name'];
 
-        $HTML_template = BASEDIR . '/styles/global/v4/email_templates/' . $code . '.html';
+        $HTML_template = DirPath::get('styles') . 'global/v4/email_templates/' . $code . '.html';
 
         if (file_exists($HTML_template)) {
             $body = file_get_contents($HTML_template);

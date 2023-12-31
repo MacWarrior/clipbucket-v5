@@ -561,36 +561,36 @@ class CBvideo extends CBCategory
                 , 'sub'   => [
                     [
                         'title' => lang('videos_manager')
-                        , 'url' => ADMIN_BASEURL . '/video_manager.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'
                     ]
                     , [
                         'title' => lang('manage_playlists')
-                        , 'url' => ADMIN_BASEURL . '/manage_playlist.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'manage_playlist.php'
                     ]
                     , [
                         'title' => lang('manage_categories')
-                        , 'url' => ADMIN_BASEURL . '/category.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'category.php'
                     ]
                     , [
                         'title' => 'List Flagged Videos'
-                        , 'url' => ADMIN_BASEURL . '/flagged_videos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_videos.php'
                     ]
                     , [
                         'title' => 'Mass Upload Videos'
-                        , 'url' => ADMIN_BASEURL . '/mass_uploader.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'mass_uploader.php'
                     ]
                     , [
                         'title' => 'List Inactive Videos'
-                        , 'url' => ADMIN_BASEURL . '/video_manager.php?search=search&active=no'
+                        , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php?search=search&active=no'
                     ]
                     , [
                         'title' => 'Notification settings'
-                        , 'url' => ADMIN_BASEURL . '/notification_settings.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'
                     ]
                 ]
             ];
 
-            $Cbucket->addMenuAdmin($menu_video, 70);
+            ClipBucket::getInstance()->addMenuAdmin($menu_video, 70);
         }
     }
 
@@ -781,9 +781,9 @@ class CBvideo extends CBCategory
                 if( $video['status'] == 'Successful' && in_array($video['broadcast'], ['public', 'logged']) && $video['subscription_email'] == 'pending' ){
                     //Sending Subscription email in background
                     if (stristr(PHP_OS, 'WIN')) {
-                        exec(php_path() . ' -q ' . BASEDIR . '/actions/send_subscription_email.php ' . $vid);
+                        exec(php_path() . ' -q ' . DirPath::get('actions') . 'send_subscription_email.php ' . $vid);
                     } else {
-                        exec(php_path() . ' -q ' . BASEDIR . '/actions/send_subscription_email.php ' . $vid . ' &> /dev/null &');
+                        exec(php_path() . ' -q ' . DirPath::get('actions') . 'send_subscription_email.php ' . $vid . ' &> /dev/null &');
                     }
                 }
                 break;
@@ -1059,7 +1059,7 @@ class CBvideo extends CBCategory
         global $db;
         //delete olds thumbs from db and on disk
         $db->delete(tbl('video_thumbs'), ['videoid'], [$vdetails['videoid']]);
-        $pattern = THUMBS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*';
+        $pattern = DirPath::get('thumbs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*';
         $glob = glob($pattern);
         foreach ($glob as $thumb) {
             unlink($thumb);
@@ -1080,7 +1080,7 @@ class CBvideo extends CBCategory
     {
         global $db;
         $src = $vdetails['videoid'];
-        $file = LOGS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
+        $file = DirPath::get('logs') . $vdetails['file_name'] . '.log';
         $db->execute('DELETE FROM ' . tbl('video_files') . ' WHERE src_name = \'' . mysql_clean($src) . '\'');
         if (file_exists($file)) {
             unlink($file);
@@ -1089,8 +1089,8 @@ class CBvideo extends CBCategory
         $result = db_select('SELECT * FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($fn) . '\'');
         if ($result) {
             foreach ($result as $result1) {
-                $str = DIRECTORY_SEPARATOR . $result1['file_directory'] . DIRECTORY_SEPARATOR;
-                $file1 = LOGS_DIR . $str . $vdetails['file_name'] . '.log';
+                $str = $result1['file_directory'] . DIRECTORY_SEPARATOR;
+                $file1 = DirPath::get('logs') . $str . $vdetails['file_name'] . '.log';
                 if (file_exists($file1) && is_file($file1)) {
                     unlink($file1);
                 }
@@ -1107,7 +1107,7 @@ class CBvideo extends CBCategory
     function remove_subtitles($vdetails, string $number = null)
     {
         global $db;
-        $directory = SUBTITLES_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+        $directory = DirPath::get('subtitles') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
         $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid'];
         if ($number !== null) {
             $query .= ' AND number = \'' . mysql_clean($number) . '\'';
@@ -1141,7 +1141,7 @@ class CBvideo extends CBCategory
      */
     function remove_resolution($resolution, &$video_detail)
     {
-        $directory_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $video_detail['file_directory'] . DIRECTORY_SEPARATOR;
+        $directory_path = DirPath::get('videos') . $video_detail['file_directory'] . DIRECTORY_SEPARATOR;
         switch ($video_detail['file_type']) {
             default:
             case 'mp4':
@@ -1199,7 +1199,7 @@ class CBvideo extends CBCategory
             $this->remove_resolution($quality, $vdetails);
         }
         if ($vdetails['file_type'] == 'hls') {
-            $directory_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
+            $directory_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
             rmdir($directory_path);
         }
         e(lang('vid_files_removed_msg'), 'm');

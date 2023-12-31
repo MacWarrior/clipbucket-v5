@@ -1,11 +1,10 @@
 <?php
-global $Cbucket;
 if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'bootstrap.min.css'                  => 'admin',
     'font-awesome.min.css'               => 'admin',
     'icon-font.css'                      => 'admin',
@@ -15,7 +14,7 @@ $Cbucket->addCSS([
     'jquery_ui' . $min_suffixe . '.css'  => 'admin'
 ]);
 
-$Cbucket->addJS([
+ClipBucket::getInstance()->addJS([
     'jquery-3.7.1.min.js'                        => 'admin',
     'jquery-ui-1.13.2.min.js'                    => 'global',
     'clipbucket' . $min_suffixe . '.js'          => 'admin',

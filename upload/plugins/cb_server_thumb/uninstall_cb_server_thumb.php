@@ -24,7 +24,7 @@ function delete_directory($dirname): bool
 
 function uninstall_cb_server_thumb()
 {
-    $cache_dir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'cb_server_thumb';
+    $cache_dir = DirPath::get('cache') . 'cb_server_thumb';
     if (!delete_directory($cache_dir)) {
         e('Unable to remove directory \'' . $cache_dir . '\'');
     }

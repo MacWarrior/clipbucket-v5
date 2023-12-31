@@ -82,7 +82,7 @@ class Update
     private function getCurrentCoreLatest(): array
     {
         if( empty($this->latest) ){
-            $filepath_latest = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR.'latest.json';
+            $filepath_latest = DirPath::get('changelog') . 'latest.json';
             $this->latest = json_decode(file_get_contents($filepath_latest), true);
         }
 
@@ -129,11 +129,10 @@ class Update
     private function getChangelog($version): array
     {
         if( empty($this->changelog[$version]) ){
-            $base_filepath = realpath(dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog');
             if (strpos($version, '.') !== false) {
                 $version = str_replace('.','', $version);
             }
-            $filepath_changelog = $base_filepath . DIRECTORY_SEPARATOR . $version . '.json';
+            $filepath_changelog = DirPath::get('changelog') . $version . '.json';
 
             if (!file_exists($filepath_changelog)) {
                 e(lang('error_occured'));
@@ -235,7 +234,7 @@ class Update
             return false;
         }
 
-        $folders = glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR);
+        $folders = glob(DirPath::get('sql') . '[0-9]**', GLOB_ONLYDIR);
         $folder_version = '';
         foreach ($folders as $folder) {
             $folder_cur_version = basename($folder);
@@ -278,7 +277,7 @@ class Update
         }
 
         //Get folders superior or equal to current version
-        $folders = array_filter(glob(DIR_SQL . '[0-9]**', GLOB_ONLYDIR)
+        $folders = array_filter(glob(DirPath::get('sql') . '[0-9]**', GLOB_ONLYDIR)
             , function ($dir) use ($version) {
                 return str_replace('.', '', basename($dir)) >= $version;
             });
@@ -286,7 +285,7 @@ class Update
         $files = [];
 
         if ($version == '4.2-RC1-premium') {
-            $files[] = DIR_SQL . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
+            $files[] = DirPath::get('sql') . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
         }
 
         foreach ($folders as $folder) {
@@ -355,7 +354,7 @@ class Update
             $db_version = $installed_plugin['plugin_version'];
             $detail_verision = CBPlugin::getInstance()->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
             //get files in update folder
-            $folder = PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
+            $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
             $files = glob($folder . '*.sql');
             //filter files which are between db version and detail version
             $update_files = array_merge(
@@ -609,7 +608,7 @@ class Update
             '5.2.0'           => '1',
         ];
 
-        $files = glob(dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . '[0-9]*' . '.json');
+        $files = glob(DirPath::get('changelog') . '[0-9]*' . '.json');
         foreach ($files as $file) {
             $changelog = json_decode(file_get_contents($file), true);
             $versions[$changelog['version']] = $changelog['revision'];

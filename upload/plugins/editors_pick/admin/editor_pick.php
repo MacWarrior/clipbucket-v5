@@ -8,7 +8,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
-$breadcrumb[1] = ['title' => lang('plugin_editors_picks'), 'url' => PLUG_URL . '/editors_pick/admin/editor_pick.php'];
+$breadcrumb[1] = ['title' => lang('plugin_editors_picks'), 'url' => DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php'];
 
 //Removing
 if (isset($_GET['remove'])) {
@@ -44,5 +44,5 @@ if (isset($_POST['upload_special'])) {
 assign('videos', $ep_videos);
 
 subtitle(lang('plugin_editors_picks'));
-template_files('editor_pick.html', PLUG_DIR.'/editors_pick/templates/admin/');
+template_files('editor_pick.html', DirPath::get('plugins') . 'editors_pick/templates/admin/');
 display_it();

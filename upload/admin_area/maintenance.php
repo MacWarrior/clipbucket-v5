@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Maintenance', 'url' => ADMIN_BASEURL . '/maintenance.php'];
+$breadcrumb[1] = ['title' => 'Maintenance', 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'];
 
 /**
  * Removing Inactive Sessions
@@ -100,7 +100,7 @@ if (@$_GET['mode'] == 'remove_activity_feed') {
     while ($i < $total_users) {
         if ($users[$i]['userid']) {
             $deleted = 0;
-            $user_feed_dir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $users[$i]['userid'];
+            $user_feed_dir = DirPath::getUrl('userfeeds') . $users[$i]['userid'];
             if ($user_feed_dir) {
                 $feeds = glob($user_feed_dir . '/*.feed');
                 if ($feeds) {

@@ -8,7 +8,7 @@ $userquery->perm_check('ad_manager_access', true);
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Advertisement', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Placements', 'url' => ADMIN_BASEURL . '/ads_add_placements.php'];
+$breadcrumb[1] = ['title' => 'Manage Placements', 'url' => DirPath::getUrl('admin_area') . 'ads_add_placements.php'];
 
 //Removing Placement
 if (isset($_GET['remove'])) {

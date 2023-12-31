@@ -6,6 +6,7 @@ $(document).ready(function(){
 
 function get_ep_video(vid)
 {
+    videojs($('#ep_video_container').find('video')[0]).dispose();
     $("#ep_video_container").html(loading);
     $.ajax({
         url : '/plugins/editors_pick/front/ajax.php',

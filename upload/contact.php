@@ -1,5 +1,5 @@
 <?php
-define("THIS_PAGE", "contact");
+define('THIS_PAGE', "contact");
 
 require 'includes/config.inc.php';
 

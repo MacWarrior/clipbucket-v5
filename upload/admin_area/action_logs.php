@@ -8,7 +8,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Action Logs', 'url' => ADMIN_BASEURL . '/action_logs.php?type=login'];
+$breadcrumb[1] = ['title' => 'Action Logs', 'url' => DirPath::getUrl('admin_area') . 'action_logs.php?type=login'];
 
 //Getting User List
 if (isset($_GET['clean'])) {

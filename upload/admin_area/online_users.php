@@ -7,7 +7,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'View online users', 'url' => ADMIN_BASEURL . '/online_users.php'];
+$breadcrumb[1] = ['title' => 'View online users', 'url' => DirPath::getUrl('admin_area') . 'online_users.php'];
 
 if ($_GET['kick']) {
     if ($sess->kick(mysql_clean($_GET['kick']))) {

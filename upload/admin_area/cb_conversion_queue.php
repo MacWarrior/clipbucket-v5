@@ -10,13 +10,13 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Conversion Queue Manager', 'url' => ADMIN_BASEURL . '/cb_conversion_queue.php'];
+$breadcrumb[1] = ['title' => 'Conversion Queue Manager', 'url' => DirPath::getUrl('admin_area') . 'cb_conversion_queue.php'];
 
 if ($_GET['delete_lock']) {
     if (conv_lock_exists()) {
         for ($i = 0; $i < config('max_conversion'); $i++) {
-            if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'conv_lock' . $i . '.loc')) {
-                unlink(TEMP_DIR . DIRECTORY_SEPARATOR . 'conv_lock' . $i . '.loc');
+            if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
+                unlink(DirPath::get('temp') . 'conv_lock' . $i . '.loc');
             }
         }
         e('Conversion lock has been deleted', 'm');

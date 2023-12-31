@@ -1,5 +1,5 @@
 <?php
-global $userquery, $pages, $cbcollection, $Cbucket, $breadcrumb;
+global $userquery, $pages, $cbcollection, $breadcrumb;
 require_once '../includes/admin_config.php';
 
 $userquery->admin_login_check();
@@ -8,7 +8,7 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => ADMIN_BASEURL . '/collection_category.php'];
+$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'collection_category.php'];
 
 //Form Processing
 if (isset($_POST['add_category'])) {
@@ -33,7 +33,7 @@ if (isset($_GET['category'])) {
 
     assign('cat_details', $cat_details);
 
-    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($cat_details['category_name']), 'url' => ADMIN_BASEURL . '/collection_category.php?category=' . display_clean($_GET['category'])];
+    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($cat_details['category_name']), 'url' => DirPath::getUrl('admin_area') . 'collection_category.php?category=' . display_clean($_GET['category'])];
 }
 
 //Delete Category
@@ -66,8 +66,8 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addAdminJS(['pages/collection_category/collection_category'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+ClipBucket::getInstance()->addAdminJS(['pages/collection_category/collection_category'.$min_suffixe.'.js' => 'admin']);
 
 template_files('collection_category.html');
 display_it();

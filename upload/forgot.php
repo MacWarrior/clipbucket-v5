@@ -1,6 +1,6 @@
 <?php
-define("THIS_PAGE", "forgot");
-define("PARENT_PAGE", 'signup');
+define('THIS_PAGE', "forgot");
+define('PARENT_PAGE', 'signup');
 
 require 'includes/config.inc.php';
 

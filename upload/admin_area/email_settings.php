@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Templates', 'url' => ADMIN_BASEURL . '/email_settings.php'];
+$breadcrumb[1] = ['title' => 'Email Templates', 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'];
 
 //Updating email templates
 if (isset($_POST['update'])) {

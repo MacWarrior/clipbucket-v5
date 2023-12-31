@@ -312,7 +312,7 @@ class userquery extends CBCategory
      */
     function init()
     {
-        global $sess, $Cbucket;
+        global $sess;
 
         $this->sess_salt = $sess->get('sess_salt');
         $this->sessions = $this->get_sessions();
@@ -370,7 +370,7 @@ class userquery extends CBCategory
         define('BACKGROUND_URL', config('background_url'));
         define('BACKGROUND_COLOR', config('background_color'));
         if (isSectionEnabled('channels')) {
-            $Cbucket->search_types['channels'] = 'userquery';
+            ClipBucket::getInstance()->search_types['channels'] = 'userquery';
         }
     }
 
@@ -380,8 +380,7 @@ class userquery extends CBCategory
     function create_session_key($session, $pass): string
     {
         $newkey = $session . $pass;
-        $newkey = md5($newkey);
-        return $newkey;
+        return md5($newkey);
     }
 
     /**
@@ -581,8 +580,6 @@ class userquery extends CBCategory
      */
     function login_check($access = null, $check_only = false, $verify_logged_user = true)
     {
-        global $Cbucket;
-
         if ($verify_logged_user) {
             //First check weather userid is here or not
             if (!user_id()) {
@@ -621,7 +618,7 @@ class userquery extends CBCategory
                 if (!$check_only) {
                     e(lang('insufficient_privileges'));
                 }
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
                 return false;
             }
 
@@ -631,7 +628,7 @@ class userquery extends CBCategory
 
             if (!$check_only) {
                 e(lang('insufficient_privileges'));
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
             }
             return false;
         }
@@ -1698,10 +1695,10 @@ class userquery extends CBCategory
         $avatar = $avatar_path = '';
         if (!empty($udetails)) {
             $avatar = $udetails['avatar'];
-            $avatar_path = AVATARS_DIR . DIRECTORY_SEPARATOR . $avatar;
+            $avatar_path = DirPath::get('avatars') . $avatar;
         }
         if (!empty($avatar) && file_exists($avatar_path)) {
-            return AVATARS_URL . DIRECTORY_SEPARATOR . $avatar;
+            return DirPath::getUrl('avatars') . $avatar;
         }
 
         if (!empty($udetails['avatar_url'])) {
@@ -1767,10 +1764,10 @@ class userquery extends CBCategory
     function getUserBg($udetails, $check = false)
     {
         $file = $udetails['background'];
-        $bgfile = USER_BG_DIR . DIRECTORY_SEPARATOR . $file;
+        $bgfile = DirPath::get('backgrounds') . $file;
 
         if (file_exists($bgfile) && $file) {
-            return USER_BG_URL . '/' . $file;
+            return DirPath::getUrl('backgrounds') . $file;
         }
 
         if (!empty($udetails['background_url']) && BACKGROUND_URL == 'yes') {
@@ -2192,7 +2189,6 @@ class userquery extends CBCategory
      */
     function perm_check($access = '', $check_login = false, $control_page = true, $silent = false): bool
     {
-        global $Cbucket;
         $access_details = $this->permission;
         if (is_numeric($access)) {
             if ($access_details['level_id'] == $access) {
@@ -2204,7 +2200,7 @@ class userquery extends CBCategory
             }
 
             if ($control_page) {
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
             }
             return false;
         }
@@ -2222,7 +2218,7 @@ class userquery extends CBCategory
         }
 
         if ($control_page) {
-            $Cbucket->show_page(false);
+            ClipBucket::getInstance()->show_page(false);
         }
         return false;
     }
@@ -2502,7 +2498,7 @@ class userquery extends CBCategory
         if ($array['delete_avatar'] == 'yes') {
             $udetails = $this->get_user_details($array['userid']);
 
-            $file = AVATARS_DIR . '/' . $udetails['avatar'];
+            $file = DirPath::get('avatars') . $udetails['avatar'];
             if (file_exists($file) && $udetails['avatar'] != '') {
                 unlink($file);
             }
@@ -2521,7 +2517,7 @@ class userquery extends CBCategory
 
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
-            $file = USER_BG_DIR . DIRECTORY_SEPARATOR . $array['bg_file_name'];
+            $file = DirPath::get('backgrounds') . $array['bg_file_name'];
             if (file_exists($file) && $array['bg_file_name']) {
                 unlink($file);
             }
@@ -2617,7 +2613,7 @@ class userquery extends CBCategory
         if ($array['delete_avatar'] == 'yes') {
             $udetails = $this->get_user_details(user_id());
 
-            $file = AVATARS_DIR . DIRECTORY_SEPARATOR . $udetails['avatar_url'];
+            $file = DirPath::get('avatars') . $udetails['avatar_url'];
             if (file_exists($file) && $udetails['avatar_url'] != '') {
                 unlink($file);
             }
@@ -2645,7 +2641,7 @@ class userquery extends CBCategory
 
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
-            $file = USER_BG_DIR . DIRECTORY_SEPARATOR . $array['bg_file_name'];
+            $file = DirPath::get('backgrounds') . $array['bg_file_name'];
             if (file_exists($file) && $array['bg_file_name'] != '') {
                 unlink($file);
             }
@@ -2718,7 +2714,7 @@ class userquery extends CBCategory
 
         $ext = getext($file['name']);
         $file_name = $file['userid'] . '.' . $ext;
-        $file_path = USER_BG_DIR . DIRECTORY_SEPARATOR . $file_name;
+        $file_path = DirPath::get('backgrounds') . $file_name;
         if (move_uploaded_file($file['tmp_name'], $file_path)) {
             $imgObj = new ResizeImage();
             if (!$imgObj->ValidateImage($file_path, $ext)) {
@@ -3170,8 +3166,6 @@ class userquery extends CBCategory
      */
     function load_signup_fields($input = null): array
     {
-        global $Cbucket;
-
         $default = [];
 
         if (isset($input)) {
@@ -3290,7 +3284,7 @@ class userquery extends CBCategory
         ];
 
         if( config('enable_country') == 'yes' ){
-            $countries = $Cbucket->get_countries();
+            $countries = ClipBucket::getInstance()->get_countries();
             $selected_cont = null;
             $pick_geo_country = config('pick_geo_country');
             if ($pick_geo_country == 'yes') {

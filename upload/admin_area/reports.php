@@ -6,14 +6,14 @@ $userquery->login_check('web_config_access');
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => ADMIN_BASEURL . '/reports.php'];
+$breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => DirPath::getUrl('admin_area') . 'reports.php'];
 
-$vid_dir = get_directory_size(VIDEOS_DIR);
-$thumb_dir = get_directory_size(THUMBS_DIR, ['.gitignore', 'processing.jpg']);
-$orig_dir = get_directory_size(ORIGINAL_DIR);
-$user_thumbs = get_directory_size(USER_THUMBS_DIR);
-$user_bg = get_directory_size(USER_BG_DIR);
-$cat_thumbs = get_directory_size(CAT_THUMB_DIR);
+$vid_dir = get_directory_size(DirPath::get('videos'));
+$thumb_dir = get_directory_size(DirPath::get('thumbs'), ['.gitignore', 'processing.jpg']);
+$orig_dir = get_directory_size(DirPath::get('original'));
+$user_thumbs = get_directory_size(DirPath::get('avatars'));
+$user_bg = get_directory_size(DirPath::get('backgrounds'));
+$cat_thumbs = get_directory_size(DirPath::get('category_thumbs'));
 
 assign('vid_dir', $vid_dir);
 assign('thumb_dir', $thumb_dir);
@@ -29,6 +29,6 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/reports/reports'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/reports/reports'.$min_suffixe.'.js' => 'admin']);
 template_files('reports.html');
 display_it();

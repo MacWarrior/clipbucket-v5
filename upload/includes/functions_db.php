@@ -117,7 +117,7 @@ function check_need_plugin_upgrade($installed_plugin): bool
 {
     global $cbplugin;
     $detail = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder']);
-    $files = glob(PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . '*.sql');
+    $files = glob(DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR . '*.sql');
     foreach ($files as $file) {
         $file_cur_version = pathinfo($file)['filename'];
         if ($file_cur_version > $installed_plugin['plugin_version'] && $file_cur_version <= $detail['version']) {
@@ -140,7 +140,7 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
         $db_version = $installed_plugin['plugin_version'];
         $detail_verision = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
         //get files in update folder
-        $folder = PLUG_DIR . DIRECTORY_SEPARATOR . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
+        $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
         $files = glob($folder . '*.sql');
         //filter files which are between db version and detail version
         $update_files = array_merge(
@@ -236,7 +236,7 @@ function getRevisions(): array
         function ($dir) {
             return basename($dir);
         }
-        , array_filter(glob(DIR_SQL . '*', GLOB_ONLYDIR)
+        , array_filter(glob(DirPath::get('sql') . '*', GLOB_ONLYDIR)
         , function ($dir) {
             return basename($dir) >= '5.3.0' && basename($dir) <= '5.5.0';
         }
@@ -249,7 +249,7 @@ function getRevisions(): array
         '5.2.0'           => '1',
     ];
     foreach ($versions as $version) {
-        $changelog_url = BASEDIR . DIRECTORY_SEPARATOR . 'changelog' . DIRECTORY_SEPARATOR . str_replace('.', '', $version) . '.json';
+        $changelog_url = DirPath::get('changelog') . str_replace('.', '', $version) . '.json';
         $changelog = json_decode(file_get_contents($changelog_url, false), true);
         //after revision 168, version system should be already ready
         $revisions[$version] = min($changelog['revision'], 168);

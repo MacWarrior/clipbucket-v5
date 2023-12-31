@@ -4,16 +4,15 @@
     Description: Increase photos thumbs quality of default theme
     Author: Mohammad Shoaib & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    Version: 2.0.0
+    Version: 2.0.1
     ClipBucket Version: 5.5.0
 */
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 120;
-const CB_SERVER_THUMB_URL = PLUG_URL . '/cb_server_thumb';
 
 $__resize_thumbs = true;
 
-$cache_dir = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'cb_server_thumb' . DIRECTORY_SEPARATOR;
+$cache_dir = DirPath::get('cache') . 'cb_server_thumb' . DIRECTORY_SEPARATOR;
 if (!is_writable($cache_dir)) {
     $__resize_thumbs = false;
 
@@ -36,7 +35,7 @@ function get_server_img($params)
     $w = DEFAULT_WIDTH;
     $h = DEFAULT_HEIGHT;
 
-    $timthumb_path = CB_SERVER_THUMB_URL . '/timthumb.php?src=';
+    $timthumb_path = DirPath::getUrl('plugins') . 'cb_server_thumb/timthumb.php?src=';
 
     $details = $params['details'];
     $output = $params['output'];
@@ -44,17 +43,17 @@ function get_server_img($params)
 
     //on view photo page image with original size needed so this is simple patch
     if (THIS_PAGE == 'view_item' && isset($details['photo_key']) && isset($_GET['item']) && $_GET['item'] == $details['photo_key']) {
-        $url = PHOTOS_URL;
-        $path = PHOTOS_DIR;
+        $url = DirPath::getUrl('photos');
+        $path = DirPath::get('photos');
 
         $image_name = $details['filename'] . '.' . $details['ext'];
 
         if (isset($details['file_directory']) && $details['file_directory'] != '') {
-            $photo_link = $url . '/' . $details['file_directory'] . '/' . $image_name;
-            $photo_path = $path . DIRECTORY_SEPARATOR . $details['file_directory'] . DIRECTORY_SEPARATOR . $image_name;
+            $photo_link = $url . $details['file_directory'] . '/' . $image_name;
+            $photo_path = $path . $details['file_directory'] . DIRECTORY_SEPARATOR . $image_name;
         } else {
-            $photo_link = $url . '/' . $image_name;
-            $photo_path = $path . DIRECTORY_SEPARATOR . $image_name;
+            $photo_link = $url . $image_name;
+            $photo_path = $path . $image_name;
         }
 
         if (file_exists($photo_path)) {
@@ -109,7 +108,7 @@ function get_server_img($params)
 
     $params['photo'] = $photo;
 
-    $path = PHOTOS_DIR;
+    $path = DirPath::get('photos');
     $directory = get_photo_date_folder($photo);
     $with_original = $params['with_orig'];
 
