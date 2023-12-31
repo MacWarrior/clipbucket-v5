@@ -1,10 +1,12 @@
 <?php
-global $userquery, $myquery;
+define('THIS_PAGE', 'notification_settings');
+
+global $myquery;
 
 require_once '../includes/admin_config.php';
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 
 /* Generating breadcrumb */
 global $breadcrumb;

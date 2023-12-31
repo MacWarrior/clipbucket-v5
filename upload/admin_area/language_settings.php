@@ -1,11 +1,11 @@
 <?php
-require_once '../includes/admin_config.php';
 define('THIS_PAGE', 'language_setting');
-global $userquery, $pages, $Cbucket;
 
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+require_once '../includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -51,7 +51,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     $total_pages = $total_phrases / $limit;
     $total_pages = round($total_pages + 0.49, 0);
     //Pagination
-    $pages->paginate($total_pages, $current_page);
+    pages::getInstance()->paginate($total_pages, $current_page);
 }
 
 if(in_dev()){
@@ -61,8 +61,8 @@ if(in_dev()){
 }
 ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
-assign('client_id', $Cbucket->configs['clientid']);
-assign('secret_Id', $Cbucket->configs['secretId']);
+assign('client_id', Clipbucket::getInstance()->configs['clientid']);
+assign('secret_Id', Clipbucket::getInstance()->configs['secretId']);
 subtitle('Language Settings');
 template_files('language_settings.html');
 display_it();

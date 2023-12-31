@@ -1,10 +1,12 @@
 <?php
+define('THIS_PAGE', 'manage_players');
 
 require_once '../includes/admin_config.php';
-global $userquery, $pages, $Upload, $myquery, $cbplayer;
-$userquery->admin_login_check();
-$pages->page_redir();
-$userquery->login_check('admin_access');
+
+global $Upload, $myquery, $cbplayer;
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
+userquery::getInstance()->login_check('admin_access');
 
 if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_settings' ){
     redirect_to(BASEURL . DirPath::getUrl('admin_area'));

@@ -1,10 +1,12 @@
 <?php
+define('THIS_PAGE', 'comments');
+
 require_once '../includes/admin_config.php';
 
-global $userquery, $pages, $myquery;
+global $myquery;
 
-$userquery->admin_login_check();
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -43,7 +45,7 @@ $comment_cond['count'] = true;
 unset($comment_cond['limit']);
 $total_rows =  Comments::getAll($comment_cond);
 $total_pages = count_pages($total_rows, RESULTS);
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 subtitle(lang('comments'));
 template_files('comments.html');

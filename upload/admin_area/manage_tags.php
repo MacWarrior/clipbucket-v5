@@ -1,14 +1,15 @@
 <?php
+define('THIS_PAGE', 'manage_tags');
 
 require_once '../includes/admin_config.php';
 require_once('../includes/classes/admin_tool.class.php');
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
+
 /* Generating breadcrumb */
-global $breadcrumb, $pages, $userquery, $Cbucket;
-
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
-
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
 $breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
@@ -38,7 +39,7 @@ $count = Tags::countTags($cond);
 $total_pages = $count / $limit;
 $total_pages = round($total_pages + 0.49, 0);
 //Pagination
-$pages->paginate($total_pages, $current_page);
+pages::getInstance()->paginate($total_pages, $current_page);
 
 assign('tags', $tags);
 assign('tag_types', $tag_types);
