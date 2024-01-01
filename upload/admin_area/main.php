@@ -90,6 +90,7 @@ if (isset($_POST['update'])) {
         , 'display_channel_comments'
         , 'enable_collection_comments'
         , 'display_collection_comments'
+        , 'enable_sitemap'
     ];
 
     $config_booleans_to_refactor = [
@@ -292,6 +293,7 @@ if (isset($_POST['update'])) {
         'enable_global_age_restriction',
         'enable_collection_comments',
         'display_collection_comments',
+        'enable_sitemap',
 
         'thumb_width',
         'thumb_height',
