@@ -132,10 +132,10 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
+									<label class="nowrap" for="enable_sitemap" title="{lang code='option_enable_sitemap'}">{lang code='option_enable_sitemap'}</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
-									<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<input value="yes" id="enable_sitemap" {if $row.enable_sitemap=='yes'}checked{/if} name="enable_sitemap" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -191,6 +191,16 @@
 								<div class="col-md-12">
 									<label class="nowrap" for="closed_msg" title="Closed message">Closed message</label>
 									<textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{$row.closed_msg}</textarea>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>

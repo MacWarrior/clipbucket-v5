@@ -1,14 +1,17 @@
 <?php
-global $userquery, $pages;
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('admin_access');
-$pages->page_redir();
+define('THIS_PAGE', 'user_category');
+
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('admin_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'user_category.php'];
+
 
 //Making Category as Default
 if (isset($_GET['make_default'])) {

@@ -1,11 +1,13 @@
 <?php
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'email_settings');
 
-global $userquery, $pages, $cbemail, $eh, $Cbucket, $myquery;
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$pages->page_redir();
+global $cbemail, $eh, $Cbucket, $myquery;
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;

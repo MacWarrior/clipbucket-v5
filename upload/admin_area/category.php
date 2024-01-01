@@ -1,9 +1,12 @@
 <?php
-global $userquery, $pages, $cbvid;
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
-$pages->page_redir();
+define('THIS_PAGE', 'category');
+
+global $cbvid;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;

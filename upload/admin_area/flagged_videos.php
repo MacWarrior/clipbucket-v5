@@ -1,10 +1,12 @@
 <?php
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'flagged_videos');
 
-global $userquery, $cbvideo, $eh, $cbvid, $pages;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+global $cbvideo, $eh, $cbvid;
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -81,7 +83,7 @@ switch ($mode) {
         $total_pages = count_pages($total_rows, 5);
 
         //Pagination
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
         break;
 
     case 'view_flags':

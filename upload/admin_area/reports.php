@@ -1,10 +1,13 @@
 <?php
-global $userquery, $Cbucket, $breadcrumb;
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
+define('THIS_PAGE', 'reports');
+
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
 
 /* Generating breadcrumb */
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => DirPath::getUrl('admin_area') . 'reports.php'];
 
@@ -22,7 +25,6 @@ assign('user_thumbs', $user_thumbs);
 assign('user_bg', $user_bg);
 assign('cat_thumbs', $cat_thumbs);
 assign('db_size', formatfilesize(get_db_size()));
-
 
 if(in_dev()){
     $min_suffixe = '';

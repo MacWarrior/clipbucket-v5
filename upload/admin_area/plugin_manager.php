@@ -1,10 +1,12 @@
 <?php
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'plugin_manager');
 
-global $userquery, $pages, $cbplugin;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$pages->page_redir();
+global $cbplugin;
+
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;

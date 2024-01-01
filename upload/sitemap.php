@@ -1,12 +1,18 @@
 <?php
+define('THIS_PAGE', 'sitemap');
+
 require 'includes/config.inc.php';
 header("Content-Type: text/xml charset=utf-8");
 
-$limit = 100;
-$videos = get_videos(['limit' => $limit, 'active' => 'yes', 'order' => 'date_added DESC']);
+$params = ['limit' => 100];
+$videos = Video::getInstance()->getAll($params);
+
+if( config('enable_sitemap') != 'yes' ){
+    header('HTTP/1.0 403 Forbidden');
+    die();
+}
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-    <!-- by fjulio ( tangi @ clipbucket dev. ) -->
     <?php
     foreach ($videos as $video) {
         ?>

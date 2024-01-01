@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'email_tester');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('web_config_access');
 pages::getInstance()->page_redir();

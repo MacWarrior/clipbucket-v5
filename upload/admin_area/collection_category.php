@@ -1,10 +1,12 @@
 <?php
-global $userquery, $pages, $cbcollection, $breadcrumb;
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'collection_category');
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
-$pages->page_redir();
+global $cbcollection, $breadcrumb;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];

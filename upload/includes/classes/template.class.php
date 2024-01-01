@@ -157,7 +157,7 @@ class CBTemplate
         foreach ($exts as $ext) {
             $file = DirPath::get('root') . $path . $ext;
             if (file_exists($file)) {
-                $thumb_path = DirPath::getUrl('root') . $path . $ext;
+                $thumb_path = $path . $ext;
                 break;
             }
         }

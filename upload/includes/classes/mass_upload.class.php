@@ -15,7 +15,10 @@ class mass_upload extends Upload
     {
         if( is_null($dir) ){
             $dir = DirPath::get('mass_uploads');
+        } else if (substr($dir, -1) !== DIRECTORY_SEPARATOR) {
+            $dir .= DIRECTORY_SEPARATOR;
         }
+
         require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
         $cache_key = 'vid_info:';
         $allowed_exts = get_vid_extensions();
@@ -27,13 +30,13 @@ class mass_upload extends Upload
                 continue;
             }
 
-            $filepath = $dir . $filename . DIRECTORY_SEPARATOR;
+            $filepath = $dir . $filename;
 
             if( !is_readable($filepath) ){
                 continue;
             }
 
-            if (is_dir($filepath)) {
+            if (is_dir($filepath . DIRECTORY_SEPARATOR)) {
                 $new_files = $this->get_video_files_list($listonly, $filepath);
 
                 if ($new_files) {
