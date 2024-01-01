@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"321",
+  "revision":"322",
   "status":"dev",
   "detail":[
     {
@@ -98,6 +98,7 @@
         ,"Mass upload should not list unreadable files"
         ,"Add options to hide comments"
         ,"Move development mode to website configurations"
+        ,"Add option to disable sitemap"
       ]
     },
     {
@@ -257,6 +258,7 @@
         ,"Fix videos and photos count"
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
+        ,"Fix sitemap & phpinfo privacy"
       ]
     }
   ,{

@@ -8,8 +8,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'template_dir', 'cb_28'),
 	(NULL, 'player_file', 'cb_video_js.php'),
 	(NULL, 'closed', '0'),
-	(NULL, 'closed_msg', 'We Are Updating Our Website, Please Visit us after few hours.'),
-	(NULL, 'description', 'Clip Bucket is an ultimate Video Sharing script'),
+	(NULL, 'closed_msg', 'We are updating our website, please visit in a few minutes.'),
+	(NULL, 'description', 'ClipBucketV5 is a photo & video sharing script, by Oxygenz'),
 	(NULL, 'keywords', 'clip bucket video sharing website script'),
 	(NULL, 'ffmpegpath', ''),
 	(NULL, 'srate', '22050'),
@@ -248,7 +248,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'display_photo_comments', 'yes'),
     (NULL, 'display_channel_comments', 'yes'),
     (NULL, 'enable_collection_comments', 'yes'),
-    (NULL, 'display_collection_comments', 'yes');
+    (NULL, 'display_collection_comments', 'yes'),
+    (NULL, 'enable_sitemap', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

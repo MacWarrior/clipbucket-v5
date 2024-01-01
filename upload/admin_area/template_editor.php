@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'template_editor');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->perm_check('manage_template_access', true);

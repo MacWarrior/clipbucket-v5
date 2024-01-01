@@ -1,32 +1,4 @@
 <?php
-
-
-$request = $_REQUEST;
-$mode = $request['mode'];
-
-switch ($mode) {
-    case "registerToken":
-        {
-            include('../includes/config.inc.php');
-            include('global.php');
-            global $db;
-            $token = $request['token'];
-            $response = $db->insert(tbl('token'), ['token'], [$token]);
-            if ($response) {
-                echo json_encode(['success' => 'yes', 'msg' => 'token saved successfully']);
-            } else {
-                echo json_encode(['err' => lang(error('single'))]);
-            }
-        }
-        break;
-    default:
-    {
-
-
-    }
-
-}
-
 function send_video_notification($videoId)
 {
     global $myquery, $db;
@@ -38,8 +10,6 @@ function send_video_notification($videoId)
     $title = $vdetails['title'];
     // Put your private key's passphrase here:
     $passphrase = 'janjuajanjua';
-
-    ////////////////////////////////////////////////////////////////////////////////
 
     $ctx = stream_context_create();
     stream_context_set_option($ctx, 'ssl', 'local_cert', 'E:\wamp\www\clipbucket_bug1\api\apns-dev.pem');
@@ -55,7 +25,6 @@ function send_video_notification($videoId)
     }
 
     echo 'Connected to APNS' . PHP_EOL;
-
 
     $token_result = $db->select(tbl('token'), 'token');
     if ($token_result) {
@@ -86,6 +55,5 @@ function send_video_notification($videoId)
 
     // Close the connection to the server
     fclose($fp);
-
 }
 

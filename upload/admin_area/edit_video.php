@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'edit_video');
 global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');

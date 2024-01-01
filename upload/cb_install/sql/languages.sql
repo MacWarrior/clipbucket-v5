@@ -1026,4 +1026,5 @@ VALUES
        ('dev'),
        ('discord_error_log'),
        ('discord_webhook_url'),
-       ('discord_webhook_url_invalid');
+       ('discord_webhook_url_invalid'),
+       ('option_enable_sitemap');

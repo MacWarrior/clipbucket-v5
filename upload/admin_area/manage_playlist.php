@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'manage_playlists');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $cbvid, $eh, $Cbucket;
 

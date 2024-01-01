@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'view_conversion_log');
 global $userquery, $pages, $myquery, $Cbucket;
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();
