@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"322",
+  "revision":"323",
   "status":"dev",
   "detail":[
     {
@@ -292,6 +292,7 @@
         ,"Fix missing component in CentOS 7 script"
         ,"Update dependancies check"
         ,"Fix admin creation"
+        ,"Fix PHP error when PHP CLI is missing"
       ]
     }
   ]
