@@ -128,7 +128,16 @@ function check_module($type): array
 
         case 'ffmpeg':
             $ffmpeg_path = exec('which ffmpeg');
+            if( empty($ffmpeg_path) ){
+                $return['err'] = 'Unable to find FFMPEG';
+                break;
+            }
+
             $ffmpeg_version = shell_output("$ffmpeg_path -version | head -n1");
+            if( empty($ffmpeg_version) ){
+                $return['err'] = 'FFMpeg is not correctly configured';
+                break;
+            }
 
             $version = false;
             preg_match('/SVN-r([0-9]+)/i', $ffmpeg_version, $matches);
@@ -141,7 +150,7 @@ function check_module($type): array
             }
 
             if (!$version) {
-                $return['err'] = 'Unable to find FFMPEG';
+                $return['err'] = 'FFMpeg is not correctly configured';
             } else {
                 $return['msg'] = sprintf('Found FFMPEG %s : %s', $version, $ffmpeg_path);
             }
@@ -149,7 +158,16 @@ function check_module($type): array
 
         case 'ffprobe':
             $ffprobe_path = exec('which ffprobe');
+            if( empty($ffprobe_path) ){
+                $return['err'] = 'Unable to find FFPROBE';
+                break;
+            }
+
             $ffprobe_version = shell_output("$ffprobe_path -version | head -n1");
+            if( empty($ffprobe_version) ){
+                $return['err'] = 'FFPROBE is not correctly configured';
+                break;
+            }
 
             $version = false;
             preg_match('/SVN-r([0-9]+)/i', $ffprobe_version, $matches);
@@ -170,7 +188,16 @@ function check_module($type): array
 
         case 'media_info':
             $mediainfo_path = exec('which mediainfo');
+            if( empty($ffprobe_path) ){
+                $return['err'] = 'Unable to find Media Info';
+                break;
+            }
+
             $mediainfo_result = shell_output("$mediainfo_path --version");
+            if( empty($mediainfo_result) ){
+                $return['err'] = 'Media Info is not correctly configured';
+                break;
+            }
 
             $media_info_version = explode('v', $mediainfo_result);
             $version = false;
