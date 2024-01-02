@@ -878,14 +878,22 @@ class userquery extends CBCategory
 
         $is_email = strpos($id, '@') !== false;
         $select_field = (!$is_email && !is_numeric($id)) ? 'username' : (!is_numeric($id) ? 'email' : 'userid');
+        $version = Update::getInstance()->getDBVersion();
+
         if (!$email) {
-            $fields = table_fields(['users' => ['*'], 'users_categories'=>['id_category']]);
+            $params = ['users' => ['*']];
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
+                $params['users_categories'] = ['id_category'];
+            }
+            $fields = table_fields($params);
         } else {
             $fields = table_fields(['users' => ['email']]);
         }
 
-        $query = "SELECT $fields FROM " . cb_sql_table('users');
-        $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+        $query = 'SELECT '.$fields.' FROM ' . cb_sql_table('users');
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
+            $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+        }
         $query .= " WHERE users.$select_field = '$id'";
 
         $result = select($query, 60);

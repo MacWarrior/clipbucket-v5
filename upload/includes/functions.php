@@ -563,6 +563,7 @@ function isValidtag($tag): bool
  * @param array $params
  *
  * @return array|bool|string : { array } { $cats } { array of categories }
+ * @throws Exception
  * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
  */
 function getCategoryList($params = [])
@@ -578,10 +579,13 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            $params['category_type'] = Category::getInstance()->getIdsCategoriesType('video');
-            $cats = Category::getInstance()->getAll($params);
-            foreach ($cats as &$cat) {
-                $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+            $version = Update::getInstance()->getDBVersion();
+            if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+                $params['category_type'] = Category::getInstance()->getIdsCategoriesType('video');
+                $cats = Category::getInstance()->getAll($params);
+                foreach ($cats as &$cat) {
+                    $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+                }
             }
             break;
 

@@ -44,6 +44,14 @@ ClipBucket::getInstance()->addCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
-assign('default_category_id', Category::getInstance()->getDefaultByType('video')['category_id']);
+
+$version = Update::getInstance()->getDBVersion();
+if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+    $default_category_id = Category::getInstance()->getDefaultByType('video')['category_id'];
+} else {
+    $default_category_id = 0;
+}
+assign('default_category_id', $default_category_id);
+
 template_files('upload.html');
 display_it();

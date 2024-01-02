@@ -58,7 +58,7 @@ class Upload
      */
     function submit_upload($array = null)
     {
-        global $eh, $db, $userquery;
+        global $eh, $db;
 
         if (!$array) {
             $array = $_POST;
@@ -74,7 +74,7 @@ class Upload
         $userid = user_id();
         if (!$userid) {
             if (has_access('allow_video_upload', true, false)) {
-                $userid = $userquery->get_anonymous_user();
+                $userid = userquery::getInstance()->get_anonymous_user();
             } else {
                 e(lang('you_not_logged_in'));
                 return false;
@@ -128,8 +128,6 @@ class Upload
             if( !empty($field['clean_func']) && !apply_func($field['clean_func'], $val) ){
                 $val = apply_func($field['clean_func'], $val);
             }
-
-
 
             if (!empty($field['db_field'])) {
                 $query_val[] = $val;
@@ -210,7 +208,11 @@ class Upload
             $insert_id = $db->insert_id();
 
             \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
-            Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
+            $version = Update::getInstance()->getDBVersion();
+            if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+                Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
+            }
+
             //logging Upload
             $log_array = [
                 'success'       => 'yes',
@@ -219,8 +221,6 @@ class Upload
                 'details'       => $array['title']
             ];
             insert_log('Uploaded a video', $log_array);
-
-
 
             $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
@@ -259,6 +259,9 @@ class Upload
         return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
     }
 
+    /**
+     * @throws Exception
+     */
     function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $thumbs_ver = false)
     {
         global $imgObj;
@@ -656,7 +659,6 @@ class Upload
         ];
     }
 
-
     /**
      * Function used to add files in conversion queue
      *
@@ -784,7 +786,6 @@ class Upload
 
         return $new_array;
     }
-
 
     /**
      * Function used to load custom form fields

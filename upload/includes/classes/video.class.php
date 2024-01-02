@@ -253,13 +253,6 @@ class Video
         if( $param_featured ){
             $conditions[] = 'video.featured = \'yes\'';
         }
-        if( $param_category ){
-            if( !is_array($param_category) ){
-                $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
-            } else {
-                $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
-            }
-        }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
@@ -300,6 +293,19 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
         }
 
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
+
+            if( $param_category ){
+                if( !is_array($param_category) ){
+                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
+        }
+
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND video.videoid = ' . $collection_items_table . '.object_id';
@@ -326,10 +332,7 @@ class Video
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->getTableName()) . '
-                LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid
-                LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video
-                LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id 
-                '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))

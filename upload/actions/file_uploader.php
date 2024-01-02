@@ -45,9 +45,16 @@ switch ($mode) {
         $vidDetails = [
             'title'       => $title,
             'description' => $desc,
-            'tags'        => $tags,
-            'category'    => [Category::getInstance()->getDefaultByType('video')['category_id']]
+            'tags'        => $tags
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+            $category = [Category::getInstance()->getDefaultByType('video')['category_id']];
+        } else {
+            $category = [];
+        }
+        $vidDetails['category'] = $category;
 
         assign('objId', $_POST['objId']);
         assign('input', $vidDetails);
@@ -150,12 +157,20 @@ switch ($mode) {
         if (strlen($filename_without_ext) > config('max_video_title')) {
             $filename_without_ext = substr($filename_without_ext, 0, config('max_video_title'));
         }
+
+        $version = Update::getInstance()->getDBVersion();
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+            $category = [Category::getInstance()->getDefaultByType('video')['category_id']];
+        } else {
+            $category = [];
+        }
+
         $vidDetails = [
             'title'             => $filename_without_ext
             , 'file_name'       => $file_name
             , 'file_directory'  => $file_directory
             , 'description'     => $filename_without_ext
-            , 'category'        => [Category::getInstance()->getDefaultByType('video')['category_id']]
+            , 'category'        => $category
             , 'userid'          => user_id()
             , 'allow_comments'  => 'yes'
             , 'comment_voting'  => 'yes'

@@ -53,9 +53,12 @@ class Category
         return self::$category;
     }
 
-    public static function getAllCategoryTypes()
+    /**
+     * @throws Exception
+     */
+    public static function getAllCategoryTypes(): array
     {
-        return Clipbucket_db::getInstance()->_select('Select * from ' . cb_sql_table('categories_type'));
+        return Clipbucket_db::getInstance()->_select('SELECT * FROM ' . cb_sql_table('categories_type'));
     }
 
     private function getAllFields(): array
@@ -239,6 +242,9 @@ class Category
         return Clipbucket_db::getInstance()->insert_id();
     }
 
+    /**
+     * @throws Exception
+     */
     public function delete($category_id)
     {
         $cat_details = $this->getById($category_id);
