@@ -574,6 +574,10 @@ class CBPhotos
                         'title' => 'Recreate Thumbs'
                         , 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'
                     ]
+                    , [
+                        'title' => lang('manage_categories')
+                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
+                    ]
                 ]
             ];
             ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);

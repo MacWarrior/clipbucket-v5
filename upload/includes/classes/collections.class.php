@@ -1028,10 +1028,9 @@ class Collections extends CBCategory
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
         if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
+            $cat_array = $default['category'];
         } else {
-            preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-            $cat_array = [$m[1]];
+            $cat_array = explode(',', $default['category']);
         }
 
         $data = [
@@ -1071,10 +1070,9 @@ class Collections extends CBCategory
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
-                'value'             => ['category', $cat_array],
-                'db_field'          => 'category',
+                'value'             => $cat_array,
                 'required'          => 'yes',
-                'validate_function' => 'validate_collection_category',
+                'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('collect_cat_er'),
                 'display_function'  => 'convert_to_categories',
                 'category_type'     => 'collections'
@@ -1321,14 +1319,6 @@ class Collections extends CBCategory
                     if (!config('enable_sub_collection')) {
                         continue;
                     }
-                }
-
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
                 }
 
                 if ($field['use_func_val']) {

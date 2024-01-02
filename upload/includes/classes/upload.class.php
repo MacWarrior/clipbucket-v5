@@ -416,7 +416,7 @@ class Upload
                 'value'             => $cat_array,
                 'hint_1'            => sprintf(lang('vdo_cat_msg'), ALLOWED_VDO_CATS),
                 'required'          => 'yes',
-                'validate_function' => 'validate_vid_category',
+                'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('vdo_cat_err3'),
                 'display_function'  => 'convert_to_categories'
             ],

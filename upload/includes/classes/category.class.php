@@ -296,6 +296,39 @@ class Category
         ]);
     }
 
+    public function validate($array)
+    {
+        if ($array == null) {
+            $array = $_POST['category'];
+        }
+
+        if (!is_array($array)) {
+            return false;
+        }
+
+        if (count($array) == 0) {
+            return false;
+        }
+
+        $new_array = [];
+        foreach ($array as $arr) {
+            if (!empty(Category::getInstance()->getById($arr))) {
+                $new_array[] = $arr;
+            }
+        }
+
+        if (count($new_array) == 0) {
+            e(lang('vdo_cat_err3'));
+            return false;
+        }
+
+        if (count($new_array) > ALLOWED_VDO_CATS) {
+            e(sprintf(lang('vdo_cat_err2'), ALLOWED_VDO_CATS));
+            return false;
+        }
+
+        return true;    }
+
     /**
      * @param string $type
      * @param $category_id
