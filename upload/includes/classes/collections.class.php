@@ -446,7 +446,7 @@ class Collections extends CBCategory
                         ]
                         , [
                             'title' => lang('manage_categories')
-                            , 'url' => DirPath::getUrl('admin_area') . 'collection_category.php'
+                            , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
                             'title' => lang('flagged_collections')

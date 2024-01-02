@@ -569,10 +569,9 @@ function isValidtag($tag): bool
 function getCategoryList($params = [])
 {
     $cats = '';
-    $type = $params['type'];
     $params['echo'] = $params['echo'] ?: false;
     $version = Update::getInstance()->getDBVersion();
-    switch ($type) {
+    switch ($params['type']) {
         default:
             cb_call_functions('categoryListing', $params);
             break;
@@ -580,31 +579,33 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
-                $params['category_type'] = Category::getInstance()->getIdsCategoriesType('video');
-                $params['parent_only'] = true;
-                $cats = Category::getInstance()->getAll($params);
-                foreach ($cats as &$cat) {
-                    $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
-                }
-            }
+            $type='video';
+            $has_child = true;
             break;
 
         case 'users':
         case 'user':
         case 'u':
         case 'channels':
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
-                $params['category_type'] = Category::getInstance()->getIdsCategoriesType('user');
-                $cats = Category::getInstance()->getAll($params);
-            }
+            $type='user';
+            $has_child = false;
             break;
         case 'collection':
         case 'collections':
         case 'cl':
-            global $cbcollection;
-            $cats = $cbcollection->cbCategories($params);
+            $type='collection';
+            $has_child = true;
             break;
+    }
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
+        $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
+        $params['parent_only'] = true;
+        $cats = Category::getInstance()->getAll($params);
+        if ($has_child) {
+            foreach ($cats as &$cat) {
+                $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+            }
+        }
     }
     if (!empty($params['with_all'])) {
         $cats[] = ['category_id'   => 'all', 'category_name' => lang('cat_all')];

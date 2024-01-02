@@ -200,12 +200,7 @@ class Category
             return false;
         }
         $param_primary_key = $param[$this->primary_key] ?? false;
-        $sets = [];
-        foreach ($this->fields as $field) {
-            if (isset($param[$field]) && $field != $this->primary_key) {
-                $sets[] = $field . ' = \'' . mysql_clean($param[$field]) . '\'';
-            }
-        }
+        $sets = $this->setSQLValues($param);
         if (empty($sets)) {
             e(lang('no_vals_provided'));
             return false;
@@ -226,11 +221,7 @@ class Category
      */
     public function insert(array $param = [])
     {
-        foreach ($this->fields as $field) {
-            if (isset($param[$field]) && $field != $this->primary_key) {
-                $sets[] = $field . ' = \'' . mysql_clean($param[$field]).'\'';
-            }
-        }
+        $sets = $this->setSQLValues($param);
         if (empty($sets)) {
             e(lang('no_vals_provided'));
             return false;
@@ -418,6 +409,25 @@ class Category
             ]);
         }
         return true;
+    }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    private function setSQLValues(array $param): array
+    {
+        $sets = [];
+        foreach ($this->fields as $field) {
+            if (isset($param[$field]) && $field != $this->primary_key) {
+                if ($field == 'parent_id' && (int)$param[$field] === 0) {
+                    $sets[] = $field . ' = NULL';
+                } else {
+                    $sets[] = $field . ' = \'' . mysql_clean($param[$field]) . '\'';
+                }
+            }
+        }
+        return $sets;
     }
 
 

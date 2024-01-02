@@ -8,14 +8,15 @@ userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
 pages::getInstance()->page_redir();
 
+$type = $_GET['type'] ?? 'video';
+assign('type', $type);
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'category.php'];
+$breadcrumb[0] = ['title' => lang($type), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'category.php?type=' . $type];
 
 //Making Category as Default
 if (isset($_GET['make_default'])) {
-    $cid = mysql_clean($_GET['make_default']);
     Category::getInstance()->makeDefault('video', $_GET['make_default']);
 }
 if (!empty($_POST)) {
@@ -23,7 +24,7 @@ if (!empty($_POST)) {
     if (empty($_POST['category_name'])) {
         e(lang('add_cat_no_name_err'));
     } elseif (!empty(Category::getInstance()->getAll([
-            'category_type' => Category::getInstance()->getIdsCategoriesType('video'),
+            'category_type' => Category::getInstance()->getIdsCategoriesType($type),
             'condition'     => 'category_name like \'%' . mysql_clean($_POST['category_name']) . '%\'',
             'first_only'    => true
         ])) && ($_POST['cur_name'] != $_POST['category_name']) ) {
@@ -35,7 +36,7 @@ if (!empty($_POST)) {
         }
     } else {
         $params = $_POST;
-        $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType('video');
+        $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $id_category = Category::getInstance()->insert($params);
     }
 
@@ -43,9 +44,10 @@ if (!empty($_POST)) {
         Category::getInstance()->add_category_thumb($id_category, $_FILES['category_thumb']);
     }
 }
+$id_category = $id_category ?? ($_GET['category'] ?? 0);
 $cat_details = Category::getInstance()->getAll([
-    'category_type' => Category::getInstance()->getIdsCategoriesType('video'),
-    'category_id'   => $id_category ?? ($_GET['category'] ?? 0),
+    'category_type' => Category::getInstance()->getIdsCategoriesType($type),
+    'category_id'   => $id_category,
     'first_only'    => true
 ]);
 assign('cat_details', $cat_details);
@@ -56,7 +58,7 @@ if (!empty($_GET['category']) && is_numeric($_GET['category'])) {
     } else {
         $breadcrumb[2] = [
             'title' => 'Editing : ' . display_clean($cat_details['category_name']),
-            'url'   => DirPath::getUrl('admin_area') . '/category.php?category=' . display_clean($id_category)
+            'url'   => DirPath::getUrl('admin_area') . '/category.php?type=' . $type.'&category=' . display_clean($id_category)
         ];
     }
 }
@@ -78,16 +80,16 @@ if (isset($_POST['update_order'])) {
 }
 
 $cats = Category::getInstance()->getAll([
-    'category_type' => Category::getInstance()->getIdsCategoriesType('video')
+    'category_type' => Category::getInstance()->getIdsCategoriesType($type)
 ]);
 
 //Assign Category Values
 assign('category', $cats);
 assign('total', $cats = Category::getInstance()->getAll([
-    'category_type' => Category::getInstance()->getIdsCategoriesType('video'),
+    'category_type' => Category::getInstance()->getIdsCategoriesType($type),
     'count'
 ]));
-subtitle('Video Category Manager');
+subtitle(lang($type) . ' Category Manager');
 Assign('msg', @$msg);
 template_files('category.html');
 display_it();

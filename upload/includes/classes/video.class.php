@@ -891,9 +891,7 @@ class CBvideo extends CBCategory
                         $query_field[] = $field['db_field'];
                     }
 
-                    if (!$field['clean_func'] || (!apply_func($field['clean_func'], $val) && !is_array($field['clean_func']))) {
-                        $val = ($val);
-                    } else {
+                    if ($field['clean_func'] && (apply_func($field['clean_func'], $val) || is_array($field['clean_func']))) {
                         $val = apply_func($field['clean_func'], mysql_clean('|no_mc|' . $val));
                     }
 
