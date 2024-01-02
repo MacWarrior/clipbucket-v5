@@ -571,6 +571,7 @@ function getCategoryList($params = [])
     $cats = '';
     $type = $params['type'];
     $params['echo'] = $params['echo'] ?: false;
+    $version = Update::getInstance()->getDBVersion();
     switch ($type) {
         default:
             cb_call_functions('categoryListing', $params);
@@ -579,9 +580,9 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            $version = Update::getInstance()->getDBVersion();
-            if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
                 $params['category_type'] = Category::getInstance()->getIdsCategoriesType('video');
+                $params['parent_only'] = true;
                 $cats = Category::getInstance()->getAll($params);
                 foreach ($cats as &$cat) {
                     $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
@@ -593,8 +594,10 @@ function getCategoryList($params = [])
         case 'user':
         case 'u':
         case 'channels':
-            $params['category_type']= Category::getInstance()->getIdsCategoriesType('user');
-            $cats = Category::getInstance()->getAll($params);
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
+                $params['category_type'] = Category::getInstance()->getIdsCategoriesType('user');
+                $cats = Category::getInstance()->getAll($params);
+            }
             break;
         case 'collection':
         case 'collections':
@@ -604,7 +607,7 @@ function getCategoryList($params = [])
             break;
     }
     if (!empty($params['with_all'])) {
-        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+        $cats[] = ['category_id'   => 'all', 'category_name' => lang('cat_all')];
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);

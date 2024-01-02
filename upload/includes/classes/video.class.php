@@ -297,6 +297,11 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
 
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $group[] = 'video.videoid';
+            }
+
             if( $param_category ){
                 if( !is_array($param_category) ){
                     $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
@@ -960,7 +965,7 @@ class CBvideo extends CBCategory
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
                 Tags::saveTags($array['tags'], 'video', $vid);
-                Category::getInstance()->saveLinks('video', $vid, [$array['category']]);
+                Category::getInstance()->saveLinks('video', $vid, $array['category']);
 
                 cb_do_action('update_video', [
                     'object_id' => $vid,
