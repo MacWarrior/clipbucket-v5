@@ -27,6 +27,7 @@
                 </div>
             </h3>
 
+
             <div class="pull-right marginBottomLarge">
                 <span class="btn btn-app btn-sm btn-pink no-hover">
                     <span class="line-height-1"> {if $u.usr_status=='Ok'}<span class="glyphicon glyphicon-ok"></span>
@@ -132,7 +133,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {if config('enable_user_category')=='yes'}
+                                        {if config('enable_user_category')=='yes' && $show_categ}
                                         {$thecats = getCategoryList(['type'=>'user'])}
                                         <tr>
                                             <td class="first"> <label for="category">User Category</label></td>
