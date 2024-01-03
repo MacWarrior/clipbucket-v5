@@ -579,32 +579,30 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            $type='video';
-            $has_child = true;
+            $type = 'video';
             break;
 
         case 'users':
         case 'user':
         case 'u':
         case 'channels':
-            $type='user';
-            $has_child = false;
+            $type = 'user';
             break;
         case 'collection':
         case 'collections':
         case 'cl':
-            $type='collection';
-            $has_child = true;
+            $type = 'collection';
+            break;
+        case 'photo':
+            $type = 'photo';
             break;
     }
     if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
         $cats = Category::getInstance()->getAll($params);
-        if ($has_child) {
-            foreach ($cats as &$cat) {
-                $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
-            }
+        foreach ($cats as &$cat) {
+            $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
         }
     }
     if (!empty($params['with_all'])) {

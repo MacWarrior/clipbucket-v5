@@ -1,10 +1,6 @@
 {assign var=requiredFields value=$cbcollection->load_required_fields($data)}
 {assign var=otherFields value=$cbcollection->load_other_fields($data)}
 
-{if strlen($data.category) < 1}
-	{$data.category = '#1#'}
-{/if}
-
 <div class="heading clearfix marginBottomLarge paddingBottomSmall">
 	<h2 class="pull-left">Editing <small>&gt; {display_clean($data.collection_name)}</small></h2>
 	<div class="pull-right">

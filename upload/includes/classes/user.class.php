@@ -16,7 +16,6 @@ class User
         $this->tablename = 'users';
         $this->fields = [
             'userid'
-            ,'category'
             ,'featured_video'
             ,'username'
             ,'user_session_key'
