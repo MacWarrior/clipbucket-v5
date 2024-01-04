@@ -146,6 +146,9 @@ class Collection
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
+            if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
             $cond .= ')';
 
             $conditions[] = $cond;
@@ -156,7 +159,7 @@ class Collection
         }
 
         if( !$param_with_items && $param_count ){
-            $select = ['COUNT(collections.collection_id) AS count'];
+            $select = ['COUNT(collections.collection_id) AS count, collections.userid'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username';
@@ -1368,6 +1371,7 @@ class Collections extends CBCategory
 
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
+            Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
             Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}categories`
     ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_name`);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
 (

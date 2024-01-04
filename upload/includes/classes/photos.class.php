@@ -145,7 +145,10 @@ class Photo
             /* Search is done on photo title, photo tags */
             $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
 
@@ -169,6 +172,16 @@ class Photo
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
+        }
+
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('photos_categories') . ' ON photos.photo_id = photos_categories.id_photo';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
+
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $group[] = 'photos.photo_id';
+            }
         }
 
         if( $param_collection_id ){
@@ -845,7 +858,7 @@ class CBPhotos
         $fields = [
             'photos'      => get_photo_fields(),
             'users'       => get_user_fields(),
-            'collections' => ['collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added']
+            'collections' => ['collection_name', 'type', 'views as collection_views', 'date_added as collection_added']
         ];
 
         $select_tag = '';
