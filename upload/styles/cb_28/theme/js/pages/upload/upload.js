@@ -63,7 +63,6 @@ $(document).ready(function(){
                 } else {
                     wrapperDiv.className = 'tab-pane uploadFormContainer';
                 }
-
                 $(oneUploadForm).find(".cancel_button").attr('to_cancel',index);
                 $(oneUploadForm).find("input[name='title']").val(file.data.title);
                 $(oneUploadForm).find("textarea[name='description']").val(file.data.description);
@@ -164,30 +163,30 @@ $(document).ready(function(){
         });
 
         uploader.bind('FilesAdded', function(up, uploadedFiles) {
+            let i;
             $("#uploadMore").addClass("hidden");
-
-            const filename = uploadedFiles[0].name;
-            let filename_without_extension = filename.substring(0, filename.lastIndexOf('.'));
-            if( filename_without_extension.length > max_video_title ){
-                filename_without_extension = filename_without_extension.substring(0, max_video_title);
+            for(i = 0; i < uploadedFiles.length; i++) {
+                const filename = uploadedFiles[i].name;
+                let filename_without_extension = filename.substring(0, filename.lastIndexOf('.'));
+                if( filename_without_extension.length > max_video_title ){
+                    filename_without_extension = filename_without_extension.substring(0, max_video_title);
+                }
+                uploadedFiles[i].data = [];
+                uploadedFiles[i].data.title = filename_without_extension;
+                uploadedFiles[i].data.description = filename_without_extension;
+                uploadedFiles[i].data.tags = '';
+                uploadedFiles[i].data.country = default_country_iso2;
+                uploadedFiles[i].data.location = '';
+                uploadedFiles[i].data.datecreated = date_format_time;
+                uploadedFiles[i].data.broadcast = '';
+                uploadedFiles[i].data.video_password = '';
+                uploadedFiles[i].data.video_users = '';
+                uploadedFiles[i].data.allow_comments = 'yes';
+                uploadedFiles[i].data.comment_voting = 'yes';
+                uploadedFiles[i].data.allow_rating = 'yes';
+                uploadedFiles[i].data.allow_embedding = 'yes';
+                uploadedFiles[i].data['category[]'] = [get_default_cid];
             }
-
-            uploadedFiles[0].data = [];
-            uploadedFiles[0].data.title = filename_without_extension;
-            uploadedFiles[0].data.description = filename_without_extension;
-            uploadedFiles[0].data.tags = '';
-            uploadedFiles[0].data.country = default_country_iso2;
-            uploadedFiles[0].data.location = '';
-            uploadedFiles[0].data.datecreated = date_format_time;
-            uploadedFiles[0].data.broadcast = '';
-            uploadedFiles[0].data.video_password = '';
-            uploadedFiles[0].data.video_users = '';
-            uploadedFiles[0].data.allow_comments = 'yes';
-            uploadedFiles[0].data.comment_voting = 'yes';
-            uploadedFiles[0].data.allow_rating = 'yes';
-            uploadedFiles[0].data.allow_embedding = 'yes';
-            uploadedFiles[0].data['category[]'] = [get_default_cid];
-
             reFreshTabs(up);
 
             //function for real progress bar
@@ -204,7 +203,7 @@ $(document).ready(function(){
             //end function
 
             var index = 1;
-            for (var i = 0; i < up.files.length; i++ ){
+            for (i = 0; i < up.files.length; i++ ){
                 if( up.files[i].file_name !== undefined ){
                     var hiddenField_fileName = document.createElement('input');
                     hiddenField_fileName.name = 'file_name';

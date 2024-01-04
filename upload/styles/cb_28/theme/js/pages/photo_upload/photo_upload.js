@@ -185,7 +185,7 @@
             uploader.init();
 
             uploader.bind('FilesAdded', function(up, uploadedFiles) {
-                for(var i = 0; i < uploadedFiles.length; i++){
+                for(let i = 0; i < uploadedFiles.length; i++){
                     files.push(uploadedFiles[i]);
                     uploadedFiles[i].data = [];
                     uploadedFiles[i].data.photo_title = uploadedFiles[0].name;
