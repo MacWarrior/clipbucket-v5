@@ -167,7 +167,7 @@ switch ($mode) {
         $vid = $Upload->submit_upload($vidDetails);
 
         if (!$vid) {
-            echo json_encode(['success' => 'no', 'file_name' => $filename_without_ext]);
+            echo json_encode(['success' => 'no', 'file_name' => $filename_without_ext, 'msg'=>$eh->get_error()[0]]);
             exit();
         }
 

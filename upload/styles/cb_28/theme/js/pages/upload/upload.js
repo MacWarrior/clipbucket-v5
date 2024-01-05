@@ -288,7 +288,8 @@ $(document).ready(function(){
             $('#overallProgress').css('width', ((100/up.files.length)*(++filesUploaded))+"%");
             $('#overallProgress').parents('.row').find('#uploadedFilesInfo').text('Inserted ' + (filesUploaded) + ' of ' + up.files.length);
             var serverResponse = $.parseJSON(response.response);
-
+            //TODO get errors from server here
+            //TODO display errors here or inside uploader.bind('UploadComplete')
             var index = 1;
             plupload.each(up.files,function(file) {
                 if( file.id === fileDetails.id ){
@@ -370,8 +371,8 @@ $(document).ready(function(){
         });
 
         uploader.bind('UploadComplete', function(plupload, files){
+            //TODO display errors here or inside uploader.bind('FileUploaded')
             $("#fileUploadProgress").addClass('hidden');
-
             $("#uploadMore").removeClass('hidden');
             $(".uploadingProgressContainer").hide();
             uploader.refresh();
