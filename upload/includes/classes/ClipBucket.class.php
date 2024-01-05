@@ -760,7 +760,7 @@ class ClipBucket
             }
         }
 
-        $output = "";
+        $output = '';
         foreach ($main_menu as $menu) {
             $selected = getArrayValue($menu, 'active');
             $output .= '<li ';
@@ -865,6 +865,16 @@ class ClipBucket
             }
             $_REQUEST = $clean_request;
         }
+    }
+
+    function getMaxUploadSize($suffix = ''): string
+    {
+        $post_max_size = ini_get('post_max_size');
+        $post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+
+        return min($post_max_size_mb,$upload_max_filesize_mb).$suffix;
     }
 
 }

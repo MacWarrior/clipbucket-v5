@@ -6,13 +6,6 @@ include('../includes/config.inc.php');
 if (isset($_REQUEST['plupload'])) {
     $mode = 'plupload';
 }
-
-if ($_FILES['photoUpload']) {
-    $mode = 'uploadPhoto';
-}
-if ($_POST['photoForm']) {
-    $mode = 'get_photo_form';
-}
 if ($_POST['insertPhoto']) {
     $mode = 'insert_photo';
 }
@@ -21,26 +14,6 @@ if ($_POST['updatePhoto']) {
 }
 
 switch ($mode) {
-    case 'get_photo_form':
-        $name = getName($_POST['name']);
-        if (!$name) {
-            $name = $_POST['name'];
-        }
-        $desc = $name;
-        $tags = $name;
-        $collection = $_POST['collection'];
-        $photoArray = [
-            'photo_title'       => $name,
-            'photo_description' => $name,
-            'photo_tags'        => $name,
-            'collection_id'     => $collection
-        ];
-        assign('uniqueID', $_POST['objID']);
-        assign('photoArray', $photoArray);
-        $form = Fetch('/blocks/upload/photo_form.html');
-        echo json_encode(['form' => $form]);
-        break;
-
     case 'insert_photo':
         $_POST['photo_title'] = mysql_clean($_POST['photo_title']);
         $_POST['photo_description'] = mysql_clean($_POST['photo_description']);
@@ -87,85 +60,6 @@ switch ($mode) {
         echo json_encode($updateResponse);
         break;
 
-    case 'uploadPhoto':
-        $exts = $cbphoto->exts;
-        $max_size = 1048576; // 2MB in bytes
-        $form = 'photoUpload';
-        $path = DirPath::get('photos');
-
-        // These are found in $_FILES. We can access them like $_FILES['file']['error'].
-        $upErrors = [
-            0 => 'There is no error, the file uploaded with success.',
-            1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini.',
-            2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form.',
-            3 => 'The uploaded file was only partially uploaded.',
-            4 => 'No file was uploaded.',
-            6 => 'Missing a temporary folder.',
-            7 => 'Failed to write file to disk.'
-        ];
-
-        // Let's see if everything is working fine by checking $_FILES.
-        if (!isset($_FILES[$form])) {
-            upload_error("No upload found in \$_FILES for " . $form);
-            exit(0);
-        }
-        if (isset($_FILES[$form]['error']) && $_FILES[$form]['error'] != 0) {
-            upload_error($upErrors[$_FILES[$form]['error']]);
-            exit(0);
-        }
-        if (!isset($_FILES[$form]['tmp_name']) || !@is_uploaded_file($_FILES[$form]['tmp_name'])) {
-            upload_error('Upload failed is_uploaded_file test.');
-            exit(0);
-        }
-        if (empty($_FILES[$form]['name'])) {
-            upload_error('File name is empty');
-            exit(0);
-        }
-
-        //Checking Extension of File
-        $info = pathinfo($_FILES[$form]['name']);
-        $extension = strtolower($info['extension']);
-        $valid_extension = false;
-
-        foreach ($exts as $ext) {
-            if (strcasecmp($extension, $ext) == 0) {
-                $valid_extension = true;
-                break;
-            }
-        }
-
-        if (!$valid_extension) {
-            upload_error('Invalid file extension');
-            exit(0);
-        }
-
-        #checking for if the right file is uploaded
-        $content_type = get_mime_type($_FILES[$form]['tmp_name']);
-        if ($content_type != 'image') {
-            upload_error('Invalid file type');
-            exit();
-        }
-
-        //Check file size
-        $max_file_size_in_bytes = config('max_photo_size') * 1024 * 1024;
-        $file_size = @filesize($_FILES['Filedata']['tmp_name']);
-        if (!$file_size || $file_size > $max_file_size_in_bytes) {
-            upload_error('File exceeds the maximum allowed size');
-            exit(0);
-        }
-
-        $filename = $cbphoto->create_filename();
-
-        //Now uploading the file
-        if (move_uploaded_file($_FILES[$form]['tmp_name'], $path . $filename . '.' . $extension)) {
-            echo json_encode(['success' => 'yes', 'filename' => $filename, 'extension' => $extension]);
-        } else {
-            upload_error('File could not be saved.');
-            exit(0);
-        }
-        break;
-
-
     case 'plupload':
         $status_array = [];
         // HTTP headers for no cache etc
@@ -186,7 +80,7 @@ switch ($mode) {
         $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
 
-        if (!in_array($extension, $supported_extensions)) {
+        if (!in_array($extension, $supported_extensions) || ($extension = 'blob' && config('enable_chunk_upload') == 'no')) {
             echo json_encode(['status' => '504', 'msg' => 'Invalid extension']);
             exit();
         }

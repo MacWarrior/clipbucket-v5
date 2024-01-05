@@ -60,10 +60,6 @@ switch ($mode) {
         break;
 
     case 'upload':
-        $ffmpegpath = ClipBucket::getInstance()->configs['ffmpegpath'];
-        $extension = getExt($_FILES['Filedata']['name']);
-
-        #checking for if the right file is uploaded
         $tempFile = $_FILES['Filedata']['tmp_name'];
         $content_type = get_mime_type($tempFile);
         if ($content_type != 'video') {
@@ -71,9 +67,10 @@ switch ($mode) {
             exit();
         }
 
+        $extension = getExt($_FILES['Filedata']['name']);
         $types = strtolower(config('allowed_video_types'));
         $supported_extensions = explode(',', $types);
-        if (!in_array($extension, $supported_extensions)) {
+        if (!in_array($extension, $supported_extensions) || ($extension = 'blob' && config('enable_chunk_upload') == 'no')) {
             echo json_encode(['status' => '504', 'msg' => 'Invalid video extension']);
             exit();
         }

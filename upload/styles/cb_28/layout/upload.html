@@ -56,14 +56,15 @@
 						</div>
 					</div>
 				</div>
-					
 			</div>
 		</div>
 	<div>
 </div>
 <script type="text/javascript">
 	var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
-	var max_upload_size ='{$Cbucket->configs.max_upload_size}';
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize('mb')}";
+	var max_file_size ="{config('max_upload_size')}mb";
+	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
 	var back_extensions = '{$extensions}';
 	var theme = '{$theme}';
 	var max_video_title = "{config('max_video_title')}";

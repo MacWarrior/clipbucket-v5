@@ -91,6 +91,7 @@ if (isset($_POST['update'])) {
         , 'enable_collection_comments'
         , 'display_collection_comments'
         , 'enable_sitemap'
+        , 'enable_chunk_upload'
     ];
 
     $config_booleans_to_refactor = [
@@ -294,6 +295,7 @@ if (isset($_POST['update'])) {
         'enable_collection_comments',
         'display_collection_comments',
         'enable_sitemap',
+        'enable_chunk_upload',
 
         'thumb_width',
         'thumb_height',

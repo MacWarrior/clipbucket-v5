@@ -1027,4 +1027,6 @@ VALUES
        ('discord_error_log'),
        ('discord_webhook_url'),
        ('discord_webhook_url_invalid'),
-       ('option_enable_sitemap');
+       ('option_enable_sitemap'),
+       ('option_enable_chunk_upload'),
+       ('tips_enable_chunk_upload');

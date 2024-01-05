@@ -1,7 +1,6 @@
 (function(window){
     $(document).ready(function(){
 
-        /* files uploading */
         $.get(theme + "/js/plupload/js/plupload.full.min.js", function(e){
             var files = [];
             var uploader = new plupload.Uploader({
@@ -10,7 +9,8 @@
                 url : uploadScriptPath,
                 dragdrop: true,
                 drop_element: "dragDrop",
-                max_file_size : max_upload_size + 'Mb',
+                max_file_size : max_file_size,
+                chunk_size: '1mb',
                 filters: {
                     mime_types : [
                         { title : "Image files", extensions : photo_extensions },
