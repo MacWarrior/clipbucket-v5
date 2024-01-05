@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "filp/whoops",
-            "version": "2.15.3",
-            "version_normalized": "2.15.3.0",
+            "version": "2.15.4",
+            "version_normalized": "2.15.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "c83e88a30524f9360b11f585f71e6b17313b7187"
+                "reference": "a139776fa3f5985a50b509f2a02ff0f709d2a546"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/c83e88a30524f9360b11f585f71e6b17313b7187",
-                "reference": "c83e88a30524f9360b11f585f71e6b17313b7187",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/a139776fa3f5985a50b509f2a02ff0f709d2a546",
+                "reference": "a139776fa3f5985a50b509f2a02ff0f709d2a546",
                 "shasum": ""
             },
             "require": {
@@ -28,7 +28,7 @@
                 "symfony/var-dumper": "Pretty print complex values better with var-dumper available",
                 "whoops/soap": "Formats errors as SOAP responses"
             },
-            "time": "2023-07-13T12:00:00+00:00",
+            "time": "2023-11-03T12:00:00+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -64,7 +64,7 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.15.3"
+                "source": "https://github.com/filp/whoops/tree/2.15.4"
             },
             "funding": [
                 {
@@ -76,24 +76,25 @@
         },
         {
             "name": "oxygenzsas/composer_lib_discord",
-            "version": "0.3.0",
-            "version_normalized": "0.3.0.0",
+            "version": "dev-php7",
+            "version_normalized": "dev-php7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxygenzSAS/composer_lib_discord.git",
-                "reference": "cab5c0fa41b98e2e7160b1a1d3c0e12d760d087e"
+                "reference": "9ae37b0ffd0ccd71d9a35b84efb7d3e9c6b06c23"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_discord/zipball/cab5c0fa41b98e2e7160b1a1d3c0e12d760d087e",
-                "reference": "cab5c0fa41b98e2e7160b1a1d3c0e12d760d087e",
+                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_discord/zipball/9ae37b0ffd0ccd71d9a35b84efb7d3e9c6b06c23",
+                "reference": "9ae37b0ffd0ccd71d9a35b84efb7d3e9c6b06c23",
                 "shasum": ""
             },
             "require": {
                 "psr/http-message": "^1.0",
-                "psr/http-server-middleware": "^1.0"
+                "psr/http-server-middleware": "1.0.2",
+                "psr/log": "1.1.4"
             },
-            "time": "2023-12-21T08:40:34+00:00",
+            "time": "2024-01-05T15:28:18+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -122,7 +123,7 @@
             ],
             "support": {
                 "issues": "https://github.com/OxygenzSAS/composer_lib_discord/issues",
-                "source": "https://github.com/OxygenzSAS/composer_lib_discord/tree/0.3.0"
+                "source": "https://github.com/OxygenzSAS/composer_lib_discord/tree/php7"
             },
             "install-path": "../oxygenzsas/composer_lib_discord"
         },
@@ -456,33 +457,33 @@
         },
         {
             "name": "psr/log",
-            "version": "3.0.0",
-            "version_normalized": "3.0.0.0",
+            "version": "1.1.4",
+            "version_normalized": "1.1.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/d49695b909c3b7628b6289db5479a1c204601f11",
+                "reference": "d49695b909c3b7628b6289db5479a1c204601f11",
                 "shasum": ""
             },
             "require": {
-                "php": ">=8.0.0"
+                "php": ">=5.3.0"
             },
-            "time": "2021-07-14T16:46:02+00:00",
+            "time": "2021-05-03T11:20:27+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "Psr\\Log\\": "src"
+                    "Psr\\Log\\": "Psr/Log/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -503,7 +504,7 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/3.0.0"
+                "source": "https://github.com/php-fig/log/tree/1.1.4"
             },
             "install-path": "../psr/log"
         },

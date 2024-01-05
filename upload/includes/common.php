@@ -49,6 +49,7 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
+$test = 1/0;
 
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';

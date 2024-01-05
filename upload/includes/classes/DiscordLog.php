@@ -9,7 +9,10 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
 
     public function __construct()
     {
-        $site_title = config('site_title');
+        $site_title = '';
+        if( function_exists('config') ){
+            $site_title = config('site_title');
+        }
         if( empty($site_title) ){
             $site_title = $_SERVER['HTTP_HOST'];
         }
