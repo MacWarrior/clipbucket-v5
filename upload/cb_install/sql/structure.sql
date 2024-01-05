@@ -1092,3 +1092,16 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 ALTER TABLE `{tbl_prefix}playlist_tags`
   ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+CREATE TABLE `{tbl_prefix}video_audio_track` (
+                                              `videoid` bigint(20) NOT NULL,
+                                              `number` varchar(2) NOT NULL,
+                                              `title` varchar(64) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}video_audio_track`
+    ADD UNIQUE KEY `videoid` (`videoid`,`number`);
+
+ALTER TABLE `{tbl_prefix}video_audio_track`
+    ADD CONSTRAINT `{tbl_prefix}video_audio_track` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;

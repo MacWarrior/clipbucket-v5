@@ -29,6 +29,7 @@ class DirPath
                 $url = $dir_name;
                 break;
 
+            case 'audios':
             case 'avatars':
             case 'backgrounds':
             case 'conversion_queue':

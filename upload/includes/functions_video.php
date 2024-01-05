@@ -296,6 +296,36 @@ function get_video_subtitles($vdetails)
 }
 
 /**
+ * @param $vdetails
+ * @return array|false
+ * @throws Exception
+ */
+function get_video_tracks($vdetails)
+{
+    if (empty($vdetails)) {
+        return false;
+    }
+
+    global $db;
+    $results = $db->select(tbl('video_audio_track'), 'videoid,number,title', ' videoid=' . $vdetails['videoid']);
+
+    if (count($results) == 0) {
+        return false;
+    }
+
+    $subtitles = [];
+    foreach ($results as $line) {
+        $subtitles[] = [
+//            'url'      => DirPath::getUrl('audios') . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.aac'
+            'language'  => $line['title']
+            , 'id' => $line['number']
+        ];
+    }
+
+    return $subtitles;
+}
+
+/**
  * function used to get default thumb of ClipBucket
  */
 function default_thumb(): string

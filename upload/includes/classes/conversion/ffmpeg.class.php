@@ -248,6 +248,8 @@ class FFMpeg
             $this->extract_subtitles();
         }
 
+        $this->extract_audio_track();
+
         $resolutions = $this->get_eligible_resolutions();
 
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
@@ -320,10 +322,13 @@ class FFMpeg
 
             $count = 0;
             foreach ($subtitles as $map_id => $data) {
-                $this->log->writeLine(date('Y-m-d H:i:s').' - Extracting '.$data['title'].'...');
+                $this->log->writeLine(date('Y-m-d H:i:s') . ' - Extracting ' . $data['title'] . '...');
 
-                if (isset($data['codec_name']) && in_array($data['codec_name'], ['hdmv_pgs_subtitle', 'dvd_subtitle'])) {
-                    $this->log->writeLine(date('Y-m-d H:i:s').' => Subtitle ' . $data['title'] . ' can\'t be extracted because it\'s in bitmap format');
+                if (isset($data['codec_name']) && in_array($data['codec_name'], [
+                        'hdmv_pgs_subtitle',
+                        'dvd_subtitle'
+                    ])) {
+                    $this->log->writeLine(date('Y-m-d H:i:s') . ' => Subtitle ' . $data['title'] . ' can\'t be extracted because it\'s in bitmap format');
                     continue;
                 }
 
@@ -333,12 +338,49 @@ class FFMpeg
                 $output = shell_exec($command);
                 $db->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
                 if (in_dev()) {
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">' . $command . '</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">' . $output . '</p></div>', '', true, false, true);
+                }
+            }
+        } else {
+            $this->log->writeLine('No subtitle to extract');
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function extract_audio_track()
+    {
+        global $cbvideo, $db;
+
+        $this->log->newSection('Audio track extraction');
+
+        $audio_tracks = FFMpeg::get_track_infos($this->input_file, 'audio');
+
+        if (count($audio_tracks) > 0) {
+            $video = $cbvideo->get_video($this->file_name, true);
+            $audio_dir = DirPath::get('audios') . $this->file_directory;
+            if (!is_dir($audio_dir)) {
+                mkdir($audio_dir, 0755, true);
+            }
+
+            $count = 0;
+            foreach ($audio_tracks as $map_id => $data) {
+                $this->log->writeLine(date('Y-m-d H:i:s').' - Extracting '.$data['title'].'...');
+
+                $count++;
+                $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
+                $command = config('ffmpegpath') . ' -i ' . $this->input_file . ' -map 0:' . $map_id . ' -c copy  ' . $audio_dir . $this->file_name . '-' . $display_count . '.aac 2>&1';
+                $output = shell_exec($command);
+                $db->insert(tbl('video_audio_track'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
+                if (in_dev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
                 }
             }
         } else {
-            $this->log->writeLine('No subtitle to extract');
+            $this->log->writeLine('No audios to extract');
         }
     }
 
@@ -506,6 +548,7 @@ class FFMpeg
                 // Keeping audio tracks
                 if (config('keep_audio_tracks') || $this->conversion_type == 'hls') {
                     $audio_tracks = self::get_media_stream_id('audio', $this->input_file);
+                    DiscordLog::sendDump($audio_tracks);
                     foreach ($audio_tracks as $track_id) {
                         if ($track_id != $this->audio_track) {
                             $cmd .= ' -map 0:' . $track_id;

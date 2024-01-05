@@ -64,8 +64,9 @@
                 "RemainingTimeDisplay", // Temps restant
                 "PlaybackRateMenuButton", // Vitesse de lecture
                 "subsCapsButton", // Sous-titres
-                "PictureInPictureToggle", // PictureInPicture
-                "FullscreenToggle" // Plein écran
+                // "PictureInPictureToggle", // PictureInPicture
+                "FullscreenToggle", // Plein écran
+                "audioTrackButton" //Pistes audio
             ]
         }
     };
@@ -115,10 +116,26 @@
         {if config('player_thumbnails') === 'yes'}
         this.thumbnails({get_player_thumbs_json($vdata)});
         {/if}
+
     }
+
     //Initializing
     $(document).ready(function() {
         var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+
+        {$tracks = get_video_tracks($vdata)}
+        {if $tracks}
+            let track;
+            {foreach $tracks as $file}
+                track = new videojs.AudioTrack({
+                    id: '{$file.number}',
+                    kind: 'translation',
+                    // label: 'Spanish',
+                    language: '{$file.language}'
+                });
+        cb_player.audioTracks().addTrack(track);
+            {/foreach}
+        {/if}
     });
 </script>
 
