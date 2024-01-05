@@ -118,6 +118,7 @@ class Photo
         $param_having = $params['having'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
+        $param_show_unlisted = $params['show_unlisted'] ?? false;
 
         $conditions = [];
         if( $param_photo_id ){
@@ -137,7 +138,7 @@ class Photo
         }
 
         if (!has_access('admin_access', true)) {
-            $conditions[] = $this->getGenericConstraints();
+            $conditions[] = $this->getGenericConstraints($param_first_only || $param_show_unlisted);
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -228,7 +229,7 @@ class Photo
     /**
      * @throws Exception
      */
-    public function getGenericConstraints(): string
+    public function getGenericConstraints(bool $show_unlisted = false): string
     {
         if (has_access('admin_access', true)) {
             return '';
@@ -243,7 +244,11 @@ class Photo
             $sql_age_restrict = ' AND (photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
         }
 
-        $cond .= ' AND photos.broadcast = \'public\'';
+        $cond .= ' AND (photos.broadcast = \'public\'';
+        if( $show_unlisted ){
+            $cond .= ' OR (photos.broadcast = \'unlisted\')';
+        }
+        $cond .= ')';
 
         $current_user_id = user_id();
         if ($current_user_id) {

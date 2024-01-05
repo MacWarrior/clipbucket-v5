@@ -201,8 +201,8 @@ class Collection
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints();
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints();
+            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(true);
+            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(true);
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -225,6 +225,7 @@ class Collection
             foreach($result AS &$collection){
                 $params = [];
                 $params['collection_id'] = $collection['collection_id'];
+                $params['show_unlisted'] = true;
                 $params['order'] = $this->getTableNameItems() . '.date_added ASC';
 
                 if( $collection['type'] == 'videos' ){
