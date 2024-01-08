@@ -989,7 +989,7 @@ class cbactions
 
         $left_join_video_cond = '';
         if( !has_access('admin_access', true) ){
-            $left_join_video_cond = ' AND ' . Video::getInstance()->getGenericConstraints();
+            $left_join_video_cond = ' AND ' . Video::getInstance()->getGenericConstraints(true);
         }
 
         $select = ', COUNT(video.videoid) AS total_items';
@@ -1127,7 +1127,7 @@ class cbactions
         $where_video = '';
         if( !has_access('admin_access', true) ){
             $left_join_video = ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid';
-            $where_video = 'AND ' . Video::getInstance()->getGenericConstraints();
+            $where_video = 'AND ' . Video::getInstance()->getGenericConstraints(true);
         }
 
         return $db->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);
