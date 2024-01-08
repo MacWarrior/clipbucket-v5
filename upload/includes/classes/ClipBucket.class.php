@@ -85,16 +85,22 @@ class ClipBucket
 
         $this->clean_requests();
 
-        $sort_array = sorting_links();
-
-        if (!isset($_GET['sort']) || !isset($sort_array[$_GET['sort']])) {
+        if( !isset($_GET['sort']) ){
             $_GET['sort'] = 'most_recent';
+        } else {
+            $sort_array = sorting_links();
+            if( !isset($sort_array[$_GET['sort']]) ){
+                $_GET['sort'] = 'most_recent';
+            }
         }
 
-        $time_array = time_links();
-
-        if (!isset($_GET['time']) || !isset($time_array[$_GET['time']])) {
+        if( !isset($_GET['time']) ){
             $_GET['time'] = 'all_time';
+        } else {
+            $time_array = time_links();
+            if( !isset($time_array[$_GET['time']]) ){
+                $_GET['time'] = 'all_time';
+            }
         }
 
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {

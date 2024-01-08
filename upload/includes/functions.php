@@ -1404,10 +1404,13 @@ function lang($var)
 
         if (!array_key_exists($var, Language::getInstance()->arrayTranslation)) {
             $translation = $var;
-            error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
 
-            if (in_dev()) {
-                error_log(debug_backtrace_string());
+            if( Language::getInstance()->isTranslationSystemInstalled() ){
+                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+
+                if (in_dev()) {
+                    error_log(debug_backtrace_string());
+                }
             }
         }
     } else {
