@@ -282,33 +282,43 @@ $(document).ready(function(){
         */
 
         var filesUploaded = 0;
+        var errors = [];
 
         uploader.bind('FileUploaded', function(up, fileDetails, response)
         {
             $('#overallProgress').css('width', ((100/up.files.length)*(++filesUploaded))+"%");
             $('#overallProgress').parents('.row').find('#uploadedFilesInfo').text('Inserted ' + (filesUploaded) + ' of ' + up.files.length);
             var serverResponse = $.parseJSON(response.response);
-            //TODO get errors from server here
-            //TODO display errors here or inside uploader.bind('UploadComplete')
+            var id_error = '';
+            if (serverResponse.error) {
+                errors.push(serverResponse.error);
+                $('.progress-bar_'+fileDetails.id).addClass('progress-bar-danger');
+                id_error = fileDetails.id;
+                debugger;
+            }
             var index = 1;
             plupload.each(up.files,function(file) {
                 if( file.id === fileDetails.id ){
-                    file.file_name = serverResponse.file_name;
-
-                    var hiddenField_fileName = document.createElement('input');
-                    hiddenField_fileName.name = 'file_name';
-                    hiddenField_fileName.type = 'hidden';
-                    hiddenField_fileName.value = serverResponse.file_name;
-                    $('#tab'+index+' form').append(hiddenField_fileName);
-
-                    if(serverResponse.extension === 'mp4' && stay_mp4 === 'yes' ){
-                        file.show_duration = true;
-                        $('#tab'+index+' #duration').removeClass('hidden').removeAttr('disabled');
+                    if (id_error === file.id) {
+                        $('#tab'+index+' form').find(':input').attr('disabled','disabled');
                     } else {
-                        file.show_duration = false;
-                    }
+                        file.file_name = serverResponse.file_name;
 
-                    $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
+                        var hiddenField_fileName = document.createElement('input');
+                        hiddenField_fileName.name = 'file_name';
+                        hiddenField_fileName.type = 'hidden';
+                        hiddenField_fileName.value = serverResponse.file_name;
+                        $('#tab'+index+' form').append(hiddenField_fileName);
+
+                        if(serverResponse.extension === 'mp4' && stay_mp4 === 'yes' ){
+                            file.show_duration = true;
+                            $('#tab'+index+' #duration').removeClass('hidden').removeAttr('disabled');
+                        } else {
+                            file.show_duration = false;
+                        }
+
+                        $('#tab'+index+' .saveVideoDetails').removeAttr('disabled');
+                    }
                 }
                 index++
             });
@@ -366,20 +376,28 @@ $(document).ready(function(){
                 // remove cancel button
                 $(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
                 // turn progress bar into green to show success
-                $('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
+                if (!$('.progress-bar_'+pluploadFileId).hasClass('progress-bar-danger')) {
+                    $('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
+                }
             }
         });
 
         uploader.bind('UploadComplete', function(plupload, files){
-            //TODO display errors here or inside uploader.bind('FileUploaded')
             $("#fileUploadProgress").addClass('hidden');
             $("#uploadMore").removeClass('hidden');
             $(".uploadingProgressContainer").hide();
             uploader.refresh();
-            $("#uploadMessage").html('File uploaded successfully').attr('class', 'alert alert-success container');
-            setTimeout(function(){
-                $("#uploadMessage").addClass('hidden');
-            }, 5000);
+            if (errors.length > 0 ) {
+                $("#uploadMessage").html('');
+                errors.forEach(function (error) {
+                    $("#uploadMessage").append(error).attr('class', 'alert alert-danger container');
+                });
+            } else {
+                $("#uploadMessage").html('File uploaded successfully').attr('class', 'alert alert-success container');
+                setTimeout(function(){
+                    $("#uploadMessage").addClass('hidden');
+                }, 5000);
+            }
         });
 
         uploader.bind('error', function(up, err) {
