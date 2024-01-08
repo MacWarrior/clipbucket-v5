@@ -28,20 +28,21 @@ $(document).ready(function(){
         function reFreshTabs(up)
         {
             // creating the selected files list
-            var tabs = document.createElement('ul');
-            tabs.id = 'selectedFilesList';
-            tabs.className = 'nav nav-tabs';
+            var ul = $('#selectedFilesList');
             var li = false;
-            var index = 1;
+            var index = 0;
             var uploadForm = $('#updateVideoInfoForm.template').clone();
             var oneUploadForm = false;
             var uploadForms = [];
             plupload.each(up.files, function(file) {
-                li = document.createElement('li');
+                index++;
                 if(index === up.files.length){
+                    li = document.createElement('li');
                     li.className = 'active';
                 }else{
-                    li.className = '';
+                    ul.find('#'+index).removeClass('active');
+                    $('#tab'+index).removeClass('active');
+                    return;
                 }
                 var link = document.createElement('a');
                 link.href = '#tab'+index;
@@ -100,7 +101,6 @@ $(document).ready(function(){
                         alert_shown = false;
                     }
                 });
-
                 if(file.data.broadcast === 'unlisted'){
                     $(oneUploadForm).find('#video_password').attr('disabled',false);
                 } else if(file.data.broadcast === 'private') {
@@ -122,13 +122,12 @@ $(document).ready(function(){
                 wrapperDiv.appendChild(oneUploadForm);
                 uploadForms.push(wrapperDiv);
 
-                li.id = index++;
+                li.id = index;
                 li.appendChild(link);
-                tabs.appendChild(li);
+                ul.append(li);
             });
 
-            $('#files').html('').append(tabs);
-            $('#allUploadForms').html('').append(uploadForms);
+            $('#allUploadForms').append(uploadForms);
 
             $("#allUploadForms input, " +
                 "#allUploadForms textarea, " +
@@ -211,7 +210,6 @@ $(document).ready(function(){
                     hiddenField_fileName.value = up.files[i].file_name;
                     $('#tab'+index+' form').append(hiddenField_fileName);
                 }
-
                 if( up.files[i].show_duration === true ){
                     $('#tab'+index+' #duration').removeClass('hidden').removeAttr('disabled');
                 }
@@ -286,16 +284,17 @@ $(document).ready(function(){
 
         uploader.bind('FileUploaded', function(up, fileDetails, response)
         {
-            $('#overallProgress').css('width', ((100/up.files.length)*(++filesUploaded))+"%");
-            $('#overallProgress').parents('.row').find('#uploadedFilesInfo').text('Inserted ' + (filesUploaded) + ' of ' + up.files.length);
             var serverResponse = $.parseJSON(response.response);
             var id_error = '';
             if (serverResponse.error) {
                 errors.push(serverResponse.error);
                 $('.progress-bar_'+fileDetails.id).addClass('progress-bar-danger');
                 id_error = fileDetails.id;
-                debugger;
+            }else {
+                filesUploaded++;
             }
+            $('#overallProgress').css('width', ((100/up.files.length)*(filesUploaded))+"%");
+            $('#overallProgress').parents('.row').find('#uploadedFilesInfo').text('Inserted ' + (filesUploaded) + ' of ' + up.files.length);
             var index = 1;
             plupload.each(up.files,function(file) {
                 if( file.id === fileDetails.id ){
@@ -392,6 +391,7 @@ $(document).ready(function(){
                 errors.forEach(function (error) {
                     $("#uploadMessage").append(error).attr('class', 'alert alert-danger container');
                 });
+                errors = [];
             } else {
                 $("#uploadMessage").html('File uploaded successfully').attr('class', 'alert alert-success container');
                 setTimeout(function(){
