@@ -57,6 +57,7 @@ echo -ne "Updating PHP ${PHP_VERSION} configs..."
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+
 sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_VERSION}/cli/php.ini
 sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_VERSION}/cli/php.ini
 systemctl restart php${PHP_VERSION}-fpm
@@ -64,15 +65,16 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing ClipbucketV5 sources..."
-mkdir -p /srv/http/clipbucket/ && cd "$_"
-git clone https://github.com/MacWarrior/clipbucket-v5.git ./ > /dev/null 2>&1
+INSTALL_PATH="/srv/http/clipbucket/"
+mkdir -p ${INSTALL_PATH}
+git clone https://github.com/MacWarrior/clipbucket-v5.git ${INSTALL_PATH} > /dev/null 2>&1
+git config --global --add safe.directory ${INSTALL_PATH}
 echo -ne " OK"
 
 echo ""
 echo -ne "Updating sources access permissions..."
-chown www-data: -R ../clipbucket/
-chmod 755 -R ./upload/cache ./upload/files ./upload/images
-chmod 755 ./upload/includes
+chown www-data: -R ${INSTALL_PATH}
+chmod 755 -R ${INSTALL_PATH}
 echo -ne " OK"
 
 echo ""
@@ -94,7 +96,7 @@ server {
     listen 80;
     server_name DOMAINNAME;
 
-    root /srv/http/clipbucket/upload/;
+    root INSTALLPATH;
     index index.php;
 
     client_max_body_size 100M;
@@ -244,6 +246,7 @@ EOF
 
 sed -i "s/DOMAINNAME/${DOMAIN_NAME}/g" /etc/nginx/sites-available/001-clipbucket
 sed -i "s/PHPVERSION/${PHP_VERSION}/g" /etc/nginx/sites-available/001-clipbucket
+sed -i "s/INSTALLPATH/${INSTALL_PATH//\//\\/}upload/g" /etc/nginx/sites-available/001-clipbucket
 ln -s /etc/nginx/sites-available/001-clipbucket /etc/nginx/sites-enabled/
 systemctl restart nginx > /dev/null
 echo -ne " OK"
@@ -261,7 +264,8 @@ echo "- Database address : localhost"
 echo "- Database name : clipbucket"
 echo "- Database user : clipbucket"
 echo "- Database password : ${DB_PASS}"
+echo "- Install directory : ${INSTALL_PATH}"
 echo "- Website URL : http://${DOMAIN_NAME}"
 echo ""
-echo "ClipBucketV5 installation completed"
+echo "ClipBucketV5 installation completed - Welcome onboard !"
 echo ""
