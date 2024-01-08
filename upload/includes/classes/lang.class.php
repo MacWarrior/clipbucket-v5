@@ -223,6 +223,11 @@ class Language
         return $lang;
     }
 
+    public function isTranslationSystemInstalled(): bool
+    {
+        return !$this->uninstalled;
+    }
+
 
     /**
      * Function used to get list of languages installed
