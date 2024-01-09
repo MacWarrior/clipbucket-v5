@@ -90,7 +90,7 @@ CREATE TABLE `{tbl_prefix}collection_items` (
 
 CREATE TABLE `{tbl_prefix}comments` (
   `comment_id` int(60) NOT NULL,
-  `type` varchar(3) NOT NULL,
+  `type` varchar(16) NOT NULL,
   `comment` text NOT NULL,
   `userid` int(60) NULL DEFAULT NULL,
   `anonym_name` varchar(255) NOT NULL,
@@ -258,7 +258,8 @@ CREATE TABLE `{tbl_prefix}photos` (
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
   `owner_ip` varchar(20) NOT NULL,
-  `photo_details` text NULL DEFAULT NULL
+  `photo_details` text NULL DEFAULT NULL,
+  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}playlists` (
@@ -564,7 +565,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `re_conv_status` tinytext NULL DEFAULT NULL,
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
-  `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending'
+  `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
+  `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_categories` (

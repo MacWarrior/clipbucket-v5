@@ -4,14 +4,19 @@ class myquery
     static $website_details = [];
     static $video_resolutions = [];
 
+    public static function getInstance(){
+        global $myquery;
+        return $myquery;
+    }
+
     /**
      * @throws Exception
      */
     function Set_Website_Details($name, $value)
     {
-        global $db, $Cbucket;
+        global $db;
         $db->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
-        $Cbucket->configs[$name] = $value;
+        ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
     }
 
@@ -70,8 +75,6 @@ class myquery
      */
     public function saveVideoResolutions($post)
     {
-        global $db;
-
         $video_resolutions = self::getVideoResolutions();
         foreach ($video_resolutions as $ratio) {
             foreach ($ratio as $resolution) {
@@ -83,7 +86,13 @@ class myquery
                     $enabled = 0;
                 }
 
-                $db->update(tbl('video_resolution'), ['enabled'], [$enabled], " title = '" . mysql_clean($resolution['title']) . "'");
+                if (isset($post['vbrate_' . $resolution['title']])) {
+                    $vbrate = $post['vbrate_' . $resolution['title']];
+                } else {
+                    $vbrate = 0;
+                }
+
+                Clipbucket_db::getInstance()->update(tbl('video_resolution'), ['enabled', 'video_bitrate'], [$enabled, $vbrate], ' title = \'' . mysql_clean($resolution['title']) . '\'');
             }
         }
         static::$video_resolutions = [];
@@ -243,7 +252,7 @@ class myquery
     function set_template($template)
     {
         global $myquery;
-        if (is_dir(STYLES_DIR . DIRECTORY_SEPARATOR . $template) && $template) {
+        if (is_dir(DirPath::get('styles') . $template) && $template) {
             $myquery->Set_Website_Details('template_dir', $template);
             e(lang('template_activated'), 'm');
         } else {
@@ -268,15 +277,6 @@ class myquery
     {
         global $db;
         $db->insert(tbl('admin_todo'), ['todo,date_added,userid'], [mysql_clean($text), NOW(), user_id()]);
-    }
-
-    /**
-     * @throws Exception
-     */
-    function update_todo($id, $text)
-    {
-        global $db;
-        $db->execute('UPDATE ' . tbl('admin_todo') . ' SET todo=\'' . mysql_clean($text) . '\' WHERE comment_id=\''.mysql_clean($id).'\'');
     }
 
     /**

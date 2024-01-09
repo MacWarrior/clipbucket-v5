@@ -84,15 +84,15 @@ function cb_menu($params = null)
 function display_it()
 {
     try {
-        global $ClipBucket, $__devmsgs, $breadcrumb;
+        global $__devmsgs, $breadcrumb;
         if( in_dev() ) {
-            assign('thebase', BASEDIR);
+            assign('thebase', DirPath::get('root'));
             assign('__devmsgs', $__devmsgs);
         }
 
         $new_list = [];
-        foreach ($ClipBucket->template_files as $file) {
-            if ($ClipBucket->show_page || !$file['follow_show_page']) {
+        foreach (ClipBucket::getInstance()->template_files as $file) {
+            if (ClipBucket::getInstance()->show_page || !$file['follow_show_page']) {
                 if( isset($file['folder']) ){
                     $filepath = $file['folder'].DIRECTORY_SEPARATOR.$file['file'];
                 } else {

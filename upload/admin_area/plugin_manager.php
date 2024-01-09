@@ -1,15 +1,17 @@
 <?php
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'plugin_manager');
 
-global $userquery, $pages, $cbplugin;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$pages->page_redir();
+global $cbplugin;
+
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => ADMIN_BASEURL . '/plugin_manager.php'];
+$breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
 
 //uninstalling Plugin
 if (isset($_GET['uninstall'])) {

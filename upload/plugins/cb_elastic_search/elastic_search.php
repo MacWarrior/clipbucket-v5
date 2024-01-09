@@ -14,8 +14,8 @@ assign('cb_es', CB_ES_MANAGER);
 define('CB_ES', 'installed');
 assign('cb_es', CB_ES);
 /* PATHS */
-define('CB_ES_DIR', PLUG_DIR . '/' . CB_ES);
-define('CB_ES_URL', PLUG_URL . '/' . CB_ES);
+define('CB_ES_DIR', DirPath::get('plugins') . CB_ES);
+define('CB_ES_URL', DirPath::getUrl('plugins') . CB_ES);
 
 define('CB_ES_ADMIN_DIR', CB_ES_DIR . '/admin');
 define('CB_ES_ADMIN_URL', CB_ES_URL . '/admin');

@@ -223,6 +223,11 @@ class Language
         return $lang;
     }
 
+    public function isTranslationSystemInstalled(): bool
+    {
+        return !$this->uninstalled;
+    }
+
 
     /**
      * Function used to get list of languages installed
@@ -409,7 +414,7 @@ class Language
                 'de'    => 'DEU'
             ];
 
-            $path = DIR_SQL . 'language_' . $restorable_langs[$code] . '.sql';
+            $path = DirPath::get('sql') . 'language_' . $restorable_langs[$code] . '.sql';
             if (file_exists($path)) {
                 execute_sql_file($path);
             }

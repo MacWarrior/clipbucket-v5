@@ -23,7 +23,7 @@ $file_directory = $file_directory_ . DIRECTORY_SEPARATOR;
 
 $logFile = $argv[4] ?? false;
 if (empty($logFile)) {
-    $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . $_filename . '.log';
+    $logFile = DirPath::get('logs') . $file_directory . $_filename . '.log';
 }
 
 $audio_track = $argv[5] ?? false;
@@ -77,14 +77,14 @@ if (!empty($_filename)) {
         case 'mp4':
             // Delete the uploaded file from temp directory
             // and move it into the conversion queue directory for conversion
-            $temp_file = TEMP_DIR . DIRECTORY_SEPARATOR . $_filename . '.' . $tmp_ext;
-            $orig_file = CON_DIR . DIRECTORY_SEPARATOR . $_filename . '.' . $ext;
+            $temp_file = DirPath::get('temp') . $_filename . '.' . $tmp_ext;
+            $orig_file = DirPath::get('conversion_queue') . $_filename . '.' . $ext;
             $renamed = rename($temp_file, $orig_file);
             break;
         case 'm3u8':
-            $temp_dir = TEMP_DIR . DIRECTORY_SEPARATOR . $_filename . DIRECTORY_SEPARATOR;
+            $temp_dir = DirPath::get('temp') . $_filename . DIRECTORY_SEPARATOR;
             $temp_files = $temp_dir . '*';
-            $conversion_path = CON_DIR . DIRECTORY_SEPARATOR . $_filename . DIRECTORY_SEPARATOR;
+            $conversion_path = DirPath::get('conversion_queue') . $_filename . DIRECTORY_SEPARATOR;
             $orig_file = $conversion_path . $_filename . '.' . $ext;
             mkdir($conversion_path);
             foreach (glob($temp_files) as $file) {
@@ -102,7 +102,7 @@ if (!empty($_filename)) {
         $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
     }
 
-    require_once(BASEDIR . '/includes/classes/conversion/ffmpeg.class.php');
+    require_once(DirPath::get('classes') . 'conversion/ffmpeg.class.php');
 
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->conversion_type = config('conversion_type');
@@ -131,11 +131,11 @@ if (!empty($_filename)) {
     }
 
     if (stristr(PHP_OS, 'WIN')) {
-        exec(php_path() . ' -q ' . BASEDIR . '/actions/verify_converted_videos.php ' . $queue_details['cqueue_name']);
+        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name']);
     } elseif (stristr(PHP_OS, 'darwin')) {
-        exec(php_path() . ' -q ' . BASEDIR . '/actions/verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' </dev/null >/dev/null &');
+        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' </dev/null >/dev/null &');
     } else {
-        exec(php_path() . ' -q ' . BASEDIR . '/actions/verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' &> /dev/null &');
+        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' &> /dev/null &');
     }
 
     switch ($ext) {

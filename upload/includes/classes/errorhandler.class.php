@@ -6,6 +6,11 @@ class errorhandler
     public $message_list = [];
     public $warning_list = [];
 
+    public static function getInstance(){
+        global $eh;
+        return $eh;
+    }
+
     /**
      * @param null $message
      * @param bool $secure

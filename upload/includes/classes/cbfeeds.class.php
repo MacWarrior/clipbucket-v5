@@ -112,7 +112,7 @@ class cbfeeds
     function getFeedFile($uid)
     {
         $time = time();
-        $ufeedDir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $uid;
+        $ufeedDir = DirPath::get('userfeeds') . $uid;
         //checking user feed folder exists or not
         if (!file_exists($ufeedDir)) {
             mkdir($ufeedDir, 0755, true);
@@ -134,7 +134,7 @@ class cbfeeds
         }
 
         $feeds = [];
-        $ufeedDir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $uid;
+        $ufeedDir = DirPath::get('userfeeds') . $uid;
         if (file_exists($ufeedDir)) {
             $files = glob($ufeedDir . DIRECTORY_SEPARATOR . '*.feed');
             rsort($files);
@@ -160,7 +160,7 @@ class cbfeeds
     function getUserFeeds($user)
     {
         global $cbphoto, $userquery, $cbvid, $cbcollection;
-        $allowed_feeds = USER_ACTIVITY_FEEDS_LIMIT;
+        $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
 
@@ -176,7 +176,7 @@ class cbfeeds
                 break;
             }
             $feedArray = json_decode($feed['content'], true);
-            if ($feed && count($feedArray) > 0) {
+            if ($feed && !empty($feedArray)) {
                 $remove_feed = false;
                 $farr = $feedArray;
 
@@ -323,7 +323,7 @@ class cbfeeds
      */
     function deleteFeed($uid, $feedid)
     {
-        $ufeedDir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
+        $ufeedDir = DirPath::get('userfeeds') . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
         if (file_exists($ufeedDir)) {
             unlink($ufeedDir);
         }

@@ -9,20 +9,18 @@ if (!defined('PARENT_PAGE')) {
 require_once 'common.php';
 require_once 'plugins.php';
 
-global $Cbucket, $cbvid, $ClipBucket, $userquery;
+global $cbvid, $userquery;
 
-define('TEMPLATEDIR', BASEDIR . DIRECTORY_SEPARATOR . TEMPLATEFOLDER . DIRECTORY_SEPARATOR . $Cbucket->template);
-define('TEMPLATEURL', '/' . TEMPLATEFOLDER . '/' . $Cbucket->template);
+define('TEMPLATEDIR', DirPath::get('styles') . ClipBucket::getInstance()->template);
+define('TEMPLATEURL', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
-define('COVERS_DIR', BASEDIR . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'cover_photos');
 Assign('baseurl', BASEURL);
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('layout', TEMPLATEURL . '/layout');
 Assign('theme', TEMPLATEURL . '/theme');
 Assign('template_dir', TEMPLATEDIR);
 Assign('style_dir', LAYOUT);
-Assign('covers_dir', COVERS_DIR);
-Assign('admin_baseurl', '/' . ADMINDIR . '/');
+Assign('admin_baseurl', DirPath::getUrl('admin_area'));
 
 //Checking Website is closed or not
 if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_install') {
@@ -40,12 +38,11 @@ uploaderDetails();
 isSectionEnabled(PARENT_PAGE, true);
 
 //setting quicklist
-assign('total_quicklist', $cbvid->total_quicklist());
 
 cb_call_functions('clipbucket_init_completed');
 
-if (!$in_bg_cron && !in_array(THIS_PAGE, $ClipBucket->public_pages)) {
-    if ($Cbucket->configs['access_to_logged_in'] == 'yes') {
+if (!$in_bg_cron && !in_array(THIS_PAGE, ClipBucket::getInstance()->public_pages)) {
+    if (ClipBucket::getInstance()->configs['access_to_logged_in'] == 'yes') {
         $userquery->logincheck();
     }
 }

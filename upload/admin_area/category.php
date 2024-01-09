@@ -1,14 +1,17 @@
 <?php
-global $userquery, $pages, $cbvid;
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
-$pages->page_redir();
+define('THIS_PAGE', 'category');
+
+global $cbvid;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => ADMIN_BASEURL . '/category.php'];
+$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'category.php'];
 
 //Form Processing
 if (isset($_POST['add_category'])) {
@@ -32,7 +35,7 @@ if (isset($_GET['category']) && !empty($_GET['category']) && is_numeric($_GET['c
     }
 
     $cat_details = $cbvid->get_category($id_category);
-    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($cat_details['category_name']), 'url' => ADMIN_BASEURL . '/category.php?category=' . display_clean($id_category)];
+    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($cat_details['category_name']), 'url' => DirPath::getUrl('admin_area') . 'category.php?category=' . display_clean($id_category)];
     assign('cat_details', $cat_details);
 
     $pid = $cbvid->get_category_field($_GET['category'], 'parent_id');

@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
-global $userquery, $cbvid, $eh, $Cbucket;
+global $userquery, $cbvid, $eh;
 
 $userquery->logincheck();
 $udetails = $userquery->get_user_details(user_id());
@@ -28,7 +28,7 @@ switch ($mode) {
         if (isset($_POST['delete_playlists'])) {
             $playlists = post('check_playlist');
 
-            if (count($playlists) > 0) {
+            if (!empty($playlists) && count($playlists) > 0) {
                 foreach ($playlists as $playlist) {
                     $cbvid->action->delete_playlist($playlist);
                 }
@@ -125,12 +125,12 @@ if (in_dev()) {
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS([
+ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                                => 'admin',
     'pages/manage_playlist/manage_playlist' . $min_suffixe . '.js' => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js'     => 'admin'
 ]);
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

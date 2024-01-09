@@ -1,16 +1,18 @@
 <?php
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'maintenance');
 
-global $userquery, $pages, $db, $cbindex;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+global $db, $cbindex;
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Maintenance', 'url' => ADMIN_BASEURL . '/maintenance.php'];
+$breadcrumb[1] = ['title' => 'Maintenance', 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'];
 
 /**
  * Removing Inactive Sessions
@@ -100,7 +102,7 @@ if (@$_GET['mode'] == 'remove_activity_feed') {
     while ($i < $total_users) {
         if ($users[$i]['userid']) {
             $deleted = 0;
-            $user_feed_dir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $users[$i]['userid'];
+            $user_feed_dir = DirPath::getUrl('userfeeds') . $users[$i]['userid'];
             if ($user_feed_dir) {
                 $feeds = glob($user_feed_dir . '/*.feed');
                 if ($feeds) {

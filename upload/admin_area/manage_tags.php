@@ -1,16 +1,17 @@
 <?php
+define('THIS_PAGE', 'manage_tags');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once('../includes/classes/admin_tool.class.php');
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
+
 /* Generating breadcrumb */
-global $breadcrumb, $pages, $userquery, $Cbucket;
-
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
-
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
-$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => ADMIN_BASEURL . '/manage_tags.php'];
+$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
 $limit = RESULTS;
 
@@ -38,7 +39,7 @@ $count = Tags::countTags($cond);
 $total_pages = $count / $limit;
 $total_pages = round($total_pages + 0.49, 0);
 //Pagination
-$pages->paginate($total_pages, $current_page);
+pages::getInstance()->paginate($total_pages, $current_page);
 
 assign('tags', $tags);
 assign('tag_types', $tag_types);
@@ -49,7 +50,7 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
 
 subtitle(lang('manage_tags'));
 template_files('manage_tags.html');

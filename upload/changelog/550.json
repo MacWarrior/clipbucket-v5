@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"302",
+  "revision":"326",
   "status":"dev",
   "detail":[
     {
@@ -92,6 +92,13 @@
         ,"Remove video embedding with flash"
         ,"Fix user form saving"
         ,"Implement custom thumbs"
+        ,"Implement age restriction options"
+        ,"Add option to disable quicklist"
+        ,"Add option to hide empty collections"
+        ,"Mass upload should not list unreadable files"
+        ,"Add options to hide comments"
+        ,"Move development mode to website configurations"
+        ,"Add option to disable sitemap"
       ]
     },
     {
@@ -110,10 +117,10 @@
         ,"Auto-clear templates cache when in DEV mode"
         ,"Fix compatibility with MySQL 8.0.X"
         ,"Add german translation <i>#219</i> (Thanks joo4mart !)"
-        ,"Update PHPMailer to 6.8.0"
+        ,"Update PHPMailer to 6.9.1"
         ,"Fix file extension check <i>#221</i>"
         ,"Fix SQL structure <i>#220</i>, <i>#261</i>"
-        ,"Implement Whoops 2.15.3 in DEV mode <i>#217</i> (Thanks veka-server !)"
+        ,"Implement Whoops 2.15.4 in DEV mode <i>#217</i> (Thanks veka-server !)"
         ,"Update Smarty to version 3.1.48 & move it into composer"
         ,"Update login logs <i>#252</i>"
         ,"Add portuguese (BR) translation <i>#253, #262</i> (Thanks raiancollyn !)"
@@ -130,6 +137,9 @@
         ,"Fix SQL timeout"
         ,"Update Plupload to 3.1.5 <i>#281</i>"
         ,"Refactor update and version"
+        ,"Implement CSS/JS versionning"
+        ,"Refactor directory constants"
+        ,"Implement discord error logs"
       ]
     },
     {
@@ -242,12 +252,19 @@
         ,"Refactor video sharing"
         ,"Fix embed player"
         ,"Implement collection banner"
+        ,"Fix quicklists"
+        ,"Implement age restriction pop-in, thumb blur"
+        ,"Fix collection creation while uploading new photos"
+        ,"Fix videos and photos count"
+        ,"Fix disabled sections privacy"
+        ,"Implement channels comments"
+        ,"Fix sitemap & phpinfo privacy"
       ]
     }
   ,{
       "title":"Plugin",
       "description":[
-        "Update Editor's Pick to 2.0.4"
+        "Update Editor's Pick to 2.0.5"
         ,"Update Global Announcement to 2.0.2"
         ,"Update CB Server Thumb to 2.0.0"
         ,"Implement plugin compatibility check"
@@ -275,6 +292,7 @@
         ,"Fix missing component in CentOS 7 script"
         ,"Update dependancies check"
         ,"Fix admin creation"
+        ,"Fix PHP error when PHP CLI is missing"
       ]
     }
   ]

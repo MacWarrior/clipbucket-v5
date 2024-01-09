@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'photo_settings');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $myquery, $cbphoto;
 
@@ -12,7 +12,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Watermark Settings', 'url' => ADMIN_BASEURL . '/photo_settings.php?mode=watermark_settings'];
+$breadcrumb[1] = ['title' => 'Watermark Settings', 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'];
 
 if ($_POST['update_watermark']) {
     $rows = [

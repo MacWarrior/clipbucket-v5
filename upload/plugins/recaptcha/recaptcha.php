@@ -43,4 +43,4 @@ function validateCbRecaptcha($val = null)
 
 register_cb_captcha('cbRecaptcha', 'validateCbRecaptcha', false);
 register_anchor('; Recaptcha.reload ();', 'onClickAddComment');
-add_header(PLUG_DIR . '/recaptcha/reCaptcha_header.html');
+add_header(DirPath::get('plugins') . 'recaptcha/reCaptcha_header.html');

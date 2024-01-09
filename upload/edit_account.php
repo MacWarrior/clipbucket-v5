@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'edit_account');
 
-global $userquery, $Cbucket;
+global $userquery;
 
 require 'includes/config.inc.php';
 $userquery->logincheck();
@@ -97,19 +97,19 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        Assign('extensions', $Cbucket->get_extensions('photo'));
+        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'avatar_bg');
         break;
 
     case 'channel_bg':
-        Assign('extensions', $Cbucket->get_extensions('photo'));
+        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'channel_bg');
         break;
 
     case 'change_cover':
-        Assign('extensions', $Cbucket->get_extensions('photo'));
+        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'change_cover');
         break;
@@ -153,12 +153,12 @@ if(in_dev()){
     $min_suffixe = '.min';
 }
 
-$Cbucket->addJS([
+ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
-$Cbucket->addCSS([
+ClipBucket::getInstance()->addCSS([
     'jquery.tagit'.$min_suffixe.'.css' => 'admin',
     'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
 ]);
@@ -167,12 +167,17 @@ $datepicker_js_lang = '';
 if( Language::getInstance()->getLang() != 'en'){
     $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
 }
-$Cbucket->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+ClipBucket::getInstance()->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
 
 $available_tags = Tags::fill_auto_complete_tags('profile');
 assign('available_tags', $available_tags);
 
 assign('user', $udetails);
+
+assign('signup_fields', $userquery->load_signup_fields($udetails));
+assign('cust_signup_fields', $userquery->load_custom_signup_fields($udetails,false,true));
+assign('myAccountLinks', $userquery->my_account_links());
+
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');
 display_it();

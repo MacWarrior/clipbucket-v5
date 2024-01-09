@@ -40,7 +40,7 @@ function get_playlists($args = [])
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.playlist_item_id DESC")
 {
@@ -51,21 +51,21 @@ function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.play
 function get_playlist_cover($playlist, $return_default = false)
 {
     $cover = $playlist['cover'];
-    $playlist_dir = PLAYLIST_COVERS_DIR;
+    $playlist_dir = DirPath::get('playlist_covers');
 
     if (empty($cover)) {
         return $return_default ? get_playlist_default_thumb() : false;
     }
 
-    if (file_exists($playlist_dir . '/' . $cover)) {
-        return PLAYLIST_COVERS_URL . '/' . $cover;
+    if (file_exists($playlist_dir . $cover)) {
+        return DirPath::getUrl('playlist_covers') . $cover;
     }
 
     return $return_default ? get_playlist_default_thumb() : false;
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function get_playlist_thumb($playlist, $size = false)
 {
@@ -97,9 +97,9 @@ function get_playlist_default_thumb()
 {
     $name = 'playlist_thumb.png';
     $template = TEMPLATEDIR;
-    $images = IMAGES_URL;
+    $images = DirPath::getUrl('images');
 
-    $url = $images . '/' . $name;
+    $url = $images . $name;
 
     if (file_exists($template . '/images/' . $name)) {
         $url = TEMPLATEURL . '/images/' . $name;
@@ -148,7 +148,7 @@ function view_playlist($playlist_id)
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function playlist_upload_cover($args)
 {
@@ -156,8 +156,8 @@ function playlist_upload_cover($args)
 
     $filename = $args['playlist_id'];
     $extension = getExt($args['name']);
-    $folder = create_dated_folder(PLAYLIST_COVERS_DIR);
-    $uploaded_file = PLAYLIST_COVERS_DIR . '/' . $folder . '/' . $filename . '.' . $extension;
+    $folder = create_dated_folder(DirPath::get('playlist_covers'));
+    $uploaded_file = DirPath::get('playlist_covers') . $folder . '/' . $filename . '.' . $extension;
 
     if (!empty($filename)) {
 

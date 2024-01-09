@@ -1,0 +1,22 @@
+{
+    "name": "oxygenzsas/composer_lib_discord",
+    "description": "Un middleware PSR-15 et Log PSR-3  pour Discord",
+    "license": "MIT",
+    "keywords": ["middleware","minimalist","PSR-15","discord", "log", "PSR-3"],
+    "authors": [
+        {
+            "name": "nvanhaezebrouck",
+            "email": "nicolas@oxygenz.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "OxygenzSAS\\Discord\\" : "src/"
+        }
+    },
+    "require": {
+        "psr/http-message": "^1.0",
+        "psr/http-server-middleware": "1.0.2",
+        "psr/log": "1.1.4"
+    }
+}

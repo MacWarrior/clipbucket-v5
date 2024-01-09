@@ -44,7 +44,6 @@
                     } else {
                         link.innerHTML = '(' + index + ') ';
                     }
-
                     oneUploadForm = $(uploadForm).clone().get(0);
                     oneUploadForm.className = 'updatePhotoInfoForm';
                     oneUploadForm.id = '';
@@ -61,7 +60,7 @@
                     $(oneUploadForm).find("input[name='photo_title']").val(file.data.photo_title);
                     $(oneUploadForm).find("textarea[name='photo_description']").val(file.data.photo_description);
                     $(oneUploadForm).find("input[name='photo_tags']").val(file.data.photo_tags).attr('id', 'tags'+ index);
-                    $(oneUploadForm).find("select[name='collection_id']").val(file.data.collection_id);
+                    $(oneUploadForm).find("select[name='collection_id']").val(file.data.collection_id).prop('disabled',true);
                     $(oneUploadForm).find("input[name='allow_comments'][value='"+file.data.allow_comments+"']").prop('checked', true);
                     $(oneUploadForm).find("input[name='allow_embedding'][value='"+file.data.allow_embedding+"']").prop('checked', true);
                     $(oneUploadForm).find("input[name='allow_rating'][value='"+file.data.allow_rating+"']").prop('checked', true);
@@ -148,7 +147,6 @@
                     submit: function(e){
                         e.preventDefault();
                         var data = $(this).serialize();
-
                         data += "&collection_id="+collectionId;
                         data += "&updatePhoto=yes";
 
@@ -381,7 +379,10 @@
                                 newCollectionElement.value = parseInt(msg.id);
                                 newCollectionElement.innerHTML = collectionName;
                                 newCollectionElement.selected = true;
-                                $("#collectionSelection").get(0).appendChild(newCollectionElement);
+                                $("select[name='collection_id']").get(0).appendChild(newCollectionElement);
+                                $("#collectionSelection").get(0).appendChild( newCollectionElement.cloneNode(true));
+                                $("#collectionSelection option").last().attr('selected','selected');
+
                                 $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success container").removeClass("hidden");
 
                                 $("#CollectionDIV").toggle("fast");

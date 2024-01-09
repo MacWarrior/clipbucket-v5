@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'manage_playlists');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $cbvid, $eh, $Cbucket;
 
@@ -16,7 +16,7 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => lang('manage_playlists'),
-    'url'   => ADMIN_BASEURL . '/manage_playlist.php'
+    'url'   => DirPath::getUrl('admin_area') . 'manage_playlist.php'
 ];
 
 $mode = $_GET['mode'];
@@ -36,7 +36,7 @@ switch ($mode) {
         if (isset($_POST['delete_playlists'])) {
             $playlists = post('check_playlist');
 
-            if (count($playlists) > 0) {
+            if (!empty($playlists) && count($playlists) > 0) {
                 foreach ($playlists as $playlist) {
                     $cbvid->action->delete_playlist($playlist);
                 }
@@ -151,19 +151,19 @@ switch ($mode) {
         }
         break;
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
 if (in_dev()) {
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

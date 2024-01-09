@@ -1,16 +1,16 @@
 <?php
-require_once '../includes/admin_config.php';
 define('THIS_PAGE', 'language_setting');
-global $userquery, $pages, $Cbucket;
 
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Language Settings', 'url' => ADMIN_BASEURL . '/language_settings.php'];
+$breadcrumb[1] = ['title' => 'Language Settings', 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'];
 
 $ll = Language::getInstance()->get_langs(false, true);
 foreach ($ll as &$language) {
@@ -29,7 +29,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     assign('edit_lang', 'yes');
     $detail = Language::getInstance()->getLangById($_GET['edit_language']);
     assign('lang_details', $detail);
-    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => ADMIN_BASEURL . '/language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
+    $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => DirPath::getUrl('admin_area') . 'language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
     $edit_id = mysql_clean($_GET['edit_language']);
     $limit = RESULTS;
 
@@ -51,7 +51,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     $total_pages = $total_phrases / $limit;
     $total_pages = round($total_pages + 0.49, 0);
     //Pagination
-    $pages->paginate($total_pages, $current_page);
+    pages::getInstance()->paginate($total_pages, $current_page);
 }
 
 if(in_dev()){
@@ -59,10 +59,10 @@ if(in_dev()){
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
-assign('client_id', $Cbucket->configs['clientid']);
-assign('secret_Id', $Cbucket->configs['secretId']);
+assign('client_id', Clipbucket::getInstance()->configs['clientid']);
+assign('secret_Id', Clipbucket::getInstance()->configs['secretId']);
 subtitle('Language Settings');
 template_files('language_settings.html');
 display_it();

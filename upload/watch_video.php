@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'watch_video');
 define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
-global $cbvid, $Cbucket;
+global $cbvid;
 
 if (!userquery::getInstance()->perm_check('view_video', true)) {
     redirect_to(BASEURL);
@@ -44,6 +44,7 @@ if (video_playable($vdo)) {
         $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
     }
     $playlist = $cbvid->action->get_playlist($pid, user_id());
+
     $assign_arry['playlist'] = $playlist;
     //Getting Playlist Item
     $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC');
@@ -60,18 +61,18 @@ if (video_playable($vdo)) {
         $min_suffixe = '.min';
     }
 
-    $Cbucket->addJS([
+    ClipBucket::getInstance()->addJS([
         'tag-it' . $min_suffixe . '.js'                              => 'admin',
         'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin',
         'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
     ]);
-    $Cbucket->addCSS([
+    ClipBucket::getInstance()->addCSS([
         'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
         'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',
         'readonly_tag' . $min_suffixe . '.css'     => 'admin'
     ]);
 } else {
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 }
 
 display_it();

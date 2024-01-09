@@ -1,23 +1,3 @@
-{$first_col_thumb = $cbcollection->coll_first_thumb($collection,'l')}
-{if $Cbucket->configs.seo == 'no'}
-    {$main_url = "/view_collection.php?cid={$collection.collection_id}"}
-{else}
-    {$main_url = "/collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
-{/if}
 <div class="clearfix collection-item col-lg-3 col-md-3 col-sm-4 col-xs-6">
-	<div class="collection-holder">
-		<div class="photo-block">
-			<a href="{$main_url}" title="{display_clean($collection.collection_name)}}">
-				<img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive" id="collection_{$collection.collection_id}" src="{$first_col_thumb}"/>
-				{ANCHOR place='in_collection_thumb' data=$collection}
-				<div class="collection-info">
-					<span>{$collection.total_objects}</span>{if $collection.type == 'videos'}{lang code='videos'}{else}{lang code='photos'}{/if}
-				</div>
-			</a>
-		</div>
-		<img src="{$theme}/images/photo-bg.png" alt="" class="photo-bg">
-	</div>
-	<span class="title" title="{display_clean($collection.collection_name)}">{display_clean($collection.collection_name)}</span>
+	{include file="$style_dir/blocks/collection-item.html"}
 </div>
-
-

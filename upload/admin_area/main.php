@@ -1,20 +1,21 @@
 <?php
+define('THIS_PAGE', 'website_configurations');
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-require_once '../includes/admin_config.php';
-global $userquery, $pages, $Upload, $myquery, $Cbucket, $breadcrumb;
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
+$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => DirPath::getUrl('admin_area') . 'main.php'];
 
 if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-$opt_list = $Upload->get_upload_options();
+$opt_list = Upload::getInstance()->get_upload_options();
 
 assign('opt_list', $opt_list);
 assign('post_max_size', ini_get('post_max_size'));
@@ -78,6 +79,18 @@ if (isset($_POST['update'])) {
         , 'enable_video_social_sharing'
         , 'enable_video_internal_sharing'
         , 'enable_video_link_sharing'
+        , 'enable_age_restriction'
+        , 'enable_user_dob_edition'
+        , 'enable_blur_restricted_content'
+        , 'enable_global_age_restriction'
+        , 'enable_quicklist'
+        , 'hide_empty_collection'
+        , 'display_video_comments'
+        , 'display_photo_comments'
+        , 'display_channel_comments'
+        , 'enable_collection_comments'
+        , 'display_collection_comments'
+        , 'enable_sitemap'
         , 'enable_tmdb'
     ];
 
@@ -275,6 +288,13 @@ if (isset($_POST['update'])) {
         'enable_video_social_sharing',
         'enable_video_internal_sharing',
         'enable_video_link_sharing',
+        'enable_age_restriction',
+        'enable_user_dob_edition',
+        'enable_blur_restricted_content',
+        'enable_global_age_restriction',
+        'enable_collection_comments',
+        'display_collection_comments',
+        'enable_sitemap',
 
         'thumb_width',
         'thumb_height',
@@ -318,6 +338,7 @@ if (isset($_POST['update'])) {
         'enable_video_file_upload',
         'enable_video_remote_upload',
         'enable_photo_file_upload',
+        'enable_quicklist',
 
         'allow_conversion_1_percent',
 
@@ -342,7 +363,12 @@ if (isset($_POST['update'])) {
         'cache_password',
 
         'enable_tmdb',
-        'tmdb_token'
+        'tmdb_token',
+
+        'hide_empty_collection',
+        'display_video_comments',
+        'display_photo_comments',
+        'display_channel_comments'
     ];
 
     foreach ($opt_list as $optl) {
@@ -398,12 +424,28 @@ if (isset($_POST['update'])) {
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height'
+        'photo_med_height',
     ];
 
+    if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {
+        $_POST['video_comments'] = '0';
+    }
+    if (empty($_POST['display_photo_comments']) || $_POST['display_photo_comments'] == 'no') {
+        $_POST['photo_comments'] = '0';
+    }
+    if (empty($_POST['display_channel_comments']) || $_POST['display_channel_comments'] == 'no') {
+        $_POST['channel_comments'] = '0';
+    }
+    if (empty($_POST['display_collection_comments']) || $_POST['display_collection_comments'] == 'no') {
+        $_POST['collection_comments'] = '0';
+    }
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
+            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
+                e(lang('error_age_restriction_save'));
+                break;
+            }
             if ($value <= 0 || !is_numeric($value)) {
                 $value = 1;
             }
@@ -419,18 +461,18 @@ if (isset($_POST['update'])) {
             }
         }
 
-        $myquery->Set_Website_Details($field, $value);
+        myquery::getInstance()->Set_Website_Details($field, $value);
     }
     CacheRedis::flushAll();
 
-    $myquery->saveVideoResolutions($_POST);
+    myquery::getInstance()->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');
 }
 
-$row = $myquery->Get_Website_Details();
+$row = myquery::getInstance()->Get_Website_Details();
 Assign('row', $row);
 
-$video_resolutions = $myquery->getVideoResolutions();
+$video_resolutions = myquery::getInstance()->getVideoResolutions();
 Assign('video_resolutions', $video_resolutions);
 
 $ffmpeg_version = check_version('ffmpeg');
@@ -438,12 +480,48 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
+if (!empty($_POST)) {
+    $filepath_dev_file = DirPath::get('temp') . 'development.dev';
+    if (!empty($_POST['enable_dev_mode'])) {
+        if (is_writable(DirPath::get('temp'))) {
+            file_put_contents($filepath_dev_file, '');
+            if (file_exists($filepath_dev_file)) {
+                assign('DEVELOPMENT_MODE', true);
+            }
+        } else {
+            e('"temp" directory is not writeable');
+        }
+    } else {
+        unlink($filepath_dev_file);
+        if (!file_exists($filepath_dev_file)) {
+            assign('DEVELOPMENT_MODE', false);
+        }
+    }
+} else {
+    assign('DEVELOPMENT_MODE', in_dev());
+}
+
+if( !empty($_POST['discord_error_log']) ){
+    if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
+            e(lang('discord_webhook_url_invalid'));
+        } else {
+            DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
+        }
+    } else {
+        DiscordLog::getInstance()->disable();
+    }
+}
+
+assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
+assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
+
 if(in_dev()){
     $min_suffixe = '';
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
+ClipBucket::getInstance()->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
 template_files('main.html');
 display_it();

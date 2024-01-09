@@ -2,10 +2,14 @@
 define('THIS_PAGE', 'channels');
 
 require 'includes/config.inc.php';
-global $pages, $userquery;
-$pages->page_redir();
-$userquery->perm_check('view_channels', true);
-global $pages;
+
+pages::getInstance()->page_redir();
+userquery::getInstance()->perm_check('view_channels', true);
+
+if( !isSectionEnabled('channels') ){
+    redirect_to(BASEURL);
+}
+
 $assign_arry = [];
 $sort = $_GET['sort'];
 $u_cond = ['category' => mysql_clean($_GET['cat']), 'date_span' => mysql_clean($_GET['time'])];
@@ -47,11 +51,8 @@ $total_pages = count_pages($counter, CLISTPP);
 //Pagination
 $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';
-$pages->paginate($total_pages, $page, $link, $extra_params, $tag);
-if (!$subtitle) {
-    $subtitle = 'channels';
-}
-subtitle(lang($subtitle));
+pages::getInstance()->paginate($total_pages, $page, null, $extra_params, $tag);
+subtitle(lang('channels'));
 Assign('users', $users);
 template_files('channels.html');
 display_it();

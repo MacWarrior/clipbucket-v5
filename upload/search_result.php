@@ -2,9 +2,7 @@
 define('THIS_PAGE', 'search_result');
 require_once 'includes/config.inc.php';
 
-global $pages, $userquery, $cbvid;
-
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $page = $_GET['page'];
 $type = strtolower($_GET['type']);
@@ -20,7 +18,7 @@ switch($type){
         break;
 }
 
-if (!$userquery->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
+if (!userquery::getInstance()->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
     redirect_to(BASEURL);
 }
 
@@ -56,7 +54,7 @@ assign('template_var', $obj->getDisplayVarName());
 assign('display_template', $obj->getDisplayBlock());
 
 //Pagination
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 assign('type', $type);
 assign('results', $results);

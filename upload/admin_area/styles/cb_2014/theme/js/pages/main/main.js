@@ -43,6 +43,24 @@ $(document).ready(function () {
         }
     });
 
+    const autoDisabled = [
+        'video'
+        ,'photo'
+        ,'channel'
+        ,'collection'
+    ];
+
+    autoDisabled.forEach(function (elem) {
+        $('#display_'+elem+'_comments').change(function () {
+            let parent = $('#'+elem+'_comments');
+            if (!$(this).prop('checked')) {
+                parent.prop('checked',false).prop('disabled',true);
+            } else {
+                parent.prop('disabled',false);
+            }
+        });
+    });
+
     $("#smtp_auth").change(function () {
         if ($("#smtp_auth:checked").length == 1) {
             $('.config_smtp_auth').show();
@@ -66,4 +84,12 @@ $(document).ready(function () {
         }
     });
 
+    $('#discord_error_log').change(function () {
+        let parent = $('#discord_webhook_url');
+        if (!$(this).prop('checked')) {
+            parent.prop('disabled',true);
+        } else {
+            parent.prop('disabled',false);
+        }
+    });
 });

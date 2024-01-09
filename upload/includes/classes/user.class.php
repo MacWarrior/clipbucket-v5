@@ -7,7 +7,11 @@ class User
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
+    private $current_user = [];
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'users';
         $this->fields = [
@@ -65,6 +69,15 @@ class User
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
+
+        $user_id = user_id();
+        if( $user_id ){
+            $params = [];
+            $params['userid'] = $user_id;
+            $params['first_only'] = true;
+            $this->current_user = $this->getAll($params);
+        }
+
     }
 
     public static function getInstance(): self
@@ -102,7 +115,6 @@ class User
      */
     public function getAll(array $params = [])
     {
-        $param_collection_id = $params['userid'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
 
@@ -199,6 +211,31 @@ class User
 
         return $result;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function getCurrentUserAge()
+    {
+        if( empty($this->current_user) ){
+            return false;
+        }
+
+        $current_date = new DateTime();
+        $date_of_birth = new DateTime($this->current_user['dob']);
+        $diff = $current_date->diff($date_of_birth);
+        return $diff->y;
+    }
+
+    public function isUserConnected()
+    {
+        return !empty($this->current_user);
+    }
+
+    public function getCurrentUserID()
+    {
+        return $this->current_user['userid'] ?? false;
+    }
 }
 
 
@@ -275,7 +312,7 @@ class userquery extends CBCategory
      */
     function init()
     {
-        global $sess, $Cbucket;
+        global $sess;
 
         $this->sess_salt = $sess->get('sess_salt');
         $this->sessions = $this->get_sessions();
@@ -333,7 +370,7 @@ class userquery extends CBCategory
         define('BACKGROUND_URL', config('background_url'));
         define('BACKGROUND_COLOR', config('background_color'));
         if (isSectionEnabled('channels')) {
-            $Cbucket->search_types['channels'] = 'userquery';
+            ClipBucket::getInstance()->search_types['channels'] = 'userquery';
         }
     }
 
@@ -343,8 +380,7 @@ class userquery extends CBCategory
     function create_session_key($session, $pass): string
     {
         $newkey = $session . $pass;
-        $newkey = md5($newkey);
-        return $newkey;
+        return md5($newkey);
     }
 
     /**
@@ -544,8 +580,6 @@ class userquery extends CBCategory
      */
     function login_check($access = null, $check_only = false, $verify_logged_user = true)
     {
-        global $Cbucket;
-
         if ($verify_logged_user) {
             //First check weather userid is here or not
             if (!user_id()) {
@@ -584,7 +618,7 @@ class userquery extends CBCategory
                 if (!$check_only) {
                     e(lang('insufficient_privileges'));
                 }
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
                 return false;
             }
 
@@ -594,7 +628,7 @@ class userquery extends CBCategory
 
             if (!$check_only) {
                 e(lang('insufficient_privileges'));
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
             }
             return false;
         }
@@ -1661,10 +1695,10 @@ class userquery extends CBCategory
         $avatar = $avatar_path = '';
         if (!empty($udetails)) {
             $avatar = $udetails['avatar'];
-            $avatar_path = AVATARS_DIR . DIRECTORY_SEPARATOR . $avatar;
+            $avatar_path = DirPath::get('avatars') . $avatar;
         }
         if (!empty($avatar) && file_exists($avatar_path)) {
-            return AVATARS_URL . DIRECTORY_SEPARATOR . $avatar;
+            return DirPath::getUrl('avatars') . $avatar;
         }
 
         if (!empty($udetails['avatar_url'])) {
@@ -1730,10 +1764,10 @@ class userquery extends CBCategory
     function getUserBg($udetails, $check = false)
     {
         $file = $udetails['background'];
-        $bgfile = USER_BG_DIR . DIRECTORY_SEPARATOR . $file;
+        $bgfile = DirPath::get('backgrounds') . $file;
 
         if (file_exists($bgfile) && $file) {
-            return USER_BG_URL . '/' . $file;
+            return DirPath::getUrl('backgrounds') . $file;
         }
 
         if (!empty($udetails['background_url']) && BACKGROUND_URL == 'yes') {
@@ -2098,7 +2132,7 @@ class userquery extends CBCategory
             $udetails = $this->get_user_details($udetails);
         }
 
-        $username = display_clean($udetails['username']);
+        $username = display_clean($udetails['user_username'] ?? $udetails['username']);
         if (SEO != 'yes') {
             return '/view_channel.php?user=' . $username;
         }
@@ -2155,7 +2189,6 @@ class userquery extends CBCategory
      */
     function perm_check($access = '', $check_login = false, $control_page = true, $silent = false): bool
     {
-        global $Cbucket;
         $access_details = $this->permission;
         if (is_numeric($access)) {
             if ($access_details['level_id'] == $access) {
@@ -2167,7 +2200,7 @@ class userquery extends CBCategory
             }
 
             if ($control_page) {
-                $Cbucket->show_page(false);
+                ClipBucket::getInstance()->show_page(false);
             }
             return false;
         }
@@ -2185,7 +2218,7 @@ class userquery extends CBCategory
         }
 
         if ($control_page) {
-            $Cbucket->show_page(false);
+            ClipBucket::getInstance()->show_page(false);
         }
         return false;
     }
@@ -2430,6 +2463,9 @@ class userquery extends CBCategory
 
         //Changing Date of birth
         if (isset($array['dob']) && $array['dob'] != '0000-00-00') {
+            if (!verify_age($array['dob'])) {
+                e(sprintf(lang('edition_min_age_request'), config('min_age_reg')));
+            }
             $uquery_field[] = 'dob';
 
             // Converting date from custom format to MySQL
@@ -2462,7 +2498,7 @@ class userquery extends CBCategory
         if ($array['delete_avatar'] == 'yes') {
             $udetails = $this->get_user_details($array['userid']);
 
-            $file = AVATARS_DIR . '/' . $udetails['avatar'];
+            $file = DirPath::get('avatars') . $udetails['avatar'];
             if (file_exists($file) && $udetails['avatar'] != '') {
                 unlink($file);
             }
@@ -2481,7 +2517,7 @@ class userquery extends CBCategory
 
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
-            $file = USER_BG_DIR . DIRECTORY_SEPARATOR . $array['bg_file_name'];
+            $file = DirPath::get('backgrounds') . $array['bg_file_name'];
             if (file_exists($file) && $array['bg_file_name']) {
                 unlink($file);
             }
@@ -2577,7 +2613,7 @@ class userquery extends CBCategory
         if ($array['delete_avatar'] == 'yes') {
             $udetails = $this->get_user_details(user_id());
 
-            $file = AVATARS_DIR . DIRECTORY_SEPARATOR . $udetails['avatar_url'];
+            $file = DirPath::get('avatars') . $udetails['avatar_url'];
             if (file_exists($file) && $udetails['avatar_url'] != '') {
                 unlink($file);
             }
@@ -2605,7 +2641,7 @@ class userquery extends CBCategory
 
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
-            $file = USER_BG_DIR . DIRECTORY_SEPARATOR . $array['bg_file_name'];
+            $file = DirPath::get('backgrounds') . $array['bg_file_name'];
             if (file_exists($file) && $array['bg_file_name'] != '') {
                 unlink($file);
             }
@@ -2678,7 +2714,7 @@ class userquery extends CBCategory
 
         $ext = getext($file['name']);
         $file_name = $file['userid'] . '.' . $ext;
-        $file_path = USER_BG_DIR . DIRECTORY_SEPARATOR . $file_name;
+        $file_path = DirPath::get('backgrounds') . $file_name;
         if (move_uploaded_file($file['tmp_name'], $file_path)) {
             $imgObj = new ResizeImage();
             if (!$imgObj->ValidateImage($file_path, $ext)) {
@@ -3130,8 +3166,6 @@ class userquery extends CBCategory
      */
     function load_signup_fields($input = null): array
     {
-        global $Cbucket;
-
         $default = [];
 
         if (isset($input)) {
@@ -3250,7 +3284,7 @@ class userquery extends CBCategory
         ];
 
         if( config('enable_country') == 'yes' ){
-            $countries = $Cbucket->get_countries();
+            $countries = ClipBucket::getInstance()->get_countries();
             $selected_cont = null;
             $pick_geo_country = config('pick_geo_country');
             if ($pick_geo_country == 'yes') {
@@ -3700,7 +3734,7 @@ class userquery extends CBCategory
             if ($cond != '') {
                 $cond .= ' AND';
             }
-            $cond .= ' ' . cbsearch::date_margin('users.doj', $params['date_span']);
+            $cond .= ' ' . Search::date_margin('users.doj', $params['date_span']);
         }
 
         //FEATURED
@@ -4725,18 +4759,21 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        $return = [
-            'show_profile'       => [
-                'title'    => lang('show_profile'),
-                'type'     => 'dropdown',
-                'name'     => 'show_profile',
-                'id'       => 'show_profile',
-                'value'    => ['all' => lang('all'), 'members' => lang('members'), 'friends' => lang('friends')],
-                'checked'  => $default['show_profile'],
-                'db_field' => 'show_profile',
-                'sep'      => '&nbsp;'
-            ],
-            'allow_comments'     => [
+        $return = [];
+
+        $return['show_profile'] = [
+            'title'    => lang('show_profile'),
+            'type'     => 'dropdown',
+            'name'     => 'show_profile',
+            'id'       => 'show_profile',
+            'value'    => ['all' => lang('all'), 'members' => lang('members'), 'friends' => lang('friends')],
+            'checked'  => $default['show_profile'],
+            'db_field' => 'show_profile',
+            'sep'      => '&nbsp;'
+        ];
+
+        if( config('display_channel_comments') == 'yes' ){
+            $return['allow_comments'] = [
                 'title'    => lang('vdo_allow_comm'),
                 'type'     => 'radiobutton',
                 'name'     => 'allow_comments',
@@ -4745,28 +4782,30 @@ class userquery extends CBCategory
                 'checked'  => strtolower($default['allow_comments']),
                 'db_field' => 'allow_comments',
                 'sep'      => '&nbsp;'
-            ],
-            'allow_ratings'      => [
-                'title'    => lang('allow_ratings'),
-                'type'     => 'radiobutton',
-                'name'     => 'allow_ratings',
-                'id'       => 'allow_ratings',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['allow_ratings']),
-                'db_field' => 'allow_ratings',
-                'sep'      => '&nbsp;'
-            ],
-            'allow_subscription' => [
-                'title'    => lang('allow_subscription'),
-                'type'     => 'radiobutton',
-                'name'     => 'allow_subscription',
-                'id'       => 'allow_subscription',
-                'hint_1'   => lang('allow_subscription_hint'),
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['allow_subscription']),
-                'db_field' => 'allow_subscription',
-                'sep'      => '&nbsp;'
-            ]
+            ];
+        }
+
+        $return['allow_ratings'] = [
+            'title'    => lang('allow_ratings'),
+            'type'     => 'radiobutton',
+            'name'     => 'allow_ratings',
+            'id'       => 'allow_ratings',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['allow_ratings']),
+            'db_field' => 'allow_ratings',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['allow_subscription'] = [
+            'title'    => lang('allow_subscription'),
+            'type'     => 'radiobutton',
+            'name'     => 'allow_subscription',
+            'id'       => 'allow_subscription',
+            'hint_1'   => lang('allow_subscription_hint'),
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['allow_subscription']),
+            'db_field' => 'allow_subscription',
+            'sep'      => '&nbsp;'
         ];
 
         if( config('enable_user_status') == 'yes' ){
@@ -4797,87 +4836,96 @@ class userquery extends CBCategory
             $default = $_POST;
         }
 
-        return [
-            'profile_title'         => [
-                'title'     => lang('channel_title'),
-                'type'      => 'textfield',
-                'name'      => 'profile_title',
-                'id'        => 'profile_title',
-                'value'     => $default['profile_title'],
-                'db_field'  => 'profile_title',
-                'auto_view' => 'no'
-            ],
-            'profile_desc'          => [
-                'title'      => lang('channel_desc'),
-                'type'       => 'textarea',
-                'name'       => 'profile_desc',
-                'id'         => 'profile_desc',
-                'value'      => $default['profile_desc'],
-                'db_field'   => 'profile_desc',
-                'auto_view'  => 'yes',
-                'clean_func' => 'Replacer'
-            ],
-            'show_my_friends'       => [
-                'title'    => lang('show_my_friends'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_friends',
-                'id'       => 'show_my_friends',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_friends']),
-                'db_field' => 'show_my_friends',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_videos'        => [
-                'title'    => lang('show_my_videos'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_videos',
-                'id'       => 'show_my_videos',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_videos']),
-                'db_field' => 'show_my_videos',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_photos'        => [
-                'title'    => lang('show_my_photos'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_photos',
-                'id'       => 'show_my_photos',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_photos']),
-                'db_field' => 'show_my_photos',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_subscriptions' => [
-                'title'    => lang('show_my_subscriptions'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_subscriptions',
-                'id'       => 'show_my_subscriptions',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_subscriptions']),
-                'db_field' => 'show_my_subscriptions',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_subscribers'   => [
-                'title'    => lang('show_my_subscribers'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_subscribers',
-                'id'       => 'show_my_subscribers',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_subscribers']),
-                'db_field' => 'show_my_subscribers',
-                'sep'      => '&nbsp;'
-            ],
-            'show_my_collections'   => [
-                'title'    => lang('show_my_collections'),
-                'type'     => 'radiobutton',
-                'name'     => 'show_my_collections',
-                'id'       => 'show_my_collections',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-                'checked'  => strtolower($default['show_my_collections']),
-                'db_field' => 'show_my_collections',
-                'sep'      => '&nbsp;'
-            ]
+        $return = [];
+
+        $return['profile_title'] = [
+            'title'     => lang('channel_title'),
+            'type'      => 'textfield',
+            'name'      => 'profile_title',
+            'id'        => 'profile_title',
+            'value'     => $default['profile_title'],
+            'db_field'  => 'profile_title',
+            'auto_view' => 'no'
         ];
+
+        $return['profile_desc'] = [
+            'title'      => lang('channel_desc'),
+            'type'       => 'textarea',
+            'name'       => 'profile_desc',
+            'id'         => 'profile_desc',
+            'value'      => $default['profile_desc'],
+            'db_field'   => 'profile_desc',
+            'auto_view'  => 'yes',
+            'clean_func' => 'Replacer'
+        ];
+
+        $return['show_my_friends'] = [
+            'title'    => lang('show_my_friends'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_friends',
+            'id'       => 'show_my_friends',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_friends']),
+            'db_field' => 'show_my_friends',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_videos'] = [
+            'title'    => lang('show_my_videos'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_videos',
+            'id'       => 'show_my_videos',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_videos']),
+            'db_field' => 'show_my_videos',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_photos'] = [
+            'title'    => lang('show_my_photos'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_photos',
+            'id'       => 'show_my_photos',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_photos']),
+            'db_field' => 'show_my_photos',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_subscriptions'] = [
+            'title'    => lang('show_my_subscriptions'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_subscriptions',
+            'id'       => 'show_my_subscriptions',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_subscriptions']),
+            'db_field' => 'show_my_subscriptions',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_subscribers'] = [
+            'title'    => lang('show_my_subscribers'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_subscribers',
+            'id'       => 'show_my_subscribers',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_subscribers']),
+            'db_field' => 'show_my_subscribers',
+            'sep'      => '&nbsp;'
+        ];
+
+        $return['show_my_collections'] = [
+            'title'    => lang('show_my_collections'),
+            'type'     => 'radiobutton',
+            'name'     => 'show_my_collections',
+            'id'       => 'show_my_collections',
+            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'checked'  => strtolower($default['show_my_collections']),
+            'db_field' => 'show_my_collections',
+            'sep'      => '&nbsp;'
+        ];
+
+        return $return;
     }
 
     /**
@@ -4894,7 +4942,7 @@ class userquery extends CBCategory
      * and that array will be part of video fields
      * @throws Exception
      */
-    function load_user_fields($default, $type = 'all')
+    function load_user_fields($default, $type = 'all'): array
     {
         $getChannelSettings = false;
         $getProfileSettings = false;

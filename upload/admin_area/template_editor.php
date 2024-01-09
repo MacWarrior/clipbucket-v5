@@ -1,12 +1,15 @@
 <?php
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->perm_check('manage_template_access', true);
+define('THIS_PAGE', 'template_editor');
+
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->perm_check('manage_template_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Templates Editor', 'url' => ADMIN_BASEURL . '/template_editor.php'];
+$breadcrumb[1] = ['title' => 'Templates Editor', 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'];
 
 /**
  * Getting List Of Templates
@@ -21,7 +24,7 @@ if (!$sel_dir || !$cbtpl->is_template($sel_dir)) {
 
 //Checking if still there is no template, display error
 if (!$cbtpl->is_template($sel_dir)) {
-    e("No Template Found");
+    e('No Template Found');
 } else {
     assign('sel_dir', $sel_dir);
     //Getting list template layout files , i.e HTML files
@@ -33,18 +36,18 @@ if (!$cbtpl->is_template($sel_dir)) {
 
     //Reading File
     if (isset($_GET['file']) && isset($_GET['folder'])) {
-        $file = STYLES_DIR . '/' . TEMPLATE . '/' . $_GET['folder'] . '/' . $_GET['file'];
+        $file = DirPath::get('styles') . TEMPLATE . DIRECTORY_SEPARATOR . $_GET['folder'] . DIRECTORY_SEPARATOR . $_GET['file'];
 
         if (file_exists($file)) {
             if (isset($_POST['update_file'])) {
                 if (is_writable($file)) {
                     //echo $file;
                     $data = $_POST['thecontent'];
-                    $open_file = fopen($file, "w");
+                    $open_file = fopen($file, 'w');
                     fwrite($open_file, stripslashes($data));
-                    e("File has been updated", "m");
+                    e('File has been updated', 'm');
                 } else {
-                    e("Unable to write file");
+                    e('Unable to write file');
                 }
             }
 
@@ -61,11 +64,11 @@ if (!$cbtpl->is_template($sel_dir)) {
 }
 
 //Getting And Listing Files
-if (!file_exists(BASEDIR . '/' . TEMPLATEFOLDER . '/' . @$_GET['temp']) || @$_GET['temp'] == '') {
+if (!file_exists(DirPath::get('styles') . @$_GET['temp']) || @$_GET['temp'] == '') {
     $dir = SITETEMPLATEDIR . '/layout/';
     $cur_dir = TEMPLATE;
 } else {
-    $dir = BASEDIR . '/' . TEMPLATEFOLDER . '/' . $_GET['temp'] . '/layout/';
+    $dir = DirPath::get('styles') . $_GET['temp'] . DIRECTORY_SEPARATOR . 'layout' . DIRECTORY_SEPARATOR;
     $cur_dir = $_GET['temp'];
 }
 if (!($dp = opendir($dir))) {

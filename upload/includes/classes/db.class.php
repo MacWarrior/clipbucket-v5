@@ -267,12 +267,16 @@ class Clipbucket_db
                 $val = $this->clean_var($val);
             }
 
-            $needle = substr($val, 0, 3);
-            if ($needle != '|f|') {
-                $fields_query .= $flds[$i] . "='" . $val . "'";
+            if (strtoupper($val) == 'NULL') {
+                $fields_query .= $flds[$i] . '= NULL';
             } else {
-                $val = substr($val, 3, strlen($val));
-                $fields_query .= $flds[$i] . '=' . $val;
+                $needle = substr($val, 0, 3);
+                if ($needle != '|f|') {
+                    $fields_query .= $flds[$i] . "='" . $val . "'";
+                } else {
+                    $val = substr($val, 3, strlen($val));
+                    $fields_query .= $flds[$i] . '=' . $val;
+                }
             }
 
             if ($total_fields != $count) {

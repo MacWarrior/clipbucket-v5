@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb, $Cbucket;
-require_once '../includes/admin_config.php';
+global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
@@ -17,11 +17,11 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => lang('videos_manager'),
-    'url'   => ADMIN_BASEURL . '/video_manager.php'
+    'url'   => DirPath::getUrl('admin_area') . 'video_manager.php'
 ];
 $breadcrumb[2] = [
     'title' => 'Editing : ' . display_clean($data['title']),
-    'url'   => ADMIN_BASEURL . '/edit_video.php?video=' . display_clean($video)
+    'url'   => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)
 ];
 
 if (@$_GET['msg']) {
@@ -65,13 +65,13 @@ if ($myquery->video_exists($video)) {
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
     } else {
-        $str = DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR;
-        $file = LOGS_DIR . $str . $data['file_name'] . '.log';
+        $str = $data['file_directory'] . DIRECTORY_SEPARATOR;
+        $file = DirPath::get('logs') . $str . $data['file_name'] . '.log';
     }
     assign('has_log', file_exists($file));
 } else {
     //add parameter to display message after redirect
-    redirect_to(BASEURL . ADMIN_BASEURL . '/video_manager.php?missing_video=1');
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php?missing_video=1');
 }
 
 $resolution_list = getResolution_list($data);
@@ -105,13 +105,13 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

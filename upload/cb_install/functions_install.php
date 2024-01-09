@@ -1,23 +1,19 @@
 <?php
-define('BASEDIR', dirname(__FILE__, 2));
-
-if (!file_exists(BASEDIR . '/files/temp/install.me')) {
-    if (!file_exists(BASEDIR . '/files/temp/install.me.not') && !file_exists(BASEDIR . '/files/temp/development.dev')) {
+if (!file_exists(DirPath::get('temp') . 'install.me')) {
+    if (!file_exists(DirPath::get('temp') . 'install.me.not') && !file_exists(DirPath::get('temp') . 'development.dev')) {
         header('Location: //' . $_SERVER['SERVER_NAME']);
         die();
     }
 
-    if (!file_exists(BASEDIR . '/files/temp/install.me.not')) {
+    if (!file_exists(DirPath::get('temp') . 'install.me.not')) {
         $mode = 'lock';
     }
 }
 
-
 function get_cbla()
 {
-    $license = file_get_contents(dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'LICENSE');
-    $license = str_replace("\n", '<BR>', $license);
-    return $license;
+    $license = file_get_contents(DirPath::get('root') . 'LICENSE');
+    return str_replace("\n", '<BR>', $license);
 }
 
 function button($text, $params, $class = 'btn-primary')
@@ -65,57 +61,63 @@ function check_module($type): array
                 $return['msg'] = sprintf('Found PHP %s : %s', $php_version, PHP_BINARY);
             }
             break;
+
         case 'php_cli':
             $php_path = exec('which php');
-            $cmd = $php_path . ' ' . BASEDIR . DIRECTORY_SEPARATOR . 'phpinfo.php';
-            if (empty($php_cli_info)) {
-                exec($cmd, $php_cli_info);
+            if( empty($php_path) ) {
+                $return['err'] = 'Unable to find PHP CLI';
+                break;
             }
 
-            if (empty($php_cli_info)) {
-                e(lang('php_cli_not_found'));
-            } else {
-                $regVersion = '/(\w* \w*) => (.*)$/';
-                foreach ($php_cli_info as $line) {
-                    $match = [];
-                    if (strpos($line, 'PHP Version') !== false) {
-                        preg_match($regVersion, $line, $match);
-                        if (!empty($match)) {
-                            $php_version = $match[2];
-                        }
+            $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php';
+            exec($cmd, $php_cli_info);
+
+            if( empty($php_cli_info) ){
+                $return['err'] = 'PHP CLI is not correctly configured';
+                break;
+            }
+
+            $regVersion = '/(\w* \w*) => (.*)$/';
+            foreach ($php_cli_info as $line) {
+                $match = [];
+                if (strpos($line, 'PHP Version') !== false) {
+                    preg_match($regVersion, $line, $match);
+                    if (!empty($match)) {
+                        $php_version = $match[2];
                     }
-                    if (strpos($line, 'GD library Version') !== false) {
-                        preg_match($regVersion, $line, $match);
-                        if (!empty($match)) {
-                            $extensionsCLI['gd'] = $match[2];
-                        }
+                }
+                if (strpos($line, 'GD library Version') !== false) {
+                    preg_match($regVersion, $line, $match);
+                    if (!empty($match)) {
+                        $extensionsCLI['gd'] = $match[2];
                     }
-                    if (strpos($line, 'libmbfl version') !== false) {
-                        preg_match($regVersion, $line, $match);
-                        if (!empty($match)) {
-                            $extensionsCLI['mbstring'] = $match[2];
-                        }
+                }
+                if (strpos($line, 'libmbfl version') !== false) {
+                    preg_match($regVersion, $line, $match);
+                    if (!empty($match)) {
+                        $extensionsCLI['mbstring'] = $match[2];
                     }
-                    if (strpos($line, 'Client API library version') !== false) {
-                        preg_match($regVersion, $line, $match);
-                        if (!empty($match)) {
-                            $extensionsCLI['mysqli'] = $match[2];
-                        }
+                }
+                if (strpos($line, 'Client API library version') !== false) {
+                    preg_match($regVersion, $line, $match);
+                    if (!empty($match)) {
+                        $extensionsCLI['mysqli'] = $match[2];
                     }
-                    if (strpos($line, 'libxml2 Version') !== false) {
-                        preg_match($regVersion, $line, $match);
-                        if (!empty($match)) {
-                            $extensionsCLI['xml'] = $match[2];
-                        }
+                }
+                if (strpos($line, 'libxml2 Version') !== false) {
+                    preg_match($regVersion, $line, $match);
+                    if (!empty($match)) {
+                        $extensionsCLI['xml'] = $match[2];
                     }
-                    if (strpos($line, 'cURL Information') !== false) {
-                        preg_match($regVersion, $line, $match);
-                        if (!empty($match)) {
-                            $extensionsCLI['curl'] = $match[2];
-                        }
+                }
+                if (strpos($line, 'cURL Information') !== false) {
+                    preg_match($regVersion, $line, $match);
+                    if (!empty($match)) {
+                        $extensionsCLI['curl'] = $match[2];
                     }
                 }
             }
+
             $req = '7.0.0';
             if ($php_version < $req) {
                 $return['err'] = sprintf('Found PHP CLI %s but required is PHP %s : %s', $php_version, $req, $php_path);
@@ -310,13 +312,12 @@ function checkPermissions(): array
         'images/avatars',
         'images/category_thumbs',
         'images/collection_thumbs',
-        'images/groups_thumbs',
         'includes'
     ];
 
     $permsArray = [];
     foreach ($files as $file) {
-        if (is_writeable(BASEDIR . DIRECTORY_SEPARATOR . $file)) {
+        if (is_writeable(DirPath::get('root') . $file)) {
             $permsArray[] = [
                 'path' => $file,
                 'msg'  => 'writeable'

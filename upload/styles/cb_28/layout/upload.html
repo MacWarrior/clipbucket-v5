@@ -33,7 +33,6 @@
 								{if $counter == 1}
 									{$class = "active"}
 								{/if}
-								{* Checking weather to show uploadin option to user or not *}
 
 								{assign var='no_upload' value='no'}
 								<li class="{$class}">
@@ -42,23 +41,19 @@
 								{$counter = $counter + 1}
 							{/foreach}
 						</ul>
-						<!-- the div for upload file remote/normal-->
 						<div class="tab-content uploadFormDiv">
 							{$counter = 1}
-							{foreach from=$opt_list item=opt key=divid}     
-								{* Checking weather to show uploadin option to user or not *}
+							{foreach from=$opt_list item=opt key=divid}
 								{$class = ""}
 								{if $counter == 1}
 									{$class = "active"}
 								{/if}
 								<div class="tab-pane fade in clearfix {$class} uploadForm" id="{$divid}">
-								<!-- this line call everything related to upload on the page -->
 									{load_form name=$opt.function function_class=$opt.class button_class='cb_button_2' class='upload_form'}
 								</div>
 								{$counter = $counter + 1}
 							{/foreach}
 						</div>
-						<!-- ending of the div for upload file remote/normal-->
 					</div>
 				</div>
 					

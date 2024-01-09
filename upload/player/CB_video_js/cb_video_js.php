@@ -16,8 +16,6 @@ class CB_video_js
      */
     private function load_dependancies()
     {
-        global $Cbucket;
-
         $player_name = self::class;
 
         if (in_dev()) {
@@ -25,7 +23,7 @@ class CB_video_js
         } else {
             $min_suffixe = '.min';
         }
-        $Cbucket->addAllJS([
+        ClipBucket::getInstance()->addAllJS([
             $player_name.'/js/video'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/lang/'.get_current_language().'.js' => 'player'
             ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.js' => 'player'
@@ -33,33 +31,33 @@ class CB_video_js
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.js' => 'player'
             ,$player_name.'/plugin/hls-quality-selector/videojs-hls-quality-selector'.$min_suffixe.'.js' => 'player'
         ]);
-        $Cbucket->addAllCSS([
+        ClipBucket::getInstance()->addAllCSS([
             $player_name.'/css/video-js'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
             ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
         ]);
 
         if( config('chromecast') == 'yes' ){
-            $Cbucket->addAllJS([
+            ClipBucket::getInstance()->addAllJS([
                 $player_name.'/plugin/chromecast/cast_sender.js' => 'player'
                 ,$player_name.'/plugin/chromecast/videojs-chromecast'.$min_suffixe.'.js' => 'player'
             ]);
-            $Cbucket->addAllCSS([$player_name.'/plugin/chromecast/videojs-chromecast'.$min_suffixe.'.css' => 'player']);
+            ClipBucket::getInstance()->addAllCSS([$player_name.'/plugin/chromecast/videojs-chromecast'.$min_suffixe.'.css' => 'player']);
         }
 
         if( config('player_thumbnails') == 'yes' ){
-            $Cbucket->addAllJS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.js' => 'player']);
-            $Cbucket->addAllCSS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.css' => 'player']);
+            ClipBucket::getInstance()->addAllJS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.js' => 'player']);
+            ClipBucket::getInstance()->addAllCSS([$player_name.'/plugin/thumbnails/videojs-thumbnails'.$min_suffixe.'.css' => 'player']);
         }
 
         if( config('enable_advertisement') == 'yes' ){
-            $Cbucket->addAllJS([
+            ClipBucket::getInstance()->addAllJS([
                 $player_name.'/plugin/ads/videojs-contrib-ads'.$min_suffixe.'.js' => 'player'
                 ,$player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.js' => 'player'
                 ,$player_name.'/plugin/ads/videojs.ima.js' => 'player'
             ]);
 
-            $Cbucket->addAllCSS([
+            ClipBucket::getInstance()->addAllCSS([
                 $player_name.'/plugin/ads/videojs.ads'.$min_suffixe.'.css' => 'player'
                 ,$player_name.'/plugin/clipbucket/videojs-clipbucket'.$min_suffixe.'.css' => 'player'
                 ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
@@ -86,7 +84,7 @@ class CB_video_js
         assign('video_files', $video_play);
         assign('vdata',$vdetails);
 
-        Template(PLAYER_DIR . DIRECTORY_SEPARATOR . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
+        Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
         return true;
     }
 

@@ -1,15 +1,17 @@
 <?php
-global $userquery, $myquery;
+define('THIS_PAGE', 'notification_settings');
 
-require_once '../includes/admin_config.php';
+global $myquery;
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Notification settings', 'url' => ADMIN_BASEURL . '/notification_settings.php'];
+$breadcrumb[1] = ['title' => 'Notification settings', 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'];
 
 $mode = $_GET['mode'];
 

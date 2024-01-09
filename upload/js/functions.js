@@ -458,10 +458,15 @@ function delete_comment(cid)
                 alert('No data');
             } else {
                 if(data.msg) {
+                    if (data.nb === undefined) {
+                        data.nb = 1;
+                    }
                     $(".reply-"+cid).fadeOut('slow');
                     $("#comment_"+cid).fadeOut('slow');
                     $("#comment_msg_output").html(data.msg+' !');
                     $("#comment_msg_output").fadeIn('slow');
+                    var count = parseInt($('#comment_count').html());
+                    $('#comment_count').html((count- data.nb).toString());
                     setTimeout(function(){
                         $('#comment_msg_output').fadeOut();
                     }, 3000);
@@ -472,150 +477,6 @@ function delete_comment(cid)
             }
         },'json'
     );
-}
-
-/**
- * Function used to add and remove video from quicklist
- * THIS FEATURE IS SPECIALLY ADDED ON REQUEST BY JAHANZEB HASSAN
- */
-function add_quicklist(obj,vid)
-{
-    $(obj).attr('src',imageurl+"/ajax-loader.gif");
-    $(obj).css('background-position',"-200px 200px");
-    set_cookie_secure("btn-q-"+vid, "yes");
-
-    $.post(page, {
-            mode : 'quicklist',
-            todo : 'add',
-            vid : vid
-        },
-        function(data) {
-            if(!data){
-                alert('No data');
-            } else {
-                $(obj).attr('src',imageurl+"/dot.gif");
-                $(obj).css('background-position',"-0px -0px");
-                $(obj).removeClass('add_icon');
-                $(obj).addClass('check_icon');
-                $(obj).removeAttr('title');
-                load_quicklist_box();
-            }
-        },'text'
-    );
-}
-
-/**
- * Function used to remove video from quicklist
- */
-function remove_quicklist(obj,vid)
-{
-    set_cookie_secure("btn-q-"+vid, null);
-    $.post(page, {
-            mode : 'quicklist',
-            todo : 'remove',
-            vid : vid
-        },
-        function(data) {
-            if(!data){
-                alert('No data');
-            } else {
-                $(obj).slideUp();
-                $(obj).hide();
-                $('.cb-btn-quick-'+vid).addClass('add_icon');
-                $('.cb-btn-quick-'+vid).removeClass('check_icon');
-            }
-        },'text'
-    );
-}
-
-
-/**
- * Function used to chek if video is added in quicklist
- */
-function quicklist_videos_check(videoids)
-{
-    var ids = JSON.parse(videoids.trim());
-    if (ids){
-        $.each(ids, function() {
-            if($.cookie('btn-q-'+this)=='yes') {
-                $('.cb-btn-quick-'+this).removeClass('add_icon');
-                $('.cb-btn-quick-'+this).addClass('check_icon');
-            }
-        });
-    }
-
-}
-
-
-/**
- * Function used to load quicklist
- */
-function load_quicklist_box()
-{
-    $.post(page, {
-            mode : 'getquicklistbox'
-        },
-        function(data) {
-            data = $.trim(data);
-            if(!data){
-                $("#quicklist_box").css('display','none');
-            } else {
-                $("#quicklist_box").css('display','block');
-                $("#quicklist_box").html(data);
-
-                if($.cookie('quick_list_box')!='hide') {
-                    $("#quicklist_cont").css('display','block');
-                    $('.ql_show-hide').html('hide');
-                } else {
-                    $('.ql_show-hide').html('show');
-                }
-            }
-        },'text'
-    );
-}
-
-
-
-/**
- * Function used to clear all the videos from quicklist
- */
-function clear_quicklist(ids)
-{
-    $.post(page, {
-            mode : 'clear_quicklist'
-        },
-        function(data) {
-            load_quicklist_box();
-            $.each(ids, function() {
-                set_cookie_secure('btn-q-'+this, null);
-                $('.cb-btn-quick-'+this).addClass('add_icon');
-                $('.cb-btn-quick-'+this).removeClass('check_icon');
-            });
-        },'text'
-    );
-}
-
-function quick_show_hide_toggle(obj)
-{
-    $(obj).slideToggle()
-
-    if($.cookie("quick_list_box")=="show") {
-        set_cookie_secure('quick_list_box','hide');
-        $('.ql_show-hide').html('show');
-    } else {
-        set_cookie_secure('quick_list_box','show')
-        $('.ql_show-hide').html('hide');
-    }
-}
-
-/**
- * Function used to set cookies
- */
-function ini_cookies()
-{
-    if(!$.cookie('quick_list_box')){
-        set_cookie_secure('quick_list_box','show');
-    }
 }
 
 function get_group_info(Div,li)
@@ -1271,6 +1132,8 @@ function add_comment_js(form_id,type)
                 if(data.cid) {
                     $('.no-comments').remove();
                     get_the_comment(data.cid,data.type_id,'#comments-ul');
+                    var count = parseInt($('#comment_count').html());
+                    $('#comment_count').html((count+1).toString());
                 }
 
             }
@@ -1349,5 +1212,15 @@ function set_cookie_secure(name, value){
         document.cookie=name + "=" + value +";path=/;samesite=strict;";
     } else {
         document.cookie=name + "=" + value +";secure;path=/;samesite=strict;";
+    }
+}
+
+function age_disclaimer(accept) {
+    if ( accept) {
+        $('#disclaimer').hide();
+        $('#container').removeClass('blur');
+        set_cookie_secure('age_restrict','checked');
+    } else {
+        window.location = 'https://www.google.com';
     }
 }

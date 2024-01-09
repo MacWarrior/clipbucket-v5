@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'video_manager');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once '../api/push.php';
 global $cbvid, $userquery, $pages, $myquery, $eh, $cbvideo;
 $userquery->admin_login_check();
@@ -16,9 +16,9 @@ if (!empty($_GET['missing_video'])) {
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 if ($_GET['active'] == 'no') {
-    $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => ADMIN_BASEURL . '/video_manager.php'];
+    $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 } else {
-    $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => ADMIN_BASEURL . '/video_manager.php'];
+    $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 }
 
 if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {

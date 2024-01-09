@@ -457,6 +457,7 @@
             </div>
             {/if}
 
+            {if config('display_video_comments') == 'yes'}
             <div class="row">
                 <div class="col-md-12">
                     <div class="widget-box" style="margin-top:30px;">
@@ -468,9 +469,7 @@
                                 </a>
                             </div>
                         </div>
-                        <!-- Add Artist's anchor here -->
                         {ANCHOR place="after_video_edit" data=$data.videoid}
-
                         <div class="widget-body">
                             <div class="widget-main">
                                 <div class="slimScrollDiv fontawesome-icons">
@@ -507,11 +506,13 @@
                                     </form>
                                     {/foreach}
                                 </div>
-                            </div><!-- /widget-main -->
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+            {/if}
+
         </div>
 	</div>
 

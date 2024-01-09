@@ -8,8 +8,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'template_dir', 'cb_28'),
 	(NULL, 'player_file', 'cb_video_js.php'),
 	(NULL, 'closed', '0'),
-	(NULL, 'closed_msg', 'We Are Updating Our Website, Please Visit us after few hours.'),
-	(NULL, 'description', 'Clip Bucket is an ultimate Video Sharing script'),
+	(NULL, 'closed_msg', 'We are updating our website, please visit in a few minutes.'),
+	(NULL, 'description', 'ClipBucketV5 is a photo & video sharing script, by Oxygenz'),
 	(NULL, 'keywords', 'clip bucket video sharing website script'),
 	(NULL, 'ffmpegpath', ''),
 	(NULL, 'srate', '22050'),
@@ -239,7 +239,20 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_internal_sharing', 'yes'),
     (NULL, 'enable_video_link_sharing', 'yes'),
     (NULL, 'tmdb_token', ''),
-    (NULL, 'enable_tmdb', 'no');
+    (NULL, 'enable_tmdb', 'no'),
+    (NULL, 'enable_video_link_sharing', 'yes'),
+    (NULL, 'enable_user_dob_edition', 'yes'),
+    (NULL, 'enable_age_restriction', 'yes'),
+    (NULL, 'enable_blur_restricted_content', 'no'),
+    (NULL, 'enable_global_age_restriction', 'no'),
+    (NULL, 'enable_quicklist', 'yes'),
+    (NULL, 'hide_empty_collection', 'yes'),
+    (NULL, 'display_video_comments', 'yes'),
+    (NULL, 'display_photo_comments', 'yes'),
+    (NULL, 'display_channel_comments', 'yes'),
+    (NULL, 'enable_collection_comments', 'yes'),
+    (NULL, 'display_collection_comments', 'yes'),
+    (NULL, 'enable_sitemap', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

@@ -658,32 +658,10 @@ h1 {
   margin: 0 10px 0 0;
 }
 
-.featured-video .video_thumb .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
 .featured-video .video_thumb a {
   display: block;
-  position: absolute;
   width: 100%;
   height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
-}
-
-.featured-video .video_thumb a .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
 }
 
 .featured-video .duration {
@@ -774,25 +752,10 @@ h1 {
 }
 
 .item-video .thumb-holder .video-link {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
   display: block;
-  z-index: 1;
   text-decoration: none;
   color: #fff;
   font-size: 12px;
-  list-style: 14px;
-}
-
-.item-video .thumb-holder .video-link .img-responsive {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
 }
 
 .item-video .thumb-holder .video-link .title {
@@ -1206,15 +1169,6 @@ h1 {
   position: relative;
 }
 
-.pl_thumb a .img-responsive {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
 .ql_delete {
   position: absolute;
   right: 5px;
@@ -1441,15 +1395,6 @@ h1 {
 .sidebar-playlists .playlist .playlist-video {
   display: block;
   position: relative;
-}
-
-.sidebar-playlists .playlist .playlist-video .img-responsive {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  top: 0;
-  left: 0;
 }
 
 .sidebar-playlists .playlist .videos-count {
@@ -7778,4 +7723,96 @@ textarea#comment_box {
   cursor: pointer;
   font-size: 1.3em;
   margin-right: 1em;
+}
+
+.blur{
+  filter: blur(8px);
+}
+.restricted {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 5;
+  cursor: help;
+  background-color: #000;
+  opacity: 0.9;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  text-align:center;
+  border-radius: 25px;
+}
+.no_overflow{
+  overflow: hidden;
+}
+.no_select{
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+.age_restriction{
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Age restriction pop-in */
+#disclaimer{
+  position:fixed;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  z-index: 999;
+  background-color: rgba(0, 0, 0, .15);
+}
+
+#disclaimer .content{
+  position: absolute;
+  top: calc(50% - 150px);
+  left: 50%;
+  max-width: 70%;
+  text-align: center;
+  transform: translate(-50%,-20%);
+  background-color: #EEEEEE;
+  border: 1px solid #adadad;
+  border-radius: 5px;
+  padding: 30px;
+}
+
+#disclaimer .head img{
+  margin: auto;
+  max-width: 100%;
+}
+
+#disclaimer h1{
+  color: #0080b4;
+  font-size: 30px;
+  padding-top: 20px;
+}
+
+#disclaimer button{
+  border: 1px solid #e3e3e3;
+  border-radius: 5px;
+  padding: 1em;
+  font-size: 15px;
+  transition: all .3s;
+  margin-top: 20px;
+}
+
+#disclaimer button.enter{
+  background-color: #0080b4;
+  color: white;
+}
+
+#disclaimer button.enter:hover{
+  background-color: #04aef3;
+}
+
+#disclaimer button.exit{
+  background-color: #4b4b4b;
+  color: #bbb;
+}
+
+#disclaimer button.exit:hover{
+  background-color: #363636;
 }

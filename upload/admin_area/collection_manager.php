@@ -1,8 +1,8 @@
 <?php
 define('THIS_PAGE', 'collection_manager');
-global $userquery, $pages, $cbcollection, $eh, $Cbucket;
+global $userquery, $pages, $cbcollection, $eh;
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();
@@ -15,7 +15,7 @@ $breadcrumb[0] = [
 ];
 $breadcrumb[1] = [
     'title' => lang('manage_collections'),
-    'url'   => ADMIN_BASEURL . '/collection_manager.php'
+    'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 
 if (isset($_GET['make_feature'])) {
@@ -137,14 +137,14 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
-$Cbucket->addAdminJS([
+ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'                                  => 'admin',
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 
-$Cbucket->addAdminCSS([
+ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);

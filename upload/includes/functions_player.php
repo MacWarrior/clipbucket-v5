@@ -26,7 +26,7 @@ function show_player($param): bool
             }
             if( !empty($player_code) && !is_bool($player_code) ) {
                 assign('player_js_code', $player_code);
-                Template(PLAYER_DIR . '/player.html', false);
+                Template(DirPath::get('player') . 'player.html', false);
                 return false;
             }
         }

@@ -399,7 +399,7 @@ function get_directory_size(string $path, array $excluded = []): array
     $dircount = 0;
     if ($handle = opendir($path)) {
         while (false !== ($file = readdir($handle))) {
-            $nextpath = $path . DIRECTORY_SEPARATOR . $file;
+            $nextpath = $path . $file;
             if ($file != '.' && $file != '..' && !is_link($nextpath)) {
                 if (is_dir($nextpath)) {
                     $dircount++;
@@ -701,6 +701,14 @@ function user_email()
     global $userquery;
     if ($userquery->email) {
         return $userquery->email;
+    }
+    return false;
+}
+function user_dob()
+{
+    global $userquery;
+    if ($userquery->udetails['dob']) {
+        return $userquery->udetails['dob'];
     }
     return false;
 }
@@ -1151,11 +1159,10 @@ function msg_list(): array
  */
 function template_files($file, $folder = false, $follow_show_page = true)
 {
-    global $ClipBucket;
     if (!$folder) {
-        $ClipBucket->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
+        ClipBucket::getInstance()->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
     } else {
-        $ClipBucket->template_files[] = ['file' => $file, 'folder' => $folder, 'follow_show_page' => $follow_show_page];
+        ClipBucket::getInstance()->template_files[] = ['file' => $file, 'folder' => $folder, 'follow_show_page' => $follow_show_page];
     }
 }
 
@@ -1397,10 +1404,13 @@ function lang($var)
 
         if (!array_key_exists($var, Language::getInstance()->arrayTranslation)) {
             $translation = $var;
-            error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
 
-            if (in_dev()) {
-                error_log(debug_backtrace_string());
+            if( Language::getInstance()->isTranslationSystemInstalled() ){
+                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+
+                if (in_dev()) {
+                    error_log(debug_backtrace_string());
+                }
             }
         }
     } else {
@@ -1486,7 +1496,6 @@ function getConstant($constantName = false)
  */
 function cblink($params, $fullurl = false)
 {
-    global $ClipBucket;
     $name = getArrayValue($params, 'name');
     if ($name == 'category') {
         return category_link($params['data'], $params['type']);
@@ -1515,11 +1524,11 @@ function cblink($params, $fullurl = false)
         $link = '';
     }
 
-    if (isset($ClipBucket->links[$name])) {
-        if (strpos(get_server_protocol(), $ClipBucket->links[$name][$val]) !== false) {
-            $link .= $ClipBucket->links[$name][$val];
+    if (isset(ClipBucket::getInstance()->links[$name])) {
+        if (strpos(get_server_protocol(), ClipBucket::getInstance()->links[$name][$val]) !== false) {
+            $link .= ClipBucket::getInstance()->links[$name][$val];
         } else {
-            $link .= '/' . $ClipBucket->links[$name][$val];
+            $link .= '/' . ClipBucket::getInstance()->links[$name][$val];
         }
     } else {
         $link = false;
@@ -1678,7 +1687,7 @@ function get_functions($name)
 function add_js($files)
 {
     global $Cbucket;
-    $Cbucket->addJS($files);
+    ClipBucket::getInstance()->addJS($files);
 }
 
 /**
@@ -1695,7 +1704,7 @@ function add_js($files)
 function add_header($files)
 {
     global $Cbucket;
-    $Cbucket->add_header($files);
+    ClipBucket::getInstance()->add_header($files);
 }
 
 /**
@@ -1707,7 +1716,7 @@ function add_header($files)
 function add_admin_header($files)
 {
     global $Cbucket;
-    $Cbucket->add_admin_header($files);
+    ClipBucket::getInstance()->add_admin_header($files);
 }
 
 /**
@@ -2959,7 +2968,7 @@ function include_header($params)
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
     if ($file == 'global_header') {
-        Template(BASEDIR . '/styles/global/head.html', false);
+        Template(DirPath::get('styles') . 'global/head.html', false);
         return false;
     }
     if (!$type) {
@@ -3011,7 +3020,7 @@ function include_js($params)
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
-                    return '<script src="' . JS_URL . '/' . $file . '" type="text/javascript"></script>';
+                    return '<script src="' . DirPath::getUrl('js') . $file . '" type="text/javascript"></script>';
                 }
             }
         }
@@ -3019,13 +3028,13 @@ function include_js($params)
         switch ($type) {
             default:
             case 'global:':
-                $url = JS_URL . '/';
+                $url = DirPath::getUrl('js');
                 break;
             case 'plugin':
-                $url = PLUG_URL . '/';
+                $url = DirPath::getUrl('plugins');
                 break;
             case 'player':
-                $url = PLAYER_URL . '/';
+                $url = DirPath::getUrl('player');
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
@@ -3048,7 +3057,8 @@ function include_css($params)
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
-                    return '<link rel="stylesheet" href="' . CSS_URL . '/' . $file . '" ">';
+                    error_log(DirPath::getUrl('css') . $file);
+                    return '<link rel="stylesheet" href="' . DirPath::getUrl('css') . $file . '" ">';
                 }
             }
         }
@@ -3056,13 +3066,13 @@ function include_css($params)
         switch ($type) {
             default:
             case 'global:':
-                $url = CSS_URL . '/';
+                $url = DirPath::getUrl('css');
                 break;
             case 'plugin':
-                $url = PLUG_URL . '/';
+                $url = DirPath::getUrl('plugins');
                 break;
             case 'player':
-                $url = PLAYER_URL . '/';
+                $url = DirPath::getUrl('player');
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
@@ -3469,7 +3479,7 @@ function updateObjectStats($type, $object, $id, $op = '+')
 function conv_lock_exists()
 {
     for ($i = 0; $i < config('max_conversion'); $i++) {
-        if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'conv_lock' . $i . '.loc')) {
+        if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
             return true;
         }
     }
@@ -3620,21 +3630,14 @@ function uploaderDetails()
  *
  * @return bool|void
  */
-function isSectionEnabled($input, $restrict = false)
+function isSectionEnabled($input)
 {
-    global $Cbucket;
-    $section = $Cbucket->configs[$input . 'Section'];
-    if (!$restrict) {
-        return $section == 'yes';
-    }
+    $section = config($input . 'Section');
 
     if ($section == 'yes' || THIS_PAGE == 'cb_install') {
         return true;
     }
-
-    template_files('blocked.html');
-    display_it();
-    exit();
+    return false;
 }
 
 /**
@@ -3961,7 +3964,7 @@ function update_counter($section, $query, $counter)
  *
  * @return bool : { boolean } { true / false depending on situation }
  */
-function verify_age($dob)
+function verify_age($dob): bool
 {
     $allowed_age = config('min_age_reg');
     if ($allowed_age < 1) {
@@ -4498,7 +4501,7 @@ function get_website_logo_path()
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
-        return LOGOS_URL . DIRECTORY_SEPARATOR . $logo_name;
+        return DirPath::getUrl('logos') . $logo_name;
     }
     if (defined('TEMPLATEURLFO')) {
         return TEMPLATEURLFO . '/theme' . '/images/logo.png';
@@ -4510,7 +4513,7 @@ function get_website_favicon_path()
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
-        return LOGOS_URL . DIRECTORY_SEPARATOR . $favicon_name;
+        return DirPath::getUrl('logos') . $favicon_name;
     }
     if (defined('TEMPLATEURLFO')) {
         return TEMPLATEURLFO . '/theme' . '/images/favicon.png';
@@ -4537,7 +4540,7 @@ function upload_image($type = 'logo')
 
     if (in_array($file_ext, $allowed_file_types) && ($filesize < 4000000)) {
         // Rename file
-        $logo_path = LOGOS_DIR . DIRECTORY_SEPARATOR . $file_basename . '-' . $type . '.' . $file_ext;
+        $logo_path = DirPath::get('logos') . $file_basename . '-' . $type . '.' . $file_ext;
         unlink($logo_path);
         move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $logo_path);
 
@@ -4865,6 +4868,17 @@ function parseAllPHPModules()
     }
     return $vModules;
 }
+function ageRestriction($var) {
+    $var = (int)$var;
+    if (empty($var)) {
+        return 'null';
+    }
+    if ($var > 99 || $var < 0) {
+        return false;
+    }
+    return $var;
+}
+
 
 
 include('functions_db.php');

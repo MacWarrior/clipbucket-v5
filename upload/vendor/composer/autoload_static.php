@@ -14,8 +14,14 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Server\\' => 16,
+            'Psr\\Http\\Message\\' => 17,
             'Predis\\' => 7,
             'PHPMailer\\PHPMailer\\' => 20,
+        ),
+        'O' => 
+        array (
+            'OxygenzSAS\\Discord\\' => 19,
         ),
     );
 
@@ -28,6 +34,15 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
+            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
         'Predis\\' => 
         array (
             0 => __DIR__ . '/..' . '/predis/predis/src',
@@ -35,6 +50,10 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'PHPMailer\\PHPMailer\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
+        ),
+        'OxygenzSAS\\Discord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/oxygenzsas/composer_lib_discord/src',
         ),
     );
 

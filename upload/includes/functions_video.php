@@ -8,12 +8,12 @@ function get_video_fields($extra = null)
 /**
  * Function used to check video is playlable or not
  *
- * @param : { string / id } { $id } { id of key of video }
  *
- * @return bool|void : { boolean } { true if playable, else false }
+ * @param array|string $id contain video info or video id
+ * @return bool : { boolean } { true if playable, else false }
  * @throws Exception
  */
-function video_playable($id)
+function video_playable($id): bool
 {
     global $cbvideo, $userquery;
 
@@ -57,12 +57,13 @@ function video_playable($id)
         return false;
     }
     if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
-        e(lang("vdo_iac_msg"));
+        e(lang('vdo_iac_msg'));
         if (!has_access('admin_access', true)) {
             return false;
         }
         return true;
     }
+
     if ($vdo['video_password']
         && $vdo['broadcast'] == 'unlisted'
         && $vdo['video_password'] != $video_password
@@ -85,8 +86,17 @@ function video_playable($id)
                 }
             }
         }
-        return true;
     }
+
+    if( !has_access('video_moderation', true)
+        && config('enable_age_restriction') == 'yes'
+        && Video::getInstance()->isCurrentUserRestricted($vdo['videoid'])
+    ){
+        e(lang('error_age_restriction'));
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -167,8 +177,8 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
                 return [default_thumb()];
             }
             $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] == 'custom' ? '-c' : '') .'.' . $re['extension'];
-            if (file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
-                $thumb[] = THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
+            if (file_exists(DirPath::get('thumbs') . $filepath)) {
+                $thumb[] = DirPath::getUrl('thumbs') . $filepath;
             } else {
                 error_log('get_thumb - missing file : ' . $filepath);
                 $thumb[] = default_thumb();
@@ -177,11 +187,11 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         return $thumb;
     }
     $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] == 'custom' ? '-c' : '') .'.' . $resThumb[0]['extension'];
-    if (!file_exists(THUMBS_DIR . DIRECTORY_SEPARATOR . $filepath)) {
+    if (!file_exists(DirPath::get('thumbs') . $filepath)) {
         error_log('get_thumb - missing file : ' . $filepath);
         return default_thumb();
     }
-    return THUMBS_URL . DIRECTORY_SEPARATOR . $filepath;
+    return DirPath::getUrl('thumbs') . $filepath;
 }
 
 /**
@@ -209,7 +219,7 @@ function create_thumb($video_db, $multi, $size)
 {
     global $db;
     //check files
-    $glob = THUMBS_DIR . DIRECTORY_SEPARATOR . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
+    $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
     $vid_thumbs = glob($glob);
     if (!empty($vid_thumbs) && !empty($video_db['file_directory']) && !empty($video_db['file_name'])) {
         foreach ($vid_thumbs as $thumb) {
@@ -276,7 +286,7 @@ function get_video_subtitles($vdetails)
     $subtitles = [];
     foreach ($results as $line) {
         $subtitles[] = [
-            'url'      => SUBTITLES_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.srt'
+            'url'      => DirPath::getUrl('subtitles') . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '-' . $line['number'] . '.srt'
             , 'title'  => $line['title']
             , 'number' => $line['number']
         ];
@@ -293,10 +303,8 @@ function default_thumb(): string
     if (file_exists(TEMPLATEDIR . '/images/thumbs/processing.png')) {
         return TEMPLATEURL . '/images/thumbs/processing.png';
     }
-    if (file_exists(TEMPLATEDIR . '/images/thumbs/processing.jpg')) {
-        return TEMPLATEURL . '/images/thumbs/processing.jpg';
-    }
-    return '/files/thumbs/processing.jpg';
+
+    return DirPath::getUrl('thumbs') . 'processing.jpg';
 }
 
 /**
@@ -627,7 +635,7 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
         return false;
     }
 
-    $vid_files = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . '*');
+    $vid_files = glob(DirPath::get('videos') . $fileDirectory . $vdetails['file_name'] . '*');
 
     #replace Dir with URL
     if (is_array($vid_files)) {
@@ -639,7 +647,7 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
             $video_file = $files_part[count($files_part) - 1];
 
             if ($with_path) {
-                $files[] = VIDEOS_URL . '/' . $fileDirectory . $video_file;
+                $files[] = DirPath::getUrl('videos') . $fileDirectory . $video_file;
             } else {
                 $files[] = $video_file;
             }
@@ -649,7 +657,7 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
     if ((!is_array($files) || count($files) == 0) && !$multi && !$count_only) {
         if ($return_default) {
             if ($with_path) {
-                return VIDEOS_URL . '/no_video.mp4';
+                return DirPath::getUrl('videos') . 'no_video.mp4';
             }
             return 'no_video.mp4';
         }
@@ -739,8 +747,8 @@ function get_file_details($file_name, $get_jsoned = false)
         if ($video['file_server_path']) {
             $file = $video['file_server_path'] . '/logs/' . $video['file_directory'] . $file_name . '.log';
         } else {
-            $str = DIRECTORY_SEPARATOR . $video['file_directory'] . DIRECTORY_SEPARATOR;
-            $file = LOGS_DIR . $str . $file_name . '.log';
+            $str = $video['file_directory'] . DIRECTORY_SEPARATOR;
+            $file = DirPath::get('logs') . $str . $file_name . '.log';
         }
     }
 
@@ -799,7 +807,7 @@ function get_thumb_num($name): string
 function delete_video_thumb($videoDetails, $num)
 {
     global $db;
-    $files = glob(THUMBS_DIR . DIRECTORY_SEPARATOR . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .'[-.]*');
+    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .'[-.]*');
     if ($files) {
         foreach ($files as $file) {
             if (file_exists($file)) {
@@ -1097,7 +1105,7 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
 {
     if( $vdetails['status'] != 'Successful' || empty($vdetails['file_directory']) || empty($vdetails['file_name']) || empty($vdetails['file_type']) ){
         if ($with_path) {
-            return [VIDEOS_URL . '/no_video.mp4'];
+            return [DirPath::getUrl('videos') . 'no_video.mp4'];
         }
         return ['no_video.mp4'];
     }
@@ -1114,7 +1122,7 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
 
     if( empty($vdetails['video_files']) || empty(json_decode($vdetails['video_files'])) ){
         if ($with_path) {
-            return [VIDEOS_URL . '/no_video.mp4'];
+            return [DirPath::getUrl('videos') . 'no_video.mp4'];
         }
         return ['no_video.mp4'];
     }
@@ -1130,12 +1138,12 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
                     $vid_files[] = $file_name;
                 } else {
                     if ($vdetails['video_version'] == 'COMMERCIAL') {
-                        $vid_files[] = VIDEOS_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '/' . $file_name;
+                        $vid_files[] = DirPath::getUrl('videos') . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '/' . $file_name;
                     } else {
                         if ($vdetails['video_version'] >= '2.7') {
-                            $vid_files[] = VIDEOS_URL . '/' . $vdetails['file_directory'] . '/' . $file_name;
+                            $vid_files[] = DirPath::getUrl('videos') . $vdetails['file_directory'] . '/' . $file_name;
                         } else {
-                            $vid_files[] = VIDEOS_URL . '/' . $file_name;
+                            $vid_files[] = DirPath::getUrl('videos') . $file_name;
                         }
                     }
                 }
@@ -1147,7 +1155,7 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
             if( !$with_path ) {
                 $vid_files[] = $file_name;
             } else {
-                $vid_files[] = VIDEOS_URL . '/' . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '/' . $file_name;
+                $vid_files[] = DirPath::getUrl('videos') . $vdetails['file_directory'] . '/' . $vdetails['file_name'] . '/' . $file_name;
             }
             break;
     }
@@ -1191,7 +1199,7 @@ function get_high_res_file($vdetails): string
         }
     }
 
-    $filepath = VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+    $filepath = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     switch ($vdetails['file_type']) {
         default:
         case 'mp4':
@@ -1235,6 +1243,24 @@ function get_fast_qlist($cookie_name = false): array
     }
 
     return array_filter($vid_dets);
+}
+
+/**
+ * @throws Exception
+ */
+function must_check_age(): bool
+{
+    $min_age_reg = config('min_age_reg');
+    if( config('enable_global_age_restriction') != 'yes' || $min_age_reg > 99 || $min_age_reg < 0 ){
+        return false;
+    }
+
+    $user = User::getInstance();
+    if( $user->isUserConnected() && $user->getCurrentUserAge() >= $min_age_reg ){
+        return false;
+    }
+
+    return ((empty($_COOKIE['age_restrict']) || $_COOKIE['age_restrict']!='checked')  );
 }
 
 function dateNow(): string
@@ -1341,12 +1367,12 @@ function update_video_files($vdetails)
         default:
         case 'mp4':
             if ($vdetails['video_version'] == 'COMMERCIAL') {
-                $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+                $list_videos = glob(DirPath::get('videos') . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
             } else {
                 if ($vdetails['video_version'] >= '2.7') {
-                    $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+                    $list_videos = glob(DirPath::get('videos') . $fileDirectory . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
                 } else {
-                    $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
+                    $list_videos = glob(DirPath::get('videos') . $vdetails['file_name'] . '*.' . $vdetails['file_type']);
                 }
             }
 
@@ -1363,7 +1389,7 @@ function update_video_files($vdetails)
             break;
 
         case 'hls':
-            $list_videos = glob(VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . 'video_*.m3u8');
+            $list_videos = glob(DirPath::get('videos') . $fileDirectory . $vdetails['file_name'] . DIRECTORY_SEPARATOR . 'video_*.m3u8');
             foreach ($list_videos as  $path) {
                 $quality = explode('video_', $path);
                 $quality = explode('p.',end($quality));
@@ -1416,9 +1442,9 @@ function isReconvertAble($vdetails): bool
             $is_convertable = false;
             if (empty($vdetails['file_server_path'])) {
                 if (!empty($fileDirectory)) {
-                    $path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
+                    $path = DirPath::get('videos') . $fileDirectory . DIRECTORY_SEPARATOR . $fileName . '*';
                 } else {
-                    $path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $fileName . '*';
+                    $path = DirPath::get('videos') . $fileName . '*';
                 }
                 $vid_files = glob($path);
                 if (!empty($vid_files) && is_array($vid_files)) {
@@ -1519,16 +1545,16 @@ function reConvertVideos($data = '')
                 default:
                 case 'mp4':
                     $max_quality_file = get_high_res_file($vdetails);
-                    $conversion_filepath = TEMP_DIR . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.mp4';
+                    $conversion_filepath = DirPath::get('temp') . $vdetails['file_name'] . '.mp4';
                     copy($max_quality_file, $conversion_filepath);
                     $Upload->add_conversion_queue($vdetails['file_name'] . '.mp4');
                     break;
                 case 'hls':
-                    $conversion_dir = TEMP_DIR . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
+                    $conversion_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
                     mkdir($conversion_dir);
                     $max_quality = max(json_decode($vdetails['video_files']));
                     $conversion_filepath = $conversion_dir . $max_quality . '.m3u8';
-                    $original_files_path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $max_quality . '*';
+                    $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $max_quality . '*';
                     foreach (glob($original_files_path) as $file) {
                         $files_part = explode('/', $file);
                         $video_file = $files_part[count($files_part) - 1];
@@ -1543,8 +1569,8 @@ function reConvertVideos($data = '')
 
             remove_video_files($vdetails);
 
-            $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
-            exec(php_path() . ' -q ' . BASEDIR . "/actions/video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
+            $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
+            exec(php_path() . ' -q ' . DirPath::get('actions')  . "video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
 
             setVideoStatus($daVideo, 'started', true);
         }
@@ -1565,9 +1591,9 @@ function generatingMoreThumbs($data, bool $regenerate = false)
 {
     global $db;
     $vid_file = get_high_res_file($data);
-    require_once BASEDIR . '/includes/classes/sLog.php';
+    require_once DirPath::get('classes') . 'sLog.php';
     $log = new SLog();
-    require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+    require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->input_details['duration'] = $data['duration'];
     $ffmpeg->input_file = $vid_file;
@@ -1596,7 +1622,7 @@ function update_duration($vdetails)
 
     global $db;
     $filepath = get_high_res_file($vdetails);
-    require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+    require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $data = FFMpeg::get_video_basic_infos($filepath);
 
     if (isset($data['duration'])) {
@@ -1615,7 +1641,7 @@ function getResolution_list($data): array
         switch ($data['file_type']) {
             default:
             case 'mp4':
-                $path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . '-' . $video_file . '.' . $data['file_type'];
+                $path = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . '-' . $video_file . '.' . $data['file_type'];
                 if (file_exists($path)) {
                     $nb_file = 1;
                     $size = filesize($path);
@@ -1649,7 +1675,7 @@ function getResolution_list($data): array
 function getHlsFilesInfo($resolution, $data): array
 {
     //get list nb files + size hls
-    $path = VIDEOS_DIR . DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . DIRECTORY_SEPARATOR;
+    $path = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . DIRECTORY_SEPARATOR;
     $files = glob($path . 'video_' . $resolution . '*');
     $nb = 0;
     $size = 0;
@@ -1687,7 +1713,7 @@ function reset_video_log($log_file)
  */
 function remove_empty_directory_log($path)
 {
-    remove_empty_directory($path, LOGS_DIR);
+    remove_empty_directory($path, DirPath::get('logs'));
 }
 
 /**
@@ -1725,11 +1751,11 @@ function clean_orphan_files($file)
     switch ($file['type']) {
         case 'log':
             unlink($file['data']);
-            $stop_path = LOGS_DIR;
+            $stop_path = DirPath::get('logs');
             break;
         case 'video_mp':
             unlink($file['data']);
-            $stop_path = VIDEOS_DIR;
+            $stop_path = DirPath::get('videos');
             break;
         case 'video_hls':
             $files_hls = array_diff(scandir($file['data']), ['.', '..']);
@@ -1737,24 +1763,49 @@ function clean_orphan_files($file)
                 unlink($file['data'] . DIRECTORY_SEPARATOR . $file_hls);
             }
             rmdir($file['data']);
-            $stop_path = VIDEOS_DIR;
+            $stop_path = DirPath::get('videos');
             break;
         case 'thumb':
             unlink($file['data']);
-            $stop_path = THUMBS_DIR;
+            $stop_path = DirPath::get('thumbs');
             break;
         case 'subtitle':
             unlink($file['data']);
-            $stop_path = SUBTITLES_DIR;
+            $stop_path = DirPath::get('subtitles');
             break;
         case 'photo':
             unlink($file['data']);
-            $stop_path = PHOTOS_DIR;
+            $stop_path = DirPath::get('photos');
             break;
         case 'userfeeds':
             unlink($file['data']);
-            $stop_path = USER_FEEDS_DIR;
+            $stop_path = DirPath::getUrl('userfeeds');
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
 }
+
+/**
+ * @throws Exception
+ */
+function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
+{
+    $sql = ' SELECT 
+    TIMESTAMPDIFF(YEAR, U.dob, now()),
+    CASE
+        WHEN O.age_restriction IS NULL THEN 1
+        WHEN TIMESTAMPDIFF(YEAR, U.dob, now()) < O.age_restriction THEN 0
+            ELSE 1
+        END AS can_access
+    FROM '.tbl('users') . ' AS U , '.tbl($obj_type) .' AS O
+    WHERE O.'.$id_field.' = '.mysql_clean($video_id).' AND U.userid = '.($user_id ? mysql_clean($user_id) :  '0').'
+    ' ;
+    $rs = select($sql);
+    if (!empty($rs)) {
+        return $rs[0]['can_access'];
+    } else {
+        return 0;
+    }
+}
+
+

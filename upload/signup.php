@@ -3,7 +3,7 @@ define('THIS_PAGE', 'signup');
 define('PARENT_PAGE', 'signup');
 
 require 'includes/config.inc.php';
-global $Cbucket, $userquery, $eh;
+global $userquery, $eh;
 if ($userquery->login_check('', true)) {
     redirect_to(BASEURL);
 }
@@ -39,7 +39,7 @@ if (isset($_POST['signup'])) {
             $udetails = $userquery->get_user_details($signup);
             $eh->flush();
             assign('udetails', $udetails);
-            if (empty($Cbucket->configs['email_verification'])) {
+            if (empty(ClipBucket::getInstance()->configs['email_verification'])) {
                 // login user and redirect to home page
                 $userquery->login_as_user($udetails['userid']);
                 header('Location: ' . BASEURL);
@@ -80,7 +80,7 @@ $datepicker_js_lang = '';
 if( Language::getInstance()->getLang() != 'en'){
     $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
 }
-$Cbucket->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+ClipBucket::getInstance()->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
 
 subtitle(lang('signup'));
 //Displaying The Template

@@ -1,5 +1,5 @@
 <?php
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $cbphoto, $eh;
 
@@ -10,7 +10,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Recreate Thumbs', 'url' => ADMIN_BASEURL . '/recreate_thumbs.php?mode=mass'];
+$breadcrumb[1] = ['title' => 'Recreate Thumbs', 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'];
 
 $mode = $_GET['mode'];
 $photo = mysql_clean($_GET['photo']);

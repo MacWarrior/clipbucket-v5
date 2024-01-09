@@ -9,11 +9,11 @@
 */
 
 define("SOCIAL_BEAST_BASE", basename(dirname(__FILE__)));
-define("SOCIAL_BEAST_DIR", PLUG_DIR . '/' . SOCIAL_BEAST_BASE);
-define("SOCIAL_BEAST_URL", PLUG_URL . '/' . SOCIAL_BEAST_BASE);
+define("SOCIAL_BEAST_DIR", DirPath::get('plugins') . SOCIAL_BEAST_BASE);
+define("SOCIAL_BEAST_URL", DirPath::getUrl('plugins') . SOCIAL_BEAST_BASE);
 define("SOCIAL_BEAST_ADMIN_DIR", SOCIAL_BEAST_DIR . '/admin');
 define("SOCIAL_BEAST_ADMIN_URL", SOCIAL_BEAST_URL . '/admin');
-define("SOCIAL_BEAST_INCLUDES", PLUG_DIR . '/' . SOCIAL_BEAST_BASE . '/honey_includes');
+define("SOCIAL_BEAST_INCLUDES", DirPath::get('plugins') . SOCIAL_BEAST_BASE . '/honey_includes');
 assign("SOCIAL_BEAST_ADMIN_URL", SOCIAL_BEAST_ADMIN_URL);
 define('FONT_AWESOME', SOCIAL_BEAST_URL . '/font_awesome.css');
 define('BEAST_CSS', SOCIAL_BEAST_URL . '/beast.css');

@@ -1,6 +1,6 @@
 <?php
 define('THIS_PAGE', 'user_levels');
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 global $userquery, $pages, $Cbucket;
 $userquery->admin_login_check();
 $userquery->login_check('admin_access');
@@ -9,7 +9,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'User Levels', 'url' => ADMIN_BASEURL . '/user_levels.php'];
+$breadcrumb[1] = ['title' => 'User Levels', 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'];
 
 if (!has_access('allow_manage_user_level') && $userquery->udetails['level'] != 1) {
     $Cbucket->show_page = false;

@@ -2,6 +2,7 @@
 
 class Comments
 {
+    public static $libelle_type_channel = 'channel';
     /**
      * @throws Exception
      */
@@ -33,6 +34,10 @@ class Comments
         if( !$param_type || $param_type == 'cl'){
             $left_join .= ' LEFT JOIN '.cb_sql_table('collections').' ON comments.type = \'cl\' AND comments.type_id = collections.collection_id';
             $case_when .= ' WHEN comments.type = \'cl\' THEN collections.collection_name';
+        }
+        if( !$param_type || $param_type == Comments::$libelle_type_channel){
+            $left_join .= ' LEFT JOIN '.tbl('users').' channels ON comments.type = \''.Comments::$libelle_type_channel.'\' AND comments.type_id = channels.userid';
+            $case_when .= ' WHEN comments.type = \''.Comments::$libelle_type_channel.'\' THEN channels.username';
         }
 
         $conditions = [];
@@ -147,7 +152,7 @@ class Comments
     /**
      * @throws Exception
      */
-    public static function delete($params): bool
+    public static function delete($params): int
     {
         $param_type = $params['type'] ?? false;
         $param_type_id = $params['type_id'] ?? false;
@@ -199,13 +204,13 @@ class Comments
 
         $sql = 'DELETE FROM ' . tbl('comments') . $where;
         Clipbucket_db::getInstance()->execute($sql);
-
+        $nb_delete = Clipbucket_db::getInstance()->mysqli->affected_rows;
         if( !$param_type && !$param_type_id){
             self::updateCommentsCount($comment['type'], $comment['type_id']);
         }
 
         e(lang('usr_cmt_del_msg'), 'm');
-        return true;
+        return $nb_delete;
     }
 
     /**
@@ -236,6 +241,10 @@ class Comments
                 $field = 'total_comments';
                 $cond = 'collection_id';
                 break;
+            case Comments::$libelle_type_channel:
+                $table = 'users';
+                $field = 'comments_count';
+                $cond = 'userid';
         }
 
         Clipbucket_db::getInstance()->update(tbl($table), [$field], [$count_comment], $cond.' = '.mysql_clean($type_id));
@@ -386,6 +395,11 @@ class Comments
                 $obj = $collection->get_collection($type_id);
                 $link = $collection->collection_links($obj);
                 break;
+            case Comments::$libelle_type_channel:
+                $user = userquery::getInstance();
+                $obj = $user->get_user_profile($type_id);
+                $link = $user->profile_link($obj);
+                break;
         }
         $owner_id = $obj['userid'];
 
@@ -482,7 +496,6 @@ class Comments
         }
 
         switch($type){
-            default:
             case 'v':
                 if( !CBvideo::getInstance()->video_exists($type_id) ){
                     e(lang('class_vdo_del_err'));
@@ -501,6 +514,15 @@ class Comments
                     return false;
                 }
                 break;
+            case Comments::$libelle_type_channel:
+                if ( !userquery::getInstance()->user_exists($type_id)) {
+                    e(lang('channel_not_exist'));
+                    return false;
+                }
+                break;
+            default:
+                e(lang('unknow_type'));
+                return false;
         }
 
         $func_array = get_functions('validate_comment_functions');

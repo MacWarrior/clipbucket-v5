@@ -8,6 +8,9 @@ class Photo
     private $search_limit = 0;
     private $display_var_name = '';
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'photos';
         $this->fields = [
@@ -42,6 +45,12 @@ class Photo
             ,'owner_ip'
             ,'photo_details'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $this->fields[] = 'age_restriction';
+        }
+
         $this->display_block = LAYOUT . '/blocks/photo.html';
         $this->display_var_name = 'photo';
         $this->search_limit = (int)config('photo_search_result');
@@ -55,10 +64,14 @@ class Photo
         return self::$photo;
     }
 
-    private function getAllFields(): array
+    public function getAllFields($prefix = false): array
     {
-        return array_map(function($field) {
-            return $this->tablename . '.' . $field;
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->tablename . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->tablename . '.' . $field.'`';
+            }
+            return $field_name;
         }, $this->fields);
     }
 
@@ -80,6 +93,15 @@ class Photo
     /**
      * @throws Exception
      */
+    public function getOne(array $params = [])
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getAll(array $params = [])
     {
         $param_photo_id = $params['photo_id'] ?? false;
@@ -87,6 +109,7 @@ class Photo
         $param_filename = $params['filename'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_collection_id = $params['collection_id'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -139,11 +162,18 @@ class Photo
         $join = [];
         $group = [];
         $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $group[] = 'photos.photo_id';
+            }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
-            $group[] = 'photos.photo_id';
+        }
+
+        if( $param_collection_id ){
+            $collection_items_table = Collection::getInstance()->getTableNameItems();
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -204,21 +234,88 @@ class Photo
             return '';
         }
 
-        $cond = '((photos.active = \'yes\' AND photos.broadcast = \'public\' ';
+        $cond = '((photos.active = \'yes\'';
+
+        $sql_age_restrict = '';
+        if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
+            $cond .= ' AND photos.age_restriction IS NULL';
+            $dob = user_dob();
+            $sql_age_restrict = ' AND (photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
+        }
+
+        $cond .= ' AND photos.broadcast = \'public\'';
 
         $current_user_id = user_id();
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $cond .= ' OR photos.userid = ' . $current_user_id . ')';
-            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\'))';
-            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . '))';
+            $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
+            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
         }
         $cond .= ')';
         return $cond;
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_restricted($photo)
+    {
+        if( !empty($photo['age_restriction']) ){
+            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">-' . $photo['age_restriction'] . '</span>';
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isCurrentUserRestricted($photo_id): string
+    {
+        if (has_access('video_moderation', true)) {
+            return false;
+        }
+
+        $params = [];
+        $params['photo_id'] = $photo_id;
+        $photo = $this->getOne($params);
+
+        if (empty($photo)) {
+            return false;
+        }
+
+        if( empty($photo['age_restriction']) ){
+            return false;
+        }
+
+        if( !User::getInstance()->isUserConnected() ){
+            return true;
+        }
+
+        if( User::getInstance()->getCurrentUserID() == $photo['userid'] ){
+            return false;
+        }
+
+        if( User::getInstance()->getCurrentUserAge() < $photo['age_restriction'] ){
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isToBlur($photo_id)
+    {
+        if (config('enable_blur_restricted_content') != 'yes') {
+            return false;
+        }
+        return $this->isCurrentUserRestricted($photo_id);
+    }
+
 }
+
 class CBPhotos
 {
     var $action = '';
@@ -264,6 +361,9 @@ class CBPhotos
 
         $cb_columns->object('photos')->register_columns($basic_fields);
 
+        if( config('enable_age_restriction') == 'yes' ){
+            register_anchor_function('display_restricted', 'in_photo_thumb', Photo::class);
+        }
         register_anchor_function('display_banner', 'in_photo_thumb', self::class);
     }
 
@@ -297,14 +397,22 @@ class CBPhotos
         return $this->basic_fields = $fields;
     }
 
+    /**
+     * @throws Exception
+     */
     function basic_fields_setup()
     {
-        # Set basic video fields
+        # Set basic photo fields
         $basic_fields = [
             'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+            $basic_fields[] = 'age_restriction';
+        }
 
         return $this->set_basic_fields($basic_fields);
     }
@@ -434,7 +542,7 @@ class CBPhotos
      */
     function photos_admin_menu()
     {
-        global $Cbucket, $userquery;
+        global $userquery;
         $per = $userquery->get_user_level(user_id());
 
         if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
@@ -444,31 +552,31 @@ class CBPhotos
                 , 'sub'   => [
                     [
                         'title' => 'Photo Manager'
-                        , 'url' => ADMIN_BASEURL . '/photo_manager.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
                         'title' => 'Inactive Photos'
-                        , 'url' => ADMIN_BASEURL . '/photo_manager.php?search=search&active=no'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'
                     ]
                     , [
                         'title' => 'Flagged Photos'
-                        , 'url' => ADMIN_BASEURL . '/flagged_photos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'
                     ]
                     , [
                         'title' => 'Orphan Photos'
-                        , 'url' => ADMIN_BASEURL . '/orphan_photos.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
                     ]
                     , [
                         'title' => 'Watermark Settings'
-                        , 'url' => ADMIN_BASEURL . '/photo_settings.php?mode=watermark_settings'
+                        , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
                         'title' => 'Recreate Thumbs'
-                        , 'url' => ADMIN_BASEURL . '/recreate_thumbs.php?mode=mass'
+                        , 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'
                     ]
                 ]
             ];
-            $Cbucket->addMenuAdmin($menu_photo, 90);
+            ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
     }
 
@@ -478,10 +586,10 @@ class CBPhotos
      */
     function setting_other_things()
     {
-        global $userquery, $Cbucket;
+        global $userquery;
         // Search type
         if (isSectionEnabled('photos')) {
-            $Cbucket->search_types['photos'] = "cbphoto";
+            ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
         }
 
         // My account links
@@ -494,14 +602,14 @@ class CBPhotos
         }
 
         //Setting Cbucket links
-        $Cbucket->links['photos'] = ['photos.php', 'photos/'];
-        $Cbucket->links['manage_photos'] = ['manage_photos.php', 'manage_photos.php'];
-        $Cbucket->links['edit_photo'] = ['edit_photo.php?photo=', 'edit_photo.php?photo='];
-        $Cbucket->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
-        $Cbucket->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
-        $Cbucket->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
-        $Cbucket->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
-        $Cbucket->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
+        ClipBucket::getInstance()->links['photos'] = ['photos.php', 'photos/'];
+        ClipBucket::getInstance()->links['manage_photos'] = ['manage_photos.php', 'manage_photos.php'];
+        ClipBucket::getInstance()->links['edit_photo'] = ['edit_photo.php?photo=', 'edit_photo.php?photo='];
+        ClipBucket::getInstance()->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
+        ClipBucket::getInstance()->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
+        ClipBucket::getInstance()->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
+        ClipBucket::getInstance()->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
+        ClipBucket::getInstance()->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
     }
 
     /**
@@ -509,8 +617,7 @@ class CBPhotos
      */
     function set_photo_max_size()
     {
-        global $Cbucket;
-        $adminSize = $Cbucket->configs['max_photo_size'];
+        $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
         if (!$adminSize) {
             $this->max_file_size = 2 * 1024 * 1024;
         } else {
@@ -659,7 +766,7 @@ class CBPhotos
             if ($cond != '') {
                 $cond .= ' AND ';
             }
-            $cond .= cbsearch::date_margin('photos.date_added', $p['date_span']);
+            $cond .= Search::date_margin('photos.date_added', $p['date_span']);
         }
 
         if ($p['featured']) {
@@ -1029,7 +1136,7 @@ class CBPhotos
         $files = get_image_file(['details' => $photo, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
         if (!empty($files)) {
             foreach ($files as $file) {
-                $file_dir = PHOTOS_DIR . DIRECTORY_SEPARATOR . $file;
+                $file_dir = DirPath::get('photos') . $file;
                 if (file_exists($file_dir)) {
                     unlink($file_dir);
                 }
@@ -1159,7 +1266,7 @@ class CBPhotos
      */
     function generate_photos($array)
     {
-        $path = PHOTOS_DIR . DIRECTORY_SEPARATOR;
+        $path = DirPath::get('photos');
 
         if (!is_array($array)) {
             $p = $this->get_photo($array);
@@ -1209,7 +1316,7 @@ class CBPhotos
 
             if ($images) {
                 foreach ($images as $image) {
-                    $imageFile = PHOTOS_DIR . DIRECTORY_SEPARATOR . $image;
+                    $imageFile = DirPath::get('photos') . $image;
 
                     if (file_exists($imageFile)) {
                         $imageDetails = getimagesize($imageFile);
@@ -1312,8 +1419,8 @@ class CBPhotos
      */
     function watermark_file()
     {
-        if (file_exists(BASEDIR . '/images/photo_watermark.png')) {
-            return '/images/photo_watermark.png';
+        if (file_exists(DirPath::get('images') . 'photo_watermark.png')) {
+            return DirPath::getUrl('images') . 'photo_watermark.png';
         }
         return false;
     }
@@ -1324,8 +1431,7 @@ class CBPhotos
      */
     function get_watermark_position()
     {
-        global $Cbucket;
-        return $Cbucket->configs['watermark_placement'];
+        return ClipBucket::getInstance()->configs['watermark_placement'];
     }
 
     /**
@@ -1347,8 +1453,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        list($w, $h) = getimagesize($file);
-        list($ww, $wh) = getimagesize($watermark);
+        [$w, $h] = getimagesize($file);
+        [$ww, $wh] = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1399,7 +1505,7 @@ class CBPhotos
             return false;
         }
 
-        list($Swidth, $Sheight, $Stype) = getimagesize($input);
+        [$Swidth, $Sheight, $Stype] = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);
@@ -1548,6 +1654,9 @@ class CBPhotos
             if (!isset($array['allow_rating'])) {
                 $array['allow_rating'] = 'yes';
             }
+            if (!isset($array['age_restriction'])) {
+                $array['age_restriction'] = 'null';
+            }
 
             foreach ($FullForms as $field) {
                 $name = formObj::rmBrackets($field['name']);
@@ -1648,7 +1757,7 @@ class CBPhotos
         if (empty($file)) {
             e(lang('no_watermark_found'));
         } else {
-            $oldW = BASEDIR . '/images/photo_watermark.png';
+            $oldW = DirPath::get('images') . 'photo_watermark.png';
             if (file_exists($oldW)) {
                 unset($oldW);
             }
@@ -1658,8 +1767,8 @@ class CBPhotos
             $type = $info[2];
 
             if ($type == 3) {
-                if (move_uploaded_file($file['tmp_name'], BASEDIR . '/images/photo_watermark.png')) {
-                    $wFile = BASEDIR . '/images/photo_watermark.png';
+                if (move_uploaded_file($file['tmp_name'], DirPath::get('images') . 'photo_watermark.png')) {
+                    $wFile = DirPath::get('images') . 'photo_watermark.png';
                     if ($width > $this->max_watermark_width) {
                         $this->createThumb($wFile, $wFile, 'png', $this->max_watermark_width);
                     }
@@ -1685,12 +1794,14 @@ class CBPhotos
             $array = $_POST;
         }
 
-        $comments = $array['allow_comments'];
+        $comments = config('photo_comments') ? $array['allow_comments'] : 'no';
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
 
-        return [
-            'comments'  => [
+        $return = [];
+
+        if( config('display_photo_comments') == 'yes' ){
+            $return['comments'] = [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
                 'db_field'          => 'allow_comments',
@@ -1700,31 +1811,53 @@ class CBPhotos
                 'checked'           => $comments,
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ],
-            'embedding' => [
-                'title'             => lang('vdo_embedding'),
-                'type'              => 'radiobutton',
-                'name'              => 'allow_embedding',
-                'db_field'          => 'allow_embedding',
-                'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
-                'checked'           => $embedding,
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ],
-            'rating'    => [
-                'title'             => lang('rating'),
-                'name'              => 'allow_rating',
-                'type'              => 'radiobutton',
-                'db_field'          => 'allow_rating',
-                'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
-                'checked'           => $rating,
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ]
+                'default_value'     => 'yes',
+                'extra_tags'        => config('photo_comments') ? '' : 'disabled="disabled" ',
+            ];
+        }
+
+        $return ['embedding'] = [
+            'title'             => lang('vdo_embedding'),
+            'type'              => 'radiobutton',
+            'name'              => 'allow_embedding',
+            'db_field'          => 'allow_embedding',
+            'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
+            'checked'           => $embedding,
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'yes'
         ];
+
+        $return ['rating'] = [
+            'title'             => lang('rating'),
+            'name'              => 'allow_rating',
+            'type'              => 'radiobutton',
+            'db_field'          => 'allow_rating',
+            'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
+            'checked'           => $rating,
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'yes'
+        ];
+
+        if( config('enable_age_restriction') == 'yes' ) {
+            $age_restriction = $array['age_restriction'];
+            $return['age_restriction'] = [
+                'title'             => lang('age_restriction'),
+                'type'              => 'textfield',
+                'name'              => 'age_restriction',
+                'id'                => 'age_restriction',
+                'value'             =>  $age_restriction ?? '',
+                'db_field'          => 'age_restriction',
+                'required'          => 'no',
+                'hint_2'            => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true,
+                'class'             => 'form-control'
+            ];
+        }
+
+        return $return;
     }
 
     /**
@@ -2027,15 +2160,14 @@ class CBPhotos
      */
     function getFileSmarty($p)
     {
-        global $Cbucket;
         $details = $p['details'];
         $output = $p['output'];
         if (empty($details)) {
             return $this->default_thumb($size, $output);
         } else {
             //Calling Custom Functions
-            if (!empty($Cbucket->custom_get_photo_funcs)) {
-                foreach ($Cbucket->custom_get_photo_funcs as $funcs) {
+            if (!empty(ClipBucket::getInstance()->custom_get_photo_funcs)) {
+                foreach (ClipBucket::getInstance()->custom_get_photo_funcs as $funcs) {
                     if (function_exists($funcs)) {
                         $func_returned = $funcs($p);
                         if ($func_returned) {
@@ -2068,7 +2200,7 @@ class CBPhotos
             }
 
             if (!empty($photo['filename']) && !empty($photo['ext'])) {
-                $files = glob(PHOTOS_DIR . '/' . $photo['filename'] . '*.' . $photo['ext']);
+                $files = glob(DirPath::get('photos') . $photo['filename'] . '*.' . $photo['ext']);
                 if (!empty($files) && is_array($files)) {
                     $thumbs = [];
                     foreach ($files as $file) {
@@ -2078,13 +2210,13 @@ class CBPhotos
                         $type = $this->get_image_type($thumb_name);
                         if ($with_orig) {
                             if ($with_path) {
-                                $thumbs[] = PHOTOS_URL . '/' . $thumb_name;
+                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
                             } else {
                                 $thumbs[] = $thumb_name;
                             }
                         } elseif (!empty($type)) {
                             if ($with_path) {
-                                $thumbs[] = PHOTOS_URL . '/' . $thumb_name;
+                                $thumbs[] = DirPath::getUrl('photos') . $thumb_name;
                             } else {
                                 $thumbs[] = $thumb_name;
                             }
@@ -2129,7 +2261,7 @@ class CBPhotos
                         }
 
                         if (empty($imgDetails) || empty($imgDetails[$p['size']])) {
-                            $dem = getimagesize(str_replace(PHOTOS_URL, PHOTOS_DIR, $src));
+                            $dem = getimagesize(str_replace(DirPath::getUrl('photos'), DirPath::get('photos'), $src));
                             $width = $dem[0];
                             $height = $dem[1];
                             /* UPDATING IMAGE DETAILS */
@@ -2423,7 +2555,7 @@ class CBPhotos
         if (file_exists(TEMPLATEDIR . '/images/thumbs/no-photo' . $size . '.png')) {
             $path = TEMPLATEURL . '/images/thumbs/no-photo' . $size . '.png';
         } else {
-            $path = PHOTOS_URL . '/no-photo' . $size . '.png';
+            $path = DirPath::getUrl('photos') . 'no-photo' . $size . '.png';
         }
 
         if (!empty($output) && $output == 'html') {

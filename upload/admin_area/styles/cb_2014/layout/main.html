@@ -47,6 +47,11 @@
                     </a>
                 </li>
                 <li>
+                    <a data-toggle="tab" href="#config_collections">
+                        <h8>{lang code='collections'}</h8>
+                    </a>
+                </li>
+                <li>
                     <a data-toggle="tab" href="#config_comments">
                         <h8>{lang code='comments'}</h8>
                     </a>
@@ -69,6 +74,11 @@
                 <li>
                     <a data-toggle="tab" href="#config_cache">
                         <h8>{lang|ucfirst code='cache'}</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#config_dev">
+                        <h8>{lang|ucfirst code='dev'}</h8>
                     </a>
                 </li>
             </ul>
@@ -126,6 +136,16 @@
 								</div>
 								<div class="col-md-2 row-size no_padding">
 									<input value="yes" id="enable_tmdb" {if $row.enable_tmdb=='yes'}checked{/if} name="enable_tmdb" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_sitemap" title="{lang code='option_enable_sitemap'}">{lang code='option_enable_sitemap'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_sitemap" {if $row.enable_sitemap=='yes'}checked{/if} name="enable_sitemap" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -193,6 +213,37 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_age_restriction" title="{lang code='option_enable_age_restriction'}">{lang code='option_enable_age_restriction'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_age_restriction" {if $row.enable_age_restriction=='yes'}checked{/if} name="enable_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_blur_restricted_content'}"/> {lang code='option_enable_blur_restricted_content'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_blur_restricted_content" {if $row.enable_blur_restricted_content=='yes'}checked{/if} name="enable_blur_restricted_content" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+
 						</div>
 						<div class="col-md-4">
 							<div class="row">
@@ -504,6 +555,16 @@
 								</div>
 								<div class="col-md-4 row-size">
 									<input value="yes" name="allow_username_spaces" id="allow_username_spaces" {if $row.allow_username_spaces=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_dob_edition" title="{lang code='option_enable_user_dob_edition'}">{lang code='option_enable_user_dob_edition'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_dob_edition" id="enable_user_dob_edition" {if $row.enable_user_dob_edition=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -1362,6 +1423,16 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_quicklist" title="{lang code='option_enable_quicklist'}">{lang code='option_enable_quicklist'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_quicklist" id="enable_quicklist" {if $row.enable_quicklist=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -1529,6 +1600,17 @@
 						</div>
 					</div>
 				</div>
+                <div id="config_collections" class="tab-pane">
+					<div class="row">
+						<div class="col-md-4">
+							<label class="nowrap" for="hide_empty_collection" title="{lang code='option_hide_empty_collection'}">{lang code='option_hide_empty_collection'}</label>
+						</div>
+						<div class="col-md-2 row-size">
+							<input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
+					</div>
+				</div>
 				<div id="config_comments" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
@@ -1537,14 +1619,7 @@
 									<label class="nowrap" for="video_comments" title="Video comments">Video comments</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="1" name="video_comments" id="video_comments" {if $row.video_comments=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="channel_comments" title="Channel comments">Channel comments</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="channel_comments" id="channel_comments" {if $row.channel_comments=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="1" name="video_comments" id="video_comments" {if $row.video_comments=='1'}checked{/if} {if $row.display_video_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -1554,34 +1629,71 @@
                                     <label class="nowrap" for="photo_comments" title="Photo comments">Photo comments</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="photo_comments" id="photo_comments" {if $row.photo_comments=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="1" name="photo_comments" id="photo_comments" {if $row.photo_comments=='1'}checked{/if} {if $row.display_photo_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>
-
-						</div>
-						<div class="col-md-4">
 							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_comment_chr" title="Maximum Comment Characters">Maximum Comment Characters</label>
+								<div class="col-md-4">
+									<label class="nowrap" for="channel_comments" title="Channel comments">Channel comments</label>
 								</div>
-								<div class="col-md-6 row-size">
-									<input class="form-control" name="max_comment_chr" id="max_comment_chr" value="{$row.max_comment_chr}"/>
+								<div class="col-md-2 row-size">
+									<input value="1" name="channel_comments" id="channel_comments" {if $row.channel_comments=='1'}checked{/if} {if $row.display_channel_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <label class="nowrap" for="anonym_comments" title="Allow guests to comment">Allow guests to comment</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="collection_comments" title="{lang code='enable_collection_comments'}">{lang code='enable_collection_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_collection_comments" id="collection_comments" {if $row.enable_collection_comments=='yes'}checked{/if}  {if $row.display_collection_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="display_video_comments" title="{lang code='option_display_video_comments'}">{lang code='option_display_video_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="display_video_comments" id="display_video_comments" {if $row.display_video_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="display_photo_comments" title="{lang code='option_display_photo_comments'}">{lang code='option_display_photo_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="display_photo_comments" id="display_photo_comments" {if $row.display_photo_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="display_channel_comments" title="{lang code='option_display_channel_comments'}">{lang code='option_display_channel_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="display_channel_comments" id="display_channel_comments" {if $row.display_channel_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="display_collection_comments" id="display_collection_comments" {if $row.display_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
 						</div>
 						<div class="col-md-4">
 							<div class="row">
@@ -1594,6 +1706,25 @@
 										<option value="guests" {if $row.comments_captcha=='guests'}selected{/if}>For Guests Only</option>
 										<option value="none" {if $row.comments_captcha=='none'}selected{/if}>Disabled</option>
 									</select>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="max_comment_chr" title="Maximum Comment Characters">Maximum Comment Characters</label>
+								</div>
+								<div class="col-md-6 row-size">
+									<input class="form-control" name="max_comment_chr" id="max_comment_chr" value="{$row.max_comment_chr}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="anonym_comments" title="Allow guests to comment">Allow guests to comment</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
@@ -2076,6 +2207,43 @@
 								</div>
 								<div class="col-md-8 row-size">
 									<input class="form-control" name="cache_password" id="cache_password" value="{$row.cache_password}"/>
+								</div>
+							</div>
+							<hr/>
+						</div>
+					</div>
+				</div>
+				<div id="config_dev" class="tab-pane">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-5">
+									<label class="nowrap" for="enable_dev_mode" title="{lang code='dev_mode'}">{lang code='dev_mode'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_dev_mode" id="enable_dev_mode" {if $DEVELOPMENT_MODE}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+						</div>
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-5">
+									<label class="nowrap" for="discord_error_log" title="{lang code='discord_error_log'}">{lang code='discord_error_log'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="discord_error_log" id="discord_error_log" {if $discord_error_log } checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="discord_webhook_url" title="{lang code='discord_webhook_url'}">{lang code='discord_webhook_url'}</label>
+								</div>
+								<div class="col-md-8 row-size">
+									<input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{$discord_webhook_url}" {if !$discord_error_log }disabled="disabled"{/if}/>
 								</div>
 							</div>
 							<hr/>
