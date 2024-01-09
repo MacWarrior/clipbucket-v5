@@ -27,6 +27,28 @@ echo -ne " OK"
 
 echo ""
 echo ""
+echo "HTTP servers availables : "
+echo " - Nginx [Default]"
+echo " - Apache"
+read -p "Which HTTP server do you want to use ? [Nginx] " READ_HTTP_SERVER
+case ${READ_HTTP_SERVER} in
+    "Apache")
+        HTTP_SERVER="APACHE"
+        echo ""
+        echo -ne "Installing Apache..."
+        apt install apache2 --yes > /dev/null 2>&1
+        ;;
+    *)
+        HTTP_SERVER="NGINX"
+        echo ""
+        echo -ne "Installing Nginx..."
+        apt install nginx-full --yes > /dev/null 2>&1
+        ;;
+esac
+echo -ne " OK"
+
+echo ""
+echo ""
 echo "PHP versions availables : "
 echo " - 8.2 [Default]"
 echo " - 8.3"
@@ -49,7 +71,7 @@ esac
 
 echo ""
 echo -ne "Installing requiered elements..."
-apt install php${PHP_VERSION}-fpm nginx-full mariadb-server git php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
+apt install php${PHP_VERSION}-fpm mariadb-server git php${PHP_VERSION}-curl ffmpeg php${PHP_VERSION}-mysqli php${PHP_VERSION}-xml php${PHP_VERSION}-mbstring php${PHP_VERSION}-gd sendmail mediainfo --yes > /dev/null 2>&1
 echo -ne " OK"
 
 echo ""
@@ -65,7 +87,8 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Installing ClipbucketV5 sources..."
-INSTALL_PATH="/srv/http/clipbucket/"
+SERVER_ROOT="/srv/http/"
+INSTALL_PATH="${SERVER_ROOT}clipbucket/"
 mkdir -p ${INSTALL_PATH}
 git clone https://github.com/MacWarrior/clipbucket-v5.git ${INSTALL_PATH} > /dev/null 2>&1
 git config --global --add safe.directory ${INSTALL_PATH}
@@ -89,9 +112,12 @@ case ${READ_DOMAIN} in
 esac
 
 echo ""
-echo -ne "Configuring Nginx Vhost..."
-rm -f /etc/nginx/sites-enabled/default
-cat << 'EOF' > /etc/nginx/sites-available/001-clipbucket
+case ${HTTP_SERVER} in
+    "NGINX")
+        echo -ne "Configuring Nginx Vhost..."
+        VHOST_PATH="/etc/nginx/sites-available/001-clipbucket"
+        rm -f /etc/nginx/sites-enabled/default
+        cat << 'EOF' > ${VHOST_PATH}
 server {
     listen 80;
     server_name DOMAINNAME;
@@ -244,11 +270,61 @@ server {
 }
 EOF
 
-sed -i "s/DOMAINNAME/${DOMAIN_NAME}/g" /etc/nginx/sites-available/001-clipbucket
-sed -i "s/PHPVERSION/${PHP_VERSION}/g" /etc/nginx/sites-available/001-clipbucket
-sed -i "s/INSTALLPATH/${INSTALL_PATH//\//\\/}upload/g" /etc/nginx/sites-available/001-clipbucket
-ln -s /etc/nginx/sites-available/001-clipbucket /etc/nginx/sites-enabled/
-systemctl restart nginx > /dev/null
+        ln -s ${VHOST_PATH} /etc/nginx/sites-enabled/
+        ;;
+
+    "APACHE")
+        echo -ne "Configuring Apache Vhost..."
+        VHOST_PATH="/etc/apache2/sites-available/001-clipbucket.conf"
+        a2enconf php${PHP_VERSION}-fpm > /dev/null
+        a2enmod rewrite proxy_fcgi > /dev/null
+        cat << 'EOF' > ${VHOST_PATH}
+<VirtualHost *:80>
+    ServerName DOMAINNAME
+    DocumentRoot INSTALLPATH
+
+    <Directory INSTALLPATH>
+        Options Indexes FollowSymLinks
+        AllowOverride all
+        Order allow,deny
+        allow from all
+    </Directory>
+
+    <FilesMatch .php$>
+        SetHandler "proxy:unix:/run/php/phpPHPVERSION-fpm.sock|fcgi://localhost"
+    </FilesMatch>
+
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
+</VirtualHost>
+EOF
+
+        a2ensite 001-clipbucket > /dev/null
+
+        cat << 'EOF' >> /etc/apache2/apache2.conf
+
+<Directory SERVERROOT>
+        Options Indexes FollowSymLinks
+        AllowOverride None
+        Require all granted
+</Directory>
+EOF
+        sed -i "s/SERVERROOT/${SERVER_ROOT//\//\\/}/g" /etc/apache2/apache2.conf
+        ;;
+esac
+
+sed -i "s/DOMAINNAME/${DOMAIN_NAME}/g" ${VHOST_PATH}
+sed -i "s/PHPVERSION/${PHP_VERSION}/g" ${VHOST_PATH}
+sed -i "s/INSTALLPATH/${INSTALL_PATH//\//\\/}upload/g" ${VHOST_PATH}
+
+case ${HTTP_SERVER} in
+    "NGINX")
+      systemctl restart nginx > /dev/null
+      ;;
+    "APACHE")
+      systemctl restart apache2 > /dev/null
+      ;;
+esac
 echo -ne " OK"
 
 echo ""

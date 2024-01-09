@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"326",
+  "revision":"327",
   "status":"dev",
   "detail":[
     {
@@ -282,7 +282,7 @@
       "description":[
         "Fix directories check"
         ,"Fix chmod in all scripts"
-        ,"Add script for Debian 12 + Nginx"
+        ,"Add script for Debian 12 - Apache & Nginx - PHP 8.2 & 8.3"
         ,"Add script for Ubuntu 22.04 + Nginx"
         ,"Add script for Ubuntu 23.04 + Nginx"
         ,"Update installation process"
