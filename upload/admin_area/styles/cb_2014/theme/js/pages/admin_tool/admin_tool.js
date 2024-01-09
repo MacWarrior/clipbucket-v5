@@ -1,4 +1,26 @@
+var max_try = 5;
 $(function () {
+    var tries = 0;
+    // Create new event, the server script is sse.php
+    var eventSource = new EventSource("/actions/progress_tool.php");
+    // Event when receiving a message from the server
+    eventSource.addEventListener("message", function(e) {
+        console.log(e.data);
+    }, false);
+    eventSource.addEventListener('open', function(e) {
+        console.log('opened');
+        if (tries > max_try) {
+            eventSource.close();
+        }
+        tries++
+    }, false);
+
+    eventSource.addEventListener('error', function(e) {
+        if (e.readyState == EventSource.CLOSED) {
+// Connection was closed.
+        console.log('closed');
+        }
+    }, false);
     $('.launch').on('click', function () {
         var elem = $(this);
         if (!elem.parent().hasClass('disabled')) {
@@ -32,8 +54,10 @@ $(function () {
                     $('#span-' + id_tool).html(result['libelle_status']);
                     elem.parent().addClass('disabled');
                     $('.page-content').prepend(result['msg']);
+                    eventSource.close();
                 }
             });
         }
     });
+
 });

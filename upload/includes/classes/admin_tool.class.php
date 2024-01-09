@@ -23,15 +23,14 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    private static function getTools($condition = []): array
+    public static function getTools($condition = []): array
     {
-        global $db;
 
         $where = implode(' AND ', $condition);
         $select = tbl("tools") . ' AS T
         LEFT JOIN ' . tbl("tools_status") . ' AS TT ON TT.id_tools_status = T.id_tools_status';
 
-        return $db->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
+        return Clipbucket_db::getInstance()->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
                CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress'
             , $where
         );
@@ -393,6 +392,7 @@ class AdminTool
                 //call function
                 try {
                     call_user_func($function, $item);
+                    sleep(5);
                 } catch (\Exception $e) {
                     e(lang($e->getMessage()));
                     if ($stop_on_error) {
