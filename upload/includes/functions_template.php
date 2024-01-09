@@ -174,6 +174,12 @@ function display_subtitle_list($data)
     echo templateWithMsgJson('blocks/subtitle_list.html');
 }
 
+function display_tmdb_result($data)
+{
+    assign('results', $data);
+    echo templateWithMsgJson('blocks/tmdb_result.html');
+}
+
 //todO séparer en 2 fonctions
 /**
  * @throws Exception

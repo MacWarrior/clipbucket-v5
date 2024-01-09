@@ -1,0 +1,44 @@
+<div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+            <table class="table table-bordered table-striped manageUsersTable">
+                <tr>
+                    <th class="col-md-10">{lang code='title'}</th>
+                    <th class="col-md-10">{lang code='release_date'}</th>
+                    <th class="col-md-10">{lang code='overview'}</th>
+                    <th class="col-md-10">{lang code='poster'}</th>
+                    <th class="col-md-1"></th>
+                </tr>
+                {section name=sub loop=$results}
+                <tr>
+                    <td>
+                        <span>{display_clean($results[sub].title)}</span>
+                    </td>
+                    <td>
+                        <span>{display_clean($results[sub].release_date)}</span>
+                    </td>
+                    <td>
+                        <!--            TODO masquer une partie-->
+                        <span>{display_clean($results[sub].overview)}</span>
+                    </td>
+                    <td>
+                        <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{$results[sub].poster_path}"/>
+                    </td>
+                    <td>
+                        <button onclick="saveInfoTmdb({display_clean($results[sub].id)})">{lang code='import'}</button>
+                    </td>
+                </tr>
+                {/section}
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+</div>

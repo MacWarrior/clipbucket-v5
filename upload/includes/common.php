@@ -72,6 +72,8 @@ require_once DirPath::get('classes') . 'user.class.php';
 require_once DirPath::get('classes') . 'lang.class.php';
 require_once DirPath::get('classes') . 'pages.class.php';
 require_once DirPath::get('classes') . 'tags.class.php';
+require_once DirPath::get('classes') . 'curl.class.php';
+require_once DirPath::get('classes') . 'tmdb.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();

@@ -83,7 +83,22 @@ function getInfoTmdb($video_id) {
         data: {videoid: videoid},
         dataType: 'json',
         success: function (result) {
-           //@todo
+            var modal = $('#myModal');
+            modal.html(result['template']);
+            modal.modal();
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
+function saveInfoTmdb(tmdb_video_id) {
+    $.ajax({
+        url: "/actions/info_tmdb.php",
+        type: "POST",
+        data: {tmdb_video_id: tmdb_video_id},
+        dataType: 'json',
+        success: function (result) {
+            location.reload();
         }
     });
 }

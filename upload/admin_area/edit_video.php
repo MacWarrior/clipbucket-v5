@@ -45,6 +45,7 @@ if ($_GET['mode'] != '') {
     assign('modedata', $modedata);
 }
 
+
 //Check Video Exists or Not
 if ($myquery->video_exists($video)) {
     //Deleting Comment
@@ -84,6 +85,8 @@ assign('subtitle_list', $subtitle_list);
 if (isset($_POST['del_cmt'])) {
     Comments::delete(['comment_id' => $_POST['cmt_id']]);
 }
+$result_tmdb = Tmdb::getInstance()->searchMovie($data['title']);
+
 
 $params = [];
 $params['type'] = 'v';

@@ -36,14 +36,14 @@ class Curl
      * @param $param
      * @return array
      */
-    public function exec($action, $param)
+    public function exec($action, $param=[])
     {
         curl_setopt_array($this->curl, [
-            CURLOPT_URL => $this->base_url . $action . http_build_query($param)
+            CURLOPT_URL => $this->base_url . $action . (!empty($param) ? '?' : '') . http_build_query($param)
         ]);
         $response = curl_exec($this->curl);
         $err = curl_error($this->curl);
-        return ['error'=>$err, 'response'=> $response];
+        return ['error'=>$err, 'response'=> json_decode($response,true)];
     }
 
     /**
