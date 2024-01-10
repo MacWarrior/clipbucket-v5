@@ -49,7 +49,6 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
-
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';

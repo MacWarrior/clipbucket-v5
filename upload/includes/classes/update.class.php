@@ -45,14 +45,19 @@ class Update
         }, $this->fields);
     }
 
-    /**
-     * @throws Exception
-     */
     public function getDBVersion(): array
     {
         if( empty($this->dbVersion) ){
             $select = implode(', ', $this->getAllFields());
-            $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+            try{
+                $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+            }
+            catch (Exception $e){
+                return [
+                    'version' => '-1',
+                    'revision' => '-1'
+                ];
+            }
 
             $this->dbVersion = [
                 'version' => $result['version'],
@@ -283,41 +288,37 @@ class Update
             });
 
         $files = [];
-
         if ($version == '4.2-RC1-premium') {
             $files[] = DirPath::get('sql') . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
         }
 
         foreach ($folders as $folder) {
             //get files in folder minus . and .. folders
-            $clean_folder = array_diff(scandir($folder), ['..', '.']);
-            $files = array_merge(
-                $files,
-                //clean null files
-                array_filter(
-                //return absolute path
-                    array_map(function ($file) use ($revision, $version, $folder) {
-                        $file_rev = (int)pathinfo($file)['filename'];
-                        $folder_version = str_replace('.', '', basename($folder));
+            $folder_files = array_diff(scandir($folder), ['..', '.']);
+            $folder_version = str_replace('.', '', basename($folder));
 
-                        return
-                            //if current version, then only superior revisions but still under current revision in changelog
-                            (
-                                ($file_rev > $revision && $folder_version == $version
-                                    // or all files from superior version but still under current version in changelog
-                                    || $folder_version > $version
-                                )
-                                && //check if version and revision or not superior to changelog
-                                ($folder_version == $this->getCurrentCoreVersionCode() && $file_rev <= $this->getCurrentCoreRevision()
-                                    || $folder_version < $this->getCurrentCoreVersion()
-                                )
-                            )
-                                ?
-                                $folder . DIRECTORY_SEPARATOR . $file
-                                : null;
-                    }, $clean_folder)
-                )
-            );
+            // Exclude older and future versions
+            if( $version > $folder_version || $folder_version > $this->getCurrentCoreVersionCode() ){
+                break;
+            }
+
+            foreach($folder_files AS $file){
+                $file_rev = (int)pathinfo($file)['filename'];
+
+                // Exclude future revisions
+                if( $folder_version == $this->getCurrentCoreVersionCode() && $file_rev > $this->getCurrentCoreRevision() ){
+                    break;
+                }
+
+                if( // For current version, include next revisions
+                    ($folder_version == $version && $file_rev > $revision)
+                    ||
+                    // For next versions, include all revisions
+                    $folder_version > $version
+                ){
+                    $files[] = $folder . DIRECTORY_SEPARATOR . $file;
+                }
+            }
         }
 
         return ($count ? count($files) : $files);
@@ -414,20 +415,15 @@ class Update
      */
     public static function isVersionSystemInstalled(): bool
     {
-        try {
-            $params = [];
-            $params['first_only'] = true;
-            Plugin::getInstance()->getAll($params);
-        } catch (Exception $e) {
-            if ($e->getMessage() == 'version_not_installed') {
-                if (BACK_END) {
-                    e('Version system isn\'t installed, please connect and follow upgrade instructions.');
-                } elseif (in_dev()) {
-                    e('Version system isn\'t installed, please contact your administrator.');
-                }
-                return false;
+        $dbversion = Update::getInstance()->getDBVersion();
+
+        if( $dbversion['version'] == '-1' ){
+            if (BACK_END) {
+                e('Version system isn\'t installed, please connect and follow upgrade instructions.');
+            } elseif (in_dev()) {
+                e('Version system isn\'t installed, please contact your administrator.');
             }
-            throw $e;
+            return false;
         }
         return true;
     }

@@ -87,8 +87,7 @@ try {
         $db->mysqli->query($sql);
     }
 
-    $update = Update::getInstance();
-    $files = $update->getUpdateFiles(false, $version, $revision);
+    $files = Update::getInstance()->getUpdateFiles(false, $version, $revision);
 
     $installed_plugins = $db->select(tbl('plugins'), '*');
     $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
