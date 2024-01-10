@@ -49,7 +49,7 @@ switch ($mode) {
         ];
 
         $version = Update::getInstance()->getDBVersion();
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
             $category = [Category::getInstance()->getDefaultByType('video')['category_id']];
         } else {
             $category = [];
@@ -159,7 +159,7 @@ switch ($mode) {
         }
 
         $version = Update::getInstance()->getDBVersion();
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323) ) {
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
             $category = [Category::getInstance()->getDefaultByType('video')['category_id']];
         } else {
             $category = [];

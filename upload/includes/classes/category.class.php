@@ -395,6 +395,9 @@ class Category
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function add_category_thumb($cid, $file)
     {
         global $imgObj;

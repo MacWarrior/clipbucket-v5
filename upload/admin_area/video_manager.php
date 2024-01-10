@@ -129,7 +129,7 @@ $get_limit = create_query_limit($page, RESULTS);
 
 $version = Update::getInstance()->getDBVersion();
 
-if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
+if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
     $all_categories = Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType('video')
     ]);

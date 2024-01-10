@@ -597,7 +597,7 @@ function getCategoryList($params = [])
             $type = 'photo';
             break;
     }
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) {
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
         $cats = Category::getInstance()->getAll($params);
