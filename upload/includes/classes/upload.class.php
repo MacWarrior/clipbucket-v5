@@ -366,7 +366,6 @@ class Upload
             $cat_array = [$m[1]];
         }
 
-        $tags = $default['tags'];
 
         $uploadFormRequiredFieldsArray = [
             /**
@@ -427,16 +426,76 @@ class Upload
                 'invalid_err'       => lang('vdo_cat_err3'),
                 'display_function'  => 'convert_to_categories'
             ],
-            'tags'  => [
+            'tags_video'  => [
                 'title'             => lang('tag_title'),
                 'type'              => 'hidden',
-                'name'              => 'tags',
-                'id'                => 'tags',
-                'value'             => genTags($tags),
+                'name'              => 'tags_video',
+                'id'                => 'tags_video',
+                'value'             => genTags($default['tags_video']),
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ]
+            ],
+            'tags_actors'  => [
+                'title'             => lang('actors'),
+                'type'              => 'hidden',
+                'name'              => 'tags_actors',
+                'id'                => 'tags_actors',
+                'value'             => genTags($default['tags_actors']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
+            'tags_producer'  => [
+                'title'             => lang('producer'),
+                'type'              => 'hidden',
+                'name'              => 'tags_producer',
+                'id'                => 'tags_producer',
+                'value'             => genTags($default['tags_producer']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
+            'tags_executive_producer'  => [
+                'title'             => lang('executive_producer'),
+                'type'              => 'hidden',
+                'name'              => 'tags_executive_producer',
+                'id'                => 'tags_executive_producer',
+                'value'             => genTags($default['tags_executive_producer']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
+            'tags_director'  => [
+                'title'             => lang('director'),
+                'type'              => 'hidden',
+                'name'              => 'tags_director',
+                'id'                => 'tags_director',
+                'value'             => genTags($default['tags_director']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
+            'tags_crew'  => [
+                'title'             => lang('crew'),
+                'type'              => 'hidden',
+                'name'              => 'tags_crew',
+                'id'                => 'tags_crew',
+                'value'             => genTags($default['tags_crew']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
+            'tags_genre'  => [
+                'title'             => lang('genre'),
+                'type'              => 'hidden',
+                'name'              => 'tags_genre',
+                'id'                => 'tags_genre',
+                'value'             => genTags($default['tags_genre']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
         ];
 
         $tracks = $default['tracks'];

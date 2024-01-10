@@ -689,7 +689,11 @@ class CBvideo extends CBCategory
         $version = Update::getInstance()->getDBVersion();
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
+//            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
+            $types = Tags::getVideoTypes();
+            foreach ($types as $type) {
+                $select_tag .= ', GROUP_CONCAT( CASE WHEN T.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN T.name ELSE \'\' END, \',\') AS tags_' . mysql_clean($type['name']);
+            }
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
                     LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
             $group_tag = ' GROUP BY video.videoid ';
@@ -965,7 +969,18 @@ class CBvideo extends CBCategory
             } else {
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
-                Tags::saveTags($array['tags'], 'video', $vid);
+
+                foreach ($array as $key => $item) {
+                    $matches = [];
+                    if (preg_match('/(tags)_*(.*)/',$key, $matches)) {
+                        if (empty($matches['2'])) {
+                            $type = 'video';
+                        } else {
+                            $type = $matches['2'];
+                        }
+                        Tags::saveTags($item, $type, $vid);
+                    }
+                }
 
                 cb_do_action('update_video', [
                     'object_id' => $vid,

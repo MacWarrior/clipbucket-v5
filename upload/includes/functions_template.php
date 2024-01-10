@@ -174,9 +174,10 @@ function display_subtitle_list($data)
     echo templateWithMsgJson('blocks/subtitle_list.html');
 }
 
-function display_tmdb_result($data)
+function display_tmdb_result($data, $videoid)
 {
     assign('results', $data);
+    assign('videoid', $videoid);
     echo templateWithMsgJson('blocks/tmdb_result.html');
 }
 

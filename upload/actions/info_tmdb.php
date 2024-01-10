@@ -13,4 +13,4 @@ $results = Tmdb::getInstance()->searchMovie($video_info['title']);
 if (!empty($results['error'])) {
     e(lang($results['error']));
 }
-display_tmdb_result($results['response']['results']);
+display_tmdb_result($results['response']['results'], $video_info['videoid']);

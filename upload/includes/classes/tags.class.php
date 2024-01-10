@@ -2,6 +2,20 @@
 
 class Tags
 {
+
+    /**
+     * @var string[]
+     */
+    private static $video_types = [
+        'video',
+        'actors',
+        'producer',
+        'executive_producer',
+        'director',
+        'crew',
+        'genre',
+    ];
+
     /**
      * @throws Exception
      */
@@ -22,7 +36,7 @@ class Tags
         LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag 
-        '. ($cond ? 'WHERE '. (is_array($cond) ? implode(' AND ', $cond) : $cond) : '') .'
+        ' . ($cond ? 'WHERE ' . (is_array($cond) ? implode(' AND ', $cond) : $cond) : '') . '
         GROUP BY T.id_tag
         ';
         if ($limit) {
@@ -90,7 +104,7 @@ class Tags
      * @return bool
      * @throws Exception
      */
-    public static function updateTag($name, $id_tag):bool
+    public static function updateTag($name, $id_tag): bool
     {
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
@@ -99,7 +113,7 @@ class Tags
         }
         global $db;
         if (strlen(trim($name)) <= 2) {
-            e(lang('tag_too_short'),'warning');
+            e(lang('tag_too_short'), 'warning');
             return false;
         }
         try {
@@ -122,38 +136,35 @@ class Tags
             e(lang('missing_table'));
             return false;
         }
-        switch ($object_type) {
-            case 'video':
-                $id_field = 'id_video';
-                $table_tag = 'video_tags';
-                break;
-            case 'photo':
-                $id_field = 'id_photo';
-                $table_tag = 'photo_tags';
-                break;
-            case 'collection':
-                $id_field = 'id_collection';
-                $table_tag = 'collection_tags';
-                break;
-            case 'profile':
-                $id_field = 'id_user';
-                $table_tag = 'user_tags';
-                break;
-            case 'playlist':
-                $id_field = 'id_playlist';
-                $table_tag = 'playlist_tags';
-                break;
-            default:
-                //TODO
-                return false;
+        if (in_array($object_type,self::$video_types)) {
+            $id_field = 'id_video';
+            $table_tag = 'video_tags';
+        } else {
+            switch ($object_type) {
+                case 'photo':
+                    $id_field = 'id_photo';
+                    $table_tag = 'photo_tags';
+                    break;
+                case 'collection':
+                    $id_field = 'id_collection';
+                    $table_tag = 'collection_tags';
+                    break;
+                case 'profile':
+                    $id_field = 'id_user';
+                    $table_tag = 'user_tags';
+                    break;
+                case 'playlist':
+                    $id_field = 'id_playlist';
+                    $table_tag = 'playlist_tags';
+                    break;
+                default:
+                    //TODO
+                    return false;
+            }
         }
         global $db;
-        $sql_delete_link = 'DELETE FROM ' . tbl($table_tag) . ' WHERE ' . $id_field . ' = ' . mysql_clean($object_id);
-        if (!$db->execute($sql_delete_link, 'delete')) {
-            e(lang('error_delete_linking_tags'));
-            return false;
-        }
         if (!empty($tags)) {
+            //getting type
             $sql_id_type = 'SELECT id_tag_type
                        FROM ' . tbl('tags_type') . '
                        WHERE name LIKE \'' . $object_type . '\'';
@@ -164,6 +175,16 @@ class Tags
                 e(lang('unknown_tag_type'));
                 return false;
             }
+            //delete old tags
+            $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
+            INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
+            WHERE ' . $id_field . ' = ' . mysql_clean($object_id) . ' AND id_tag_type = ' . mysql_clean($id_type);
+            if (!$db->execute($sql_delete_link, 'delete')) {
+                e(lang('error_delete_linking_tags'));
+                return false;
+            }
+
+            //insert new tags
             $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
                           FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
             if (!$db->execute($sql_insert_tag, 'insert')) {
@@ -171,6 +192,7 @@ class Tags
                 return false;
             }
 
+            //link tags to object
             $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
             SELECT T.id_tag, ' . mysql_clean($object_id) . '
             FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable
@@ -217,7 +239,7 @@ class Tags
      * @return array
      * @throws Exception
      */
-    public static function getTagTypes(): array
+    public static function getTagTypes($cond=[]): array
     {
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
@@ -225,6 +247,11 @@ class Tags
             return [];
         }
         global $db;
-        return $db->select(tbl('tags_type'),'*',false, false, false, false, 300);
+        return $db->select(tbl('tags_type'), '*', implode(' AND ', $cond), false, false, false, 300);
+    }
+
+    public static function getVideoTypes()
+    {
+        return self::getTagTypes(['name IN (\''.implode('\',\'',self::$video_types).'\')']);
     }
 }

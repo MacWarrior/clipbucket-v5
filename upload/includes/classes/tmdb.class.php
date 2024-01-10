@@ -7,6 +7,8 @@ class Tmdb
     private $curl;
     private static $instance;
 
+    private $language = '';
+
     /**
      * @param \Classes\Curl $curl
      * @return void
@@ -26,6 +28,7 @@ class Tmdb
         if (empty(self::$instance)) {
             self::$instance = new self();
             self::$instance->init(new \Classes\Curl(self::API_URL, config('tmdb_token')));
+            self::$instance->setLanguage(Language::getInstance()->lang);
             return self::$instance;
         }
         return self::$instance;
@@ -33,33 +36,31 @@ class Tmdb
 
     public function searchMovie($search)
     {
-        $return = $this->curl->exec('search/movie',[
+        return $this->requestAPI('search/movie',[
             'query'=>$search
         ]);
-        return $return;
     }
 
     public function movieDetail($movie_id)
     {
-        $return = $this->curl->exec('search/movie',[
-            'query'=>$movie_id
-        ]);
-        return $return;
+        return $this->requestAPI('search/movie/' . $movie_id );
     }
 
     public function movieCredits($movie_id)
     {
-        $return = $this->curl->exec('search/movie/' . $movie_id . '/credits');
-        return $return;
+        return $this->requestAPI('search/movie/' . $movie_id . '/credits');
     }
 
     public function setLanguage($language)
     {
-
+        $this->language = $language;
     }
 
-    public function personDetail($person_id)
+    public function requestAPI($url, $param = [])
     {
-
+        if (empty($param['language']) ) {
+            $param['language'] = $this->language;
+        }
+        return $this->curl->exec($url, $param);
     }
 }

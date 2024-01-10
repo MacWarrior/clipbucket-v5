@@ -76,11 +76,11 @@ function saveSubtitle(number) {
     });
 }
 
-function getInfoTmdb($video_id) {
+function getInfoTmdb(video_id) {
     $.ajax({
         url: "/actions/info_tmdb.php",
         type: "POST",
-        data: {videoid: videoid},
+        data: {videoid: video_id},
         dataType: 'json',
         success: function (result) {
             var modal = $('#myModal');
@@ -95,7 +95,7 @@ function saveInfoTmdb(tmdb_video_id) {
     $.ajax({
         url: "/actions/info_tmdb.php",
         type: "POST",
-        data: {tmdb_video_id: tmdb_video_id},
+        data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
         dataType: 'json',
         success: function (result) {
             location.reload();
@@ -103,5 +103,7 @@ function saveInfoTmdb(tmdb_video_id) {
     });
 }
 $(function () {
-    init_tags('tags', available_tags);
+    $("[id^=tags]").each(function(elem){
+        init_tags(this.id, available_tags, '#list_'+this.id);
+    });
 });

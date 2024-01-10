@@ -31,7 +31,7 @@
                         <img src="https://image.tmdb.org/t/p/w600_and_h900_bestv2{$results[sub].poster_path}"/>
                     </td>
                     <td>
-                        <button onclick="saveInfoTmdb({display_clean($results[sub].id)})">{lang code='import'}</button>
+                        <button onclick="saveInfoTmdb({display_clean($results[sub].id)}, {display_clean($videoid)})">{lang code='import'}</button>
                     </td>
                 </tr>
                 {/section}

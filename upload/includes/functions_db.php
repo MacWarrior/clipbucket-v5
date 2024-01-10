@@ -106,7 +106,8 @@ function cb_sql_table($table, $as = null)
 function select($query, $cached_time = -1, $cached_key = ''): array
 {
     global $db;
-    return $db->_select($query, $cached_time, $cached_key);
+    $res = $db->_select($query, $cached_time, $cached_key);
+    return $res;
 }
 
 /**
