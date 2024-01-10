@@ -1,9 +1,12 @@
 <?php
-global $userquery, $pages, $myquery, $Cbucket, $Cbucket;
+define('THIS_PAGE', 'view_user');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+$userquery = userquery::getInstance();
+
 $userquery->admin_login_check();
-$pages->page_redir();
+pages::getInstance()->page_redir();
 $userquery->login_check('member_moderation');
 
 $uid = $_GET['uid'];
@@ -79,7 +82,7 @@ if ($udetails) {
     assign('catparmas', 'catparmas');
 } else {
     e('No User Found');
-    $Cbucket->show_page = false;
+    Clipbucket::getInstance()->show_page = false;
 }
 if (in_dev()) {
     $min_suffixe = '';
