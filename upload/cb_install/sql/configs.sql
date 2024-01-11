@@ -275,6 +275,6 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration', 1, NULL, NULL),
     ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
 
-INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
+INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;

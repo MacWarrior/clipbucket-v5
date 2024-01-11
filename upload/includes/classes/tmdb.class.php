@@ -43,12 +43,12 @@ class Tmdb
 
     public function movieDetail($movie_id)
     {
-        return $this->requestAPI('search/movie/' . $movie_id );
+        return $this->requestAPI('movie/' . $movie_id );
     }
 
     public function movieCredits($movie_id)
     {
-        return $this->requestAPI('search/movie/' . $movie_id . '/credits');
+        return $this->requestAPI('movie/' . $movie_id . '/credits');
     }
 
     public function setLanguage($language)

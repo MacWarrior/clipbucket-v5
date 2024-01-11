@@ -92,14 +92,21 @@ function getInfoTmdb(video_id) {
 }
 
 function saveInfoTmdb(tmdb_video_id) {
+    debugger;
     $.ajax({
-        url: "/actions/info_tmdb.php",
+        url: "/actions/import_tmdb.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
         dataType: 'json',
         success: function (result) {
+            console.log(result);
+            debugger;
             location.reload();
+        },
+        done: function () {
+            debugger;
         }
+
     });
 }
 $(function () {

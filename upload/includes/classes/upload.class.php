@@ -436,6 +436,16 @@ class Upload
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ],
+            'tags_genre'  => [
+                'title'             => lang('genre'),
+                'type'              => 'hidden',
+                'name'              => 'tags_genre',
+                'id'                => 'tags_genre',
+                'value'             => genTags($default['tags_genre']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ],
             'tags_actors'  => [
                 'title'             => lang('actors'),
                 'type'              => 'hidden',
@@ -485,17 +495,8 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_genre'  => [
-                'title'             => lang('genre'),
-                'type'              => 'hidden',
-                'name'              => 'tags_genre',
-                'id'                => 'tags_genre',
-                'value'             => genTags($default['tags_genre']),
-                'hint_1'            => '',
-                'required'          => 'no',
-                'validate_function' => 'genTags'
-            ],
+            ]
+
         ];
 
         $tracks = $default['tracks'];
