@@ -36,9 +36,8 @@ $(document).ready(function(){
             var uploadForms = [];
             plupload.each(up.files, function(file) {
                 index++;
-                if(index === up.files.length){
+                if($('#tab'+index).length === 0){
                     li = document.createElement('li');
-                    li.className = 'active';
                 }else{
                     ul.find('#'+index).removeClass('active');
                     $('#tab'+index).removeClass('active');
@@ -60,6 +59,7 @@ $(document).ready(function(){
                 wrapperDiv.id = 'tab'+index;
 
                 if(index === up.files.length){
+                    li.className = 'active';
                     wrapperDiv.className = 'tab-pane active uploadFormContainer';
                 } else {
                     wrapperDiv.className = 'tab-pane uploadFormContainer';
