@@ -10,9 +10,10 @@ pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
 assign('type', $type);
+assign('display_type', $type .'s');
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang($type), 'url' => ''];
+$breadcrumb[0] = ['title' => lang($type.'s'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'category.php?type=' . $type];
 
 $version = Update::getInstance()->getDBVersion();

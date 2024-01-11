@@ -182,6 +182,7 @@ class Collection
 
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT(categories.category_name SEPARATOR \',\') AS category_names';
                 $group[] = 'collections.collection_id';
             }
 

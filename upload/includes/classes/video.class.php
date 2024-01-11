@@ -300,7 +300,7 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
 
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category, GROUP_CONCAT(categories.category_name SEPARATOR \', \') AS category_names';
                 $group[] = 'video.videoid';
             }
 
@@ -692,25 +692,35 @@ class CBvideo extends CBCategory
         $cond = (($filename) ? 'video.file_name' : (is_numeric($vid) ? 'video.videoid' : 'video.videokey')) . ' = \'%s\' ';
 
         $select_tag = '';
+        $select_categ = '';
         $join_tag = '';
-        $group_tag = '';
+        $join_categ = '';
+        $group = [];
         $version = Update::getInstance()->getDBVersion();
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
                     LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
-            $group_tag = ' GROUP BY video.videoid ';
+            $group[] = ' video.videoid ';
         }
 
-        $query = 'SELECT ' . table_fields($fields) . ' ' . $select_tag . ' FROM ' . cb_sql_table('video');
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
+            $select_categ = ', GROUP_CONCAT(categories.category_name SEPARATOR \', \') AS category';
+            $join_categ .= ' LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
+            $join_categ .= ' LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
+            $group[] = ' video.videoid ';
+        }
+
+        $query = 'SELECT ' . table_fields($fields) . ' ' . $select_tag . ' ' . $select_categ . ' FROM ' . cb_sql_table('video');
         $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
         $query .= $join_tag;
+        $query .= $join_categ;
         if ($cond) {
             $query .= ' WHERE ' . sprintf($cond, $vid);
         }
 
-        $query .= $group_tag . ' LIMIT 1';
+        $query .= (!empty($group) ? 'GROUP BY ' . implode(',', $group) :''). ' LIMIT 1';
         $query_id = cb_query_id($query);
 
         $data = cb_do_action('select_video', ['query_id' => $query_id, 'videoid' => $vid]);
