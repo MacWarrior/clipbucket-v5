@@ -1048,7 +1048,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_order`   INT(5)            NOT NULL DEFAULT 0,
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `category_thumb`   MEDIUMTEXT        NOT NULL,
+    `category_thumb`   MEDIUMTEXT        NULL,
     `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
