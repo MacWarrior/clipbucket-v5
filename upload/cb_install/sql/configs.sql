@@ -240,7 +240,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_link_sharing', 'yes'),
     (NULL, 'tmdb_token', ''),
     (NULL, 'enable_tmdb', 'no'),
-    (NULL, 'enable_video_link_sharing', 'yes'),
     (NULL, 'enable_user_dob_edition', 'yes'),
     (NULL, 'enable_age_restriction', 'yes'),
     (NULL, 'enable_blur_restricted_content', 'no'),
