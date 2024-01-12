@@ -289,7 +289,7 @@ class Video
         $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'video.videoid';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
@@ -301,7 +301,7 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
 
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category, GROUP_CONCAT(categories.category_name SEPARATOR \', \') AS category_names';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
                 $group[] = 'video.videoid';
             }
 
