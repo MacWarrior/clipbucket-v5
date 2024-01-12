@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"329",
+  "revision":"330",
   "status":"dev",
   "detail":[
     {
@@ -162,6 +162,7 @@
         ,"Implement HLS video quality switch"
         ,"Fix typo in file name"
         ,"Fix MP4 default quality selector"
+        ,"Fix HLS multilangue selection (Thanks @Kenmeiyoki !)"
       ]
     },
     {
