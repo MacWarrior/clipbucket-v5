@@ -149,6 +149,14 @@ INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
     WHERE TRIM(jsontable.categs) != ''
 );
 
+INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
+    SELECT C.category_id, V.videoid
+    FROM `{tbl_prefix}video` V , `{tbl_prefix}categories` C
+
+    WHERE (V.category IS NULL OR V.category = '') AND C.is_default = 'yes' AND C.category_id = @type_category
+);
+
+
 # Users
 SET @type_category = (
     SELECT id_category_type
