@@ -152,7 +152,7 @@ class Playlist
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON playlist_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 330)) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('playlists_categories') . ' ON playlists.playlist_id = playlists_categories.id_playlist';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON playlists_categories.id_category = categories.category_id';
 

@@ -881,7 +881,7 @@ class userquery extends CBCategory
 
         if (!$email) {
             $params = ['users' => ['*']];
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 330)) {
                 $params['users_categories'] = ['id_category'];
             }
             $fields = table_fields($params);
@@ -890,7 +890,7 @@ class userquery extends CBCategory
         }
 
         $query = 'SELECT '.$fields.' FROM ' . cb_sql_table('users');
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 330)) {
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
         $query .= " WHERE users.$select_field = '$id'";

@@ -209,7 +209,7 @@ class Upload
 
             \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
             $version = Update::getInstance()->getDBVersion();
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 328)) {
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 330)) {
                 Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
             }
 
