@@ -182,8 +182,8 @@ switch ($mode) {
         $vid = $Upload->submit_upload($vidDetails);
 
         if (!$vid) {
-            echo json_encode(['success' => 'no', 'file_name' => $filename_without_ext]);
-            exit();
+            upload_error($eh->get_error()[0]['val']);
+            exit(0);
         }
 
         $Upload->add_conversion_queue($targetFileName);

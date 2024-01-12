@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"327",
+  "revision":"329",
   "status":"dev",
   "detail":[
     {
@@ -140,7 +140,9 @@
         ,"Implement CSS/JS versionning"
         ,"Refactor directory constants"
         ,"Implement discord error logs"
-        ,"Refactor tags management"
+        ,"Fix .htaccess error"
+        ,"Fix SQL update"
+        ,"Refactor categories management"
       ]
     },
     {
