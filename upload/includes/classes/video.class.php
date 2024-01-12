@@ -233,9 +233,10 @@ class Video
         $param_order = $params['order'] ?? false;
         $param_group = $params['group'] ?? false;
         $param_having = $params['having'] ?? false;
-        $param_count = $params['count'] ?? false;
+        $param_show_unlisted = $params['show_unlisted'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_exist = $params['exist'] ?? false;
+        $param_count = $params['count'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -274,7 +275,7 @@ class Video
         }
 
         if( !has_access('admin_access', true) && !$param_exist ){
-            $conditions[] = $this->getGenericConstraints($param_first_only);
+            $conditions[] = $this->getGenericConstraints($param_first_only || $param_show_unlisted);
         }
 
         if( $param_count ){
@@ -372,11 +373,11 @@ class Video
     }
 
     /**
-     * @param bool $param_first_only
+     * @param bool $show_unlisted
      * @return string
      * @throws Exception
      */
-    public function getGenericConstraints(bool $param_first_only = false): string
+    public function getGenericConstraints(bool $show_unlisted = false): string
     {
         if (has_access('admin_access', true)) {
             return '';
@@ -393,7 +394,7 @@ class Video
 
         $cond .= ' AND (video.broadcast = \'public\'';
 
-        if( $param_first_only ){
+        if( $show_unlisted ){
             $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
         }
         $cond .= ')';
@@ -2046,7 +2047,7 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND ' . Video::getInstance()->getGenericConstraints();
+            $where = ' AND ' . Video::getInstance()->getGenericConstraints(true);
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
