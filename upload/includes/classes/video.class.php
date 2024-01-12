@@ -836,7 +836,10 @@ class CBvideo extends CBCategory
     {
         global $eh, $db, $Upload, $userquery, $cbvid;
 
-        $Upload->validate_video_upload_form(null, true);
+        if (!$array) {
+            $array = $_POST;
+        }
+        $Upload->validate_video_upload_form($array, true);
 
         if (empty($eh->get_error())) {
             $required_fields = $Upload->loadRequiredFields($array);
@@ -851,9 +854,6 @@ class CBvideo extends CBCategory
                 $upload_fields = array_merge($upload_fields, $custom_flds);
             }
 
-            if (!$array) {
-                $array = $_POST;
-            }
 
             if (isset($array['videoid'])) {
                 $vid = $array['videoid'];

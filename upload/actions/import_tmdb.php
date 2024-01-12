@@ -11,10 +11,22 @@ if (empty($video_info)) {
 }
 
 $movie_details = Tmdb::getInstance()->movieDetail($_POST['tmdb_video_id'])['response'];
-
+//video details
 $video_info['title'] = $movie_details['title'];
 $video_info['description'] = $movie_details['overview'];
+$movie_name_without_slash = str_replace('/','',$movie_details['poster_path']);
+CBvideo::getInstance()->update_video($video_info);
 
+//poster
+$url = config('url_tmdb_poster') . $movie_details['poster_path'];
+$tmp_path = DirPath::get('temp') . $movie_name_without_slash;
+$resutl = file_put_contents($tmp_path, file_get_contents($url));
+Upload::getInstance()->upload_thumb($video_info['file_name'], [
+    'tmp_name' => [$tmp_path],
+    'name'     => [$movie_name_without_slash]
+], 0, $video_info['file_directory']);
+
+//tags
 $genre_tags = [];
 foreach ($movie_details['genres'] as $genre) {
     $genre_tags[] = $genre['name'];
@@ -54,5 +66,5 @@ Tags::saveTags(implode(', ', $executive_producer_tags), 'executive_producer', $_
 Tags::saveTags(implode(', ', $director_tags), 'director', $_POST['videoid']);
 Tags::saveTags(implode(', ', $crew_tags), 'crew', $_POST['videoid']);
 
-echo json_encode(['success'=>true]);
-//TODO import poster into custom thumb
+
+echo json_encode(['success' => true]);

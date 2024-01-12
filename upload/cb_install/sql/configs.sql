@@ -251,7 +251,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'display_channel_comments', 'yes'),
     (NULL, 'enable_collection_comments', 'yes'),
     (NULL, 'display_collection_comments', 'yes'),
-    (NULL, 'enable_sitemap', 'yes');
+    (NULL, 'enable_sitemap', 'yes'),
+    (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

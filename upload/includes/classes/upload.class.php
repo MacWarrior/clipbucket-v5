@@ -281,8 +281,11 @@ class Upload
                 $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
-
-                move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                if (is_uploaded_file($file['tmp_name'][$key])) {
+                    $is_moved = move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                } else {
+                    $is_moved = rename($file['tmp_name'][$key], $temp_file_path);
+                }
 
                 foreach ($thumbs_settings_28 as $key => $thumbs_size) {
                     $height_setting = $thumbs_size[1];

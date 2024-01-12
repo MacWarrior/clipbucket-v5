@@ -1,6 +1,7 @@
 INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`)
 VALUES (NULL, 'tmdb_token', ''),
-       (NULL, 'enable_tmdb', 'no');
+       (NULL, 'enable_tmdb', 'no'),
+       (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
