@@ -259,7 +259,7 @@
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
         ,"Fix sitemap & phpinfo privacy"
-        ,"Implement video & photo multi-upload"
+        ,"Implement video & photo multi-upload <i>#319</i> (Thanks @Kenmeiyoki !)"
       ]
     }
   ,{
