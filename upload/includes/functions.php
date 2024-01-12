@@ -597,7 +597,8 @@ function getCategoryList($params = [])
             $type = 'photo';
             break;
     }
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 330)) {
+    $cats = [];
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
         $cats = Category::getInstance()->getAll($params);
@@ -606,7 +607,7 @@ function getCategoryList($params = [])
         }
     }
     if (!empty($params['with_all'])) {
-        $cats[] = ['category_id'   => 'all', 'category_name' => lang('cat_all')];
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
     }
     if (!empty($params['echo'])) {
         echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
