@@ -4208,8 +4208,8 @@ function check_server_confs()
     define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
     define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
 
-    if (getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200) {
-        e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>', 'w', false);
+    if (true || getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200) {
+        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
     }
 }
 
