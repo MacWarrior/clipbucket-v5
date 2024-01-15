@@ -1,5 +1,473 @@
 <?php
 
+class Category
+{
+    private static $category;
+    private $tablename = '';
+    private $primary_key = '';
+    private $fields = [];
+
+    private $cat_thumb_height = '';
+    private $cat_thumb_width = '';
+    private $default_thumb = '';
+
+    private $typeNamesByIds = [];
+    public function __construct()
+    {
+        $this->tablename = 'categories';
+        $this->primary_key = 'category_id';
+        $this->fields = [
+            'category_id'
+            ,'parent_id'
+            ,'id_category_type'
+            ,'category_name'
+            ,'category_order'
+            ,'category_desc'
+            ,'date_added'
+            ,'category_thumb'
+            ,'is_default'
+        ];
+        $this->cat_thumb_height = '125';
+        $this->cat_thumb_width = '125';
+        $this->default_thumb = 'no_thumb.jpg';
+        $this->typeNamesByIds = array_column(self::getAllCategoryTypes(), 'name', 'id_category_type');
+    }
+
+    /**
+     * @param $name
+     * @return array|mixed|null
+     */
+    public function getIdsCategoriesType($name = '')
+    {
+        if (!empty($name)) {
+            return array_search($name, $this->typeNamesByIds);
+        }
+        return $this->typeNamesByIds;
+    }
+
+    public static function getInstance(): self
+    {
+        if( empty(self::$category) ){
+            self::$category = new self();
+        }
+        return self::$category;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getAllCategoryTypes(): array
+    {
+        return Clipbucket_db::getInstance()->_select('SELECT * FROM ' . cb_sql_table('categories_type'));
+    }
+
+    private function getAllFields(): array
+    {
+        return array_map(function($field) {
+            return $this->tablename . '.' . $field;
+        }, $this->fields);
+    }
+
+    public function getAll(array $params = [])
+    {
+        $param_category_id = $params['category_id'] ?? false;
+        $param_category_type = $params['category_type'] ?? false;
+        $param_category_default = $params['category_default'] ?? false;
+        $param_parent_id = $params['parent_id'] ?? false;
+        $param_parent_only = $params['parent_only'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $conditions = [];
+
+        if ($param_category_id !== false) {
+            $conditions[] = 'category_id = '. mysql_clean($param_category_id);
+        }
+        if ($param_category_type !== false) {
+            $conditions[] = 'id_category_type = '. mysql_clean($param_category_type);
+        }
+        if ($param_category_default !== false) {
+            $conditions[] = 'is_default = '. mysql_clean($param_category_type);
+        }
+        if ($param_parent_id !== false) {
+            $conditions[] = 'parent_id = '. mysql_clean($param_parent_id);
+        }
+        if ($param_parent_only !== false) {
+            $conditions[] = 'parent_id IS NULL ';
+        }
+
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(category.category_id) AS count'];
+        } else {
+            $select = $this->getAllFields();
+        }
+
+        $join = [];
+        $group = [];
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table('categories') . ' '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param $categ_type
+     * @param $obj_id
+     * @param array $new_vals
+     * @return bool
+     * @throws Exception
+     */
+    public function saveLinks($categ_type, $obj_id, array $new_vals): bool
+    {
+        if (!in_array($categ_type, $this->typeNamesByIds)) {
+            e(lang('unknow_categ'));
+            return false;
+        }
+        if (empty($new_vals)) {
+            e(lang('unknow_categ'));
+            return false;
+        }
+        $categ_table_name = $categ_type . 's_categories';
+        $categ_id = 'id_' . $categ_type;
+
+        Clipbucket_db::getInstance()->delete(tbl($categ_table_name),  [$categ_id], [$obj_id]);
+        foreach ($new_vals as $new_val) {
+            Clipbucket_db::getInstance()->insert(tbl($categ_table_name), ['id_category', $categ_id], [$new_val, $obj_id]);
+        }
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(array $param = [])
+    {
+        if (empty($param[$this->primary_key])) {
+            e(lang('no_pk_provided'));
+            return false;
+        }
+        $param_primary_key = $param[$this->primary_key] ?? false;
+        $sets = $this->setSQLValues($param);
+        if (empty($sets)) {
+            e(lang('no_vals_provided'));
+            return false;
+        }
+
+        $sql = 'UPDATE ' . cb_sql_table($this->tablename)
+            . ' SET ' . implode(', ', $sets)
+            . ' WHERE ' . $this->primary_key . ' = ' . mysql_clean($param_primary_key);
+
+        Clipbucket_db::getInstance()->execute($sql);
+        return true;
+    }
+
+    /**
+     * @param array $param
+     * @return bool|int
+     * @throws Exception
+     */
+    public function insert(array $param = [])
+    {
+        $sets = $this->setSQLValues($param);
+        if (empty($sets)) {
+            e(lang('no_vals_provided'));
+            return false;
+        }
+        $sql = 'INSERT INTO ' . tbl($this->tablename)
+            . ' SET ' . implode(', ', $sets);
+
+        Clipbucket_db::getInstance()->execute($sql);
+        return Clipbucket_db::getInstance()->insert_id();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delete($category_id)
+    {
+        $cat_details = $this->getById($category_id);
+        if (!$cat_details) {
+            e(lang('cat_exist_error'));
+            return;
+        }
+        if ($cat_details['is_default'] == 'yes') { //Checking if category is default or not
+            e(lang('cat_default_err'));
+            return;
+        }
+
+        //si has child
+        $childs = $this->getAll([
+            'condition' => 'parent_id = \'' . mysql_clean($category_id) . '\''
+        ]);
+        if (!empty($childs)) {
+            //deplacer
+            //si a un parent => décaler vers parent sinon vers default
+            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType($this->typeNamesByIds[$cat_details['id_category_type']])['category_id']);
+            //@TODO rework update for update all children with 1 request
+            foreach ($childs as $child) {
+                $this->update([
+                    $this->primary_key => $child[$this->primary_key],
+                    'parent_id' => $dest_category_id
+                ]);
+            }
+        }
+
+        //Removing Category
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE '. $this->primary_key .' = ' . mysql_clean($category_id));
+        e(lang('class_cat_del_msg'), 'm');
+    }
+
+    /**
+     * @param $category_id
+     * @return array|false|int|mixed
+     */
+    public function getById($category_id)
+    {
+        return Category::getInstance()->getAll([
+            'category_id'   => $category_id,
+            'first_only'    => true
+        ]);
+    }
+
+    public function getDefaultByType($type)
+    {
+        $categ_type_id = $this->getIdsCategoriesType($type);
+        if (empty($categ_type_id)) {
+            e(lang('unknow_categ'));
+            return false;
+        }
+        return $this->getAll([
+            'category_type' => $categ_type_id,
+            'is_default'    => 'yes',
+            'first_only'    => true
+        ]);
+    }
+
+    public function validate($array)
+    {
+        if ($array == null) {
+            $array = $_POST['category'];
+        }
+
+        if (!is_array($array)) {
+            return false;
+        }
+
+        if (count($array) == 0) {
+            return false;
+        }
+
+        $new_array = [];
+        foreach ($array as $arr) {
+            if (!empty(Category::getInstance()->getById($arr))) {
+                $new_array[] = $arr;
+            }
+        }
+
+        if (count($new_array) == 0) {
+            e(lang('vdo_cat_err3'));
+            return false;
+        }
+
+        if (count($new_array) > ALLOWED_VDO_CATS) {
+            e(sprintf(lang('vdo_cat_err2'), ALLOWED_VDO_CATS));
+            return false;
+        }
+
+        return true;    }
+
+    /**
+     * @param string $type
+     * @param $category_id
+     * @return false|void
+     * @throws Exception
+     */
+    public function makeDefault(string $type, $category_id)
+    {
+        $categ_type_id = $this->getIdsCategoriesType($type);
+        if (empty($categ_type_id)) {
+            e(lang('unknow_categ'));
+            return false;
+        }
+        if (!empty($this->getById($category_id))) {
+            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'no\' WHERE id_category_type = ' . mysql_clean($categ_type_id);
+            Clipbucket_db::getInstance()->execute($sql);
+            $sql = 'UPDATE ' . cb_sql_table($this->tablename) . ' SET is_default = \'yes\' WHERE category_id = ' . mysql_clean($category_id);
+            Clipbucket_db::getInstance()->execute($sql);
+            e(lang('cat_set_default_ok'), 'm');
+        } else {
+            e(lang('cat_exist_error'));
+        }
+    }
+
+    /**
+     * @param $category_id
+     * @param $multi_level bool if returned array contain children which contain their children in 'children' case, false if all result in 1 level array
+     * @param $only_id bool
+     * @return array|false|int|mixed
+     */
+    public function getChildren($category_id, $multi_level = true,$only_id = false)
+    {
+        if (empty($category_id)) {
+            return [];
+        }
+        $children = $this->getAll([
+            'parent_id' => $category_id
+        ]);
+        if (empty($children)) {
+            return [];
+        } else {
+            foreach ($children as &$child) {
+                $children_of_child = $this->getChildren($child['category_id'], $multi_level, $only_id);
+                if ($multi_level) {
+                    $child['children'] = $children_of_child;
+                } else {
+                    $children = array_merge($children, $children_of_child);
+                }
+            }
+        }
+        if ($only_id) {
+            $children = array_map(function ($elem){
+                return $elem['category_id'];
+            }, $children);
+        }
+        return $children;
+    }
+
+    public function getParent($category_id)
+    {
+        return $this->getAll([
+            'parent_id'  => $category_id,
+            'first_only' => true
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function add_category_thumb($cid, $file)
+    {
+        global $imgObj;
+        $category = $this->getById($cid);
+        if (empty($category)) {
+            return false;
+        }
+        //Checking for category thumbs directory
+        $dir = $this->typeNamesByIds[$category['id_type_category']] . 's';
+
+        //Checking File Extension
+        $ext = getext($file['name']);
+
+        if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
+            e(lang('cat_img_error'));
+            return false;
+        }
+        $dir_path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir;
+        if (!is_dir($dir_path)) {
+            @mkdir($dir_path, 0777);
+        }
+
+        if (is_dir($dir_path)) {
+            e(lang('cat_dir_make_err'));
+            return false;
+        }
+
+        $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
+
+        //Removing File if already exists
+        if (file_exists($path)) {
+            unlink($path);
+        }
+        move_uploaded_file($file['tmp_name'], $path);
+
+        //Now checking if file is really an image
+        if (!@$imgObj->ValidateImage($path, $ext)) {
+            e(lang('pic_upload_vali_err'));
+            unlink($path);
+        } else {
+            $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
+            Category::getInstance()->update([
+                'category_id'    => $cid,
+                'category_thumb' => $file['name']
+            ]);
+        }
+        return true;
+    }
+
+    /**
+     * @param array $param
+     * @return array
+     */
+    private function setSQLValues(array $param): array
+    {
+        $sets = [];
+        foreach ($this->fields as $field) {
+            if (isset($param[$field]) && $field != $this->primary_key) {
+                if ($field == 'parent_id' && (int)$param[$field] === 0) {
+                    $sets[] = $field . ' = NULL';
+                } else {
+                    $sets[] = $field . ' = \'' . mysql_clean($param[$field]) . '\'';
+                }
+            }
+        }
+        return $sets;
+    }
+
+
+}
 abstract class CBCategory
 {
     var $cat_tbl = ''; //Name of category Table
@@ -19,25 +487,7 @@ abstract class CBCategory
      */
     function category_exists($cid)
     {
-        return $this->get_category($cid);
-    }
-
-    /**
-     * Function used to get category details
-     *
-     * @param $cid
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function get_category($cid)
-    {
-        global $db;
-        $results = $db->select(tbl($this->cat_tbl), '*', ' category_id=\'' . mysql_clean($cid) . '\' ');
-        if (count($results) > 0) {
-            return $results[0];
-        }
-        return false;
+        return !empty(Category::getInstance()->getById($cid));
     }
 
     /**
@@ -119,24 +569,6 @@ abstract class CBCategory
                     $this->add_category_thumb($cid, $_FILES['cat_thumb']);
                 }
             }
-        }
-    }
-
-    /**
-     * Function used to make category as default
-     *
-     * @param $cid
-     * @throws Exception
-     */
-    function make_default_category($cid)
-    {
-        global $db;
-        if ($this->category_exists($cid)) {
-            $db->update(tbl($this->cat_tbl), ['isdefault'], ['no'], ' isdefault=\'yes\' ');
-            $db->update(tbl($this->cat_tbl), ['isdefault'], ['yes'], ' category_id=\'' . mysql_clean($cid) . '\' ');
-            e(lang('cat_set_default_ok'), 'm');
-        } else {
-            e(lang('cat_exist_error'));
         }
     }
 
@@ -332,56 +764,6 @@ abstract class CBCategory
     }
 
     /**
-     * Function used to delete category
-     *
-     * @param $cid
-     * @throws Exception
-     */
-    function delete_category($cid)
-    {
-        global $db;
-        $cat_details = $this->category_exists($cid);
-        if (!$cat_details) {
-            e(lang('cat_exist_error'));
-            return;
-        }
-        if ($cat_details['isdefault'] == 'yes') { //Checking if category is default or not
-            e(lang('cat_default_err'));
-            return;
-        }
-
-        if ($this->cat_tbl = 'user_categories') {
-            $has_child = false;
-            $to = $this->get_default_category()['category_id'];
-        } else {
-            $parent_category = $this->has_parent($cid, true);
-
-            if ($parent_category) {
-                if ($this->is_parent($cid)) {
-                    $to = $parent_category[0]['category_id'];
-                    $has_child = true;
-                } else { //Checking if category is only child
-                    $to = $parent_category[0]['category_id'];
-                    $has_child = true;
-                }
-            } else {
-                if ($this->is_parent($cid)) { //Checking if category is only parent
-                    $to = null;
-                    $has_child = false;
-                    $db->update(tbl($this->cat_tbl), ['parent_id'], ['0'], ' parent_id = ' . mysql_clean($cid));
-                }
-            }
-        }
-
-        //Moving all contents to parent OR default category
-        $this->change_category($cid, $to, $has_child);
-
-        //Removing Category
-        $db->execute('DELETE FROM ' . tbl($this->cat_tbl) . ' WHERE category_id=' . mysql_clean($cid));
-        e(lang('class_cat_del_msg'), 'm');
-    }
-
-    /**
      * Function used to get default category
      * @throws Exception
      */
@@ -393,41 +775,6 @@ abstract class CBCategory
             return $results[0];
         }
         return false;
-    }
-
-    /**
-     * Function used to get default category ID
-     */
-    function get_default_cid()
-    {
-        $default = $this->get_default_category();
-        return $default['category_id'];
-    }
-
-    /**
-     * Function used to move contents from one section to other
-     *
-     * @param      $from
-     * @param null $to
-     * @param null $has_child
-     * @throws Exception
-     */
-    function change_category($from, $to = null, $has_child = null)
-    {
-        global $db;
-
-        if (!$this->category_exists($to)) {
-            $to = $this->get_default_cid();
-        }
-
-        if ($has_child) {
-            $db->update(tbl($this->cat_tbl), ['parent_id'], [$to], ' parent_id = ' . $from);
-        }
-
-        if (!empty($this->section_tbl)) {
-            $db->execute('UPDATE ' . tbl($this->section_tbl) . ' SET category = replace(category,\'#' . $from . '#\',\'#' . $to . '#\') WHERE category LIKE \'%#' . $from . '#%\'');
-            $db->execute('UPDATE ' . tbl($this->section_tbl) . ' SET category = replace(category,\'#' . $to . '# #' . $to . '#\',\'#' . $to . '#\') WHERE category LIKE \'%#' . $to . '#%\'');
-        }
     }
 
     /**
@@ -592,23 +939,6 @@ abstract class CBCategory
         }
     }
 
-    /**
-     * Function used get parent category
-     *
-     * @param $pid
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_parent_category($pid)
-    {
-        global $db;
-        $result = $db->select(tbl($this->cat_tbl), '*', ' category_id = ' . mysql_clean($pid));
-        if (count($result) > 0) {
-            return $result;
-        }
-        return false;
-    }
 
     /**
      * Function used to check category is parent or not
@@ -629,28 +959,6 @@ abstract class CBCategory
         return false;
     }
 
-    /**
-     * Function used to check wheather category has parent or not
-     *
-     * @param      $cid
-     * @param bool $return_parent
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function has_parent($cid, $return_parent = false)
-    {
-        global $db;
-        $result = $db->select(tbl($this->cat_tbl), '*', ' category_id = ' . mysql_clean($cid) . ' AND parent_id != 0');
-
-        if (is_array($result) && count($result) > 0) {
-            if ($return_parent) {
-                return $this->get_parent_category($result[0]['parent_id']);
-            }
-            return true;
-        }
-        return false;
-    }
 
     /**
      * Function used to get parent categories

@@ -77,7 +77,7 @@ class cbactions
             lang('other')
         ];
 
-        $fields = ['playlist_id', 'playlist_name', 'userid', 'description', 'category',
+        $fields = ['playlist_id', 'playlist_name', 'userid', 'description',
             'played', 'privacy', 'total_comments', 'runtime',
             'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
 

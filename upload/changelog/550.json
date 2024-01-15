@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"330",
+  "revision":"331",
   "status":"dev",
   "detail":[
     {
@@ -142,6 +142,7 @@
         ,"Implement discord error logs"
         ,"Fix .htaccess error"
         ,"Fix SQL update"
+        ,"Refactor categories management"
       ]
     },
     {
@@ -262,7 +263,6 @@
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
         ,"Fix sitemap & phpinfo privacy"
-        ,"Implement video & photo multi-upload <i>#319</i> (Thanks @Kenmeiyoki !)"
       ]
     }
   ,{

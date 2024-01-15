@@ -74,8 +74,8 @@ if ($mode == 'adminsettings') {
         }
 
         if (!$next) {
-            $next = 'add_categories';
-            $next_msg = 'Creating categories';
+            $next = 'add_admin';
+            $next_msg = 'adding admin account..';
         }
 
         if ($current) {
@@ -118,9 +118,9 @@ if ($mode == 'adminsettings') {
         }
     } else {
         switch ($step) {
+
             case 'add_categories':
                 install_execute_sql_file($cnnct, DirPath::get('sql') . 'categories.sql', $dbprefix, $dbname);
-
                 $return['msg'] = '<div class="ok green">Videos, Users, Groups and Collections Categories have been created</div>';
                 $return['status'] = 'adding admin account..';
                 $return['step'] = 'add_admin';

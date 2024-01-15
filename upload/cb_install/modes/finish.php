@@ -9,7 +9,7 @@ $myquery->Set_Website_Details('site_title', $title);
 $myquery->Set_Website_Details('site_slogan', $slogan);
 $myquery->Set_Website_Details('baseurl', $baseurl);
 
-if (file_exists(DirPath::get('temp') . 'install.me')) {
+if (file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::get('temp') . 'install.me.not')) {
     unlink(DirPath::get('temp') . 'install.me');
 }
 ?>
