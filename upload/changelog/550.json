@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"327",
+  "revision":"330",
   "status":"dev",
   "detail":[
     {
@@ -140,6 +140,8 @@
         ,"Implement CSS/JS versionning"
         ,"Refactor directory constants"
         ,"Implement discord error logs"
+        ,"Fix .htaccess error"
+        ,"Fix SQL update"
       ]
     },
     {
@@ -160,6 +162,7 @@
         ,"Implement HLS video quality switch"
         ,"Fix typo in file name"
         ,"Fix MP4 default quality selector"
+        ,"Fix HLS multilangue selection (Thanks @Kenmeiyoki !)"
       ]
     },
     {
@@ -259,6 +262,7 @@
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
         ,"Fix sitemap & phpinfo privacy"
+        ,"Implement video & photo multi-upload <i>#319</i> (Thanks @Kenmeiyoki !)"
       ]
     }
   ,{
