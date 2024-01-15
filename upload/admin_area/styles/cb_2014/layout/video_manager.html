@@ -83,9 +83,9 @@
                                     <span class="label label-info">{strtoupper($video.file_type)}</span>
 
                                     <div class="clearfix"></div>
-                                    {$catString = {$video.category|categories:video}}
+                                    {$catString = {$video.category_names}}
                                     {$catString = strip_tags($catString)}
-                                    {$toArray = explode(',',$catString)}
+                                    {$toArray = explode(', ',$catString)}
                                     {if count($toArray) > 4}
                                         {$moreText = ' + '|cat:{lang code='more'}}
                                     {else}

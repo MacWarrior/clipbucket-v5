@@ -276,3 +276,33 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
+
+INSERT INTO `{tbl_prefix}categories_type` (`name`)
+VALUES ('video'),
+       ('photo'),
+       ('collection'),
+       ('user'),
+       ('playlist');
+
+SET @type_collection = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'collection'
+);
+SET @type_user = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'user'
+);
+SET @type_video = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'video'
+);
+
+INSERT INTO `{tbl_prefix}categories` (`id_category_type`, `category_name`, `category_thumb`, `is_default`) VALUES
+    (@type_collection, 'Uncategorized', '', 'yes'),
+    (@type_user, 'Basic User', '', 'yes'),
+    (@type_user, 'Gurus', '', 'no'),
+    (@type_user, 'Comedian', '', 'no'),
+    (@type_video, 'Uncategorized','', 'yes');

@@ -563,14 +563,15 @@ function isValidtag($tag): bool
  * @param array $params
  *
  * @return array|bool|string : { array } { $cats } { array of categories }
+ * @throws Exception
  * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
  */
 function getCategoryList($params = [])
 {
-    global $cats;
     $cats = '';
-    $type = $params['type'];
-    switch ($type) {
+    $params['echo'] = $params['echo'] ?: false;
+    $version = Update::getInstance()->getDBVersion();
+    switch ($params['type']) {
         default:
             cb_call_functions('categoryListing', $params);
             break;
@@ -578,25 +579,41 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            global $cbvid;
-            $cats = $cbvid->cbCategories($params);
+            $type = 'video';
             break;
 
         case 'users':
         case 'user':
         case 'u':
         case 'channels':
-            global $userquery;
-            $cats = $userquery->cbCategories($params);
+            $type = 'user';
             break;
-
         case 'collection':
         case 'collections':
         case 'cl':
-            global $cbcollection;
-            $cats = $cbcollection->cbCategories($params);
+            $type = 'collection';
+            break;
+        case 'photo':
+            $type = 'photo';
             break;
     }
+    $cats = [];
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
+        $params['parent_only'] = true;
+        $cats = Category::getInstance()->getAll($params);
+        foreach ($cats as &$cat) {
+            $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+        }
+    }
+    if (!empty($params['with_all'])) {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
+    if (!empty($params['echo'])) {
+        echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
+        return;
+    }
+
     return $cats;
 }
 
@@ -1054,25 +1071,18 @@ function convert_to_categories($input)
                 foreach ($in as $i) {
                     if (is_array($i)) {
                         foreach ($i as $info) {
-                            $cat_details = get_category($info);
-                            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                            $cat_details = Category::getInstance()->getById($info);
+                            $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                         }
                     } elseif (is_numeric($i)) {
-                        $cat_details = get_category($i);
-                        $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                        $cat_details = Category::getInstance()->getById($i);
+                        $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                     }
                 }
             } elseif (is_numeric($in)) {
-                $cat_details = get_category($in);
-                $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                $cat_details = Category::getInstance()->getById($in);
+                $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
             }
-        }
-    } else {
-        preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-        $cat_array = [$m[1]];
-        foreach ($cat_array as $i) {
-            $cat_details = get_category($i);
-            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
         }
     }
     $count = 1;
@@ -1087,19 +1097,6 @@ function convert_to_categories($input)
     }
 }
 
-/**
- * Function used to get categorie details
- * @param $id
- *
- * @return array
- * @throws Exception
- * @uses : { class : $myquery } { function : get_category }
- */
-function get_category($id): array
-{
-    global $myquery;
-    return $myquery->get_category($id);
-}
 
 /**
  * Sharing OPT displaying

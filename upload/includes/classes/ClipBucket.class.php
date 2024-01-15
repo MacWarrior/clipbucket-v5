@@ -379,7 +379,7 @@ class ClipBucket
                     ]
                     , [
                         'title' => lang('manage_categories')
-                        , 'url' => DirPath::getUrl('admin_area') . 'user_category.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
                     ]
                     , [
                         'title' => 'Inactive Only'

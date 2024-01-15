@@ -16,7 +16,6 @@ class User
         $this->tablename = 'users';
         $this->fields = [
             'userid'
-            ,'category'
             ,'featured_video'
             ,'username'
             ,'user_session_key'
@@ -878,13 +877,22 @@ class userquery extends CBCategory
 
         $is_email = strpos($id, '@') !== false;
         $select_field = (!$is_email && !is_numeric($id)) ? 'username' : (!is_numeric($id) ? 'email' : 'userid');
+        $version = Update::getInstance()->getDBVersion();
+
         if (!$email) {
-            $fields = table_fields(['users' => ['*']]);
+            $params = ['users' => ['*']];
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $params['users_categories'] = ['id_category'];
+            }
+            $fields = table_fields($params);
         } else {
             $fields = table_fields(['users' => ['email']]);
         }
 
-        $query = "SELECT $fields FROM " . cb_sql_table('users');
+        $query = 'SELECT '.$fields.' FROM ' . cb_sql_table('users');
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+        }
         $query .= " WHERE users.$select_field = '$id'";
 
         $result = select($query, 60);
@@ -2330,49 +2338,12 @@ class userquery extends CBCategory
                 $query_field[] = $field['db_field'];
             }
 
-            if (is_array($val)) {
-                $new_val = '';
-                foreach ($val as $v) {
-                    $new_val .= '#' . $v . '# ';
-                }
-                $val = $new_val;
-            }
             if ($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func']))) {
                 $val = apply_func($field['clean_func'], $val);
             }
 
             if (!empty($field['db_field'])) {
                 $query_val[] = $val;
-            }
-        }
-
-        //Category
-        if ($cat_field) {
-            $field = $cat_field;
-            $name = formObj::rmBrackets($field['name']);
-            $val = $array[$name];
-
-            if ($field['use_func_val']) {
-                $val = $field['validate_function']($val);
-            }
-
-            if (!empty($field['db_field'])) {
-                $uquery_field[] = $field['db_field'];
-            }
-
-            if (is_array($val)) {
-                $new_val = '';
-                foreach ($val as $v) {
-                    $new_val .= '#' . $v . '# ';
-                }
-                $val = $new_val;
-            }
-            if ($field['clean_func'] && (function_exists($field['clean_func']) || is_array($field['clean_func']))) {
-                $val = apply_func($field['clean_func'], $val);
-            }
-
-            if (!empty($field['db_field'])) {
-                $uquery_val[] = $val;
             }
         }
 
@@ -2478,10 +2449,7 @@ class userquery extends CBCategory
         }
 
         //Changing category
-        if (isset($array['category'])) {
-            $uquery_field[] = 'category';
-            $uquery_val[] = $array['category'];
-        }
+        Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
 
         //Updating User Avatar
         if ($array['avatar_url']) {
