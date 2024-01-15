@@ -7,4 +7,4 @@ SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys`
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'You must update <strong>"Server Configurations"</strong>. Click here <a href="%s">for details.</a>', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Merci de mettre à jour votre configuration serveur. Cliquez ici <a href="%s">pour plus d\'information.</a>', @language_id_fra);
+VALUES (@id_language_key, 'Merci de mettre à jour votre configuration serveur. Cliquez ici <a href="%s">pour plus d\'informations.</a>', @language_id_fra);
