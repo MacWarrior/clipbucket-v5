@@ -205,11 +205,14 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-8">
+								<div class="col-md-4">
 									<label class="nowrap" for="tmdb_token" title="{lang code='tmdb_token'}">{lang code='tmdb_token'}</label>
 								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if !$row.enable_tmdb != 'yes'}disabled="disabled"{/if}/>
+								</div>
 								<div class="col-md-4">
-									<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45"/>
+									<button id="test_tmbd_auth"  {if !$row.enable_tmdb != 'yes'}disabled="disabled"{/if} >{lang code='test'}</button>
 								</div>
 							</div>
 							<hr/>

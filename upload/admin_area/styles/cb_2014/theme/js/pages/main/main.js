@@ -92,4 +92,30 @@ $(document).ready(function () {
             parent.prop('disabled',false);
         }
     });
+    $('#enable_tmdb').change(function () {
+        let parent = $('#tmdb_token');
+        let button = $('#test_tmbd_auth');
+        if (!$(this).prop('checked')) {
+            parent.prop('disabled',true);
+            button.prop('disabled',true);
+            parent.trigger('focus')
+        } else {
+            parent.prop('disabled',false);
+            button.prop('disabled',false);
+        }
+    });
+
+    $('#test_tmbd_auth').click(function (e) {
+        e.preventDefault();
+        $.ajax({
+            url: "/actions/test_tmdb.php",
+            type: "POST",
+            data: {token: $('#tmdb_token').val()},
+            dataType: 'json',
+            success: function (result) {
+                $('.close').click();
+                $('.page-content').prepend(result['msg']);
+            }
+        });
+    });
 });
