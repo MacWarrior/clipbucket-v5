@@ -40,17 +40,26 @@ assign('canAccessNginx', $can_access_nginx );
 assign('clientMaxBodySize', $client_max_body_size );
 
 /** services info */
+$ffReq = '3';
+assign('ffReq', $ffReq);
+$mysqlReq = '5.6.0';
+assign('mysqlReq', $mysqlReq);
+$phpVersionReq = '7.0.0';
+assign('phpVersionReq',$phpVersionReq);
+
 $ffmpegVersion = check_version('ffmpeg');
 assign('ffmpegVersion', $ffmpegVersion);
-
+assign('ffmpegVersionOK', $ffmpegVersion >= $ffReq);
+$ffprobe_path = check_version('ffprobe');
+assign('ffprobe_path', $ffprobe_path);
+assign('ffprobe_path_OK', $ffprobe_path >= $ffReq);
 
 assign('phpVersionWeb', phpversion());
+assign('phpVersionWebOK', phpversion() >= $phpVersionReq);
 
 $media_info = check_version('media_info');
 assign('media_info', $media_info);
 
-$ffprobe_path = check_version('ffprobe');
-assign('ffprobe_path', $ffprobe_path);
 
 /** php info web */
 ob_start();
@@ -121,6 +130,9 @@ if (empty($exec_output)) {
             preg_match($regVersion, $line, $match);
             if (!empty($match)) {
                 $extensionsCLI['mysqli'] = $match[2];
+                $match_mysql = [];
+                preg_match('/(\d+\.\d+\.\d+)$/', $extensionsCLI['mysqli'], $match_mysql);
+                $versionMySQLCliOK = $match_mysql[1] > $mysqlReq;
             }
 
         } elseif (strpos($line, 'libxml2 Version') !== false) {
@@ -153,10 +165,17 @@ foreach ($extensionMessages as $extension => $version) {
     $res = $modulesWeb[$extension];
     if (!empty($res)) {
         $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+        if ($extension == 'mysqli') {
+            $match_mysql = [];
+            preg_match('/(\d+\.\d+\.\d+)$/', $extensionsWEB[$extension], $match_mysql);
+            $versionMySQLOK = $match_mysql[1] > $mysqlReq;
+        }
     }
 }
-
 assign('phpVersionCli', $phpVersion);
+assign('phpVersionCliOK', $phpVersion >= $phpVersionReq);
+assign('versionMySQLOK', $versionMySQLOK ?? false);
+assign('versionMySQLCliOK', $versionMySQLCliOK ?? false);
 assign('post_max_size_cli', $post_max_size_cli);
 assign('memory_limit_cli', $memory_limit_cli);
 assign('upload_max_filesize_cli', $upload_max_filesize_cli);
