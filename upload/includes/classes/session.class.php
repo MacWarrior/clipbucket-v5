@@ -46,14 +46,12 @@ class Session
 
         $cur_url = $pages->GetCurrentUrl();
 
-        if (getConstant('THIS_PAGE') != 'cb_install') {
-            if ($name == 'guest' && config('store_guest_session') != 'yes') {
-                // do nothing
-            } else {
-                $db->insert(tbl($this->tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
-                    'last_active', 'referer', 'agent', 'current_page'],
-                    [$user, $this->id, $name, $_SERVER['REMOTE_ADDR'], $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
-            }
+        if ($name == 'guest' && config('store_guest_session') != 'yes') {
+            // do nothing
+        } else {
+            $db->insert(tbl($this->tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
+                'last_active', 'referer', 'agent', 'current_page'],
+                [$user, $this->id, $name, $_SERVER['REMOTE_ADDR'], $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
         }
 
         if ($reg) {
