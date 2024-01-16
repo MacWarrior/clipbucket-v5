@@ -1523,14 +1523,12 @@ class Collections extends CBCategory
         Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
 
         //Remove tags
-        \Tags::saveTags('', 'collection', $cid);
+        Tags::saveTags('', 'collection', $cid);
+        //Remove categories
+        Category::getInstance()->unlinkAll('collection', $cid);
 
         Clipbucket_db::getInstance()->delete(tbl($this->items), ['collection_id'], [$cid]);
         $this->delete_thumbs($cid);
-        Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
-
-        //Decrementing users total collection
-        Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
 
         $params = [];
         $params['type'] = 'cl';
@@ -1539,6 +1537,11 @@ class Collections extends CBCategory
 
         //Removing video From Favorites
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);
+
+        Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
+        //Decrementing users total collection
+        Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
+
         e(lang('collection_deleted'), 'm');
     }
 

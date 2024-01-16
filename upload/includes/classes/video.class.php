@@ -1033,13 +1033,12 @@ class CBvideo extends CBCategory
                 }
 
                 //Remove tags
-                \Tags::saveTags('', 'video', $vdetails['videoid']);
-                //Finally Removing Database entry of video
-                $db->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
-                //Removing Video From Playlist
-                $db->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
+                Tags::saveTags('', 'video', $vdetails['videoid']);
+                //Remove categories
+                Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
-                $db->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
+                //Removing video from Playlist
+                $db->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
 
                 //Removing video Comments
                 $params = [];
@@ -1049,6 +1048,10 @@ class CBvideo extends CBCategory
 
                 //Removing video From Favorites
                 $db->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
+
+                //Finally Removing Database entry of video
+                $db->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
+                $db->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
 
                 e(lang('class_vdo_del_msg'), 'm');
             } else {

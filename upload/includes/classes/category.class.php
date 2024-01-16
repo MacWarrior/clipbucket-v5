@@ -12,6 +12,10 @@ class Category
     private $default_thumb = '';
 
     private $typeNamesByIds = [];
+
+    /**
+     * @throws Exception
+     */
     public function __construct()
     {
         $this->tablename = 'categories';
@@ -30,19 +34,7 @@ class Category
         $this->cat_thumb_height = '125';
         $this->cat_thumb_width = '125';
         $this->default_thumb = 'no_thumb.jpg';
-        $this->typeNamesByIds = array_column(self::getAllCategoryTypes(), 'name', 'id_category_type');
-    }
-
-    /**
-     * @param $name
-     * @return array|mixed|null
-     */
-    public function getIdsCategoriesType($name = '')
-    {
-        if (!empty($name)) {
-            return array_search($name, $this->typeNamesByIds);
-        }
-        return $this->typeNamesByIds;
+        $this->typeNamesByIds = array_column($this->getAllCategoryTypes(), 'name', 'id_category_type');
     }
 
     public static function getInstance(): self
@@ -53,14 +45,6 @@ class Category
         return self::$category;
     }
 
-    /**
-     * @throws Exception
-     */
-    public static function getAllCategoryTypes(): array
-    {
-        return Clipbucket_db::getInstance()->_select('SELECT * FROM ' . cb_sql_table('categories_type'));
-    }
-
     private function getAllFields(): array
     {
         return array_map(function($field) {
@@ -68,6 +52,9 @@ class Category
         }, $this->fields);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAll(array $params = [])
     {
         $param_category_id = $params['category_id'] ?? false;
@@ -75,7 +62,6 @@ class Category
         $param_category_default = $params['category_default'] ?? false;
         $param_parent_id = $params['parent_id'] ?? false;
         $param_parent_only = $params['parent_only'] ?? false;
-        $param_search = $params['search'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -164,28 +150,73 @@ class Category
     }
 
     /**
-     * @param $categ_type
-     * @param $obj_id
-     * @param array $new_vals
+     * @param string $name
+     * @return array|false|int|string
+     */
+    public function getIdsCategoriesType(string $name = '')
+    {
+        if (!empty($name)) {
+            return array_search($name, $this->typeNamesByIds);
+        }
+        return $this->typeNamesByIds;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getAllCategoryTypes(): array
+    {
+        return Clipbucket_db::getInstance()->_select('SELECT id_category_type, name FROM ' . cb_sql_table('categories_type'));
+    }
+
+    private function getTypeTableName(string $categ_type): string
+    {
+        return $categ_type . 's_categories';
+    }
+
+    private function getTypeTableID(string $categ_type): string
+    {
+        return 'id_' . $categ_type;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function unlinkAll(string $categ_type, int $obj_id)
+    {
+        $categ_table_name = $this->getTypeTableName($categ_type);
+        $categ_id = $this->getTypeTableID($categ_type);
+        Clipbucket_db::getInstance()->delete(tbl($categ_table_name),  [$categ_id], [$obj_id]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function link(string $categ_type, int $obj_id, int $id_category)
+    {
+        $categ_table_name = $this->getTypeTableName($categ_type);
+        $categ_id = $this->getTypeTableID($categ_type);
+        Clipbucket_db::getInstance()->insert(tbl($categ_table_name), ['id_category', $categ_id], [$id_category, $obj_id]);
+    }
+
+    /**
+     * @param string $categ_type
+     * @param int $obj_id
+     * @param array $categories
      * @return bool
      * @throws Exception
      */
-    public function saveLinks($categ_type, $obj_id, array $new_vals): bool
+    public function saveLinks(string $categ_type, int $obj_id, array $categories): bool
     {
         if (!in_array($categ_type, $this->typeNamesByIds)) {
-            e(lang('unknow_categ'));
+            e(sprintf(lang('category_type_unknown'), $categ_type));
             return false;
         }
-        if (empty($new_vals)) {
-            e(lang('unknow_categ'));
-            return false;
-        }
-        $categ_table_name = $categ_type . 's_categories';
-        $categ_id = 'id_' . $categ_type;
 
-        Clipbucket_db::getInstance()->delete(tbl($categ_table_name),  [$categ_id], [$obj_id]);
-        foreach ($new_vals as $new_val) {
-            Clipbucket_db::getInstance()->insert(tbl($categ_table_name), ['id_category', $categ_id], [$new_val, $obj_id]);
+        $this->unlinkAll($categ_type, $obj_id);
+
+        foreach ($categories as $category_id) {
+            $this->link($categ_type, $obj_id, $category_id);
         }
         return true;
     }
@@ -193,16 +224,16 @@ class Category
     /**
      * @throws Exception
      */
-    public function update(array $param = [])
+    public function update(array $param = []): bool
     {
         if (empty($param[$this->primary_key])) {
-            e(lang('no_pk_provided'));
+            e(lang('technical_error'));
             return false;
         }
         $param_primary_key = $param[$this->primary_key] ?? false;
         $sets = $this->setSQLValues($param);
         if (empty($sets)) {
-            e(lang('no_vals_provided'));
+            e(lang('technical_error'));
             return false;
         }
 
@@ -223,7 +254,7 @@ class Category
     {
         $sets = $this->setSQLValues($param);
         if (empty($sets)) {
-            e(lang('no_vals_provided'));
+            e(lang('technical_error'));
             return false;
         }
         $sql = 'INSERT INTO ' . tbl($this->tablename)
@@ -273,6 +304,7 @@ class Category
     /**
      * @param $category_id
      * @return array|false|int|mixed
+     * @throws Exception
      */
     public function getById($category_id)
     {
@@ -282,6 +314,9 @@ class Category
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public function getDefaultByType($type)
     {
         $categ_type_id = $this->getIdsCategoriesType($type);
@@ -296,7 +331,10 @@ class Category
         ]);
     }
 
-    public function validate($array)
+    /**
+     * @throws Exception
+     */
+    public function validate($array): bool
     {
         if ($array == null) {
             $array = $_POST['category'];
@@ -358,6 +396,7 @@ class Category
      * @param $multi_level bool if returned array contain children which contain their children in 'children' case, false if all result in 1 level array
      * @param $only_id bool
      * @return array|false|int|mixed
+     * @throws Exception
      */
     public function getChildren($category_id, $multi_level = true,$only_id = false)
     {
@@ -387,6 +426,9 @@ class Category
         return $children;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getParent($category_id)
     {
         return $this->getAll([
@@ -398,7 +440,7 @@ class Category
     /**
      * @throws Exception
      */
-    public function add_category_thumb($cid, $file)
+    public function add_category_thumb($cid, $file): bool
     {
         global $imgObj;
         $category = $this->getById($cid);
