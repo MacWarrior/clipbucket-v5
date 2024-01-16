@@ -103,7 +103,7 @@ SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys`
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Here you can set basic configuration of your website, you can change them later by going to Admin area > Website Configurations', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Ici vous pouvez paramétrer des éléments de base, vous pourrez les changer ulterieurement en allant dans l\'espace d\'administration > Configuration du site web', @language_id_fra);
+VALUES (@id_language_key, 'Vous pouvez paramétrer ici des éléments de base, vous pourrez les changer ultérieurement en allant dans l\'espace d\'administration > Configuration du site web', @language_id_fra);
 
 SET @language_key = 'website_title' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);

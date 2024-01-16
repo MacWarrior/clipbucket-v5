@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"334",
+  "revision":"335",
   "status":"dev",
   "detail":[
     {
@@ -295,6 +295,9 @@
         ,"Update dependancies check"
         ,"Fix admin creation"
         ,"Fix PHP error when PHP CLI is missing"
+        ,"Add default language choice"
+        ,"Translate post-database steps"
+        ,"Fix auto-logging"
       ]
     }
   ]
