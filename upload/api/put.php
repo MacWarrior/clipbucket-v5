@@ -162,7 +162,7 @@ switch ($mode) {
             'title'          => $title,
             'description'    => $title,
             'tags'           => genTags(str_replace(' ', ', ', $title)),
-            'category'       => [$cbvid->get_default_cid()],
+            'category'       => [Category::getInstance()->getDefaultByType('video')['category_id']],
             'file_name'      => $file_name,
             'file_directory' => $file_directory,
             'userid'         => user_id(),

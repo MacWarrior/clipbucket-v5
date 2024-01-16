@@ -162,7 +162,7 @@ function categories($input, $type, $sep = ', ', $object_name = null): string
     $total = count($cat_array);
     $cats = '';
     foreach ($cat_array as $cat) {
-        $cat_details = $obj->get_category($cat);
+        $cat_details = Category::getInstance()->getById($cat);
 
         $cats .= '<a href="' . category_link($cat_details, $type) . '">' . display_clean($cat_details['category_name']) . '</a>';
         if ($count < $total) {

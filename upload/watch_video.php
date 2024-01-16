@@ -43,7 +43,10 @@ if (video_playable($vdo)) {
         $relMode = 'ono';
         $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
     }
-    $playlist = $cbvid->action->get_playlist($pid, user_id());
+    $playlist = Playlist::getInstance()->getAll([
+        'first_only'  => true,
+        'playlist_id' => $pid
+    ]);
 
     $assign_arry['playlist'] = $playlist;
     //Getting Playlist Item

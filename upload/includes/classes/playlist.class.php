@@ -3,6 +3,8 @@ class Playlist
 {
     private static $playlist;
     private $tablename = '';
+
+    private $fields = [];
     public function getTablename(): string
     {
         return $this->tablename;
@@ -10,6 +12,28 @@ class Playlist
     public function __construct()
     {
         $this->tablename = 'playlists';
+        $this->fields = [
+            'playlist_id',
+            'playlist_name',
+            'userid',
+            'playlist_type',
+            'description',
+            'tags',
+            'privacy',
+            'allow_comments',
+            'allow_rating',
+            'total_comments',
+            'total_items',
+            'rating',
+            'rated_by',
+            'voters',
+            'last_update',
+            'runtime',
+            'first_item',
+            'cover',
+            'played',
+            'date_added'
+        ];
     }
 
     public static function getInstance(): self
@@ -18,6 +42,19 @@ class Playlist
             self::$playlist = new self();
         }
         return self::$playlist;
+    }
+
+    private function getSQLFields($type = '', $prefix = false): array
+    {
+        $fields = $this->fields;
+
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->getTableName() . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->getTableName() . '.' . $field.'`';
+            }
+            return $field_name;
+        }, $fields);
     }
 
     /**
@@ -39,6 +76,151 @@ class Playlist
             $cond .= ')';
         }
         return $cond;
+    }
+
+    /**
+     * @throws Exception
+     * @noinspection DuplicatedCode
+     */
+    public function getAll(array $params = [])
+    {
+        $param_playlist_id = $params['playlist_id'] ?? false;
+        $param_playlist_name = $params['playlist_name'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_playlist_type = $params['playlist_type'] ?? false;
+        $param_category = $params['category'] ?? false;
+        $param_search = $params['search'] ?? false;
+
+        $param_condition = $params['condition'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_order = $params['order'] ?? false;
+        $param_group = $params['group'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+        $param_exist = $params['exist'] ?? false;
+
+        $conditions = [];
+        if( $param_playlist_id ){
+            $conditions[] = 'playlist.playlist_id = \''.mysql_clean($param_playlist_id).'\'';
+        }
+        if( $param_playlist_name ){
+            $conditions[] = 'playlist.playlist_name = \''.mysql_clean($param_playlist_name).'\'';
+        }
+        if( $param_userid ){
+            $conditions[] = 'playlist.userid = \''.mysql_clean($param_userid).'\'';
+        }
+        if( $param_playlist_type ){
+            $conditions[] = 'playlist.playlist_type = \''.mysql_clean($param_playlist_type).'\'';
+        }
+        if( $param_condition ){
+            $conditions[] = '(' . $param_condition . ')';
+        }
+
+        $version = Update::getInstance()->getDBVersion();
+
+        if( $param_search ){
+            /* Search is done on playlist name, playlist tags */
+            $cond = '(MATCH(playlist.playlist_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(playlist.playlist_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            $cond .= ')';
+
+            $conditions[] = $cond;
+        }
+
+        if( !has_access('admin_access', true) && !$param_exist ){
+            $conditions[] = $this->getGenericConstraints($param_first_only);
+        }
+
+        if( $param_count ){
+            $select = ['COUNT(playlist.playlist_id) AS count'];
+        } else {
+            $select = $this->getSQLFields();
+            $select[] = 'users.username AS user_username';
+        }
+
+        $join = [];
+        $group = [];
+        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $group[] = 'playlists.playlist_id';
+            }
+            $join[] = 'LEFT JOIN ' . cb_sql_table('playlist_tags') . ' ON playlists.playlist_id = playlist_tags.id_playlist';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON playlist_tags.id_tag = tags.id_tag';
+        }
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('playlists_categories') . ' ON playlists.playlist_id = playlists_categories.id_playlist';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON playlists_categories.id_category = categories.category_id';
+
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $group[] = 'playlists.playlist_id';
+            }
+
+            if( $param_category ){
+                if( !is_array($param_category) ){
+                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
+        }
+
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table($this->getTableName()) . '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid '
+            . implode(' ', $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_exist ){
+            return !empty($result);
+        }
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
     }
 
 }

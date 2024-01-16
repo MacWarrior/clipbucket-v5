@@ -150,7 +150,7 @@ class formObj
     function createCheckBox($field, $multi = false)
     {
         //First Checking if value is CATEGORY
-        if ($field['value'][0] == 'category') {
+        if ($field['id'] == 'category') {
             //Generate Category list
             $type = $field['category_type'] ?: 'video';
 
@@ -315,19 +315,12 @@ class formObj
         }
 
         //Setting up the values
-        $values = $field['value'][1][0];
-        $newVals = [];
-
-        if (!empty($values)) {
-            foreach ($values as $val) {
-                $newVals[] = '|' . $val . '|';
-            }
-        }
+        $values = $field['value'];
         if ($cats) {
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array('|' . $cat['category_id'] . '|', $newVals)) {
+                if (in_array($cat['category_id'] , $values)) {
                     $checked = 'checked';
                 }
 
