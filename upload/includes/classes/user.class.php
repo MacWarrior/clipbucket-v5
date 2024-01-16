@@ -3320,7 +3320,6 @@ class userquery extends CBCategory
                 'name'             => 'category',
                 'id'               => 'category',
                 'value'            => ['category', ($default['category'] ?? '')],
-                'db_field'         => 'category',
                 'checked'          => ($default['category'] ?? ''),
                 'required'         => 'yes',
                 'invalid_err'      => lang('select_category'),
@@ -3440,13 +3439,6 @@ class userquery extends CBCategory
                     $query_field[] = $field['db_field'];
                 }
 
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
                 if (!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))) {
                     $val = mysql_clean($val);
                 } else {
@@ -3560,6 +3552,11 @@ class userquery extends CBCategory
             $insert_id = $db->insert_id();
 
             $db->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['password'], $insert_id)], ' userid=\'' . $insert_id . '\'');
+
+            if( config('enable_user_category') == 'yes' ){
+                //Changing category
+                Category::getInstance()->saveLinks('user', $insert_id, [$array['category']]);
+            }
 
             $fields_list = [];
             $fields_data = [];
