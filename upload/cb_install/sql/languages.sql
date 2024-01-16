@@ -1056,4 +1056,6 @@ VALUES ('admin_setting'),
        ('continue_to'),
        ('successful_install'),
        ('finish'),
-       ('default_language');
+       ('default_language'),
+       ('error_server_config'),
+       ('not_required_verison');

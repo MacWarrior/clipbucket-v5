@@ -4198,15 +4198,21 @@ function find_string($needle_start, $needle_end, $results)
 	* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
 	* If any of these configs are less than required value, warning is shown
     */
+/**
+ * @throws Exception
+ */
 function check_server_confs()
 {
-    define('POST_MAX_SIZE', ini_get('post_max_size'));
-    define('MEMORY_LIMIT', ini_get('memory_limit'));
-    define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
-    define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
+    $post_max_size = ini_get('post_max_size');
+    $memory_limit = ini_get('memory_limit');
+    $upload_max_filesize = ini_get('upload_max_filesize');
+    $max_execution_time = ini_get('max_execution_time');
 
-    if (getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200) {
-        e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>', 'w', false);
+    if (getBytesFromFileSize($post_max_size) < getBytesFromFileSize('50M')
+        || getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M')
+        || getBytesFromFileSize($upload_max_filesize) < getBytesFromFileSize('50M')
+        || $max_execution_time < 7200) {
+        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
     }
 }
 
