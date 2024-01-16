@@ -297,6 +297,9 @@
         ,"Update dependancies check"
         ,"Fix admin creation"
         ,"Fix PHP error when PHP CLI is missing"
+        ,"Add default language choice"
+        ,"Translate post-database steps"
+        ,"Fix auto-logging"
       ]
     }
   ]

@@ -9,7 +9,6 @@ require_once DirPath::get('cb_install') . 'functions_install.php';
 $mode = $_POST['mode'];
 
 $result = [];
-
 $dbhost = $_POST['dbhost'];
 $dbpass = $_POST['dbpass'];
 $dbuser = $_POST['dbuser'];
