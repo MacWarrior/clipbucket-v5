@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"334",
+  "revision":"336",
   "status":"dev",
   "detail":[
     {
@@ -99,6 +99,8 @@
         ,"Add options to hide comments"
         ,"Move development mode to website configurations"
         ,"Add option to disable sitemap"
+        ,"Fix configuration warning link"
+        ,"Add PHP, FFMpeg & FFprobe version check"
       ]
     },
     {
