@@ -42,8 +42,6 @@ assign('clientMaxBodySize', $client_max_body_size );
 /** services info */
 $ffReq = '3';
 assign('ffReq', $ffReq);
-$mysqlReq = '5.6.0';
-assign('mysqlReq', $mysqlReq);
 $phpVersionReq = '7.0.0';
 assign('phpVersionReq',$phpVersionReq);
 
@@ -130,9 +128,6 @@ if (empty($exec_output)) {
             preg_match($regVersion, $line, $match);
             if (!empty($match)) {
                 $extensionsCLI['mysqli'] = $match[2];
-                $match_mysql = [];
-                preg_match('/(\d+\.\d+\.\d+)$/', $extensionsCLI['mysqli'], $match_mysql);
-                $versionMySQLCliOK = $match_mysql[1] > $mysqlReq;
             }
 
         } elseif (strpos($line, 'libxml2 Version') !== false) {
@@ -165,11 +160,6 @@ foreach ($extensionMessages as $extension => $version) {
     $res = $modulesWeb[$extension];
     if (!empty($res)) {
         $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
-        if ($extension == 'mysqli') {
-            $match_mysql = [];
-            preg_match('/(\d+\.\d+\.\d+)$/', $extensionsWEB[$extension], $match_mysql);
-            $versionMySQLOK = $match_mysql[1] > $mysqlReq;
-        }
     }
 }
 assign('phpVersionCli', $phpVersion);

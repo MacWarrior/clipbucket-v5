@@ -119,17 +119,11 @@
                     </div>
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli && $versionMySQLOK }tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli }tick{else}alert{/if}.png"/>
                             <label>
                                 PHP MYSQLI -
-                                {if !$extensionsWEB.mysqli || !$versionMySQLOK}
-                                <div class="alert alert-danger">
-                                    {if !$extensionsWEB.mysqli}
-                                        {lang code = 'not_found'}
-                                    {elseif !$versionMySQLOK}
-                                        {sprintf(lang("not_required_version"), 'PHP MYSQLI',$extensionsWEB.mysqli, $mysqlReq)}
-                                    {/if}
-                                </div>
+                                {if !$extensionsWEB.mysqli }
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.mysqli}</strong>
                                 {/if}
@@ -208,17 +202,11 @@
                     </div>
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli && $versionMySQLCliOK}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli }tick{else}alert{/if}.png"/>
                             <label>
                                 PHP MYSQLI -
-                                {if !$extensionsCLI.mysqli || !$versionMySQLCliOK}
-                                <div class="alert alert-danger">
-                                    {if !$extensionsCLI.mysqli}
-                                        {lang code = 'not_found'}
-                                    {elseif !$versionMySQLCliOK}
-                                        {sprintf(lang("not_required_version"), 'PHP MYSQLI',$extensionsCLI.mysqli, $mysqlReq)}
-                                    {/if}
-                                </div>
+                                {if !$extensionsCLI.mysqli}
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.mysqli}</strong>
                                 {/if}
