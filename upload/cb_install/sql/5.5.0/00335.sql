@@ -225,3 +225,11 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'has been installed successfully !', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'a été installé avec succès !', @language_id_fra);
+
+SET @language_key = 'default_language' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Default language', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Langage par défaut', @language_id_fra);

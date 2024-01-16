@@ -42,7 +42,7 @@ $db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'")
         </div>
         <br/>
         <div class="field">
-            <label class="grey-text" for="email"><?php echo lang('language'); ?></label>
+            <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
             <select name="language" id="language" class="form-control">
                 <?php foreach (Language::getInstance()->get_langs() as $lang) {
                     echo '<option value="'.$lang['language_id'].'">'.$lang['language_name'].'</option>';
