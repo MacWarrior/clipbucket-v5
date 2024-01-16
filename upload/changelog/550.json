@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"331",
+  "revision":"332",
   "status":"dev",
   "detail":[
     {
@@ -286,9 +286,7 @@
       "description":[
         "Fix directories check"
         ,"Fix chmod in all scripts"
-        ,"Add script for Debian 12 - Apache & Nginx - PHP 8.2 & 8.3"
-        ,"Add script for Ubuntu 22.04 + Nginx"
-        ,"Add script for Ubuntu 23.04 + Nginx"
+        ,"Update installation script for Debian 9 to 12 and Ubuntu 16.04 to 23.10"
         ,"Update installation process"
         ,"Fix SQL queries"
         ,"Fix default video activation config value"
