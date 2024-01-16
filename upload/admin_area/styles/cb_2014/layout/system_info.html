@@ -72,7 +72,7 @@
                             {if !$phpVersionWeb}
                                 {lang code = 'not_found'}
                             {elseif !$phpVersionWebOK}
-                                Version <strong>{$phpVersionWeb}</strong> {lang code = 'not_required_version'} <strong>{$phpVersionReq}</strong>
+                                {sprintf(lang("not_required_version"), 'PHP WEB',$phpVersionWeb, $phpVersionReq)}
                             {/if}
                         </div>
                         {else}
@@ -122,12 +122,12 @@
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli && $versionMySQLOK }tick{else}alert{/if}.png"/>
                             <label>
                                 PHP MYSQLI -
-                                {if !$extensionsWEB.mysqli || !versionMySQLOK}
+                                {if !$extensionsWEB.mysqli || !$versionMySQLOK}
                                 <div class="alert alert-danger">
                                     {if !$extensionsWEB.mysqli}
                                         {lang code = 'not_found'}
-                                    {elseif !versionMySQLOK}
-                                        Version <strong>{$extensionsWEB.mysqli}</strong> {lang code = 'not_required_version'} <strong>{$mysqlReq}</strong>
+                                    {elseif !$versionMySQLOK}
+                                        {sprintf(lang("not_required_version"), 'PHP MYSQLI',$extensionsWEB.mysqli, $mysqlReq)}
                                     {/if}
                                 </div>
                                 {else}
@@ -159,7 +159,7 @@
                                  {if !$phpVersionCli}
                                     {lang code = 'php_cli_not_found'}
                                  {elseif !$phpVersionCliOK}
-                                    Version <strong>{$phpVersionCli}</strong> {lang code = 'not_required_verison'} <strong>{$phpVersionReq}</strong>
+                                    {sprintf(lang("not_required_version"), 'PHP CLI',$phpVersionCli, $phpVersionReq)}
                                 {/if}
                             </span>
                         {else}
@@ -216,7 +216,7 @@
                                     {if !$extensionsCLI.mysqli}
                                         {lang code = 'not_found'}
                                     {elseif !$versionMySQLCliOK}
-                                        Version <strong>{$extensionsCLI.mysqli}</strong> {lang code = 'not_required_version'} <strong>{$mysqlReq}</strong>
+                                        {sprintf(lang("not_required_version"), 'PHP MYSQLI',$extensionsCLI.mysqli, $mysqlReq)}
                                     {/if}
                                 </div>
                                 {else}
@@ -248,7 +248,7 @@
                                 {if !$ffmpegVersion}
                                     {lang code = 'not_found'}
                                 {elseif !$ffmpegVersionOK}
-                                    Version <strong>{$ffmpegVersion}</strong> {lang code = 'not_required_version'} <strong>{$ffReq}</strong>
+                                    {sprintf(lang("not_required_version"), 'FFMPEG',$ffmpegVersion, $ffReq)}
                                 {/if}
                             </div>
                         {else}
@@ -266,7 +266,7 @@
                                 {if !$ffprobe_path}
                                     {lang code = 'not_found'}
                                 {elseif !$ffprobe_path_OK}
-                                    Version <strong>{$ffprobe_path}</strong> {lang code = 'not_required_version'} <strong>{$ffReq}</strong>
+                                    {sprintf(lang("not_required_version"), 'FFProbe',$ffprobe_path, $ffReq)}
                                 {/if}
                             </p>
                             {if is_array($ffprobe_path) && $ffprobe_path.error}
