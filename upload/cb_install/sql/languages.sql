@@ -422,8 +422,7 @@ VALUES ('ad_name_error'),
        ('playlists');
 
 INSERT INTO `{tbl_prefix}languages_keys` (language_key)
-VALUES
-       ('change_style_of_listing'),
+VALUES ('change_style_of_listing'),
        ('manage_playlists'),
        ('total_items'),
        ('play_now'),
@@ -1028,3 +1027,33 @@ VALUES
        ('discord_webhook_url'),
        ('discord_webhook_url_invalid'),
        ('option_enable_sitemap');
+INSERT INTO `{tbl_prefix}languages_keys` (language_key)
+VALUES ('admin_setting'),
+       ('site_setting'),
+       ('admin_username'),
+       ('admin_password'),
+       ('admin_email'),
+       ('save_continue'),
+       ('hint_admin_username'),
+       ('hint_admin_email'),
+       ('admin_install_info'),
+       ('generate'),
+       ('current'),
+       ('website_configuration'),
+       ('website_configuration_info'),
+       ('website_title'),
+       ('website_title_hint'),
+       ('website_slogan'),
+       ('website_slogan_hint'),
+       ('website_url'),
+       ('website_url_hint'),
+       ('agreement'),
+       ('pre_check'),
+       ('permission'),
+       ('database'),
+       ('data_import'),
+       ('continue_admin_area'),
+       ('continue_to'),
+       ('successful_install'),
+       ('finish'),
+       ('default_language');
