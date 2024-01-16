@@ -26,7 +26,7 @@ SET "CB_DIR=C:\ClipBucketV5"
 echo ClipBucketV5 will be installed in %CB_DIR% with all it's components
 pause
 
-goto start_server
+::goto start_server
 
 :install_root
 echo.
@@ -348,10 +348,12 @@ echo OK
 
 :start_server
 echo.
-echo Starting Server...
-start %PHP_DIR%\php-cgi.exe -b 127.0.0.1:9000 -c %PHP_DIR%\php.ini
-start cmd.exe /k "cd %NGINX_DIR% & %NGINX_DIR%\nginx.exe"
-start %MARIADB_SERVER_EXE% --console
+echo Configuring server start script...
+SET "START_SCRIPT=%CB_DIR%\start.bat"
+
+echo start %PHP_DIR%\php-cgi.exe -b 127.0.0.1:9000 -c %PHP_DIR%\php.ini >> %START_SCRIPT%
+echo start cmd.exe /k "cd %NGINX_DIR% & %NGINX_DIR%\nginx.exe" >> %START_SCRIPT%
+echo start %MARIADB_SERVER_EXE% --console >> %START_SCRIPT%
 
 
 :: TODO
