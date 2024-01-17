@@ -4,7 +4,11 @@ header('Cache-Control: no-cache');
 header('X-Accel-Buffering: no');
 header('connection: keep-alive');
 const THIS_PAGE = 'progress';
-include("../includes/config.inc.php");
+require_once dirname(__FILE__, 3) . '/includes/config.inc.php';
+
+
+userquery::getInstance()->admin_login_check();
+
 ignore_user_abort(false);
 if (session_id()) {
     session_write_close();

@@ -47,7 +47,7 @@ $(function () {
 function connectSSE () {
     var tries = 0;
     // Create new event, the server script is sse.php
-    eventSource = new EventSource("/actions/progress_tool.php");
+    eventSource = new EventSource("/admin_area/sse/progress_tool.php");
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);
