@@ -118,10 +118,23 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
 );
 
 INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_collection`) (
-    SELECT collection_categs, collection_id
-    FROM `{tbl_prefix}collections`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(REPLACE(TRIM(LOWER(`category`)), ' ', '","'), '#', ''), '"]'), '$[*]' COLUMNS (`collection_categs` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.collection_categs) != ''
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 1 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+    )
+    SELECT
+        SUBSTRING_INDEX(SUBSTRING_INDEX(C.category, '#', seq.n+1), '#', -1) AS extracted_number
+         ,C.collection_id
+    FROM
+        `{tbl_prefix}collections` C
+            JOIN NumberSequence seq ON seq.n < LENGTH(C.category)-LENGTH(REPLACE(C.category, '#', ''))+1
+    WHERE
+        C.category IS NOT NULL
+        AND C.category != ''
+        AND SUBSTRING_INDEX(SUBSTRING_INDEX(C.category, '#', seq.n+1), '#', -1) != ''
 );
 
 # Vidéos
@@ -143,19 +156,30 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
 );
 
 INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
-    SELECT categs + @id_categ, videoid
-    FROM `{tbl_prefix}video`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(REPLACE(TRIM(LOWER(`category`)), ' ', '","'), '#', ''), '"]'), '$[*]' COLUMNS (`categs` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.categs) != ''
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 1 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+    )
+    SELECT
+        SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, '#', seq.n+1), '#', -1) + @id_categ AS extracted_number
+        ,V.videoid
+    FROM
+        `{tbl_prefix}video` V
+        JOIN NumberSequence seq ON seq.n < LENGTH(V.category)-LENGTH(REPLACE(V.category, '#', ''))+1
+    WHERE
+        V.category IS NOT NULL
+      AND V.category != ''
+      AND SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, '#', seq.n+1), '#', -1) != ''
 );
 
 INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
     SELECT C.category_id, V.videoid
     FROM `{tbl_prefix}video` V , `{tbl_prefix}categories` C
-
     WHERE (V.category IS NULL OR V.category = '') AND C.is_default = 'yes' AND C.id_category_type = @type_category
 );
-
 
 # Users
 SET @type_category = (
@@ -177,10 +201,23 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
 );
 
 INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`) (
-    SELECT categs + @id_categ, userid
-    FROM `{tbl_prefix}users`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(REPLACE(TRIM(LOWER(`category`)), ' ', '","'), '#', ''), '"]'), '$[*]' COLUMNS (`categs` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.categs) != ''
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 1 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+    )
+    SELECT
+        SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) + @id_categ AS extracted_number
+         ,U.userid
+    FROM
+        `{tbl_prefix}users` U
+        JOIN NumberSequence seq ON seq.n < LENGTH(U.category)-LENGTH(REPLACE(U.category, '#', ''))+1
+    WHERE
+        U.category IS NOT NULL
+      AND U.category != ''
+      AND SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) != ''
 );
 
 ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `category`;

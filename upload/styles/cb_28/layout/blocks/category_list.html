@@ -10,11 +10,6 @@
 			{else}
 				{$catname = {lang code='cat_all'}}
 			{/if}
-			{if $smarty.const.BEATSLIST}
-				{$cats_array = $beats->get_categories()}
-				{$categories = $cats_array}
-				{$type = 'beats'}
-			{/if}
 			<span class="lastclicked" style="display:none;"></span>
 			<span class="lastlevel" style="display:none;"></span>
 			<div class="dropdown"> <!-- Start of category code -->
