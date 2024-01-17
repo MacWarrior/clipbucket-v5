@@ -12,8 +12,7 @@ if (session_id()) {
 if (ob_get_level() == 0) {
     ob_start();
 }
-$x = true;
-while ($x) {
+while (true) {
     try {
         $tools = AdminTool::getTools([
             ' elements_total IS NOT NULL '
@@ -21,20 +20,28 @@ while ($x) {
     } catch (Exception $e) {
     }
     if (empty($tools)) {
-        $x = false;
+        $sleep = 10;
     }
+    $sleep = 5;
+    $output = 'data: ';
+    $returned_tools=[];
     foreach ($tools as $tool) {
-        $output = 'data: ' . json_encode([
-                'id'       => $tool['id_tool'],
-                'pourcent' => $tool['pourcentage_progress']
-            ]);
-        $output .= str_pad('', 4096) . "\n\n";
-        echo $output;
-        ob_flush();
-        flush();
+        $returned_tools[] = [
+            'id'             => $tool['id_tool'],
+            'status'         => $tool['id_tools_status'],
+            'status_title'   => lang($tool['language_key_title']),
+            'pourcent'       => sprintf('%.2f', $tool['pourcentage_progress']),
+            'elements_done'  => $tool['elements_done'],
+            'elements_total' => $tool['elements_total']
+        ];
     }
+    $output .= json_encode($returned_tools);
+    $output .= str_pad('', 4096) . "\n\n";
+    echo $output;
+    ob_flush();
+    flush();
     if (connection_aborted()) {
         exit();
     }
-    sleep(1);
+    sleep($sleep);
 }

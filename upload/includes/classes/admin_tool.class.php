@@ -392,7 +392,6 @@ class AdminTool
                 //call function
                 try {
                     call_user_func($function, $item);
-                    sleep(5);
                 } catch (\Exception $e) {
                     e(lang($e->getMessage()));
                     if ($stop_on_error) {
