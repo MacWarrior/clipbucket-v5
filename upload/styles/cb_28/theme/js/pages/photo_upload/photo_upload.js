@@ -149,7 +149,6 @@
                         var data = $(this).serialize();
                         data += "&collection_id="+collectionId;
                         data += "&updatePhoto=yes";
-
                         $.ajax({
                             url : "/actions/photo_uploader.php",
                             type : "post",
@@ -259,6 +258,7 @@
                         $(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
                         // turn progress bar into green to show success
                         $('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
+                        hideSpinner();
                     }
                 });
 
@@ -281,6 +281,7 @@
             uploader.bind("BeforeUpload", function(){
                 $("#fileUploadProgress").removeClass("hidden");
                 $(".progress-container").removeClass("hidden");
+                showSpinner();
             })
 
             var filesUploaded = 0;
@@ -465,3 +466,10 @@
         init_tags('collection_tags', available_collection_tags);
     });
 })(window);
+function showSpinner() {
+    $('.spinner-content').show();
+}
+
+function hideSpinner() {
+    $('.spinner-content').hide();
+}

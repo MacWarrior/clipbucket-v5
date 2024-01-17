@@ -7816,3 +7816,15 @@ textarea#comment_box {
 #disclaimer button.exit:hover{
   background-color: #363636;
 }
+
+.animate-spin {
+  -webkit-animation: spin 2s infinite linear;
+  animation: spin 2s infinite linear;
+  display: inline-block;
+}
+
+.spinner-content {
+  width: 400px;
+  height: 180px;
+  text-align: center;
+}
