@@ -388,7 +388,7 @@ function GetServerURL(): string
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 {

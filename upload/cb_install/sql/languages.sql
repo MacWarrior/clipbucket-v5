@@ -1058,4 +1058,5 @@ VALUES ('admin_setting'),
        ('finish'),
        ('default_language'),
        ('error_server_config'),
-       ('not_required_verison');
+       ('not_required_version'),
+       ('category_type_unknown');

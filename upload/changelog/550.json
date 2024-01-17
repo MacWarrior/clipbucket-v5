@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"336",
+  "revision":"337",
   "status":"dev",
   "detail":[
     {
@@ -300,6 +300,7 @@
         ,"Add default language choice"
         ,"Translate post-database steps"
         ,"Fix auto-logging"
+        ,"Implement DB port config"
       ]
     }
   ]

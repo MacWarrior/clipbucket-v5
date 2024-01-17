@@ -14,9 +14,10 @@ $dbpass = $_POST['dbpass'];
 $dbuser = $_POST['dbuser'];
 $dbname = $_POST['dbname'];
 $dbprefix = $_POST['dbprefix'];
+$dbport = $_POST['dbport'];
 
 try{
-    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass);
+    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass, null, $dbport);
 
     try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
@@ -139,6 +140,7 @@ if ($mode == 'adminsettings') {
                 $dbconnect = str_replace('_DB_NAME_', $dbname, $dbconnect);
                 $dbconnect = str_replace('_DB_USER_', $dbuser, $dbconnect);
                 $dbconnect = str_replace('_DB_PASS_', $dbpass, $dbconnect);
+                $dbconnect = str_replace('_DB_PORT_', $dbport, $dbconnect);
                 $dbconnect = str_replace('_TABLE_PREFIX_', $dbprefix, $dbconnect);
 
                 $fp = fopen(DirPath::get('includes') . 'config.php', 'w');
