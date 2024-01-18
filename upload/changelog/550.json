@@ -102,6 +102,7 @@
         ,"Fix configuration warning link"
         ,"Add PHP, FFMpeg & FFprobe version check"
         ,"Move mass email to tool box"
+        ,"Hide user disabled fields"
       ]
     },
     {
@@ -243,7 +244,7 @@
         ,"Fix home popup video"
         ,"Fix photo collection creation form"
         ,"Fix collection & playlists count display"
-        ,"Fix user, photo, video, collection & playlists privacy"
+        ,"Fix photo, video, collection & playlists privacy"
         ,"Implement photo breadcrumb"
         ,"Fix custom page privacy"
         ,"Fix comments display"
