@@ -25,17 +25,18 @@ if ($_GET['view'] == 'search') {
 
 //Delete User
 if (isset($_GET['deleteuser'])) {
-    $deleteuser = mysql_clean($_GET['deleteuser']);
-    $userquery->delete_user($deleteuser);
+    $userquery->delete_user($_GET['deleteuser']);
 }
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->delete_user($_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->delete_user($userid);
     }
-    $eh->flush();
-    e('Selected users have been deleted', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been deleted', 'm');
+    }
 }
 
 //Activate User
@@ -51,19 +52,23 @@ if (isset($_GET['deactivate'])) {
 
 //Using Multiple Action
 if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('activate', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('activate', $userid);
     }
-    $eh->flush();
-    e('Selected users have been activated', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been activated', 'm');
+    }
 }
 
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('deactivate', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('deactivate', $userid);
     }
-    $eh->flush();
-    e('Selected users have been deactivated', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been deactivated', 'm');
+    }
 }
 
 if (isset($_GET['resend_verif'])) {
@@ -90,18 +95,22 @@ if (isset($_GET['unfeatured'])) {
 
 //Using Multiple Action
 if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('featured', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('featured', $userid);
     }
-    $eh->flush();
-    e('Selected users have been set as featured', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been set as featured', 'm');
+    }
 }
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('unfeatured', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('unfeatured', $userid);
     }
-    $eh->flush();
-    e('Selected users have been removed from featured list', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been removed from featured list', 'm');
+    }
 }
 
 //Ban User
@@ -118,19 +127,23 @@ if (isset($_GET['unban'])) {
 
 //Using Multiple Action
 if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('ban', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('ban', $userid);
     }
-    $eh->flush();
-    e('Selected users have been banned', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been banned', 'm');
+    }
 }
 
 if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('unban', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('unban', $userid);
     }
-    $eh->flush();
-    e('Selected users have been unbanned', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been unbanned', 'm');
+    }
 }
 
 //Calling Video Manager Functions
@@ -201,7 +214,7 @@ $cat_array = [
     'type'             => 'checkbox',
     'name'             => 'category[]',
     'id'               => 'category',
-    'value'            => ['category', $cats_array],
+    'value'            => [$cats_array],
     'hint_1'           => lang('vdo_cat_msg'),
     'display_function' => 'convert_to_categories',
     'category_type'    => 'user'

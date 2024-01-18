@@ -9,7 +9,7 @@ if ($userquery->is_admin_logged_as_user()) {
 }
 
 if ($userquery->admin_login_check(true)) {
-    redirect_to(BASEURL . DirPath::getUrl('admin_area') . "index.php");
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'index.php');
 }
 
 $thisurl = $_SERVER['PHP_SELF'];

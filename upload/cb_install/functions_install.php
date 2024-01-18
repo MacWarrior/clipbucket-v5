@@ -140,8 +140,11 @@ function check_module($type): array
                 $version = $matches[1];
             }
 
+            $req = '3.0';
             if (!$version) {
                 $return['err'] = 'Unable to find FFMPEG';
+            } elseif ($version < $req) {
+                $return['err'] = sprintf('Current version is %s, minimal version %s is required. Please update', $version, $req);
             } else {
                 $return['msg'] = sprintf('Found FFMPEG %s : %s', $version, $ffmpeg_path);
             }
@@ -160,9 +163,11 @@ function check_module($type): array
             if (@$matches[1]) {
                 $version = $matches[1];
             }
-
+            $req='3.0';
             if (!$version) {
                 $return['err'] = 'Unable to find FFPROBE';
+            } elseif ($version < $req) {
+                $return['err'] = sprintf('Current version is %s, minimal version %s is required. Please update', $version, $req);
             } else {
                 $return['msg'] = sprintf('Found FFPROBE %s : %s', $version, $ffprobe_path);
             }
@@ -190,13 +195,27 @@ function check_module($type): array
 
 function check_extension ($extension, $type) {
     global $extensionsCLI, $extensionsWeb;
+    $reg = '/(\d+\.\d+\.\d+)$/';
+    $mysqlReq = '5.6';
     switch ($type) {
         case 'cli':
             $version = $extensionsCLI[$extension] ?? false;
             if (!$version) {
                 $return['err'] = $extension. ' extension is not enabled';
             } else {
-                $return['msg'] = sprintf('%s %s extension is enabled',$extension ,$version);
+                $error = false;
+                if ($extension == 'mysqli') {
+                    $match_mysql = [];
+                    preg_match($reg, $version, $match_mysql);
+                    if ($match_mysql[1] < $mysqlReq) {
+                        $error = sprintf('Current version of %s is %s, minimal version %s is required. Please update', $extension, $version, $mysqlReq);
+                    }
+                }
+                if ($error) {
+                    $return['err'] = $error;
+                } else {
+                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $version);
+                }
             }
             break;
         case 'web':
@@ -213,7 +232,20 @@ function check_extension ($extension, $type) {
                     $return['err'] = $extension . ' extension is not enabled';
                 } else {
                     $key = $extensionMessages[$extension];
-                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $res[$key]);
+                    $error = false;
+                    if ($extension == 'mysqli') {
+                        $match_mysql = [];
+
+                        preg_match($reg, $res[$key], $match_mysql);
+                        if ($match_mysql[1] < $mysqlReq) {
+                            $error = sprintf('Current version of %s is %s, minimal version %s is required. Please update', $extension, $res[$key], $mysqlReq);
+                        }
+                    }
+                    if ($error) {
+                        $return['err'] = $error;
+                    } else {
+                        $return['msg'] = sprintf('%s %s extension is enabled', $extension, $res[$key]);
+                    }
                 }
             }
             break;
@@ -356,7 +388,7 @@ function GetServerURL(): string
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 {

@@ -64,11 +64,17 @@
             </div>
             <div id="services" class="tab-pane">
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionWeb}tick{else}alert{/if}.png"/>
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionWeb && $phpVersionWebOK}tick{else}alert{/if}.png"/>
                     <label>
                         PHP WEB -
-                        {if !$phpVersionWeb}
-                        <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                        {if !$phpVersionWeb || !$phpVersionWebOK}
+                        <div class="alert alert-danger">
+                            {if !$phpVersionWeb}
+                                {lang code = 'not_found'}
+                            {elseif !$phpVersionWebOK}
+                                {sprintf(lang("not_required_version"), 'PHP WEB',$phpVersionWeb, $phpVersionReq)}
+                            {/if}
+                        </div>
                         {else}
                         Version <strong>{$phpVersionWeb}</strong>
                         - {lang code='info_php_web'}
@@ -113,10 +119,10 @@
                     </div>
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli }tick{else}alert{/if}.png"/>
                             <label>
                                 PHP MYSQLI -
-                                {if !$extensionsWEB.mysqli}
+                                {if !$extensionsWEB.mysqli }
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.mysqli}</strong>
@@ -139,9 +145,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli}tick{else}alert{/if}.png"/>
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli && $phpVersionCliOK}tick{else}alert{/if}.png"/>
                     <label>
-                        PHP CLI - {if !$phpVersionCli}<span class="alert-danger">{lang code = 'php_cli_not_found'}</span>
+                        PHP CLI -
+                        {if !$phpVersionCli || !$phpVersionCliOK}
+                            <span class="alert-danger">
+                                 {if !$phpVersionCli}
+                                    {lang code = 'php_cli_not_found'}
+                                 {elseif !$phpVersionCliOK}
+                                    {sprintf(lang("not_required_version"), 'PHP CLI',$phpVersionCli, $phpVersionReq)}
+                                {/if}
+                            </span>
                         {else}
                         Version <strong>{$phpVersionCli}</strong>
                         - {lang code='info_php_cli'}
@@ -188,7 +202,7 @@
                     </div>
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli }tick{else}alert{/if}.png"/>
                             <label>
                                 PHP MYSQLI -
                                 {if !$extensionsCLI.mysqli}
@@ -214,11 +228,17 @@
                     </div>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion}tick{else}alert{/if}.png"/>
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>
                     <label>
                         FFMPEG -
-                        {if !$ffmpegVersion}
-                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                            {if !$ffmpegVersion || !$ffmpegVersionOK}
+                            <div class="alert alert-danger">
+                                {if !$ffmpegVersion}
+                                    {lang code = 'not_found'}
+                                {elseif !$ffmpegVersionOK}
+                                    {sprintf(lang("not_required_version"), 'FFMPEG',$ffmpegVersion, $ffReq)}
+                                {/if}
+                            </div>
                         {else}
                             Version <strong>{$ffmpegVersion}</strong>
                             - {lang code='info_ffmpeg'}
@@ -226,12 +246,18 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffprobe_path}tick{else}alert{/if}.png"/>
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffprobe_path && $ffprobe_path_OK}tick{else}alert{/if}.png"/>
                     <label>
                         FFProbe -
-                        {if !$ffprobe_path}
-                            <p class="alert alert-danger">{lang code = 'not_found'}</p>
-                            {if $ffprobe_path.error}
+                        {if !$ffprobe_path || !$ffprobe_path_OK}
+                            <p class="alert alert-danger">
+                                {if !$ffprobe_path}
+                                    {lang code = 'not_found'}
+                                {elseif !$ffprobe_path_OK}
+                                    {sprintf(lang("not_required_version"), 'FFProbe',$ffprobe_path, $ffReq)}
+                                {/if}
+                            </p>
+                            {if is_array($ffprobe_path) && $ffprobe_path.error}
                                 <br/><span style="color:#e70000;">{$ffprobe_path.error}</span>
                             {/if}
                         {else}

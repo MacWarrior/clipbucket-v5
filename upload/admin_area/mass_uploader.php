@@ -13,7 +13,9 @@ $delMassUpload = config('delete_mass_upload');
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Mass Upload Videos', 'url' => DirPath::getUrl('admin_area') . 'mass_uploader.php'];
 
-$cats = $cbvid->get_categories();
+$cats = Category::getInstance()->getAll([
+    'category_type' => Category::getInstance()->getIdsCategoriesType('video')
+]);
 assign('cats', $cats);
 
 if (isset($_POST['mass_upload_video'])) {

@@ -115,7 +115,7 @@ class Tags
     /**
      * @throws Exception
      */
-    public static function saveTags(string $tags, string $object_type, int $object_id)
+    public static function saveTags(string $tags, string $object_type, int $object_id): bool
     {
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {

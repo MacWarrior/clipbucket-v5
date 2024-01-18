@@ -149,7 +149,6 @@
                         var data = $(this).serialize();
                         data += "&collection_id="+collectionId;
                         data += "&updatePhoto=yes";
-
                         $.ajax({
                             url : "/actions/photo_uploader.php",
                             type : "post",
@@ -185,20 +184,19 @@
             uploader.init();
 
             uploader.bind('FilesAdded', function(up, uploadedFiles) {
-                for(var i = 0; i < uploadedFiles.length; i++){
+                for(let i = 0; i < uploadedFiles.length; i++){
                     files.push(uploadedFiles[i]);
+                    uploadedFiles[i].data = [];
+                    uploadedFiles[i].data.photo_title = uploadedFiles[0].name;
+                    uploadedFiles[i].data.photo_description = uploadedFiles[0].name;
+                    uploadedFiles[i].data.photo_tags = '';
+                    uploadedFiles[i].data.collection_id = $('#collectionSelection').val();
+                    uploadedFiles[i].data.allow_comments = 'yes';
+                    uploadedFiles[i].data.allow_embedding = 'yes';
+                    uploadedFiles[i].data.allow_rating = 'yes';
+                    uploadedFiles[i].data.photoThumb = '';
+                    uploadedFiles[i].data.photo_id = 0;
                 }
-
-                uploadedFiles[0].data = [];
-                uploadedFiles[0].data.photo_title = uploadedFiles[0].name;
-                uploadedFiles[0].data.photo_description = uploadedFiles[0].name;
-                uploadedFiles[0].data.photo_tags = '';
-                uploadedFiles[0].data.collection_id = $('#collectionSelection').val();
-                uploadedFiles[0].data.allow_comments = 'yes';
-                uploadedFiles[0].data.allow_embedding = 'yes';
-                uploadedFiles[0].data.allow_rating = 'yes';
-                uploadedFiles[0].data.photoThumb = '';
-                uploadedFiles[0].data.photo_id = 0;
 
                 reFreshTabs(up);
 
@@ -282,6 +280,7 @@
             uploader.bind("BeforeUpload", function(){
                 $("#fileUploadProgress").removeClass("hidden");
                 $(".progress-container").removeClass("hidden");
+                showSpinner();
             })
 
             var filesUploaded = 0;
@@ -331,6 +330,7 @@
                         hiddenField_photoId.name = 'photo_id';
                         hiddenField_photoId.type = 'hidden';
                         hiddenField_photoId.value = msg.photoID;
+                        hideSpinner();
                         $('#tab'+current_index+' form').append(hiddenField_photoId);
                         $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
                         $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
@@ -466,3 +466,10 @@
         init_tags('collection_tags', available_collection_tags);
     });
 })(window);
+function showSpinner() {
+    $('.spinner-content').show();
+}
+
+function hideSpinner() {
+    $('.spinner-content').hide();
+}

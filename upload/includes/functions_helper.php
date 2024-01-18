@@ -102,44 +102,6 @@ function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = [], $con
     return $open . $attributes . $close;
 }
 
-/**
- * Pulls categories without needing any parameters
- * making it easy to use in smarty. Decides type using page
- *
- * @param bool $page
- *
- * @return array|bool : { array } { $all_cats } { array with all details of all categories }
- * @since : March 22nd, 2016 ClipBucket 2.8.1
- * @author : Saqib Razzaq
- */
-function pullCategories($page = false)
-{
-    global $cbvid, $userquery, $cbphoto;
-    $params = [];
-    if (!$page) {
-        $page = THIS_PAGE;
-    }
-
-    switch ($page) {
-        case 'photos':
-            $all_cats = $cbphoto->cbCategories($params);
-            break;
-
-        case 'channels':
-            $all_cats = $userquery->cbCategories($params);
-            break;
-
-        case 'videos':
-        default:
-            $all_cats = $cbvid->cbCategories($params);
-            break;
-    }
-
-    if (is_array($all_cats)) {
-        return $all_cats;
-    }
-    return false;
-}
 
 /**
  * Takes a number and returns more human friendly format of it e.g 1000 == 1K

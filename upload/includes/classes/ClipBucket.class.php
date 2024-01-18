@@ -379,7 +379,7 @@ class ClipBucket
                     ]
                     , [
                         'title' => lang('manage_categories')
-                        , 'url' => DirPath::getUrl('admin_area') . 'user_category.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
                     ]
                     , [
                         'title' => 'Inactive Only'
@@ -395,13 +395,6 @@ class ClipBucket
                     ]
                 ]
             ];
-
-            if (config('disable_email') == 'no') {
-                $menu_users['sub'][] = [
-                    'title' => 'Mass Email'
-                    , 'url' => DirPath::getUrl('admin_area') . 'mass_email.php'
-                ];
-            }
 
             if ($per['allow_manage_user_level'] == 'yes' || $userquery->level == 1) {
                 $menu_users['sub'][] = [
@@ -487,6 +480,8 @@ class ClipBucket
             $this->addMenuAdmin($menu_plugin, 50);
         }
 
+
+
         if ($per['tool_box'] == 'yes') {
             $menu_tool = [
                 'title'   => lang('tool_box')
@@ -522,6 +517,13 @@ class ClipBucket
                     ]
                 ]
             ];
+
+            if (config('disable_email') == 'no') {
+                $menu_tool['sub'][] = [
+                    'title' => 'Mass Email'
+                    , 'url' => DirPath::getUrl('admin_area') . 'mass_email.php'
+                ];
+            }
 
 
             if ($per['web_config_access'] == 'yes') {
