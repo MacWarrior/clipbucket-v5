@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"337",
+  "revision":"339",
   "status":"dev",
   "detail":[
     {
@@ -101,6 +101,8 @@
         ,"Add option to disable sitemap"
         ,"Fix configuration warning link"
         ,"Add PHP, FFMpeg & FFprobe version check"
+        ,"Move mass email to tool box"
+        ,"Hide user disabled fields"
       ]
     },
     {

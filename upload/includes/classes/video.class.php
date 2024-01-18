@@ -499,7 +499,7 @@ class CBvideo extends CBCategory
     function init()
     {
         global $Cbucket, $cb_columns;
-        $this->cat_tbl = 'video_categories';
+        $this->cat_tbl = 'videos_categories';
         $this->section_tbl = 'video';
         $this->use_sub_cats = true;
         $this->init_actions();

@@ -130,10 +130,12 @@
 								<td class="first"><label>Email</label></td>
 								<td class="last"><p><span>{$data.email}</span></p></td>
 							</tr>
+							{if config('enable_gender') == 'yes'}
 							<tr>
 								<td class="first"><label>Gender</label></td>
 								<td class="last"><p><span>{$data.sex}</span></p></td>
 							</tr>
+							{/if}
 							<tr>
 								<td class="first"><label>Rating</label></td>
 								<td class="last"><p><span>{$data.rating}</span></p></td>
