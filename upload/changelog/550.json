@@ -103,6 +103,7 @@
         ,"Add PHP, FFMpeg & FFprobe version check"
         ,"Move mass email to tool box"
         ,"Hide user disabled fields"
+        ,"Implement SSE on admin tools"
       ]
     },
     {
