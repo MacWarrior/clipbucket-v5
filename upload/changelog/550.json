@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"339",
+  "revision":"340",
   "status":"dev",
   "detail":[
     {
@@ -267,6 +267,7 @@
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
         ,"Fix sitemap & phpinfo privacy"
+        ,"Add loading spinner during photo upload and thumbs generation"
       ]
     }
   ,{
