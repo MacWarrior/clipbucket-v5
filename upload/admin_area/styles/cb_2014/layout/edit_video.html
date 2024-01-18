@@ -210,12 +210,14 @@
 											<p><span>{$data.email}</span></p>
 										</td>
 									</tr>
+                                    {if config('enable_gender') == 'yes'}
 									<tr>
 										<td class="first"><label>{lang code='gender'}</label></td>
 										<td class="last">
 											<p><span>{lang code="{$data.sex}"}</span></p>
 										</td>
 									</tr>
+                                    {/if}
 									<tr>
 										<td class="first"><label>{lang code='rating'}</label></td>
 										<td class="last">
