@@ -6,7 +6,6 @@ header('connection: keep-alive');
 const THIS_PAGE = 'progress';
 require_once dirname(__FILE__, 3) . '/includes/config.inc.php';
 
-
 userquery::getInstance()->admin_login_check();
 
 ignore_user_abort(false);
@@ -17,16 +16,23 @@ if (ob_get_level() == 0) {
     ob_start();
 }
 while (true) {
+    if (connection_aborted()) {
+        exit();
+    }
+
     try {
         $tools = AdminTool::getTools([
             ' elements_total IS NOT NULL '
         ]);
     } catch (Exception $e) {
+        exit();
     }
+
+    $sleep = 1;
     if (empty($tools)) {
         $sleep = 10;
     }
-    $sleep = 5;
+
     $output = 'data: ';
     $returned_tools=[];
     foreach ($tools as $tool) {
@@ -44,8 +50,5 @@ while (true) {
     echo $output;
     ob_flush();
     flush();
-    if (connection_aborted()) {
-        exit();
-    }
     sleep($sleep);
 }

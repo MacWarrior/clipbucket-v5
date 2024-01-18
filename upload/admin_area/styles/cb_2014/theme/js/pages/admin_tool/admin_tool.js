@@ -14,8 +14,11 @@ $(function () {
                 dataType: 'json',
                 success: function (result) {
                     $('#progress-' + id_tool).show();
-                    $('#progress-bar-' + id_tool).attr('aria-valuenow', 0);
+                    $('#progress-bar-' + id_tool).removeClass('progress-bar-success').attr('aria-valuenow', 0).width(0 + '%');
                     $('#span-' + id_tool).html(result['libelle_status']);
+                    $('#pourcent-' + id_tool).html(0);
+                    $('#done-' + id_tool).html(0);
+                    $('#total-' + id_tool).html(0);
                     $('.page-content').prepend(result['msg']);
                     elem.parent().addClass('disabled');
                     $('.stop[data-id="' + id_tool + '"]').parent().removeClass('disabled');
@@ -51,7 +54,6 @@ function connectSSE () {
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);
-        console.log(data);
         var ids_tool = [];
         data.forEach(function (tool) {
             $('#progress-bar-' + tool.id).attr('aria-valuenow',tool.pourcent).width(tool.pourcent + '%');
@@ -67,18 +69,24 @@ function connectSSE () {
             if (!ids_tool.includes(id)) {
                 elem.addClass('progress-bar-success');
                 elem.width('100%');
-                $('.launch[data-id='+id+']').parent().removeClass('disabled')
-                $('.stop[data-id='+id+']').parent().addClass('disabled')
-                $('#span-' + id).html(lang.complete);
+                $('.launch[data-id='+id+']').parent().removeClass('disabled');
+                $('.stop[data-id='+id+']').parent().addClass('disabled');+
+                $('#span-' + id).html(lang.completed);
+                $('#progress-bar-' + id).attr('aria-valuenow',100).width(100 + '%');
+                $('#done-' + id).html($('#total-' + id).html());
+                $('#pourcent-' + id).html(100);
                 setTimeout(function () {
                     $('#progress-' + id).hide();
                     $('#span-' + id).html(lang.ready);
+                    $('#progress-bar-' + id).removeClass('progress-bar-success').attr('aria-valuenow', 0).width(0 + '%');
+                    $('#pourcent-' + id).html(0);
+                    $('#done-' + id).html(0);
+                    $('#total-' + id).html(0);
                 }, 10000);
             }
         });
     }, false);
     eventSource.addEventListener('open', function(e) {
-        console.log('opened');
         tries++
         if (tries > max_try) {
             eventSource.close();

@@ -23,9 +23,8 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public static function getTools($condition = []): array
+    public static function getTools(array $condition = []): array
     {
-
         $where = implode(' AND ', $condition);
         $select = tbl("tools") . ' AS T
         LEFT JOIN ' . tbl("tools_status") . ' AS TT ON TT.id_tools_status = T.id_tools_status';
