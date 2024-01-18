@@ -1060,4 +1060,5 @@ VALUES ('admin_setting'),
        ('error_server_config'),
        ('not_required_version'),
        ('category_type_unknown'),
-       ('dob_required');
+       ('dob_required'),
+       ('completed');
