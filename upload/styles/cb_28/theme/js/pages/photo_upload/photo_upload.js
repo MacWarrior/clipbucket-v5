@@ -258,7 +258,6 @@
                         $(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
                         // turn progress bar into green to show success
                         $('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
-                        hideSpinner();
                     }
                 });
 
@@ -331,6 +330,7 @@
                         hiddenField_photoId.name = 'photo_id';
                         hiddenField_photoId.type = 'hidden';
                         hiddenField_photoId.value = msg.photoID;
+                        hideSpinner();
                         $('#tab'+current_index+' form').append(hiddenField_photoId);
                         $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
                         $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
