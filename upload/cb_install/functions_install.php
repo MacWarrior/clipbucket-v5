@@ -51,6 +51,9 @@ function check_module($type): array
 {
     global $extensionsCLI;
     $return = [];
+    $regex_version = '(\d+\.\d+\.\d+)';
+    $mysqlReq='5.6.0';
+
     switch ($type) {
         case 'php_web':
             $php_version = phpversion();
@@ -187,6 +190,21 @@ function check_module($type): array
                 $return['err'] = 'Unable to find Media Info';
             } else {
                 $return['msg'] = sprintf('Found Media Info %s : %s', $version, $mediainfo_path);
+            }
+            break;
+        case 'mysql_client':
+            $cmd = 'mysql --version';
+            exec($cmd, $mysql_client_output);
+            $match_mysql = [];
+            preg_match($regex_version, $mysql_client_output[0], $match_mysql);
+            $clientMySqlVersion = $match_mysql[0] ?? false;
+
+            if (!$clientMySqlVersion) {
+                $return['err'] = 'Unable to find MySQL Client';
+            } elseif ((version_compare($clientMySqlVersion, $mysqlReq) < 0)) {
+                $return['err'] = sprintf('Current version is %s, minimal version %s is required. Please update', $clientMySqlVersion, $mysqlReq);
+            } else {
+                $return['msg'] = sprintf('Found MySQL Client %s', $clientMySqlVersion);
             }
             break;
     }
