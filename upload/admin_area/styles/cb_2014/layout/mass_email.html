@@ -61,33 +61,39 @@
 
 						<div class="tab-content">
 							<div id="activestatus" class="tab-pane active">
-								<h4>Active status<br /><small>Choose whether to send to active users or non active</small></h4>
-								<label class="radio">
+								<h4>Active status<br/>
+									<small>Choose whether to send to active users or non active</small>
+								</h4>
+								<label>
 									<input name="active" type="radio" value="yes" checked />{lang code='yes'}
 								</label>
-								<label class="radio">
-									<input type="radio" name="active" value="no" />{lang code='no'}
+								<label>
+									<input name="active" type="radio" value="no" />{lang code='no'}
 								</label>
-								<label class="radio">
+								<label>
 									<input name="active" type="radio" value="any" />Any
 								</label>
 							</div>
 
 							<div id="bannedstatus" class="tab-pane">
-								<h4>Banned status<br /><small>Send email to banned users</small></h4>
-								<label class="radio">
-									<input type="radio" name="ban" value="yes" />{lang code='yes'}
+								<h4>Banned status<br/>
+									<small>Send email to banned users</small>
+								</h4>
+								<label>
+									<input name="ban" type="radio" value="yes" />{lang code='yes'}
 								</label>
-								<label class="radio">
+								<label>
 									<input name="ban" type="radio" value="no" checked />{lang code='no'}
 								</label>
-								<label class="radio">
+								<label>
 									<input name="ban" type="radio" value="any" />Any
 								</label>
 							</div>
 
 							<div id="userlevel" class="tab-pane">
-								<h4>User level<br><small>Choose which user level to send email</small></h4>
+								<h4>User level<br/>
+									<small>Choose which user level to send email</small>
+								</h4>
 								{assign var=levels value=$userquery->get_levels()}
 								{foreach from=$levels item=level}
 									{if $level.user_level_id !='4'}
@@ -100,7 +106,6 @@
 
 							<div id="usercategory" class="tab-pane">
 								<h4>User category<br><small>User category</small></h4>
-								{assign var=cats value=$userquery->get_categories()}
 								<label class="checkbox-inline">
 									<input type='checkbox' name="cat[]" value="0" checked />All
 								</label>

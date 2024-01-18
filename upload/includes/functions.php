@@ -622,6 +622,7 @@ function getCategoryList($params = [])
  * @param $params
  *
  * @return array|bool|string
+ * @throws Exception
  * @uses { function : getCategoryList }
  *
  */
