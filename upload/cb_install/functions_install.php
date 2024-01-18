@@ -332,6 +332,7 @@ function checkPermissions(): array
         'files',
         'files/backgrounds',
         'files/conversion_queue',
+        'files/category_thumbs',
         'files/logs',
         'files/mass_uploads',
         'files/original',
@@ -342,7 +343,6 @@ function checkPermissions(): array
         'files/videos',
         'images',
         'images/avatars',
-        'images/category_thumbs',
         'images/collection_thumbs',
         'includes'
     ];

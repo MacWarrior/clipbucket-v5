@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"343",
+  "revision":"344",
   "status":"dev",
   "detail":[
     {
@@ -104,6 +104,7 @@
         ,"Move mass email to tool box"
         ,"Hide user disabled fields"
         ,"Implement SSE on admin tools"
+        ,"Fix categories thumbs"
       ]
     },
     {
