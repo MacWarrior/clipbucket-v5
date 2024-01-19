@@ -35,8 +35,9 @@ try{
         $serverMySqlVersion = $data[0]['@@version'];
         preg_match($regex_version, $serverMySqlVersion, $match_mysql);
         $serverMySqlVersion = $match_mysql[0] ?? false;
-        if (version_compare($serverMySqlVersion, '5.6.0') < 0) {
-            $result['err'] = '<span class="alert">MySql Server (v'.$data[0]['@@version'].') is outdated : version 5.6.0 minimal is required</span>';
+        $mysqlReq='5.6.0';
+        if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+            $result['err'] = '<span class="alert">MySql Server (v'.$data[0]['@@version'].') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
         }
     }
     catch(\Exception $e){

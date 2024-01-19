@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"344",
+  "revision":"345",
   "status":"dev",
   "detail":[
     {
@@ -105,6 +105,7 @@
         ,"Hide user disabled fields"
         ,"Implement SSE on admin tools"
         ,"Fix categories thumbs"
+        ,"Implement DB version check"
       ]
     },
     {
@@ -307,6 +308,7 @@
         ,"Translate post-database steps"
         ,"Fix auto-logging"
         ,"Implement DB port config"
+        ,"Implement DB version check"
       ]
     }
   ]

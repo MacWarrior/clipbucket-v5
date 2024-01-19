@@ -1062,6 +1062,5 @@ VALUES ('admin_setting'),
        ('dob_required'),
        ('completed'),
        ('error_allow_photo_types'),
-       ('category_type_unknown'),
        ('mysql_client'),
        ('mysql_server');
