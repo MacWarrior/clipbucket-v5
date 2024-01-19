@@ -21,7 +21,6 @@ class Collection
             ,'collection_id_parent'
             ,'collection_name'
             ,'collection_description'
-            ,'category'
             ,'userid'
             ,'views'
             ,'date_added'
@@ -101,6 +100,7 @@ class Collection
         $param_category = $params['category'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_hide_empty_collection = $params['hide_empty_collection'];
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -112,7 +112,7 @@ class Collection
             $param_having[] = $params['having'];
         }
 
-        if (config('hide_empty_collection') == 'yes') {
+        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
             $hide_empty_collection = 'COUNT( DISTINCT collection_items.ci_id > 0 )';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
                 $hide_empty_collection = '(' . $hide_empty_collection . ' OR collections.userid = ' . User::getInstance()->getCurrentUserID() . ')';
@@ -133,17 +133,6 @@ class Collection
         if( $param_userid ){
             $conditions[] = 'collections.userid = \''.mysql_clean($param_userid).'\'';
         }
-        if( $param_category ){
-            if( !is_array($param_category) ){
-                $conditions[] = 'collections.category LIKE \'%#'.mysql_clean($param_category).'#%\'';
-            } else {
-                $category_cond = [];
-                foreach($param_category as $category){
-                    $category_cond[] = 'collections.category LIKE \'%#'.mysql_clean($category).'#%\'';
-                }
-                $conditions[] = '(' . implode(' OR ', $category_cond) . ')';
-            }
-        }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
@@ -157,6 +146,9 @@ class Collection
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
             $cond .= ')';
 
             $conditions[] = $cond;
@@ -167,7 +159,7 @@ class Collection
         }
 
         if( !$param_with_items && $param_count ){
-            $select = ['COUNT(collections.collection_id) AS count'];
+            $select = ['COUNT(collections.collection_id) AS count, collections.userid'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username';
@@ -182,6 +174,25 @@ class Collection
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
+        }
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('collections_categories') . ' ON collections.collection_id = collections_categories.id_collection';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON collections_categories.id_category = categories.category_id';
+
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT(categories.category_name SEPARATOR \',\') AS category_names';
+                $group[] = 'collections.collection_id';
+            }
+
+            if( $param_category ){
+                if( !is_array($param_category) ){
+                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
         }
 
         if( $param_group ){
@@ -391,7 +402,7 @@ class Collections extends CBCategory
         $this->init_actions();
 
         $fields = ['collection_id', 'collection_name', 'collection_description',
-            'collection_tags', 'userid', 'type', 'category', 'views', 'date_added',
+            'collection_tags', 'userid', 'type', 'views', 'date_added',
             'active', 'rating', 'rated_by', 'voters'];
 
         $cb_columns->object('collections')->register_columns($fields);
@@ -447,7 +458,7 @@ class Collections extends CBCategory
                         ]
                         , [
                             'title' => lang('manage_categories')
-                            , 'url' => DirPath::getUrl('admin_area') . 'collection_category.php'
+                            , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
                             'title' => lang('flagged_collections')
@@ -1029,10 +1040,9 @@ class Collections extends CBCategory
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
         if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
+            $cat_array = $default['category'];
         } else {
-            preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-            $cat_array = [$m[1]];
+            $cat_array = explode(',', $default['category']);
         }
 
         $data = [
@@ -1072,10 +1082,9 @@ class Collections extends CBCategory
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
-                'value'             => ['category', $cat_array],
-                'db_field'          => 'category',
+                'value'             => $cat_array,
                 'required'          => 'yes',
-                'validate_function' => 'validate_collection_category',
+                'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('collect_cat_er'),
                 'display_function'  => 'convert_to_categories',
                 'category_type'     => 'collections'
@@ -1324,14 +1333,6 @@ class Collections extends CBCategory
                     }
                 }
 
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
-
                 if ($field['use_func_val']) {
                     $val = $field['validate_function']($val);
                 }
@@ -1372,6 +1373,7 @@ class Collections extends CBCategory
 
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
+            Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
             Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');
@@ -1521,14 +1523,12 @@ class Collections extends CBCategory
         Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
 
         //Remove tags
-        \Tags::saveTags('', 'collection', $cid);
+        Tags::saveTags('', 'collection', $cid);
+        //Remove categories
+        Category::getInstance()->unlinkAll('collection', $cid);
 
         Clipbucket_db::getInstance()->delete(tbl($this->items), ['collection_id'], [$cid]);
         $this->delete_thumbs($cid);
-        Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
-
-        //Decrementing users total collection
-        Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
 
         $params = [];
         $params['type'] = 'cl';
@@ -1537,6 +1537,11 @@ class Collections extends CBCategory
 
         //Removing video From Favorites
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);
+
+        Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
+        //Decrementing users total collection
+        Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
+
         e(lang('collection_deleted'), 'm');
     }
 
@@ -1691,13 +1696,6 @@ class Collections extends CBCategory
                     $query_field[] = $field['db_field'];
                 }
 
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
                 if (!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))) {
                     $val = ($val);
                 } else {
@@ -1733,6 +1731,7 @@ class Collections extends CBCategory
                 $cid = mysql_clean($cid);
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
 
+                Category::getInstance()->saveLinks('collection', $cid, $array['category']);
                 Tags::saveTags($array['collection_tags'], 'collection', $cid);
 
                 e(lang('collection_updated'), 'm');

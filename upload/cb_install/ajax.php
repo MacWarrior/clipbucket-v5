@@ -9,19 +9,36 @@ require_once DirPath::get('cb_install') . 'functions_install.php';
 $mode = $_POST['mode'];
 
 $result = [];
-
 $dbhost = $_POST['dbhost'];
 $dbpass = $_POST['dbpass'];
 $dbuser = $_POST['dbuser'];
 $dbname = $_POST['dbname'];
 $dbprefix = $_POST['dbprefix'];
+$dbport = $_POST['dbport'];
 
 try{
-    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass);
+    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass, null, $dbport);
 
     try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
         mysqli_query($cnnct, 'SET NAMES "utf8mb4"');
+
+        $res = mysqli_query($cnnct,'select @@version');
+        $data=[];
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $data[] = $row;
+            }
+            $res->close();
+        }
+        $regex_version = '(\d+\.\d+\.\d+)';
+        $serverMySqlVersion = $data[0]['@@version'];
+        preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+        $serverMySqlVersion = $match_mysql[0] ?? false;
+        $mysqlReq='5.6.0';
+        if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+            $result['err'] = '<span class="alert">MySql Server (v'.$data[0]['@@version'].') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
+        }
     }
     catch(\Exception $e){
         $result['err'] = "<span class='alert'>Unable to select database : " . $e->getMessage() . '</span>';
@@ -74,8 +91,8 @@ if ($mode == 'adminsettings') {
         }
 
         if (!$next) {
-            $next = 'add_categories';
-            $next_msg = 'Creating categories';
+            $next = 'add_admin';
+            $next_msg = 'adding admin account..';
         }
 
         if ($current) {
@@ -118,9 +135,9 @@ if ($mode == 'adminsettings') {
         }
     } else {
         switch ($step) {
+
             case 'add_categories':
                 install_execute_sql_file($cnnct, DirPath::get('sql') . 'categories.sql', $dbprefix, $dbname);
-
                 $return['msg'] = '<div class="ok green">Videos, Users, Groups and Collections Categories have been created</div>';
                 $return['status'] = 'adding admin account..';
                 $return['step'] = 'add_admin';
@@ -140,6 +157,7 @@ if ($mode == 'adminsettings') {
                 $dbconnect = str_replace('_DB_NAME_', $dbname, $dbconnect);
                 $dbconnect = str_replace('_DB_USER_', $dbuser, $dbconnect);
                 $dbconnect = str_replace('_DB_PASS_', $dbpass, $dbconnect);
+                $dbconnect = str_replace('_DB_PORT_', $dbport, $dbconnect);
                 $dbconnect = str_replace('_TABLE_PREFIX_', $dbprefix, $dbconnect);
 
                 $fp = fopen(DirPath::get('includes') . 'config.php', 'w');

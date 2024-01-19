@@ -231,21 +231,6 @@ class myquery
     }
 
     /**
-     * Function used to get categorie details
-     *
-     * @param $id
-     *
-     * @return array
-     * @throws Exception
-     */
-    function get_category($id): array
-    {
-        global $db;
-        $results = $db->select(tbl('category'), '*', " categoryid='$id'");
-        return $results[0];
-    }
-
-    /**
      * Function used to set website template
      * @throws Exception
      */

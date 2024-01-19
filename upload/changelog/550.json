@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"326",
+  "revision":"346",
   "status":"dev",
   "detail":[
     {
@@ -99,6 +99,13 @@
         ,"Add options to hide comments"
         ,"Move development mode to website configurations"
         ,"Add option to disable sitemap"
+        ,"Fix configuration warning link"
+        ,"Add PHP, FFMpeg & FFprobe version check"
+        ,"Move mass email to tool box"
+        ,"Hide user disabled fields"
+        ,"Implement SSE on admin tools"
+        ,"Fix categories thumbs"
+        ,"Implement DB version check"
       ]
     },
     {
@@ -140,6 +147,9 @@
         ,"Implement CSS/JS versionning"
         ,"Refactor directory constants"
         ,"Implement discord error logs"
+        ,"Fix .htaccess error"
+        ,"Fix SQL update"
+        ,"Refactor categories management"
       ]
     },
     {
@@ -160,6 +170,7 @@
         ,"Implement HLS video quality switch"
         ,"Fix typo in file name"
         ,"Fix MP4 default quality selector"
+        ,"Fix HLS multilangue selection (Thanks @Kenmeiyoki !)"
       ]
     },
     {
@@ -259,6 +270,8 @@
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
         ,"Fix sitemap & phpinfo privacy"
+        ,"Add loading spinner during photo upload and thumbs generation"
+        ,"Fix date of birth error on signup"
       ]
     }
   ,{
@@ -282,9 +295,7 @@
       "description":[
         "Fix directories check"
         ,"Fix chmod in all scripts"
-        ,"Add script for Debian 12 + Nginx"
-        ,"Add script for Ubuntu 22.04 + Nginx"
-        ,"Add script for Ubuntu 23.04 + Nginx"
+        ,"Update installation script for Debian 9 to 12 and Ubuntu 16.04 to 23.10"
         ,"Update installation process"
         ,"Fix SQL queries"
         ,"Fix default video activation config value"
@@ -293,6 +304,12 @@
         ,"Update dependancies check"
         ,"Fix admin creation"
         ,"Fix PHP error when PHP CLI is missing"
+        ,"Add default language choice"
+        ,"Translate post-database steps"
+        ,"Fix auto-logging"
+        ,"Implement DB port config"
+        ,"Implement DB version check"
+        ,"Prevent SQL issues when updating from old versions"
       ]
     }
   ]

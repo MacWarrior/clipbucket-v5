@@ -132,8 +132,8 @@ font-weight:bold;
 
 #logo{font-family: 'Cabin', arial, serif; font-size:28px; font-weight:bold; padding: 5px 0px 15px 20px;}
 
-dt{font-weight:bold; float:left; width:80px; display:inline-block;padding:5px 3px; line-height:20px; }
-dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0px; line-height:20px;}
+dt{font-weight:bold; float:left; width:100px; display:inline-block;padding:5px 3px; line-height:20px; }
+dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0; line-height:20px;}
 
 dd span,
 dt span{

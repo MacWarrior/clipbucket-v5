@@ -28,7 +28,11 @@ if ($_GET['mode'] != '') {
 }
 
 $id = $_GET['collection'];
-$c = $cbcollection->get_collection($id);
+$c = Collection::getInstance()->getAll([
+    'collection_id'         => $id,
+    'first_only'            => true,
+    'hide_empty_collection' => 'no'
+]);
 
 /* Generating breadcrumb */
 global $breadcrumb;

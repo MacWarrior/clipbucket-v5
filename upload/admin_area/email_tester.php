@@ -8,8 +8,8 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Tool Box', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Tester', 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('email_tester'), 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'];
 
 if (isset($_POST['start_test'])) {
     try {
@@ -47,6 +47,7 @@ if (isset($_POST['start_test'])) {
 
         $code = $_POST['email_template'];
         if ($code != -1) {
+            $cbemail = CBEmail::getInstance();
             $template = $cbemail->get_template($code);
 
             if ($template) {
