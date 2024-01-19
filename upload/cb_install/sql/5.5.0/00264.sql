@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tags`
-    ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type` (`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `tag_type` FOREIGN KEY IF NOT EXISTS (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type` (`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
 (
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_tags`
-    ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `video_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}video_tags`
-    ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `video_tags_video` FOREIGN KEY IF NOT EXISTS (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
 (
@@ -45,9 +45,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}photo_tags`
-    ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}photo_tags`
-    ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY IF NOT EXISTS (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
 (
@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY IF NOT EXISTS (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
 (
@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY IF NOT EXISTS (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 (
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
     PRIMARY KEY (`id_playlist`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY IF NOT EXISTS (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`)
 VALUES ('video'),
@@ -185,11 +185,11 @@ INSERT IGNORE INTO `{tbl_prefix}playlist_tags` (`id_tag`, `id_playlist`) (
     WHERE TRIM(jsontable.tags) != ''
 );
 
-ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;
-ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_tags`;
-ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `collection_tags`;
-ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;
-ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;
+ALTER TABLE `{tbl_prefix}video` DROP COLUMN IF EXISTS `tags`;
+ALTER TABLE `{tbl_prefix}photos` DROP COLUMN IF EXISTS `photo_tags`;
+ALTER TABLE `{tbl_prefix}collections` DROP COLUMN IF EXISTS `collection_tags`;
+ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN IF EXISTS `profile_tags`;
+ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN IF EXISTS `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
 INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES

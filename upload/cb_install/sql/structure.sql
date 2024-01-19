@@ -902,7 +902,7 @@ ALTER TABLE `{tbl_prefix}video_subtitle`
 	ADD UNIQUE KEY `videoid` (`videoid`,`number`);
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
-	ADD CONSTRAINT `{tbl_prefix}video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+	ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `{tbl_prefix}collections`
 	ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -926,8 +926,8 @@ ALTER TABLE `{tbl_prefix}languages_translations`
     ADD KEY `id_language_key` (`id_language_key`);
 
 ALTER TABLE `{tbl_prefix}languages_translations`
-    ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}video_thumbs`(
     `videoid`    BIGINT(20)  NOT NULL,
@@ -941,7 +941,7 @@ CREATE TABLE `{tbl_prefix}video_thumbs`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD CONSTRAINT `{tbl_prefix}video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    ADD CONSTRAINT `video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
     ADD INDEX(`type`);
 
 CREATE TABLE `{tbl_prefix}tools`(

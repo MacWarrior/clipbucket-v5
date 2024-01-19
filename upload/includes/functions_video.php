@@ -217,6 +217,10 @@ function get_count_thumb($videoid)
  */
 function create_thumb($video_db, $multi, $size)
 {
+    if(empty($video_db)){
+        return default_thumb();
+    }
+
     global $db;
     //check files
     $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
