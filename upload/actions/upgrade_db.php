@@ -1,8 +1,9 @@
 <?php
 require_once dirname(__FILE__, 2).'/includes/admin_config.php';
-global $userquery, $eh, $db;
+global $userquery, $eh;
 $need_to_create_version_table = true;
-
+$eh->flush_error();
+$error=false;
 $array_42 = ['4.2-RC1-free', '4.2-RC1-premium'];
 if (php_sapi_name() == 'cli') {
     $update = Update::getInstance();
@@ -12,12 +13,7 @@ if (php_sapi_name() == 'cli') {
         $version = $version_db['version'];
         $revision = $version_db['revision'];
 
-        $need_to_create_version_table = false;
-        if (!empty($argv[1]) || !empty($argv[2])) {
-            echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
-        }
-    } catch (\Exception $e) {
-        if ($e->getMessage() == 'version_not_installed') {
+        if ($version == '-1' || $revision == '-1') {
             if (empty($argv[1]) && empty($argv[2])) {
                 $version = readline('Version : ');
                 $revision = readline('Revision : ');
@@ -49,47 +45,82 @@ if (php_sapi_name() == 'cli') {
                 die;
             }
         } else {
-            throw $e;
+            $need_to_create_version_table = false;
+            if (!empty($argv[1]) || !empty($argv[2]) ) {
+                echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
+            }
         }
+    } catch (\Exception $e) {
+        throw $e;
     }
+
 } else {
     $userquery->admin_login_check();
     if (empty($_REQUEST['version']) || empty($_REQUEST['revision'])) {
         error_lang_cli('Version or revision is missing');
-        return false;
+        $error = true;
     }
 
     $revision = $_REQUEST['revision'];
     $version = $_REQUEST['version'];
 }
 
+$regex_version = '(\d+\.\d+\.\d+)';
+$mysqlReq='5.6.0';
+assign('mysqlReq', $mysqlReq);
+$cmd = 'mysql --version';
+exec($cmd, $mysql_client_output);
+$match_mysql = [];
+preg_match($regex_version, $mysql_client_output[0], $match_mysql);
+$clientMySqlVersion = $match_mysql[0] ?? false;
+if(version_compare($clientMySqlVersion, $mysqlReq) < 0) {
+    error_lang_cli(sprintf('Current version of MySQL Client is %s, minimal version %s is required. Please update'. PHP_EOL, $clientMySqlVersion, $mysqlReq));
+    $error=true;
+}
+
+$serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+$serverMySqlVersion = $match_mysql[0] ?? false;
+if(version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+    error_lang_cli(sprintf('Current version of MySQL Server is %s, minimal version %s is required. Please update'. PHP_EOL, $serverMySqlVersion, $mysqlReq));
+    $error=true;
+}
+
 if ($need_to_create_version_table) {
     $revisions = getRevisions();
     if (!array_key_exists($version, $revisions) || ($revisions[$version]) < $revision) {
         error_lang_cli('Revision provided is incorrect');
-        return false;
+        $error=true;
     }
     $table_version_path = DirPath::get('sql') . 'table_version.sql';
     $lines = file($table_version_path);
     if (empty($lines)) {
         error_lang_cli('Version system initialisation failed because table_version.sql is missing or empty ; please make sure your code is up-to-date and table_version.sql file is correct.');
-        return false;
+        $error=true;
     }
 }
+if ($error=true) {
+    if (php_sapi_name() != 'cli') {
+        echo json_encode([
+            'success' => false
+            , 'msg'   => getTemplateMsg()
+        ]);
+    }
+    return false;
+}
 
-$eh->flush_error();
 $templine = '';
 try {
     if ($need_to_create_version_table) {
         execute_sql_file($table_version_path);
 
         $sql = 'INSERT INTO ' . tbl('version') . ' (id, version, revision) VALUES (1, \'' . mysql_clean($version) . '\' , ' . mysql_clean((int)$revision) . ')';
-        $db->mysqli->query($sql);
+        Clipbucket_db::getInstance()->mysqli->query($sql);
     }
 
     $files = Update::getInstance()->getUpdateFiles(false, $version, $revision);
 
-    $installed_plugins = $db->select(tbl('plugins'), '*');
+    $installed_plugins = Clipbucket_db::getInstance()->select(tbl('plugins'), '*');
     $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
 
     $match = [];
