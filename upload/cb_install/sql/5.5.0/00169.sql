@@ -67,3 +67,12 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
     VALUES (@id_language_key, 'revision', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
     VALUES (@id_language_key, 'révision', @language_id_fra);
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}version`(
+    `id`       INT(11)     NOT NULL,
+    `version`  VARCHAR(16) NOT NULL,
+    `revision` INT(11)     NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+INSERT IGNORE INTO `{tbl_prefix}version` (id, version, revision) VALUES (1, '5.5.0', 169);

@@ -1,4 +1,4 @@
-CREATE TABLE `{tbl_prefix}version`(
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}version`(
     `id`       INT(11)     NOT NULL,
     `version`  VARCHAR(16) NOT NULL,
     `revision` INT(11)     NOT NULL,

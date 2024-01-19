@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"345",
+  "revision":"346",
   "status":"dev",
   "detail":[
     {
@@ -309,6 +309,7 @@
         ,"Fix auto-logging"
         ,"Implement DB port config"
         ,"Implement DB version check"
+        ,"Prevent SQL issues when updating from old versions"
       ]
     }
   ]
