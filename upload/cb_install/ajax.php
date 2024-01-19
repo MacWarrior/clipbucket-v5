@@ -22,6 +22,23 @@ try{
     try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
         mysqli_query($cnnct, 'SET NAMES "utf8mb4"');
+
+        $res = mysqli_query($cnnct,'select @@version');
+        $data=[];
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $data[] = $row;
+            }
+            $res->close();
+        }
+        $regex_version = '(\d+\.\d+\.\d+)';
+        $serverMySqlVersion = $data[0]['@@version'];
+        preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+        $serverMySqlVersion = $match_mysql[0] ?? false;
+        $mysqlReq='5.6.0';
+        if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+            $result['err'] = '<span class="alert">MySql Server (v'.$data[0]['@@version'].') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
+        }
     }
     catch(\Exception $e){
         $result['err'] = "<span class='alert'>Unable to select database : " . $e->getMessage() . '</span>';

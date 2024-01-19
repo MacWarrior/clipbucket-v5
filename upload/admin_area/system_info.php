@@ -72,6 +72,23 @@ $cmd = $row['php_path'] . ' ' . DirPath::get('root') . 'phpinfo.php';
 exec($cmd, $exec_output);
 assign('cli_php_info', implode('<br/>',$exec_output));
 
+$regex_version = '(\d+\.\d+\.\d+)';
+$mysqlReq='5.6.0';
+assign('mysqlReq', $mysqlReq);
+$cmd = 'mysql --version';
+exec($cmd, $mysql_client_output);
+$match_mysql = [];
+preg_match($regex_version, $mysql_client_output[0], $match_mysql);
+$clientMySqlVersion = $match_mysql[0] ?? false;
+assign('clientMySqlVersion', $clientMySqlVersion);
+assign('clientMySqlVersionOk', (version_compare($clientMySqlVersion, $mysqlReq) >= 0));
+
+$serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+$serverMySqlVersion = $match_mysql[0] ?? false;
+assign('serverMySqlVersion', $serverMySqlVersion);
+assign('serverMySqlVersionOk', (version_compare($serverMySqlVersion, $mysqlReq) >= 0));
+
 $post_max_size_cli = 0;
 $memory_limit_cli = 0;
 $upload_max_filesize_cli = 0;

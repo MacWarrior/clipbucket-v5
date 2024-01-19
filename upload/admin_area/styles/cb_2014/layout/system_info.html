@@ -278,6 +278,40 @@
                         {/if}
                     </label>
                 </div>
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $clientMySqlVersion && $clientMySqlVersionOk }tick{else}alert{/if}.png"/>
+                    <label>
+                        {lang code="mysql_client"} -
+                        {if !$clientMySqlVersion || !$clientMySqlVersionOk}
+                            <p class="alert alert-danger">
+                                {if !$clientMySqlVersion}
+                                    {lang code = 'not_found'}
+                                {elseif !$clientMySqlVersionOk}
+                                    {sprintf(lang("not_required_version"), lang('mysql_client'),$clientMySqlVersion, $mysqlReq)}
+                                {/if}
+                            </p>
+                        {else}
+                            Version <strong>{$clientMySqlVersion}</strong>
+                        {/if}
+                    </label>
+                </div>
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $serverMySqlVersion && $serverMySqlVersionOk }tick{else}alert{/if}.png"/>
+                    <label>
+                        {lang code="mysql_server"} -
+                        {if !$serverMySqlVersion || !$serverMySqlVersionOk}
+                            <p class="alert alert-danger">
+                                {if !$serverMySqlVersion}
+                                    {lang code = 'not_found'}
+                                {elseif !$serverMySqlVersionOk}
+                                    {sprintf(lang("not_required_version"), lang('mysql_client'),$serverMySqlVersion, $mysqlReq)}
+                                {/if}
+                            </p>
+                        {else}
+                            Version <strong>{$serverMySqlVersion}</strong>
+                        {/if}
+                    </label>
+                </div>
 
             </div>
             <div id="hosting" class="tab-pane active">
