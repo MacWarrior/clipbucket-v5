@@ -102,16 +102,16 @@ class Playlist
 
         $conditions = [];
         if( $param_playlist_id ){
-            $conditions[] = 'playlist.playlist_id = \''.mysql_clean($param_playlist_id).'\'';
+            $conditions[] = 'playlists.playlist_id = \''.mysql_clean($param_playlist_id).'\'';
         }
         if( $param_playlist_name ){
-            $conditions[] = 'playlist.playlist_name = \''.mysql_clean($param_playlist_name).'\'';
+            $conditions[] = 'playlists.playlist_name = \''.mysql_clean($param_playlist_name).'\'';
         }
         if( $param_userid ){
-            $conditions[] = 'playlist.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = 'playlists.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_playlist_type ){
-            $conditions[] = 'playlist.playlist_type = \''.mysql_clean($param_playlist_type).'\'';
+            $conditions[] = 'playlists.playlist_type = \''.mysql_clean($param_playlist_type).'\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -131,7 +131,7 @@ class Playlist
         }
 
         if( !has_access('admin_access', true) && !$param_exist ){
-            $conditions[] = $this->getGenericConstraints($param_first_only);
+            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only]);
         }
 
         if( $param_count ){
@@ -146,7 +146,6 @@ class Playlist
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
-                $group[] = 'playlists.playlist_id';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('playlist_tags') . ' ON playlists.playlist_id = playlist_tags.id_playlist';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON playlist_tags.id_tag = tags.id_tag';
@@ -158,7 +157,6 @@ class Playlist
 
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
-                $group[] = 'playlists.playlist_id';
             }
 
             if( $param_category ){
@@ -168,6 +166,10 @@ class Playlist
                     $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
                 }
             }
+        }
+
+        if( !$param_count ){
+            $group[] = 'playlists.playlist_id';
         }
 
         if( $param_group ){

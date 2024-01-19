@@ -212,8 +212,8 @@ class Collection
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(true);
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(true);
+            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
+            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -305,7 +305,7 @@ class Collection
      * @return string
      * @throws Exception
      */
-    public function getGenericConstraints(): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
@@ -570,9 +570,9 @@ class Collections extends CBCategory
         $left_join_cond = '';
         if( !has_access('admin_access', true) ) {
             if( $this->objTable == 'video' ){
-                $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints();
+                $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
-                $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints();
+                $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             }
         }
 
@@ -821,8 +821,8 @@ class Collections extends CBCategory
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints();
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints();
+            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
+            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
 
             if ($cond != '') {
                 $cond .= ' AND ';
@@ -981,9 +981,9 @@ class Collections extends CBCategory
 
         if (!has_access('admin_access', true) ) {
             if( $this->objTable == 'video' ){
-                $condition[] = Video::getInstance()->getGenericConstraints();
+                $condition[] = Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
-                $condition[] = Photo::getInstance()->getGenericConstraints();
+                $condition[] = Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             }
         }
 

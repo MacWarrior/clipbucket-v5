@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"346",
+  "revision":"347",
   "status":"dev",
   "detail":[
     {
@@ -272,6 +272,7 @@
         ,"Fix sitemap & phpinfo privacy"
         ,"Add loading spinner during photo upload and thumbs generation"
         ,"Fix date of birth error on signup"
+        ,"Make unlisted videos viewable inside collections and playlists"
       ]
     }
   ,{

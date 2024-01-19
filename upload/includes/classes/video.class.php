@@ -275,7 +275,7 @@ class Video
         }
 
         if( !has_access('admin_access', true) && !$param_exist ){
-            $conditions[] = $this->getGenericConstraints($param_first_only || $param_show_unlisted);
+            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
         if( $param_count ){
@@ -377,11 +377,13 @@ class Video
      * @return string
      * @throws Exception
      */
-    public function getGenericConstraints(bool $show_unlisted = false): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
         }
+
+        $show_unlisted = $params['show_unlisted'] ?? false;
 
         $cond = '( (video.active = \'yes\' AND video.status = \'Successful\'';
 
@@ -2050,7 +2052,7 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND ' . Video::getInstance()->getGenericConstraints(true);
+            $where = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');
