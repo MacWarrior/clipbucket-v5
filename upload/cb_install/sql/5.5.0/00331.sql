@@ -117,7 +117,7 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_collection`) (
+INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_collection`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 1 AS n
         UNION ALL
@@ -135,7 +135,7 @@ INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_coll
         C.category IS NOT NULL
         AND C.category != ''
         AND SUBSTRING_INDEX(SUBSTRING_INDEX(C.category, '#', seq.n+1), '#', -1) != ''
-);
+;
 
 # Vidéos
 SET @type_category = (
@@ -155,7 +155,7 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
+INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 1 AS n
         UNION ALL
@@ -173,7 +173,7 @@ INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
         V.category IS NOT NULL
       AND V.category != ''
       AND SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, '#', seq.n+1), '#', -1) != ''
-);
+;
 
 INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
     SELECT C.category_id, V.videoid
@@ -200,7 +200,7 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`) (
+INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 1 AS n
         UNION ALL
@@ -218,7 +218,7 @@ INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`) (
         U.category IS NOT NULL
       AND U.category != ''
       AND SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) != ''
-);
+;
 
 ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `category`;
 ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `category`;

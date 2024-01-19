@@ -624,10 +624,15 @@ class CBvideo extends CBCategory
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
             , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
-            , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email'
+            , 're_conv_status', 'subscription_email'
         ];
 
         $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+            $basic_fields[] = 'is_castable';
+            $basic_fields[] = 'bits_color';
+        }
+
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $basic_fields[] = 'age_restriction';
         }

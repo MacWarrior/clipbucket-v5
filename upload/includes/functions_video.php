@@ -1195,8 +1195,11 @@ function get_fast_qlist($cookie_name = false): array
     $vids = explode(',', $clean_cookies);
     assign('qlist_vids', $vids);
     $vid_dets = [];
+
     foreach ($vids as $vid) {
-        $vid_dets[] = $cbvid->get_video($vid);
+        if( !empty($vid) ){
+            $vid_dets[] = $cbvid->get_video($vid);
+        }
     }
 
     return array_filter($vid_dets);
