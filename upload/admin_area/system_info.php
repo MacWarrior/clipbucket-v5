@@ -159,7 +159,11 @@ $extensionsWEB = [];
 foreach ($extensionMessages as $extension => $version) {
     $res = $modulesWeb[$extension];
     if (!empty($res)) {
-        $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+        if (empty($modulesWeb[$extension][$version]) && $extension == 'gd') {
+            $extensionsWEB[$extension] = $modulesWeb[$extension]['GD Version'];
+        } else {
+            $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+        }
     }
 }
 assign('phpVersionCli', $phpVersion);
