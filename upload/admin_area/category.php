@@ -18,14 +18,14 @@ $breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl
 
 $version = Update::getInstance()->getDBVersion();
 if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) ) {
-    e('Your database is not up-to-date. Please update your database via this link : <a href="admin_tool.php?id_tool=5">'.lang ('update').'</a>', 'e', false);
+    e('Your database is not up-to-date. Please update your database via this link : <a href="admin_tool.php?id_tool=5">'.lang('update').'</a>', 'e', false);
 } else {
-//Making Category as Default
+    //Making Category as Default
     if (isset($_GET['make_default'])) {
         Category::getInstance()->makeDefault('video', $_GET['make_default']);
     }
     if (!empty($_POST)) {
-//@TODO rework check vals
+        //@TODO rework check vals
         if (empty($_POST['category_name'])) {
             e(lang('add_cat_no_name_err'));
         } elseif (!empty(Category::getInstance()->getAll([
@@ -63,18 +63,17 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
         } else {
             $breadcrumb[2] = [
                 'title' => 'Editing : ' . display_clean($cat_details['category_name']),
-                'url'   => DirPath::getUrl('admin_area') . '/category.php?type=' . $type.'&category=' . display_clean($id_category)
+                'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type.'&category=' . display_clean($id_category)
             ];
         }
     }
 
-
-//Delete Category
+    //Delete Category
     if (isset($_GET['delete_category'])) {
         Category::getInstance()->delete($_GET['delete_category']);
     }
 
-//Updating Category Order
+    //Updating Category Order
     if (isset($_POST['update_order'])) {
         foreach ($_POST['category_order'] as $key => $item) {
             Category::getInstance()->update([
@@ -88,14 +87,14 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
         'category_type' => Category::getInstance()->getIdsCategoriesType($type)
     ]);
 
-//Assign Category Values
+    //Assign Category Values
     assign('category', $cats);
     assign('total', $cats = Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType($type),
         'count'
     ]));
 }
-subtitle(lang($type) . ' Category Manager');
+subtitle(lang('manage_categories') . ' - ' . ucfirst(lang($type)));
 Assign('msg', @$msg);
 template_files('category.html');
 display_it();

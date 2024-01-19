@@ -1,4 +1,10 @@
 <FilesMatch "\.(html)$">
-order allow,deny
-satisfy all
+    <IfModule !mod_authz_core.c>
+        order allow,deny
+        satisfy all
+    </IfModule>
+
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
 </FilesMatch>

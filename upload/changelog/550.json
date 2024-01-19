@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"337",
+  "revision":"344",
   "status":"dev",
   "detail":[
     {
@@ -101,6 +101,10 @@
         ,"Add option to disable sitemap"
         ,"Fix configuration warning link"
         ,"Add PHP, FFMpeg & FFprobe version check"
+        ,"Move mass email to tool box"
+        ,"Hide user disabled fields"
+        ,"Implement SSE on admin tools"
+        ,"Fix categories thumbs"
       ]
     },
     {
@@ -265,6 +269,8 @@
         ,"Fix disabled sections privacy"
         ,"Implement channels comments"
         ,"Fix sitemap & phpinfo privacy"
+        ,"Add loading spinner during photo upload and thumbs generation"
+        ,"Fix date of birth error on signup"
       ]
     }
   ,{

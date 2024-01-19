@@ -41,11 +41,11 @@ class DirPath
             case 'temp':
             case 'thumbs':
             case 'videos':
+            case 'category_thumbs':
                 $path = $root_directory . 'files' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'files/' . $dir_name;
                 break;
 
-            case 'category_thumbs':
             case 'collection_thumbs':
             case 'icons':
             case 'playlist_covers':

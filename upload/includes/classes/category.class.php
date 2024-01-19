@@ -448,21 +448,23 @@ class Category
             return false;
         }
         //Checking for category thumbs directory
-        $dir = $this->typeNamesByIds[$category['id_type_category']] . 's';
+        $dir = $this->typeNamesByIds[$category['id_category_type']];
 
         //Checking File Extension
         $ext = getext($file['name']);
 
-        if ($ext != 'jpg' && $ext != 'png' && $ext != 'gif') {
-            e(lang('cat_img_error'));
+        $types = strtolower(config('allowed_photo_types'));
+        $supported_extensions = explode(',', $types);
+        if (!in_array($ext, $supported_extensions)) {
+             e(sprintf(lang('error_allow_photo_types'), implode(', ', $supported_extensions)));
             return false;
         }
-        $dir_path = CAT_THUMB_DIR . DIRECTORY_SEPARATOR . $dir;
+
+        $dir_path = DirPath::get('category_thumbs') . $dir . DIRECTORY_SEPARATOR;
         if (!is_dir($dir_path)) {
             @mkdir($dir_path, 0777);
         }
-
-        if (is_dir($dir_path)) {
+        if (!is_dir($dir_path)) {
             e(lang('cat_dir_make_err'));
             return false;
         }
@@ -548,80 +550,6 @@ abstract class CBCategory
             return $results[0];
         }
         return false;
-    }
-
-    /**
-     * Function used to get category by name
-     *
-     * @param $name
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function get_cat_by_name($name)
-    {
-        global $db;
-        $results = $db->select(tbl($this->cat_tbl), '*', ' category_name=\'' . mysql_clean($name) . '\' ');
-        if (count($results) > 0) {
-            return $results[0];
-        }
-        return false;
-    }
-
-    /**
-     * Function used to add new category
-     *
-     * @param $array
-     * @throws Exception
-     */
-    function add_category($array)
-    {
-        global $db;
-        $name = $array['name'];
-        $desc = $array['desc'];
-        $default = mysql_clean($array['default']);
-
-        $flds = ['category_name', 'category_desc', 'date_added', 'category_thumb'];
-        $values = [$name, $desc, now(), ''];
-
-        if (!empty($this->use_sub_cats)) {
-            $parent_id = mysql_clean($array['parent_cat']);
-            $flds[] = 'parent_id';
-            $values[] = $parent_id;
-        }
-
-        if ($this->get_cat_by_name($name)) {
-            e(lang('add_cat_erro'));
-        } else {
-            if (empty($name)) {
-                e(lang('add_cat_no_name_err'));
-            } else {
-                $cid = $db->insert(tbl($this->cat_tbl), $flds, $values);
-
-                if ($default == 'yes' || !$this->get_default_category()) {
-                    $this->make_default_category($cid);
-                }
-
-                if (!error()) {
-                    e(lang('cat_add_msg'), 'm');
-                }
-
-                //Uploading thumb
-                if (!empty($_FILES['cat_thumb']['tmp_name'])) {
-                    $this->add_category_thumb($cid, $_FILES['cat_thumb']);
-                }
-            }
-        }
-    }
-
-    /**
-     * Function used to get list of categories
-     * @throws Exception
-     */
-    function get_categories(): array
-    {
-        global $db;
-        return $db->select(tbl($this->cat_tbl), '*', null, null, ' category_order ASC');
     }
 
     /**
@@ -755,165 +683,6 @@ abstract class CBCategory
         return $html;
     }
 
-    function displayOutput($CatArray, $params)
-    {
-        if (is_array($CatArray)) {
-            return $this->displayDropdownCategory($CatArray, $params);
-        }
-        return false;
-    }
-
-    /**
-     * @throws \PHPMailer\PHPMailer\Exception
-     */
-    function cbCategories($params = null)
-    {
-        $p = $params;
-        $p['type'] = $p['type'] ?: 'video';
-        $p['echo'] = $p['echo'] ?: false;
-        $p['with_all'] = $p['with_all'] ?: false;
-
-        $categories = $this->getCbCategories($p);
-
-        if ($categories) {
-            if ($p['echo'] == true) {
-                $html = $this->displayOutput($categories, $p);
-                if ($p['assign']) {
-                    assign($p['assign'], $html);
-                } else {
-                    echo $html;
-                }
-            } else {
-                if ($p['assign']) {
-                    assign($p['assign'], $categories);
-                } else {
-                    return $categories;
-                }
-            }
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * Function used to count total number of categories
-     * @throws Exception
-     */
-    function total_categories()
-    {
-        global $db;
-        return $db->count(tbl($this->cat_tbl), '*');
-    }
-
-    /**
-     * Function used to get default category
-     * @throws Exception
-     */
-    function get_default_category()
-    {
-        global $db;
-        $results = $db->select(tbl($this->cat_tbl), '*', ' isdefault=\'yes\' ');
-        if (count($results) > 0) {
-            return $results[0];
-        }
-        return false;
-    }
-
-    /**
-     * Function used to edit category
-     * submit values and it will update category
-     *
-     * @param $array
-     * @throws Exception
-     */
-    function update_category($array)
-    {
-        global $db;
-        $name = $array['name'];
-        $desc = $array['desc'];
-        $default = $array['default_categ'];
-        $pcat = $array['parent_cat'];
-
-        $flds = ['category_name', 'category_desc', 'isdefault'];
-        if ($this->cat_tbl != 'user_categories') {
-            $flds[] = 'parent_id';
-        }
-
-        $values = [$name, $desc, $default, $pcat];
-        $cur_name = $array['cur_name'];
-        $cid = mysql_clean($array['cid']);
-
-        if ($this->get_cat_by_name($name) && $cur_name != $name) {
-            e(lang('add_cat_erro'));
-        } elseif (empty($name)) {
-            e(lang('add_cat_no_name_err'));
-        } elseif ($pcat == $cid) {
-            e(lang('You can not make category parent of itself'));
-        } else {
-            $db->update(tbl($this->cat_tbl), $flds, $values, ' category_id=\'' . $cid . '\'');
-            if ($default == lang('yes')) {
-                $this->make_default_category($cid);
-            }
-            e(lang('cat_update_msg'), 'm');
-
-            //Uploading thumb
-            if (!empty($_FILES['cat_thumb']['tmp_name'])) {
-                $this->add_category_thumb($cid, $_FILES['cat_thumb']);
-            }
-        }
-    }
-
-
-    /**
-     * Function used to add category thumbnail
-     *
-     * @param $cid
-     * @param $file
-     *
-     * @throws Exception
-     * @internal param and $Cid Array
-     */
-    function add_category_thumb($cid, $file)
-    {
-        global $imgObj;
-        if ($this->category_exists($cid)) {
-            //Checking for category thumbs directory
-            $dir = $this->thumb_dir ?? $this->section_tbl;
-
-            //Checking File Extension
-            $ext = getext($file['name']);
-
-            if ($ext == 'jpg' || $ext == 'png' || $ext == 'gif') {
-                $dir_path = DirPath::get('category_thumbs') . $dir;
-                if (!is_dir($dir_path)) {
-                    @mkdir($dir_path, 0777);
-                }
-
-                if (is_dir($dir_path)) {
-                    $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
-
-                    //Removing File if already exists
-                    if (file_exists($path)) {
-                        unlink($path);
-                    }
-                    move_uploaded_file($file['tmp_name'], $path);
-
-                    //Now checking if file is really an image
-                    if (!@$imgObj->ValidateImage($path, $ext)) {
-                        e(lang('pic_upload_vali_err'));
-                        unlink($path);
-                    } else {
-                        $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height, true);
-                    }
-                } else {
-                    e(lang('cat_dir_make_err'));
-                }
-            } else {
-                e(lang('cat_img_error'));
-            }
-        }
-    }
-
     /**
      * Function used to get category thumb
      *
@@ -937,7 +706,7 @@ abstract class CBCategory
         }
 
         if ($file_exists) {
-            return DirPath::get('category_thumbs') . $dir . '/' . $cid . '.' . $ext;
+            return DirPath::getUrl('category_thumbs') . $dir . '/' . $cid . '.' . $ext;
         }
         return $this->default_thumb();
     }
@@ -955,32 +724,8 @@ abstract class CBCategory
         if (empty($this->default_thumb)) {
             $this->default_thumb = 'no_thumb.jpg';
         }
-        return DirPath::get('category_thumbs') . $this->default_thumb;
+        return DirPath::getUrl('images') . $this->default_thumb;
     }
-
-    /**
-     * Function used to update category id
-     *
-     * @param $id
-     * @param $order
-     * @throws Exception
-     */
-    function update_cat_order($id, $order)
-    {
-        $id = mysql_clean($id);
-
-        global $db;
-        $cat = $this->category_exists($id);
-        if (!$cat) {
-            e(lang('cat_exist_error'));
-        } else {
-            if (!is_numeric($order) || $order < 1) {
-                $order = 1;
-            }
-            $db->update(tbl($this->cat_tbl), ['category_order'], [$order], ' category_id=\'' . mysql_clean($id) . '\'');
-        }
-    }
-
 
     /**
      * Function used to check category is parent or not
@@ -990,131 +735,13 @@ abstract class CBCategory
      * @return bool
      * @throws Exception
      */
-    function is_parent($cid)
+    function is_parent($cid): bool
     {
         global $db;
         $result = $db->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . mysql_clean($cid));
 
         if ($result > 0) {
             return true;
-        }
-        return false;
-    }
-
-
-    /**
-     * Function used to get parent categories
-     *
-     * @param bool $count
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_parents($count = false)
-    {
-        global $db;
-
-        if ($count) {
-            return $db->count(tbl($this->cat_tbl), '*', ' parent_id = 0');
-        }
-        return $db->select(tbl($this->cat_tbl), '*', ' parent_id = 0');
-    }
-
-    /**
-     * Function used to list categories in admin area
-     * with indention
-     *
-     * @param $selected
-     *
-     * @return string
-     * @throws Exception
-     */
-    function admin_area_cats($selected): string
-    {
-        $html = '';
-        $pcats = $this->get_parents();
-
-        if (!empty($pcats)) {
-            foreach ($pcats as $pcat) {
-                if ($selected == $pcat['category_id']) {
-                    $select = 'selected=\'selected\'';
-                } else {
-                    $select = null;
-                }
-
-                $html .= '<option value=\'' . $pcat['category_id'] . '\' ' . $select . '>';
-                $html .= $pcat['category_name'];
-                $html .= '</option>';
-                if ($this->is_parent($pcat['category_id'])) {
-                    $html .= $this->get_sub_subs($pcat['category_id'], $selected);
-                }
-            }
-        }
-        return $html;
-    }
-
-    /**
-     * Function used to get child categories
-     *
-     * @param $cid
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_sub_categories($cid)
-    {
-        global $db;
-        $result = $db->select(tbl($this->cat_tbl), '*', ' parent_id = ' . (int)mysql_clean($cid));
-
-        if ($result > 0) {
-            return $result;
-        }
-        return false;
-    }
-
-    /**
-     * Function used to get child child categories
-     *
-     * @param        $cid
-     * @param        $selected
-     * @param string $space
-     *
-     * @return string
-     * @throws Exception
-     */
-    function get_sub_subs($cid, $selected, $space = '&nbsp; - '): string
-    {
-        $html = '';
-        $subs = $this->get_sub_categories($cid);
-        if (!empty($subs)) {
-            foreach ($subs as $sub) {
-                if ($selected == $sub['category_id']) {
-                    $select = 'selected=\'selected\'';
-                } else {
-                    $select = null;
-                }
-
-                $html .= '<option value=\'' . $sub['category_id'] . '\' ' . $select . '>';
-                $html .= $space . $sub['category_name'];
-                $html .= '</option>';
-                if ($this->is_parent($sub['category_id'])) {
-                    $html .= $this->get_sub_subs($sub['category_id'], $selected, $space . ' - ');
-                }
-            }
-        }
-        return $html;
-    }
-
-    /**
-     * @throws Exception
-     */
-    function get_category_field($cid, $field)
-    {
-        global $db;
-        $result = $db->select(tbl($this->cat_tbl), $field, 'category_id =' . mysql_clean($cid));
-
-        if ($result) {
-            return $result[0][$field];
         }
         return false;
     }

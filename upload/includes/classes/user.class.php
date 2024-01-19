@@ -3259,7 +3259,7 @@ class userquery extends CBCategory
                 'db_field'          => 'dob',
                 'required'          => 'yes',
                 'placehoder'        => lang('user_date_of_birth'),
-                'invalid_err'       => sprintf(lang('register_min_age_request'), config('min_age_reg'))
+                'invalid_err'       => ((!empty(config('min_age_reg')) && (int)config('min_age_reg') != 0) ? sprintf(lang('register_min_age_request'), config('min_age_reg')) : lang('dob_required'))
             ]
         ];
 

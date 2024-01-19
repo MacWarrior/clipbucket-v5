@@ -1,26 +1,23 @@
 <?php
-/*
- ****************************************************************
- | Copyright (c) 2007-2010 Clip-Bucket.com. All rights reserved.
- | @ Author : ArslanHassan
- | @ Software : ClipBucket , © PHPBucket.com
- ****************************************************************
-*/
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('member_moderation');
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('member_moderation');
+pages::getInstance()->page_redir();
+
+if (config('disable_email') == 'yes') {
+    redirect_to(BASEURL . DirPath::getUrl('admin_area'));
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Mass Email', 'url' => DirPath::getUrl('admin_area') . 'mass_email.php'];
 
 if (!empty($_GET['email'])) {
     Assign('email', $_GET['email']);
 }
 
+$cbemail = CBEmail::getInstance();
 //Creating an mass email
 if (isset($_POST['create_email'])) {
     if ($cbemail->add_mass_email()) {
@@ -33,7 +30,6 @@ if (isset($_GET['delete'])) {
     $del = mysql_clean($_GET['delete']);
     $cbemail->action($del, 'delete');
 }
-
 
 if (config('disable_email') == 'no') { //Sending Email
     if (isset($_GET['send_email'])) {
@@ -72,7 +68,12 @@ $cat_array = [
 ];
 assign('cat_array', $cat_array);
 
+$cats = Category::getInstance()->getAll([
+    'category_type' => Category::getInstance()->getIdsCategoriesType('profile')
+]);
+assign('cats', $cats);
+
 //Displaying template...
-subtitle("Mass Email");
-template_files("mass_email.html");
+subtitle('Mass Email');
+template_files('mass_email.html');
 display_it();

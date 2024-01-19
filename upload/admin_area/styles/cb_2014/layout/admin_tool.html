@@ -17,13 +17,13 @@
                 <span id="span-{$admin_tool_list[tool_list].id_tool}">
                     {lang code = ($admin_tool_list[tool_list].language_key_title)}
                 </span>
-                <div id="progress-{$admin_tool_list[tool_list].id_tool}" style=" text-align: center; vertical-align: middle; {if $admin_tool_list[tool_list].language_key_title == 'ready'} display: none; {/if} ">
+                <div id="progress-{$admin_tool_list[tool_list].id_tool}" style="text-align: center; vertical-align: middle; {if $admin_tool_list[tool_list].language_key_title == 'ready'} display: none; {/if} ">
                     <br/>
-                    <p>{$admin_tool_list[tool_list].pourcentage_progress|string_format:"%.2f"}%
-                        <span {if !$admin_tool_list[tool_list].elements_total} style="display: none;" {/if}>({$admin_tool_list[tool_list].elements_done} / {$admin_tool_list[tool_list].elements_total}) </span>
-                    </p>
+                    <div style="padding: 6px;" ><span id="pourcent-{$admin_tool_list[tool_list].id_tool}">{$admin_tool_list[tool_list].pourcentage_progress|string_format:"%.2f"}</span>%
+                        (<span id="done-{$admin_tool_list[tool_list].id_tool}">{$admin_tool_list[tool_list].elements_done}</span> / <span id="total-{$admin_tool_list[tool_list].id_tool}">{$admin_tool_list[tool_list].elements_total}</span>)
+                    </div>
                     <div  class="progress ">
-                        <div class="progress-bar" role="progressbar" id="progress-bar-{$admin_tool_list[tool_list].id_tool}"  aria-valuenow="{$admin_tool_list[tool_list].pourcentage_progress}"
+                        <div class="progress-bar" role="progressbar" id="progress-bar-{$admin_tool_list[tool_list].id_tool}" data-id="{$admin_tool_list[tool_list].id_tool}" aria-valuenow="{$admin_tool_list[tool_list].pourcentage_progress}"
                              aria-valuemin="0" aria-valuemax="100" style="width:{$admin_tool_list[tool_list].pourcentage_progress}%">
                         </div>
                     </div>
@@ -34,12 +34,12 @@
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                         Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                        <li role="presentation"  {if $admin_tool_list[tool_list].language_key_title != 'ready'} class="disabled" {/if}>
+                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title!='ready'}class="disabled"{/if}>
                             <a role="menuitem" class="launch" data-id="{$admin_tool_list[tool_list].id_tool}" >
                                 {lang code='launch'}
                             </a>
                         </li>
-                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title != 'in_progress'} class="disabled" {/if}>
+                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title!='in_progress'}class="disabled"{/if}>
                             <a role="menuitem" class="stop" data-id="{$admin_tool_list[tool_list].id_tool}" >
                                 {lang code='stop'}
                             </a>
@@ -51,3 +51,8 @@
         {/section}
     </table>
 </div>
+<script>
+    var lang = [];
+    lang['ready'] = "{lang code='ready'}";
+    lang['completed'] = "{lang code='completed'}";
+</script>
