@@ -16,6 +16,7 @@ if (php_sapi_name() == 'cli') {
         if (!empty($argv[1]) || !empty($argv[2])) {
             echo 'Upgrade system is already installed, parameters so are ignored' . PHP_EOL;
         }
+
     } catch (\Exception $e) {
         if ($e->getMessage() == 'version_not_installed') {
             if (empty($argv[1]) && empty($argv[2])) {
@@ -63,6 +64,27 @@ if (php_sapi_name() == 'cli') {
     $version = $_REQUEST['version'];
 }
 
+$regex_version = '(\d+\.\d+\.\d+)';
+$mysqlReq='5.6.0';
+assign('mysqlReq', $mysqlReq);
+$cmd = 'mysql --version';
+exec($cmd, $mysql_client_output);
+$match_mysql = [];
+preg_match($regex_version, $mysql_client_output[0], $match_mysql);
+$clientMySqlVersion = $match_mysql[0] ?? false;
+if(version_compare($clientMySqlVersion, $mysqlReq) < 0) {
+    error_lang_cli(sprintf('Current version of MySQL Client is %s, minimal version %s is required. Please update'. PHP_EOL, $clientMySqlVersion, $mysqlReq));
+    return false;
+}
+
+$serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+$serverMySqlVersion = $match_mysql[0] ?? false;
+if(version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+    error_lang_cli(sprintf('Current version of MySQL Server is %s, minimal version %s is required. Please update'. PHP_EOL, $serverMySqlVersion, $mysqlReq));
+    return false;
+}
+
 if ($need_to_create_version_table) {
     $revisions = getRevisions();
     if (!array_key_exists($version, $revisions) || ($revisions[$version]) < $revision) {
@@ -76,7 +98,6 @@ if ($need_to_create_version_table) {
         return false;
     }
 }
-
 $eh->flush_error();
 $templine = '';
 try {
