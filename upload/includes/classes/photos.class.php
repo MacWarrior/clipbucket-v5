@@ -138,7 +138,7 @@ class Photo
         }
 
         if (!has_access('admin_access', true)) {
-            $conditions[] = $this->getGenericConstraints($param_first_only || $param_show_unlisted);
+            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -242,11 +242,13 @@ class Photo
     /**
      * @throws Exception
      */
-    public function getGenericConstraints(bool $show_unlisted = false): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
         }
+
+        $show_unlisted = $params['show_unlisted'] ?? false;
 
         $cond = '((photos.active = \'yes\'';
 
