@@ -21,6 +21,13 @@ if (video_playable($vdo)) {
         if ($plist) {
             $assign_arry['playlist'] = $plist;
         }
+
+        $playlist = Playlist::getInstance()->getAll([
+            'first_only'  => true,
+            'playlist_id' => $pid
+        ]);
+
+        $assign_arry['playlist'] = $playlist;
     }
     //Calling Functions When Video Is going to play
     call_watch_video_function($vdo);
@@ -43,12 +50,7 @@ if (video_playable($vdo)) {
         $relMode = 'ono';
         $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
     }
-    $playlist = Playlist::getInstance()->getAll([
-        'first_only'  => true,
-        'playlist_id' => $pid
-    ]);
 
-    $assign_arry['playlist'] = $playlist;
     //Getting Playlist Item
     $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC');
     $assign_arry['items'] = $items;

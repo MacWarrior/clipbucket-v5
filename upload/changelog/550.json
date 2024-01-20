@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"350",
+  "revision":"351",
   "status":"dev",
   "detail":[
     {
@@ -224,7 +224,7 @@
         ,"Fix PM <i>#237</i>"
         ,"Fix SQL injection <i>Thanks @svmorris !</i>"
         ,"Fix JS error"
-        ,"Fix collection list & collection pagination"
+        ,"Fix video, photo, collection list & collection pagination"
         ,"Fix channel load more videos"
         ,"Fix photos filter <i>#243</i>"
         ,"Fix video detail saving during conversion <i>#243</i>"

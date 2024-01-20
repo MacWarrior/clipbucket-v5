@@ -157,7 +157,7 @@ class Photo
         }
 
         if( $param_count ){
-            $select = ['COUNT(photos.photo_id) AS count'];
+            $select = ['COUNT(DISTINCT photos.photo_id) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username';

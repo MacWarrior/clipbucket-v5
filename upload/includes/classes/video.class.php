@@ -279,7 +279,7 @@ class Video
         }
 
         if( $param_count ){
-            $select = ['COUNT(video.videoid) AS count'];
+            $select = ['COUNT(DISTINCT video.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
             $select[] = 'users.username AS user_username';

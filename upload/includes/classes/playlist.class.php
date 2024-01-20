@@ -134,7 +134,7 @@ class Playlist
         }
 
         if( $param_count ){
-            $select = ['COUNT(playlist.playlist_id) AS count'];
+            $select = ['COUNT(DISTINCT playlist.playlist_id) AS count'];
         } else {
             $select = $this->getSQLFields();
             $select[] = 'users.username AS user_username';
