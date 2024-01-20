@@ -18,7 +18,6 @@ class Playlist
             'userid',
             'playlist_type',
             'description',
-            'tags',
             'privacy',
             'allow_comments',
             'allow_rating',
