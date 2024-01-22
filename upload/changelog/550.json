@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"351",
+  "revision":"352",
   "status":"dev",
   "detail":[
     {
@@ -280,7 +280,7 @@
       "description":[
         "Update Editor's Pick to 2.0.5"
         ,"Update Global Announcement to 2.0.2"
-        ,"Update CB Server Thumb to 2.0.0"
+        ,"Update CB Server Thumb to 2.0.2"
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
