@@ -1064,4 +1064,7 @@ VALUES ('admin_setting'),
        ('error_allow_photo_types'),
        ('mysql_client'),
        ('mysql_server'),
-       ('option_git_path');
+       ('option_git_path'),
+       ('core_upgrade_avaible'),
+       ('update_core_label'),
+       ('update_core_description');

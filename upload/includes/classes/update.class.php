@@ -391,11 +391,13 @@ class Update
         if ($nb_db_update > 0) {
             assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
         }
-        Template('msg_update_db.html');
 
-        if( !$this->isCoreUpToDate() && $this->isManagedWithGit() ){
-            echo 'ouiiii';
+        assign('need_core_update', false);
+        if( config('enable_update_checker') == '1' && !$this->isCoreUpToDate() && $this->isManagedWithGit() ){
+            assign('need_core_update', true);
         }
+
+        Template('msg_update_db.html');
     }
 
     /**

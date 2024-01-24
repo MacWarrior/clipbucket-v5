@@ -1,5 +1,5 @@
 {if !$need_db_update && !$is_plugin_db}
-<div class="alert alert-success alert-dismissable">
+<div class="alert alert-success alert-dismissable" {if $need_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
     <ul class="list-unstyled">
         <li>
             <img alt='msg' src="{$imageurl}/ok.png"/>
@@ -8,11 +8,22 @@
     </ul>
 </div>
 {else if $need_db_update}
-<div class="alert alert-warning alert-dismissable">
+<div class="alert alert-warning alert-dismissable" {if $need_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
     <ul class="list-unstyled">
         <li>
             <img alt='warning' src="{$imageurl}/error.png"/>
             {$nb_db_update}<a href="admin_tool.php?id_tool=5">{lang code='update'}</a>
+        </li>
+    </ul>
+</div>
+{/if}
+
+{if !$is_plugin_db && $need_core_update}
+<div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
+    <ul class="list-unstyled">
+        <li>
+            <img alt='warning' src="{$imageurl}/error.png"/>
+            {lang code='core_upgrade_avaible'}<a href="admin_tool.php?id_tool=XXX">{lang code='update'}</a>
         </li>
     </ul>
 </div>
