@@ -130,7 +130,7 @@ INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_coll
          ,C.collection_id
     FROM
         `{tbl_prefix}collections` C
-            JOIN NumberSequence seq ON seq.n < LENGTH(C.category)-LENGTH(REPLACE(C.category, '#', ''))+1
+        JOIN NumberSequence seq ON seq.n < LENGTH(C.category)-LENGTH(REPLACE(C.category, '#', ''))+1
     WHERE
         C.category IS NOT NULL
         AND C.category != ''
