@@ -1,4 +1,4 @@
-DROP TABLE `{tbl_prefix}phrases`;
+DROP TABLE IF EXISTS `{tbl_prefix}phrases`;
 
 ALTER DATABASE `{dbname}` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
