@@ -132,7 +132,7 @@ SET @type_photo = (
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'photo'
 );
-SET @tags_photo = (SELECT GROUP_CONCAT(`tags`) FROM `{tbl_prefix}photos` WHERE `tags` IS NOT NULL AND TRIM(`tags`) != '');
+SET @tags_photo = (SELECT GROUP_CONCAT(`photo_tags`) FROM `{tbl_prefix}photos` WHERE `photo_tags` IS NOT NULL AND TRIM(`photo_tags`) != '');
 INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 0 AS n
@@ -159,9 +159,9 @@ INSERT IGNORE INTO `{tbl_prefix}photo_tags` (`id_tag`, `id_photo`)
         ,photo.photo_id
     FROM `{tbl_prefix}photos` photo
          CROSS JOIN NumberSequence seq
-         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(photo.tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_photo
+         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(photo.photo_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_photo
     WHERE
-        photo.tags IS NOT NULL AND TRIM(photo.tags) != ''
+        photo.photo_tags IS NOT NULL AND TRIM(photo.photo_tags) != ''
 ;
 
 SET @type_collection = (
@@ -169,7 +169,7 @@ SET @type_collection = (
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'collection'
 );
-SET @tags_collection = (SELECT GROUP_CONCAT(`tags`) FROM `{tbl_prefix}collections` WHERE `tags` IS NOT NULL AND TRIM(`tags`) != '');
+SET @tags_collection = (SELECT GROUP_CONCAT(`collection_tags`) FROM `{tbl_prefix}collections` WHERE `collection_tags` IS NOT NULL AND TRIM(`collection_tags`) != '');
 INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 0 AS n
@@ -196,9 +196,9 @@ INSERT IGNORE INTO `{tbl_prefix}collection_tags` (`id_tag`, `id_collection`)
         ,collection.collection_id
     FROM `{tbl_prefix}collections` collection
          CROSS JOIN NumberSequence seq
-         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(collection.tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_collection
+         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(collection.collection_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_collection
     WHERE
-    collection.tags IS NOT NULL AND TRIM(collection.tags) != ''
+    collection.collection_tags IS NOT NULL AND TRIM(collection.collection_tags) != ''
 ;
 
 SET @type_profile = (
@@ -206,7 +206,7 @@ SET @type_profile = (
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'profile'
 );
-SET @tags_profile = (SELECT GROUP_CONCAT(`tags`) FROM `{tbl_prefix}user_profile` WHERE `tags` IS NOT NULL AND TRIM(`tags`) != '');
+SET @tags_profile = (SELECT GROUP_CONCAT(`profile_tags`) FROM `{tbl_prefix}user_profile` WHERE `profile_tags` IS NOT NULL AND TRIM(`profile_tags`) != '');
 INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name)
     WITH RECURSIVE NumberSequence AS (
         SELECT 0 AS n
@@ -233,9 +233,9 @@ INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`) (
         ,profile.userid
     FROM `{tbl_prefix}user_profile` profile
          CROSS JOIN NumberSequence seq
-         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(profile.tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_profile
+         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(profile.profile_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_profile
     WHERE
-        profile.tags IS NOT NULL AND TRIM(profile.tags) != ''
+        profile.profile_tags IS NOT NULL AND TRIM(profile.profile_tags) != ''
 );
 
 SET @type_playlist = (
