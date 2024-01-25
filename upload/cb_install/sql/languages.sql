@@ -1067,4 +1067,5 @@ VALUES ('admin_setting'),
        ('option_git_path'),
        ('core_upgrade_avaible'),
        ('update_core_label'),
-       ('update_core_description');
+       ('update_core_description'),
+       ('core_up_to_date');

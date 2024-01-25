@@ -393,8 +393,10 @@ class Update
         }
 
         assign('need_core_update', false);
-        if( config('enable_update_checker') == '1' && !$this->isCoreUpToDate() && $this->isManagedWithGit() ){
-            assign('need_core_update', true);
+        assign('show_core_update', false);
+        if( config('enable_update_checker') == '1' && $this->isManagedWithGit()) {
+            assign('need_core_update', !$this->isCoreUpToDate());
+            assign('show_core_update', true);
         }
 
         Template('msg_update_db.html');

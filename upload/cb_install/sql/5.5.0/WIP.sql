@@ -39,3 +39,11 @@ VALUES (@id_language_key, 'Utilise GIT pour annuler tous les changements et mett
 
 INSERT IGNORE INTO `{tbl_prefix}tools` (`id_tool`, `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
     (11, 'update_core_label', 'update_core_description', 'AdminTool::updateCore', 1, NULL, NULL);
+
+SET @language_key = 'core_up_to_date' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Your core is up to date', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Votre coeur est à jour', @language_id_fra);
