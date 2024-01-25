@@ -697,9 +697,18 @@ class Update
         return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
-    private function resetGitRepository()
+    private function resetGitRepository(): bool
     {
-        return shell_exec(get_binaries('git') . ' reset --hard');
+        $output = shell_exec(get_binaries('git') . ' reset --hard');
+        if( !$output ){
+            return false;
+        }
+
+        $filepath = DirPath::get('temp') . 'install.me';
+        if( file_exists($filepath) ){
+            unlink($filepath);
+        }
+        return true;
     }
 
     private function updateGitRepository()
