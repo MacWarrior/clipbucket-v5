@@ -697,4 +697,32 @@ class Update
         return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
+    private function resetGitRepository()
+    {
+        return shell_exec(get_binaries('git') . ' reset --hard');
+    }
+
+    private function updateGitRepository()
+    {
+        return shell_exec(get_binaries('git') . ' pull');
+    }
+
+    public static function updateGitSources(): bool
+    {
+        $update = Update::getInstance();
+        if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
+            return false;
+        }
+
+        if( !$update->resetGitRepository() ){
+            return false;
+        }
+
+        if( !$update->updateGitRepository() ){
+            return false;
+        }
+
+        return true;
+    }
+
 }
