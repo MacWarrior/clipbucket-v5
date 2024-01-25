@@ -697,8 +697,10 @@ class Update
         return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
-    private function resetGitRepository(): bool
+    private function resetGitRepository(string $root_directory): bool
     {
+        chdir($root_directory);
+
         $output = shell_exec(get_binaries('git') . ' reset --hard');
         if( !$output ){
             return false;
@@ -711,8 +713,10 @@ class Update
         return true;
     }
 
-    private function updateGitRepository()
+    private function updateGitRepository(string $root_directory)
     {
+        chdir($root_directory);
+
         return shell_exec(get_binaries('git') . ' pull');
     }
 
@@ -723,11 +727,16 @@ class Update
             return false;
         }
 
-        if( !$update->resetGitRepository() ){
+        $root_directory = $update->getGitRootDirectory();
+        if( !$root_directory ){
             return false;
         }
 
-        if( !$update->updateGitRepository() ){
+        if( !$update->resetGitRepository($root_directory) ){
+            return false;
+        }
+
+        if( !$update->updateGitRepository($root_directory) ){
             return false;
         }
 
