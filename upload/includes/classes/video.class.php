@@ -714,7 +714,7 @@ class CBvideo extends CBCategory
         }
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-            $select_categ = ', GROUP_CONCAT(categories.category_name SEPARATOR \', \') AS category';
+            $select_categ = ', GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category';
             $join_categ .= ' LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
             $join_categ .= ' LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
             $group[] = ' video.videoid ';
