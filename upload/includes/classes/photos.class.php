@@ -334,6 +334,16 @@ class Photo
         return $this->isCurrentUserRestricted($photo_id);
     }
 
+    /**
+     * @param $id
+     * @return null
+     * @throws Exception
+     */
+    public static function generatePhoto($id)
+    {
+        CBPhotos::getInstance()->generate_photos($id);
+    }
+
 }
 
 class CBPhotos

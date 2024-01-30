@@ -437,4 +437,13 @@ class AdminTool
         return self::$temp;
     }
 
+    public static function recreateThumb($id_tool)
+    {
+        $photos = Photo::getInstance()->getAll();
+        if (empty($photos)) {
+            $photos = [];
+        }
+        $photos_ids = array_column($photos, 'photo_id');
+        self::executeTool($id_tool, $photos_ids, 'Photo::generatePhoto');
+    }
 }
