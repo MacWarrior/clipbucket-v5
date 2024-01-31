@@ -1063,4 +1063,6 @@ VALUES ('admin_setting'),
        ('completed'),
        ('error_allow_photo_types'),
        ('mysql_client'),
-       ('mysql_server');
+       ('mysql_server'),
+       ('tool_recalcul_video_file_label'),
+       ('tool_recalcul_video_file_description');
