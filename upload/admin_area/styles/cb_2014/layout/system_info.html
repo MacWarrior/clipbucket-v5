@@ -202,7 +202,7 @@
                     </div>
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli }tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli}tick{else}alert{/if}.png"/>
                             <label>
                                 PHP MYSQLI -
                                 {if !$extensionsCLI.mysqli}
@@ -279,7 +279,7 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $clientMySqlVersion && $clientMySqlVersionOk }tick{else}alert{/if}.png"/>
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $clientMySqlVersion && $clientMySqlVersionOk}tick{else}alert{/if}.png"/>
                     <label>
                         {lang code="mysql_client"} -
                         {if !$clientMySqlVersion || !$clientMySqlVersionOk}
@@ -296,7 +296,7 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $serverMySqlVersion && $serverMySqlVersionOk }tick{else}alert{/if}.png"/>
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $serverMySqlVersion && $serverMySqlVersionOk}tick{else}alert{/if}.png"/>
                     <label>
                         {lang code="mysql_server"} -
                         {if !$serverMySqlVersion || !$serverMySqlVersionOk}
@@ -309,6 +309,19 @@
                             </p>
                         {else}
                             Version <strong>{$serverMySqlVersion}</strong>
+                        {/if}
+                    </label>
+                </div>
+                <div class="row">
+                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $git_version}tick{else}error{/if}.png"/>
+                    <label>
+                        [{lang|strtoupper code='optional'}] Git -
+                        {if !$git_version}
+                        <p class="alert alert-danger">
+                            {lang code = 'not_found'}
+                        </p>
+                        {else}
+                        Version <strong>{$git_version}</strong>
                         {/if}
                     </label>
                 </div>

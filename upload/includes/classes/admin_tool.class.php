@@ -365,6 +365,14 @@ class AdminTool
     }
 
     /**
+     * @throws Exception
+     */
+    private static function updateCore($id_tool)
+    {
+        self::executeTool($id_tool, ['updateGit'], 'Update::updateGitSources');
+    }
+
+    /**
      * @param $id_tool
      * @param $array
      * @param $function
