@@ -89,7 +89,7 @@ function check_module($type): array
                         $php_version = $match[2];
                     }
                 }
-                if (strpos($line, 'GD library Version') !== false) {
+                if (strpos($line, 'GD library Version') !== false || strpos($line, 'GD Version') !== false ) {
                     preg_match($regVersion, $line, $match);
                     if (!empty($match)) {
                         $extensionsCLI['gd'] = $match[2];
@@ -258,6 +258,9 @@ function check_extension ($extension, $type) {
                         if ($match_mysql[1] < $mysqlReq) {
                             $error = sprintf('Current version of %s is %s, minimal version %s is required. Please update', $extension, $res[$key], $mysqlReq);
                         }
+                    }
+                    if (empty($res[$key]) && $extension == 'gd') {
+                        $key='GD Version';
                     }
                     if ($error) {
                         $return['err'] = $error;
