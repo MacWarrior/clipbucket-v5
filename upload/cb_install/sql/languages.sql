@@ -1063,4 +1063,6 @@ VALUES ('admin_setting'),
        ('completed'),
        ('error_allow_photo_types'),
        ('mysql_client'),
-       ('mysql_server');
+       ('mysql_server'),
+       ('clean_session_table_label'),
+       ('clean_session_table_description');
