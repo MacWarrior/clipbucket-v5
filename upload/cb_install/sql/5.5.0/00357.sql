@@ -1,5 +1,5 @@
 INSERT IGNORE INTO `{tbl_prefix}tools` ( `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    ( 'clean_session_table_label', 'clean_session_table_description', 'AdminTool::cleanSessionTable', 1, NULL, NULL);
+    ('clean_session_table_label', 'clean_session_table_description', 'AdminTool::cleanSessionTable', 1, NULL, NULL);
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"356",
+  "revision":"357",
   "status":"dev",
   "detail":[
     {
@@ -107,6 +107,7 @@
         ,"Fix categories thumbs"
         ,"Implement DB version check"
         ,"Implement Core self-update with GIT"
+        ,"Implement cleanup session tool"
       ]
     },
     {
