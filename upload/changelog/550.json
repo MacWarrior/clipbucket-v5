@@ -108,6 +108,7 @@
         ,"Implement DB version check"
         ,"Implement Core self-update with GIT"
         ,"Implement cleanup session tool"
+        ,"Implement video_files update tool"
       ]
     },
     {
