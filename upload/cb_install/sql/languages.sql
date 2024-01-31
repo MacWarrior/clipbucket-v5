@@ -1070,4 +1070,6 @@ VALUES ('admin_setting'),
        ('update_core_description'),
        ('core_up_to_date'),
        ('clean_session_table_label'),
-       ('clean_session_table_description');
+       ('clean_session_table_description'),
+       ('tool_recalcul_video_file_label'),
+       ('tool_recalcul_video_file_description');
