@@ -1150,10 +1150,10 @@ abstract class Smarty_Internal_TemplateCompilerBase
             echo ob_get_clean();
             flush();
         }
-        if (version_compare(phpversion(), '7.4.0', '<')) {
+        if (version_compare(phpversion(), '8.0', '<')) {
             $e = new SmartyCompilerException($error_text);
         } else {
-            $e = new SmartyCompilerException74($error_text);
+            $e = new SmartyCompilerException80($error_text);
         }
 
         $e->line = $line;

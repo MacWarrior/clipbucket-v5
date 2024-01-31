@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"353",
+  "revision":"356",
   "status":"dev",
   "detail":[
     {
@@ -106,6 +106,7 @@
         ,"Implement SSE on admin tools"
         ,"Fix categories thumbs"
         ,"Implement DB version check"
+        ,"Implement Core self-update with GIT"
       ]
     },
     {
@@ -284,7 +285,7 @@
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
-        ,"Implement Oxygenz - Remote Play - 1.0.4"
+        ,"Implement Oxygenz - Remote Play - 1.0.6"
         ,"Implement SQL update system"
         ,"Update anchor mechanism"
         ,"Implement Oxygenz - Plugin example - 1.0.0"

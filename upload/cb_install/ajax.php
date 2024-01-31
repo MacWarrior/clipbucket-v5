@@ -111,13 +111,15 @@ if ($mode == 'adminsettings') {
         $return['step'] = $next;
 
         if ($step == 'configs') {
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which php')) . '" WHERE name = "php_path"';
-            mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffmpeg')) . '" WHERE name = "ffmpegpath"';
             mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffprobe')) . '" WHERE name = "ffprobe_path"';
             mysqli_query($cnnct, $sql);
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which git')) . '" WHERE name = "git_path"';
+            mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which mediainfo')) . '" WHERE name = "media_info"';
+            mysqli_query($cnnct, $sql);
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which php')) . '" WHERE name = "php_path"';
             mysqli_query($cnnct, $sql);
         }
         //update database version from last json
