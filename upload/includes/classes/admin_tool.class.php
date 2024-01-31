@@ -437,4 +437,10 @@ class AdminTool
         return self::$temp;
     }
 
+    public static function recalculVideoFile($id_tool)
+    {
+        $videos = Video::getInstance()->getAll();
+        self::executeTool($id_tool, $videos, 'update_video_files');
+    }
+
 }
