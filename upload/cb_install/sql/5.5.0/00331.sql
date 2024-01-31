@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}categories`
-    ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `categorie_parent` FOREIGN KEY IF NOT EXISTS (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_name`);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}categories`
-    ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}categories_type` (`id_category_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `categorie_type` FOREIGN KEY IF NOT EXISTS (`id_category_type`) REFERENCES `{tbl_prefix}categories_type` (`id_category_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}videos_categories`
 (
@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}videos_categories`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}videos_categories`
-    ADD CONSTRAINT `video_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `video_categories_category` FOREIGN KEY IF NOT EXISTS (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}videos_categories`
-    ADD CONSTRAINT `video_categories_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `video_categories_video` FOREIGN KEY IF NOT EXISTS (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}photos_categories`
 (
@@ -52,9 +52,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}photos_categories`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}photos_categories`
-    ADD CONSTRAINT `photo_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `photo_categories_category` FOREIGN KEY IF NOT EXISTS (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}photos_categories`
-    ADD CONSTRAINT `photo_categories_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `photo_categories_photo` FOREIGN KEY IF NOT EXISTS (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}collections_categories`
 (
@@ -66,9 +66,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collections_categories`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}collections_categories`
-    ADD CONSTRAINT `collection_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `collection_categories_category` FOREIGN KEY IF NOT EXISTS (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}collections_categories`
-    ADD CONSTRAINT `collection_categories_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `collection_categories_collection` FOREIGN KEY IF NOT EXISTS (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_categories`
 (
@@ -80,9 +80,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_categories`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}users_categories`
-    ADD CONSTRAINT `user_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `user_categories_category` FOREIGN KEY IF NOT EXISTS (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}users_categories`
-    ADD CONSTRAINT `user_categories_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `user_categories_profile` FOREIGN KEY IF NOT EXISTS (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlists_categories`
 (
@@ -94,9 +94,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlists_categories`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}playlists_categories`
-    ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY IF NOT EXISTS (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}playlists_categories`
-    ADD CONSTRAINT `playlist_categories_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `playlist_categories_playlist` FOREIGN KEY IF NOT EXISTS (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 INSERT INTO `{tbl_prefix}categories_type` (`name`)
 VALUES ('video'),
@@ -117,7 +117,7 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_collection`) (
+INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_collection`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 1 AS n
         UNION ALL
@@ -130,12 +130,12 @@ INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_coll
          ,C.collection_id
     FROM
         `{tbl_prefix}collections` C
-            JOIN NumberSequence seq ON seq.n < LENGTH(C.category)-LENGTH(REPLACE(C.category, '#', ''))+1
+        JOIN NumberSequence seq ON seq.n < LENGTH(C.category)-LENGTH(REPLACE(C.category, '#', ''))+1
     WHERE
         C.category IS NOT NULL
         AND C.category != ''
         AND SUBSTRING_INDEX(SUBSTRING_INDEX(C.category, '#', seq.n+1), '#', -1) != ''
-);
+;
 
 # Vidéos
 SET @type_category = (
@@ -155,7 +155,7 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
+INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 1 AS n
         UNION ALL
@@ -173,7 +173,7 @@ INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
         V.category IS NOT NULL
       AND V.category != ''
       AND SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, '#', seq.n+1), '#', -1) != ''
-);
+;
 
 INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
     SELECT C.category_id, V.videoid
@@ -200,7 +200,7 @@ INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, catego
     WHERE 1
 );
 
-INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`) (
+INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 1 AS n
         UNION ALL
@@ -218,12 +218,12 @@ INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`) (
         U.category IS NOT NULL
       AND U.category != ''
       AND SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) != ''
-);
+;
 
-ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `category`;
-ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `category`;
-ALTER TABLE `{tbl_prefix}users` DROP COLUMN `category`;
-ALTER TABLE `{tbl_prefix}video` DROP COLUMN `category`;
+ALTER TABLE `{tbl_prefix}collections` DROP COLUMN IF EXISTS `category`;
+ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN IF EXISTS `category`;
+ALTER TABLE `{tbl_prefix}users` DROP COLUMN IF EXISTS `category`;
+ALTER TABLE `{tbl_prefix}video` DROP COLUMN IF EXISTS `category`;
 DROP TABLE `{tbl_prefix}collection_categories`;
 DROP TABLE `{tbl_prefix}user_categories`;
 DROP TABLE `{tbl_prefix}video_categories`;

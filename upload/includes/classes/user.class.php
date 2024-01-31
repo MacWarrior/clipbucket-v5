@@ -148,7 +148,7 @@ class User
         }
 
         if( $param_count ){
-            $select = ['COUNT(users.userid) AS count'];
+            $select = ['COUNT(DISTINCT users.userid) AS count'];
         } else {
             $select = $this->getAllFields();
         }

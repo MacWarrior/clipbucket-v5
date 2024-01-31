@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_audio_tracks` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_audio_tracks`
-    ADD UNIQUE KEY `videoid` (`videoid`,`number`);
+    ADD UNIQUE KEY IF NOT EXISTS `videoid` (`videoid`,`number`);
 
 ALTER TABLE `{tbl_prefix}video_audio_tracks`
-    ADD CONSTRAINT `{tbl_prefix}video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY IF NOT EXISTS (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;

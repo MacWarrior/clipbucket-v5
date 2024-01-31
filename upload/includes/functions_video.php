@@ -217,6 +217,10 @@ function get_count_thumb($videoid)
  */
 function create_thumb($video_db, $multi, $size)
 {
+    if(empty($video_db)){
+        return default_thumb();
+    }
+
     global $db;
     //check files
     $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
@@ -1195,8 +1199,11 @@ function get_fast_qlist($cookie_name = false): array
     $vids = explode(',', $clean_cookies);
     assign('qlist_vids', $vids);
     $vid_dets = [];
+
     foreach ($vids as $vid) {
-        $vid_dets[] = $cbvid->get_video($vid);
+        if( !empty($vid) ){
+            $vid_dets[] = $cbvid->get_video($vid);
+        }
     }
 
     return array_filter($vid_dets);

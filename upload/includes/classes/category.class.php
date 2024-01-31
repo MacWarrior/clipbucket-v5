@@ -113,7 +113,7 @@ class Category
         }
 
         if( $param_count ){
-            $select = ['COUNT(category.category_id) AS count'];
+            $select = ['COUNT(DISTINCT category.category_id) AS count'];
         } else {
             $select = $this->getAllFields();
         }

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"346",
+  "revision":"354",
   "status":"dev",
   "detail":[
     {
@@ -224,7 +224,7 @@
         ,"Fix PM <i>#237</i>"
         ,"Fix SQL injection <i>Thanks @svmorris !</i>"
         ,"Fix JS error"
-        ,"Fix collection list & collection pagination"
+        ,"Fix video, photo, collection list & collection pagination"
         ,"Fix channel load more videos"
         ,"Fix photos filter <i>#243</i>"
         ,"Fix video detail saving during conversion <i>#243</i>"
@@ -272,6 +272,7 @@
         ,"Fix sitemap & phpinfo privacy"
         ,"Add loading spinner during photo upload and thumbs generation"
         ,"Fix date of birth error on signup"
+        ,"Make unlisted videos viewable inside collections and playlists"
       ]
     }
   ,{
@@ -279,11 +280,11 @@
       "description":[
         "Update Editor's Pick to 2.0.5"
         ,"Update Global Announcement to 2.0.2"
-        ,"Update CB Server Thumb to 2.0.0"
+        ,"Update CB Server Thumb to 2.0.2"
         ,"Implement plugin compatibility check"
         ,"Update plugin management interface"
         ,"Refactor custom_video_file_funcs"
-        ,"Implement Oxygenz - Remote Play - 1.0.4"
+        ,"Implement Oxygenz - Remote Play - 1.0.6"
         ,"Implement SQL update system"
         ,"Update anchor mechanism"
         ,"Implement Oxygenz - Plugin example - 1.0.0"

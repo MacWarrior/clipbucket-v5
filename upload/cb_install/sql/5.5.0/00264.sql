@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tags`
-    ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type` (`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `tag_type` FOREIGN KEY IF NOT EXISTS (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type` (`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
 (
@@ -31,9 +31,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_tags`
-    ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `video_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}video_tags`
-    ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `video_tags_video` FOREIGN KEY IF NOT EXISTS (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
 (
@@ -45,9 +45,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}photo_tags`
-    ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}photo_tags`
-    ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+    ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY IF NOT EXISTS (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
 (
@@ -58,8 +58,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY IF NOT EXISTS (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
 (
@@ -70,8 +70,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY IF NOT EXISTS (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
 (
@@ -80,8 +80,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
     PRIMARY KEY (`id_playlist`, `id_tag`)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY IF NOT EXISTS (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY IF NOT EXISTS (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`)
 VALUES ('video'),
@@ -95,75 +95,147 @@ SET @type_video = (
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'video'
 );
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
-    SELECT @type_video, TRIM(jsontable.tags)
-    FROM `{tbl_prefix}video`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.tags) != ''
-);
-INSERT IGNORE INTO `{tbl_prefix}video_tags` (`id_tag`, `id_video`) (
-    SELECT T.id_tag, videoid
-    FROM `{tbl_prefix}video`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_video
-    WHERE TRIM(jsontable.tags) != ''
-);
+SET @tags_video = (SELECT GROUP_CONCAT(`tags`) FROM `{tbl_prefix}video` WHERE `tags` IS NOT NULL AND TRIM(`tags`) != '');
+INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_video) - LENGTH(REPLACE(@tags_video, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        @type_video
+        ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_video, ',', seq.n + 1), ',', -1) AS tags
+    FROM NumberSequence seq
+;
+INSERT IGNORE INTO `{tbl_prefix}video_tags` (`id_tag`, `id_video`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_video) - LENGTH(REPLACE(@tags_video, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        tags.id_tag
+        ,video.videoid
+    FROM `{tbl_prefix}video` video
+        CROSS JOIN NumberSequence seq
+        INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(video.tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_video
+    WHERE
+        video.tags IS NOT NULL AND TRIM(video.tags) != ''
+;
 
 SET @type_photo = (
     SELECT id_tag_type
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'photo'
 );
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
-    SELECT @type_photo, TRIM(jsontable.photo_tags)
-    FROM `{tbl_prefix}photos`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`photo_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`photo_tags` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.photo_tags) != ''
-);
-INSERT IGNORE INTO `{tbl_prefix}photo_tags` (`id_tag`, `id_photo`) (
-    SELECT T.id_tag, photo_id
-    FROM `{tbl_prefix}photos`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`photo_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`photo_tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.photo_tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_photo
-    WHERE TRIM(jsontable.photo_tags) != ''
-);
+SET @tags_photo = (SELECT GROUP_CONCAT(`photo_tags`) FROM `{tbl_prefix}photos` WHERE `photo_tags` IS NOT NULL AND TRIM(`photo_tags`) != '');
+INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_photo) - LENGTH(REPLACE(@tags_photo, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        @type_photo
+        ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_photo, ',', seq.n + 1), ',', -1) AS tags
+    FROM NumberSequence seq
+;
+INSERT IGNORE INTO `{tbl_prefix}photo_tags` (`id_tag`, `id_photo`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_photo) - LENGTH(REPLACE(@tags_photo, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        tags.id_tag
+        ,photo.photo_id
+    FROM `{tbl_prefix}photos` photo
+         CROSS JOIN NumberSequence seq
+         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(photo.photo_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_photo
+    WHERE
+        photo.photo_tags IS NOT NULL AND TRIM(photo.photo_tags) != ''
+;
 
 SET @type_collection = (
     SELECT id_tag_type
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'collection'
 );
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
-    SELECT @type_collection, TRIM(jsontable.collection_tags)
-    FROM `{tbl_prefix}collections`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`collection_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`collection_tags` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.collection_tags) != ''
-);
-INSERT IGNORE INTO `{tbl_prefix}collection_tags` (`id_tag`, `id_collection`) (
-    SELECT T.id_tag, collection_id
-    FROM `{tbl_prefix}collections`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`collection_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`collection_tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.collection_tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_collection
-    WHERE TRIM(jsontable.collection_tags) != ''
-);
+SET @tags_collection = (SELECT GROUP_CONCAT(`collection_tags`) FROM `{tbl_prefix}collections` WHERE `collection_tags` IS NOT NULL AND TRIM(`collection_tags`) != '');
+INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_collection) - LENGTH(REPLACE(@tags_collection, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        @type_collection
+        ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_collection, ',', seq.n + 1), ',', -1) AS tags
+    FROM NumberSequence seq
+;
+INSERT IGNORE INTO `{tbl_prefix}collection_tags` (`id_tag`, `id_collection`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_collection) - LENGTH(REPLACE(@tags_collection, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        tags.id_tag
+        ,collection.collection_id
+    FROM `{tbl_prefix}collections` collection
+         CROSS JOIN NumberSequence seq
+         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(collection.collection_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_collection
+    WHERE
+    collection.collection_tags IS NOT NULL AND TRIM(collection.collection_tags) != ''
+;
 
 SET @type_profile = (
     SELECT id_tag_type
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'profile'
 );
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
-    SELECT @type_profile, TRIM(jsontable.profile_tags)
-    FROM `{tbl_prefix}user_profile`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.profile_tags) != ''
-);
+SET @tags_profile = (SELECT GROUP_CONCAT(`profile_tags`) FROM `{tbl_prefix}user_profile` WHERE `profile_tags` IS NOT NULL AND TRIM(`profile_tags`) != '');
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_profile) - LENGTH(REPLACE(@tags_profile, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        @type_profile
+        ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_profile, ',', seq.n + 1), ',', -1) AS tags
+    FROM NumberSequence seq
+;
 INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`) (
-    SELECT T.id_tag, userid
-    FROM `{tbl_prefix}user_profile`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`profile_tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`profile_tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.profile_tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_profile
-    WHERE TRIM(jsontable.profile_tags) != ''
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_profile) - LENGTH(REPLACE(@tags_profile, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        tags.id_tag
+        ,profile.userid
+    FROM `{tbl_prefix}user_profile` profile
+         CROSS JOIN NumberSequence seq
+         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(profile.profile_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_profile
+    WHERE
+        profile.profile_tags IS NOT NULL AND TRIM(profile.profile_tags) != ''
 );
 
 SET @type_playlist = (
@@ -171,25 +243,43 @@ SET @type_playlist = (
     FROM `{tbl_prefix}tags_type`
     WHERE name LIKE 'playlist'
 );
-INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name) (
-    SELECT @type_playlist, TRIM(jsontable.tags)
-    FROM `{tbl_prefix}playlists`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-    WHERE TRIM(jsontable.tags) != ''
-);
-INSERT IGNORE INTO `{tbl_prefix}playlist_tags` (`id_tag`, `id_playlist`) (
-    SELECT T.id_tag, playlist_id
-    FROM `{tbl_prefix}playlists`
-             CROSS JOIN JSON_TABLE(CONCAT('["', REPLACE(LOWER(`tags`), ',', '","'), '"]'), '$[*]' COLUMNS (`tags` TEXT PATH '$')) jsontable
-             INNER JOIN `{tbl_prefix}tags` AS T ON T.name = TRIM(LOWER(jsontable.tags)) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = @type_playlist
-    WHERE TRIM(jsontable.tags) != ''
-);
+SET @tags_playlist = (SELECT GROUP_CONCAT(`tags`) FROM `{tbl_prefix}playlists` WHERE `tags` IS NOT NULL AND TRIM(`tags`) != '');
+INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_playlist) - LENGTH(REPLACE(@tags_playlist, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        @type_playlist
+        ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_playlist, ',', seq.n + 1), ',', -1) AS tags
+    FROM NumberSequence seq
+;
+INSERT IGNORE INTO `{tbl_prefix}playlist_tags` (`id_tag`, `id_playlist`)
+    WITH RECURSIVE NumberSequence AS (
+        SELECT 0 AS n
+        UNION ALL
+        SELECT n + 1
+        FROM NumberSequence
+        WHERE n <= LENGTH(@tags_playlist) - LENGTH(REPLACE(@tags_playlist, ',', '')) + 1
+    )
+    SELECT DISTINCT
+        tags.id_tag
+        ,playlist.playlist_id
+    FROM `{tbl_prefix}playlists` playlist
+             CROSS JOIN NumberSequence seq
+             INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(playlist.tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_playlist
+    WHERE
+        playlist.tags IS NOT NULL AND TRIM(playlist.tags) != ''
+;
 
-ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;
-ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_tags`;
-ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `collection_tags`;
-ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;
-ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;
+ALTER TABLE `{tbl_prefix}video` DROP COLUMN IF EXISTS `tags`;
+ALTER TABLE `{tbl_prefix}photos` DROP COLUMN IF EXISTS `photo_tags`;
+ALTER TABLE `{tbl_prefix}collections` DROP COLUMN IF EXISTS `collection_tags`;
+ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN IF EXISTS `profile_tags`;
+ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN IF EXISTS `tags`;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
 INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES

@@ -275,11 +275,11 @@ class Video
         }
 
         if( !has_access('admin_access', true) && !$param_exist ){
-            $conditions[] = $this->getGenericConstraints($param_first_only || $param_show_unlisted);
+            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
         if( $param_count ){
-            $select = ['COUNT(video.videoid) AS count'];
+            $select = ['COUNT(DISTINCT video.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
             $select[] = 'users.username AS user_username';
@@ -377,11 +377,13 @@ class Video
      * @return string
      * @throws Exception
      */
-    public function getGenericConstraints(bool $show_unlisted = false): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
         }
+
+        $show_unlisted = $params['show_unlisted'] ?? false;
 
         $cond = '( (video.active = \'yes\' AND video.status = \'Successful\'';
 
@@ -622,10 +624,15 @@ class CBvideo extends CBCategory
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
             , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
-            , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email'
+            , 're_conv_status', 'subscription_email'
         ];
 
         $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+            $basic_fields[] = 'is_castable';
+            $basic_fields[] = 'bits_color';
+        }
+
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $basic_fields[] = 'age_restriction';
         }
@@ -2050,7 +2057,7 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND ' . Video::getInstance()->getGenericConstraints(true);
+            $where = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');

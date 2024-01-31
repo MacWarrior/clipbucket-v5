@@ -99,7 +99,7 @@ if ($need_to_create_version_table) {
         $error=true;
     }
 }
-if ($error=true) {
+if( $error ) {
     if (php_sapi_name() != 'cli') {
         echo json_encode([
             'success' => false

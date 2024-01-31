@@ -29,7 +29,7 @@ assign('videos', $videos);
 
 if( empty($videos) ){
     $count = 0;
-} else if( count($videos) < config('videos_list_per_page') ){
+} else if( count($videos) < config('videos_list_per_page') && $page == 1 ){
     $count = count($videos);
 } else {
     unset($params['limit']);
