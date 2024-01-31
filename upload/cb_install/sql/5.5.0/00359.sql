@@ -8,14 +8,14 @@ SET @language_key = 'tool_recalcul_video_file_label' COLLATE utf8mb4_unicode_520
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Recalcul video_files', @language_id_eng);
+VALUES (@id_language_key, 'Update video files listing', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Recalcul des videos files', @language_id_fra);
+VALUES (@id_language_key, 'Mise à jour de la liste des fichiers vidéos', @language_id_fra);
 
 SET @language_key = 'tool_recalcul_video_file_description' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Analyse existing files aand update field video_files', @language_id_eng);
+VALUES (@id_language_key, 'Update all videos file list', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Analyser les fichier existants et mettre à jour le champ video_files', @language_id_fra);
+VALUES (@id_language_key, 'Met à jour la liste des fichiers vidéos de toutes les vidéos', @language_id_fra);
