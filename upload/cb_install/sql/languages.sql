@@ -1068,4 +1068,6 @@ VALUES ('admin_setting'),
        ('core_upgrade_avaible'),
        ('update_core_label'),
        ('update_core_description'),
-       ('core_up_to_date');
+       ('core_up_to_date'),
+       ('clean_session_table_label'),
+       ('clean_session_table_description');
