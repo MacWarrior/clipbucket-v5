@@ -445,4 +445,15 @@ class AdminTool
         return self::$temp;
     }
 
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public static function cleanSessionTable($id_tool)
+    {
+        $res = Clipbucket_db::getInstance()->select(tbl('sessions'), 'session_id', 'session_date < DATE_SUB(NOW(), INTERVAL 1 MONTH);');
+        self::executeTool($id_tool, array_column($res, 'session_id'), 'Session::deleteById');
+    }
+
 }
