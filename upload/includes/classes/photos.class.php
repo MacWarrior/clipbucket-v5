@@ -601,10 +601,6 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
-                        'title' => 'Recreate Thumbs'
-                        , 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'
-                    ]
-                    , [
                         'title' => lang('manage_categories')
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
