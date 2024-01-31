@@ -391,6 +391,14 @@ class Update
         if ($nb_db_update > 0) {
             assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
         }
+
+        assign('need_core_update', false);
+        assign('show_core_update', false);
+        if( config('enable_update_checker') == '1' && $this->isManagedWithGit()) {
+            assign('need_core_update', !$this->isCoreUpToDate());
+            assign('show_core_update', true);
+        }
+
         Template('msg_update_db.html');
     }
 
@@ -431,6 +439,27 @@ class Update
     /**
      * @throws Exception
      */
+    public function isCoreUpToDate(): bool
+    {
+        if( !ini_get('allow_url_fopen')
+            || !$this->getWebVersion()
+            || !$this->getWebRevision()
+        ){
+            return true;
+        }
+
+        if( $this->getCurrentCoreVersionCode() >= $this->getWebVersion()
+            && $this->getCurrentCoreRevision() >= $this->getWebRevision()
+        ){
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getCoreUpdateStatus(): string
     {
         if( !ini_get('allow_url_fopen')
@@ -440,12 +469,9 @@ class Update
             return 'red';
         }
 
-        if( $this->getCurrentCoreVersionCode() >= $this->getWebVersion()
-            && $this->getCurrentCoreRevision() >= $this->getWebRevision()
-        ){
+        if( $this->isCoreUpToDate() ){
             return 'green';
         }
-
         return 'orange';
     }
 
@@ -610,6 +636,113 @@ class Update
             $versions[$changelog['version']] = $changelog['revision'];
         }
         return $versions;
+    }
+
+    public function isGitInstalled(): bool
+    {
+        $git_path = get_binaries('git');
+        if( empty($git_path) || !file_exists($git_path) ){
+            return false;
+        }
+
+        $output = shell_exec($git_path . ' --version 2>&1');
+        return stripos($output, 'git version') !== false;
+    }
+
+    public function isManagedWithGit(): bool
+    {
+        if( !$this->isGitInstalled() ){
+            return false;
+        }
+
+        $dir = DirPath::get('root');
+        chdir($dir);
+        $output = shell_exec(get_binaries('git') . ' rev-parse --is-inside-work-tree 2>&1');
+
+        if( trim($output) === 'true' ){
+            return true;
+        }
+
+        $test = $this->checkAndfixGitSafeDirectory($output);
+        if( $test ){
+            return true;
+        }
+        return false;
+    }
+
+    private function checkAndfixGitSafeDirectory($output): bool
+    {
+        if( stripos($output, '--add safe.directory') === false ){
+            return true;
+        }
+
+        $git_command = substr($output, stripos($output, 'git config'));
+
+        $pattern = '/safe\.directory (.+)$/';
+        preg_match($pattern, $git_command, $matches);
+
+        if (!isset($matches[1])) {
+            return false;
+        }
+
+        $filePath = trim($matches[1], " \t\n\r\0\x0B'");
+
+        $output = shell_exec(get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
+        if( empty($output) ){
+            return true;
+        }
+        return false;
+    }
+
+    private function getGitRootDirectory(): string
+    {
+        return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
+    }
+
+    private function resetGitRepository(string $root_directory): bool
+    {
+        chdir($root_directory);
+
+        $output = shell_exec(get_binaries('git') . ' reset --hard');
+        if( !$output ){
+            return false;
+        }
+
+        $filepath = DirPath::get('temp') . 'install.me';
+        if( file_exists($filepath) ){
+            unlink($filepath);
+        }
+        return true;
+    }
+
+    private function updateGitRepository(string $root_directory)
+    {
+        chdir($root_directory);
+
+        return shell_exec(get_binaries('git') . ' pull');
+    }
+
+    public static function updateGitSources(): bool
+    {
+        $update = Update::getInstance();
+        if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
+            return false;
+        }
+
+        $root_directory = $update->getGitRootDirectory();
+        if( !$root_directory ){
+            return false;
+        }
+
+        if( !$update->resetGitRepository($root_directory) ){
+            return false;
+        }
+
+        if( !$update->updateGitRepository($root_directory) ){
+            return false;
+        }
+
+        return true;
     }
 
 }

@@ -181,8 +181,8 @@ class Collection
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON collections_categories.id_category = categories.category_id';
 
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
-                $select[] = 'GROUP_CONCAT(categories.category_name SEPARATOR \',\') AS category_names';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \',\') AS category_names';
                 $group[] = 'collections.collection_id';
             }
 
@@ -402,7 +402,7 @@ class Collections extends CBCategory
         $this->init_actions();
 
         $fields = ['collection_id', 'collection_name', 'collection_description',
-            'collection_tags', 'userid', 'type', 'views', 'date_added',
+            'tags', 'userid', 'type', 'views', 'date_added',
             'active', 'rating', 'rated_by', 'voters'];
 
         $cb_columns->object('collections')->register_columns($fields);
@@ -1035,7 +1035,7 @@ class Collections extends CBCategory
 
         $name = $default['collection_name'];
         $description = $default['collection_description'];
-        $tags = $default['collection_tags'];
+        $tags = $default['tags'];
         $type = $default['type'];
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
@@ -1070,7 +1070,7 @@ class Collections extends CBCategory
             'tags' => [
                 'title'             => lang('collection_tags'),
                 'type'              => 'hidden',
-                'name'              => 'collection_tags',
+                'name'              => 'tags',
                 'id'                => 'collection_tags',
                 'value'             => genTags($tags),
                 'required'          => 'no',
@@ -1374,7 +1374,7 @@ class Collections extends CBCategory
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
             Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
-            Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
+            Tags::saveTags($array['tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');
             return $insert_id;
@@ -1732,7 +1732,7 @@ class Collections extends CBCategory
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
 
                 Category::getInstance()->saveLinks('collection', $cid, $array['category']);
-                Tags::saveTags($array['collection_tags'], 'collection', $cid);
+                Tags::saveTags($array['tags'], 'collection', $cid);
 
                 e(lang('collection_updated'), 'm');
 

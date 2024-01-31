@@ -365,6 +365,14 @@ class AdminTool
     }
 
     /**
+     * @throws Exception
+     */
+    private static function updateCore($id_tool)
+    {
+        self::executeTool($id_tool, ['updateGit'], 'Update::updateGitSources');
+    }
+
+    /**
      * @param $id_tool
      * @param $array
      * @param $function
@@ -437,10 +445,26 @@ class AdminTool
         return self::$temp;
     }
 
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
     public static function recalculVideoFile($id_tool)
     {
         $videos = Video::getInstance()->getAll();
         self::executeTool($id_tool, $videos, 'update_video_files');
+    }
+
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public static function cleanSessionTable($id_tool)
+    {
+        $res = Clipbucket_db::getInstance()->select(tbl('sessions'), 'session_id', 'session_date < DATE_SUB(NOW(), INTERVAL 1 MONTH);');
+        self::executeTool($id_tool, array_column($res, 'session_id'), 'Session::deleteById');
     }
 
 }
