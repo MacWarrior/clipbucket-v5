@@ -166,7 +166,7 @@ class Tags
             }
 
             $tags_count = substr_count($tags, ',')+1;
-            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (
+            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) 
                 WITH RECURSIVE NumberSequence AS (
                     SELECT 0 AS n
                     UNION ALL
@@ -178,7 +178,7 @@ class Tags
                     ' . mysql_clean($id_type) . '
                     , SUBSTRING_INDEX(SUBSTRING_INDEX(\'' . mysql_clean($tags) . '\', \',\', seq.n + 1), \',\', -1) AS tags
                 FROM NumberSequence seq
-            )';
+            ';
             if (!$db->execute($sql_insert_tag, 'insert')) {
                 e(lang('technical_error'));
                 return false;

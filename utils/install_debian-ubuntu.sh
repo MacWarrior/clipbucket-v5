@@ -444,8 +444,8 @@ EOF
     "APACHE")
         echo -ne "Configuring Apache Vhost..."
         VHOST_PATH="/etc/apache2/sites-available/001-clipbucket.conf"
-        a2enconf php${PHP_VERSION}-fpm > /dev/null
-        a2enmod rewrite proxy_fcgi > /dev/null
+        a2enconf php${PHP_VERSION}-fpm 2>&1 > /dev/null
+        a2enmod rewrite proxy_fcgi 2>&1 > /dev/null
         cat << 'EOF' > ${VHOST_PATH}
 <VirtualHost *:80>
     ServerName DOMAINNAME

@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"354",
+  "revision":"360",
   "status":"dev",
   "detail":[
     {
@@ -106,6 +106,9 @@
         ,"Implement SSE on admin tools"
         ,"Fix categories thumbs"
         ,"Implement DB version check"
+        ,"Implement Core self-update with GIT"
+        ,"Implement cleanup session tool"
+        ,"Implement video_files update tool"
       ]
     },
     {
@@ -273,6 +276,7 @@
         ,"Add loading spinner during photo upload and thumbs generation"
         ,"Fix date of birth error on signup"
         ,"Make unlisted videos viewable inside collections and playlists"
+        ,"Fix duplicate collection categories"
       ]
     }
   ,{

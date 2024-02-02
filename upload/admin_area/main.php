@@ -229,6 +229,7 @@ if (isset($_POST['update'])) {
         'own_photo_rating',
 
         'php_path',
+        'git_path',
         'picture_url',
         'picture_upload',
         'photosSection',

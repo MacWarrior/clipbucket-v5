@@ -46,7 +46,8 @@ while (true) {
         ];
     }
     $output .= json_encode($returned_tools);
-    $output .= str_pad('', 4096) . "\n\n";
+    $output_beffering = ini_get('output_buffering') ?? 4096;
+    $output .= str_pad('', $output_beffering) . "\n\n";
     echo $output;
     ob_flush();
     flush();
