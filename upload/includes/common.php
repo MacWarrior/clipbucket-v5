@@ -57,8 +57,8 @@ require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 
 check_install('before');
-if (file_exists(DirPath::get('includes') . '/config.php')) {
-    require_once DirPath::get('includes') . '/config.php'; // New config file
+if (file_exists(DirPath::get('includes') . 'config.php')) {
+    require_once DirPath::get('includes') . 'config.php'; // New config file
 } else {
     require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
