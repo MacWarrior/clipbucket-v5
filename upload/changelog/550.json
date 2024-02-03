@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"360",
+  "revision":"361",
   "status":"dev",
   "detail":[
     {
@@ -109,6 +109,7 @@
         ,"Implement Core self-update with GIT"
         ,"Implement cleanup session tool"
         ,"Implement video_files update tool"
+        ,"Implement photo thumbs recreation tool"
       ]
     },
     {
