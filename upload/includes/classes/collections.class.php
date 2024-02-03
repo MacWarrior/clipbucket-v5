@@ -1070,7 +1070,7 @@ class Collections extends CBCategory
             'tags' => [
                 'title'             => lang('collection_tags'),
                 'type'              => 'hidden',
-                'name'              => 'tags',
+                'name'              => 'collection_tags',
                 'id'                => 'collection_tags',
                 'value'             => genTags($tags),
                 'required'          => 'no',
@@ -1374,7 +1374,7 @@ class Collections extends CBCategory
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
             Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
-            Tags::saveTags($array['tags'], 'collection', $insert_id);
+            Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');
             return $insert_id;
