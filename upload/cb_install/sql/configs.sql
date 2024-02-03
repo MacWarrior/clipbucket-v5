@@ -275,7 +275,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL),
     ('update_core_label', 'update_core_description', 'AdminTool::updateCore', 1, NULL, NULL),
     ('clean_session_table_label', 'clean_session_table_description', 'AdminTool::cleanSessionTable', 1, NULL, NULL),
-    ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 1, NULL, NULL);
+    ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 1, NULL, NULL),
+    ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 1, NULL, NULL);
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
 

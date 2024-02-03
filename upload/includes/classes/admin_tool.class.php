@@ -467,4 +467,18 @@ class AdminTool
         self::executeTool($id_tool, array_column($res, 'session_id'), 'Session::deleteById');
     }
 
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public static function recreateThumb($id_tool)
+    {
+        $photos = Photo::getInstance()->getAll();
+        if (empty($photos)) {
+            $photos = [];
+        }
+        $photos_ids = array_column($photos, 'photo_id');
+        self::executeTool($id_tool, $photos_ids, 'Photo::generatePhoto');
+    }
 }

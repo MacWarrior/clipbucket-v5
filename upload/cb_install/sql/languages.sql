@@ -1072,4 +1072,6 @@ VALUES ('admin_setting'),
        ('clean_session_table_label'),
        ('clean_session_table_description'),
        ('tool_recalcul_video_file_label'),
-       ('tool_recalcul_video_file_description');
+       ('tool_recalcul_video_file_description'),
+       ('recreate_thumb_label'),
+       ('recreate_thumb_description');
