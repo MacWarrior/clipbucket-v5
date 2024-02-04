@@ -24,7 +24,7 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 - Chromecast support
 - Subtitles support
 - Recursive collections
-- HLS conversion (WIP)
+- HLS conversion
 - Easy installation scripts
 - New configuration options
 - Integrated DB update system

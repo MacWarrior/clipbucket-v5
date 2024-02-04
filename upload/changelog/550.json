@@ -163,7 +163,7 @@
         ,"Add option to enable subtitles"
         ,"Add support for HLS video files"
         ,"Improve video quality selection <i>#230</i> (Thanks joo4mart !)"
-        ,"Update VideoJS to version 8.6.1"
+        ,"Update VideoJS to version 8.11.1"
         ,"Add HLS player default quality option"
         ,"Update resolution plugin compatibility to VideoJS 8.X"
         ,"Add support for CB 4.X commercial version migration"
@@ -193,8 +193,8 @@
       "title": "Conversion",
       "description": [
         "Add conversion support for 21/9"
-        ,"Refactor FFMPEG conversion (WIP)"
-        ,"Implement HLS conversion (WIP)"
+        ,"Refactor FFMPEG conversion"
+        ,"Implement HLS conversion"
         ,"Refactor video rate <i>#222</i>"
         ,"Fix audio channels selection and bits color detection"
         ,"Fix video storage when using 'Stay MP4 as it is'"
