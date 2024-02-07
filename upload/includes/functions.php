@@ -1319,7 +1319,7 @@ function create_query_limit($page, $result): string
     }
     $from = $page - 1;
     $from = $from * $result;
-    return $from . ',' . $result;
+    return mysql_clean($from) . ',' . mysql_clean($result);
 }
 
 /**

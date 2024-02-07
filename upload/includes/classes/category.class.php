@@ -535,24 +535,6 @@ abstract class CBCategory
     }
 
     /**
-     * Function used to get category name
-     *
-     * @param $cid
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function get_category_name($cid)
-    {
-        global $db;
-        $results = $db->select(tbl($this->cat_tbl), 'category_name', ' category_id=\'' . mysql_clean($cid) . '\' ');
-        if (count($results) > 0) {
-            return $results[0];
-        }
-        return false;
-    }
-
-    /**
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */

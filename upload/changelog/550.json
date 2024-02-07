@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"361",
+  "revision":"362",
   "status":"dev",
   "detail":[
     {
@@ -278,6 +278,8 @@
         ,"Fix date of birth error on signup"
         ,"Make unlisted videos viewable inside collections and playlists"
         ,"Fix duplicate collection categories"
+        ,"Fix user category display"
+        ,"Implement user search by category"
       ]
     }
   ,{

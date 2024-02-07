@@ -232,10 +232,6 @@ define('SUPPORT_EMAIL', $row['support_email']);
 define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
 
-# Listing Of Videos , Channels
-define('VLISTPP', $row['videos_list_per_page']);                //Video List Per page
-define('CLISTPP', $row['channels_list_per_page']);            //Channels List Per page
-
 # Defining Photo Limits
 define('MAINPLIST', $row['photo_main_list']);
 

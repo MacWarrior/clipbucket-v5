@@ -136,11 +136,13 @@ class User
         $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
-            /* Search is done on collection title, collection tags */
-            // TODO : Add search on collection categories
+            /* Search is done on username, profile tags and profile categories */
             $cond = '(MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $cond .= 'OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
 
@@ -163,6 +165,11 @@ class User
             $group[] = 'users.userid';
         }
 
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+        }
+
         if( $param_group ){
             $group[] = $param_group;
         }
@@ -183,7 +190,8 @@ class User
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
-                FROM ' . cb_sql_table('users') . ' '
+                FROM ' . cb_sql_table('users') . '
+                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.user_profile_id '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -226,7 +234,7 @@ class User
         return $diff->y;
     }
 
-    public function isUserConnected()
+    public function isUserConnected(): bool
     {
         return !empty($this->current_user);
     }
@@ -283,7 +291,7 @@ class userquery extends CBCategory
     {
         global $cb_columns;
 
-        $this->cat_tbl = 'user_categories';
+        $this->cat_tbl = 'users_categories';
 
         $basic_fields = [
             'userid', 'username', 'email', 'avatar', 'sex', 'avatar_url',
