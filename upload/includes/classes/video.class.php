@@ -289,7 +289,10 @@ class Video
         $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
+                $types = Tags::getVideoTypes();
+                foreach ($types as $type) {
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                }
                 $group[] = 'video.videoid';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
@@ -707,13 +710,12 @@ class CBvideo extends CBCategory
         $version = Update::getInstance()->getDBVersion();
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-//            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
             $types = Tags::getVideoTypes();
             foreach ($types as $type) {
-                $select_tag .= ', GROUP_CONCAT( CASE WHEN T.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN T.name ELSE \'\' END, \',\') AS tags_' . mysql_clean($type['name']);
+                $select_tag .= ', GROUP_CONCAT( CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
             }
-            $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
+            $join_tag = ' LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video 
+                    LEFT JOIN ' . tbl('tags') .' ON video_tags.id_tag = tags.id_tag';
             $group[] = ' video.videoid ';
         }
 
