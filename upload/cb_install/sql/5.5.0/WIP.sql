@@ -1,4 +1,4 @@
-INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`)
+INSERT IGNORE INTO `{tbl_prefix}config` (`configid`, `name`, `value`)
 VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'enable_tmdb', 'no'),
        (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2');
@@ -54,4 +54,4 @@ VALUES (@id_language_key, 'Import', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Importer', @language_id_fra);
 
-INSERT IGNORE INTO `{tbl_prefixe}tags_type` (name) VALUES ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
+INSERT IGNORE INTO `{tbl_prefix}tags_type` (name) VALUES ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
