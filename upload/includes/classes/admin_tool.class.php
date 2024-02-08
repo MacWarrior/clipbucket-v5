@@ -431,24 +431,22 @@ class AdminTool
         //get list of video
         if (!empty($this->array_loop)) {
             //update nb_elements of tools
-            $this->updateToolHisto([
-                'elements_total',
-                'elements_done'
-            ], [
-                count($this->array_loop),
-                0
-            ]);
+            $this->updateToolHisto(['elements_total', 'elements_done'], [count($this->array_loop), 0]);
             $nb_done = 0;
             $this->addLog('tool started');
             foreach ($this->array_loop as $item) {
                 //check if user request stop
-                $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T INNER JOIN ' . tbl('tools_histo_status') . ' AS TS ON T.id_tools_histo_status = TS.id_tools_histo_status', 'TS.id_tools_histo_status', 'T.id_tool = ' . $secureIdTool . ' AND TS.language_key_title like \'stopping\'');
+                $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T 
+                    INNER JOIN ' . tbl('tools_histo') . ' AS TH ON T.id_tool = TH.id_tool
+                    INNER JOIN ' . tbl('tools_histo_status') . ' AS TS ON TH.id_tools_histo_status = TS.id_tools_histo_status'
+                    , 'TS.id_tools_histo_status', 'T.id_tool = ' . $secureIdTool . ' AND TS.language_key_title like \'stopping\'');
                 if (!empty($has_to_stop)) {
                     break;
                 }
                 //call function
                 try {
                     call_user_func($function, $item);
+                    $this->addLog('iteration : ' . $nb_done);
                     sleep(2);
                 } catch (\Exception $e) {
                     e(lang($e->getMessage()));
@@ -478,13 +476,7 @@ class AdminTool
         if ($this->tool['language_key_title'] != 'in_progress') {
             return false;
         }
-        $this->updateToolHisto([
-            'id_tools_histo_status',
-            'date_end'
-        ], [
-            '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')',
-            'NOW()'
-        ]);
+        $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
     }
 
     /**
@@ -512,9 +504,8 @@ class AdminTool
      */
     public function getLastLogs(int $max_id = 0)
     {
-        $where = ' id_histo = ' . mysql_clean($this->id_histo) . ' AND id_log > ' . mysql_clean($max_id);
-        $logs = Clipbucket_db::getInstance()->select(tbl('tool_histo_log'), 'datetime ,message', $where);
-        $max_id_log = Clipbucket_db::getInstance()->select(tbl('tool_histo_log'), 'MAX(id_log) as max_id_log', $where);
+        $logs = Clipbucket_db::getInstance()->select(tbl('tool_histo_log'), 'datetime ,message', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0') . ' AND id_log > ' . mysql_clean($max_id));
+        $max_id_log = Clipbucket_db::getInstance()->select(tbl('tool_histo_log'), 'MAX(id_log) as max_id_log', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0'));
         return [
             'logs' => $logs,
             'max_id_log' => $max_id_log[0]['max_id_log'] ?? 0

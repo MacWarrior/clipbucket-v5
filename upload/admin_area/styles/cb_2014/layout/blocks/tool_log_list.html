@@ -1,3 +1,4 @@
+{if $tool_log_list|@count > 0}
 <table class="table table-bordered table-striped " id="tool_logs">
     <tr>
         <th class="col-md-1">{lang code='date'}</th>
@@ -10,3 +11,6 @@
     </tr>
     {/section}
 </table>
+{else}
+    {lang code='no_logs'}
+{/if}

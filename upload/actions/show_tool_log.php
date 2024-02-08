@@ -10,5 +10,5 @@ $info_logs = $tool->getLastLogs();
 assign('tool_log_list', $info_logs['logs']);
 $return = templateWithMsgJson('blocks/tool_log_list.html', false);
 $return ['id_tool'] = $_POST['id_tool'];
-$return ['max_id_log'] = !empty($info_logs['logs'][0]['max_id_log']) ? $info_logs['logs'][0]['max_id_log'] : 0 ;
+$return ['max_id_log'] = !empty($info_logs['max_id_log']) ? $info_logs['max_id_log'] : 0 ;
 echo json_encode($return);

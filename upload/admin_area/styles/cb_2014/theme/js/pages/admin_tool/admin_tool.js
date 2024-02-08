@@ -1,6 +1,7 @@
 var max_try = 5;
 var eventSource;
 var eventSourceLog;
+var ids_stopped=[];
 $(function () {
 
     connectSSE();
@@ -40,7 +41,7 @@ $(function () {
                     $('#span-' + id_tool).html(result['libelle_status']);
                     elem.parent().addClass('disabled');
                     $('.page-content').prepend(result['msg']);
-                    eventSource.close();
+                    ids_stopped.push(id_tool);
                 }
             });
         }
@@ -55,9 +56,8 @@ $(function () {
                 data: {id_tool: id_tool},
                 dataType: 'json',
                 success: function (result) {
-                    var tries = 0;
                     // Create new event, the server script is sse.php
-                    //connectSSELog(result['id_tool'], result['max_id_tool']);
+                    connectSSELog(result['max_id_log'],result['id_tool']);
                     $('.page-content').prepend(result['msg']);
                     $('#logModal').find('.modal-body').html(result['template']);
                     $('#logModal').modal();
@@ -67,7 +67,6 @@ $(function () {
     });
 
     $('#logModal').on('hidden.bs.modal', function () {
-        $(this).html('');
         eventSourceLog.close();
     });
 });
@@ -92,14 +91,20 @@ function connectSSE () {
             elem = $(elem);
             let id = elem.attr('data-id');
             if (!ids_tool.includes(id)) {
-                elem.addClass('progress-bar-success');
-                elem.width('100%');
-                $('.launch[data-id='+id+']').parent().removeClass('disabled');
-                $('.stop[data-id='+id+']').parent().addClass('disabled');+
-                $('#span-' + id).html(lang.completed);
-                $('#progress-bar-' + id).attr('aria-valuenow',100).width(100 + '%');
-                $('#done-' + id).html($('#total-' + id).html());
-                $('#pourcent-' + id).html(100);
+                if (ids_stopped.includes(parseInt(id))) {
+                    elem.addClass('progress-bar-striped ').addClass('active');
+                    const index = ids_stopped.indexOf(parseInt(id));
+                    const x = ids_stopped.splice(index, 1);
+                } else {
+                    elem.addClass('progress-bar-success');
+                    elem.width('100%');
+                    $('.launch[data-id='+id+']').parent().removeClass('disabled');
+                    $('.stop[data-id='+id+']').parent().addClass('disabled');+
+                        $('#span-' + id).html(lang.completed);
+                    $('#progress-bar-' + id).attr('aria-valuenow',100).width(100 + '%');
+                    $('#done-' + id).html($('#total-' + id).html());
+                    $('#pourcent-' + id).html(100);
+                }
                 setTimeout(function () {
                     $('#progress-' + id).hide();
                     $('#span-' + id).html(lang.ready);
@@ -122,17 +127,16 @@ function connectSSE () {
             eventSource.close();
     }, false);
 }
-function connectSSELog () {
+function connectSSELog (max_id, id_tool) {
     var tries = 0;
     // Create new event, the server script is sse.php
-    eventSourceLog = new eventSourceLog("/admin_area/sse/progress_tool.php?max_id=" );
+    eventSourceLog = new EventSource("/admin_area/sse/logs_tool.php?max_id="+max_id+"&id_tool="+id_tool);
     // Event when receiving a message from the server
     eventSourceLog.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);
         data.forEach(function (elem) {
-            $('#tool_logs').append('<tr><td>'+elem.datetime+'</td><td>'+elem.message+'</td>' +
-                '</tr>')
-        })
+            $('#tool_logs').append('<tr><td>'+elem.datetime+'</td><td>'+elem.message+'</td></tr>');
+        });
     }, false);
 
     eventSourceLog.addEventListener('open', function(e) {
