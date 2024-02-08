@@ -932,7 +932,7 @@ ALTER TABLE `{tbl_prefix}languages_translations`
 CREATE TABLE `{tbl_prefix}video_thumbs`(
     `videoid`    BIGINT(20)  NOT NULL,
     `resolution` VARCHAR(16) NOT NULL,
-    `num`        VARCHAR(4)  NOT NULL,
+    `num`        TINYINT NOT NULL,
     `extension`  VARCHAR(4)  NOT NULL,
     `version`    VARCHAR(30) NOT NULL,
     `type`       VARCHAR(15) NOT NULL,
@@ -970,7 +970,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
     `id_tag_type` INT          NOT NULL,
     `name`        VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id_tag`),
-    UNIQUE  `id_tag_type` (`id_tag_type`, `name`) USING BTREE
+    UNIQUE `id_tag_type` (`id_tag_type`, `name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
@@ -978,10 +978,12 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
 (
     `id_tag_type` INT         NOT NULL AUTO_INCREMENT,
     `name`        VARCHAR(32) NOT NULL,
-    PRIMARY KEY (`id_tag_type`)
+    PRIMARY KEY (`id_tag_type`),
+    UNIQUE `name` (`name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}tags`
+    ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
 (

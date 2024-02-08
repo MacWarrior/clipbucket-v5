@@ -373,7 +373,7 @@ class Video
     }
 
     /**
-     * @param bool $show_unlisted
+     * @param array $params
      * @return string
      * @throws Exception
      */
@@ -994,8 +994,15 @@ class CBvideo extends CBCategory
                         } else {
                             $type = $matches['2'];
                         }
-                        Tags::saveTags($item, $type, $vid);
+
+                        if( !empty($item) ){
+                            Tags::saveTags($item, $type, $vid);
+                        }
                     }
+                }
+
+                if( !is_array($array['category']) ){
+                    $array['category'] = [$array['category']];
                 }
 
                 Category::getInstance()->saveLinks('video', $vid, $array['category']);

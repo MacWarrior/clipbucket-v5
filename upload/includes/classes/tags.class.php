@@ -162,53 +162,50 @@ class Tags
                     return false;
             }
         }
-        global $db;
-        if (!empty($tags)) {
-            //getting type
-            $sql_id_type = 'SELECT id_tag_type
-                       FROM ' . tbl('tags_type') . '
-                       WHERE name LIKE \'' . $object_type . '\'';
-            $res = $db->_select($sql_id_type);
-            if (!empty($res)) {
-                $id_type = $res[0]['id_tag_type'];
-            } else {
-                e(lang('unknown_tag_type'));
-                return false;
-            }
 
-            //delete old tags
-            $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
-            INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
-            WHERE ' . $id_field . ' = ' . mysql_clean($object_id) . ' AND id_tag_type = ' . mysql_clean($id_type);
-            if (!$db->execute($sql_delete_link, 'delete')) {
-                e(lang('error_delete_linking_tags'));
-                return false;
-            }
+        //getting type
+        $sql_id_type = 'SELECT id_tag_type
+                   FROM ' . tbl('tags_type') . '
+                   WHERE name = \'' . $object_type . '\'';
+        $res = Clipbucket_db::getInstance()->_select($sql_id_type);
+        if( empty($res) ){
+            e(lang('unknown_tag_type'));
+            return false;
+        }
+        $id_type = $res[0]['id_tag_type'];
 
-            //insert new tags
-            $tags_count = substr_count($tags, ',')+1;
-            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) 
-                WITH RECURSIVE NumberSequence AS (
-                    SELECT 0 AS n
-                    UNION ALL
-                    SELECT n + 1
-                    FROM NumberSequence
-                    WHERE n <= ' . $tags_count . '
-                )
-                SELECT DISTINCT
-                    ' . mysql_clean($id_type) . '
-                    , SUBSTRING_INDEX(SUBSTRING_INDEX(\'' . mysql_clean($tags) . '\', \',\', seq.n + 1), \',\', -1) AS tags
-                FROM NumberSequence seq
-            ';
+        //delete old tags
+        $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
+        INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
+        WHERE ' . $id_field . ' = ' . mysql_clean($object_id) . ' AND id_tag_type = ' . $id_type;
+        if (!Clipbucket_db::getInstance()->execute($sql_delete_link, 'delete')) {
+            e(lang('error_delete_linking_tags'));
+            return false;
+        }
 
-            if (!$db->execute($sql_insert_tag, 'insert')) {
+        //insert new tags
+        $tag_array = explode(',', mysql_clean($tags));
+        while( !empty($tag_array) ) {
+            $tmp_tags = array_splice($tag_array, 0, 500);
+            $values = '(\'' . implode('\'),(\'', $tmp_tags) . '\')';
+
+            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name)
+                SELECT ' . $id_type . ', temp.*
+                FROM (
+                    VALUES ' . $values . '
+                ) AS temp';
+
+            if (!Clipbucket_db::getInstance()->execute($sql_insert_tag, 'insert')) {
                 e(lang('technical_error'));
                 return false;
             }
+        }
 
-            //link tags to object
-            $tag_array = explode(',', $tags);
-            $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
+        //link tags to object
+        $tag_array = explode(',', $tags);
+        while( !empty($tag_array) ) {
+            $tmp_tags = array_splice($tag_array, 0, 500);
+            $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`)
                 SELECT 
                     tags.id_tag
                     ,' . mysql_clean($object_id) . '
@@ -216,9 +213,10 @@ class Tags
                     ' . cb_sql_table('tags') . '
                 WHERE
                     tags.id_tag_type = ' . mysql_clean($id_type) . '
-                    AND tags.name IN(\'' . implode('\',\'', $tag_array) . '\')
-            )';
-            if (!$db->execute($sql_link_tag, 'insert')) {
+                    AND tags.name IN(\'' . implode('\',\'', $tmp_tags) . '\')
+            ';
+
+            if (!Clipbucket_db::getInstance()->execute($sql_link_tag, 'insert')) {
                 e(lang('technical_error'));
                 return false;
             }
