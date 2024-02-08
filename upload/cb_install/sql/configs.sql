@@ -252,6 +252,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_collection_comments', 'yes'),
     (NULL, 'display_collection_comments', 'yes'),
     (NULL, 'enable_sitemap', 'yes'),
+    (NULL, 'git_path', ''),
     (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
@@ -274,8 +275,42 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 1, NULL, NULL),
     ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles', 1, NULL, NULL),
     ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration', 1, NULL, NULL),
-    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
+    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL),
+    ('update_core_label', 'update_core_description', 'AdminTool::updateCore', 1, NULL, NULL),
+    ('clean_session_table_label', 'clean_session_table_description', 'AdminTool::cleanSessionTable', 1, NULL, NULL),
+    ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 1, NULL, NULL),
+    ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 1, NULL, NULL);
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
+
+INSERT INTO `{tbl_prefix}categories_type` (`name`)
+VALUES ('video'),
+       ('photo'),
+       ('collection'),
+       ('user'),
+       ('playlist');
+
+SET @type_collection = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'collection'
+);
+SET @type_user = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'user'
+);
+SET @type_video = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'video'
+);
+
+INSERT INTO `{tbl_prefix}categories` (`id_category_type`, `category_name`, `category_thumb`, `is_default`) VALUES
+    (@type_collection, 'Uncategorized', '', 'yes'),
+    (@type_user, 'Basic User', '', 'yes'),
+    (@type_user, 'Gurus', '', 'no'),
+    (@type_user, 'Comedian', '', 'no'),
+    (@type_video, 'Uncategorized','', 'yes');

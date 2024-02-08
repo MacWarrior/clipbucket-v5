@@ -64,7 +64,7 @@ class Plugin
         }
 
         if( $param_count ){
-            $select = ['COUNT(plugins.plugin_id) AS count'];
+            $select = ['COUNT(DISTINCT plugins.plugin_id) AS count'];
         } else {
             $select = $this->getAllFields();
         }

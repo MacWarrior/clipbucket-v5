@@ -8,25 +8,6 @@ $userquery->login_check('video_moderation');
 $pages->page_redir();
 
 $video = $_GET['video'];
-$data = get_video_details($video);
-
-/* Generating breadcrumb */
-$breadcrumb[0] = [
-    'title' => lang('videos'),
-    'url'   => ''
-];
-$breadcrumb[1] = [
-    'title' => lang('videos_manager'),
-    'url'   => DirPath::getUrl('admin_area') . 'video_manager.php'
-];
-$breadcrumb[2] = [
-    'title' => 'Editing : ' . display_clean($data['title']),
-    'url'   => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)
-];
-
-if (@$_GET['msg']) {
-    $msg[] = clean($_GET['msg']);
-}
 
 //Updating Video Details
 if (isset($_POST['update'])) {
@@ -35,8 +16,17 @@ if (isset($_POST['update'])) {
         $myquery->update_video();
         $myquery->set_default_thumb($video, $_POST['default_thumb']);
 
-        $data = get_video_details($video);
     }
+}
+$data = Video::getInstance()->getOne(['videoid'=>$video]);
+
+/* Generating breadcrumb */
+$breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)];
+
+if (@$_GET['msg']) {
+    $msg[] = clean($_GET['msg']);
 }
 
 //Performing Video Actions

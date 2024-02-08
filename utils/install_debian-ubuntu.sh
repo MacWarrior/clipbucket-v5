@@ -12,15 +12,104 @@ echo " / ___| (_)_ __ | __ ) _   _  ___| | _____| |\ \   / / ___|"
 echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
 echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
 echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
-echo "          |_|  Installation script for Debian 12 + Nginx"
+echo "          |_|            Installation script for"
+echo "                    Debian 9-12 & Ubuntu 16.04-23.10"
 echo ""
 echo "Disclaimer : This easy installation script is only"
 echo "             made to configure local / dev environments."
 echo "             Use it with caution."
-echo ""
+
+OS_NAME=$(lsb_release -d | awk -F"\t" '{print $2}')
+case ${OS_NAME} in
+
+    "Debian GNU/Linux 9.13 (stretch)")
+        OS="DEBIAN9"
+        ;;
+    "Debian GNU/Linux 10 (buster)")
+        OS="DEBIAN10"
+        ;;
+    "Debian GNU/Linux 11 (bullseye)")
+        OS="DEBIAN11"
+        ;;
+    "Debian GNU/Linux 12 (bookworm)")
+        OS="DEBIAN12"
+        ;;
+
+    "Ubuntu 16.04.7 LTS"|"Ubuntu 16.04.6 LTS"|"Ubuntu 16.04.5 LTS"|"Ubuntu 16.04.4 LTS"|"Ubuntu 16.04.3 LTS"|"Ubuntu 16.04.2 LTS"|"Ubuntu 16.04.1 LTS"|"Ubuntu 16.04 LTS"|"Ubuntu 16.04")
+        OS="UBUNTU1604"
+        ;;
+    "Ubuntu 18.04.6 LTS"|"Ubuntu 18.04.5 LTS"|"Ubuntu 18.04.4 LTS"|"Ubuntu 18.04.3 LTS"|"Ubuntu 18.04.2 LTS"|"Ubuntu 18.04.1 LTS"|"Ubuntu 18.04 LTS"|"Ubuntu 18.04")
+        OS="UBUNTU1804"
+        ;;
+    "Ubuntu 20.04.6 LTS"|"Ubuntu 20.04.5 LTS"|"Ubuntu 20.04.4 LTS"|"Ubuntu 20.04.3 LTS"|"Ubuntu 20.04.2 LTS"|"Ubuntu 20.04.1 LTS"|"Ubuntu 20.04 LTS"|"Ubuntu 20.04")
+        OS="UBUNTU2004"
+        ;;
+    "Ubuntu 22.04.3 LTS"|"Ubuntu 22.04.2 LTS"|"Ubuntu 22.04.1 LTS"|"Ubuntu 22.04 LTS"|"Ubuntu 22.04")
+        OS="UBUNTU2204"
+        ;;
+    "Ubuntu 23.04")
+        OS="UBUNTU2304"
+        ;;
+    "Ubuntu 23.10")
+        OS="UBUNTU2310"
+        ;;
+    *)
+        echo ""
+        echo ""
+        echo "Installation script haven't been able to determine your operating system."
+        echo "Please select one : "
+        echo " - Debian 9"
+        echo " - Debian 10"
+        echo " - Debian 11"
+        echo " - Debian 12"
+        echo " - Ubuntu 16.04"
+        echo " - Ubuntu 18.04"
+        echo " - Ubuntu 20.04"
+        echo " - Ubuntu 22.04"
+        echo " - Ubuntu 23.04"
+        echo " - Ubuntu 23.10"
+        read -p "Which operating system do you use ? " READ_OS
+        case ${READ_OS} in
+            "Debian 9"|"debian 9")
+                OS="DEBIAN9"
+                ;;
+            "Debian 10"|"debian 10")
+                OS="DEBIAN10"
+                ;;
+            "Debian 11"|"debian 11")
+                OS="DEBIAN11"
+                ;;
+            "Debian"|"debian"|"Debian 12"|"debian 12")
+                OS="DEBIAN12"
+                ;;
+            "Ubuntu 16.04"|"ubuntu 16.04")
+                OS="UBUNTU1604"
+                ;;
+            "Ubuntu 18.04"|"ubuntu 18.04")
+                OS="UBUNTU1804"
+                ;;
+            "Ubuntu 20.04"|"ubuntu 20.04")
+                OS="UBUNTU2004"
+                ;;
+            "Ubuntu 22.04"|"ubuntu 22.04")
+                OS="UBUNTU2204"
+                ;;
+            "Ubuntu 23.04"|"ubuntu 23.04")
+                OS="UBUNTU2204"
+                ;;
+            "Ubuntu"|"ubuntu"|"Ubuntu 23.10"|"ubuntu 23.10")
+                OS="UBUNTU2310"
+                ;;
+            *)
+                echo "Unknown system, please select Debian or Ubuntu"
+                exit
+                ;;
+        esac
+        ;;
+esac
 
 echo ""
-echo -ne "Updating Debian system..."
+echo -ne "Updating system..."
 apt update > /dev/null 2>&1
 apt dist-upgrade -y > /dev/null 2>&1
 echo -ne " OK"
@@ -47,24 +136,103 @@ case ${READ_HTTP_SERVER} in
 esac
 echo -ne " OK"
 
-echo ""
-echo ""
-echo "PHP versions availables : "
-echo " - 8.2 [Default]"
-echo " - 8.3"
-read -p "Which PHP version do you want to use ? [8.2] " READ_PHP_VERSION
-case ${READ_PHP_VERSION} in
-    "8.3")
-        echo ""
-        echo -ne "Configuring PHP 8.3 repo..."
-        apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
-        wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
-        echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
-        apt update > /dev/null 2>&1
-        echo -ne " OK"
-        PHP_VERSION="8.3"
+case ${OS} in
+    "DEBIAN9")
+        PHP_VERSION="7.0"
         ;;
-    *)
+
+    "DEBIAN10")
+        echo ""
+        echo ""
+        echo "PHP versions availables : "
+        echo " - 7.3 [Default]"
+        echo " - 7.4"
+        echo " - 8.0"
+        echo " - 8.1"
+        echo " - 8.2"
+        echo " - 8.3"
+        read -p "Which PHP version do you want to use ? [7.3] " READ_PHP_VERSION
+        case ${READ_PHP_VERSION} in
+            "7.4"|"8.0"|"8.1"|"8.2"|"8.3")
+                echo ""
+                echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
+                apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+                wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
+                echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+                apt update > /dev/null 2>&1
+                echo -ne " OK"
+                PHP_VERSION=${READ_PHP_VERSION}
+                ;;
+            "7.3"|*)
+                PHP_VERSION="7.3"
+                ;;
+        esac
+        ;;
+
+    "DEBIAN11")
+        echo ""
+        echo ""
+        echo "PHP versions availables : "
+        echo " - 7.4 [Default]"
+        echo " - 8.0"
+        echo " - 8.1"
+        echo " - 8.2"
+        echo " - 8.3"
+        read -p "Which PHP version do you want to use ? [7.4] " READ_PHP_VERSION
+        case ${READ_PHP_VERSION} in
+            "8.0"|"8.1"|"8.2"|"8.3")
+                echo ""
+                echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
+                apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+                wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
+                echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+                apt update > /dev/null 2>&1
+                echo -ne " OK"
+                PHP_VERSION=${READ_PHP_VERSION}
+                ;;
+            "7.4"|*)
+                PHP_VERSION="7.4"
+                ;;
+        esac
+        ;;
+
+    "DEBIAN12")
+        echo ""
+        echo ""
+        echo "PHP versions availables : "
+        echo " - 8.2 [Default]"
+        echo " - 8.3"
+        read -p "Which PHP version do you want to use ? [8.2] " READ_PHP_VERSION
+        case ${READ_PHP_VERSION} in
+            "8.3")
+                echo ""
+                echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
+                apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+                wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
+                echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+                apt update > /dev/null 2>&1
+                echo -ne " OK"
+                PHP_VERSION=${READ_PHP_VERSION}
+                ;;
+            "8.2"|*)
+                PHP_VERSION="8.2"
+                ;;
+        esac
+        ;;
+
+    "UBUNTU1604")
+        PHP_VERSION="7.0"
+        ;;
+    "UBUNTU1804")
+        PHP_VERSION="7.2"
+        ;;
+    "UBUNTU2004")
+        PHP_VERSION="7.4"
+        ;;
+    "UBUNTU2304"|"UBUNTU2204")
+        PHP_VERSION="8.1"
+        ;;
+    "UBUNTU2310")
         PHP_VERSION="8.2"
         ;;
 esac
@@ -276,8 +444,8 @@ EOF
     "APACHE")
         echo -ne "Configuring Apache Vhost..."
         VHOST_PATH="/etc/apache2/sites-available/001-clipbucket.conf"
-        a2enconf php${PHP_VERSION}-fpm > /dev/null
-        a2enmod rewrite proxy_fcgi > /dev/null
+        a2enconf php${PHP_VERSION}-fpm 2>&1 > /dev/null
+        a2enmod rewrite proxy_fcgi 2>&1 > /dev/null
         cat << 'EOF' > ${VHOST_PATH}
 <VirtualHost *:80>
     ServerName DOMAINNAME

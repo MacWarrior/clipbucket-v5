@@ -257,3 +257,7 @@ function getRevisions(): array
     }
     return $revisions;
 }
+
+function getMysqlServerVersion() {
+    return Clipbucket_db::getInstance()->_select('select @@version;');
+}

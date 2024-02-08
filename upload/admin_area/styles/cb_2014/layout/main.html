@@ -81,6 +81,11 @@
                         <h8>{lang|ucfirst code='dev'}</h8>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#config_hosting">
+                        <h8>{lang|ucfirst code='hosting'}</h8>
+                    </a>
+                </li>
             </ul>
 			<div class="tab-content">
 				<div id="config_general" class="tab-pane active">
@@ -957,51 +962,6 @@
 						<div class="col-md-4">
 							<div class="row">
 								<div class="col-md-6">
-									<label class="nowrap" for="php_path" title="PHP Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="PHP Binary Path"> PHP Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="media_info" title="Mediainfo Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Mediainfo Binary Path"> Mediainfo Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
-								</div>
-							</div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFmpeg Binary Path"> FFmpeg Path</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFprobe Binary Path"> FFprobe Path</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
-                                </div>
-                            </div>
-                            <hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_conversion" title="Max videos to convert at once"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video conversion use lot of ressources, be aware of what's you're doing !"> Max videos to convert at once</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="max_conversion" id="max_conversion" value="{$row.max_conversion}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
 									<label class="nowrap" for="num_thumbs" title="Number of video thumbs">Number of video thumbs</label>
 								</div>
 								<div class="col-md-6">
@@ -1009,54 +969,54 @@
 								</div>
 							</div>
 							<hr/>
-
-						</div>
-						<div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
-                                </div>
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <label class="nowrap" for="vrate" title="Frame rate target"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video rate will be calculated to be the closer as possible from this value"> Frame rate target</label>
-                                </div>
-                                <div class="col-md-3">
-                                    <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
-                                </div>
+							<div class="row">
+								<div class="col-md-3">
+									<label class="nowrap" for="video_codec" title="Video Codec">Video Codec</label>
+								</div>
+								<div class="col-md-3">
+									<input class="form-control" name="video_codec" id="video_codec" value="{$row.video_codec}"/>
+								</div>
+								<div class="col-md-3">
+									<label class="nowrap" for="audio_codec" title="Audio Codec">Audio Codec</label>
+								</div>
+								<div class="col-md-3">
+									<input class="form-control" name="audio_codec" id="audio_codec" value="{$row.audio_codec}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-3">
+									<label class="nowrap" for="srate" title="Audio Rate">Audio Rate</label>
+								</div>
+								<div class="col-md-3">
+									<input class="form-control" name="srate" id="srate" value="{$row.srate}"/>
+								</div>
+								<div class="col-md-3">
+									<label class="nowrap" for="sbrate" title="Audio Bitrate">Audio Bitrate</label>
+								</div>
+								<div class="col-md-3">
+									<input class="form-control" name="sbrate" id="sbrate" value="{$row.sbrate}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-3">
+									<label class="nowrap" for="vrate" title="Frame rate target"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video rate will be calculated to be the closer as possible from this value"> Frame rate target</label>
+								</div>
+								<div class="col-md-3">
+									<input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
+								</div>
 								<div class="col-md-3">
 									<label class="nowrap" for="subtitle_format" title="Subtitle Format">Subtitle Format</label>
 								</div>
 								<div class="col-md-3">
 									<input class="form-control" name="subtitle_format" id="subtitle_format" value="{$row.subtitle_format}"/>
 								</div>
-                            </div>
-                            <hr/>
+							</div>
+							<hr/>
+
+						</div>
+						<div class="col-md-4">
 							<div class="row">
                                 <div class="col-md-10">
                                     <label class="nowrap" for="chromecast_fix" title="Chromecast compatibility" class="nowrap"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Force audio conversion to Stereo"> Chromecast compatibility</label>
@@ -2216,6 +2176,7 @@
 						</div>
 					</div>
 				</div>
+
 				<div id="config_dev" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
@@ -2252,6 +2213,70 @@
 							<hr/>
 						</div>
 					</div>
+				</div>
+
+				<div id="config_hosting" class="tab-pane">
+					<div class="row">
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="php_path" title="PHP Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="PHP Binary Path"> PHP Path</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="media_info" title="Mediainfo Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Mediainfo Binary Path"> Mediainfo Path</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFmpeg Binary Path"> FFmpeg Path</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="ffprobe_path" title="FFprobe Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFprobe Binary Path"> FFprobe Path</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="max_conversion" title="Max videos to convert at once"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video conversion use lot of ressources, be aware of what's you're doing !"> Max videos to convert at once</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="max_conversion" id="max_conversion" value="{$row.max_conversion}"/>
+								</div>
+							</div>
+							<hr/>
+
+						</div>
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="git_path" title="{lang code='option_git_path'}">{lang code='option_git_path'}</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="git_path" id="git_path" value="{$row.git_path}"/>
+								</div>
+							</div>
+							<hr/>
+
+						</div>
 				</div>
 			</div>
 		</div>

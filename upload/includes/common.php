@@ -57,8 +57,8 @@ require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 
 check_install('before');
-if (file_exists(DirPath::get('includes') . '/config.php')) {
-    require_once DirPath::get('includes') . '/config.php'; // New config file
+if (file_exists(DirPath::get('includes') . 'config.php')) {
+    require_once DirPath::get('includes') . 'config.php'; // New config file
 } else {
     require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
@@ -74,6 +74,7 @@ require_once DirPath::get('classes') . 'pages.class.php';
 require_once DirPath::get('classes') . 'tags.class.php';
 require_once DirPath::get('classes') . 'curl.class.php';
 require_once DirPath::get('classes') . 'tmdb.class.php';
+require_once DirPath::get('classes') . 'admin_tool.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -232,10 +233,6 @@ define('WEBSITE_EMAIL', $row['website_email']);
 define('SUPPORT_EMAIL', $row['support_email']);
 define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
-
-# Listing Of Videos , Channels
-define('VLISTPP', $row['videos_list_per_page']);                //Video List Per page
-define('CLISTPP', $row['channels_list_per_page']);            //Channels List Per page
 
 # Defining Photo Limits
 define('MAINPLIST', $row['photo_main_list']);

@@ -23,15 +23,13 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    private static function getTools($condition = []): array
+    public static function getTools(array $condition = []): array
     {
-        global $db;
-
         $where = implode(' AND ', $condition);
         $select = tbl("tools") . ' AS T
         LEFT JOIN ' . tbl("tools_status") . ' AS TT ON TT.id_tools_status = T.id_tools_status';
 
-        return $db->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
+        return Clipbucket_db::getInstance()->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
                CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress'
             , $where
         );
@@ -367,6 +365,14 @@ class AdminTool
     }
 
     /**
+     * @throws Exception
+     */
+    private static function updateCore($id_tool)
+    {
+        self::executeTool($id_tool, ['updateGit'], 'Update::updateGitSources');
+    }
+
+    /**
      * @param $id_tool
      * @param $array
      * @param $function
@@ -439,4 +445,40 @@ class AdminTool
         return self::$temp;
     }
 
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public static function recalculVideoFile($id_tool)
+    {
+        $videos = Video::getInstance()->getAll();
+        self::executeTool($id_tool, $videos, 'update_video_files');
+    }
+
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public static function cleanSessionTable($id_tool)
+    {
+        $res = Clipbucket_db::getInstance()->select(tbl('sessions'), 'session_id', 'session_date < DATE_SUB(NOW(), INTERVAL 1 MONTH);');
+        self::executeTool($id_tool, array_column($res, 'session_id'), 'Session::deleteById');
+    }
+
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public static function recreateThumb($id_tool)
+    {
+        $photos = Photo::getInstance()->getAll();
+        if (empty($photos)) {
+            $photos = [];
+        }
+        $photos_ids = array_column($photos, 'photo_id');
+        self::executeTool($id_tool, $photos_ids, 'Photo::generatePhoto');
+    }
 }

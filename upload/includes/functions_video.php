@@ -217,6 +217,10 @@ function get_count_thumb($videoid)
  */
 function create_thumb($video_db, $multi, $size)
 {
+    if(empty($video_db)){
+        return default_thumb();
+    }
+
     global $db;
     //check files
     $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
@@ -420,49 +424,6 @@ function videoSmartyLink($params)
     assign($params['assign'], $link);
 }
 
-/**
- * Function used to validate category
- * INPUT $cat array
- *
- * @param null $array
- *
- * @return bool
- * @throws Exception
- */
-function validate_vid_category($array = null): bool
-{
-    global $cbvid;
-    if ($array == null) {
-        $array = $_POST['category'];
-    }
-
-    if (!is_array($array)) {
-        return false;
-    }
-
-    if (count($array) == 0) {
-        return false;
-    }
-
-    $new_array = [];
-    foreach ($array as $arr) {
-        if ($cbvid->category_exists($arr)) {
-            $new_array[] = $arr;
-        }
-    }
-
-    if (count($new_array) == 0) {
-        e(lang('vdo_cat_err3'));
-        return false;
-    }
-
-    if (count($new_array) > ALLOWED_VDO_CATS) {
-        e(sprintf(lang('vdo_cat_err2'), ALLOWED_VDO_CATS));
-        return false;
-    }
-
-    return true;
-}
 
 /**
  * Function used to check videokey exists or not
@@ -1238,8 +1199,11 @@ function get_fast_qlist($cookie_name = false): array
     $vids = explode(',', $clean_cookies);
     assign('qlist_vids', $vids);
     $vid_dets = [];
+
     foreach ($vids as $vid) {
-        $vid_dets[] = $cbvid->get_video($vid);
+        if( !empty($vid) ){
+            $vid_dets[] = $cbvid->get_video($vid);
+        }
     }
 
     return array_filter($vid_dets);

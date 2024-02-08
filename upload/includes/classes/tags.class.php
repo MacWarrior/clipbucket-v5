@@ -129,7 +129,7 @@ class Tags
     /**
      * @throws Exception
      */
-    public static function saveTags(string $tags, string $object_type, int $object_id)
+    public static function saveTags(string $tags, string $object_type, int $object_id): bool
     {
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
@@ -175,6 +175,7 @@ class Tags
                 e(lang('unknown_tag_type'));
                 return false;
             }
+
             //delete old tags
             $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
             INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
@@ -185,19 +186,38 @@ class Tags
             }
 
             //insert new tags
-            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) (SELECT ' . mysql_clean($id_type) . ', jsontable.tags
-                          FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable)';
+            $tags_count = substr_count($tags, ',')+1;
+            $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name) 
+                WITH RECURSIVE NumberSequence AS (
+                    SELECT 0 AS n
+                    UNION ALL
+                    SELECT n + 1
+                    FROM NumberSequence
+                    WHERE n <= ' . $tags_count . '
+                )
+                SELECT DISTINCT
+                    ' . mysql_clean($id_type) . '
+                    , SUBSTRING_INDEX(SUBSTRING_INDEX(\'' . mysql_clean($tags) . '\', \',\', seq.n + 1), \',\', -1) AS tags
+                FROM NumberSequence seq
+            ';
+
             if (!$db->execute($sql_insert_tag, 'insert')) {
                 e(lang('technical_error'));
                 return false;
             }
 
             //link tags to object
+            $tag_array = explode(',', $tags);
             $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`) (
-            SELECT T.id_tag, ' . mysql_clean($object_id) . '
-            FROM JSON_TABLE(CONCAT(\'["\', REPLACE(LOWER(\'' . mysql_clean($tags) . '\'), \',\', \'","\'), \'"]\'), \'$[*]\' COLUMNS (`tags` TEXT PATH \'$\')) jsontable
-            INNER JOIN ' . tbl('tags') . ' AS T ON T.name = LOWER(jsontable.tags) COLLATE utf8mb4_unicode_520_ci AND T.id_tag_type = ' . mysql_clean($id_type) . '
-        )';
+                SELECT 
+                    tags.id_tag
+                    ,' . mysql_clean($object_id) . '
+                FROM
+                    ' . cb_sql_table('tags') . '
+                WHERE
+                    tags.id_tag_type = ' . mysql_clean($id_type) . '
+                    AND tags.name IN(\'' . implode('\',\'', $tag_array) . '\')
+            )';
             if (!$db->execute($sql_link_tag, 'insert')) {
                 e(lang('technical_error'));
                 return false;

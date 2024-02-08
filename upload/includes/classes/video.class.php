@@ -30,7 +30,6 @@ class Video
             ,'file_type'
             ,'file_directory'
             ,'description'
-            ,'category'
             ,'broadcast'
             ,'location'
             ,'datecreated'
@@ -234,9 +233,10 @@ class Video
         $param_order = $params['order'] ?? false;
         $param_group = $params['group'] ?? false;
         $param_having = $params['having'] ?? false;
-        $param_count = $params['count'] ?? false;
+        $param_show_unlisted = $params['show_unlisted'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_exist = $params['exist'] ?? false;
+        $param_count = $params['count'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -254,17 +254,6 @@ class Video
         if( $param_featured ){
             $conditions[] = 'video.featured = \'yes\'';
         }
-        if( $param_category ){
-            if( !is_array($param_category) ){
-                $conditions[] = 'video.category LIKE \'%#'.mysql_clean($param_category).'#%\'';
-            } else {
-                $category_cond = [];
-                foreach($param_category as $category){
-                    $category_cond[] = 'video.category LIKE \'%#'.mysql_clean($category).'#%\'';
-                }
-                $conditions[] = '(' . implode(' OR ', $category_cond) . ')';
-            }
-        }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
@@ -273,10 +262,12 @@ class Video
 
         if( $param_search ){
             /* Search is done on video title, video tags */
-            // TODO : Add search on video categories
             $cond = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(video.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
 
@@ -284,11 +275,11 @@ class Video
         }
 
         if( !has_access('admin_access', true) && !$param_exist ){
-            $conditions[] = $this->getGenericConstraints($param_first_only);
+            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
         if( $param_count ){
-            $select = ['COUNT(video.videoid) AS count'];
+            $select = ['COUNT(DISTINCT video.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
             $select[] = 'users.username AS user_username';
@@ -298,11 +289,29 @@ class Video
         $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'video.videoid';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
+        }
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
+
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
+                $group[] = 'video.videoid';
+            }
+
+            if( $param_category ){
+                if( !is_array($param_category) ){
+                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
         }
 
         if( $param_collection_id ){
@@ -364,15 +373,17 @@ class Video
     }
 
     /**
-     * @param bool $param_first_only
+     * @param bool $show_unlisted
      * @return string
      * @throws Exception
      */
-    public function getGenericConstraints(bool $param_first_only = false): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
         }
+
+        $show_unlisted = $params['show_unlisted'] ?? false;
 
         $cond = '( (video.active = \'yes\' AND video.status = \'Successful\'';
 
@@ -385,7 +396,7 @@ class Video
 
         $cond .= ' AND (video.broadcast = \'public\'';
 
-        if( $param_first_only ){
+        if( $show_unlisted ){
             $cond .= ' OR (video.broadcast = \'unlisted\' AND video.video_password = \'\')';
         }
         $cond .= ')';
@@ -490,7 +501,7 @@ class CBvideo extends CBCategory
     function init()
     {
         global $Cbucket, $cb_columns;
-        $this->cat_tbl = 'video_categories';
+        $this->cat_tbl = 'videos_categories';
         $this->section_tbl = 'video';
         $this->use_sub_cats = true;
         $this->init_actions();
@@ -607,16 +618,21 @@ class CBvideo extends CBCategory
         # Set basic video fields
         $basic_fields = [
             'videoid', 'videokey', 'video_password', 'video_users', 'username', 'userid', 'title', 'file_name', 'file_type'
-            , 'file_directory', 'description', 'category', 'broadcast', 'location', 'datecreated'
+            , 'file_directory', 'description', 'broadcast', 'location', 'datecreated'
             , 'country', 'allow_embedding', 'rating', 'rated_by', 'voter_ids', 'allow_comments'
             , 'comment_voting', 'comments_count', 'last_commented', 'featured', 'featured_date', 'allow_rating'
             , 'active', 'favourite_count', 'playlist_count', 'views', 'last_viewed', 'date_added', 'flagged', 'duration', 'status'
             , 'default_thumb', 'embed_code', 'downloads', 'uploader_ip'
             , 'video_files', 'file_server_path', 'video_version', 'thumbs_version'
-            , 're_conv_status', 'is_castable', 'bits_color', 'subscription_email'
+            , 're_conv_status', 'subscription_email'
         ];
 
         $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+            $basic_fields[] = 'is_castable';
+            $basic_fields[] = 'bits_color';
+        }
+
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $basic_fields[] = 'age_restriction';
         }
@@ -684,8 +700,10 @@ class CBvideo extends CBCategory
         $cond = (($filename) ? 'video.file_name' : (is_numeric($vid) ? 'video.videoid' : 'video.videokey')) . ' = \'%s\' ';
 
         $select_tag = '';
+        $select_categ = '';
         $join_tag = '';
-        $group_tag = '';
+        $join_categ = '';
+        $group = [];
         $version = Update::getInstance()->getDBVersion();
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
@@ -696,17 +714,25 @@ class CBvideo extends CBCategory
             }
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
                     LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
-            $group_tag = ' GROUP BY video.videoid ';
+            $group[] = ' video.videoid ';
         }
 
-        $query = 'SELECT ' . table_fields($fields) . ' ' . $select_tag . ' FROM ' . cb_sql_table('video');
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $select_categ = ', GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category';
+            $join_categ .= ' LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
+            $join_categ .= ' LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
+            $group[] = ' video.videoid ';
+        }
+
+        $query = 'SELECT ' . table_fields($fields) . ' ' . $select_tag . ' ' . $select_categ . ' FROM ' . cb_sql_table('video');
         $query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid';
         $query .= $join_tag;
+        $query .= $join_categ;
         if ($cond) {
             $query .= ' WHERE ' . sprintf($cond, $vid);
         }
 
-        $query .= $group_tag . ' LIMIT 1';
+        $query .= (!empty($group) ? 'GROUP BY ' . implode(',', $group) :''). ' LIMIT 1';
         $query_id = cb_query_id($query);
 
         $data = cb_do_action('select_video', ['query_id' => $query_id, 'videoid' => $vid]);
@@ -889,16 +915,7 @@ class CBvideo extends CBCategory
                         $query_field[] = $field['db_field'];
                     }
 
-                    if (is_array($val)) {
-                        $new_val = '';
-                        foreach ($val as $v) {
-                            $new_val .= '#' . $v . '# ';
-                        }
-                        $val = $new_val;
-                    }
-                    if (!$field['clean_func'] || (!apply_func($field['clean_func'], $val) && !is_array($field['clean_func']))) {
-                        $val = ($val);
-                    } else {
+                    if ($field['clean_func'] && (apply_func($field['clean_func'], $val) || is_array($field['clean_func']))) {
                         $val = apply_func($field['clean_func'], mysql_clean('|no_mc|' . $val));
                     }
 
@@ -969,7 +986,6 @@ class CBvideo extends CBCategory
             } else {
                 $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
-
                 foreach ($array as $key => $item) {
                     $matches = [];
                     if (preg_match('/(tags)_*(.*)/',$key, $matches)) {
@@ -981,6 +997,8 @@ class CBvideo extends CBCategory
                         Tags::saveTags($item, $type, $vid);
                     }
                 }
+
+                Category::getInstance()->saveLinks('video', $vid, $array['category']);
 
                 cb_do_action('update_video', [
                     'object_id' => $vid,
@@ -1037,13 +1055,12 @@ class CBvideo extends CBCategory
                 }
 
                 //Remove tags
-                \Tags::saveTags('', 'video', $vdetails['videoid']);
-                //Finally Removing Database entry of video
-                $db->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
-                //Removing Video From Playlist
-                $db->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
+                Tags::saveTags('', 'video', $vdetails['videoid']);
+                //Remove categories
+                Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
-                $db->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
+                //Removing video from Playlist
+                $db->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
 
                 //Removing video Comments
                 $params = [];
@@ -1053,6 +1070,10 @@ class CBvideo extends CBCategory
 
                 //Removing video From Favorites
                 $db->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
+
+                //Finally Removing Database entry of video
+                $db->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
+                $db->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
 
                 e(lang('class_vdo_del_msg'), 'm');
             } else {
@@ -2051,7 +2072,7 @@ class CBvideo extends CBCategory
 
         $where = '';
         if( !has_access('admin_access', true) ){
-            $where = ' AND ' . Video::getInstance()->getGenericConstraints();
+            $where = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
         $query = 'SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('playlist_items');

@@ -149,7 +149,6 @@
                         var data = $(this).serialize();
                         data += "&collection_id="+collectionId;
                         data += "&updatePhoto=yes";
-
                         $.ajax({
                             url : "/actions/photo_uploader.php",
                             type : "post",
@@ -281,6 +280,7 @@
             uploader.bind("BeforeUpload", function(){
                 $("#fileUploadProgress").removeClass("hidden");
                 $(".progress-container").removeClass("hidden");
+                showSpinner();
             })
 
             var filesUploaded = 0;
@@ -330,6 +330,7 @@
                         hiddenField_photoId.name = 'photo_id';
                         hiddenField_photoId.type = 'hidden';
                         hiddenField_photoId.value = msg.photoID;
+                        hideSpinner();
                         $('#tab'+current_index+' form').append(hiddenField_photoId);
                         $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
                         $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
@@ -465,3 +466,10 @@
         init_tags('collection_tags', available_collection_tags);
     });
 })(window);
+function showSpinner() {
+    $('.spinner-content').show();
+}
+
+function hideSpinner() {
+    $('.spinner-content').hide();
+}

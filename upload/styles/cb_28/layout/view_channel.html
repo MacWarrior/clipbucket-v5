@@ -36,13 +36,13 @@
 					<li>
 						<a href="#user-info" data-toggle="tab">{lang code='info'}</a>
 					</li>
-					{if isSectionEnabled('videos') && $u.show_my_videos!='no'}
+					{if isSectionEnabled('videos') && $user.show_my_videos!='no'}
 					<li class="active">
 						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
 					</li>
 					{/if}
-					{if isSectionEnabled('photos') && $u.show_my_photos != 'no'}
-					<li {if $u.show_my_videos=='no' || !isSectionEnabled('videos')}class="active"{/if}>
+					{if isSectionEnabled('photos') && $user.show_my_photos != 'no'}
+					<li {if $user.show_my_videos=='no' || !isSectionEnabled('videos')}class="active"{/if}>
 						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
 					</li>
 					<li>
@@ -52,12 +52,12 @@
 					</li>
 					{if config('display_channel_comments') == 'yes'}
 						<li>
-							<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$u.comments_count}</span>)</a>
+							<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
 						</li>
 					{/if}
 				</ul>
 				<div class="tab-content clearfix">
-					<div class="tab-pane fade in clearfix{if $u.show_my_videos=='no' && $u.show_my_photos=='no'} active{/if}" id="user-info">
+					<div class="tab-pane fade in clearfix{if $user.show_my_videos=='no' && $user.show_my_photos=='no'} active{/if}" id="user-info">
 						<div class="clearfix watch-vid-details">
 							<h2>{lang code='user_activity'}</h2>
 							<ul class="clearfix desc-list">
@@ -72,15 +72,15 @@
 								</li>
 								{/if}
 								<li>
-									<strong>{lang code='joined'}</strong> : {$u.doj|niceTime}
+									<strong>{lang code='joined'}</strong> : {$user.doj|niceTime}
 								</li>
 								<li>
-									<strong>{lang code='user_last_login'}</strong> : {$u.last_logged|niceTime}
+									<strong>{lang code='user_last_login'}</strong> : {$user.last_logged|niceTime}
 								</li>
 								{if config('enable_user_status') == 'yes'}
 								<li>
 									<strong>{lang code='online_status'}</strong> :
-									{if $userquery->isOnline($u.last_active,$p.online_status)}
+									{if $userquery->isOnline($user.last_active,$p.online_status)}
 										<span style="color:#060;">{lang code='online'}</span>
 									{else}
 										<span style="color:#ed0000;">{lang code='offline'}</span>
@@ -97,7 +97,7 @@
 										<ul class="clearfix desc-list">
 											{if $field_group.group_id=='profile_location' && config('enable_country')=='yes'}
 											<li>
-												<strong>{lang code='country'}</strong> : {$u.country|country}
+												<strong>{lang code='country'}</strong> : {$user.country|country}
 											</li>
 											{/if}
 
@@ -118,12 +118,11 @@
 											{if $field_group.group_id=='profile_basic_info'}
 												{if $p.show_dob!='no'}
 												<li>
-													<strong>{lang code='user_date_of_birth'}</strong> : {cbdate(NULL, $u.dob)}
+													<strong>{lang code='user_date_of_birth'}</strong> : {cbdate(NULL, $user.dob)}
 												</li>
 												{/if}
 												{if config('enable_user_category')=='yes'}
-													{$usercat = $userquery->get_category_name($user.category)}
-													<li><strong>Category : </strong>{$usercat.category_name}</li>
+													<li><strong>Category : </strong>{$user_category}</li>
 												{/if}
 											{/if}
 										</ul>
@@ -133,7 +132,7 @@
 							{/if}
 						</div>
 					</div>
-					<div class="tab-pane videos fade in clearfix {if $u.show_my_videos != 'no'}active{/if}" id="user-videos">
+					<div class="tab-pane videos fade in clearfix {if $user.show_my_videos != 'no'}active{/if}" id="user-videos">
 							{if $uservideos}
 						<div class="clearfix row user_vids">
 							<div id="usr-vids" class="clearfix">
@@ -154,7 +153,7 @@
 							{/if}
 					</div>
 
-					<div class="tab-pane photos fade in clearfix {if $u.show_my_videos == 'no'}active{/if}" id="user-photos">
+					<div class="tab-pane photos fade in clearfix {if $user.show_my_videos == 'no'}active{/if}" id="user-photos">
 						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
 							{if $photos}
 						<div id="usr-photos" class="clearfix row user_photos">
@@ -175,7 +174,7 @@
 					</div>
 
 					<div class="tab-pane playlist fade in clearfix" id="user-playlist">
-						{$playlists = $cbvid->action->get_playlists(["user"=>$u.userid,"order"=>"date_added DESC","limit"=>""])}
+						{$playlists = $cbvid->action->get_playlists(["user"=>$user.userid,"order"=>"date_added DESC","limit"=>""])}
 						
 						{if $playlists}
 						<div class="clearfix row ch-playlists">
@@ -197,7 +196,7 @@
 
 								<div class="collectionComments addComment">
 									<div id="bloc-comment" >
-										{include file="$style_dir/blocks/comments/add_comment.html" id=$u.userid type=Comments::$libelle_type_channel}
+										{include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
 
 										<div class="userComments">
 											<ul id="userCommentsList" style="margin-left:-40px;">
@@ -216,7 +215,7 @@
 			</div>
 		</section>
 		<aside id="sidebar">
-			{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
+			{assign var=userFeeds value=$cbfeeds->getUserFeeds($user)}
 			{if $userFeeds && user_id()}
 			<h2>{lang code="user_activity"}</h2>
 			<div id="userFeeds" class="user-activities clearfix sidebar-items">

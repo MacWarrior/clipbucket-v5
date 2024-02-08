@@ -40,17 +40,26 @@ assign('canAccessNginx', $can_access_nginx );
 assign('clientMaxBodySize', $client_max_body_size );
 
 /** services info */
+$ffReq = '3';
+assign('ffReq', $ffReq);
+$phpVersionReq = '7.0.0';
+assign('phpVersionReq',$phpVersionReq);
+
 $ffmpegVersion = check_version('ffmpeg');
 assign('ffmpegVersion', $ffmpegVersion);
-
+assign('ffmpegVersionOK', $ffmpegVersion >= $ffReq);
+$ffprobe_path = check_version('ffprobe');
+assign('ffprobe_path', $ffprobe_path);
+assign('ffprobe_path_OK', $ffprobe_path >= $ffReq);
 
 assign('phpVersionWeb', phpversion());
+assign('phpVersionWebOK', phpversion() >= $phpVersionReq);
 
 $media_info = check_version('media_info');
 assign('media_info', $media_info);
 
-$ffprobe_path = check_version('ffprobe');
-assign('ffprobe_path', $ffprobe_path);
+$git_version = check_version('git');
+assign('git_version', $git_version);
 
 /** php info web */
 ob_start();
@@ -60,10 +69,26 @@ $phpinfo = preg_replace( '%^.*<body>(.*)</body>.*$%ms','$1',$phpinfo);
 assign('php_info', $phpinfo);
 
 /** php info cli */
-$row = $myquery->Get_Website_Details();
-$cmd = $row['php_path'] . ' ' . DirPath::get('root') . 'phpinfo.php';
+$cmd = config('php_path') . ' ' . DirPath::get('root') . 'phpinfo.php';
 exec($cmd, $exec_output);
 assign('cli_php_info', implode('<br/>',$exec_output));
+
+$regex_version = '(\d+\.\d+\.\d+)';
+$mysqlReq='5.6.0';
+assign('mysqlReq', $mysqlReq);
+$cmd = 'mysql --version';
+exec($cmd, $mysql_client_output);
+$match_mysql = [];
+preg_match($regex_version, $mysql_client_output[0], $match_mysql);
+$clientMySqlVersion = $match_mysql[0] ?? false;
+assign('clientMySqlVersion', $clientMySqlVersion);
+assign('clientMySqlVersionOk', (version_compare($clientMySqlVersion, $mysqlReq) >= 0));
+
+$serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+$serverMySqlVersion = $match_mysql[0] ?? false;
+assign('serverMySqlVersion', $serverMySqlVersion);
+assign('serverMySqlVersionOk', (version_compare($serverMySqlVersion, $mysqlReq) >= 0));
 
 $post_max_size_cli = 0;
 $memory_limit_cli = 0;
@@ -152,11 +177,17 @@ $extensionsWEB = [];
 foreach ($extensionMessages as $extension => $version) {
     $res = $modulesWeb[$extension];
     if (!empty($res)) {
-        $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+        if (empty($modulesWeb[$extension][$version]) && $extension == 'gd') {
+            $extensionsWEB[$extension] = $modulesWeb[$extension]['GD Version'];
+        } else {
+            $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+        }
     }
 }
-
 assign('phpVersionCli', $phpVersion);
+assign('phpVersionCliOK', $phpVersion >= $phpVersionReq);
+assign('versionMySQLOK', $versionMySQLOK ?? false);
+assign('versionMySQLCliOK', $versionMySQLCliOK ?? false);
 assign('post_max_size_cli', $post_max_size_cli);
 assign('memory_limit_cli', $memory_limit_cli);
 assign('upload_max_filesize_cli', $upload_max_filesize_cli);

@@ -127,11 +127,17 @@ call_functions($cbvid->video_manager_funcs);
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, RESULTS);
 
-$all_categories = $cbvid->get_categories();
-$all_category_ids = [];
+$version = Update::getInstance()->getDBVersion();
 
-foreach ($all_categories as $cats) {
-    $all_category_ids[] = $cats['category_id'];
+if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+    $all_categories = Category::getInstance()->getAll([
+        'category_type' => Category::getInstance()->getIdsCategoriesType('video')
+    ]);
+    $all_category_ids = [];
+
+    foreach ($all_categories as $cats) {
+        $all_category_ids[] = $cats['category_id'];
+    }
 }
 
 if (isset($_GET['category'])) {
@@ -163,7 +169,7 @@ if (!$array['order']) {
     $result_array['order'] = ' videoid DESC ';
 }
 
-$videos = get_videos($result_array);
+$videos = Video::getInstance()->getAll($result_array);
 
 Assign('videos', $videos);
 
@@ -186,7 +192,7 @@ $cat_array = [
     'type'             => 'checkbox',
     'name'             => 'category',
     'id'               => 'category',
-    'value'            => ['category', $cats_array],
+    'value'            => [$cats_array],
     'hint_1'           => lang('vdo_cat_msg'),
     'display_function' => 'convert_to_categories'
 ];

@@ -8,7 +8,7 @@
 				{AD place='ad_728x90'}
 			</div>
 			{/if}
-			{$categories = pullCategories()}
+			{$categories = getCategoryList(['type'=>'user'])}
 			{assign var=sorting_links value=sorting_links()}
 			<div class="filter-dropdowns clearfix">
 				<div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
