@@ -202,7 +202,7 @@ class Tags
         }
 
         //link tags to object
-        $tag_array = explode(',', $tags);
+        $tag_array = explode(',', mysql_clean($tags));
         while( !empty($tag_array) ) {
             $tmp_tags = array_splice($tag_array, 0, 500);
             $sql_link_tag = 'INSERT IGNORE INTO ' . tbl($table_tag) . ' (`id_tag`, `' . $id_field . '`)
