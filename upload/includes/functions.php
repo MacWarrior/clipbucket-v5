@@ -922,74 +922,58 @@ function php_path()
  */
 function get_binaries($path): string
 {
-    $type = '';
-    if (is_array($path)) {
-        $type = $path['type'];
-        $path = $path['path'];
+    $path = strtolower($path);
+    switch ($path) {
+        case 'php':
+            $software_path = php_path();
+            break;
+
+        case 'media_info':
+            $software_path = config('media_info');
+            break;
+
+        case 'ffprobe':
+            $software_path = config('ffprobe_path');
+            break;
+
+        case 'ffmpeg':
+            $software_path = config('ffmpegpath');
+            break;
+
+        case 'git':
+            $software_path = config('git_path');
+            break;
+
+        default:
+            $software_path = '';
+            break;
     }
 
-    $path = strtolower($path);
-    if ($type == '' || $type == 'user') {
-        switch ($path) {
-            case 'php':
-                $software_path = php_path();
-                break;
-
-            case 'media_info':
-                $software_path = config('media_info');
-                break;
-
-            case 'ffprobe':
-                $software_path = config('ffprobe_path');
-                break;
-
-            case 'ffmpeg':
-                $software_path = config('ffmpegpath');
-                break;
-
-            default:
-                $software_path = '';
-                break;
-        }
-
-        if ($software_path != '') {
-            return $software_path;
-        }
+    if ($software_path != '') {
+        return $software_path;
     }
 
     switch ($path) {
-        case 'php':
-            $return_path = shell_output('which php');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find PHP path';
-
-        case 'media_info':
-            $return_path = shell_output('which mediainfo');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find media_info path';
-
         case 'ffprobe':
-            $return_path = shell_output('which ffprobe');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find ffprobe path';
-
         case 'ffmpeg':
-            $return_path = shell_output('which ffmpeg');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find ffmpeg path';
+        case 'git':
+        case 'php':
+            $which = $path;
+            break;
+        case 'media_info':
+            $which = 'mediainfo';
+            break;
 
         default:
             error_log('get_binaries wrong path : ' . $path);
             return 'Unknown path : ' . $path;
     }
+
+    $return_path = shell_output('which '.$which);
+    if ($return_path) {
+        return $return_path;
+    }
+    return 'Unable to find ' . $path . ' path';
 }
 
 /**
@@ -1335,7 +1319,7 @@ function create_query_limit($page, $result): string
     }
     $from = $page - 1;
     $from = $from * $result;
-    return $from . ',' . $result;
+    return mysql_clean($from) . ',' . mysql_clean($result);
 }
 
 /**
@@ -3121,6 +3105,9 @@ function check_version($name)
         case 'ffmpeg':
         case 'ffprobe':
             $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
             $matches = [];
             $result = shell_output($path . ' -version | head -n1');
             if ($result) {
@@ -3145,14 +3132,37 @@ function check_version($name)
             }
             return false;
 
+        case 'git':
+            $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
+
+            $matches = [];
+            $result = shell_output($path . ' --version');
+            if ($result) {
+                preg_match('/git version (.+)$/', strtolower($result), $matches);
+                if (count($matches) > 0) {
+                    return array_pop($matches);
+                }
+                return false;
+            }
+            return false;
+
         case 'media_info':
             $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
             $result = shell_output($path . ' --version');
             $media_info_version = explode('v', $result);
             return $media_info_version[1];
 
         case 'php':
             $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
             $matches = [];
             $result = shell_output($path . ' --version | head -n1');
             if ($result) {

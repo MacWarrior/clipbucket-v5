@@ -1,18 +1,18 @@
-// https://www.npmjs.com/package/videojs-quality-selector-hls
-// https://github.com/chrisboustead/videojs-hls-quality-selector/issues/106
+// https://www.npmjs.com/package/jb-videojs-hls-quality-selector
+// https://github.com/jb-alvarado/videojs-hls-quality-selector
 
-/*! @name videojs-quality-selector-hls @version 1.1.1 @license MIT */
+/*! @name jb-videojs-hls-quality-selector @version 2.0.2 @license MIT */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(require('video.js')) :
       typeof define === 'function' && define.amd ? define(['video.js'], factory) :
-          (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojsQualitySelectorHls = factory(global.videojs));
+          (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.jbVideojsHlsQualitySelector = factory(global.videojs));
 }(this, (function (videojs) { 'use strict';
 
   function _interopDefaultLegacy (e) { return e && typeof e === 'object' && 'default' in e ? e : { 'default': e }; }
 
   var videojs__default = /*#__PURE__*/_interopDefaultLegacy(videojs);
 
-  var version = "1.1.1";
+  var version = "2.0.2";
 
   const VideoJsButtonClass = videojs__default['default'].getComponent('MenuButton');
   const VideoJsMenuClass = videojs__default['default'].getComponent('Menu');
@@ -33,85 +33,104 @@
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
   /**
-   * Convert string to title case.
-   *
-   * @param {Player} player - the string to convert
-   * @return {MenuButton} the returned titlecase string
+   * Extend vjs button class for quality button.
    */
 
 
-  function ConcreteButton(player) {
-    const ConcreteButtonInit = new VideoJsButtonClass(player, {
-      title: player.localize('Quality'),
-      name: 'QualityButton',
-      createItems: () => {
-        return [];
-      },
-      createMenu: () => {
-        const menu = new VideoJsMenuClass(this.player_, {
-          menuButton: this
+  class ConcreteButton extends VideoJsButtonClass {
+    /**
+     * Button constructor.
+     *
+     * @param {Player} player - videojs player instance
+     */
+    constructor(player) {
+      super(player, {
+        title: player.localize('Quality'),
+        name: 'QualityButton'
+      });
+    }
+    /**
+     * Creates button items.
+     *
+     * @return {Array} - Button items
+     */
+
+
+    createItems() {
+      return [];
+    }
+    /**
+     * Create the menu and add all items to it.
+     *
+     * @return {Menu}
+     *         The constructed menu
+     */
+
+
+    createMenu() {
+      const menu = new VideoJsMenuClass(this.player_, {
+        menuButton: this
+      });
+      menu.addClass('hls-quality-button');
+      this.hideThreshold_ = 0; // Add a title list item to the top
+
+      if (this.options_.title) {
+        const titleEl = Dom.createEl('li', {
+          className: 'vjs-menu-title',
+          innerHTML: toTitleCase(this.options_.title),
+          tabIndex: -1
         });
-        this.hideThreshold_ = 0; // Add a title list item to the top
-
-        if (this.options_.title) {
-          const titleEl = Dom.createEl('li', {
-            className: 'vjs-menu-title',
-            innerHTML: toTitleCase(this.options_.title),
-            tabIndex: -1
-          });
-          const titleComponent = new VideoJsComponent(this.player_, {
-            el: titleEl
-          });
-          this.hideThreshold_ += 1;
-          menu.addItem(titleComponent);
-        }
-
-        this.items = this.createItems();
-
-        if (this.items) {
-          // Add menu items to the menu
-          for (let i = 0; i < this.items.length; i++) {
-            menu.addItem(this.items[i]);
-          }
-        }
-
-        return menu;
+        const titleComponent = new VideoJsComponent(this.player_, {
+          el: titleEl
+        });
+        this.hideThreshold_ += 1;
+        menu.addItem(titleComponent);
       }
-    });
-    return ConcreteButtonInit;
+
+      this.items = this.createItems();
+
+      if (this.items) {
+        // Add menu items to the menu
+        for (let i = 0; i < this.items.length; i++) {
+          menu.addItem(this.items[i]);
+        }
+      }
+
+      return menu;
+    }
+
   }
 
   const VideoJsMenuItemClass = videojs__default['default'].getComponent('MenuItem');
   /**
-   * Create a QualitySelectorHls plugin instance.
-   *
-   * @param  {player} player
-   *         A Video.js Player instance.
-   *
-   * @param  {item} [item]
-   *         The Item Quality Item
-   *
-   * @param  {qualityButton} [qualityButton]
-   *         ConcreteButton
-   *
-   * @param  {plugin} plugin
-   *         Plugin
-   *
-   * @return {MenuItem} MenuItem
-   *         VideoJS Menu Item Class
+   * Extend vjs menu item class.
    */
 
-  function ConcreteMenuItem(player, item, qualityButton, plugin) {
-    const ConcreteMenuItemInit = new VideoJsMenuItemClass(player, {
-      label: item.label,
-      selectable: true,
-      selected: item.selected || false
-    });
-    ConcreteMenuItemInit.item = item;
-    ConcreteMenuItemInit.qualityButton = qualityButton;
-    ConcreteMenuItemInit.plugin = plugin;
+  class ConcreteMenuItem extends VideoJsMenuItemClass {
+    /**
+     * Menu item constructor.
+     *
+     * @param {Player} player - vjs player
+     * @param {Object} item - Item object
+     * @param {ConcreteButton} qualityButton - The containing button.
+     * @param {HlsQualitySelectorPlugin} plugin - This plugin instance.
+     */
+    constructor(player, item, qualityButton, plugin) {
+      super(player, {
+        label: item.label,
+        selectable: true,
+        selected: item.selected || false
+      });
+      this.item = item;
+      this.qualityButton = qualityButton;
+      this.plugin = plugin;
+    }
+    /**
+     * Click event for menu item.
+     */
 
-    ConcreteMenuItemInit.handleClick = function () {
+
+    handleClick() {
       // Reset other menu items selected status.
       for (let i = 0; i < this.qualityButton.items.length; ++i) {
         this.qualityButton.items[i].selected(false);
@@ -120,51 +139,35 @@
 
       this.plugin.setQuality(this.item.value);
       this.selected(true);
-    };
+    }
 
-    return ConcreteMenuItemInit;
   }
 
-  // Default options for the plugin.
+  const defaults = {}; // Cross-compatibility for Video.js 5 and 6.
 
-  const defaults = {
-    vjsIconClass: 'vjs-icon-hd',
-    displayCurrentQuality: false,
-    placementIndex: 0
-  };
+  const registerPlugin = videojs__default['default'].registerPlugin || videojs__default['default'].plugin; // const dom = videojs.dom || videojs;
+
   /**
-   * An advanced Video.js plugin. For more information on the API
-   *
-   * See: https://blog.videojs.com/feature-spotlight-advanced-plugins/
+   * VideoJS HLS Quality Selector Plugin class.
    */
 
-  class QualitySelectorHlsClass {
+  class HlsQualitySelectorPlugin {
     /**
-     * Create a QualitySelectorHls plugin instance.
+     * Plugin Constructor.
      *
-     * @param  {Player} player
-     *         A Video.js Player instance.
-     *
-     * @param  {Object} [options]
-     *         An optional options object.
-     *
-     *         While not a core part of the Video.js plugin architecture, a
-     *         second argument of options is a convenient way to accept inputs
-     *         from your plugin's caller.
+     * @param {Player} player - The videojs player instance.
+     * @param {Object} options - The plugin options.
      */
     constructor(player, options) {
-      // the parent class will add player under this.player
       this.player = player;
-      this.config = videojs__default['default'].obj.merge(defaults, options);
-      player.ready(() => {
-        this.player.addClass('vjs-quality-selector-hls');
+      this.config = options; // If there is quality levels plugin and the HLS tech exists
+      // then continue.
 
-        if (this.player.qualityLevels) {
-          // Create the quality button.
-          this.createQualityButton();
-          this.bindPlayerEvents();
-        }
-      });
+      if (this.player.qualityLevels) {
+        // Create the quality button.
+        this.createQualityButton();
+        this.bindPlayerEvents();
+      }
     }
     /**
      * Returns HLS Plugin
@@ -176,7 +179,7 @@
     getHls() {
       return this.player.tech({
         IWillNotUseThisInPlugins: true
-      }).hls;
+      }).vhs;
     }
     /**
      * Binds listener for quality level changes.
@@ -204,7 +207,7 @@
         const icon = ` ${this.config.vjsIconClass || 'vjs-icon-hd'}`;
         concreteButtonInstance.menuButton_.$('.vjs-icon-placeholder').className += icon;
       } else {
-        this.setButtonInnerText('auto');
+        this.setButtonInnerText(this.player.localize('Auto'));
       }
 
       concreteButtonInstance.removeClass('vjs-hidden');
@@ -229,7 +232,7 @@
 
     getQualityMenuItem(item) {
       const player = this.player;
-      return ConcreteMenuItem(player, item, this._qualityButton, this);
+      return new ConcreteMenuItem(player, item, this._qualityButton, this);
     }
     /**
      * Executed when a quality level is added from HLS playlist.
@@ -306,7 +309,7 @@
       this._currentQuality = quality;
 
       if (this.config.displayCurrentQuality) {
-        this.setButtonInnerText(quality === 'auto' ? quality : `${quality}p`);
+        this.setButtonInnerText(quality === 'auto' ? this.player.localize('Auto') : `${quality}p`);
       }
 
       for (let i = 0; i < qualityList.length; ++i) {
@@ -332,24 +335,51 @@
     }
 
   }
+  /**
+   * Function to invoke when the player is ready.
+   *
+   * This is a great place for your plugin to initialize itself. When this
+   * function is called, the player will have its DOM and child components
+   * in place.
+   *
+   * @function onPlayerReady
+   * @param    {Player} player
+   *           A Video.js player object.
+   *
+   * @param    {Object} [options={}]
+   *           A plain object containing options for the plugin.
+   */
 
-  const initPlugin = function (player, options) {
-    const QualitySelectorHls = new QualitySelectorHlsClass(player, options);
-    player.QualitySelectorHlsVjs = true; // Define default values for the plugin's `state` object here.
 
-    QualitySelectorHls.defaultState = {}; // Include the version number.
-
-    QualitySelectorHls.VERSION = version;
-    return QualitySelectorHls;
+  const onPlayerReady = (player, options) => {
+    player.addClass('vjs-hls-quality-selector');
+    player.hlsQualitySelector = new HlsQualitySelectorPlugin(player, options);
   };
+  /**
+   * A video.js plugin.
+   *
+   * In the plugin function, the value of `this` is a video.js `Player`
+   * instance. You cannot rely on the player being in a 'ready' state here,
+   * depending on how the plugin is invoked. This may or may not be important
+   * to you; if not, remove the wait for 'ready'!
+   *
+   * @function hlsQualitySelector
+   * @param    {Object} [options={}]
+   *           An object of options left to the plugin author to define.
+   */
 
-  const QualitySelectorHls = function (options) {
-    return initPlugin(this, videojs__default['default'].obj.merge({}, options));
+
+  const hlsQualitySelector = function (options) {
+    this.ready(() => {
+      onPlayerReady(this, videojs__default['default'].obj.merge(defaults, options));
+    });
   }; // Register the plugin with video.js.
 
 
-  videojs__default['default'].registerPlugin('qualitySelectorHls', QualitySelectorHls);
+  registerPlugin('hlsQualitySelector', hlsQualitySelector); // Include the version number.
 
-  return QualitySelectorHls;
+  hlsQualitySelector.VERSION = version;
+
+  return hlsQualitySelector;
 
 })));

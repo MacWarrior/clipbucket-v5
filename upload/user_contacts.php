@@ -13,7 +13,7 @@ $u = $u ? $u : $_GET['u'];
 $u = mysql_clean($u);
 $udetails = $userquery->get_user_details($u);
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, CLISTPP);
+$get_limit = create_query_limit($page, config('channels_list_per_page'));
 
 if ($udetails) {
     assign('u', $udetails);

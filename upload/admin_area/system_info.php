@@ -58,6 +58,8 @@ assign('phpVersionWebOK', phpversion() >= $phpVersionReq);
 $media_info = check_version('media_info');
 assign('media_info', $media_info);
 
+$git_version = check_version('git');
+assign('git_version', $git_version);
 
 /** php info web */
 ob_start();
@@ -67,8 +69,7 @@ $phpinfo = preg_replace( '%^.*<body>(.*)</body>.*$%ms','$1',$phpinfo);
 assign('php_info', $phpinfo);
 
 /** php info cli */
-$row = $myquery->Get_Website_Details();
-$cmd = $row['php_path'] . ' ' . DirPath::get('root') . 'phpinfo.php';
+$cmd = config('php_path') . ' ' . DirPath::get('root') . 'phpinfo.php';
 exec($cmd, $exec_output);
 assign('cli_php_info', implode('<br/>',$exec_output));
 

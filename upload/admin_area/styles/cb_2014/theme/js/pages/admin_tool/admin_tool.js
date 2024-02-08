@@ -14,7 +14,6 @@ $(function () {
                 data: {id_tool: id_tool},
                 dataType: 'json',
                 success: function (result) {
-                    $('#progress-' + id_tool).show();
                     $('#progress-bar-' + id_tool).removeClass('progress-bar-success').attr('aria-valuenow', 0).width(0 + '%');
                     $('#span-' + id_tool).html(result['libelle_status']);
                     $('#pourcent-' + id_tool).html(0);
@@ -23,6 +22,7 @@ $(function () {
                     $('.page-content').prepend(result['msg']);
                     elem.parent().addClass('disabled');
                     $('.stop[data-id="' + id_tool + '"]').parent().removeClass('disabled');
+                    $('#progress-' + id_tool).show();
                 }
             });
         }

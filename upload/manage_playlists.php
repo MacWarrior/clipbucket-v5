@@ -14,7 +14,7 @@ assign('p', $userquery->get_user_profile($udetails['userid']));
 $mode = $_GET['mode'];
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, VLISTPP);
+$get_limit = create_query_limit($page, config('videos_list_per_page'));
 
 switch ($mode) {
     case 'manage_playlist':

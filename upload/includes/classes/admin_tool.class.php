@@ -66,7 +66,7 @@ class AdminTool
                 ) tools_histo_max_date ON tools.id_tool = tools_histo_max_date.id_tool
                 LEFT JOIN ' . cb_sql_table("tools_histo") . ' ON tools.id_tool = tools_histo.id_tool AND tools_histo.date_start = tools_histo_max_date.max_date
                 left JOIN ' . cb_sql_table("tools_histo_status") . '  ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
-                WHERE tools_histo.id_tool IS NOT NULL OR tools_histo_max_date.id_tool IS NULL
+                WHERE (tools_histo.id_tool IS NOT NULL OR tools_histo_max_date.id_tool IS NULL)
                 '.(!empty($where) ? 'AND ' . $where : '').'
                 ORDER BY tools.id_tool;';
 
@@ -410,6 +410,15 @@ class AdminTool
     }
 
     /**
+     * @throws Exception
+     */
+    private function updateCore()
+    {
+        $this->array_loop = ['updateGit'];
+        $this->executeTool('Update::updateGitSources');
+    }
+
+    /**
      * @param string $function
      * @param bool $stop_on_error
      * @return void
@@ -524,4 +533,41 @@ class AdminTool
     }
 
 
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function recalculVideoFile()
+    {
+        $videos = Video::getInstance()->getAll();
+        $this->array_loop=$videos;
+        $this->executeTool('update_video_files');
+    }
+
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public function cleanSessionTable()
+    {
+        $res = Clipbucket_db::getInstance()->select(tbl('sessions'), 'session_id', 'session_date < DATE_SUB(NOW(), INTERVAL 1 MONTH);');
+        $this->array_loop=array_column($res, 'session_id');
+        $this->executeTool('Session::deleteById');
+    }
+
+    /**
+     * @param $id_tool
+     * @return void
+     * @throws Exception
+     */
+    public function recreateThumb()
+    {
+        $photos = Photo::getInstance()->getAll();
+        if (empty($photos)) {
+            $photos = [];
+        }
+        $this->array_loop = array_column($photos, 'photo_id');
+        $this->executeTool('Photo::generatePhoto');
+    }
 }
