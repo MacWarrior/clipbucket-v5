@@ -949,20 +949,14 @@ CREATE TABLE `{tbl_prefix}tools`(
     `language_key_label`       VARCHAR(128) NOT NULL,
     `language_key_description` VARCHAR(128) NOT NULL,
     `function_name`            VARCHAR(128) NOT NULL,
-    `id_tools_status`          INT          NOT NULL,
-    `elements_total`           INT          NULL DEFAULT NULL,
-    `elements_done`            INT          NULL DEFAULT NULL,
     PRIMARY KEY (`id_tool`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}tools_status`(
-    `id_tools_status`    INT          NOT NULL AUTO_INCREMENT,
+CREATE TABLE `{tbl_prefix}tools_histo_status`(
+    `id_tools_histo_status`    INT          NOT NULL AUTO_INCREMENT,
     `language_key_title` VARCHAR(128) NOT NULL,
-    PRIMARY KEY (`id_tools_status`)
+    PRIMARY KEY (`id_tools_histo_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-ALTER TABLE `{tbl_prefix}tools`
-    ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
 (
@@ -1138,3 +1132,35 @@ ALTER TABLE `{tbl_prefix}playlists_categories`
     ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}playlists_categories`
     ADD CONSTRAINT `playlist_categories_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
+(
+    `id_histo`        INT      NOT NULL AUTO_INCREMENT,
+    `id_tool`         INT      NOT NULL,
+    `id_tools_histo_status` INT      NOT NULL,
+    `date_start`      DATETIME NOT NULL,
+    `date_end`        DATETIME NULL,
+    `elements_total`  INT      NOT NULL,
+    `elements_done`   INT      NOT NULL,
+    PRIMARY KEY (`id_histo`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tools_histo`
+    ADD CONSTRAINT `id_tools_histo` FOREIGN KEY (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
+(
+    `id_log`   INT          NOT NULL AUTO_INCREMENT,
+    `id_histo` INT          NOT NULL,
+    `datetime` DATETIME     NOT NULL,
+    `message`  VARCHAR(256) NOT NULL,
+    PRIMARY KEY (`id_log`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tools_histo_log`
+    ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;

@@ -1,5 +1,6 @@
 var max_try = 5;
 var eventSource;
+var eventSourceLog;
 $(function () {
 
     connectSSE();
@@ -44,7 +45,31 @@ $(function () {
             });
         }
     });
+    $('.show_log').on('click', function () {
+        var elem = $(this);
+        if (!$(this).parent().hasClass('disabled')) {
+            var id_tool = elem.data('id');
+            $.ajax({
+                url: "/actions/show_tool_log.php",
+                type: "POST",
+                data: {id_tool: id_tool},
+                dataType: 'json',
+                success: function (result) {
+                    var tries = 0;
+                    // Create new event, the server script is sse.php
+                    //connectSSELog(result['id_tool'], result['max_id_tool']);
+                    $('.page-content').prepend(result['msg']);
+                    $('#logModal').find('.modal-body').html(result['template']);
+                    $('#logModal').modal();
+                }
+            });
+        }
+    });
 
+    $('#logModal').on('hidden.bs.modal', function () {
+        $(this).html('');
+        eventSourceLog.close();
+    });
 });
 
 function connectSSE () {
@@ -95,5 +120,29 @@ function connectSSE () {
 
     eventSource.addEventListener('error', function(e) {
             eventSource.close();
+    }, false);
+}
+function connectSSELog () {
+    var tries = 0;
+    // Create new event, the server script is sse.php
+    eventSourceLog = new eventSourceLog("/admin_area/sse/progress_tool.php?max_id=" );
+    // Event when receiving a message from the server
+    eventSourceLog.addEventListener("message", function(e) {
+        var data = JSON.parse(e.data);
+        data.forEach(function (elem) {
+            $('#tool_logs').append('<tr><td>'+elem.datetime+'</td><td>'+elem.message+'</td>' +
+                '</tr>')
+        })
+    }, false);
+
+    eventSourceLog.addEventListener('open', function(e) {
+        tries++
+        if (tries > max_try) {
+            eventSourceLog.close();
+        }
+    }, false);
+
+    eventSourceLog.addEventListener('error', function(e) {
+            eventSourceLog.close();
     }, false);
 }

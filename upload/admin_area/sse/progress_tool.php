@@ -1,28 +1,14 @@
 <?php
-header('Content-Type: text/event-stream');
-header('Cache-Control: no-cache');
-header('X-Accel-Buffering: no');
-header('connection: keep-alive');
+
 const THIS_PAGE = 'progress';
 require_once dirname(__FILE__, 3) . '/includes/config.inc.php';
-
+require_once DirPath::get('classes') . 'SSE.class.php';
 userquery::getInstance()->admin_login_check();
 
-ignore_user_abort(false);
-if (session_id()) {
-    session_write_close();
-}
-if (ob_get_level() == 0) {
-    ob_start();
-}
-while (true) {
-    if (connection_aborted()) {
-        exit();
-    }
-
+SSE::processSSE(function () {
     try {
         $tools = AdminTool::getTools([
-            ' elements_total IS NOT NULL '
+            ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\') '
         ]);
     } catch (Exception $e) {
         exit();
@@ -38,7 +24,7 @@ while (true) {
     foreach ($tools as $tool) {
         $returned_tools[] = [
             'id'             => $tool['id_tool'],
-            'status'         => $tool['id_tools_status'],
+            'status'         => $tool['id_tools_histo_status'],
             'status_title'   => lang($tool['language_key_title']),
             'pourcent'       => sprintf('%.2f', $tool['pourcentage_progress']),
             'elements_done'  => $tool['elements_done'],
@@ -46,9 +32,5 @@ while (true) {
         ];
     }
     $output .= json_encode($returned_tools);
-    $output .= str_pad('', 4096) . "\n\n";
-    echo $output;
-    ob_flush();
-    flush();
-    sleep($sleep);
-}
+    return ['output'=>$output, 'sleep'=>$sleep];
+}, 10);

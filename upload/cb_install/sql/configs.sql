@@ -260,18 +260,18 @@ INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`
 	('1440p', '16/9', 0, 2560, 1440, 7280000),
 	('2160p', '16/9', 0, 4096, 2160, 17472000);
 
-INSERT INTO `{tbl_prefix}tools_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
-INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    ('generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL),
-    ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus', 1, NULL, NULL),
-    ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 1, NULL, NULL),
-    ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 1, NULL, NULL),
-    ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion', 1, NULL, NULL),
-    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 1, NULL, NULL),
-    ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 1, NULL, NULL),
-    ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles', 1, NULL, NULL),
-    ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration', 1, NULL, NULL),
-    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
+INSERT INTO `{tbl_prefix}tools_histo_log` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
+INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`) VALUES
+    ('generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs'),
+    ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus'),
+    ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor'),
+    ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration'),
+    ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion'),
+    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache'),
+    ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog'),
+    ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles'),
+    ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration'),
+    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
 
