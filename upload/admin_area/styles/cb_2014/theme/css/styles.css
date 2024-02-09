@@ -848,3 +848,40 @@ a[role='menuitem'] {
     display: inline;
     padding: 3px;
 }
+
+#tmdb_token_test{
+    width: 40px;
+}
+
+#tmdb_token_test img{
+    width: 15px;
+}
+
+#tmdb_token_test:not(.disabled){
+    cursor: pointer;
+}
+
+#tmdb_token_test.disabled{
+    cursor: no-drop;
+}
+
+#tmdb_token_test:not(.disabled):hover{
+    background-color: #d5d5d5;
+}
+
+#tmdb_token_test.ok{
+    background-color:#DFF0D8;
+    color: #3c763d;
+}
+
+#tmdb_token_test.ok:hover{
+    background-color: #d2eeca;
+}
+
+#tmdb_token_test.ko{
+    background-color:#F2DEDE;
+    color: #a94442;
+}
+#tmdb_token_test.ko:hover{
+    background-color: #f3d3d3;
+}

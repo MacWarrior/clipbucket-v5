@@ -715,7 +715,7 @@ class CBvideo extends CBCategory
                 $select_tag .= ', GROUP_CONCAT( CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
             }
             $join_tag = ' LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video 
-                    LEFT JOIN ' . tbl('tags') .' ON video_tags.id_tag = tags.id_tag';
+                    LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
             $group[] = ' video.videoid ';
         }
 

@@ -6,10 +6,10 @@ userquery::getInstance()->admin_login_check();
 try {
     $tmdb = new TMdb();
     $tmdb->init(new \Classes\Curl(TMdb::API_URL, $_REQUEST['token']));
-    e(lang('success'),'m');
+    $msg = 'OK';
     $success = true;
 } catch ( \Exception $e) {
-    e($e->getMessage());
+    $msg = 'KO';
     $success = false;
 }
-echo json_encode(['success'=>$success, 'msg'=>getTemplateMsg()]);
+echo json_encode(['success'=>$success, 'msg'=>$msg]);

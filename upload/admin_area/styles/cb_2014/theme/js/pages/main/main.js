@@ -94,27 +94,42 @@ $(document).ready(function () {
     });
     $('#enable_tmdb').change(function () {
         let parent = $('#tmdb_token');
-        let button = $('#test_tmbd_auth');
+        let button = $('#tmdb_token_test');
         if (!$(this).prop('checked')) {
             parent.prop('disabled',true);
-            button.prop('disabled',true);
+            button.addClass('disabled');
             parent.trigger('focus')
         } else {
             parent.prop('disabled',false);
-            button.prop('disabled',false);
+            button.removeClass('disabled');
         }
     });
 
-    $('#test_tmbd_auth').click(function (e) {
+    $('#tmdb_token').keyup(function(){
+        $('#tmdb_token_test').html('?').removeClass('ok ko');
+    });
+
+    $('#tmdb_token_test').click(function (e) {
+        if( $(this).hasClass('disabled') ){
+            return;
+        }
+
         e.preventDefault();
         $.ajax({
             url: "/actions/test_tmdb.php",
             type: "POST",
             data: {token: $('#tmdb_token').val()},
             dataType: 'json',
+            beforeSend : function(){
+                $('#tmdb_token_test').removeClass('ok ko').html(loading_img);
+            },
             success: function (result) {
-                $('.close').click();
-                $('.page-content').prepend(result['msg']);
+                console.log(result['msg']);
+                if( result['msg'] === 'OK' ){
+                    $('#tmdb_token_test').html("<span class='glyphicon glyphicon-ok'></span>").removeClass('ko').addClass('ok');
+                } else {
+                    $('#tmdb_token_test').html("<span class='glyphicon glyphicon-remove'></span>").removeClass('ok').addClass('ko');
+                }
             }
         });
     });
