@@ -886,3 +886,7 @@ a[role='menuitem'] {
 #tmdb_token_test.glyphicon-remove:hover{
     background-color: #f3d3d3;
 }
+
+.tmdb_poster{
+    max-height: 150px;
+}

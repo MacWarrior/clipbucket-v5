@@ -1,18 +1,16 @@
-<div class="modal-dialog">
-
-    <!-- Modal content-->
+<div class="modal-dialog" style="width:80%">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title">Modal Header</h4>
+            <h4 class="modal-title">{lang code='tmdb_search'}</h4>
         </div>
         <div class="modal-body">
-            <table class="table table-bordered table-striped manageUsersTable">
+            <table class="table table-bordered table-striped">
                 <tr>
-                    <th class="col-md-10">{lang code='title'}</th>
-                    <th class="col-md-10">{lang code='release_date'}</th>
-                    <th class="col-md-10">{lang code='description'}</th>
-                    <th class="col-md-10">{lang code='poster'}</th>
+                    <th class="col-md-1">{lang code='title'}</th>
+                    <th class="col-md-2">{lang code='release_date'}</th>
+                    <th class="col-md-6">{lang code='description'}</th>
+                    <th class="col-md-2">{lang code='poster'}</th>
                     <th class="col-md-1"></th>
                 </tr>
                 {section name=sub loop=$results}
@@ -28,7 +26,7 @@
                         <span>{display_clean($results[sub].overview)}</span>
                     </td>
                     <td>
-                        <img src="{config('url_tmdb_poster')}{$results[sub].poster_path}"/>
+                        <img class="tmdb_poster" src="{config('url_tmdb_poster')}{$results[sub].poster_path}"/>
                     </td>
                     <td>
                         <button onclick="saveInfoTmdb({display_clean($results[sub].id)}, {display_clean($videoid)})">{lang code='import'}</button>
@@ -38,7 +36,7 @@
             </table>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
         </div>
     </div>
 </div>
