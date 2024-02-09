@@ -124,6 +124,11 @@
                             <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
                         </a>
                     </li>
+                    <li>
+                        <a data-toggle="tab" href="#movie_infos">
+                            <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                        </a>
+                    </li>
 				</ul>
 				<div class="tab-content">
 					<div id="videodetail" class="tab-pane active">
@@ -283,6 +288,30 @@
                         </div>
                         {/foreach}
                     </div>
+
+                    <div id="movie_infos" class="tab-pane">
+                        {foreach from=$video_fields item=field}
+                            {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                {continue}
+                            {/if}
+
+                        <div class="table">
+                            {$field.class='form-control'}
+                            <label><strong>{$field.title|truncate:80}</strong></label><br>
+                            {if $field.hint_1}
+                            {$field.hint_1}<br/>
+                            {/if}
+                            {$formObj->createField($field)}
+                            {if $field.id|strstr:'tags'}
+                            <ul id="list_{$field.id}"></ul>
+                            {/if}
+                            {if $field.hint_2}<br/>
+                            {$field.hint_2}
+                            {/if}
+                        </div>
+                        {/foreach}
+                    </div>
+
 				</div>
 			</div>
             <div class="tabbable paddingTop">
@@ -320,6 +349,10 @@
                 <div class="tab-content">
                     <div id="videoinfos" class="tab-pane active">
                         {foreach from=$video_fields item=field}
+                            {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                {continue}
+                            {/if}
+
                         {if $field.id == 'category'}
                         <div>
                             {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
@@ -414,7 +447,6 @@
                                     {$field.hint_1}<br/>
                                     {ANCHOR place=$field.anchor_before}
 
-                                    <!-- checkmate -->
                                     {if $field.name=='embed_code'}
                                         {if ($data.embed_code == '' || $data.embed_code == 'none' || $data.embed_code ==NULL)}
                                             {$field.extra_tags='disabled="disabled"'}
@@ -426,7 +458,6 @@
                                             {$field.extra_tags=' disabled="disabled"'}
                                         {/if}
                                     {/if}
-                                    <!-- checkmate -->
 
                                     {$formObj->createField($field)}
                                 {$field.hint_2}

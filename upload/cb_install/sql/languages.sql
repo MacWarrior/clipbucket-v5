@@ -1098,4 +1098,5 @@ VALUES ('admin_setting'),
        ('option_tmdb_get_release_date'),
        ('option_tmdb_get_title'),
        ('option_tmdb_get_description'),
-       ('tmdb_search');
+       ('tmdb_search'),
+       ('movie_infos');
