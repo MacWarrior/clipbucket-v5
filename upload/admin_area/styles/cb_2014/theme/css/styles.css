@@ -851,6 +851,7 @@ a[role='menuitem'] {
 
 #tmdb_token_test{
     width: 40px;
+    top: 0;
 }
 
 #tmdb_token_test img{
@@ -869,19 +870,19 @@ a[role='menuitem'] {
     background-color: #d5d5d5;
 }
 
-#tmdb_token_test.ok{
+#tmdb_token_test.glyphicon-ok{
     background-color:#DFF0D8;
     color: #3c763d;
 }
 
-#tmdb_token_test.ok:hover{
+#tmdb_token_test.glyphicon-ok:hover{
     background-color: #d2eeca;
 }
 
-#tmdb_token_test.ko{
+#tmdb_token_test.glyphicon-remove{
     background-color:#F2DEDE;
     color: #a94442;
 }
-#tmdb_token_test.ko:hover{
+#tmdb_token_test.glyphicon-remove:hover{
     background-color: #f3d3d3;
 }

@@ -106,7 +106,7 @@ $(document).ready(function () {
     });
 
     $('#tmdb_token').keyup(function(){
-        $('#tmdb_token_test').html('?').removeClass('ok ko');
+        $('#tmdb_token_test').removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-refresh');
     });
 
     $('#tmdb_token_test').click(function (e) {
@@ -121,14 +121,13 @@ $(document).ready(function () {
             data: {token: $('#tmdb_token').val()},
             dataType: 'json',
             beforeSend : function(){
-                $('#tmdb_token_test').removeClass('ok ko').html(loading_img);
+                $('#tmdb_token_test').removeClass('glyphicon-ok glyphicon-remove glyphicon-refresh').html(loading_img);
             },
             success: function (result) {
-                console.log(result['msg']);
                 if( result['msg'] === 'OK' ){
-                    $('#tmdb_token_test').html("<span class='glyphicon glyphicon-ok'></span>").removeClass('ko').addClass('ok');
+                    $('#tmdb_token_test').html('').removeClass('glyphicon-remove glyphicon-refresh').addClass('glyphicon-ok');
                 } else {
-                    $('#tmdb_token_test').html("<span class='glyphicon glyphicon-remove'></span>").removeClass('ok').addClass('ko');
+                    $('#tmdb_token_test').html('').removeClass('glyphicon-refresh glyphicon-ok').addClass('glyphicon-remove');
                 }
             }
         });

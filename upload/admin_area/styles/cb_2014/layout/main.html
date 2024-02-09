@@ -216,7 +216,7 @@
 								<div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if $row.enable_tmdb != 'yes'}disabled="disabled"{/if}/>
-										<span class="input-group-addon {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test" title="Check TMDB token">?</span>
+										<span class="input-group-addon glyphicon glyphicon-refresh {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test" title="{lang code='tmdb_token_check'}"></span>
 									</div>
 								</div>
 							</div>
