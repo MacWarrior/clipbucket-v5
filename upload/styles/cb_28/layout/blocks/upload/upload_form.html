@@ -22,8 +22,8 @@
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
                         {/if}
-                            {if $field.id == 'tags'}
-                            <ul id="list_tags"></ul>
+                            {if $field.id|strstr:'tags'}
+                            <ul id="list_{$field.id}"></ul>
                             {/if}
                         </div>
                     {/foreach}
