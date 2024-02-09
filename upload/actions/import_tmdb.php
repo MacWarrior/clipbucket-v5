@@ -13,30 +13,41 @@ if (empty($video_info)) {
 $movie_credits = Tmdb::getInstance()->movieCredits($_POST['tmdb_video_id'])['response'];
 $movie_details = Tmdb::getInstance()->movieDetail($_POST['tmdb_video_id'])['response'];
 
-//video details
-$video_info['title'] = $movie_details['title'];
-$video_info['description'] = $movie_details['overview'];
-$movie_name_without_slash = str_replace('/','',$movie_details['poster_path']);
-CBvideo::getInstance()->update_video($video_info);
-
-//poster
-$url = config('url_tmdb_poster') . $movie_details['poster_path'];
-$tmp_path = DirPath::get('temp') . $movie_name_without_slash;
-$resutl = file_put_contents($tmp_path, file_get_contents($url));
-Upload::getInstance()->upload_thumb($video_info['file_name'], [
-    'tmp_name' => [$tmp_path],
-    'name'     => [$movie_name_without_slash]
-], 0, $video_info['file_directory']);
-
-//tags
-$genre_tags = [];
-foreach ($movie_details['genres'] as $genre) {
-    $genre_tags[] = trim($genre['name']);
+if( config('tmdb_get_title') == 'yes' ) {
+    $video_info['title'] = $movie_details['title'];
+}
+if( config('tmdb_get_description') == 'yes' ) {
+    $video_info['description'] = $movie_details['overview'];
+}
+if( config('tmdb_get_title') == 'yes' || config('tmdb_get_description') == 'yes' ) {
+    CBvideo::getInstance()->update_video($video_info);
 }
 
-$actors_tags = [];
-foreach ($movie_credits['cast'] as $actor) {
-    $actors_tags[] = trim($actor['name']);
+if( config('tmdb_get_poster') == 'yes' ){
+    $movie_name_without_slash = str_replace('/','',$movie_details['poster_path']);
+    $url = config('url_tmdb_poster') . $movie_details['poster_path'];
+    $tmp_path = DirPath::get('temp') . $movie_name_without_slash;
+    $resutl = file_put_contents($tmp_path, file_get_contents($url));
+    Upload::getInstance()->upload_thumb($video_info['file_name'], [
+        'tmp_name' => [$tmp_path],
+        'name'     => [$movie_name_without_slash]
+    ], 0, $video_info['file_directory']);
+}
+
+if( config('tmdb_get_genre') == 'yes' ) {
+    $genre_tags = [];
+    foreach ($movie_details['genres'] as $genre) {
+        $genre_tags[] = trim($genre['name']);
+    }
+    Tags::saveTags(implode(',', $genre_tags), 'genre', $_POST['videoid']);
+}
+
+if( config('tmdb_get_actors') == 'yes' ) {
+    $actors_tags = [];
+    foreach ($movie_credits['cast'] as $actor) {
+        $actors_tags[] = trim($actor['name']);
+        Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
+    }
 }
 
 $producer_tags = [];
@@ -61,11 +72,20 @@ foreach ($movie_credits['crew'] as $crew) {
     }
 }
 
-Tags::saveTags(implode(',', $producer_tags), 'producer', $_POST['videoid']);
-Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $_POST['videoid']);
-Tags::saveTags(implode(',', $director_tags), 'director', $_POST['videoid']);
-Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
-Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
-Tags::saveTags(implode(',', $genre_tags), 'genre', $_POST['videoid']);
+if( config('tmdb_get_producer') == 'yes' ) {
+    Tags::saveTags(implode(',', $producer_tags), 'producer', $_POST['videoid']);
+}
+
+if( config('tmdb_get_executive_producer') == 'yes' ) {
+    Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $_POST['videoid']);
+}
+
+if( config('tmdb_get_director') == 'yes' ) {
+    Tags::saveTags(implode(',', $director_tags), 'director', $_POST['videoid']);
+}
+
+if( config('tmdb_get_crew') == 'yes' ) {
+    Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
+}
 
 echo json_encode(['success' => true]);

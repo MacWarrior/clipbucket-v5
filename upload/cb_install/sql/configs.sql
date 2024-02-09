@@ -253,7 +253,17 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'display_collection_comments', 'yes'),
     (NULL, 'enable_sitemap', 'yes'),
     (NULL, 'git_path', ''),
-    (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2');
+    (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2'),
+    (NULL, 'tmdb_get_genre', 'yes'),
+    (NULL, 'tmdb_get_actors', 'yes'),
+    (NULL, 'tmdb_get_producer', 'yes'),
+    (NULL, 'tmdb_get_executive_producer', 'yes'),
+    (NULL, 'tmdb_get_director', 'yes'),
+    (NULL, 'tmdb_get_crew', 'yes'),
+    (NULL, 'tmdb_get_poster', 'yes'),
+    (NULL, 'tmdb_get_release_date', 'yes'),
+    (NULL, 'tmdb_get_title', 'yes'),
+    (NULL, 'tmdb_get_description', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

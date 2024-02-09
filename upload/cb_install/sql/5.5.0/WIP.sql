@@ -1,13 +1,23 @@
 INSERT IGNORE INTO `{tbl_prefix}config` (`configid`, `name`, `value`)
 VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'enable_tmdb', 'no'),
-       (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2');
+       (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/w600_and_h900_bestv2'),
+       (NULL, 'tmdb_get_genre', 'yes'),
+       (NULL, 'tmdb_get_actors', 'yes'),
+       (NULL, 'tmdb_get_producer', 'yes'),
+       (NULL, 'tmdb_get_executive_producer', 'yes'),
+       (NULL, 'tmdb_get_director', 'yes'),
+       (NULL, 'tmdb_get_crew', 'yes'),
+       (NULL, 'tmdb_get_poster', 'yes'),
+       (NULL, 'tmdb_get_release_date', 'yes'),
+       (NULL, 'tmdb_get_title', 'yes'),
+       (NULL, 'tmdb_get_description', 'yes');
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
     MODIFY COLUMN `num` TINYINT NOT NULL;
 
 ALTER TABLE `{tbl_prefix}tags_type`
-    ADD UNIQUE `name` (`name`);
+    ADD UNIQUE IF NOT EXISTS `name` (`name`);
 INSERT IGNORE INTO `{tbl_prefix}tags_type` (name) VALUES ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
@@ -116,3 +126,83 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Director', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Directeur', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_genre' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get genre from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer le genre depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_actors' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get actors from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer les acteurs depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_producer' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get producer from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer le producteur depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_executive_producer' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get executive producer from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer le producteur exécutif depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_director' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get director from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer le directeur depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_crew' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get crew from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer l\'équipe depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_poster' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get poster from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer l\'affiche depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_release_date' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get release date from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer la date de sortie depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_title' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get title from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer le titre depuis TMDB', @language_id_fra);
+
+SET @language_key = 'option_tmdb_get_description' COLLATE utf8mb4_unicode_520_ci;
+INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Get description from TMDB', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Récupérer la description depuis TMDB', @language_id_fra);

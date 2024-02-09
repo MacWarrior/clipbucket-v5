@@ -137,16 +137,6 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="enable_tmdb" title="Enable RSS feeds">{lang code='enable_tmdb'}</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input value="yes" id="enable_tmdb" {if $row.enable_tmdb=='yes'}checked{/if} name="enable_tmdb" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
 									<label class="nowrap" for="enable_sitemap" title="{lang code='option_enable_sitemap'}">{lang code='option_enable_sitemap'}</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
@@ -206,18 +196,6 @@
 								<div class="col-md-12">
 									<label class="nowrap" for="closed_msg" title="Closed message">Closed message</label>
 									<textarea class="form-control" name="closed_msg" id="closed_msg" cols="45" rows="5">{$row.closed_msg}</textarea>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="tmdb_token" title="{lang code='tmdb_token'}">{lang code='tmdb_token'}</label>
-								</div>
-								<div class="col-md-6">
-									<div class="input-group">
-										<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if $row.enable_tmdb != 'yes'}disabled="disabled"{/if}/>
-										<span class="input-group-addon glyphicon glyphicon-refresh {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test" title="{lang code='tmdb_token_check'}"></span>
-									</div>
 								</div>
 							</div>
 							<hr/>
@@ -1384,6 +1362,13 @@
 									<input value="yes" name="enable_video_social_sharing" id="enable_video_social_sharing" {if $row.enable_video_social_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_link_sharing" title="{lang code='option_enable_video_link_sharing'}">{lang code='option_enable_video_link_sharing'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_link_sharing" id="enable_video_link_sharing" {if $row.enable_video_link_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
 							</div>
 							<hr/>
 							<div class="row">
@@ -1393,6 +1378,28 @@
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_quicklist" id="enable_quicklist" {if $row.enable_quicklist=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="video_round_views" title="Round views">Round views</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="video_round_views" id="video_round_views" {if $row.video_round_views=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="vid_cat_width" title="Category Width">Category Width</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input class="form-control" name="vid_cat_width" id="vid_cat_width" value="{$row.vid_cat_width}"/>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="vid_cat_height" title="Category height">Category height</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input class="form-control" name="vid_cat_height" id="vid_cat_height" value="{$row.vid_cat_height}"/>
 								</div>
 							</div>
 							<hr/>
@@ -1432,36 +1439,108 @@
 						</div>
 						<div class="col-md-4">
 							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_tmdb" title="Enable RSS feeds">{lang code='enable_tmdb'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" id="enable_tmdb" {if $row.enable_tmdb=='yes'}checked{/if} name="enable_tmdb" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="tmdb_token" title="{lang code='tmdb_token'}">{lang code='tmdb_token'}</label>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group">
+										<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if $row.enable_tmdb != 'yes'}disabled="disabled"{/if}/>
+										<span class="input-group-addon glyphicon glyphicon-refresh {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test" title="{lang code='tmdb_token_check'}"></span>
+									</div>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="video_round_views" title="Round views">Round views</label>
+									<label class="nowrap" for="tmdb_get_title" title="{lang code='option_tmdb_get_title'}">{lang code='option_tmdb_get_title'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="video_round_views" id="video_round_views" {if $row.video_round_views=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_title" id="tmdb_get_title" {if $row.tmdb_get_title=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_description" title="{lang code='option_tmdb_get_description'}">{lang code='option_tmdb_get_description'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_description" id="tmdb_get_description" {if $row.tmdb_get_description=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="vid_cat_width" title="Category Width">Category Width</label>
+									<label class="nowrap" for="tmdb_get_genre" title="{lang code='option_tmdb_get_genre'}">{lang code='option_tmdb_get_genre'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input class="form-control" name="vid_cat_width" id="vid_cat_width" value="{$row.vid_cat_width}"/>
+									<input value="yes" name="tmdb_get_genre" id="tmdb_get_genre" {if $row.tmdb_get_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
-									<label class="nowrap" for="vid_cat_height" title="Category height">Category height</label>
+									<label class="nowrap" for="tmdb_get_actors" title="{lang code='option_tmdb_get_actors'}">{lang code='option_tmdb_get_actors'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input class="form-control" name="vid_cat_height" id="vid_cat_height" value="{$row.vid_cat_height}"/>
+									<input value="yes" name="tmdb_get_actors" id="tmdb_get_actors" {if $row.tmdb_get_actors=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_link_sharing" title="{lang code='option_enable_video_link_sharing'}">{lang code='option_enable_video_link_sharing'}</label>
+									<label class="nowrap" for="tmdb_get_producer" title="{lang code='option_tmdb_get_producer'}">{lang code='option_tmdb_get_producer'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_video_link_sharing" id="enable_video_link_sharing" {if $row.enable_video_link_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_producer" id="tmdb_get_producer" {if $row.tmdb_get_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_executive_producer" title="{lang code='option_tmdb_get_executive_producer'}">{lang code='option_tmdb_get_executive_producer'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer" {if $row.tmdb_get_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_director" title="{lang code='option_tmdb_get_director'}">{lang code='option_tmdb_get_director'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_director" id="tmdb_get_director" {if $row.tmdb_get_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_crew" title="{lang code='option_tmdb_get_crew'}">{lang code='option_tmdb_get_crew'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_crew" id="tmdb_get_crew" {if $row.tmdb_get_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_poster" title="{lang code='option_tmdb_get_poster'}">{lang code='option_tmdb_get_poster'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_poster" id="tmdb_get_poster" {if $row.tmdb_get_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_release_date" title="{lang code='option_tmdb_get_release_date'}">{lang code='option_tmdb_get_release_date'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_release_date" id="tmdb_get_release_date" {if $row.tmdb_get_release_date=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>

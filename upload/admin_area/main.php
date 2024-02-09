@@ -92,6 +92,16 @@ if (isset($_POST['update'])) {
         , 'display_collection_comments'
         , 'enable_sitemap'
         , 'enable_tmdb'
+        , 'tmdb_get_genre'
+        , 'tmdb_get_actors'
+        , 'tmdb_get_producer'
+        , 'tmdb_get_executive_producer'
+        , 'tmdb_get_director'
+        , 'tmdb_get_crew'
+        , 'tmdb_get_poster'
+        , 'tmdb_get_release_date'
+        , 'tmdb_get_title'
+        , 'tmdb_get_description'
     ];
 
     $config_booleans_to_refactor = [
@@ -365,6 +375,16 @@ if (isset($_POST['update'])) {
 
         'enable_tmdb',
         'tmdb_token',
+        'tmdb_get_genre',
+        'tmdb_get_actors',
+        'tmdb_get_producer',
+        'tmdb_get_executive_producer',
+        'tmdb_get_director',
+        'tmdb_get_crew',
+        'tmdb_get_poster',
+        'tmdb_get_release_date',
+        'tmdb_get_title',
+        'tmdb_get_description',
 
         'hide_empty_collection',
         'display_video_comments',
