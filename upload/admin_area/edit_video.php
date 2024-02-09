@@ -15,7 +15,6 @@ if (isset($_POST['update'])) {
     if (empty($eh->get_error())) {
         $myquery->update_video();
         $myquery->set_default_thumb($video, $_POST['default_thumb']);
-
     }
 }
 $data = Video::getInstance()->getOne(['videoid'=>$video]);
@@ -34,7 +33,6 @@ if ($_GET['mode'] != '') {
     $modedata = $cbvid->action($_GET['mode'], $video);
     assign('modedata', $modedata);
 }
-
 
 //Check Video Exists or Not
 if ($myquery->video_exists($video)) {

@@ -997,9 +997,10 @@ class CBvideo extends CBCategory
                             $type = $matches['2'];
                         }
 
-                        if( !empty($item) ){
-                            Tags::saveTags($item, $type, $vid);
+                        if( empty($item) ){
+                            $item = '';
                         }
+                        Tags::saveTags($item, $type, $vid);
                     }
                 }
 

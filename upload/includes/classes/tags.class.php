@@ -183,6 +183,8 @@ class Tags
             return false;
         }
 
+
+
         //insert new tags
         $tag_array = explode(',', mysql_clean($tags));
         while( !empty($tag_array) ) {
