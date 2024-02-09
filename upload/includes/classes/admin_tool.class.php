@@ -55,8 +55,9 @@ class AdminTool
     public static function getTools(array $condition = []): array
     {
         $where = implode(' AND ', $condition);
-
-        $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, 
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+            $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, 
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
                 FROM ' . cb_sql_table("tools") . '
                 LEFT JOIN (
@@ -67,11 +68,18 @@ class AdminTool
                 LEFT JOIN ' . cb_sql_table("tools_histo") . ' ON tools.id_tool = tools_histo.id_tool AND tools_histo.date_start = tools_histo_max_date.max_date
                 left JOIN ' . cb_sql_table("tools_histo_status") . '  ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
                 WHERE (tools_histo.id_tool IS NOT NULL OR tools_histo_max_date.id_tool IS NULL)
-                '.(!empty($where) ? 'AND ' . $where : '').'
+                ' . (!empty($where) ? 'AND ' . $where : '') . '
                 ORDER BY tools.id_tool;';
 
-
-        return Clipbucket_db::getInstance()->_select($sql);
+            return Clipbucket_db::getInstance()->_select($sql);
+        } else {
+            $select = cb_sql_table("tools") . ' 
+        LEFT JOIN ' . cb_sql_table("tools_status") . ' ON tools_status.id_tools_status = tools.id_tools_status';
+            return Clipbucket_db::getInstance()->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
+               CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress'
+                , $where
+            );
+        }
     }
 
     /**
@@ -81,8 +89,13 @@ class AdminTool
      */
     public function setToolInProgress(): bool
     {
-        Clipbucket_db::getInstance()->insert(tbl('tools_histo'), ['id_tool', 'id_tools_histo_status', 'date_start'], [$this->id_tool, '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')', '|no_mc||f|NOW()']);
-        $this->id_histo = Clipbucket_db::getInstance()->insert_id();
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+            Clipbucket_db::getInstance()->insert(tbl('tools_histo'), ['id_tool', 'id_tools_histo_status', 'date_start'], [$this->id_tool, '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')', '|no_mc||f|NOW()']);
+            $this->id_histo = Clipbucket_db::getInstance()->insert_id();
+        } else {
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'in_progress\')'], 'id_tool = ' . mysql_clean($this->id_tool));
+        }
         return true;
     }
 
@@ -431,22 +444,30 @@ class AdminTool
         //get list of video
         if (!empty($this->array_loop)) {
             //update nb_elements of tools
-            $this->updateToolHisto(['elements_total', 'elements_done'], [count($this->array_loop), 0]);
+            $version = Update::getInstance()->getDBVersion();
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+                $this->updateToolHisto(['elements_total', 'elements_done'], [count($this->array_loop), 0]);
+                $this->addLog('tool started');
+            } else {
+                Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [count($this->array_loop), 0], ' id_tool = ' . $secureIdTool);
+            }
             $nb_done = 0;
-            $this->addLog('tool started');
             foreach ($this->array_loop as $item) {
                 //check if user request stop
-                $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T 
+                if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+                    $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T 
                     INNER JOIN ' . tbl('tools_histo') . ' AS TH ON T.id_tool = TH.id_tool
                     INNER JOIN ' . tbl('tools_histo_status') . ' AS TS ON TH.id_tools_histo_status = TS.id_tools_histo_status'
-                    , 'TS.id_tools_histo_status', 'T.id_tool = ' . $secureIdTool . ' AND TS.language_key_title like \'stopping\'');
+                        , 'TS.id_tools_histo_status', 'T.id_tool = ' . $secureIdTool . ' AND TS.language_key_title like \'stopping\'');
+                } else {
+                    $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T INNER JOIN ' . tbl('tools_status') . ' AS TS ON T.id_tools_status = TS.id_tools_status', 'TS.id_tools_status', 'T.id_tool = ' . $secureIdTool . ' AND TS.language_key_title like \'stopping\'');
+                }
                 if (!empty($has_to_stop)) {
                     break;
                 }
                 //call function
                 try {
                     call_user_func($function, $item);
-                    $this->addLog('iteration : ' . $nb_done);
                     sleep(2);
                 } catch (\Exception $e) {
                     e(lang($e->getMessage()));
@@ -458,11 +479,19 @@ class AdminTool
                 }
                 //update nb_done of tools
                 $nb_done++;
-                $this->updateToolHisto(['elements_done'], [$nb_done]);
+                if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+                    $this->updateToolHisto(['elements_done'], [$nb_done]);
+                } else {
+                    Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_done'], [$nb_done], ' id_tool = ' . $secureIdTool);
+                }
             }
         }
-        $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
-        $this->addLog('tool ended');
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+            $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
+            $this->addLog('tool ended');
+        } else {
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
+        }
     }
 
     /**
@@ -476,7 +505,12 @@ class AdminTool
         if ($this->tool['language_key_title'] != 'in_progress') {
             return false;
         }
-        $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 364)) {
+            $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
+        } else {
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'stopping\')'], ' id_tool = ' . mysql_clean($this->id_tool));
+        }
     }
 
     /**
@@ -494,7 +528,7 @@ class AdminTool
      */
     public function addLog(string $msg)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tool_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
+        Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
     }
 
     /**
@@ -504,8 +538,8 @@ class AdminTool
      */
     public function getLastLogs(int $max_id = 0)
     {
-        $logs = Clipbucket_db::getInstance()->select(tbl('tool_histo_log'), 'datetime ,message', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0') . ' AND id_log > ' . mysql_clean($max_id));
-        $max_id_log = Clipbucket_db::getInstance()->select(tbl('tool_histo_log'), 'MAX(id_log) as max_id_log', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0'));
+        $logs = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'datetime ,message', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0') . ' AND id_log > ' . mysql_clean($max_id));
+        $max_id_log = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'MAX(id_log) as max_id_log', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0'));
         return [
             'logs' => $logs,
             'max_id_log' => $max_id_log[0]['max_id_log'] ?? 0
