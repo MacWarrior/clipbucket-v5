@@ -1074,4 +1074,6 @@ VALUES ('admin_setting'),
        ('tool_recalcul_video_file_label'),
        ('tool_recalcul_video_file_description'),
        ('recreate_thumb_label'),
-       ('recreate_thumb_description');
+       ('recreate_thumb_description'),
+       ('no_logs'),
+       ('show_log');

@@ -261,7 +261,7 @@ INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`
 	('1440p', '16/9', 0, 2560, 1440, 7280000),
 	('2160p', '16/9', 0, 4096, 2160, 17472000);
 
-INSERT INTO `{tbl_prefix}tools_histo_log` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
+INSERT INTO `{tbl_prefix}tools_histo_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
 INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`) VALUES
     ('generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs'),
     ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus'),

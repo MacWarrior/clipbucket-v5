@@ -1135,13 +1135,13 @@ ALTER TABLE `{tbl_prefix}playlists_categories`
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
 (
-    `id_histo`        INT      NOT NULL AUTO_INCREMENT,
-    `id_tool`         INT      NOT NULL,
+    `id_histo`              INT      NOT NULL AUTO_INCREMENT,
+    `id_tool`               INT      NOT NULL,
     `id_tools_histo_status` INT      NOT NULL,
-    `date_start`      DATETIME NOT NULL,
-    `date_end`        DATETIME NULL,
-    `elements_total`  INT      NOT NULL,
-    `elements_done`   INT      NOT NULL,
+    `date_start`            DATETIME NOT NULL,
+    `date_end`              DATETIME NULL,
+    `elements_total`        INT      NULL,
+    `elements_done`         INT      NULL,
     PRIMARY KEY (`id_histo`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
