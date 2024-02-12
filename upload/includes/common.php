@@ -123,26 +123,8 @@ $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInst
 $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
-$baseurl = $row['baseurl'];
 
-if (is_ssl()) {
-    $baseurl = str_replace('http://', 'https://', $baseurl);
-} else {
-    $baseurl = str_replace('https://', 'http://', $baseurl);
-}
-
-//Removing www. as it effects SEO and updating Config
-$wwwcheck = preg_match('/:\/\/www\./', $baseurl, $matches);
-if (count($matches) > 0) {
-    $baseurl = preg_replace('/:\/\/www\./', '://', $baseurl);
-}
-
-$clean_base = false;
-if (defined('CLEAN_BASEURL')) {
-    $clean_base = CLEAN_BASEURL;
-}
-
-define('BASEURL', $baseurl);
+define('BASEURL', config('baseurl'));
 
 require_once('classes/session.class.php');
 $sess = new Session();
@@ -153,13 +135,14 @@ if (has_access('admin_access', true) && !empty($error_redis)) {
     e($error_redis);
 }
 
-$thisurl = curPageURL();
-
 if (!Update::isVersionSystemInstalled()) {
     define('NEED_UPDATE', true);
-    if (strpos($thisurl, '/admin_area/upgrade_db.php') === false
-        && strpos($thisurl, '/admin_area/logout.php') === false
-        && strpos($thisurl, 'actions/upgrade_db.php') === false
+
+    $request_uri = $_SERVER['REQUEST_URI'];
+
+    if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
+        && strpos($request_uri, '/admin_area/logout.php') === false
+        && strpos($request_uri, 'actions/upgrade_db.php') === false
         && $userquery->admin_login_check(true)) {
         header('Location: /admin_area/upgrade_db.php');
         die();
@@ -288,7 +271,6 @@ $Cbucket->set_the_template();
 
 $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
-Assign('THIS_URL', $thisurl);
 define('ALLOWED_VDO_CATS', $row['video_categories']);
 
 Assign('NEED_UPDATE', NEED_UPDATE);
