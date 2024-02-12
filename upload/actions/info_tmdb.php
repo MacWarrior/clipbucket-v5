@@ -9,8 +9,9 @@ $video_info = Video::getInstance()->getOne([
 if (empty($video_info)) {
     e(lang('class_vdo_del_err'));
 }
-$results = Tmdb::getInstance()->searchMovie($video_info['title']);
+$title = !empty($_POST['video_title']) ? $_POST['video_title'] : $video_info['title'];
+$results= Tmdb::getInstance()->searchMovie($title);
 if (!empty($results['error'])) {
     e(lang($results['error']));
 }
-display_tmdb_result($results['response']['results'], $video_info['videoid']);
+display_tmdb_result(['results'=>$results['response']['results'], 'title'=>$title], $video_info['videoid']);

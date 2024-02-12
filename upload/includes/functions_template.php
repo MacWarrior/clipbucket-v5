@@ -176,7 +176,8 @@ function display_subtitle_list($data)
 
 function display_tmdb_result($data, $videoid)
 {
-    assign('results', $data);
+    assign('results', $data['results']);
+    assign('search', $data['title']);
     assign('videoid', $videoid);
     echo templateWithMsgJson('blocks/tmdb_result.html');
 }

@@ -43,7 +43,7 @@
                         {/if}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}">Manage thumbnails</a></li>
                         {if config('enable_tmdb') && config('tmdb_token')!= ''}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onclick="getInfoTmdb({$data.videoid})">{lang code='get_data_tmdb'}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}
 					</ul>
 				</div>

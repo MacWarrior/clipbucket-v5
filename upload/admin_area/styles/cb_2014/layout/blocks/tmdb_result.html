@@ -5,6 +5,15 @@
             <h4 class="modal-title">{lang code='tmdb_search'}</h4>
         </div>
         <div class="modal-body">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="search_title">{lang code="search"}</label>
+                <input name="title" type="text" class="form-control" id="search_title" value="{$search}" />
+            </div>
+            <div class="form-group">
+                <input type="submit" name="search" id="search" value='{lang code="search"}' class="btn btn-success btn-sm"/>
+            </div>
+        </div>
             <table class="table table-bordered table-striped">
                 <tr>
                     <th class="col-md-1">{lang code='title'}</th>
@@ -40,3 +49,13 @@
         </div>
     </div>
 </div>
+<script>
+    $(function () {
+        $('#search').on('click', function () {
+            var video_title = $('#search_title').val();
+            var videoid = $('#button_info_tmdb').data('id');
+            debugger;
+            getInfoTmdb(videoid, video_title);
+        })
+    })
+</script>
