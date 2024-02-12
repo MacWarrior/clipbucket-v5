@@ -1,10 +1,4 @@
 <?php
-/**
- * ALL LINKS ARE DEFINED HERE
- * YOU CAN CHANGE THEM IF REQUIRED
- * ARRAY( [name]=> Array([Non SEO Link], [SEO Link])) - Without BASEURL
- */
-
 $cbLinks = [
     'channels'           => ['channels.php', 'channels/'],
     'compose_new'        => ['private_message.php?mode=new_msg', 'private_message.php?mode=new_msg'],
