@@ -13,6 +13,7 @@ if (empty($video_info)) {
 $movie_credits = Tmdb::getInstance()->movieCredits($_POST['tmdb_video_id'])['response'];
 $movie_details = Tmdb::getInstance()->movieDetail($_POST['tmdb_video_id'])['response'];
 
+$video_info['datecreated'] = $movie_details['release_date'];
 if( config('tmdb_get_title') == 'yes' ) {
     $video_info['title'] = $movie_details['title'];
 }
