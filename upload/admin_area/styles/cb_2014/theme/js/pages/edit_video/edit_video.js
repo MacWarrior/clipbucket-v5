@@ -77,14 +77,15 @@ function saveSubtitle(number) {
 }
 
 
-function getInfoTmdb(video_id, video_title, sort) {
-
+function getInfoTmdb(video_id, video_title, sort, sort_order) {
+    showSpinner();
     $.ajax({
         url: "/actions/info_tmdb.php",
         type: "POST",
-        data: {videoid: video_id, video_title:video_title },
+        data: {videoid: video_id, video_title:video_title, sort: sort, sort_order: sort_order },
         dataType: 'json',
         success: function (result) {
+            hideSpinner();
             var modal = $('#myModal');
             modal.html(result['template']);
             modal.modal();

@@ -16,8 +16,8 @@
         </div>
             <table class="table table-bordered table-striped">
                 <tr>
-                    <th class="col-md-1">{lang code='title'}</th>
-                    <th class="col-md-2">{lang code='release_date'}</th>
+                    <th class="col-md-1">{lang code='title'} <i class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></i></th>
+                    <th class="col-md-2">{lang code='release_date'}<i class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="release_date"></i></th>
                     <th class="col-md-6">{lang code='description'}</th>
                     <th class="col-md-2">{lang code='poster'}</th>
                     <th class="col-md-1"></th>
@@ -31,7 +31,6 @@
                         <span>{display_clean($results[sub].release_date)}</span>
                     </td>
                     <td>
-                        <!--            TODO masquer une partie-->
                         <span>{display_clean($results[sub].overview)}</span>
                     </td>
                     <td>
@@ -51,10 +50,28 @@
 </div>
 <script>
     $(function () {
+        var videoid = $('#button_info_tmdb').data('id');
         $('#search').on('click', function () {
             var video_title = $('#search_title').val();
-            var videoid = $('#button_info_tmdb').data('id');
             getInfoTmdb(videoid, video_title);
-        })
-    })
+        });
+        $('.icon-sort').on('click', function () {
+            var video_title = $('#search_title').val();
+            $(this).removeClass('icon-sort');
+            $(this).addClass('icon-sort-up');
+            getInfoTmdb(videoid, video_title, $(this).data('type'), 'ASC');
+        });
+        $('.icon-sort-up').on('click', function () {
+            var video_title = $('#search_title').val();
+            $(this).removeClass('icon-sort-up');
+            $(this).addClass('icon-sort-down');
+            getInfoTmdb(videoid, video_title, $(this).data('type'), 'DESC');
+        });
+        $('.icon-sort-down').on('click', function () {
+            var video_title = $('#search_title').val();
+            $(this).removeClass('icon-sort-down');
+            $(this).addClass('icon-sort');
+            getInfoTmdb(videoid, video_title);
+        });
+    });
 </script>
