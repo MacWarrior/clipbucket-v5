@@ -14,18 +14,19 @@ $results = Tmdb::getInstance()->searchMovie($title);
 if (!empty($results['error'])) {
     e(lang($results['error']));
 }
-if (!empty($_POST['sort']) && !empty($_POST['sort_order'])) {
-    usort($results['response']['results'], function ($a, $b) {
-        if ($_POST['sort_order'] == 'ASC') {
-            return $a[$_POST['sort']] <=> $b[$_POST['sort']];
+
+$sort = empty($_POST['sort']) ? 'release_date' : $_POST['sort'];
+$sort_order = empty($_POST['sort_order']) ? 'ASC' : $_POST['sort_order'];
+    usort($results['response']['results'], function ($a, $b) use ($sort, $sort_order) {
+        if ($sort_order == 'ASC') {
+            return $a[$sort] <=> $b[$sort];
         } else {
-            return $b[$_POST['sort']] <=> $a[$_POST['sort']];
+            return $b[$sort] <=> $a[$sort];
         }
     });
-}
 display_tmdb_result([
         'results'    => $results['response']['results'],
         'title'      => $title,
-        'sort'       => $_POST['sort'],
-        'sort_order' => $_POST['sort_order']
+        'sort'       => $sort,
+        'sort_order' => $sort_order
     ], $video_info['videoid']);
