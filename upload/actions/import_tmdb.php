@@ -12,6 +12,7 @@ if (empty($video_info)) {
 
 $movie_credits = Tmdb::getInstance()->movieCredits($_POST['tmdb_video_id'])['response'];
 $movie_details = Tmdb::getInstance()->movieDetail($_POST['tmdb_video_id'])['response'];
+$movie_credentials = Tmdb::getInstance()->movieCurrentLanguageAgeRestriction($_POST['tmdb_video_id']);
 
 $video_info['datecreated'] = $movie_details['release_date'];
 if( config('tmdb_get_title') == 'yes' ) {
@@ -19,6 +20,9 @@ if( config('tmdb_get_title') == 'yes' ) {
 }
 if( config('tmdb_get_description') == 'yes' ) {
     $video_info['description'] = $movie_details['overview'];
+}
+if( $movie_credentials ) {
+    $video_info['age_restriction'] = $movie_credentials;
 }
 if( config('tmdb_get_title') == 'yes' || config('tmdb_get_description') == 'yes' ) {
     CBvideo::getInstance()->update_video($video_info);

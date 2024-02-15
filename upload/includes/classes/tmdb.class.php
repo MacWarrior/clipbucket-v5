@@ -50,6 +50,15 @@ class Tmdb
     {
         return $this->requestAPI('movie/' . $movie_id . '/credits');
     }
+    public function movieCurrentLanguageAgeRestriction($movie_id)
+    {
+        $results = $this->requestAPI('movie/' . $movie_id . '/release_dates')['response']['results'];
+        $restriction = array_search(strtoupper($this->language), array_column($results, 'iso_3166_1'));
+        if ($restriction) {
+            return (!empty($results[$restriction]['release_dates'][0]['certification']) ? $results[$restriction]['release_dates'][0]['certification'] : 0);
+        }
+        return 0;
+    }
 
     public function setLanguage($language)
     {
