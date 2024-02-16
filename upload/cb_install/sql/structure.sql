@@ -541,7 +541,9 @@ CREATE TABLE `{tbl_prefix}video` (
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
-  `age_restriction` INT DEFAULT NULL
+  `age_restriction` INT DEFAULT NULL,
+  `default_poster` int(3) NULL DEFAULT NULL,
+  `default_backdrop` int(3) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_favourites` (

@@ -253,7 +253,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'display_collection_comments', 'yes'),
     (NULL, 'enable_sitemap', 'yes'),
     (NULL, 'git_path', ''),
-    (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/original'),
     (NULL, 'tmdb_get_genre', 'yes'),
     (NULL, 'tmdb_get_actors', 'yes'),
     (NULL, 'tmdb_get_producer', 'yes'),
