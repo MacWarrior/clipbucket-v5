@@ -701,7 +701,7 @@ class FFMpeg
         //delete olds thumbs from db and on disk
         $this->log->writeLine(date('Y-m-d H:i:s').' - Deleting old thumbs...');
         $db->delete(tbl('video_thumbs'), ['videoid','type'], [$videoid,'auto']);
-        $pattern = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-c].*';
+        $pattern = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-cpb].*';
         $glob = glob($pattern);
         foreach ($glob as $thumb) {
             unlink($thumb);

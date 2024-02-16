@@ -6,6 +6,13 @@ class Upload
     var $custom_upload_fields = []; //Step 2 of Uploading
     var $actions_after_video_upload = ['activate_video_with_file'];
 
+    var $types_thumb = [
+        'c' => 'custom',
+        'p' => 'posters',
+        'b' => 'backdrops',
+        'a' => 'auto'
+    ];
+
     public static function getInstance(){
         global $Upload;
         return $Upload;
@@ -262,7 +269,7 @@ class Upload
     /**
      * @throws Exception
      */
-    function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $thumbs_ver = false)
+    function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
     {
         global $imgObj;
         $file = $file_array;
@@ -273,7 +280,7 @@ class Upload
             $ext = getExt($file['name'][$key]);
             if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
+                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-'.$type.'.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
                 if (is_uploaded_file($file['tmp_name'][$key])) {
@@ -286,13 +293,16 @@ class Upload
                     $height_setting = $thumbs_size[1];
                     $width_setting = $thumbs_size[0];
                     if ($key != 'original') {
+                        if ($type != 'c') {
+                            continue;
+                        }
                         $dimensions = implode('x', $thumbs_size);
                     } else {
                         $dimensions = 'original';
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
+                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
                     $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
                     global $db;
                     $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
@@ -302,7 +312,7 @@ class Upload
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, 'custom']);
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
                 }
 
                 unlink($temp_file_path);
@@ -317,22 +327,21 @@ class Upload
      * @param      $file_name
      * @param      $file_array
      * @param null $files_dir
-     * @param bool $thumbs_ver
-     *
+     * @param string $type
      * @throws Exception
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
-    function upload_thumbs($file_name, $file_array, $files_dir = null, bool $thumbs_ver = false)
+    function upload_thumbs($file_name, $file_array, $files_dir = null, string $type = 'c')
     {
         if (count($file_array['name']) > 1) {
             for ($i = 0; $i < count($file_array['name']); $i++) {
-                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $thumbs_ver);
+                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $type);
             }
             e(lang('upload_vid_thumbs_msg'), 'm');
         } else {
             $file = $file_array;
-            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $thumbs_ver);
+            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $type);
         }
     }
 

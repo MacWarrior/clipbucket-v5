@@ -64,6 +64,11 @@ class Tmdb
         return 0;
     }
 
+    public function moviePosterBackdrops($movie_id)
+    {
+        return $this->requestAPI('movie/' . $movie_id . '/images', ['include_image_language'=> $this->language . ',null']);
+    }
+
     public function setLanguage($language)
     {
         $this->language = $language;
