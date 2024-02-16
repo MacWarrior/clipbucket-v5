@@ -93,14 +93,10 @@ $(document).ready(function () {
         }
     });
     $('#enable_tmdb').change(function () {
-        let parent = $('#tmdb_token');
         let button = $('#tmdb_token_test');
         if (!$(this).prop('checked')) {
-            parent.prop('disabled',true);
             button.addClass('disabled');
-            parent.trigger('focus')
         } else {
-            parent.prop('disabled',false);
             button.removeClass('disabled');
         }
     });
@@ -142,6 +138,7 @@ $(document).ready(function () {
         ,'enable_video_crew': 'tmdb_get_crew'
         ,'enable_video_poster': 'tmdb_get_poster'
         ,'enable_video_backdrop': 'tmdb_get_backdrop'
+        ,'enable_tmdb': 'tmdb_token'
 
     }, function( index, value ) {
 
