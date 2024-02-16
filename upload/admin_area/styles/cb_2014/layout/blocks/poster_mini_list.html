@@ -4,7 +4,7 @@
     {foreach from=$vidthumbs_poster item=vid_thumb}
     <li style="display:inline;">
       <label for="{$vid_thumb|get_thumb_num}" class="no-margin">
-        <img src="{$vid_thumb}" width="100" height="63"/>
+        <img src="{$vid_thumb}" width="100"/>
       </label>
       <div class="tools tools-bottom">
         <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_poster" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />
