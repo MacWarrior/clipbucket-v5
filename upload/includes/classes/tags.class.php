@@ -97,7 +97,6 @@ class Tags
         }
     }
 
-
     /**
      * @param $name
      * @param $id_tag
@@ -129,18 +128,77 @@ class Tags
     /**
      * @throws Exception
      */
-    public static function saveTags(string $tags, string $object_type, int $object_id): bool
+    public static function deleteTags(string $object_type, int $object_id, string $tag_type = ''): bool
+    {
+        switch ($object_type) {
+            case 'video':
+                $id_field = 'id_video';
+                $table_tag = 'video_tags';
+                break;
+            case 'photo':
+                $id_field = 'id_photo';
+                $table_tag = 'photo_tags';
+                break;
+            case 'collection':
+                $id_field = 'id_collection';
+                $table_tag = 'collection_tags';
+                break;
+            case 'profile':
+                $id_field = 'id_user';
+                $table_tag = 'user_tags';
+                break;
+            case 'playlist':
+                $id_field = 'id_playlist';
+                $table_tag = 'playlist_tags';
+                break;
+            default:
+                error_log('Undefined object type : '.$object_type);
+                return false;
+        }
+
+        if( !empty($tag_type) ){
+            $sql_id_type = 'SELECT id_tag_type
+                   FROM ' . tbl('tags_type') . '
+                   WHERE name = \'' . $tag_type . '\'';
+            $res = Clipbucket_db::getInstance()->_select($sql_id_type);
+            if( empty($res) ){
+                e(lang('unknown_tag_type'));
+                return false;
+            }
+            $id_type = $res[0]['id_tag_type'];
+
+            $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
+                INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
+                WHERE ' . $id_field . ' = ' . mysql_clean($object_id) . ' AND tags.id_tag_type = ' . $id_type;
+        } else {
+            $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
+                WHERE ' . $id_field . ' = ' . mysql_clean($object_id);
+        }
+
+        if (!Clipbucket_db::getInstance()->execute($sql_delete_link, 'delete')) {
+            e(lang('error_delete_linking_tags'));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function saveTags(string $tags, string $tag_type, int $object_id): bool
     {
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
             return false;
         }
-        if (in_array($object_type,self::$video_types)) {
+        if (in_array($tag_type,self::$video_types)) {
             $id_field = 'id_video';
             $table_tag = 'video_tags';
+            $object_type = 'video';
         } else {
-            switch ($object_type) {
+            $object_type = $tag_type;
+            switch ($tag_type) {
                 case 'photo':
                     $id_field = 'id_photo';
                     $table_tag = 'photo_tags';
@@ -158,32 +216,27 @@ class Tags
                     $table_tag = 'playlist_tags';
                     break;
                 default:
-                    //TODO
+                    error_log('Undefined tag type : '.$tag_type);
                     return false;
             }
+        }
+
+        self::deleteTags($object_type, $object_id, $tag_type);
+
+        if( empty(trim($tags)) ){
+            return true;
         }
 
         //getting type
         $sql_id_type = 'SELECT id_tag_type
                    FROM ' . tbl('tags_type') . '
-                   WHERE name = \'' . $object_type . '\'';
+                   WHERE name = \'' . $tag_type . '\'';
         $res = Clipbucket_db::getInstance()->_select($sql_id_type);
         if( empty($res) ){
             e(lang('unknown_tag_type'));
             return false;
         }
         $id_type = $res[0]['id_tag_type'];
-
-        //delete old tags
-        $sql_delete_link = 'DELETE ' . $table_tag . ' FROM ' . cb_sql_table($table_tag) . '
-        INNER JOIN ' . cb_sql_table('tags') . ' ON tags.id_tag = ' . $table_tag . '.id_tag
-        WHERE ' . $id_field . ' = ' . mysql_clean($object_id) . ' AND id_tag_type = ' . $id_type;
-        if (!Clipbucket_db::getInstance()->execute($sql_delete_link, 'delete')) {
-            e(lang('error_delete_linking_tags'));
-            return false;
-        }
-
-
 
         //insert new tags
         $tag_array = explode(',', mysql_clean($tags));
@@ -256,6 +309,7 @@ class Tags
     }
 
     /**
+     * @param array $cond
      * @return array
      * @throws Exception
      */
@@ -270,7 +324,10 @@ class Tags
         return $db->select(tbl('tags_type'), '*', implode(' AND ', $cond), false, false, false, 300);
     }
 
-    public static function getVideoTypes()
+    /**
+     * @throws Exception
+     */
+    public static function getVideoTypes(): array
     {
         return self::getTagTypes(['name IN (\''.implode('\',\'',self::$video_types).'\')']);
     }

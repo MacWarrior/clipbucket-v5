@@ -1065,7 +1065,7 @@ class CBvideo extends CBCategory
                 }
 
                 //Remove tags
-                Tags::saveTags('', 'video', $vdetails['videoid']);
+                Tags::deleteTags('video', $vdetails['videoid']);
                 //Remove categories
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
