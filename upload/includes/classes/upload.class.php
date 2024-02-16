@@ -431,8 +431,11 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_genre'  => [
+            ]
+        ];
+
+        if( config('enable_video_genre') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_genre'] = [
                 'title'             => lang('genre'),
                 'type'              => 'hidden',
                 'name'              => 'tags_genre',
@@ -441,8 +444,11 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_actors'  => [
+            ];
+        }
+
+        if( config('enable_video_actor') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_actors'] = [
                 'title'             => lang('actors'),
                 'type'              => 'hidden',
                 'name'              => 'tags_actors',
@@ -451,8 +457,11 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_producer'  => [
+            ];
+        }
+
+        if( config('enable_video_producer') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_producer'] = [
                 'title'             => lang('producer'),
                 'type'              => 'hidden',
                 'name'              => 'tags_producer',
@@ -461,8 +470,11 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_executive_producer'  => [
+            ];
+        }
+
+        if( config('enable_video_executive_producer') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_executive_producer'] = [
                 'title'             => lang('executive_producer'),
                 'type'              => 'hidden',
                 'name'              => 'tags_executive_producer',
@@ -471,8 +483,11 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_director'  => [
+            ];
+        }
+
+        if( config('enable_video_director') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_director'] = [
                 'title'             => lang('director'),
                 'type'              => 'hidden',
                 'name'              => 'tags_director',
@@ -481,8 +496,11 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ],
-            'tags_crew'  => [
+            ];
+        }
+
+        if( config('enable_video_crew') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_crew'] = [
                 'title'             => lang('crew'),
                 'type'              => 'hidden',
                 'name'              => 'tags_crew',
@@ -491,9 +509,8 @@ class Upload
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
-            ]
-
-        ];
+            ];
+        }
 
         $tracks = $default['tracks'];
         if (!empty($tracks)) {

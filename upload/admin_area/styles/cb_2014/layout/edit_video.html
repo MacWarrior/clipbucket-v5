@@ -124,11 +124,15 @@
                             <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
                         </a>
                     </li>
+                    {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                    }
                     <li>
                         <a data-toggle="tab" href="#movie_infos">
                             <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
                         </a>
                     </li>
+                    {/if}
 				</ul>
 				<div class="tab-content">
 					<div id="videodetail" class="tab-pane active">
@@ -289,6 +293,9 @@
                         {/foreach}
                     </div>
 
+                    {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                    || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                    }
                     <div id="movie_infos" class="tab-pane">
                         {foreach from=$video_fields item=field}
                             {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
@@ -311,6 +318,7 @@
                         </div>
                         {/foreach}
                     </div>
+                    {/if}
 
 				</div>
 			</div>
