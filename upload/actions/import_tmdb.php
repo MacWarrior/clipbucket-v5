@@ -34,28 +34,31 @@ if( $update_video ) {
 }
 
 if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes' ){
-    //default_poster
-    $poster_path_without_slash = str_replace('/','', $movie_details['poster_path']);
-    $url = config('url_tmdb_poster') . $movie_details['poster_path'];
-    $tmp_path = DirPath::get('temp') . $poster_path_without_slash;
-    $resutl = file_put_contents($tmp_path, file_get_contents($url));
-    Upload::getInstance()->upload_thumb($video_info['file_name'], [
-        'tmp_name' => [$tmp_path],
-        'name'     => [$poster_path_without_slash]
-    ], 0, $video_info['file_directory'], 'p');
-
-    $movie_backdrops = Tmdb::getInstance()->moviePosterBackdrops($_POST['tmdb_video_id'])['response']['backdrops'];
     $movie_posters = Tmdb::getInstance()->moviePosterBackdrops($_POST['tmdb_video_id'])['response']['posters'];
-        foreach ($movie_backdrops as $movie_backdrop) {
-            $path_without_slash = str_replace('/','', $movie_backdrop['file_path']);
-            $url = config('url_tmdb_poster') . $movie_backdrop['file_path'];
-            $tmp_path = DirPath::get('temp') . $poster_path_without_slash;
-            $resutl = file_put_contents($tmp_path, file_get_contents($url));
-            Upload::getInstance()->upload_thumbs($video_info['file_name'], [
-                'tmp_name' => [$tmp_path],
-                'name'     => [$path_without_slash],
-            ],  $video_info['file_directory'], 'b');
-        }
+    foreach ($movie_posters as $movie_poster) {
+        $path_without_slash = str_replace('/','', $movie_poster['file_path']);
+        $url = Tmdb::IMAGE_URL . $movie_poster['file_path'];
+        $tmp_path = DirPath::get('temp') . $path_without_slash;
+        $resutl = file_put_contents($tmp_path, file_get_contents($url));
+        Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+            'tmp_name' => [$tmp_path],
+            'name'     => [$path_without_slash],
+        ],  $video_info['file_directory'], 'p');
+    }
+}
+
+if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 'yes' ){
+    $movie_backdrops = Tmdb::getInstance()->moviePosterBackdrops($_POST['tmdb_video_id'])['response']['backdrops'];
+    foreach ($movie_backdrops as $movie_backdrop) {
+        $path_without_slash = str_replace('/','', $movie_backdrop['file_path']);
+        $url = Tmdb::IMAGE_URL . $movie_backdrop['file_path'];
+        $tmp_path = DirPath::get('temp') . $path_without_slash;
+        $resutl = file_put_contents($tmp_path, file_get_contents($url));
+        Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+            'tmp_name' => [$tmp_path],
+            'name'     => [$path_without_slash],
+        ],  $video_info['file_directory'], 'b');
+    }
 }
 
 if( config('tmdb_get_genre') == 'yes' && config('enable_video_genre') == 'yes' ) {

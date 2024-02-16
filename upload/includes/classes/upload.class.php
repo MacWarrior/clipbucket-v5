@@ -8,8 +8,8 @@ class Upload
 
     var $types_thumb = [
         'c' => 'custom',
-        'p' => 'posters',
-        'b' => 'backdrops',
+        'p' => 'poster',
+        'b' => 'backdrop',
         'a' => 'auto'
     ];
 
@@ -269,18 +269,18 @@ class Upload
     /**
      * @throws Exception
      */
-    function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
+    function upload_thumb($video_file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
     {
         global $imgObj;
         $file = $file_array;
         if (!empty($file['name'][$key])) {
             define('dir', $files_dir);
 
-            $file_num = $this->get_next_available_num($file_name);
+            $file_num = $this->get_next_available_num($video_file_name);
             $ext = getExt($file['name'][$key]);
             if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-'.$type.'.' . $ext;
+                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $video_file_name . '-' . $file_num . '-'.$type.'.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
                 if (is_uploaded_file($file['tmp_name'][$key])) {
@@ -302,10 +302,11 @@ class Upload
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
+                    $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
+                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
                     $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
                     global $db;
-                    $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
+                    $rs = $db->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
                     if (!empty($rs)) {
                         $videoid = $rs[0]['videoid'];
                     } else {
@@ -313,6 +314,9 @@ class Upload
                         $videoid = 0;
                     }
                     $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
+                    if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
+                        Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
+                    }
                 }
 
                 unlink($temp_file_path);

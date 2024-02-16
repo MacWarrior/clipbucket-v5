@@ -14,7 +14,9 @@ if (isset($_POST['update'])) {
     $Upload->validate_video_upload_form();
     if (empty($eh->get_error())) {
         $myquery->update_video();
-        $myquery->set_default_thumb($video, $_POST['default_thumb']);
+        Video::getInstance()->setDefaultPicture($video, $_POST['default_thumb']);
+        Video::getInstance()->setDefaultPicture($video, $_POST['default_poster'] ?? '', 'poster');
+        Video::getInstance()->setDefaultPicture($video, $_POST['default_backdrop'] ?? '', 'backdrop');
     }
 }
 $data = Video::getInstance()->getOne(['videoid'=>$video]);
@@ -50,8 +52,8 @@ if ($myquery->video_exists($video)) {
     assign('data', $data);
     assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
     assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
-    assign('vidthumbs_poster', get_thumb($data,TRUE,'original','posters'));
-    assign('vidthumbs_backdrop', get_thumb($data,TRUE,'original','backdrops'));
+    assign('vidthumbs_poster', get_thumb($data,TRUE,'original','poster'));
+    assign('vidthumbs_backdrop', get_thumb($data,TRUE,'original','backdrop'));
 
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';

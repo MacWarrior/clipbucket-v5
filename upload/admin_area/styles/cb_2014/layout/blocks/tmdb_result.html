@@ -34,7 +34,7 @@
                         <span>{display_clean($results[sub].overview)}</span>
                     </td>
                     <td>
-                        <img class="tmdb_poster" src="{config('url_tmdb_poster')}{$results[sub].poster_path}"/>
+                        <img class="tmdb_poster" src="{Tmdb::IMAGE_URL}{$results[sub].poster_path}"/>
                     </td>
                     <td>
                         <button onclick="saveInfoTmdb({display_clean($results[sub].id)}, {display_clean($videoid)})">{lang code='import'}</button>

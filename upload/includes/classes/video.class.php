@@ -66,6 +66,8 @@ class Video
             ,'is_castable'
             ,'bits_color'
             ,'subscription_email'
+            ,'default_poster'
+            ,'default_backdrop'
         ];
 
         $version = Update::getInstance()->getDBVersion();
@@ -472,6 +474,21 @@ class Video
             return false;
         }
         return $this->isCurrentUserRestricted($video_id);
+    }
+
+    public function setDefaultPicture($video_id, string $poster, string $type = 'thumb')
+    {
+        if (empty($poster)) {
+            e(lang('missing_param'));
+            return;
+        }
+        if (!in_array($type, ['thumb', 'poster', 'backdrop']) ) {
+            e(lang('unknown_type'));
+            return;
+        }
+        $num = get_thumb_num($poster);
+        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
+        e(lang('vid_thumb_changed'), 'm');
     }
 }
 

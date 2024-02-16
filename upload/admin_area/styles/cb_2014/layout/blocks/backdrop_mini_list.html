@@ -7,7 +7,7 @@
         <img src="{$vid_thumb}" width="100"/>
       </label>
       <div class="tools tools-bottom">
-        <input type="radio" id="backdrop_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
+        <input type="radio" id="backdrop_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_backdrop" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />
       </div>
     </li>
     {/foreach}

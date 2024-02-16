@@ -312,3 +312,6 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Get backdrop from TMDB', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Récupérer le décors depuis TMDB', @language_id_fra);
+
+ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS `default_poster` INT(3) DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS `default_backdrop` INT(3) DEFAULT NULL;

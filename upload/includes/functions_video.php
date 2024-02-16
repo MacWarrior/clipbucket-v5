@@ -751,7 +751,7 @@ function get_file_details($file_name, $get_jsoned = false)
  */
 function get_thumb_num($name): string
 {
-    $regex = '`.*-.*-(\d+)(?:-c)?.\w+`';
+    $regex = '`.*-.*-(\d+)(?:-[cbp])?.\w+`';
     $match = [];
     $res = preg_match($regex, $name, $match);
     return $match[1] ?? '' ;
