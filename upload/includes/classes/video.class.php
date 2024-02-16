@@ -490,6 +490,26 @@ class Video
         Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
         e(lang('vid_thumb_changed'), 'm');
     }
+
+    /**
+     * @param array $video_detail
+     * @param string $type must one of following : thumb, poster, backdrop
+     * @return void
+     * @throws Exception
+     */
+    public function deletePictures(array $video_detail, string $type)
+    {
+        if (!in_array($type, ['thumb', 'poster', 'backdrop']) ) {
+            e(lang('unknown_type'));
+            return;
+        }
+        $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                delete_video_thumb($video_detail, $result['num']);
+            }
+        }
+    }
 }
 
 class CBvideo extends CBCategory

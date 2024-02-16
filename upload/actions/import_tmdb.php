@@ -34,6 +34,7 @@ if( $update_video ) {
 }
 
 if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes' ){
+    Video::getInstance()->deletePictures($video_info, 'poster');
     $movie_posters = Tmdb::getInstance()->moviePosterBackdrops($_POST['tmdb_video_id'])['response']['posters'];
     foreach ($movie_posters as $movie_poster) {
         $path_without_slash = str_replace('/','', $movie_poster['file_path']);
@@ -48,6 +49,7 @@ if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes
 }
 
 if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 'yes' ){
+    Video::getInstance()->deletePictures($video_info, 'backdrop');
     $movie_backdrops = Tmdb::getInstance()->moviePosterBackdrops($_POST['tmdb_video_id'])['response']['backdrops'];
     foreach ($movie_backdrops as $movie_backdrop) {
         $path_without_slash = str_replace('/','', $movie_backdrop['file_path']);
