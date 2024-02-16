@@ -102,6 +102,16 @@ if (isset($_POST['update'])) {
         , 'tmdb_get_release_date'
         , 'tmdb_get_title'
         , 'tmdb_get_description'
+        , 'tmdb_get_backdrop'
+        , 'tmdb_get_age_restriction'
+        , 'enable_video_genre'
+        , 'enable_video_actor'
+        , 'enable_video_producer'
+        , 'enable_video_executive_producer'
+        , 'enable_video_director'
+        , 'enable_video_crew'
+        , 'enable_video_poster'
+        , 'enable_video_backdrop'
     ];
 
     $config_booleans_to_refactor = [
@@ -385,6 +395,16 @@ if (isset($_POST['update'])) {
         'tmdb_get_release_date',
         'tmdb_get_title',
         'tmdb_get_description',
+        'tmdb_get_backdrop',
+        'tmdb_get_age_restriction',
+        'enable_video_genre',
+        'enable_video_actor',
+        'enable_video_producer',
+        'enable_video_executive_producer',
+        'enable_video_director',
+        'enable_video_crew',
+        'enable_video_poster',
+        'enable_video_backdrop',
 
         'hide_empty_collection',
         'display_video_comments',

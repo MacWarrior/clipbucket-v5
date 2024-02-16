@@ -1435,6 +1435,74 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_genre" title="{lang code='option_enable_video_genre'}">{lang code='option_enable_video_genre'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_genre" id="enable_video_genre" {if $row.enable_video_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_actor" title="{lang code='option_enable_video_actor'}">{lang code='option_enable_video_actor'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_actor" id="enable_video_actor" {if $row.enable_video_actor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_producer" title="{lang code='option_enable_video_producer'}">{lang code='option_enable_video_producer'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_producer" id="enable_video_producer" {if $row.enable_video_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_executive_producer" title="{lang code='option_enable_video_executive_producer'}">{lang code='option_enable_video_executive_producer'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_executive_producer" id="enable_video_executive_producer" {if $row.enable_video_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_director" title="{lang code='option_enable_video_director'}">{lang code='option_enable_video_director'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_director" id="enable_video_director" {if $row.enable_video_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_crew" title="{lang code='option_enable_video_crew'}">{lang code='option_enable_video_crew'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_crew" id="enable_video_crew" {if $row.enable_video_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_poster" title="{lang code='option_enable_video_poster'}">{lang code='option_enable_video_poster'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_poster" id="enable_video_poster" {if $row.enable_video_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_backdrop" title="{lang code='option_enable_video_backdrop'}">{lang code='option_enable_video_backdrop'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_backdrop" id="enable_video_backdrop" {if $row.enable_video_backdrop=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 
 
 						</div>
@@ -1483,15 +1551,17 @@
 									<label class="nowrap" for="tmdb_get_genre" title="{lang code='option_tmdb_get_genre'}">{lang code='option_tmdb_get_genre'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_genre" id="tmdb_get_genre" {if $row.tmdb_get_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_genre" id="tmdb_get_genre" {if $row.tmdb_get_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_genre!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_genre}" name="tmdb_get_genre" id="tmdb_get_genre_hidden" type="hidden" {if $row.enable_video_genre=='yes'}disabled{/if}/>
 								</div>
 								<div class="col-md-4">
 									<label class="nowrap" for="tmdb_get_actors" title="{lang code='option_tmdb_get_actors'}">{lang code='option_tmdb_get_actors'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_actors" id="tmdb_get_actors" {if $row.tmdb_get_actors=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_actors" id="tmdb_get_actors" {if $row.tmdb_get_actors=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_actor!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_actors}" name="tmdb_get_actors" id="tmdb_get_actors_hidden" type="hidden" {if $row.enable_video_actor=='yes'}disabled{/if}/>
 								</div>
 							</div>
 							<hr/>
@@ -1500,15 +1570,17 @@
 									<label class="nowrap" for="tmdb_get_producer" title="{lang code='option_tmdb_get_producer'}">{lang code='option_tmdb_get_producer'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_producer" id="tmdb_get_producer" {if $row.tmdb_get_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_producer" id="tmdb_get_producer" {if $row.tmdb_get_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_producer!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_producer}" name="tmdb_get_producer" id="tmdb_get_producer_hidden" type="hidden" {if $row.enable_video_producer=='yes'}disabled{/if}/>
 								</div>
 								<div class="col-md-4">
 									<label class="nowrap" for="tmdb_get_executive_producer" title="{lang code='option_tmdb_get_executive_producer'}">{lang code='option_tmdb_get_executive_producer'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer" {if $row.tmdb_get_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer" {if $row.tmdb_get_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_executive_producer!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_executive_producer}" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer_hidden" type="hidden" {if $row.enable_video_executive_producer=='yes'}disabled{/if}/>
 								</div>
 							</div>
 							<hr/>
@@ -1517,14 +1589,33 @@
 									<label class="nowrap" for="tmdb_get_director" title="{lang code='option_tmdb_get_director'}">{lang code='option_tmdb_get_director'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_director" id="tmdb_get_director" {if $row.tmdb_get_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_director" id="tmdb_get_director" {if $row.tmdb_get_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_director!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_director}" name="tmdb_get_director" id="tmdb_get_director_hidden" type="hidden" {if $row.enable_video_director=='yes'}disabled{/if}/>
 								</div>
 								<div class="col-md-4">
 									<label class="nowrap" for="tmdb_get_crew" title="{lang code='option_tmdb_get_crew'}">{lang code='option_tmdb_get_crew'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_crew" id="tmdb_get_crew" {if $row.tmdb_get_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_crew" id="tmdb_get_crew" {if $row.tmdb_get_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_crew!='yes'}disabled{/if}/>
+									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_crew}" name="tmdb_get_crew" id="tmdb_get_crew_hidden" type="hidden" {if $row.enable_video_crew=='yes'}disabled{/if}/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_age_restriction" title="{lang code='option_tmdb_get_age_restriction'}">{lang code='option_tmdb_get_age_restriction'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_age_restriction" id="tmdb_get_age_restriction" {if $row.tmdb_get_age_restriction=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_get_release_date" title="{lang code='option_tmdb_get_release_date'}">{lang code='option_tmdb_get_release_date'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="tmdb_get_release_date" id="tmdb_get_release_date" {if $row.tmdb_get_release_date=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -1534,15 +1625,17 @@
 									<label class="nowrap" for="tmdb_get_poster" title="{lang code='option_tmdb_get_poster'}">{lang code='option_tmdb_get_poster'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_poster" id="tmdb_get_poster" {if $row.tmdb_get_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_poster" id="tmdb_get_poster" {if $row.tmdb_get_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_poster!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_poster}" name="tmdb_get_poster" id="tmdb_get_poster_hidden" type="hidden" {if $row.enable_video_poster=='yes'}disabled{/if}/>
 								</div>
 								<div class="col-md-4">
-									<label class="nowrap" for="tmdb_get_release_date" title="{lang code='option_tmdb_get_release_date'}">{lang code='option_tmdb_get_release_date'}</label>
+									<label class="nowrap" for="tmdb_get_backdrop" title="{lang code='option_tmdb_get_backdrop'}">{lang code='option_tmdb_get_backdrop'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_release_date" id="tmdb_get_release_date" {if $row.tmdb_get_release_date=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="tmdb_get_backdrop" id="tmdb_get_backdrop" {if $row.tmdb_get_backdrop=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_backdrop!='yes'}disabled{/if}/>
 									<span class="lbl"></span>
+									<input value="{$row.tmdb_get_backdrop}" name="tmdb_get_backdrop" id="tmdb_get_backdrop_hidden" type="hidden" {if $row.enable_video_backdrop=='yes'}disabled{/if}/>
 								</div>
 							</div>
 							<hr/>

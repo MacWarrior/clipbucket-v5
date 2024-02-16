@@ -12,6 +12,7 @@ class Tmdb
     /**
      * @param \Classes\Curl $curl
      * @return void
+     * @throws Exception
      */
     public function init(\Classes\Curl $curl)
     {
@@ -23,6 +24,9 @@ class Tmdb
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getInstance()
     {
         if (empty(self::$instance)) {

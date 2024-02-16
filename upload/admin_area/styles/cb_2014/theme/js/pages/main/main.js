@@ -132,4 +132,28 @@ $(document).ready(function () {
             }
         });
     });
+
+    $.each({
+        'enable_video_genre': 'tmdb_get_genre'
+        ,'enable_video_actor': 'tmdb_get_actors'
+        ,'enable_video_producer': 'tmdb_get_producer'
+        ,'enable_video_executive_producer': 'tmdb_get_executive_producer'
+        ,'enable_video_director': 'tmdb_get_director'
+        ,'enable_video_crew': 'tmdb_get_crew'
+        ,'enable_video_poster': 'tmdb_get_poster'
+        ,'enable_video_backdrop': 'tmdb_get_backdrop'
+
+    }, function( index, value ) {
+
+        $('#'+index).change(function () {
+            let input_to_disable = [value];
+            if( $(this).prop('checked') ) {
+                $('#' + input_to_disable).prop('disabled', false);
+                $('#' + input_to_disable + '_hidden').prop('disabled', true);
+            } else {
+                $('#' + input_to_disable).prop('disabled', true);
+                $('#' + input_to_disable + '_hidden').prop('disabled', false);
+            }
+        })
+    });
 });

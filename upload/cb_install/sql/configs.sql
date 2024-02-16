@@ -263,7 +263,15 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'tmdb_get_poster', 'yes'),
     (NULL, 'tmdb_get_release_date', 'yes'),
     (NULL, 'tmdb_get_title', 'yes'),
-    (NULL, 'tmdb_get_description', 'yes');
+    (NULL, 'tmdb_get_description', 'yes'),
+    (NULL, 'enable_video_genre', 'yes'),
+    (NULL, 'enable_video_actor', 'yes'),
+    (NULL, 'enable_video_producer', 'yes'),
+    (NULL, 'enable_video_executive_producer', 'yes'),
+    (NULL, 'enable_video_director', 'yes'),
+    (NULL, 'enable_video_crew', 'yes'),
+    (NULL, 'enable_video_poster', 'yes'),
+    (NULL, 'enable_video_backdrop', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
