@@ -263,6 +263,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'tmdb_get_release_date', 'yes'),
     (NULL, 'tmdb_get_title', 'yes'),
     (NULL, 'tmdb_get_description', 'yes'),
+    (NULL, 'tmdb_get_backdrop', 'yes'),
+    (NULL, 'tmdb_get_age_restriction', 'yes'),
     (NULL, 'enable_video_genre', 'yes'),
     (NULL, 'enable_video_actor', 'yes'),
     (NULL, 'enable_video_producer', 'yes'),
