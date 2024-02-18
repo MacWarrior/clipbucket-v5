@@ -331,19 +331,23 @@
                     </li>
                     <li>
                         <a data-toggle="tab" href="#thumbnails">
-                            <i class="glyphicon glyphicon-picture"></i> Default thumbnail
+                            <i class="glyphicon glyphicon-picture"></i> {lang code='default_thumbnail'}
                         </a>
                     </li>
+                    {if config('enable_video_poster') == 'yes'}
                     <li>
                         <a data-toggle="tab" href="#posters">
-                            <i class="glyphicon glyphicon-picture"></i> {lang code='posters'}
+                            <i class="glyphicon glyphicon-picture"></i> {lang code='default_poster'}
                         </a>
                     </li>
+                    {/if}
+                    {if config('enable_video_backdrop') == 'yes'}
                     <li>
                         <a data-toggle="tab" href="#backdrops">
-                            <i class="glyphicon glyphicon-picture"></i> {lang code='backdrops'}
+                            <i class="glyphicon glyphicon-picture"></i> {lang code='default_backdrop'}
                         </a>
                     </li>
+                    {/if}
                     <li>
                         <a data-toggle="tab" href="#miscellaneous">
                             <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
@@ -416,12 +420,16 @@
                     <div id="thumbnails" class="tab-pane">
                         {include file="$style_dir/blocks/thumb_mini_list.html"}
                     </div>
+                    {if config('enable_video_poster') == 'yes'}
                     <div id="posters" class="tab-pane">
                         {include file="$style_dir/blocks/poster_mini_list.html"}
                     </div>
+                    {/if}
+                    {if config('enable_video_backdrop') == 'yes'}
                     <div id="backdrops" class="tab-pane">
                         {include file="$style_dir/blocks/backdrop_mini_list.html"}
                     </div>
+                    {/if}
                     <div id="miscellaneous" class="tab-pane">
                         <div class="row">
                             <label for="status"><strong>{lang code='vdo_status'}</strong></label>
