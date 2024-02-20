@@ -34,7 +34,9 @@
                         <span>{display_clean($results[sub].overview)}</span>
                     </td>
                     <td>
+                        {if $results[sub].poster_path}
                         <img class="tmdb_poster" src="{Tmdb::IMAGE_URL}{$results[sub].poster_path}"/>
+                        {/if}
                     </td>
                     <td>
                         <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, {display_clean($videoid)})">{lang code='import'}</button>

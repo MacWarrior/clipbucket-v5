@@ -107,7 +107,6 @@ function saveInfoTmdb(tmdb_video_id) {
 }
 
 function pageInfoTmdb(page) {
-    debugger;
     let sort_type;
     let sort;
     if ($('.icon-sort-up').length > 0) {
