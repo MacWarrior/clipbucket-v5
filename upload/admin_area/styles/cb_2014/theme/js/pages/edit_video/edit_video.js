@@ -76,7 +76,6 @@ function saveSubtitle(number) {
     });
 }
 
-
 function getInfoTmdb(video_id, video_title, sort, sort_order) {
     showSpinner();
     $.ajax({
@@ -116,4 +115,12 @@ $(function () {
         var video_title = $('#title').val();
         getInfoTmdb(videoid, video_title);
     })
+});
+
+$( document ).ready(function() {
+    $('.poster li').click(function(){
+            $('.poster li.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    );
 });

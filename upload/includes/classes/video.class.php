@@ -476,6 +476,9 @@ class Video
         return $this->isCurrentUserRestricted($video_id);
     }
 
+    /**
+     * @throws Exception
+     */
     public function setDefaultPicture($video_id, string $poster, string $type = 'thumb')
     {
         if (empty($poster)) {

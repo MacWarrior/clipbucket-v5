@@ -21,13 +21,13 @@
 					</div>
 					<div class="page-content">
 	                    {include file="$style_dir/msg.html"}
-						<!-- Setting Body File -->
+
 						{if $Cbucket->show_page}
 	                        {foreach from=$template_files item=file}
 	                            {include_template_file file=$file}
 	                        {/foreach}
 						{/if}
-						<!-- Setting Body File -->
+
 						{if in_dev()}
 							{showDevWitch()}
 						{/if}
