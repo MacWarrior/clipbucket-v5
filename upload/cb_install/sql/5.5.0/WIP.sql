@@ -341,6 +341,14 @@ VALUES (@id_language_key, 'Default backdrop', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Décor par défaut', @language_id_fra);
 
+SET @language_key = 'sort_by' COLLATE utf8mb4_unicode_520_ci;
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+DELETE FROM `{tbl_prefix}languages_translations` WHERE id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Sort by %s', @language_id_eng);
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES (@id_language_key, 'Trier para %s', @language_id_fra);
+
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
 (
     `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
