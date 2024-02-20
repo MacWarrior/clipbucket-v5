@@ -66,13 +66,15 @@ class Video
             ,'is_castable'
             ,'bits_color'
             ,'subscription_email'
-            ,'default_poster'
-            ,'default_backdrop'
         ];
 
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
+        }
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 366)) {
+            $this->fields[] = 'default_poster';
+            $this->fields[] = 'default_backdrop';
         }
 
         $this->fields_categories = [
