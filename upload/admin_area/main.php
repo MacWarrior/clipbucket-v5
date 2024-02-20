@@ -397,6 +397,7 @@ if (isset($_POST['update'])) {
         'tmdb_get_description',
         'tmdb_get_backdrop',
         'tmdb_get_age_restriction',
+        'tmdb_search',
         'enable_video_genre',
         'enable_video_actor',
         'enable_video_producer',

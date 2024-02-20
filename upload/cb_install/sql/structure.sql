@@ -1142,3 +1142,28 @@ ALTER TABLE `{tbl_prefix}playlists_categories`
     ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}playlists_categories`
     ADD CONSTRAINT `playlist_categories_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
+(
+    `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `search_key`      VARCHAR(128) NOT NULL UNIQUE,
+    `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `total_results`   INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
+(
+    `id_tmdb_search_result` INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `id_tmdb_search`        INT          NOT NULL,
+    `title`                 VARCHAR(128) NOT NULL,
+    `overview`              TEXT         NULL,
+    `poster_path`           VARCHAR(128) NOT NULL,
+    `release_date`          DATE         NULL,
+    `id_tmdb_movie`         INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tmdb_search_result`
+    ADD CONSTRAINT `search_result` FOREIGN KEY IF NOT EXISTS (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;

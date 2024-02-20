@@ -37,11 +37,12 @@
                         <img class="tmdb_poster" src="{Tmdb::IMAGE_URL}{$results[sub].poster_path}"/>
                     </td>
                     <td>
-                        <button onclick="saveInfoTmdb({display_clean($results[sub].id)}, {display_clean($videoid)})">{lang code='import'}</button>
+                        <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, {display_clean($videoid)})">{lang code='import'}</button>
                     </td>
                 </tr>
                 {/section}
             </table>
+            {include file="$style_dir/blocks/pagination.html" }
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
@@ -53,25 +54,25 @@
         var videoid = $('#button_info_tmdb').data('id');
         $('#search').on('click', function () {
             var video_title = $('#search_title').val();
-            getInfoTmdb(videoid, video_title);
+            getInfoTmdb(videoid, video_title, 1);
         });
         $('.icon-sort').on('click', function () {
             var video_title = $('#search_title').val();
             $(this).removeClass('icon-sort');
             $(this).addClass('icon-sort-up');
-            getInfoTmdb(videoid, video_title, $(this).data('type'), 'ASC');
+            getInfoTmdb(videoid, video_title, 1, $(this).data('type'), 'ASC');
         });
         $('.icon-sort-up').on('click', function () {
             var video_title = $('#search_title').val();
             $(this).removeClass('icon-sort-up');
             $(this).addClass('icon-sort-down');
-            getInfoTmdb(videoid, video_title, $(this).data('type'), 'DESC');
+            getInfoTmdb(videoid, video_title, 1, $(this).data('type'), 'DESC');
         });
         $('.icon-sort-down').on('click', function () {
             var video_title = $('#search_title').val();
             $(this).removeClass('icon-sort-down');
             $(this).addClass('icon-sort');
-            getInfoTmdb(videoid, video_title);
+            getInfoTmdb(videoid, video_title, 1);
         });
     });
 </script>

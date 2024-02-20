@@ -6,6 +6,7 @@ class Tmdb
     const API_URL = 'https://api.themoviedb.org/3/';
 
     const IMAGE_URL = 'https://image.tmdb.org/t/p/original';
+
     private $curl;
     private static $instance;
 
@@ -40,22 +41,24 @@ class Tmdb
         return self::$instance;
     }
 
-    public function searchMovie($search)
+    public function searchMovie($search, $page = 1)
     {
-        return $this->requestAPI('search/movie',[
-            'query'=>$search
+        return $this->requestAPI('search/movie', [
+            'query' => $search,
+            'page'  => $page
         ]);
     }
 
     public function movieDetail($movie_id)
     {
-        return $this->requestAPI('movie/' . $movie_id );
+        return $this->requestAPI('movie/' . $movie_id);
     }
 
     public function movieCredits($movie_id)
     {
         return $this->requestAPI('movie/' . $movie_id . '/credits');
     }
+
     public function movieCurrentLanguageAgeRestriction($movie_id)
     {
         $results = $this->requestAPI('movie/' . $movie_id . '/release_dates')['response']['results'];
@@ -68,7 +71,7 @@ class Tmdb
 
     public function moviePosterBackdrops($movie_id)
     {
-        return $this->requestAPI('movie/' . $movie_id . '/images', ['include_image_language'=> $this->language . ',null']);
+        return $this->requestAPI('movie/' . $movie_id . '/images', ['include_image_language' => $this->language . ',null']);
     }
 
     public function setLanguage($language)
@@ -78,9 +81,74 @@ class Tmdb
 
     public function requestAPI($url, $param = [])
     {
-        if (empty($param['language']) ) {
+        if (empty($param['language'])) {
             $param['language'] = $this->language;
         }
         return $this->curl->exec($url, $param);
+    }
+
+    /**
+     * @param string $query
+     * @param string $sort
+     * @param string $sort_order
+     * @param string $limit
+     * @return array|null
+     * @throws Exception
+     */
+    public function getCacheFromQuery(string $query, string $sort = 'release_date', string $sort_order = 'DESC', string $limit = '1')
+    {
+        $sql = 'SELECT TSR.* 
+                FROM ' . tbl('tmdb_search') . ' TS
+                INNER JOIN ' . tbl('tmdb_search_result') . ' TSR ON TS.id_tmdb_search = TSR.id_tmdb_search
+                WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' 
+                ORDER BY ' . mysql_clean($sort) . ' ' . mysql_clean($sort_order) . '
+                LIMIT ' . create_query_limit($limit, config('tmdb_search')) . '
+                ';
+        return Clipbucket_db::getInstance()->_select($sql);
+    }
+
+    /**
+     * @param string $query
+     * @return array|null
+     * @throws Exception
+     */
+    public function getSearchInfo(string $query)
+    {
+        $sql = 'SELECT * 
+                FROM ' . tbl('tmdb_search') . ' TS
+                WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' ';
+        return Clipbucket_db::getInstance()->_select($sql);
+    }
+
+    /**
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public function deleteOldCacheEntries()
+    {
+        return Clipbucket_db::getInstance()->execute(
+            'DELETE FROM ' . tbl('tmdb_search') . ' WHERE datetime_search < DATE_SUB(NOW(), INTERVAL 1 HOUR)'
+            , 'delete');
+    }
+
+    /**
+     * @param string $query
+     * @param array $results
+     * @param int $total_results
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public function setQueryInCache(string $query, array $results, int $total_results)
+    {
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower(mysql_clean($query)), mysql_clean($total_results)]);
+        $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
+
+        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie) VALUES ';
+        $insert_line = [];
+        foreach ($results as $result) {
+            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . addslashes($result['title']) . '\', \'' . addslashes($result['overview']) . '\', ' . (empty($result['release_date']) ? 'null' : '\'' . $result['release_date'] . '\'') . ', \'' . $result['poster_path'] . '\', ' . $result['id'] . ') ';
+        }
+        $sql_insert .= implode(', ', $insert_line);
+        return Clipbucket_db::getInstance()->execute($sql_insert);
     }
 }

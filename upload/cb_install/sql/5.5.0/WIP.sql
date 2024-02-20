@@ -21,7 +21,8 @@ VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'enable_video_director', 'yes'),
        (NULL, 'enable_video_crew', 'yes'),
        (NULL, 'enable_video_poster', 'yes'),
-       (NULL, 'enable_video_backdrop', 'yes');
+       (NULL, 'enable_video_backdrop', 'yes'),
+       (NULL, 'tmdb_search', '10');
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
     MODIFY COLUMN `num` TINYINT NOT NULL;
@@ -339,3 +340,28 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `tra
 VALUES (@id_language_key, 'Default backdrop', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Décor par défaut', @language_id_fra);
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
+(
+    `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `search_key`      VARCHAR(128) NOT NULL UNIQUE,
+    `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `total_results`   INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
+(
+    `id_tmdb_search_result` INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `id_tmdb_search`        INT          NOT NULL,
+    `title`                 VARCHAR(128) NOT NULL,
+    `overview`           TEXT         NULL,
+    `poster_path`           VARCHAR(128) NOT NULL,
+    `release_date`          DATE         NULL,
+    `id_tmdb_movie`         INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tmdb_search_result`
+    ADD CONSTRAINT `search_result` FOREIGN KEY IF NOT EXISTS (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;

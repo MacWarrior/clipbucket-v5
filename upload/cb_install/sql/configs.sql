@@ -272,7 +272,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_director', 'yes'),
     (NULL, 'enable_video_crew', 'yes'),
     (NULL, 'enable_video_poster', 'yes'),
-    (NULL, 'enable_video_backdrop', 'yes');
+    (NULL, 'enable_video_backdrop', 'yes'),
+    (NULL, 'tmdb_search', '10');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

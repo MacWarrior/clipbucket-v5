@@ -337,9 +337,9 @@ class Clipbucket_db
     /**
      * Delete an element from database
      *
-     * @param      $tbl
-     * @param      $flds
-     * @param      $vls
+     * @param string $tbl
+     * @param array $flds
+     * @param array $vls
      * @param null $ep
      *
      * @throws Exception
@@ -348,7 +348,7 @@ class Clipbucket_db
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      * @internal param $ : { string } { $tbl } { table to delete value from }
      */
-    function delete($tbl, $flds, $vls, $ep = null)
+    function delete(string $tbl, array $flds, array $vls, $ep = null)
     {
         $this->ping();
 
@@ -381,9 +381,9 @@ class Clipbucket_db
     /**
      * Function used to insert values in database { table, fields, values style }
      *
-     * @param      $tbl
-     * @param      $flds
-     * @param      $vls
+     * @param string $tbl
+     * @param array $flds
+     * @param array $vls
      * @param null $ep
      *
      * @return mixed|void : { integer } { $insert_id } { id of inserted element }
@@ -394,7 +394,7 @@ class Clipbucket_db
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      */
-    function insert($tbl, $flds, $vls, $ep = null)
+    function insert(string $tbl, array $flds, array $vls, $ep = null)
     {
         $this->ping();
 
