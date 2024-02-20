@@ -48,6 +48,10 @@
                             {$formObj->createField($field)}
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
+                        {elseif $field.id == 'tags_video'}
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                            <ul id="list_{$field.id}"></ul>
                         {elseif !$field.id|strstr:'tags'}
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
@@ -68,7 +72,7 @@
                         <div class="form-group">
                             {$field.class='form-control'}
                             {$field.notShowSeprator='yes'}
-                            {if $field.id|strstr:'tags'}
+                            {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
                             <ul id="list_{$field.id}"></ul>
