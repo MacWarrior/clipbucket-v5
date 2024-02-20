@@ -171,8 +171,6 @@ function check_remote_url()
 var hasLoaded = false;
 var perc_download = 0;
 
-/* done */
-
 function status_update()
 {
     var file = $("#remote_file_url").val();
