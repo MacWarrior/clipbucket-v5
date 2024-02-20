@@ -950,3 +950,16 @@ a[role='menuitem'] {
     text-align: center;
     width: 100%;
 }
+
+.modal-body.tmdb .input-group{
+    width:60%;
+    margin-bottom:5px;
+}
+
+.modal-body.tmdb .input-group-addon{
+    cursor: pointer;
+}
+
+.modal-body.tmdb .input-group-addon:hover{
+    background-color: #d5d5d5;
+}
