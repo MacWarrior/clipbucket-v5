@@ -259,11 +259,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'tmdb_get_executive_producer', 'yes'),
     (NULL, 'tmdb_get_director', 'yes'),
     (NULL, 'tmdb_get_crew', 'yes'),
-    (NULL, 'tmdb_get_poster', 'yes'),
+    (NULL, 'tmdb_get_poster', 'no'),
     (NULL, 'tmdb_get_release_date', 'yes'),
     (NULL, 'tmdb_get_title', 'yes'),
     (NULL, 'tmdb_get_description', 'yes'),
-    (NULL, 'tmdb_get_backdrop', 'yes'),
+    (NULL, 'tmdb_get_backdrop', 'no'),
     (NULL, 'tmdb_get_age_restriction', 'yes'),
     (NULL, 'enable_video_genre', 'yes'),
     (NULL, 'enable_video_actor', 'yes'),
@@ -271,8 +271,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_executive_producer', 'yes'),
     (NULL, 'enable_video_director', 'yes'),
     (NULL, 'enable_video_crew', 'yes'),
-    (NULL, 'enable_video_poster', 'yes'),
-    (NULL, 'enable_video_backdrop', 'yes'),
+    (NULL, 'enable_video_poster', 'no'),
+    (NULL, 'enable_video_backdrop', 'no'),
     (NULL, 'tmdb_search', '10');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

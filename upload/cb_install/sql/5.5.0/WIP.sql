@@ -1,18 +1,17 @@
 INSERT IGNORE INTO `{tbl_prefix}config` (`configid`, `name`, `value`)
 VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'enable_tmdb', 'no'),
-       (NULL, 'url_tmdb_poster', 'https://image.tmdb.org/t/p/original'),
        (NULL, 'tmdb_get_genre', 'yes'),
        (NULL, 'tmdb_get_actors', 'yes'),
        (NULL, 'tmdb_get_producer', 'yes'),
        (NULL, 'tmdb_get_executive_producer', 'yes'),
        (NULL, 'tmdb_get_director', 'yes'),
        (NULL, 'tmdb_get_crew', 'yes'),
-       (NULL, 'tmdb_get_poster', 'yes'),
+       (NULL, 'tmdb_get_poster', 'no'),
        (NULL, 'tmdb_get_release_date', 'yes'),
        (NULL, 'tmdb_get_title', 'yes'),
        (NULL, 'tmdb_get_description', 'yes'),
-       (NULL, 'tmdb_get_backdrop', 'yes'),
+       (NULL, 'tmdb_get_backdrop', 'no'),
        (NULL, 'tmdb_get_age_restriction', 'yes'),
        (NULL, 'enable_video_genre', 'yes'),
        (NULL, 'enable_video_actor', 'yes'),
@@ -20,8 +19,8 @@ VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'enable_video_executive_producer', 'yes'),
        (NULL, 'enable_video_director', 'yes'),
        (NULL, 'enable_video_crew', 'yes'),
-       (NULL, 'enable_video_poster', 'yes'),
-       (NULL, 'enable_video_backdrop', 'yes'),
+       (NULL, 'enable_video_poster', 'no'),
+       (NULL, 'enable_video_backdrop', 'no'),
        (NULL, 'tmdb_search', '10');
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
@@ -371,5 +370,6 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
+
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
     ADD CONSTRAINT `search_result` FOREIGN KEY IF NOT EXISTS (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
