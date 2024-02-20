@@ -15,8 +15,14 @@ if (isset($_POST['update'])) {
     if (empty($eh->get_error())) {
         $myquery->update_video();
         Video::getInstance()->setDefaultPicture($video, $_POST['default_thumb']);
-        Video::getInstance()->setDefaultPicture($video, $_POST['default_poster'] ?? '', 'poster');
-        Video::getInstance()->setDefaultPicture($video, $_POST['default_backdrop'] ?? '', 'backdrop');
+
+        if( config('enable_video_poster') == 'yes' ){
+            Video::getInstance()->setDefaultPicture($video, $_POST['default_poster'] ?? '', 'poster');
+        }
+
+        if( config('enable_video_backdrop') == 'yes' ) {
+            Video::getInstance()->setDefaultPicture($video, $_POST['default_backdrop'] ?? '', 'backdrop');
+        }
     }
 }
 $data = Video::getInstance()->getOne(['videoid'=>$video]);
