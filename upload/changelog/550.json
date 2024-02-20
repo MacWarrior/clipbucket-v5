@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"363",
+  "revision":"364",
   "status":"dev",
   "detail":[
     {
@@ -280,6 +280,7 @@
         ,"Fix duplicate collection categories"
         ,"Fix user category display"
         ,"Implement user search by category"
+        ,"Fix upload form field check"
       ]
     }
   ,{
