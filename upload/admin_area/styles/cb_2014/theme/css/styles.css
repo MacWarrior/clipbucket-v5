@@ -894,17 +894,28 @@ a[role='menuitem'] {
 .ace-thumbnails.poster li{
     width:100px;
     height:150px;
+}
+
+.ace-thumbnails.backdrop li{
+    width:150px;
+    height:85px;
+}
+
+.ace-thumbnails.backdrop li,
+.ace-thumbnails.poster li{
     background-size:cover;
     border-radius:5px;
     background-repeat: no-repeat;
     background-position: center;
 }
 
+.ace-thumbnails.backdrop li.selected,
 .ace-thumbnails.poster li.selected{
     border-color: #337ab7;
     border-width: thick;
 }
 
+.ace-thumbnails.backdrop label,
 .ace-thumbnails.poster label{
     width: 100%;
     height: 100%;
@@ -912,10 +923,12 @@ a[role='menuitem'] {
     text-align:center;
 }
 
+.ace-thumbnails.backdrop li:not(:hover) input,
 .ace-thumbnails.poster li:not(:hover) input{
     display: none;
 }
 
+.ace-thumbnails.backdrop li input,
 .ace-thumbnails.poster li input{
     cursor: pointer;
     bottom: 10px;

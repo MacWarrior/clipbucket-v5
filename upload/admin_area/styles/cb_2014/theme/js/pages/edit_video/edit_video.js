@@ -137,4 +137,9 @@ $( document ).ready(function() {
             $(this).addClass('selected');
         }
     );
+    $('.backdrop li').click(function(){
+            $('.backdrop li.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    );
 });
