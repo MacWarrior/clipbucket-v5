@@ -1,16 +1,11 @@
 <div class="row">
-  <h5>{lang code="backdrops"}</h5>
-  <ul class="ace-thumbnails">
+  <ul class="ace-thumbnails backdrop">
     {foreach from=$vidthumbs_backdrop item=vid_thumb}
-    <li style="display:inline;">
-      <label for="{$vid_thumb|get_thumb_num}" class="no-margin">
-        <img src="{$vid_thumb}" width="100"/>
+    <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_backdrop}class="selected"{/if} title="Select as default backdrop">
+      <label for="poster_{$vid_thumb|get_thumb_num}">
+        <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_backdrop" {if $data.default_backdrop==$vid_thumb|get_thumb_num}checked{/if} />
       </label>
-      <div class="tools tools-bottom">
-        <input type="radio" id="backdrop_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_backdrop" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if} />
-      </div>
     </li>
     {/foreach}
   </ul>
-  <div style="clear:both;"></div>
 </div>
