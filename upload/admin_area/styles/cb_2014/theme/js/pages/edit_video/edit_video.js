@@ -107,6 +107,7 @@ function saveInfoTmdb(tmdb_video_id) {
 }
 
 function pageInfoTmdb(page) {
+    debugger;
     let sort_type;
     let sort;
     if ($('.icon-sort-up').length > 0) {
@@ -117,7 +118,7 @@ function pageInfoTmdb(page) {
         sort = 'DESC';
     }
 
-    getInfoTmdb(videoid, $('#title').val(), page, sort_type, sort);
+    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
 }
 
 $(function () {
