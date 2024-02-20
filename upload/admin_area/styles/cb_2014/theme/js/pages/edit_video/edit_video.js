@@ -117,7 +117,7 @@ function pageInfoTmdb(page) {
         sort = 'DESC';
     }
 
-    getInfoTmdb(videoid, $('#title').val(), page, sort_type, sort);
+    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
 }
 
 $(function () {
