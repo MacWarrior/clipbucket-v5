@@ -3,7 +3,9 @@
     {foreach from=$vidthumbs_poster item=vid_thumb}
     <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_poster}class="selected"{/if} title="Select as default poster">
       <label for="poster_{$vid_thumb|get_thumb_num}">
-          <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_poster" {if $data.default_poster==$vid_thumb|get_thumb_num}checked{/if} />
+        <span class="content_bottom">
+          <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_poster" {if $data.default_poster==$vid_thumb|get_thumb_num}checked{/if}/>
+        </span>
       </label>
     </li>
     {/foreach}

@@ -142,4 +142,9 @@ $( document ).ready(function() {
             $(this).addClass('selected');
         }
     );
+    $('.thumb li').click(function(){
+            $('.thumb li.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    );
 });
