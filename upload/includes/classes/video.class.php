@@ -72,7 +72,7 @@ class Video
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 366)) {
+        if ($version['version'] > Tmdb::MIN_VERSION || ($version['version'] == Tmdb::MIN_VERSION && $version['revision'] >= Tmdb::MIN_REVISION)) {
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
         }
