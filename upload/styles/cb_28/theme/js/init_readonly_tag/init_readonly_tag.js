@@ -15,9 +15,9 @@
         });
 
         if (link_type !== undefined && link_type) {
-            var labels = $('.tagit-label');
+            var labels = $(list_tag + ' .tagit-label');
             labels.each(function () {
-                $(this).parent().wrap('<a href="/search_result.php?query=' + $(this).html() + '&type=' + link_type + '"></a>');
+                $(this).parent().first().wrap('<a href="/search_result.php?query=' + $(this).html() + '&type=' + link_type + '"></a>');
             });
         }
     }
