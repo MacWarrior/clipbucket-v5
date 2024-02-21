@@ -24,7 +24,7 @@ VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'tmdb_search', '10');
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
-    MODIFY COLUMN `num` TINYINT NOT NULL;
+    MODIFY COLUMN `num` MEDIUMINT NOT NULL;
 
 ALTER TABLE `{tbl_prefix}tags_type`
     ADD UNIQUE IF NOT EXISTS `name` (`name`);

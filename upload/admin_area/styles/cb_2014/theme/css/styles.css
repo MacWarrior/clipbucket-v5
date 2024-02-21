@@ -908,7 +908,8 @@ a[role='menuitem'] {
 
 .ace-thumbnails.thumb li,
 .ace-thumbnails.backdrop li,
-.ace-thumbnails.poster li{
+.ace-thumbnails.poster li,
+.default_poster{
     background-size:cover;
     border-radius:5px;
     background-repeat: no-repeat;
@@ -962,4 +963,11 @@ a[role='menuitem'] {
 
 .modal-body.tmdb .input-group-addon:hover{
     background-color: #d5d5d5;
+}
+
+.default_poster{
+    display: block;
+    width: 200px;
+    height: 300px;
+    float: right;
 }

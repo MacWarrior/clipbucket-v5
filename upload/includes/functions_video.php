@@ -111,9 +111,7 @@ function video_playable($id): bool
  */
 function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 {
-    /**  getting video ID*/
     if (is_array($vdetails)) {
-        #check for videoid
         if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
@@ -134,9 +132,15 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         }
     }
 
-    global $db;
+    $fields = ['V.videoid', 'V.file_name', 'V.file_directory', 'VT.num', 'V.default_thumb', 'V.status'];
+    $version = Update::getInstance()->getDBVersion();
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 366)) {
+        $fields[] = 'V.default_poster';
+        $fields[] = 'V.default_backdrop';
+    }
+
     //get current video from db
-    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb, V.status', 'V.videoid = ' . mysql_clean($vid));
+    $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -147,7 +151,18 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     //get thumbs for current video from db
     $where[] = 'videoid = ' . mysql_clean($vid);
     if (!$multi) {
-        $where[] = ' num = ' . mysql_clean($resVideo['default_thumb']);
+        switch($type){
+            default:
+                $default = $resVideo['default_thumb'];
+                break;
+            case 'poster':
+                $default = $resVideo['default_poster'];
+                break;
+            case 'backdrop':
+                $default = $resVideo['default_backdrop'];
+                break;
+        }
+        $where[] = ' num = ' . mysql_clean($default);
     }
     if (!empty($size)) {
         $where[] = ' resolution LIKE \'' . mysql_clean($size) . '\'';
@@ -157,7 +172,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         $where[] = ' type = \'' . $type . '\'';
     }
 
-    $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
+    $resThumb = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
     if (empty($resThumb) && $type =='custom') {
         return $multi ? [] : '';
@@ -168,6 +183,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         return create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
+        if($debug){DiscordLog::sendDump(implode(' AND ', $where));}
         return $multi ? [default_thumb()] : default_thumb();
     }
     if ($multi) {

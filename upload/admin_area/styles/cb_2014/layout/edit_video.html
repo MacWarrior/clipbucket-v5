@@ -102,6 +102,7 @@
 			</div>
 		</div>
         <form method="post" name="edit_video" enctype="multipart/form-data">
+            <input class="form-control" name="videoid" type="hidden" id="videoid" value="{$data.videoid}"/>
             <div class="col-md-6">
                 <div class="tabbable">
                     <ul class="nav nav-tabs">
@@ -142,38 +143,42 @@
                                     <table class="myTable" style="width:100%;">
                                         <tr>
                                             <td class="first"><label>Video Id</label></td>
-                                            <td class="last">
+                                            <td>
                                                 <p><span>{$data.videoid}</span></p>
                                             </td>
-                                            <input class="form-control" name="videoid" type="hidden" id="videoid" value="{$data.videoid}"/>
+                                            {if config('enable_video_poster') == 'yes' && !empty($data.default_poster)}
+                                            <td rowspan="8">
+                                                <span class='default_poster' style="background-image:url({get_thumb($data, false, 'original', 'poster')})"></span>
+                                            </td>
+                                            {/if}
                                         </tr>
                                         <tr>
                                             <td class="first"><label>Video Key</label></td>
-                                            <td class="last">
+                                            <td>
                                                 <p><span>{$data.videokey}</span></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="first"><label>File Name</label></td>
-                                            <td class="last">
+                                            <td>
                                                 <p><span>{$data.file_name}</span></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="first"><label>Uploaded Date</label></td>
-                                            <td class="last">
+                                            <td>
                                                 <p><span>{$data.date_added}</span></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="first"><label>{lang code='duration'}</label></td>
-                                            <td class="last">
+                                            <td>
                                             <p><span>{$data.duration|SetTime}</span></p>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td class="first"><label>Total Video Files</label></td>
-                                            <td class="last">
+                                            <td>
                                                 <p><span>{get_all_video_files vdetails=$data count_only=true}</span></p>
                                             </td>
                                         </tr>
@@ -181,13 +186,13 @@
                                             <td class="first">
                                                 <label>{lang code='conversion_log'}</label>
                                             </td>
-                                            <td class="last">
+                                            <td>
                                                 <p><span>{if $has_log}<a href="view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="first"><label>Total Thumbnails</label></td>
-                                            <td class="last">
+                                            <td class="first"><label>Total images</label></td>
+                                            <td>
                                                 <p><span>{get_count_thumb($data['videoid'])}</span></p>
                                             </td>
                                         </tr>

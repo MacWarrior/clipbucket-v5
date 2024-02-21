@@ -58,8 +58,14 @@ if ($myquery->video_exists($video)) {
     assign('data', $data);
     assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
     assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
-    assign('vidthumbs_poster', get_thumb($data,TRUE,'original','poster'));
-    assign('vidthumbs_backdrop', get_thumb($data,TRUE,'original','backdrop'));
+
+    if( config('enable_video_poster') == 'yes' ){
+        assign('vidthumbs_poster', get_thumb($data,TRUE,'original','poster'));
+    }
+
+    if( config('enable_video_backdrop') == 'yes' ) {
+        assign('vidthumbs_backdrop', get_thumb($data, TRUE, 'original', 'backdrop'));
+    }
 
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
