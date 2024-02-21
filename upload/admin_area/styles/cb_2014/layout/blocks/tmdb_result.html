@@ -72,5 +72,10 @@
             $(this).children().first().addClass('icon-sort-up');
             getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC');
         });
+        $('#search_title').keypress(function(event){
+            if(event.keyCode == 13){
+                $('#search').click();
+            }
+        });
     });
 </script>

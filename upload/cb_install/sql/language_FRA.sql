@@ -1,3 +1,4 @@
+INSERT INTO `{tbl_prefix}languages` (`language_name`, `language_active`, `language_default`, `language_code`)
 VALUES ('Français', 'yes', 'no', 'fr');
 
 SET @language_id = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
