@@ -13,11 +13,18 @@ $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => DirPath::getUrl('admin_area') . 'admin_tool.php'];
 
 $tool = null;
-if (!empty($_GET['id_tool'])) {
-    $tool = new AdminTool();
-    $tool->init($_GET['id_tool']);
-}
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
 
+    if (!empty($_GET['code_tool'])) {
+        $tool = new AdminTool();
+        $tool->initByCode($_GET['code_tool']);
+    }
+} else {
+    if (!empty($_GET['id_tool'])) {
+        $tool = new AdminTool();
+        $tool->initById($_GET['id_tool']);
+    }
+}
 sendClientResponseAndContinue(function () use ($tool){
     if ($tool) {
         $tool->setToolInProgress();

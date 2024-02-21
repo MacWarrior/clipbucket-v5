@@ -5,6 +5,11 @@ class AdminTool
     private static $_instance = null;
     private static $temp;
 
+    CONST CODE_UPDATE_DATABASE_VERSION = 'update_database_version';
+
+    CONST MIN_VERSION_CODE = '5.5.0';
+    CONST MIN_REVISION_CODE = '365';
+
     /**
      * @var $id_histo the most recent tools_histo
      */
@@ -25,11 +30,11 @@ class AdminTool
     }
 
     /**
-     * @param $id_tool
+     * @param int $id_tool
      * @return bool
      * @throws Exception
      */
-    public function init($id_tool): bool
+    public function initById(int $id_tool): bool
     {
         $this->id_tool = $id_tool;
         if (empty($id_tool)) {
@@ -41,6 +46,27 @@ class AdminTool
             e(lang('class_error_occured'));
             return false;
         }
+        $this->id_histo = $this->tool['id_histo'];
+        return true;
+    }
+
+    /**
+     * @param string $code
+     * @return bool
+     * @throws Exception
+     */
+    public function initByCode(string $code): bool
+    {
+        if (empty($code)) {
+            e(lang('class_error_occured'));
+            return false;
+        }
+        $this->tool = self::getToolByCode($code);
+        if (empty($this->tool)) {
+            e(lang('class_error_occured'));
+            return false;
+        }
+        $this->id_tool = $this->tool['id_tool'];
         $this->id_histo = $this->tool['id_histo'];
         return true;
     }
@@ -133,6 +159,10 @@ class AdminTool
     public static function getToolById($id): array
     {
         return self::getTools([' tools.id_tool = ' . mysql_clean($id)])[0];
+    }
+    public static function getToolByCode($code): array
+    {
+        return self::getTools([' tools.code = \'' . mysql_clean($code) . '\''])[0];
     }
 
     /**

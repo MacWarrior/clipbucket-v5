@@ -949,6 +949,7 @@ CREATE TABLE `{tbl_prefix}tools`(
     `language_key_label`       VARCHAR(128) NOT NULL,
     `language_key_description` VARCHAR(128) NOT NULL,
     `function_name`            VARCHAR(128) NOT NULL,
+    `code`                     VARCHAR(32)  NOT NULL UNIQUE,
     PRIMARY KEY (`id_tool`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 

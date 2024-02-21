@@ -5,7 +5,7 @@ global $userquery;
 
 $userquery->admin_login_check();
 $tool = new AdminTool();
-$tool->init($_POST['id_tool']);
+$tool->initById($_POST['id_tool']);
 $tool->stop();
 echo json_encode([
     'msg'              => getTemplateMsg()

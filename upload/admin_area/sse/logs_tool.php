@@ -6,7 +6,7 @@ userquery::getInstance()->admin_login_check();
 $max_id = $_GET['max_id'];
 SSE::processSSE(function () use(&$max_id){
     $tool = new AdminTool();
-    $tool->init($_GET['id_tool']);
+    $tool->initById($_GET['id_tool']);
 
     $info_logs = $tool->getLastLogs($max_id);
     $max_id = $info_logs['max_id_log'];

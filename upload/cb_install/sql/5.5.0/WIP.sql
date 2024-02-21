@@ -68,3 +68,6 @@ VALUES (@id_language_key, 'Show last logs', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Afficher les derniers journaux', @language_id_fra);
 
+ALTER TABLE `{tbl_prefix}tools` ADD COLUMN IF NOT EXISTS `code` VARCHAR(32) NOT NULL ;
+UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,'_label', '');
+ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE(`code`);

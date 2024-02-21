@@ -4,7 +4,7 @@ require_once('../includes/classes/admin_tool.class.php');
 
 userquery::getInstance()->admin_login_check();
 $tool = new AdminTool();
-$tool->init($_POST['id_tool']);
+$tool->initById($_POST['id_tool']);
 sendClientResponseAndContinue(function () use ($tool) {
     $tool->setToolInProgress();
     echo json_encode([
