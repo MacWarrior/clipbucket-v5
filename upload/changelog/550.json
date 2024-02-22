@@ -319,6 +319,7 @@
         ,"Implement DB port config"
         ,"Implement DB version check"
         ,"Prevent SQL issues when updating from old versions"
+        ,"Fix PHP extension check"
       ]
     }
   ]
