@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"366",
+  "revision":"369",
   "status":"dev",
   "detail":[
     {
@@ -110,6 +110,7 @@
         ,"Implement cleanup session tool"
         ,"Implement video_files update tool"
         ,"Implement photo thumbs recreation tool"
+        ,"Implement admin tools logs"
       ]
     },
     {

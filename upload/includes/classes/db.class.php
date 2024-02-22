@@ -425,8 +425,10 @@ class Clipbucket_db
                 $needle = substr($val, 0, 3);
                 if ($needle == '|f|') {
                     $val = substr($val, 3, strlen($val));
+                    $values_query .=  $val ;
+                } else {
+                    $values_query .= "'" . $val . "'";
                 }
-                $values_query .= "'" . $val . "'";
             }
 
             if ($total_values != $count) {

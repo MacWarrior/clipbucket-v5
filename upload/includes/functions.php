@@ -3614,15 +3614,13 @@ function uploaderDetails()
  * Checks if given section is enabled or not e.g videos, photos
  *
  * @param : { string } { $input } { section to check }
- * @param bool $restrict
- *
  * @return bool|void
  */
 function isSectionEnabled($input)
 {
     $section = config($input . 'Section');
 
-    if ($section == 'yes' || THIS_PAGE == 'cb_install') {
+    if ($section == 'yes' || (defined('THIS_PAGE') && THIS_PAGE == 'cb_install') ) {
         return true;
     }
     return false;

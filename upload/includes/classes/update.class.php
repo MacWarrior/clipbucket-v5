@@ -745,4 +745,15 @@ class Update
         return true;
     }
 
+    /**
+     * @param $version
+     * @param $revision
+     * @return bool
+     */
+    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision)
+    {
+        $version_db = Update::getInstance()->getDBVersion();
+        return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));
+    }
+
 }
