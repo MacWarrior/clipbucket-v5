@@ -89,7 +89,7 @@
                     <a id="thumbs_{$category[list].category_id}" class="label label-danger arrowed popoverButton" data-html="true" data-placement="top" data-toggle="popover" data-content="<img src='{$cbvid->get_category_thumb($category[list], $type)}' height='90' width='90'/>" href="javascript:void(0);">View Thumb</a>
                 </td>
                 <td>
-                    <input name="category_order_{$category[list].category_id}" type="text" id="order" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" />
+                    <input name="category_order[{$category[list].category_id}]" type="text" id="order_{$category[list].category_id}" style="border:1px solid #999; padding:2px; width:30px" value="{$category[list].category_order}" size="5" maxlength="5" />
                 </td>
                 {if config('use_subs')==1}
                 <td>{display_clean($p_name)}</td>
