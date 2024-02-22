@@ -973,31 +973,37 @@ class CBvideo extends CBCategory
 
             if (!user_id()) {
                 e(lang('you_dont_have_permission_to_update_this_video'));
-            } elseif (!$this->video_exists($vid)) {
+                return;
+            }
+            if (!$this->video_exists($vid)) {
                 e(lang('class_vdo_del_err'));
-            } elseif (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
+                return;
+            }
+            if (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
                 e(lang('no_edit_video'));
-            } elseif (strlen($array['title']) > 100) {
-                e(lang('Title exceeds max length of 100 characters')); // TODO : Translation
-            } else {
-                $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
-
-                Tags::saveTags($array['tags'], 'video', $vid);
-                Category::getInstance()->saveLinks('video', $vid, $array['category']);
-
-                cb_do_action('update_video', [
-                    'object_id' => $vid,
-                    'results'   => $array
-                ]);
-
-                $videoDetails = $cbvid->get_video($vid);
-                if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
-                    $userquery->sendSubscriptionEmail($videoDetails, true);
-                }
-
-                e(lang('class_vdo_update_msg'), 'm');
+                return;
+            }
+            validate_cb_form($upload_fields, $array);
+            if( !empty(errorhandler::getInstance()->get_error()) ){
+                return;
             }
 
+            $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
+
+            Tags::saveTags($array['tags'], 'video', $vid);
+            Category::getInstance()->saveLinks('video', $vid, $array['category']);
+
+            cb_do_action('update_video', [
+                'object_id' => $vid,
+                'results'   => $array
+            ]);
+
+            $videoDetails = $cbvid->get_video($vid);
+            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+                $userquery->sendSubscriptionEmail($videoDetails, true);
+            }
+
+            e(lang('class_vdo_update_msg'), 'm');
         }
     }
 

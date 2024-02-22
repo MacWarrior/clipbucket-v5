@@ -281,6 +281,7 @@
         ,"Fix duplicate collection categories"
         ,"Fix user category display"
         ,"Implement user search by category"
+        ,"Fix upload form field check"
       ]
     }
   ,{
@@ -319,6 +320,7 @@
         ,"Implement DB port config"
         ,"Implement DB version check"
         ,"Prevent SQL issues when updating from old versions"
+        ,"Fix PHP extension check"
       ]
     }
   ]
