@@ -23,9 +23,6 @@ VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'enable_video_backdrop', 'no'),
        (NULL, 'tmdb_search', '10');
 
-ALTER TABLE `{tbl_prefix}video_thumbs`
-    MODIFY COLUMN `num` MEDIUMINT NOT NULL;
-
 ALTER TABLE `{tbl_prefix}tags_type`
     ADD UNIQUE IF NOT EXISTS `name` (`name`);
 INSERT IGNORE INTO `{tbl_prefix}tags_type` (name) VALUES ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');

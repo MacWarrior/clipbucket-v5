@@ -487,7 +487,7 @@ class Video
             e(lang('missing_param'));
             return;
         }
-        if (!in_array($type, ['thumb', 'poster', 'backdrop']) ) {
+        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             e(lang('unknown_type'));
             return;
         }
@@ -499,10 +499,15 @@ class Video
      */
     public function resetDefaultPicture($video_id, string $type = 'thumb')
     {
-        if (!in_array($type, ['thumb', 'poster', 'backdrop']) ) {
+        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             e(lang('unknown_type'));
             return;
         }
+
+        if( in_array($type, ['auto', 'custom'])){
+            $type = 'thumb';
+        }
+
         Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], ['|f|null'], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
 
@@ -514,7 +519,7 @@ class Video
      */
     public function deletePictures(array $video_detail, string $type)
     {
-        if (!in_array($type, ['thumb', 'poster', 'backdrop']) ) {
+        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             e(lang('unknown_type'));
             return;
         }

@@ -256,14 +256,13 @@ class Upload
      */
     function get_next_available_num($file_name): string
     {
-        global $db;
-        $res = $db->select(tbl('video_thumbs'), 'MAX(num) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
+        $res = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'MAX(CAST(num AS UNSIGNED)) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
         if (empty($res)) {
             $code = 0;
         } else {
             $code = $res[0]['num_max'];
         }
-        return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+        return str_pad((string)$code, 4, '0', STR_PAD_LEFT);
     }
 
     /**
@@ -284,9 +283,9 @@ class Upload
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
                 if (is_uploaded_file($file['tmp_name'][$key])) {
-                    $is_moved = move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                    move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
                 } else {
-                    $is_moved = rename($file['tmp_name'][$key], $temp_file_path);
+                    rename($file['tmp_name'][$key], $temp_file_path);
                 }
 
                 foreach ($thumbs_settings_28 as $key => $thumbs_size) {

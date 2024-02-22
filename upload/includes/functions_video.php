@@ -251,7 +251,7 @@ function create_thumb($video_db, $multi, $size)
         }
     } else {
         //insert default
-        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], '', '', '', VERSION]);
+        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_db['videoid'], '', '', '', VERSION, 'auto']);
         error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
     return get_thumb($video_db['videoid'], $multi, $size);
@@ -768,15 +768,14 @@ function get_thumb_num($name): string
 {
     $regex = '`.*-.*-(\d+)(?:-[cbp])?.\w+`';
     $match = [];
-    $res = preg_match($regex, $name, $match);
+    preg_match($regex, $name, $match);
     return $match[1] ?? '' ;
 }
 
 /**
  * Function used to remove specific thumbs number
  *
- * @param $file_dir
- * @param $file_name
+ * @param $videoDetails
  * @param $num
  * @throws Exception
  */
@@ -803,7 +802,7 @@ function delete_video_thumb($videoDetails, $num)
         create_thumb($videoDetails, '', '');
     }
     if ($videoDetails['default_thumb'] == $num) {
-        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` =  (SELECT  CASE WHEN num = \'\' THEN 0 ELSE MIN(`num`) END FROM ' . tbl('video_thumbs') . ' WHERE  videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
     }
 }
 
@@ -1584,7 +1583,11 @@ function generatingMoreThumbs($data, bool $regenerate = false)
         $ffmpeg->generateAllMissingThumbs();
     }
 
-    e(lang('video_thumbs_regenerated'), 'm');
+    if( !error() && !warning() ) {
+        errorhandler::getInstance()->flush();
+        e(lang('video_thumbs_regenerated'), 'm');
+    }
+
     $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
 }
 

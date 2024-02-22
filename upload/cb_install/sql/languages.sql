@@ -1108,4 +1108,11 @@ VALUES ('admin_setting'),
        ('option_enable_video_poster'),
        ('option_enable_video_backdrop'),
        ('option_tmdb_get_age_restriction'),
-       ('option_tmdb_get_backdrop');
+       ('option_tmdb_get_backdrop'),
+       ('backdrop'),
+       ('poster'),
+       ('thumbnail'),
+       ('default_x'),
+       ('option_require_x_enabled'),
+       ('select_as_default_x'),
+       ('enable_x_field');

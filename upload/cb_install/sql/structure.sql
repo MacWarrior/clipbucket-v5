@@ -934,7 +934,7 @@ ALTER TABLE `{tbl_prefix}languages_translations`
 CREATE TABLE `{tbl_prefix}video_thumbs`(
     `videoid`    BIGINT(20)  NOT NULL,
     `resolution` VARCHAR(16) NOT NULL,
-    `num`        TINYINT NOT NULL,
+    `num`        VARCHAR(4)  NOT NULL,
     `extension`  VARCHAR(4)  NOT NULL,
     `version`    VARCHAR(30) NOT NULL,
     `type`       VARCHAR(15) NOT NULL,
