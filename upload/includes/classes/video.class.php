@@ -493,7 +493,17 @@ class Video
         }
         $num = get_thumb_num($poster);
         Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
-        e(lang('vid_thumb_changed'), 'm');
+    }
+    /**
+     * @throws Exception
+     */
+    public function resetDefaultPicture($video_id, string $type = 'thumb')
+    {
+        if (!in_array($type, ['thumb', 'poster', 'backdrop']) ) {
+            e(lang('unknown_type'));
+            return;
+        }
+        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], ['|f|null'], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
 
     /**
@@ -513,6 +523,7 @@ class Video
             foreach ($results as $result) {
                 delete_video_thumb($video_detail, $result['num']);
             }
+            Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
         }
     }
 }
