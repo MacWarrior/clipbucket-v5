@@ -183,7 +183,6 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         return create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
-        if($debug){DiscordLog::sendDump(implode(' AND ', $where));}
         return $multi ? [default_thumb()] : default_thumb();
     }
     if ($multi) {

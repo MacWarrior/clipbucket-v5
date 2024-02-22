@@ -475,20 +475,20 @@
                         </li>
                         <li>
                             <a data-toggle="tab" href="#thumbnails">
-                                <i class="glyphicon glyphicon-picture"></i> {lang code='default_thumbnail'}
+                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('thumbnail'))|ucfirst}
                             </a>
                         </li>
                         {if config('enable_video_poster') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#posters">
-                                <i class="glyphicon glyphicon-picture"></i> {lang code='default_poster'}
+                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('poster'))|ucfirst}
                             </a>
                         </li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#backdrops">
-                                <i class="glyphicon glyphicon-picture"></i> {lang code='default_backdrop'}
+                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('backdrop'))|ucfirst}
                             </a>
                         </li>
                         {/if}

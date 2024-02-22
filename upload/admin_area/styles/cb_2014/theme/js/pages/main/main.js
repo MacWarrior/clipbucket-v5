@@ -97,7 +97,7 @@ $(document).ready(function () {
         if (!$(this).prop('checked')) {
             button.addClass('disabled');
         } else {
-            button.removeClass('disabled');
+            button.removeClass('disabled').attr('title','');
         }
     });
 
@@ -145,7 +145,7 @@ $(document).ready(function () {
         $('#'+index).change(function () {
             let input_to_disable = [value];
             if( $(this).prop('checked') ) {
-                $('#' + input_to_disable).prop('disabled', false);
+                $('#' + input_to_disable).prop('disabled', false).attr('title','');
                 $('#' + input_to_disable + '_hidden').prop('disabled', true);
             } else {
                 $('#' + input_to_disable).prop('disabled', true);

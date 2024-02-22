@@ -862,7 +862,8 @@ a[role='menuitem'] {
     cursor: pointer;
 }
 
-#tmdb_token_test.disabled{
+#tmdb_token_test.disabled,
+#main_form input:disabled{
     cursor: no-drop;
 }
 
