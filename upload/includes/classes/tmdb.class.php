@@ -2,7 +2,6 @@
 
 class Tmdb
 {
-
     const API_URL = 'https://api.themoviedb.org/3/';
 
     const IMAGE_URL = 'https://image.tmdb.org/t/p/original';
@@ -33,7 +32,7 @@ class Tmdb
     /**
      * @throws Exception
      */
-    public static function getInstance()
+    public static function getInstance(): Tmdb
     {
         if (empty(self::$instance)) {
             self::$instance = new self();
