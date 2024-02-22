@@ -235,18 +235,6 @@ function check_extension ($extension, $type) {
                 break;
             }
 
-            $error = false;
-            if ($extension == 'mysqli') {
-                $match_mysql = [];
-                preg_match($reg, $version, $match_mysql);
-                if ($match_mysql[1] < $mysqlReq) {
-                    $error = sprintf('Current version of %s is %s, minimal version %s is required. Please update', $extension, $version, $mysqlReq);
-                }
-            }
-            if ($error) {
-                $return['err'] = $error;
-                break;
-            }
             $return['msg'] = sprintf('%s %s extension is enabled', $extension, $version);
             break;
 

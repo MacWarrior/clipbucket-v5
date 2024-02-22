@@ -101,7 +101,7 @@ if (empty($exec_output)) {
     e(lang('php_cli_not_found'));
 } else {
     $reg = '/^(\w*) => (-?\w*).*$/';
-    $regVersion = '/(\w* \w*) => (.*)$/';
+    $regVersion = '/(\w* \w*) => (\w* ?\d+\.\d+\.\d+).*$/';
     foreach ($exec_output as $line) {
         $match= [];
         if (strpos($line, 'post_max_size') !== false) {
