@@ -161,7 +161,7 @@ function check_module($type): array
                 break;
             }
 
-            $regVersion = '/(\w* \w*) => (.*)$/';
+            $regVersion = '/(\w* \w*) => (\w* ?\d+\.\d+\.\d+).*$/';
             foreach ($php_cli_info as $line) {
                 $match = [];
                 if (strpos($line, 'PHP Version') !== false) {
@@ -226,7 +226,6 @@ function check_module($type): array
 function check_extension ($extension, $type) {
     global $extensionsCLI, $extensionsWeb;
     $reg = '/(\d+\.\d+\.\d+)$/';
-    $mysqlReq = '5.6';
     switch ($type) {
         case 'cli':
             $version = $extensionsCLI[$extension] ?? false;
@@ -252,23 +251,12 @@ function check_extension ($extension, $type) {
                     $return['err'] = $extension . ' extension is not enabled';
                 } else {
                     $key = $extensionMessages[$extension];
-                    $error = false;
-                    if ($extension == 'mysqli') {
-                        $match_mysql = [];
-
-                        preg_match($reg, $res[$key], $match_mysql);
-                        if ($match_mysql[1] < $mysqlReq) {
-                            $error = sprintf('Current version of %s is %s, minimal version %s is required. Please update', $extension, $res[$key], $mysqlReq);
-                        }
-                    }
                     if (empty($res[$key]) && $extension == 'gd') {
                         $key='GD Version';
                     }
-                    if ($error) {
-                        $return['err'] = $error;
-                    } else {
-                        $return['msg'] = sprintf('%s %s extension is enabled', $extension, $res[$key]);
-                    }
+                    $matches =[];
+                    preg_match($reg, $res[$key],$matches );
+                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[1] ?? $res[$key]);
                 }
             }
             break;
