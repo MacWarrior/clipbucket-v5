@@ -161,7 +161,7 @@ function check_module($type): array
                 break;
             }
 
-            $regVersion = '/(\w* \w*) => (\w* ?\d+\.\d+\.\d+).*$/';
+            $regVersion = '/(\w* \w*) => \w* ?(\d+\.\d+\.\d+).*$/';
             foreach ($php_cli_info as $line) {
                 $match = [];
                 if (strpos($line, 'PHP Version') !== false) {
@@ -234,7 +234,12 @@ function check_extension ($extension, $type) {
                 break;
             }
 
-            $return['msg'] = sprintf('%s %s extension is enabled', $extension, $version);
+            $matches =[];
+            if ($extension == 'mysqli') {
+                $version = 'mysqlnd 8.3.3';
+            }
+            preg_match($reg, $version,$matches );
+            $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[1] ?? $version);
             break;
 
         case 'web':

@@ -101,7 +101,7 @@ if (empty($exec_output)) {
     e(lang('php_cli_not_found'));
 } else {
     $reg = '/^(\w*) => (-?\w*).*$/';
-    $regVersion = '/(\w* \w*) => (\w* ?\d+\.\d+\.\d+).*$/';
+    $regVersion = '/(\w* \w*) => \w* ?(\d+\.\d+\.\d+).*$/';
     foreach ($exec_output as $line) {
         $match= [];
         if (strpos($line, 'post_max_size') !== false) {
@@ -180,7 +180,9 @@ foreach ($extensionMessages as $extension => $version) {
         if (empty($modulesWeb[$extension][$version]) && $extension == 'gd') {
             $extensionsWEB[$extension] = $modulesWeb[$extension]['GD Version'];
         } else {
-            $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+            $matches = [];
+            preg_match($regex_version, $modulesWeb[$extension][$version], $matches);
+            $extensionsWEB[$extension] = $matches[0]??$modulesWeb[$extension][$version];
         }
     }
 }
