@@ -235,10 +235,7 @@ function check_extension ($extension, $type) {
             }
 
             $matches =[];
-            if ($extension == 'mysqli') {
-                $version = 'mysqlnd 8.3.3';
-            }
-            preg_match($reg, $version,$matches );
+            preg_match($reg, $version,$matches);
             $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[1] ?? $version);
             break;
 
