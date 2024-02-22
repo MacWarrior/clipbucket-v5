@@ -78,7 +78,6 @@ class AdminTool
     public static function getTools(array $condition = []): array
     {
         $where = implode(' AND ', $condition);
-        $version = Update::getInstance()->getDBVersion();
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, 
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
