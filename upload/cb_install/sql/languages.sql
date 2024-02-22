@@ -1076,4 +1076,7 @@ VALUES ('admin_setting'),
        ('recreate_thumb_label'),
        ('recreate_thumb_description'),
        ('no_logs'),
-       ('show_log');
+       ('show_log'),
+       ('tool_started'),
+       ('tool_stopped'),
+       ('tool_ended');

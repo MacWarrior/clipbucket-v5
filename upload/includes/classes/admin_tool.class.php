@@ -8,11 +8,8 @@ class AdminTool
     CONST CODE_UPDATE_DATABASE_VERSION = 'update_database_version';
 
     CONST MIN_VERSION_CODE = '5.5.0';
-    CONST MIN_REVISION_CODE = '365';
+    CONST MIN_REVISION_CODE = '367';
 
-    /**
-     * @var $id_histo the most recent tools_histo
-     */
     private $id_histo;
     private $id_tool;
     private $tool;
@@ -477,7 +474,7 @@ class AdminTool
             $version = Update::getInstance()->getDBVersion();
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
                 $this->updateToolHisto(['elements_total', 'elements_done'], [count($this->array_loop), 0]);
-                $this->addLog('tool started');
+                $this->addLog(lang('tool_started'));
             } else {
                 Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [count($this->array_loop), 0], ' id_tool = ' . $secureIdTool);
             }
@@ -503,7 +500,7 @@ class AdminTool
                     e(lang($e->getMessage()));
                     $this->addLog($e->getMessage());
                     if ($stop_on_error) {
-                        $this->addLog('process_stopped');
+                        $this->addLog(lang('tool_stopped'));
                         break;
                     }
                 }
@@ -518,7 +515,7 @@ class AdminTool
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
-            $this->addLog('tool ended');
+            $this->addLog(lang('tool_ended'));
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
         }
