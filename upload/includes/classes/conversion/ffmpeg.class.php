@@ -690,10 +690,11 @@ class FFMpeg
 
         $video_info = Video::getInstance()->getOne([
             'file_name' => $this->file_name
+            ,'disable_generic_constraints' => true
         ]);
 
         if( empty($video_info) ){
-            e(lang('technical_error'));
+            $this->log->writeLine(date('Y-m-d H:i:s') . ' - ' . lang('technical_error'));
             return;
         }
 
@@ -712,6 +713,15 @@ class FFMpeg
         $this->generateDefaultsThumbs($video_info['videoid'], $thumbs_res_settings, $thumbs_settings);
     }
 
+    public static function extractVideoThumbnail(array $params): array
+    {
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $params['dimension'] . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        return [
+            'command' => $command
+            ,'output' => shell_exec($command)
+        ];
+    }
+
     /**
      * @param $array
      * @return void
@@ -719,7 +729,6 @@ class FFMpeg
      */
     public function generateThumbs($array)
     {
-        global $db;
         $duration = $array['duration'];
         $dim = $array['dim'];
         $num = $array['num'];
@@ -762,16 +771,20 @@ class FFMpeg
 
                 $this->log->writeLine(date('Y-m-d H:i:s').' => Generating '.$file_name.'...');
 
-                $command = config('ffmpegpath') . ' -ss ' . $time_sec . ' -i ' . $this->input_file . ' -pix_fmt yuvj422p -an -r 1 ' . $dimension . ' -y -f image2 -vframes 1 ' . $file_path . ' 2>&1';
-                $output = shell_exec($command);
+                $return = self::extractVideoThumbnail([
+                    'timecode' => $time_sec
+                    ,'input_path' => $this->input_file
+                    ,'dimension' => $dimension
+                    ,'output_path' => $file_path
+                ]);
 
                 if(in_dev()){
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', '', true, false, true);
                 }
 
                 if (file_exists($file_path)) {
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dim, $thumb_file_number, $extension, VERSION, 'auto']);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dim, $thumb_file_number, $extension, VERSION, 'auto']);
                 } else {
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }
@@ -990,7 +1003,6 @@ class FFMpeg
     }
 
     /**
-     * @param Clipbucket_db $db
      * @param $videoid
      * @param array $thumbs_res_settings
      * @param array $thumbs_settings
