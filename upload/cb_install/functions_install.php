@@ -227,7 +227,7 @@ function check_module($type): array
 
 function check_extension ($extension, $type) {
     global $extensionsCLI, $extensionsWeb;
-    $reg = '/(\d+\.\d+\.\d+)$/';
+    $reg = '(\d+\.\d+\.\d+)';
     switch ($type) {
         case 'cli':
             $version = $extensionsCLI[$extension] ?? false;
@@ -259,8 +259,8 @@ function check_extension ($extension, $type) {
                         $key='GD Version';
                     }
                     $matches =[];
-                    preg_match($reg, $res[$key],$matches );
-                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[1] ?? $res[$key]);
+                    preg_match($reg, $res[$key],$matches);
+                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[0] ?? $res[$key]);
                 }
             }
             break;
