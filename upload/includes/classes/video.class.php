@@ -241,6 +241,7 @@ class Video
         $param_first_only = $params['first_only'] ?? false;
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
+        $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -278,7 +279,7 @@ class Video
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true) && !$param_exist ){
+        if( !has_access('admin_access', true) && !$param_exist && !$param_disable_generic_constraints){
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
@@ -530,6 +531,76 @@ class Video
             }
             Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function extractThumbnails(array $video_details): bool
+    {
+        $video_file = get_high_res_file($video_details);
+        if(empty($video_file)){
+            e('Video file not found');
+            return false;
+        }
+
+        if( $video_details['duration'] == 0 ){
+            update_duration($video_details);
+            $video_details = $this->getOne([
+                'videoid' => $video_details['videoid']
+            ]);
+            if( $video_details['duration'] == 0 ){
+                e('Video has no duration');
+                return false;
+            }
+        }
+
+        $thumbs_dir = DirPath::get('thumbs') . $video_details['file_directory'] . DIRECTORY_SEPARATOR;
+        if (!is_dir($thumbs_dir)) {
+            mkdir($thumbs_dir, 0755, true);
+        }
+
+        $num_thumbs = config('num_thumbs');
+        if( empty($num_thumbs) || $num_thumbs <= 0 ){
+            e('Incorrect num_thumbs');
+            return false;
+        }
+
+        if( $video_details['duration'] > $num_thumbs ){
+            $num_thumbs = (int)$video_details['duration'];
+        }
+
+        $extension = 'jpg';
+
+        for($i = 1 ; $i <= $num_thumbs ; $i++){
+            $thumb_file_number = str_pad((string)$i, 4, '0', STR_PAD_LEFT);
+            $file_name = $video_details['file_name'] . '-original' . $thumb_file_number . '.' . $extension;
+            $file_path = $thumbs_dir . $file_name;
+            $timecode = (int)($video_details['duration'] / $num_thumbs * $i);
+
+            $params = [
+                'input_path' => $video_file
+                ,'output_path' => $file_path
+                ,'timecode' => $timecode
+                ,'dimension' => ''
+            ];
+
+            FFMpeg::extractVideoThumbnail($params);
+
+            if (!file_exists($file_path)) {
+                e('Error generating '.$file_name.'...');
+                return false;
+            }
+
+            Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_details['videoid'], 'original', $i, $extension, VERSION, 'auto']);
+        }
+
+        return true;
+    }
+
+    public function generateThumbnails(array $video_details, string $type = ''): bool
+    {
+
     }
 }
 

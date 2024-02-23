@@ -1,5 +1,85 @@
 <?php
 
+class Image
+{
+    public static function getThumbnailsResolutions($type): array
+    {
+        switch($type)
+        {
+            default:
+                e('Unknown type : '.$type);
+                return [];
+
+            case 'video_thumbnail':
+                return [
+                    ['168', '105']
+                    ,['416', '260']
+                    ,['632', '395']
+                    ,['768', '432']
+                ];
+
+            // TODO
+            case 'video_poster':
+            case 'video_backdrop':
+            case 'photo':
+                return[];
+        }
+    }
+
+    public static function generateThumbnail($params): bool
+    {
+        if( !file_exists($params['input_file']) ){
+            e('Input file doesn\'t exists : ' . $params['input_file']);
+            return false;
+        }
+
+        $input_extension = getExt($params['input_file']);
+        if( $input_extension == 'jpg' ){
+            $input_extension = 'jpeg';
+        }
+
+        $image_create_function_name = 'imagecreatefrom' . $input_extension;
+        if( !function_exists($image_create_function_name) ){
+            e('Unsupported image format : ' . $input_extension);
+            return false;
+        }
+
+        $input_file = call_user_func($image_create_function_name, $params['input_file']);
+
+        $input_width = imagesx($input_file);
+        $input_height = imagesy($input_file);
+
+        if( empty($input_width) || empty($input_height) ){
+            e('Unable to get image size : ' . $params['input_file']);
+            imagedestroy($input_file);
+            return false;
+        }
+
+        if( $params['output_width'] < $input_width && $params['output_height'] < $input_height ){
+            // Nothing to do, original file is smaller than asked size
+            imagedestroy($input_file);
+            return true;
+        }
+
+        $output_image = imagecreatetruecolor($params['output_width'], $params['output_height']);
+
+        imagecopyresampled($output_image, $input_file, 0, 0, 0, 0, $params['output_width'], $params['output_height'], $input_width, $input_height);
+
+        $image_save_function_name = 'image' . $params['output_extension'];
+        call_user_func($image_save_function_name, $input_file, $params['output_file'], $params['output_quality'] ?? 100);
+
+        imagedestroy($input_file);
+        imagedestroy($output_image);
+
+        if( !file_exists($params['output_file']) ){
+            e('Output file hasn\'t been created : ' . $params['output_file']);
+            return false;
+        }
+
+        return true;
+    }
+}
+
 class ResizeImage
 {
     //Resize the following image

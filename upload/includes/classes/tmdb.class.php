@@ -104,8 +104,7 @@ class Tmdb
                 INNER JOIN ' . tbl('tmdb_search_result') . ' TSR ON TS.id_tmdb_search = TSR.id_tmdb_search
                 WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' 
                 ORDER BY ' . mysql_clean($sort) . ' ' . mysql_clean($sort_order) . '
-                LIMIT ' . create_query_limit($limit, config('tmdb_search')) . '
-                ';
+                LIMIT ' . create_query_limit($limit, config('tmdb_search'));
         return Clipbucket_db::getInstance()->_select($sql);
     }
 
