@@ -52,7 +52,11 @@ $ffprobe_path = check_version('ffprobe');
 assign('ffprobe_path', $ffprobe_path);
 assign('ffprobe_path_OK', $ffprobe_path >= $ffReq);
 
-assign('phpVersionWeb', phpversion());
+$regVersionPHP = '/(\d+\.\d+\.\d+)/';
+preg_match($regVersionPHP, phpversion(), $match);
+$phpVersion = $match[1] ?? phpversion();
+
+assign('phpVersionWeb', $phpVersion);
 assign('phpVersionWebOK', phpversion() >= $phpVersionReq);
 
 $media_info = check_version('media_info');
