@@ -7,7 +7,7 @@ class Tmdb
     const IMAGE_URL = 'https://image.tmdb.org/t/p/original';
 
     const MIN_VERSION = '5.5.0';
-    const MIN_REVISION = '370';
+    const MIN_REVISION = '371';
 
     private $curl;
     private static $instance;
