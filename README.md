@@ -12,11 +12,9 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 </p>
 
 # Update 5.5.0
-After more than 400 revisions, we're proud to officialy announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
-<br/><br/>
-
+After more than 370 revisions, we're proud to officialy announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
 <p align="center">
-  <img src="./upload/images/release-5.5.0.jpg" alt="ClipbucketV5 update 5.5.0 features list"/>
+  <img src="./upload/images/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
 </p>
 
 # History
