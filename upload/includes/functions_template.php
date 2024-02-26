@@ -180,6 +180,15 @@ function display_subtitle_list($data)
     echo templateWithMsgJson('blocks/subtitle_list.html');
 }
 
+function display_tmdb_result($data, $videoid)
+{
+    assign('results', $data['results']);
+    assign('search', $data['title']);
+    assign('sort', $data['sort']);
+    assign('sort_order', $data['sort_order']);
+    assign('videoid', $videoid);
+    echo templateWithMsgJson('blocks/tmdb_result.html');
+}
 
 //todO séparer en 2 fonctions
 /**

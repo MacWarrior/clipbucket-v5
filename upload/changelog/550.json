@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"370",
+  "revision":"373",
   "status":"dev",
   "detail":[
     {
@@ -112,6 +112,8 @@
         ,"Implement photo thumbs recreation tool"
         ,"Implement admin tools logs"
         ,"Fix categories order"
+        ,"Implement TMDB integration"
+        ,"Fix collapsed categories display"
       ]
     },
     {

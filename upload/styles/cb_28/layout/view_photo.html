@@ -275,6 +275,7 @@
 
 			$(document).ready(function(){
 				getAllComments('p','{$object.photo_id}','{$object.last_commented}',1,'{$object.total_comments}','{$object_type}');
+				init_readonly_tags('tags', '#list_tags');
 			});
 		</script>
 	</div>

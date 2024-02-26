@@ -91,6 +91,27 @@ if (isset($_POST['update'])) {
         , 'enable_collection_comments'
         , 'display_collection_comments'
         , 'enable_sitemap'
+        , 'enable_tmdb'
+        , 'tmdb_get_genre'
+        , 'tmdb_get_actors'
+        , 'tmdb_get_producer'
+        , 'tmdb_get_executive_producer'
+        , 'tmdb_get_director'
+        , 'tmdb_get_crew'
+        , 'tmdb_get_poster'
+        , 'tmdb_get_release_date'
+        , 'tmdb_get_title'
+        , 'tmdb_get_description'
+        , 'tmdb_get_backdrop'
+        , 'tmdb_get_age_restriction'
+        , 'enable_video_genre'
+        , 'enable_video_actor'
+        , 'enable_video_producer'
+        , 'enable_video_executive_producer'
+        , 'enable_video_director'
+        , 'enable_video_crew'
+        , 'enable_video_poster'
+        , 'enable_video_backdrop'
     ];
 
     $config_booleans_to_refactor = [
@@ -361,6 +382,30 @@ if (isset($_POST['update'])) {
         'cache_host',
         'cache_port',
         'cache_password',
+
+        'enable_tmdb',
+        'tmdb_token',
+        'tmdb_get_genre',
+        'tmdb_get_actors',
+        'tmdb_get_producer',
+        'tmdb_get_executive_producer',
+        'tmdb_get_director',
+        'tmdb_get_crew',
+        'tmdb_get_poster',
+        'tmdb_get_release_date',
+        'tmdb_get_title',
+        'tmdb_get_description',
+        'tmdb_get_backdrop',
+        'tmdb_get_age_restriction',
+        'tmdb_search',
+        'enable_video_genre',
+        'enable_video_actor',
+        'enable_video_producer',
+        'enable_video_executive_producer',
+        'enable_video_director',
+        'enable_video_crew',
+        'enable_video_poster',
+        'enable_video_backdrop',
 
         'hide_empty_collection',
         'display_video_comments',

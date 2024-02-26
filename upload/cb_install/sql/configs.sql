@@ -238,6 +238,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_social_sharing', 'yes'),
     (NULL, 'enable_video_internal_sharing', 'yes'),
     (NULL, 'enable_video_link_sharing', 'yes'),
+    (NULL, 'tmdb_token', ''),
+    (NULL, 'enable_tmdb', 'no'),
     (NULL, 'enable_user_dob_edition', 'yes'),
     (NULL, 'enable_age_restriction', 'yes'),
     (NULL, 'enable_blur_restricted_content', 'no'),
@@ -250,7 +252,28 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_collection_comments', 'yes'),
     (NULL, 'display_collection_comments', 'yes'),
     (NULL, 'enable_sitemap', 'yes'),
-    (NULL, 'git_path', '');
+    (NULL, 'git_path', ''),
+    (NULL, 'tmdb_get_genre', 'yes'),
+    (NULL, 'tmdb_get_actors', 'yes'),
+    (NULL, 'tmdb_get_producer', 'yes'),
+    (NULL, 'tmdb_get_executive_producer', 'yes'),
+    (NULL, 'tmdb_get_director', 'yes'),
+    (NULL, 'tmdb_get_crew', 'yes'),
+    (NULL, 'tmdb_get_poster', 'no'),
+    (NULL, 'tmdb_get_release_date', 'yes'),
+    (NULL, 'tmdb_get_title', 'yes'),
+    (NULL, 'tmdb_get_description', 'yes'),
+    (NULL, 'tmdb_get_backdrop', 'no'),
+    (NULL, 'tmdb_get_age_restriction', 'yes'),
+    (NULL, 'enable_video_genre', 'yes'),
+    (NULL, 'enable_video_actor', 'yes'),
+    (NULL, 'enable_video_producer', 'yes'),
+    (NULL, 'enable_video_executive_producer', 'yes'),
+    (NULL, 'enable_video_director', 'yes'),
+    (NULL, 'enable_video_crew', 'yes'),
+    (NULL, 'enable_video_poster', 'no'),
+    (NULL, 'enable_video_backdrop', 'no'),
+    (NULL, 'tmdb_search', '10');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
@@ -278,7 +301,7 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 'tool_recalcul_video_file'),
     ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 'recreate_thumb');
 
-INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
+INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 

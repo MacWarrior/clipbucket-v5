@@ -31,7 +31,7 @@ if ($myquery->video_exists($video)) {
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {
-        $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $data['thumbs_version']);
+        $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory']);
     }
 } else {
     $msg[] = lang('class_vdo_del_err');

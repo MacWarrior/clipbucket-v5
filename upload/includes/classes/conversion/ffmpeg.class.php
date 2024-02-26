@@ -682,33 +682,44 @@ class FFMpeg
     {
         $this->log->newSection('Thumbs generation');
 
-        global $db;
         $thumbs_res_settings = thumbs_res_settings_28();
 
         $thumbs_settings = [];
         $thumbs_settings['duration'] = $this->input_details['duration'];
         $thumbs_settings['num'] = config('num_thumbs');
-        $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $this->file_name . '\'');
-        if (!empty($rs)) {
-            $videoid = $rs[0]['videoid'];
 
-        } else {
-            e(lang('technical_error'));
-            $videoid = 0;
+        $video_info = Video::getInstance()->getOne([
+            'file_name' => $this->file_name
+            ,'disable_generic_constraints' => true
+        ]);
+
+        if( empty($video_info) ){
+            $this->log->writeLine(date('Y-m-d H:i:s') . ' - ' . lang('technical_error'));
+            return;
         }
-        $thumbs_settings['videoid'] = $videoid;
+
+        $thumbs_settings['videoid'] = $video_info['videoid'];
 
         //delete olds thumbs from db and on disk
         $this->log->writeLine(date('Y-m-d H:i:s').' - Deleting old thumbs...');
-        $db->delete(tbl('video_thumbs'), ['videoid','type'], [$videoid,'auto']);
-        $pattern = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-c].*';
+        Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid','type'], [$video_info['videoid'],'auto']);
+        $pattern = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR . $this->file_name . '*[!-cpb].*';
         $glob = glob($pattern);
         foreach ($glob as $thumb) {
             unlink($thumb);
         }
 
         //reset default thumb
-        $this->generateDefaultsThumbs($db, $videoid, $thumbs_res_settings, $thumbs_settings);
+        $this->generateDefaultsThumbs($video_info['videoid'], $thumbs_res_settings, $thumbs_settings);
+    }
+
+    public static function extractVideoThumbnail(array $params): array
+    {
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $params['dimension'] . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        return [
+            'command' => $command
+            ,'output' => shell_exec($command)
+        ];
     }
 
     /**
@@ -718,7 +729,6 @@ class FFMpeg
      */
     public function generateThumbs($array)
     {
-        global $db;
         $duration = $array['duration'];
         $dim = $array['dim'];
         $num = $array['num'];
@@ -752,26 +762,29 @@ class FFMpeg
         $extension = 'jpg';
         if ($num >= 1) {
             $division = $duration / $num;
-            $num_length = strlen($num);
 
             for ($count = 1; $count <= $num; $count++) {
-                $thumb_file_number = str_pad((string)$count, $num_length, '0', STR_PAD_LEFT);
+                $thumb_file_number = str_pad((string)$count, 4, '0', STR_PAD_LEFT);
                 $file_name = $this->file_name . '-' . $size_tag . $thumb_file_number . '.' . $extension;
                 $file_path = $thumb_dir . $file_name;
                 $time_sec = (int)($division * $count);
 
                 $this->log->writeLine(date('Y-m-d H:i:s').' => Generating '.$file_name.'...');
 
-                $command = config('ffmpegpath') . ' -ss ' . $time_sec . ' -i ' . $this->input_file . ' -pix_fmt yuvj422p -an -r 1 ' . $dimension . ' -y -f image2 -vframes 1 ' . $file_path . ' 2>&1';
-                $output = shell_exec($command);
+                $return = self::extractVideoThumbnail([
+                    'timecode' => $time_sec
+                    ,'input_path' => $this->input_file
+                    ,'dimension' => $dimension
+                    ,'output_path' => $file_path
+                ]);
 
                 if(in_dev()){
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', '', true, false, true);
                 }
 
                 if (file_exists($file_path)) {
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dim, $thumb_file_number, $extension, VERSION, 'auto']);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dim, $thumb_file_number, $extension, VERSION, 'auto']);
                 } else {
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }
@@ -786,29 +799,29 @@ class FFMpeg
      */
     public function generateAllMissingThumbs()
     {
-        global $db;
         $thumbs_res_settings = thumbs_res_settings_28();
 
         $thumbs_settings = [];
         $thumbs_settings['duration'] = $this->input_details['duration'];
         $thumbs_settings['num'] = config('num_thumbs');
-        $rs = $db->select(tbl('video'), '*', 'file_name LIKE \'' . $this->file_name . '\'');
-        if (!empty($rs)) {
-            $video_details = $rs[0];
-            $videoid = $rs[0]['videoid'];
-        } else {
-            $video_details = null;
+        $rs = Clipbucket_db::getInstance()->select(tbl('video'), '*', 'file_name LIKE \'' . $this->file_name . '\'');
+
+        if( empty($rs) ){
             e(lang('technical_error'));
-            $videoid = 0;
+            return;
         }
-        $thumbs_settings['videoid'] = $videoid;
+
+        $video_details = $rs[0];
+
+        $thumbs_settings['videoid'] = $video_details['videoid'];
 
         $thumbs = get_thumb($video_details, true);
         //si rien en base
         if (empty($thumbs) || $thumbs[0] == default_thumb()) {
-            $db->delete(tbl('video_thumbs'), ['videoid', 'type'], [$videoid, 'auto']);
+            Video::getInstance()->deletePictures($video_details, 'auto');
+
             //generate default thumb
-            $this->generateDefaultsThumbs($db, $videoid, $thumbs_res_settings, $thumbs_settings);
+            $this->generateDefaultsThumbs($video_details['videoid'], $thumbs_res_settings, $thumbs_settings);
         }
     }
 
@@ -990,14 +1003,13 @@ class FFMpeg
     }
 
     /**
-     * @param Clipbucket_db $db
      * @param $videoid
      * @param array $thumbs_res_settings
      * @param array $thumbs_settings
      * @return void
      * @throws Exception
      */
-    public function generateDefaultsThumbs(Clipbucket_db $db, $videoid, array $thumbs_res_settings, array $thumbs_settings)
+    public function generateDefaultsThumbs($videoid, array $thumbs_res_settings, array $thumbs_settings)
     {
         foreach ($thumbs_res_settings as $key => $thumbs_size) {
             $height_setting = $thumbs_size[1];
@@ -1011,12 +1023,12 @@ class FFMpeg
 
             $this->generateThumbs($thumbs_settings);
         }
-        $res = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
+        $res = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
             , 'num'
             , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
         );
          if (empty($res)) {
-             $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+             Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
          }
     }
 }

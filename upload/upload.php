@@ -35,8 +35,8 @@ if (in_dev()) {
 
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'              => 'admin',
-    'pages/upload/upload' . $min_suffixe . '.js' => 'admin'
-
+    'pages/upload/upload' . $min_suffixe . '.js' => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js'    => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',

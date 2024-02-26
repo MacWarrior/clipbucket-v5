@@ -117,7 +117,9 @@ class pages
             $has_amp = true;
         }
 
-        $link = $link . $page_link;
+        if (strpos($link,'javascript:') !== 0 ) {
+            $link = $link . $page_link;
+        }
         $params = 'href="' . $link . '"';
         $params .= ' ' . $extra_params;
 

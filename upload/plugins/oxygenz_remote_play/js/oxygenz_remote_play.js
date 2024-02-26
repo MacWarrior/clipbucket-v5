@@ -11,6 +11,10 @@ $( document ).ready(function() {
             }
         }
     });
+    console.log($('#remote_tags_video'));
+    $("[id^=remote_tags]").each(function(elem){
+        init_tags(this.id, available_tags,'#remote_list_'+this.name);
+    });
 
     $('#oxygenz_remote_play_submit_form1').click(function(e) {
         e.preventDefault();

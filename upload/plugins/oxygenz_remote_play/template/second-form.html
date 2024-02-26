@@ -26,18 +26,36 @@
                         {$formObj->createField($field)}
                     {elseif $field.type == 'checkbox'}
                         {$categories = $field}
-                    {else}
-                    <label for="{$field.id}">{$field.title}</label>
+                    {elseif $field.name == 'tags_video'}
+                        {$field.id = 'remote_tags_video'}
+                        <label for="{$field.id}">{$field.title}</label>
                         {$formObj->createField($field)}
-                    {/if}
-                    {if $field.name == 'tags'}
-                         <ul id="list_tags"></ul>
+                        <ul id="remote_list_{$field.name}"></ul>
+                    {elseif !$field.name|strstr:'tags'}
+                        <label for="{$field.name}">{$field.title}</label>
+                        {$formObj->createField($field)}
                     {/if}
                 </div>
                 {/foreach}
             </div>
             {ANCHOR place="after_upload_form_required_fields"}
-
+            <div class="formSection clear">
+                <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                <div class="sectionContent hidden">
+                    {foreach $requiredFields.fields as $field}
+                    <div class="form-group">
+                        {$field.id = 'remote_'|cat: $field.name}
+                        {$field.class='form-control'}
+                        {$field.notShowSeprator='yes'}
+                        {if $field.id|strstr:'tags' && $field.id != 'remote_tags_video'}
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                            <ul id="remote_list_{$field.name}"></ul>
+                        {/if}
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
             {if $custom_flag && $custom_fields!=""}
                 {ANCHOR place="before_upload_form_custom_fields"}
             <div class="formSection clear">

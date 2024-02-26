@@ -541,7 +541,9 @@ CREATE TABLE `{tbl_prefix}video` (
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
-  `age_restriction` INT DEFAULT NULL
+  `age_restriction` INT DEFAULT NULL,
+  `default_poster` int(3) NULL DEFAULT NULL,
+  `default_backdrop` int(3) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_favourites` (
@@ -965,7 +967,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
     `id_tag_type` INT          NOT NULL,
     `name`        VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id_tag`),
-    UNIQUE  `id_tag_type` (`id_tag_type`, `name`) USING BTREE
+    UNIQUE `id_tag_type` (`id_tag_type`, `name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
@@ -973,10 +975,12 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
 (
     `id_tag_type` INT         NOT NULL AUTO_INCREMENT,
     `name`        VARCHAR(32) NOT NULL,
-    PRIMARY KEY (`id_tag_type`)
+    PRIMARY KEY (`id_tag_type`),
+    UNIQUE `name` (`name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}tags`
+    ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
 (
@@ -1165,3 +1169,28 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
 
 ALTER TABLE `{tbl_prefix}tools_histo_log`
     ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
+(
+    `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `search_key`      VARCHAR(128) NOT NULL UNIQUE,
+    `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `total_results`   INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
+(
+    `id_tmdb_search_result` INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `id_tmdb_search`        INT          NOT NULL,
+    `title`                 VARCHAR(128) NOT NULL,
+    `overview`              TEXT         NULL,
+    `poster_path`           VARCHAR(128) NOT NULL,
+    `release_date`          DATE         NULL,
+    `id_tmdb_movie`         INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tmdb_search_result`
+    ADD CONSTRAINT `search_result` FOREIGN KEY IF NOT EXISTS (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
