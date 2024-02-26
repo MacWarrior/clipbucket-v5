@@ -10,12 +10,13 @@ class Image
                 e('Unknown type : '.$type);
                 return [];
 
-            case 'video_thumbnail':
+            case 'video_auto':
+            case 'video_custom':
                 return [
-                    ['168', '105']
-                    ,['416', '260']
-                    ,['632', '395']
-                    ,['768', '432']
+                    ['width'=>'168', 'height'=>'105']
+                    ,['width'=>'416', 'height'=>'260']
+                    ,['width'=>'632', 'height'=>'395']
+                    ,['width'=>'768', 'height'=>'432']
                 ];
 
             // TODO
@@ -26,6 +27,9 @@ class Image
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function generateThumbnail($params): bool
     {
         if( !file_exists($params['input_file']) ){
@@ -65,7 +69,7 @@ class Image
 
         imagecopyresampled($output_image, $input_file, 0, 0, 0, 0, $params['output_width'], $params['output_height'], $input_width, $input_height);
 
-        $image_save_function_name = 'image' . $params['output_extension'];
+        $image_save_function_name = 'image' . $params['output_format'];
         call_user_func($image_save_function_name, $input_file, $params['output_file'], $params['output_quality'] ?? 100);
 
         imagedestroy($input_file);

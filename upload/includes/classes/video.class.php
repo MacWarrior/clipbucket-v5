@@ -495,6 +495,7 @@ class Video
         $num = get_thumb_num($poster);
         Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
+
     /**
      * @throws Exception
      */
@@ -592,16 +593,92 @@ class Video
                 return false;
             }
 
-            Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_details['videoid'], 'original', $i, $extension, VERSION, 'auto']);
+            Thumbnail::getInstance()->insert([
+                'videoid'     => $video_details['videoid']
+                ,'resolution' => 'original'
+                ,'num'        => $i
+                ,'extension'  => $extension
+                ,'type'       => 'auto'
+            ]);
         }
 
         return true;
     }
 
-    public function generateThumbnails(array $video_details, string $type = ''): bool
+    /**
+     * @throws Exception
+     */
+    private function generateThumbnails(array $video_details, string $type): bool
     {
+        $original_thumbnails = Thumbnail::getInstance()->getAll([
+            'videoid' => $video_details['videoid']
+            ,'resolution' => 'original'
+            ,'type' => $type
+        ]);
+        if(empty($original_thumbnails)){
+            e('No original thumbnail found');
+            return false;
+        }
 
+        if( !$video_thumbnails_resolutions = Image::getThumbnailsResolutions('video_' . $type) ){
+            return false;
+        }
+
+        foreach($original_thumbnails AS $thumbnail){
+            foreach($video_thumbnails_resolutions AS $resolution){
+                $params = [
+                    'input_file' => Thumbnail::getInstance()->getFilePath($video_details, $thumbnail)
+                    ,'output_width' => $resolution['width']
+                    ,'output_height' => $resolution['height']
+                    ,'output_format' => 'jpeg'
+                    ,'output_file' => Thumbnail::getInstance()->getFilePath($video_details, $thumbnail, $resolution)
+                ];
+
+                if( !Image::generateThumbnail($params) ){
+                    return false;
+                }
+
+                Thumbnail::getInstance()->insert([
+                    'videoid'     => $params['thumbnail_videoid']
+                    ,'resolution' => $resolution['witdh'] . 'x' . $resolution['height']
+                    ,'num'        => $thumbnail['num']
+                    ,'extension'  => 'jpg'
+                    ,'type'       => $type
+                ]);
+            }
+        }
+        return true;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function reGenerateThumbnails(array $video_details, $type = 'auto'): bool
+    {
+        $params = [
+            'type' => $type
+        ];
+        if( $type != 'auto' ){
+            $params['exclude_resolution'] = 'original';
+        }
+
+        if( !Thumbnail::getInstance()->delete($video_details, $params) ){
+            return false;
+        }
+
+        if( $type == 'auto' ){
+            if( !$this->extractThumbnails($video_details) ){
+                return false;
+            }
+        }
+
+        if( !$this->generateThumbnails($video_details, $type) ){
+            return false;
+        }
+
+        return true;
+    }
+
 }
 
 class CBvideo extends CBCategory
