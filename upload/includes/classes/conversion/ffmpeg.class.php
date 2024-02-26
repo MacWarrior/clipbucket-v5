@@ -960,12 +960,12 @@ class FFMpeg
     {
         global $myquery;
         $video_resolutions = $myquery->getVideoResolutions();
-        $max_resolution = false;
+        $max_resolution = 0;
 
         foreach ($video_resolutions as $ratio) {
             foreach ($ratio as $res) {
                 $video_height = (int)$res['height'];
-                $video_width = (int)$res['witdh'];
+                $video_width = (int)$res['width'];
 
                 // This option allow video with a 1% lower resolution to be included in the superior resolution
                 // For example : 1900x800 will be allowed in 1080p resolution
