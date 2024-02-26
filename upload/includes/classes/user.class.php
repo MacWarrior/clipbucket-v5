@@ -808,7 +808,7 @@ class userquery extends CBCategory
         $db->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $this->get_anonymous_user() . '\' WHERE message_from=' . mysql_clean($uid));
 
         //Remove tags
-        Tags::saveTags('', 'profile', $uid);
+        Tags::deleteTags('profile', $uid);
         //Remove categories
         Category::getInstance()->unlinkAll('user', $uid);
 

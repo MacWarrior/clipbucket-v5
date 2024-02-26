@@ -52,7 +52,11 @@ $ffprobe_path = check_version('ffprobe');
 assign('ffprobe_path', $ffprobe_path);
 assign('ffprobe_path_OK', $ffprobe_path >= $ffReq);
 
-assign('phpVersionWeb', phpversion());
+$regVersionPHP = '/(\d+\.\d+\.\d+)/';
+preg_match($regVersionPHP, phpversion(), $match);
+$phpVersion = $match[1] ?? phpversion();
+
+assign('phpVersionWeb', $phpVersion);
 assign('phpVersionWebOK', phpversion() >= $phpVersionReq);
 
 $media_info = check_version('media_info');
@@ -101,7 +105,7 @@ if (empty($exec_output)) {
     e(lang('php_cli_not_found'));
 } else {
     $reg = '/^(\w*) => (-?\w*).*$/';
-    $regVersion = '/(\w* \w*) => (.*)$/';
+    $regVersion = '/(\w* \w*) => \w* ?(\d+\.\d+\.\d+).*$/';
     foreach ($exec_output as $line) {
         $match= [];
         if (strpos($line, 'post_max_size') !== false) {
@@ -180,7 +184,9 @@ foreach ($extensionMessages as $extension => $version) {
         if (empty($modulesWeb[$extension][$version]) && $extension == 'gd') {
             $extensionsWEB[$extension] = $modulesWeb[$extension]['GD Version'];
         } else {
-            $extensionsWEB[$extension] = $modulesWeb[$extension][$version];
+            $matches = [];
+            preg_match($regex_version, $modulesWeb[$extension][$version], $matches);
+            $extensionsWEB[$extension] = $matches[0]??$modulesWeb[$extension][$version];
         }
     }
 }

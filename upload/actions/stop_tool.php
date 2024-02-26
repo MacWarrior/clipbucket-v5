@@ -4,8 +4,9 @@ require_once('../includes/classes/admin_tool.class.php');
 global $userquery;
 
 $userquery->admin_login_check();
-
-AdminTool::stop($_POST['id_tool']);
+$tool = new AdminTool();
+$tool->initById($_POST['id_tool']);
+$tool->stop();
 echo json_encode([
     'msg'              => getTemplateMsg()
     , 'libelle_status' => lang('stopping')

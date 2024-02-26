@@ -1121,11 +1121,12 @@ class CBPhotos
                 }
             }
 
-            if ($orphan == false) {//removing from collection
+            if (!$orphan) {//removing from collection
                 $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
             }
+
             //Remove tags
-            \Tags::saveTags('', 'photo', $photo['photo_id']);
+            Tags::deleteTags('photo', $photo['photo_id']);
 
             //now removing photo files
             $this->delete_photo_files($photo);

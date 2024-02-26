@@ -1,5 +1,10 @@
 <?php
-error_reporting(E_ALL ^ E_NOTICE);
+define('THIS_PAGE', 'file_results');
+include(dirname(__FILE__, 2) . '/includes/config.inc.php');
+
+if(empty($_POST['file_name'])){
+    die();
+}
 
 $file_name = $_POST['file_name'];
 $log_file = DirPath::get('temp') . $file_name . '_curl_log.cblog';

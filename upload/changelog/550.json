@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"363",
+  "revision":"374",
   "status":"dev",
   "detail":[
     {
@@ -110,6 +110,10 @@
         ,"Implement cleanup session tool"
         ,"Implement video_files update tool"
         ,"Implement photo thumbs recreation tool"
+        ,"Implement admin tools logs"
+        ,"Fix categories order"
+        ,"Implement TMDB integration"
+        ,"Fix collapsed categories display"
       ]
     },
     {
@@ -205,6 +209,7 @@
         ,"Fix video duration not saving properly while not in dev mode"
         ,"Fix video status saving"
         ,"Fix thumbs generation when thumbs number is higher than video duration"
+        ,"Fix 'Stay MP4 as it is' file naming"
       ]
     }
     ,{
@@ -280,6 +285,7 @@
         ,"Fix duplicate collection categories"
         ,"Fix user category display"
         ,"Implement user search by category"
+        ,"Fix upload form field check"
       ]
     }
   ,{
@@ -318,6 +324,7 @@
         ,"Implement DB port config"
         ,"Implement DB version check"
         ,"Prevent SQL issues when updating from old versions"
+        ,"Fix PHP extension check"
       ]
     }
   ]

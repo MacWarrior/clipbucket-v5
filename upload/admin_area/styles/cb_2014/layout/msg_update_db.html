@@ -12,7 +12,9 @@
     <ul class="list-unstyled">
         <li>
             <img alt='warning' src="{$imageurl}/error.png"/>
-            {$nb_db_update}<a href="admin_tool.php?id_tool=5">{lang code='update'}</a>
+
+            {$nb_db_update}
+            <a href="admin_tool.php?{if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}code_tool={AdminTool::CODE_UPDATE_DATABASE_VERSION}{else}id_tool=5{/if}">{lang code='update'}</a>
         </li>
     </ul>
 </div>
@@ -24,7 +26,7 @@
     <ul class="list-unstyled">
         <li>
             <img alt='warning' src="{$imageurl}/error.png"/>
-            {lang code='core_upgrade_avaible'}<a href="admin_tool.php?id_tool=11">{lang code='update'}</a>
+            {lang code='core_upgrade_avaible'}<a href="admin_tool.php?{if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}code_tool=update_core{else}id_tool=11{/if}">{lang code='update'}</a>
         </li>
     </ul>
 </div>

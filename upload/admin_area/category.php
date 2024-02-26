@@ -24,7 +24,7 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
     if (isset($_GET['make_default'])) {
         Category::getInstance()->makeDefault('video', $_GET['make_default']);
     }
-    if (!empty($_POST)) {
+    if (!empty($_POST) && empty($_POST['update_order'])) {
         //@TODO rework check vals
         if (empty($_POST['category_name'])) {
             e(lang('add_cat_no_name_err'));

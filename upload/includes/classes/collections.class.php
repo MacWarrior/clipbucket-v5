@@ -1523,7 +1523,7 @@ class Collections extends CBCategory
         Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
 
         //Remove tags
-        Tags::saveTags('', 'collection', $cid);
+        Tags::deleteTags('collection', $cid);
         //Remove categories
         Category::getInstance()->unlinkAll('collection', $cid);
 

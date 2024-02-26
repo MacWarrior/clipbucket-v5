@@ -1,7 +1,7 @@
 (function(window){
     $(document).ready(function(){
 
-        /* files uploading */
+        /* files uploading */ 
         $.get(theme + "/js/plupload/js/plupload.full.min.js", function(e){
             var files = [];
             var uploader = new plupload.Uploader({

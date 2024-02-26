@@ -72,6 +72,10 @@ class Video
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
+        if ($version['version'] > Tmdb::MIN_VERSION || ($version['version'] == Tmdb::MIN_VERSION && $version['revision'] >= Tmdb::MIN_REVISION)) {
+            $this->fields[] = 'default_poster';
+            $this->fields[] = 'default_backdrop';
+        }
 
         $this->fields_categories = [
             'category_id'
@@ -237,6 +241,7 @@ class Video
         $param_first_only = $params['first_only'] ?? false;
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
+        $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -274,7 +279,7 @@ class Video
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true) && !$param_exist ){
+        if( !has_access('admin_access', true) && !$param_exist && !$param_disable_generic_constraints){
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
@@ -289,7 +294,10 @@ class Video
         $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
+                $types = Tags::getVideoTypes();
+                foreach ($types as $type) {
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                }
                 $group[] = 'video.videoid';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
@@ -373,7 +381,7 @@ class Video
     }
 
     /**
-     * @param bool $show_unlisted
+     * @param array $params
      * @return string
      * @throws Exception
      */
@@ -470,6 +478,78 @@ class Video
         }
         return $this->isCurrentUserRestricted($video_id);
     }
+
+    /**
+     * @throws Exception
+     */
+    public function setDefaultPicture($video_id, string $poster, string $type = 'auto')
+    {
+        if (empty($poster)) {
+            e(lang('missing_param'));
+            return;
+        }
+        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+            if( in_dev() ){
+                e(sprintf(lang('unknown_type'), $type));
+            } else {
+                e(lang('technical_error'));
+            }
+            return;
+        }
+
+        if( in_array($type, ['auto', 'custom'])){
+            $type = 'thumb';
+        }
+
+        $num = get_thumb_num($poster);
+        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
+    }
+    /**
+     * @throws Exception
+     */
+    public function resetDefaultPicture($video_id, string $type = 'auto')
+    {
+        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+            if( in_dev() ){
+                e(sprintf(lang('unknown_type'), $type));
+            } else {
+                e(lang('technical_error'));
+            }
+            return;
+        }
+
+        if( in_array($type, ['auto', 'custom'])){
+            $type = 'thumb';
+        }
+
+        Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], ['|f|null'], ' videoid=\'' . mysql_clean($video_id) . '\'');
+    }
+
+    /**
+     * @param array $video_detail
+     * @param string $type must one of following : thumb, poster, backdrop
+     * @return void
+     * @throws Exception
+     */
+    public function deletePictures(array $video_detail, string $type)
+    {
+        if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
+            if( in_dev() ){
+                e(sprintf(lang('unknown_type'), $type));
+            } else {
+                e(lang('technical_error'));
+            }
+            return;
+        }
+        $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
+        if (!empty($results)) {
+            foreach ($results as $result) {
+                delete_video_thumb($video_detail, $result['num']);
+            }
+            Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
+        }
+    }
+
 }
 
 class CBvideo extends CBCategory
@@ -707,9 +787,12 @@ class CBvideo extends CBCategory
         $version = Update::getInstance()->getDBVersion();
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS tags';
-            $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
+            $types = Tags::getVideoTypes();
+            foreach ($types as $type) {
+                $select_tag .= ', GROUP_CONCAT( CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+            }
+            $join_tag = ' LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video 
+                    LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
             $group[] = ' video.videoid ';
         }
 
@@ -858,7 +941,10 @@ class CBvideo extends CBCategory
     {
         global $eh, $db, $Upload, $userquery, $cbvid;
 
-        $Upload->validate_video_upload_form(null, true);
+        if (!$array) {
+            $array = $_POST;
+        }
+        $Upload->validate_video_upload_form($array, true);
 
         if (empty($eh->get_error())) {
             $required_fields = $Upload->loadRequiredFields($array);
@@ -873,9 +959,6 @@ class CBvideo extends CBCategory
                 $upload_fields = array_merge($upload_fields, $custom_flds);
             }
 
-            if (!$array) {
-                $array = $_POST;
-            }
 
             if (isset($array['videoid'])) {
                 $vid = $array['videoid'];
@@ -973,31 +1056,57 @@ class CBvideo extends CBCategory
 
             if (!user_id()) {
                 e(lang('you_dont_have_permission_to_update_this_video'));
-            } elseif (!$this->video_exists($vid)) {
+                return;
+            }
+            if (!$this->video_exists($vid)) {
                 e(lang('class_vdo_del_err'));
-            } elseif (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
+                return;
+            }
+            if (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
                 e(lang('no_edit_video'));
-            } elseif (strlen($array['title']) > 100) {
-                e(lang('Title exceeds max length of 100 characters')); // TODO : Translation
-            } else {
-                $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
-
-                Tags::saveTags($array['tags'], 'video', $vid);
-                Category::getInstance()->saveLinks('video', $vid, $array['category']);
-
-                cb_do_action('update_video', [
-                    'object_id' => $vid,
-                    'results'   => $array
-                ]);
-
-                $videoDetails = $cbvid->get_video($vid);
-                if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
-                    $userquery->sendSubscriptionEmail($videoDetails, true);
-                }
-
-                e(lang('class_vdo_update_msg'), 'm');
+                return;
             }
 
+            validate_cb_form($upload_fields, $array);
+            if( !empty(errorhandler::getInstance()->get_error()) ){
+                return;
+            }
+
+            $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
+
+            foreach ($array as $key => $item) {
+                $matches = [];
+                if (preg_match('/(tags)_*(.*)/',$key, $matches)) {
+                    if (empty($matches['2'])) {
+                        $type = 'video';
+                    } else {
+                        $type = $matches['2'];
+                    }
+
+                    if( empty($item) ){
+                        $item = '';
+                    }
+                    Tags::saveTags($item, $type, $vid);
+                }
+            }
+
+            if( !is_array($array['category']) ){
+                $array['category'] = [$array['category']];
+            }
+
+            Category::getInstance()->saveLinks('video', $vid, $array['category']);
+
+            cb_do_action('update_video', [
+                'object_id' => $vid,
+                'results'   => $array
+            ]);
+
+            $videoDetails = $cbvid->get_video($vid);
+            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+                $userquery->sendSubscriptionEmail($videoDetails, true);
+            }
+
+            e(lang('class_vdo_update_msg'), 'm');
         }
     }
 
@@ -1040,7 +1149,7 @@ class CBvideo extends CBCategory
                 }
 
                 //Remove tags
-                Tags::saveTags('', 'video', $vdetails['videoid']);
+                Tags::deleteTags('video', $vdetails['videoid']);
                 //Remove categories
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 

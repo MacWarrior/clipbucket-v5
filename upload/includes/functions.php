@@ -6,26 +6,6 @@ require 'define_php_links.php';
 include_once 'upload_forms.php';
 
 /**
- * This Funtion is use to get CURRENT PAGE DIRECT URL
- * @return string : { string } { $pageURL } { url of current page }
- */
-function curPageURL(): string
-{
-    $pageURL = 'http';
-    if (@$_SERVER["HTTPS"] == 'on') {
-        $pageURL .= 's';
-    }
-    $pageURL .= '://';
-    $pageURL .= $_SERVER['SERVER_NAME'];
-    $pageURL .= $_SERVER['PHP_SELF'];
-    $query_string = $_SERVER['QUERY_STRING'];
-    if (!empty($query_string)) {
-        $pageURL .= '?' . $query_string;
-    }
-    return $pageURL;
-}
-
-/**
  * Cleans a string by putting it through multiple layers
  *
  * @param : { string } { string to be cleaned }
@@ -3634,15 +3614,13 @@ function uploaderDetails()
  * Checks if given section is enabled or not e.g videos, photos
  *
  * @param : { string } { $input } { section to check }
- * @param bool $restrict
- *
  * @return bool|void
  */
 function isSectionEnabled($input)
 {
     $section = config($input . 'Section');
 
-    if ($section == 'yes' || THIS_PAGE == 'cb_install') {
+    if ($section == 'yes' || (defined('THIS_PAGE') && THIS_PAGE == 'cb_install') ) {
         return true;
     }
     return false;
