@@ -2073,7 +2073,7 @@ h1 {
 }
 
 .fav-repo .desc-list li,
-.watch-vid-details .desc-list li {
+.watch-vid-details .desc-list > li {
   margin: 0 0 10px;
 }
 
@@ -2082,6 +2082,10 @@ h1 {
   display: inline-block;
   vertical-align: middle;
   margin: 0 5px 0 0;
+}
+
+.watch-vid-details .tagit-new input:disabled{
+  display: none;
 }
 
 .fav-repo .desc-list li a,

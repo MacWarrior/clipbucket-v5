@@ -67,7 +67,6 @@ $(document).ready(function(){
                 $(oneUploadForm).find(".cancel_button").attr('to_cancel',index);
                 $(oneUploadForm).find("input[name='title']").val(file.data.title);
                 $(oneUploadForm).find("textarea[name='description']").val(file.data.description);
-                $(oneUploadForm).find("input[name='tags']").val(file.data.tags).attr('id', 'tags'+ index);
                 $(oneUploadForm).find("input[name='location']").val(file.data.location);
                 $(oneUploadForm).find("input[name='datecreated']").val(file.data.datecreated);
                 $(oneUploadForm).find("input[name='video_password']").val(file.data.video_password);
@@ -78,28 +77,31 @@ $(document).ready(function(){
                 $(oneUploadForm).find("input[name='comment_voting'][value='"+file.data.comment_voting+"']").prop('checked', true);
                 $(oneUploadForm).find("input[name='allow_rating'][value='"+file.data.allow_rating+"']").prop('checked', true);
                 $(oneUploadForm).find("input[name='allow_embedding'][value='"+file.data.allow_embedding+"']").prop('checked', true);
+                $(oneUploadForm).find("[id^=tags]").each(function(elem) {
+                    var tagsList = document.createElement('ul');
+                    tagsList.id = 'list_' + this.id + '_' + index;
+                    $(this).val(file.data[this.name]).attr('id', this.name + index);
+                    $(tagsList).insertAfter($(oneUploadForm).find("input[name='"+this.name+"']"));
+                    var alert_shown = false;
 
-                var tagsList = document.createElement('ul');
-                tagsList.id = 'list_tags_' + index;
-                $(tagsList).insertAfter($(oneUploadForm).find("input[name='tags']"));
-                var alert_shown = false;
-                $(oneUploadForm).find('#list_tags_'+ index).tagit({
-                    singleField:true,
-                    readOnly:false,
-                    singleFieldNode: $(oneUploadForm).find('#tags'+ index),
-                    animate:true,
-                    caseSensitive:false,
-                    availableTags: available_tags,
-                    beforeTagAdded: function (event,info) {
-                        if (info.tagLabel.length <= 2) {
-                            if (!alert_shown) {
-                                alert_shown = true;
-                                alert(tag_too_short);
+                    $(oneUploadForm).find('#' + tagsList.id).tagit({
+                        singleField: true,
+                        readOnly: false,
+                        singleFieldNode: $(oneUploadForm).find('#' +this.id),
+                        animate: true,
+                        caseSensitive: false,
+                        availableTags: available_tags,
+                        beforeTagAdded: function (event, info) {
+                            if (info.tagLabel.length <= 2) {
+                                if (!alert_shown) {
+                                    alert_shown = true;
+                                    alert(tag_too_short);
+                                }
+                                return false;
                             }
-                            return false;
+                            alert_shown = false;
                         }
-                        alert_shown = false;
-                    }
+                    });
                 });
                 if(file.data.broadcast === 'unlisted'){
                     $(oneUploadForm).find('#video_password').attr('disabled',false);
