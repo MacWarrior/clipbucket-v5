@@ -482,26 +482,39 @@ class Video
     /**
      * @throws Exception
      */
-    public function setDefaultPicture($video_id, string $poster, string $type = 'thumb')
+    public function setDefaultPicture($video_id, string $poster, string $type = 'auto')
     {
         if (empty($poster)) {
             e(lang('missing_param'));
             return;
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            e(lang('unknown_type'));
+            if( in_dev() ){
+                e(sprintf(lang('unknown_type'), $type));
+            } else {
+                e(lang('technical_error'));
+            }
             return;
         }
+
+        if( in_array($type, ['auto', 'custom'])){
+            $type = 'thumb';
+        }
+
         $num = get_thumb_num($poster);
         Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
     /**
      * @throws Exception
      */
-    public function resetDefaultPicture($video_id, string $type = 'thumb')
+    public function resetDefaultPicture($video_id, string $type = 'auto')
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            e(lang('unknown_type'));
+            if( in_dev() ){
+                e(sprintf(lang('unknown_type'), $type));
+            } else {
+                e(lang('technical_error'));
+            }
             return;
         }
 
@@ -521,7 +534,11 @@ class Video
     public function deletePictures(array $video_detail, string $type)
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
-            e(lang('unknown_type'));
+            if( in_dev() ){
+                e(sprintf(lang('unknown_type'), $type));
+            } else {
+                e(lang('technical_error'));
+            }
             return;
         }
         $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
