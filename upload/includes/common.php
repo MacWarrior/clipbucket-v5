@@ -173,7 +173,7 @@ require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
-require_once DirPath::get('includes') .  'plugins_functions.php';
+require_once DirPath::get('includes') . 'plugins_functions.php';
 
 $signup = new signup();
 $Upload = new Upload();
