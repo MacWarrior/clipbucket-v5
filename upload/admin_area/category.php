@@ -42,6 +42,8 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
         } else {
             $params = $_POST;
             $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType($type);
+            $next_order_place = Category::getInstance()->getNextOrderForParent($type, $_POST['parent_id']);
+            $params['category_order'] = $next_order_place;
             $id_category = Category::getInstance()->insert($params);
         }
 
