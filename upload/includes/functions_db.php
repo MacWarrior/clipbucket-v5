@@ -183,6 +183,7 @@ function execute_sql_file($path): bool
                     error_log('SQL : ' . $templine);
                     error_log('ERROR : ' . $db->mysqli->error);
                     $db->mysqli->rollback();
+                    DiscordLog::sendDump($db->mysqli->error);
                     return false;
                 }
                 $templine = '';
@@ -194,6 +195,7 @@ function execute_sql_file($path): bool
         e('ERROR : ' . $e->getMessage());
         error_log('SQL : ' . $templine);
         error_log('ERROR : ' . $e->getMessage());
+        DiscordLog::sendDump($e->getMessage());
         return false;
     }
 
