@@ -1,5 +1,5 @@
-ALTER TABLE `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
-ALTER TABLE `{tbl_prefix}tools_histo_status` RENAME COLUMN `id_tools_status` TO `id_tools_histo_status`;
+ALTER TABLE IF EXISTS`{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
+ALTER TABLE `{tbl_prefix}tools_histo_status` RENAME COLUMN IF EXISTS `id_tools_status` TO `id_tools_histo_status`;
 
 SET @constraint_name = (SELECT CONSTRAINT_NAME
                         FROM information_schema.key_column_usage
@@ -12,7 +12,7 @@ SET @sql = REPLACE(@sql, '@constraint_name', @constraint_name);
 
 PREPARE alterTable FROM @sql;
 EXECUTE alterTable;
-ALTER TABLE `{tbl_prefix}tools` DROP COLUMN id_tools_status, DROP COLUMN elements_total, DROP COLUMN elements_done;
+ALTER TABLE `{tbl_prefix}tools` DROP COLUMN IF EXISTS id_tools_status, DROP COLUMN IF EXISTS elements_total, DROP COLUMN IF EXISTS elements_done;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
 (
@@ -69,7 +69,7 @@ VALUES (@id_language_key, 'Afficher les derniers journaux', @language_id_fra);
 
 ALTER TABLE `{tbl_prefix}tools` ADD COLUMN IF NOT EXISTS `code` VARCHAR(32) NOT NULL;
 UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,'_label', '');
-ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE(`code`);
+ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE IF NOT EXISTS(`code`);
 
 SET @language_key = 'tool_started' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);
