@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `category_thumb`   MEDIUMTEXT        NULL,
-    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no',
+    `is_default`       ENUM ('yes','no') NOT NULL DEFAULT 'no',
     `old_category_id`  INT(255) NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -217,8 +217,7 @@ WHERE C.parent_id != 0 AND C.parent_id IS NOT NULL;
 ALTER TABLE `{tbl_prefix}categories`
     ADD CONSTRAINT `categorie_parent` FOREIGN KEY IF NOT EXISTS (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-ALTER TABLE  `{tbl_prefix}categories` DROP COLUMN IF EXISTS old_category_id;
-
+ALTER TABLE `{tbl_prefix}categories` DROP COLUMN IF EXISTS `old_category_id`;
 
 ALTER TABLE `{tbl_prefix}collections` DROP COLUMN IF EXISTS `category`;
 ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN IF EXISTS `category`;
