@@ -47,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tools_histo_log`
-    ADD CONSTRAINT IF NOT EXISTS `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY IF NOT EXISTS (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 UPDATE `{tbl_prefix}tools` SET function_name = REPLACE(function_name, 'AdminTool::', '');
 
