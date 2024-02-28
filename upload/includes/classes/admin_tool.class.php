@@ -123,7 +123,6 @@ class AdminTool
 
     /**
      * check if tool exist and execute the function stored in database
-     * @param $id
      * @return false|void
      * @throws Exception
      */
@@ -156,6 +155,10 @@ class AdminTool
     {
         return self::getTools([' tools.id_tool = ' . mysql_clean($id)])[0];
     }
+
+    /**
+     * @throws Exception
+     */
     public static function getToolByCode($code): array
     {
         return self::getTools([' tools.code = \'' . mysql_clean($code) . '\''])[0];
@@ -163,7 +166,6 @@ class AdminTool
 
     /**
      * Find videos which don't have thumbs and generate them
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
@@ -209,7 +211,6 @@ class AdminTool
 
     /**
      * check videos duration which have duration at 0
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
@@ -221,7 +222,6 @@ class AdminTool
 
     /**
      * check videos duration
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
@@ -252,7 +252,6 @@ class AdminTool
     }
 
     /**
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
@@ -494,7 +493,6 @@ class AdminTool
                 //call function
                 try {
                     call_user_func($function, $item);
-                    sleep(2);
                 } catch (\Exception $e) {
                     e(lang($e->getMessage()));
                     $this->addLog($e->getMessage());
@@ -522,7 +520,6 @@ class AdminTool
 
     /**
      * Set status to false in order to stop function execution at the next iteration
-     * @param $id_tool
      * @return false|void
      * @throws Exception
      */

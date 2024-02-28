@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"372",
+  "revision":"375",
   "status":"dev",
   "detail":[
     {
@@ -113,6 +113,7 @@
         ,"Implement admin tools logs"
         ,"Fix categories order"
         ,"Implement TMDB integration"
+        ,"Fix collapsed categories display"
       ]
     },
     {
@@ -208,6 +209,8 @@
         ,"Fix video duration not saving properly while not in dev mode"
         ,"Fix video status saving"
         ,"Fix thumbs generation when thumbs number is higher than video duration"
+        ,"Fix 'Stay MP4 as it is' file naming"
+        ,"Fix thumbnails generation output format"
       ]
     }
     ,{

@@ -276,8 +276,9 @@ class Upload
             define('dir', $files_dir);
 
             $file_num = $this->get_next_available_num($video_file_name);
-            $ext = getExt($file['name'][$key]);
-            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
+            $ext_original = getExt($file['name'][$key]);
+            $ext = 'jpg';
+            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext_original)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
                 $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $video_file_name . '-' . $file_num . '-'.$type.'.' . $ext;
 
@@ -303,7 +304,7 @@ class Upload
                     }
                     $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
                     $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
-                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
+                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
                     global $db;
                     $rs = $db->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
                     if (!empty($rs)) {
