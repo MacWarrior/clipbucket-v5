@@ -552,7 +552,9 @@ class AdminTool
      */
     public function addLog(string $msg)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
+        if( !empty($this->id_histo) ){
+            Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
+        }
     }
 
     /**
@@ -578,7 +580,9 @@ class AdminTool
      */
     private function updateToolHisto(array $fields, array $values)
     {
-        Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
+        if( !empty($this->id_histo) ){
+            Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
+        }
     }
 
 
@@ -594,7 +598,6 @@ class AdminTool
     }
 
     /**
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
@@ -606,7 +609,6 @@ class AdminTool
     }
 
     /**
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
