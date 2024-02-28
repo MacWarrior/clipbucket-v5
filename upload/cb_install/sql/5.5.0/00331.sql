@@ -156,7 +156,7 @@ INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`)
         UNION ALL
         SELECT n + 1
         FROM NumberSequence
-        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}video_categories`)
     )
     SELECT
         SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, '#', seq.n+1), '#', -1) + @id_categ AS extracted_number
@@ -195,7 +195,7 @@ INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
         UNION ALL
         SELECT n + 1
         FROM NumberSequence
-        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}user_categories`)
     )
     SELECT
         SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) + @id_categ AS extracted_number
@@ -211,7 +211,7 @@ INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
 
 UPDATE `{tbl_prefix}categories` C
     INNER JOIN `{tbl_prefix}categories` CP ON CP.old_category_id = C.parent_id AND CP.id_category_type = C.id_category_type
-SET parent_id = CP.category_id
+SET C.parent_id = CP.category_id
 WHERE C.parent_id != 0 AND C.parent_id IS NOT NULL;
 
 ALTER TABLE `{tbl_prefix}categories`
