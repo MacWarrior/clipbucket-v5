@@ -421,7 +421,6 @@ class AdminTool
         foreach ($empty_folders as $folder) {
             delete_empty_directories($folder);
         }
-
     }
 
     /**
@@ -562,7 +561,7 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public function getLastLogs(int $max_id = 0)
+    public function getLastLogs(int $max_id = 0): array
     {
         $logs = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'datetime ,message', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0') . ' AND id_log > ' . mysql_clean($max_id));
         $max_id_log = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'MAX(id_log) as max_id_log', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0'));
