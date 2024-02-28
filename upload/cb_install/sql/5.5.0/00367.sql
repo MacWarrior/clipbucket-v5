@@ -32,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tools_histo`
-    ADD CONSTRAINT IF NOT EXISTS `id_tools_histo` FOREIGN KEY (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT IF NOT EXISTS `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `id_tools_histo` FOREIGN KEY IF NOT EXISTS (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY IF NOT EXISTS (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
 (
