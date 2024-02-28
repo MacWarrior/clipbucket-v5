@@ -520,7 +520,7 @@ class Category
     {
         $categ_type_id = $this->getIdsCategoriesType($type);
         $sql = 'SELECT MAX(category_order) + 1 AS next_order_place FROM ' . tbl($this->tablename) . ' 
-        WHERE id_category_type = ' . mysql_clean($categ_type_id) . ' AND parent_id ' . ((is_null($parent_id) || $parent_id == 'null') ? ' IS NULL ' : ' = ' . mysql_clean($parent_id));
+        WHERE id_category_type = ' . mysql_clean($categ_type_id) . ' AND parent_id ' . ((empty($parent_id) || $parent_id == 'null') ? ' IS NULL ' : ' = ' . mysql_clean($parent_id));
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (!empty($results)) {
             return $results[0]['next_order_place'];
