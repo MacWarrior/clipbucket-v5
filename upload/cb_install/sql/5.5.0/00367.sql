@@ -1,4 +1,4 @@
-ALTER TABLE IF EXISTS`{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
+ALTER TABLE IF EXISTS `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
 ALTER TABLE `{tbl_prefix}tools_histo_status` RENAME COLUMN IF EXISTS `id_tools_status` TO `id_tools_histo_status`;
 
 SET @constraint_name = (SELECT CONSTRAINT_NAME
