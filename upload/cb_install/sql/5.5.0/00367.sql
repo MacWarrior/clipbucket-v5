@@ -1,5 +1,5 @@
-ALTER TABLE `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
-ALTER TABLE `{tbl_prefix}tools_histo_status` RENAME COLUMN `id_tools_status` TO `id_tools_histo_status`;
+ALTER TABLE IF EXISTS `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
+ALTER TABLE `{tbl_prefix}tools_histo_status` RENAME COLUMN IF EXISTS `id_tools_status` TO `id_tools_histo_status`;
 
 SET @constraint_name = (SELECT CONSTRAINT_NAME
                         FROM information_schema.key_column_usage
@@ -7,12 +7,15 @@ SET @constraint_name = (SELECT CONSTRAINT_NAME
                           AND TABLE_NAME = '{tbl_prefix}tools'
                           AND REFERENCED_TABLE_NAME IS NOT NULL);
 
-SET @sql = 'ALTER TABLE `{tbl_prefix}tools` DROP FOREIGN KEY @constraint_name;';
+SET @sql = 'ALTER TABLE `{tbl_prefix}tools` DROP FOREIGN KEY IF EXISTS @constraint_name;';
 SET @sql = REPLACE(@sql, '@constraint_name', @constraint_name);
-
 PREPARE alterTable FROM @sql;
 EXECUTE alterTable;
-ALTER TABLE `{tbl_prefix}tools` DROP COLUMN id_tools_status, DROP COLUMN elements_total, DROP COLUMN elements_done;
+
+ALTER TABLE `{tbl_prefix}tools`
+    DROP COLUMN IF EXISTS id_tools_status,
+    DROP COLUMN IF EXISTS elements_total,
+    DROP COLUMN IF EXISTS elements_done;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
 (
@@ -29,8 +32,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tools_histo`
-    ADD CONSTRAINT `id_tools_histo` FOREIGN KEY (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `id_tools_histo` FOREIGN KEY IF NOT EXISTS (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY IF NOT EXISTS (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
 (
@@ -44,7 +47,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tools_histo_log`
-    ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY IF NOT EXISTS (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 UPDATE `{tbl_prefix}tools` SET function_name = REPLACE(function_name, 'AdminTool::', '');
 
@@ -69,7 +72,13 @@ VALUES (@id_language_key, 'Afficher les derniers journaux', @language_id_fra);
 
 ALTER TABLE `{tbl_prefix}tools` ADD COLUMN IF NOT EXISTS `code` VARCHAR(32) NOT NULL;
 UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,'_label', '');
-ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE(`code`);
+DELETE FROM `{tbl_prefix}tools`
+    WHERE `id_tool` NOT IN(
+        SELECT MIN(`id_tool`)
+        FROM `{tbl_prefix}tools`
+        GROUP BY `code`
+    );
+ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE IF NOT EXISTS(`code`);
 
 SET @language_key = 'tool_started' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);

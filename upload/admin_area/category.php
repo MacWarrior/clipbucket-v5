@@ -10,15 +10,21 @@ pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
 assign('type', $type);
-assign('display_type', $type .'s');
+assign('display_type', $type . 's');
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang($type.'s'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_categories'), 'url' => DirPath::getUrl('admin_area') . 'category.php?type=' . $type];
+$breadcrumb[0] = [
+    'title' => lang($type . 's'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_categories'),
+    'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type
+];
 
 $version = Update::getInstance()->getDBVersion();
-if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)) ) {
-    e('Your database is not up-to-date. Please update your database via this link : <a href="admin_tool.php?id_tool=5">'.lang('update').'</a>', 'e', false);
+if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323))) {
+    e('Your database is not up-to-date. Please update your database via this link : <a href="admin_tool.php?id_tool=5">' . lang('update') . '</a>', 'e', false);
 } else {
     //Making Category as Default
     if (isset($_GET['make_default'])) {
@@ -32,7 +38,7 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
                 'category_type' => Category::getInstance()->getIdsCategoriesType($type),
                 'condition'     => 'category_name like \'%' . mysql_clean($_POST['category_name']) . '%\'',
                 'first_only'    => true
-            ])) && ($_POST['cur_name'] != $_POST['category_name']) ) {
+            ])) && ($_POST['cur_name'] != $_POST['category_name'])) {
             e(lang('add_cat_erro'));
         } elseif (!empty($_POST['category_id'])) {
             $id_category = $_POST['category_id'];
@@ -42,7 +48,9 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
         } else {
             $params = $_POST;
             $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType($type);
-            $id_category = Category::getInstance()->insert($params);
+            $next_order_place = Category::getInstance()->getNextOrderForParent($type, $_POST['parent_id']);
+            $params['category_order'] = $next_order_place;
+            Category::getInstance()->insert($params);
         }
 
         if (!empty($_FILES['category_thumb']['tmp_name'])) {
@@ -63,7 +71,7 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
         } else {
             $breadcrumb[2] = [
                 'title' => 'Editing : ' . display_clean($cat_details['category_name']),
-                'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type.'&category=' . display_clean($id_category)
+                'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type . '&category=' . display_clean($id_category)
             ];
         }
     }
@@ -77,7 +85,7 @@ if( !($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
     if (isset($_POST['update_order'])) {
         foreach ($_POST['category_order'] as $key => $item) {
             Category::getInstance()->update([
-                'category_id'    => $key,
+                'category_id' => $key,
                 'category_order' => $item
             ]);
         }

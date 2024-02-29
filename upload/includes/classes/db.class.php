@@ -535,13 +535,17 @@ class Clipbucket_db
         if ($this->getError() != '') {
             //customize exceptions
             if (preg_match('/language.*doesn\'t exist/', $this->getError())) {
-                throw new \Exception("lang_not_installed");
+                throw new \Exception('lang_not_installed');
             }
             if (preg_match('/version.*doesn\'t exist/', $this->getError())) {
-                throw new \Exception("version_not_installed");
+                throw new \Exception('version_not_installed');
             }
             if (preg_match('/doesn\'t exist/', $this->getError())) {
-                throw new \Exception("missing_table");
+                error_log('SQL : ' . $query);
+                error_log('ERROR : ' . $this->getError());
+                DiscordLog::sendDump('SQL : ' . $query);
+                DiscordLog::sendDump('ERROR : ' . $this->getError());
+                throw new \Exception('missing_table');
             }
 
             if (in_dev()) {
@@ -550,6 +554,9 @@ class Clipbucket_db
                 error_log('SQL : ' . $query);
                 error_log('ERROR : ' . $this->getError());
                 error_log(debug_backtrace_string());
+                DiscordLog::sendDump('SQL : ' . $query);
+                DiscordLog::sendDump('ERROR : ' . $this->getError());
+                DiscordLog::sendDump(debug_backtrace_string());
             } else {
                 e(lang('technical_error'));
             }

@@ -182,7 +182,10 @@ function execute_sql_file($path): bool
                 if ($db->mysqli->error != '') {
                     error_log('SQL : ' . $templine);
                     error_log('ERROR : ' . $db->mysqli->error);
+                    DiscordLog::sendDump('SQL : ' . $templine);
+                    DiscordLog::sendDump('ERROR : ' . $db->mysqli->error);
                     $db->mysqli->rollback();
+
                     return false;
                 }
                 $templine = '';
@@ -194,6 +197,8 @@ function execute_sql_file($path): bool
         e('ERROR : ' . $e->getMessage());
         error_log('SQL : ' . $templine);
         error_log('ERROR : ' . $e->getMessage());
+        DiscordLog::sendDump('SQL : ' . $templine);
+        DiscordLog::sendDump('ERROR : ' . $db->mysqli->error);
         return false;
     }
 
@@ -225,6 +230,7 @@ function execute_migration_SQL_file($path): bool
     }
     $db->mysqli->query($sql);
     CacheRedis::flushAll();
+    Update::getInstance()->flush();
     return true;
 }
 

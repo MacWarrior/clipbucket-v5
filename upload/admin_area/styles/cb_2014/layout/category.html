@@ -49,7 +49,7 @@
                     <input type="file" name="category_thumb" id="cat_thumb"/>
                 </div>
                 <div class="col-md-6">
-                    <input type="submit" class="btn btn-primary pull-right button" name="update_category" id="button" value="Update Category"/>
+                    <input type="submit" class="btn btn-primary pull-right button" name="update_category" id="button" value="{if empty($cat_details.category_id)}{lang code='add_new_category'}{else}{lang code='update_category'}{/if}"/>
                 </div>
             </div>
         </form>

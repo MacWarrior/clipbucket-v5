@@ -81,27 +81,27 @@ class AdminTool
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, 
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
-                FROM ' . cb_sql_table("tools") . '
+                FROM ' . cb_sql_table('tools') . '
                 LEFT JOIN (
                     SELECT id_tool, MAX(date_start) AS max_date
                     FROM ' . tbl('tools_histo') . '
                     GROUP BY id_tool
                 ) tools_histo_max_date ON tools.id_tool = tools_histo_max_date.id_tool
-                LEFT JOIN ' . cb_sql_table("tools_histo") . ' ON tools.id_tool = tools_histo.id_tool AND tools_histo.date_start = tools_histo_max_date.max_date
-                left JOIN ' . cb_sql_table("tools_histo_status") . '  ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
+                LEFT JOIN ' . cb_sql_table('tools_histo') . ' ON tools.id_tool = tools_histo.id_tool AND tools_histo.date_start = tools_histo_max_date.max_date
+                left JOIN ' . cb_sql_table('tools_histo_status') . '  ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
                 WHERE (tools_histo.id_tool IS NOT NULL OR tools_histo_max_date.id_tool IS NULL)
                 ' . (!empty($where) ? 'AND ' . $where : '') . '
                 ORDER BY tools.id_tool;';
 
             return Clipbucket_db::getInstance()->_select($sql);
-        } else {
-            $select = cb_sql_table("tools") . ' 
-        LEFT JOIN ' . cb_sql_table("tools_status") . ' ON tools_status.id_tools_status = tools.id_tools_status';
-            return Clipbucket_db::getInstance()->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
-               CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress'
-                , $where
-            );
         }
+
+        $select = cb_sql_table('tools') . ' 
+    LEFT JOIN ' . cb_sql_table('tools_status') . ' ON tools_status.id_tools_status = tools.id_tools_status';
+        return Clipbucket_db::getInstance()->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
+           CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress'
+            , $where
+        );
     }
 
     /**
@@ -227,7 +227,6 @@ class AdminTool
      */
     public function updateDataBaseVersion()
     {
-
         $update = Update::getInstance();
         $files = $update->getUpdateFiles();
 
@@ -237,6 +236,8 @@ class AdminTool
             //update to current revision
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV);
             Clipbucket_db::getInstance()->mysqli->query($sql);
+            CacheRedis::flushAll();
+            Update::getInstance()->flush();
         }
         $this->array_loop = $files;
         $this->executeTool('execute_migration_SQL_file', true);
@@ -420,7 +421,6 @@ class AdminTool
         foreach ($empty_folders as $folder) {
             delete_empty_directories($folder);
         }
-
     }
 
     /**
@@ -551,7 +551,9 @@ class AdminTool
      */
     public function addLog(string $msg)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
+        if( !empty($this->id_histo) ){
+            Clipbucket_db::getInstance()->insert(tbl('tools_histo_log'), ['id_histo', 'datetime', 'message'], [mysql_clean($this->id_histo), '|f|NOW()', $msg]);
+        }
     }
 
     /**
@@ -559,7 +561,7 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public function getLastLogs(int $max_id = 0)
+    public function getLastLogs(int $max_id = 0): array
     {
         $logs = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'datetime ,message', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0') . ' AND id_log > ' . mysql_clean($max_id));
         $max_id_log = Clipbucket_db::getInstance()->select(tbl('tools_histo_log'), 'MAX(id_log) as max_id_log', ' id_histo = ' . (!empty($this->id_histo) ? mysql_clean($this->id_histo) : '0'));
@@ -577,7 +579,9 @@ class AdminTool
      */
     private function updateToolHisto(array $fields, array $values)
     {
-        Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
+        if( !empty($this->id_histo) ){
+            Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
+        }
     }
 
 
@@ -593,7 +597,6 @@ class AdminTool
     }
 
     /**
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
@@ -605,7 +608,6 @@ class AdminTool
     }
 
     /**
-     * @param $id_tool
      * @return void
      * @throws Exception
      */
