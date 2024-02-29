@@ -15,4 +15,4 @@ SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys`
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Add new category', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
-VALUES (@id_language_key, 'Ajouter une nouvelle catégorie', @language_id_fra)
+VALUES (@id_language_key, 'Ajouter une nouvelle catégorie', @language_id_fra);

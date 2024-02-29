@@ -1119,4 +1119,6 @@ VALUES ('admin_setting'),
        ('default_x'),
        ('option_require_x_enabled'),
        ('select_as_default_x'),
-       ('enable_x_field');
+       ('enable_x_field'),
+       ('update_category'),
+       ('add_new_category');
