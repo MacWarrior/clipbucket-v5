@@ -220,7 +220,7 @@ INSERT IGNORE INTO `{tbl_prefix}tags` (id_tag_type, name)
         ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_profile, ',', seq.n + 1), ',', -1) AS tags
     FROM NumberSequence seq
 ;
-INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`) (
+INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`)
     WITH RECURSIVE NumberSequence AS (
         SELECT 0 AS n
         UNION ALL
@@ -236,7 +236,7 @@ INSERT IGNORE INTO `{tbl_prefix}user_tags` (`id_tag`, `id_user`) (
          INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(profile.profile_tags, ',', seq.n + 1), ',', -1) AND tags.id_tag_type = @type_profile
     WHERE
         profile.profile_tags IS NOT NULL AND TRIM(profile.profile_tags) != ''
-);
+;
 
 SET @type_playlist = (
     SELECT id_tag_type

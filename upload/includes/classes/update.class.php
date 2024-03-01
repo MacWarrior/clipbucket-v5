@@ -452,8 +452,8 @@ class Update
             return true;
         }
 
-        if( $this->getCurrentCoreVersionCode() >= $this->getWebVersion()
-            && $this->getCurrentCoreRevision() >= $this->getWebRevision()
+        if( $this->getCurrentCoreVersionCode() > $this->getWebVersion()
+            || ($this->getCurrentCoreVersionCode() == $this->getWebVersion() && $this->getCurrentCoreRevision() >= $this->getWebRevision())
         ){
             return true;
         }
