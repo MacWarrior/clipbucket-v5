@@ -1,7 +1,7 @@
 {
   "version":"5.5.0",
   "revision":"376",
-  "status":"dev",
+  "status":"stable",
   "detail":[
     {
       "title":"Admin area",
