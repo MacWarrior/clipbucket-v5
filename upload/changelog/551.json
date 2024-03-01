@@ -1,8 +1,25 @@
 {
   "version":"5.5.1",
-  "revision":"0",
+  "revision":"1",
   "status":"dev",
   "detail":[
-
+    {
+      "title": "Admin area",
+      "description": [
+        "Fix revision check when current revision is 0"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update Player to version 2.0.3"
+      ]
+    },
+    {
+      "title": "External components",
+      "description": [
+        "Update VideoJS to version 8.11.5"
+      ]
+    }
   ]
 }

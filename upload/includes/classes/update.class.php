@@ -447,7 +447,7 @@ class Update
     {
         if( !ini_get('allow_url_fopen')
             || !$this->getWebVersion()
-            || !$this->getWebRevision()
+            || $this->getWebRevision() === false
         ){
             return true;
         }
@@ -468,7 +468,7 @@ class Update
     {
         if( !ini_get('allow_url_fopen')
             || !$this->getWebVersion()
-            || !$this->getWebRevision()
+            || $this->getWebRevision() === false
         ){
             return 'red';
         }
