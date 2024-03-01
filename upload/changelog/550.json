@@ -1,6 +1,6 @@
 {
   "version":"5.5.0",
-  "revision":"374",
+  "revision":"375",
   "status":"dev",
   "detail":[
     {
@@ -210,6 +210,7 @@
         ,"Fix video status saving"
         ,"Fix thumbs generation when thumbs number is higher than video duration"
         ,"Fix 'Stay MP4 as it is' file naming"
+        ,"Fix thumbnails generation output format"
       ]
     }
     ,{
