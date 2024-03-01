@@ -8,12 +8,12 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories`
     `category_desc`    TEXT              NULL     DEFAULT NULL,
     `date_added`       DATETIME          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `category_thumb`   MEDIUMTEXT        NULL,
-    `is_default`        ENUM ('yes','no') NOT NULL DEFAULT 'no'
+    `is_default`       ENUM ('yes','no') NOT NULL DEFAULT 'no',
+    `old_category_id`  INT(255) NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
-ALTER TABLE `{tbl_prefix}categories`
-    ADD CONSTRAINT `categorie_parent` FOREIGN KEY IF NOT EXISTS (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_name`);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
@@ -111,8 +111,8 @@ SET @type_category = (
     FROM `{tbl_prefix}categories_type`
     WHERE name LIKE 'collection'
 );
-INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
-    SELECT @type_category, CASE WHEN parent_id != 0 THEN (CASE WHEN parent_id = category_id THEN NULL ELSE parent_id + @id_categ END) ELSE NULL END, category_name, category_order, category_desc, date_added, category_thumb, isdefault
+INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) (
+    SELECT @type_category, CASE WHEN parent_id = '0' THEN NULL ELSE parent_id END, category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
     FROM `{tbl_prefix}collection_categories`
     WHERE 1
 );
@@ -143,14 +143,9 @@ SET @type_category = (
     FROM `{tbl_prefix}categories_type`
     WHERE name LIKE 'video'
 );
-SET @id_categ = (
-    SELECT max(category_id)
-    FROM `{tbl_prefix}categories`
-    WHERE 1
-);
 
-INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
-    SELECT @type_category, CASE WHEN parent_id != 0 THEN parent_id + @id_categ ELSE NULL END, category_name, category_order, category_desc, date_added, category_thumb, isdefault
+INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) (
+    SELECT @type_category, CASE WHEN parent_id = '0' THEN NULL ELSE parent_id END , category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
     FROM `{tbl_prefix}video_categories`
     WHERE 1
 );
@@ -161,7 +156,7 @@ INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`)
         UNION ALL
         SELECT n + 1
         FROM NumberSequence
-        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}video_categories`)
     )
     SELECT
         SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, '#', seq.n+1), '#', -1) + @id_categ AS extracted_number
@@ -188,12 +183,6 @@ SET @type_category = (
     WHERE name LIKE 'user'
 );
 
-SET @id_categ = (
-    SELECT max(category_id)
-    FROM `{tbl_prefix}categories`
-    WHERE 1
-);
-
 INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
     SELECT @type_category, NULL, category_name, category_order, category_desc, date_added, category_thumb, isdefault
     FROM `{tbl_prefix}user_categories`
@@ -206,7 +195,7 @@ INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
         UNION ALL
         SELECT n + 1
         FROM NumberSequence
-        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}collection_categories`)
+        WHERE n < (SELECT COUNT(*) FROM `{tbl_prefix}user_categories`)
     )
     SELECT
         SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) + @id_categ AS extracted_number
@@ -219,6 +208,16 @@ INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
       AND U.category != ''
       AND SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, '#', seq.n+1), '#', -1) != ''
 ;
+
+UPDATE `{tbl_prefix}categories` C
+    INNER JOIN `{tbl_prefix}categories` CP ON CP.old_category_id = C.parent_id AND CP.id_category_type = C.id_category_type
+SET C.parent_id = CP.category_id
+WHERE C.parent_id != 0 AND C.parent_id IS NOT NULL;
+
+ALTER TABLE `{tbl_prefix}categories`
+    ADD CONSTRAINT `categorie_parent` FOREIGN KEY IF NOT EXISTS (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}categories` DROP COLUMN IF EXISTS `old_category_id`;
 
 ALTER TABLE `{tbl_prefix}collections` DROP COLUMN IF EXISTS `category`;
 ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN IF EXISTS `category`;

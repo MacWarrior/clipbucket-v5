@@ -45,6 +45,10 @@ class Update
         }, $this->fields);
     }
 
+    public function flush(){
+        $this->dbVersion = [];
+    }
+
     public function getDBVersion(): array
     {
         if( empty($this->dbVersion) ){
@@ -750,7 +754,7 @@ class Update
      * @param $revision
      * @return bool
      */
-    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision)
+    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision): bool
     {
         $version_db = Update::getInstance()->getDBVersion();
         return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));

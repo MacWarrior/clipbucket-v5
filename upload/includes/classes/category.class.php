@@ -510,6 +510,23 @@ class Category
         return $sets;
     }
 
+    /**
+     * @param $type
+     * @param $parent_id
+     * @return int|mixed
+     * @throws Exception
+     */
+    public function getNextOrderForParent($type, $parent_id): int
+    {
+        $categ_type_id = $this->getIdsCategoriesType($type);
+        $sql = 'SELECT MAX(category_order) + 1 AS next_order_place FROM ' . tbl($this->tablename) . ' 
+        WHERE id_category_type = ' . mysql_clean($categ_type_id) . ' AND parent_id ' . ((empty($parent_id) || $parent_id == 'null') ? ' IS NULL ' : ' = ' . mysql_clean($parent_id));
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($results[0]['next_order_place'])) {
+            return $results[0]['next_order_place'];
+        }
+        return 0;
+    }
 
 }
 abstract class CBCategory
