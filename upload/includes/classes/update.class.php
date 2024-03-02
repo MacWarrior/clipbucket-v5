@@ -531,13 +531,12 @@ class Update
         $html .= '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>' . $current_revision . '</b> <i>(' . ucfirst($current_state) . ')</i><br/>';
         $html .= 'Latest version <i>(' . ucfirst($current_state) . ')</i> : <b>' . $web_version . '</b> - Revision <b>' . $web_revision . '</b></h5></div>';
 
-        $is_new_version = $current_version > $web_version;
-        $is_new_revision = $is_new_version || $current_revision > $web_revision;
+        $is_new_version = $current_version > $web_version || ($current_version == $web_version && $current_revision > $web_revision);
 
         if ($current_version == $web_version && $current_revision == $web_revision) {
             $html .= '<h3 style="text-align:center;">Your ClipbucketV5 seems up-to-date !</h3>';
         } else {
-            if ($is_new_version || $is_new_revision) {
+            if ($is_new_version) {
                 $html .= '<h3 style="text-align:center;">Keep working on this new version ! :)</h3>';
             } else {
                 $html .= '<h3 style="text-align:center;">Update <b>' . $web_version . '</b> - Revision <b>' . $web_revision . '</b> is available !</h3>';
