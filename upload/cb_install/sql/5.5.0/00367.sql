@@ -3,7 +3,7 @@ ALTER TABLE `{tbl_prefix}tools_histo_status` CHANGE `id_tools_status` `id_tools_
 
 SET @constraint_name = (SELECT CONSTRAINT_NAME
                         FROM information_schema.key_column_usage
-                        WHERE CONSTRAINT_SCHEMA = '{dbname}'
+                        WHERE CONSTRAINT_SCHEMA = DATABASE()
                           AND TABLE_NAME = '{tbl_prefix}tools'
                           AND REFERENCED_TABLE_NAME IS NOT NULL);
 
@@ -72,12 +72,8 @@ VALUES (@id_language_key, 'Afficher les derniers journaux', @language_id_fra);
 
 ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `code` VARCHAR(32) NOT NULL;
 UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,'_label', '');
-DELETE FROM `{tbl_prefix}tools`
-    WHERE `id_tool` NOT IN(
-        SELECT MIN(`id_tool`)
-        FROM `{tbl_prefix}tools`
-        GROUP BY `code`
-    );
+CREATE TEMPORARY TABLE `tmp_ids` SELECT MIN(`id_tool`) FROM `{tbl_prefix}tools` GROUP BY `code`;
+DELETE FROM `{tbl_prefix}tools` WHERE `id_tool` NOT IN(SELECT * FROM `tmp_ids`);
 ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE (`code`);
 
 SET @language_key = 'tool_started' COLLATE utf8mb4_unicode_520_ci;
