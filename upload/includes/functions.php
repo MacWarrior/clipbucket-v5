@@ -3248,7 +3248,6 @@ function get_db_size(): int
 function marked_spammed($comment): bool
 {
     $spam_voters = explode("|", $comment['spam_voters']);
-    $spam_votes = $comment['spam_votes'];
     $admin_vote = in_array('1', $spam_voters);
     if (user_id() && in_array(user_id(), $spam_voters)) {
         return true;
@@ -3314,7 +3313,7 @@ function get_server_url(): string
  */
 function get_server_protocol()
 {
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    if (is_ssl()) {
         return 'https://';
     }
 
@@ -3335,7 +3334,7 @@ function get_server_protocol()
  * @param mixed A string, or an array from a file() function.
  * @return boolean
  */
-function isUTF8($string)
+function isUTF8($string): bool
 {
     if (is_array($string)) {
         $enc = implode('', $string);
@@ -3390,7 +3389,7 @@ function datecreated($in): string
  * @internal param $ { none }
  * @since 2.6.0
  */
-function is_ssl()
+function is_ssl(): bool
 {
     if (isset($_SERVER['HTTPS'])) {
         if ('on' == strtolower($_SERVER['HTTPS'])) {

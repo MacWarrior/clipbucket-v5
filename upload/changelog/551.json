@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"2",
+  "revision":"3",
   "status":"dev",
   "detail":[
     {
@@ -14,6 +14,8 @@
       "title": "Miscellaneous",
       "description": [
         "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        ,"Fix SSL detection"
+        ,"Cleanup code"
       ]
     },
     {
