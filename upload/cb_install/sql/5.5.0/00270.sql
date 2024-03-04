@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS `{tbl_prefix}collection_contributors`;
-ALTER TABLE `{tbl_prefix}comments` DROP IF EXISTS `voters`;
-ALTER TABLE `{tbl_prefix}comments` DROP IF EXISTS `vote`;
+ALTER TABLE `{tbl_prefix}comments` DROP `voters`;
+ALTER TABLE `{tbl_prefix}comments` DROP `vote`;
 
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'thanks_rating_comment');
 DELETE FROM `{tbl_prefix}languages_translations` WHERE `id_language_key` = @id_language_key;

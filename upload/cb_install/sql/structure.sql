@@ -1193,4 +1193,4 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
-    ADD CONSTRAINT `search_result` FOREIGN KEY IF NOT EXISTS (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;

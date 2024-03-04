@@ -9,13 +9,13 @@ DROP TABLE IF EXISTS `{tbl_prefix}group_categories`;
 DROP TABLE IF EXISTS `{tbl_prefix}groups`;
 
 ALTER TABLE `{tbl_prefix}users`
-    DROP COLUMN IF EXISTS `total_groups`;
+    DROP COLUMN `total_groups`;
 
 DELETE FROM `{tbl_prefix}user_permissions` WHERE `permission_code` IN('view_groups','view_group');
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions`
-    DROP COLUMN IF EXISTS `view_groups`,
-    DROP COLUMN IF EXISTS `view_group`;
+    DROP COLUMN `view_groups`,
+    DROP COLUMN `view_group`;
 
 DELETE FROM `{tbl_prefix}languages_translations` WHERE `id_language_key` IN(
     SELECT `id_language_key` FROM `{tbl_prefix}languages_keys` WHERE `language_key` IN(
