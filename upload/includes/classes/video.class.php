@@ -338,6 +338,7 @@ class Video
 
         $order = '';
         if( $param_order ){
+            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
 
@@ -1754,7 +1755,7 @@ class CBvideo extends CBCategory
                 $cond = ' WHERE ' . $cond;
             }
 
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM'.cb_sql_table('video') . $joined . ' ' . $cond . ' GROUP BY video.videoid) T';
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM '.cb_sql_table('video') . ' ' . $cond . ' GROUP BY video.videoid) T';
             $count = $db->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];

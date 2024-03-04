@@ -2268,16 +2268,12 @@ class userquery extends CBCategory
             $select[] = 'UP.' . $field;
         }
 
-
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select[] = 'GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
                     LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
-
-            foreach($user_profile_fields as $field){
-                $group[] = 'UP.' . $field;
-            }
+            $group[] = 'UP.userid';
         }
 
         $query = 'SELECT ' . implode(', ', $select) . '

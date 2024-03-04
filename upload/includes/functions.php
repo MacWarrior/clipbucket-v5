@@ -4464,11 +4464,11 @@ function build_sort_photos($sort, $vid_cond)
         switch ($sort) {
             case 'most_recent':
             default:
-                $vid_cond['order'] = ' date_added DESC ';
+                $vid_cond['order'] = ' photos.date_added DESC ';
                 break;
 
             case 'most_viewed':
-                $vid_cond['order'] = ' views DESC ';
+                $vid_cond['order'] = ' photos.views DESC ';
                 $vid_cond['date_span_column'] = 'last_viewed';
                 break;
 
@@ -4481,7 +4481,7 @@ function build_sort_photos($sort, $vid_cond)
                 break;
 
             case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
+                $vid_cond['order'] = ' photos.comments_count DESC';
                 break;
         }
     }

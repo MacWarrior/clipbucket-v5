@@ -225,7 +225,7 @@
 			</div>
 			{/if}
 
-			{$popular_users = get_users(['cond' => 'users.username != \''|cat:$smarty.get.user|cat:'\'', 'order'=>'profile_hits DESC limit 5'])}
+			{$popular_users = get_users(['cond' => 'users.username != \''|cat:$smarty.get.user|cat:'\'', 'order'=>'users.profile_hits DESC limit 5'])}
 			{if $popular_users}
 			<h2>{lang code="popular_users"}</h2>
 			<div class="clearfix sidebar-channels">

@@ -18,7 +18,6 @@ function cb_query_id($query): string
 
 function tbl($tbl): string
 {
-    global $DBNAME;
     $prefix = TABLE_PREFIX;
     $tbls = explode(',', $tbl);
     $new_tbls = '';
@@ -26,7 +25,7 @@ function tbl($tbl): string
         if (!empty($new_tbls)) {
             $new_tbls .= ',';
         }
-        $new_tbls .= '`' . $DBNAME . '`.' . $prefix . $ntbl;
+        $new_tbls .= $prefix . $ntbl;
     }
 
     return $new_tbls;
@@ -38,7 +37,7 @@ function tbl($tbl): string
  * @param $fields
  * @return string
  */
-function table_fields($fields)
+function table_fields($fields): string
 {
     if (empty($fields)) {
         return '';

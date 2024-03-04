@@ -201,6 +201,7 @@ class Collection
 
         $order = '';
         if( $param_order ){
+            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
 
