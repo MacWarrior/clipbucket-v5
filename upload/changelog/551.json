@@ -9,6 +9,7 @@
         "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
         ,"Fix SSL detection"
         ,"Cleanup code"
+        ,"Fix MySQL8 compatibility"
       ]
     },
     {
@@ -16,7 +17,6 @@
       "description": [
         "Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
-        ,"Fix MySQL8 compatibility"
       ]
     },
     {

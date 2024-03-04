@@ -1797,8 +1797,8 @@ function increment_views_new($id, $type = null)
                 $vdetails = get_video_details($id);
                 // Cookie life time at least 1 hour else if video duration is bigger set at video time.
                 $cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videoid='$id' OR videokey='$id'");
-                set_cookie_secure('video_' . $id, 'watched');
+                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
+                set_cookie_secure('video_' . $id, 'watched', $cookieTime);
 
                 $userid = user_id();
                 if ($userid) {
