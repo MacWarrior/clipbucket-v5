@@ -124,7 +124,7 @@ $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
 
-define('BASEURL', (empty($_SERVER['HTTPS']) ? 'http' : 'https') . '://' . $_SERVER['HTTP_HOST']);
+define('BASEURL', (is_ssl() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']);
 
 require_once('classes/session.class.php');
 $sess = new Session();
