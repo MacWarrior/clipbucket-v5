@@ -1,21 +1,22 @@
 {
   "version":"5.5.1",
-  "revision":"3",
+  "revision":"4",
   "status":"dev",
   "detail":[
-    {
-      "title": "Admin area",
-      "description": [
-        "Fix revision check when current revision is 0"
-        ,"Fix update status when working on new version"
-      ]
-    },
     {
       "title": "Miscellaneous",
       "description": [
         "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
         ,"Fix SSL detection"
         ,"Cleanup code"
+      ]
+    },
+    {
+      "title": "Installation & Update",
+      "description": [
+        "Fix revision check when current revision is 0"
+        ,"Fix update status when working on new version"
+        ,"Fix MySQL8 compatibility"
       ]
     },
     {
