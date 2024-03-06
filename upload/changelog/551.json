@@ -4,6 +4,12 @@
   "status":"dev",
   "detail":[
     {
+      "title": "Front office",
+      "description": [
+        "Refactor collections page"
+      ]
+    },
+    {
       "title": "Miscellaneous",
       "description": [
         "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
@@ -17,6 +23,12 @@
       "description": [
         "Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
+      ]
+    },
+    {
+      "title": "Plugins",
+      "description": [
+        "Update compatibility notice to 5.5.1"
       ]
     },
     {
