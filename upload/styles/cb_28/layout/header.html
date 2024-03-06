@@ -102,7 +102,7 @@
 											</button>
 											<ul class="dropdown-menu">
 												{foreach $types_list item=stype}
-													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype} class="active" {/if}>
+													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype}class="active"{/if}>
 														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
 													</li>
 												{/foreach}
@@ -113,7 +113,7 @@
 										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
-								</form><!-- form Ends -->
+								</form>
 							</div>
 							{/if}
 							<ul class="nav navbar-nav navbar-right right-menu">

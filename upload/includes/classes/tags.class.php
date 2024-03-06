@@ -242,7 +242,7 @@ class Tags
         $tag_array = explode(',', mysql_clean($tags));
         while( !empty($tag_array) ) {
             $tmp_tags = array_splice($tag_array, 0, 500);
-            $values = ' SELECT \'' . implode('\' SELECT UNION \'', $tmp_tags) . '\'';
+            $values = ' SELECT \'' . implode('\' UNION SELECT \'', $tmp_tags) . '\'';
 
             $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name)
                 WITH tags_to_insert AS ( ' . $values . ' )
@@ -250,7 +250,9 @@ class Tags
                 FROM tags_to_insert';
 
             if (!Clipbucket_db::getInstance()->execute($sql_insert_tag, 'insert')) {
-                e(lang('technical_error'));
+                if( !in_dev() ){
+                    e(lang('technical_error'));
+                }
                 return false;
             }
         }
@@ -271,7 +273,9 @@ class Tags
             ';
 
             if (!Clipbucket_db::getInstance()->execute($sql_link_tag, 'insert')) {
-                e(lang('technical_error'));
+                if( !in_dev() ){
+                    e(lang('technical_error'));
+                }
                 return false;
             }
         }

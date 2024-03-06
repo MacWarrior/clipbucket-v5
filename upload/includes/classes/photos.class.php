@@ -168,19 +168,19 @@ class Photo
 
         $conditions = [];
         if( $param_photo_id ){
-            $conditions[] = 'photos.photo_id = \''.mysql_clean($param_photo_id).'\'';
+            $conditions[] = $this->getTableName() . '.photo_id = \''.mysql_clean($param_photo_id).'\'';
         }
         if( $param_photo_key ){
-            $conditions[] = 'photos.videokey = \''.mysql_clean($param_photo_key).'\'';
+            $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_photo_key).'\'';
         }
         if( $param_userid ){
-            $conditions[] = 'photos.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_filename ){
-            $conditions[] = 'photos.file_name = \''.mysql_clean($param_filename).'\'';
+            $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_filename).'\'';
         }
         if( $param_featured ){
-            $conditions[] = 'photos.featured = \'yes\'';
+            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -934,19 +934,7 @@ class CBPhotos
             $select_complement = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
-            $group_tag = ' GROUP BY photos.photo_id ';
-
-            /*if ($p['count_only']) {
-                $group_tag = ' GROUP BY photos.photo_id';
-            } else {
-                $group_array = [];
-                foreach($fields AS $table_name => $table_fields){
-                    foreach($table_fields AS $field) {
-                        $group_array[] = $table_name . '.' . $field;
-                    }
-                }
-                $group_tag = ' GROUP BY ' . implode(', ', $group_array);
-            }*/
+            $group_tag = ' GROUP BY photos.photo_id';
         }
 
         $select = table_fields($fields);

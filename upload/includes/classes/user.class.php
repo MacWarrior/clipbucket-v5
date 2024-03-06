@@ -2262,7 +2262,7 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['show_my_collections', 'userid', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'avatar', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'profile_video', 'profile_item', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = ['userid', 'show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'avatar', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'profile_video', 'profile_item', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
 
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
@@ -2270,17 +2270,17 @@ class userquery extends CBCategory
 
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $group = $select;
             $select[] = 'GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
                     LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
-            $group[] = 'UP.userid';
         }
 
         $query = 'SELECT ' . implode(', ', $select) . '
                     FROM ' . tbl($this->dbtbl['user_profile']) . ' UP
                    ' . $join . '
                     WHERE UP.userid = ' . mysql_clean($uid) . '
-                   ' . empty($group) ? '' : ' GROUP BY ' . implode(', ', $group);
+                   ' . (empty($group) ? '' : ' GROUP BY ' . implode(', ', $group));
         $result = Clipbucket_db::getInstance()->_select($query, 60);
 
         if (count($result) > 0) {

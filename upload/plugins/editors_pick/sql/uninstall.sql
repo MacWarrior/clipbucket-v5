@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS `{tbl_prefix}editors_picks`;
-ALTER TABLE `{tbl_prefix}video` DROP IF EXISTS `in_editor_pick`;
+ALTER TABLE `{tbl_prefix}video` DROP `in_editor_pick`;
 
 DELETE FROM `{tbl_prefix}languages_translations`
 WHERE `id_language_key` IN(

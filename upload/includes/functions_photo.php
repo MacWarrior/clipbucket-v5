@@ -16,12 +16,18 @@ function get_photos($param)
 }
 
 //Photo File Fetcher
+/**
+ * @throws Exception
+ */
 function get_photo($params)
 {
     return get_image_file($params);
 }
 
 //Photo Upload Button
+/**
+ * @throws Exception
+ */
 function upload_photo_button($params)
 {
     global $cbphoto;
@@ -29,6 +35,9 @@ function upload_photo_button($params)
 }
 
 //Photo Embed Cides
+/**
+ * @throws Exception
+ */
 function photo_embed_codes($params)
 {
     global $cbphoto;

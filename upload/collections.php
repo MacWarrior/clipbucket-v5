@@ -10,39 +10,7 @@ if( !isSectionEnabled('collections') ){
 
 pages::getInstance()->page_redir();
 userquery::getInstance()->perm_check('view_collections', true);
-$sort = $_GET['sort'];
 
-$cond = ['date_span' => mysql_clean($_GET['time'])];
-if (config('enable_sub_collection')) {
-    $cond['parents_only'] = true;
-}
-
-switch ($sort) {
-    case 'most_recent':
-    default:
-        $cond['order'] = ' date_added DESC';
-        break;
-
-    case 'featured':
-        $cond['featured'] = 'yes';
-        break;
-
-    case 'most_viewed':
-        $cond['order'] = ' views DESC';
-        break;
-
-    case 'most_commented':
-        $cond['order'] = ' total_comments DESC';
-        break;
-
-    case 'most_items':
-        $cond['order'] = ' total_objects DESC';
-        break;
-}
-
-//Getting Collection List
-$page = $_GET['page'];
-$get_limit = create_query_limit($page, config('collection_per_page'));
 
 if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
     $cond['type'] = 'none';
@@ -56,21 +24,38 @@ if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
     }
 }
 
-$collection_count = $cond;
-$collection_count['count_only'] = true;
 
-$cond['limit'] = $get_limit;
-if (config('hide_empty_collection') == 'yes') {
-    $cond['has_items'] = true;
-    $cond['show_own'] = true;
+
+
+
+$page = mysql_clean($_GET['page']);
+$get_limit = create_query_limit($page, config('collection_per_page'));
+$params = Collection::getInstance()->getFilterParams($_GET['sort'], []);
+$params = Collection::getInstance()->getFilterParams($_GET['time'], $params);
+$params['limit'] = $get_limit;
+
+$collections = Collection::getInstance()->getAll($params);
+assign('collections', $collections);
+
+if( empty($collections) ){
+    $count = 0;
+} else if( count($collections) < config('collection_per_page') && $page == 1 ){
+    $count = count($collections);
+} else {
+    unset($params['limit']);
+    $params['count'] = true;
+    $count = Collection::getInstance()->getAll($params);
 }
-$collections = Collections::getInstance()->get_collections($cond);
 
-Assign('collections', $collections);
+$total_pages = count_pages($count, config('collection_per_page'));
 
-//Collecting Data for Pagination
-$total_rows = Collections::getInstance()->get_collections($collection_count);
-$total_pages = count_pages($total_rows, config('collection_per_page'));
+
+
+
+
+
+
+
 
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);

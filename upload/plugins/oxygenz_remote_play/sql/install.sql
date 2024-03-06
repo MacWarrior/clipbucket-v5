@@ -1,5 +1,5 @@
 ALTER TABLE `{tbl_prefix}video`
-    ADD IF NOT EXISTS `remote_play_url` TEXT NOT NULL DEFAULT '';
+    ADD `remote_play_url` TEXT NULL DEFAULT NULL;
 
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (language_key)
 VALUES

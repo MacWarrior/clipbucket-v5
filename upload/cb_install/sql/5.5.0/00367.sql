@@ -1,21 +1,23 @@
-ALTER TABLE `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
-ALTER TABLE `{tbl_prefix}tools_histo_status` CHANGE `id_tools_status` `id_tools_histo_status` INT NOT NULL AUTO_INCREMENT;
-
 SET @constraint_name = (SELECT CONSTRAINT_NAME
                         FROM information_schema.key_column_usage
                         WHERE CONSTRAINT_SCHEMA = DATABASE()
                           AND TABLE_NAME = '{tbl_prefix}tools'
+                          AND COLUMN_NAME = 'id_tools_status'
                           AND REFERENCED_TABLE_NAME IS NOT NULL);
 
 SET @sql = 'ALTER TABLE `{tbl_prefix}tools` DROP FOREIGN KEY @constraint_name;';
 SET @sql = REPLACE(@sql, '@constraint_name', @constraint_name);
 PREPARE alterTable FROM @sql;
 EXECUTE alterTable;
+DEALLOCATE PREPARE alterTable;
 
 ALTER TABLE `{tbl_prefix}tools`
     DROP COLUMN id_tools_status,
     DROP COLUMN elements_total,
     DROP COLUMN elements_done;
+
+ALTER TABLE `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;
+ALTER TABLE `{tbl_prefix}tools_histo_status` CHANGE `id_tools_status` `id_tools_histo_status` INT NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
 (

@@ -5,7 +5,7 @@
     Author: Mohammad Shoaib & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
     Version: 2.0.2
-    ClipBucket Version: 5.5.0
+    ClipBucket Version: 5.5.1
 */
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 120;
