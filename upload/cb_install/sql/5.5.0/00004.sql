@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_subtitle` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
-    ADD UNIQUE KEY IF NOT EXISTS `videoid` (`videoid`,`number`);
+    ADD UNIQUE KEY `videoid` (`videoid`,`number`);
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
-    ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY IF NOT EXISTS (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;

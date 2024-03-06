@@ -1,5 +1,5 @@
-ALTER TABLE `{tbl_prefix}photos` ADD COLUMN IF NOT EXISTS age_restriction INT DEFAULT NULL;
-ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS age_restriction INT DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}photos` ADD COLUMN age_restriction INT DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD COLUMN age_restriction INT DEFAULT NULL;
 
 INSERT IGNORE INTO `{tbl_prefix}config` (name, value) VALUES
     ('enable_user_dob_edition', 'yes'),

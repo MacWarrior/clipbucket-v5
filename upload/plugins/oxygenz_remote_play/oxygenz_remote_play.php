@@ -3,9 +3,9 @@
 	Plugin Name: Oxygenz - Remote Play
 	Description: Allow to add external videos from URL
 	Author: Oxygenz
-    Author Website: https://oxygenz.fr
+    Author Website: https://clipbucket.oxygenz.fr
     Version: 1.0.6
-	ClipBucket Version: 5.5.0
+	ClipBucket Version: 5.5.1
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
@@ -82,7 +82,7 @@ class oxygenz_remote_play {
     public static function load_form()
     {
         $template_dir = DirPath::get('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
-        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL . DirPath::getUrl('plugins') . self::$media_dir . 'example.mp4' );
+        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL . DirPath::getUrl('plugins') . self::class . DIRECTORY_SEPARATOR . self::$media_dir . 'example.mp4' );
         assign('placeholder_url', $plugin_cb_link_video_input_url_example);
         Template($template_dir.'first-form.html', false);
     }

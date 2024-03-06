@@ -224,7 +224,7 @@
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 			{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
-			'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'date_added DESC'])}
+			'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'photos.date_added DESC'])}
 			{if $related_photos}
 			<h2>{lang code='related_photos'}</h2>
 			<div class="clearfix sidebar-items">

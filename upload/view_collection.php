@@ -21,7 +21,7 @@ if ($cbcollection->is_viewable($c)) {
     $params['first_only'] = true;
     $cdetails = Collection::getInstance()->getAll($params);
 
-    if (!$cdetails || !isSectionEnabled($cdetails['type'])) {
+    if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !has_access('admin_access', true)) ){
         $Cbucket->show_page = false;
     }
 

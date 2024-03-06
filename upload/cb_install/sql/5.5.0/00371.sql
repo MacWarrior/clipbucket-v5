@@ -24,7 +24,7 @@ VALUES (NULL, 'tmdb_token', ''),
        (NULL, 'tmdb_search', '10');
 
 ALTER TABLE `{tbl_prefix}tags_type`
-    ADD UNIQUE IF NOT EXISTS `name` (`name`);
+    ADD UNIQUE `name` (`name`);
 INSERT IGNORE INTO `{tbl_prefix}tags_type` (name) VALUES ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
@@ -254,8 +254,8 @@ VALUES (@id_language_key, 'Get backdrop from TMDB', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Récupérer le décors depuis TMDB', @language_id_fra);
 
-ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS `default_poster` INT(3) DEFAULT NULL;
-ALTER TABLE `{tbl_prefix}video` ADD COLUMN IF NOT EXISTS `default_backdrop` INT(3) DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_poster` INT(3) DEFAULT NULL;
+ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_backdrop` INT(3) DEFAULT NULL;
 
 SET @language_key = 'sort_by' COLLATE utf8mb4_unicode_520_ci;
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
@@ -289,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
   COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
-    ADD CONSTRAINT `search_result` FOREIGN KEY IF NOT EXISTS (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 SET @language_key = 'backdrop' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);

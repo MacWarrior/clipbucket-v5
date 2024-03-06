@@ -17,12 +17,12 @@ ALTER TABLE `{tbl_prefix}languages_translations`
     ADD KEY `id_language_key` (`id_language_key`);
 
 ALTER TABLE `{tbl_prefix}languages_translations`
-    ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY IF NOT EXISTS (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY IF NOT EXISTS (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `{tbl_prefix}languages`
-    DROP COLUMN IF EXISTS language_code,
-    DROP COLUMN IF EXISTS language_regex;
+    DROP COLUMN language_code,
+    DROP COLUMN language_regex;
 
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (language_key)
 VALUES ('ad_name_error'),

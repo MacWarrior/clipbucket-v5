@@ -9,4 +9,4 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_thumbs`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD CONSTRAINT `video_thumbs_ibfk_1` FOREIGN KEY IF NOT EXISTS (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;
+    ADD CONSTRAINT `video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION;

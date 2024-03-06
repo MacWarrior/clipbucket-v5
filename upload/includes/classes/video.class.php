@@ -245,19 +245,19 @@ class Video
 
         $conditions = [];
         if( $param_videoid ){
-            $conditions[] = 'video.videoid = \''.mysql_clean($param_videoid).'\'';
+            $conditions[] = $this->getTableName() . '.videoid = \''.mysql_clean($param_videoid).'\'';
         }
         if( $param_videokey ){
-            $conditions[] = 'video.videokey = \''.mysql_clean($param_videokey).'\'';
+            $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_videokey).'\'';
         }
         if( $param_userid ){
-            $conditions[] = 'video.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_file_name ){
-            $conditions[] = 'video.file_name = \''.mysql_clean($param_file_name).'\'';
+            $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_file_name).'\'';
         }
         if( $param_featured ){
-            $conditions[] = 'video.featured = \'yes\'';
+            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -267,7 +267,7 @@ class Video
 
         if( $param_search ){
             /* Search is done on video title, video tags */
-            $cond = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(video.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
@@ -284,7 +284,7 @@ class Video
         }
 
         if( $param_count ){
-            $select = ['COUNT(DISTINCT video.videoid) AS count'];
+            $select = ['COUNT(DISTINCT ' . $this->getTableName() . '.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
             $select[] = 'users.username AS user_username';
@@ -298,19 +298,19 @@ class Video
                 foreach ($types as $type) {
                     $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
                 }
-                $group[] = 'video.videoid';
+                $group[] = $this->getTableName() . '.videoid';
             }
-            $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('video_tags') . ' ON ' . $this->getTableName() . '.videoid = video_tags.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
         }
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-            $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON ' . $this->getTableName() . '.videoid = videos_categories.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
 
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
-                $group[] = 'video.videoid';
+                $group[] = $this->getTableName() . '.videoid';
             }
 
             if( $param_category ){
@@ -324,7 +324,7 @@ class Video
 
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND video.videoid = ' . $collection_items_table . '.object_id';
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -338,6 +338,7 @@ class Video
 
         $order = '';
         if( $param_order ){
+            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
 
@@ -348,7 +349,7 @@ class Video
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->getTableName()) . '
-                LEFT JOIN ' . cb_sql_table('users') . ' ON video.userid = users.userid '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON ' . $this->getTableName() . '.userid = users.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -1754,7 +1755,7 @@ class CBvideo extends CBCategory
                 $cond = ' WHERE ' . $cond;
             }
 
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM'.cb_sql_table('video') . $joined . ' ' . $cond . ' GROUP BY video.videoid) T';
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM '.cb_sql_table('video') . ' ' . $cond . ' GROUP BY video.videoid) T';
             $count = $db->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];

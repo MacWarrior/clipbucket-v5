@@ -1,13 +1,12 @@
 {
   "version":"5.5.1",
-  "revision":"3",
+  "revision":"4",
   "status":"dev",
   "detail":[
     {
-      "title": "Admin area",
+      "title": "Front office",
       "description": [
-        "Fix revision check when current revision is 0"
-        ,"Fix update status when working on new version"
+        "Refactor collections page"
       ]
     },
     {
@@ -16,6 +15,20 @@
         "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
         ,"Fix SSL detection"
         ,"Cleanup code"
+        ,"Fix MySQL8 compatibility"
+      ]
+    },
+    {
+      "title": "Installation & Update",
+      "description": [
+        "Fix revision check when current revision is 0"
+        ,"Fix update status when working on new version"
+      ]
+    },
+    {
+      "title": "Plugins",
+      "description": [
+        "Update compatibility notice to 5.5.1"
       ]
     },
     {

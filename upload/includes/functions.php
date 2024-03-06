@@ -1797,8 +1797,8 @@ function increment_views_new($id, $type = null)
                 $vdetails = get_video_details($id);
                 // Cookie life time at least 1 hour else if video duration is bigger set at video time.
                 $cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videoid='$id' OR videokey='$id'");
-                set_cookie_secure('video_' . $id, 'watched');
+                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
+                set_cookie_secure('video_' . $id, 'watched', $cookieTime);
 
                 $userid = user_id();
                 if ($userid) {
@@ -4464,11 +4464,11 @@ function build_sort_photos($sort, $vid_cond)
         switch ($sort) {
             case 'most_recent':
             default:
-                $vid_cond['order'] = ' date_added DESC ';
+                $vid_cond['order'] = ' photos.date_added DESC ';
                 break;
 
             case 'most_viewed':
-                $vid_cond['order'] = ' views DESC ';
+                $vid_cond['order'] = ' photos.views DESC ';
                 $vid_cond['date_span_column'] = 'last_viewed';
                 break;
 
@@ -4481,7 +4481,7 @@ function build_sort_photos($sort, $vid_cond)
                 break;
 
             case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
+                $vid_cond['order'] = ' photos.comments_count DESC';
                 break;
         }
     }
