@@ -6,6 +6,13 @@ class Upload
     var $custom_upload_fields = []; //Step 2 of Uploading
     var $actions_after_video_upload = ['activate_video_with_file'];
 
+    var $types_thumb = [
+        'c' => 'custom',
+        'p' => 'poster',
+        'b' => 'backdrop',
+        'a' => 'auto'
+    ];
+
     public static function getInstance(){
         global $Upload;
         return $Upload;
@@ -58,7 +65,7 @@ class Upload
      */
     function submit_upload($array = null)
     {
-        global $eh, $db, $userquery;
+        global $eh, $db;
 
         if (!$array) {
             $array = $_POST;
@@ -74,7 +81,7 @@ class Upload
         $userid = user_id();
         if (!$userid) {
             if (has_access('allow_video_upload', true, false)) {
-                $userid = $userquery->get_anonymous_user();
+                $userid = userquery::getInstance()->get_anonymous_user();
             } else {
                 e(lang('you_not_logged_in'));
                 return false;
@@ -125,19 +132,9 @@ class Upload
                 $query_field[] = $field['db_field'];
             }
 
-            if (is_array($val)) {
-                $new_val = '';
-                foreach ($val as $v) {
-                    $new_val .= '#' . $v . '# ';
-                }
-                $val = $new_val;
-            }
-
             if( !empty($field['clean_func']) && !apply_func($field['clean_func'], $val) ){
                 $val = apply_func($field['clean_func'], $val);
             }
-
-
 
             if (!empty($field['db_field'])) {
                 $query_val[] = $val;
@@ -218,6 +215,10 @@ class Upload
             $insert_id = $db->insert_id();
 
             \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
+            $version = Update::getInstance()->getDBVersion();
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
+            }
 
             //logging Upload
             $log_array = [
@@ -227,8 +228,6 @@ class Upload
                 'details'       => $array['title']
             ];
             insert_log('Uploaded a video', $log_array);
-
-
 
             $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
@@ -257,54 +256,67 @@ class Upload
      */
     function get_next_available_num($file_name): string
     {
-        global $db;
-        $res = $db->select(tbl('video_thumbs'), 'MAX(num) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
+        $res = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'MAX(CAST(num AS UNSIGNED)) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
         if (empty($res)) {
             $code = 0;
         } else {
             $code = $res[0]['num_max'];
         }
-        return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+        return str_pad((string)$code, 4, '0', STR_PAD_LEFT);
     }
 
-    function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $thumbs_ver = false)
+    /**
+     * @throws Exception
+     */
+    function upload_thumb($video_file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
     {
         global $imgObj;
         $file = $file_array;
         if (!empty($file['name'][$key])) {
             define('dir', $files_dir);
 
-            $file_num = $this->get_next_available_num($file_name);
-            $ext = getExt($file['name'][$key]);
-            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
+            $file_num = $this->get_next_available_num($video_file_name);
+            $ext_original = getExt($file['name'][$key]);
+            $ext = 'jpg';
+            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext_original)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '-c.' . $ext;
+                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $video_file_name . '-' . $file_num . '-'.$type.'.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
-
-                move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                if (is_uploaded_file($file['tmp_name'][$key])) {
+                    move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                } else {
+                    rename($file['tmp_name'][$key], $temp_file_path);
+                }
 
                 foreach ($thumbs_settings_28 as $key => $thumbs_size) {
                     $height_setting = $thumbs_size[1];
                     $width_setting = $thumbs_size[0];
                     if ($key != 'original') {
+                        if ($type != 'c') {
+                            continue;
+                        }
                         $dimensions = implode('x', $thumbs_size);
                     } else {
                         $dimensions = 'original';
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '-c.' . $ext;
-                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
+                    $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
+                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
+                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
                     global $db;
-                    $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
+                    $rs = $db->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
                     if (!empty($rs)) {
                         $videoid = $rs[0]['videoid'];
                     } else {
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, 'custom']);
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
+                    if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
+                        Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
+                    }
                 }
 
                 unlink($temp_file_path);
@@ -319,22 +331,21 @@ class Upload
      * @param      $file_name
      * @param      $file_array
      * @param null $files_dir
-     * @param bool $thumbs_ver
-     *
+     * @param string $type
      * @throws Exception
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
-    function upload_thumbs($file_name, $file_array, $files_dir = null, bool $thumbs_ver = false)
+    function upload_thumbs($file_name, $file_array, $files_dir = null, string $type = 'c')
     {
         if (count($file_array['name']) > 1) {
             for ($i = 0; $i < count($file_array['name']); $i++) {
-                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $thumbs_ver);
+                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $type);
             }
             e(lang('upload_vid_thumbs_msg'), 'm');
         } else {
             $file = $file_array;
-            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $thumbs_ver);
+            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $type);
         }
     }
 
@@ -360,13 +371,11 @@ class Upload
         $desc = $default['description'];
 
         if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
+            $cat_array = $default['category'];
         } else {
-            preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-            $cat_array = [$m[1]];
+            $cat_array = explode(',', $default['category']);
         }
 
-        $tags = $default['tags'];
 
         $uploadFormRequiredFieldsArray = [
             /**
@@ -419,25 +428,102 @@ class Upload
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
-                'value'             => ['category', $cat_array],
+                'value'             => $cat_array,
                 'hint_1'            => sprintf(lang('vdo_cat_msg'), ALLOWED_VDO_CATS),
-                'db_field'          => 'category',
                 'required'          => 'yes',
-                'validate_function' => 'validate_vid_category',
+                'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('vdo_cat_err3'),
                 'display_function'  => 'convert_to_categories'
             ],
-            'tags'  => [
+            'tags_video'  => [
                 'title'             => lang('tag_title'),
                 'type'              => 'hidden',
-                'name'              => 'tags',
-                'id'                => 'tags',
-                'value'             => genTags($tags),
+                'name'              => 'tags_video',
+                'id'                => 'tags_video',
+                'value'             => genTags($default['tags_video']),
                 'hint_1'            => '',
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ]
         ];
+
+        if( config('enable_video_genre') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_genre'] = [
+                'title'             => lang('genre'),
+                'type'              => 'hidden',
+                'name'              => 'tags_genre',
+                'id'                => 'tags_genre',
+                'value'             => genTags($default['tags_genre']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_actor') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_actors'] = [
+                'title'             => lang('actors'),
+                'type'              => 'hidden',
+                'name'              => 'tags_actors',
+                'id'                => 'tags_actors',
+                'value'             => genTags($default['tags_actors']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_producer') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_producer'] = [
+                'title'             => lang('producer'),
+                'type'              => 'hidden',
+                'name'              => 'tags_producer',
+                'id'                => 'tags_producer',
+                'value'             => genTags($default['tags_producer']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_executive_producer') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_executive_producer'] = [
+                'title'             => lang('executive_producer'),
+                'type'              => 'hidden',
+                'name'              => 'tags_executive_producer',
+                'id'                => 'tags_executive_producer',
+                'value'             => genTags($default['tags_executive_producer']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_director') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_director'] = [
+                'title'             => lang('director'),
+                'type'              => 'hidden',
+                'name'              => 'tags_director',
+                'id'                => 'tags_director',
+                'value'             => genTags($default['tags_director']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_crew') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_crew'] = [
+                'title'             => lang('crew'),
+                'type'              => 'hidden',
+                'name'              => 'tags_crew',
+                'id'                => 'tags_crew',
+                'value'             => genTags($default['tags_crew']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
 
         $tracks = $default['tracks'];
         if (!empty($tracks)) {
@@ -666,7 +752,6 @@ class Upload
         ];
     }
 
-
     /**
      * Function used to add files in conversion queue
      *
@@ -794,7 +879,6 @@ class Upload
 
         return $new_array;
     }
-
 
     /**
      * Function used to load custom form fields

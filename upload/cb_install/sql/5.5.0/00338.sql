@@ -1,0 +1,13 @@
+SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
+
+SET @language_key = 'option_enable_user_dob_edition' COLLATE utf8mb4_unicode_520_ci;
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+UPDATE `{tbl_prefix}languages_translations`
+    SET `translation` = 'Autoriser l\'édition de la date de naissance'
+    WHERE `id_language_key` = @id_language_key AND `language_id` = @language_id_fra;
+
+SET @language_key = 'user_dob_edition_disabled' COLLATE utf8mb4_unicode_520_ci;
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);
+UPDATE `{tbl_prefix}languages_translations`
+    SET `translation` = 'L\'édition de la date de naissance est désactivée'
+    WHERE `id_language_key` = @id_language_key AND `language_id` = @language_id_fra;

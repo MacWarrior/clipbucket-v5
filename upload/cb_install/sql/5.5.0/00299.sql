@@ -2,7 +2,7 @@ SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE 
 SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD COLUMN IF NOT EXISTS `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+    ADD COLUMN `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
 

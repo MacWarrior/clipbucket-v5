@@ -23,7 +23,7 @@ class ResizeImage
             $width = $width_orig / $ratio;
             $height = $height_orig / $ratio;
 
-            if ($aspect_ratio == false && $dim_h != '') {
+            if (!$aspect_ratio && $dim_h != '') {
                 $width = $dim;
                 $height = $dim_h;
             }
@@ -34,22 +34,23 @@ class ResizeImage
                 case 'jpg':
                 case 'jpeg':
                     $image = imagecreatefromjpeg($file);
-                    imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                    imagejpeg($image_p, $des, 90);
                     break;
 
                 case 'png':
                     $image = imagecreatefrompng($file);
-                    imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                    imagepng($image_p, $des);
                     break;
 
                 case 'gif':
                     $image = imagecreatefromgif($file);
-                    imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
-                    imagegif($image_p, $des);
                     break;
+
+                default:
+                    return;
             }
+
+            // Output format is always jpeg
+            imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
+            imagejpeg($image_p, $des, 90);
         } else {
             if (!file_exists($des)) {
                 copy($file, $des);
@@ -58,18 +59,17 @@ class ResizeImage
     }
 
     //Validating an Image
-    function ValidateImage($file, $ext = null)
+    function ValidateImage($file, $ext = null): bool
     {
-        $array = getimagesize($file);
-        if ($ext == 'jpg' || $ext == 'JPG' || $ext == 'JPEG' || $ext == 'gif' || $ext == 'GIF' || $ext == 'PNG' || $ext == 'png') {
-            if (empty($array[0]) || empty($array[1])) {
-                $validate = false;
-            } else {
-                $validate = true;
-            }
-        } else {
-            $validate = false;
+        if( !in_array(strtolower($ext), ['jpg','jpeg','gif','png']) ) {
+            return false;
         }
-        return $validate;
+
+        $array = getimagesize($file);
+        if (empty($array[0]) || empty($array[1])) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -134,14 +134,56 @@
 								{if $video.age_restriction }<p class="age_restriction">{sprintf(lang('access_forbidden_under_age'),$video.age_restriction)}</p>{/if}
 								<p style="white-space: pre-line;">{display_clean(AutoLinkUrls($video.description|unescape:"html"))}</p>
 								<ul class="clearfix desc-list">
-									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category|categories:video}</li>
+									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category}</li>
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
 									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>
-										<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags" value="{$vdo.tags}">
-										<ul id="list_tags" style="border: 0;"></ul>
+										<strong class="pull-left" id="label_tags_video">{lang('tag_title')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_video" value="{$vdo.tags_video}">
+										<ul id="list_tags_video" style="border: 0;"></ul>
 									</li>
+									{if config('enable_video_genre') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_genre">{lang('genre')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_genre" value="{$vdo.tags_genre}">
+										<ul id="list_tags_genre" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_actor') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_actors">{lang('actors')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_actors" value="{$vdo.tags_actors}">
+										<ul id="list_tags_actors" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_producer') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_producer">{lang('producer')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_producer" value="{$vdo.tags_producer}">
+										<ul id="list_tags_producer" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_executive_producer') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_executive_producer">{lang('executive_producer')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_executive_producer" value="{$vdo.tags_executive_producer}">
+										<ul id="list_tags_executive_producer" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_director') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_director">{lang('director')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_director" value="{$vdo.tags_director}">
+										<ul id="list_tags_director" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_crew') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_crew">{lang('crew')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_crew" value="{$vdo.tags_crew}">
+										<ul id="list_tags_crew" style="border: 0;"></ul>
+									</li>
+									{/if}
 								</ul>
 							</div>
 						</div>

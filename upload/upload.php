@@ -32,16 +32,26 @@ if (in_dev()) {
 } else {
     $min_suffixe = '.min';
 }
+
 ClipBucket::getInstance()->addJS([
-    'tag-it' . $min_suffixe . '.js'                            => 'admin',
-    'pages/upload/upload' . $min_suffixe . '.js'               => 'admin'
+    'tag-it' . $min_suffixe . '.js'              => 'admin',
+    'pages/upload/upload' . $min_suffixe . '.js' => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js'    => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
 $available_tags = Tags::fill_auto_complete_tags('video');
-assign('available_tags',$available_tags);
+assign('available_tags', $available_tags);
+
+$version = Update::getInstance()->getDBVersion();
+if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+    $default_category_id = Category::getInstance()->getDefaultByType('video')['category_id'];
+} else {
+    $default_category_id = 0;
+}
+assign('default_category_id', $default_category_id);
 
 template_files('upload.html');
 display_it();

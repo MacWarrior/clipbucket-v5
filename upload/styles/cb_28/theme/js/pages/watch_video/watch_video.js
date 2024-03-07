@@ -104,4 +104,7 @@ $(document).ready(function () {
     $('#add_comment_button').on("click", function () {
         set_cookie_secure(cookieToSave, null);
     });
+    $("[id^=tags]").each(function(elem){
+        init_readonly_tags(this.id, '#list_'+this.id);
+    });
 });

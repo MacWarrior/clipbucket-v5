@@ -85,16 +85,22 @@ class ClipBucket
 
         $this->clean_requests();
 
-        $sort_array = sorting_links();
-
-        if (!isset($_GET['sort']) || !isset($sort_array[$_GET['sort']])) {
+        if( !isset($_GET['sort']) ){
             $_GET['sort'] = 'most_recent';
+        } else {
+            $sort_array = sorting_links();
+            if( !isset($sort_array[$_GET['sort']]) ){
+                $_GET['sort'] = 'most_recent';
+            }
         }
 
-        $time_array = time_links();
-
-        if (!isset($_GET['time']) || !isset($time_array[$_GET['time']])) {
+        if( !isset($_GET['time']) ){
             $_GET['time'] = 'all_time';
+        } else {
+            $time_array = time_links();
+            if( !isset($time_array[$_GET['time']]) ){
+                $_GET['time'] = 'all_time';
+            }
         }
 
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
@@ -373,7 +379,7 @@ class ClipBucket
                     ]
                     , [
                         'title' => lang('manage_categories')
-                        , 'url' => DirPath::getUrl('admin_area') . 'user_category.php'
+                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
                     ]
                     , [
                         'title' => 'Inactive Only'
@@ -389,13 +395,6 @@ class ClipBucket
                     ]
                 ]
             ];
-
-            if (config('disable_email') == 'no') {
-                $menu_users['sub'][] = [
-                    'title' => 'Mass Email'
-                    , 'url' => DirPath::getUrl('admin_area') . 'mass_email.php'
-                ];
-            }
 
             if ($per['allow_manage_user_level'] == 'yes' || $userquery->level == 1) {
                 $menu_users['sub'][] = [
@@ -481,6 +480,8 @@ class ClipBucket
             $this->addMenuAdmin($menu_plugin, 50);
         }
 
+
+
         if ($per['tool_box'] == 'yes') {
             $menu_tool = [
                 'title'   => lang('tool_box')
@@ -516,6 +517,13 @@ class ClipBucket
                     ]
                 ]
             ];
+
+            if (config('disable_email') == 'no') {
+                $menu_tool['sub'][] = [
+                    'title' => 'Mass Email'
+                    , 'url' => DirPath::getUrl('admin_area') . 'mass_email.php'
+                ];
+            }
 
 
             if ($per['web_config_access'] == 'yes') {

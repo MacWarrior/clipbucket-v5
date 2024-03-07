@@ -18,7 +18,6 @@ function cb_query_id($query): string
 
 function tbl($tbl): string
 {
-    global $DBNAME;
     $prefix = TABLE_PREFIX;
     $tbls = explode(',', $tbl);
     $new_tbls = '';
@@ -26,7 +25,7 @@ function tbl($tbl): string
         if (!empty($new_tbls)) {
             $new_tbls .= ',';
         }
-        $new_tbls .= '`' . $DBNAME . '`.' . $prefix . $ntbl;
+        $new_tbls .= $prefix . $ntbl;
     }
 
     return $new_tbls;
@@ -38,7 +37,7 @@ function tbl($tbl): string
  * @param $fields
  * @return string
  */
-function table_fields($fields)
+function table_fields($fields): string
 {
     if (empty($fields)) {
         return '';
@@ -106,7 +105,8 @@ function cb_sql_table($table, $as = null)
 function select($query, $cached_time = -1, $cached_key = ''): array
 {
     global $db;
-    return $db->_select($query, $cached_time, $cached_key);
+    $res = $db->_select($query, $cached_time, $cached_key);
+    return $res;
 }
 
 /**
@@ -181,7 +181,10 @@ function execute_sql_file($path): bool
                 if ($db->mysqli->error != '') {
                     error_log('SQL : ' . $templine);
                     error_log('ERROR : ' . $db->mysqli->error);
+                    DiscordLog::sendDump('SQL : ' . $templine);
+                    DiscordLog::sendDump('ERROR : ' . $db->mysqli->error);
                     $db->mysqli->rollback();
+
                     return false;
                 }
                 $templine = '';
@@ -193,6 +196,8 @@ function execute_sql_file($path): bool
         e('ERROR : ' . $e->getMessage());
         error_log('SQL : ' . $templine);
         error_log('ERROR : ' . $e->getMessage());
+        DiscordLog::sendDump('SQL : ' . $templine);
+        DiscordLog::sendDump('ERROR : ' . $db->mysqli->error);
         return false;
     }
 
@@ -224,6 +229,7 @@ function execute_migration_SQL_file($path): bool
     }
     $db->mysqli->query($sql);
     CacheRedis::flushAll();
+    Update::getInstance()->flush();
     return true;
 }
 
@@ -255,4 +261,8 @@ function getRevisions(): array
         $revisions[$version] = min($changelog['revision'], 168);
     }
     return $revisions;
+}
+
+function getMysqlServerVersion() {
+    return Clipbucket_db::getInstance()->_select('select @@version;');
 }

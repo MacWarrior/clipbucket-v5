@@ -64,12 +64,17 @@ class Photo
         return self::$photo;
     }
 
+    public function getTableName(): string
+    {
+        return $this->tablename;
+    }
+
     public function getAllFields($prefix = false): array
     {
         return array_map(function($field) use ($prefix) {
-            $field_name = $this->tablename . '.' . $field;
+            $field_name = $this->getTableName() . '.' . $field;
             if( $prefix ){
-                $field_name .= ' AS `'.$this->tablename . '.' . $field.'`';
+                $field_name .= ' AS `'.$this->getTableName() . '.' . $field.'`';
             }
             return $field_name;
         }, $this->fields);
@@ -99,6 +104,46 @@ class Photo
         return $this->getAll($params);
     }
 
+    public function getFilterParams(string $value, array $params): array
+    {
+        switch ($value) {
+            case 'most_recent':
+            default:
+                $params['order'] = $this->getTableName() . '.date_added DESC';
+                break;
+
+            case 'most_viewed':
+                $params['order'] = $this->getTableName() . '.views DESC';
+                break;
+
+            case 'featured':
+                $params['featured'] = true;
+                break;
+
+            case 'top_rated':
+                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                break;
+
+            case 'most_commented':
+                $params['order'] = $this->getTableName() . '.comments_count DESC';
+                break;
+
+            case 'all_time':
+            case 'today':
+            case 'yesterday':
+            case 'this_week':
+            case 'last_week':
+            case 'this_month':
+            case 'last_month':
+            case 'this_year':
+            case 'last_year':
+                $column = $this->getTableName() . '.date_added';
+                $params['condition'] = Search::date_margin($column, $value);
+                break;
+        }
+        return $params;
+    }
+
     /**
      * @throws Exception
      */
@@ -110,6 +155,7 @@ class Photo
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
+        $param_featured = $params['featured'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -118,26 +164,30 @@ class Photo
         $param_having = $params['having'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
+        $param_show_unlisted = $params['show_unlisted'] ?? false;
 
         $conditions = [];
         if( $param_photo_id ){
-            $conditions[] = 'photos.photo_id = \''.mysql_clean($param_photo_id).'\'';
+            $conditions[] = $this->getTableName() . '.photo_id = \''.mysql_clean($param_photo_id).'\'';
         }
         if( $param_photo_key ){
-            $conditions[] = 'photos.videokey = \''.mysql_clean($param_photo_key).'\'';
+            $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_photo_key).'\'';
         }
         if( $param_userid ){
-            $conditions[] = 'photos.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_filename ){
-            $conditions[] = 'photos.file_name = \''.mysql_clean($param_filename).'\'';
+            $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_filename).'\'';
+        }
+        if( $param_featured ){
+            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
 
         if (!has_access('admin_access', true)) {
-            $conditions[] = $this->getGenericConstraints();
+            $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -145,7 +195,10 @@ class Photo
             /* Search is done on photo title, photo tags */
             $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
 
@@ -153,7 +206,7 @@ class Photo
         }
 
         if( $param_count ){
-            $select = ['COUNT(photos.photo_id) AS count'];
+            $select = ['COUNT(DISTINCT photos.photo_id) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username';
@@ -169,6 +222,16 @@ class Photo
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
+        }
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('photos_categories') . ' ON photos.photo_id = photos_categories.id_photo';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
+
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $group[] = 'photos.photo_id';
+            }
         }
 
         if( $param_collection_id ){
@@ -187,6 +250,7 @@ class Photo
 
         $order = '';
         if( $param_order ){
+            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
 
@@ -228,11 +292,13 @@ class Photo
     /**
      * @throws Exception
      */
-    public function getGenericConstraints(): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
         }
+
+        $show_unlisted = $params['show_unlisted'] ?? false;
 
         $cond = '((photos.active = \'yes\'';
 
@@ -243,7 +309,11 @@ class Photo
             $sql_age_restrict = ' AND (photos.age_restriction IS NULL OR TIMESTAMPDIFF(YEAR, \'' . mysql_clean($dob) . '\', now()) >= photos.age_restriction )';
         }
 
-        $cond .= ' AND photos.broadcast = \'public\'';
+        $cond .= ' AND (photos.broadcast = \'public\'';
+        if( $show_unlisted ){
+            $cond .= ' OR (photos.broadcast = \'unlisted\')';
+        }
+        $cond .= ')';
 
         $current_user_id = user_id();
         if ($current_user_id) {
@@ -312,6 +382,16 @@ class Photo
             return false;
         }
         return $this->isCurrentUserRestricted($photo_id);
+    }
+
+    /**
+     * @param $id
+     * @return null
+     * @throws Exception
+     */
+    public static function generatePhoto($id)
+    {
+        CBPhotos::getInstance()->generate_photos($id);
     }
 
 }
@@ -571,8 +651,8 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
-                        'title' => 'Recreate Thumbs'
-                        , 'url' => DirPath::getUrl('admin_area') . 'recreate_thumbs.php?mode=mass'
+                        'title' => lang('manage_categories')
+                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
                 ]
             ];
@@ -841,25 +921,25 @@ class CBPhotos
         $fields = [
             'photos'      => get_photo_fields(),
             'users'       => get_user_fields(),
-            'collections' => ['collection_name', 'type', 'category', 'views as collection_views', 'date_added as collection_added']
+            'collections' => ['collection_name', 'type', 'views', 'date_added']
         ];
 
-        $select_tag = '';
+        $select_complement = '';
         $join_tag = '';
         $group_tag = '';
         $match_tag='';
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $match_tag = 'T.name';
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $select_complement = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
-            $group_tag = ' GROUP BY photos.photo_id ';
+            $group_tag = ' GROUP BY photos.photo_id';
         }
 
-        $string = table_fields($fields);
+        $select = table_fields($fields);
 
-        $main_query = 'SELECT ' . $string . ' ' . $select_tag;
+        $main_query = 'SELECT ' . $select . ' ' . $select_complement;
         $main_query .= ' FROM '.cb_sql_table('photos');
         $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
         $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
@@ -978,7 +1058,7 @@ class CBPhotos
             }
 
             //don't remove alias T at the end, request will crash
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photo_id FROM' . cb_sql_table('photos') . $join_tag . ' WHERE ' . $cond . ' ' . $group_tag . ') T';
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photos.photo_id FROM ' . cb_sql_table('photos') . $join_tag . ' WHERE ' . $cond . ' ' . $group_tag . ') T';
             $count = $db->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
@@ -1091,11 +1171,12 @@ class CBPhotos
                 }
             }
 
-            if ($orphan == false) {//removing from collection
+            if (!$orphan) {//removing from collection
                 $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
             }
+
             //Remove tags
-            \Tags::saveTags('', 'photo', $photo['photo_id']);
+            Tags::deleteTags('photo', $photo['photo_id']);
 
             //now removing photo files
             $this->delete_photo_files($photo);

@@ -12,4 +12,4 @@ ALTER TABLE `{tbl_prefix}video_audio_tracks`
     ADD UNIQUE KEY `videoid` (`videoid`,`number`);
 
 ALTER TABLE `{tbl_prefix}video_audio_tracks`
-    ADD CONSTRAINT `{tbl_prefix}video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;

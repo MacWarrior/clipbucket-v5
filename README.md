@@ -11,6 +11,12 @@ You can start a fully dedicated video sharing website or photo sharing websites 
   <img src="./upload/images/screenshot.jpg"/>
 </p>
 
+# Update 5.5.0
+After more than 370 revisions, we're proud to officialy announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
+<p align="center">
+  <img src="./upload/images/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
+</p>
+
 # History
 ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository</a> has been slowly dying since the release 4.1 (May 2018) and has been archived on December 2022.<br/>
 <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://oxygenz.fr/en/" target="_blank">Oxygenz</a>'s projects since 2023
@@ -24,7 +30,7 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 - Chromecast support
 - Subtitles support
 - Recursive collections
-- HLS conversion (WIP)
+- HLS conversion
 - Easy installation scripts
 - New configuration options
 - Integrated DB update system

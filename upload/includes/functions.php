@@ -6,26 +6,6 @@ require 'define_php_links.php';
 include_once 'upload_forms.php';
 
 /**
- * This Funtion is use to get CURRENT PAGE DIRECT URL
- * @return string : { string } { $pageURL } { url of current page }
- */
-function curPageURL(): string
-{
-    $pageURL = 'http';
-    if (@$_SERVER["HTTPS"] == 'on') {
-        $pageURL .= 's';
-    }
-    $pageURL .= '://';
-    $pageURL .= $_SERVER['SERVER_NAME'];
-    $pageURL .= $_SERVER['PHP_SELF'];
-    $query_string = $_SERVER['QUERY_STRING'];
-    if (!empty($query_string)) {
-        $pageURL .= '?' . $query_string;
-    }
-    return $pageURL;
-}
-
-/**
  * Cleans a string by putting it through multiple layers
  *
  * @param : { string } { string to be cleaned }
@@ -563,14 +543,15 @@ function isValidtag($tag): bool
  * @param array $params
  *
  * @return array|bool|string : { array } { $cats } { array of categories }
+ * @throws Exception
  * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
  */
 function getCategoryList($params = [])
 {
-    global $cats;
     $cats = '';
-    $type = $params['type'];
-    switch ($type) {
+    $params['echo'] = $params['echo'] ?: false;
+    $version = Update::getInstance()->getDBVersion();
+    switch ($params['type']) {
         default:
             cb_call_functions('categoryListing', $params);
             break;
@@ -578,25 +559,41 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            global $cbvid;
-            $cats = $cbvid->cbCategories($params);
+            $type = 'video';
             break;
 
         case 'users':
         case 'user':
         case 'u':
         case 'channels':
-            global $userquery;
-            $cats = $userquery->cbCategories($params);
+            $type = 'user';
             break;
-
         case 'collection':
         case 'collections':
         case 'cl':
-            global $cbcollection;
-            $cats = $cbcollection->cbCategories($params);
+            $type = 'collection';
+            break;
+        case 'photo':
+            $type = 'photo';
             break;
     }
+    $cats = [];
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
+        $params['parent_only'] = true;
+        $cats = Category::getInstance()->getAll($params);
+        foreach ($cats as &$cat) {
+            $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+        }
+    }
+    if (!empty($params['with_all'])) {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
+    if (!empty($params['echo'])) {
+        echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
+        return;
+    }
+
     return $cats;
 }
 
@@ -605,6 +602,7 @@ function getCategoryList($params = [])
  * @param $params
  *
  * @return array|bool|string
+ * @throws Exception
  * @uses { function : getCategoryList }
  *
  */
@@ -904,74 +902,58 @@ function php_path()
  */
 function get_binaries($path): string
 {
-    $type = '';
-    if (is_array($path)) {
-        $type = $path['type'];
-        $path = $path['path'];
+    $path = strtolower($path);
+    switch ($path) {
+        case 'php':
+            $software_path = php_path();
+            break;
+
+        case 'media_info':
+            $software_path = config('media_info');
+            break;
+
+        case 'ffprobe':
+            $software_path = config('ffprobe_path');
+            break;
+
+        case 'ffmpeg':
+            $software_path = config('ffmpegpath');
+            break;
+
+        case 'git':
+            $software_path = config('git_path');
+            break;
+
+        default:
+            $software_path = '';
+            break;
     }
 
-    $path = strtolower($path);
-    if ($type == '' || $type == 'user') {
-        switch ($path) {
-            case 'php':
-                $software_path = php_path();
-                break;
-
-            case 'media_info':
-                $software_path = config('media_info');
-                break;
-
-            case 'ffprobe':
-                $software_path = config('ffprobe_path');
-                break;
-
-            case 'ffmpeg':
-                $software_path = config('ffmpegpath');
-                break;
-
-            default:
-                $software_path = '';
-                break;
-        }
-
-        if ($software_path != '') {
-            return $software_path;
-        }
+    if ($software_path != '') {
+        return $software_path;
     }
 
     switch ($path) {
-        case 'php':
-            $return_path = shell_output('which php');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find PHP path';
-
-        case 'media_info':
-            $return_path = shell_output('which mediainfo');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find media_info path';
-
         case 'ffprobe':
-            $return_path = shell_output('which ffprobe');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find ffprobe path';
-
         case 'ffmpeg':
-            $return_path = shell_output('which ffmpeg');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find ffmpeg path';
+        case 'git':
+        case 'php':
+            $which = $path;
+            break;
+        case 'media_info':
+            $which = 'mediainfo';
+            break;
 
         default:
             error_log('get_binaries wrong path : ' . $path);
             return 'Unknown path : ' . $path;
     }
+
+    $return_path = shell_output('which '.$which);
+    if ($return_path) {
+        return $return_path;
+    }
+    return 'Unable to find ' . $path . ' path';
 }
 
 /**
@@ -1054,25 +1036,18 @@ function convert_to_categories($input)
                 foreach ($in as $i) {
                     if (is_array($i)) {
                         foreach ($i as $info) {
-                            $cat_details = get_category($info);
-                            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                            $cat_details = Category::getInstance()->getById($info);
+                            $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                         }
                     } elseif (is_numeric($i)) {
-                        $cat_details = get_category($i);
-                        $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                        $cat_details = Category::getInstance()->getById($i);
+                        $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                     }
                 }
             } elseif (is_numeric($in)) {
-                $cat_details = get_category($in);
-                $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                $cat_details = Category::getInstance()->getById($in);
+                $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
             }
-        }
-    } else {
-        preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-        $cat_array = [$m[1]];
-        foreach ($cat_array as $i) {
-            $cat_details = get_category($i);
-            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
         }
     }
     $count = 1;
@@ -1087,19 +1062,6 @@ function convert_to_categories($input)
     }
 }
 
-/**
- * Function used to get categorie details
- * @param $id
- *
- * @return array
- * @throws Exception
- * @uses : { class : $myquery } { function : get_category }
- */
-function get_category($id): array
-{
-    global $myquery;
-    return $myquery->get_category($id);
-}
 
 /**
  * Sharing OPT displaying
@@ -1337,7 +1299,7 @@ function create_query_limit($page, $result): string
     }
     $from = $page - 1;
     $from = $from * $result;
-    return $from . ',' . $result;
+    return mysql_clean($from) . ',' . mysql_clean($result);
 }
 
 /**
@@ -1404,10 +1366,13 @@ function lang($var)
 
         if (!array_key_exists($var, Language::getInstance()->arrayTranslation)) {
             $translation = $var;
-            error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
 
-            if (in_dev()) {
-                error_log(debug_backtrace_string());
+            if( Language::getInstance()->isTranslationSystemInstalled() ){
+                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+
+                if (in_dev()) {
+                    error_log(debug_backtrace_string());
+                }
             }
         }
     } else {
@@ -1832,8 +1797,8 @@ function increment_views_new($id, $type = null)
                 $vdetails = get_video_details($id);
                 // Cookie life time at least 1 hour else if video duration is bigger set at video time.
                 $cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videoid='$id' OR videokey='$id'");
-                set_cookie_secure('video_' . $id, 'watched');
+                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
+                set_cookie_secure('video_' . $id, 'watched', $cookieTime);
 
                 $userid = user_id();
                 if ($userid) {
@@ -3120,6 +3085,9 @@ function check_version($name)
         case 'ffmpeg':
         case 'ffprobe':
             $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
             $matches = [];
             $result = shell_output($path . ' -version | head -n1');
             if ($result) {
@@ -3144,14 +3112,37 @@ function check_version($name)
             }
             return false;
 
+        case 'git':
+            $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
+
+            $matches = [];
+            $result = shell_output($path . ' --version');
+            if ($result) {
+                preg_match('/git version (.+)$/', strtolower($result), $matches);
+                if (count($matches) > 0) {
+                    return array_pop($matches);
+                }
+                return false;
+            }
+            return false;
+
         case 'media_info':
             $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
             $result = shell_output($path . ' --version');
             $media_info_version = explode('v', $result);
             return $media_info_version[1];
 
         case 'php':
             $path = get_binaries($name);
+            if( empty($path) || !file_exists($path) ){
+                return false;
+            }
             $matches = [];
             $result = shell_output($path . ' --version | head -n1');
             if ($result) {
@@ -3257,7 +3248,6 @@ function get_db_size(): int
 function marked_spammed($comment): bool
 {
     $spam_voters = explode("|", $comment['spam_voters']);
-    $spam_votes = $comment['spam_votes'];
     $admin_vote = in_array('1', $spam_voters);
     if (user_id() && in_array(user_id(), $spam_voters)) {
         return true;
@@ -3323,7 +3313,7 @@ function get_server_url(): string
  */
 function get_server_protocol()
 {
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    if (is_ssl()) {
         return 'https://';
     }
 
@@ -3344,7 +3334,7 @@ function get_server_protocol()
  * @param mixed A string, or an array from a file() function.
  * @return boolean
  */
-function isUTF8($string)
+function isUTF8($string): bool
 {
     if (is_array($string)) {
         $enc = implode('', $string);
@@ -3399,7 +3389,7 @@ function datecreated($in): string
  * @internal param $ { none }
  * @since 2.6.0
  */
-function is_ssl()
+function is_ssl(): bool
 {
     if (isset($_SERVER['HTTPS'])) {
         if ('on' == strtolower($_SERVER['HTTPS'])) {
@@ -3623,15 +3613,13 @@ function uploaderDetails()
  * Checks if given section is enabled or not e.g videos, photos
  *
  * @param : { string } { $input } { section to check }
- * @param bool $restrict
- *
  * @return bool|void
  */
 function isSectionEnabled($input)
 {
     $section = config($input . 'Section');
 
-    if ($section == 'yes' || THIS_PAGE == 'cb_install') {
+    if ($section == 'yes' || (defined('THIS_PAGE') && THIS_PAGE == 'cb_install') ) {
         return true;
     }
     return false;
@@ -3964,7 +3952,7 @@ function update_counter($section, $query, $counter)
 function verify_age($dob): bool
 {
     $allowed_age = config('min_age_reg');
-    if ($allowed_age < 1) {
+    if (empty($allowed_age) || $allowed_age < 1) {
         return true;
     }
     $age_time = strtotime($dob);
@@ -4198,15 +4186,21 @@ function find_string($needle_start, $needle_end, $results)
 	* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
 	* If any of these configs are less than required value, warning is shown
     */
+/**
+ * @throws Exception
+ */
 function check_server_confs()
 {
-    define('POST_MAX_SIZE', ini_get('post_max_size'));
-    define('MEMORY_LIMIT', ini_get('memory_limit'));
-    define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
-    define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
+    $post_max_size = ini_get('post_max_size');
+    $memory_limit = ini_get('memory_limit');
+    $upload_max_filesize = ini_get('upload_max_filesize');
+    $max_execution_time = ini_get('max_execution_time');
 
-    if (getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200) {
-        e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>', 'w', false);
+    if (getBytesFromFileSize($post_max_size) < getBytesFromFileSize('50M')
+        || getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M')
+        || getBytesFromFileSize($upload_max_filesize) < getBytesFromFileSize('50M')
+        || $max_execution_time < 7200) {
+        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
     }
 }
 
@@ -4470,11 +4464,11 @@ function build_sort_photos($sort, $vid_cond)
         switch ($sort) {
             case 'most_recent':
             default:
-                $vid_cond['order'] = ' date_added DESC ';
+                $vid_cond['order'] = ' photos.date_added DESC ';
                 break;
 
             case 'most_viewed':
-                $vid_cond['order'] = ' views DESC ';
+                $vid_cond['order'] = ' photos.views DESC ';
                 $vid_cond['date_span_column'] = 'last_viewed';
                 break;
 
@@ -4487,7 +4481,7 @@ function build_sort_photos($sort, $vid_cond)
                 break;
 
             case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
+                $vid_cond['order'] = ' photos.comments_count DESC';
                 break;
         }
     }

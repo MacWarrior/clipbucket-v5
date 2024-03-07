@@ -14,7 +14,7 @@ assign('p', $userquery->get_user_profile($udetails['userid']));
 $mode = $_GET['mode'];
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, VLISTPP);
+$get_limit = create_query_limit($page, config('videos_list_per_page'));
 
 assign('queryString', queryString(null, ['type',
     'makeProfileItem',
@@ -33,7 +33,7 @@ switch ($mode) {
 
         //Deleting Videos
         if (isset($_POST['delete_videos'])) {
-            for ($id = 0; $id <= VLISTPP; $id++) {
+            for ($id = 0; $id <= config('videos_list_per_page'); $id++) {
                 $cbvideo->delete_video($_POST['check_vid'][$id]);
             }
             $eh->flush();
@@ -66,7 +66,7 @@ switch ($mode) {
         //Collecting Data for Pagination
         $vid_array['count_only'] = true;
         $total_rows = get_videos($vid_array);
-        $total_pages = count_pages($total_rows, VLISTPP);
+        $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
         //Pagination
         $pages->paginate($total_pages, $page);
@@ -85,7 +85,7 @@ switch ($mode) {
 
         //Removing Multiple Videos
         if (isset($_POST['delete_fav_videos'])) {
-            for ($id = 0; $id <= VLISTPP; $id++) {
+            for ($id = 0; $id <= config('videos_list_per_page'); $id++) {
                 $cbvideo->delete_video($_POST['check_vid'][$id]);
             }
             $eh->flush();
@@ -103,7 +103,7 @@ switch ($mode) {
         //Collecting Data for Pagination
         $params['count_only'] = 'yes';
         $favorites_count = $cbvid->action->get_favorites($params);
-        $total_pages = count_pages($favorites_count, VLISTPP);
+        $total_pages = count_pages($favorites_count, config('videos_list_per_page'));
         //Pagination
         $pages->paginate($total_pages, $page);
 

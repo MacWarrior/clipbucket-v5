@@ -484,11 +484,3 @@ function get_remote_url_function()
     return 'check_remote_url()';
 }
 
-function plug_url($file, $dir, $admin_base = false)
-{
-    $url = 'plugin.php?folder=' . $dir . '&file=' . $file;
-    if ($admin_base) {
-        $url = DirPath::getUrl('admin_area') . '' . $url;
-    }
-    return $url;
-}

@@ -86,7 +86,7 @@ class Comments
         }
 
         if( $param_count ){
-            $select = ['COUNT(comments.comment_id) AS count'];
+            $select = ['COUNT(DISTINCT comments.comment_id) AS count'];
         } else {
             $select = [
                 'comments.comment_id'

@@ -1,5 +1,5 @@
 ALTER TABLE `{tbl_prefix}video`
-    DROP COLUMN IF EXISTS `remote_play_url`;
+    DROP COLUMN `remote_play_url`;
 
 DELETE FROM `{tbl_prefix}languages_translations`
 WHERE `id_language_key` IN(

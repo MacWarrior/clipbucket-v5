@@ -8,7 +8,24 @@ $userquery->login_check('video_moderation');
 $pages->page_redir();
 
 $video = $_GET['video'];
-$data = get_video_details($video);
+
+//Updating Video Details
+if (isset($_POST['update'])) {
+    $Upload->validate_video_upload_form();
+    if (empty($eh->get_error())) {
+        $myquery->update_video();
+        Video::getInstance()->setDefaultPicture($video, $_POST['default_thumb']);
+
+        if( config('enable_video_poster') == 'yes' ){
+            Video::getInstance()->setDefaultPicture($video, $_POST['default_poster'] ?? '', 'poster');
+        }
+
+        if( config('enable_video_backdrop') == 'yes' ) {
+            Video::getInstance()->setDefaultPicture($video, $_POST['default_backdrop'] ?? '', 'backdrop');
+        }
+    }
+}
+$data = Video::getInstance()->getOne(['videoid'=>$video]);
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
@@ -17,17 +34,6 @@ $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url'
 
 if (@$_GET['msg']) {
     $msg[] = clean($_GET['msg']);
-}
-
-//Updating Video Details
-if (isset($_POST['update'])) {
-    $Upload->validate_video_upload_form();
-    if (empty($eh->get_error())) {
-        $myquery->update_video();
-        $myquery->set_default_thumb($video, $_POST['default_thumb']);
-
-        $data = get_video_details($video);
-    }
 }
 
 //Performing Video Actions
@@ -52,6 +58,14 @@ if ($myquery->video_exists($video)) {
     assign('data', $data);
     assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
     assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
+
+    if( config('enable_video_poster') == 'yes' ){
+        assign('vidthumbs_poster', get_thumb($data,TRUE,'original','poster'));
+    }
+
+    if( config('enable_video_backdrop') == 'yes' ) {
+        assign('vidthumbs_backdrop', get_thumb($data, TRUE, 'original', 'backdrop'));
+    }
 
     if ($data['file_server_path']) {
         $file = $data['file_server_path'] . '/logs/' . $data['file_directory'] . $data['file_name'] . '.log';
@@ -106,6 +120,9 @@ ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
+
+$available_tags = Tags::fill_auto_complete_tags('video');
+assign('available_tags',$available_tags);
 
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);

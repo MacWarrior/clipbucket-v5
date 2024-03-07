@@ -49,7 +49,6 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
-
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
@@ -58,8 +57,8 @@ require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 
 check_install('before');
-if (file_exists(DirPath::get('includes') . '/config.php')) {
-    require_once DirPath::get('includes') . '/config.php'; // New config file
+if (file_exists(DirPath::get('includes') . 'config.php')) {
+    require_once DirPath::get('includes') . 'config.php'; // New config file
 } else {
     require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
@@ -73,6 +72,9 @@ require_once DirPath::get('classes') . 'user.class.php';
 require_once DirPath::get('classes') . 'lang.class.php';
 require_once DirPath::get('classes') . 'pages.class.php';
 require_once DirPath::get('classes') . 'tags.class.php';
+require_once DirPath::get('classes') . 'curl.class.php';
+require_once DirPath::get('classes') . 'tmdb.class.php';
+require_once DirPath::get('classes') . 'admin_tool.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -121,26 +123,8 @@ $arrayTranslations = Language::getInstance()->loadTranslations(Language::getInst
 $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
-$baseurl = $row['baseurl'];
 
-if (is_ssl()) {
-    $baseurl = str_replace('http://', 'https://', $baseurl);
-} else {
-    $baseurl = str_replace('https://', 'http://', $baseurl);
-}
-
-//Removing www. as it effects SEO and updating Config
-$wwwcheck = preg_match('/:\/\/www\./', $baseurl, $matches);
-if (count($matches) > 0) {
-    $baseurl = preg_replace('/:\/\/www\./', '://', $baseurl);
-}
-
-$clean_base = false;
-if (defined('CLEAN_BASEURL')) {
-    $clean_base = CLEAN_BASEURL;
-}
-
-define('BASEURL', $baseurl);
+define('BASEURL', (is_ssl() ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST']);
 
 require_once('classes/session.class.php');
 $sess = new Session();
@@ -151,13 +135,14 @@ if (has_access('admin_access', true) && !empty($error_redis)) {
     e($error_redis);
 }
 
-$thisurl = curPageURL();
-
 if (!Update::isVersionSystemInstalled()) {
     define('NEED_UPDATE', true);
-    if (strpos($thisurl, '/admin_area/upgrade_db.php') === false
-        && strpos($thisurl, '/admin_area/logout.php') === false
-        && strpos($thisurl, 'actions/upgrade_db.php') === false
+
+    $request_uri = $_SERVER['REQUEST_URI'];
+
+    if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
+        && strpos($request_uri, '/admin_area/logout.php') === false
+        && strpos($request_uri, 'actions/upgrade_db.php') === false
         && $userquery->admin_login_check(true)) {
         header('Location: /admin_area/upgrade_db.php');
         die();
@@ -188,7 +173,7 @@ require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
-require_once DirPath::get('includes') .  'plugins_functions.php';
+require_once DirPath::get('includes') . 'plugins_functions.php';
 
 $signup = new signup();
 $Upload = new Upload();
@@ -231,10 +216,6 @@ define('WEBSITE_EMAIL', $row['website_email']);
 define('SUPPORT_EMAIL', $row['support_email']);
 define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
-
-# Listing Of Videos , Channels
-define('VLISTPP', $row['videos_list_per_page']);                //Video List Per page
-define('CLISTPP', $row['channels_list_per_page']);            //Channels List Per page
 
 # Defining Photo Limits
 define('MAINPLIST', $row['photo_main_list']);
@@ -290,7 +271,6 @@ $Cbucket->set_the_template();
 
 $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
-Assign('THIS_URL', $thisurl);
 define('ALLOWED_VDO_CATS', $row['video_categories']);
 
 Assign('NEED_UPDATE', NEED_UPDATE);

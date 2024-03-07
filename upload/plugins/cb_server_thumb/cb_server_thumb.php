@@ -4,8 +4,8 @@
     Description: Increase photos thumbs quality of default theme
     Author: Mohammad Shoaib & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    Version: 2.0.1
-    ClipBucket Version: 5.5.0
+    Version: 2.0.2
+    ClipBucket Version: 5.5.1
 */
 const DEFAULT_WIDTH = 200;
 const DEFAULT_HEIGHT = 120;

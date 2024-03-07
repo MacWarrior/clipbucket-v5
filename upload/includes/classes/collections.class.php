@@ -21,7 +21,6 @@ class Collection
             ,'collection_id_parent'
             ,'collection_name'
             ,'collection_description'
-            ,'category'
             ,'userid'
             ,'views'
             ,'date_added'
@@ -60,6 +59,11 @@ class Collection
         return self::$collection;
     }
 
+    public function getTableName(): string
+    {
+        return $this->tablename;
+    }
+
     public function getTableNameItems(): string
     {
         return $this->tablename_items;
@@ -68,9 +72,9 @@ class Collection
     public function getAllFields($prefix = false): array
     {
         return array_map(function($field) use ($prefix) {
-            $field_name = $this->tablename . '.' . $field;
+            $field_name = $this->getTableName() . '.' . $field;
             if( $prefix ){
-                $field_name .= ' AS `'.$this->tablename . '.' . $field.'`';
+                $field_name .= ' AS `' . $this->getTableName() . '.' . $field.'`';
             }
             return $field_name;
         }, $this->fields);
@@ -91,6 +95,46 @@ class Collection
         return $this->display_var_name;
     }
 
+    public function getFilterParams(string $value, array $params): array
+    {
+        switch ($value) {
+            case 'most_recent':
+            default:
+                $params['order'] = $this->getTableName() . '.date_added DESC';
+                break;
+
+            case 'most_viewed':
+                $params['order'] = $this->getTableName() . '.views DESC';
+                break;
+
+            case 'featured':
+                $params['featured'] = true;
+                break;
+
+            case 'top_rated':
+                $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
+                break;
+
+            case 'most_commented':
+                $params['order'] = $this->getTableName() . '.comments_count DESC';
+                break;
+
+            case 'all_time':
+            case 'today':
+            case 'yesterday':
+            case 'this_week':
+            case 'last_week':
+            case 'this_month':
+            case 'last_month':
+            case 'this_year':
+            case 'last_year':
+                $column = $this->getTableName() . '.date_added';
+                $params['condition'] = Search::date_margin($column, $value);
+                break;
+        }
+        return $params;
+    }
+
     /**
      * @throws Exception
      */
@@ -101,6 +145,8 @@ class Collection
         $param_category = $params['category'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_hide_empty_collection = $params['hide_empty_collection'];
+        $param_featured = $params['featured'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -112,50 +158,48 @@ class Collection
             $param_having[] = $params['having'];
         }
 
-        if (config('hide_empty_collection') == 'yes') {
+        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
             $hide_empty_collection = 'COUNT( DISTINCT collection_items.ci_id > 0 )';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR collections.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . 'userid = ' . User::getInstance()->getCurrentUserID() . ')';
             }
             $param_having[] = $hide_empty_collection;
         }
+
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
 
         $conditions = [];
         if( $param_collection_id ){
-            $conditions[] = 'collections.collection_id = \''.mysql_clean($param_collection_id).'\'';
+            $conditions[] = $this->getTableName() . '.collection_id = \''.mysql_clean($param_collection_id).'\'';
         }
         if( $param_collection_id_parent ){
-            $conditions[] = 'collections.collection_id_parent = \''.mysql_clean($param_collection_id_parent).'\'';
+            $conditions[] = $this->getTableName() . '.collection_id_parent = \''.mysql_clean($param_collection_id_parent).'\'';
         }
         if( $param_userid ){
-            $conditions[] = 'collections.userid = \''.mysql_clean($param_userid).'\'';
-        }
-        if( $param_category ){
-            if( !is_array($param_category) ){
-                $conditions[] = 'collections.category LIKE \'%#'.mysql_clean($param_category).'#%\'';
-            } else {
-                $category_cond = [];
-                foreach($param_category as $category){
-                    $category_cond[] = 'collections.category LIKE \'%#'.mysql_clean($category).'#%\'';
-                }
-                $conditions[] = '(' . implode(' OR ', $category_cond) . ')';
-            }
+            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
+        }
+        if( $param_featured ){
+            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+        }
+        if( config('enable_sub_collection') && !$param_collection_id_parent && !$param_collection_id){
+            $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
         }
 
         $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
             /* Search is done on collection title, collection tags */
-            // TODO : Add search on collection categories
-            $cond = '(MATCH(collections.collection_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(collections.collection_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond = '(MATCH(collections.collection_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.collection_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
 
@@ -167,21 +211,40 @@ class Collection
         }
 
         if( !$param_with_items && $param_count ){
-            $select = ['COUNT(collections.collection_id) AS count'];
+            $select = ['COUNT(' . $this->getTableName() . '.collection_id) AS count, ' . $this->getTableName() . '.userid'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username';
-            $select[] = 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) AS total_objects';
+            $select[] = 'COUNT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) AS total_objects';
         }
 
         $join = [];
-        $group = ['collections.collection_id'];
+        $group = [$this->getTableName() . '.collection_id'];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
             }
-            $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON collections.collection_id = collection_tags.id_collection';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON ' . $this->getTableName() . '.collection_id = collection_tags.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
+        }
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('collections_categories') . ' ON ' . $this->getTableName() . '.collection_id = collections_categories.id_collection';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON collections_categories.id_category = categories.category_id';
+
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \',\') AS category_names';
+                $group[] = $this->getTableName() . '.collection_id';
+            }
+
+            if( $param_category ){
+                if( !is_array($param_category) ){
+                    $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
         }
 
         if( $param_group ){
@@ -189,7 +252,8 @@ class Collection
         }
 
         $order = '';
-        if( $param_order ){
+        if( $param_order && !$param_count){
+            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
 
@@ -201,8 +265,8 @@ class Collection
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints();
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints();
+            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
+            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -225,6 +289,7 @@ class Collection
             foreach($result AS &$collection){
                 $params = [];
                 $params['collection_id'] = $collection['collection_id'];
+                $params['show_unlisted'] = true;
                 $params['order'] = $this->getTableNameItems() . '.date_added ASC';
 
                 if( $collection['type'] == 'videos' ){
@@ -249,7 +314,7 @@ class Collection
             if( empty($result) ){
                 return 0;
             }
-            return $result[0]['count'];
+            return count($result);
         }
 
         if( !$result ){
@@ -290,16 +355,29 @@ class Collection
     }
 
     /**
+     * @param array $params
      * @return string
      * @throws Exception
      */
-    public function getGenericConstraints(): string
+    public function getGenericConstraints(array $params = []): string
     {
         if (has_access('admin_access', true)) {
             return '';
         }
 
         $cond = '(collections.active = \'yes\' AND collections.broadcast = \'public\'';
+
+        if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
+            $cond .= ' AND collections.type = \'none\'';
+        } else {
+            if (!isSectionEnabled('photos')) {
+                $cond .= ' AND collections.type = \'videos\'';
+            } else {
+                if (!isSectionEnabled('videos')) {
+                    $cond .= ' AND collections.type = \'photos\'';
+                }
+            }
+        }
 
         $current_user_id = user_id();
         if( $current_user_id ){
@@ -390,7 +468,7 @@ class Collections extends CBCategory
         $this->init_actions();
 
         $fields = ['collection_id', 'collection_name', 'collection_description',
-            'collection_tags', 'userid', 'type', 'category', 'views', 'date_added',
+            'tags', 'userid', 'type', 'views', 'date_added',
             'active', 'rating', 'rated_by', 'voters'];
 
         $cb_columns->object('collections')->register_columns($fields);
@@ -446,7 +524,7 @@ class Collections extends CBCategory
                         ]
                         , [
                             'title' => lang('manage_categories')
-                            , 'url' => DirPath::getUrl('admin_area') . 'collection_category.php'
+                            , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
                             'title' => lang('flagged_collections')
@@ -558,9 +636,9 @@ class Collections extends CBCategory
         $left_join_cond = '';
         if( !has_access('admin_access', true) ) {
             if( $this->objTable == 'video' ){
-                $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints();
+                $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
-                $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints();
+                $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             }
         }
 
@@ -809,8 +887,8 @@ class Collections extends CBCategory
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints();
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints();
+            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
+            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
 
             if ($cond != '') {
                 $cond .= ' AND ';
@@ -969,9 +1047,9 @@ class Collections extends CBCategory
 
         if (!has_access('admin_access', true) ) {
             if( $this->objTable == 'video' ){
-                $condition[] = Video::getInstance()->getGenericConstraints();
+                $condition[] = Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
-                $condition[] = Photo::getInstance()->getGenericConstraints();
+                $condition[] = Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             }
         }
 
@@ -1023,15 +1101,14 @@ class Collections extends CBCategory
 
         $name = $default['collection_name'];
         $description = $default['collection_description'];
-        $tags = $default['collection_tags'];
+        $tags = $default['tags'];
         $type = $default['type'];
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
         if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
+            $cat_array = $default['category'];
         } else {
-            preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-            $cat_array = [$m[1]];
+            $cat_array = explode(',', $default['category']);
         }
 
         $data = [
@@ -1071,10 +1148,9 @@ class Collections extends CBCategory
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
-                'value'             => ['category', $cat_array],
-                'db_field'          => 'category',
+                'value'             => $cat_array,
                 'required'          => 'yes',
-                'validate_function' => 'validate_collection_category',
+                'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('collect_cat_er'),
                 'display_function'  => 'convert_to_categories',
                 'category_type'     => 'collections'
@@ -1323,14 +1399,6 @@ class Collections extends CBCategory
                     }
                 }
 
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
-
                 if ($field['use_func_val']) {
                     $val = $field['validate_function']($val);
                 }
@@ -1371,6 +1439,7 @@ class Collections extends CBCategory
 
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
+            Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
             Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');
@@ -1520,14 +1589,12 @@ class Collections extends CBCategory
         Clipbucket_db::getInstance()->update(tbl($this->section_tbl), ['collection_id_parent'], [$collection_id_parent], ' collection_id_parent = ' . $cid);
 
         //Remove tags
-        \Tags::saveTags('', 'collection', $cid);
+        Tags::deleteTags('collection', $cid);
+        //Remove categories
+        Category::getInstance()->unlinkAll('collection', $cid);
 
         Clipbucket_db::getInstance()->delete(tbl($this->items), ['collection_id'], [$cid]);
         $this->delete_thumbs($cid);
-        Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
-
-        //Decrementing users total collection
-        Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
 
         $params = [];
         $params['type'] = 'cl';
@@ -1536,6 +1603,11 @@ class Collections extends CBCategory
 
         //Removing video From Favorites
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);
+
+        Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
+        //Decrementing users total collection
+        Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
+
         e(lang('collection_deleted'), 'm');
     }
 
@@ -1690,13 +1762,6 @@ class Collections extends CBCategory
                     $query_field[] = $field['db_field'];
                 }
 
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
                 if (!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))) {
                     $val = ($val);
                 } else {
@@ -1732,7 +1797,8 @@ class Collections extends CBCategory
                 $cid = mysql_clean($cid);
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
 
-                Tags::saveTags($array['collection_tags'], 'collection', $cid);
+                Category::getInstance()->saveLinks('collection', $cid, $array['category']);
+                Tags::saveTags($array['tags'], 'collection', $cid);
 
                 e(lang('collection_updated'), 'm');
 

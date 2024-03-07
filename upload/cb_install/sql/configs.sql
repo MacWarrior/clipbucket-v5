@@ -238,6 +238,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_social_sharing', 'yes'),
     (NULL, 'enable_video_internal_sharing', 'yes'),
     (NULL, 'enable_video_link_sharing', 'yes'),
+    (NULL, 'tmdb_token', ''),
+    (NULL, 'enable_tmdb', 'no'),
     (NULL, 'enable_user_dob_edition', 'yes'),
     (NULL, 'enable_age_restriction', 'yes'),
     (NULL, 'enable_blur_restricted_content', 'no'),
@@ -250,6 +252,28 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_collection_comments', 'yes'),
     (NULL, 'display_collection_comments', 'yes'),
     (NULL, 'enable_sitemap', 'yes'),
+    (NULL, 'git_path', ''),
+    (NULL, 'tmdb_get_genre', 'yes'),
+    (NULL, 'tmdb_get_actors', 'yes'),
+    (NULL, 'tmdb_get_producer', 'yes'),
+    (NULL, 'tmdb_get_executive_producer', 'yes'),
+    (NULL, 'tmdb_get_director', 'yes'),
+    (NULL, 'tmdb_get_crew', 'yes'),
+    (NULL, 'tmdb_get_poster', 'no'),
+    (NULL, 'tmdb_get_release_date', 'yes'),
+    (NULL, 'tmdb_get_title', 'yes'),
+    (NULL, 'tmdb_get_description', 'yes'),
+    (NULL, 'tmdb_get_backdrop', 'no'),
+    (NULL, 'tmdb_get_age_restriction', 'yes'),
+    (NULL, 'enable_video_genre', 'yes'),
+    (NULL, 'enable_video_actor', 'yes'),
+    (NULL, 'enable_video_producer', 'yes'),
+    (NULL, 'enable_video_executive_producer', 'yes'),
+    (NULL, 'enable_video_director', 'yes'),
+    (NULL, 'enable_video_crew', 'yes'),
+    (NULL, 'enable_video_poster', 'no'),
+    (NULL, 'enable_video_backdrop', 'no'),
+    (NULL, 'tmdb_search', '10'),
     (NULL, 'enable_chunk_upload', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
@@ -261,19 +285,53 @@ INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`
 	('1440p', '16/9', 0, 2560, 1440, 7280000),
 	('2160p', '16/9', 0, 4096, 2160, 17472000);
 
-INSERT INTO `{tbl_prefix}tools_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
-INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    ('generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 1, NULL, NULL),
-    ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus', 1, NULL, NULL),
-    ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 1, NULL, NULL),
-    ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 1, NULL, NULL),
-    ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion', 1, NULL, NULL),
-    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 1, NULL, NULL),
-    ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 1, NULL, NULL),
-    ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles', 1, NULL, NULL),
-    ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration', 1, NULL, NULL),
-    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 1, NULL, NULL);
+INSERT INTO `{tbl_prefix}tools_histo_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping');
+INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`) VALUES
+    ('generate_missing_thumbs_label', 'generate_missing_thumbs_description', 'AdminTool::generateMissingThumbs', 'generate_missing_thumbs'),
+    ('update_castable_status_label', 'update_castable_status_description', 'AdminTool::updateCastableStatus', 'update_castable_status'),
+    ('update_bits_color_label', 'update_bits_color_description', 'AdminTool::updateBitsColor', 'update_bits_color'),
+    ('update_videos_duration_label', 'update_videos_duration_description', 'AdminTool::updateVideoDuration', 'update_videos_duration'),
+    ('update_database_version_label', 'update_database_version_description', 'AdminTool::updateDataBaseVersion', 'update_database_version'),
+    ('reset_cache_label', 'reset_cache_description', 'AdminTool::resetCache', 'reset_cache'),
+    ('reset_video_log_label', 'reset_video_log_description', 'AdminTool::resetVideoLog', 'reset_video_log'),
+    ('clean_orphan_files_label', 'clean_orphan_files_description', 'AdminTool::cleanOrphanFiles', 'clean_orphan_files'),
+    ('repair_video_duration_label', 'repair_video_duration_description', 'AdminTool::repairVideoDuration', 'repair_video_duration'),
+    ('clean_orphan_tags', 'clean_orphan_tags_description', 'AdminTool::cleanOrphanTags', 'clean_orpha'),
+    ('update_core_label', 'update_core_description', 'AdminTool::updateCore', 'update_core'),
+    ('clean_session_table_label', 'clean_session_table_description', 'AdminTool::cleanSessionTable', 'clean_session_table'),
+    ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 'tool_recalcul_video_file'),
+    ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 'recreate_thumb');
 
-INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist');
+INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
 UPDATE `{tbl_prefix}video_thumbs` SET `type` = 'auto' WHERE `type` IS NULL;
+
+INSERT INTO `{tbl_prefix}categories_type` (`name`)
+VALUES ('video'),
+       ('photo'),
+       ('collection'),
+       ('user'),
+       ('playlist');
+
+SET @type_collection = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'collection'
+);
+SET @type_user = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'user'
+);
+SET @type_video = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'video'
+);
+
+INSERT INTO `{tbl_prefix}categories` (`id_category_type`, `category_name`, `category_thumb`, `is_default`) VALUES
+    (@type_collection, 'Uncategorized', '', 'yes'),
+    (@type_user, 'Basic User', '', 'yes'),
+    (@type_user, 'Gurus', '', 'no'),
+    (@type_user, 'Comedian', '', 'no'),
+    (@type_video, 'Uncategorized','', 'yes');

@@ -45,14 +45,23 @@ class Update
         }, $this->fields);
     }
 
-    /**
-     * @throws Exception
-     */
+    public function flush(){
+        $this->dbVersion = [];
+    }
+
     public function getDBVersion(): array
     {
         if( empty($this->dbVersion) ){
             $select = implode(', ', $this->getAllFields());
-            $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+            try{
+                $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+            }
+            catch (Exception $e){
+                return [
+                    'version' => '-1',
+                    'revision' => '-1'
+                ];
+            }
 
             $this->dbVersion = [
                 'version' => $result['version'],
@@ -283,41 +292,37 @@ class Update
             });
 
         $files = [];
-
         if ($version == '4.2-RC1-premium') {
             $files[] = DirPath::get('sql') . 'commercial' . DIRECTORY_SEPARATOR . '00001.sql';
         }
 
         foreach ($folders as $folder) {
             //get files in folder minus . and .. folders
-            $clean_folder = array_diff(scandir($folder), ['..', '.']);
-            $files = array_merge(
-                $files,
-                //clean null files
-                array_filter(
-                //return absolute path
-                    array_map(function ($file) use ($revision, $version, $folder) {
-                        $file_rev = (int)pathinfo($file)['filename'];
-                        $folder_version = str_replace('.', '', basename($folder));
+            $folder_files = array_diff(scandir($folder), ['..', '.']);
+            $folder_version = str_replace('.', '', basename($folder));
 
-                        return
-                            //if current version, then only superior revisions but still under current revision in changelog
-                            (
-                                ($file_rev > $revision && $folder_version == $version
-                                    // or all files from superior version but still under current version in changelog
-                                    || $folder_version > $version
-                                )
-                                && //check if version and revision or not superior to changelog
-                                ($folder_version == $this->getCurrentCoreVersionCode() && $file_rev <= $this->getCurrentCoreRevision()
-                                    || $folder_version < $this->getCurrentCoreVersion()
-                                )
-                            )
-                                ?
-                                $folder . DIRECTORY_SEPARATOR . $file
-                                : null;
-                    }, $clean_folder)
-                )
-            );
+            // Exclude older and future versions
+            if( $version > $folder_version || $folder_version > $this->getCurrentCoreVersionCode() ){
+                break;
+            }
+
+            foreach($folder_files AS $file){
+                $file_rev = (int)pathinfo($file)['filename'];
+
+                // Exclude future revisions
+                if( $folder_version == $this->getCurrentCoreVersionCode() && $file_rev > $this->getCurrentCoreRevision() ){
+                    break;
+                }
+
+                if( // For current version, include next revisions
+                    ($folder_version == $version && $file_rev > $revision)
+                    ||
+                    // For next versions, include all revisions
+                    $folder_version > $version
+                ){
+                    $files[] = $folder . DIRECTORY_SEPARATOR . $file;
+                }
+            }
         }
 
         return ($count ? count($files) : $files);
@@ -390,6 +395,14 @@ class Update
         if ($nb_db_update > 0) {
             assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
         }
+
+        assign('need_core_update', false);
+        assign('show_core_update', false);
+        if( config('enable_update_checker') == '1' && $this->isManagedWithGit()) {
+            assign('need_core_update', !$this->isCoreUpToDate());
+            assign('show_core_update', true);
+        }
+
         Template('msg_update_db.html');
     }
 
@@ -414,22 +427,38 @@ class Update
      */
     public static function isVersionSystemInstalled(): bool
     {
-        try {
-            $params = [];
-            $params['first_only'] = true;
-            Plugin::getInstance()->getAll($params);
-        } catch (Exception $e) {
-            if ($e->getMessage() == 'version_not_installed') {
-                if (BACK_END) {
-                    e('Version system isn\'t installed, please connect and follow upgrade instructions.');
-                } elseif (in_dev()) {
-                    e('Version system isn\'t installed, please contact your administrator.');
-                }
-                return false;
+        $dbversion = Update::getInstance()->getDBVersion();
+
+        if( $dbversion['version'] == '-1' ){
+            if (BACK_END) {
+                e('Version system isn\'t installed, please connect and follow upgrade instructions.');
+            } elseif (in_dev()) {
+                e('Version system isn\'t installed, please contact your administrator.');
             }
-            throw $e;
+            return false;
         }
         return true;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function isCoreUpToDate(): bool
+    {
+        if( !ini_get('allow_url_fopen')
+            || !$this->getWebVersion()
+            || $this->getWebRevision() === false
+        ){
+            return true;
+        }
+
+        if( $this->getCurrentCoreVersionCode() > $this->getWebVersion()
+            || ($this->getCurrentCoreVersionCode() == $this->getWebVersion() && $this->getCurrentCoreRevision() >= $this->getWebRevision())
+        ){
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -439,17 +468,14 @@ class Update
     {
         if( !ini_get('allow_url_fopen')
             || !$this->getWebVersion()
-            || !$this->getWebRevision()
+            || $this->getWebRevision() === false
         ){
             return 'red';
         }
 
-        if( $this->getCurrentCoreVersionCode() >= $this->getWebVersion()
-            && $this->getCurrentCoreRevision() >= $this->getWebRevision()
-        ){
+        if( $this->isCoreUpToDate() ){
             return 'green';
         }
-
         return 'orange';
     }
 
@@ -505,13 +531,12 @@ class Update
         $html .= '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>' . $current_revision . '</b> <i>(' . ucfirst($current_state) . ')</i><br/>';
         $html .= 'Latest version <i>(' . ucfirst($current_state) . ')</i> : <b>' . $web_version . '</b> - Revision <b>' . $web_revision . '</b></h5></div>';
 
-        $is_new_version = $current_version > $web_version;
-        $is_new_revision = $is_new_version || $current_revision > $web_revision;
+        $is_new_version = $current_version > $web_version || ($current_version == $web_version && $current_revision > $web_revision);
 
         if ($current_version == $web_version && $current_revision == $web_revision) {
             $html .= '<h3 style="text-align:center;">Your ClipbucketV5 seems up-to-date !</h3>';
         } else {
-            if ($is_new_version || $is_new_revision) {
+            if ($is_new_version) {
                 $html .= '<h3 style="text-align:center;">Keep working on this new version ! :)</h3>';
             } else {
                 $html .= '<h3 style="text-align:center;">Update <b>' . $web_version . '</b> - Revision <b>' . $web_revision . '</b> is available !</h3>';
@@ -614,6 +639,124 @@ class Update
             $versions[$changelog['version']] = $changelog['revision'];
         }
         return $versions;
+    }
+
+    public function isGitInstalled(): bool
+    {
+        $git_path = get_binaries('git');
+        if( empty($git_path) || !file_exists($git_path) ){
+            return false;
+        }
+
+        $output = shell_exec($git_path . ' --version 2>&1');
+        return stripos($output, 'git version') !== false;
+    }
+
+    public function isManagedWithGit(): bool
+    {
+        if( !$this->isGitInstalled() ){
+            return false;
+        }
+
+        $dir = DirPath::get('root');
+        chdir($dir);
+        $output = shell_exec(get_binaries('git') . ' rev-parse --is-inside-work-tree 2>&1');
+
+        if( trim($output) === 'true' ){
+            return true;
+        }
+
+        $test = $this->checkAndfixGitSafeDirectory($output);
+        if( $test ){
+            return true;
+        }
+        return false;
+    }
+
+    private function checkAndfixGitSafeDirectory($output): bool
+    {
+        if( stripos($output, '--add safe.directory') === false ){
+            return true;
+        }
+
+        $git_command = substr($output, stripos($output, 'git config'));
+
+        $pattern = '/safe\.directory (.+)$/';
+        preg_match($pattern, $git_command, $matches);
+
+        if (!isset($matches[1])) {
+            return false;
+        }
+
+        $filePath = trim($matches[1], " \t\n\r\0\x0B'");
+
+        $output = shell_exec(get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
+        if( empty($output) ){
+            return true;
+        }
+        return false;
+    }
+
+    private function getGitRootDirectory(): string
+    {
+        return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
+    }
+
+    private function resetGitRepository(string $root_directory): bool
+    {
+        chdir($root_directory);
+
+        $output = shell_exec(get_binaries('git') . ' reset --hard');
+        if( !$output ){
+            return false;
+        }
+
+        $filepath = DirPath::get('temp') . 'install.me';
+        if( file_exists($filepath) ){
+            unlink($filepath);
+        }
+        return true;
+    }
+
+    private function updateGitRepository(string $root_directory)
+    {
+        chdir($root_directory);
+
+        return shell_exec(get_binaries('git') . ' pull');
+    }
+
+    public static function updateGitSources(): bool
+    {
+        $update = Update::getInstance();
+        if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
+            return false;
+        }
+
+        $root_directory = $update->getGitRootDirectory();
+        if( !$root_directory ){
+            return false;
+        }
+
+        if( !$update->resetGitRepository($root_directory) ){
+            return false;
+        }
+
+        if( !$update->updateGitRepository($root_directory) ){
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param $version
+     * @param $revision
+     * @return bool
+     */
+    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision): bool
+    {
+        $version_db = Update::getInstance()->getDBVersion();
+        return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));
     }
 
 }

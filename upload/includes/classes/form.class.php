@@ -12,6 +12,7 @@ class formObj
      * @param bool $skipall
      *
      * @return bool|string|void
+     * @throws Exception
      */
     function createField($field, $multi = false, $skipall = false)
     {
@@ -146,11 +147,12 @@ class formObj
      * @param label
      *
      * @return bool|string|void
+     * @throws Exception
      */
     function createCheckBox($field, $multi = false)
     {
         //First Checking if value is CATEGORY
-        if ($field['value'][0] == 'category') {
+        if ($field['id'] == 'category') {
             //Generate Category list
             $type = $field['category_type'] ?: 'video';
 
@@ -265,20 +267,14 @@ class formObj
             $fieldName = $fieldName . $this->multi_cat_id . '[]';
         }
         $display = 'none';
-        $values = $field['value'][1][0];
-        $Values = [];
-        if (!empty($values)) {
-            foreach ($values as $val) {
-                $Values[] = '|' . $val . '|';
-            }
-        }
 
         if ($cats) {
             foreach ($cats as $cat) {
                 $checked = '';
-                if (in_array('|' . $cat['category_id'] . '|', $Values)) {
+                if( in_array($cat['category_id'], $field['value']) ){
                     $checked = 'checked';
                 }
+
                 echo "<div style='position:relative;'>";
                 echo $field['sep'];
                 echo '<label><input name="' . $fieldName . '" type="checkbox" value="' . $cat['category_id'] . '" ' . $checked . ' ' . $field['extra_tags'] . '>' . display_clean($cat['category_name']) . '</label>';
@@ -315,19 +311,12 @@ class formObj
         }
 
         //Setting up the values
-        $values = $field['value'][1][0];
-        $newVals = [];
-
-        if (!empty($values)) {
-            foreach ($values as $val) {
-                $newVals[] = '|' . $val . '|';
-            }
-        }
+        $values = $field['value'];
         if ($cats) {
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array('|' . $cat['category_id'] . '|', $newVals)) {
+                if (in_array($cat['category_id'] , $values)) {
                     $checked = 'checked';
                 }
 
@@ -423,7 +412,7 @@ class formObj
     /**
      * FUNCTION USED TO REMOVE BRACKET FROM FIELD NAME IF IT IS AN ARRAY
      *
-     * @param string with brackets
+     * @param string $string with brackets
      *
      * @return string|string[]|null
      */
@@ -436,7 +425,7 @@ class formObj
     {
         $data = [];
         foreach ($catArray as $categorie) {
-            if ($skipall == true && $categorie['category_id'] == 'all') {
+            if ($skipall && $categorie['category_id'] == 'all') {
                 continue;
             }
 
@@ -452,6 +441,9 @@ class formObj
         return $data;
     }
 
+    /**
+     * @throws Exception
+     */
     function createDropDown($field, $multi = false, $skipall = false)
     {
         //First Checking if value is CATEGORY

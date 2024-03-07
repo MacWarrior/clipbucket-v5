@@ -64,6 +64,7 @@
                 "RemainingTimeDisplay", // Temps restant
                 "PlaybackRateMenuButton", // Vitesse de lecture
                 "subsCapsButton", // Sous-titres
+                "audioTrackButton", //Pistes audio
                 "PictureInPictureToggle", // PictureInPicture
                 "FullscreenToggle" // Plein écran
             ]
@@ -100,7 +101,7 @@
         };
         this.videoJsResolutionSwitcher(res_options);
         {else}
-        this.qualitySelectorHls({
+        this.hlsQualitySelector({
             displayCurrentQuality: false,
             vjsIconClass: 'vjs-icon-cog'
         });

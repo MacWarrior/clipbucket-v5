@@ -1,6 +1,10 @@
 var alert_shown = false;
-function init_tags(id_input, available_tags) {
-    $('#list_tags').tagit({
+function init_tags(id_input, available_tags, list_tag) {
+    // debugger
+    if (typeof list_tag == 'undefined') {
+        list_tag = '#list_tags';
+    }
+    $(list_tag).tagit({
         singleField: true,
         fieldName: "tags",
         readOnly: false,

@@ -70,7 +70,7 @@
 	var max_video_title = "{config('max_video_title')}";
 	var default_country_iso2 = "{config('default_country_iso2')}";
 	var date_format_time = "{date(config('date_format'),time())}";
-	var get_default_cid = "{$cbvid->get_default_cid()}";
+	var get_default_cid = "{$default_category_id}";
 	var stay_mp4 = "{config('stay_mp4')}";
 	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 </script>
