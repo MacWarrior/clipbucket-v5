@@ -161,7 +161,7 @@ class Collection
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
             $hide_empty_collection = 'COUNT( DISTINCT collection_items.ci_id > 0 )';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . 'userid = ' . User::getInstance()->getCurrentUserID() . ')';
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
             }
             $param_having[] = $hide_empty_collection;
         }
