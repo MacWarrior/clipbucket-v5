@@ -117,4 +117,11 @@ if( config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes' ) {
     Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
 }
 
-echo json_encode(['success' => true]);
+if (errorhandler::getInstance()->get_error() ) {
+    echo json_encode([
+        'success' => false
+        , 'msg'   => getTemplateMsg()
+    ]);
+} else {
+    echo json_encode(['success' => true]);
+}
