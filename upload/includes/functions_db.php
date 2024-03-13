@@ -211,7 +211,7 @@ function execute_sql_file($path): bool
 function execute_migration_SQL_file($path): bool
 {
     if (!execute_sql_file($path)) {
-        return false;
+        throw new Exception("error_during_update");
     }
 
     global $db;
