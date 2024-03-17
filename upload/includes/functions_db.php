@@ -179,7 +179,7 @@ function execute_sql_file($path): bool
                 $templine = preg_replace("/{dbname}/", $db->db_name, $templine);
                 $db->mysqli->query($templine);
                 if ($db->mysqli->error != '') {
-                    throw new Exception('SQL : ' . $templine . '\n' . 'ERROR : ' . $db->mysqli->error);
+                    throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $db->mysqli->error);
                 }
                 $templine = '';
             }
@@ -192,7 +192,7 @@ function execute_sql_file($path): bool
         error_log('ERROR : ' . $e->getMessage());
         DiscordLog::sendDump('SQL : ' . $templine);
         DiscordLog::sendDump('ERROR : ' . $e->getMessage());
-        throw new Exception('SQL : ' . $templine . '\n' . 'ERROR : ' . $e->getMessage());
+        throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $e->getMessage());
     } catch (\Exception $e) {
         $db->mysqli->rollback();
         e($e->getMessage());
