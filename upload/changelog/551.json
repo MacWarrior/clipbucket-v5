@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"6",
+  "revision":"7",
   "status":"dev",
   "detail":[
     {
@@ -24,6 +24,7 @@
       "description": [
         "Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
+        ,"Stop migration on first error if occurs"
       ]
     },
     {
