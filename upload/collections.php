@@ -26,6 +26,7 @@ if( empty($collections) ){
     $count = count($collections);
 } else {
     unset($params['limit']);
+    unset($params['order']);
     $params['count'] = true;
     $count = Collection::getInstance()->getAll($params);
 }
