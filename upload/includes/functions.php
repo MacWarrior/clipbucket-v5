@@ -4590,7 +4590,8 @@ function cb_curl($url)
 /**
  * Check for the content mime type of a file provided
  * @param : { FILE } { $mainFile } { File to run check against }
- * @return : { string/boolean } { type or false }
+ * @param int $offset
+ * @return false|string : { string/boolean } { type or false }
  * @since : 10 January, 2018
  * @todo : will Check for the content mime type of a file provided
  * @author : Fahad Abbas
