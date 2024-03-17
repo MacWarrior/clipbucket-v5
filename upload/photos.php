@@ -25,6 +25,7 @@ if( empty($photos) ){
     $count = count($photos);
 } else {
     unset($params['limit']);
+    unset($params['order']);
     $params['count'] = true;
     $count = Photo::getInstance()->getAll($params);
 }
