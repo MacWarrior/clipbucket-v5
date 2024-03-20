@@ -1108,7 +1108,11 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
         case 'mp4':
             $video_qualities = json_decode($vdetails['video_files']);
             foreach($video_qualities as $quality){
-                $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                if (strpos($quality, $vdetails['file_name']) !== false) {
+                    $file_name = $vdetails['file_name'] . '.mp4';
+                } else {
+                    $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                }
                 if( !$with_path ) {
                     $vid_files[] = $file_name;
                 } else {
