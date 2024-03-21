@@ -568,56 +568,6 @@
 				},'json');
 		};
 
-		this.add_comment_js = function (form_id,type){
-			$('#add_comment_result').css('display','block').html(this.loading);
-			$('#add_comment_button').attr('disabled','disabled');
-
-			//First we will get all values of form_id and then serialize them
-			//so we can forward details to ajax.php
-
-			var formObjectData = $('#'+form_id).serialize()+'&mode=add_comment';
-
-			$.post(page,formObjectData,
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$('#add_comment_button').attr('disabled','').css('display','block');
-
-						if(data.err !== '') {
-							$('#add_comment_result').html(data.err);
-						}
-						if(data.msg !== ''){
-							$('#add_comment_result').html(data.msg);
-						}
-
-						if(data.cid) {
-							get_the_comment(data.cid,'#latest_comment_container');
-						}
-					}
-				},'json');
-		};
-
-		this.get_the_comment = function (id,div){
-
-			$(div).html(this.loading);
-			$.post(page,
-				{
-					mode : 'get_comment',
-					cid : id
-				},
-				function(data)
-				{
-					if(!data){
-						alert('No data');
-					} else {
-						$(div).css('display','none');
-						$(div).html(data).fadeIn('slow');
-					}
-				},'text');
-		};
-
 		this.add_playlist = function (mode,vid,form_id,objtype){
 			$('#playlist_form_result').css('display','block').html(this.loading);
 			switch(mode)

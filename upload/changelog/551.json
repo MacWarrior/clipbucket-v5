@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"10",
+  "revision":"11",
   "status":"dev",
   "detail":[
     {
@@ -14,6 +14,7 @@
       "description": [
         "Refactor collections page"
         ,"Fix pagination on videos, collections & photos"
+        ,"Fix comments display on photos collection (#91)"
       ]
     },
     {
