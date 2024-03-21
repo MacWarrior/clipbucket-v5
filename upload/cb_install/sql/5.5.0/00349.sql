@@ -9,7 +9,7 @@ execute stmt;
 deallocate prepare stmt;
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
-    ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `cb_video`(`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video`(`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 set @var=if((SELECT true FROM information_schema.TABLE_CONSTRAINTS WHERE
     CONSTRAINT_SCHEMA = DATABASE() AND

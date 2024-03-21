@@ -179,26 +179,26 @@ function execute_sql_file($path): bool
                 $templine = preg_replace("/{dbname}/", $db->db_name, $templine);
                 $db->mysqli->query($templine);
                 if ($db->mysqli->error != '') {
-                    error_log('SQL : ' . $templine);
-                    error_log('ERROR : ' . $db->mysqli->error);
-                    DiscordLog::sendDump('SQL : ' . $templine);
-                    DiscordLog::sendDump('ERROR : ' . $db->mysqli->error);
-                    $db->mysqli->rollback();
-
-                    return false;
+                    throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $db->mysqli->error);
                 }
                 $templine = '';
             }
         }
-    } catch (\Exception $e) {
+    } catch (mysqli_sql_exception $e) {
         $db->mysqli->rollback();
         e('SQL : ' . $templine);
         e('ERROR : ' . $e->getMessage());
         error_log('SQL : ' . $templine);
         error_log('ERROR : ' . $e->getMessage());
         DiscordLog::sendDump('SQL : ' . $templine);
-        DiscordLog::sendDump('ERROR : ' . $db->mysqli->error);
-        return false;
+        DiscordLog::sendDump('ERROR : ' . $e->getMessage());
+        throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $e->getMessage());
+    } catch (\Exception $e) {
+        $db->mysqli->rollback();
+        e($e->getMessage());
+        error_log( $e->getMessage());
+        DiscordLog::sendDump($e->getMessage());
+        throw new Exception($e->getMessage());
     }
 
     $db->mysqli->commit();
@@ -211,7 +211,7 @@ function execute_sql_file($path): bool
 function execute_migration_SQL_file($path): bool
 {
     if (!execute_sql_file($path)) {
-        return false;
+        throw new Exception("error_during_update");
     }
 
     global $db;

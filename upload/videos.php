@@ -33,6 +33,7 @@ if( empty($videos) ){
     $count = count($videos);
 } else {
     unset($params['limit']);
+    unset($params['order']);
     $params['count'] = true;
     $count = Video::getInstance()->getAll($params);
 }
