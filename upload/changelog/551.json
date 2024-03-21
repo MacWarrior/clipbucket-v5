@@ -1,8 +1,14 @@
 {
   "version":"5.5.1",
-  "revision":"8",
+  "revision":"10",
   "status":"dev",
   "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Fix TMDB import error display"
+      ]
+    },
     {
       "title": "Front office",
       "description": [
@@ -17,6 +23,7 @@
         ,"Fix SSL detection"
         ,"Cleanup code"
         ,"Fix MySQL8 compatibility"
+        ,"Fix old videos without quality specified"
       ]
     },
     {
