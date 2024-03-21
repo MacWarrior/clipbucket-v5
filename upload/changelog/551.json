@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"7",
+  "revision":"8",
   "status":"dev",
   "detail":[
     {
@@ -25,6 +25,10 @@
         "Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
         ,"Stop migration on first error if occurs"
+        ,"Fix hardcoded prefix in update 5.5.0 - 349"
+        ,"Fix categories creation in update 5.5.0 - 331"
+        ,"Prevent SSE error on update from old version"
+        ,"Fix dependancies check during installation process"
       ]
     },
     {
