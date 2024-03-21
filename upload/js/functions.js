@@ -1094,7 +1094,7 @@ function decode64(input) {
     return output.toString();
 }
 
-function add_comment_js(form_id,type)
+function add_comment_js(form_id)
 {
     $('#add_comment_result').css('display','block');
     $('#add_comment_button').val(lang_loading);
@@ -1179,7 +1179,7 @@ function reply_box(cid,type,type_id)
     html += '</span>';
     html += '</i>';
     html += '</div>';
-    html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\',\''+type+'\')" value="'+lang_reply+'">';
+    html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\')" value="'+lang_reply+'">';
     html += '</form>';
     $('.reply-box-' + cid).html(html).slideDown("slow");
     $('#reply_box_' + cid).focus();
