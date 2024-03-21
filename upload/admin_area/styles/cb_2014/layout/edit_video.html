@@ -32,13 +32,13 @@
 						{else}
 						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
 						{/if}
-
-						{if config('chromecast')=='yes' && !$data.is_castable}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
-						{/if}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
-						<li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
-
+                        {if $video.status=='Successful' }
+                            {if config('chromecast')=='yes' && !$data.is_castable}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
+                            {/if}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
+                            <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
+                        {/if}
                         {if $data.embeded != 'yes'}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                         {/if}

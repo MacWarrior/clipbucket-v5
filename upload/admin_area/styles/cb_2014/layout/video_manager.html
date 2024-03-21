@@ -126,13 +126,16 @@
                         <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a></li>
                         {/if}
                         <li><a role="menuitem" tabindex="-1" href="view_conversion_log.php?file_name={$video.file_name}">File conversion details</a></li>
-                        {if isReconvertAble($video)}
-                        <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Reconvert</a></li>
+                        {if $video.status=='Successful' }
+                            {if isReconvertAble($video)}
+                            <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Reconvert</a></li>
+                            {/if}
+                            {if config('chromecast')=='yes' && !$video.is_castable}
+                            <li><a href="?check_castable={$video.videoid}">{lang code='castable_status_check'}</a></li>
+                            {/if}
+                            <li><a href="?update_bits_color={$video.videoid}">{lang code='update_bits_color'}</a></li>
                         {/if}
-                        {if config('chromecast')=='yes' && !$video.is_castable}
-                        <li><a href="?check_castable={$video.videoid}">{lang code='castable_status_check'}</a></li>
-                        {/if}
-                        <li><a href="?update_bits_color={$video.videoid}">{lang code='update_bits_color'}</a></li>
+
                         <li class="divider"></li>
                         <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a></li>
                         {foreach from=$cbvid->video_manager_link item=links}
