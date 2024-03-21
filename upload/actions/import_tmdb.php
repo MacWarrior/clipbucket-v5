@@ -16,11 +16,11 @@ $movie_details = Tmdb::getInstance()->movieDetail($_POST['tmdb_video_id'])['resp
 $update_video = false;
 
 $video_info['datecreated'] = $movie_details['release_date'];
-if( config('tmdb_get_title') == 'yes' ) {
+if( config('tmdb_get_title') == 'yes' && !empty($movie_details['title']) ) {
     $video_info['title'] = $movie_details['title'];
     $update_video = true;
 }
-if( config('tmdb_get_description') == 'yes' ) {
+if( config('tmdb_get_description') == 'yes' && !empty($movie_details['overview']) ) {
     $video_info['description'] = $movie_details['overview'];
     $update_video = true;
 }
@@ -46,6 +46,10 @@ if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes
             'name'     => [$path_without_slash],
         ],  $video_info['file_directory'], 'p');
     }
+
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
 }
 
 if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 'yes' ){
@@ -60,6 +64,10 @@ if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 
             'tmp_name' => [$tmp_path],
             'name'     => [$path_without_slash],
         ],  $video_info['file_directory'], 'b');
+    }
+
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
     }
 }
 
@@ -117,4 +125,11 @@ if( config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes' ) {
     Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
 }
 
-echo json_encode(['success' => true]);
+if (errorhandler::getInstance()->get_error() ) {
+    echo json_encode([
+        'success' => false
+        , 'msg'   => getTemplateMsg()
+    ]);
+} else {
+    echo json_encode(['success' => true]);
+}

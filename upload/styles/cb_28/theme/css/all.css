@@ -7837,3 +7837,14 @@ textarea#comment_box {
   height: 180px;
   text-align: center;
 }
+.collapsing_arrow.collapsed span {
+    -webkit-transform: rotate(180deg)!important;
+    -moz-transform: rotate(180deg)!important;
+    transform: rotate(180deg)!important;
+}
+.collapsing_arrow span {
+  transition: all 0.4s;
+    -webkit-transform: rotate(0deg)!important;
+    -moz-transform: rotate(0deg)!important;
+    transform: rotate(0deg)!important;
+}

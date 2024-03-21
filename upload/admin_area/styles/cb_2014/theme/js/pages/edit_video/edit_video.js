@@ -101,7 +101,13 @@ function saveInfoTmdb(tmdb_video_id) {
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
         dataType: 'json',
         success: function (result) {
-            location.reload();
+            if (result.success == false) {
+                $('.close').click();
+                hideSpinner();
+                $('.page-content').prepend(result['msg']);
+            } else {
+                location.reload();
+            }
         },
     });
 }

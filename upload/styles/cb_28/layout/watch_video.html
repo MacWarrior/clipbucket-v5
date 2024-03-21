@@ -248,10 +248,10 @@
 							{/if}
 							(<span id="comment_count">{$vdo.comments_count}</span>)
 						</h2>
-						<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-						<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
-
-						<div id="bloc-comment" style="display:none;">
+						<a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
+							<span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
+						</a>
+						<div id="bloc-comment" class="collapse">
 							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 
 							<div class="userComments">

@@ -1,13 +1,20 @@
 {
   "version":"5.5.1",
-  "revision":"9",
+  "revision":"11",
   "status":"dev",
   "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Fix TMDB import error display"
+      ]
+    },
     {
       "title": "Front office",
       "description": [
         "Refactor collections page"
         ,"Fix pagination on videos, collections & photos"
+        ,"Fix comments display on photos collection (#91)"
       ]
     },
     {
