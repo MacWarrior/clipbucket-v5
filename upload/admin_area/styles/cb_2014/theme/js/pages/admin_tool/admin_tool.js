@@ -3,7 +3,6 @@ var eventSource;
 var eventSourceLog;
 var ids_stopped=[];
 $(function () {
-    console.log(can_sse)
     if (can_sse == 'true') {
         connectSSE();
     }
