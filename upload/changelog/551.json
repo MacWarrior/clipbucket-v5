@@ -1,8 +1,14 @@
 {
   "version":"5.5.1",
-  "revision":"9",
+  "revision":"10",
   "status":"dev",
   "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Fix TMDB import error display"
+      ]
+    },
     {
       "title": "Front office",
       "description": [
