@@ -273,12 +273,9 @@
 			var user = {$user_admin};
 			var r = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px;"></i>');  // Ajax loader
 			var b = $('<i class="glyphicon glyphicon-refresh animate-spin pic-glyp" style="position:absolute;left:50%;top: 50%;font-size:16px;line-height:16px;width:16px;height:16px;margin:-8px 0 0 -8px; color:#fff;"></i>'); // Extend Ajax Loader
-			console.log('script 1');
 			$(document).ready(function(){
-				console.log('doc ready 1');
 				getAllComments('p','{$object.photo_id}','{$object.last_commented}',1,'{$object.total_comments}','{$object_type}');
 				init_readonly_tags('tags', '#list_tags');
-				initCommentSlide();
 			});
 		</script>
 	</div>
