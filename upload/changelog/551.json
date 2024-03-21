@@ -1,12 +1,13 @@
 {
   "version":"5.5.1",
-  "revision":"11",
+  "revision":"12",
   "status":"dev",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Fix TMDB import error display"
+        ,"Hide unsupported actions on unsuccessfully converted videos"
       ]
     },
     {
