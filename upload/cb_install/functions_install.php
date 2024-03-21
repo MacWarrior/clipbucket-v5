@@ -58,6 +58,10 @@ function check_module($type): array
         case 'ffmpeg':
         case 'ffprobe':
             $ffmpeg_path = exec('which '.$type);
+            if (empty($ffmpeg_path)) {
+                $return['err'] = 'Unable to find ' . strtoupper($type);
+                break;
+            }
             $ffmpeg_version = shell_output($ffmpeg_path . ' -version | head -n1');
 
             $version = false;
@@ -103,6 +107,10 @@ function check_module($type): array
 
         case 'media_info':
             $mediainfo_path = exec('which mediainfo');
+            if (empty($mediainfo_path)) {
+                $return['err'] = 'Unable to find Media Info';
+                break;
+            }
             $mediainfo_result = shell_output($mediainfo_path . ' --version');
 
             $media_info_version = explode('v', $mediainfo_result);

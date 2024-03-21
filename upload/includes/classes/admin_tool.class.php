@@ -111,7 +111,6 @@ class AdminTool
      */
     public function setToolInProgress(): bool
     {
-        $version = Update::getInstance()->getDBVersion();
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             Clipbucket_db::getInstance()->insert(tbl('tools_histo'), ['id_tool', 'id_tools_histo_status', 'date_start'], [$this->id_tool, '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')', '|no_mc||f|NOW()']);
             $this->id_histo = Clipbucket_db::getInstance()->insert_id();
@@ -469,7 +468,6 @@ class AdminTool
         //get list of video
         if (!empty($this->array_loop)) {
             //update nb_elements of tools
-            $version = Update::getInstance()->getDBVersion();
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
                 $this->updateToolHisto(['elements_total', 'elements_done'], [count($this->array_loop), 0]);
                 $this->addLog(lang('tool_started'));

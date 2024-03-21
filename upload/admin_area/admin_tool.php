@@ -13,17 +13,19 @@ $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => DirPath::getUrl('admin_area') . 'admin_tool.php'];
 $tool = null;
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
-
+    $can_sse = 'true';
     if (!empty($_GET['code_tool'])) {
         $tool = new AdminTool();
         $tool->initByCode($_GET['code_tool']);
     }
 } else {
+    $can_sse = 'false';
     if (!empty($_GET['id_tool'])) {
         $tool = new AdminTool();
         $tool->initById($_GET['id_tool']);
     }
 }
+assign('can_sse', $can_sse);
 sendClientResponseAndContinue(function () use ($tool){
     if ($tool) {
         $tool->setToolInProgress();
