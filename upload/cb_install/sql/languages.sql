@@ -1121,4 +1121,6 @@ VALUES ('admin_setting'),
        ('select_as_default_x'),
        ('enable_x_field'),
        ('update_category'),
-       ('add_new_category');
+       ('add_new_category'),
+       ('option_enable_chunk_upload'),
+       ('tips_enable_chunk_upload');

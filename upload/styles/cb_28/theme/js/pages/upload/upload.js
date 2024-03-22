@@ -14,14 +14,15 @@ $(document).ready(function(){
             browse_button: 'selectFiles',
             dragdrop: true,
             drop_element: 'dragDrop',
-            runtimes : 'html5,flash,silverlight,html4',
+            runtimes : 'html5,silverlight,html4',
             url : uploadurl,
             file_data_name : 'Filedata',
+            chunk_size: chunk_upload ? max_upload_size : false,
+            max_file_size : max_file_size,
             filters: {
                 mime_types : [
                     { title : 'Video files', extensions : extensions }
-                ],
-                max_file_size : max_upload_size + 'Mb'
+                ]
             }
         });
 

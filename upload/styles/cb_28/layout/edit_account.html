@@ -163,7 +163,7 @@
             {include file="$style_dir/blocks/manage/userMenuLeft.html"}
         </div>
         <div class="col-md-9 col-sm-9 col-xs-12">
-            <div id="uavatar" class="tab-pane {if $mode == 'avatar_bg'} active {/if}">
+            <div id="uavatar" class="tab-pane {if $mode=='avatar_bg'}active{/if}">
                 <form method="post" enctype="multipart/form-data">
                     <h2>{lang code='user_user_avatar'}</h2>
                     <div class="show-image">
@@ -360,22 +360,26 @@
         });
 
         var extensions = "{$extensions}";
+        var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize('mb')}";
+        var max_file_size ="{config('max_photo_size')}mb";
+        var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
         $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
             var uploader = new plupload.Uploader({
                 browse_button: 'selectCover',
-                runtimes : 'html5,flash,silverlight,html4',
-                url : "/edit_account.php?mode=avatar_bg",
-                file_data_name : "backgroundPhoto",
+                runtimes : 'html5,silverlight,html4',
+                url : '/edit_account.php?mode=avatar_bg',
+                file_data_name : 'backgroundPhoto',
+                max_file_size: max_file_size,
+                chunk_size: chunk_upload ? max_upload_size : false,
                 filters: {
-                    mime_types : [ { title : "Image files", extensions : extensions }, ],
-                    max_file_size: "2mb",
+                    mime_types : [ { title : 'Image files', extensions : extensions }, ],
                     prevent_duplicates: true
                 }
             });
             window.uploader = uploader;
             uploader.init();
             uploader.bind("FilesAdded", function(up, uploadedFiles){
-                $("#backgroundPhoto").attr("src", "/images/loading.png");
+                $("#backgroundPhoto").attr('src', '/images/loading.png');
                 up.start();
             });
             uploader.bind('UploadComplete', function(plupload, files, response){});

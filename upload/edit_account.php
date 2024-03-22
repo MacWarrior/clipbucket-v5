@@ -97,19 +97,19 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'avatar_bg');
         break;
 
     case 'channel_bg':
-        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'channel_bg');
         break;
 
     case 'change_cover':
-        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'change_cover');
         break;
@@ -145,8 +145,9 @@ switch ($mode) {
 $udetails = $userquery->get_user_details(user_id());
 $profile = $userquery->get_user_profile($udetails['userid']);
 if (is_array($profile)) {
-    $udetails = array_merge($udetails, $profile);
+    $udetails = array_merge($profile, $udetails);
 }
+
 if(in_dev()){
     $min_suffixe = '';
 } else {
