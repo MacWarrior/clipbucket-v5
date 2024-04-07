@@ -411,7 +411,8 @@ class Language
                 'en'    => 'ENG',
                 'fr'    => 'FRA',
                 'pt-BR' => 'POR',
-                'de'    => 'DEU'
+                'de'    => 'DEU',
+                'esp'   => 'ESP'
             ];
 
             $path = DirPath::get('sql') . 'language_' . $restorable_langs[$code] . '.sql';

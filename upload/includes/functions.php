@@ -4816,7 +4816,8 @@ function get_restorable_languages(array $list_language = []): array
         'en'    => 'English',
         'fr'    => 'Français',
         'pt-BR' => 'Portuguesa',
-        'de'    => 'Deutsche'
+        'de'    => 'Deutsche',
+        'esp'   => 'Español'
     ];
 
     return array_filter($restorable_langs, function ($lang) use ($list_language) {
@@ -4825,9 +4826,8 @@ function get_restorable_languages(array $list_language = []): array
     });
 }
 
-function parseAllPHPModules()
+function parseAllPHPModules(): array
 {
-
     ob_start();
     phpinfo(INFO_MODULES);
     $s = ob_get_contents();
@@ -4869,8 +4869,6 @@ function ageRestriction($var) {
     }
     return $var;
 }
-
-
 
 include('functions_db.php');
 include('functions_filter.php');

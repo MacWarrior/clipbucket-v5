@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"12",
+  "revision":"13",
   "status":"dev",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Cleanup code"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
+        ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
       ]
     },
     {
