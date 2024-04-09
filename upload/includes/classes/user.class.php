@@ -191,7 +191,7 @@ class User
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
-                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.user_profile_id '
+                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))

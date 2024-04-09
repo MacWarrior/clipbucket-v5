@@ -31,7 +31,9 @@
                     </td>
                     <td>
                         {if $results[sub].poster_path}
-                        <img class="tmdb_poster" src="{Tmdb::IMAGE_URL}{$results[sub].poster_path}"/>
+                        <img class="tmdb_poster"
+                             {if $results[sub].is_adult == true && config('tmdb_mature_content_age') > $user_age } style=" filter: blur(1.5rem);" {/if}
+                             src="{Tmdb::IMAGE_URL}{$results[sub].poster_path}"/>
                         {/if}
                     </td>
                     <td>

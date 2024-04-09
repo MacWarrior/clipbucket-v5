@@ -86,6 +86,7 @@ class Tmdb
         if (empty($param['language'])) {
             $param['language'] = $this->language;
         }
+        $param['include_adult'] = config('enable_tmdb_mature_content') == 'yes' ? 'true' : 'false';
         return $this->curl->exec($url, $param);
     }
 
@@ -144,10 +145,14 @@ class Tmdb
         Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower(mysql_clean($query)), mysql_clean($total_results)]);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
-        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie) VALUES ';
+        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie, is_adult) VALUES ';
         $insert_line = [];
         foreach ($results as $result) {
-            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . addslashes($result['title']) . '\', \'' . addslashes($result['overview']) . '\', ' . (empty($result['release_date']) ? 'null' : '\'' . $result['release_date'] . '\'') . ', \'' . $result['poster_path'] . '\', ' . $result['id'] . ') ';
+            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . addslashes($result['title']) . '\'
+            , \'' . addslashes($result['overview']) . '\'
+            , ' . (empty($result['release_date']) ? 'null' : '\'' . $result['release_date'] . '\'') . '
+            , \'' . $result['poster_path'] . '\', ' . $result['id'] . '
+            , ' . ($result['adult'] ? 'true' : 'false') . ') ';
         }
         $sql_insert .= implode(', ', $insert_line);
         return Clipbucket_db::getInstance()->execute($sql_insert);
