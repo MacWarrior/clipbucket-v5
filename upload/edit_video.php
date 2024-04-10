@@ -16,7 +16,7 @@ assign('p', $userquery->get_user_profile($udetails['userid']));
 
 $vid = mysql_clean($_GET['vid']);
 //get video details
-$vdetails = $cbvid->get_video($vid);
+$vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
 
 if ($vdetails['userid'] != $userid) {
     e(lang('no_edit_video'));
