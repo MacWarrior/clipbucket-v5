@@ -207,7 +207,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'player_subtitles', '1'),
 	(NULL, 'subtitle_format', 'webvtt'),
 	(NULL, 'conversion_type', 'mp4'),
-	(NULL, 'enable_sub_collection', '1'),
+	(NULL, 'enable_sub_collection', 'yes'),
 	(NULL, 'player_default_resolution_hls', 'auto'),
     (NULL, 'cache_enable', 'no'),
     (NULL, 'cache_auth', 'no'),

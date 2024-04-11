@@ -789,7 +789,7 @@ if (!empty($mode)) {
                 'broadcast'              => 'public',
                 'public_upload'          => 'yes'
             ];
-            if (config('enable_sub_collection')) {
+            if (config('enable_sub_collection') == 'yes') {
                 $CollectParams['collection_id_parent'] = $_POST['collection_id_parent'];
             }
             $insert_id = $cbcollection->create_collection($CollectParams);
