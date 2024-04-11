@@ -249,7 +249,17 @@ class FFMpeg
         }
 
         $resolutions = $this->get_eligible_resolutions();
-
+        if (config('only_keep_max_resolution')=='yes') {
+            $max_resolution = $resolutions[0]['height'];
+            $max_key = 0;
+            foreach ($resolutions as $key=> $resolution) {
+                if ($resolution['height'] > $max_resolution) {
+                    $max_resolution = $resolution['height'];
+                    $max_key = $key;
+                }
+            }
+            $resolutions= array($resolutions[$max_key]);
+        }
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
@@ -261,7 +271,6 @@ class FFMpeg
                         $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
                         $resolution = $this->get_max_resolution_from_file();
                         $this->video_files[] = $resolution;
-
                         $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
                         copy($this->input_file, $this->output_file);
                         break;
