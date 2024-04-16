@@ -491,7 +491,6 @@ function saveInfoTmdb(tmdb_video_id, videoid) {
                                     var tags = value.split(',');
                                     $.each(tags, function (key, value) {
                                         if (value !== '') {
-                                            debugger
                                             input.parent().find('ul').first().tagit('createTag', value);
                                         }
                                     })

@@ -10,6 +10,11 @@
 			{assign var='video_fields' value=$Upload->load_video_fields($v)}
 			<div class="cb-box marginBottom">
 				<h2>{lang code='vdo_edit_vdo'}</h2>
+				{if config('enable_tmdb') && config('tmdb_token')!= ''}
+					<div class="row">
+						<button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$v.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+					</div>
+				{/if}
 				<div class="account_form">
 					<h3>Thumbs</h3>
 					<div class="clearfix well">
@@ -130,7 +135,9 @@
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="myModal" role="dialog">
+</div>
 <script>
+	var videoid = '{$v.videoid}';
 	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 </script>
