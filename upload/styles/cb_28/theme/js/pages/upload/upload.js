@@ -1,4 +1,5 @@
 var grabbed_json = 'nothing';
+var uploader;
 
 $(document).ready(function(){
     var uploadurl = '/actions/file_uploader.php';
@@ -10,7 +11,7 @@ $(document).ready(function(){
     extensions = extensions.substring(0, extensions.length-1);
 
     $.get(theme+"/js/plupload/js/plupload.full.min.js", function(e){
-        var uploader = new plupload.Uploader({
+        uploader = new plupload.Uploader({
             browse_button: 'selectFiles',
             dragdrop: true,
             drop_element: 'dragDrop',
@@ -102,6 +103,10 @@ $(document).ready(function(){
                             alert_shown = false;
                         }
                     });
+                });
+                $(oneUploadForm).find('#button_info_tmdb').on('click', function () {
+                    var videoid = $(oneUploadForm).find('#videoid_' + index).val();
+                    getInfoTmdb(videoid, file.data.title, 1);
                 });
                 if(file.data.broadcast === 'unlisted'){
                     $(oneUploadForm).find('#video_password').attr('disabled',false);
@@ -304,12 +309,21 @@ $(document).ready(function(){
                         $('#tab'+index+' form').find(':input').attr('disabled','disabled');
                     } else {
                         file.file_name = serverResponse.file_name;
-
                         var hiddenField_fileName = document.createElement('input');
                         hiddenField_fileName.name = 'file_name';
+                        hiddenField_fileName.id = 'file_name_' + index;
                         hiddenField_fileName.type = 'hidden';
                         hiddenField_fileName.value = serverResponse.file_name;
-                        $('#tab'+index+' form').append(hiddenField_fileName);
+                        $('#tab' + index + ' form').append(hiddenField_fileName);
+                        var hiddenField_videoId = document.createElement('input');
+                        hiddenField_videoId.name = 'videoid';
+                        hiddenField_videoId.id = 'videoid_' + index;
+                        hiddenField_videoId.type = 'hidden';
+                        hiddenField_videoId.value = serverResponse.videoid;
+
+                        if ($('#' + hiddenField_videoId.id).length === 0) {
+                            $('#tab' + index + ' form').append(hiddenField_videoId);
+                        }
 
                         if(serverResponse.extension === 'mp4' && stay_mp4 === 'yes' ){
                             file.show_duration = true;
@@ -434,3 +448,83 @@ $(document).ready(function(){
         return null;
     };
 });
+
+function getInfoTmdb(videoid, video_title, page,sort, sort_order,filename) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/info_tmdb.php",
+        type: "POST",
+        data: {videoid: videoid, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            var modal = $('#myModal');
+            modal.html(result['template']);
+            modal.modal();
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
+function saveInfoTmdb(tmdb_video_id, videoid) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/import_tmdb.php",
+        type: "POST",
+        data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
+        dataType: 'json',
+        success: function (result) {
+            $('.close').click();
+            hideSpinner();
+            if (result.success == false) {
+                $('.page-content').prepend(result['msg']);
+            } else {
+                //remplir uploaded files
+                var index = 1;
+                plupload.each(uploader.files, function (file) {
+                    if (file.file_name === result['video_detail']['file_name']) {
+                        $.each(result['video_detail'], function (key, value) {
+                            file.data[key] = value;
+                            var input = $('#tab' + index).find('[name="' + key + '"]').first();
+                            if (input.length > 0) {
+                                if (key.includes('tag')) {
+                                    var tags = value.split(',');
+                                    $.each(tags, function (key, value) {
+                                        if (value !== '') {
+                                            debugger
+                                            input.parent().find('ul').first().tagit('createTag', value);
+                                        }
+                                    })
+                                } else {
+                                    input.val(value);
+                                }
+                            }
+                        });
+                    }
+                    index++;
+                });
+            }
+        },
+    });
+}
+
+function pageInfoTmdb(page, videoid) {
+    let sort_type;
+    let sort;
+    if ($('.icon-sort-up').length > 0) {
+        sort_type = $('.icon-sort-up').data('type');
+        sort = 'ASC';
+    } else if ($('.icon-sort-down').length > 0) {
+        sort_type = $('.icon-sort-down').data('type');
+        sort = 'DESC';
+    }
+
+    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
+}
+function showSpinner() {
+    $('.taskHandler').show();
+}
+
+function hideSpinner() {
+    $('.taskHandler').hide();
+}

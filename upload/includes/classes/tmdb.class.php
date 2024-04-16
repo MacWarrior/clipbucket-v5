@@ -152,4 +152,190 @@ class Tmdb
         $sql_insert .= implode(', ', $insert_line);
         return Clipbucket_db::getInstance()->execute($sql_insert);
     }
+
+    /**
+     * @param int $videoid
+     * @param int $tmdb_id
+     * @return void
+     * @throws Exception
+     */
+    public function importDataFromTmdb(int $videoid, int $tmdb_id)
+    {
+        $video_info = Video::getInstance()->getOne([
+            'videoid' => $videoid
+        ]);
+        if (empty($video_info)) {
+            e(lang('class_vdo_del_err'));
+        }
+        $movie_credits = Tmdb::getInstance()->movieCredits($tmdb_id)['response'];
+        $movie_details = Tmdb::getInstance()->movieDetail($tmdb_id)['response'];
+
+        $update_video = false;
+
+        $video_info['datecreated'] = $movie_details['release_date'];
+        if( config('tmdb_get_title') == 'yes' && !empty($movie_details['title']) ) {
+            $video_info['title'] = $movie_details['title'];
+            $update_video = true;
+        }
+        if( config('tmdb_get_description') == 'yes' && !empty($movie_details['overview']) ) {
+            $video_info['description'] = $movie_details['overview'];
+            $update_video = true;
+        }
+        if( config('tmdb_get_age_restriction') == 'yes' ) {
+            $movie_credentials = Tmdb::getInstance()->movieCurrentLanguageAgeRestriction($tmdb_id);
+            $video_info['age_restriction'] = $movie_credentials;
+            $update_video = true;
+        }
+        if( $update_video ) {
+            CBvideo::getInstance()->update_video($video_info);
+        }
+
+        if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes' ){
+            Video::getInstance()->deletePictures($video_info, 'poster');
+            $movie_posters = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['posters'];
+            foreach ($movie_posters as $movie_poster) {
+                $path_without_slash = str_replace('/','', $movie_poster['file_path']);
+                $url = Tmdb::IMAGE_URL . $movie_poster['file_path'];
+                $tmp_path = DirPath::get('temp') . $path_without_slash;
+                $resutl = file_put_contents($tmp_path, file_get_contents($url));
+                Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+                    'tmp_name' => [$tmp_path],
+                    'name'     => [$path_without_slash],
+                ],  $video_info['file_directory'], 'p');
+            }
+
+            if( empty(errorhandler::getInstance()->get_error()) ){
+                errorhandler::getInstance()->flush();
+            }
+        }
+
+        if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 'yes' ){
+            Video::getInstance()->deletePictures($video_info, 'backdrop');
+            $movie_backdrops = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['backdrops'];
+            foreach ($movie_backdrops as $movie_backdrop) {
+                $path_without_slash = str_replace('/','', $movie_backdrop['file_path']);
+                $url = Tmdb::IMAGE_URL . $movie_backdrop['file_path'];
+                $tmp_path = DirPath::get('temp') . $path_without_slash;
+                $resutl = file_put_contents($tmp_path, file_get_contents($url));
+                Upload::getInstance()->upload_thumbs($video_info['file_name'], [
+                    'tmp_name' => [$tmp_path],
+                    'name'     => [$path_without_slash],
+                ],  $video_info['file_directory'], 'b');
+            }
+
+            if( empty(errorhandler::getInstance()->get_error()) ){
+                errorhandler::getInstance()->flush();
+            }
+        }
+
+        if( config('tmdb_get_genre') == 'yes' && config('enable_video_genre') == 'yes' ) {
+            $genre_tags = [];
+            foreach ($movie_details['genres'] as $genre) {
+                $genre_tags[] = trim($genre['name']);
+            }
+            Tags::saveTags(implode(',', $genre_tags), 'genre', $_POST['videoid']);
+        }
+
+        if( config('tmdb_get_actors') == 'yes' && config('enable_video_actor') == 'yes' ) {
+            $actors_tags = [];
+            foreach ($movie_credits['cast'] as $actor) {
+                $actors_tags[] = trim($actor['name']);
+                Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
+            }
+        }
+
+        $producer_tags = [];
+        $executive_producer_tags = [];
+        $director_tags = [];
+        $crew_tags = [];
+        foreach ($movie_credits['crew'] as $crew) {
+            switch (strtolower($crew['job'])) {
+                case 'producer':
+                    $producer_tags[] = trim($crew['name']);
+                    break;
+                case 'executive producer':
+                    $executive_producer_tags[] = trim($crew['name']);
+                    break;
+                case 'director':
+                case 'co-director':
+                    $director_tags[] = trim($crew['name']);
+                    break;
+                default:
+                    $crew_tags[] = trim($crew['name']);
+                    break;
+            }
+        }
+
+        if( config('tmdb_get_producer') == 'yes' && config('enable_video_producer') == 'yes' ) {
+            Tags::saveTags(implode(',', $producer_tags), 'producer', $_POST['videoid']);
+        }
+
+        if( config('tmdb_get_executive_producer') == 'yes' && config('enable_video_executive_producer') == 'yes' ) {
+            Tags::saveTags(implode(',', $executive_producer_tags), 'executive_producer', $_POST['videoid']);
+        }
+
+        if( config('tmdb_get_director') == 'yes' && config('enable_video_director') == 'yes' ) {
+            Tags::saveTags(implode(',', $director_tags), 'director', $_POST['videoid']);
+        }
+
+        if( config('tmdb_get_crew') == 'yes' && config('enable_video_crew') == 'yes' ) {
+            Tags::saveTags(implode(',', $crew_tags), 'crew', $_POST['videoid']);
+        }
+    }
+
+    public function getInfoTmdb($videoid, $params, string $fileName= '')
+    {
+        $video_info = Video::getInstance()->getOne([
+            'videoid' => $videoid
+        ]);
+        if (empty($video_info)) {
+            $video_info = Video::getInstance()->getOne([
+                'file_name' => $fileName
+            ]);
+        }
+        if (empty($video_info)) {
+            e(lang('class_vdo_del_err'));
+        }
+        self::getInstance()->deleteOldCacheEntries();
+        $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
+        $sort = empty($params['sort']) ? 'release_date' : $params['sort'];
+        $sort_order = empty($params['sort_order']) ? 'DESC' : $params['sort_order'];
+
+        $total_rows = 0;
+        $cache_results = Tmdb::getInstance()->getSearchInfo($title);
+        if (!empty($cache_results)) {
+            $total_rows = $cache_results[0]['total_results'];
+        } else {
+            $tmdb_results = [];
+            $page_tmdb = 1;
+            do {
+                $results = Tmdb::getInstance()->searchMovie($title, $page_tmdb)['response'];
+                $total_rows = $results['total_results'];
+                $tmdb_results = array_merge($tmdb_results, $results['results']);
+                $page_tmdb++;
+                if (!empty($results['error'])) {
+                    e(lang($results['error']));
+                    break;
+                }
+            } while (!empty($results['results']));
+
+            if (!empty($tmdb_results)) {
+                try {
+                    Tmdb::getInstance()->setQueryInCache($title, $tmdb_results, $total_rows);
+                } catch (Exception $e) {
+                    e($e->getMessage());
+                }
+            }
+        }
+        $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, $_POST['page']);
+
+        $total_pages = count_pages($total_rows, config('tmdb_search'));
+        return [
+            'final_results' => $final_results,
+            'total_pages'   => $total_pages,
+            'title'         => $title,
+            'sort_order'    => $sort_order,
+            'videoid'       => $video_info['videoid']
+        ];
+    }
 }

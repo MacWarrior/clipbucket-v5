@@ -44,12 +44,13 @@
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
+            <input type="hidden" value="{$videoid}" id="modal_videoid">
         </div>
     </div>
 </div>
 <script>
     $(function () {
-        var videoid = $('#button_info_tmdb').data('id');
+        var videoid = $('#modal_videoid').val();
         $('#search').on('click', function () {
             var video_title = $('#search_title').val();
             getInfoTmdb(videoid, video_title, 1);

@@ -7848,3 +7848,6 @@ textarea#comment_box {
     -moz-transform: rotate(0deg)!important;
     transform: rotate(0deg)!important;
 }
+.tmdb_poster{
+  max-height: 150px;
+}

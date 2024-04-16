@@ -203,7 +203,7 @@ switch ($mode) {
         $query = 'INSERT INTO ' . tbl('video_views') . ' (video_id, video_views, last_updated) VALUES(' . $vid . ',0,' . time() . ')';
         $db->execute($query);
 
-        echo json_encode(['success' => 'yes', 'file_name' => $file_name]);
+        echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         exit();
 
     default:
