@@ -239,7 +239,7 @@ class AdminTool
             Update::getInstance()->flush();
         }
         $this->array_loop = $files;
-        $this->executeTool('execute_migration_SQL_file', true);
+        $this->executeTool('execute_migration_file', true);
     }
 
     /**

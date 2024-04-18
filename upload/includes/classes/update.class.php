@@ -256,7 +256,7 @@ class Update
         }
         $clean_folder = array_diff(scandir($folder_version), ['..', '.']);
         foreach ($clean_folder as $file) {
-            $file_rev = (int)pathinfo($file)['filename'];
+            $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
             if ($file_rev > $this->getCurrentDBRevision() && $file_rev <= REV) {
                 $this->needCodeDBUpdate = true;
                 return true;
@@ -307,7 +307,7 @@ class Update
             }
 
             foreach($folder_files AS $file){
-                $file_rev = (int)pathinfo($file)['filename'];
+                $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
 
                 // Exclude future revisions
                 if( $folder_version == $this->getCurrentCoreVersionCode() && $file_rev > $this->getCurrentCoreRevision() ){

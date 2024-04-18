@@ -214,23 +214,18 @@ function execute_migration_SQL_file($path): bool
         throw new Exception("error_during_update");
     }
 
-    global $db;
-    if (strpos($path, 'plugin') !== false) {
-        $plugin_folder = basename(dirname($path, 3));
-        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\.sql/';
-        $match = [];
-        preg_match($regex, $path, $match);
-        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' . $plugin_folder . '\'';
-    } else {
-        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
-        $match = [];
-        preg_match($regex, $path, $match);
-        $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']);
-    }
-    $db->mysqli->query($sql);
-    CacheRedis::flushAll();
-    Update::getInstance()->flush();
     return true;
+}
+function execute_migration_file($path): bool
+{
+    include_once $path;
+    $class = pathinfo($path)['filename'];
+    $instance = new ($class)();
+    if (!$instance->launch()) {
+        throw new Exception("error_during_update");
+    }
+
+    return $instance;
 }
 
 /**
