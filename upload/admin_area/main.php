@@ -112,6 +112,8 @@ if (isset($_POST['update'])) {
         , 'enable_video_crew'
         , 'enable_video_poster'
         , 'enable_video_backdrop'
+        , 'enable_edit_button'
+        , 'enable_sub_collection'
         , 'only_keep_max_resolution'
     ];
 
@@ -147,7 +149,6 @@ if (isset($_POST['update'])) {
         , 'keep_audio_tracks'
         , 'keep_subtitles'
         , 'extract_subtitles'
-        , 'enable_sub_collection'
         , 'photo_crop'
     ];
 
@@ -407,6 +408,7 @@ if (isset($_POST['update'])) {
         'enable_video_crew',
         'enable_video_poster',
         'enable_video_backdrop',
+        'enable_edit_button',
 
         'hide_empty_collection',
         'display_video_comments',

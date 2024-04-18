@@ -1117,4 +1117,7 @@ VALUES ('admin_setting'),
        ('enable_x_field'),
        ('update_category'),
        ('add_new_category'),
+       ('edit_from_BO'),
+       ('edit_from_FO'),
+       ('enable_edit_button'),
        ('only_keep_max_resolution');
