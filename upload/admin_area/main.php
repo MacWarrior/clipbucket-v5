@@ -112,6 +112,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_crew'
         , 'enable_video_poster'
         , 'enable_video_backdrop'
+        , 'enable_edit_button'
     ];
 
     $config_booleans_to_refactor = [
@@ -406,6 +407,7 @@ if (isset($_POST['update'])) {
         'enable_video_crew',
         'enable_video_poster',
         'enable_video_backdrop',
+        'enable_edit_button',
 
         'hide_empty_collection',
         'display_video_comments',
