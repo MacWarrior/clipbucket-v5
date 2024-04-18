@@ -15,8 +15,8 @@
       "description": [
         "Refactor collections page"
         ,"Fix pagination on videos, collections & photos"
-        ,"Fix comments display on photos collection (#91)"
-        ,"Add edit button on video page (#319)"
+        ,"Fix comments display on photos collection <i>(#91)</i>"
+        ,"Add edit button on video page <i>(#319)</i>"
       ]
     },
     {
