@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"13",
+  "revision":"16",
   "status":"dev",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Fix TMDB import error display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Move sub-collections option to collection config tab"
       ]
     },
     {
@@ -15,7 +16,8 @@
       "description": [
         "Refactor collections page"
         ,"Fix pagination on videos, collections & photos"
-        ,"Fix comments display on photos collection (#91)"
+        ,"Fix comments display on photos collection <i>(#91)</i>"
+        ,"Add edit button on video page <i>(#319)</i>"
       ]
     },
     {
@@ -27,6 +29,12 @@
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Add option to only keep maximum resolution"
       ]
     },
     {
