@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"13",
+  "revision":"14",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,7 @@
         "Refactor collections page"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection (#91)"
+        ,"Add edit button on video page (#319)"
       ]
     },
     {

@@ -76,10 +76,9 @@
 									</button>
 								{/if}
 							{/if}
-							<!-- edit video link-->
+
 							{if config('enable_edit_button') == 'yes'}
 								{if has_access('admin_access', true)}
-									<!-- admin && owner -->
 									{if user_id() && $video.userid == user_id()}
 										<div class="dropdown">
 											<button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
@@ -92,15 +91,13 @@
 											</ul>
 										</div>
 									{else}
-										<!-- admin -->
 									<a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
 									{/if}
 								{elseif user_id() && $video.userid == user_id()}
-										<!--owner-->
 										<a class="btn btn-success" style=" font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
 								{/if}
 							{/if}
-<!--							download button-->
+
 							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
 							<div class="dropdown">
 								<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
