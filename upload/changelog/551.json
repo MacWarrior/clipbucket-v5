@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"14",
+  "revision":"15",
   "status":"dev",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Fix TMDB import error display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Move sub-collections option to collection config tab"
       ]
     },
     {

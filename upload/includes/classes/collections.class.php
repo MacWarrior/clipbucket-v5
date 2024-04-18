@@ -186,7 +186,7 @@ class Collection
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
-        if( config('enable_sub_collection') && !$param_collection_id_parent && !$param_collection_id){
+        if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id){
             $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
         }
 
@@ -934,7 +934,7 @@ class Collections extends CBCategory
 
         $result = Clipbucket_db::getInstance()->select($from, $select, $cond, $limit, $order);
 
-        if (config('enable_sub_collection')) {
+        if (config('enable_sub_collection') == 'yes') {
             foreach ($result as &$line) {
                 $line['total_objects'] = $this->get_total_object_sub_collection($line);
             }
@@ -1172,7 +1172,7 @@ class Collections extends CBCategory
             $data['type']['input_hidden'] = true;
         }
 
-        if (config('enable_sub_collection')) {
+        if (config('enable_sub_collection') == 'yes') {
             $list_parent_categories = ['null' => lang('collection_no_parent')];
             $type = $default['type'] ?? null;
             foreach ($this->get_collections_list(0, null, $collection_id, $type, user_id()) as $col_id => $col_data) {
@@ -1236,7 +1236,7 @@ class Collections extends CBCategory
             , $cond);
         foreach ($collections_parent as $col_parent) {
             $space = '';
-            if (config('enable_sub_collection')) {
+            if (config('enable_sub_collection') == 'yes') {
                 $space = str_repeat('&nbsp;', $level * 3);
             }
             $data[$col_parent['collection_id']]['name'] = $space . display_clean($col_parent['collection_name']);
@@ -1394,7 +1394,7 @@ class Collections extends CBCategory
                 $val = $array[$name];
 
                 if ($name == 'collection_id_parent') {
-                    if (!config('enable_sub_collection')) {
+                    if (config('enable_sub_collection') != 'yes') {
                         continue;
                     }
                 }

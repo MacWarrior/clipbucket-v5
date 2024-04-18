@@ -113,6 +113,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_poster'
         , 'enable_video_backdrop'
         , 'enable_edit_button'
+        , 'enable_sub_collection'
     ];
 
     $config_booleans_to_refactor = [
@@ -147,7 +148,6 @@ if (isset($_POST['update'])) {
         , 'keep_audio_tracks'
         , 'keep_subtitles'
         , 'extract_subtitles'
-        , 'enable_sub_collection'
         , 'photo_crop'
     ];
 
