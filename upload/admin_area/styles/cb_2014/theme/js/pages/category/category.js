@@ -7,8 +7,13 @@ function addOrEdit(category_id) {
         dataType: 'json'
     }).done(function (result) {
         $('#content').html(result['template']);
-        $('.close').click();
         $('.page-content').prepend(result['msg']);
+        $('#hideshow').hide();
+        $('#cancel').on('click', function (e) {
+            e.preventDefault();
+            $('#hideshow').show();
+            $('#content').html('');
+        });
     });
     $('html, body').animate({
         scrollTop: 0
@@ -18,8 +23,11 @@ function addOrEdit(category_id) {
 $(function () {
     if (category_id !== '') {
         addOrEdit(category_id);
+        $('#hideshow').hide();
     }
     $('#hideshow').on('click', function () {
         addOrEdit();
     });
+
+
 });

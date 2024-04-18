@@ -31,11 +31,14 @@
         <br>
 
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <label>Category Thumb</label>
                 <input type="file" name="category_thumb" id="cat_thumb"/>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-2">
+                <button  class="btn btn-default button" id="cancel" >{lang code='cancel'}</button>
+            </div>
+            <div class="col-md-2">
                 <input type="submit" class="btn btn-primary pull-right button" name="update_category" id="button" value="{if empty($categ.category_id)}{lang code='add_new_category'}{else}{lang code='update_category'}{/if}"/>
             </div>
         </div>
