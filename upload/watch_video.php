@@ -60,6 +60,10 @@ if (video_playable($vdo)) {
     array_val_assign($assign_arry);
     template_files('watch_video.html');
 
+    //link edit
+    assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_video.php?video=' . $vdo['videoid']);
+    assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);
+
     if(in_dev()){
         $min_suffixe = '';
     } else {
