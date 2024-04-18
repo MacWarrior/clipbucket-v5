@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"15",
+  "revision":"16",
   "status":"dev",
   "detail":[
     {
@@ -29,6 +29,12 @@
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Add option to only keep maximum resolution"
       ]
     },
     {

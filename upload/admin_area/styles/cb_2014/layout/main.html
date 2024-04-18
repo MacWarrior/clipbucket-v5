@@ -1066,8 +1066,8 @@
                                     <span class="lbl"></span>
                                     <input value="{$row.keep_subtitles}" name="keep_subtitles" id="keep_subtitles_hidden" type="hidden" {if $row.conversion_type!='hls'}disabled{/if}/>
                                 </div>
-                            </div>
-                            <hr/>
+							</div>
+							<hr/>
 
 						</div>
 
@@ -1177,6 +1177,17 @@
                                         <span class="lbl"></span>
                                     </div>
                                 </div>
+								<hr/>
+								<div class="row">
+									<div class="col-md-10">
+										<label class="nowrap" for="only_keep_max_resolution" title="Keep subtitles">{lang code='only_keep_max_resolution'}</label>
+									</div>
+									<div class="col-md-2 row-size">
+										<input value="yes" name="only_keep_max_resolution" id="only_keep_max_resolution" {if $row.only_keep_max_resolution=='yes'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
+										<span class="lbl"></span>
+										<input value="{$row.only_keep_max_resolution}" name="only_keep_max_resolution" id="only_keep_max_resolution_hidden" type="hidden" {if $row.conversion_type!='hls'}disabled{/if}/>
+									</div>
+								</div>
 							</div>
 						</div>
 					</div>

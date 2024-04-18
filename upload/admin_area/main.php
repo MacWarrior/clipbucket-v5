@@ -114,6 +114,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_backdrop'
         , 'enable_edit_button'
         , 'enable_sub_collection'
+        , 'only_keep_max_resolution'
     ];
 
     $config_booleans_to_refactor = [
@@ -412,7 +413,8 @@ if (isset($_POST['update'])) {
         'hide_empty_collection',
         'display_video_comments',
         'display_photo_comments',
-        'display_channel_comments'
+        'display_channel_comments',
+        'only_keep_max_resolution'
     ];
 
     foreach ($opt_list as $optl) {

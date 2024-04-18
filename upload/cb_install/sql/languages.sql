@@ -1119,4 +1119,5 @@ VALUES ('admin_setting'),
        ('add_new_category'),
        ('edit_from_BO'),
        ('edit_from_FO'),
-       ('enable_edit_button');
+       ('enable_edit_button'),
+       ('only_keep_max_resolution');
