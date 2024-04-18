@@ -1120,4 +1120,5 @@ VALUES ('admin_setting'),
        ('edit_from_BO'),
        ('edit_from_FO'),
        ('enable_edit_button'),
-       ('only_keep_max_resolution');
+       ('only_keep_max_resolution'),
+       ('thumbs');
