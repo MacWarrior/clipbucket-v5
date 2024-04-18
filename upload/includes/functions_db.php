@@ -141,13 +141,13 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
         $detail_verision = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
         //get files in update folder
         $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
-        $files = glob($folder . '*.sql');
+        $files = glob($folder . '*.php');
         //filter files which are between db version and detail version
         $update_files = array_merge(
             $update_files,
             array_filter(
                 array_map(function ($file) use ($db_version, $detail_verision, $folder) {
-                    $file_version = pathinfo($file)['filename'];
+                    $file_version = str_replace('P','',str_replace('_','.' , pathinfo($file)['filename']));
                     return ($file_version > $db_version && $file_version <= $detail_verision)
                         ? $file
                         : null;
@@ -216,7 +216,7 @@ function execute_migration_SQL_file($path): bool
 
     return true;
 }
-function execute_migration_file($path): bool
+function execute_migration_file($path)
 {
     include_once $path;
     $class = pathinfo($path)['filename'];

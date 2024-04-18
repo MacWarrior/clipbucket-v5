@@ -10,14 +10,24 @@ class Migration
     public function __construct()
     {
         $reflector = new ReflectionClass(get_called_class());
-        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\D)(\d{5})\.php/';
         $match = [];
+        $regex = '/\/(\d{1,3}\.\d{1,3}\.\d{1,3})\/(\D)(\d{5})\.php/';
         preg_match($regex, $reflector->getFileName(), $match);
+        if (empty($match)) {
+            $regex = '/.*\/plugins\/(\w+)\/sql\/update\/(\D)(\d{0,3}_\d{0,3}_\d{0,3})\.php/';
+            preg_match($regex, $reflector->getFileName(), $match);
 
-        $this->version = $match[1];
-        $this->type = $match[2];
-        $this->revision = $match[3];
+            $this->version = str_replace('_', '.', $match[3]);
+            $this->type = $match[2];
+            //plugin name
+            $this->revision = $match[1];
+        } else {
+            $this->version = $match[1];
+            $this->type = $match[2];
+            $this->revision = $match[3];
+        }
     }
+
     public function launch(): bool
     {
         global $db;
@@ -56,14 +66,14 @@ class Migration
      */
     public function updateVersion()
     {
-       self::sUpdateVersion($this->version, $this->revision, $this->type);
+        self::sUpdateVersion($this->version, $this->revision, $this->type);
     }
 
     public static function sUpdateVersion($version, $revision, $type = 'm')
     {
         $db = Clipbucket_db::getInstance();
         if (strtolower($type) == 'p') {
-            $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($revision) . '\' WHERE plugin_folder = \'' . $version . '\'';
+            $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($version) . '\' WHERE plugin_folder = \'' . $revision . '\'';
         } else {
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
         }
