@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"18",
+  "revision":"19",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Add edit button on video page <i>(#319)</i>"
         ,"Refactor video edition interface"
+        ,"Update translations"
       ]
     },
     {
