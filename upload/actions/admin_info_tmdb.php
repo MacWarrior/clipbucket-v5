@@ -10,7 +10,7 @@ $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, [
 ]);
 
 pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#);');
-
+assign('user_age'  , User::getInstance()->getCurrentUserAge());
 display_tmdb_result([
     'results'    => $results['final_results'],
     'title'      => $results['title'],
