@@ -5,7 +5,41 @@ $(function () {
     $('#button_info_tmdb').on('click', function (e) {
         var video_title = $('#title').val();
         getInfoTmdb(videoid, video_title, 1);
-    })
+    });
+    $('.formSection h4').on({
+        click: function(e){
+            e.preventDefault();
+            if($(this).find('i').hasClass('glyphicon-chevron-down')){
+                $(this).find('i').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-up');
+                $(this).next().toggleClass('hidden');
+            }else{
+                $(this).find('i').removeClass('glyphicon-chevron-up').addClass('glyphicon-chevron-down');
+                $(this).next().toggleClass('hidden');
+            }
+        }
+    });
+
+    $('#upload_thumbs').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs')[0].files, function(i, file) {
+            fd.append('vid_thumb[]', file);
+        });
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd
+                , success: function (data) {
+                    // location.reload();
+                }
+            }
+        )
+    });
 });
 function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
     showSpinner();

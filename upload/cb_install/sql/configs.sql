@@ -207,7 +207,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'player_subtitles', '1'),
 	(NULL, 'subtitle_format', 'webvtt'),
 	(NULL, 'conversion_type', 'mp4'),
-	(NULL, 'enable_sub_collection', '1'),
+	(NULL, 'enable_sub_collection', 'yes'),
 	(NULL, 'player_default_resolution_hls', 'auto'),
     (NULL, 'cache_enable', 'no'),
     (NULL, 'cache_auth', 'no'),
@@ -273,6 +273,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_crew', 'yes'),
     (NULL, 'enable_video_poster', 'no'),
     (NULL, 'enable_video_backdrop', 'no'),
+    (NULL, 'tmdb_search', '10'),
+    (NULL, 'enable_edit_button', 'yes'),
+    (NULL, 'only_keep_max_resolution', 'no'),
+    (NULL, 'enable_tmdb_mature_content', 'no'),
+    (NULL, 'tmdb_mature_content_age', '18'),
     (NULL, 'tmdb_search', '10'),
     (NULL, 'tmdb_enable_on_front_end', 'no');
 

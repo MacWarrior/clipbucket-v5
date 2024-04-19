@@ -21,16 +21,12 @@ $video = mysql_clean($_GET['video']);
 
 
 if ($myquery->video_exists($video)) {
-    # Setting Default thumb
-    if (isset($_POST['update_default_thumb'])) {
-        $myquery->set_default_thumb($video, $_POST['default_thumb']);
-    }
 
     $data = get_video_details($video);
     $vid_file = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
 
     # Uploading Thumbs
-    if (isset($_POST['upload_thumbs'])) {
+    if (!empty($_FILES['vid_thumb'])) {
         $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory']);
     }
 } else {
