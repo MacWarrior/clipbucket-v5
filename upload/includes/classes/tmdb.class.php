@@ -65,7 +65,7 @@ class Tmdb
     {
         $results = $this->requestAPI('movie/' . $movie_id . '/release_dates')['response']['results'];
         $restriction = array_search(strtoupper($this->language), array_column($results, 'iso_3166_1'));
-        if ($restriction) {
+        if ($restriction !== false) {
             return (!empty($results[$restriction]['release_dates'][0]['certification']) ? $results[$restriction]['release_dates'][0]['certification'] : 0);
         }
         return 0;
@@ -141,7 +141,7 @@ class Tmdb
      */
     public function setQueryInCache(string $query, array $results, int $total_results)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower(mysql_clean($query)), mysql_clean($total_results)]);
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower(($query)), ($total_results)]);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
         $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie) VALUES ';
@@ -184,6 +184,9 @@ class Tmdb
         if( config('tmdb_get_age_restriction') == 'yes' ) {
             $movie_credentials = Tmdb::getInstance()->movieCurrentLanguageAgeRestriction($tmdb_id);
             $video_info['age_restriction'] = $movie_credentials;
+            if (!$movie_credentials && config('enable_tmdb_mature_content') == 'yes' && $movie_details['adult']) {
+                $video_info['age_restriction'] = config('tmdb_mature_content_age');
+            }
             $update_video = true;
         }
         if( $update_video ) {
