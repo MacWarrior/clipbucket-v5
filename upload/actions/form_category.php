@@ -1,9 +1,9 @@
 <?php
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once('../includes/classes/admin_tool.class.php');
-global $userquery;
 
-$userquery->admin_login_check();
+userquery::getInstance()->admin_login_check();
+
 $type = mysql_clean($_POST['type']);
 if (!empty($_POST['category_id'])) {
     global $breadcrumb;
