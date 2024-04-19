@@ -334,7 +334,7 @@ class Photo
     public static function display_restricted($photo)
     {
         if( !empty($photo['age_restriction']) ){
-            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">-' . $photo['age_restriction'] . '</span>';
+            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">' . sprintf(lang('access_forbidden_under_age_display'), $photo['age_restriction']) . '</span>';
         }
     }
 

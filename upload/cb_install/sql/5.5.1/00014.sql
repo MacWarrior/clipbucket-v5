@@ -25,4 +25,4 @@ VALUES (@id_language_key, 'Enable edit button', @language_id_eng);
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES (@id_language_key, 'Activer le bouton d''édition', @language_id_fra);
 
-INSERT INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('enable_edit_button','yes');
+INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES ('enable_edit_button','yes');

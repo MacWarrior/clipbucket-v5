@@ -1,4 +1,4 @@
-INSERT INTO `{tbl_prefix}config` (name, value)
+INSERT IGNORE INTO `{tbl_prefix}config` (name, value)
 VALUES ('only_keep_max_resolution', 'no');
 
 SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
