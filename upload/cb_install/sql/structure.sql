@@ -497,7 +497,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
   `video_password` varchar(255) NOT NULL DEFAULT '',
-  `video_users` text NOT NULL DEFAULT '',
+  `video_users` text NULL DEFAULT NULL,
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
@@ -541,7 +541,9 @@ CREATE TABLE `{tbl_prefix}video` (
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
-  `age_restriction` INT DEFAULT NULL
+  `age_restriction` INT DEFAULT NULL,
+  `default_poster` int(3) NULL DEFAULT NULL,
+  `default_backdrop` int(3) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_favourites` (
@@ -902,7 +904,7 @@ ALTER TABLE `{tbl_prefix}video_subtitle`
 	ADD UNIQUE KEY `videoid` (`videoid`,`number`);
 
 ALTER TABLE `{tbl_prefix}video_subtitle`
-	ADD CONSTRAINT `{tbl_prefix}video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
+	ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE `{tbl_prefix}collections`
 	ADD FOREIGN KEY (`collection_id_parent`) REFERENCES `{tbl_prefix}collections`(`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
@@ -926,8 +928,8 @@ ALTER TABLE `{tbl_prefix}languages_translations`
     ADD KEY `id_language_key` (`id_language_key`);
 
 ALTER TABLE `{tbl_prefix}languages_translations`
-    ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}video_thumbs`(
     `videoid`    BIGINT(20)  NOT NULL,
@@ -941,7 +943,7 @@ CREATE TABLE `{tbl_prefix}video_thumbs`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}video_thumbs`
-    ADD CONSTRAINT `{tbl_prefix}video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
+    ADD CONSTRAINT `video_thumbs_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE NO ACTION,
     ADD INDEX(`type`);
 
 CREATE TABLE `{tbl_prefix}tools`(
@@ -949,20 +951,15 @@ CREATE TABLE `{tbl_prefix}tools`(
     `language_key_label`       VARCHAR(128) NOT NULL,
     `language_key_description` VARCHAR(128) NOT NULL,
     `function_name`            VARCHAR(128) NOT NULL,
-    `id_tools_status`          INT          NOT NULL,
-    `elements_total`           INT          NULL DEFAULT NULL,
-    `elements_done`            INT          NULL DEFAULT NULL,
+    `code`                     VARCHAR(32)  NOT NULL UNIQUE,
     PRIMARY KEY (`id_tool`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}tools_status`(
-    `id_tools_status`    INT          NOT NULL AUTO_INCREMENT,
+CREATE TABLE `{tbl_prefix}tools_histo_status`(
+    `id_tools_histo_status`    INT          NOT NULL AUTO_INCREMENT,
     `language_key_title` VARCHAR(128) NOT NULL,
-    PRIMARY KEY (`id_tools_status`)
+    PRIMARY KEY (`id_tools_histo_status`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-ALTER TABLE `{tbl_prefix}tools`
-    ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
 (
@@ -970,7 +967,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
     `id_tag_type` INT          NOT NULL,
     `name`        VARCHAR(128) NOT NULL,
     PRIMARY KEY (`id_tag`),
-    UNIQUE  `id_tag_type` (`id_tag_type`, `name`) USING BTREE
+    UNIQUE `id_tag_type` (`id_tag_type`, `name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);
 
@@ -978,10 +975,12 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags_type`
 (
     `id_tag_type` INT         NOT NULL AUTO_INCREMENT,
     `name`        VARCHAR(32) NOT NULL,
-    PRIMARY KEY (`id_tag_type`)
+    PRIMARY KEY (`id_tag_type`),
+    UNIQUE `name` (`name`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}tags`
+    ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type`(`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
 (
@@ -1138,3 +1137,61 @@ ALTER TABLE `{tbl_prefix}playlists_categories`
     ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}playlists_categories`
     ADD CONSTRAINT `playlist_categories_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo`
+(
+    `id_histo`              INT      NOT NULL AUTO_INCREMENT,
+    `id_tool`               INT      NOT NULL,
+    `id_tools_histo_status` INT      NOT NULL,
+    `date_start`            DATETIME NOT NULL,
+    `date_end`              DATETIME NULL,
+    `elements_total`        INT      NULL,
+    `elements_done`         INT      NULL,
+    PRIMARY KEY (`id_histo`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tools_histo`
+    ADD CONSTRAINT `id_tools_histo` FOREIGN KEY (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
+(
+    `id_log`   INT          NOT NULL AUTO_INCREMENT,
+    `id_histo` INT          NOT NULL,
+    `datetime` DATETIME     NOT NULL,
+    `message`  VARCHAR(256) NOT NULL,
+    PRIMARY KEY (`id_log`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tools_histo_log`
+    ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
+(
+    `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `search_key`      VARCHAR(128) NOT NULL UNIQUE,
+    `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `total_results`   INT          NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
+(
+    `id_tmdb_search_result` INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `id_tmdb_search`        INT          NOT NULL,
+    `title`                 VARCHAR(256) NOT NULL,
+    `overview`              TEXT         NULL,
+    `poster_path`           VARCHAR(128) NOT NULL,
+    `release_date`          DATE         NULL,
+    `id_tmdb_movie`         INT          NOT NULL,
+    `is_adult`              BOOLEAN      NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tmdb_search_result`
+    ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;

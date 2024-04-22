@@ -12,6 +12,7 @@
     });
 </script>
 	<div class="row">
+
 		<div class="heading clearfix">
 			<h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {display_clean($data.title)|truncate:80}</small>
 				<div class="btn-group">
@@ -31,17 +32,20 @@
 						{else}
 						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
 						{/if}
-
-						{if config('chromecast')=='yes' && !$data.is_castable}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
-						{/if}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
-						<li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
-
-                        {if $data.embeded != 'yes'}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
+                        {if $video.status=='Successful' }
+                            {if config('chromecast')=='yes' && !$data.is_castable}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
+                            {/if}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
+                            <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
+                            {if $data.embeded != 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
+                            {/if}
                         {/if}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}">Manage thumbnails</a></li>
+                        {if config('enable_tmdb') && config('tmdb_token')!= ''}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
+                        {/if}
 					</ul>
 				</div>
 			</h2>
@@ -98,421 +102,510 @@
 			</div>
 		</div>
         <form method="post" name="edit_video" enctype="multipart/form-data">
-		<div class="col-md-6">
-			<div class="tabbable">
-				<ul class="nav nav-tabs">
-					<li class="active">
-						<a data-toggle="tab" href="#videodetail">
-							<i class="glyphicon glyphicon-facetime-video"></i> Video Details
-						</a>
-					</li>
-					<li>
-						<a data-toggle="tab" href="#uinformation">
-							<i class="glyphicon glyphicon-user"></i> Uploader Information
-						</a>
-					</li>
-                    <li>
-                        <a data-toggle="tab" href="#privacyoption">
-                            <i class="glyphicon glyphicon-eye-open"></i> {lang code='vdo_share_opt'}
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="tab" href="#datelocation">
-                            <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
-                        </a>
-                    </li>
-				</ul>
-				<div class="tab-content">
-					<div id="videodetail" class="tab-pane active">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="myTable" style="width:100%;">
-                                    <tr>
-                                        <td class="first"><label>Video Id</label></td>
-                                        <td class="last">
-                                            <p><span>{$data.videoid}</span></p>
-                                        </td>
-                                        <input class="form-control" name="videoid" type="hidden" id="videoid" value="{$data.videoid}"/>
-                                    </tr>
-                                    <tr>
-                                        <td class="first"><label>Video Key</label></td>
-                                        <td class="last">
-                                            <p><span>{$data.videokey}</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first"><label>File Name</label></td>
-                                        <td class="last">
-                                            <p><span>{$data.file_name}</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first"><label>Uploaded Date</label></td>
-                                        <td class="last">
-                                            <p><span>{$data.date_added}</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first"><label>{lang code='duration'}</label></td>
-                                        <td class="last">
-                                        <p><span>{$data.duration|SetTime}</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first"><label>Total Video Files</label></td>
-                                        <td class="last">
-                                            <p><span>{get_all_video_files vdetails=$data count_only=true}</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first">
-                                            <label>{lang code='conversion_log'}</label>
-                                        </td>
-                                        <td class="last">
-                                            <p><span>{if $has_log}<a href="view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="first"><label>Total Thumbnails</label></td>
-                                        <td class="last">
-                                            <p><span>{get_count_thumb($data['videoid'])}</span></p>
-                                        </td>
-                                    </tr>
-                                </table>
+            <input class="form-control" name="videoid" type="hidden" id="videoid" value="{$data.videoid}"/>
+            <div class="col-md-6">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#videodetail">
+                                <i class="glyphicon glyphicon-facetime-video"></i> Video Details
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#uinformation">
+                                <i class="glyphicon glyphicon-user"></i> Uploader Information
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#privacyoption">
+                                <i class="glyphicon glyphicon-eye-open"></i> {lang code='vdo_share_opt'}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#datelocation">
+                                <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
+                            </a>
+                        </li>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                            || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <li>
+                            <a data-toggle="tab" href="#movie_infos">
+                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                            </a>
+                        </li>
+                        {/if}
+                    </ul>
+                    <div class="tab-content">
+                        <div id="videodetail" class="tab-pane active">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="myTable" style="width:100%;">
+                                        <tr>
+                                            <td class="first"><label>Video Id</label></td>
+                                            <td>
+                                                <p><span>{$data.videoid}</span></p>
+                                            </td>
+                                            {if config('enable_video_poster') == 'yes' && !empty($data.default_poster)}
+                                            <td rowspan="8">
+                                                <span class='default_poster' style="background-image:url({get_thumb($data, false, 'original', 'poster')})"></span>
+                                            </td>
+                                            {/if}
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Video Key</label></td>
+                                            <td>
+                                                <p><span>{$data.videokey}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>File Name</label></td>
+                                            <td>
+                                                <p><span>{$data.file_name}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Uploaded Date</label></td>
+                                            <td>
+                                                <p><span>{$data.date_added}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>{lang code='duration'}</label></td>
+                                            <td>
+                                            <p><span>{$data.duration|SetTime}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Total Video Files</label></td>
+                                            <td>
+                                                <p><span>{get_all_video_files vdetails=$data count_only=true}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first">
+                                                <label>{lang code='conversion_log'}</label>
+                                            </td>
+                                            <td>
+                                                <p><span>{if $has_log}<a href="view_conversion_log.php?file_name={$data.file_name}">{lang code='watch_conversion_log'}</a>{else}{lang code='no_conversion_log'}{/if}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Total images</label></td>
+                                            <td>
+                                                <p><span>{get_count_thumb($data['videoid'])}</span></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-					<div id="uinformation" class="tab-pane">
-						<div class="row">
-							<div class="col-md-10">
-								<table class="myTable" style="width:100%;">
-									<tr>
-										<td class="first"><label>User Id</label></td>
-										<td class="last">
-											<p><span>{$data.userid}</span></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="first"><label>{lang code='username'}</label></td>
-										<td class="last">
-											<p><span>{display_clean($data.userid|get_username)}</span></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="first"><label>DOB</label></td>
-										<td class="last">
-											<p><span>{$data.dob}</span></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="first"><label>Email</label></td>
-										<td class="last">
-											<p><span>{$data.email}</span></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="first"><label>{lang code='gender'}</label></td>
-										<td class="last">
-											<p><span>{lang code="{$data.sex}"}</span></p>
-										</td>
-									</tr>
-									<tr>
-										<td class="first"><label>{lang code='rating'}</label></td>
-										<td class="last">
-											<p><span>{$data.rating}</span></p>
-										</td>
-									</tr>
-								</table>
-							</div>
-							<div class="col-md-2">
-								<img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
-							</div>
-						</div>
-					</div>
-                    <div id="privacyoption" class="tab-pane">
-                        {foreach from=$video_privacyoption item=field}
-                        <div class="table">
-                            {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                {if empty($field.class)}
-                                    {$field.class = 'form-control'}
-                                {else}
-                                    {$field.class = $field.class|cat:' form-control'}
+                        <div id="uinformation" class="tab-pane">
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <table class="myTable" style="width:100%;">
+                                        <tr>
+                                            <td class="first"><label>User Id</label></td>
+                                            <td class="last">
+                                                <p><span>{$data.userid}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>{lang code='username'}</label></td>
+                                            <td class="last">
+                                                <p><span>{display_clean($data.userid|get_username)}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>DOB</label></td>
+                                            <td class="last">
+                                                <p><span>{$data.dob}</span></p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="first"><label>Email</label></td>
+                                            <td class="last">
+                                                <p><span>{$data.email}</span></p>
+                                            </td>
+                                        </tr>
+                                        {if config('enable_gender') == 'yes'}
+                                        <tr>
+                                            <td class="first"><label>{lang code='gender'}</label></td>
+                                            <td class="last">
+                                                <p><span>{lang code="{$data.sex}"}</span></p>
+                                            </td>
+                                        </tr>
+                                        {/if}
+                                        <tr>
+                                            <td class="first"><label>{lang code='rating'}</label></td>
+                                            <td class="last">
+                                                <p><span>{$data.rating}</span></p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-2">
+                                    <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="privacyoption" class="tab-pane">
+                            {foreach from=$video_privacyoption item=field}
+                            <div class="table">
+                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                    {if empty($field.class)}
+                                        {$field.class = 'form-control'}
+                                    {else}
+                                        {$field.class = $field.class|cat:' form-control'}
+                                    {/if}
                                 {/if}
-                            {/if}
-                            <label><strong>{$field.title|truncate:80}</strong></label><br/>
-                            {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                {if empty($field.class)}
-                                    {$field.class = 'form-control'}
-                                {else}
-                                    {$field.class = $field.class|cat:' form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br/>
+                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                    {if empty($field.class)}
+                                        {$field.class = 'form-control'}
+                                    {else}
+                                        {$field.class = $field.class|cat:' form-control'}
+                                    {/if}
                                 {/if}
-                            {/if}
-                            {if $field.hint_1}
+                                {if $field.hint_1}
+                                    {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.hint_2}<br/>
+                                    {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        <div id="datelocation" class="tab-pane">
+                            {foreach from=$video_datelocation item=field}
+                            <div class="table">
+                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                    {if empty($field.class)}
+                                        {$field.class = 'form-control'}
+                                    {else}
+                                        {$field.class = $field.class|cat:' form-control'}
+                                    {/if}
+                                {/if}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
+                                    {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.hint_2}<br/>
+                                    {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <div id="movie_infos" class="tab-pane">
+                            {foreach from=$video_fields item=field}
+                                {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                    {continue}
+                                {/if}
+
+                            <div class="table">
+                                {$field.class='form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
                                 {$field.hint_1}<br/>
-                            {/if}
-                            {$formObj->createField($field)}
-                            {if $field.hint_2}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.id|strstr:'tags'}
+                                <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
                                 {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        {/if}
+
+                    </div>
+                </div>
+                <div class="tabbable paddingTop">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#videoinfos">
+                                <i class="glyphicon glyphicon-film"></i> {lang code='basic_info'}
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#miscellaneous">
+                                <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div id="videoinfos" class="tab-pane active">
+                            {foreach from=$video_fields item=field}
+                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                    {continue}
+                                {/if}
+
+                            {if $field.id == 'category'}
+                            <div>
+                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                    {if empty($field.class)}
+                                        {$field.class = 'form-control'}
+                                    {else}
+                                        {$field.class = $field.class|cat:' form-control'}
+                                    {/if}
+                                {/if}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
+                                    {$field.hint_1}
+                                {/if}
+                                <div class="tab-content scroll">
+                                    <div class="VideoCategory" style="{if !config('show_collapsed_checkboxes')}margin-top:-30px;{/if}">
+                                        {$formObj->createField($field)}
+                                        {if $field.hint_2}<br/>
+                                            {$field.hint_2}
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                            <br/>
+                                {continue}
+                            {/if}
+
+                            <div class="table">
+                                {$field.class='form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
+                                    {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.id|strstr:'tags'}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
+                                    {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        <div id="miscellaneous" class="tab-pane">
+                            <div class="row">
+                                <label for="status"><strong>{lang code='vdo_status'}</strong></label>
+                                <select class="form-control" name="status" id="status">
+                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>Successfull</option>
+                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>Processing</option>
+                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>Failed</option>
+                                </select>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <label><strong>Video Stats</strong></label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <label for="views">{lang code='views'} :</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="views" type="text" id="views" value="{$data.views|number_format}" size="45"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="rating">{lang code='rating'} :</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="rating" type="text" id="rating" value="{$data.rating|number_format}" size="5"/>
+                                </div>
+                                <div class="col-md-2">
+                                    <label for="rated_by">RatedBy :</label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input class="form-control" name="rated_by" type="text" id="rated_by" value="{$data.rated_by|number_format}" size="45"/>
+                                </div>
+                            </div>
+                            {if count($custom_upload_fields) > 0}
+                            <hr/>
+                            <div class="row">
+                                {foreach from=$custom_upload_fields item=field}
+                                <div class="form-group">
+                                        <label><strong>{$field.title}</strong></label>
+                                        {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                            {if empty($field.class)}
+                                                {$field.class = 'form-control'}
+                                            {else}
+                                                {$field.class = $field.class|cat:' form-control'}
+                                            {/if}
+                                        {/if}
+                                        {$field.hint_1}<br/>
+                                        {ANCHOR place=$field.anchor_before}
+
+                                        {if $field.name=='embed_code'}
+                                            {if ($data.embed_code == '' || $data.embed_code == 'none' || $data.embed_code ==NULL)}
+                                                {$field.extra_tags='disabled="disabled"'}
+                                            {/if}
+                                        {/if}
+
+                                        {if $field.name=='remote_play_url'}
+                                            {if ($data.remote_play_url == '' || $data.remote_play_url == 'none' || $data.remote_play_url ==NULL)}
+                                                {$field.extra_tags=' disabled="disabled"'}
+                                            {/if}
+                                        {/if}
+
+                                        {$formObj->createField($field)}
+                                    {$field.hint_2}
+                                </div>
+                                {/foreach}
+                            </div>
                             {/if}
                         </div>
-                        {/foreach}
                     </div>
-                    <div id="datelocation" class="tab-pane">
-                        {foreach from=$video_datelocation item=field}
-                        <div class="table">
-                            {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                {if empty($field.class)}
-                                    {$field.class = 'form-control'}
-                                {else}
-                                    {$field.class = $field.class|cat:' form-control'}
-                                {/if}
-                            {/if}
-                            <label><strong>{$field.title|truncate:80}</strong></label><br>
-                            {if $field.hint_1}
-                                {$field.hint_1}<br/>
-                            {/if}
-                            {$formObj->createField($field)}
-                            {if $field.hint_2}<br/>
-                                {$field.hint_2}
-                            {/if}
-                        </div>
-                        {/foreach}
+                    <div class="form-group alignCenter">
+                        <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
                     </div>
-				</div>
-			</div>
-            <div class="tabbable paddingTop">
-                <ul class="nav nav-tabs">
-                    <li class="active">
-                        <a data-toggle="tab" href="#videoinfos">
-                            <i class="glyphicon glyphicon-film"></i> {lang code='basic_info'}
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="tab" href="#thumbnails">
-                            <i class="glyphicon glyphicon-picture"></i> Default thumbnail
-                        </a>
-                    </li>
-                    <li>
-                        <a data-toggle="tab" href="#miscellaneous">
-                            <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
-                        </a>
-                    </li>
-                    {if !empty($resolution_list)}
-                    <li>
-                        <a data-toggle="tab" href="#resolutions">
-                            <i class="glyphicon glyphicon-hdd"></i> {lang code='video_file_management'}
-                        </a>
-                    </li>
-                    {/if}
-                    {if !empty($subtitle_list)}
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="tabbable">
+                    <ul class="nav nav-tabs">
+                        <li class="active">
+                            <a data-toggle="tab" href="#videoplayer">
+                                <i class="glyphicon glyphicon-film"></i> Video player
+                            </a>
+                        </li>
+                        <li>
+                            <a data-toggle="tab" href="#thumbnails">
+                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('thumbnail'))|ucfirst}
+                            </a>
+                        </li>
+                        {if config('enable_video_poster') == 'yes'}
+                        <li>
+                            <a data-toggle="tab" href="#posters">
+                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('poster'))|ucfirst}
+                            </a>
+                        </li>
+                        {/if}
+                        {if config('enable_video_backdrop') == 'yes'}
+                        <li>
+                            <a data-toggle="tab" href="#backdrops">
+                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('backdrop'))|ucfirst}
+                            </a>
+                        </li>
+                        {/if}
+                        {if !empty($resolution_list)}
+                        <li>
+                            <a data-toggle="tab" href="#resolutions">
+                                <i class="glyphicon glyphicon-hdd"></i> {lang code='video_file_management'}
+                            </a>
+                        </li>
+                        {/if}
+                        {if !empty($subtitle_list)}
                         <li>
                             <a data-toggle="tab" href="#subtitiles">
                                 <i class="glyphicon glyphicon-subtitles"></i> {lang code='video_subtitle_management'}
                             </a>
                         </li>
-                    {/if}
-                </ul>
-                <div class="tab-content">
-                    <div id="videoinfos" class="tab-pane active">
-                        {foreach from=$video_fields item=field}
-                        {if $field.id == 'category'}
-                        <div>
-                            {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                {if empty($field.class)}
-                                    {$field.class = 'form-control'}
-                                {else}
-                                    {$field.class = $field.class|cat:' form-control'}
-                                {/if}
-                            {/if}
-                            <label><strong>{$field.title|truncate:80}</strong></label><br>
-                            {if $field.hint_1}
-                                {$field.hint_1}
-                            {/if}
-                            <div class="tab-content scroll">
-                                <div class="VideoCategory" style="{if !config('show_collapsed_checkboxes')}margin-top:-30px;{/if}">
-                                    {$formObj->createField($field)}
-                                    {if $field.hint_2}<br/>
-                                        {$field.hint_2}
-                                    {/if}
-                                </div>
-                            </div>
-                        </div>
-                        <br/>
-                            {continue}
                         {/if}
 
-                        <div class="table">
-                            {$field.class='form-control'}
-                            <label><strong>{$field.title|truncate:80}</strong></label><br>
-                            {if $field.hint_1}
-                                {$field.hint_1}<br/>
-                            {/if}
-                            {$formObj->createField($field)}
-                            {if $field.id == 'tags'}
-                                <ul id="list_tags"></ul>
-                            {/if}
-                            {if $field.hint_2}<br/>
-                                {$field.hint_2}
+                    </ul>
+                    <div class="tab-content">
+                        <div id="videoplayer" class="tab-pane active">
+                            {if $data.status=='Successful'}
+                                {show_player vdetails=$data}
                             {/if}
                         </div>
-                        {/foreach}
-                    </div>
-                    <div id="thumbnails" class="tab-pane">
-                        {include file="$style_dir/blocks/thumb_mini_list.html"}
-                    </div>
-                    <div id="miscellaneous" class="tab-pane">
-                        <div class="row">
-                            <label for="status"><strong>{lang code='vdo_status'}</strong></label>
-                            <select class="form-control" name="status" id="status">
-                                <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>Successfull</option>
-                                <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>Processing</option>
-                                <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>Failed</option>
-                            </select>
+                        <div id="thumbnails" class="tab-pane">
+                            {include file="$style_dir/blocks/thumb_mini_list.html"}
                         </div>
-                        <hr/>
-                        <div class="row">
-                            <label><strong>Video Stats</strong></label>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-2">
-                                <label for="views">{lang code='views'} :</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input class="form-control" name="views" type="text" id="views" value="{$data.views|number_format}" size="45"/>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="rating">{lang code='rating'} :</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input class="form-control" name="rating" type="text" id="rating" value="{$data.rating|number_format}" size="5"/>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="rated_by">RatedBy :</label>
-                            </div>
-                            <div class="col-md-2">
-                                <input class="form-control" name="rated_by" type="text" id="rated_by" value="{$data.rated_by|number_format}" size="45"/>
-                            </div>
-                        </div>
-                        {if count($custom_upload_fields) > 0}
-                        <hr/>
-                        <div class="row">
-                            {foreach from=$custom_upload_fields item=field}
-                            <div class="form-group">
-                                    <label><strong>{$field.title}</strong></label>
-                                    {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                        {if empty($field.class)}
-                                            {$field.class = 'form-control'}
-                                        {else}
-                                            {$field.class = $field.class|cat:' form-control'}
-                                        {/if}
-                                    {/if}
-                                    {$field.hint_1}<br/>
-                                    {ANCHOR place=$field.anchor_before}
-
-                                    <!-- checkmate -->
-                                    {if $field.name=='embed_code'}
-                                        {if ($data.embed_code == '' || $data.embed_code == 'none' || $data.embed_code ==NULL)}
-                                            {$field.extra_tags='disabled="disabled"'}
-                                        {/if}
-                                    {/if}
-
-                                    {if $field.name=='remote_play_url'}
-                                        {if ($data.remote_play_url == '' || $data.remote_play_url == 'none' || $data.remote_play_url ==NULL)}
-                                            {$field.extra_tags=' disabled="disabled"'}
-                                        {/if}
-                                    {/if}
-                                    <!-- checkmate -->
-
-                                    {$formObj->createField($field)}
-                                {$field.hint_2}
-                            </div>
-                            {/foreach}
+                        {if config('enable_video_poster') == 'yes'}
+                        <div id="posters" class="tab-pane">
+                            {include file="$style_dir/blocks/poster_mini_list.html"}
                         </div>
                         {/if}
-                    </div>
-                    {if !empty($resolution_list)}
-                    <div id="resolutions" class="tab-pane">
-                        {include file="$style_dir/blocks/resolution_list.html"}
-                    </div>
-                    {/if}
-                    {if !empty($subtitle_list)}
+                        {if config('enable_video_backdrop') == 'yes'}
+                        <div id="backdrops" class="tab-pane">
+                            {include file="$style_dir/blocks/backdrop_mini_list.html"}
+                        </div>
+                        {/if}
+                        {if !empty($resolution_list)}
+                        <div id="resolutions" class="tab-pane">
+                            {include file="$style_dir/blocks/resolution_list.html"}
+                        </div>
+                        {/if}
+                        {if !empty($subtitle_list)}
                         <div id="subtitiles" class="tab-pane">
                             {include file="$style_dir/blocks/subtitle_list.html"}
                         </div>
-                    {/if}
-                </div>
-                <div class="form-group alignCenter">
-                    <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
+                        {/if}
+                    </div>
                 </div>
             </div>
-		</div>
-        </form>
-		<div class="col-md-6">
-            {if $data.status=='Successful'}
-            <div class="col-md-12" id="player">
-                {show_player vdetails=$data}
-            </div>
-            {/if}
 
-            {if config('display_video_comments') == 'yes'}
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="widget-box" style="margin-top:30px;">
-                        <div class="widget-header header-color-blue2 fontawesome-icons">
-                            <h5>Comments</h5>
-                            <div class="widget-toolbar">
-                                <a href="#" data-action="collapse">
-                                    <i class="icon-chevron-up"></i>
-                                </a>
+
+            <div class="col-md-6">
+
+
+                {if config('display_video_comments') == 'yes'}
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="widget-box" style="margin-top:30px;">
+                            <div class="widget-header header-color-blue2 fontawesome-icons">
+                                <h5>Comments</h5>
+                                <div class="widget-toolbar">
+                                    <a href="#" data-action="collapse">
+                                        <i class="icon-chevron-up"></i>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        {ANCHOR place="after_video_edit" data=$data.videoid}
-                        <div class="widget-body">
-                            <div class="widget-main">
-                                <div class="slimScrollDiv fontawesome-icons">
-                                    {foreach from=$comments item=comment}
-                                    <form method="post" name="delete_Comment" id="edit_video">
-                                        {if $comment != ''}
-                                        <div class="itemdiv dialogdiv">
-                                            {$userdetails = $userquery->get_user_details($comment.userid)}
-                                            <div class="user">
-                                                <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+                            {ANCHOR place="after_video_edit" data=$data.videoid}
+                            <div class="widget-body">
+                                <div class="widget-main">
+                                    <div class="slimScrollDiv fontawesome-icons">
+                                        {foreach from=$comments item=comment}
+                                        <form method="post" name="delete_Comment" id="edit_video">
+                                            {if $comment != ''}
+                                            <div class="itemdiv dialogdiv">
+                                                {$userdetails = $userquery->get_user_details($comment.userid)}
+                                                <div class="user">
+                                                    <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+                                                </div>
+                                                <div class="body clearfix">
+                                                    <div class="col-md-3">
+                                                        <a href="#">{display_clean($comment.anonym_name)}</a>
+                                                    </div>
+                                                    <div class="col-md-4">
+                                                        {display_clean($comment.comment)}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <i class="icon-time"></i>
+                                                        <span class="green">{$comment.date_added|date_format}</span>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <input type="hidden" name="cmt_id" value="{$comment.comment_id}" />
+                                                        <input class="btn btn-primary" type="submit" name="del_cmt" value="{lang code='delete'}" />
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="body clearfix">
-                                                <div class="col-md-3">
-                                                    <a href="#">{display_clean($comment.anonym_name)}</a>
-                                                </div>
-                                                <div class="col-md-4">
-                                                    {display_clean($comment.comment)}
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <i class="icon-time"></i>
-                                                    <span class="green">{$comment.date_added|date_format}</span>
-                                                </div>
-                                                <div class="col-md-2">
-                                                    <input type="hidden" name="cmt_id" value="{$comment.comment_id}" />
-                                                    <input class="btn btn-primary" type="submit" name="del_cmt" value="{lang code='delete'}" />
-                                                </div>
+                                            {else}
+                                            <div class="body">
+                                                <p>No comments found !</p>
                                             </div>
-                                        </div>
-                                        {else}
-                                        <div class="body">
-                                            <p>No comments found !</p>
-                                        </div>
-                                        {/if}
-                                    </form>
-                                    {/foreach}
+                                            {/if}
+                                        </form>
+                                        {/foreach}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+                {/if}
+
             </div>
-            {/if}
-
-        </div>
-	</div>
-
+        </form>
+    </div>
+<div class="modal fade" id="myModal" role="dialog">
+</div>
 <script>
     var text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
     var text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';

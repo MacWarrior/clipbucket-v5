@@ -64,14 +64,13 @@
 	$(document).ready(function(){
 		var form_selector = 'comment_form';
 		var type = '{$type}';
-		var video_id = '{$vdo.video_id}';
-		$('body').on("click","#add_comment_button",function(){
-			add_comment_js(form_selector,type,video_id);
+		$('#add_comment_button').on("click",function(){
+			add_comment_js(form_selector);
 		});
 		$('#comment_box').keypress(function(e){
 			if(e.keyCode == 13 && !e.shiftKey) {
 				e.preventDefault();
-				add_comment_js(form_selector,type,video_id);
+				add_comment_js(form_selector);
 			}
 		});
 	});

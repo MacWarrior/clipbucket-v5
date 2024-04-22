@@ -36,12 +36,13 @@ function Template($template, $layout = true)
 }
 
 /**
- * return JSON string containing msg template and $template
+ * return JSON string containing msg template and $template if $jsonReturn is true, return an array otherwise
  * use this for AJAX call to print result template and msg generated with e()
  * @param $template
- * @return string|false
+ * @param bool $jsonReturn
+ * @return string|array
  */
-function templateWithMsgJson($template)
+function templateWithMsgJson($template, bool $jsonReturn = true)
 {
     ob_start();
     Template('msg.html');
@@ -49,7 +50,12 @@ function templateWithMsgJson($template)
     ob_clean();
     Template($template);
     $template = ob_get_clean();
-    return json_encode(['msg' => $msg, 'template' => $template]);
+    $return = ['msg' => $msg, 'template' => $template];
+    if ($jsonReturn) {
+        return json_encode($return);
+    } else {
+        return $return;
+    }
 }
 
 function getTemplateMsg()
@@ -174,6 +180,16 @@ function display_subtitle_list($data)
     echo templateWithMsgJson('blocks/subtitle_list.html');
 }
 
+function display_tmdb_result($data, $videoid)
+{
+    assign('results', $data['results']);
+    assign('search', $data['title']);
+    assign('sort', $data['sort']);
+    assign('sort_order', $data['sort_order']);
+    assign('videoid', $videoid);
+    echo templateWithMsgJson('blocks/tmdb_result.html');
+}
+
 //todO séparer en 2 fonctions
 /**
  * @throws Exception
@@ -185,4 +201,9 @@ function return_thumb_mini_list($data)
     assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
 
     return (templateWithMsgJson('blocks/thumb_mini_list.html'));
+}
+
+function display_categ_form()
+{
+    echo templateWithMsgJson('blocks/edit_category.html');
 }

@@ -92,4 +92,66 @@ $(document).ready(function () {
             parent.prop('disabled',false);
         }
     });
+    $('#enable_tmdb').change(function () {
+        let button = $('#tmdb_token_test');
+        if (!$(this).prop('checked')) {
+            button.addClass('disabled');
+        } else {
+            button.removeClass('disabled').attr('title','');
+        }
+    });
+
+    $('#tmdb_token').keyup(function(){
+        $('#tmdb_token_test').removeClass('glyphicon-ok glyphicon-remove').addClass('glyphicon-refresh');
+    });
+
+    $('#tmdb_token_test').click(function (e) {
+        if( $(this).hasClass('disabled') ){
+            return;
+        }
+
+        e.preventDefault();
+        $.ajax({
+            url: "/actions/test_tmdb.php",
+            type: "POST",
+            data: {token: $('#tmdb_token').val()},
+            dataType: 'json',
+            beforeSend : function(){
+                $('#tmdb_token_test').removeClass('glyphicon-ok glyphicon-remove glyphicon-refresh').html(loading_img);
+            },
+            success: function (result) {
+                if( result['msg'] === 'OK' ){
+                    $('#tmdb_token_test').html('').removeClass('glyphicon-remove glyphicon-refresh').addClass('glyphicon-ok');
+                } else {
+                    $('#tmdb_token_test').html('').removeClass('glyphicon-refresh glyphicon-ok').addClass('glyphicon-remove');
+                }
+            }
+        });
+    });
+
+    $.each({
+        'enable_video_genre': 'tmdb_get_genre'
+        , 'enable_video_actor': 'tmdb_get_actors'
+        , 'enable_video_producer': 'tmdb_get_producer'
+        , 'enable_video_executive_producer': 'tmdb_get_executive_producer'
+        , 'enable_video_director': 'tmdb_get_director'
+        , 'enable_video_crew': 'tmdb_get_crew'
+        , 'enable_video_poster': 'tmdb_get_poster'
+        , 'enable_video_backdrop': 'tmdb_get_backdrop'
+        , 'enable_tmdb': 'tmdb_token'
+        , 'enable_tmdb_mature_content': 'tmdb_mature_content_age'
+
+    }, function (index, value) {
+
+        $('#'+index).change(function () {
+            let input_to_disable = [value];
+            if( $(this).prop('checked') ) {
+                $('#' + input_to_disable).prop('disabled', false).attr('title','');
+                $('#' + input_to_disable + '_hidden').prop('disabled', true);
+            } else {
+                $('#' + input_to_disable).prop('disabled', true);
+                $('#' + input_to_disable + '_hidden').prop('disabled', false);
+            }
+        })
+    });
 });

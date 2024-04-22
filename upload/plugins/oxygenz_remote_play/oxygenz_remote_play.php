@@ -3,14 +3,14 @@
 	Plugin Name: Oxygenz - Remote Play
 	Description: Allow to add external videos from URL
 	Author: Oxygenz
-    Author Website: https://oxygenz.fr
-    Version: 1.0.5
-	ClipBucket Version: 5.5.0
+    Author Website: https://clipbucket.oxygenz.fr
+    Version: 1.0.6
+	ClipBucket Version: 5.5.1
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
 class oxygenz_remote_play {
-    static $media_dir = DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR;
+    static $media_dir = 'media'.DIRECTORY_SEPARATOR;
     static $js_dir = DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR;
     static $lang_prefix = 'plugin_'.self::class.'_';
 
@@ -46,6 +46,7 @@ class oxygenz_remote_play {
         }
         add_js([self::class.'/js/'.$js_file => 'plugin']);
 
+        assign('plugin_url', DirPath::getUrl('plugins'));
         ClipBucket::getInstance()->add_header(DirPath::get('plugins') . self::class.self::$js_dir.'header.html');
     }
 
@@ -80,8 +81,8 @@ class oxygenz_remote_play {
      */
     public static function load_form()
     {
-        $template_dir = DirPath::getUrl('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
-        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL . DirPath::getUrl('plugins') . self::$media_dir.'example.mp4' );
+        $template_dir = DirPath::get('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
+        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL . DirPath::getUrl('plugins') . self::class . DIRECTORY_SEPARATOR . self::$media_dir . 'example.mp4' );
         assign('placeholder_url', $plugin_cb_link_video_input_url_example);
         Template($template_dir.'first-form.html', false);
     }

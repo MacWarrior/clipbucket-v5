@@ -9,19 +9,36 @@ require_once DirPath::get('cb_install') . 'functions_install.php';
 $mode = $_POST['mode'];
 
 $result = [];
-
 $dbhost = $_POST['dbhost'];
 $dbpass = $_POST['dbpass'];
 $dbuser = $_POST['dbuser'];
 $dbname = $_POST['dbname'];
 $dbprefix = $_POST['dbprefix'];
+$dbport = $_POST['dbport'];
 
 try{
-    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass);
+    $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass, null, $dbport);
 
     try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
         mysqli_query($cnnct, 'SET NAMES "utf8mb4"');
+
+        $res = mysqli_query($cnnct,'select @@version');
+        $data=[];
+        if ($res) {
+            while ($row = $res->fetch_assoc()) {
+                $data[] = $row;
+            }
+            $res->close();
+        }
+        $regex_version = '(\d+\.\d+\.\d+)';
+        $serverMySqlVersion = $data[0]['@@version'];
+        preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+        $serverMySqlVersion = $match_mysql[0] ?? false;
+        $mysqlReq='5.6.0';
+        if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
+            $result['err'] = '<span class="alert">MySql Server (v'.$data[0]['@@version'].') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
+        }
     }
     catch(\Exception $e){
         $result['err'] = "<span class='alert'>Unable to select database : " . $e->getMessage() . '</span>';
@@ -48,6 +65,7 @@ if ($mode == 'adminsettings') {
         'language_FRA'    => 'language_FRA.sql',
         'language_DEU'    => 'language_DEU.sql',
         'language_POR'    => 'language_POR.sql',
+        'language_ESP'    => 'language_ESP.sql',
         'ads_placements'  => 'ads_placements.sql',
         'countries'       => 'countries.sql',
         'email_templates' => 'email_templates.sql',
@@ -94,13 +112,15 @@ if ($mode == 'adminsettings') {
         $return['step'] = $next;
 
         if ($step == 'configs') {
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which php')) . '" WHERE name = "php_path"';
-            mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffmpeg')) . '" WHERE name = "ffmpegpath"';
             mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffprobe')) . '" WHERE name = "ffprobe_path"';
             mysqli_query($cnnct, $sql);
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which git')) . '" WHERE name = "git_path"';
+            mysqli_query($cnnct, $sql);
             $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which mediainfo')) . '" WHERE name = "media_info"';
+            mysqli_query($cnnct, $sql);
+            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which php')) . '" WHERE name = "php_path"';
             mysqli_query($cnnct, $sql);
         }
         //update database version from last json
@@ -140,6 +160,7 @@ if ($mode == 'adminsettings') {
                 $dbconnect = str_replace('_DB_NAME_', $dbname, $dbconnect);
                 $dbconnect = str_replace('_DB_USER_', $dbuser, $dbconnect);
                 $dbconnect = str_replace('_DB_PASS_', $dbpass, $dbconnect);
+                $dbconnect = str_replace('_DB_PORT_', $dbport, $dbconnect);
                 $dbconnect = str_replace('_TABLE_PREFIX_', $dbprefix, $dbconnect);
 
                 $fp = fopen(DirPath::get('includes') . 'config.php', 'w');

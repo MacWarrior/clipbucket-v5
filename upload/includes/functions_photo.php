@@ -16,12 +16,18 @@ function get_photos($param)
 }
 
 //Photo File Fetcher
+/**
+ * @throws Exception
+ */
 function get_photo($params)
 {
     return get_image_file($params);
 }
 
 //Photo Upload Button
+/**
+ * @throws Exception
+ */
 function upload_photo_button($params)
 {
     global $cbphoto;
@@ -29,6 +35,9 @@ function upload_photo_button($params)
 }
 
 //Photo Embed Cides
+/**
+ * @throws Exception
+ */
 function photo_embed_codes($params)
 {
     global $cbphoto;
@@ -110,6 +119,9 @@ function get_photo_default_thumb($size = null, $output = null)
     return $cbphoto->default_thumb($size, $output);
 }
 
+/**
+ * @throws Exception
+ */
 function get_image_file($params)
 {
     global $cbphoto, $Cbucket;
@@ -148,9 +160,15 @@ function get_image_file($params)
         $functions = $Cbucket->custom_get_photo_funcs;
         foreach ($functions as $func) {
             if (function_exists($func)) {
+                ob_start();
                 $func_data = $func($params);
                 if ($func_data) {
                     return $func_data;
+                }
+                $html = ob_get_contents();
+                ob_end_clean();
+                if( !empty($html) ){
+                    return $html;
                 }
             }
         }
@@ -161,7 +179,7 @@ function get_image_file($params)
     $with_original = $params['with_orig'] ?? false;
 
     if ($directory) {
-        $directory .= '/';
+        $directory .= DIRECTORY_SEPARATOR;
     }
 
     $path = DirPath::get('photos') . $directory;

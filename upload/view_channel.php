@@ -46,7 +46,13 @@ if (userquery::getInstance()->perm_check('view_channel', true)) {
         }
     }
 
-    Assign('user', $udetails);
+    assign('user', $udetails);
+
+    if( config('enable_user_category')=='yes' ){
+        $user_category = Category::getInstance()->getById($udetails['id_category']);
+        assign('user_category', $user_category['category_name']);
+    }
+
     //Subscribing User
     if ($_GET['subscribe']) {
         userquery::getInstance()->subscribe_user($udetails['userid']);
@@ -55,18 +61,16 @@ if (userquery::getInstance()->perm_check('view_channel', true)) {
     //Calling view channel functions
     call_view_channel_functions($udetails);
 
-    assign('u', $udetails);
-
     //Getting profile details
     $p = userquery::getInstance()->get_user_profile($udetails['userid']);
     assign('p', $p);
     assign('backgroundPhoto', userquery::getInstance()->getBackground($udetails['userid']));
-    Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+    assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
 
     //Getting users channel List
     $result_array['order'] = ' profile_hits DESC limit 6';
     $users = get_users($result_array);
-    Assign('users', $users);
+    assign('users', $users);
 
     //Checking Profile permissions
     $perms = $p['show_profile'];

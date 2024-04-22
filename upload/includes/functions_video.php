@@ -111,9 +111,7 @@ function video_playable($id): bool
  */
 function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 {
-    /**  getting video ID*/
     if (is_array($vdetails)) {
-        #check for videoid
         if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
@@ -134,9 +132,15 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         }
     }
 
-    global $db;
+    $fields = ['V.videoid', 'V.file_name', 'V.file_directory', 'VT.num', 'V.default_thumb', 'V.status'];
+    $version = Update::getInstance()->getDBVersion();
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 366)) {
+        $fields[] = 'V.default_poster';
+        $fields[] = 'V.default_backdrop';
+    }
+
     //get current video from db
-    $resVideo = $db->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'V.videoid, V.file_name, V.file_directory, VT.num, V.default_thumb, V.status', 'V.videoid = ' . mysql_clean($vid));
+    $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -147,7 +151,18 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     //get thumbs for current video from db
     $where[] = 'videoid = ' . mysql_clean($vid);
     if (!$multi) {
-        $where[] = ' num = ' . mysql_clean($resVideo['default_thumb']);
+        switch($type){
+            default:
+                $default = $resVideo['default_thumb'];
+                break;
+            case 'poster':
+                $default = $resVideo['default_poster'];
+                break;
+            case 'backdrop':
+                $default = $resVideo['default_backdrop'];
+                break;
+        }
+        $where[] = ' num = ' . mysql_clean($default);
     }
     if (!empty($size)) {
         $where[] = ' resolution LIKE \'' . mysql_clean($size) . '\'';
@@ -157,7 +172,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         $where[] = ' type = \'' . $type . '\'';
     }
 
-    $resThumb = $db->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
+    $resThumb = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
 
     if (empty($resThumb) && $type =='custom') {
         return $multi ? [] : '';
@@ -176,7 +191,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
             if ($re['size'] === '') {
                 return [default_thumb()];
             }
-            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] == 'custom' ? '-c' : '') .'.' . $re['extension'];
+            $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] != 'auto' ? '-'.array_search($re['type'], Upload::getInstance()->types_thumb) : '') .'.' . $re['extension'];
             if (file_exists(DirPath::get('thumbs') . $filepath)) {
                 $thumb[] = DirPath::getUrl('thumbs') . $filepath;
             } else {
@@ -186,7 +201,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
         }
         return $thumb;
     }
-    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] == 'custom' ? '-c' : '') .'.' . $resThumb[0]['extension'];
+    $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] != 'auto' ? '-'. array_search($resThumb[0]['type'], Upload::getInstance()->types_thumb) : '') .'.' . $resThumb[0]['extension'];
     if (!file_exists(DirPath::get('thumbs') . $filepath)) {
         error_log('get_thumb - missing file : ' . $filepath);
         return default_thumb();
@@ -217,6 +232,10 @@ function get_count_thumb($videoid)
  */
 function create_thumb($video_db, $multi, $size)
 {
+    if(empty($video_db)){
+        return default_thumb();
+    }
+
     global $db;
     //check files
     $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
@@ -232,7 +251,7 @@ function create_thumb($video_db, $multi, $size)
         }
     } else {
         //insert default
-        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], '', '', '', VERSION]);
+        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_db['videoid'], '', '', '', VERSION, 'auto']);
         error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
     return get_thumb($video_db['videoid'], $multi, $size);
@@ -747,17 +766,16 @@ function get_file_details($file_name, $get_jsoned = false)
  */
 function get_thumb_num($name): string
 {
-    $regex = '`.*-.*-(\d+)(?:-c)?.\w+`';
+    $regex = '`.*-.*-(\d+)(?:-[cbp])?.\w+`';
     $match = [];
-    $res = preg_match($regex, $name, $match);
+    preg_match($regex, $name, $match);
     return $match[1] ?? '' ;
 }
 
 /**
  * Function used to remove specific thumbs number
  *
- * @param $file_dir
- * @param $file_name
+ * @param $videoDetails
  * @param $num
  * @throws Exception
  */
@@ -784,7 +802,7 @@ function delete_video_thumb($videoDetails, $num)
         create_thumb($videoDetails, '', '');
     }
     if ($videoDetails['default_thumb'] == $num) {
-        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` =  (SELECT  CASE WHEN num = \'\' THEN 0 ELSE MIN(`num`) END FROM ' . tbl('video_thumbs') . ' WHERE  videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
     }
 }
 
@@ -1090,7 +1108,11 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
         case 'mp4':
             $video_qualities = json_decode($vdetails['video_files']);
             foreach($video_qualities as $quality){
-                $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                if (empty($quality)) {
+                    $file_name = $vdetails['file_name'] . '.mp4';
+                } else {
+                    $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                }
                 if( !$with_path ) {
                     $vid_files[] = $file_name;
                 } else {
@@ -1195,8 +1217,11 @@ function get_fast_qlist($cookie_name = false): array
     $vids = explode(',', $clean_cookies);
     assign('qlist_vids', $vids);
     $vid_dets = [];
+
     foreach ($vids as $vid) {
-        $vid_dets[] = $cbvid->get_video($vid);
+        if( !empty($vid) ){
+            $vid_dets[] = $cbvid->get_video($vid);
+        }
     }
 
     return array_filter($vid_dets);
@@ -1334,7 +1359,7 @@ function update_video_files($vdetails)
             }
 
             foreach ($list_videos as  $path) {
-                $quality = explode('-', $path);
+                $quality = explode('-', $path,-1);
                 $quality = explode('.', end($quality));
                 if( is_numeric($quality[0]) ){
                     $video_qualities[] = (int)$quality[0];
@@ -1562,7 +1587,11 @@ function generatingMoreThumbs($data, bool $regenerate = false)
         $ffmpeg->generateAllMissingThumbs();
     }
 
-    e(lang('video_thumbs_regenerated'), 'm');
+    if( !error() && !warning() ) {
+        errorhandler::getInstance()->flush();
+        e(lang('video_thumbs_regenerated'), 'm');
+    }
+
     $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
 }
 

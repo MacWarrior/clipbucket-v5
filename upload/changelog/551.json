@@ -1,0 +1,76 @@
+{
+  "version":"5.5.1",
+  "revision":"21",
+  "status":"dev",
+  "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Fix TMDB import error display"
+        ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Move sub-collections option to collection config tab"
+        ,"Refactor category creation and edition interface"
+        ,"Implement TMDB mature content search"
+      ]
+    },
+    {
+      "title": "Front office",
+      "description": [
+        "Refactor collections page"
+        ,"Fix pagination on videos, collections & photos"
+        ,"Fix comments display on photos collection <i>(#91)</i>"
+        ,"Add edit button on video page <i>(#319)</i>"
+        ,"Refactor video edition interface"
+        ,"Update translations"
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        ,"Fix SSL detection"
+        ,"Cleanup code"
+        ,"Fix MySQL8 compatibility"
+        ,"Fix old videos without quality specified"
+        ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Add option to only keep maximum resolution"
+      ]
+    },
+    {
+      "title": "Installation & Update",
+      "description": [
+        "Fix revision check when current revision is 0"
+        ,"Fix update status when working on new version"
+        ,"Stop migration on first error if occurs"
+        ,"Fix hardcoded prefix in update 5.5.0 - 349"
+        ,"Fix categories creation in update 5.5.0 - 331"
+        ,"Prevent SSE error on update from old version"
+        ,"Fix dependancies check during installation process"
+        ,"Update Debian 10 installation script"
+      ]
+    },
+    {
+      "title": "Plugins",
+      "description": [
+        "Update compatibility notice to 5.5.1"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update Player to version 2.0.3"
+      ]
+    },
+    {
+      "title": "External components",
+      "description": [
+        "Update VideoJS to version 8.11.5"
+      ]
+    }
+  ]
+}

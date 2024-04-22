@@ -713,6 +713,7 @@ class timthumb
 
     protected function calcDocRoot()
     {
+        require_once dirname(__DIR__, 2). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
         $this->docRoot = DirPath::get('root');
     }
 

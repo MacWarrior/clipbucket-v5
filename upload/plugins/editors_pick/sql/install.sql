@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}editors_picks` (
     PRIMARY KEY (`pick_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci AUTO_INCREMENT=1;
 
-ALTER TABLE `{tbl_prefix}video` ADD IF NOT EXISTS `in_editor_pick` varchar(255) DEFAULT 'no';
+ALTER TABLE `{tbl_prefix}video` ADD `in_editor_pick` varchar(255) DEFAULT 'no';
 
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (language_key)
 VALUES
@@ -23,6 +23,7 @@ SET @language_id_en = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE l
 SET @language_id_fr = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
 SET @language_id_de = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'de');
 SET @language_id_ptbr = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'pt-BR');
+SET @language_id_esp = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'esp');
 
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -83,6 +84,8 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_lang
     VALUES (@language_id_de, @id_language_key, 'Zur redaktionellen Auswahl hinzufügen');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_ptbr, @id_language_key, 'Adicionar à Escolha do Editor');
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+    VALUES (@language_id_esp, @id_language_key, 'Añadir a la selección del editor');
 
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks_remove_from');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -93,6 +96,8 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_lang
     VALUES (@language_id_de, @id_language_key, 'Von der redaktionellen Auswahl entfernen');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_ptbr, @id_language_key, 'Remover da Escolha do Editor');
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+    VALUES (@language_id_esp, @id_language_key, 'Eliminar de la selección del editor');
 
 SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_editors_picks_remove_confirm');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -103,3 +108,5 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_lang
     VALUES (@language_id_de, @id_language_key, 'Wollen Sie das ausgewählte Videos wirklich aus der redaktionellen Auswahl entfernen?');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_ptbr, @id_language_key, 'Tem certeza de que deseja remover os vídeos selecionados da Escolha do Editor?');
+INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
+    VALUES (@language_id_esp, @id_language_key, '¿Estás seguro de que deseas eliminar los videos seleccionados de la Selección del editor?');

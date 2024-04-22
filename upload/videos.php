@@ -17,7 +17,7 @@ if ($_GET['cat'] && is_numeric($_GET['cat'])) {
 }
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, VLISTPP);
+$get_limit = create_query_limit($page, config('videos_list_per_page'));
 $params = Video::getInstance()->getFilterParams($_GET['sort'], []);
 $params = Video::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
@@ -29,15 +29,16 @@ assign('videos', $videos);
 
 if( empty($videos) ){
     $count = 0;
-} else if( count($videos) < config('videos_list_per_page') ){
+} else if( count($videos) < config('videos_list_per_page') && $page == 1 ){
     $count = count($videos);
 } else {
     unset($params['limit']);
+    unset($params['order']);
     $params['count'] = true;
     $count = Video::getInstance()->getAll($params);
 }
 
-$total_pages = count_pages($count, VLISTPP);
+$total_pages = count_pages($count, config('videos_list_per_page'));
 //Pagination
 $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';

@@ -3,7 +3,7 @@ class DirPath
 {
     public static function get(string $dir_name, $get_url = false): string
     {
-        $root_directory = dirname(__DIR__) . DIRECTORY_SEPARATOR;
+        $root_directory = dirname(__DIR__);
         switch($dir_name){
             default:
             case 'root':
@@ -25,7 +25,7 @@ class DirPath
             case 'plugins':
             case 'styles':
             case 'vendor':
-                $path = $root_directory . $dir_name;
+                $path = $root_directory . DIRECTORY_SEPARATOR . $dir_name;
                 $url = $dir_name;
                 break;
 
@@ -41,31 +41,31 @@ class DirPath
             case 'temp':
             case 'thumbs':
             case 'videos':
-                $path = $root_directory . 'files' . DIRECTORY_SEPARATOR . $dir_name;
+            case 'category_thumbs':
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'files/' . $dir_name;
                 break;
 
-            case 'category_thumbs':
             case 'collection_thumbs':
             case 'icons':
             case 'playlist_covers':
-                $path = $root_directory . 'images' . DIRECTORY_SEPARATOR . $dir_name;
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'images/' . $dir_name;
                 break;
 
             case 'userfeeds':
             case 'views':
-                $path = $root_directory . 'cache' . DIRECTORY_SEPARATOR . $dir_name;
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'cache/' . $dir_name;
                 break;
 
             case 'sql':
-                $path = $root_directory . 'cb_install' . DIRECTORY_SEPARATOR . $dir_name;
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'cb_install' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'cb_install/' . $dir_name;
                 break;
 
             case 'classes':
-                $path = $root_directory . 'includes' . DIRECTORY_SEPARATOR . $dir_name;
+                $path = $root_directory . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'includes/' . $dir_name;
                 break;
         }

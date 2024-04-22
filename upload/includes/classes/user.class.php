@@ -136,11 +136,13 @@ class User
         $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
-            /* Search is done on collection title, collection tags */
-            // TODO : Add search on collection categories
+            /* Search is done on username, profile tags and profile categories */
             $cond = '(MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            }
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                $cond .= 'OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
             $cond .= ')';
 
@@ -148,7 +150,7 @@ class User
         }
 
         if( $param_count ){
-            $select = ['COUNT(users.userid) AS count'];
+            $select = ['COUNT(DISTINCT users.userid) AS count'];
         } else {
             $select = $this->getAllFields();
         }
@@ -161,6 +163,11 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
             $group[] = 'users.userid';
+        }
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
         if( $param_group ){
@@ -183,7 +190,8 @@ class User
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
-                FROM ' . cb_sql_table('users') . ' '
+                FROM ' . cb_sql_table('users') . '
+                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -226,7 +234,7 @@ class User
         return $diff->y;
     }
 
-    public function isUserConnected()
+    public function isUserConnected(): bool
     {
         return !empty($this->current_user);
     }
@@ -283,7 +291,7 @@ class userquery extends CBCategory
     {
         global $cb_columns;
 
-        $this->cat_tbl = 'user_categories';
+        $this->cat_tbl = 'users_categories';
 
         $basic_fields = [
             'userid', 'username', 'email', 'avatar', 'sex', 'avatar_url',
@@ -763,43 +771,53 @@ class userquery extends CBCategory
     {
         global $db;
 
-        if ($this->user_exists($uid)) {
-            $udetails = $this->get_user_details($uid);
-
-            if (user_id() != $uid && has_access('admin_access', true) && $uid != 1) {
-                //list of functions to perform while deleting a video
-                $del_user_funcs = $this->delete_user_functions;
-                if (is_array($del_user_funcs)) {
-                    foreach ($del_user_funcs as $func) {
-                        if (function_exists($func)) {
-                            $func($udetails);
-                        }
-                    }
-                }
-
-                //Removing Subscriptions and subscribers
-                $this->remove_user_subscriptions($uid);
-                $this->remove_user_subscribers($uid);
-
-                //Changing User Videos To Anonymous
-                $db->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=\'' . $uid . '\'');
-                //Deleting User Contacts
-                $this->remove_contacts($uid);
-
-                //Deleting User PMS
-                $this->remove_user_pms($uid);
-                //Changing From Messages to Anonymous
-                $db->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $this->get_anonymous_user() . '\' WHERE message_from=\'' . $uid . '\'');
-                //Finally Removing Database entry of user
-                $db->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=\'' . $uid . '\'');
-                $db->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=\'' . $uid . '\'');
-
-                e(lang('usr_del_msg'), 'm');
-            } else {
-                e(lang('you_cant_delete_this_user'));
-            }
-        } else {
+        if( !$this->user_exists($uid) ){
             e(lang('user_doesnt_exist'));
+            return;
+        }
+
+        $udetails = $this->get_user_details($uid);
+
+        if( user_id() == $uid || !has_access('admin_access', true) ){
+            e(lang('you_cant_delete_this_user'));
+            return;
+        }
+
+        //list of functions to perform while deleting a video
+        $del_user_funcs = $this->delete_user_functions;
+        if (is_array($del_user_funcs)) {
+            foreach ($del_user_funcs as $func) {
+                if (function_exists($func)) {
+                    $func($udetails);
+                }
+            }
+        }
+
+        //Removing Subscriptions and subscribers
+        $this->remove_user_subscriptions($uid);
+        $this->remove_user_subscribers($uid);
+
+        //Changing User Videos To Anonymous
+        $db->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=' . mysql_clean($uid));
+        //Deleting User Contacts
+        $this->remove_contacts($uid);
+
+        //Deleting User PMS
+        $this->remove_user_pms($uid);
+        //Changing From Messages to Anonymous
+        $db->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $this->get_anonymous_user() . '\' WHERE message_from=' . mysql_clean($uid));
+
+        //Remove tags
+        Tags::deleteTags('profile', $uid);
+        //Remove categories
+        Category::getInstance()->unlinkAll('user', $uid);
+
+        //Finally Removing Database entry of user
+        $db->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
+        $db->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
+
+        if( empty(errorhandler::getInstance()->get_error()) ){
+            e(lang('usr_del_msg'), 'm');
         }
     }
 
@@ -2241,23 +2259,29 @@ class userquery extends CBCategory
      */
     function get_user_profile($uid)
     {
-        global $db;
-        $select = '';
+        $select = [];
         $join = '';
-        $group = '';
+        $group = [];
+        $user_profile_fields = ['userid', 'show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'avatar', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'profile_video', 'profile_item', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+
+        foreach($user_profile_fields as $field){
+            $select[] = 'UP.' . $field;
+        }
+
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select = ', GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $group = $select;
+            $select[] = 'GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
                     LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
-            $group = ' GROUP BY UP.userid';
         }
-        $query = 'SELECT UP.* ' . $select . '
+
+        $query = 'SELECT ' . implode(', ', $select) . '
                     FROM ' . tbl($this->dbtbl['user_profile']) . ' UP
                    ' . $join . '
                     WHERE UP.userid = ' . mysql_clean($uid) . '
-                   ' . $group;
-        $result = $db->_select($query, 60);
+                   ' . (empty($group) ? '' : ' GROUP BY ' . implode(', ', $group));
+        $result = Clipbucket_db::getInstance()->_select($query, 60);
 
         if (count($result) > 0) {
             return $result[0];
@@ -2448,8 +2472,10 @@ class userquery extends CBCategory
             }
         }
 
-        //Changing category
-        Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
+        if( config('enable_user_category') == 'yes' ){
+            //Changing category
+            Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
+        }
 
         //Updating User Avatar
         if ($array['avatar_url']) {
@@ -2474,7 +2500,7 @@ class userquery extends CBCategory
             $uquery_field[] = 'avatar';
             $uquery_val[] = '';
         } else {
-            if (isset($_FILES['avatar_file']['name']) && !empty($_FILES['avatar_file']['name'])) {
+            if (!empty($_FILES['avatar_file']['name'])) {
                 $file = $Upload->upload_user_file('a', $_FILES['avatar_file'], $array['userid']);
                 if ($file) {
                     $uquery_field[] = 'avatar';
@@ -3247,7 +3273,7 @@ class userquery extends CBCategory
                 'db_field'          => 'dob',
                 'required'          => 'yes',
                 'placehoder'        => lang('user_date_of_birth'),
-                'invalid_err'       => sprintf(lang('register_min_age_request'), config('min_age_reg'))
+                'invalid_err'       => ((!empty(config('min_age_reg')) && (int)config('min_age_reg') != 0) ? sprintf(lang('register_min_age_request'), config('min_age_reg')) : lang('dob_required'))
             ]
         ];
 
@@ -3308,7 +3334,6 @@ class userquery extends CBCategory
                 'name'             => 'category',
                 'id'               => 'category',
                 'value'            => ['category', ($default['category'] ?? '')],
-                'db_field'         => 'category',
                 'checked'          => ($default['category'] ?? ''),
                 'required'         => 'yes',
                 'invalid_err'      => lang('select_category'),
@@ -3428,13 +3453,6 @@ class userquery extends CBCategory
                     $query_field[] = $field['db_field'];
                 }
 
-                if (is_array($val)) {
-                    $new_val = '';
-                    foreach ($val as $v) {
-                        $new_val .= '#' . $v . '# ';
-                    }
-                    $val = $new_val;
-                }
                 if (!$field['clean_func'] || (!function_exists($field['clean_func']) && !is_array($field['clean_func']))) {
                     $val = mysql_clean($val);
                 } else {
@@ -3548,6 +3566,11 @@ class userquery extends CBCategory
             $insert_id = $db->insert_id();
 
             $db->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['password'], $insert_id)], ' userid=\'' . $insert_id . '\'');
+
+            if( config('enable_user_category') == 'yes' ){
+                //Changing category
+                Category::getInstance()->saveLinks('user', $insert_id, [$array['category']]);
+            }
 
             $fields_list = [];
             $fields_data = [];
@@ -4008,6 +4031,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to revert back to admin
+     * @throws Exception
      */
     function revert_from_user()
     {
@@ -4045,6 +4069,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get anonymous user
+     * @throws Exception
      */
     function get_anonymous_user()
     {
@@ -4069,20 +4094,18 @@ class userquery extends CBCategory
         }
 
         //Create Anonymous user
-        return $this->signup_user(
-            [
-                'username'  => 'anonymous' . RandomString(5),
-                'email'     => $email,
-                'password'  => $pass,
-                'cpassword' => $pass,
-                'country'   => config('default_country_iso2'),
-                'gender'    => 'Male',
-                'dob'       => '2000-10-10',
-                'category'  => '1',
-                'level'     => '6',
-                'active'    => 'yes',
-                'agree'     => 'yes'
-            ], false);
+        return $this->signup_user([
+            'username'  => 'anonymous' . RandomString(5),
+            'email'     => $email,
+            'password'  => $pass,
+            'cpassword' => $pass,
+            'country'   => config('default_country_iso2'),
+            'gender'    => 'Male',
+            'dob'       => '2000-10-10',
+            'level'     => '6',
+            'active'    => 'yes',
+            'agree'     => 'yes'
+        ], false);
     }
 
     /**
@@ -4152,7 +4175,6 @@ class userquery extends CBCategory
                     $cbpm->delete_msg($out['message_id'], $uid, 'out');
                 }
             }
-            $eh->flush_msg();
             e(lang('all_user_sent_messages_deleted'), 'm');
         }
     }
@@ -4334,8 +4356,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        $db->update(tbl('user_profile'), ['profile_item'], [""]
-            , " userid='$uid' ");
+        $db->update(tbl('user_profile'), ['profile_item'], [''], " userid='$uid' ");
 
         e(lang('profile_item_removed'), 'm');
     }

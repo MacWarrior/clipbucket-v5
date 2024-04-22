@@ -41,6 +41,10 @@
 
         <dt>Media Info</dt>
         <dd><span><?php echo msg_arr(check_module('media_info')); ?></span></dd>
+        <dt>MySQL Client</dt>
+        <dd><span><?php echo msg_arr(check_module('mysql_client')); ?></span></dd>
+        <dt>Git</dt>
+        <dd><span><?php echo msg_arr(check_module('git')); ?></span></dd>
     </dl>
 
     <form method="post" id="installation">

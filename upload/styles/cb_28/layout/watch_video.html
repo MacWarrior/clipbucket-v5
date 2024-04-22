@@ -76,6 +76,28 @@
 									</button>
 								{/if}
 							{/if}
+
+							{if config('enable_edit_button') == 'yes'}
+								{if has_access('admin_access', true)}
+									{if user_id() && $video.userid == user_id()}
+										<div class="dropdown">
+											<button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+												{lang code='edit'}
+												<span class="caret"></span>
+											</button>
+											<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
+												<li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
+												<li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
+											</ul>
+										</div>
+									{else}
+									<a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
+									{/if}
+								{elseif user_id() && $video.userid == user_id()}
+										<a class="btn btn-success" style=" font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
+								{/if}
+							{/if}
+
 							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
 							<div class="dropdown">
 								<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
@@ -138,10 +160,52 @@
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
 									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
 									<li>
-										<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags" value="{$vdo.tags}">
-										<ul id="list_tags" style="border: 0;"></ul>
+										<strong class="pull-left" id="label_tags_video">{lang('tag_title')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_video" value="{$vdo.tags_video}">
+										<ul id="list_tags_video" style="border: 0;"></ul>
 									</li>
+									{if config('enable_video_genre') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_genre">{lang('genre')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_genre" value="{$vdo.tags_genre}">
+										<ul id="list_tags_genre" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_actor') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_actors">{lang('actors')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_actors" value="{$vdo.tags_actors}">
+										<ul id="list_tags_actors" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_producer') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_producer">{lang('producer')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_producer" value="{$vdo.tags_producer}">
+										<ul id="list_tags_producer" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_executive_producer') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_executive_producer">{lang('executive_producer')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_executive_producer" value="{$vdo.tags_executive_producer}">
+										<ul id="list_tags_executive_producer" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_director') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_director">{lang('director')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_director" value="{$vdo.tags_director}">
+										<ul id="list_tags_director" style="border: 0;"></ul>
+									</li>
+									{/if}
+									{if config('enable_video_crew') == 'yes'}
+									<li>
+										<strong class="pull-left" id="label_tags_crew">{lang('crew')}:&nbsp;&nbsp;</strong>
+										<input type="hidden" id="tags_crew" value="{$vdo.tags_crew}">
+										<ul id="list_tags_crew" style="border: 0;"></ul>
+									</li>
+									{/if}
 								</ul>
 							</div>
 						</div>
@@ -206,10 +270,10 @@
 							{/if}
 							(<span id="comment_count">{$vdo.comments_count}</span>)
 						</h2>
-						<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-						<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
-
-						<div id="bloc-comment" style="display:none;">
+						<a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
+							<span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
+						</a>
+						<div id="bloc-comment" class="collapse">
 							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 
 							<div class="userComments">

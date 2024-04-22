@@ -20,7 +20,7 @@
 				{display_clean($c.collection_name)}&nbsp;
 				({$c.total_objects}&nbsp;{lang code="{$c.type}"})
 				{lang code='collection' assign='object_type'}
-				{uploadButton details=$c output='link' target="_blank" class='btn btn-success pull-right'}
+				{uploadButton details=$c output='link' class='btn btn-success pull-right'}
 			</h1>
 
             {if $collections}
@@ -84,7 +84,7 @@
 					</li>
 					<li>	
 						<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
-						<input type="hidden" id="tags" value="{$c.collection_tags}">
+						<input type="hidden" id="tags" value="{$c.tags}">
 						<ul id="list_tags" style="border:0;"></ul>
 					</li>
 				</ul>
@@ -102,10 +102,10 @@
 							{/if}
 							(<span id="comment_count">{$c.total_comments}</span>)
 						</h2>
-						<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-						<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
-
-						<div id="bloc-comment" style="display:none;">
+						<a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
+							<span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
+						</a>
+						<div id="bloc-comment" class="collapse">
 							{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
 
 							<div class="userComments">
@@ -167,4 +167,7 @@
 	var last_commented = "{$c.last_commented}";
 	var total_comments = "{$c.total_comments}";
 	var object_type = "{$object_type}";
+	$(function () {
+		init_readonly_tags('tags', '#list_tags');
+	});
 </script>

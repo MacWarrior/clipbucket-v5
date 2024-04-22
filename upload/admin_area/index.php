@@ -134,6 +134,7 @@ $update = Update::getInstance();
 Assign('VERSION', $update->getCurrentCoreVersion());
 Assign('STATE', strtoupper($update->getCurrentCoreState()));
 Assign('comments', $comments);
+Assign('changelog_551', $update->getChangelogHTML('551'));
 Assign('changelog_550', $update->getChangelogHTML('550'));
 Assign('changelog_541', $update->getChangelogHTML('541'));
 Assign('changelog_540', $update->getChangelogHTML('540'));

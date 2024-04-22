@@ -35,7 +35,7 @@
                 <label class="grey-text" for="dbuser">Database User</label>
                 <input type="text" name="dbuser" id="dbuser" value="" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    Your MYSQL username
+                    Your MySQL username
                 </p>
             </div>
 
@@ -43,7 +43,15 @@
                 <label class="grey-text" for="dbpass">Database Password</label>
                 <input type="text" name="dbpass" id="dbpass" value="" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    Your MYSQL password
+                    Your MySQL password
+                </p>
+            </div>
+
+            <div class="field">
+                <label class="grey-text" for="dbport">Database Port</label>
+                <input type="text" name="dbport" id="dbport" value="3306" class="form-control">
+                <p class="grey-text font-size" style="margin-top:0;">
+                    Your MySQL port
                 </p>
             </div>
 

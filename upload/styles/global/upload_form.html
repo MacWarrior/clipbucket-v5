@@ -48,7 +48,11 @@
                             {$formObj->createField($field)}
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
-                        {else}
+                        {elseif $field.id == 'tags_video'}
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                            <ul id="list_{$field.id}"></ul>
+                        {elseif !$field.id|strstr:'tags'}
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
                         {/if}
@@ -58,6 +62,23 @@
                     <div class="form-group hidden">
                         <label for="duration">Duration</label>
                         <input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
+                    </div>
+                </div>
+
+                <div class="formSection clear">
+                    <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $requiredFields.fields as $field}
+                        <div class="form-group">
+                            {$field.class='form-control'}
+                            {$field.notShowSeprator='yes'}
+                            {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                            <ul id="list_{$field.id}"></ul>
+                            {/if}
+                        </div>
+                        {/foreach}
                     </div>
                 </div>
                 {ANCHOR place="after_upload_form_required_fields"}

@@ -128,7 +128,7 @@ $get_limit = create_query_limit($page, RESULTS);
 
 $parr['limit'] = $get_limit;
 if (!$parr['order']) {
-    $parr['order'] = ' date_added DESC ';
+    $parr['order'] = ' photos.date_added DESC ';
 } else {
     $parr['order'] = $parr['order'] . ' DESC';
 }

@@ -21,7 +21,7 @@ if ($cbcollection->is_viewable($c)) {
     $params['first_only'] = true;
     $cdetails = Collection::getInstance()->getAll($params);
 
-    if (!$cdetails || !isSectionEnabled($cdetails['type'])) {
+    if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !has_access('admin_access', true)) ){
         $Cbucket->show_page = false;
     }
 
@@ -29,7 +29,7 @@ if ($cbcollection->is_viewable($c)) {
         e(lang('collection_not_exists'));
     } else {
         $get_limit = create_query_limit($page, config('collection_items_page'));
-        if (config('enable_sub_collection')) {
+        if (config('enable_sub_collection') == 'yes') {
             $params = [];
             $params['collection_id_parent'] = $c;
             $params['limit'] = $get_limit;
@@ -60,7 +60,7 @@ if ($cbcollection->is_viewable($c)) {
         //Pagination
         $pages->paginate($total_pages, $page);
 
-        if (config('enable_sub_collection')) {
+        if (config('enable_sub_collection') == 'yes') {
             $breadcrum = [];
             $collection_parent = $cdetails;
             do {

@@ -17,8 +17,8 @@ ALTER TABLE `{tbl_prefix}languages_translations`
     ADD KEY `id_language_key` (`id_language_key`);
 
 ALTER TABLE `{tbl_prefix}languages_translations`
-    ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `{tbl_prefix}languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `languages_translations_ibfk_1` FOREIGN KEY (`language_id`) REFERENCES `{tbl_prefix}languages` (`language_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 ALTER TABLE `{tbl_prefix}languages`
     DROP COLUMN language_code,
@@ -4071,7 +4071,7 @@ INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_lang
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_eng, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'upload_desktop_msg'), 'Upload videos directly FROM your desktop and share it online with our community ');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-    VALUES (@language_id_eng, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'upload_remote_video_msg'), 'Upload videos FROM other websites or server, simply enter its URL and click on Upload or you can enter Youtube Url and click Grab FROM youtube to upload video directly FROM youtube without entering its details');
+    VALUES (@language_id_eng, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'upload_remote_video_msg'), 'Upload videos FROM other websites or server, simply enter its URL and click on Upload or you can enter Youtube Url and click Grab from youtube to upload video directly from youtube without entering its details');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_eng, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'embed_video_msg'), 'Embed videos FROM different website using their \"video embed code\" , simply enter embed code, enter video duration and SELECT its thumb, fill in the required details and click on upload.');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)

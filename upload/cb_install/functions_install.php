@@ -51,15 +51,115 @@ function check_module($type): array
 {
     global $extensionsCLI;
     $return = [];
+    $regex_version = '/(\d+\.\d+\.\d+)/';
+    $mysqlReq='5.6.0';
+
     switch ($type) {
-        case 'php_web':
-            $php_version = phpversion();
-            $req = '7.0.0';
-            if ($php_version < $req) {
-                $return['err'] = sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, PHP_BINARY);
-            } else {
-                $return['msg'] = sprintf('Found PHP %s : %s', $php_version, PHP_BINARY);
+        case 'ffmpeg':
+        case 'ffprobe':
+            $ffmpeg_path = exec('which '.$type);
+            if (empty($ffmpeg_path)) {
+                $return['err'] = 'Unable to find ' . strtoupper($type);
+                break;
             }
+            $ffmpeg_version = shell_output($ffmpeg_path . ' -version | head -n1');
+            if( empty($ffmpeg_version) ){
+                $return['err'] = strtoupper($type) . ' is not correctly configured';
+                break;
+            }
+
+            $version = false;
+            preg_match('/SVN-r([0-9]+)/i', $ffmpeg_version, $matches);
+            if (@$matches[1]) {
+                $version = 'r' . $matches[1];
+            }
+            preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
+            if (@$matches[1]) {
+                $version = $matches[1];
+            }
+
+            $req = '3.0';
+            if (!$version) {
+                $return['err'] = 'Unable to find ' . strtoupper($type);
+                break;
+            }
+            if ($version < $req) {
+                $return['err'] = sprintf('Current version is %s, minimal version %s is required. Please update', $version, $req);
+                break;
+            }
+            $return['msg'] = sprintf('Found ' . strtoupper($type) . ' %s : %s', $version, $ffmpeg_path);
+            break;
+
+        case 'git':
+            $git_path = exec('which '.$type);
+            if( empty($git_path) ){
+                $return['err'] = '[OPTIONNAL] Unable to find Git';
+                break;
+            }
+
+            $git_version = shell_output($git_path . ' --version');
+            if( empty($git_version) ){
+                $return['err'] = '[OPTIONNAL] Git is not correctly configured';
+                break;
+            }
+
+            preg_match('/git version (.+)$/', strtolower($git_version), $matches);
+            if( !empty($matches) ) {
+                $return['msg'] = sprintf('Found Git %s', array_pop($matches));
+            }
+            break;
+
+        case 'media_info':
+            $mediainfo_path = exec('which mediainfo');
+            if (empty($mediainfo_path)) {
+                $return['err'] = 'Unable to find Media Info';
+                break;
+            }
+            $mediainfo_result = shell_output($mediainfo_path . ' --version');
+            if( empty($mediainfo_result) ){
+                $return['err'] = 'Media Info is not correctly configured';
+                break;
+            }
+
+            $media_info_version = explode('v', $mediainfo_result);
+            $version = false;
+            if (isset($media_info_version[1])) {
+                $version = $media_info_version[1];
+            }
+
+            if (!$version) {
+                $return['err'] = 'Unable to find Media Info';
+                break;
+            }
+            $return['msg'] = sprintf('Found Media Info %s : %s', $version, $mediainfo_path);
+            break;
+
+        case 'mysql_client':
+            $mysql_path = exec('which mysql');
+            if( empty($mysql_path) ){
+                $return['err'] = 'Unable to find Mysql';
+                break;
+            }
+
+            exec($mysql_path . ' --version', $mysql_client_output);
+            if( empty($mysql_client_output) ){
+                $return['err'] = 'Mysql is not correctly configured';
+                break;
+            }
+
+            $match_mysql = [];
+            preg_match($regex_version, $mysql_client_output[0], $match_mysql);
+            $clientMySqlVersion = $match_mysql[0] ?? false;
+
+            if (!$clientMySqlVersion) {
+                $return['err'] = 'Unable to find MySQL Client';
+                break;
+            }
+            if ((version_compare($clientMySqlVersion, $mysqlReq) < 0)) {
+                $return['err'] = sprintf('Current version is %s, minimal version %s is required. Please update', $clientMySqlVersion, $mysqlReq);
+                break;
+            }
+            $return['msg'] = sprintf('Found MySQL Client %s', $clientMySqlVersion);
             break;
 
         case 'php_cli':
@@ -77,7 +177,7 @@ function check_module($type): array
                 break;
             }
 
-            $regVersion = '/(\w* \w*) => (.*)$/';
+            $regVersion = '/(\w* \w*) => \w* ?(\d+\.\d+\.\d+).*$/';
             foreach ($php_cli_info as $line) {
                 $match = [];
                 if (strpos($line, 'PHP Version') !== false) {
@@ -86,7 +186,7 @@ function check_module($type): array
                         $php_version = $match[2];
                     }
                 }
-                if (strpos($line, 'GD library Version') !== false) {
+                if (strpos($line, 'GD library Version') !== false || strpos($line, 'GD Version') !== false ) {
                     preg_match($regVersion, $line, $match);
                     if (!empty($match)) {
                         $extensionsCLI['gd'] = $match[2];
@@ -121,95 +221,21 @@ function check_module($type): array
             $req = '7.0.0';
             if ($php_version < $req) {
                 $return['err'] = sprintf('Found PHP CLI %s but required is PHP %s : %s', $php_version, $req, $php_path);
-            } else {
-                $return['msg'] = sprintf('Found PHP CLI %s : %s', $php_version, $php_path);
+                break;
             }
+            $return['msg'] = sprintf('Found PHP CLI %s : %s', $php_version, $php_path);
             break;
 
-        case 'ffmpeg':
-            $ffmpeg_path = exec('which ffmpeg');
-            if( empty($ffmpeg_path) ){
-                $return['err'] = 'Unable to find FFMPEG';
+        case 'php_web':
+            $req = '7.0.0';
+            $match = [];
+            preg_match($regex_version, phpversion(), $match);
+            $php_version = $match[1] ?? phpversion();
+            if ($php_version < $req) {
+                $return['err'] = sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, PHP_BINARY);
                 break;
             }
-
-            $ffmpeg_version = shell_output("$ffmpeg_path -version | head -n1");
-            if( empty($ffmpeg_version) ){
-                $return['err'] = 'FFMpeg is not correctly configured';
-                break;
-            }
-
-            $version = false;
-            preg_match('/SVN-r([0-9]+)/i', $ffmpeg_version, $matches);
-            if (@$matches[1]) {
-                $version = 'r' . $matches[1];
-            }
-            preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
-            if (@$matches[1]) {
-                $version = $matches[1];
-            }
-
-            if (!$version) {
-                $return['err'] = 'FFMpeg is not correctly configured';
-            } else {
-                $return['msg'] = sprintf('Found FFMPEG %s : %s', $version, $ffmpeg_path);
-            }
-            break;
-
-        case 'ffprobe':
-            $ffprobe_path = exec('which ffprobe');
-            if( empty($ffprobe_path) ){
-                $return['err'] = 'Unable to find FFPROBE';
-                break;
-            }
-
-            $ffprobe_version = shell_output("$ffprobe_path -version | head -n1");
-            if( empty($ffprobe_version) ){
-                $return['err'] = 'FFPROBE is not correctly configured';
-                break;
-            }
-
-            $version = false;
-            preg_match('/SVN-r([0-9]+)/i', $ffprobe_version, $matches);
-            if (@$matches[1]) {
-                $version = 'r' . $matches[1];
-            }
-            preg_match('/version ([0-9.]+)/i', $ffprobe_version, $matches);
-            if (@$matches[1]) {
-                $version = $matches[1];
-            }
-
-            if (!$version) {
-                $return['err'] = 'Unable to find FFPROBE';
-            } else {
-                $return['msg'] = sprintf('Found FFPROBE %s : %s', $version, $ffprobe_path);
-            }
-            break;
-
-        case 'media_info':
-            $mediainfo_path = exec('which mediainfo');
-            if( empty($ffprobe_path) ){
-                $return['err'] = 'Unable to find Media Info';
-                break;
-            }
-
-            $mediainfo_result = shell_output("$mediainfo_path --version");
-            if( empty($mediainfo_result) ){
-                $return['err'] = 'Media Info is not correctly configured';
-                break;
-            }
-
-            $media_info_version = explode('v', $mediainfo_result);
-            $version = false;
-            if (isset($media_info_version[1])) {
-                $version = $media_info_version[1];
-            }
-
-            if (!$version) {
-                $return['err'] = 'Unable to find Media Info';
-            } else {
-                $return['msg'] = sprintf('Found Media Info %s : %s', $version, $mediainfo_path);
-            }
+            $return['msg'] = sprintf('Found PHP %s : %s', $php_version, PHP_BINARY);
             break;
     }
     return $return;
@@ -217,15 +243,20 @@ function check_module($type): array
 
 function check_extension ($extension, $type) {
     global $extensionsCLI, $extensionsWeb;
+    $reg = '(\d+\.\d+\.\d+)';
     switch ($type) {
         case 'cli':
             $version = $extensionsCLI[$extension] ?? false;
             if (!$version) {
                 $return['err'] = $extension. ' extension is not enabled';
-            } else {
-                $return['msg'] = sprintf('%s %s extension is enabled',$extension ,$version);
+                break;
             }
+
+            $matches =[];
+            preg_match($reg, $version,$matches);
+            $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[1] ?? $version);
             break;
+
         case 'web':
             $extensionMessages = [
                 'gd' => 'GD library Version',
@@ -240,7 +271,12 @@ function check_extension ($extension, $type) {
                     $return['err'] = $extension . ' extension is not enabled';
                 } else {
                     $key = $extensionMessages[$extension];
-                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $res[$key]);
+                    if (empty($res[$key]) && $extension == 'gd') {
+                        $key='GD Version';
+                    }
+                    $matches =[];
+                    preg_match($reg, $res[$key],$matches);
+                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[0] ?? $res[$key]);
                 }
             }
             break;
@@ -327,6 +363,7 @@ function checkPermissions(): array
         'files',
         'files/backgrounds',
         'files/conversion_queue',
+        'files/category_thumbs',
         'files/logs',
         'files/mass_uploads',
         'files/original',
@@ -337,7 +374,6 @@ function checkPermissions(): array
         'files/videos',
         'images',
         'images/avatars',
-        'images/category_thumbs',
         'images/collection_thumbs',
         'includes'
     ];
@@ -383,7 +419,7 @@ function GetServerURL(): string
 }
 
 /**
- * @throws \Exception
+ * @throws Exception
  */
 function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 {

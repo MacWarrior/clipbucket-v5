@@ -2,7 +2,7 @@
 
 class Session
 {
-    var $tbl = 'sessions';
+    const tbl = 'sessions';
     var $id = '';
     var $overwrite = false;
 
@@ -27,7 +27,7 @@ class Session
      * @param bool $value
      * @param bool $reg
      *
-     * @throws \Exception
+     * @throws Exception
      * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
      */
 
@@ -41,19 +41,17 @@ class Session
         $sessions = $this->get_user_session($user, $name, true);
 
         if (count($sessions) > 0) {
-            $db->delete(tbl($this->tbl), ['session_string', 'session'], [$name, $this->id]);
+            $db->delete(tbl(self::tbl), ['session_string', 'session'], [$name, $this->id]);
         }
 
         $cur_url = $pages->GetCurrentUrl();
 
-        if (getConstant('THIS_PAGE') != 'cb_install') {
-            if ($name == 'guest' && config('store_guest_session') != 'yes') {
-                // do nothing
-            } else {
-                $db->insert(tbl($this->tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
-                    'last_active', 'referer', 'agent', 'current_page'],
-                    [$user, $this->id, $name, $_SERVER['REMOTE_ADDR'], $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
-            }
+        if ($name == 'guest' && config('store_guest_session') != 'yes') {
+            // do nothing
+        } else {
+            $db->insert(tbl(self::tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
+                'last_active', 'referer', 'agent', 'current_page'],
+                [$user, $this->id, $name, $_SERVER['REMOTE_ADDR'], $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
         }
 
         if ($reg) {
@@ -70,7 +68,7 @@ class Session
      * @param bool $phpsess
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_user_session($user, $session_name = false, $phpsess = false): array
     {
@@ -85,27 +83,27 @@ class Session
             }
             $session_cond .= ' session =\'' . $this->id . '\' ';
         }
-        return $db->select(tbl($this->tbl), '*', $session_cond);
+        return $db->select(tbl(self::tbl), '*', $session_cond);
     }
 
     /**
      * Function used to get sessins
      *
-     * @throws \Exception
+     * @throws Exception
      * @todo : They are updated on every page refresh, highly  critical for performance.
      */
     function get_sessions(): array
     {
         global $db, $pages;
-        $results = $db->select(tbl($this->tbl), '*', 'session =\'' . $this->id . '\' ');
+        $results = $db->select(tbl(self::tbl), '*', 'session =\'' . $this->id . '\' ');
 
         $cur_url = $pages->GetCurrentUrl();
 
         if (getConstant('THIS_PAGE') != 'cb_install') {
             if (getConstant('THIS_PAGE') != 'ajax') {
-                $db->update(tbl($this->tbl), ['last_active', 'current_page'], [now(), $cur_url], ' session=\'' . $this->id . '\' ');
+                $db->update(tbl(self::tbl), ['last_active', 'current_page'], [now(), $cur_url], ' session=\'' . $this->id . '\' ');
             } else {
-                $db->update(tbl($this->tbl), ['last_active'], [now()], ' session=\'' . $this->id . '\' ');
+                $db->update(tbl(self::tbl), ['last_active'], [now()], ' session=\'' . $this->id . '\' ');
             }
         }
 
@@ -192,12 +190,12 @@ class Session
 
     /**
      * Destroy Session
-     * @throws \Exception
+     * @throws Exception
      */
     function destroy()
     {
         global $db;
-        $db->delete(tbl($this->tbl), ['session'], [$this->id]);
+        $db->delete(tbl(self::tbl), ['session'], [$this->id]);
         session_destroy();
     }
 
@@ -228,7 +226,7 @@ class Session
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     function kick($id): bool
     {
@@ -245,7 +243,17 @@ class Session
             e('You cannot kick administrators');
             return false;
         }
-        $db->delete(tbl($this->tbl), ['session_id'], [$id]);
+        $this->deleteById($id);
         return true;
+    }
+
+    /**
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
+    public static function deleteById($id)
+    {
+        Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session_id'], [$id]);
     }
 }

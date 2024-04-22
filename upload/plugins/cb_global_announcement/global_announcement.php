@@ -5,7 +5,7 @@
     Author: Arslan Hassan & MacWarrior
     Version: 2.0.3
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    ClipBucket Version: 5.5.0
+    ClipBucket Version: 5.5.1
 */
 
 class cb_global_announcement

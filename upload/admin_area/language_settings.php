@@ -18,14 +18,12 @@ foreach ($ll as &$language) {
 }
 
 $restorable_langs = get_restorable_languages($ll);
-
 assign('restore_lang_options', $restorable_langs);
 //Get List Of Languages
 assign('language_list', $ll);
 Assign('msg', $msg);
 
 if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET['edit_language'])) {
-
     assign('edit_lang', 'yes');
     $detail = Language::getInstance()->getLangById($_GET['edit_language']);
     assign('lang_details', $detail);

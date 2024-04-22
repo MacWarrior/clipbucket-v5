@@ -1,0 +1,16 @@
+{if $tool_log_list|@count > 0}
+<table class="table table-bordered table-striped " id="tool_logs">
+    <tr>
+        <th class="col-md-1">{lang code='date'}</th>
+        <th class="col-md-11">{lang code='message'}</th>
+    </tr>
+    {section name=i loop=$tool_log_list}
+    <tr>
+        <td>{$tool_log_list[i].datetime}</td>
+        <td>{$tool_log_list[i].message}</td>
+    </tr>
+    {/section}
+</table>
+{else}
+    {lang code='no_logs'}
+{/if}

@@ -8,6 +8,7 @@ class Clipbucket_db
     var $db_uname = '';
     var $db_pwd = '';
     var $db_host = '';
+    var $db_port = '3306';
 
     var $total_queries_sql = [];
     var $total_queries = 0;
@@ -20,46 +21,48 @@ class Clipbucket_db
     /**
      * Connect to mysqli Database
      *
-     * @param $host
-     * @param $name
-     * @param $uname
-     * @param $pwd
-     *
+     * @param string $host
+     * @param string $name
+     * @param string $uname
+     * @param string $pwd
+     * @param string $port
      * @return bool|void
      *
-     * @internal param $ : { string } { $host } { your database host e.g localhost }
-     * @internal param $ : { string } { $name } { name of database to connect to }
-     * @internal param $ : { string } { $uname } { your database username }
-     * @internal param $ : { string } { $pwd } { password of database to connect to }
      */
-    function connect($host = '', $name = '', $uname = '', $pwd = '')
+    function connect(string $host = '', string $name = '', string $uname = '', string $pwd = '', string $port = '3306')
     {
         try {
-            if (!$host) {
+            if (empty($host)) {
                 $host = $this->db_host;
             } else {
                 $this->db_host = $host;
             }
 
-            if (!$name) {
+            if (empty($name)) {
                 $name = $this->db_name;
             } else {
                 $this->db_name = $name;
             }
 
-            if (!$uname) {
+            if (empty($uname)) {
                 $uname = $this->db_uname;
             } else {
                 $this->db_uname = $uname;
             }
 
-            if (!$pwd) {
+            if (empty($pwd)) {
                 $pwd = $this->db_pwd;
             } else {
                 $this->db_pwd = $pwd;
             }
 
-            $this->mysqli = new mysqli($host, $uname, $pwd, $name);
+            if (empty($port)) {
+                $port = $this->db_port;
+            } else {
+                $this->db_port = $port;
+            }
+
+            $this->mysqli = new mysqli($host, $uname, $pwd, $name, $port);
             if ($this->mysqli->connect_errno) {
                 return false;
             }
@@ -334,9 +337,9 @@ class Clipbucket_db
     /**
      * Delete an element from database
      *
-     * @param      $tbl
-     * @param      $flds
-     * @param      $vls
+     * @param string $tbl
+     * @param array $flds
+     * @param array $vls
      * @param null $ep
      *
      * @throws Exception
@@ -345,7 +348,7 @@ class Clipbucket_db
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      * @internal param $ : { string } { $tbl } { table to delete value from }
      */
-    function delete($tbl, $flds, $vls, $ep = null)
+    function delete(string $tbl, array $flds, array $vls, $ep = null)
     {
         $this->ping();
 
@@ -378,9 +381,9 @@ class Clipbucket_db
     /**
      * Function used to insert values in database { table, fields, values style }
      *
-     * @param      $tbl
-     * @param      $flds
-     * @param      $vls
+     * @param string $tbl
+     * @param array $flds
+     * @param array $vls
      * @param null $ep
      *
      * @return mixed|void : { integer } { $insert_id } { id of inserted element }
@@ -391,7 +394,7 @@ class Clipbucket_db
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      */
-    function insert($tbl, $flds, $vls, $ep = null)
+    function insert(string $tbl, array $flds, array $vls, $ep = null)
     {
         $this->ping();
 
@@ -422,8 +425,10 @@ class Clipbucket_db
                 $needle = substr($val, 0, 3);
                 if ($needle == '|f|') {
                     $val = substr($val, 3, strlen($val));
+                    $values_query .=  $val ;
+                } else {
+                    $values_query .= "'" . $val . "'";
                 }
-                $values_query .= "'" . $val . "'";
             }
 
             if ($total_values != $count) {
@@ -530,13 +535,17 @@ class Clipbucket_db
         if ($this->getError() != '') {
             //customize exceptions
             if (preg_match('/language.*doesn\'t exist/', $this->getError())) {
-                throw new \Exception("lang_not_installed");
+                throw new \Exception('lang_not_installed');
             }
             if (preg_match('/version.*doesn\'t exist/', $this->getError())) {
-                throw new \Exception("version_not_installed");
+                throw new \Exception('version_not_installed');
             }
             if (preg_match('/doesn\'t exist/', $this->getError())) {
-                throw new \Exception("missing_table");
+                error_log('SQL : ' . $query);
+                error_log('ERROR : ' . $this->getError());
+                DiscordLog::sendDump('SQL : ' . $query);
+                DiscordLog::sendDump('ERROR : ' . $this->getError());
+                throw new \Exception('missing_table');
             }
 
             if (in_dev()) {
@@ -545,6 +554,9 @@ class Clipbucket_db
                 error_log('SQL : ' . $query);
                 error_log('ERROR : ' . $this->getError());
                 error_log(debug_backtrace_string());
+                DiscordLog::sendDump('SQL : ' . $query);
+                DiscordLog::sendDump('ERROR : ' . $this->getError());
+                DiscordLog::sendDump(debug_backtrace_string());
             } else {
                 e(lang('technical_error'));
             }
