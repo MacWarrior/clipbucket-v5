@@ -10,7 +10,6 @@ class Tmdb
     const MIN_REVISION = '371';
 
     CONST MIN_VERSION_IS_ADULT = '5.5.1';
-    /** @TODO update_revision */
     CONST MIN_REVISION_IS_ADULT = '20';
 
     private $curl;
