@@ -1,6 +1,9 @@
 @echo off
 cls
 
+:: TODO
+:: - Hide git install progress bar if possible
+
 net session >nul 2>&1
 if %errorLevel% NEQ 0 (
     echo ClipBucketV5 easy installation script must be run as Administrator
@@ -39,10 +42,22 @@ echo.
 echo Which domain name do you want to use ? [clipbucket.local]
 SET /p LOCAL_DOMAIN=
 if "%LOCAL_DOMAIN%"=="" (
-   SET "LOCAL_DOMAIN=clipbucket.local"
+    SET "LOCAL_DOMAIN=clipbucket.local"
 )
 
-::goto start_server
+SET "EDIT_HOSTS="
+echo.
+echo Should installation script add entry in Windows hosts ? (Y/N) [Y]
+SET /p EDIT_HOSTS=
+if "%EDIT_HOSTS%"=="" (
+    SET "EDIT_HOSTS=Y"
+)
+
+SET "WINDOWS_HOSTS=C:\Windows\System32\drivers\etc\hosts"
+if "%EDIT_HOSTS%"=="Y" (
+    echo. >> %WINDOWS_HOSTS%
+    echo 127.0.0.1	%LOCAL_DOMAIN% >> %WINDOWS_HOSTS%
+)
 
 :install_root
 echo.
@@ -186,8 +201,8 @@ echo OK
 echo.
 echo |set /p=Configuring MariaDB...
 md %MARIADB_DIR%\data
+start /wait %MARIADB_DIR%\bin\mariadb-install-db.exe
 SET "MARIADB_SERVER_EXE=%MARIADB_DIR%\bin\mariadbd.exe"
-start %MARIADB_DIR%\bin\mariadb-install-db.exe
 start %MARIADB_SERVER_EXE% --initialize-insecure
 echo OK
 
@@ -398,7 +413,7 @@ echo }>> %NGINX_CONF%
 
 echo OK
 
-:start_server
+:setup_script
 echo.
 echo Configuring server start script...
 SET "START_SCRIPT=%CB_DIR%\start.bat"
@@ -407,7 +422,7 @@ echo start %PHP_DIR%\php-cgi.exe -b 127.0.0.1:9000 -c %PHP_DIR%\php.ini >> %STAR
 echo start cmd.exe /k "cd %NGINX_DIR% & %NGINX_DIR%\nginx.exe" >> %START_SCRIPT%
 echo start %MARIADB_SERVER_EXE% --console >> %START_SCRIPT%
 
-
-:: TODO
-:: - Configuring Windows Hosts
-:: - Hide git install progress bar if possible
+:end
+echo.
+echo You can now start server by launching %CB_DIR%\start.bat
+echo.
