@@ -11,7 +11,7 @@ class Tmdb
 
     CONST MIN_VERSION_IS_ADULT = '5.5.1';
     /** @TODO update_revision */
-    CONST MIN_REVISION_IS_ADULT = '18';
+    CONST MIN_REVISION_IS_ADULT = '20';
 
     private $curl;
     private static $instance;

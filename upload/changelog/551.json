@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"19",
+  "revision":"20",
   "status":"dev",
   "detail":[
     {
@@ -10,6 +10,7 @@
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Refactor category creation and edition interface"
+        ,"Implement TMDB mature content search"
       ]
     },
     {
