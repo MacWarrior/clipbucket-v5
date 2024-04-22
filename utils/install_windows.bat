@@ -9,13 +9,21 @@ if %errorLevel% NEQ 0 (
     exit /b
 )
 
+reg Query "HKLM\Hardware\Description\System\CentralProcessor\0" | find /i "x86" > NUL && set OS=32BIT || set OS=64BIT
+if %OS%==32BIT (
+   echo ClipBucketV5 easy installation script can only be used on 64bit operating system
+   echo.
+   pause
+   exit /b
+)
+
 echo.
 echo   ____ _ _       ____             _        _ __     ______
 echo  / ___^| (_)_ __ ^| __ ) _   _  ___^| ^| _____^| ^|\ \   / / ___^|
 echo ^| ^|   ^| ^| ^| '_ \^|  _ \^| ^| ^| ^|/ __^| ^|/ / _ \ __\ \ / /^|___ \\
 echo ^| ^|___^| ^| ^| ^|_) ^| ^|_) ^| ^|_^| ^| (__^|   ^<  __/ ^|_ \ V /  ___) ^|
 echo  \____^|_^|_^| .__/^|____/ \__,_^|\___^|_^|\_\___^|\__^| \_/  ^|____/
-echo           ^|_^|  Installation script for Windows 10 + Nginx
+echo           ^|_^|  Installation script for Windows 10/11 + Nginx
 echo.
 echo Disclaimer : This easy installation script is only
 echo              made to configure local / dev environments.
@@ -25,6 +33,14 @@ echo.
 SET "CB_DIR=C:\ClipBucketV5"
 echo ClipBucketV5 will be installed in %CB_DIR% with all it's components
 pause
+
+SET "LOCAL_DOMAIN="
+echo.
+echo Which domain name do you want to use ? [clipbucket.local]
+SET /p LOCAL_DOMAIN=
+if "%LOCAL_DOMAIN%"=="" (
+   SET "LOCAL_DOMAIN=clipbucket.local"
+)
 
 ::goto start_server
 
@@ -40,7 +56,7 @@ echo |set /p=Creating GIT directory...
 SET "GIT_DIR=%CB_DIR%\git"
 md %GIT_DIR%
 echo OK
-echo |set /p=Downloading GIT 2.45.0 install...
+echo |set /p=Downloading GIT 2.45.0...
 SET "GIT_URL=https://github.com/git-for-windows/git/releases/download/v2.45.0-rc0.windows.1/PortableGit-2.45.0-rc0-64-bit.7z.exe"
 SET "GIT_EXE_FILENAME=install_git.exe"
 SET "GIT_EXE=%GIT_DIR%\%GIT_EXE_FILENAME%"
@@ -52,7 +68,7 @@ start %GIT_EXE% -o"%GIT_DIR%" -y
 timeout /t 2 /nobreak > NUL
 FOR /F %%x IN ('tasklist /NH /FI "IMAGENAME eq %GIT_EXE_FILENAME%"') DO IF %%x == %GIT_EXE_FILENAME% goto CheckGitProcess
 echo OK
-echo |set /p=Deleting GIT install file...
+echo |set /p=Deleting GIT file...
 del %GIT_EXE%
 echo OK
 
@@ -62,7 +78,7 @@ echo |set /p=Creating MariaDB directory...
 SET "MARIADB_DIR=%CB_DIR%\mariadb"
 md %MARIADB_DIR%
 echo OK
-echo |set /p=Downloading MariaDB 11.5.0 install...
+echo |set /p=Downloading MariaDB 11.5.0...
 SET "MARIADB_URL=https://mirrors.ircam.fr/pub/mariadb/mariadb-11.5.0/winx64-packages/mariadb-11.5.0-winx64.zip"
 SET "MARIADB_ZIP_FILENAME=mariadb-11.5.0.zip"
 SET "MARIADB_ZIP=%MARIADB_DIR%\%MARIADB_ZIP_FILENAME%"
@@ -80,7 +96,7 @@ echo |set /p=Creating Nginx directory...
 SET "NGINX_DIR=%CB_DIR%\nginx"
 md %NGINX_DIR%
 echo OK
-echo |set /p=Downloading Nginx 1.25.5 install...
+echo |set /p=Downloading Nginx 1.25.5...
 SET "NGINX_URL=https://nginx.org/download/nginx-1.25.5.zip"
 SET "NGINX_ZIP_FILENAME=nginx-1.25.5.zip"
 SET "NGINX_ZIP=%NGINX_DIR%\%NGINX_ZIP_FILENAME%"
@@ -98,7 +114,7 @@ echo |set /p=Creating PHP directory...
 SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
-echo |set /p=Downloading PHP 8.3.6 install...
+echo |set /p=Downloading PHP 8.3.6...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-8.3.6-Win32-vs16-x64.zip"
 SET "PHP_ZIP_FILENAME=php-8.3.6.zip"
 SET "PHP_ZIP=%PHP_DIR%\%PHP_ZIP_FILENAME%"
@@ -117,7 +133,7 @@ echo |set /p=Creating FFMpeg directory...
 SET "FFMPEG_DIR=%CB_DIR%\ffmpeg"
 md %FFMPEG_DIR%
 echo OK
-echo |set /p=Downloading FFMpeg 7.0 install...
+echo |set /p=Downloading FFMpeg 7.0...
 SET "FFMPEG_URL=https://github.com/GyanD/codexffmpeg/releases/download/7.0/ffmpeg-7.0-full_build.zip"
 SET "FFMPEG_ZIP_FILENAME=ffmpeg-7.0.zip"
 SET "FFMPEG_ZIP=%FFMPEG_DIR%\%FFMPEG_ZIP_FILENAME%"
@@ -135,7 +151,7 @@ echo |set /p=Creating MediaInfo directory...
 SET "MEDIAINFO_DIR=%CB_DIR%\mediainfo"
 md %MEDIAINFO_DIR%
 echo OK
-echo |set /p=Downloading MediaInfo 24.04 install...
+echo |set /p=Downloading MediaInfo 24.04...
 SET "MEDIAINFO_URL=https://mediaarea.net/download/binary/mediainfo/24.04/MediaInfo_CLI_24.04_Windows_x64.zip"
 SET "MEDIAINFO_ZIP_FILENAME=mediainfo-24.04.zip"
 SET "MEDIAINFO_ZIP=%MEDIAINFO_DIR%\%MEDIAINFO_ZIP_FILENAME%"
@@ -156,7 +172,7 @@ echo OK
 
 :install_clipbucket
 echo.
-echo |set /p=Downloading ClipBucketV5 install...
+echo |set /p=Downloading ClipBucketV5...
 SET "CLIPBUCKETV5_URL=https://github.com/MacWarrior/clipbucket-v5.git"
 start %GIT_DIR%\bin\git.exe clone %CLIPBUCKETV5_URL% %WEB_DIR% -q
 echo OK
@@ -197,7 +213,7 @@ echo     gzip  on;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 	server {>> %NGINX_CONF%
 echo 		listen 80;>> %NGINX_CONF%
-echo 		server_name clipbucket.local;>> %NGINX_CONF%
+echo 		server_name %LOCAL_DOMAIN%;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		root "c:\\ClipBucketV5\\www\\upload\\";>> %NGINX_CONF%
 echo 		index index.php;>> %NGINX_CONF%
