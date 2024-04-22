@@ -1649,6 +1649,24 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_tmdb_mature_content" title="{lang code='enable_tmdb_mature_content'}">{lang code='enable_tmdb_mature_content'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_tmdb_mature_content" id="enable_tmdb_mature_content" {if $row.enable_tmdb_mature_content=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="tmdb_mature_content_age" title="{lang code='tmdb_mature_content_age'}">{lang code='tmdb_mature_content_age'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
+									<span class="lbl"></span>
+									<input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 					</div>

@@ -44,7 +44,7 @@ $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_ord
 
 $total_pages = count_pages($total_rows, config('tmdb_search'));
 pages::getInstance()->paginate($total_pages, $_POST['page'], 'javascript:pageInfoTmdb(#page#);');
-
+assign('user_age'  , User::getInstance()->getCurrentUserAge());
 display_tmdb_result([
     'results'    => $final_results,
     'title'      => $title,

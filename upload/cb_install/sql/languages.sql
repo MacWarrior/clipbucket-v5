@@ -1121,4 +1121,7 @@ VALUES ('admin_setting'),
        ('edit_from_FO'),
        ('enable_edit_button'),
        ('only_keep_max_resolution'),
-       ('thumbs');
+       ('thumbs'),
+       ('enable_tmdb_mature_content'),
+       ('tmdb_mature_content_age'),
+       ('access_forbidden_under_age_display');
