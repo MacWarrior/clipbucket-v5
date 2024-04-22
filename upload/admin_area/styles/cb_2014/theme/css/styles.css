@@ -972,3 +972,11 @@ a[role='menuitem'] {
     height: 300px;
     float: right;
 }
+
+.blur{
+    filter: blur(8px);
+}
+
+.no_overflow{
+    overflow: hidden;
+}

@@ -202,3 +202,8 @@ function return_thumb_mini_list($data)
 
     return (templateWithMsgJson('blocks/thumb_mini_list.html'));
 }
+
+function display_categ_form()
+{
+    echo templateWithMsgJson('blocks/edit_category.html');
+}

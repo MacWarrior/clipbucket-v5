@@ -10,8 +10,7 @@ class Tmdb
     const MIN_REVISION = '371';
 
     CONST MIN_VERSION_IS_ADULT = '5.5.1';
-    /** @TODO update_revision */
-    CONST MIN_REVISION_IS_ADULT = '18';
+    CONST MIN_REVISION_IS_ADULT = '20';
 
     private $curl;
     private static $instance;
@@ -154,7 +153,7 @@ class Tmdb
      */
     public function setQueryInCache(string $query, array $results, int $total_results)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower(($query)), ($total_results)]);
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower($query), $total_results]);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
         $can_is_adult = false;

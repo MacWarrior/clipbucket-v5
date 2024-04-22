@@ -1663,7 +1663,7 @@
 								<div class="col-md-2 row-size">
 									<input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
 									<span class="lbl"></span>
-
+									<input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
 								</div>
 							</div>
 							<hr/>

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"17",
+  "revision":"20",
   "status":"dev",
   "detail":[
     {
@@ -9,6 +9,8 @@
         "Fix TMDB import error display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
+        ,"Refactor category creation and edition interface"
+        ,"Implement TMDB mature content search"
       ]
     },
     {
@@ -19,6 +21,7 @@
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Add edit button on video page <i>(#319)</i>"
         ,"Refactor video edition interface"
+        ,"Update translations"
       ]
     },
     {
