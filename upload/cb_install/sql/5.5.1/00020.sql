@@ -24,12 +24,12 @@ set @var=if((SELECT true FROM information_schema.COLUMNS WHERE
     TABLE_SCHEMA = DATABASE() AND
     TABLE_NAME   = '{tbl_prefix}tmdb_search_result' AND
     COLUMN_NAME  = 'is_adult')
+    ,'SELECT 1'
     , 'ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN'
-    ,'SELECT 1');
+ );
 prepare stmt from @var;
 execute stmt;
 deallocate prepare stmt;
-ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN;
 
 SET @language_key = 'access_forbidden_under_age_display' COLLATE utf8mb4_unicode_520_ci;
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (`language_key`) VALUES (@language_key);

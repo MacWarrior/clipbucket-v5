@@ -15,9 +15,7 @@
 			<div class="cb-box marginBottom">
 				<h2>{lang code='vdo_edit_vdo'}</h2>
 				{if config('enable_tmdb') && config('tmdb_token')!= ''}
-					<div class="row">
-						<button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$v.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
-					</div>
+						<button class="btn btn-primary" style="margin-bottom: 15px;" tabindex="-1" href="javascript:void(0);" data-id="{$v.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
 				{/if}
 				<div class="account_form">
 					<div id="updateVideoInfo">

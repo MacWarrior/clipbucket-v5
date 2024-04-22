@@ -98,26 +98,34 @@ class Tmdb
      * @param string $sort
      * @param string $sort_order
      * @param string $limit
-     * @return array|null
+     * @return array|int
      * @throws Exception
      */
-    public function getCacheFromQuery(string $query, string $sort = 'release_date', string $sort_order = 'DESC', string $limit = '1')
+    public function getCacheFromQuery(string $query, string $sort = 'release_date', string $sort_order = 'DESC', string $limit = '1', bool $count = false)
     {
         $search_adult = '';
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(Tmdb::MIN_VERSION_IS_ADULT, Tmdb::MIN_REVISION_IS_ADULT)) {
-            if (config('enable_tmdb_mature_content') == 'yes') {
-                $search_adult = ' AND is_adult = TRUE';
-            } else {
+            if (config('enable_tmdb_mature_content') !== 'yes') {
                 $search_adult = ' AND is_adult = FALSE';
             }
         }
+        $sql_limit = '';
+        if (!empty($limit)) {
+            $sql_limit = 'LIMIT ' . create_query_limit($limit, config('tmdb_search'));
+        }
+
         $sql = 'SELECT TSR.* 
                 FROM ' . tbl('tmdb_search') . ' TS
                 INNER JOIN ' . tbl('tmdb_search_result') . ' TSR ON TS.id_tmdb_search = TSR.id_tmdb_search
                 WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' '. $search_adult . '
                 ORDER BY ' . mysql_clean($sort) . ' ' . mysql_clean($sort_order) . '
-                LIMIT ' . create_query_limit($limit, config('tmdb_search'));
-        return Clipbucket_db::getInstance()->_select($sql);
+                '.$sql_limit
+                ;
+        $result = Clipbucket_db::getInstance()->_select($sql);
+        if ($count) {
+            return count($result);
+        }
+        return $result;
     }
 
     /**
@@ -353,7 +361,8 @@ class Tmdb
             }
         }
         $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, $_POST['page']);
-
+        //use different sql to get numbers of rows
+        $total_rows = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, 0, true);
         $total_pages = count_pages($total_rows, config('tmdb_search'));
         return [
             'final_results' => $final_results,
