@@ -9,6 +9,9 @@ class Tmdb
     const MIN_VERSION = '5.5.0';
     const MIN_REVISION = '371';
 
+    CONST MIN_VERSION_IS_ADULT = '5.5.1';
+    CONST MIN_REVISION_IS_ADULT = '20';
+
     private $curl;
     private static $instance;
 
@@ -86,6 +89,7 @@ class Tmdb
         if (empty($param['language'])) {
             $param['language'] = $this->language;
         }
+        $param['include_adult'] = config('enable_tmdb_mature_content') == 'yes' ? 'true' : 'false';
         return $this->curl->exec($url, $param);
     }
 
@@ -99,10 +103,18 @@ class Tmdb
      */
     public function getCacheFromQuery(string $query, string $sort = 'release_date', string $sort_order = 'DESC', string $limit = '1')
     {
+        $search_adult = '';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(Tmdb::MIN_VERSION_IS_ADULT, Tmdb::MIN_REVISION_IS_ADULT)) {
+            if (config('enable_tmdb_mature_content') == 'yes') {
+                $search_adult = ' AND is_adult = TRUE';
+            } else {
+                $search_adult = ' AND is_adult = FALSE';
+            }
+        }
         $sql = 'SELECT TSR.* 
                 FROM ' . tbl('tmdb_search') . ' TS
                 INNER JOIN ' . tbl('tmdb_search_result') . ' TSR ON TS.id_tmdb_search = TSR.id_tmdb_search
-                WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' 
+                WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' '. $search_adult . '
                 ORDER BY ' . mysql_clean($sort) . ' ' . mysql_clean($sort_order) . '
                 LIMIT ' . create_query_limit($limit, config('tmdb_search'));
         return Clipbucket_db::getInstance()->_select($sql);
@@ -141,13 +153,23 @@ class Tmdb
      */
     public function setQueryInCache(string $query, array $results, int $total_results)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower(mysql_clean($query)), mysql_clean($total_results)]);
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower($query), $total_results]);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
-        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie) VALUES ';
+        $can_is_adult = false;
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(Tmdb::MIN_VERSION_IS_ADULT, Tmdb::MIN_REVISION_IS_ADULT)) {
+            $can_is_adult = true;
+        }
+
+        $sql_insert = 'INSERT INTO ' . tbl('tmdb_search_result') . ' (id_tmdb_search, title, overview,release_date, poster_path, id_tmdb_movie '.($can_is_adult ? ', is_adult': '' ).') VALUES ';
         $insert_line = [];
         foreach ($results as $result) {
-            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . addslashes($result['title']) . '\', \'' . addslashes($result['overview']) . '\', ' . (empty($result['release_date']) ? 'null' : '\'' . $result['release_date'] . '\'') . ', \'' . $result['poster_path'] . '\', ' . $result['id'] . ') ';
+            $insert_line[] = ' (' . $id_tmdb_search . ', \'' . mysql_clean($result['title']) . '\'
+            , \'' . mysql_clean($result['overview']) . '\'
+            , ' . (empty($result['release_date']) ? 'null' : '\'' . mysql_clean($result['release_date']) . '\'') . '
+            , \'' . mysql_clean($result['poster_path']) . '\', ' . mysql_clean($result['id'])
+            . ($can_is_adult ? ', '. ($result['adult'] ? 'true' : 'false')  : '')
+            . ') ';
         }
         $sql_insert .= implode(', ', $insert_line);
         return Clipbucket_db::getInstance()->execute($sql_insert);

@@ -1116,4 +1116,12 @@ VALUES ('admin_setting'),
        ('select_as_default_x'),
        ('enable_x_field'),
        ('update_category'),
-       ('add_new_category');
+       ('add_new_category'),
+       ('edit_from_BO'),
+       ('edit_from_FO'),
+       ('enable_edit_button'),
+       ('only_keep_max_resolution'),
+       ('thumbs'),
+       ('enable_tmdb_mature_content'),
+       ('tmdb_mature_content_age'),
+       ('access_forbidden_under_age_display');

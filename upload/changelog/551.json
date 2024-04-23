@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"13",
+  "revision":"21",
   "status":"dev",
   "detail":[
     {
@@ -8,6 +8,9 @@
       "description": [
         "Fix TMDB import error display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Move sub-collections option to collection config tab"
+        ,"Refactor category creation and edition interface"
+        ,"Implement TMDB mature content search"
       ]
     },
     {
@@ -15,7 +18,10 @@
       "description": [
         "Refactor collections page"
         ,"Fix pagination on videos, collections & photos"
-        ,"Fix comments display on photos collection (#91)"
+        ,"Fix comments display on photos collection <i>(#91)</i>"
+        ,"Add edit button on video page <i>(#319)</i>"
+        ,"Refactor video edition interface"
+        ,"Update translations"
       ]
     },
     {
@@ -30,6 +36,12 @@
       ]
     },
     {
+      "title": "Conversion",
+      "description": [
+        "Add option to only keep maximum resolution"
+      ]
+    },
+    {
       "title": "Installation & Update",
       "description": [
         "Fix revision check when current revision is 0"
@@ -39,6 +51,7 @@
         ,"Fix categories creation in update 5.5.0 - 331"
         ,"Prevent SSE error on update from old version"
         ,"Fix dependancies check during installation process"
+        ,"Update Debian 10 installation script"
       ]
     },
     {

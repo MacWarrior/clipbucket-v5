@@ -528,6 +528,15 @@ class Category
         return 0;
     }
 
+    /**
+     * @param $key
+     * @return mixed
+     */
+    public function getTypeNamesByIds($key)
+    {
+        return $this->typeNamesByIds[$key];
+    }
+
 }
 abstract class CBCategory
 {
