@@ -238,6 +238,19 @@ class Clipbucket_db
     }
 
     /**
+     * @param $sql
+     * @return void
+     * @throws Exception
+     */
+    public function executeThrowException($sql)
+    {
+        $this->mysqli->query($sql);
+        if ($this->mysqli->error != '') {
+            throw new Exception('SQL : ' . $sql . "\n" . 'ERROR : ' . $this->mysqli->error);
+        }
+    }
+
+    /**
      * Update database fields { table, fields, values style }
      *
      * @param      $tbl
@@ -585,6 +598,30 @@ class Clipbucket_db
     function getError()
     {
         return $this->mysqli->error;
+    }
+
+    /**
+     * @return void
+     */
+    function rollback()
+    {
+        $this->mysqli->rollback();
+    }
+
+    /**
+     * @return void
+     */
+    function commit()
+    {
+        $this->mysqli->commit();
+    }
+
+    /**
+     * @return void
+     */
+    function begin_transaction()
+    {
+        $this->mysqli->begin_transaction();
     }
 
 }

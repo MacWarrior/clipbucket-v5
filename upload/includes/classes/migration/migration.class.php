@@ -2,9 +2,12 @@
 
 class Migration
 {
-    protected $migration;
+
+    /** @var mixed */
     protected $revision;
+    /** @var mixed */
     protected $type;
+    /** @var array|mixed|string|string[] */
     protected $version;
 
     public function __construct()
@@ -28,56 +31,58 @@ class Migration
         }
     }
 
+    /**
+     * @return bool
+     * @throws Exception
+     */
     public function launch(): bool
     {
-        global $db;
-        if (!is_callable($this->migration)) {
-            $error = 'migration not set';
-            DiscordLog::sendDump($error);
-            error_log($error);
-            return false;
-        }
-        $db->mysqli->begin_transaction();
+        Clipbucket_db::getInstance()->begin_transaction();
         try {
-            call_user_func($this->migration);
+            $this->start();
         } catch (mysqli_sql_exception $e) {
-            $db->mysqli->rollback();
+            Clipbucket_db::getInstance()->rollback();
             e('ERROR : ' . $e->getMessage());
-            error_log('SQL : ' . $templine);
             error_log('ERROR : ' . $e->getMessage());
             DiscordLog::sendDump('ERROR : ' . $e->getMessage());
-            throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $e->getMessage());
-        } catch (\Exception $e) {
-            $db->mysqli->rollback();
+            throw new Exception('ERROR : ' . $e->getMessage());
+        } catch (Exception $e) {
+            Clipbucket_db::getInstance()->rollback();
             e($e->getMessage());
             error_log($e->getMessage());
             DiscordLog::sendDump($e->getMessage());
             throw new Exception($e->getMessage());
         }
-        $db->mysqli->commit();
+        Clipbucket_db::getInstance()->commit();
         $this->updateVersion();
         return true;
     }
 
     /**
      * @return void
-     * @throws \Predis\Connection\ConnectionException
-     * @throws \Predis\Response\ServerException
+     * @throws Exception
      */
     public function updateVersion()
     {
         self::sUpdateVersion($this->version, $this->revision, $this->type);
     }
 
+    /**
+     * @param $version
+     * @param $revision
+     * @param $type
+     * @return void
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     public static function sUpdateVersion($version, $revision, $type = 'm')
     {
-        $db = Clipbucket_db::getInstance();
         if (strtolower($type) == 'p') {
             $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($version) . '\' WHERE plugin_folder = \'' . $revision . '\'';
         } else {
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
         }
-        $db->mysqli->query($sql);
+        Clipbucket_db::getInstance()->executeThrowException($sql);
         CacheRedis::flushAll();
         Update::getInstance()->flush();
     }
@@ -109,22 +114,29 @@ class Migration
     /**
      * @param string $translation_key
      * @param array $translations ex: ['fr' => 'Bonjour', 'en' => 'Hello']
-     * @return bool|mysqli_result
      * @throws Exception
      */
     public static function generateTranslation(string $translation_key, array $translations)
     {
-        $sql = /** @lang MySQL */
-            'SET @language_key = \'' . $translation_key . '\' COLLATE utf8mb4_unicode_520_ci;
-            INSERT IGNORE INTO `' . tbl('languages_keys') . '` (`language_key`) VALUES (@language_key);
-            SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);';
+        $sql = 'SET @language_key = \'' . mysql_clean(strtolower($translation_key)) . '\' COLLATE utf8mb4_unicode_520_ci; ';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+
+        $sql = 'INSERT IGNORE INTO `' . tbl('languages_keys') . '` (`language_key`) VALUES (@language_key);';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+
+        $sql = 'SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+
         foreach ($translations as $language_code => $translation) {
-            $sql .= /** @lang MySQL */
-                'SET @language_id_' . $language_code . ' = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'' . $language_code . '\');
-                INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`)
-                    VALUES (@language_key, \'' . $translation . '\', @language_id_' . $language_code . ');';
+            $sql = 'SET @language_id_' . mysql_clean(strtolower($language_code)) . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
+            Clipbucket_db::getInstance()->executeThrowException($sql);
+
+            $sql = ' INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@language_key, \'' . $translation . '\', @language_id_' . mysql_clean(strtolower($language_code)) . ');';
+            Clipbucket_db::getInstance()->executeThrowException($sql);
         }
-        return Clipbucket_db::getInstance()->execute($sql);
     }
+
+    public function start(){}
+
 
 }
