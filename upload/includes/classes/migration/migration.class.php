@@ -106,4 +106,25 @@ class Migration
         return $this->type;
     }
 
+    /**
+     * @param string $translation_key
+     * @param array $translations ex: ['fr' => 'Bonjour', 'en' => 'Hello']
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public static function generateTranslation(string $translation_key, array $translations)
+    {
+        $sql = /** @lang MySQL */
+            'SET @language_key = \'' . $translation_key . '\' COLLATE utf8mb4_unicode_520_ci;
+            INSERT IGNORE INTO `' . tbl('languages_keys') . '` (`language_key`) VALUES (@language_key);
+            SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);';
+        foreach ($translations as $language_code => $translation) {
+            $sql .= /** @lang MySQL */
+                'SET @language_id_' . $language_code . ' = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'' . $language_code . '\');
+                INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`)
+                    VALUES (@language_key, \'' . $translation . '\', @language_id_' . $language_code . ');';
+        }
+        return Clipbucket_db::getInstance()->execute($sql);
+    }
+
 }
