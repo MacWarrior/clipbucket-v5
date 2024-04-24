@@ -136,7 +136,64 @@ class Migration
         }
     }
 
-    public function start(){}
+    /**
+     * @param $sql_alter
+     * @param array $params fields available table, column, constraint_name, constraint_type, constraint_schema
+     * @throws Exception
+     */
+    public static function alterTable($sql_alter, array $params = [])
+    {
+        $table = 'COLUMNS';
+        $conditions = [];
+        $conditions[] = 'TABLE_SCHEMA = DATABASE()';
+
+        if (!empty($params['table'])) {
+            $conditions[] = 'TABLE_NAME = \'' . tbl($params['table']) . '\'';
+        }
+
+        if (!empty($params['column'])) {
+            $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params['column']) . '\')';
+        }
+
+        if (!empty($params['constraint_name'])) {
+            $conditions[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params['constraint_name']) . '\')';
+            $table = 'TABLE_CONSTRAINTS';
+        }
+
+        if (!empty($params['constraint_type'])) {
+            $conditions[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params['constraint_type']) . '\')';
+            $table = 'TABLE_CONSTRAINTS';
+        }
+
+        if (!empty($params['constraint_schema'])) {
+            $conditions[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params['constraint_schema']) . '\')';
+            $table = 'TABLE_CONSTRAINTS';
+        }
+
+        $sql = 'set @var=if((SELECT true FROM information_schema.' . $table . ' WHERE
+        ' . implode(' AND ', $conditions) . '
+        , \'' . $sql_alter . '\'
+        ,\'SELECT 1\');';
+        self::query($sql);
+        self::query('prepare stmt from @var;');
+        self::query('execute stmt;');
+        self::query('deallocate prepare stmt;');
+
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function query($sql)
+    {
+        $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
+        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->db_name, $sql);
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    public function start()
+    {
+    }
 
 
 }

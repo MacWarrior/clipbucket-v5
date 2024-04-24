@@ -4,6 +4,9 @@ require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIREC
 
 class M00021 extends Migration
 {
+    /**
+     * @throws Exception
+     */
     public function start()
     {
         DiscordLog::sendDump('toto');
