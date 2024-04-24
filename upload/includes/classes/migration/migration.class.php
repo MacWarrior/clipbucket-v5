@@ -138,7 +138,7 @@ class Migration
 
     /**
      * @param $sql_alter
-     * @param array $params fields available table, column, constraint_name, constraint_type, constraint_schema
+     * @param array $params fields available : table, column, constraint_name, constraint_type, constraint_schema
      * @throws Exception
      */
     public static function alterTable($sql_alter, array $params = [])
