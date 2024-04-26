@@ -10,20 +10,20 @@ class M00305 extends Migration
     {
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photos` ADD COLUMN age_restriction INT DEFAULT NULL;', [
-            'table'  => '`{tbl_prefix}photos`',
+            'table'  => '{tbl_prefix}photos',
             'column' => 'age_restriction'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN age_restriction INT DEFAULT NULL;', [
-            'table'  => '`{tbl_prefix}video`',
+            'table'  => '{tbl_prefix}video',
             'column' => 'age_restriction'
         ]);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (name, value) VALUES
-    (\'enable_user_dob_edition\', \'yes\'),
-    (\'enable_age_restriction\', \'yes\'),
-    (\'enable_blur_restricted_content\', \'no\'),
-    (\'enable_global_age_restriction\', \'no\'); ';
+        (\'enable_user_dob_edition\', \'yes\'),
+        (\'enable_age_restriction\', \'yes\'),
+        (\'enable_blur_restricted_content\', \'no\'),
+        (\'enable_global_age_restriction\', \'no\'); ';
         self::query($sql);
 
         self::generateTranslation('age_restriction', [

@@ -33,7 +33,7 @@ class M00315 extends Migration
             'pt-BR' => 'Comentários desativados para este vídeo %s'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` MODIFY type VARCHAR(16);', [
-            'table'  => '`{tbl_prefix}comments`',
+            'table'  => '{tbl_prefix}comments',
             'column' => 'type'
         ]);
 
