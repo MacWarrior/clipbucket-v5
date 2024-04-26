@@ -9,6 +9,6 @@ class M00019 extends Migration
      */
     public function start()
     {
-        self::generateTranslation('add_more', ['fr'=>'Rajouter']);
+        self::generateTranslation('add_more', ['fr' => 'Rajouter']);
     }
 }

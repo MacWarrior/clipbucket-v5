@@ -41,115 +41,115 @@ class M00371 extends Migration
 
         self::generateTranslation('enable_tmdb', [
             'en' => 'Enable TMDB',
-            'fr' => 'Activer TMDB',
+            'fr' => 'Activer TMDB'
         ]);
         self::generateTranslation('tmdb_token', [
             'en' => 'TMDB authentification token',
-            'fr' => 'Token d\'authentification TMDB',
+            'fr' => 'Token d\'authentification TMDB'
         ]);
         self::generateTranslation('get_data_tmdb', [
             'en' => 'Get info from The Movie DataBase',
-            'fr' => 'Récupérer les infos depuis The Movie DataBase',
+            'fr' => 'Récupérer les infos depuis The Movie DataBase'
         ]);
         self::generateTranslation('release_date', [
             'en' => 'Release date',
-            'fr' => 'Date de sortie',
+            'fr' => 'Date de sortie'
         ]);
         self::generateTranslation('import', [
             'en' => 'Import',
-            'fr' => 'Importer',
+            'fr' => 'Importer'
         ]);
         self::generateTranslation('actors', [
             'en' => 'Actors',
-            'fr' => 'Acteurs',
+            'fr' => 'Acteurs'
         ]);
         self::generateTranslation('producer', [
             'en' => 'Producer',
-            'fr' => 'Producteur',
+            'fr' => 'Producteur'
         ]);
         self::generateTranslation('crew', [
             'en' => 'Crew',
-            'fr' => 'Equipe',
+            'fr' => 'Equipe'
         ]);
         self::generateTranslation('genre', [
             'en' => 'Genre',
-            'fr' => 'Genre',
+            'fr' => 'Genre'
         ]);
         self::generateTranslation('executive_producer', [
             'en' => 'Executive Producer',
-            'fr' => 'Producteur exécutif',
+            'fr' => 'Producteur exécutif'
         ]);
         self::generateTranslation('director', [
             'en' => 'Director',
-            'fr' => 'Directeur',
+            'fr' => 'Directeur'
         ]);
         self::generateTranslation('option_tmdb_get_genre', [
             'en' => 'Get genre from TMDB',
-            'fr' => 'Récupérer le genre depuis TMDB',
+            'fr' => 'Récupérer le genre depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_actors', [
             'en' => 'Get actors from TMDB',
-            'fr' => 'Récupérer les acteurs depuis TMDB',
+            'fr' => 'Récupérer les acteurs depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_producer', [
             'en' => 'Get producer from TMDB',
-            'fr' => 'Récupérer le producteur depuis TMDB',
+            'fr' => 'Récupérer le producteur depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_executive_producer', [
             'en' => 'Get executive producer from TMDB',
-            'fr' => 'Récupérer le producteur exécutif depuis TMDB',
+            'fr' => 'Récupérer le producteur exécutif depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_director', [
             'en' => 'Get director from TMDB',
-            'fr' => 'Récupérer le directeur depuis TMDB',
+            'fr' => 'Récupérer le directeur depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_director', [
             'en' => 'Get director from TMDB',
-            'fr' => 'Récupérer le directeur depuis TMDB',
+            'fr' => 'Récupérer le directeur depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_crew', [
             'en' => 'Get crew from TMDB',
-            'fr' => 'Récupérer l\'équipe depuis TMDB',
+            'fr' => 'Récupérer l\'équipe depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_poster', [
             'en' => 'Get poster from TMDB',
-            'fr' => 'Récupérer l\'affiche depuis TMDB',
+            'fr' => 'Récupérer l\'affiche depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_release_date', [
             'en' => 'Get release date from TMDB',
-            'fr' => 'Récupérer la date de sortie depuis TMDB',
+            'fr' => 'Récupérer la date de sortie depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_title', [
             'en' => 'Get title from TMDB',
-            'fr' => 'Récupérer le titre depuis TMDB',
+            'fr' => 'Récupérer le titre depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_description', [
             'en' => 'Get description from TMDB',
-            'fr' => 'Récupérer la description depuis TMDB',
+            'fr' => 'Récupérer la description depuis TMDB'
         ]);
         self::generateTranslation('tmdb_search', [
             'en' => 'The Movie Database search',
-            'fr' => 'Recherche The Movie Database',
+            'fr' => 'Recherche The Movie Database'
         ]);
         self::generateTranslation('movie_infos', [
             'en' => 'Movie infos',
-            'fr' => 'Informations sur le film',
+            'fr' => 'Informations sur le film'
         ]);
         self::generateTranslation('option_enable_video_poster', [
             'en' => 'Enable poster',
-            'fr' => 'Activer les affiches',
+            'fr' => 'Activer les affiches'
         ]);
         self::generateTranslation('option_enable_video_backdrop', [
             'en' => 'Enable backdrop',
-            'fr' => 'Activer les décors',
+            'fr' => 'Activer les décors'
         ]);
         self::generateTranslation('option_tmdb_get_age_restriction', [
             'en' => 'Get age restriction from TMDB',
-            'fr' => 'Récupérer la restriction d\'âge depuis TMDB',
+            'fr' => 'Récupérer la restriction d\'âge depuis TMDB'
         ]);
         self::generateTranslation('option_tmdb_get_backdrop', [
             'en' => 'Get backdrop from TMDB',
-            'fr' => 'Récupérer le décors depuis TMDB',
+            'fr' => 'Récupérer le décors depuis TMDB'
         ]);
         self::generateTranslation('sort_by', [
             'en' => 'Sort by %s',

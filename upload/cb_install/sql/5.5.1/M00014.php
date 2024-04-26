@@ -9,15 +9,15 @@ class M00014 extends Migration
     public function start()
     {
         self::generateTranslation('edit_from_BO', [
-            'en' =>'From admin area',
+            'en' => 'From admin area',
             'fr' => 'Depuis l\'administration'
         ]);
         self::generateTranslation('edit_from_FO', [
-            'en' =>'From my account',
+            'en' => 'From my account',
             'fr' => 'Depuis mon compte'
         ]);
         self::generateTranslation('enable_edit_button', [
-            'en' =>'Enable edit button',
+            'en' => 'Enable edit button',
             'fr' => 'Activer le bouton d\'édition'
         ]);
 

@@ -9,12 +9,12 @@ class M00345 extends Migration
     public function start()
     {
         self::generateTranslation('mysql_client', [
-            'en'=>'MySQL Client',
-            'fr'=>'Client MySQL'
+            'en' => 'MySQL Client',
+            'fr' => 'Client MySQL'
         ]);
         self::generateTranslation('mysql_server', [
-            'en'=>'MySQL Server',
-            'fr'=>'Serveur MySQL'
+            'en' => 'MySQL Server',
+            'fr' => 'Serveur MySQL'
         ]);
     }
 }

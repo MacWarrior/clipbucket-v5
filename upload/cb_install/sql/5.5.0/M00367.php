@@ -99,17 +99,17 @@ class M00367 extends Migration
 
         self::generateTranslation('no_logs', [
             'en' => 'No logs to display',
-            'fr' => 'Aucuns journaux à afficher',
+            'fr' => 'Aucuns journaux à afficher'
         ]);
         self::generateTranslation('show_log', [
             'en' => 'Show last logs',
-            'fr' => 'Afficher les derniers journaux',
+            'fr' => 'Afficher les derniers journaux'
         ]);
         self::query($sql);
         $sql = 'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `code` VARCHAR(32) NOT NULL;';
         self::alterTable($sql, [
             'table'  => '{tbl_prefix}tools',
-            'colmun' => 'code',
+            'colmun' => 'code'
         ]);
         $sql = 'UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,\'_label\', \'\');';
         self::query($sql);
@@ -128,11 +128,11 @@ class M00367 extends Migration
 
         self::generateTranslation('tool_started', [
             'en' => 'Tool started',
-            'fr' => 'Outil lancé',
+            'fr' => 'Outil lancé'
         ]);
         self::generateTranslation('tool_stopped', [
             'en' => 'Tool ended',
-            'fr' => 'Outil terminé',
+            'fr' => 'Outil terminé'
         ]);
     }
 }

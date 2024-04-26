@@ -14,19 +14,19 @@ class M00020 extends Migration
         self::query($sql);
 
         self::generateTranslation('enable_tmdb_mature_content', [
-            'en'=>'Enable mature content',
-            'fr'=>'Activer le contenu mature',
+            'en' => 'Enable mature content',
+            'fr' => 'Activer le contenu mature'
         ]);
         self::generateTranslation('tmdb_mature_content_age', [
-            'en'=>'Minimal age for adult content',
-            'fr'=>'Âge minimum du contenu pour adulte',
+            'en' => 'Minimal age for adult content',
+            'fr' => 'Âge minimum du contenu pour adulte'
         ]);
         self::generateTranslation('access_forbidden_under_age_display', [
-            'en'=>'- %s',
-            'fr'=>'- %s',
+            'en' => '- %s',
+            'fr' => '- %s'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN', [
-            'table' => '{tbl_prefix}tmdb_search_result',
+            'table'   => '{tbl_prefix}tmdb_search_result',
             'columns' => 'is_adult'
         ]);
     }

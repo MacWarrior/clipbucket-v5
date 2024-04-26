@@ -10,7 +10,7 @@ class M00372 extends Migration
     {
         self::generateTranslation('unknown_type', [
             'en' => 'Unknown type : %s',
-            'fr' => 'Type inconnu : %s',
+            'fr' => 'Type inconnu : %s'
         ]);
     }
 }
