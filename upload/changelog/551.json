@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"22",
+  "revision":"23",
   "status":"dev",
   "detail":[
     {
@@ -23,6 +23,7 @@
         ,"Add edit button on video page <i>(#319)</i>"
         ,"Refactor video edition interface"
         ,"Update translations"
+        ,"Fix video upload max filesize check"
       ]
     },
     {
@@ -40,6 +41,7 @@
       "title": "Conversion",
       "description": [
         "Add option to only keep maximum resolution"
+        ,"Reduce converted video filesize"
       ]
     },
     {
