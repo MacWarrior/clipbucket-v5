@@ -189,11 +189,11 @@ $(document).ready(function (){
         runtimes : 'html5,flash,silverlight,html4',
         url : "/edit_account.php?mode=avatar_bg",
         file_data_name : "backgroundPhoto",
+        max_file_size: "2Mb",
         filters: {
             mime_types : [
                 { title : "Image files", extensions : extensions },
             ],
-            max_file_size: "2mb",
             prevent_duplicates: false,
         }
     });

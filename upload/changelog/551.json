@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"24",
+  "revision":"25",
   "status":"dev",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Refactor video edition interface"
         ,"Update translations"
         ,"Fix video upload max filesize check"
+        ,"Fix channel background upload <i>(#370)</i>"
       ]
     },
     {
