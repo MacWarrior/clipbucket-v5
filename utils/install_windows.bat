@@ -23,10 +23,10 @@ if %OS%==32BIT (
 echo.
 echo   ____ _ _       ____             _        _ __     ______
 echo  / ___^| (_)_ __ ^| __ ) _   _  ___^| ^| _____^| ^|\ \   / / ___^|
-echo ^| ^|   ^| ^| ^| '_ \^|  _ \^| ^| ^| ^|/ __^| ^|/ / _ \ __\ \ / /^|___ \\
+echo ^| ^|   ^| ^| ^| '_ \^|  _ \^| ^| ^| ^|/ __^| ^|/ / _ \ __\ \ / /^|___ \
 echo ^| ^|___^| ^| ^| ^|_) ^| ^|_) ^| ^|_^| ^| (__^|   ^<  __/ ^|_ \ V /  ___) ^|
 echo  \____^|_^|_^| .__/^|____/ \__,_^|\___^|_^|\_\___^|\__^| \_/  ^|____/
-echo           ^|_^|  Installation script for Windows 10/11 + Nginx
+echo           ^|_^| Installation script for Windows 10/11 + Nginx
 echo.
 echo Disclaimer : This easy installation script is only
 echo              made to configure local / dev environments.
@@ -198,12 +198,25 @@ start %GIT_DIR%\bin\git.exe clone %CLIPBUCKETV5_URL% %WEB_DIR% -q
 echo OK
 
 :config_mariadb
+SET "MARIADB_DIR=%CB_DIR%\mariadb"
+
 echo.
 echo |set /p=Configuring MariaDB...
-md %MARIADB_DIR%\data
-start /wait %MARIADB_DIR%\bin\mariadb-install-db.exe
+%MARIADB_DIR%\bin\mariadb-install-db.exe > NULL 2>&1
 SET "MARIADB_SERVER_EXE=%MARIADB_DIR%\bin\mariadbd.exe"
-start %MARIADB_SERVER_EXE% --initialize-insecure
+start /wait %MARIADB_SERVER_EXE% --initialize-insecure > NULL 2>&1
+
+start %MARIADB_SERVER_EXE% --console
+timeout 10 > NUL
+
+SET "MYSQL_BIN=%MARIADB_DIR%\bin\mysql.exe"
+SET "DB_PASS=%RANDOM%-%RANDOM%-%RANDOM%"
+%MYSQL_BIN% -u root -e "CREATE DATABASE clipbucket;"
+%MYSQL_BIN% -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '%DB_PASS%';"
+%MYSQL_BIN% -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost' IDENTIFIED BY '%DB_PASS%';"
+%MYSQL_BIN% -uroot -e "FLUSH PRIVILEGES;"
+
+taskkill /IM mariadbd.exe > NULL
 echo OK
 
 :config_php
@@ -426,3 +439,11 @@ echo start %MARIADB_SERVER_EXE% --console >> %START_SCRIPT%
 echo.
 echo You can now start server by launching %CB_DIR%\start.bat
 echo.
+
+echo - Database address : localhost
+echo - Database name : clipbucket
+echo - Database user : clipbucket
+echo - Database port : 3306
+echo - Database password : %DB_PASS%
+echo - Install directory : %CB_DIR%
+echo - Website URL : http://%LOCAL_DOMAIN%
