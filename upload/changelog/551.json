@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"21",
+  "revision":"22",
   "status":"dev",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Move sub-collections option to collection config tab"
         ,"Refactor category creation and edition interface"
         ,"Implement TMDB mature content search"
+        ,"Fix PHP error on user deletion"
       ]
     },
     {
