@@ -542,13 +542,12 @@ function isValidtag($tag): bool
  *
  * @param array $params
  *
- * @return array|bool|string : { array } { $cats } { array of categories }
+ * @return array|bool|string|void : { array } { $cats } { array of categories }
  * @throws Exception
  * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
  */
 function getCategoryList($params = [])
 {
-    $cats = '';
     $params['echo'] = $params['echo'] ?: false;
     $version = Update::getInstance()->getDBVersion();
     switch ($params['type']) {

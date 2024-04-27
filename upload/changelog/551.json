@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"23",
+  "revision":"24",
   "status":"dev",
   "detail":[
     {
@@ -12,6 +12,7 @@
         ,"Refactor category creation and edition interface"
         ,"Implement TMDB mature content search"
         ,"Fix PHP error on user deletion"
+        ,"Fix video search"
       ]
     },
     {

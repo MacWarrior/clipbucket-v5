@@ -231,6 +231,10 @@ class Video
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
         $param_featured = $params['featured'] ?? false;
+        $param_title = $params['title'] ?? false;
+        $param_tags = $params['tags'] ?? false;
+        $param_active = $params['active'] ?? false;
+        $param_status = $params['status'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -257,7 +261,13 @@ class Video
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_file_name).'\'';
         }
         if( $param_featured ){
-            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+            $conditions[] = $this->getTableName() . '.featured = \'' . mysql_clean($param_featured) . '\'';
+        }
+        if( $param_active ){
+            $conditions[] = $this->getTableName() . '.active = \'' . mysql_clean($param_active) . '\'';
+        }
+        if( $param_status ){
+            $conditions[] = $this->getTableName() . '.status = \'' . mysql_clean($param_status) . '\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -277,6 +287,14 @@ class Video
             $cond .= ')';
 
             $conditions[] = $cond;
+        }
+
+        if( $param_tags && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))){
+            $conditions[] = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        }
+
+        if( $param_title ){
+            $conditions[] = 'MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\'';
         }
 
         if( !has_access('admin_access', true) && !$param_exist && !$param_disable_generic_constraints){
