@@ -163,7 +163,9 @@ if (!$params['order']) {
 $videos = Video::getInstance()->getAll($params);
 Assign('videos', $videos);
 
-if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
+if( empty($videos) ){
+    $total_rows = 0;
+} if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
     $total_rows = count($videos);
 } else {
     $params['count'] = true;
