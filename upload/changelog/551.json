@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"28",
+  "revision":"29",
   "status":"dev",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
         ,"Fix video manager pagination"
+        ,"Fix website configurations display"
       ]
     },
     {
@@ -27,6 +28,7 @@
         ,"Update translations"
         ,"Fix video upload max filesize check"
         ,"Fix channel background upload <i>(#370)</i>"
+        ,"Fix add video to collection"
       ]
     },
     {

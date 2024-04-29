@@ -1907,6 +1907,7 @@ function show_playlist_form($array)
 
 /**
  * Function used to show collection form
+ * @throws Exception
  * @internal param $ : { array } { $params } { array with parameters }
  */
 function show_collection_form()
