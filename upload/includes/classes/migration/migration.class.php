@@ -152,26 +152,29 @@ class Migration
         }
 
         if (!empty($params['column'])) {
-            $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params['column']) . '\')';
+            $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params['column']) . '\'';
+        }
+        if (!empty($params['columns'])) {
+            $conditions[] = 'COLUMN_NAME IN (\'' . mysql_clean(implode('\',',$params['columns'])) . '\')';
         }
 
         if (!empty($params['constraint_name'])) {
-            $conditions[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params['constraint_name']) . '\')';
+            $conditions[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params['constraint_name']) . '\'';
             $table = 'TABLE_CONSTRAINTS';
         }
 
         if (!empty($params['constraint_type'])) {
-            $conditions[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params['constraint_type']) . '\')';
+            $conditions[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params['constraint_type']) . '\'';
             $table = 'TABLE_CONSTRAINTS';
         }
 
         if (!empty($params['constraint_schema'])) {
-            $conditions[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params['constraint_schema']) . '\')';
+            $conditions[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params['constraint_schema']) . '\'';
             $table = 'TABLE_CONSTRAINTS';
         }
 
         $sql = 'set @var=if((SELECT true FROM information_schema.' . $table . ' WHERE
-        ' . implode(' AND ', $conditions) . '
+        ' . implode(' AND ', $conditions) . ')
         , \'' . $sql_alter . '\'
         ,\'SELECT 1\');';
         self::query($sql);
