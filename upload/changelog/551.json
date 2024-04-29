@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"26",
+  "revision":"27",
   "status":"dev",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Implement TMDB mature content search"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
+        ,"Fix video manager pagination"
       ]
     },
     {

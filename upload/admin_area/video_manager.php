@@ -125,7 +125,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_video'])) {
 call_functions($cbvid->video_manager_funcs);
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $version = Update::getInstance()->getDBVersion();
 
@@ -163,9 +163,15 @@ if (!$params['order']) {
 $videos = Video::getInstance()->getAll($params);
 Assign('videos', $videos);
 
-$params['count'] = true;
-$total_rows = Video::getInstance()->getAll($params);
-$total_pages = count_pages($total_rows, RESULTS);
+if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
+    $total_rows = count($videos);
+} else {
+    $params['count'] = true;
+    unset($params['limit']);
+    unset($params['order']);
+    $total_rows = Video::getInstance()->getAll($params);
+}
+$total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
 subtitle(lang('videos_manager'));

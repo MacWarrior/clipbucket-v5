@@ -29,7 +29,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     assign('lang_details', $detail);
     $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => DirPath::getUrl('admin_area') . 'language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
     $edit_id = mysql_clean($_GET['edit_language']);
-    $limit = RESULTS;
+    $limit = config('admin_pages');
 
     $current_page = $_GET['page'];
     $current_page = is_numeric($current_page) && $current_page > 0 ? $current_page : 1;
