@@ -165,7 +165,7 @@ Assign('videos', $videos);
 
 if( empty($videos) ){
     $total_rows = 0;
-} if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
+} else if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
     $total_rows = count($videos);
 } else {
     $params['count'] = true;
