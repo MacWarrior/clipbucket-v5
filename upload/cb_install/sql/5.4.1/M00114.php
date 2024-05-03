@@ -1,4 +1,5 @@
 <?php
+
 namespace V5_4_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
@@ -21,15 +22,18 @@ class M00114 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` ADD PRIMARY KEY (`id_video_resolution`);', [
-            'table'   => 'video_resolution',
-            'column' => 'id_video_resolution',
-            'constraint_type'=>'PRIMARY KEY'
+            'table'  => 'video_resolution',
+            'column' => 'id_video_resolution'
+        ], [
+            'constraint_type' => 'PRIMARY KEY',
+            'constraint_name' => 'id_video_resolution'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` ADD UNIQUE KEY `title` (`title`);', [
-            'table'   => 'video_resolution',
-            'column' => 'title',
-            'constraint_name'=>'title',
-            'constraint_type'=>'UNIQUE'
+            'table'  => 'video_resolution',
+            'column' => 'title'
+        ], [
+            'constraint_name' => 'title',
+            'constraint_type' => 'UNIQUE'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` MODIFY `id_video_resolution` INT(11) NOT NULL AUTO_INCREMENT;', [

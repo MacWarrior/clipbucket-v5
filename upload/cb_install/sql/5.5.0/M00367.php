@@ -63,18 +63,18 @@ class M00367 extends \Migration
         $sql = 'ALTER TABLE `{tbl_prefix}tools_histo` ADD CONSTRAINT `id_tools_histo` FOREIGN KEY (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'tools_histo',
-            'colmun' => 'id_tool'
+            'column' => 'id_tool'
         ], [
-            'contraint_name'    => 'id_tools_histo',
+            'constraint_name'    => 'id_tools_histo',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
         $sql = 'ALTER TABLE `{tbl_prefix}tools_histo` ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;';
         self::alterTable($sql, [
             'table'  => 'tools_histo',
-            'colmun' => 'id_tools_histo_status'
+            'column' => 'id_tools_histo_status'
         ], [
-            'contraint_name'    => 'id_tools_histo_status',
+            'constraint_name'    => 'id_tools_histo_status',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
@@ -94,13 +94,14 @@ class M00367 extends \Migration
             ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;';
         self::alterTable($sql, [
             'table'  => 'tools_histo_log',
-            'colmun' => 'id_histo'
+            'column' => 'id_histo'
         ], [
-            'contraint_name'    => 'id_tools_histo_log',
+            'constraint_name'    => 'id_tools_histo_log',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
         $sql = 'UPDATE `{tbl_prefix}tools` SET function_name = REPLACE(function_name, \'AdminTool::\', \'\');';
+        self::query($sql);
 
         self::generateTranslation('no_logs', [
             'en' => 'No logs to display',
@@ -110,11 +111,10 @@ class M00367 extends \Migration
             'en' => 'Show last logs',
             'fr' => 'Afficher les derniers journaux'
         ]);
-        self::query($sql);
         $sql = 'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `code` VARCHAR(32) NOT NULL;';
-        self::alterTable($sql, [
+        self::alterTable($sql, [], [
             'table'  => 'tools',
-            'colmun' => 'code'
+            'column' => 'code'
         ]);
         $sql = 'UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,\'_label\', \'\');';
         self::query($sql);
@@ -125,9 +125,9 @@ class M00367 extends \Migration
         $sql = 'ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE (`code`);';
         self::alterTable($sql, [
             'table'  => 'tools',
-            'colmun' => 'code'
+            'column' => 'code'
         ], [
-            'contraint_name'    => 'code',
+            'constraint_name'    => 'code',
             'constraint_type'   => 'UNIQUE',
             'constraint_schema' => '{dbname}'
         ]);

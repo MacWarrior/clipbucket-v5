@@ -9,7 +9,7 @@ class M00299 extends \Migration
      */
     public function start()
     {
-        self::alterTable('ALTER TABLE `{tbl_prefix}video_thumbs` ADD COLUMN `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci;', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_thumbs` ADD COLUMN `type` VARCHAR(15) CHARACTER SET utf8 COLLATE utf8_unicode_ci;',[], [
             'table'  => 'video_thumbs',
             'column' => 'type'
         ]);

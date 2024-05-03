@@ -1,4 +1,5 @@
 <?php
+
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
@@ -26,9 +27,9 @@ class M00020 extends \Migration
             'en' => '- %s',
             'fr' => '- %s'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN', [
-            'table' => 'tmdb_search_result',
-            'columns' => 'is_adult'
+        self::alterTable('ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN', [], [
+            'table'  => 'tmdb_search_result',
+            'column' => 'is_adult'
         ]);
     }
 }

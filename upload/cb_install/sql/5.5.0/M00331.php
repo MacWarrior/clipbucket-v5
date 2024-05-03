@@ -45,7 +45,7 @@ class M00331 extends \Migration
             'table'  => 'categories',
             'column' => 'id_category_type'
         ], [
-            'contraint_name'  => 'categorie_type',
+            'constraint_name'  => 'categorie_type',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -63,7 +63,7 @@ class M00331 extends \Migration
             'table'  => 'videos_categories',
             'column' => 'id_category'
         ], [
-            'contraint_name'  => 'video_categories_category',
+            'constraint_name'  => 'video_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -71,7 +71,7 @@ class M00331 extends \Migration
             'table'  => 'videos_categories',
             'column' => 'id_video'
         ], [
-            'contraint_name'  => 'video_categories_video',
+            'constraint_name'  => 'video_categories_video',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -89,7 +89,7 @@ class M00331 extends \Migration
             'table'  => 'photos_categories',
             'column' => 'id_category'
         ], [
-            'contraint_name'  => 'photo_categories_category',
+            'constraint_name'  => 'photo_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -97,7 +97,7 @@ class M00331 extends \Migration
             'table'  => 'photos_categories',
             'column' => 'id_photo'
         ], [
-            'contraint_name'  => 'photo_categories_photo',
+            'constraint_name'  => 'photo_categories_photo',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -115,7 +115,7 @@ class M00331 extends \Migration
             'table'  => 'collections_categories',
             'column' => 'id_category'
         ], [
-            'contraint_name'  => 'collection_categories_category',
+            'constraint_name'  => 'collection_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -123,7 +123,7 @@ class M00331 extends \Migration
             'table'  => 'collections_categories',
             'column' => 'id_collection'
         ], [
-            'contraint_name'  => 'collection_categories_collection',
+            'constraint_name'  => 'collection_categories_collection',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -141,7 +141,7 @@ class M00331 extends \Migration
             'table'  => 'user_categories',
             'column' => 'id_category'
         ], [
-            'contraint_name'  => 'user_categories_category',
+            'constraint_name'  => 'user_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -149,7 +149,7 @@ class M00331 extends \Migration
             'table'  => 'user_categories',
             'column' => 'id_user'
         ], [
-            'contraint_name'  => 'user_categories_profile',
+            'constraint_name'  => 'user_categories_profile',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -167,7 +167,7 @@ class M00331 extends \Migration
             'table'  => 'playlists_categories',
             'column' => 'id_category'
         ], [
-            'contraint_name'  => 'playlist_categories_category',
+            'constraint_name'  => 'playlist_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -175,7 +175,7 @@ class M00331 extends \Migration
             'table'  => 'playlists_categories',
             'column' => 'id_playlist'
         ], [
-            'contraint_name'  => 'playlist_categories_playlist',
+            'constraint_name'  => 'playlist_categories_playlist',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -294,8 +294,9 @@ class M00331 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}categories` ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
-            'table'           => 'categories',
-            'column'          => 'parent_id',
+            'table'  => 'categories',
+            'column' => 'parent_id'
+        ], [
             'constraint_name' => 'categorie_parent',
             'constraint_type' => 'FOREIGN KEY'
         ]);

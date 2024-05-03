@@ -24,7 +24,7 @@ class M00001 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` TEXT NULL DEFAULT NULL;', [
-            'table_name' => '{tbl_prefix}user_levels_permissions',
+            'table' =>'user_levels_permissions',
             'column'     => 'plugins_perms'
         ]);
 
@@ -45,7 +45,7 @@ class M00001 extends \Migration
                 MODIFY COLUMN `total_groups` BIGINT(20) NOT NULL DEFAULT \'0\',
                 MODIFY COLUMN `banned_users` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
                 MODIFY COLUMN `total_downloads` BIGINT(255) NOT NULL DEFAULT \'0\';', [
-            'table_name' => '{tbl_prefix}users',
+            'table' =>'users',
             'columns'    => [
                 'featured_video',
                 'avatar_url',

@@ -10,9 +10,9 @@ class M00161 extends \Migration
     public function start()
     {
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}languages` ADD COLUMN `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci;', [
-            'table_name'  => '{tbl_prefix}languages',
-            'column_name' => 'language_code',
+        self::alterTable('ALTER TABLE `{tbl_prefix}languages` ADD COLUMN `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci;',[], [
+            'table'  => 'languages',
+            'column' => 'language_code',
         ]);
 
         $sql = 'UPDATE `{tbl_prefix}languages`
@@ -20,13 +20,13 @@ class M00161 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}languages` CHANGE `language_code` `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE;', [
-            'table_name'  => '{tbl_prefix}languages',
-            'column_name' => 'language_code'
+            'table' => 'languages',
+            'column' => 'language_code'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}languages_translations` MODIFY COLUMN `translation` VARCHAR(1024) NOT NULL;', [
-            'table_name'  => '{tbl_prefix}languages_translations',
-            'column_name' => 'translation',
+            'table' => 'languages_translations',
+            'column' => 'translation',
         ]);
 
         $sql = 'SET @language_id_eng = 1;';

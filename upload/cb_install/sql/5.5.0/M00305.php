@@ -10,12 +10,12 @@ class M00305 extends \Migration
     public function start()
     {
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` ADD COLUMN age_restriction INT DEFAULT NULL;', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos` ADD COLUMN age_restriction INT DEFAULT NULL;',[], [
             'table' => 'photos',
             'column' => 'age_restriction'
         ]);
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN age_restriction INT DEFAULT NULL;', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD COLUMN age_restriction INT DEFAULT NULL;',[], [
             'table' => 'video',
             'column' => 'age_restriction'
         ]);

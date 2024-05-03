@@ -22,7 +22,7 @@ class M00349 extends \Migration
             'table'  => 'video_subtitle',
             'column' => 'videoid'
         ], [
-            'contraint_name'  => 'video_subtitle_ibfk_1',
+            'constraint_name'  => 'video_subtitle_ibfk_1',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
@@ -43,7 +43,7 @@ class M00349 extends \Migration
             'table'  => 'languages_translations',
             'column' => 'language_id'
         ], [
-            'contraint_name'  => 'languages_translations_ibfk_1',
+            'constraint_name'  => 'languages_translations_ibfk_1',
             'constraint_type' => 'FOREIGN KEY'
         ]);
         $sql = 'ALTER TABLE {tbl_prefix}languages_translations ADD CONSTRAINT `languages_translations_ibfk_2` FOREIGN KEY (`id_language_key`) REFERENCES `{tbl_prefix}languages_keys` (`id_language_key`) ON DELETE NO ACTION ON UPDATE NO ACTION';
@@ -51,7 +51,7 @@ class M00349 extends \Migration
             'table'  => 'languages_translations',
             'column' => 'id_language_key'
         ], [
-            'contraint_name'  => 'languages_translations_ibfk_2',
+            'constraint_name'  => 'languages_translations_ibfk_2',
             'constraint_type' => 'FOREIGN KEY'
         ]);
         $sql = 'ALTER TABLE {tbl_prefix}video_thumbs DROP FOREIGN KEY `video_thumbs_ibfk_1`';
@@ -65,7 +65,7 @@ class M00349 extends \Migration
             'table'  => 'video_thumbs',
             'column' => 'videoid'
         ], [
-            'contraint_name'  => 'video_thumbs_ibfk_1',
+            'constraint_name'  => 'video_thumbs_ibfk_1',
             'constraint_type' => 'FOREIGN KEY'
         ]);
     }

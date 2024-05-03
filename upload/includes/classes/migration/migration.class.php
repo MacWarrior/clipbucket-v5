@@ -128,10 +128,11 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
 
         foreach ($translations as $language_code => $translation) {
-            $sql = 'SET @language_id_' . mysql_clean(strtolower($language_code)) . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
+            $language_id_sql = '@' . preg_replace('/\W/', '_', 'language_id_' . mysql_clean(strtolower($language_code)));
+            $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
 
-            $sql = ' INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@language_key, \'' . $translation . '\', @language_id_' . mysql_clean(strtolower($language_code)) . ');';
+            $sql = ' INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@id_language_key, \'' . mysql_clean($translation) . '\', ' . $language_id_sql . ');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
         }
     }
@@ -153,7 +154,7 @@ class Migration
 
         if (!empty($params_exists['column'])) {
             $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params_exists['column']) . '\'';
-        } 
+        }
         if (!empty($params_exists['columns'])) {
             $conditions[] = 'COLUMN_NAME IN (\'' . implode('\',\'', $params_exists['columns']) . '\')';
         }
