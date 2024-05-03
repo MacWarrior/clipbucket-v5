@@ -1,14 +1,15 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00038 extends Migration
+class M00038 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
-        $sql='DELETE FROM `{tbl_prefix}config` WHERE `name` IN (
+        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE `name` IN (
             \'default_time_zone\'
             ,\'user_max_chr\'
             ,\'captcha_type\'

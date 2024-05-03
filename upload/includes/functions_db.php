@@ -220,7 +220,8 @@ function execute_migration_file($path)
 {
     include_once $path;
     $class = pathinfo($path)['filename'];
-    $instance = new ($class)();
+    $namespace = 'V'.str_replace('.','_',basename(dirname($path)));
+    $instance = new ($namespace . '\\'.$class)();
     if (!$instance->launch()) {
         throw new Exception("error_during_update");
     }

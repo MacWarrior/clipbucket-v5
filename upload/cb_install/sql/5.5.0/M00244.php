@@ -1,56 +1,57 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00244 extends Migration
+class M00244 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `blocked_countries`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'blocked_countries'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `sprite_count`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'sprite_count'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `failed_reason`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'failed_reason'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `category_parents`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'category_parents'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `featured_description`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'featured_description'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `aspect_ratio`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'aspect_ratio'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `files_thumbs_path`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'files_thumbs_path'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `unique_embed_code`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'unique_embed_code'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `refer_url`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'refer_url'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `server_ip`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'server_ip'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `process_status`', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'process_status'
         ]);
 

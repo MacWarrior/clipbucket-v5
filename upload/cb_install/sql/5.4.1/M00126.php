@@ -1,15 +1,16 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_1;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00126 extends Migration
+class M00126 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}video` MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT \'1000-01-01\';', [
-            'table'  => '{tbl_prefix}video',
+            'table'  => 'video',
             'column' => 'datecreated'
         ]);
 

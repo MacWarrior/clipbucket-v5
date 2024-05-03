@@ -1,15 +1,16 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_1;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00114 extends Migration
+class M00114 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
-        $sql = 'CREATE TABLE `{tbl_prefix}video_resolution` (
-            `id_video_resolution` INT(11) NOT NULL,
+        $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_resolution` (
+            `id_video_resolution` INT(11) NOT NULL ,
             `title` VARCHAR(32) NOT NULL DEFAULT \'\',
             `ratio` VARCHAR(8) NOT NULL DEFAULT \'\',
             `enabled` TINYINT(1) NOT NULL DEFAULT 1,
@@ -19,20 +20,24 @@ class M00114 extends Migration
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` ADD PRIMARY KEY (`id_video_resolution`), ADD UNIQUE KEY `title` (`title`);', [
-            'table'   => '{tbl_prefix}video_resolution',
-            'columns' => [
-                'id_video_resolution',
-                'title'
-            ]
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` ADD PRIMARY KEY (`id_video_resolution`);', [
+            'table'   => 'video_resolution',
+            'column' => 'id_video_resolution',
+            'constraint_type'=>'PRIMARY KEY'
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` ADD UNIQUE KEY `title` (`title`);', [
+            'table'   => 'video_resolution',
+            'column' => 'title',
+            'constraint_name'=>'title',
+            'constraint_type'=>'UNIQUE'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` MODIFY `id_video_resolution` INT(11) NOT NULL AUTO_INCREMENT;', [
-            'table'  => '{tbl_prefix}video_resolution',
+            'table'  => 'video_resolution',
             'column' => 'id_video_resolution'
         ]);
 
-        $sql='INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
+        $sql = 'INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
         (\'240p\', \'16/9\', (SELECT CASE WHEN (SELECT value FROM `{tbl_prefix}config` WHERE name = \'cb_combo_res\') = \'no\' THEN 0 ELSE (SELECT CASE WHEN value = \'yes\' THEN 1 ELSE 0 END FROM `{tbl_prefix}config` WHERE name = \'gen_240\') END), 428, 240, (CASE WHEN (SELECT value FROM `{tbl_prefix}config` WHERE name = \'vbrate_240\') IS NULL THEN \'240000\' ELSE (SELECT value FROM `{tbl_prefix}config` WHERE name = \'vbrate_240\') END)),
         (\'360p\', \'16/9\', (SELECT CASE WHEN (SELECT value FROM `{tbl_prefix}config` WHERE name = \'cb_combo_res\') = \'no\' THEN 1 ELSE (SELECT CASE WHEN value = \'yes\' THEN 1 ELSE 0 END FROM `{tbl_prefix}config` WHERE name = \'gen_360\') END), 640, 360, (CASE WHEN (SELECT value FROM `{tbl_prefix}config` WHERE name = \'vbrate_360\') IS NULL THEN \'400000\' ELSE (SELECT value FROM `{tbl_prefix}config` WHERE name = \'vbrate_360\') END)),
         (\'480p\', \'16/9\', (SELECT CASE WHEN (SELECT value FROM `{tbl_prefix}config` WHERE name = \'cb_combo_res\') = \'no\' THEN 0 ELSE (SELECT CASE WHEN value = \'yes\' THEN 1 ELSE 0 END FROM `{tbl_prefix}config` WHERE name = \'gen_480\') END), 854, 480, (CASE WHEN (SELECT value FROM `{tbl_prefix}config` WHERE name = \'vbrate_480\') IS NULL THEN \'700000\' ELSE (SELECT value FROM `{tbl_prefix}config` WHERE name = \'vbrate_480\') END)),

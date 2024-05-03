@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00169 extends Migration
+class M00169 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -34,8 +35,8 @@ class M00169 extends Migration
         ]);
 
         self::generateTranslation('no_version', [
-            'en' => 'Your ClipBucket use the old database upgrade system. Please execute all sql migration files to version 5.3.0 before continue.',
-            'fr' => 'Votre ClipBucket utilise l\'ancien système de mise à jour. Merci d\'exéctuer les fichiers de migration jusqu\'à la version 5.3.0. avant de poursuivre.'
+            'en' => 'Your ClipBucket use the old database upgrade system. Please execute all sql \Migration files to version 5.3.0 before continue.',
+            'fr' => 'Votre ClipBucket utilise l\'ancien système de mise à jour. Merci d\'exéctuer les fichiers de \Migration jusqu\'à la version 5.3.0. avant de poursuivre.'
         ]);
 
         self::generateTranslation('select_version', [

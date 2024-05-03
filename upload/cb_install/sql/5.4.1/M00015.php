@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_1;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00015 extends Migration
+class M00015 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -17,7 +18,7 @@ class M00015 extends Migration
     MODIFY COLUMN `tags` MEDIUMTEXT NULL DEFAULT NULL,
     MODIFY COLUMN `uploader_ip` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
     MODIFY COLUMN `file_directory` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
-            'table'   => '{tbl_prefix}video',
+            'table'   => 'video',
             'columns' => [
                 'videokey',
                 'video_password',

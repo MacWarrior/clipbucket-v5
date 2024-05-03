@@ -1,16 +1,17 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_1;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00050 extends Migration
+class M00050 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}plugins` MODIFY COLUMN `plugin_version` VARCHAR(32) NOT NULL;', [
-            'table' => '{tbl_prefix}plugins',
-            'column'=>'plugin_version'
+            'table'  => 'plugins',
+            'column' => 'plugin_version'
         ]);
     }
 }

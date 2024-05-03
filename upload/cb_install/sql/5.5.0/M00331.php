@@ -1,10 +1,12 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00331 extends Migration
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+
+class M00331 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -40,8 +42,9 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}categories` ADD CONSTRAINT `categorie_type` FOREIGN KEY (`id_category_type`) REFERENCES `{tbl_prefix}categories_type` (`id_category_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}categories',
-            'column'          => 'id_category_type',
+            'table'  => 'categories',
+            'column' => 'id_category_type'
+        ], [
             'contraint_name'  => 'categorie_type',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -57,15 +60,17 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}videos_categories` ADD CONSTRAINT `video_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}videos_categories',
-            'column'          => 'id_category',
+            'table'  => 'videos_categories',
+            'column' => 'id_category'
+        ], [
             'contraint_name'  => 'video_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}videos_categories` ADD CONSTRAINT `video_categories_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}videos_categories',
-            'column'          => 'id_video',
+            'table'  => 'videos_categories',
+            'column' => 'id_video'
+        ], [
             'contraint_name'  => 'video_categories_video',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -81,15 +86,17 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photos_categories` ADD CONSTRAINT `photo_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}photos_categories',
-            'column'          => 'id_category',
+            'table'  => 'photos_categories',
+            'column' => 'id_category'
+        ], [
             'contraint_name'  => 'photo_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photos_categories` ADD CONSTRAINT `photo_categories_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}photos_categories',
-            'column'          => 'id_photo',
+            'table'  => 'photos_categories',
+            'column' => 'id_photo'
+        ], [
             'contraint_name'  => 'photo_categories_photo',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -105,15 +112,17 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collections_categories` ADD CONSTRAINT `collection_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}collections_categories',
-            'column'          => 'id_category',
+            'table'  => 'collections_categories',
+            'column' => 'id_category'
+        ], [
             'contraint_name'  => 'collection_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collections_categories` ADD CONSTRAINT `collection_categories_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}collections_categories',
-            'column'          => 'id_collection',
+            'table'  => 'collections_categories',
+            'column' => 'id_collection'
+        ], [
             'contraint_name'  => 'collection_categories_collection',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -129,15 +138,17 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users_categories` ADD CONSTRAINT `user_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}user_categories',
-            'column'          => 'id_category',
+            'table'  => 'user_categories',
+            'column' => 'id_category'
+        ], [
             'contraint_name'  => 'user_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users_categories` ADD CONSTRAINT `user_categories_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}user_categories',
-            'column'          => 'id_user',
+            'table'  => 'user_categories',
+            'column' => 'id_user'
+        ], [
             'contraint_name'  => 'user_categories_profile',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -153,15 +164,17 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlists_categories` ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}playlists_categories',
-            'column'          => 'id_category',
+            'table'  => 'playlists_categories',
+            'column' => 'id_category'
+        ], [
             'contraint_name'  => 'playlist_categories_category',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlists_categories` ADD CONSTRAINT `playlist_categories_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}playlists_categories',
-            'column'          => 'id_playlist',
+            'table'  => 'playlists_categories',
+            'column' => 'id_playlist'
+        ], [
             'contraint_name'  => 'playlist_categories_playlist',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -281,26 +294,26 @@ class M00331 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}categories` ADD CONSTRAINT `categorie_parent` FOREIGN KEY (`parent_id`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
-            'table'           => '{tbl_prefix}categories',
+            'table'           => 'categories',
             'column'          => 'parent_id',
             'constraint_name' => 'categorie_parent',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `category`;', [
-            'table'  => '{tbl_prefix}collections',
+            'table'  => 'collections',
             'column' => 'category'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `category`;', [
-            'table'  => '{tbl_prefix}playlists',
+            'table'  => 'playlists',
             'column' => 'category'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}users` DROP COLUMN `category`;', [
-            'table'  => '{tbl_prefix}users',
+            'table'  => 'users',
             'column' => 'category'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `category`;', [
-            'table'  => '{tbl_prefix}video',
+            'table'  => 'video',
             'column' => 'category'
         ]);
 

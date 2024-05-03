@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_3_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00001 extends Migration
+class M00001 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -91,7 +92,7 @@ class M00001 extends Migration
             MODIFY COLUMN `extras` VARCHAR(225) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `re_conv_status` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
-            'table'   => '{tbl_prefix}video',
+            'table' => 'video',
             'columns' => [
                 'username',
                 'category_parents',
@@ -119,7 +120,7 @@ class M00001 extends Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD `is_castable` BOOLEAN NOT NULL DEFAULT FALSE, ADD `bits_color` TINYINT(4) DEFAULT NULL;', [
-            'table' => '{tbl_prefix}video'
+            'table' => 'video'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile`
@@ -143,7 +144,7 @@ class M00001 extends Migration
             MODIFY COLUMN `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
             MODIFY COLUMN `rated_by` INT(150) NULL DEFAULT NULL,
             MODIFY COLUMN `insta_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\';', [
-            'table'   => '{tbl_prefix}user_profile',
+            'table' => 'user_profile',
             'columns' => [
                 'fb_url',
                 'twitter_url',
@@ -179,7 +180,7 @@ class M00001 extends Migration
             MODIFY COLUMN `downloaded` BIGINT(255) NOT NULL DEFAULT \'0\',
             MODIFY COLUMN `server_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `photo_details` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
-            'table'   => '{tbl_prefix}photos',
+            'table' => 'photos',
             'columns' => [
                 'views',
                 'total_comments',
@@ -202,7 +203,7 @@ class M00001 extends Migration
             MODIFY COLUMN `rating` BIGINT(20) NOT NULL DEFAULT \'0\',
             MODIFY COLUMN `rated_by` BIGINT(20) NOT NULL DEFAULT \'0\',
             MODIFY COLUMN `voters` LONGTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;', [
-            'table'   => '{tbl_prefix}collections',
+            'table' => 'collections',
             'columns' => [
                 'views',
                 'total_comments',
@@ -215,7 +216,7 @@ class M00001 extends Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}action_log` MODIFY COLUMN `action_success` ENUM(\'yes\',\'no\') CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;', [
-            'table'  => '{tbl_prefix}action_log',
+            'table' => 'action_log',
             'column' => 'action_success'
         ]);
 
@@ -224,7 +225,7 @@ class M00001 extends Migration
             MODIFY `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY `spam_votes` BIGINT(20) NOT NULL DEFAULT \'0\',
             MODIFY `spam_voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
-            'table'   => '{tbl_prefix}comments',
+            'table' => 'comments',
             'columns' => [
                 'vote',
                 'voters',

@@ -1,10 +1,12 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00371 extends Migration
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+
+class M00371 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -158,12 +160,12 @@ class M00371 extends Migration
 
         $sql = 'ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_poster` INT(3) DEFAULT NULL;';
         self::alterTable($sql, [
-            'table'  => '{tbl_prefix}video',
+            'table'  => 'video',
             'colmun' => 'default_poster'
         ]);
         $sql = 'ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_backdrop` INT(3) DEFAULT NULL;';
         self::alterTable($sql, [
-            'table'  => '{tbl_prefix}video',
+            'table'  => 'video',
             'colmun' => 'default_backdrop'
         ]);
 
@@ -193,9 +195,10 @@ class M00371 extends Migration
 
         $sql = 'ALTER TABLE `' . tbl('tmdb_search_result') . '` ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `' . tbl('tmdb_search') . '` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;';
         self::alterTable($sql, [
-            'table'             => '{tbl_prefix}tmdb_search_result',
-            'colmun'            => 'id_tmdb_search',
-            'constraint_name'   => 'search_result',
+            'table'  => 'tmdb_search_result',
+            'colmun' => 'id_tmdb_search'
+        ], [
+            'contraint_name'    => 'search_result',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);

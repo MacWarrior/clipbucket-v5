@@ -1,22 +1,23 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_1;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00101 extends Migration
+class M00101 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}action_log` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}action_log',
+            'table'  => 'action_log',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}ads_data`
             MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\',
             MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'   => '{tbl_prefix}ads_data',
+            'table'   => 'ads_data',
             'columns' => [
                 'last_viewed',
                 'date_added'
@@ -26,7 +27,7 @@ class M00101 extends Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}collection_categories`
             MODIFY COLUMN `category_desc` TEXT NULL DEFAULT NULL,
             MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'   => '{tbl_prefix}collection_categories',
+            'table'   => 'collection_categories',
             'columns' => [
                 'category_desc',
                 'date_added'
@@ -34,7 +35,7 @@ class M00101 extends Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` MODIFY COLUMN `voters` TEXT NULL DEFAULT NULL, MODIFY COLUMN `spam_voters` TEXT NULL DEFAULT NULL;', [
-            'table'   => '{tbl_prefix}comments',
+            'table'   => 'comments',
             'columns' => [
                 'voters',
                 'spam_voters'
@@ -42,39 +43,39 @@ class M00101 extends Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}conversion_queue` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}conversion_queue',
+            'table'  => 'conversion_queue',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}group_categories` MODIFY COLUMN `date_added` DATETIME NOT NULL;', [
-            'table'  => '{tbl_prefix}group_categories',
+            'table'  => 'group_categories',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}group_invitations` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}group_invitations',
+            'table'  => 'group_invitations',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}group_members` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}group_members',
+            'table'  => 'group_members',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}group_videos` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}group_videos',
+            'table'  => 'group_videos',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}messages` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}messages',
+            'table'  => 'messages',
             'column' => 'date_added'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}photos`
             MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\' ON UPDATE CURRENT_TIMESTAMP,
             MODIFY COLUMN `server_url` TEXT NULL DEFAULT NULL,
             MODIFY COLUMN `photo_details` TEXT NULL DEFAULT NULL;', [
-            'table'   => '{tbl_prefix}photos',
+            'table'   => 'photos',
             'columns' => [
                 'last_viewed',
                 'server_url',
@@ -88,7 +89,7 @@ class M00101 extends Migration
             MODIFY COLUMN `first_item` TEXT NULL DEFAULT NULL,
             MODIFY COLUMN `cover` TEXT NULL DEFAULT NULL,
             MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;', [
-            'table'   => '{tbl_prefix}playlists',
+            'table'   => 'playlists',
             'columns' => [
                 'voters',
                 'last_update',
@@ -99,12 +100,12 @@ class M00101 extends Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlist_items` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}playlist_items',
+            'table'  => 'playlist_items',
             'column' => 'date_added'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}subscriptions` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'  => '{tbl_prefix}subscriptions',
+            'table'  => 'subscriptions',
             'column' => 'date_added'
         ]);
 
@@ -114,7 +115,7 @@ class M00101 extends Migration
             MODIFY COLUMN `doj` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
             MODIFY COLUMN `last_logged` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\',
             MODIFY COLUMN `last_active` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\';', [
-            'table'   => '{tbl_prefix}users',
+            'table'   => 'users',
             'columns' => [
                 'avatar_url',
                 'dob',
@@ -126,7 +127,7 @@ class M00101 extends Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_categories`
             MODIFY COLUMN `date_added` DATETIME NOT NULL;', [
-            'table'  => '{tbl_prefix}user_categories',
+            'table'  => 'user_categories',
             'column' => 'date_added'
         ]);
 
@@ -147,7 +148,7 @@ class M00101 extends Migration
     MODIFY COLUMN `thumbs_version` VARCHAR(5) NOT NULL DEFAULT \'5.4.1\',
     MODIFY COLUMN `re_conv_status` TINYTEXT NULL DEFAULT NULL,
     MODIFY COLUMN `conv_progress` TEXT NULL DEFAULT NULL;', [
-            'table'   => '{tbl_prefix}video',
+            'table'   => 'video',
             'columns' => [
                 'username',
                 'category_parents',
@@ -168,15 +169,18 @@ class M00101 extends Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_categories`
-            MODIFY COLUMN `category_desc` text NULL DEFAULT NULL,
-            MODIFY COLUMN `date_added` datetime NULL DEFAULT NULL;', [
-                'table'   => '{tbl_prefix}video_categories',
-                'columns'=>['category_desc', 'date_added']
+            MODIFY COLUMN `category_desc` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `date_added` DATETIME NULL DEFAULT NULL;', [
+            'table'   => 'video_categories',
+            'columns' => [
+                'category_desc',
+                'date_added'
+            ]
         ]);
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}video_favourites` MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
-            'table'   => '{tbl_prefix}video_favourites',
-            'column'=>'date_added'
+        self::alterTable('ALTER TABLE `{tbl_prefix}video_favourites` MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
+            'table'  => 'video_favourites',
+            'column' => 'date_added'
         ]);
     }
 }

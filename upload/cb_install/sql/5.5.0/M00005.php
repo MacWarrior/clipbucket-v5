@@ -1,10 +1,12 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00005 extends Migration
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+
+class M00005 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -21,15 +23,18 @@ class M00005 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_audio_tracks` ADD UNIQUE KEY `videoid` (`videoid`,`number`);', [
-            'table' => '{tbl_prefix}video_audio_tracks',
-            'columns' => ['videoid', 'number']
+            'table' => 'video_audio_tracks'
+        ], [
+            'constraint_name' => 'videoid',
+            'constraint_type' => 'UNIQUE'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_audio_tracks` ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;', [
-            'table' => '{tbl_prefix}video_audio_tracks',
-            'column'=>'videoid',
-            'constraint_name'=>'video_audio_tracks_ibfk_1',
-            'contraint_type'=>'FOREIGN KEY'
+            'table'  => 'video_audio_tracks',
+            'column' => 'videoid'
+        ], [
+            'constraint_name' => 'video_audio_tracks_ibfk_1',
+            'contraint_type'  => 'FOREIGN KEY'
         ]);
     }
 }

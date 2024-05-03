@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_1;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00020 extends Migration
+class M00020 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -26,7 +27,7 @@ class M00020 extends Migration
             'fr' => '- %s'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN', [
-            'table'   => '{tbl_prefix}tmdb_search_result',
+            'table' => 'tmdb_search_result',
             'columns' => 'is_adult'
         ]);
     }

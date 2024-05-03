@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00289 extends Migration
+class M00289 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -27,18 +28,18 @@ class M00289 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users` DROP COLUMN `total_groups`;', [
-            'table'  => '{tbl_prefix}users',
+            'table' => 'users',
             'column' => 'total_groups',
         ]);
         $sql = 'DELETE FROM `{tbl_prefix}user_permissions` WHERE `permission_code` IN(\'view_groups\',\'view_group\')';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` DROP COLUMN `view_groups`', [
-            'table'  => '{tbl_prefix}user_levels_permissions',
+            'table' => 'user_levels_permissions',
             'column' => 'view_groups',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` DROP COLUMN `view_group`', [
-            'table'  => '{tbl_prefix}user_levels_permissions',
+            'table' => 'user_levels_permissions',
             'column' => 'view_group',
         ]);
 

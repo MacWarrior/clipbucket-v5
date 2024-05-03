@@ -1,10 +1,12 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00367 extends Migration
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+
+class M00367 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -27,20 +29,20 @@ class M00367 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}tools` DROP COLUMN id_tools_status', [
-            'table'  => '{tbl_prefix}tools',
+            'table'  => 'tools',
             'column' => 'id_tools_status'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}tools` DROP COLUMN elements_total', [
-            'table'  => '{tbl_prefix}tools',
+            'table'  => 'tools',
             'column' => 'elements_total'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}tools` DROP COLUMN elements_done', [
-            'table'  => '{tbl_prefix}tools',
+            'table'  => 'tools',
             'column' => 'elements_done'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;', ['table' => '{tbl_prefix}tools_status']);
+        self::alterTable('ALTER TABLE `{tbl_prefix}tools_status` RENAME `{tbl_prefix}tools_histo_status`;', ['table' => 'tools_status']);
         self::alterTable('ALTER TABLE `{tbl_prefix}tools_histo_status` CHANGE `id_tools_status` `id_tools_histo_status` INT NOT NULL AUTO_INCREMENT;', [
-            'table'  => '{tbl_prefix}tools_histo_status',
+            'table'  => 'tools_histo_status',
             'column' => 'id_tools_status'
         ]);
 
@@ -60,17 +62,19 @@ class M00367 extends Migration
         self::query($sql);
         $sql = 'ALTER TABLE `{tbl_prefix}tools_histo` ADD CONSTRAINT `id_tools_histo` FOREIGN KEY (`id_tool`) REFERENCES `{tbl_prefix}tools` (`id_tool`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
-            'table'             => '{tbl_prefix}tools_histo',
-            'colmun'            => 'id_tool',
-            'constraint_name'   => 'id_tools_histo',
+            'table'  => 'tools_histo',
+            'colmun' => 'id_tool'
+        ], [
+            'contraint_name'    => 'id_tools_histo',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
         $sql = 'ALTER TABLE `{tbl_prefix}tools_histo` ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;';
         self::alterTable($sql, [
-            'table'             => '{tbl_prefix}tools_histo',
-            'colmun'            => 'id_tools_histo_status',
-            'constraint_name'   => 'id_tools_histo_status',
+            'table'  => 'tools_histo',
+            'colmun' => 'id_tools_histo_status'
+        ], [
+            'contraint_name'    => 'id_tools_histo_status',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
@@ -89,9 +93,10 @@ class M00367 extends Migration
         $sql = 'ALTER TABLE `{tbl_prefix}tools_histo_log`
             ADD CONSTRAINT `id_tools_histo_log` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;';
         self::alterTable($sql, [
-            'table'             => '{tbl_prefix}tools_histo_log',
-            'colmun'            => 'id_histo',
-            'constraint_name'   => 'id_tools_histo_log',
+            'table'  => 'tools_histo_log',
+            'colmun' => 'id_histo'
+        ], [
+            'contraint_name'    => 'id_tools_histo_log',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
@@ -108,7 +113,7 @@ class M00367 extends Migration
         self::query($sql);
         $sql = 'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `code` VARCHAR(32) NOT NULL;';
         self::alterTable($sql, [
-            'table'  => '{tbl_prefix}tools',
+            'table'  => 'tools',
             'colmun' => 'code'
         ]);
         $sql = 'UPDATE `{tbl_prefix}tools` SET `code` = REPLACE( language_key_label,\'_label\', \'\');';
@@ -119,9 +124,10 @@ class M00367 extends Migration
         self::query($sql);
         $sql = 'ALTER TABLE `{tbl_prefix}tools` ADD UNIQUE (`code`);';
         self::alterTable($sql, [
-            'table'             => '{tbl_prefix}tools',
-            'colmun'            => 'code',
-            'constraint_name'   => 'code',
+            'table'  => 'tools',
+            'colmun' => 'code'
+        ], [
+            'contraint_name'    => 'code',
             'constraint_type'   => 'UNIQUE',
             'constraint_schema' => '{dbname}'
         ]);

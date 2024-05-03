@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00315 extends Migration
+class M00315 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -33,7 +34,7 @@ class M00315 extends Migration
             'pt-BR' => 'Comentários desativados para este vídeo %s'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` MODIFY type VARCHAR(16);', [
-            'table'  => '{tbl_prefix}comments',
+            'table' => 'comments',
             'column' => 'type'
         ]);
 

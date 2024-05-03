@@ -1,21 +1,22 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00270 extends Migration
+class M00270 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
         $sql = 'DROP TABLE IF EXISTS `{tbl_prefix}collection_contributors`;';
         self::query($sql);
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` DROP `voters`;', [
-            'table'  => '{tbl_prefix}comments',
+            'table' => 'comments',
             'column' => 'voters'
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}comments` DROP `vote`;', [
-            'table'  => '{tbl_prefix}comments',
+            'table' => 'comments',
             'column' => 'vote'
         ]);
         $sql = 'SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = \'thanks_rating_comment\');';

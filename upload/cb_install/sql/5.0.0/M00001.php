@@ -1,10 +1,12 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00001 extends Migration
+namespace V5_0_0;
+
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+class M00001 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -567,16 +569,16 @@ class M00001 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users` CHANGE `password` `password` VARCHAR(128) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
-            'table'  => '{tbl_prefix}users',
+            'table'  => 'users',
             'column' => 'password'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_photos` ENUM(\'yes\', \'no\') NOT NULL DEFAULT \'yes\' AFTER `view_video`;', [
-            'table' => '{tbl_prefix}user_levels_permissions'
+            'table' => 'user_levels_permissions'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_collections` ENUM(\'yes\', \'no\') NOT NULL DEFAULT \'yes\' AFTER `view_photos`;', [
-            'table' => '{tbl_prefix}user_levels_permissions'
+            'table' => 'user_levels_permissions'
         ]);
 
         $sql = 'INSERT INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES

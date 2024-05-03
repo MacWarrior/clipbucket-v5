@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00264 extends Migration
+class M00264 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -33,7 +34,8 @@ class M00264 extends Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type` (`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table'           => 'tags',
-            'column'          => 'id_tag_type',
+            'column'          => 'id_tag_type'
+            ],[
             'constraint_name' => 'tag_type',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -49,15 +51,17 @@ class M00264 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}video_tags',
-            'column'          => 'id_tag',
+            'table' => 'video_tags',
+            'column'          => 'id_tag'
+            ], [
             'constraint_name' => 'video_tags_tag',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}video_tags',
-            'column'          => 'id_video',
+            'table' => 'video_tags',
+            'column'          => 'id_video'
+            ], [
             'constraint_name' => 'video_tags_video',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -73,15 +77,17 @@ class M00264 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}photo_tags',
-            'column'          => 'id_tag',
+            'table' => 'photo_tags',
+            'column'          => 'id_tag'
+            ], [
             'constraint_name' => 'photo_tags_tag',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}photo_tags',
-            'column'          => 'id_photo',
+            'table' => 'photo_tags',
+            'column'          => 'id_photo'
+            ], [
             'constraint_name' => 'photo_tags_photo',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -97,15 +103,17 @@ class M00264 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}collection_tags',
-            'column'          => 'id_tag',
+            'table' => 'collection_tags',
+            'column'          => 'id_tag'
+            ], [
             'constraint_name' => 'collection_tags_tag',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}collection_tags',
-            'column'          => 'id_collection',
+            'table' => 'collection_tags',
+            'column'          => 'id_collection'
+            ], [
             'constraint_name' => 'collection_tags_collection',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -121,15 +129,17 @@ class M00264 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}user_tags',
-            'column'          => 'id_tag',
+            'table' => 'user_tags',
+            'column'          => 'id_tag'
+            ], [
             'constraint_name' => 'user_tags_tag',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}user_tags',
-            'column'          => 'id_user',
+            'table' => 'user_tags',
+            'column'          => 'id_user'
+            ], [
             'constraint_name' => 'user_tags_profile',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -143,15 +153,17 @@ class M00264 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}playlist_tags',
-            'column'          => 'id_tag',
+            'table' => 'playlist_tags',
+            'column'          => 'id_tag'
+            ], [
             'constraint_name' => 'playlist_tags_tag',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => '{tbl_prefix}playlist_tags',
-            'column'          => 'id_playlist',
+            'table' => 'playlist_tags',
+            'column'          => 'id_playlist'
+            ], [
             'constraint_name' => 'playlist_tags_playlist',
             'constraint_type' => 'FOREIGN KEY'
         ]);
@@ -385,28 +397,28 @@ INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;', [
-            'table'  => '{tbl_prefix}video',
+            'table' => 'video',
             'column' => 'tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_tags`;', [
-            'table'  => '{tbl_prefix}photos',
+            'table' => 'photos',
             'column' => 'photo_tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `collection_tags`;', [
-            'table'  => '{tbl_prefix}collections',
+            'table' => 'collections',
             'column' => 'collection_tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;', [
-            'table'  => '{tbl_prefix}user_profile',
+            'table' => 'user_profile',
             'column' => 'profile_tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;', [
-            'table'  => '{tbl_prefix}playlists',
+            'table' => 'playlists',
             'column' => 'tags',
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);', [
-            'table'  => '{tbl_prefix}tags',
+            'table' => 'tags',
             'column' => 'name',
         ]);
 

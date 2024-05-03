@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_4_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00039 extends Migration
+class M00039 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -12,7 +13,7 @@ class M00039 extends Migration
     MODIFY COLUMN `category_desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
     MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
-            'table'   => '{tbl_prefix}video_categories',
+            'table'   => 'video_categories',
             'columns' => [
                 'category_desc',
                 'date_added',
@@ -28,7 +29,7 @@ class M00039 extends Migration
             MODIFY COLUMN `category_thumb` MEDIUMINT(9) NOT NULL DEFAULT \'0\',
             MODIFY COLUMN `isdefault` ENUM(\'yes\',\'no\') CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'no\';',
             [
-                'table'   => '{tbl_prefix}collection_categories',
+                'table'   => 'collection_categories',
                 'columns' => [
                     'category_name',
                     'category_order',
@@ -55,7 +56,7 @@ class M00039 extends Migration
             MODIFY COLUMN `first_item` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `cover` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `played` INT(255) NOT NULL DEFAULT \'0\';', [
-            'table'   => '{tbl_prefix}playlists',
+            'table'   => 'playlists',
             'columns' => [
                 'playlist_name',
                 'userid',

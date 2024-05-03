@@ -138,44 +138,80 @@ class Migration
 
     /**
      * @param $sql_alter
-     * @param array $params fields available : table, column, constraint_name, constraint_type, constraint_schema
+     * @param array $params_exists fields available : table, column, constraint_name, constraint_type, constraint_schema
      * @throws Exception
      */
-    public static function alterTable($sql_alter, array $params = [])
+    public static function alterTable($sql_alter, array $params_exists = [], array $params_not_exists = [])
     {
         $table = 'COLUMNS';
         $conditions = [];
-        $conditions[] = 'TABLE_SCHEMA = DATABASE()';
+        $conditions[] = 'TABLE_SCHEMA = \'{dbname}\'';
 
-        if (!empty($params['table'])) {
-            $conditions[] = 'TABLE_NAME = \'' . tbl($params['table']) . '\'';
+        if (!empty($params_exists['table'])) {
+            $conditions[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
         }
 
-        if (!empty($params['column'])) {
-            $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params['column']) . '\'';
-        }
-        if (!empty($params['columns'])) {
-            $conditions[] = 'COLUMN_NAME IN (\'' . mysql_clean(implode('\',',$params['columns'])) . '\')';
+        if (!empty($params_exists['column'])) {
+            $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params_exists['column']) . '\'';
+        } 
+        if (!empty($params_exists['columns'])) {
+            $conditions[] = 'COLUMN_NAME IN (\'' . implode('\',\'', $params_exists['columns']) . '\')';
         }
 
-        if (!empty($params['constraint_name'])) {
-            $conditions[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params['constraint_name']) . '\'';
+        if (!empty($params_exists['constraint_name'])) {
+            $conditions[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_exists['constraint_name']) . '\'';
             $table = 'TABLE_CONSTRAINTS';
         }
 
-        if (!empty($params['constraint_type'])) {
-            $conditions[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params['constraint_type']) . '\'';
+        if (!empty($params_exists['constraint_type'])) {
+            $conditions[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params_exists['constraint_type']) . '\'';
             $table = 'TABLE_CONSTRAINTS';
         }
 
-        if (!empty($params['constraint_schema'])) {
-            $conditions[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params['constraint_schema']) . '\'';
+        if (!empty($params_exists['constraint_schema'])) {
+            $conditions[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params_exists['constraint_schema']) . '\'';
             $table = 'TABLE_CONSTRAINTS';
+        }
+
+        $sql_not_exists = '';
+        if (!empty($params_not_exists)) {
+            $table_not_exists = 'COLUMNS';
+            $conditions_not_exists = [];
+            $conditions_not_exists[] = 'TABLE_SCHEMA = \'{dbname}\'';
+            if (!empty($params_not_exists['table'])) {
+                $conditions_not_exists[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
+            }
+
+            if (!empty($params_not_exists['column'])) {
+                $conditions_not_exists[] = 'COLUMN_NAME = \'' . mysql_clean($params_not_exists['column']) . '\'';
+            }
+            if (!empty($params_not_exists['columns'])) {
+                $conditions_not_exists[] = 'COLUMN_NAME IN (\'' . implode('\',\'', $params_not_exists['columns']) . '\')';
+            }
+
+            if (!empty($params_not_exists['constraint_name'])) {
+                $conditions_not_exists[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_not_exists['constraint_name']) . '\'';
+                $table_not_exists = 'TABLE_CONSTRAINTS';
+            }
+
+            if (!empty($params_not_exists['constraint_type'])) {
+                $conditions_not_exists[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params_not_exists['constraint_type']) . '\'';
+                $table_not_exists = 'TABLE_CONSTRAINTS';
+            }
+
+            if (!empty($params_not_exists['constraint_schema'])) {
+                $conditions_not_exists[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params_not_exists['constraint_schema']) . '\'';
+                $table_not_exists = 'TABLE_CONSTRAINTS';
+            }
+            $sql_not_exists = ' AND (
+                SELECT COUNT(*) FROM information_schema.' . $table_not_exists . ' WHERE
+                ' . implode(' AND ', $conditions_not_exists) . ' LIMIT 1
+                ) = 0 ';
         }
 
         $sql = 'set @var=if((SELECT true FROM information_schema.' . $table . ' WHERE
-        ' . implode(' AND ', $conditions) . ')
-        , \'' . $sql_alter . '\'
+        ' . implode(' AND ', $conditions) . ' LIMIT 1) ' . $sql_not_exists . '
+        , \'' . addslashes($sql_alter) . '\'
         ,\'SELECT 1\');';
         self::query($sql);
         self::query('prepare stmt from @var;');

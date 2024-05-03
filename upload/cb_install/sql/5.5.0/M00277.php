@@ -1,10 +1,11 @@
 <?php
-require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+namespace V5_5_0;
+require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00277 extends Migration
+class M00277 extends \Migration
 {
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function start()
     {
@@ -12,12 +13,12 @@ class M00277 extends Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD FULLTEXT KEY `collection_name` (`collection_name`);', [
-            'table'  => '{tbl_prefix}collections',
+            'table' => 'collections',
             'column' => 'collection_name'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users` ADD FULLTEXT KEY `username_fulltext` (`username`);', [
-            'table'  => '{tbl_prefix}users',
+            'table' => 'users',
             'column' => 'username'
         ]);
     }
