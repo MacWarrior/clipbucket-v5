@@ -1034,12 +1034,13 @@ class FFMpeg
 
             $this->generateThumbs($thumbs_settings);
         }
+
         $res = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
             , 'num'
             , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
         );
-         if (empty($res)) {
-             Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
-         }
+        if (empty($res)) {
+            Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+        }
     }
 }

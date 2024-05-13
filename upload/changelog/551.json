@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"29",
+  "revision":"30",
   "status":"dev",
   "detail":[
     {
@@ -60,6 +60,7 @@
         ,"Prevent SSE error on update from old version"
         ,"Fix dependancies check during installation process"
         ,"Update Debian 10 installation script"
+        ,"Fix upgrade from 4.2 RC1"
       ]
     },
     {

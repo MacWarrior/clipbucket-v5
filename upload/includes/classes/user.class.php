@@ -533,9 +533,12 @@ class userquery extends CBCategory
                     $oldpass = pass_code_unsecure($password);
                     $udetails = $this->get_user_with_pass($username, $oldpass);
 
-                    if ($udetails) // This account still use old password method, let's update it
-                    {
-                        $db->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                    // This account still use old password method, let's update it
+                    if ($udetails){
+                        $version = Update::getInstance()->getDBVersion();
+                        if ($version['version'] > '5.0.0' || ($version['version'] == '5.0.0' && $version['revision'] >= 1)) {
+                            $db->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                        }
                     }
                 }
 

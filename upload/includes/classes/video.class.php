@@ -63,12 +63,14 @@ class Video
             ,'video_version'
             ,'thumbs_version'
             ,'re_conv_status'
-            ,'is_castable'
-            ,'bits_color'
             ,'subscription_email'
         ];
 
         $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+            $this->fields[] = 'is_castable';
+            $this->fields[] = 'bits_color';
+        }
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
@@ -1691,15 +1693,18 @@ class CBvideo extends CBCategory
 
         if ($params['show_related']) {
             $cond = '';
-            if ($superCond) {
-                $cond = $superCond . ' AND ';
-            }
 
-            $cond .= '(MATCH(video.title) AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE) ';
-            if( $match_tag != ''){
-                $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE)';
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                if ($superCond) {
+                    $cond = $superCond . ' AND ';
+                }
+
+                $cond .= '(MATCH(video.title) AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE) ';
+                if( $match_tag != ''){
+                    $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($params['title']) . '\' IN NATURAL LANGUAGE MODE)';
+                }
+                $cond .= ')';
             }
-            $cond .= ')';
 
             if ($params['exclude']) {
                 if ($cond != '') {
@@ -1723,15 +1728,19 @@ class CBvideo extends CBCategory
             $result = select($query);
             if (count($result) == 0) {
                 $cond = '';
-                if ($superCond) {
-                    $cond = $superCond . ' AND ';
+
+                if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                    if ($superCond) {
+                        $cond = $superCond . ' AND ';
+                    }
+
+                    //Try Finding videos via tags
+                    $cond .= '(MATCH(video.title) AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE) ';
+                    if ($match_tag != '') {
+                        $cond .= 'OR MATCH(' . $match_tag . ') AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE)';
+                    }
+                    $cond .= ')';
                 }
-                //Try Finding videos via tags
-                $cond .= '(MATCH(video.title) AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE) ';
-                if( $match_tag != ''){
-                    $cond .= 'OR MATCH('.$match_tag.') AGAINST (\'' . mysql_clean($params['tags']) . '\' IN NATURAL LANGUAGE MODE)';
-                }
-                $cond .= ')';
 
                 if ($params['exclude']) {
                     if ($cond != '') {
