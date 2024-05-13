@@ -52,11 +52,11 @@ if (isset($_POST['pending']) && is_array($_POST['check_queue'])) {
 
 //Getting List of Conversion Queue
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 $queue_list = $myquery->get_conversion_queue(null, $get_limit);
 assign('queues', $queue_list);
 $total_rows = get_videos($vcount);
-$total_pages = count_pages($db->count(tbl('conversion_queue'), 'cqueue_id'), RESULTS);
+$total_pages = count_pages($db->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
 subtitle('Conversion Queue Manager');

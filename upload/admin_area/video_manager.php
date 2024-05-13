@@ -125,7 +125,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_video'])) {
 call_functions($cbvid->video_manager_funcs);
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $version = Update::getInstance()->getDBVersion();
 
@@ -140,64 +140,42 @@ if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version
     }
 }
 
-if (isset($_GET['category'])) {
-    if ($_GET['category'][0] == 'all') {
-        $cat_field = '';
-    } else {
-        $cat_field = $_GET['category'];
-    }
-}
-
 if (isset($_GET['search'])) {
-    $array = [
-        'videoid'  => $_GET['videoid'],
-        'videokey' => $_GET['videokey'],
-        'title'    => $_GET['title'],
-        'tags'     => $_GET['tags'],
-        'user'     => $_GET['userid'],
-        'category' => $cat_field,
-        'featured' => $_GET['featured'],
-        'active'   => $_GET['active'],
-        'status'   => $_GET['status']
+    $params = [
+        'videoid'  => $_GET['videoid'] ?? false,
+        'videokey' => $_GET['videokey'] ?? false,
+        'title'    => $_GET['title'] ?? false,
+        'tags'     => $_GET['tags'] ?? false,
+        'userid'   => $_GET['userid'] ?? false,
+        'category' => $_GET['category'] ?? false,
+        'featured' => $_GET['featured'] ?? false,
+        'active'   => $_GET['active'] ?? false,
+        'status'   => $_GET['status'] ?? false
     ];
 }
 
-$result_array = $array;
 //Getting Video List
-$result_array['limit'] = $get_limit;
-if (!$array['order']) {
-    $result_array['order'] = ' videoid DESC ';
+$params['limit'] = $get_limit;
+if (!$params['order']) {
+    $params['order'] = ' videoid DESC ';
 }
 
-$videos = Video::getInstance()->getAll($result_array);
-
+$videos = Video::getInstance()->getAll($params);
 Assign('videos', $videos);
 
-//Collecting Data for Pagination
-$vcount = $array;
-$vcount['count_only'] = true;
-$total_rows = get_videos($vcount);
-$total_pages = count_pages($total_rows, RESULTS);
+if( empty($videos) ){
+    $total_rows = 0;
+} else if( count($videos) < config('admin_pages') && ($page == 1 || empty($page)) ){
+    $total_rows = count($videos);
+} else {
+    $params['count'] = true;
+    unset($params['limit']);
+    unset($params['order']);
+    $total_rows = Video::getInstance()->getAll($params);
+}
+$total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
-//Category Array
-if (is_array($_GET['category'])) {
-    $cats_array = [$_GET['category']];
-} else {
-    preg_match_all('/#([0-9]+)#/', $_GET['category'], $m);
-    $cats_array = [$m[1]];
-}
-$cat_array = [
-    lang('vdo_cat'),
-    'type'             => 'checkbox',
-    'name'             => 'category',
-    'id'               => 'category',
-    'value'            => [$cats_array],
-    'hint_1'           => lang('vdo_cat_msg'),
-    'display_function' => 'convert_to_categories'
-];
-
-assign('cat_array', $cat_array);
 subtitle(lang('videos_manager'));
 template_files('video_manager.html');
 display_it();

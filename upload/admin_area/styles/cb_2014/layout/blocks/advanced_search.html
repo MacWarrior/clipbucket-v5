@@ -60,9 +60,9 @@
                     <label for="status">Conversion Status</label>
                     <select class="form-control" name="status" id="status">
                         <option value=""> </option>
-                        <option value="Successful" {if $smarty.get.status=='Successful'} selected{/if}>Successful</option>
-                        <option value="Processing" {if $smarty.get.status=='Processing'} selected{/if}>Processing</option>
-                        <option value="Failed" {if $smarty.get.status=='Failed'} selected{/if}>Failed</option>
+                        <option value="Successful" {if $smarty.get.status=='Successful'}selected{/if}>Successful</option>
+                        <option value="Processing" {if $smarty.get.status=='Processing'}selected{/if}>Processing</option>
+                        <option value="Failed" {if $smarty.get.status=='Failed'}selected{/if}>Failed</option>
                     </select>
                 </div>
             </div>
@@ -75,11 +75,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>{lang code="category"}</label>
-                    {$cat_array.type = 'dropdown'}
-                    {$cat_array.category_type = 'video'}
-                    {$cat_array.class = "form-control"}
-                    {$cat_array.with_all = true}
-                    {$formObj->createField($cat_array)}
+                    {cbCategories output="dropdown" class='form-control' selected=$smarty.get.category name="category" blank_option=TRUE type='video' echo=TRUE}
                 </div>
             </div>
         </div>

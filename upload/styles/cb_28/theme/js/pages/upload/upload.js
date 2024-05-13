@@ -18,11 +18,11 @@ $(document).ready(function(){
             runtimes : 'html5,flash,silverlight,html4',
             url : uploadurl,
             file_data_name : 'Filedata',
+            max_file_size : max_upload_size + 'Mb',
             filters: {
                 mime_types : [
                     { title : 'Video files', extensions : extensions }
-                ],
-                max_file_size : max_upload_size + 'Mb'
+                ]
             }
         });
 

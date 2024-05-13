@@ -18,7 +18,6 @@ class Collection
 
         $this->fields = [
             'collection_id'
-            ,'collection_id_parent'
             ,'collection_name'
             ,'collection_description'
             ,'userid'
@@ -37,6 +36,12 @@ class Collection
             ,'public_upload'
             ,'type'
         ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+            $this->fields[] = 'collection_id_parent';
+        }
+
         $this->fields_items = [
             'ci_id'
             ,'collection_id'
@@ -170,13 +175,13 @@ class Collection
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
 
+        $version = Update::getInstance()->getDBVersion();
+
         $conditions = [];
         if( $param_collection_id ){
             $conditions[] = $this->getTableName() . '.collection_id = \''.mysql_clean($param_collection_id).'\'';
         }
-        if( $param_collection_id_parent ){
-            $conditions[] = $this->getTableName() . '.collection_id_parent = \''.mysql_clean($param_collection_id_parent).'\'';
-        }
+
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
@@ -186,11 +191,15 @@ class Collection
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
-        if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id){
-            $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
-        }
 
-        $version = Update::getInstance()->getDBVersion();
+        if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+            if( $param_collection_id_parent ){
+                $conditions[] = $this->getTableName() . '.collection_id_parent = \''.mysql_clean($param_collection_id_parent).'\'';
+            }
+            if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id){
+                $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
+            }
+        }
 
         if( $param_search ){
             /* Search is done on collection title, collection tags */
@@ -659,14 +668,21 @@ class Collections extends CBCategory
     /**
      * @throws Exception
      */
-    private function get_collection_childs($id, $cond = null)
+    private function get_collection_childs($id)
     {
+        $version = Update::getInstance()->getDBVersion();
+
+        $cond = '';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
+            $cond = 'C.collection_id_parent = ' . mysql_clean($id);
+        }
+
         $result = Clipbucket_db::getInstance()->select(tbl($this->section_tbl) . ' C
             INNER JOIN ' . tbl('users') . ' U ON C.userid = U.userid
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id
             LEFT JOIN ' . tbl($this->objTable) . ' obj ON obj.'.$this->objFieldID .' = citem.object_id',
             'C.* ,U.userid,U.username, COUNT(DISTINCT citem.ci_id) AS total_objects',
-            'C.collection_id_parent = ' . mysql_clean($id) . ' ' . $cond . ' GROUP BY C.collection_id');
+            $cond . ' GROUP BY C.collection_id');
 
         if ($result) {
             return $result;
@@ -863,18 +879,22 @@ class Collections extends CBCategory
             $title_tag .= 'T.name IN (\'' . $p['tags'] . '\') ' ;
         }
 
-        if ($p['parents_only']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.collection_id_parent IS NULL';
-        }
+        $version = Update::getInstance()->getDBVersion();
 
-        if ($p['parent_id']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
+            if ($p['parents_only']) {
+                if ($cond != '') {
+                    $cond .= ' AND ';
+                }
+                $cond .= 'collections.collection_id_parent IS NULL';
             }
-            $cond .= 'collections.collection_id_parent = ' . mysql_clean($p['parent_id']);
+
+            if ($p['parent_id']) {
+                if ($cond != '') {
+                    $cond .= ' AND ';
+                }
+                $cond .= 'collections.collection_id_parent = ' . mysql_clean($p['parent_id']);
+            }
         }
 
         if ($title_tag != '') {
@@ -898,19 +918,25 @@ class Collections extends CBCategory
 
         $select_tag = '';
         $join_tag = '';
-        $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS collection_tags';
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON collections.collection_id = CT.id_collection 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         }
+
+        $select_collection_parent = '';
+        $join_collection_parent = '';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
+            $select_collection_parent = ', CPARENT.collection_name AS collection_name_parent';
+            $join_collection_parent = ' LEFT JOIN ' . tbl('collections') . ' CPARENT ON collections.collection_id_parent = CPARENT.collection_id';
+        }
+
         $from = cb_sql_table('collections') .
             ' INNER JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
-            LEFT JOIN ' . tbl('collections') . ' CPARENT ON collections.collection_id_parent = CPARENT.collection_id
             LEFT JOIN ' . tbl($this->items) . ' citem ON collections.collection_id = citem.collection_id
             LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND citem.object_id = video.videoid' . $left_join_video_cond . '
             LEFT JOIN ' . cb_sql_table('photos') . ' ON collections.type = \'photos\' AND citem.object_id = photos.photo_id' . $left_join_photos_cond
-            . $join_tag;
+            . $join_tag . $join_collection_parent;
 
         if (!empty ($cond)) {
             $cond .= ' GROUP BY collections.collection_id';
@@ -929,7 +955,7 @@ class Collections extends CBCategory
         if (isset($p['count_only'])) {
             $select = 'COUNT(collections.collection_id) AS total_collections';
         } else {
-            $select = 'collections.*, users.username, CPARENT.collection_name AS collection_name_parent, '.$count.' AS total_objects' . $select_tag;
+            $select = 'collections.*, users.username, '.$count.' AS total_objects' . $select_tag . $select_collection_parent;
         }
 
         $result = Clipbucket_db::getInstance()->select($from, $select, $cond, $limit, $order);
@@ -1208,10 +1234,16 @@ class Collections extends CBCategory
     {
         $data = [];
 
-        if ($level == 0 && is_null($collection_id)) {
-            $cond = ' C.collection_id_parent IS NULL';
+        $version = Update::getInstance()->getDBVersion();
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
+            if ($level == 0 && is_null($collection_id)) {
+                $cond = ' C.collection_id_parent IS NULL';
+            } else {
+                $cond = ' C.collection_id_parent = ' . mysql_clean($collection_id);
+            }
         } else {
-            $cond = ' C.collection_id_parent = ' . mysql_clean($collection_id);
+            $cond = ' 1=1';
         }
 
         if (!is_null($exclude_id)) {
@@ -1234,6 +1266,7 @@ class Collections extends CBCategory
             LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
             , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects'
             , $cond);
+
         foreach ($collections_parent as $col_parent) {
             $space = '';
             if (config('enable_sub_collection') == 'yes') {
