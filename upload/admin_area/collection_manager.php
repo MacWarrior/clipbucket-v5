@@ -117,7 +117,7 @@ if ($_GET['search']) {
 
 /* CREATING LIMIT */
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $carray['limit'] = $get_limit;
 if (!empty($carray['order'])) {
@@ -129,7 +129,7 @@ if (!empty($carray['order'])) {
 $collections = $cbcollection->get_collections($carray);
 assign('collections', $collections);
 
-$total_pages = count_pages(count($collections), RESULTS);
+$total_pages = count_pages(count($collections), config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
 if (in_dev()) {

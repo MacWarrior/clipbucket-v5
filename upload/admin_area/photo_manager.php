@@ -124,7 +124,7 @@ if (isset($_GET['search'])) {
 
 // Creating Limit
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $parr['limit'] = $get_limit;
 if (!$parr['order']) {
@@ -140,7 +140,7 @@ Assign('photos', $photos);
 $pcount = $parr;
 $pcount['count_only'] = true;
 $total_rows = $cbphoto->get_photos($pcount);
-$total_pages = count_pages($total_rows, RESULTS);
+$total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
 subtitle('Photo Manager');
