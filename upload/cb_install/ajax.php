@@ -65,6 +65,7 @@ if ($mode == 'adminsettings') {
         'language_FRA'    => 'language_FRA.sql',
         'language_DEU'    => 'language_DEU.sql',
         'language_POR'    => 'language_POR.sql',
+        'language_ESP'    => 'language_ESP.sql',
         'ads_placements'  => 'ads_placements.sql',
         'countries'       => 'countries.sql',
         'email_templates' => 'email_templates.sql',

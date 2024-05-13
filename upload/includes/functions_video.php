@@ -140,7 +140,11 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     }
 
     //get current video from db
-    $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 163)) {
+        $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
+    } else {
+        return $multi ? [default_thumb()] : default_thumb();
+    }
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -151,7 +155,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     //get thumbs for current video from db
     $where[] = 'videoid = ' . mysql_clean($vid);
     if (!$multi) {
-        switch($type){
+        switch ($type) {
             default:
                 $default = $resVideo['default_thumb'];
                 break;
@@ -1108,7 +1112,11 @@ function get_video_files($vdetails, $with_path = true, $multi = false, $count_on
         case 'mp4':
             $video_qualities = json_decode($vdetails['video_files']);
             foreach($video_qualities as $quality){
-                $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                if (empty($quality)) {
+                    $file_name = $vdetails['file_name'] . '.mp4';
+                } else {
+                    $file_name = $vdetails['file_name'] . '-' . $quality . '.mp4';
+                }
                 if( !$with_path ) {
                     $vid_files[] = $file_name;
                 } else {
@@ -1355,7 +1363,7 @@ function update_video_files($vdetails)
             }
 
             foreach ($list_videos as  $path) {
-                $quality = explode('-', $path);
+                $quality = explode('-', $path,-1);
                 $quality = explode('.', end($quality));
                 if( is_numeric($quality[0]) ){
                     $video_qualities[] = (int)$quality[0];

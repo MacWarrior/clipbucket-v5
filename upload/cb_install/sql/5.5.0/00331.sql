@@ -112,7 +112,7 @@ SET @type_category = (
     WHERE name LIKE 'collection'
 );
 INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) (
-    SELECT @type_category, CASE WHEN parent_id = '0' THEN NULL ELSE parent_id END, category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
+    SELECT @type_category, CASE WHEN parent_id = '0' OR parent_id = category_id THEN NULL ELSE parent_id END, category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
     FROM `{tbl_prefix}collection_categories`
     WHERE 1
 );
@@ -145,7 +145,7 @@ SET @type_category = (
 );
 
 INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) (
-    SELECT @type_category, CASE WHEN parent_id = '0' THEN NULL ELSE parent_id END , category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
+    SELECT @type_category, CASE WHEN parent_id = '0' OR parent_id = category_id  THEN NULL ELSE parent_id END , category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
     FROM `{tbl_prefix}video_categories`
     WHERE 1
 );

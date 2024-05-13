@@ -200,22 +200,8 @@ $(document).ready(function()
         $(".navbar-header").toggleClass('show-search');
     });
     loginHeight();
-
-    if( $("#show-comments") && $("#hide-comments") )
-    {
-        $("#show-comments").click(function(){
-            $("#show-comments").hide();
-            $("#hide-comments").show();
-            $('#bloc-comment').slideDown();
-        });
-
-        $("#hide-comments").click(function(){
-            $("#hide-comments").hide();
-            $("#show-comments").show();
-            $('#bloc-comment').slideUp();
-        });
-    }
 });
+
 
 function homePageVideos(qlist_items)
 {

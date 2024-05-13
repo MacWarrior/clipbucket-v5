@@ -249,7 +249,17 @@ class FFMpeg
         }
 
         $resolutions = $this->get_eligible_resolutions();
-
+        if (config('only_keep_max_resolution')=='yes') {
+            $max_resolution = $resolutions[0]['height'];
+            $max_key = 0;
+            foreach ($resolutions as $key=> $resolution) {
+                if ($resolution['height'] > $max_resolution) {
+                    $max_resolution = $resolution['height'];
+                    $max_key = $key;
+                }
+            }
+            $resolutions= array($resolutions[$max_key]);
+        }
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
@@ -261,7 +271,6 @@ class FFMpeg
                         $this->log->writeLine('<b>Stay MP4 as it is enabled, no conversion done</b>');
                         $resolution = $this->get_max_resolution_from_file();
                         $this->video_files[] = $resolution;
-
                         $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution . '.' . $this->conversion_type;
                         copy($this->input_file, $this->output_file);
                         break;
@@ -446,21 +455,21 @@ class FFMpeg
                 break;
 
             case 'video_mp4':
-                global $myquery;
+                $final_video_bitrate = min($this->input_details['video_bitrate'], myquery::getInstance()->getVideoResolutionBitrateFromHeight($resolution['height']));
+
                 // Video Bitrate
-                $cmd .= ' -vb ' . $myquery->getVideoResolutionBitrateFromHeight($resolution['height']);
+                $cmd .= ' -vb ' . $final_video_bitrate;
                 // Resolution
                 $cmd .= ' -s ' . $resolution['video_width'] . 'x' . $resolution['video_height'];
                 break;
 
             case 'video_hls':
-                global $myquery;
                 $count = 0;
                 $bitrates = '';
                 $resolutions = '';
                 $log_res = '';
                 foreach ($resolution as $res) {
-                    $video_bitrate = $myquery->getVideoResolutionBitrateFromHeight($res['height']);
+                    $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
                     $this->video_files[] = $res['height'];
                     if( !empty($log_res) ){
                         $log_res .= ' & ';
@@ -623,6 +632,9 @@ class FFMpeg
         $tmp_file = time() . RandomString(5) . '.tmp';
         $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$more_res['height'].'...');
         $command = config('ffmpegpath') . ' -i ' . $this->input_file . $opt_av . ' ' . $this->output_file . ' 2> ' . DirPath::get('temp') . $tmp_file;
+        if (in_dev()) {
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
+        }
 
         $output = shell_exec($command);
 
@@ -639,7 +651,6 @@ class FFMpeg
         }
 
         if (in_dev()) {
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
         }
 
@@ -1023,12 +1034,13 @@ class FFMpeg
 
             $this->generateThumbs($thumbs_settings);
         }
+
         $res = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid '
             , 'num'
             , ' V.videoid = ' . mysql_clean($videoid). ' AND type=\'custom\' AND V.default_thumb = VT.num'
         );
-         if (empty($res)) {
-             Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
-         }
+        if (empty($res)) {
+            Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
+        }
     }
 }

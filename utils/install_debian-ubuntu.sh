@@ -157,8 +157,8 @@ case ${OS} in
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
-                wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
-                echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
+                wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg > /dev/null 2>&1
+                echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
                 apt update > /dev/null 2>&1
                 echo -ne " OK"
                 PHP_VERSION=${READ_PHP_VERSION}
@@ -259,6 +259,7 @@ SERVER_ROOT="/srv/http/"
 INSTALL_PATH="${SERVER_ROOT}clipbucket/"
 mkdir -p ${INSTALL_PATH}
 git clone https://github.com/MacWarrior/clipbucket-v5.git ${INSTALL_PATH} > /dev/null 2>&1
+git config core.fileMode false
 git config --global --add safe.directory ${INSTALL_PATH}
 echo -ne " OK"
 

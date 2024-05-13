@@ -18,20 +18,18 @@ foreach ($ll as &$language) {
 }
 
 $restorable_langs = get_restorable_languages($ll);
-
 assign('restore_lang_options', $restorable_langs);
 //Get List Of Languages
 assign('language_list', $ll);
 Assign('msg', $msg);
 
 if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET['edit_language'])) {
-
     assign('edit_lang', 'yes');
     $detail = Language::getInstance()->getLangById($_GET['edit_language']);
     assign('lang_details', $detail);
     $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($detail['language_name']), 'url' => DirPath::getUrl('admin_area') . 'language_settings.php?edit_language=' . display_clean($_GET['edit_language'])];
     $edit_id = mysql_clean($_GET['edit_language']);
-    $limit = RESULTS;
+    $limit = config('admin_pages');
 
     $current_page = $_GET['page'];
     $current_page = is_numeric($current_page) && $current_page > 0 ? $current_page : 1;

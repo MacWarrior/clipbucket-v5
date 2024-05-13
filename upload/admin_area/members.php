@@ -151,7 +151,7 @@ call_functions($userquery->user_manager_func);
 
 //Getting Member List
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 if (isset($_GET['category'])) {
     if ($_GET['category'][0] == 'all') {
@@ -196,7 +196,7 @@ Assign('userLevel', (int)$userLevel);
 $mcount = $array;
 $mcount['count_only'] = true;
 $total_rows = get_users($mcount);
-$total_pages = count_pages($total_rows, RESULTS);
+$total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
 //Pagination

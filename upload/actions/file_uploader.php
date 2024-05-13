@@ -234,7 +234,11 @@ switch ($mode) {
         exit();
 
     default:
-        upload_error('Unknown command');
+        if( in_dev() ){
+            upload_error('Unknown command : '.$mode);
+        } else {
+            upload_error('Unknown command');
+        }
         exit();
 }
 

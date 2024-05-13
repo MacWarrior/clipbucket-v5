@@ -30,7 +30,7 @@ $comment_cond = [];
 $comment_cond['order'] = ' comment_id DESC';
 
 $page = $_GET['page'];
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 $comment_cond['limit'] = $get_limit;
 
 $type = $_GET['type'] ?? false;
@@ -44,7 +44,7 @@ assign('comments', $comments);
 $comment_cond['count'] = true;
 unset($comment_cond['limit']);
 $total_rows =  Comments::getAll($comment_cond);
-$total_pages = count_pages($total_rows, RESULTS);
+$total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
 subtitle(lang('comments'));

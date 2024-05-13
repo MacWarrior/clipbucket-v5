@@ -1184,11 +1184,12 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
 (
     `id_tmdb_search_result` INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `id_tmdb_search`        INT          NOT NULL,
-    `title`                 VARCHAR(128) NOT NULL,
+    `title`                 VARCHAR(256) NOT NULL,
     `overview`              TEXT         NULL,
     `poster_path`           VARCHAR(128) NOT NULL,
     `release_date`          DATE         NULL,
-    `id_tmdb_movie`         INT          NOT NULL
+    `id_tmdb_movie`         INT          NOT NULL,
+    `is_adult`              BOOLEAN      NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;

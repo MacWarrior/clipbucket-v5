@@ -6,7 +6,6 @@ define('SLOGAN', 'Administration Panel');
 //Admin Area
 $admin_area = true;
 
-/* Config.Inc.php */
 include('common.php');
 ClipBucket::getInstance()->initAdminMenu();
 
@@ -19,30 +18,24 @@ global $db, $Smarty, $myquery;
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
 
-$admin_pages = $row['admin_pages'];
-
 if (isset($_POST['update_dp_options'])) {
     if (!is_numeric($_POST['admin_pages']) || $_POST['admin_pages'] < 1) {
         $num = '20';
         $msg = 'Please Type Number from 1 to Maximum';
     } else {
         $num = $_POST['admin_pages'];
-        $admin_pages = $num;
     }
 
     $myquery->Set_Website_Details('admin_pages', $num);
 }
 
-define('RESULTS', $admin_pages);
-Assign('admin_pages', $admin_pages);
-
 //Do No Edit Below This Line
 define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
-define('SITETEMPLATEDIR', DirPath::get('styles') . $row['template_dir']);
+define('SITETEMPLATEDIR', DirPath::get('styles') . config('template_dir'));
 define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('TEMPLATEURLFO', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
-define('TEMPLATE', $row['template_dir']);
+define('TEMPLATE', config('template_dir'));
 
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';

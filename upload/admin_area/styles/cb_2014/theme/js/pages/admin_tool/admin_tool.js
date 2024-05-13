@@ -3,8 +3,9 @@ var eventSource;
 var eventSourceLog;
 var ids_stopped=[];
 $(function () {
-
-    connectSSE();
+    if (can_sse == 'true') {
+        connectSSE();
+    }
     $('.launch').on('click', function () {
         var elem = $(this);
         if (!elem.parent().hasClass('disabled')) {

@@ -2,8 +2,8 @@
     <div class="form-group">
         <h2>{lang($display_type)|capitalize} Categories
             <div class="dropdown pull-right">
-                <button id="hideshow" class="btn btn-default pull-right dropdown-toggle" data-toggle="dropdown">
-                    Add new Category <i class="caret"></i>
+                <button id="hideshow" class="btn btn-primary pull-right dropdown-toggle" data-toggle="dropdown">
+                    {lang code='add_new_category'}
                 </button>
             </div>
         </h2>
@@ -11,49 +11,7 @@
 </div>
 
 <div class="row" >
-    <div id="content" style="{if !$cat_details.category_id}display: none;{/if}">
-        <form method="post" enctype="multipart/form-data" name="edit_category" id="Edit Category">
-            <input name="category_id" value="{$cat_details.category_id}" type="hidden" />
-            <input name="cur_name" value="{display_clean($cat_details.category_name)}" type="hidden" />
-            <div class="row">
-                <div class="col-md-4">
-                    <label for="name">Category Name*</label>
-                    <input name="category_name" class="form-control" type="text" id="name" value="{display_clean($cat_details.category_name)}" size="45" />
-                </div>
-                {if config('use_subs')==1}
-                <div class="col-md-4">
-                    <label>Parent Category</label>
-                    {cbCategories output="dropdown" class='form-control' selected=$cat_details.parent_id name="parent_id" id="parent_cat" blank_option=TRUE type=$type echo=TRUE parent_only=true}
-                </div>
-                {/if}
-                <div class="col-md-4">
-                    <label for="default_categ">Make Default Category</label>
-                    <select class="form-control" name="is_default" id="default_categ">
-                        <option class="form-control" {if $cat_details.is_default=='yes'}selected{/if} value="yes">{lang code='yes'}</option>
-                        <option class="form-control" {if $cat_details.is_default=='no' || $cat_details.is_default==''}selected{/if} value="no">{lang code='no'}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row marginTopLarge">
-                <div class="col-md-12">
-                    <label>{lang code='description'}</label>
-                    <textarea class="form-control" name="category_desc" id="description" cols="33" rows="5">{display_clean($cat_details.category_desc)}</textarea>
-                </div>
-            </div>
-
-            <br>
-
-            <div class="row">
-                <div class="col-md-6">
-                    <label>Category Thumb</label>
-                    <input type="file" name="category_thumb" id="cat_thumb"/>
-                </div>
-                <div class="col-md-6">
-                    <input type="submit" class="btn btn-primary pull-right button" name="update_category" id="button" value="{if empty($cat_details.category_id)}{lang code='add_new_category'}{else}{lang code='update_category'}{/if}"/>
-                </div>
-            </div>
-        </form>
-    </div>
+    <div id="content"></div>
 </div>
 
 <div class="row">
@@ -103,7 +61,7 @@
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                             <li role="presentation">
-                                <a role="menuitem" tabindex="-1" href="?type={$type}&category={$category[list].category_id}">{lang code='edit'}</a>
+                                <a role="menuitem" tabindex="-1" href="" onclick="addOrEdit('{$category[list].category_id}'); return false;">{lang code='edit'}</a>
                             </li>
                         {if $category[list].isdefault != "yes"}
                             <li role="presentation">
@@ -131,15 +89,7 @@
 </div>
 
 <script>
-    var button = document.getElementById('hideshow'); // Assumes element with id='button'
-
-    button.onclick = function() {
-        var div = document.getElementById('content');
-        if (div.style.display !== 'none') {
-            div.style.display = 'none';
-        } else {
-            div.style.display = 'block';
-        }
-    };
+    var category_id = '{$cat_details.category_id}';
+    var type = '{$type}';
 </script>
 

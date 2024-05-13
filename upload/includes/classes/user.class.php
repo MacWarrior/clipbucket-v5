@@ -191,7 +191,7 @@ class User
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
-                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.user_profile_id '
+                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.userid '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -222,6 +222,15 @@ class User
     /**
      * @throws Exception
      */
+    public function getOne(array $params = [])
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getCurrentUserAge()
     {
         if( empty($this->current_user) ){
@@ -242,6 +251,23 @@ class User
     public function getCurrentUserID()
     {
         return $this->current_user['userid'] ?? false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function delBackground($userid)
+    {
+        $user = self::getOne(['userid'=>$userid]);
+        $user_background = $user['background'];
+
+        if( !empty($user_background) ){
+            $file = DirPath::get('backgrounds') . $user_background;
+            if( file_exists($file) ){
+                unlink($file);
+            }
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [''], ' userid = ' . mysql_clean($userid));
+        }
     }
 }
 
@@ -507,9 +533,12 @@ class userquery extends CBCategory
                     $oldpass = pass_code_unsecure($password);
                     $udetails = $this->get_user_with_pass($username, $oldpass);
 
-                    if ($udetails) // This account still use old password method, let's update it
-                    {
-                        $db->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                    // This account still use old password method, let's update it
+                    if ($udetails){
+                        $version = Update::getInstance()->getDBVersion();
+                        if ($version['version'] > '5.0.0' || ($version['version'] == '5.0.0' && $version['revision'] >= 1)) {
+                            $db->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                        }
                     }
                 }
 
@@ -1580,8 +1609,8 @@ class userquery extends CBCategory
      *
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
-
     function reset_password($step, $input, $code = null)
     {
         global $cbemail, $db;
@@ -1661,6 +1690,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to recover username
+     * @throws Exception
      */
     function recover_username($email): string
     {
@@ -1751,6 +1781,9 @@ class userquery extends CBCategory
         return $default;
     }
 
+    /**
+     * @throws Exception
+     */
     function avatar($udetails, $size = '', $uid = null): string
     {
         return $this->getUserThumb($udetails, $size, $uid);
@@ -2511,10 +2544,7 @@ class userquery extends CBCategory
 
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
-            $file = DirPath::get('backgrounds') . $array['bg_file_name'];
-            if (file_exists($file) && $array['bg_file_name']) {
-                unlink($file);
-            }
+            User::getInstance()->delBackground($array['userid']);
         }
 
         //Updating User Background
@@ -2533,7 +2563,7 @@ class userquery extends CBCategory
             $uquery_val[] = $array['background_repeat'];
         }
 
-        if (isset($_FILES['background_file']['name']) && !empty($_FILES['background_file']['name'])) {
+        if (!empty($_FILES['background_file']['name'])) {
             $file = $Upload->upload_user_file('b', $_FILES['background_file'], $array['userid']);
             if ($file) {
                 $uquery_field[] = 'background';
@@ -2635,10 +2665,7 @@ class userquery extends CBCategory
 
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
-            $file = DirPath::get('backgrounds') . $array['bg_file_name'];
-            if (file_exists($file) && $array['bg_file_name'] != '') {
-                unlink($file);
-            }
+            User::getInstance()->delBackground($array['userid']);
         }
 
         if (config('background_url') == 'yes') {
@@ -2675,6 +2702,9 @@ class userquery extends CBCategory
         e(lang('usr_avatar_bg_update'), 'm');
     }
 
+    /**
+     * @throws Exception
+     */
     public function updateBackground($file = []): array
     {
         if (empty($file)) {
@@ -2706,6 +2736,8 @@ class userquery extends CBCategory
             ];
         }
 
+        User::getInstance()->delBackground($file['userid']);
+
         $ext = getext($file['name']);
         $file_name = $file['userid'] . '.' . $ext;
         $file_path = DirPath::get('backgrounds') . $file_name;
@@ -2718,6 +2750,7 @@ class userquery extends CBCategory
                     'msg'    => 'Invalid file type'
                 ];
             }
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . mysql_clean($file['userid']));
             return [
                 'status' => true,
                 'msg'    => 'Succesfully Uploaded'
@@ -2729,6 +2762,9 @@ class userquery extends CBCategory
         ];
     }
 
+    /**
+     * @throws Exception
+     */
     public function getBackground($userId = false)
     {
         if (!$userId) {

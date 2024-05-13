@@ -606,9 +606,15 @@ class ClipBucket
         if ($ctemplate) {
             $_GET['template'] = $ctemplate;
         }
-        $template = $this->template;
 
-        require_once DirPath::get('styles') . $this->template . DIRECTORY_SEPARATOR . 'header.php';
+        if( is_dir(DirPath::get('styles') . $this->template) ){
+            $template = $this->template;
+        } else {
+            // Fallback to default template
+            $template = 'cb_28';
+        }
+        require_once DirPath::get('styles') . $template . DIRECTORY_SEPARATOR . 'header.php';
+
         if (isset($_SESSION['the_template']) && $cbtpl->is_template($_SESSION['the_template'])) {
             $template = $_SESSION['the_template'];
         }
@@ -674,14 +680,7 @@ class ClipBucket
                 break;
         }
 
-        $exts = preg_replace('/ /', '', strtolower($exts));
-        $exts = explode(',', $exts);
-        $new_form = '';
-        foreach ($exts as $ext) {
-            $new_form .= "$ext,";
-        }
-
-        return $new_form;
+        return preg_replace('/ /', '', strtolower($exts));
     }
 
     /**

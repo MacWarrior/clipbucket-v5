@@ -542,13 +542,12 @@ function isValidtag($tag): bool
  *
  * @param array $params
  *
- * @return array|bool|string : { array } { $cats } { array of categories }
+ * @return array|bool|string|void : { array } { $cats } { array of categories }
  * @throws Exception
  * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
  */
 function getCategoryList($params = [])
 {
-    $cats = '';
     $params['echo'] = $params['echo'] ?: false;
     $version = Update::getInstance()->getDBVersion();
     switch ($params['type']) {
@@ -1908,6 +1907,7 @@ function show_playlist_form($array)
 
 /**
  * Function used to show collection form
+ * @throws Exception
  * @internal param $ : { array } { $params } { array with parameters }
  */
 function show_collection_form()
@@ -4817,7 +4817,8 @@ function get_restorable_languages(array $list_language = []): array
         'en'    => 'English',
         'fr'    => 'Français',
         'pt-BR' => 'Portuguesa',
-        'de'    => 'Deutsche'
+        'de'    => 'Deutsche',
+        'esp'   => 'Español'
     ];
 
     return array_filter($restorable_langs, function ($lang) use ($list_language) {
@@ -4826,9 +4827,8 @@ function get_restorable_languages(array $list_language = []): array
     });
 }
 
-function parseAllPHPModules()
+function parseAllPHPModules(): array
 {
-
     ob_start();
     phpinfo(INFO_MODULES);
     $s = ob_get_contents();
@@ -4870,8 +4870,6 @@ function ageRestriction($var) {
     }
     return $var;
 }
-
-
 
 include('functions_db.php');
 include('functions_filter.php');

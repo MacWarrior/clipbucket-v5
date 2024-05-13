@@ -112,6 +112,10 @@ if (isset($_POST['update'])) {
         , 'enable_video_crew'
         , 'enable_video_poster'
         , 'enable_video_backdrop'
+        , 'enable_edit_button'
+        , 'enable_sub_collection'
+        , 'only_keep_max_resolution'
+        , 'enable_tmdb_mature_content'
         , 'enable_chunk_upload'
     ];
 
@@ -147,7 +151,6 @@ if (isset($_POST['update'])) {
         , 'keep_audio_tracks'
         , 'keep_subtitles'
         , 'extract_subtitles'
-        , 'enable_sub_collection'
         , 'photo_crop'
     ];
 
@@ -400,6 +403,8 @@ if (isset($_POST['update'])) {
         'tmdb_get_backdrop',
         'tmdb_get_age_restriction',
         'tmdb_search',
+        'enable_tmdb_mature_content',
+        'tmdb_mature_content_age',
         'enable_video_genre',
         'enable_video_actor',
         'enable_video_producer',
@@ -408,11 +413,13 @@ if (isset($_POST['update'])) {
         'enable_video_crew',
         'enable_video_poster',
         'enable_video_backdrop',
+        'enable_edit_button',
 
         'hide_empty_collection',
         'display_video_comments',
         'display_photo_comments',
-        'display_channel_comments'
+        'display_channel_comments',
+        'only_keep_max_resolution'
     ];
 
     foreach ($opt_list as $optl) {
@@ -446,6 +453,7 @@ if (isset($_POST['update'])) {
         'videos_item_channel_page',
         'videos_list_per_page',
         'video_categories',
+        'tmdb_mature_content_age',
 
         'photo_main_list',
         'photo_home_tabs',

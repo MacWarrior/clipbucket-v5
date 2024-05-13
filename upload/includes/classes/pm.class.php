@@ -203,7 +203,6 @@ class cb_pm
         return false;
     }
 
-
     /**
      * Function used to get user
      */
@@ -215,7 +214,6 @@ class cb_pm
         }
         return $user;
     }
-
 
     /**
      * Function used to make attachment valid
@@ -280,7 +278,7 @@ class cb_pm
      *
      * @param $mid
      * @param null $uid
-     * @return bool
+     * @return bool|array
      * @throws Exception
      */
     function get_inbox_message($mid, $uid = null)
@@ -303,10 +301,10 @@ class cb_pm
      *
      * @param $mid
      * @param null $uid
-     * @return bool
+     * @return bool|array
      * @throws Exception
      */
-    function get_outbox_message($mid, $uid = null): bool
+    function get_outbox_message($mid, $uid = null)
     {
         global $db;
         if (!$uid) {
@@ -314,21 +312,11 @@ class cb_pm
         }
         $result = $db->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_from='$uid' AND userid=" . tbl($this->tbl . ".message_from"));
 
-        if (count($result) > 0) {
+        if( !empty($result) ) {
             return $result[0];
         }
         e(lang('no_pm_exist'));
         return false;
-    }
-
-    /**
-     * Get Total PM
-     * @throws Exception
-     */
-    function pm_count()
-    {
-        global $db;
-        return $db->count(tbl($this->tbl), 'message_id');
     }
 
     /**
@@ -371,7 +359,6 @@ class cb_pm
                     $result = $db->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.username AS message_from_user '),
                         tbl($this->tbl) . ".message_from = '$uid' AND " . tbl("users") . ".userid = " . tbl($this->tbl) . ".message_from 
 										  AND " . tbl($this->tbl) . ".message_box ='out'", null, " date_added DESC");
-                    //echo $db->db_query;
                     //One More Query Need To be executed to get username of recievers
                     $count = 0;
 
@@ -421,22 +408,31 @@ class cb_pm
                 }
         }
 
-        if ($result) {
+        if( !empty($result) ){
             return $result;
         }
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_inbox_messages($uid, $count_only = false)
     {
         return $this->get_user_messages($uid, 'in', $count_only);
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_outbox_messages($uid, $count_only = false)
     {
         return $this->get_user_messages($uid, 'out', $count_only);
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_notification_messages($uid, $count_only = false)
     {
         return $this->get_user_messages($uid, 'notification', $count_only);
@@ -544,9 +540,9 @@ class cb_pm
 
     /**
      * Function used to get emails of users from input
+     * @throws Exception
      */
-
-    function get_users_emails($input)
+    function get_users_emails($input): string
     {
         global $userquery, $db;
         //check if usernames are sperated by colon ';'
@@ -574,6 +570,7 @@ class cb_pm
 
     /**
      * Function used to set private message status as read
+     * @throws Exception
      */
     function set_message_status($mid, $status = 'read')
     {
