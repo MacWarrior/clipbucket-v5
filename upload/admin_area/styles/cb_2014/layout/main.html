@@ -1527,6 +1527,16 @@
 							</div>
 							<hr/>
 							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="tmdb_enable_on_front_end" title="{lang code='tmdb_enable_on_front_end'}">{lang code='tmdb_enable_on_front'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" name="tmdb_enable_on_front_end" id="tmdb_enable_on_front_end" {if $row.tmdb_enable_on_front_end=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
 								<div class="col-md-6">
 									<label class="nowrap" for="tmdb_token" title="{lang code='tmdb_token'}">{lang code='tmdb_token'}</label>
 								</div>
@@ -1664,16 +1674,6 @@
 									<input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age" {if $row.enable_tmdb_mature_content!='yes'}disabled{/if} class="form-control"/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_mature_content_age}" name="tmdb_mature_content_age" id="tmdb_mature_content_age_hidden" type="hidden" {if $row.enable_tmdb_mature_content=='yes'}disabled="disabled"{/if}/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="tmdb_enable_on_front_end" title="{lang code='tmdb_enable_on_front_end'}">{lang code='enable_on_front'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_enable_on_front_end" id="tmdb_enable_on_front_end" {if $row.tmdb_enable_on_front_end=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
