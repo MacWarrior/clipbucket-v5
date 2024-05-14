@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"30",
+  "revision":"31",
   "status":"dev",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+        ,"Fix video files detection"
       ]
     },
     {
