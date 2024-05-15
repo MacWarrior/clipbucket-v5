@@ -140,7 +140,11 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     }
 
     //get current video from db
-    $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 163)) {
+        $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
+    } else {
+        return $multi ? [default_thumb()] : default_thumb();
+    }
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
@@ -151,7 +155,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     //get thumbs for current video from db
     $where[] = 'videoid = ' . mysql_clean($vid);
     if (!$multi) {
-        switch($type){
+        switch ($type) {
             default:
                 $default = $resVideo['default_thumb'];
                 break;
@@ -1359,14 +1363,19 @@ function update_video_files($vdetails)
             }
 
             foreach ($list_videos as  $path) {
-                $quality = explode('-', $path,-1);
-                $quality = explode('.', end($quality));
-                if( is_numeric($quality[0]) ){
-                    $video_qualities[] = (int)$quality[0];
-                } else {
-                    $video_qualities[] = $quality[0];
-                }
+                $filename = basename($path);
 
+                if( strpos($filename, '-') === false ) {
+                    $video_qualities[] = '';
+                } else {
+                    $quality = explode('-', $filename);
+                    $quality = explode('.', end($quality));
+                    if( is_numeric($quality[0]) ){
+                        $video_qualities[] = (int)$quality[0];
+                    } else {
+                        $video_qualities[] = $quality[0];
+                    }
+                }
             }
             break;
 

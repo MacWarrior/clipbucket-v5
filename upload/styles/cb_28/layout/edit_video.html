@@ -14,6 +14,9 @@
 			{$custom_fields = $videoFields[4]}
 			<div class="cb-box marginBottom">
 				<h2>{lang code='vdo_edit_vdo'}</h2>
+				{if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
+					<button class="btn btn-primary" style="margin-bottom: 15px;" tabindex="-1" href="javascript:void(0);" data-id="{$v.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+				{/if}
 				<div class="account_form">
 					<div id="updateVideoInfo">
 						<form method="post" name="edit_video" enctype="multipart/form-data">
@@ -214,8 +217,10 @@
 		</div>
 	</div>
 </div>
-
+<div class="modal fade" id="myModal" role="dialog">
+</div>
 <script>
+	var videoid = '{$v.videoid}';
 	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 	var videoid = '{$v.videoid}';
 </script>

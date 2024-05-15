@@ -13,7 +13,7 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
 $breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
-$limit = RESULTS;
+$limit = config('admin_pages');
 
 $current_page = $_GET['page'];
 $current_page = is_numeric($current_page) && $current_page > 0 ? $current_page : 1;

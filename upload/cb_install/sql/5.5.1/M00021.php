@@ -9,7 +9,6 @@ class M00021 extends \Migration
      */
     public function start()
     {
-        \DiscordLog::sendDump('toto');
         self::generateTranslation('test_migration', [
             'fr' => 'ceci est un test de migration',
             'en' => 'this is a migration test'

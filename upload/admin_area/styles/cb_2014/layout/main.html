@@ -1183,9 +1183,9 @@
 										<label class="nowrap" for="only_keep_max_resolution" title="Keep subtitles">{lang code='only_keep_max_resolution'}</label>
 									</div>
 									<div class="col-md-2 row-size">
-										<input value="yes" name="only_keep_max_resolution" id="only_keep_max_resolution" {if $row.only_keep_max_resolution=='yes'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
+										<input value="yes" name="only_keep_max_resolution" id="only_keep_max_resolution" {if $row.only_keep_max_resolution=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 										<span class="lbl"></span>
-										<input value="{$row.only_keep_max_resolution}" name="only_keep_max_resolution" id="only_keep_max_resolution_hidden" type="hidden" {if $row.conversion_type!='hls'}disabled{/if}/>
+										<input value="{$row.only_keep_max_resolution}" name="only_keep_max_resolution" id="only_keep_max_resolution_hidden" type="hidden"/>
 									</div>
 								</div>
 							</div>
@@ -1522,6 +1522,16 @@
 								</div>
 								<div class="col-md-2 row-size no_padding">
 									<input value="yes" id="enable_tmdb" {if $row.enable_tmdb=='yes'}checked{/if} name="enable_tmdb" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="tmdb_enable_on_front_end" title="{lang code='tmdb_enable_on_front_end'}">{lang code='tmdb_enable_on_front'}</label>
+								</div>
+								<div class="col-md-2 row-size no_padding">
+									<input value="yes" name="tmdb_enable_on_front_end" id="tmdb_enable_on_front_end" {if $row.tmdb_enable_on_front_end=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>

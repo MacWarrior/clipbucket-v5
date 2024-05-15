@@ -97,19 +97,19 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'avatar_bg');
         break;
 
     case 'channel_bg':
-        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'channel_bg');
         break;
 
     case 'change_cover':
-        Assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
+        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', 'change_cover');
         break;

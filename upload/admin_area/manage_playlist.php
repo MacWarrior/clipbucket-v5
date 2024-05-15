@@ -71,7 +71,7 @@ switch ($mode) {
 
         //getting limit for pagination
         $page = mysql_clean($_GET['page']);
-        $get_limit = create_query_limit($page, RESULTS);
+        $get_limit = create_query_limit($page, config('admin_pages'));
 
         //Getting List of available playlists with pagination
         $result_array = $array;
@@ -85,7 +85,7 @@ switch ($mode) {
         $pcount = $array;
         $pcount['count_only'] = true;
         $total_rows = get_playlists($pcount);
-        $total_pages = count_pages($total_rows, RESULTS);
+        $total_pages = count_pages($total_rows, config('admin_pages'));
         $pages->paginate($total_pages, $page);
 
         assign('playlists', $playlists);

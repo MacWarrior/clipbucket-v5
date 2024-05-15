@@ -23,7 +23,7 @@ if (isset($_GET['delete_video'])) {
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_selected'])) {
-    for ($id = 0; $id <= RESULTS; $id++) {
+    for ($id = 0; $id <= config('admin_pages'); $id++) {
         $cbvideo->delete_video($_POST['check_video'][$id]);
     }
     $eh->flush();
@@ -42,13 +42,13 @@ if (isset($_GET['deactivate'])) {
 
 //Using Multiple Action
 if (isset($_POST['activate_selected'])) {
-    for ($id = 0; $id <= RESULTS; $id++) {
+    for ($id = 0; $id <= config('admin_pages'); $id++) {
         $cbvid->action('activate', $_POST['check_video'][$id]);
     }
     e('Selected Videos Have Been Activated', 'm');
 }
 if (isset($_POST['deactivate_selected'])) {
-    for ($id = 0; $id <= RESULTS; $id++) {
+    for ($id = 0; $id <= config('admin_pages'); $id++) {
         $cbvid->action('deactivate', $_POST['check_video'][$id]);
     }
     e('Selected Videos Have Been Dectivated', 'm');
@@ -61,7 +61,7 @@ if (isset($_REQUEST['delete_flags'])) {
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_flags'])) {
-    for ($id = 0; $id <= RESULTS; $id++) {
+    for ($id = 0; $id <= config('admin_pages'); $id++) {
         $eh->flush();
         $cbvid->action->delete_flags($_POST['check_video'][$id]);
     }

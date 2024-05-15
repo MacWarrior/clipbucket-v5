@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"21",
+  "revision":"32",
   "status":"dev",
   "detail":[
     {
@@ -11,6 +11,10 @@
         ,"Move sub-collections option to collection config tab"
         ,"Refactor category creation and edition interface"
         ,"Implement TMDB mature content search"
+        ,"Fix PHP error on user deletion"
+        ,"Fix video search"
+        ,"Fix video manager pagination"
+        ,"Fix website configurations display"
       ]
     },
     {
@@ -22,6 +26,10 @@
         ,"Add edit button on video page <i>(#319)</i>"
         ,"Refactor video edition interface"
         ,"Update translations"
+        ,"Fix video upload max filesize check"
+        ,"Fix channel background upload <i>(#370)</i>"
+        ,"Fix add video to collection"
+        ,"Implement TMDB search on front office"
       ]
     },
     {
@@ -33,12 +41,14 @@
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+        ,"Fix video files detection"
       ]
     },
     {
       "title": "Conversion",
       "description": [
         "Add option to only keep maximum resolution"
+        ,"Reduce converted video filesize"
       ]
     },
     {
@@ -52,6 +62,7 @@
         ,"Prevent SSE error on update from old version"
         ,"Fix dependancies check during installation process"
         ,"Update Debian 10 installation script"
+        ,"Fix upgrade from 4.2 RC1"
       ]
     },
     {
@@ -69,7 +80,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.11.5"
+        "Update VideoJS to version 8.13.0"
       ]
     }
   ]
