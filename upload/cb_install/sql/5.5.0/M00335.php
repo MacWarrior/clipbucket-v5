@@ -9,7 +9,6 @@ class M00335 extends \Migration
      */
     public function start()
     {
-
         self::generateTranslation('admin_setting', [
             'en' => 'Admin Settings',
             'fr' => 'Administrateur'
@@ -105,7 +104,6 @@ class M00335 extends \Migration
             'fr' => 'Sans le slash de fin'
         ]);
 
-
         self::generateTranslation('agreement', [
             'en' => 'Agreement',
             'fr' => 'Accord'
@@ -155,6 +153,5 @@ class M00335 extends \Migration
             'en' => 'Default language',
             'fr' => 'Langage par défaut'
         ]);
-
     }
 }

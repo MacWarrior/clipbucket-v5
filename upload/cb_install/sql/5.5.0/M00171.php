@@ -25,11 +25,11 @@ class M00171 extends \Migration
         ]);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`)
-    VALUES (\'cache_enable\', \'no\'), (\'cache_auth\', \'no\'), (\'cache_host\', \'\'), (\'cache_password\', \'\'), (\'cache_port\', \'\');';
+            VALUES (\'cache_enable\', \'no\'), (\'cache_auth\', \'no\'), (\'cache_host\', \'\'), (\'cache_password\', \'\'), (\'cache_port\', \'\');';
         self::query($sql);
 
         $sql='INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (\'reset_cache_label\', \'reset_cache_description\', \'AdminTool::resetCache\', 1, NULL, NULL);';
+            (\'reset_cache_label\', \'reset_cache_description\', \'AdminTool::resetCache\', 1, NULL, NULL);';
         self::query($sql);
 
         self::generateTranslation('reset_cache_label', [

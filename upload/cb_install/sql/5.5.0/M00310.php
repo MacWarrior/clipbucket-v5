@@ -9,7 +9,6 @@ class M00310 extends \Migration
      */
     public function start()
     {
-
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}config`(`name`, `value`) VALUES (\'hide_empty_collection\', \'no\');';
         self::query($sql);
 

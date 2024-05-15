@@ -25,7 +25,7 @@ class M00163 extends \Migration
             'column'         => 'videoid'
             ],[
             'constraint_name' => 'video_thumbs_ibfk_1',
-            'contraint_type' => 'FOREIGN KEY',
+            'contraint_type' => 'FOREIGN KEY'
         ]);
     }
 }

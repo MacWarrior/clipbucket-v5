@@ -9,132 +9,26 @@ class M00146 extends \Migration
      */
     public function start()
     {
+        $datas = [
+            'collections' => ['userid_2', 'featured_2'],
+            'conversion_queue' => ['cqueue_conversion_2'],
+            'favorites' => ['userid_2'],
+            'languages' => ['language_default_2', 'language_code_2'],
+            'pages' => ['active_2'],
+            'photos' => ['last_viewed_2', 'userid_2', 'collection_id_2', 'featured_2', 'last_viewed_3', 'rating_2', 'total_comments_2', 'total_comments_2'],
+            'sessions' => ['session_2'],
+            'users' => ['username_2'],
+            'user_levels_permissions' => ['user_level_id_2'],
+            'video' => ['last_viewed_2', 'userid_2', 'userid_3', 'featured_2', 'last_viewed_3', 'rating_2', 'comments_count_2', 'last_viewed_4', 'status_2', 'userid_4', 'videoid_2']
+        ];
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP INDEX `userid_2`', [
-            'table' => 'collections',
-            'column'     => 'userid_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP INDEX `featured_2`', [
-            'table' => 'collections',
-            'column'     => 'featured_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}conversion_queue` DROP INDEX `cqueue_conversion_2`;', [
-            'table' => 'conversion_queue',
-            'column'     => 'cqueue_conversion_2'
-        ]);
-
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}favorites` DROP INDEX `userid_2`;', [
-            'table' => 'favorites',
-            'column'     => 'userid_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}languages` DROP INDEX `language_default_2`', [
-            'table' => 'languages',
-            'column'     => 'language_default_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}languages` DROP INDEX `language_code_2`', [
-            'table' => 'languages',
-            'column'     => 'language_code_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}pages` DROP INDEX `active_2`;', [
-            'table' => 'pages',
-            'column'     => 'active_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `last_viewed_2`;', [
-            'table' => 'photos',
-            'column'     => 'last_viewed_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `userid_2`;', [
-            'table' => 'photos',
-            'column'     => 'userid_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `collection_id_2`;', [
-            'table' => 'photos',
-            'column'     => 'collection_id_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `featured_2`;', [
-            'table' => 'photos',
-            'column'     => 'featured_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `last_viewed_3`;', [
-            'table' => 'photos',
-            'column'     => 'last_viewed_3'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `rating_2`;', [
-            'table' => 'photos',
-            'column'     => 'rating_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `total_comments_2`;', [
-            'table' => 'photos',
-            'column'     => 'total_comments_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP INDEX `total_comments_2`;', [
-            'table' => 'photos',
-            'column'     => 'total_comments_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}sessions` DROP INDEX `session_2`;', [
-            'table' => 'sessions',
-            'column'     => 'session_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}users` DROP INDEX `username_2`;', [
-            'table' => 'users',
-            'column'     => 'username_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` DROP INDEX `user_level_id_2`;', [
-            'table' => 'user_levels_permissions',
-            'column'     => 'user_level_id_2'
-        ]);
-
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `last_viewed_2`',[
-            'table' => 'video',
-            'column'     => 'last_viewed_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `userid_2`',[
-            'table' => 'video',
-            'column'     => 'userid_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `userid_3`',[
-            'table' => 'video',
-            'column'     => 'userid_3'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `featured_2`',[
-            'table' => 'video',
-            'column'     => 'featured_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `last_viewed_3`',[
-            'table' => 'video',
-            'column'     => 'last_viewed_3'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `rating_2`',[
-            'table' => 'video',
-            'column'     => 'rating_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `comments_count_2`',[
-            'table' => 'video',
-            'column'     => 'comments_count_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `last_viewed_4`',[
-            'table' => 'video',
-            'column'     => 'last_viewed_4'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `status_2`',[
-            'table' => 'video',
-            'column'     => 'status_2'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `userid_4`',[
-            'table' => 'video',
-            'column'     => 'userid_4'
-        ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP INDEX `videoid_2`',[
-            'table' => 'video',
-            'column'     => 'videoid_2'
-        ]);
+        foreach($datas as $table => $indexs){
+            foreach($indexs as $index){
+                self::alterTable('ALTER TABLE `{tbl_prefix}' . $table . '` DROP INDEX `' . $index . '`', [
+                    'table'  => $table,
+                    'column' => $index
+                ]);
+            }
+        }
     }
 }

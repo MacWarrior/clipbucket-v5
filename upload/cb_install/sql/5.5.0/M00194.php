@@ -9,7 +9,6 @@ class M00194 extends \Migration
      */
     public function start()
     {
-
         $sql = 'UPDATE `{tbl_prefix}config` SET value = \'0\' WHERE `name` = \'activation\' AND `value` = \'\';';
         self::query($sql);
 

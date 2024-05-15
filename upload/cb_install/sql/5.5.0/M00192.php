@@ -18,6 +18,5 @@ class M00192 extends \Migration
             'en'=>'Plugin might not be compatible with current Clipbucket version',
             'fr'=>'Le plugin peut ne pas être compatible avec la version actuelle de Clipbucket'
         ]);
-
     }
 }

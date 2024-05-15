@@ -9,7 +9,6 @@ class M00238 extends \Migration
      */
     public function start()
     {
-
         $sql = 'SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = \'collect_tag_hint\');';
         self::query($sql);
 

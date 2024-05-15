@@ -9,10 +9,9 @@ class M00204 extends \Migration
      */
     public function start()
     {
-
         self::alterTable('ALTER TABLE `{tbl_prefix}video` CHANGE `status` `status` ENUM(\'Successful\',\'Processing\',\'Failed\',\'Waiting\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT \'Processing\';', [
             'table' => 'video',
-            'column' => 'status',
+            'column' => 'status'
         ]);
         self::generateTranslation('waiting', [
             'en' => 'Waiting',

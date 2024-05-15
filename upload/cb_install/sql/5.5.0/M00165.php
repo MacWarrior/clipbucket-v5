@@ -29,7 +29,7 @@ class M00165 extends \Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}tools` ADD FOREIGN KEY (`id_tools_status`) REFERENCES `{tbl_prefix}tools_status` (`id_tools_status`) ON DELETE RESTRICT ON UPDATE NO ACTION;', [
             'table' => 'tools',
-            'column' => 'id_tools_status',
+            'column' => 'id_tools_status'
         ]);
         self::generateTranslation('admin_tool', [
             'en' => 'Administrations Tools',

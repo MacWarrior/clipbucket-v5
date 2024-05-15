@@ -11,15 +11,15 @@ class M00168 extends \Migration
     {
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (\'update_castable_status_label\', \'update_castable_status_description\', \'AdminTool::updateCastableStatus\', 1, NULL, NULL);';
+            (\'update_castable_status_label\', \'update_castable_status_description\', \'AdminTool::updateCastableStatus\', 1, NULL, NULL);';
         self::query($sql);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (\'update_bits_color_label\', \'update_bits_color_description\', \'AdminTool::updateBitsColor\', 1, NULL, NULL);';
+            (\'update_bits_color_label\', \'update_bits_color_description\', \'AdminTool::updateBitsColor\', 1, NULL, NULL);';
         self::query($sql);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (\'update_videos_duration_label\', \'update_videos_duration_description\', \'AdminTool::updateVideoDuration\', 1, NULL, NULL);';
+            (\'update_videos_duration_label\', \'update_videos_duration_description\', \'AdminTool::updateVideoDuration\', 1, NULL, NULL);';
         self::query($sql);
 
         self::generateTranslation('update_castable_status_label', [

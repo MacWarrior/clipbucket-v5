@@ -11,7 +11,7 @@ class M00009 extends \Migration
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}plugins` MODIFY COLUMN `plugin_version` FLOAT NOT NULL DEFAULT \'0\';', [
             'table' => 'plugins',
-            'column' => 'plugin_version',
+            'column' => 'plugin_version'
         ]);
     }
 }

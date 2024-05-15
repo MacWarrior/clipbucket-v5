@@ -135,6 +135,5 @@ class M00221 extends \Migration
         self::generateTranslation('restore', [
             'pt-BR' => 'Restaurar'
         ]);
-
     }
 }

@@ -14,7 +14,7 @@ class M00034 extends \Migration
             'columns' => [
                 'last_viewed',
                 'ad_category'
-            ],
+            ]
         ]);
     }
 }

@@ -9,7 +9,6 @@ class M00264 extends \Migration
      */
     public function start()
     {
-
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}tags`
         (
             `id_tag`      INT          NOT NULL AUTO_INCREMENT,
@@ -229,39 +228,38 @@ class M00264 extends \Migration
 
         $sql = 'SET @tags_photo = (SELECT GROUP_CONCAT(`photo_tags`) FROM `{tbl_prefix}photos` WHERE `photo_tags` IS NOT NULL AND TRIM(`photo_tags`) != \'\');';
         self::query($sql);
-        $sql = '
-INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
-    WITH RECURSIVE NumberSequence AS (
-        SELECT 0 AS n
-        UNION ALL
-        SELECT n + 1
-        FROM NumberSequence
-        WHERE n <= LENGTH(@tags_photo) - LENGTH(REPLACE(@tags_photo, \',\', \'\')) + 1
-    )
-    SELECT DISTINCT
-        @type_photo
-        ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_photo, \',\', seq.n + 1), \',\', -1) AS tags
-    FROM NumberSequence seq
-;';
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}tags` (`id_tag_type`, `name`)
+            WITH RECURSIVE NumberSequence AS (
+                SELECT 0 AS n
+                UNION ALL
+                SELECT n + 1
+                FROM NumberSequence
+                WHERE n <= LENGTH(@tags_photo) - LENGTH(REPLACE(@tags_photo, \',\', \'\')) + 1
+            )
+            SELECT DISTINCT
+                @type_photo
+                ,SUBSTRING_INDEX(SUBSTRING_INDEX(@tags_photo, \',\', seq.n + 1), \',\', -1) AS tags
+            FROM NumberSequence seq
+        ;';
         self::query($sql);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}photo_tags` (`id_tag`, `id_photo`)
-    WITH RECURSIVE NumberSequence AS (
-        SELECT 0 AS n
-        UNION ALL
-        SELECT n + 1
-        FROM NumberSequence
-        WHERE n <= LENGTH(@tags_photo) - LENGTH(REPLACE(@tags_photo, \',\', \'\')) + 1
-    )
-    SELECT DISTINCT
-        tags.id_tag
-        ,photo.photo_id
-    FROM `{tbl_prefix}photos` photo
-         CROSS JOIN NumberSequence seq
-         INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(photo.photo_tags, \',\', seq.n + 1), \',\', -1) AND tags.id_tag_type = @type_photo
-    WHERE
-        photo.photo_tags IS NOT NULL AND TRIM(photo.photo_tags) != \'\'
-;';
+            WITH RECURSIVE NumberSequence AS (
+                SELECT 0 AS n
+                UNION ALL
+                SELECT n + 1
+                FROM NumberSequence
+                WHERE n <= LENGTH(@tags_photo) - LENGTH(REPLACE(@tags_photo, \',\', \'\')) + 1
+            )
+            SELECT DISTINCT
+                tags.id_tag
+                ,photo.photo_id
+            FROM `{tbl_prefix}photos` photo
+                 CROSS JOIN NumberSequence seq
+                 INNER JOIN `{tbl_prefix}tags` tags ON tags.name = SUBSTRING_INDEX(SUBSTRING_INDEX(photo.photo_tags, \',\', seq.n + 1), \',\', -1) AND tags.id_tag_type = @type_photo
+            WHERE
+                photo.photo_tags IS NOT NULL AND TRIM(photo.photo_tags) != \'\'
+        ;';
         self::query($sql);
 
         $sql = 'SET @type_collection = (

@@ -28,6 +28,5 @@ class M00220 extends \Migration
             'en' => 'Restore',
             'fr' => 'Restaurer'
         ]);
-
     }
 }

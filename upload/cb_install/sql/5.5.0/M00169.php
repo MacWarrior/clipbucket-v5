@@ -11,7 +11,7 @@ class M00169 extends \Migration
     {
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (\'update_database_version_label\', \'update_database_version_description\', \'AdminTool::updateDataBaseVersion\', 1, NULL, NULL);';
+            (\'update_database_version_label\', \'update_database_version_description\', \'AdminTool::updateDataBaseVersion\', 1, NULL, NULL);';
         self::query($sql);
 
         self::generateTranslation('need_db_upgrade', [

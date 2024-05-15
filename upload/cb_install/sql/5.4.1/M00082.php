@@ -11,7 +11,7 @@ class M00082 extends \Migration
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}user_categories` MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\'; ', [
             'table'  => 'user_categories',
-            'column' => 'category_thumb',
+            'column' => 'category_thumb'
         ]);
     }
 }

@@ -9,7 +9,6 @@ class M00275 extends \Migration
      */
     public function start()
     {
-
         $sql = 'SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'en\');';
         self::query($sql);
         $sql = 'SET @language_id_fra = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'fr\');';

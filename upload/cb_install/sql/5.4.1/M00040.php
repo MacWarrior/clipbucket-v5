@@ -9,7 +9,6 @@ class M00040 extends \Migration
      */
     public function start()
     {
-
         $sql = 'DELETE FROM `{tbl_prefix}config` WHERE name = \'quick_conv\';';
         self::query($sql);
     }

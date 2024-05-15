@@ -14,7 +14,7 @@ class M00104 extends \Migration
             'columns' => [
                 'description',
                 'tags'
-            ],
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users` MODIFY COLUMN `featured_video` MEDIUMTEXT NOT NULL;', [

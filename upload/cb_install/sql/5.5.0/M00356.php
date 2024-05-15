@@ -36,7 +36,7 @@ class M00356 extends \Migration
         ]);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`id_tool`, `language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (11, \'update_core_label\', \'update_core_description\', \'AdminTool::updateCore\', 1, NULL, NULL);';
+            (11, \'update_core_label\', \'update_core_description\', \'AdminTool::updateCore\', 1, NULL, NULL);';
         self::query($sql);
 
         self::generateTranslation('core_up_to_date', [

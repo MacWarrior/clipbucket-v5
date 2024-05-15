@@ -14,7 +14,7 @@ class M00142 extends \Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD `age_required` INT NULL DEFAULT NULL;', [
             'table' => 'video',
-            'column' => 'age_required',
+            'column' => 'age_required'
         ]);
     }
 }

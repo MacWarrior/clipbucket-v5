@@ -10,7 +10,7 @@ class M00218 extends \Migration
     public function start()
     {
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES
-    (\'clean_orphan_files_label\', \'clean_orphan_files_description\', \'AdminTool::cleanOrphanFiles\', 1, NULL, NULL);';
+            (\'clean_orphan_files_label\', \'clean_orphan_files_description\', \'AdminTool::cleanOrphanFiles\', 1, NULL, NULL);';
         self::query($sql);
 
         self::generateTranslation('clean_orphan_files_label', [

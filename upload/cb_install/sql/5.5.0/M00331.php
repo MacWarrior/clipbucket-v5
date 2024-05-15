@@ -50,13 +50,13 @@ class M00331 extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}videos_categories`
-(
-    `id_video`    BIGINT NOT NULL,
-    `id_category` INT    NOT NULL,
-    PRIMARY KEY (`id_video`, `id_category`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE utf8mb4_unicode_520_ci;';
+            (
+                `id_video`    BIGINT NOT NULL,
+                `id_category` INT    NOT NULL,
+                PRIMARY KEY (`id_video`, `id_category`)
+            ) ENGINE = InnoDB
+              DEFAULT CHARSET = utf8mb4
+              COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}videos_categories` ADD CONSTRAINT `video_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
@@ -76,13 +76,13 @@ class M00331 extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}photos_categories`
-(
-    `id_photo`    BIGINT NOT NULL,
-    `id_category` INT    NOT NULL,
-    PRIMARY KEY (`id_photo`, `id_category`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE utf8mb4_unicode_520_ci;';
+            (
+                `id_photo`    BIGINT NOT NULL,
+                `id_category` INT    NOT NULL,
+                PRIMARY KEY (`id_photo`, `id_category`)
+            ) ENGINE = InnoDB
+              DEFAULT CHARSET = utf8mb4
+              COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photos_categories` ADD CONSTRAINT `photo_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
@@ -102,13 +102,13 @@ class M00331 extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}collections_categories`
-(
-    `id_collection` BIGINT NOT NULL,
-    `id_category`   INT    NOT NULL,
-    PRIMARY KEY (`id_collection`, `id_category`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE utf8mb4_unicode_520_ci;';
+            (
+                `id_collection` BIGINT NOT NULL,
+                `id_category`   INT    NOT NULL,
+                PRIMARY KEY (`id_collection`, `id_category`)
+            ) ENGINE = InnoDB
+              DEFAULT CHARSET = utf8mb4
+              COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collections_categories` ADD CONSTRAINT `collection_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
@@ -128,13 +128,13 @@ class M00331 extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_categories`
-(
-    `id_user`     BIGINT NOT NULL,
-    `id_category` INT    NOT NULL,
-    PRIMARY KEY (`id_user`, `id_category`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE utf8mb4_unicode_520_ci;';
+            (
+                `id_user`     BIGINT NOT NULL,
+                `id_category` INT    NOT NULL,
+                PRIMARY KEY (`id_user`, `id_category`)
+            ) ENGINE = InnoDB
+              DEFAULT CHARSET = utf8mb4
+              COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users_categories` ADD CONSTRAINT `user_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
@@ -154,13 +154,13 @@ class M00331 extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlists_categories`
-(
-    `id_playlist` INT NOT NULL,
-    `id_category` INT NOT NULL,
-    PRIMARY KEY (`id_playlist`, `id_category`)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8mb4
-  COLLATE utf8mb4_unicode_520_ci;';
+            (
+                `id_playlist` INT NOT NULL,
+                `id_category` INT NOT NULL,
+                PRIMARY KEY (`id_playlist`, `id_category`)
+            ) ENGINE = InnoDB
+              DEFAULT CHARSET = utf8mb4
+              COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlists_categories` ADD CONSTRAINT `playlist_categories_category` FOREIGN KEY (`id_category`) REFERENCES `{tbl_prefix}categories` (`category_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [

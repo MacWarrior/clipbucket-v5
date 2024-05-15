@@ -11,7 +11,7 @@ class M00266 extends \Migration
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `total_objects`;', [
             'table' => 'collections',
-            'column' => 'total_objects',
+            'column' => 'total_objects'
         ]);
     }
 }

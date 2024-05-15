@@ -9,7 +9,6 @@ class M00246 extends \Migration
      */
     public function start()
     {
-
         $sql = 'SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = \'no_user_subscribed_to_uploader\');';
         self::query($sql);
 

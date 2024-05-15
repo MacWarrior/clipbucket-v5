@@ -129,6 +129,5 @@ class M00181 extends \Migration
         self::generateTranslation('confirm_delete_video_file', [
             'pt-BR'=>'Tem certeza de que deseja excluir a resolução %sp ?'
         ]);
-
     }
 }

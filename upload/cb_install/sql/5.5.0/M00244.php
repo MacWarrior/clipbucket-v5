@@ -9,7 +9,6 @@ class M00244 extends \Migration
      */
     public function start()
     {
-
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP `blocked_countries`', [
             'table' => 'video',
             'column' => 'blocked_countries'

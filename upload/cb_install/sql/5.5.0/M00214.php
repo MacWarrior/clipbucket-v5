@@ -11,7 +11,7 @@ class M00214 extends \Migration
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `remote_play_url`;', [
             'table' => 'video',
-            'column' => 'remote_play_url',
+            'column' => 'remote_play_url'
         ]);
 
         $sql = 'DELETE FROM `{tbl_prefix}languages_translations` WHERE `id_language_key` IN( SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` IN( \'link_video_msg\', \'remote_play\' ) );';

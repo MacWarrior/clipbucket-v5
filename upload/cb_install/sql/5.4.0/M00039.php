@@ -10,9 +10,9 @@ class M00039 extends \Migration
     public function start()
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}video_categories`
-    MODIFY COLUMN `category_desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-    MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
+            MODIFY COLUMN `category_desc` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
+            MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            MODIFY COLUMN `category_thumb` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
             'table'   => 'video_categories',
             'columns' => [
                 'category_desc',

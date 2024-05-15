@@ -9,7 +9,6 @@ class M00289 extends \Migration
      */
     public function start()
     {
-
         $sql = 'DELETE FROM `{tbl_prefix}config` WHERE `name` = \'video_age_verification\';';
         self::query($sql);
         $sql = 'DROP TABLE IF EXISTS `{tbl_prefix}group_invitations`;';

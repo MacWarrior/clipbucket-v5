@@ -122,7 +122,7 @@ class M00101 extends \Migration
                 'doj',
                 'last_logged',
                 'last_active'
-            ],
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_categories`
@@ -133,21 +133,21 @@ class M00101 extends \Migration
 
         self::alterTable('
         ALTER TABLE `{tbl_prefix}video`
-    MODIFY COLUMN `username` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `category_parents` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `blocked_countries` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\' ON UPDATE CURRENT_TIMESTAMP,
-    MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    MODIFY COLUMN `embed_code` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `refer_url` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `remote_play_url` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `video_files` TINYTEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `file_server_path` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `files_thumbs_path` TEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `video_version` VARCHAR(30) NOT NULL DEFAULT \'5.4.1\',
-    MODIFY COLUMN `thumbs_version` VARCHAR(5) NOT NULL DEFAULT \'5.4.1\',
-    MODIFY COLUMN `re_conv_status` TINYTEXT NULL DEFAULT NULL,
-    MODIFY COLUMN `conv_progress` TEXT NULL DEFAULT NULL;', [
+            MODIFY COLUMN `username` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `category_parents` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `blocked_countries` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\' ON UPDATE CURRENT_TIMESTAMP,
+            MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            MODIFY COLUMN `embed_code` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `refer_url` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `remote_play_url` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `video_files` TINYTEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `file_server_path` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `files_thumbs_path` TEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `video_version` VARCHAR(30) NOT NULL DEFAULT \'5.4.1\',
+            MODIFY COLUMN `thumbs_version` VARCHAR(5) NOT NULL DEFAULT \'5.4.1\',
+            MODIFY COLUMN `re_conv_status` TINYTEXT NULL DEFAULT NULL,
+            MODIFY COLUMN `conv_progress` TEXT NULL DEFAULT NULL;', [
             'table'   => 'video',
             'columns' => [
                 'username',
@@ -164,8 +164,8 @@ class M00101 extends \Migration
                 'video_version',
                 'thumbs_version',
                 're_conv_status',
-                'conv_progress',
-            ],
+                'conv_progress'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_categories`

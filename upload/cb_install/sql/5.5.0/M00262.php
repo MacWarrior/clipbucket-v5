@@ -9,7 +9,6 @@ class M00262 extends \Migration
      */
     public function start()
     {
-
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) VALUES (\'repair_video_duration_label\', \'repair_video_duration_description\', \'AdminTool::repairVideoDuration\', 1, NULL, NULL);';
         self::query($sql);
 

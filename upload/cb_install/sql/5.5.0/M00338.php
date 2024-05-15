@@ -15,6 +15,5 @@ class M00338 extends \Migration
         self::generateTranslation('user_dob_edition_disabled', [
             'fr' => 'L\'édition de la date de naissance est désactivée'
         ]);
-
     }
 }
