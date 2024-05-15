@@ -7848,3 +7848,40 @@ textarea#comment_box {
     -moz-transform: rotate(0deg)!important;
     transform: rotate(0deg)!important;
 }
+.tmdb_poster{
+  max-height: 150px;
+}
+
+
+.taskHandler {
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.taskHandler .spinner-content > p {
+  color: white;
+  font-size: 40pt;
+}
+
+.open-modal {
+  color: #9124a3;
+  cursor: pointer;
+  font-size: 1.5em;
+  margin-right: 1em;
+}
+
+
