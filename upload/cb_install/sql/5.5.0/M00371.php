@@ -159,12 +159,17 @@ class M00371 extends \Migration
         ]);
 
         $sql = 'ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_poster` INT(3) DEFAULT NULL;';
-        self::alterTable($sql, [], [
+        self::alterTable($sql, [
+            'table'  => 'video'
+        ], [
             'table'  => 'video',
             'column' => 'default_poster'
         ]);
+
         $sql = 'ALTER TABLE `{tbl_prefix}video` ADD COLUMN `default_backdrop` INT(3) DEFAULT NULL;';
-        self::alterTable($sql, [], [
+        self::alterTable($sql, [
+            'table'  => 'video'
+        ], [
             'table'  => 'video',
             'column' => 'default_backdrop'
         ]);

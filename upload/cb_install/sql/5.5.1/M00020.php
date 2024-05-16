@@ -27,7 +27,9 @@ class M00020 extends \Migration
             'en' => '- %s',
             'fr' => '- %s'
         ]);
-        self::alterTable('ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN', [], [
+        self::alterTable('ALTER TABLE `{tbl_prefix}tmdb_search_result` ADD COLUMN `is_adult` BOOLEAN', [
+            'table'  => 'tmdb_search_result'
+        ], [
             'table'  => 'tmdb_search_result',
             'column' => 'is_adult'
         ]);

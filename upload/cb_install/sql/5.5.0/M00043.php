@@ -10,6 +10,8 @@ class M00043 extends \Migration
     public function start()
     {
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD `collection_id_parent` BIGINT(25) NULL DEFAULT NULL AFTER `collection_id`, ADD INDEX(`collection_id_parent`);', [
+            'table' => 'collections'
+        ], [
             'table' => 'collections',
             'column' => 'collection_id_parent'
         ]);

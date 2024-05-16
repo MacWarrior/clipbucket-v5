@@ -13,6 +13,8 @@ class M00142 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD `age_required` INT NULL DEFAULT NULL;', [
+            'table' => 'video'
+        ], [
             'table' => 'video',
             'column' => 'age_required'
         ]);

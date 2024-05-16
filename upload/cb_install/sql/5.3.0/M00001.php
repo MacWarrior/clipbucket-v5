@@ -121,6 +121,9 @@ class M00001 extends \Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD `is_castable` BOOLEAN NOT NULL DEFAULT FALSE, ADD `bits_color` TINYINT(4) DEFAULT NULL;', [
             'table' => 'video'
+        ], [
+            'table' => 'video',
+            'columns' => ['is_castable', 'bits_color']
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile`

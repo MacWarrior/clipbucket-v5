@@ -244,7 +244,17 @@ class Clipbucket_db
      */
     public function executeThrowException($sql)
     {
-        $this->mysqli->query($sql);
+        try{
+            $this->mysqli->query($sql);
+        }
+        catch(mysqli_sql_exception $e){
+            if( in_dev() ){
+                e('SQL : ' . $sql);
+                DiscordLog::sendDump('SQL : ' . $sql);
+            }
+            throw $e;
+        }
+
         if ($this->mysqli->error != '') {
             throw new Exception('SQL : ' . $sql . "\n" . 'ERROR : ' . $this->mysqli->error);
         }

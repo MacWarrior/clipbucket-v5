@@ -89,10 +89,16 @@ class M00001 extends \Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_photos` ENUM(\'yes\', \'no\') NOT NULL DEFAULT \'yes\' AFTER `view_video`;', [
             'table' => 'user_levels_permissions'
+        ], [
+            'table' => 'user_levels_permissions',
+            'column' => 'view_photos'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD `view_collections` ENUM(\'yes\', \'no\') NOT NULL DEFAULT \'yes\' AFTER `view_photos`;', [
             'table' => 'user_levels_permissions'
+        ], [
+            'table' => 'user_levels_permissions',
+            'column' => 'view_collections'
         ]);
 
         $sql = 'INSERT INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES

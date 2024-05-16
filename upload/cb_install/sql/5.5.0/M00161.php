@@ -9,7 +9,9 @@ class M00161 extends \Migration
      */
     public function start()
     {
-        self::alterTable('ALTER TABLE `{tbl_prefix}languages` ADD COLUMN `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci;',[], [
+        self::alterTable('ALTER TABLE `{tbl_prefix}languages` ADD COLUMN `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci;', [
+            'table'  => 'languages'
+        ], [
             'table'  => 'languages',
             'column' => 'language_code'
         ]);
@@ -18,7 +20,7 @@ class M00161 extends \Migration
         SET `language_code`=language_id WHERE language_code IS NULL OR language_code = \'\';';
         self::query($sql);
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}languages` CHANGE `language_code` `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL UNIQUE;', [
+        self::alterTable('ALTER TABLE `{tbl_prefix}languages` CHANGE `language_code` `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL UNIQUE;', [
             'table' => 'languages',
             'column' => 'language_code'
         ]);
