@@ -186,10 +186,10 @@ class M00331 extends \Migration
         $sql = 'SET @type_category = ( SELECT id_category_type FROM `{tbl_prefix}categories_type` WHERE name LIKE \'collection\' );';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) 
-                (SELECT @type_category, CASE WHEN parent_id = \'0\' OR parent_id = category_id THEN NULL ELSE parent_id END, category_name,
+                SELECT @type_category, CASE WHEN parent_id = \'0\' OR parent_id = category_id THEN NULL ELSE parent_id END, category_name,
                      category_order, category_desc, date_added, category_thumb, isdefault, category_id
                   FROM `{tbl_prefix}collection_categories`
-                  WHERE 1);';
+                  WHERE 1;';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}collections_categories` (`id_category`, `id_collection`)
                 WITH RECURSIVE NumberSequence AS (
@@ -208,22 +208,25 @@ class M00331 extends \Migration
                 WHERE
                     C.category IS NOT NULL
                     AND C.category != \'\'
-                    AND SUBSTRING_INDEX(SUBSTRING_INDEX(C.category, \'#\', seq.n+1), \'#\', -1) != \'\'
-            ;';
+                    AND SUBSTRING_INDEX(SUBSTRING_INDEX(C.category, \'#\', seq.n+1), \'#\', -1) != \'\';';
         self::query($sql);
 
         /** Vidéos */
-
         $sql = 'SET @type_category = ( SELECT id_category_type FROM `{tbl_prefix}categories_type` WHERE name LIKE \'video\' );';
         self::query($sql);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) (
-                SELECT @type_category, CASE WHEN parent_id = \'0\' OR parent_id = category_id  THEN NULL ELSE parent_id END , category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
-                FROM `{tbl_prefix}video_categories`
+        $sql = 'SET @id_categ = (
+                SELECT max(category_id)
+                FROM `{tbl_prefix}categories`
                 WHERE 1
-        );';
+            );';
         self::query($sql);
 
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}categories` (category_id, id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default, old_category_id) 
+                SELECT category_id+@id_categ AS category_id, @type_category, CASE WHEN parent_id = \'0\' OR parent_id = category_id  THEN NULL ELSE parent_id END , category_name, category_order, category_desc, date_added, category_thumb, isdefault, category_id
+                FROM `{tbl_prefix}video_categories`
+                WHERE 1;';
+        self::query($sql);
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`)
         WITH RECURSIVE NumberSequence AS (
             SELECT 1 AS n
@@ -241,15 +244,13 @@ class M00331 extends \Migration
         WHERE
             V.category IS NOT NULL
           AND V.category != \'\'
-          AND SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, \'#\', seq.n+1), \'#\', -1) != \'\'
-        ;';
+          AND SUBSTRING_INDEX(SUBSTRING_INDEX(V.category, \'#\', seq.n+1), \'#\', -1) != \'\';';
         self::query($sql);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`) (
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}videos_categories` (`id_category`, `id_video`)
             SELECT C.category_id, V.videoid
             FROM `{tbl_prefix}video` V , `{tbl_prefix}categories` C
-            WHERE (V.category IS NULL OR V.category = \'\') AND C.is_default = \'yes\' AND C.id_category_type = @type_category
-        );';
+            WHERE (V.category IS NULL OR V.category = \'\') AND C.is_default = \'yes\' AND C.id_category_type = @type_category;';
         self::query($sql);
 
         /** Users */
@@ -259,12 +260,16 @@ class M00331 extends \Migration
             WHERE name LIKE \'user\'
         );';
         self::query($sql);
-
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}categories` (id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default) (
-            SELECT @type_category, NULL, category_name, category_order, category_desc, date_added, category_thumb, isdefault
+        $sql = 'SET @id_categ = (
+                SELECT max(category_id)
+                FROM `{tbl_prefix}categories`
+                WHERE 1
+            );';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}categories` (category_id, id_category_type, parent_id, category_name, category_order, category_desc, date_added, category_thumb, is_default)
+            SELECT category_id+@id_categ AS category_id, @type_category, NULL, category_name, category_order, category_desc, date_added, category_thumb, isdefault
             FROM `{tbl_prefix}user_categories`
-            WHERE 1
-        );';
+            WHERE 1;';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}users_categories` (`id_category`, `id_user`)
             WITH RECURSIVE NumberSequence AS (
@@ -283,10 +288,8 @@ class M00331 extends \Migration
             WHERE
                 U.category IS NOT NULL
               AND U.category != \'\'
-              AND SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, \'#\', seq.n+1), \'#\', -1) != \'\'
-        ;';
+              AND SUBSTRING_INDEX(SUBSTRING_INDEX(U.category, \'#\', seq.n+1), \'#\', -1) != \'\';';
         self::query($sql);
-
         $sql = 'UPDATE `{tbl_prefix}categories` C
             INNER JOIN `{tbl_prefix}categories` CP ON CP.old_category_id = C.parent_id AND CP.id_category_type = C.id_category_type
         SET C.parent_id = CP.category_id
