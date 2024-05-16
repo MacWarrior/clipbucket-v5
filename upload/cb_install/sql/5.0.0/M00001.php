@@ -10,6 +10,76 @@ class M00001 extends \Migration
      */
     public function start()
     {
+        // Fixing date & datetime formats so MySQL8 won't fail upgrades
+        self::alterTable('ALTER TABLE `{tbl_prefix}ads_data`
+            MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\',
+            MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
+            'table'   => 'ads_data',
+            'columns' => [
+                'last_viewed',
+                'date_added'
+            ]
+        ]);
+
+        $sql = 'UPDATE `{tbl_prefix}collections` SET `last_commented` = \'1000-01-01 00:00:00\' WHERE CAST(`last_commented` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}pages` SET `date_added` = \'1000-01-01 00:00:00\' WHERE CAST(`date_added` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}photos`
+            MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\';', [
+            'table'   => 'photos',
+            'columns' => [
+                'last_viewed'
+            ]
+        ]);
+
+        $sql = 'UPDATE `{tbl_prefix}users` SET `featured_date` = \'1000-01-01 00:00:00\' WHERE CAST(`featured_date` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}users` SET `last_commented` = \'1000-01-01 00:00:00\' WHERE CAST(`last_commented` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}users` SET `last_logged` = \'1000-01-01 00:00:00\' WHERE CAST(`last_logged` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}users` SET `last_active` = \'1970-01-02 00:00:01\' WHERE CAST(`last_active` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}users`
+            MODIFY COLUMN `dob` date NOT NULL DEFAULT \'1000-01-01\',
+            MODIFY COLUMN `last_logged` datetime NOT NULL DEFAULT \'1000-01-01 00:00:00\',
+            MODIFY COLUMN `last_active` datetime NOT NULL DEFAULT \'1000-01-01 00:00:00\';', [
+            'table'   => 'users',
+            'columns' => [
+                'dob',
+                'last_logged',
+                'last_active'
+            ]
+        ]);
+
+        $sql = 'UPDATE `{tbl_prefix}video` SET `featured_date` = \'1000-01-01 00:00:00\' WHERE CAST(`featured_date` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}video` SET `last_viewed` = \'1970-01-02 00:00:01\' WHERE CAST(`last_viewed` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}video` SET `last_commented` = \'1000-01-01 00:00:00\' WHERE CAST(`last_commented` AS CHAR(20)) = \'0000-00-00 00:00:00\';';
+        self::query($sql);
+
+        $sql = 'UPDATE `{tbl_prefix}video` SET `datecreated` = \'1000-01-01\' WHERE CAST(`datecreated` AS CHAR(20)) = \'0000-00-00\';';
+        self::query($sql);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}video`
+            MODIFY COLUMN `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
+            'table'   => 'video',
+            'columns' => [
+                'date_added'
+            ]
+        ]);
+        // Now MySQL8 should work properly
+
         $tables = ['action_log','admin_notes','admin_todo','ads_data','ads_placements','collections','collection_categories','collection_contributors','collection_items','comments','config','contacts','conversion_queue','counters','countries','editors_picks','email_templates','favorites','flags','groups','group_categories','group_invitations','group_members','group_posts','group_topics','group_videos','languages','mass_emails','messages','modules','pages','photos','phrases','playlists','playlist_items','plugins','plugin_config','sessions','stats','subscriptions','template','users','user_categories','user_levels','user_levels_permissions','user_permissions','user_permission_types','user_profile','validation_re','version','video','video_categories','video_favourites','video_files','video_views'];
         foreach($tables as $table){
             $sql = 'ALTER TABLE `{tbl_prefix}' . $table . '` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
@@ -68,12 +138,12 @@ class M00001 extends \Migration
 
         foreach( $datas as $table => $columns){
             foreach($columns as $column){
-                $sql = 'UPDATE `{tbl_prefix}' . $table . '` SET ' . $column . ' = CONVERT(CAST(CONVERT(' . $column . ' USING utf8mb3) AS BINARY) USING utf8);';
+                $sql = 'UPDATE `{tbl_prefix}' . $table . '` SET ' . $column . ' = CONVERT(CAST(CONVERT(' . $column . ' USING utf8mb4) AS BINARY) USING utf8);';
                 self::query($sql);
             }
         }
 
-        $sql = 'INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config`(`name`, `value`) VALUES
         (\'password_salt\', SUBSTRING(HEX(SHA2(CONCAT(NOW(), RAND(), UUID()), 512)),1, 32) ),
         (\'show_collapsed_checkboxes\', \'0\'),
         (\'enable_advertisement\', \'no\'),
@@ -101,7 +171,7 @@ class M00001 extends \Migration
             'column' => 'view_collections'
         ]);
 
-        $sql = 'INSERT INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) VALUES
             (1, \'View Photos Page\', \'view_photos\', \'User can view photos page\', \'yes\'),
             (1, \'View Collections Page\', \'view_collections\', \'User can view collections page\', \'yes\');';
         self::query($sql);
@@ -109,11 +179,23 @@ class M00001 extends \Migration
         $sql = 'UPDATE `{tbl_prefix}languages` SET `language_id` = 1 WHERE `language_code` LIKE \'en\';';
         self::query($sql);
 
-        $sql = 'INSERT INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`)
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}languages` (`language_id`, `language_code`, `language_name`, `language_regex`, `language_active`, `language_default`)
         VALUES (2, \'fr\', \'Français\', \'fra\', \'no\', \'no\');';
         self::query($sql);
 
-        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE configid IN(SELECT configid FROM `{tbl_prefix}config` GROUP BY name HAVING COUNT(*) > 1);';
+        $sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS tmb_config_to_delete
+            WITH all_duplicates AS (
+                SELECT * FROM `{tbl_prefix}config` WHERE `name` IN (SELECT `name` FROM `{tbl_prefix}config` GROUP BY `name` HAVING COUNT(*) > 1 )
+            )
+            , keep_one_of_each_duplicate AS (
+                SELECT MIN(`configid`) AS configid, `name` FROM all_duplicates GROUP BY `name`
+            )
+            , all_duplicated_except_one_of_each AS (
+                SELECT `configid` FROM all_duplicates WHERE `configid` NOT IN (SELECT `configid` FROM keep_one_of_each_duplicate )
+            )
+            SELECT `configid` FROM all_duplicated_except_one_of_each;';
+        self::query($sql);
+        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE `configid` IN(SELECT `configid` FROM tmb_config_to_delete);';
         self::query($sql);
     }
 }

@@ -16,7 +16,19 @@ class M00030 extends \Migration
             self::query($sql);
         }
 
-        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE configid IN(SELECT configid FROM `{tbl_prefix}config` GROUP BY name HAVING COUNT(*) > 1);';
+        $sql = 'CREATE TEMPORARY TABLE IF NOT EXISTS tmb_config_to_delete
+            WITH all_duplicates AS (
+                SELECT * FROM `{tbl_prefix}config` WHERE `name` IN (SELECT `name` FROM `{tbl_prefix}config` GROUP BY `name` HAVING COUNT(*) > 1 )
+            )
+            , keep_one_of_each_duplicate AS (
+                SELECT MIN(`configid`) AS configid, `name` FROM all_duplicates GROUP BY `name`
+            )
+            , all_duplicated_except_one_of_each AS (
+                SELECT `configid` FROM all_duplicates WHERE `configid` NOT IN (SELECT `configid` FROM keep_one_of_each_duplicate )
+            )
+            SELECT `configid` FROM all_duplicated_except_one_of_each;';
+        self::query($sql);
+        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE `configid` IN(SELECT `configid` FROM tmb_config_to_delete);';
         self::query($sql);
     }
 }

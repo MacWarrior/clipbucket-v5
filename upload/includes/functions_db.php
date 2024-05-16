@@ -105,8 +105,7 @@ function cb_sql_table($table, $as = null)
 function select($query, $cached_time = -1, $cached_key = ''): array
 {
     global $db;
-    $res = $db->_select($query, $cached_time, $cached_key);
-    return $res;
+    return $db->_select($query, $cached_time, $cached_key);
 }
 
 /**
@@ -216,12 +215,17 @@ function execute_migration_SQL_file($path): bool
 
     return true;
 }
+
+/**
+ * @throws Exception
+ */
 function execute_migration_file($path)
 {
     include_once $path;
     $class = pathinfo($path)['filename'];
     $namespace = 'V'.str_replace('.','_',basename(dirname($path)));
-    $instance = new ($namespace . '\\'.$class)();
+    $classname = $namespace . '\\'.$class;
+    $instance = new $classname();
     if (!$instance->launch()) {
         throw new Exception("error_during_update");
     }
@@ -259,6 +263,10 @@ function getRevisions(): array
     return $revisions;
 }
 
-function getMysqlServerVersion() {
+/**
+ * @throws Exception
+ */
+function getMysqlServerVersion(): array
+{
     return Clipbucket_db::getInstance()->_select('select @@version;');
 }

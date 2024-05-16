@@ -24,13 +24,13 @@ class M00001 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` TEXT NULL DEFAULT NULL;', [
-            'table' =>'user_levels_permissions',
-            'column'     => 'plugins_perms'
+            'table'  =>'user_levels_permissions',
+            'column' => 'plugins_perms'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users`
-                MODIFY COLUMN `featured_video` MEDIUMTEXT DEFAULT \'\' NOT NULL,
-                MODIFY COLUMN `avatar_url` TEXT DEFAULT \'\' NOT NULL,
+                MODIFY COLUMN `featured_video` MEDIUMTEXT NOT NULL,
+                MODIFY COLUMN `avatar_url` TEXT NULL DEFAULT NULL,
                 MODIFY COLUMN `featured_date` DATETIME NULL DEFAULT NULL,
                 MODIFY COLUMN `total_videos` BIGINT(20) NOT NULL DEFAULT \'0\',
                 MODIFY COLUMN `total_comments` BIGINT(20) NOT NULL DEFAULT \'0\',
@@ -70,28 +70,28 @@ class M00001 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video`
-            MODIFY COLUMN `username` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `category_parents` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `blocked_countries` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `voter_ids` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
+            MODIFY COLUMN `username` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `category_parents` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `blocked_countries` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `voter_ids` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
             MODIFY COLUMN `last_commented` DATETIME NULL DEFAULT NULL,
             MODIFY COLUMN `featured_date` DATETIME NULL DEFAULT NULL,
-            MODIFY COLUMN `featured_description` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `aspect_ratio` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `embed_code` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `refer_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
+            MODIFY COLUMN `featured_description` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `aspect_ratio` VARCHAR(10) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `embed_code` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `refer_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY COLUMN `downloads` BIGINT(255) NOT NULL DEFAULT \'0\',
             MODIFY COLUMN `unique_embed_code` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `remote_play_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `video_files` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
+            MODIFY COLUMN `remote_play_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `video_files` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY COLUMN `server_ip` VARCHAR(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `file_server_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `files_thumbs_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
+            MODIFY COLUMN `file_server_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `files_thumbs_path` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY COLUMN `file_thumbs_count` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `filegrp_size` VARCHAR(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
             MODIFY COLUMN `extras` VARCHAR(225) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `re_conv_status` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
+            MODIFY COLUMN `re_conv_status` TINYTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `conv_progress` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;', [
             'table' => 'video',
             'columns' => [
                 'username',
@@ -129,22 +129,22 @@ class M00001 extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile`
             MODIFY COLUMN `fb_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
             MODIFY COLUMN `twitter_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `profile_title` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `profile_desc` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `featured_video` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `about_me` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `schools` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `occupation` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `companies` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `hobbies` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `fav_movies` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `fav_music` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `fav_books` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
-            MODIFY COLUMN `background` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
+            MODIFY COLUMN `profile_title` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `profile_desc` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `featured_video` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `about_me` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `schools` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `occupation` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `companies` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `hobbies` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `fav_movies` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `fav_music` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `fav_books` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `background` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY COLUMN `profile_video` INT(255) NULL DEFAULT NULL,
             MODIFY COLUMN `profile_item` VARCHAR(25) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
             MODIFY COLUMN `rating` TINYINT(2) NULL DEFAULT NULL,
-            MODIFY COLUMN `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\',
+            MODIFY COLUMN `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY COLUMN `rated_by` INT(150) NULL DEFAULT NULL,
             MODIFY COLUMN `insta_url` VARCHAR(200) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT \'\';', [
             'table' => 'user_profile',
@@ -181,8 +181,8 @@ class M00001 extends \Migration
             MODIFY COLUMN `rated_by` INT(25) NOT NULL DEFAULT \'0\',
             MODIFY COLUMN `voters` MEDIUMTEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY COLUMN `downloaded` BIGINT(255) NOT NULL DEFAULT \'0\',
-            MODIFY COLUMN `server_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY COLUMN `photo_details` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
+            MODIFY COLUMN `server_url` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+            MODIFY COLUMN `photo_details` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;', [
             'table' => 'photos',
             'columns' => [
                 'views',
@@ -225,9 +225,9 @@ class M00001 extends \Migration
 
         self::alterTable('ALTER TABLE `{tbl_prefix}comments`
             MODIFY `vote` VARCHAR(225) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
-            MODIFY `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\',
+            MODIFY `voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
             MODIFY `spam_votes` BIGINT(20) NOT NULL DEFAULT \'0\',
-            MODIFY `spam_voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT \'\';', [
+            MODIFY `spam_voters` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;', [
             'table' => 'comments',
             'columns' => [
                 'vote',

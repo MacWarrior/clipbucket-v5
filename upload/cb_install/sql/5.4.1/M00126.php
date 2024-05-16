@@ -9,12 +9,12 @@ class M00126 extends \Migration
      */
     public function start()
     {
+        $sql = 'UPDATE `{tbl_prefix}video` SET `datecreated` = \'1000-01-01\' WHERE CAST(`datecreated` AS CHAR(20)) = \'0000-00-00\';';
+        self::query($sql);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}video` MODIFY COLUMN `datecreated` DATE NOT NULL DEFAULT \'1000-01-01\';', [
             'table'  => 'video',
             'column' => 'datecreated'
         ]);
-
-        $sql = 'UPDATE `{tbl_prefix}video` SET datecreated = \'1000-01-01\' WHERE datecreated = \'0000-00-00\';';
-        self::query($sql);
     }
 }
