@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"33",
+  "revision":"34",
   "status":"dev",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Fix video search"
         ,"Fix video manager pagination"
         ,"Fix website configurations display"
+        ,"Fix video saving with poster ou default enabled"
       ]
     },
     {
