@@ -1,2 +1,0 @@
-ALTER TABLE `{tbl_prefix}video`
-    MODIFY COLUMN `category` VARCHAR(200) NULL DEFAULT NULL;

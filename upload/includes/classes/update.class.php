@@ -256,7 +256,7 @@ class Update
         }
         $clean_folder = array_diff(scandir($folder_version), ['..', '.']);
         foreach ($clean_folder as $file) {
-            $file_rev = (int)pathinfo($file)['filename'];
+            $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
             if ($file_rev > $this->getCurrentDBRevision() && $file_rev <= REV) {
                 $this->needCodeDBUpdate = true;
                 return true;
@@ -307,7 +307,7 @@ class Update
             }
 
             foreach($folder_files AS $file){
-                $file_rev = (int)pathinfo($file)['filename'];
+                $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
 
                 // Exclude future revisions
                 if( $folder_version == $this->getCurrentCoreVersionCode() && $file_rev > $this->getCurrentCoreRevision() ){
@@ -354,26 +354,7 @@ class Update
     {
         $plugins_installed = Plugin::getInstance()->getAll();
 
-        $update_files = [];
-        foreach ($plugins_installed as $installed_plugin) {
-            $db_version = $installed_plugin['plugin_version'];
-            $detail_verision = CBPlugin::getInstance()->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
-            //get files in update folder
-            $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
-            $files = glob($folder . '*.sql');
-            //filter files which are between db version and detail version
-            $update_files = array_merge(
-                $update_files,
-                array_filter(
-                    array_map(function ($file) use ($db_version, $detail_verision, $folder) {
-                        $file_version = pathinfo($file)['filename'];
-                        return ($file_version > $db_version && $file_version <= $detail_verision)
-                            ? $file
-                            : null;
-                    }, $files)
-                )
-            );
-        }
+        $update_files = get_plugins_files_to_upgrade($plugins_installed);
         return ($count ? count($update_files) : $update_files);
     }
 
