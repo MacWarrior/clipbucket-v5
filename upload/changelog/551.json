@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"32",
+  "revision":"33",
   "status":"dev",
   "detail":[
     {
@@ -63,6 +63,7 @@
         ,"Fix dependancies check during installation process"
         ,"Update Debian 10 installation script"
         ,"Fix upgrade from 4.2 RC1"
+        ,"Refactor migration system"
       ]
     },
     {
