@@ -1363,14 +1363,19 @@ function update_video_files($vdetails)
             }
 
             foreach ($list_videos as  $path) {
-                $quality = explode('-', $path,-1);
-                $quality = explode('.', end($quality));
-                if( is_numeric($quality[0]) ){
-                    $video_qualities[] = (int)$quality[0];
-                } else {
-                    $video_qualities[] = $quality[0];
-                }
+                $filename = basename($path);
 
+                if( strpos($filename, '-') === false ) {
+                    $video_qualities[] = '';
+                } else {
+                    $quality = explode('-', $filename);
+                    $quality = explode('.', end($quality));
+                    if( is_numeric($quality[0]) ){
+                        $video_qualities[] = (int)$quality[0];
+                    } else {
+                        $video_qualities[] = $quality[0];
+                    }
+                }
             }
             break;
 

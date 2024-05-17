@@ -105,8 +105,7 @@ function cb_sql_table($table, $as = null)
 function select($query, $cached_time = -1, $cached_key = ''): array
 {
     global $db;
-    $res = $db->_select($query, $cached_time, $cached_key);
-    return $res;
+    return $db->_select($query, $cached_time, $cached_key);
 }
 
 /**
@@ -141,13 +140,13 @@ function get_plugins_files_to_upgrade($installed_plugins, bool $count = false)
         $detail_verision = $cbplugin->get_plugin_details($installed_plugin['plugin_file'], $installed_plugin['plugin_folder'])['version'];
         //get files in update folder
         $folder = DirPath::get('plugins') . $installed_plugin['plugin_folder'] . DIRECTORY_SEPARATOR . 'sql' . DIRECTORY_SEPARATOR . 'update' . DIRECTORY_SEPARATOR;
-        $files = glob($folder . '*.sql');
+        $files = glob($folder . '*.php');
         //filter files which are between db version and detail version
         $update_files = array_merge(
             $update_files,
             array_filter(
                 array_map(function ($file) use ($db_version, $detail_verision, $folder) {
-                    $file_version = pathinfo($file)['filename'];
+                    $file_version = str_replace('P','',str_replace('_','.' , pathinfo($file)['filename']));
                     return ($file_version > $db_version && $file_version <= $detail_verision)
                         ? $file
                         : null;
@@ -214,23 +213,24 @@ function execute_migration_SQL_file($path): bool
         throw new Exception("error_during_update");
     }
 
-    global $db;
-    if (strpos($path, 'plugin') !== false) {
-        $plugin_folder = basename(dirname($path, 3));
-        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\.sql/';
-        $match = [];
-        preg_match($regex, $path, $match);
-        $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($match['1']) . '\' WHERE plugin_folder = \'' . $plugin_folder . '\'';
-    } else {
-        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
-        $match = [];
-        preg_match($regex, $path, $match);
-        $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($match['1']) . '\' , revision = ' . mysql_clean((int)$match['2']);
-    }
-    $db->mysqli->query($sql);
-    CacheRedis::flushAll();
-    Update::getInstance()->flush();
     return true;
+}
+
+/**
+ * @throws Exception
+ */
+function execute_migration_file($path)
+{
+    include_once $path;
+    $class = pathinfo($path)['filename'];
+    $namespace = 'V'.str_replace('.','_',basename(dirname($path)));
+    $classname = $namespace . '\\'.$class;
+    $instance = new $classname();
+    if (!$instance->launch()) {
+        throw new Exception("error_during_update");
+    }
+
+    return $instance;
 }
 
 /**
@@ -263,6 +263,10 @@ function getRevisions(): array
     return $revisions;
 }
 
-function getMysqlServerVersion() {
+/**
+ * @throws Exception
+ */
+function getMysqlServerVersion(): array
+{
     return Clipbucket_db::getInstance()->_select('select @@version;');
 }

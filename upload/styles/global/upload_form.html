@@ -168,6 +168,11 @@
                 {ANCHOR place="after_upload_form_submit"}
             </div>
         </div>
+        <div class="col-md-4" >
+        {if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
+            <button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+        {/if}
+        </div>
         <div class="col-md-4 uploadFormSidebarDiv">
             {ANCHOR place="before_upload_form_categories_field"}
             <h4>{$categories.title}</h4>

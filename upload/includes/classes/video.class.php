@@ -523,6 +523,9 @@ class Video
         }
 
         $num = get_thumb_num($poster);
+        if( empty($num) ){
+            return;
+        }
         Clipbucket_db::getInstance()->update(tbl('video'), ['default_' . $type], [$num], ' videoid=\'' . mysql_clean($video_id) . '\'');
     }
     /**
