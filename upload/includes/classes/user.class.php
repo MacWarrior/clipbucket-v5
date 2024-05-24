@@ -759,7 +759,7 @@ class userquery extends CBCategory
     {
         if (!has_access('admin_access', true)) {
             if (!$check_only) {
-                redirect_to('login.php');
+                redirect_to(BASEURL.'/signup.php?mode=login');
             }
             return false;
         }
@@ -771,10 +771,8 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function logout($page = 'login.php')
+    function logout()
     {
-        global $sess;
-
         //Calling Logout Functions
         $funcs = $this->logout_functions;
         if (is_array($funcs) && count($funcs) > 0) {
@@ -785,8 +783,8 @@ class userquery extends CBCategory
             }
         }
 
-        $sess->un_set('sess_salt');
-        $sess->destroy();
+        Session::getInstance()->un_set('sess_salt');
+        Session::getInstance()->destroy();
     }
 
     /**
@@ -798,8 +796,6 @@ class userquery extends CBCategory
      */
     function delete_user($uid)
     {
-        global $db;
-
         if( !$this->user_exists($uid) ){
             e(lang('user_doesnt_exist'));
             return;
@@ -827,14 +823,14 @@ class userquery extends CBCategory
         $this->remove_user_subscribers($uid);
 
         //Changing User Videos To Anonymous
-        $db->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=' . mysql_clean($uid));
         //Deleting User Contacts
         $this->remove_contacts($uid);
 
         //Deleting User PMS
         $this->remove_user_pms($uid);
         //Changing From Messages to Anonymous
-        $db->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $this->get_anonymous_user() . '\' WHERE message_from=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $this->get_anonymous_user() . '\' WHERE message_from=' . mysql_clean($uid));
 
         //Remove tags
         Tags::deleteTags('profile', $uid);
@@ -842,8 +838,8 @@ class userquery extends CBCategory
         Category::getInstance()->unlinkAll('user', $uid);
 
         //Finally Removing Database entry of user
-        $db->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
-        $db->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
 
         if( empty(errorhandler::getInstance()->get_error()) ){
             e(lang('usr_del_msg'), 'm');
@@ -1749,10 +1745,11 @@ class userquery extends CBCategory
         }
 
         $avatar = $avatar_path = '';
-        if (!empty($udetails)) {
+        if (!empty($udetails['avatar'])) {
             $avatar = $udetails['avatar'];
             $avatar_path = DirPath::get('avatars') . $avatar;
         }
+
         if (!empty($avatar) && file_exists($avatar_path)) {
             return DirPath::getUrl('avatars') . $avatar;
         }
