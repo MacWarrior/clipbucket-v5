@@ -848,6 +848,7 @@ function validate_collection_category($array = null)
  * @params_in_$param : details, size, uid
  *
  * @return string
+ * @throws Exception
  * @uses : { class : $userquery } { function : avatar }
  */
 function avatar($param)
@@ -856,7 +857,7 @@ function avatar($param)
     $udetails = $param['details'];
     $size = $param['size'];
     $uid = $param['uid'];
-    return $userquery->avatar($udetails, $size, $uid);
+    return $userquery->getUserThumb($udetails, $size, $uid);
 }
 
 /**
@@ -886,8 +887,8 @@ function load_form($param)
  */
 function php_path()
 {
-    if (PHP_PATH != '') {
-        return PHP_PATH;
+    if (config('php_path') != '') {
+        return config('php_path');
     }
     return '/usr/bin/php';
 }
@@ -3463,7 +3464,7 @@ function updateObjectStats($type, $object, $id, $op = '+')
  * @return bool { boolean } { true if conversion lock exists, else false }
  * { true if conversion lock exists, else false }
  */
-function conv_lock_exists()
+function conv_lock_exists(): bool
 {
     for ($i = 0; $i < config('max_conversion'); $i++) {
         if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
@@ -3511,78 +3512,11 @@ function queryString($var = false, $remove = false)
 }
 
 /**
- * Download a remote file and store in given directory
- *
- * @param      $snatching_file
- * @param      $destination
- * @param      $dest_name
- * @param bool $rawdecode
- *
- * @return string
- * @internal param $ : { string } { $snatching_file } { file to be downloaded }
- * @internal param $ : { string } { $destination } { where to save the downloaded file }
- * @internal param $ : { string } { $dest_name } { new name for file }
- *
- */
-function snatch_it($snatching_file, $destination, $dest_name, $rawdecode = true)
-{
-    if ($rawdecode == true) {
-        $snatching_file = rawurldecode($snatching_file);
-    }
-    if (PHP_OS == "Linux") {
-        $destination . '/' . $dest_name;
-        $saveTo = $destination . '/' . $dest_name;
-    } elseif (PHP_OS == "WINNT") {
-        $destination . '\\' . $dest_name;
-        $saveTo = $destination . '/' . $dest_name;
-    }
-    cURLdownload($snatching_file, $saveTo);
-    return $saveTo;
-}
-
-/**
- * This Function gets a file using curl method in php
- *
- * @param : { string } { $url } { file to be downloaded }
- * @param : { string } { $file } { where to save the downloaded file }
- *
- * @return string
- */
-function cURLdownload($url, $file)
-{
-    $ch = curl_init();
-    if ($ch) {
-        $fp = fopen($file, "w");
-        if ($fp) {
-            if (!curl_setopt($ch, CURLOPT_URL, $url)) {
-                fclose($fp); // to match fopen()
-                curl_close($ch); // to match curl_init()
-                return "FAIL: curl_setopt(CURLOPT_URL)";
-            }
-            if (!curl_setopt($ch, CURLOPT_FILE, $fp)) {
-                return "FAIL: curl_setopt(CURLOPT_FILE)";
-            }
-            if (!curl_setopt($ch, CURLOPT_HEADER, 0)) {
-                return "FAIL: curl_setopt(CURLOPT_HEADER)";
-            }
-            if (!curl_exec($ch)) {
-                return "FAIL: curl_exec()";
-            }
-            curl_close($ch);
-            fclose($fp);
-            return "SUCCESS: $file [$url]";
-        }
-        return "FAIL: fopen()";
-    }
-    return "FAIL: curl_init()";
-}
-
-/**
  * Checks if CURL is installed on server
  * @return bool : { boolean } { true if curl found, else false }
  * @internal param $ : { none }
  */
-function isCurlInstalled()
+function isCurlInstalled(): bool
 {
     if (in_array('curl', get_loaded_extensions())) {
         return true;
@@ -3842,10 +3776,13 @@ function get_browser_details($in = null, $assign = false)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function update_user_voted($array, $userid = null)
 {
     global $userquery;
-    return $userquery->update_user_voted($array, $userid);
+    $userquery->update_user_voted($array, $userid);
 }
 
 /**
@@ -3866,7 +3803,7 @@ function delete_video_from_collection($vdetails)
  *
  * @return bool : { boolean } { true if file exists, else false }
  */
-function checkRemoteFile($url)
+function checkRemoteFile($url): bool
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -3880,66 +3817,6 @@ function checkRemoteFile($url)
         return true;
     }
     return false;
-}
-
-/**
- * Fetch total count for videos, photos and channels
- *
- * @param $section
- * @param $query
- *
- * @return bool : { integer } { $select[0]['counts'] } { count for requested field }
- * @throws Exception
- * @internal param $ : { string } { $section } { section to select count for }
- * @internal param $ : { string } { $query } { query to fetch data against }
- */
-function get_counter($section, $query)
-{
-    global $db;
-
-    if (!config('use_cached_pagin')) {
-        return false;
-    }
-    $timeRefresh = config('cached_pagin_time');
-    $timeRefresh = $timeRefresh * 60;
-    $validTime = time() - $timeRefresh;
-    unset($query['order']);
-    $je_query = json_encode($query);
-    $query_md5 = md5($je_query);
-    $select = $db->select(tbl('counters'), "*", "section='$section' AND query_md5='$query_md5' 
-		AND '$validTime' < date_added");
-    if (count($select) > 0) {
-        return $select[0]['counts'];
-    }
-    return false;
-}
-
-/**
- * Updates total count for videos, photos and channels
- *
- * @param $section
- * @param $query
- * @param $counter
- *
- * @throws Exception
- * @internal param $ : { string } { $section } { section to update counter for }
- * @internal param $ : { string } { $query } { query to run for updating }
- * @internal param $ : { integer } { $counter } { count to update }
- */
-function update_counter($section, $query, $counter)
-{
-    global $db;
-    unset($query['order']);
-    $je_query = json_encode($query);
-    $query_md5 = md5($je_query);
-    $count = $db->count(tbl('counters'), "*", "section='$section' AND query_md5='$query_md5'");
-    if ($count) {
-        $db->update(tbl('counters'), ['counts', 'date_added'], [$counter, strtotime(now())],
-            "section='$section' AND query_md5='$query_md5'");
-    } else {
-        $db->insert(tbl('counters'), ['section', 'query', 'query_md5', 'counts', 'date_added'],
-            [$section, '|no_mc|' . $je_query, $query_md5, $counter, strtotime(now())]);
-    }
 }
 
 /**
@@ -4119,16 +3996,6 @@ function time_links(): array
         'this_year'  => lang('thisyear'),
         'last_year'  => lang('lastyear')
     ];
-}
-
-/**
- * Calls $lang_obj variable and returns a string
- * @return String
- */
-function get_locale()
-{
-    global $lang_obj;
-    return $lang_obj->lang_iso;
 }
 
 /*assign results to template for load more buttons on all_videos.html*/
@@ -4428,66 +4295,6 @@ function array_val_assign($vals)
     }
 }
 
-function build_sort($sort, $vid_cond)
-{
-    if (!empty($sort)) {
-        switch ($sort) {
-            case 'most_recent':
-            default:
-                $vid_cond['order'] = ' date_added DESC ';
-                break;
-
-            case 'most_viewed':
-                $vid_cond['order'] = 'views DESC ';
-                $vid_cond['date_span_column'] = 'last_viewed';
-                break;
-
-            case 'featured':
-                $vid_cond['featured'] = 'yes';
-                break;
-
-            case 'top_rated':
-                $vid_cond['order'] = ' rating DESC, rated_by DESC';
-                break;
-
-            case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
-                break;
-        }
-        return $vid_cond;
-    }
-}
-
-function build_sort_photos($sort, $vid_cond)
-{
-    if (!empty($sort)) {
-        switch ($sort) {
-            case 'most_recent':
-            default:
-                $vid_cond['order'] = ' photos.date_added DESC ';
-                break;
-
-            case 'most_viewed':
-                $vid_cond['order'] = ' photos.views DESC ';
-                $vid_cond['date_span_column'] = 'last_viewed';
-                break;
-
-            case 'featured':
-                $vid_cond['featured'] = 'yes';
-                break;
-
-            case 'top_rated':
-                $vid_cond['order'] = ' photos.rating DESC';
-                break;
-
-            case 'most_commented':
-                $vid_cond['order'] = ' photos.comments_count DESC';
-                break;
-        }
-    }
-    return $vid_cond;
-}
-
 function get_website_logo_path()
 {
     $logo_name = config('logo_name');
@@ -4617,7 +4424,7 @@ function get_date_js()
 
 function isset_check($input_arr, $key_name, $mysql_clean = false)
 {
-    if (isset($input_arr[$key_name]) && !empty($input_arr[$key_name])) {
+    if (!empty($input_arr[$key_name])) {
         if (!is_array($input_arr[$key_name]) && !is_numeric($input_arr[$key_name]) && $mysql_clean) {
             $input_arr[$key_name] = mysql_clean($input_arr[$key_name]);
         }

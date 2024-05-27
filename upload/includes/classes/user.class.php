@@ -1779,14 +1779,6 @@ class userquery extends CBCategory
     }
 
     /**
-     * @throws Exception
-     */
-    function avatar($udetails, $size = '', $uid = null): string
-    {
-        return $this->getUserThumb($udetails, $size, $uid);
-    }
-
-    /**
      * Function used to get default user thumb
      *
      * @param null $size

@@ -254,7 +254,7 @@ function remove_accents($string)
         ];
 
         // Used for locale-specific rules
-        $locale = get_locale();
+        $locale = Language::getInstance()->getLangISO();
 
         if ('de' == $locale) {
             $chars[chr(195) . chr(132)] = 'Ae';

@@ -120,7 +120,7 @@ class API extends REST
                 $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big')];
 
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
 
                 foreach ($blacklist_fields as $field)
                     unset($video[$field]);
@@ -256,7 +256,7 @@ class API extends REST
 
                 $video['thumbs'] = ['default' => get_thumb($video)];
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
 
                 foreach ($blacklist_fields as $field) {
                     unset($video[$field]);
@@ -419,7 +419,7 @@ class API extends REST
 
                 $video['thumbs'] = ['default' => get_thumb($video)];
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
 
                 foreach ($blacklist_fields as $field) {
                     unset($video[$field]);
@@ -456,7 +456,7 @@ class API extends REST
         $new_users = [];
         if ($users) {
             foreach ($users as $user) {
-                $user['avatar'] = $user['user_photo'] = $userquery->avatar($user);
+                $user['avatar'] = $user['user_photo'] = $userquery->getUserThumb($user);
                 $new_users[] = $user;
             }
         }
@@ -630,10 +630,10 @@ class API extends REST
         }
 
         if ($user) {
-            $user['avatar'] = $user['user_photo'] = $userquery->avatar($user);
-            $user['avatars']['medium'] = $userquery->avatar($user, 'medium');
-            $user['avatars']['xmedium'] = $userquery->avatar($user, 'xmedium');
-            $user['avatars']['large'] = $userquery->avatar($user, 'large');
+            $user['avatar'] = $user['user_photo'] = $userquery->getUserThumb($user);
+            $user['avatars']['medium'] = $userquery->getUserThumb($user, 'medium');
+            $user['avatars']['xmedium'] = $userquery->getUserThumb($user, 'xmedium');
+            $user['avatars']['large'] = $userquery->getUserThumb($user, 'large');
             // $user['name'] = name($user);
             //echo json_encode($user);
             $data = ['code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $user];
@@ -662,10 +662,10 @@ class API extends REST
                 $video['description'] = utf8_encode($video['description']);
                 $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big'), '640x480' => get_thumb($video, '640x480')];
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
-                $video['avatars']['medium'] = $userquery->avatar($video, 'small');
-                $video['avatars']['xmedium'] = $userquery->avatar($video, 'xmedium');
-                $video['avatars']['large'] = $userquery->avatar($video, 'large');
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
+                $video['avatars']['medium'] = $userquery->getUserThumb($video, 'small');
+                $video['avatars']['xmedium'] = $userquery->getUserThumb($video, 'xmedium');
+                $video['avatars']['large'] = $userquery->getUserThumb($video, 'large');
                 $new_videos[] = $video;
             }
         }
@@ -697,10 +697,10 @@ class API extends REST
                     $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big'), '640x480' => get_thumb($video, '640x480')];
 
                     $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                    $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->avatar($video);
-                    $video['avatars']['medium'] = $userquery->avatar($video, 'medium');
-                    $video['avatars']['xmedium'] = $userquery->avatar($video, 'xmedium');
-                    $video['avatars']['large'] = $userquery->avatar($video, 'large');
+                    $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
+                    $video['avatars']['medium'] = $userquery->getUserThumb($video, 'medium');
+                    $video['avatars']['xmedium'] = $userquery->getUserThumb($video, 'xmedium');
+                    $video['avatars']['large'] = $userquery->getUserThumb($video, 'large');
 
                     $new_videos[] = $video;
                 }
