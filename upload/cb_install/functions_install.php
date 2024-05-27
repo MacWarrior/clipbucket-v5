@@ -57,6 +57,13 @@ function check_module($type): array
     switch ($type) {
         case 'ffmpeg':
         case 'ffprobe':
+            $functions = ['exec', 'shell_exec'];
+            foreach($functions as $function) {
+                if (!check_function($function, false)) {
+                    $return['err'] = 'Can\'t be tested because ' . $function . '() function is not enabled';
+                    break 2;
+                }
+            }
             $ffmpeg_path = exec('which '.$type);
             if (empty($ffmpeg_path)) {
                 $return['err'] = 'Unable to find ' . strtoupper($type);
@@ -91,6 +98,13 @@ function check_module($type): array
             break;
 
         case 'git':
+            $functions = ['exec', 'shell_exec'];
+            foreach($functions as $function) {
+                if (!check_function($function, false)) {
+                    $return['err'] = 'Can\'t be tested because ' . $function . '() function is not enabled';
+                    break 2;
+                }
+            }
             $git_path = exec('which '.$type);
             if( empty($git_path) ){
                 $return['err'] = '[OPTIONNAL] Unable to find Git';
@@ -110,6 +124,13 @@ function check_module($type): array
             break;
 
         case 'media_info':
+            $functions = ['exec', 'shell_exec'];
+            foreach($functions as $function) {
+                if (!check_function($function, false)) {
+                    $return['err'] = 'Can\'t be tested because ' . $function . '() function is not enabled';
+                    break 2;
+                }
+            }
             $mediainfo_path = exec('which mediainfo');
             if (empty($mediainfo_path)) {
                 $return['err'] = 'Unable to find Media Info';
@@ -135,6 +156,10 @@ function check_module($type): array
             break;
 
         case 'mysql_client':
+            if (!check_function('exec', false)) {
+                $return['err'] = 'Can\'t be tested because exec() function is not enabled';
+                break;
+            }
             $mysql_path = exec('which mysql');
             if( empty($mysql_path) ){
                 $return['err'] = 'Unable to find Mysql';
@@ -163,6 +188,10 @@ function check_module($type): array
             break;
 
         case 'php_cli':
+            if (!check_function('exec', false)) {
+                $return['err'] = 'Can\'t be tested because exec() function is not enabled';
+                break;
+            }
             $php_path = exec('which php');
             if( empty($php_path) ) {
                 $return['err'] = 'Unable to find PHP CLI';
@@ -236,6 +265,41 @@ function check_module($type): array
                 break;
             }
             $return['msg'] = sprintf('Found PHP %s : %s', $php_version, PHP_BINARY);
+            break;
+    }
+    return $return;
+}
+
+function check_function($function, $return_error = true){
+    switch($function){
+        case 'exec':
+        case 'shell_exec':
+            if ( !empty(ini_get('safe_mode')) && strtolower(ini_get('safe_mode')) != 'off'){
+                if( $return_error ){
+                    $return['err'] = 'safe_mode is enabled, so ' . $function . ' function is not enabled';
+                } else {
+                    return false;
+                }
+            }
+
+            if ( !empty(ini_get('disable_functions')) && in_array($function, explode(',',ini_get('disable_functions')), true ) ){
+                if( $return_error ) {
+                    $return['err'] = $function . ' function is not enabled';
+                } else {
+                    return false;
+                }
+            } else {
+                if( $return_error ) {
+                    $return['msg'] = $function . ' function is enabled';
+                } else {
+                    return true;
+                }
+            }
+
+            break;
+
+        default:
+            $return = false;
             break;
     }
     return $return;

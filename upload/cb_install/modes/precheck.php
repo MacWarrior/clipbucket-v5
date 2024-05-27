@@ -19,8 +19,13 @@
         <dd><span><?php echo msg_arr(check_extension('xml', 'web')); ?></span></dd>
         <dt class="white"><span>cURL</dt>
         <dd class="white"><span><?php echo msg_arr(check_extension('curl', 'web')); ?></span></dd>
+        <dt class="white"><span>exec()</dt>
+        <dd class="white"><span><?php echo msg_arr(check_function('exec')); ?></span></dd>
+        <dt class="white"><span>shell_exec()</dt>
+        <dd class="white"><span><?php echo msg_arr(check_function('shell_exec')); ?></span></dd>
 
         <dt>PHP CLI</dt>
+        <?php if (check_function('exec', false)) { ?>
         <dd><span><?php echo msg_arr(check_module('php_cli')); ?></span></dd>
         <dt class="white"><span>GD</dt>
         <dd class="white"><span><?php echo msg_arr(check_extension('gd', 'cli')); ?></span></dd>
@@ -32,6 +37,9 @@
         <dd><span><?php echo msg_arr(check_extension('xml', 'cli')); ?></span></dd>
         <dt class="white"><span>cURL</dt>
         <dd class="white"><span><?php echo msg_arr(check_extension('curl', 'cli')); ?></span></dd>
+        <?php } else { ?>
+            <dd><span><span class="msg alert_cross">Can't be tested because exec() function is not enabled</span></dd>
+        <?php } ?>
 
         <dt>FFMPEG</dt>
         <dd><span><?php echo msg_arr(check_module('ffmpeg')); ?></span></dd>
