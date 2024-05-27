@@ -241,7 +241,6 @@ define('RESIZE', $row['resize']);
 define('MAX_UPLOAD_SIZE', $row['max_upload_size']);
 define('THUMB_HEIGHT', $row['thumb_height']);
 define('THUMB_WIDTH', $row['thumb_width']);
-define('PHP_PATH', $row['php_path']);
 
 define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
 define('USER_COMMENT_OWN', $Cbucket->configs['user_comment_own']);
@@ -275,8 +274,6 @@ define('ALLOWED_VDO_CATS', $row['video_categories']);
 
 Assign('NEED_UPDATE', NEED_UPDATE);
 
-# Assigning Smarty Tags & Values
-Assign('PHP_PATH', PHP_PATH);
 Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
 Assign('slogan', SLOGAN);

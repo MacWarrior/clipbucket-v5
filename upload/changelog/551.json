@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"34",
+  "revision":"36",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,9 @@
         ,"Fix video manager pagination"
         ,"Fix website configurations display"
         ,"Fix video saving with poster ou default enabled"
+        ,"Fix online users display"
+        ,"Fix login redirect"
+        ,"Fix category creation interface"
       ]
     },
     {
@@ -65,6 +68,12 @@
         ,"Update Debian 10 installation script"
         ,"Fix upgrade from 4.2 RC1"
         ,"Refactor migration system"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Fix missing translation"
       ]
     },
     {
