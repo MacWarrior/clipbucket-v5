@@ -42,7 +42,7 @@ class FFMpeg
         $info['path'] = $file_path;
 
         $cmd = config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams \'' . $file_path . '\'';
-        $output = shell_output($cmd);
+        $output = System::shell_output($cmd);
         $output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
         $data = json_decode($output, true);
@@ -86,7 +86,7 @@ class FFMpeg
 
         if (!$info['duration']) {
             $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
-            $info['duration'] = round((int)shell_output($CMD) / 1000, 2);
+            $info['duration'] = round((int)System::shell_output($CMD) / 1000, 2);
         }
 
         $video_rate = explode('/', $info['video_rate']);
@@ -95,7 +95,7 @@ class FFMpeg
 
         $CMD = config('media_info') . ' \'--Inform=Video;\' ' . $file_path;
 
-        $results = shell_output($CMD);
+        $results = System::shell_output($CMD);
         $needle_start = 'Original height';
         $needle_end = 'pixels';
         $original_height = find_string($needle_start, $needle_end, $results);

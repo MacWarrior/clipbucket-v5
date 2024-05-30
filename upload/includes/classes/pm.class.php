@@ -367,7 +367,7 @@ class cb_pm
                         foreach ($result as $re) {
                             $cond = '';
                             preg_match_all("/#(.*)#/Ui", $re['message_to'], $receivers);
-                            //pr($receivers);
+
                             foreach ($receivers[1] as $to_user) {
 
                                 if (!empty($to_user)) {
@@ -523,7 +523,7 @@ class cb_pm
         $msgid = $array['msg_id'];
         //Get To(Emails)
         $emails = $this->get_users_emails($array['to']);
-        #pr($emails,true);
+
         $vars = [
             '{sender}'  => $sender,
             '{content}' => $content,

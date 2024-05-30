@@ -94,7 +94,7 @@ function set_cookie_secure($name, $val, $time = null)
     $flag_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
     $flag_httponly = true;
 
-    if (version_compare(phpversion(), '7.3.0', '>=')) {
+    if (version_compare(System::get_software_version('php_web'), '7.3.0', '>=')) {
         setcookie($name, $val, [
             'expires'  => $time,
             'path'     => $path,
@@ -124,6 +124,7 @@ function getBytesFromFileSize($size)
         'YB' => pow(1024, 8)
     ];
 
+    $size = trim($size);
     $unit = preg_replace('/[0-9]/', '', $size);
     $size = preg_replace('/[^0-9]/', '', $size);
     return $size * $units[$unit];
@@ -428,21 +429,6 @@ function formatfilesize($data): string
     }
 
     return round(($data / 1024000000), 1) . ' GB';
-}
-
-/**
- * Function used to get shell output
- *
- * @param : { string } { $cmd } { command to run }
- *
- * @return mixed
- */
-function shell_output($cmd)
-{
-    if (!stristr(PHP_OS, 'WIN')) {
-        $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
-    }
-    return shell_exec($cmd);
 }
 
 function getCommentAdminLink($type, $id): string
@@ -880,80 +866,6 @@ function load_form($param)
     }
 
     error_log('Unknown method : ' . $func . ' for class : ' . $class);
-}
-
-/**
- * Function used to get PHP Path
- */
-function php_path()
-{
-    if (config('php_path') != '') {
-        return config('php_path');
-    }
-    return '/usr/bin/php';
-}
-
-/**
- * Function used to get binary paths
- *
- * @param : { string } { $path } { element to get path for }
- *
- * @return string
- */
-function get_binaries($path): string
-{
-    $path = strtolower($path);
-    switch ($path) {
-        case 'php':
-            $software_path = php_path();
-            break;
-
-        case 'media_info':
-            $software_path = config('media_info');
-            break;
-
-        case 'ffprobe':
-            $software_path = config('ffprobe_path');
-            break;
-
-        case 'ffmpeg':
-            $software_path = config('ffmpegpath');
-            break;
-
-        case 'git':
-            $software_path = config('git_path');
-            break;
-
-        default:
-            $software_path = '';
-            break;
-    }
-
-    if ($software_path != '') {
-        return $software_path;
-    }
-
-    switch ($path) {
-        case 'ffprobe':
-        case 'ffmpeg':
-        case 'git':
-        case 'php':
-            $which = $path;
-            break;
-        case 'media_info':
-            $which = 'mediainfo';
-            break;
-
-        default:
-            error_log('get_binaries wrong path : ' . $path);
-            return 'Unknown path : ' . $path;
-    }
-
-    $return_path = shell_output('which '.$which);
-    if ($return_path) {
-        return $return_path;
-    }
-    return 'Unable to find ' . $path . ' path';
 }
 
 /**
@@ -3071,90 +2983,13 @@ function get_ffmpeg_codecs($type)
 
     $codec_installed = [];
     foreach ($codecs as $codec) {
-        $get_codec = shell_output(get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
+        $get_codec = System::shell_output(System::get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
         if ($get_codec) {
             $codec_installed[] = $codec;
         }
     }
 
     return $codec_installed;
-}
-
-function check_version($name)
-{
-    switch ($name) {
-        case 'ffmpeg':
-        case 'ffprobe':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-            $matches = [];
-            $result = shell_output($path . ' -version | head -n1');
-            if ($result) {
-                if (preg_match('/git/i', $result)) {
-                    preg_match('@^(?:' . $name . ' version)?([^C]+)@i', $result, $matches);
-                    return $matches[1];
-                }
-
-                // for three-part version number
-                preg_match('/(?:' . $name . '\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-
-                // for two-part version number
-                preg_match('#(?:' . $name . '\\s)(?:version\\s)?(\\d\\.\\d)#i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-
-                return false;
-            }
-            return false;
-
-        case 'git':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-
-            $matches = [];
-            $result = shell_output($path . ' --version');
-            if ($result) {
-                preg_match('/git version (.+)$/', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-                return false;
-            }
-            return false;
-
-        case 'media_info':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-            $result = shell_output($path . ' --version');
-            $media_info_version = explode('v', $result);
-            return $media_info_version[1];
-
-        case 'php':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-            $matches = [];
-            $result = shell_output($path . ' --version | head -n1');
-            if ($result) {
-                preg_match('/(?:php\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-                return false;
-            }
-            return false;
-    }
 }
 
 /**
@@ -4633,39 +4468,6 @@ function get_restorable_languages(array $list_language = []): array
     });
 }
 
-function parseAllPHPModules(): array
-{
-    ob_start();
-    phpinfo(INFO_MODULES);
-    $s = ob_get_contents();
-    ob_end_clean();
-
-    $s = strip_tags($s, '<h2><th><td>');
-    $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/', "<info>\\1</info>", $s);
-    $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/', "<info>\\1</info>", $s);
-    $vTmp = preg_split('/(<h2>[^<]+<\/h2>)/', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
-    $vModules = [];
-    for ($i = 1; $i < count($vTmp); $i++) {
-        if (preg_match('/<h2>([^<]+)<\/h2>/', $vTmp[$i], $vMat)) {
-            $vName = trim($vMat[1]);
-            $vTmp2 = explode("\n", $vTmp[$i + 1]);
-            foreach ($vTmp2 as $vOne) {
-                $vPat = '<info>([^<]+)<\/info>';
-                $vPat3 = "/$vPat\s*$vPat\s*$vPat/";
-                $vPat2 = "/$vPat\s*$vPat/";
-                if (preg_match($vPat3, $vOne, $vMat)) { // 3cols
-                    $vModules[$vName][trim($vMat[1])] = [
-                        trim($vMat[2]),
-                        trim($vMat[3])
-                    ];
-                } elseif (preg_match($vPat2, $vOne, $vMat)) { // 2cols
-                    $vModules[$vName][trim($vMat[1])] = trim($vMat[2]);
-                }
-            }
-        }
-    }
-    return $vModules;
-}
 function ageRestriction($var) {
     $var = (int)$var;
     if (empty($var)) {

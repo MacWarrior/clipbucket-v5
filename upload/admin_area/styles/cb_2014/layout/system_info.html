@@ -381,7 +381,28 @@
                                 </strong>
                             </label>
                         </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpWebExec}tick{else}alert{/if}.png"
+                            />
+                            <label>exec() :
+                                <strong>
+                                    {if $phpWebExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpWebShellExec}tick{else}alert{/if}.png"
+                            />
+                            <label>shell_exec() :
+                                <strong>
+                                    {if $phpWebShellExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
                     </div>
+                    {if $phpWebExec && $phpVersionCli != 0}
                     <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
@@ -423,7 +444,28 @@
                                 </strong>
                             </label>
                         </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpCliExec}tick{else}alert{/if}.png"
+                            />
+                            <label>exec() :
+                                <strong>
+                                    {if $phpCliExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpCliShellExec}tick{else}alert{/if}.png"
+                            />
+                            <label>shell_exec() :
+                                <strong>
+                                    {if $phpCliShellExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
                     </div>
+                    {/if}
                     <div class="col-md-4 {if !$isNginx}hidden{/if}">
                     {if !$canAccessNginx}
                         <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>

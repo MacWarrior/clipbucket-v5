@@ -189,11 +189,11 @@ switch ($mode) {
         $Upload->add_conversion_queue($targetFileName);
 
         if (stristr(PHP_OS, 'WIN')) {
-            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName);
+            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName);
         } elseif (stristr(PHP_OS, 'darwin')) {
-            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' </dev/null >/dev/null &');
+            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' </dev/null >/dev/null &');
         } else { // for ubuntu or linux
-            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile . ' > /dev/null &');
+            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile . ' > /dev/null &');
         }
 
         $TempLogData = 'Video Converson File executed successfully with Target File > ' . $targetFileName;

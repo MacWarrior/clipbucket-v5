@@ -6,6 +6,7 @@ require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'system.class.php';
 
 $whoops = new \Whoops\Run;
 if (file_exists(DirPath::get('temp') . 'development.dev')) {

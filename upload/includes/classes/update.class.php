@@ -624,7 +624,14 @@ class Update
 
     public function isGitInstalled(): bool
     {
-        $git_path = get_binaries('git');
+        $functions = ['exec', 'shell_exec'];
+        foreach ($functions as $function) {
+            if( !System::check_php_function($function, 'web', false) ){
+                return false;
+            }
+        }
+
+        $git_path = System::get_binaries('git');
         if( empty($git_path) || !file_exists($git_path) ){
             return false;
         }
@@ -641,7 +648,7 @@ class Update
 
         $dir = DirPath::get('root');
         chdir($dir);
-        $output = shell_exec(get_binaries('git') . ' rev-parse --is-inside-work-tree 2>&1');
+        $output = shell_exec(System::get_binaries('git') . ' rev-parse --is-inside-work-tree 2>&1');
 
         if( trim($output) === 'true' ){
             return true;
@@ -671,7 +678,7 @@ class Update
 
         $filePath = trim($matches[1], " \t\n\r\0\x0B'");
 
-        $output = shell_exec(get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
+        $output = shell_exec(System::get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
         if( empty($output) ){
             return true;
         }
@@ -680,14 +687,14 @@ class Update
 
     private function getGitRootDirectory(): string
     {
-        return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
+        return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
     private function resetGitRepository(string $root_directory): bool
     {
         chdir($root_directory);
 
-        $output = shell_exec(get_binaries('git') . ' reset --hard');
+        $output = shell_exec(System::get_binaries('git') . ' reset --hard');
         if( !$output ){
             return false;
         }
@@ -703,7 +710,7 @@ class Update
     {
         chdir($root_directory);
 
-        return shell_exec(get_binaries('git') . ' pull');
+        return shell_exec(System::get_binaries('git') . ' pull');
     }
 
     public static function updateGitSources(): bool

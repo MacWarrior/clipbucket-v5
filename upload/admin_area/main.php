@@ -527,7 +527,7 @@ Assign('row', $row);
 $video_resolutions = myquery::getInstance()->getVideoResolutions();
 Assign('video_resolutions', $video_resolutions);
 
-$ffmpeg_version = check_version('ffmpeg');
+$ffmpeg_version = System::get_software_version('ffmpeg');
 Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');

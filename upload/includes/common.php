@@ -75,6 +75,7 @@ require_once DirPath::get('classes') . 'tags.class.php';
 require_once DirPath::get('classes') . 'curl.class.php';
 require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
+require_once DirPath::get('classes') . 'system.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -389,7 +390,6 @@ $Smarty->register_function('include_header', 'include_header');
 $Smarty->register_function('include_template_file', 'include_template_file');
 $Smarty->register_function('include_js', 'include_js');
 $Smarty->register_function('include_css', 'include_css');
-$Smarty->register_function('get_binaries', 'get_binaries');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
 $Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
