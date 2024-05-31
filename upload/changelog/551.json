@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"36",
+  "revision":"37",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Fix video upload max filesize check"
         ,"Fix channel background upload <i>(#370)</i>"
         ,"Fix add video to collection"
+        ,"Fix user's avatar display error"
         ,"Implement TMDB search on front office"
       ]
     },

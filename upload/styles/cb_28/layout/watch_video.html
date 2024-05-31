@@ -28,11 +28,11 @@
 
 						{if isSectionEnabled('channels')}
 							<a href="{$userquery->profile_link($video)}" class="avatar">
-								<img src="{$userquery->avatar($video,'m',user_id())}" class="img-responsive no_select"/>
+								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive no_select"/>
 							</a>
 						{else}
 							<span class="avatar">
-								<img src="{$userquery->avatar($video,'m',user_id())}" class="img-responsive no_select"/>
+								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive no_select"/>
 							</span>
 						{/if}
 
