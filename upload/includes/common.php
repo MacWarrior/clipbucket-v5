@@ -7,7 +7,9 @@ require_once DirPath::get('classes') . 'DiscordLog.php';
 
 $whoops = new \Whoops\Run;
 if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
+    if( !defined('DEVELOPMENT_MODE') ){
+        define('DEVELOPMENT_MODE', true);
+    }
     $__devmsgs = [
         'insert_queries'        => [],
         'select_queries'        => [],

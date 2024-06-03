@@ -2,8 +2,11 @@
 define('THIS_PAGE', 'cb_install');
 
 require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
+require_once DirPath::get('vendor') . 'autoload.php';
+require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('cb_install') . 'functions_install.php';
 
 $mode = $_POST['mode'];
@@ -23,7 +26,7 @@ try{
         $dbselect = mysqli_select_db($cnnct, $dbname);
         mysqli_query($cnnct, 'SET NAMES "utf8mb4"');
 
-        $res = mysqli_query($cnnct,'select @@version');
+        $res = mysqli_query($cnnct,'SELECT @@version');
         $data=[];
         if ($res) {
             while ($row = $res->fetch_assoc()) {
@@ -34,10 +37,10 @@ try{
         $regex_version = '(\d+\.\d+\.\d+)';
         $serverMySqlVersion = $data[0]['@@version'];
         preg_match($regex_version, $serverMySqlVersion, $match_mysql);
-        $serverMySqlVersion = $match_mysql[0] ?? false;
+        $serverMySqlVersion = $match_mysql[0] ?? $data[0]['@@version'];
         $mysqlReq='5.6.0';
         if (version_compare($serverMySqlVersion, $mysqlReq) < 0) {
-            $result['err'] = '<span class="alert">MySql Server (v'.$data[0]['@@version'].') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
+            $result['err'] = '<span class="alert">MySql Server (v'.$serverMySqlVersion.') is outdated : version ' . $mysqlReq . ' minimal is required</span>';
         }
     }
     catch(\Exception $e){
@@ -112,16 +115,30 @@ if ($mode == 'adminsettings') {
         $return['step'] = $next;
 
         if ($step == 'configs') {
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffmpeg')) . '" WHERE name = "ffmpegpath"';
-            mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which ffprobe')) . '" WHERE name = "ffprobe_path"';
-            mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which git')) . '" WHERE name = "git_path"';
-            mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which mediainfo')) . '" WHERE name = "media_info"';
-            mysqli_query($cnnct, $sql);
-            $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string(exec('which php')) . '" WHERE name = "php_path"';
-            mysqli_query($cnnct, $sql);
+            $configs = [
+                'ffmpeg' => ['which' => 'ffmpeg', 'config' => 'ffmpegpath'],
+                'ffprobe' => ['which' => 'ffprobe', 'config' => 'ffprobe_path'],
+                'git' => ['which' => 'git', 'config' => 'git_path'],
+                'media_info' => ['which' => 'mediainfo', 'config' => 'media_info'],
+                'php_cli' => ['which' => 'php', 'config' => 'php_path']
+            ];
+
+            $skippable_options = get_skippable_options();
+
+            foreach($configs as $key => $config) {
+                if( !empty($skippable_options[$key]) && !empty($_POST['skip_' . $key]) ){
+                    continue;
+                }
+
+                if( !empty($_POST[$key . '_filepath']) ){
+                    $filepath = $_POST[$key . '_filepath'];
+                } else {
+                    $filepath = System::get_binaries($key);;
+                }
+
+                $sql = 'UPDATE ' . $dbprefix . 'config SET value = "' . $cnnct->real_escape_string($filepath) . '" WHERE name = "' . $config['config'] . '"';
+                mysqli_query($cnnct, $sql);
+            }
         }
         //update database version from last json
         $versions = json_decode(file_get_contents(DirPath::get('changelog') . 'latest.json', false), true);

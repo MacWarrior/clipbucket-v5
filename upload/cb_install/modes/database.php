@@ -64,8 +64,10 @@
                 </p>
             </div>
 
+            <?php show_hidden_inputs(); ?>
+
             <input type="hidden" name="mode" value="dataimport"/>
         </form>
-        <div style="padding:10px 0;"><?php button('Check Connection', ' onclick="dbconnect()" '); ?> <span id="loading"></span></div>
+        <div style="padding:10px 0;"><?php button('Check Connection', 'onclick="dbconnect()"'); ?> <span id="loading"></span></div>
     </div>
 </div>

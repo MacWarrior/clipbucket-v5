@@ -71,6 +71,9 @@ $phpinfo = preg_replace( '%^.*<body>(.*)</body>.*$%ms','$1',$phpinfo);
 assign('php_info', $phpinfo);
 
 $php_cli_info = implode('<br/>',System::get_php_cli_info());
+if (empty($php_cli_info)) {
+    e(lang('php_cli_not_found'));
+}
 assign('cli_php_info', $php_cli_info);
 
 $mysqlReq='5.6.0';
@@ -85,43 +88,16 @@ $serverMySqlVersion = $match_mysql[0] ?? false;
 assign('serverMySqlVersion', $serverMySqlVersion);
 assign('serverMySqlVersionOk', (version_compare($serverMySqlVersion, $mysqlReq) >= 0));
 
-$extensionsCLI = System::get_php_extensions('cli');
-if (empty($php_cli_info)) {
-    e(lang('php_cli_not_found'));
-}
 $phpVersionCli = System::get_software_version('php_cli');
 
-$modulesWeb = System::get_php_extensions('web');
-
-$extensionMessages = [
-    'gd' => 'GD library Version',
-    'mbstring' => 'libmbfl version',
-    'mysqli' => 'Client API library version',
-    'curl' => 'cURL Information',
-    'xml' => 'libxml2 Version'
-];
-
-$extensionsWEB = [];
-foreach ($extensionMessages as $extension => $version) {
-    $res = $modulesWeb[$extension];
-    if (!empty($res)) {
-        if (empty($modulesWeb[$extension][$version]) && $extension == 'gd') {
-            $extensionsWEB[$extension] = $modulesWeb[$extension]['GD Version'];
-        } else {
-            $matches = [];
-            preg_match($regex_version, $modulesWeb[$extension][$version], $matches);
-            $extensionsWEB[$extension] = $matches[0]??$modulesWeb[$extension][$version];
-        }
-    }
-}
 assign('phpVersionCli', $phpVersionCli);
 assign('phpVersionCliOK', $phpVersionCli >= $phpVersionReq);
 assign('post_max_size_cli', System::get_php_cli_config('post_max_size') ?? 0);
 assign('memory_limit_cli', System::get_php_cli_config('memory_limit') ?? 0);
 assign('upload_max_filesize_cli', System::get_php_cli_config('upload_max_filesize') ?? 0);
 assign('max_execution_time_cli', System::get_php_cli_config('max_execution_time') ?? 1);
-assign('extensionsCLI', $extensionsCLI);
-assign('extensionsWEB', $extensionsWEB);
+assign('extensionsCLI', System::get_php_extensions('php_cli'));
+assign('extensionsWEB', System::get_php_extensions('php_web'));
 
 subtitle(lang('system_info'));
 template_files("system_info.html");

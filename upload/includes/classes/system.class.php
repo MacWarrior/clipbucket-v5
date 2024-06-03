@@ -5,10 +5,10 @@ class System{
     static $versionCli;
     static $configsCli = [];
 
-    private static function init_php_extensions($type)
+    private static function init_php_extensions($type, $custom_filepath = null)
     {
         switch($type){
-            case 'web':
+            case 'php_web':
                 ob_start();
                 phpinfo(INFO_MODULES);
                 $s = ob_get_contents();
@@ -38,12 +38,28 @@ class System{
                         }
                     }
                 }
-                self::$extensionsWeb = $vModules;
+
+                $extensions = [
+                    'GD library Version' => 'gd'
+                    ,'GD Version' => 'gd'
+                    ,'libmbfl version' => 'mbstring'
+                    ,'Client API library version' => 'mysqli'
+                    ,'libxml2 Version' => 'xml'
+                    ,'cURL Information' => 'curl'
+                ];
+
+                $regex_version = '(\d+\.\d+\.\d+)';
+                foreach ($extensions as $key => $extension) {
+                    if (!empty($vModules[$extension]) && empty(self::$extensionsWeb[$extension])) {
+                        $matches = [];
+                        preg_match($regex_version, $vModules[$extension][$key], $matches);
+                        self::$extensionsWeb[$extension] = $matches[0]??$vModules[$extension][$key];
+                    }
+                }
                 break;
 
             case 'php_cli':
-            case 'cli':
-                $php_cli_info = System::get_php_cli_info();
+                $php_cli_info = System::get_php_cli_info($custom_filepath);
                 if( !empty($php_cli_info['err']) ){
                     return ['err' => $php_cli_info['err']];
                 }
@@ -60,7 +76,12 @@ class System{
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
                         $line = explode('=>', $line);
-                        self::$versionCli = trim(end($line));
+                        $tmp_version  = trim(end($line));
+
+                        $regex_version = '(\d+\.\d+\.\d+)';
+                        preg_match($regex_version, $tmp_version, $match_version);
+                        self::$versionCli = $match_version[0] ?? $tmp_version;
+
                         continue;
                     }
 
@@ -92,19 +113,23 @@ class System{
         }
     }
 
-    public static function get_php_extensions($type): array
+    public static function get_php_extensions($type, $custom_filepath = null): array
     {
         switch($type){
-            case 'web':
+            case 'php_web':
                 if( empty(self::$extensionsWeb) ){
                     self::init_php_extensions($type);
                 }
                 return self::$extensionsWeb;
 
-            case 'cli':
-                if( empty(self::$extensionsCli) ){
-                    self::init_php_extensions($type);
+            case 'php_cli':
+                if( !System::get_software_version($type, false, $custom_filepath) ){
+                    return [];
                 }
+                if( empty(self::$extensionsCli) ){
+                    self::init_php_extensions($type, $custom_filepath);
+                }
+
                 return self::$extensionsCli;
 
             default:
@@ -121,7 +146,7 @@ class System{
         return self::$configsCli[$config_name] ?? false;
     }
 
-    public static function get_software_version($software, $verbose = false)
+    public static function get_software_version($software, $verbose = false, $custom_filepath = null)
     {
         switch($software){
             case 'php_web':
@@ -129,7 +154,7 @@ class System{
                 preg_match($regVersionPHP, phpversion(), $match);
                 $php_version = $match[1] ?? phpversion();
                 $req = '7.0.0';
-                $binary_path = System::get_binaries('php_web', false);
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
                 if ($php_version < $req) {
                     return $verbose ? ['err' =>sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, $binary_path)] : false;
                 }
@@ -140,13 +165,13 @@ class System{
                     return $verbose ? ['err' => 'Can\'t be tested because exec() function is not enabled'] : false;
                 }
 
-                $binary_path = System::get_binaries($software, false);
-                if (empty($binary_path)) {
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
                     return $verbose ? ['err' => 'Unable to find PHP CLI'] : false;
                 }
 
                 if( empty(self::$extensionsCli) ){
-                    $return = self::init_php_extensions('cli');
+                    $return = self::init_php_extensions($software, $binary_path);
                 }
                 if( isset($return['err']) ){
                     return $verbose ? ['err' => $return['err']] : false;
@@ -166,14 +191,14 @@ class System{
                 if (!System::check_php_function('exec', 'web', false)) {
                     return $verbose ? ['err' => 'Can\'t be tested because exec() function is not enabled'] : false;
                 }
-                $binary_path = System::get_binaries('mysql', false);
-                if( empty($binary_path) ){
-                    return $verbose ? ['err' => 'Unable to find Mysql'] : false;
+                $binary_path = $custom_filepath ?? System::get_binaries('mysql', false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
+                    return $verbose ? ['err' => 'Unable to find Mysql Client'] : false;
                 }
 
                 exec($binary_path . ' --version', $mysql_client_output);
                 if( empty($mysql_client_output) ){
-                    return $verbose ? ['err' => 'Mysql is not correctly configured'] : false;
+                    return $verbose ? ['err' => 'Mysql Client is not correctly configured'] : false;
                 }
 
                 $match_mysql = [];
@@ -199,8 +224,8 @@ class System{
                         return $verbose ? ['err' => 'Can\'t be tested because ' . $function . '() function is not enabled'] : false;
                     }
                 }
-                $binary_path = System::get_binaries($software, false);
-                if (empty($binary_path)) {
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
                     return $verbose ? ['err' => 'Unable to find ' . strtoupper($software)] : false;
                 }
                 $ffmpeg_version = System::shell_output($binary_path . ' -version | head -n1');
@@ -235,8 +260,8 @@ class System{
                         return $verbose ? ['err' => 'Can\'t be tested because ' . $function . '() function is not enabled'] : false;
                     }
                 }
-                $binary_path = System::get_binaries($software, false);
-                if (empty($binary_path)) {
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
                     return $verbose ? ['err' => 'Unable to find Media Info'] : false;
                 }
                 $mediainfo_result = System::shell_output($binary_path . ' --version');
@@ -262,14 +287,14 @@ class System{
                         return $verbose ? ['err' => 'Can\'t be tested because ' . $function . '() function is not enabled'] : false;
                     }
                 }
-                $binary_path = System::get_binaries($software, false);
-                if( empty($binary_path) ){
-                    return $verbose ? ['err' => '[OPTIONNAL] Unable to find Git'] : false;
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
+                    return $verbose ? ['err' => 'Unable to find Git'] : false;
                 }
 
                 $git_version = System::shell_output($binary_path . ' --version');
                 if( empty($git_version) ){
-                    return $verbose ? ['err' => '[OPTIONNAL] Git is not correctly configured'] : false;
+                    return $verbose ? ['err' => 'Git is not correctly configured'] : false;
                 }
 
                 preg_match('/git version (.+)$/', strtolower($git_version), $matches);
@@ -303,7 +328,7 @@ class System{
         return $php_path;
     }
 
-    public static function get_php_cli_info($php_path = ''): array
+    public static function get_php_cli_info($php_path = null): array
     {
         if( empty($php_path) ) {
             $php_path = self::get_binaries('php', false);
@@ -326,7 +351,7 @@ class System{
         return $php_cli_info;
     }
 
-    public static function check_php_function($function, $mode = 'web', $return_error = true){
+    public static function check_php_function($function, $mode = 'web', $return_error = true, $custom_filepath = null){
         if( $mode == 'web' ){
             $safe_mode = ini_get('safe_mode');
             $disable_functions = ini_get('disable_functions');
@@ -334,7 +359,7 @@ class System{
             if( !empty(self::$configsCli['disable_functions']) ){
                 $disable_functions = self::$configsCli['disable_functions'];
             } else {
-                $php_path = self::get_php_cli_path();
+                $php_path = $custom_filepath ?? self::get_php_cli_path();
                 if( !empty($php_path['err']) ) {
                     $return['err'] = $php_path['err'];
                     return $return;
@@ -407,6 +432,7 @@ class System{
                     break;
 
                 case 'media_info':
+                case 'mediainfo':
                     $software_path = config('media_info');
                     break;
 
@@ -438,6 +464,7 @@ class System{
             case 'git':
             case 'nginx':
             case 'mysql':
+            case 'mediainfo':
                 $which = $path;
                 break;
             case 'media_info':
@@ -445,6 +472,7 @@ class System{
                 break;
             case 'php':
             case 'php_cli':
+            case 'cli':
                 $which = 'php';
                 break;
 

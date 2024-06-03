@@ -18,9 +18,9 @@ function get_cbla()
 
 function button($text, $params, $class = 'btn-primary')
 {
-    echo '<span ' . $params . '>&nbsp;</span>';
-    echo '<span class="btn ' . $class . '" ' . $params . '>' . $text . '</span>';
-    echo '<span ' . $params . '>&nbsp;</span>';
+    echo '<span>&nbsp;</span>';
+    echo '<button class="btn ' . $class . '" ' . $params . '>' . $text . '</button>';
+    echo '<span>&nbsp;</span>';
 }
 
 function button_green($text, $params = null)
@@ -44,51 +44,6 @@ function msg_arr($arr): string
     }
 
     return '<span class="msg ' . $type . '">' . $text . '</span>';
-}
-
-function check_extension($extension, $type) {
-    $reg = '(\d+\.\d+\.\d+)';
-    switch ($type) {
-        case 'cli':
-            $version = System::get_php_extensions('cli')[$extension] ?? false;
-            if (!$version) {
-                $return['err'] = $extension. ' extension is not enabled';
-                break;
-            }
-
-            $matches =[];
-            preg_match($reg, $version,$matches);
-            $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[1] ?? $version);
-            break;
-
-        case 'web':
-            $extensionMessages = [
-                'gd' => 'GD library Version',
-                'mbstring' => 'libmbfl version',
-                'mysqli' => 'Client API library version',
-                'curl' => 'cURL Information',
-                'xml' => 'libxml2 Version'
-            ];
-            if (array_key_exists($extension, $extensionMessages)) {
-                $res = System::get_php_extensions('web')[$extension] ?? false;
-                if (empty($res)) {
-                    $return['err'] = $extension . ' extension is not enabled';
-                } else {
-                    $key = $extensionMessages[$extension];
-                    if (empty($res[$key]) && $extension == 'gd') {
-                        $key='GD Version';
-                    }
-                    $matches =[];
-                    preg_match($reg, $res[$key],$matches);
-                    $return['msg'] = sprintf('%s %s extension is enabled', $extension, $matches[0] ?? $res[$key]);
-                }
-            }
-            break;
-        default:
-            $return = false;
-            break;
-    }
-    return $return;
 }
 
 /**
@@ -195,4 +150,72 @@ function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 
     mysqli_commit($cnnct);
     return true;
+}
+
+function get_required_softwares(): array
+{
+    return [
+        'ffmpeg' => 'FFmpeg',
+        'ffprobe' => 'FFprobe',
+        'media_info' => 'Media Info',
+        'mysql_client' => 'MySQL Client',
+        'git' => 'Git'
+    ];
+}
+
+function get_required_php(): array
+{
+    return [
+        'php_web' => 'PHP Web',
+        'php_cli' => 'PHP CLI'
+    ];
+}
+
+function get_php_extensions(): array
+{
+    return [
+        'gd' => 'GD',
+        'mbstring' => 'MBstring',
+        'mysqli' => 'MySQLi',
+        'xml' => 'XML',
+        'curl' => 'cURL'
+    ];
+}
+
+function get_php_functions(): array
+{
+    return [
+        'exec' => 'exec()',
+        'shell_exec' => 'shell_exec()'
+    ];
+}
+
+function get_skippable_options(): array
+{
+    return [
+        'mysql_client' => 'I\'ll use a distant MySQL server',
+        'git' => 'I won\'t use integrated update system'
+    ];
+}
+
+function show_hidden_inputs()
+{
+    $required_php = get_required_php();
+    $required_softwares = get_required_softwares();
+    $required_softwares = array_merge($required_php, $required_softwares);
+
+    foreach ($required_softwares as $soft => $name) {
+        $input_name = $soft . '_filepath';
+        if( !empty($_POST[$input_name]) ){
+            echo '<input type="hidden" name="' . $input_name . '" value="' . $_POST[$input_name] . '">';
+        }
+    }
+
+    $skippable_option = get_skippable_options();
+    foreach($skippable_option as $soft => $value){
+        $input_name = 'skip_' . $soft;
+        if( !empty($_POST[$input_name]) ){
+            echo '<input type="hidden" name="' . $input_name . '" value="' . $_POST[$input_name] . '">';
+        }
+    }
 }
