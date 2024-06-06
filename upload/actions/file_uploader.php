@@ -86,7 +86,7 @@ switch ($mode) {
         }
 
         $file_name = time() . RandomString(5);
-        $file_directory = date('Y/m/d');
+        $file_directory = str_replace('/', DIRECTORY_SEPARATOR, date('Y/m/d'));
         $targetFileName = $file_name . '.' . $extension;
 
         create_dated_folder(DirPath::get('logs'));
@@ -94,7 +94,7 @@ switch ($mode) {
 
         $log = new SLog($logFile);
         $log->newSection('Pre-Check Configurations');
-        $log->writeLine('File to be converted', 'Initializing File <strong>' . $file_name . '.mp4</strong> and pre checking configurations...', true);
+        $log->writeLine('File to be converted', 'Initializing File <strong>' . $file_name . '.mp4</strong> and pre checking configurations...');
 
         $max_file_size_in_bytes = config('max_upload_size') * 1024 * 1024;
 
@@ -148,9 +148,9 @@ switch ($mode) {
         $moved = move_uploaded_file($tempFile, $targetFile);
 
         if ($moved) {
-            $log->writeLine('Temporary Uploading', 'File Uploaded to Temp directory successfully and video conversion file is being executed !', true);
+            $log->writeLine('Temporary Uploading', 'File Uploaded to Temp directory successfully and video conversion file is being executed !');
         } else {
-            $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!', true);
+            $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!');
         }
 
         $filename_without_ext = pathinfo($_FILES['Filedata']['name'], PATHINFO_FILENAME);
@@ -188,16 +188,18 @@ switch ($mode) {
 
         $Upload->add_conversion_queue($targetFileName);
 
+        $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
         if (stristr(PHP_OS, 'WIN')) {
-            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName);
+            $complement = '';
         } elseif (stristr(PHP_OS, 'darwin')) {
-            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' </dev/null >/dev/null &');
+            $complement = ' </dev/null >/dev/null &';
         } else { // for ubuntu or linux
-            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile . ' > /dev/null &');
+            $complement = ' > /dev/null &';
         }
+        exec($default_cmd . $complement);
 
         $TempLogData = 'Video Converson File executed successfully with Target File > ' . $targetFileName;
-        $log->writeLine('Video Conversion File Execution', $TempLogData, true);
+        $log->writeLine('Video Conversion File Execution', $TempLogData);
 
         // inserting into video views as well
         $query = 'INSERT INTO ' . tbl('video_views') . ' (video_id, video_views, last_updated) VALUES(' . $vid . ',0,' . time() . ')';
