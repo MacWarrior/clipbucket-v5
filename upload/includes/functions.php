@@ -4376,7 +4376,8 @@ function generic_curl($input_arr = [])
 }
 
 /**
- * @return array|null
+ * @param string $format
+ * @return resource
  */
 function get_proxy_settings(string $format = '')
 {
@@ -4396,7 +4397,7 @@ function get_proxy_settings(string $format = '')
                     $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
                 }
             }
-            return $context;
+            return stream_context_create($context);
     }
 }
 

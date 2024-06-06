@@ -3,6 +3,7 @@ class Update
 {
     private static $update;
     private static $urlGit = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
+    private static $files = [];
     private $tableName = '';
     private $fields = [];
     private $dbVersion = [];
@@ -86,6 +87,25 @@ class Update
     public function getCurrentDBRevision(): string
     {
         return $this->getDBVersion()['revision'];
+    }
+
+    private function getDistantFile($filename): array
+    {
+        if( !empty(self::$files[$filename]) ){
+            return self::$files[$filename];
+        }
+
+        $file_url = self::$urlGit . '/' . $filename;
+
+        $context = get_proxy_settings('file_get_contents');
+        $file_content = json_decode(file_get_contents($file_url, false, $context), true);
+
+        if( empty($file_content) ){
+            return [];
+        }
+
+        self::$files[$filename] = $file_content;
+        return self::$files[$filename];
     }
 
     private function getCurrentCoreLatest(): array
@@ -173,10 +193,9 @@ class Update
     {
         if( empty($this->webVersion) ){
             $type = $this->getCurrentCoreState();
+            $versions = $this->getDistantFile('latest.json');
             $versions_url = self::$urlGit . '/latest.json';
-            $context = get_proxy_settings('file_get_contents');
-            $versions = json_decode(file_get_contents($versions_url, false, $context), true);
-            if (!isset($versions[$type])) {
+            if (empty($versions[$type])) {
                 e(lang('error_occured'));
                 e(lang('error_file_download') . ' : ' . $versions_url);
                 return false;
@@ -195,10 +214,10 @@ class Update
     {
         if( empty($this->webChangelog) ){
             $version = $this->getWebVersion();
+            $changelog = $this->getDistantFile($version.'.json');
             $changelog_url = self::$urlGit . '/' . $version . '.json';
-            $context = get_proxy_settings('file_get_contents');
-            $changelog = json_decode(file_get_contents($changelog_url, false, $context), true);
-            if (!isset($changelog['revision'])) {
+
+            if (empty($changelog['revision'])) {
                 e(lang('error_occured'));
                 e(lang('error_file_download') . ' : ' . $changelog_url);
                 return false;
