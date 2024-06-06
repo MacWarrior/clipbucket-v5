@@ -46,6 +46,7 @@ class System{
                     ,'Client API library version' => 'mysqli'
                     ,'libxml2 Version' => 'xml'
                     ,'cURL Information' => 'curl'
+                    ,'OpenSSL Library Version' => 'openssl'
                 ];
 
                 $regex_version = '(\d+\.\d+\.\d+)';
@@ -72,13 +73,14 @@ class System{
                     ,'Client API library version' => 'mysqli'
                     ,'libxml2 Version' => 'xml'
                     ,'cURL Information' => 'curl'
+                    ,'OpenSSL Library Version' => 'openssl'
                 ];
+                $regex_version = '(\d+\.\d+\.\d+)';
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
                         $line = explode('=>', $line);
                         $tmp_version  = trim(end($line));
 
-                        $regex_version = '(\d+\.\d+\.\d+)';
                         preg_match($regex_version, $tmp_version, $match_version);
                         self::$versionCli = $match_version[0] ?? $tmp_version;
 
@@ -95,11 +97,12 @@ class System{
 
                     foreach($extensions as $search => $key){
                         if (strpos($line, $search) !== false) {
-                            if( strpos($line, 'mysqlnd') !== false){
-                                $line = str_replace('mysqlnd', '', $line);
-                            }
                             $line = explode('=>', $line);
-                            self::$extensionsCli[$key] = trim(end($line));
+                            $tmp_version  = trim(end($line));
+
+                            preg_match($regex_version, $tmp_version, $match_version);
+                            self::$extensionsCli[$key] = $match_version[0] ?? $tmp_version;
+
                             continue 2;
                         }
                     }

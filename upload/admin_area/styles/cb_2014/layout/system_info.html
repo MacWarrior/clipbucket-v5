@@ -84,7 +84,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.curl}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP CURL -
+                                cURL extension -
                                 {if !$extensionsWEB.curl}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -96,7 +96,7 @@
                     <div class="row ml-2">
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.gd}tick{else}alert{/if}.png"/>
-                                PHP GD -
+                                GD extension -
                                 {if !$extensionsWEB.gd}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -108,7 +108,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mbstring}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP MBSTRING -
+                                MBstring extension -
                                 {if !$extensionsWEB.mbstring}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -121,7 +121,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP MYSQLI -
+                                MySQLi extension -
                                 {if !$extensionsWEB.mysqli}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -134,11 +134,24 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.xml}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP XML -
+                                XML extension -
                                 {if !$extensionsWEB.xml}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsWEB.xml}</strong>
+                                {/if}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row ml-2">
+                        <div class="col-lg-10">
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.openssl}tick{else}alert{/if}.png"/>
+                            <label>
+                                OpenSSL extension -
+                                {if !$extensionsWEB.openssl}
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                                {else}
+                                Version <strong>{$extensionsWEB.openssl}</strong>
                                 {/if}
                             </label>
                         </div>
@@ -165,7 +178,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.curl}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP CURL -
+                                cURL extension -
                                 {if !$extensionsCLI.curl}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -178,7 +191,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.gd}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP GD -
+                                GD extension -
                                 {if !$extensionsCLI.gd}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -191,7 +204,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mbstring}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP MBSTRING -
+                                MBstring extension -
                                 {if !$extensionsCLI.mbstring}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -204,7 +217,7 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP MYSQLI -
+                                MySQLi extension -
                                 {if !$extensionsCLI.mysqli}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
@@ -217,11 +230,24 @@
                         <div class="col-lg-10">
                             <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.xml}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP XML -
+                                XML extension -
                                 {if !$extensionsCLI.xml}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
                                 Version <strong>{$extensionsCLI.xml}</strong>
+                                {/if}
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row ml-2">
+                        <div class="col-lg-10">
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.openssl}tick{else}alert{/if}.png"/>
+                            <label>
+                                OpenSSL extension -
+                                {if !$extensionsCLI.openssl}
+                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                                {else}
+                                Version <strong>{$extensionsCLI.openssl}</strong>
                                 {/if}
                             </label>
                         </div>

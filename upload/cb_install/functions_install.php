@@ -178,7 +178,8 @@ function get_php_extensions(): array
         'mbstring' => 'MBstring',
         'mysqli' => 'MySQLi',
         'xml' => 'XML',
-        'curl' => 'cURL'
+        'curl' => 'cURL',
+        'openssl' => 'OpenSSL'
     ];
 }
 
