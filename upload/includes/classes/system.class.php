@@ -133,6 +133,10 @@ class System{
                 'display' => 'OpenSSL'
                 ,'version_tags' => ['OpenSSL Library Version']
             ],
+            'fileinfo' => [
+                'display' => 'Fileinfo'
+                ,'version_tags' => ['fileinfo support']
+            ]
         ];
     }
 

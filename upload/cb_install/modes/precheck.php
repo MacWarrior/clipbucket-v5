@@ -65,7 +65,7 @@ $skippable_option = get_skippable_options();
                 $everything_good = false;
                 $msg = ['err' => $extension['display'] . ' extension is not enabled'];
             } else {
-                $msg = ['msg' => $extension['display'] . ' extension version '. $php_extensions[$key]];
+                $msg = ['msg' => $extension['display'] . ' extension '. $php_extensions[$key]];
             }
 
             echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . $extension['display'] . '</dt>';

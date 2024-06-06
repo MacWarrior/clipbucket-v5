@@ -247,6 +247,10 @@ set "SEARCH=;extension=openssl"
 set "REPLACEMENT=extension=openssl"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
+set "SEARCH=;extension=fileinfo"
+set "REPLACEMENT=extension=fileinfo"
+Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
+
 set "SEARCH=;extension_dir = \"./\""
 set "REPLACEMENT=extension_dir = \"%PHP_DIR%\ext\""
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"

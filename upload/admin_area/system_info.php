@@ -77,10 +77,6 @@ if (empty($php_cli_info)) {
 assign('cli_php_info', $php_cli_info);
 
 $mysqlReq='5.6.0';
-$clientMySqlVersion = System::get_software_version('mysql_client');
-assign('clientMySqlVersion', $clientMySqlVersion);
-assign('clientMySqlVersionOk', (version_compare($clientMySqlVersion, $mysqlReq) >= 0));
-
 $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
 $regex_version = '(\d+\.\d+\.\d+)';
 preg_match($regex_version, $serverMySqlVersion, $match_mysql);

@@ -90,7 +90,7 @@
                                 {if !$extensionsWEB.$key}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
-                                Version <strong>{$extensionsWEB.$key}</strong>
+                                <strong>{$extensionsWEB.$key}</strong>
                                 {/if}
                             </label>
                         </div>
@@ -111,7 +111,7 @@
                                 {/if}
                             </span>
                         {else}
-                        Version <strong>{$phpVersionCli}</strong>
+                        <strong>{$phpVersionCli}</strong>
                         - {lang code='info_php_cli'}
                         {/if}
                     </label>
@@ -180,23 +180,6 @@
                         {else}
                             Version <strong>{$media_info}</strong>
                              - {lang code='info_media_info'}
-                        {/if}
-                    </label>
-                </div>
-                <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $clientMySqlVersion && $clientMySqlVersionOk}tick{else}alert{/if}.png"/>
-                    <label>
-                        {lang code="mysql_client"} -
-                        {if !$clientMySqlVersion || !$clientMySqlVersionOk}
-                            <p class="alert alert-danger">
-                                {if !$clientMySqlVersion}
-                                    {lang code = 'not_found'}
-                                {elseif !$clientMySqlVersionOk}
-                                    {sprintf(lang("not_required_version"), lang('mysql_client'),$clientMySqlVersion, $mysqlReq)}
-                                {/if}
-                            </p>
-                        {else}
-                            Version <strong>{$clientMySqlVersion}</strong>
                         {/if}
                     </label>
                 </div>
