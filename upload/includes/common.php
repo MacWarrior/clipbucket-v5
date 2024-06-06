@@ -35,7 +35,9 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
     }
 } else {
-    define('DEVELOPMENT_MODE', false);
+    if( !defined('DEVELOPMENT_MODE') ) {
+        define('DEVELOPMENT_MODE', false);
+    }
 }
 $whoops->pushHandler(function($e){
     $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
