@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"38",
+  "revision":"39",
   "status":"dev",
   "detail":[
     {
@@ -96,7 +96,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.13.0"
+        "Update VideoJS to version 8.14.1"
       ]
     }
   ]
