@@ -41,7 +41,7 @@ class FFMpeg
         $info['video_color'] = 'N/A';
         $info['path'] = $file_path;
 
-        $cmd = config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams \'' . $file_path . '\'';
+        $cmd = config('ffprobe_path') . ' -i "' . $file_path . '" -v quiet -print_format json -show_format -show_streams';
         $output = System::shell_output($cmd);
         $output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
@@ -980,7 +980,10 @@ class FFMpeg
         return [];
     }
 
-    private function get_max_resolution_from_file()
+    /**
+     * @throws Exception
+     */
+    private function get_max_resolution_from_file(): int
     {
         global $myquery;
         $video_resolutions = $myquery->getVideoResolutions();

@@ -48,10 +48,7 @@ class SLog
 
         if(!empty($title) && !empty($description)){
             $loop = strlen($title);
-            $underline = '';
-            for ($i = 0; $i < $loop; $i++) {
-                $underline .= '-';
-            }
+            $underline = str_repeat('-', $loop);
             $this->logData .= $newLine.$underline;
         }
 
