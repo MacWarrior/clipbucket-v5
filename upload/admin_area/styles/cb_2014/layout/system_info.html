@@ -22,14 +22,14 @@
     {/literal}
 </style>
 <div class="heading">
-    <h2>{lang code = 'system_info'}</h2>
+    <h2>{lang code='system_info'}</h2>
 </div>
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#hosting">
-                    <h6>{lang code = 'hosting'}</h6>
+                    <h6>{lang code='hosting'}</h6>
                 </a>
             </li>
             <li>
@@ -39,7 +39,7 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#services">
-                    <h6>{lang code = 'services'}</h6>
+                    <h6>{lang code='services'}</h6>
                 </a>
             </li>
         </ul>
@@ -70,7 +70,7 @@
                         {if !$phpVersionWeb || !$phpVersionWebOK}
                         <div class="alert alert-danger">
                             {if !$phpVersionWeb}
-                                {lang code = 'not_found'}
+                                {lang code='not_found'}
                             {elseif !$phpVersionWebOK}
                                 {sprintf(lang("not_required_version"), 'PHP WEB',$phpVersionWeb, $phpVersionReq)}
                             {/if}
@@ -88,7 +88,7 @@
                             <label>
                                 {$extension.display} extension -
                                 {if !$extensionsWEB.$key}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
                                 {else}
                                 <strong>{$extensionsWEB.$key}</strong>
                                 {/if}
@@ -105,7 +105,7 @@
                         {if !$phpVersionCli || !$phpVersionCliOK}
                             <span class="alert-danger">
                                  {if !$phpVersionCli}
-                                    {lang code = 'php_cli_not_found'}
+                                    {lang code='php_cli_not_found'}
                                  {elseif !$phpVersionCliOK}
                                     {sprintf(lang("not_required_version"), 'PHP CLI',$phpVersionCli, $phpVersionReq)}
                                 {/if}
@@ -123,9 +123,9 @@
                             <label>
                                 {$extension.display} extension -
                                 {if !$extensionsCLI.$key}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
                                 {else}
-                                Version <strong>{$extensionsCLI.$key}</strong>
+                                <strong>{$extensionsCLI.$key}</strong>
                                 {/if}
                             </label>
                         </div>
@@ -139,7 +139,7 @@
                             {if !$ffmpegVersion || !$ffmpegVersionOK}
                             <div class="alert alert-danger">
                                 {if !$ffmpegVersion}
-                                    {lang code = 'not_found'}
+                                    {lang code='not_found'}
                                 {elseif !$ffmpegVersionOK}
                                     {sprintf(lang("not_required_version"), 'FFMPEG',$ffmpegVersion, $ffReq)}
                                 {/if}
@@ -157,7 +157,7 @@
                         {if !$ffprobe_path || !$ffprobe_path_OK}
                             <p class="alert alert-danger">
                                 {if !$ffprobe_path}
-                                    {lang code = 'not_found'}
+                                    {lang code='not_found'}
                                 {elseif !$ffprobe_path_OK}
                                     {sprintf(lang("not_required_version"), 'FFProbe',$ffprobe_path, $ffReq)}
                                 {/if}
@@ -176,7 +176,7 @@
                     <label>
                         Media Info -
                         {if !$media_info}
-                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                            <div class="alert alert-danger">{lang code='not_found'}</div>
                         {else}
                             Version <strong>{$media_info}</strong>
                              - {lang code='info_media_info'}
@@ -190,7 +190,7 @@
                         {if !$serverMySqlVersion || !$serverMySqlVersionOk}
                             <p class="alert alert-danger">
                                 {if !$serverMySqlVersion}
-                                    {lang code = 'not_found'}
+                                    {lang code='not_found'}
                                 {elseif !$serverMySqlVersionOk}
                                     {sprintf(lang("not_required_version"), lang('mysql_client'),$serverMySqlVersion, $mysqlReq)}
                                 {/if}
@@ -206,7 +206,7 @@
                         [{lang|strtoupper code='optional'}] Git -
                         {if !$git_version}
                         <p class="alert alert-danger">
-                            {lang code = 'not_found'}
+                            {lang code='not_found'}
                         </p>
                         {else}
                         Version <strong>{$git_version}</strong>
@@ -235,7 +235,7 @@
                             />
                             <label>post_max_size :
                                 <strong> {$post_max_size} {if getBytesFromFileSize($post_max_size) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -245,7 +245,7 @@
                             />
                             <label>upload_max_size :
                                 <strong> {$upload_max_filesize} {if getBytesFromFileSize($upload_max_filesize) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -255,7 +255,7 @@
                             />
                             <label>memory_limit :
                                 <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -265,7 +265,7 @@
                             />
                             <label>max_execution_time :
                                 <strong> {$max_execution_time} {if $max_execution_time < 7200 }
-                                    {lang code = 'must_be_least'} : 7200 {/if}
+                                    {lang code='must_be_least'} : 7200 {/if}
                                 </strong>
                             </label>
                         </div>
@@ -275,7 +275,7 @@
                             />
                             <label>exec() :
                                 <strong>
-                                    {if $phpWebExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                    {if $phpWebExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
@@ -285,7 +285,7 @@
                             />
                             <label>shell_exec() :
                                 <strong>
-                                    {if $phpWebShellExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                    {if $phpWebShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
@@ -298,7 +298,7 @@
                             />
                             <label>post_max_size :
                                 <strong> {$post_max_size_cli} {if getBytesFromFileSize($post_max_size_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -308,7 +308,7 @@
                             />
                             <label>upload_max_size :
                                 <strong> {$upload_max_filesize_cli} {if getBytesFromFileSize($upload_max_filesize_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -318,7 +318,7 @@
                             />
                             <label>memory_limit :
                                 <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -328,7 +328,7 @@
                             />
                             <label>max_execution_time :
                                 <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
-                                    {lang code = 'must_be_least'} : 7200 {/if}
+                                    {lang code='must_be_least'} : 7200 {/if}
                                 </strong>
                             </label>
                         </div>
@@ -338,7 +338,7 @@
                             />
                             <label>exec() :
                                 <strong>
-                                    {if $phpCliExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                    {if $phpCliExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
@@ -348,7 +348,7 @@
                             />
                             <label>shell_exec() :
                                 <strong>
-                                    {if $phpCliShellExec}{lang code = 'enabled'}{else}{lang code = 'disabled'}{/if}
+                                    {if $phpCliShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
@@ -367,7 +367,7 @@
                         />
                         <label>client_max_body_size :
                             <strong> {$clientMaxBodySize} {if getBytesFromFileSize($clientMaxBodySize) <= getBytesFromFileSize('50M') }
-                                {lang code = 'must_be_least'} : 50M {/if}
+                                {lang code='must_be_least'} : 50M {/if}
                             </strong>
                         </label>
                     {/if}
