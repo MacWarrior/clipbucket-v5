@@ -228,9 +228,9 @@ class System{
                 if (empty($binary_path) || !file_exists($binary_path)) {
                     return $verbose ? ['err' => 'Unable to find ' . strtoupper($software)] : false;
                 }
-                $ffmpeg_version = System::shell_output($binary_path . ' -version | head -n1');
+                $ffmpeg_version = System::shell_output($binary_path . ' -version');
                 if( empty($ffmpeg_version) ){
-                    return $verbose ? ['err' => strtoupper($software) . ' is not correctly configured' . strtoupper($software)] : false;
+                    return $verbose ? ['err' => strtoupper($software) . ' is not correctly configured'] : false;
                 }
 
                 $version = false;
