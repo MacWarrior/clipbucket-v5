@@ -166,7 +166,7 @@ $file_dir = $vidDetails['file_directory'];
 $logFile = DirPath::get('logs') . $file_dir . DIRECTORY_SEPARATOR . $file_name . '.log';
 
 if (stristr(PHP_OS, 'WIN')) {
-    exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' sleep');
+    exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' sleep');
 } else {
-    exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_dir . ' ' . $logFile . ' > /dev/null &');
+    exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_dir . ' ' . $logFile . ' > /dev/null &');
 }

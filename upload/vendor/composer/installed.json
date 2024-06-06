@@ -81,12 +81,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxygenzSAS/composer_lib_discord.git",
-                "reference": "9ae37b0ffd0ccd71d9a35b84efb7d3e9c6b06c23"
+                "reference": "5eeb32cabbdf3ce0f30d9dd3a7d7bd63ade77fe6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_discord/zipball/9ae37b0ffd0ccd71d9a35b84efb7d3e9c6b06c23",
-                "reference": "9ae37b0ffd0ccd71d9a35b84efb7d3e9c6b06c23",
+                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_discord/zipball/5eeb32cabbdf3ce0f30d9dd3a7d7bd63ade77fe6",
+                "reference": "5eeb32cabbdf3ce0f30d9dd3a7d7bd63ade77fe6",
                 "shasum": ""
             },
             "require": {
@@ -94,7 +94,7 @@
                 "psr/http-server-middleware": "1.0.2",
                 "psr/log": "1.1.4"
             },
-            "time": "2024-01-05T15:28:18+00:00",
+            "time": "2024-05-27T14:52:38+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

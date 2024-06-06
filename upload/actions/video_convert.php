@@ -42,15 +42,20 @@ $log->writeLine(date('Y-m-d H:i:s').' - Log file : '.$logFile);
 */
 $extension = getExt($fileName);
 
-$log->writeLine(date('Y-m-d H:i:s').' - Getting file informatiosn from queue...');
+$log->writeLine(date('Y-m-d H:i:s').' - Getting file informations from queue...');
 switch ($extension) {
     default:
     case 'mp4':
-        $queue_details = get_queued_video($fileName);
+        $queue_filename = $fileName;
         break;
     case 'm3u8':
-        $queue_details = get_queued_video($_filename . '.' . $extension);
+        $queue_filename = $_filename . '.' . $extension;
         break;
+}
+
+$queue_details = get_queued_video($queue_filename);
+if( empty($queue_details) ){
+    $log->writeLine(date('Y-m-d H:i:s').' - No queued video for '.$queue_filename);
 }
 
 if (!$file_directory_) {
@@ -70,6 +75,7 @@ $ext = $queue_details['cqueue_ext'];
 if (empty($tmp_ext)) {
     $tmp_ext = $ext;
 }
+
 if (!empty($_filename)) {
     $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
     switch ($ext) {
@@ -130,13 +136,15 @@ if (!empty($_filename)) {
         setVideoStatus($_filename, 'completed', $reconvert, true);
     }
 
+    $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'];
     if (stristr(PHP_OS, 'WIN')) {
-        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name']);
+        $complement = '';
     } elseif (stristr(PHP_OS, 'darwin')) {
-        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' </dev/null >/dev/null &');
+        $complement = ' </dev/null >/dev/null &';
     } else {
-        exec(php_path() . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'] . ' &> /dev/null &');
+        $complement = ' &> /dev/null &';
     }
+    exec($default_cmd . $complement);
 
     switch ($ext) {
         default:
@@ -149,5 +157,4 @@ if (!empty($_filename)) {
                 rmdir($conversion_path);
             }
     }
-
 }

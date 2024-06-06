@@ -499,6 +499,9 @@ function get_queued_video(string $fileName): array
     $ext = getExt($fileName);
 
     $results = $db->select(tbl('conversion_queue'), '*', "cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'", 1);
+    if( empty($results) ){
+        return [];
+    }
 
     $result = $results[0];
     $db->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], " cqueue_id = '" . $result['cqueue_id'] . "'");
@@ -1312,7 +1315,7 @@ function checkReConvStatus($vid)
 
 function get_audio_channels($filepath): int
 {
-    $cmd = get_binaries('ffprobe') . ' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 ' . $filepath . ' | grep .';
+    $cmd = System::get_binaries('ffprobe') . ' -show_entries stream=channels -of compact=p=0:nk=1 -v 0 ' . $filepath . ' | grep .';
     return (int)shell_exec($cmd) ?? 0;
 }
 
@@ -1406,7 +1409,7 @@ function update_bits_color($vdetails)
 
     global $db;
     $filepath = get_high_res_file($vdetails);
-    $cmd = get_binaries('ffprobe') . ' -show_streams ' . $filepath . ' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
+    $cmd = System::get_binaries('ffprobe') . ' -show_streams ' . $filepath . ' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
     $data = shell_exec($cmd);
 
     $db->update(tbl('video'), ['bits_color'], [(int)$data], 'videoid=' . $vdetails['videoid']);
@@ -1561,7 +1564,7 @@ function reConvertVideos($data = '')
             remove_video_files($vdetails);
 
             $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
-            exec(php_path() . ' -q ' . DirPath::get('actions')  . "video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
+            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . "video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
 
             setVideoStatus($daVideo, 'started', true);
         }

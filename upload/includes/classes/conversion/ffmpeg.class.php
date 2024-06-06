@@ -41,8 +41,8 @@ class FFMpeg
         $info['video_color'] = 'N/A';
         $info['path'] = $file_path;
 
-        $cmd = config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams \'' . $file_path . '\'';
-        $output = shell_output($cmd);
+        $cmd = config('ffprobe_path') . ' -i "' . $file_path . '" -v quiet -print_format json -show_format -show_streams';
+        $output = System::shell_output($cmd);
         $output = preg_replace('/([a-zA-Z 0-9\r\n]+){/', '{', $output, 1);
 
         $data = json_decode($output, true);
@@ -86,7 +86,7 @@ class FFMpeg
 
         if (!$info['duration']) {
             $CMD = config('media_info') . ' \'--Inform=General;%Duration%\' \'' . $file_path . '\' 2>&1';
-            $info['duration'] = round((int)shell_output($CMD) / 1000, 2);
+            $info['duration'] = round((int)System::shell_output($CMD) / 1000, 2);
         }
 
         $video_rate = explode('/', $info['video_rate']);
@@ -95,7 +95,7 @@ class FFMpeg
 
         $CMD = config('media_info') . ' \'--Inform=Video;\' ' . $file_path;
 
-        $results = shell_output($CMD);
+        $results = System::shell_output($CMD);
         $needle_start = 'Original height';
         $needle_end = 'pixels';
         $original_height = find_string($needle_start, $needle_end, $results);
@@ -148,7 +148,7 @@ class FFMpeg
             $infos .='- <b>' . $name . '</b> : ' . $value.'<br/>';
         }
 
-        $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output file details : </p><p class="content">'.$infos.'</p></div>', '', true, false, true);
+        $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output file details : </p><p class="content">'.$infos.'</p></div>', false, true);
     }
 
     function time_check()
@@ -237,7 +237,7 @@ class FFMpeg
             try {
                 $this->generateAllThumbs();
             } catch (\Exception $e) {
-                $this->log->writeLine(date('Y-m-d H:i:s').' - Error Occured : ' . $e->getMessage());
+                $this->log->writeLine(date('Y-m-d H:i:s').' - Error occured : ' . $e->getMessage());
             }
 
         } else {
@@ -342,8 +342,8 @@ class FFMpeg
                 $output = shell_exec($command);
                 $db->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
                 if (in_dev()) {
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
                 }
             }
         } else {
@@ -607,8 +607,8 @@ class FFMpeg
         }
 
         if (in_dev()) {
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
     }
 
@@ -633,7 +633,7 @@ class FFMpeg
         $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$more_res['height'].'...');
         $command = config('ffmpegpath') . ' -i ' . $this->input_file . $opt_av . ' ' . $this->output_file . ' 2> ' . DirPath::get('temp') . $tmp_file;
         if (in_dev()) {
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', '', true, false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
         }
 
         $output = shell_exec($command);
@@ -651,7 +651,7 @@ class FFMpeg
         }
 
         if (in_dev()) {
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', '', true, false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
 
         $this->output_details = $this->get_file_info($this->output_file);
@@ -662,7 +662,7 @@ class FFMpeg
     {
         //Checking File Exists
         if (!file_exists($this->input_file)) {
-            $this->log->writeLine('File Exists', 'No', true);
+            $this->log->writeLine('File Exists', 'No');
         }
 
         //Get File info
@@ -790,8 +790,8 @@ class FFMpeg
                 ]);
 
                 if(in_dev()){
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', '', true, false, true);
-                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', '', true, false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$return['command'].'</p></div>', false, true);
+                    $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$return['output'].'</p></div>', false, true);
                 }
 
                 if (file_exists($file_path)) {
@@ -980,7 +980,10 @@ class FFMpeg
         return [];
     }
 
-    private function get_max_resolution_from_file()
+    /**
+     * @throws Exception
+     */
+    private function get_max_resolution_from_file(): int
     {
         global $myquery;
         $video_resolutions = $myquery->getVideoResolutions();

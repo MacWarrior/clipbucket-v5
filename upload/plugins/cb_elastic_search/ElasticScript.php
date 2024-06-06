@@ -197,7 +197,7 @@ try {
                         $formattedgroup = $es->FormatGroupCollection($group);
                         $extras["id"] = $group["group_id"];
                         $response["data"] = $es->EsIndex($formattedgroup, $extras);
-                        #pr($response,1);
+
                         //checking for Curl Error
                         if ($response["data"]["curl_error_no"]) {
                             throw new \Exception($response["data"]["curl_error"]);

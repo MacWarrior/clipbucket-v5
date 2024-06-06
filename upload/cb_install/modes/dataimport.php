@@ -21,6 +21,8 @@
         <input type="hidden" name="dbport" value="<?php echo $_POST['dbport']; ?>"/>
         <input type="hidden" name="dbprefix" value="<?php echo $_POST['dbprefix']; ?>"/>
 
+        <?php show_hidden_inputs(); ?>
+
         <input type="hidden" name="mode" value="adminsettings"/>
     </form>
 </div>

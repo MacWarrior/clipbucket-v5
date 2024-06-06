@@ -914,9 +914,9 @@ class CBvideo extends CBCategory
                 if( $video['status'] == 'Successful' && in_array($video['broadcast'], ['public', 'logged']) && $video['subscription_email'] == 'pending' ){
                     //Sending Subscription email in background
                     if (stristr(PHP_OS, 'WIN')) {
-                        exec(php_path() . ' -q ' . DirPath::get('actions') . 'send_subscription_email.php ' . $vid);
+                        exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'send_subscription_email.php ' . $vid);
                     } else {
-                        exec(php_path() . ' -q ' . DirPath::get('actions') . 'send_subscription_email.php ' . $vid . ' &> /dev/null &');
+                        exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'send_subscription_email.php ' . $vid . ' &> /dev/null &');
                     }
                 }
                 break;

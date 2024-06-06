@@ -22,14 +22,14 @@
     {/literal}
 </style>
 <div class="heading">
-    <h2>{lang code = 'system_info'}</h2>
+    <h2>{lang code='system_info'}</h2>
 </div>
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#hosting">
-                    <h6>{lang code = 'hosting'}</h6>
+                    <h6>{lang code='hosting'}</h6>
                 </a>
             </li>
             <li>
@@ -39,7 +39,7 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#services">
-                    <h6>{lang code = 'services'}</h6>
+                    <h6>{lang code='services'}</h6>
                 </a>
             </li>
         </ul>
@@ -70,7 +70,7 @@
                         {if !$phpVersionWeb || !$phpVersionWebOK}
                         <div class="alert alert-danger">
                             {if !$phpVersionWeb}
-                                {lang code = 'not_found'}
+                                {lang code='not_found'}
                             {elseif !$phpVersionWebOK}
                                 {sprintf(lang("not_required_version"), 'PHP WEB',$phpVersionWeb, $phpVersionReq)}
                             {/if}
@@ -80,69 +80,23 @@
                         - {lang code='info_php_web'}
                         {/if}
                     </label>
+
+                    {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.curl}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP CURL -
-                                {if !$extensionsWEB.curl}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                                {$extension.display} extension -
+                                {if !$extensionsWEB.$key}
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
                                 {else}
-                                Version <strong>{$extensionsWEB.curl}</strong>
+                                <strong>{$extensionsWEB.$key}</strong>
                                 {/if}
                             </label>
                         </div>
                     </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.gd}tick{else}alert{/if}.png"/>
-                                PHP GD -
-                                {if !$extensionsWEB.gd}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.gd}</strong>
-                                {/if}
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mbstring}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP MBSTRING -
-                                {if !$extensionsWEB.mbstring}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.mbstring}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP MYSQLI -
-                                {if !$extensionsWEB.mysqli}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.mysqli}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.xml}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP XML -
-                                {if !$extensionsWEB.xml}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.xml}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
+                    {/foreach}
+
                 </div>
                 <div class="row">
                     <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli && $phpVersionCliOK}tick{else}alert{/if}.png"/>
@@ -151,81 +105,32 @@
                         {if !$phpVersionCli || !$phpVersionCliOK}
                             <span class="alert-danger">
                                  {if !$phpVersionCli}
-                                    {lang code = 'php_cli_not_found'}
+                                    {lang code='php_cli_not_found'}
                                  {elseif !$phpVersionCliOK}
                                     {sprintf(lang("not_required_version"), 'PHP CLI',$phpVersionCli, $phpVersionReq)}
                                 {/if}
                             </span>
                         {else}
-                        Version <strong>{$phpVersionCli}</strong>
+                        <strong>{$phpVersionCli}</strong>
                         - {lang code='info_php_cli'}
                         {/if}
                     </label>
+
+                    {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.curl}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
                             <label>
-                                PHP CURL -
-                                {if !$extensionsCLI.curl}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                                {$extension.display} extension -
+                                {if !$extensionsCLI.$key}
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
                                 {else}
-                                Version <strong>{$extensionsCLI.curl}</strong>
+                                <strong>{$extensionsCLI.$key}</strong>
                                 {/if}
                             </label>
                         </div>
                     </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.gd}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP GD -
-                                {if !$extensionsCLI.gd}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.gd}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mbstring}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP MBSTRING -
-                                {if !$extensionsCLI.mbstring}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.mbstring}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP MYSQLI -
-                                {if !$extensionsCLI.mysqli}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.mysqli}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.xml}tick{else}alert{/if}.png"/>
-                            <label>
-                                PHP XML -
-                                {if !$extensionsCLI.xml}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.xml}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
+                    {/foreach}
                 </div>
                 <div class="row">
                     <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>
@@ -234,7 +139,7 @@
                             {if !$ffmpegVersion || !$ffmpegVersionOK}
                             <div class="alert alert-danger">
                                 {if !$ffmpegVersion}
-                                    {lang code = 'not_found'}
+                                    {lang code='not_found'}
                                 {elseif !$ffmpegVersionOK}
                                     {sprintf(lang("not_required_version"), 'FFMPEG',$ffmpegVersion, $ffReq)}
                                 {/if}
@@ -252,7 +157,7 @@
                         {if !$ffprobe_path || !$ffprobe_path_OK}
                             <p class="alert alert-danger">
                                 {if !$ffprobe_path}
-                                    {lang code = 'not_found'}
+                                    {lang code='not_found'}
                                 {elseif !$ffprobe_path_OK}
                                     {sprintf(lang("not_required_version"), 'FFProbe',$ffprobe_path, $ffReq)}
                                 {/if}
@@ -271,27 +176,10 @@
                     <label>
                         Media Info -
                         {if !$media_info}
-                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                            <div class="alert alert-danger">{lang code='not_found'}</div>
                         {else}
                             Version <strong>{$media_info}</strong>
                              - {lang code='info_media_info'}
-                        {/if}
-                    </label>
-                </div>
-                <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $clientMySqlVersion && $clientMySqlVersionOk}tick{else}alert{/if}.png"/>
-                    <label>
-                        {lang code="mysql_client"} -
-                        {if !$clientMySqlVersion || !$clientMySqlVersionOk}
-                            <p class="alert alert-danger">
-                                {if !$clientMySqlVersion}
-                                    {lang code = 'not_found'}
-                                {elseif !$clientMySqlVersionOk}
-                                    {sprintf(lang("not_required_version"), lang('mysql_client'),$clientMySqlVersion, $mysqlReq)}
-                                {/if}
-                            </p>
-                        {else}
-                            Version <strong>{$clientMySqlVersion}</strong>
                         {/if}
                     </label>
                 </div>
@@ -302,7 +190,7 @@
                         {if !$serverMySqlVersion || !$serverMySqlVersionOk}
                             <p class="alert alert-danger">
                                 {if !$serverMySqlVersion}
-                                    {lang code = 'not_found'}
+                                    {lang code='not_found'}
                                 {elseif !$serverMySqlVersionOk}
                                     {sprintf(lang("not_required_version"), lang('mysql_client'),$serverMySqlVersion, $mysqlReq)}
                                 {/if}
@@ -318,7 +206,7 @@
                         [{lang|strtoupper code='optional'}] Git -
                         {if !$git_version}
                         <p class="alert alert-danger">
-                            {lang code = 'not_found'}
+                            {lang code='not_found'}
                         </p>
                         {else}
                         Version <strong>{$git_version}</strong>
@@ -347,7 +235,7 @@
                             />
                             <label>post_max_size :
                                 <strong> {$post_max_size} {if getBytesFromFileSize($post_max_size) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -357,7 +245,7 @@
                             />
                             <label>upload_max_size :
                                 <strong> {$upload_max_filesize} {if getBytesFromFileSize($upload_max_filesize) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -367,7 +255,7 @@
                             />
                             <label>memory_limit :
                                 <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -377,11 +265,32 @@
                             />
                             <label>max_execution_time :
                                 <strong> {$max_execution_time} {if $max_execution_time < 7200 }
-                                    {lang code = 'must_be_least'} : 7200 {/if}
+                                    {lang code='must_be_least'} : 7200 {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpWebExec}tick{else}alert{/if}.png"
+                            />
+                            <label>exec() :
+                                <strong>
+                                    {if $phpWebExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpWebShellExec}tick{else}alert{/if}.png"
+                            />
+                            <label>shell_exec() :
+                                <strong>
+                                    {if $phpWebShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
                     </div>
+                    {if $phpWebExec && $phpVersionCli != 0}
                     <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
@@ -389,7 +298,7 @@
                             />
                             <label>post_max_size :
                                 <strong> {$post_max_size_cli} {if getBytesFromFileSize($post_max_size_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -399,7 +308,7 @@
                             />
                             <label>upload_max_size :
                                 <strong> {$upload_max_filesize_cli} {if getBytesFromFileSize($upload_max_filesize_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
+                                    {lang code='must_be_least'} : 50M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -409,7 +318,7 @@
                             />
                             <label>memory_limit :
                                 <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M {/if}
                                 </strong>
                             </label>
                         </div>
@@ -419,11 +328,32 @@
                             />
                             <label>max_execution_time :
                                 <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
-                                    {lang code = 'must_be_least'} : 7200 {/if}
+                                    {lang code='must_be_least'} : 7200 {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpCliExec}tick{else}alert{/if}.png"
+                            />
+                            <label>exec() :
+                                <strong>
+                                    {if $phpCliExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img style="margin-left: 1em; margin-top: 0.4em;"
+                                 src="{$imageurl}/{if $phpCliShellExec}tick{else}alert{/if}.png"
+                            />
+                            <label>shell_exec() :
+                                <strong>
+                                    {if $phpCliShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
                     </div>
+                    {/if}
                     <div class="col-md-4 {if !$isNginx}hidden{/if}">
                     {if !$canAccessNginx}
                         <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
@@ -437,7 +367,7 @@
                         />
                         <label>client_max_body_size :
                             <strong> {$clientMaxBodySize} {if getBytesFromFileSize($clientMaxBodySize) <= getBytesFromFileSize('50M') }
-                                {lang code = 'must_be_least'} : 50M {/if}
+                                {lang code='must_be_least'} : 50M {/if}
                             </strong>
                         </label>
                     {/if}

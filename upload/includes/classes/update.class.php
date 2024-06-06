@@ -3,6 +3,7 @@ class Update
 {
     private static $update;
     private static $urlGit = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
+    private static $files = [];
     private $tableName = '';
     private $fields = [];
     private $dbVersion = [];
@@ -86,6 +87,25 @@ class Update
     public function getCurrentDBRevision(): string
     {
         return $this->getDBVersion()['revision'];
+    }
+
+    private function getDistantFile($filename): array
+    {
+        if( !empty(self::$files[$filename]) ){
+            return self::$files[$filename];
+        }
+
+        $file_url = self::$urlGit . '/' . $filename;
+
+        $context = get_proxy_settings('file_get_contents');
+        $file_content = json_decode(file_get_contents($file_url, false, $context), true);
+
+        if( empty($file_content) ){
+            return [];
+        }
+
+        self::$files[$filename] = $file_content;
+        return self::$files[$filename];
     }
 
     private function getCurrentCoreLatest(): array
@@ -173,10 +193,9 @@ class Update
     {
         if( empty($this->webVersion) ){
             $type = $this->getCurrentCoreState();
+            $versions = $this->getDistantFile('latest.json');
             $versions_url = self::$urlGit . '/latest.json';
-            $context = get_proxy_settings('file_get_contents');
-            $versions = json_decode(file_get_contents($versions_url, false, $context), true);
-            if (!isset($versions[$type])) {
+            if (empty($versions[$type])) {
                 e(lang('error_occured'));
                 e(lang('error_file_download') . ' : ' . $versions_url);
                 return false;
@@ -195,10 +214,10 @@ class Update
     {
         if( empty($this->webChangelog) ){
             $version = $this->getWebVersion();
+            $changelog = $this->getDistantFile($version.'.json');
             $changelog_url = self::$urlGit . '/' . $version . '.json';
-            $context = get_proxy_settings('file_get_contents');
-            $changelog = json_decode(file_get_contents($changelog_url, false, $context), true);
-            if (!isset($changelog['revision'])) {
+
+            if (empty($changelog['revision'])) {
                 e(lang('error_occured'));
                 e(lang('error_file_download') . ' : ' . $changelog_url);
                 return false;
@@ -624,7 +643,14 @@ class Update
 
     public function isGitInstalled(): bool
     {
-        $git_path = get_binaries('git');
+        $functions = ['exec', 'shell_exec'];
+        foreach ($functions as $function) {
+            if( !System::check_php_function($function, 'web', false) ){
+                return false;
+            }
+        }
+
+        $git_path = System::get_binaries('git');
         if( empty($git_path) || !file_exists($git_path) ){
             return false;
         }
@@ -641,7 +667,7 @@ class Update
 
         $dir = DirPath::get('root');
         chdir($dir);
-        $output = shell_exec(get_binaries('git') . ' rev-parse --is-inside-work-tree 2>&1');
+        $output = shell_exec(System::get_binaries('git') . ' rev-parse --is-inside-work-tree 2>&1');
 
         if( trim($output) === 'true' ){
             return true;
@@ -671,7 +697,7 @@ class Update
 
         $filePath = trim($matches[1], " \t\n\r\0\x0B'");
 
-        $output = shell_exec(get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
+        $output = shell_exec(System::get_binaries('git') . ' config --global --add safe.directory ' . $filePath);
         if( empty($output) ){
             return true;
         }
@@ -680,14 +706,14 @@ class Update
 
     private function getGitRootDirectory(): string
     {
-        return shell_exec(get_binaries('git') . ' rev-parse --show-toplevel');
+        return shell_exec(System::get_binaries('git') . ' rev-parse --show-toplevel');
     }
 
     private function resetGitRepository(string $root_directory): bool
     {
         chdir($root_directory);
 
-        $output = shell_exec(get_binaries('git') . ' reset --hard');
+        $output = shell_exec(System::get_binaries('git') . ' reset --hard');
         if( !$output ){
             return false;
         }
@@ -703,7 +729,7 @@ class Update
     {
         chdir($root_directory);
 
-        return shell_exec(get_binaries('git') . ' pull');
+        return shell_exec(System::get_binaries('git') . ' pull');
     }
 
     public static function updateGitSources(): bool

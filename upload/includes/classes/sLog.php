@@ -3,7 +3,6 @@
 class SLog
 {
     private $logFile = false;
-    private $fileHandle = false;
     private $logData = '';
 
     public function __construct($logFile = false)
@@ -18,30 +17,30 @@ class SLog
         }
     }
 
-    public function newSection($sectionName = false, $writeNow = true)
+    public function newSection($sectionName = false)
     {
         if (!$sectionName) {
             $sectionName = 'New Section';
         }
-        $this->logData .= "\n\n".'==========================================';
+        $this->logData = "\n\n".'==========================================';
         $this->logData .= "\n" . $sectionName;
         $this->logData .= "\n".'==========================================';
 
-        if ($writeNow) {
-            $this->writeLog();
-        }
+        $this->appendLog();
     }
 
-    public function writeLine($title = false, $description = false, $writeNow = true, $append = false, $isHtml = false)
+    public function writeLine($title = false, $description = false, $isHtml = false)
     {
         if (is_array($description)) {
             $description = json_encode($description);
         }
 
-        $newLine = "\n";
-        if( $isHtml ){
-            $newLine = '';
+        $newLine = '';
+        if( !$isHtml ){
+            $newLine = "\n";
         }
+
+        $this->logData = '';
 
         if(!empty($title)){
             $this->logData .= $newLine.$title;
@@ -49,10 +48,7 @@ class SLog
 
         if(!empty($title) && !empty($description)){
             $loop = strlen($title);
-            $underline = '';
-            for ($i = 0; $i < $loop; $i++) {
-                $underline .= '-';
-            }
+            $underline = str_repeat('-', $loop);
             $this->logData .= $newLine.$underline;
         }
 
@@ -60,26 +56,7 @@ class SLog
             $this->logData .= $newLine.$description;
         }
 
-        if (!$append) {
-            if ($writeNow) {
-                $this->writeLog();
-            }
-        } else {
-            if ($writeNow) {
-                $this->appendLog();
-            }
-        }
-    }
-
-    public function writeLog()
-    {
-        if (!$this->logFile) {
-            return;
-        }
-        $this->fileHandle = fopen($this->logFile, 'w+') or die('Unable to open file!');
-        fwrite($this->fileHandle, $this->logData);
-        fclose($this->fileHandle);
-        return $this;
+        $this->appendLog();
     }
 
     public function appendLog()
@@ -87,14 +64,8 @@ class SLog
         if (!$this->logFile) {
             return;
         }
-        $TempData = file_get_contents($this->logFile);
-        $this->logData = "\n{$TempData}\n{$this->logData}";
-        file_put_contents($this->logFile, $this->logData);
-        return $this;
-    }
 
-    public function clean()
-    {
-        $this->logData = '';
+        file_put_contents($this->logFile, $this->logData, FILE_APPEND);
+        return $this;
     }
 }
