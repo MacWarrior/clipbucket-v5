@@ -50,7 +50,7 @@ class System{
 
                 $regex_version = '(\d+\.\d+\.\d+)';
                 foreach ($extensions as $key => $extension) {
-                    if (!empty($vModules[$extension]) && empty(self::$extensionsWeb[$extension])) {
+                    if (!empty($vModules[$extension][$key]) && empty(self::$extensionsWeb[$extension])) {
                         $matches = [];
                         preg_match($regex_version, $vModules[$extension][$key], $matches);
                         self::$extensionsWeb[$extension] = $matches[0]??$vModules[$extension][$key];
