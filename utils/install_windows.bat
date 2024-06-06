@@ -71,8 +71,9 @@ echo |set /p=Creating GIT directory...
 SET "GIT_DIR=%CB_DIR%\git"
 md %GIT_DIR%
 echo OK
-echo |set /p=Downloading GIT 2.45.0...
-SET "GIT_URL=https://github.com/git-for-windows/git/releases/download/v2.45.0-rc0.windows.1/PortableGit-2.45.0-rc0-64-bit.7z.exe"
+SET "GIT_VERSION=2.45.2"
+echo |set /p=Downloading GIT %GIT_VERSION%...
+SET "GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/PortableGit-%GIT_VERSION%-64-bit.7z.exe"
 SET "GIT_EXE_FILENAME=install_git.exe"
 SET "GIT_EXE=%GIT_DIR%\%GIT_EXE_FILENAME%"
 Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%GIT_URL%','%GIT_EXE%')"
@@ -93,9 +94,9 @@ echo |set /p=Creating MariaDB directory...
 SET "MARIADB_DIR=%CB_DIR%\mariadb"
 md %MARIADB_DIR%
 echo OK
-SET "MARIADB_VERSION=11.5.0"
+SET "MARIADB_VERSION=11.5.1"
 echo |set /p=Downloading MariaDB %MARIADB_VERSION%...
-SET "MARIADB_URL=https://mirrors.ircam.fr/pub/mariadb/mariadb-%MARIADB_VERSION%/winx64-packages/mariadb-11.5.0-winx64.zip"
+SET "MARIADB_URL=https://mirrors.ircam.fr/pub/mariadb/mariadb-%MARIADB_VERSION%/winx64-packages/mariadb-%MARIADB_VERSION%-winx64.zip"
 SET "MARIADB_ZIP_FILENAME=mariadb-%MARIADB_VERSION%.zip"
 SET "MARIADB_ZIP=%MARIADB_DIR%\%MARIADB_ZIP_FILENAME%"
 Powershell.exe -command "(New-Object System.Net.WebClient).DownloadFile('%MARIADB_URL%','%MARIADB_ZIP%')"
@@ -112,7 +113,7 @@ echo |set /p=Creating Nginx directory...
 SET "NGINX_DIR=%CB_DIR%\nginx"
 md %NGINX_DIR%
 echo OK
-SET "NGINX_VERSION=1.25.5"
+SET "NGINX_VERSION=1.27.0"
 echo |set /p=Downloading Nginx %NGINX_VERSION%...
 SET "NGINX_URL=https://nginx.org/download/nginx-%NGINX_VERSION%.zip"
 SET "NGINX_ZIP_FILENAME=nginx-%NGINX_VERSION%.zip"
@@ -131,7 +132,7 @@ echo |set /p=Creating PHP directory...
 SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
-SET "PHP_VERSION=8.3.6"
+SET "PHP_VERSION=8.3.8"
 echo |set /p=Downloading PHP %PHP_VERSION%...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-%PHP_VERSION%-Win32-vs16-x64.zip"
 SET "PHP_ZIP_FILENAME=php-%PHP_VERSION%.zip"
@@ -151,7 +152,7 @@ echo |set /p=Creating FFMpeg directory...
 SET "FFMPEG_DIR=%CB_DIR%\ffmpeg"
 md %FFMPEG_DIR%
 echo OK
-SET "FFMPEG_VERSION=7.0"
+SET "FFMPEG_VERSION=7.0.1"
 echo |set /p=Downloading FFMpeg %FFMPEG_VERSION%...
 SET "FFMPEG_URL=https://github.com/GyanD/codexffmpeg/releases/download/%FFMPEG_VERSION%/ffmpeg-%FFMPEG_VERSION%-full_build.zip"
 SET "FFMPEG_ZIP_FILENAME=ffmpeg-%FFMPEG_VERSION%.zip"
@@ -170,7 +171,7 @@ echo |set /p=Creating MediaInfo directory...
 SET "MEDIAINFO_DIR=%CB_DIR%\mediainfo"
 md %MEDIAINFO_DIR%
 echo OK
-SET "MEDIAINFO_VERSION=24.04"
+SET "MEDIAINFO_VERSION=24.05"
 echo |set /p=Downloading MediaInfo %MEDIAINFO_VERSION%...
 SET "MEDIAINFO_URL=https://mediaarea.net/download/binary/mediainfo/%MEDIAINFO_VERSION%/MediaInfo_CLI_%MEDIAINFO_VERSION%_Windows_x64.zip"
 SET "MEDIAINFO_ZIP_FILENAME=mediainfo-%MEDIAINFO_VERSION%.zip"
@@ -242,6 +243,10 @@ set "SEARCH=;extension=mysqli"
 set "REPLACEMENT=extension=mysqli"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
+set "SEARCH=;extension=openssl"
+set "REPLACEMENT=extension=openssl"
+Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
+
 set "SEARCH=;extension_dir = \"./\""
 set "REPLACEMENT=extension_dir = \"%PHP_DIR%\ext\""
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
@@ -252,6 +257,10 @@ Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '
 
 set "SEARCH=upload_max_filesize = 2M"
 set "REPLACEMENT=upload_max_filesize = 100M"
+Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
+
+set "SEARCH=max_execution_time = 30"
+set "REPLACEMENT=max_execution_time = 7200"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
 echo OK
@@ -447,3 +456,5 @@ echo - Database port : 3306
 echo - Database password : %DB_PASS%
 echo - Install directory : %CB_DIR%
 echo - Website URL : http://%LOCAL_DOMAIN%
+echo.
+pause
