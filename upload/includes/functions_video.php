@@ -499,6 +499,9 @@ function get_queued_video(string $fileName): array
     $ext = getExt($fileName);
 
     $results = $db->select(tbl('conversion_queue'), '*', "cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'", 1);
+    if( empty($results) ){
+        return [];
+    }
 
     $result = $results[0];
     $db->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], " cqueue_id = '" . $result['cqueue_id'] . "'");
