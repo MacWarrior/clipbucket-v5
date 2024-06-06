@@ -80,82 +80,23 @@
                         - {lang code='info_php_web'}
                         {/if}
                     </label>
+
+                    {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.curl}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
                             <label>
-                                cURL extension -
-                                {if !$extensionsWEB.curl}
+                                {$extension.display} extension -
+                                {if !$extensionsWEB.$key}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
-                                Version <strong>{$extensionsWEB.curl}</strong>
+                                Version <strong>{$extensionsWEB.$key}</strong>
                                 {/if}
                             </label>
                         </div>
                     </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.gd}tick{else}alert{/if}.png"/>
-                                GD extension -
-                                {if !$extensionsWEB.gd}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.gd}</strong>
-                                {/if}
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mbstring}tick{else}alert{/if}.png"/>
-                            <label>
-                                MBstring extension -
-                                {if !$extensionsWEB.mbstring}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.mbstring}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.mysqli}tick{else}alert{/if}.png"/>
-                            <label>
-                                MySQLi extension -
-                                {if !$extensionsWEB.mysqli}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.mysqli}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.xml}tick{else}alert{/if}.png"/>
-                            <label>
-                                XML extension -
-                                {if !$extensionsWEB.xml}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.xml}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.openssl}tick{else}alert{/if}.png"/>
-                            <label>
-                                OpenSSL extension -
-                                {if !$extensionsWEB.openssl}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsWEB.openssl}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
+                    {/foreach}
+
                 </div>
                 <div class="row">
                     <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli && $phpVersionCliOK}tick{else}alert{/if}.png"/>
@@ -174,84 +115,22 @@
                         - {lang code='info_php_cli'}
                         {/if}
                     </label>
+
+                    {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.curl}tick{else}alert{/if}.png"/>
+                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
                             <label>
-                                cURL extension -
-                                {if !$extensionsCLI.curl}
+                                {$extension.display} extension -
+                                {if !$extensionsCLI.$key}
                                 <div class="alert alert-danger">{lang code = 'not_found'}</div>
                                 {else}
-                                Version <strong>{$extensionsCLI.curl}</strong>
+                                Version <strong>{$extensionsCLI.$key}</strong>
                                 {/if}
                             </label>
                         </div>
                     </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.gd}tick{else}alert{/if}.png"/>
-                            <label>
-                                GD extension -
-                                {if !$extensionsCLI.gd}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.gd}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mbstring}tick{else}alert{/if}.png"/>
-                            <label>
-                                MBstring extension -
-                                {if !$extensionsCLI.mbstring}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.mbstring}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.mysqli}tick{else}alert{/if}.png"/>
-                            <label>
-                                MySQLi extension -
-                                {if !$extensionsCLI.mysqli}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.mysqli}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.xml}tick{else}alert{/if}.png"/>
-                            <label>
-                                XML extension -
-                                {if !$extensionsCLI.xml}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.xml}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
-                    <div class="row ml-2">
-                        <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.openssl}tick{else}alert{/if}.png"/>
-                            <label>
-                                OpenSSL extension -
-                                {if !$extensionsCLI.openssl}
-                                <div class="alert alert-danger">{lang code = 'not_found'}</div>
-                                {else}
-                                Version <strong>{$extensionsCLI.openssl}</strong>
-                                {/if}
-                            </label>
-                        </div>
-                    </div>
+                    {/foreach}
                 </div>
                 <div class="row">
                     <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>

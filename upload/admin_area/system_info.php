@@ -98,6 +98,7 @@ assign('upload_max_filesize_cli', System::get_php_cli_config('upload_max_filesiz
 assign('max_execution_time_cli', System::get_php_cli_config('max_execution_time') ?? 1);
 assign('extensionsCLI', System::get_php_extensions('php_cli'));
 assign('extensionsWEB', System::get_php_extensions('php_web'));
+assign('php_extensions_list', System::get_php_extensions_list());
 
 subtitle(lang('system_info'));
 template_files("system_info.html");

@@ -171,18 +171,6 @@ function get_required_php(): array
     ];
 }
 
-function get_php_extensions(): array
-{
-    return [
-        'gd' => 'GD',
-        'mbstring' => 'MBstring',
-        'mysqli' => 'MySQLi',
-        'xml' => 'XML',
-        'curl' => 'cURL',
-        'openssl' => 'OpenSSL'
-    ];
-}
-
 function get_php_functions(): array
 {
     return [

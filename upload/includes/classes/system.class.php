@@ -39,24 +39,18 @@ class System{
                     }
                 }
 
-                $extensions = [
-                    'GD library Version' => 'gd'
-                    ,'GD Version' => 'gd'
-                    ,'libmbfl version' => 'mbstring'
-                    ,'Client API library version' => 'mysqli'
-                    ,'libxml2 Version' => 'xml'
-                    ,'cURL Information' => 'curl'
-                    ,'OpenSSL Library Version' => 'openssl'
-                ];
-
                 $regex_version = '(\d+\.\d+\.\d+)';
-                foreach ($extensions as $key => $extension) {
-                    if (!empty($vModules[$extension][$key]) && empty(self::$extensionsWeb[$extension])) {
-                        $matches = [];
-                        preg_match($regex_version, $vModules[$extension][$key], $matches);
-                        self::$extensionsWeb[$extension] = $matches[0]??$vModules[$extension][$key];
+                $php_extensions = self::get_php_extensions_list();
+                foreach($php_extensions as $key => $extension){
+                    foreach($extension['version_tags'] as $tag){
+                        if (!empty($vModules[$key][$tag]) && empty(self::$extensionsWeb[$key])) {
+                            $matches = [];
+                            preg_match($regex_version, $vModules[$key][$tag], $matches);
+                            self::$extensionsWeb[$key] = $matches[0]??$vModules[$key][$tag];
+                        }
                     }
                 }
+
                 break;
 
             case 'php_cli':
@@ -65,17 +59,10 @@ class System{
                     return ['err' => $php_cli_info['err']];
                 }
 
-                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions'];
-                $extensions = [
-                    'GD library Version' => 'gd'
-                    ,'GD Version' => 'gd'
-                    ,'libmbfl version' => 'mbstring'
-                    ,'Client API library version' => 'mysqli'
-                    ,'libxml2 Version' => 'xml'
-                    ,'cURL Information' => 'curl'
-                    ,'OpenSSL Library Version' => 'openssl'
-                ];
                 $regex_version = '(\d+\.\d+\.\d+)';
+                $php_extensions = self::get_php_extensions_list();
+                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions'];
+
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
                         $line = explode('=>', $line);
@@ -95,17 +82,20 @@ class System{
                         }
                     }
 
-                    foreach($extensions as $search => $key){
-                        if (strpos($line, $search) !== false) {
-                            $line = explode('=>', $line);
-                            $tmp_version  = trim(end($line));
+                    foreach($php_extensions as $key => $extension){
+                        foreach($extension['version_tags'] as $tag){
+                            if (strpos($line, $tag) !== false) {
+                                $line = explode('=>', $line);
+                                $tmp_version  = trim(end($line));
 
-                            preg_match($regex_version, $tmp_version, $match_version);
-                            self::$extensionsCli[$key] = $match_version[0] ?? $tmp_version;
+                                preg_match($regex_version, $tmp_version, $match_version);
+                                self::$extensionsCli[$key] = $match_version[0] ?? $tmp_version;
 
-                            continue 2;
+                                continue 3;
+                            }
                         }
                     }
+
                 }
                 break;
 
@@ -114,6 +104,36 @@ class System{
                 break;
 
         }
+    }
+
+    public static function get_php_extensions_list(): array
+    {
+        return [
+            'gd' => [
+                'display' => 'GD'
+                ,'version_tags' => ['GD library Version','GD Version']
+            ],
+            'mbstring' => [
+                'display' => 'MBstring'
+                ,'version_tags' => ['libmbfl version']
+            ],
+            'mysqli' => [
+                'display' => 'MySQLi'
+                ,'version_tags' => ['Client API library version']
+            ],
+            'xml' => [
+                'display' => 'XML'
+                ,'version_tags' => ['libxml2 Version']
+            ],
+            'curl' => [
+                'display' => 'cURL'
+                ,'version_tags' => ['cURL Information']
+            ],
+            'openssl' => [
+                'display' => 'OpenSSL'
+                ,'version_tags' => ['OpenSSL Library Version']
+            ],
+        ];
     }
 
     public static function get_php_extensions($type, $custom_filepath = null): array

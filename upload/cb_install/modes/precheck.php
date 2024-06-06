@@ -7,7 +7,7 @@
 
 <?php
 $required_php = get_required_php();
-$required_php_extensions = get_php_extensions();
+$required_php_extensions = System::get_php_extensions_list();
 $required_php_fonctions = get_php_functions();
 $required_softwares = get_required_softwares();
 $skippable_option = get_skippable_options();
@@ -55,20 +55,20 @@ $skippable_option = get_skippable_options();
         }
 
         $php_extensions = System::get_php_extensions($php, $_POST[$php . '_filepath'] ?? null);
-        foreach($required_php_extensions as $ext => $ext_name) {
+        foreach($required_php_extensions as $key => $extension) {
             if( !System::get_software_version($php, false, $_POST[$php . '_filepath'] ?? null) ){
                 break;
             }
             $line++;
 
-            if( empty($php_extensions[$ext]) ) {
+            if( empty($php_extensions[$key]) ) {
                 $everything_good = false;
-                $msg = ['err' => $ext_name . ' extension is not enabled'];
+                $msg = ['err' => $extension['display'] . ' extension is not enabled'];
             } else {
-                $msg = ['msg' => $ext_name . ' extension version '. $php_extensions[$ext]];
+                $msg = ['msg' => $extension['display'] . ' extension version '. $php_extensions[$key]];
             }
 
-            echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . $ext_name . '</dt>';
+            echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . $extension['display'] . '</dt>';
             echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
         }
 
