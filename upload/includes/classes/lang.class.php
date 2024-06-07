@@ -35,6 +35,11 @@ class Language
         return self::$_instance;
     }
 
+    public function getLangISO()
+    {
+        return $this->lang_iso;
+    }
+
     /**
      * INIT
      * @throws Exception

@@ -14,7 +14,6 @@
 		{$playlists = $cbvid->action->get_playlists(["limit"=>12])}
 		
 		{if $playlists}
-		{*pr($playlists,true)*}
 		
 		{foreach $playlists as $playlist name=limit}
 			{include file="$style_dir/blocks/playlist/playlist-block.html"}

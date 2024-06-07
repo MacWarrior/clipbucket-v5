@@ -79,7 +79,7 @@ function saveSubtitle(number) {
 function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
     showSpinner();
     $.ajax({
-        url: "/actions/info_tmdb.php",
+        url: "/actions/admin_info_tmdb.php",
         type: "POST",
         data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
         dataType: 'json',
@@ -96,7 +96,7 @@ function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
 function saveInfoTmdb(tmdb_video_id) {
     showSpinner();
     $.ajax({
-        url: "/actions/import_tmdb.php",
+        url: "/actions/admin_import_tmdb.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
         dataType: 'json',
@@ -134,7 +134,7 @@ $(function () {
     $('#button_info_tmdb').on('click', function () {
         var video_title = $('#title').val();
         getInfoTmdb(videoid, video_title, 1);
-    })
+    });
 }); 
 
 $( document ).ready(function() {

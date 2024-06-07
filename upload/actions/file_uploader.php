@@ -175,9 +175,9 @@ switch ($mode) {
         $moved = move_uploaded_file($_FILES['Filedata']['tmp_name'], $targetFile);
 
         if ($moved) {
-            $log->writeLine('Temporary Uploading', 'File Uploaded to Temp directory successfully and video conversion file is being executed !', true);
+            $log->writeLine('Temporary Uploading', 'File Uploaded to Temp directory successfully and video conversion file is being executed !');
         } else {
-            $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!', true);
+            $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!');
         }
 
         $filename_without_ext = pathinfo($original_filename, PATHINFO_FILENAME);
@@ -215,22 +215,24 @@ switch ($mode) {
 
         $Upload->add_conversion_queue($targetFileName);
 
+        $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
         if (stristr(PHP_OS, 'WIN')) {
-            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName);
+            $complement = '';
         } elseif (stristr(PHP_OS, 'darwin')) {
-            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' </dev/null >/dev/null &');
+            $complement = ' </dev/null >/dev/null &';
         } else { // for ubuntu or linux
-            exec(php_path() . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile . ' > /dev/null &');
+            $complement = ' > /dev/null &';
         }
+        exec($default_cmd . $complement);
 
         $TempLogData = 'Video Converson File executed successfully with Target File > ' . $targetFileName;
-        $log->writeLine('Video Conversion File Execution', $TempLogData, true);
+        $log->writeLine('Video Conversion File Execution', $TempLogData);
 
         // inserting into video views as well
         $query = 'INSERT INTO ' . tbl('video_views') . ' (video_id, video_views, last_updated) VALUES(' . $vid . ',0,' . time() . ')';
         $db->execute($query);
 
-        echo json_encode(['success' => 'yes', 'file_name' => $file_name]);
+        echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         exit();
 
     default:

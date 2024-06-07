@@ -15,7 +15,6 @@ class API extends REST
     public function __construct()
     {
         parent::__construct();// Init parent contructor
-        //$this->dbConnect();// Initiate Database connection
     }
 
     //Database connection

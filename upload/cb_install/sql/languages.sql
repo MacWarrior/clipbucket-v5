@@ -1125,5 +1125,8 @@ VALUES ('admin_setting'),
        ('enable_tmdb_mature_content'),
        ('tmdb_mature_content_age'),
        ('access_forbidden_under_age_display'),
+       ('tmdb_enable_on_front'),
+       ('enabled'),
+       ('disabled'),
        ('option_enable_chunk_upload'),
        ('tips_enable_chunk_upload');

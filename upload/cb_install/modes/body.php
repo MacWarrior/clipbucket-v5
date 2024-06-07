@@ -3,12 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ClipBucket v<?php echo VERSION . ' ' . STATE; ?> Installer</title>
-    <link href="style.css" rel="stylesheet" type="text/css"/>
-    <link href='//fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css'/>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
-    <script type="text/javascript" src="functions.js"></script>
-    <link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/js/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="./functions.js"></script>
+    <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+    <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="top clearfix">

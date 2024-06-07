@@ -7,7 +7,9 @@ require_once DirPath::get('classes') . 'DiscordLog.php';
 
 $whoops = new \Whoops\Run;
 if (file_exists(DirPath::get('temp') . 'development.dev')) {
-    define('DEVELOPMENT_MODE', true);
+    if( !defined('DEVELOPMENT_MODE') ){
+        define('DEVELOPMENT_MODE', true);
+    }
     $__devmsgs = [
         'insert_queries'        => [],
         'select_queries'        => [],
@@ -33,7 +35,9 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
         $whoops->pushHandler(new \Whoops\Handler\PrettyPageHandler);
     }
 } else {
-    define('DEVELOPMENT_MODE', false);
+    if( !defined('DEVELOPMENT_MODE') ) {
+        define('DEVELOPMENT_MODE', false);
+    }
 }
 $whoops->pushHandler(function($e){
     $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
@@ -75,6 +79,7 @@ require_once DirPath::get('classes') . 'tags.class.php';
 require_once DirPath::get('classes') . 'curl.class.php';
 require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
+require_once DirPath::get('classes') . 'system.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -241,7 +246,6 @@ define('RESIZE', $row['resize']);
 define('MAX_UPLOAD_SIZE', $row['max_upload_size']);
 define('THUMB_HEIGHT', $row['thumb_height']);
 define('THUMB_WIDTH', $row['thumb_width']);
-define('PHP_PATH', $row['php_path']);
 
 define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
 define('USER_COMMENT_OWN', $Cbucket->configs['user_comment_own']);
@@ -275,8 +279,6 @@ define('ALLOWED_VDO_CATS', $row['video_categories']);
 
 Assign('NEED_UPDATE', NEED_UPDATE);
 
-# Assigning Smarty Tags & Values
-Assign('PHP_PATH', PHP_PATH);
 Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
 Assign('slogan', SLOGAN);
@@ -392,7 +394,6 @@ $Smarty->register_function('include_header', 'include_header');
 $Smarty->register_function('include_template_file', 'include_template_file');
 $Smarty->register_function('include_js', 'include_js');
 $Smarty->register_function('include_css', 'include_css');
-$Smarty->register_function('get_binaries', 'get_binaries');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
 $Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');

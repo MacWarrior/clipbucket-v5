@@ -278,6 +278,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'only_keep_max_resolution', 'no'),
     (NULL, 'enable_tmdb_mature_content', 'no'),
     (NULL, 'tmdb_mature_content_age', '18'),
+    (NULL, 'tmdb_enable_on_front_end', 'no'),
     (NULL, 'enable_chunk_upload', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

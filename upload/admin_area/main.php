@@ -116,6 +116,7 @@ if (isset($_POST['update'])) {
         , 'enable_sub_collection'
         , 'only_keep_max_resolution'
         , 'enable_tmdb_mature_content'
+        , 'tmdb_enable_on_front_end'
         , 'enable_chunk_upload'
     ];
 
@@ -414,6 +415,7 @@ if (isset($_POST['update'])) {
         'enable_video_poster',
         'enable_video_backdrop',
         'enable_edit_button',
+        'tmdb_enable_on_front_end',
 
         'hide_empty_collection',
         'display_video_comments',
@@ -527,7 +529,7 @@ Assign('row', $row);
 $video_resolutions = myquery::getInstance()->getVideoResolutions();
 Assign('video_resolutions', $video_resolutions);
 
-$ffmpeg_version = check_version('ffmpeg');
+$ffmpeg_version = System::get_software_version('ffmpeg');
 Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');

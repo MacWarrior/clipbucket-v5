@@ -125,25 +125,21 @@ try {
 
     $match = [];
     foreach ($files as $file) {
-        $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3})\/(\d{5})\.sql/';
-        $match = [];
-        preg_match($regex, $file, $match);
-        if( !execute_migration_SQL_file($file) ){
-            throw new \Exception();
-        }
+        /** @var Migration $instance  */
+        $instance = execute_migration_file($file);
     }
     if (php_sapi_name() != 'cli') {
         echo json_encode([
             'success' => true
-            , 'msg'   => htmlentities($match['1'] . ' - revision ' . (int)$match['2'])
+            , 'msg'   => htmlentities($instance->getVersion() . ' - revision ' . (int)$instance->getRevision())
         ]);
     }
 } catch (\Exception $e) {
-    $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3}|commercial)\/(\d{5})\.sql/';
+    $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3}|commercial)\/(\D)(\d{5})\.php/';
     $match = [];
     preg_match($regex, $file, $match);
     if (php_sapi_name() != 'cli') {
-        e('An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.');
+        e('An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['3'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.');
         if ($e->getMessage() != '') {
             error_log($e->getMessage());
         }
@@ -152,7 +148,7 @@ try {
             , 'msg'   => getTemplateMsg()
         ]);
     } else {
-        echo 'An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['2'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.';
+        echo 'An SQL error occured during update ' . $match['1'] . ' - revision ' . (int)$match['3'] . ' (' . basename($file) . '). Please update manually to this revision and the restart update process from this revision.';
     }
     return false;
 }

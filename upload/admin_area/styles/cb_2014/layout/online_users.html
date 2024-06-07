@@ -9,42 +9,47 @@
     <td width="100">IP</td>
   </tr>
   {if $online_users}
-  {foreach from=$online_users item=user}
-  {$user.agent|get_browser_details:theBrowser}
+    {foreach from=$online_users item=user}
+    {$user.agent|get_browser_details:theBrowser}
     <tr>
       <td width="150">
         {if $user.username}
-          <a href="view_user?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
+          <a href="view_user.php?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
           <br>
-          <a href="view_user.php?uid={$u.userid}">
-             <img src="{$userquery->getUserThumb($user,'small')}" class="img-thumbnail oneUserImage" />
+          <a href="view_user.php?uid={$user.userid}">
+             <img src="{$userquery->getUserThumb([],'small', $user.userid)}" class="img-thumbnail oneUserImage"/>
           </a>
-
         {else}
-        {$user.session_string}
+          {$user.session_string}
         {/if}
         <img class="tipsy_tip browser {$theBrowser.bname}" src="{$imageurl}/dot.gif" title="{$theBrowser.name} {$theBrowser.version} on {$theBrowser.platform}" />
       </td>
       <td>
-          <div class="dropdown marginBottom">
-            <button id="hideshow" class="btn btn-primary btn-xs drop" value="See Details">See Details..</button>
-          </div>
+        <div class="dropdown marginBottom">
+          <button id="hideshow" class="btn btn-primary btn-xs drop" value="See Details">See Details..</button>
+        </div>
 
-          <span title="{$user.referer}">
-              <b>Right Now</b>      <a href="{$user.current_page}">{$user.current_page|truncate:40:'..':false:true}</a>
-              {if $user.referer}
-              <a href="{$user.referer}" target="_blank" ><label class="label label-warning">View Referer</label></a>
-              {/if}
-              </span>
-              <div id="content" style="display: none">
-            <label class="label label-info">{$user.email}</label>
-              <span class="label label-info">
-                                       {lang code='viewed'} <b>{$user.last_active|niceTime}</b></span>
-                     <span class="label label-info">
-                                       Session Started <b>{$user.session_date|niceTime}</b></span>
-                     <span class="label label-danger">
-                                       <b>{$user.agent}</b></span>
-                  </div>
+        <span>
+          <b>Right Now</b> <a href="{$user.current_page}" title="{$user.current_page}">{$user.current_page|truncate:40:'...':false:true}</a>
+          {if $user.referer}
+          <a href="{$user.referer}" title="{$user.referer}" target="_blank">
+            <label class="label label-warning">View Referer</label>
+          </a>
+          {/if}
+        </span>
+
+        <div id="content" style="display:none;">
+          <label class="label label-info">{$user.email}</label>
+          <span class="label label-info">
+            {lang code='viewed'} <b>{$user.last_active|niceTime}</b>
+          </span>
+          <span class="label label-info">
+            Session Started <b>{$user.session_date|niceTime}</b>
+          </span>
+          <span class="label label-danger">
+            <b>{$user.agent}</b>
+          </span>
+        </div>
       </td>
       <td width="150">
         <b>{$user.session_date|niceTime}</b><br>
@@ -52,7 +57,7 @@
       </td>
       <td width="100"><b>{$user.ip}</b></td>
     </tr>
-  {/foreach}
+    {/foreach}
   {/if}
 </table>
 

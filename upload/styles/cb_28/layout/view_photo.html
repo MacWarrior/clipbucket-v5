@@ -66,7 +66,7 @@
 						<h1 id="img-title"></h1>
 						<div class="user-video-info clearfix">
 							<a href="{$userquery->profile_link($user)}" class="avatar">
-								<img src="{$userquery->avatar($video,'m',user_id())}" class="img-responsive">
+								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive">
 							</a>
 							<h2 class="user-title">
 								<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>

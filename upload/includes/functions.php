@@ -94,7 +94,7 @@ function set_cookie_secure($name, $val, $time = null)
     $flag_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
     $flag_httponly = true;
 
-    if (version_compare(phpversion(), '7.3.0', '>=')) {
+    if (version_compare(System::get_software_version('php_web'), '7.3.0', '>=')) {
         setcookie($name, $val, [
             'expires'  => $time,
             'path'     => $path,
@@ -124,6 +124,7 @@ function getBytesFromFileSize($size)
         'YB' => pow(1024, 8)
     ];
 
+    $size = trim($size);
     $unit = preg_replace('/[0-9]/', '', $size);
     $size = preg_replace('/[^0-9]/', '', $size);
     return $size * $units[$unit];
@@ -428,21 +429,6 @@ function formatfilesize($data): string
     }
 
     return round(($data / 1024000000), 1) . ' GB';
-}
-
-/**
- * Function used to get shell output
- *
- * @param : { string } { $cmd } { command to run }
- *
- * @return mixed
- */
-function shell_output($cmd)
-{
-    if (!stristr(PHP_OS, 'WIN')) {
-        $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
-    }
-    return shell_exec($cmd);
 }
 
 function getCommentAdminLink($type, $id): string
@@ -848,6 +834,7 @@ function validate_collection_category($array = null)
  * @params_in_$param : details, size, uid
  *
  * @return string
+ * @throws Exception
  * @uses : { class : $userquery } { function : avatar }
  */
 function avatar($param)
@@ -856,7 +843,7 @@ function avatar($param)
     $udetails = $param['details'];
     $size = $param['size'];
     $uid = $param['uid'];
-    return $userquery->avatar($udetails, $size, $uid);
+    return $userquery->getUserThumb($udetails, $size, $uid);
 }
 
 /**
@@ -879,80 +866,6 @@ function load_form($param)
     }
 
     error_log('Unknown method : ' . $func . ' for class : ' . $class);
-}
-
-/**
- * Function used to get PHP Path
- */
-function php_path()
-{
-    if (PHP_PATH != '') {
-        return PHP_PATH;
-    }
-    return '/usr/bin/php';
-}
-
-/**
- * Function used to get binary paths
- *
- * @param : { string } { $path } { element to get path for }
- *
- * @return string
- */
-function get_binaries($path): string
-{
-    $path = strtolower($path);
-    switch ($path) {
-        case 'php':
-            $software_path = php_path();
-            break;
-
-        case 'media_info':
-            $software_path = config('media_info');
-            break;
-
-        case 'ffprobe':
-            $software_path = config('ffprobe_path');
-            break;
-
-        case 'ffmpeg':
-            $software_path = config('ffmpegpath');
-            break;
-
-        case 'git':
-            $software_path = config('git_path');
-            break;
-
-        default:
-            $software_path = '';
-            break;
-    }
-
-    if ($software_path != '') {
-        return $software_path;
-    }
-
-    switch ($path) {
-        case 'ffprobe':
-        case 'ffmpeg':
-        case 'git':
-        case 'php':
-            $which = $path;
-            break;
-        case 'media_info':
-            $which = 'mediainfo';
-            break;
-
-        default:
-            error_log('get_binaries wrong path : ' . $path);
-            return 'Unknown path : ' . $path;
-    }
-
-    $return_path = shell_output('which '.$which);
-    if ($return_path) {
-        return $return_path;
-    }
-    return 'Unable to find ' . $path . ' path';
 }
 
 /**
@@ -3070,90 +2983,13 @@ function get_ffmpeg_codecs($type)
 
     $codec_installed = [];
     foreach ($codecs as $codec) {
-        $get_codec = shell_output(get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
+        $get_codec = System::shell_output(System::get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
         if ($get_codec) {
             $codec_installed[] = $codec;
         }
     }
 
     return $codec_installed;
-}
-
-function check_version($name)
-{
-    switch ($name) {
-        case 'ffmpeg':
-        case 'ffprobe':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-            $matches = [];
-            $result = shell_output($path . ' -version | head -n1');
-            if ($result) {
-                if (preg_match('/git/i', $result)) {
-                    preg_match('@^(?:' . $name . ' version)?([^C]+)@i', $result, $matches);
-                    return $matches[1];
-                }
-
-                // for three-part version number
-                preg_match('/(?:' . $name . '\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-
-                // for two-part version number
-                preg_match('#(?:' . $name . '\\s)(?:version\\s)?(\\d\\.\\d)#i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-
-                return false;
-            }
-            return false;
-
-        case 'git':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-
-            $matches = [];
-            $result = shell_output($path . ' --version');
-            if ($result) {
-                preg_match('/git version (.+)$/', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-                return false;
-            }
-            return false;
-
-        case 'media_info':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-            $result = shell_output($path . ' --version');
-            $media_info_version = explode('v', $result);
-            return $media_info_version[1];
-
-        case 'php':
-            $path = get_binaries($name);
-            if( empty($path) || !file_exists($path) ){
-                return false;
-            }
-            $matches = [];
-            $result = shell_output($path . ' --version | head -n1');
-            if ($result) {
-                preg_match('/(?:php\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-                return false;
-            }
-            return false;
-    }
 }
 
 /**
@@ -3463,7 +3299,7 @@ function updateObjectStats($type, $object, $id, $op = '+')
  * @return bool { boolean } { true if conversion lock exists, else false }
  * { true if conversion lock exists, else false }
  */
-function conv_lock_exists()
+function conv_lock_exists(): bool
 {
     for ($i = 0; $i < config('max_conversion'); $i++) {
         if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
@@ -3511,78 +3347,11 @@ function queryString($var = false, $remove = false)
 }
 
 /**
- * Download a remote file and store in given directory
- *
- * @param      $snatching_file
- * @param      $destination
- * @param      $dest_name
- * @param bool $rawdecode
- *
- * @return string
- * @internal param $ : { string } { $snatching_file } { file to be downloaded }
- * @internal param $ : { string } { $destination } { where to save the downloaded file }
- * @internal param $ : { string } { $dest_name } { new name for file }
- *
- */
-function snatch_it($snatching_file, $destination, $dest_name, $rawdecode = true)
-{
-    if ($rawdecode == true) {
-        $snatching_file = rawurldecode($snatching_file);
-    }
-    if (PHP_OS == "Linux") {
-        $destination . '/' . $dest_name;
-        $saveTo = $destination . '/' . $dest_name;
-    } elseif (PHP_OS == "WINNT") {
-        $destination . '\\' . $dest_name;
-        $saveTo = $destination . '/' . $dest_name;
-    }
-    cURLdownload($snatching_file, $saveTo);
-    return $saveTo;
-}
-
-/**
- * This Function gets a file using curl method in php
- *
- * @param : { string } { $url } { file to be downloaded }
- * @param : { string } { $file } { where to save the downloaded file }
- *
- * @return string
- */
-function cURLdownload($url, $file)
-{
-    $ch = curl_init();
-    if ($ch) {
-        $fp = fopen($file, "w");
-        if ($fp) {
-            if (!curl_setopt($ch, CURLOPT_URL, $url)) {
-                fclose($fp); // to match fopen()
-                curl_close($ch); // to match curl_init()
-                return "FAIL: curl_setopt(CURLOPT_URL)";
-            }
-            if (!curl_setopt($ch, CURLOPT_FILE, $fp)) {
-                return "FAIL: curl_setopt(CURLOPT_FILE)";
-            }
-            if (!curl_setopt($ch, CURLOPT_HEADER, 0)) {
-                return "FAIL: curl_setopt(CURLOPT_HEADER)";
-            }
-            if (!curl_exec($ch)) {
-                return "FAIL: curl_exec()";
-            }
-            curl_close($ch);
-            fclose($fp);
-            return "SUCCESS: $file [$url]";
-        }
-        return "FAIL: fopen()";
-    }
-    return "FAIL: curl_init()";
-}
-
-/**
  * Checks if CURL is installed on server
  * @return bool : { boolean } { true if curl found, else false }
  * @internal param $ : { none }
  */
-function isCurlInstalled()
+function isCurlInstalled(): bool
 {
     if (in_array('curl', get_loaded_extensions())) {
         return true;
@@ -3842,10 +3611,13 @@ function get_browser_details($in = null, $assign = false)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function update_user_voted($array, $userid = null)
 {
     global $userquery;
-    return $userquery->update_user_voted($array, $userid);
+    $userquery->update_user_voted($array, $userid);
 }
 
 /**
@@ -3866,7 +3638,7 @@ function delete_video_from_collection($vdetails)
  *
  * @return bool : { boolean } { true if file exists, else false }
  */
-function checkRemoteFile($url)
+function checkRemoteFile($url): bool
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -3880,66 +3652,6 @@ function checkRemoteFile($url)
         return true;
     }
     return false;
-}
-
-/**
- * Fetch total count for videos, photos and channels
- *
- * @param $section
- * @param $query
- *
- * @return bool : { integer } { $select[0]['counts'] } { count for requested field }
- * @throws Exception
- * @internal param $ : { string } { $section } { section to select count for }
- * @internal param $ : { string } { $query } { query to fetch data against }
- */
-function get_counter($section, $query)
-{
-    global $db;
-
-    if (!config('use_cached_pagin')) {
-        return false;
-    }
-    $timeRefresh = config('cached_pagin_time');
-    $timeRefresh = $timeRefresh * 60;
-    $validTime = time() - $timeRefresh;
-    unset($query['order']);
-    $je_query = json_encode($query);
-    $query_md5 = md5($je_query);
-    $select = $db->select(tbl('counters'), "*", "section='$section' AND query_md5='$query_md5' 
-		AND '$validTime' < date_added");
-    if (count($select) > 0) {
-        return $select[0]['counts'];
-    }
-    return false;
-}
-
-/**
- * Updates total count for videos, photos and channels
- *
- * @param $section
- * @param $query
- * @param $counter
- *
- * @throws Exception
- * @internal param $ : { string } { $section } { section to update counter for }
- * @internal param $ : { string } { $query } { query to run for updating }
- * @internal param $ : { integer } { $counter } { count to update }
- */
-function update_counter($section, $query, $counter)
-{
-    global $db;
-    unset($query['order']);
-    $je_query = json_encode($query);
-    $query_md5 = md5($je_query);
-    $count = $db->count(tbl('counters'), "*", "section='$section' AND query_md5='$query_md5'");
-    if ($count) {
-        $db->update(tbl('counters'), ['counts', 'date_added'], [$counter, strtotime(now())],
-            "section='$section' AND query_md5='$query_md5'");
-    } else {
-        $db->insert(tbl('counters'), ['section', 'query', 'query_md5', 'counts', 'date_added'],
-            [$section, '|no_mc|' . $je_query, $query_md5, $counter, strtotime(now())]);
-    }
 }
 
 /**
@@ -4119,16 +3831,6 @@ function time_links(): array
         'this_year'  => lang('thisyear'),
         'last_year'  => lang('lastyear')
     ];
-}
-
-/**
- * Calls $lang_obj variable and returns a string
- * @return String
- */
-function get_locale()
-{
-    global $lang_obj;
-    return $lang_obj->lang_iso;
 }
 
 /*assign results to template for load more buttons on all_videos.html*/
@@ -4428,66 +4130,6 @@ function array_val_assign($vals)
     }
 }
 
-function build_sort($sort, $vid_cond)
-{
-    if (!empty($sort)) {
-        switch ($sort) {
-            case 'most_recent':
-            default:
-                $vid_cond['order'] = ' date_added DESC ';
-                break;
-
-            case 'most_viewed':
-                $vid_cond['order'] = 'views DESC ';
-                $vid_cond['date_span_column'] = 'last_viewed';
-                break;
-
-            case 'featured':
-                $vid_cond['featured'] = 'yes';
-                break;
-
-            case 'top_rated':
-                $vid_cond['order'] = ' rating DESC, rated_by DESC';
-                break;
-
-            case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
-                break;
-        }
-        return $vid_cond;
-    }
-}
-
-function build_sort_photos($sort, $vid_cond)
-{
-    if (!empty($sort)) {
-        switch ($sort) {
-            case 'most_recent':
-            default:
-                $vid_cond['order'] = ' photos.date_added DESC ';
-                break;
-
-            case 'most_viewed':
-                $vid_cond['order'] = ' photos.views DESC ';
-                $vid_cond['date_span_column'] = 'last_viewed';
-                break;
-
-            case 'featured':
-                $vid_cond['featured'] = 'yes';
-                break;
-
-            case 'top_rated':
-                $vid_cond['order'] = ' photos.rating DESC';
-                break;
-
-            case 'most_commented':
-                $vid_cond['order'] = ' photos.comments_count DESC';
-                break;
-        }
-    }
-    return $vid_cond;
-}
-
 function get_website_logo_path()
 {
     $logo_name = config('logo_name');
@@ -4618,7 +4260,7 @@ function get_date_js()
 
 function isset_check($input_arr, $key_name, $mysql_clean = false)
 {
-    if (isset($input_arr[$key_name]) && !empty($input_arr[$key_name])) {
+    if (!empty($input_arr[$key_name])) {
         if (!is_array($input_arr[$key_name]) && !is_numeric($input_arr[$key_name]) && $mysql_clean) {
             $input_arr[$key_name] = mysql_clean($input_arr[$key_name]);
         }
@@ -4735,7 +4377,8 @@ function generic_curl($input_arr = [])
 }
 
 /**
- * @return array|null
+ * @param string $format
+ * @return resource
  */
 function get_proxy_settings(string $format = '')
 {
@@ -4755,7 +4398,7 @@ function get_proxy_settings(string $format = '')
                     $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
                 }
             }
-            return $context;
+            return stream_context_create($context);
     }
 }
 
@@ -4827,39 +4470,6 @@ function get_restorable_languages(array $list_language = []): array
     });
 }
 
-function parseAllPHPModules(): array
-{
-    ob_start();
-    phpinfo(INFO_MODULES);
-    $s = ob_get_contents();
-    ob_end_clean();
-
-    $s = strip_tags($s, '<h2><th><td>');
-    $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/', "<info>\\1</info>", $s);
-    $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/', "<info>\\1</info>", $s);
-    $vTmp = preg_split('/(<h2>[^<]+<\/h2>)/', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
-    $vModules = [];
-    for ($i = 1; $i < count($vTmp); $i++) {
-        if (preg_match('/<h2>([^<]+)<\/h2>/', $vTmp[$i], $vMat)) {
-            $vName = trim($vMat[1]);
-            $vTmp2 = explode("\n", $vTmp[$i + 1]);
-            foreach ($vTmp2 as $vOne) {
-                $vPat = '<info>([^<]+)<\/info>';
-                $vPat3 = "/$vPat\s*$vPat\s*$vPat/";
-                $vPat2 = "/$vPat\s*$vPat/";
-                if (preg_match($vPat3, $vOne, $vMat)) { // 3cols
-                    $vModules[$vName][trim($vMat[1])] = [
-                        trim($vMat[2]),
-                        trim($vMat[3])
-                    ];
-                } elseif (preg_match($vPat2, $vOne, $vMat)) { // 2cols
-                    $vModules[$vName][trim($vMat[1])] = trim($vMat[2]);
-                }
-            }
-        }
-    }
-    return $vModules;
-}
 function ageRestriction($var) {
     $var = (int)$var;
     if (empty($var)) {
