@@ -182,7 +182,7 @@ class Upload
 
         //Upload Ip
         $query_field[] = 'uploader_ip';
-        $query_val[] = $_SERVER['REMOTE_ADDR'];
+        $query_val[] = Network::get_remote_ip();
 
         //Setting Activation Option
         $query_field[] = 'active';

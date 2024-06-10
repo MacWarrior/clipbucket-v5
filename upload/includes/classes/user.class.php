@@ -571,7 +571,7 @@ class userquery extends CBCategory
                     //Updating User last login , num of visits and ip
                     $db->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],
-                        ['|f|num_visits+1', NOW(), $_SERVER['REMOTE_ADDR']],
+                        ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
                         'userid=\'' . $udetails['userid'] . '\''
                     );
 
@@ -3305,10 +3305,8 @@ class userquery extends CBCategory
         if( config('enable_country') == 'yes' ){
             $countries = ClipBucket::getInstance()->get_countries();
             $selected_cont = null;
-            $pick_geo_country = config('pick_geo_country');
-            if ($pick_geo_country == 'yes') {
-                $user_ip = $_SERVER['REMOTE_ADDR']; // getting user's ip
-                $user_country = ip_info($user_ip, 'country'); // get country using IP
+            if (config('pick_geo_country') == 'yes') {
+                $user_country = Network::get_ip_infos('country');
                 foreach ($countries as $code => $name) {
                     $name = strtolower($name);
                     $user_country = strtolower($user_country);
@@ -3530,7 +3528,7 @@ class userquery extends CBCategory
             $query_val[] = $avcode;
 
             //Signup IP
-            $signup_ip = $_SERVER['REMOTE_ADDR'];
+            $signup_ip = Network::get_remote_ip();
             $query_field[] = 'signup_ip';
             $query_val[] = $signup_ip;
 
@@ -4028,7 +4026,7 @@ class userquery extends CBCategory
                     //Updating User last login , num of visits and ip
                     $db->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],
-                        ['|f|num_visits+1', NOW(), $_SERVER['REMOTE_ADDR']],
+                        ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
                         'userid=\'' . $userid . '\''
                     );
 

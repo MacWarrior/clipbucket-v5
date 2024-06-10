@@ -80,6 +80,7 @@ require_once DirPath::get('classes') . 'curl.class.php';
 require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
+require_once DirPath::get('classes') . 'network.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
