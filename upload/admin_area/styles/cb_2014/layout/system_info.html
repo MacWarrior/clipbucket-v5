@@ -234,21 +234,23 @@
                     <div class="col-md-3">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                                 src="{$imageurl}/{if $post_max_size_mb >= $target_upload_size}tick{else}alert{/if}.png"
                             />
                             <label>post_max_size :
-                                <strong> {$post_max_size} {if getBytesFromFileSize($post_max_size) <= getBytesFromFileSize('50M') }
-                                    {lang code='must_be_least'} : 50M {/if}
+                                <strong> {$post_max_size} {if $post_max_size_mb < $target_upload_size }
+                                    {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'}
+                                    {/if}
                                 </strong>
                             </label>
                         </div>
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                                 src="{$imageurl}/{if $upload_max_filesize_mb >= $target_upload_size}tick{else}alert{/if}.png"
                             />
                             <label>upload_max_size :
-                                <strong> {$upload_max_filesize} {if getBytesFromFileSize($upload_max_filesize) <= getBytesFromFileSize('50M') }
-                                    {lang code='must_be_least'} : 50M {/if}
+                                <strong> {$upload_max_filesize} {if $upload_max_filesize_mb < $target_upload_size }
+                                    {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'}
+                                    {/if}
                                 </strong>
                             </label>
                         </div>
@@ -258,7 +260,7 @@
                             />
                             <label>memory_limit :
                                 <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
-                                    {lang code='must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M{/if}
                                 </strong>
                             </label>
                         </div>
@@ -268,7 +270,7 @@
                             />
                             <label>max_execution_time :
                                 <strong> {$max_execution_time} {if $max_execution_time < 7200 }
-                                    {lang code='must_be_least'} : 7200 {/if}
+                                    {lang code='must_be_least'} : 7200{/if}
                                 </strong>
                             </label>
                         </div>
@@ -295,26 +297,6 @@
                     </div>
                     {if $phpWebExec && $phpVersionCli != 0}
                     <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
-                        <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($post_max_size_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                            />
-                            <label>post_max_size :
-                                <strong> {$post_max_size_cli} {if getBytesFromFileSize($post_max_size_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code='must_be_least'} : 50M {/if}
-                                </strong>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                            />
-                            <label>upload_max_size :
-                                <strong> {$upload_max_filesize_cli} {if getBytesFromFileSize($upload_max_filesize_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code='must_be_least'} : 50M {/if}
-                                </strong>
-                            </label>
-                        </div>
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"
@@ -362,7 +344,7 @@
                         <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
                         PHP is unable to check Nginx configuration.<br/>
                         Please make sure <b>client_max_body_size</b> is set correctly.<br/>
-                        Minimum configuration recommended is <b>50M</b>.<br/>
+                        {lang|ucfirst code='must_be_least'} <b>{$target_upload_size}{lang code='mb'}</b>.<br/>
                         {lang code='incorrect_configuration_413_error'}
                     {else}
                         <img style="margin-left: 1em; margin-top: 0.4em;"
@@ -370,7 +352,7 @@
                         />
                         <label>client_max_body_size :
                             <strong> {$clientMaxBodySize} {if getBytesFromFileSize($clientMaxBodySize) <= getBytesFromFileSize('50M') }
-                                {lang code='must_be_least'} : 50M {/if}
+                                {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'} {/if}
                             </strong>
                         </label>
                     {/if}

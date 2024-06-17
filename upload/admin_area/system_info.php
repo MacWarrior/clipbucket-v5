@@ -11,7 +11,7 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('system_info'), 'url' => DirPath::getUrl('admin_area') . 'cb_server_conf_info.php'];
 
-$isNginx = (strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false);
+$isNginx = System::is_nginx();
 $can_access_nginx = false;
 $client_max_body_size = '';
 if( $isNginx ){
@@ -31,9 +31,19 @@ if( $isNginx ){
 
 assign('is_cloudflare', Network::is_cloudflare());
 
-assign('post_max_size', ini_get('post_max_size'));
+$post_max_size = ini_get('post_max_size');
+$post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+assign('post_max_size', $post_max_size);
+assign('post_max_size_mb', $post_max_size_mb);
+
+$upload_max_filesize = ini_get('upload_max_filesize');
+$upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+assign('upload_max_filesize', $upload_max_filesize);
+assign('upload_max_filesize_mb', $upload_max_filesize_mb);
+
+assign('target_upload_size', config('max_upload_size'));
+
 assign('memory_limit', ini_get('memory_limit'));
-assign('upload_max_filesize', ini_get('upload_max_filesize'));
 assign('max_execution_time', ini_get('max_execution_time'));
 assign('isNginx', $isNginx);
 assign('canAccessNginx', $can_access_nginx);
@@ -90,9 +100,7 @@ $phpVersionCli = System::get_software_version('php_cli');
 
 assign('phpVersionCli', $phpVersionCli);
 assign('phpVersionCliOK', $phpVersionCli >= $phpVersionReq);
-assign('post_max_size_cli', System::get_php_cli_config('post_max_size') ?? 0);
 assign('memory_limit_cli', System::get_php_cli_config('memory_limit') ?? 0);
-assign('upload_max_filesize_cli', System::get_php_cli_config('upload_max_filesize') ?? 0);
 assign('max_execution_time_cli', System::get_php_cli_config('max_execution_time') ?? 1);
 assign('extensionsCLI', System::get_php_extensions('php_cli'));
 assign('extensionsWEB', System::get_php_extensions('php_web'));

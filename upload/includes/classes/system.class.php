@@ -527,4 +527,54 @@ class System{
 
         return shell_exec($cmd);
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function check_php_configs(): bool
+    {
+        if( ini_get('max_execution_time') < 7200 ){
+            return false;
+        }
+
+        $target_upload_size = config('max_upload_size');
+        $chunk_upload = config('enable_chunk_upload') == 'yes';
+
+        $post_max_size = ini_get('post_max_size');
+        $post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+
+        if( !$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb) ){
+            return false;
+        }
+
+        $chunk_upload_size = config('chunk_upload_size');
+
+        if( $chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb) ){
+            return false;
+        }
+
+        $cloudflare_upload_limit = config('cloudflare_upload_limit');
+        if( Network::is_cloudflare() ){
+            if( !$chunk_upload && $target_upload_size > $cloudflare_upload_limit ){
+                return false;
+            }
+            if( $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit ){
+                return false;
+            }
+        }
+
+        if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function is_nginx(): bool
+    {
+        return strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false;
+    }
 }
