@@ -42,7 +42,7 @@ function validrecaptcha_v2()
         'https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s&remoteip=%s',
         $privatekey,
         $_POST['g-recaptcha-response'],
-        $_SERVER['REMOTE_ADDR']
+        Network::get_remote_ip()
     ));
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

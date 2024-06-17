@@ -54,7 +54,7 @@ class Session
         } else {
             Clipbucket_db::getInstance()->insert(tbl(self::tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
                 'last_active', 'referer', 'agent', 'current_page'],
-                [$user, $this->id, $name, $_SERVER['REMOTE_ADDR'], $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
+                [$user, $this->id, $name, Network::get_remote_ip(), $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
         }
 
         if ($reg) {

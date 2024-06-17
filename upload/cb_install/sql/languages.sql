@@ -1128,5 +1128,7 @@ VALUES ('admin_setting'),
        ('tmdb_enable_on_front'),
        ('enabled'),
        ('disabled'),
+       ('cloudflare_documentation'),
+       ('incorrect_configuration_413_error'),
        ('option_enable_chunk_upload'),
        ('tips_enable_chunk_upload');

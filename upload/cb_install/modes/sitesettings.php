@@ -6,7 +6,7 @@ global $db, $userquery;
 $db->update(
     tbl('users'),
     ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip'],
-    [post('username'), $pass, post('email'), now(), 1, $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_ADDR']]
+    [post('username'), $pass, post('email'), now(), 1, Network::get_remote_ip(), Network::get_remote_ip()]
     , 'userid=1'
 );
 

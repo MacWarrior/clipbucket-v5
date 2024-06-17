@@ -1783,7 +1783,7 @@ class CBPhotos
             $query_val[] = NOW();
 
             $query_field[] = 'owner_ip';
-            $query_val[] = $_SERVER['REMOTE_ADDR'];
+            $query_val[] = Network::get_remote_ip();
 
             $query_field[] = 'ext';
             $query_val[] = $array['ext'];

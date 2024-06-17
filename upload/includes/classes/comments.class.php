@@ -271,7 +271,7 @@ class Comments
             return false;
         }
 
-        if( $comment['userid'] == $user_id || ($_SERVER['REMOTE_ADDR'] == $comment['comment_ip']) ){
+        if( $comment['userid'] == $user_id || (Network::get_remote_ip() == $comment['comment_ip']) ){
             e(lang('no_own_commen_spam'));
             return false;
         }
@@ -406,7 +406,7 @@ class Comments
         $comment_id = Clipbucket_db::getInstance()->insert(
             tbl('comments')
             ,['type', 'comment', 'type_id', 'userid', 'date_added', 'parent_id', 'anonym_name', 'anonym_email', 'comment_ip', 'type_owner_id']
-            ,[$type, $comment, $type_id, $userid, NOW(), $reply_to, $anonym_name, $anonym_email, $_SERVER['REMOTE_ADDR'], $owner_id]
+            ,[$type, $comment, $type_id, $userid, NOW(), $reply_to, $anonym_name, $anonym_email, Network::get_remote_ip(), $owner_id]
         );
 
         if( $user_id ){

@@ -1,12 +1,13 @@
 {
   "version":"5.5.1",
-  "revision":"39",
+  "revision":"40",
   "status":"dev",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Implement TMDB mature content search"
+        ,"Implement Cloudflare usage detection"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Hide unsupported actions on unsuccessfully converted videos"
