@@ -39,8 +39,8 @@ class MWIP extends \Migration
             'en' => 'Nginx path'
         ]);
 
-        self::generateConfig('enable_chunk_upload', 'no');
-        self::generateConfig('chunk_upload_size', '10');
+        self::generateConfig('enable_chunk_upload', 'yes');
+        self::generateConfig('chunk_upload_size', '2');
         self::generateConfig('cloudflare_upload_limit', '100');
         self::generateConfig('nginx_path', '');
     }

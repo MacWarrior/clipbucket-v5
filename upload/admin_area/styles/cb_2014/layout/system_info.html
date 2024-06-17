@@ -64,7 +64,7 @@
             </div>
             <div id="services" class="tab-pane">
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionWeb && $phpVersionWebOK}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $phpVersionWeb && $phpVersionWebOK}tick{else}alert{/if}.png"/>
                     <label>
                         PHP WEB -
                         {if !$phpVersionWeb || !$phpVersionWebOK}
@@ -84,7 +84,7 @@
                     {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
                             <label>
                                 {$extension.display} extension -
                                 {if !$extensionsWEB.$key}
@@ -99,7 +99,7 @@
 
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli && $phpVersionCliOK}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $phpVersionCli && $phpVersionCliOK}tick{else}alert{/if}.png"/>
                     <label>
                         PHP CLI -
                         {if !$phpVersionCli || !$phpVersionCliOK}
@@ -119,7 +119,7 @@
                     {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
                             <label>
                                 {$extension.display} extension -
                                 {if !$extensionsCLI.$key}
@@ -133,7 +133,7 @@
                     {/foreach}
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>
                     <label>
                         FFMPEG -
                             {if !$ffmpegVersion || !$ffmpegVersionOK}
@@ -151,7 +151,7 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffprobe_path && $ffprobe_path_OK}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $ffprobe_path && $ffprobe_path_OK}tick{else}alert{/if}.png"/>
                     <label>
                         FFProbe -
                         {if !$ffprobe_path || !$ffprobe_path_OK}
@@ -172,7 +172,7 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $media_info}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $media_info}tick{else}alert{/if}.png"/>
                     <label>
                         Media Info -
                         {if !$media_info}
@@ -184,7 +184,7 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $serverMySqlVersion && $serverMySqlVersionOk}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $serverMySqlVersion && $serverMySqlVersionOk}tick{else}alert{/if}.png"/>
                     <label>
                         {lang code="mysql_server"} -
                         {if !$serverMySqlVersion || !$serverMySqlVersionOk}
@@ -201,7 +201,7 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $git_version}tick{else}error{/if}.png"/>
+                    <img src="{$imageurl}/{if $git_version}tick{else}error{/if}.png"/>
                     <label>
                         [{lang|strtoupper code='optional'}] Git -
                         {if !$git_version}
@@ -233,31 +233,19 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $post_max_size_mb >= $target_upload_size}tick{else}alert{/if}.png"
-                            />
-                            <label>post_max_size :
-                                <strong> {$post_max_size} {if $post_max_size_mb < $target_upload_size }
-                                    {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'}
-                                    {/if}
-                                </strong>
+                            <img src="{$imageurl}/{if $target_upload_size < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb < $post_max_size_mb)}tick{else}alert{/if}.png"/>
+                            <label>
+                                post_max_size : <b>{$post_max_size}</b>
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $upload_max_filesize_mb >= $target_upload_size}tick{else}alert{/if}.png"
-                            />
-                            <label>upload_max_size :
-                                <strong> {$upload_max_filesize} {if $upload_max_filesize_mb < $target_upload_size }
-                                    {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'}
-                                    {/if}
-                                </strong>
+                            <img src="{$imageurl}/{if $upload_max_filesize_mb >= $target_upload_size || ($chunk_upload && $chunk_upload_size_mb < $upload_max_filesize_mb)}tick{else}alert{/if}.png"/>
+                            <label>
+                                upload_max_size : <b>{$upload_max_filesize}</b>
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"/>
                             <label>memory_limit :
                                 <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
                                     {lang code='must_be_least'} : 128M{/if}
@@ -265,9 +253,7 @@
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"/>
                             <label>max_execution_time :
                                 <strong> {$max_execution_time} {if $max_execution_time < 7200 }
                                     {lang code='must_be_least'} : 7200{/if}
@@ -275,9 +261,7 @@
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $phpWebExec}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $phpWebExec}tick{else}alert{/if}.png"/>
                             <label>exec() :
                                 <strong>
                                     {if $phpWebExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
@@ -285,22 +269,69 @@
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $phpWebShellExec}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $phpWebShellExec}tick{else}alert{/if}.png"/>
                             <label>shell_exec() :
                                 <strong>
                                     {if $phpWebShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
+
+                        {$show_warning = false}
+
+                        {if !$chunk_upload && $target_upload_size > $post_max_size_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                            but post_max_size is set to <b>{$post_max_size_mb}{lang code='mb'}</b>.<br/>
+                            You should probably enable <i>Chunk upload</i> option<br/>
+                            or update <i>post_max_size</i> configuration.
+                        </div>
+                        {/if}
+
+                        {if !$chunk_upload && $target_upload_size > $upload_max_filesize_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                            but upload_max_filesize is set to <b>{$upload_max_filesize_mb}{lang code='mb'}</b>.<br/>
+                            You should probably enable <i>Chunk upload</i> option<br/>
+                            or update <i>upload_max_filesize</i> configuration.
+                        </div>
+                        {/if}
+
+                        {if $chunk_upload && $chunk_upload_size > $post_max_size_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current chunk size is set to <b>{$chunk_upload_size_mb}{lang code='mb'}</b><br/>
+                            but post_max_size is set to <b>{$post_max_size_mb}{lang code='mb'}</b>.<br/>
+                            You should probably reduce <i>Chunk size</i> option.
+                        </div>
+                        {/if}
+
+                        {if $chunk_upload && $chunk_upload_size > $upload_max_filesize_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current chunk size is set to <b>{$chunk_upload_size_mb}{lang code='mb'}</b><br/>
+                            but upload_max_filesize is set to <b>{$upload_max_filesize_mb}{lang code='mb'}</b>.<br/>
+                            You should probably reduce <i>Chunk size</i> option.
+                        </div>
+                        {/if}
+
+                        {if $show_warning}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
+                        </div>
+                        {/if}
                     </div>
                     {if $phpWebExec && $phpVersionCli != 0}
                     <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"/>
                             <label>memory_limit :
                                 <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
                                     {lang code='must_be_least'} : 128M {/if}
@@ -308,9 +339,7 @@
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"/>
                             <label>max_execution_time :
                                 <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
                                     {lang code='must_be_least'} : 7200 {/if}
@@ -318,9 +347,7 @@
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $phpCliExec}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $phpCliExec}tick{else}alert{/if}.png" />
                             <label>exec() :
                                 <strong>
                                     {if $phpCliExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
@@ -328,9 +355,7 @@
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $phpCliShellExec}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $phpCliShellExec}tick{else}alert{/if}.png" />
                             <label>shell_exec() :
                                 <strong>
                                     {if $phpCliShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
@@ -340,31 +365,67 @@
                     </div>
                     {/if}
                     <div class="col-md-3 {if !$isNginx}hidden{/if}">
+                    {$show_warning = false}
                     {if !$canAccessNginx}
-                        <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
-                        PHP is unable to check Nginx configuration.<br/>
-                        Please make sure <b>client_max_body_size</b> is set correctly.<br/>
-                        {lang|ucfirst code='must_be_least'} <b>{$target_upload_size}{lang code='mb'}</b>.<br/>
-                        {lang code='incorrect_configuration_413_error'}
+                        {$show_warning = true}
+                        <div class="row">
+                            <img src="{$imageurl}/help.png"/>
+                            PHP is unable to check Nginx configuration.<br/>
+                            Please make sure <b>client_max_body_size</b> is set correctly.<br/>
+
+                            {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
+                        </div>
                     {else}
-                        <img style="margin-left: 1em; margin-top: 0.4em;"
-                             src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"
-                        />
-                        <label>client_max_body_size :
-                            <strong> {$client_max_body_size} {if $client_max_body_size_mb < $target_upload_size }
-                                {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'} {/if}
-                            </strong>
+                        <img src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"/>
+                        <label>
+                            client_max_body_size : <b>{$client_max_body_size}</b>
                         </label>
+
+                        {if !$chunk_upload && $target_upload_size > $client_max_body_size_mb}
+                            {$show_warning = true}
+                            <div class="row">
+                                <br/>
+                                <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                                but client_max_body_size is set to <b>{$client_max_body_size_mb}{lang code='mb'}</b>.<br/>
+                                You should probably enable <i>Chunk upload</i> option<br/>
+                                or update <i>client_max_body_size</i> configuration.
+                            </div>
+                        {/if}
+                    {/if}
+
+                    {if $show_warning}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
+                        </div>
                     {/if}
                     </div>
+
                     <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
                         <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank">
-                            <img alt="help" style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
+                            <img alt="help" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
                         </a>
                         Using Cloudflare implies max upload size limits,<br/>
                         depending of your subscription rank.<br/>
-                        By default, maximum upload size is <b>100M</b>.<br/>
-                        {lang code='incorrect_configuration_413_error'}
+                        Maximum upload size is currently set to <b>100M</b>.
+
+                        {if !$chunk_upload && $target_upload_size > $cloudflare_upload_limit}
+                            <br/><br/>
+                            <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                            but Cloudflare limit is set to <b>{$cloudflare_upload_limit}{lang code='mb'}</b>.<br/>
+                            You should probably enable <i>Chunk upload</i> option<br/>
+                            or update <i>{lang code='cloudflare_upload_limit'}</i> option.
+                        {/if}
+
+                        {if $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit}
+                            <br/><br/>
+                            <img src="{$imageurl}/alert.png"/>Current chunk upload size is set to <b>{$chunk_upload_size}{lang code='mb'}</b><br/>
+                            but Cloudflare limit is set to <b>{$cloudflare_upload_limit}{lang code='mb'}</b>.<br/>
+                            You should probably reduce <i>Chunk size</i> option.
+                        {/if}
+
+                        <br/><br/>
+                        <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
                     </div>
                 </div>
             </div>

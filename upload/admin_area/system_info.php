@@ -26,6 +26,9 @@ if( $isNginx ){
 }
 
 assign('is_cloudflare', Network::is_cloudflare());
+assign('cloudflare_upload_limit', config('cloudflare_upload_limit'));
+assign('chunk_upload', config('enable_chunk_upload') == 'yes');
+assign('chunk_upload_size', config('chunk_upload_size'));
 
 $post_max_size = ini_get('post_max_size');
 $post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
