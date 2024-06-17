@@ -39,8 +39,8 @@ class Network{
 
         list($range, $netmask) = explode('/', $range, 2);
 
-        $ip_bin_string = sprintf("%032b", ip2long($ip));
-        $net_bin_string = sprintf("%032b", ip2long($range));
+        $ip_bin_string = sprintf('%032b', ip2long($ip));
+        $net_bin_string = sprintf('%032b', ip2long($range));
         return (substr_compare($ip_bin_string, $net_bin_string, 0, $netmask) === 0);
     }
 
@@ -126,7 +126,7 @@ class Network{
     public static function get_remote_ip(): string
     {
         if(self::is_cloudflare()) {
-            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'];
+            $ip = $_SERVER['HTTP_CF_CONNECTING_IP'] ?? self::get_ip_standard();
         } else {
             $ip = self::get_ip_standard();
         }

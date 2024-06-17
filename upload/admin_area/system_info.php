@@ -29,6 +29,8 @@ if( $isNginx ){
     }
 }
 
+assign('is_cloudflare', Network::is_cloudflare());
+
 assign('post_max_size', ini_get('post_max_size'));
 assign('memory_limit', ini_get('memory_limit'));
 assign('upload_max_filesize', ini_get('upload_max_filesize'));

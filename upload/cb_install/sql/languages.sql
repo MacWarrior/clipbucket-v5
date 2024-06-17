@@ -1127,4 +1127,6 @@ VALUES ('admin_setting'),
        ('access_forbidden_under_age_display'),
        ('tmdb_enable_on_front'),
        ('enabled'),
-       ('disabled');
+       ('disabled'),
+       ('cloudflare_documentation'),
+       ('incorrect_configuration_413_error');

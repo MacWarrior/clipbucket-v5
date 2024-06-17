@@ -217,18 +217,21 @@
             </div>
             <div id="hosting" class="tab-pane active">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h3>PHP WEB</h3>
                     </div>
-                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
+                    <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
                         <h3>PHP CLI</h3>
                     </div>
-                    <div class="col-md-4 {if !$isNginx}hidden{/if}">
+                    <div class="col-md-3 {if !$isNginx}hidden{/if}">
                         <h3>Nginx</h3>
+                    </div>
+                    <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
+                        <h3>Cloudflare</h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
@@ -291,7 +294,7 @@
                         </div>
                     </div>
                     {if $phpWebExec && $phpVersionCli != 0}
-                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
+                    <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
                         <div class="row">
                             <img style="margin-left: 1em; margin-top: 0.4em;"
                                  src="{$imageurl}/{if getBytesFromFileSize($post_max_size_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
@@ -354,13 +357,13 @@
                         </div>
                     </div>
                     {/if}
-                    <div class="col-md-4 {if !$isNginx}hidden{/if}">
+                    <div class="col-md-3 {if !$isNginx}hidden{/if}">
                     {if !$canAccessNginx}
                         <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
                         PHP is unable to check Nginx configuration.<br/>
                         Please make sure <b>client_max_body_size</b> is set correctly.<br/>
                         Minimum configuration recommended is <b>50M</b>.<br/>
-                        Incorrect configuration might cause 413 errors.
+                        {lang code='incorrect_configuration_413_error'}
                     {else}
                         <img style="margin-left: 1em; margin-top: 0.4em;"
                              src="{$imageurl}/{if getBytesFromFileSize($clientMaxBodySize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
@@ -371,6 +374,15 @@
                             </strong>
                         </label>
                     {/if}
+                    </div>
+                    <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
+                        <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank">
+                            <img alt="help" style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
+                        </a>
+                        Using Cloudflare implies max upload size limits,<br/>
+                        depending of your subscription rank.<br/>
+                        By default, maximum upload size is <b>100M</b>.<br/>
+                        {lang code='incorrect_configuration_413_error'}
                     </div>
                 </div>
             </div>
