@@ -14,18 +14,14 @@ $breadcrumb[1] = ['title' => lang('system_info'), 'url' => DirPath::getUrl('admi
 $isNginx = System::is_nginx();
 $can_access_nginx = false;
 $client_max_body_size = '';
+$client_max_body_size_mb = '';
 if( $isNginx ){
-    if( System::check_php_function('exec', 'web', false) ){
-        $nginx_path = System::get_binaries('nginx', false);
-        if( !empty($nginx_path) ){
-            $client_max_body_size = exec($nginx_path.' -T 2>&1 | grep client_max_body_size | awk \'BEGIN{RS=";"; FS="client_max_body_size "}NF>1{print $NF}\'');
-
-            if( !empty($client_max_body_size) ){
-                $can_access_nginx = true;
-            }
-        }
-    } else {
+    $client_max_body_size = System::get_nginx_config('client_max_body_size');
+    if( empty($client_max_body_size) ){
         $can_access_nginx = false;
+    } else {
+        $client_max_body_size_mb = (int)$client_max_body_size * pow(1024, stripos('KMGT', strtoupper(substr($client_max_body_size, -1)))) / 1024;
+        $can_access_nginx = true;
     }
 }
 
@@ -47,7 +43,8 @@ assign('memory_limit', ini_get('memory_limit'));
 assign('max_execution_time', ini_get('max_execution_time'));
 assign('isNginx', $isNginx);
 assign('canAccessNginx', $can_access_nginx);
-assign('clientMaxBodySize', $client_max_body_size);
+assign('client_max_body_size', $client_max_body_size);
+assign('client_max_body_size_mb', $client_max_body_size_mb);
 
 assign('phpWebExec', System::check_php_function('exec', 'web', false));
 assign('phpWebShellExec', System::check_php_function('shell_exec', 'web', false));

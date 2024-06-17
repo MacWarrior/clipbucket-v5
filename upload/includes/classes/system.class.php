@@ -333,6 +333,32 @@ class System{
                 $version = array_pop($matches);
                 return $verbose ? ['msg' => sprintf('Found Git %s : %s', $version, $binary_path)] : $version;
 
+            case 'nginx':
+                $functions = ['exec', 'shell_exec'];
+                foreach($functions as $function) {
+                    if (!System::check_php_function($function, 'web', false)) {
+                        return $verbose ? ['err' => 'Can\'t be tested because ' . $function . '() function is not enabled'] : false;
+                    }
+                }
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
+                    return $verbose ? ['err' => 'Unable to find Nginx'] : false;
+                }
+
+                $nginx_version = System::shell_output($binary_path . ' -v 2>&1');
+                if( empty($nginx_version) ){
+                    return $verbose ? ['err' => 'Nginx is not correctly configured'] : false;
+                }
+
+                preg_match('/nginx\/(.+)$/', strtolower($nginx_version), $matches);
+
+                if (empty($matches[1])) {
+                    return $verbose ? ['err' => 'Unable to find Nginx'] : false;
+                }
+
+                $version = array_pop($matches);
+                return $verbose ? ['msg' => sprintf('Found Nginx %s : %s', $version, $binary_path)] : $version;
+
             default:
                 e('Wrong System::get_software_version software : ' . $software);
                 return '';
@@ -475,6 +501,10 @@ class System{
                     $software_path = config('git_path');
                     break;
 
+                case 'nginx':
+                    $software_path = config('nginx_path');
+                    break;
+
                 default:
                     $software_path = '';
                     break;
@@ -577,4 +607,46 @@ class System{
     {
         return strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false;
     }
+
+    public static function get_nginx_config(string $config_name): string
+    {
+        if( !self::is_nginx() ){
+            return '';
+        }
+
+        $nginx_path = self::get_binaries('nginx', false);
+        if( empty($nginx_path) || !file_exists($nginx_path) ){
+            return '';
+        }
+
+        if( !self::check_php_function('shell_exec', 'web', false) ){
+            return '';
+        }
+
+        chdir(dirname($nginx_path));
+        $data = shell_exec($nginx_path.' -T 2>&1');
+
+        $separator = "\r\n";
+        $line = strtok($data, $separator);
+
+        while ($line !== false) {
+            if( strpos($line, $config_name) !== false ){
+
+                // Clear RAM usage from strtok
+                unset($data);
+                strtok('', '');
+
+                return explode(' ', str_replace(';', '', $line))[1];
+            }
+
+            $line = strtok($separator);
+        }
+
+        // Clear RAM usage from strtok
+        unset($data);
+        strtok('', '');
+
+        return '';
+    }
+
 }

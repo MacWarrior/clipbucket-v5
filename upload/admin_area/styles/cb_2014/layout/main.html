@@ -2535,6 +2535,17 @@
 								</div>
 							</div>
 							<hr/>
+							{if System::is_nginx()}
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="nginx_path" title="{lang code='option_nginx_path'}">{lang code='option_nginx_path'}</label>
+								</div>
+								<div class="col-md-6">
+									<input class="form-control" name="nginx_path" id="nginx_path" value="{$row.nginx_path}"/>
+								</div>
+							</div>
+							<hr/>
+							{/if}
 							<div class="row">
 								<div class="col-md-6">
 									<label class="nowrap" for="cloudflare_upload_limit" title="{lang code='cloudflare_upload_limit'}">

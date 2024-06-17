@@ -110,7 +110,6 @@ class Network{
 
     public static function is_cloudflare(): bool
     {
-        return true;
         $check_ip = self::is_ip_cloudflare(self::get_ip_standard());
         $check_headers = self::is_header_cloudflare();
         return ($check_ip && $check_headers);

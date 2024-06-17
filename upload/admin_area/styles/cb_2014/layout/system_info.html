@@ -348,10 +348,10 @@
                         {lang code='incorrect_configuration_413_error'}
                     {else}
                         <img style="margin-left: 1em; margin-top: 0.4em;"
-                             src="{$imageurl}/{if getBytesFromFileSize($clientMaxBodySize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
+                             src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"
                         />
                         <label>client_max_body_size :
-                            <strong> {$clientMaxBodySize} {if getBytesFromFileSize($clientMaxBodySize) <= getBytesFromFileSize('50M') }
+                            <strong> {$client_max_body_size} {if $client_max_body_size_mb < $target_upload_size }
                                 {lang code='must_be_least'} : {$target_upload_size}{lang code='mb'} {/if}
                             </strong>
                         </label>

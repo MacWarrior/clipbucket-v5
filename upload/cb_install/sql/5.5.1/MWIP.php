@@ -30,12 +30,18 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('cloudflare_upload_limit', [
-            'fr' => 'Limit d\'upload Cloudflare',
+            'fr' => 'Limite d\'upload Cloudflare',
             'en' => 'Cloudflare upload limit'
+        ]);
+
+        self::generateTranslation('option_nginx_path', [
+            'fr' => 'Chemin Nginx',
+            'en' => 'Nginx path'
         ]);
 
         self::generateConfig('enable_chunk_upload', 'no');
         self::generateConfig('chunk_upload_size', '10');
         self::generateConfig('cloudflare_upload_limit', '100');
+        self::generateConfig('nginx_path', '');
     }
 }

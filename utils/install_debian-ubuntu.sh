@@ -244,12 +244,12 @@ echo -ne " OK"
 
 echo ""
 echo -ne "Updating PHP ${PHP_VERSION} configs..."
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 1000M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 1000M/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 
-sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 100M/g" /etc/php/${PHP_VERSION}/cli/php.ini
-sed -i "s/post_max_size = 8M/post_max_size = 100M/g" /etc/php/${PHP_VERSION}/cli/php.ini
+sed -i "s/upload_max_filesize = 2M/upload_max_filesize = 1000M/g" /etc/php/${PHP_VERSION}/cli/php.ini
+sed -i "s/post_max_size = 8M/post_max_size = 1000M/g" /etc/php/${PHP_VERSION}/cli/php.ini
 systemctl restart php${PHP_VERSION}-fpm
 echo -ne " OK"
 
@@ -294,7 +294,7 @@ server {
     root INSTALLPATH;
     index index.php;
 
-    client_max_body_size 100M;
+    client_max_body_size 1000M;
 
     # set expiration of assets to MAX for caching
     location ~* \.(ico|css|js)(\?[0-9]+)?$ {
