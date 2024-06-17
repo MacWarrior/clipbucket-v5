@@ -876,12 +876,23 @@ class ClipBucket
 
     function getMaxUploadSize($suffix = ''): string
     {
-        $post_max_size = ini_get('post_max_size');
-        $post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
-        $upload_max_filesize = ini_get('upload_max_filesize');
-        $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+        $list_upload_limits = [];
 
-        return min($post_max_size_mb,$upload_max_filesize_mb).$suffix;
+        $post_max_size = ini_get('post_max_size');
+        $list_upload_limits[] = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $list_upload_limits[] = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+
+        if( config('enable_chunk_upload') == 'yes' ){
+            $list_upload_limits[] = (int)config('chunk_upload_size');
+        }
+
+        if( Network::is_cloudflare() ){
+            $list_upload_limits[] = (int)config('cloudflare_upload_limit');
+        }
+
+        return min($list_upload_limits).$suffix;
     }
 
 }

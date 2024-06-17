@@ -15,11 +15,27 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('tips_enable_chunk_upload', [
-            'fr' => 'Si le fichier est plus lourd que PHP max upload size ou post max size, alors il sera découpé en plus petits morceaux pour l\'upload',
-            'en' => 'If filesize is larger than PHP max upload size or post max size, then it will be chunked into smaller parts for upload'
+            'fr' => 'Lors de l\'upload, le fichier sera découpé en plus petits morceaux',
+            'en' => 'During upload, file will be chunked into smaller parts'
         ]);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'enable_chunk_upload\', \'yes\');';
-        self::query($sql);
+        self::generateTranslation('mb', [
+            'fr' => 'Mo',
+            'en' => 'Mb'
+        ]);
+
+        self::generateTranslation('in_x', [
+            'fr' => 'En %s',
+            'en' => 'In %s'
+        ]);
+
+        self::generateTranslation('cloudflare_upload_limit', [
+            'fr' => 'Limit d\'upload Cloudflare',
+            'en' => 'Cloudflare upload limit'
+        ]);
+
+        self::generateConfig('enable_chunk_upload', 'no');
+        self::generateConfig('chunk_upload_size', '10');
+        self::generateConfig('cloudflare_upload_limit', '100');
     }
 }

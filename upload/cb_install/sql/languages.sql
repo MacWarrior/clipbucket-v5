@@ -1131,4 +1131,7 @@ VALUES ('admin_setting'),
        ('cloudflare_documentation'),
        ('incorrect_configuration_413_error'),
        ('option_enable_chunk_upload'),
-       ('tips_enable_chunk_upload');
+       ('tips_enable_chunk_upload'),
+       ('mb'),
+       ('in_x'),
+       ('cloudflare_upload_limit');
