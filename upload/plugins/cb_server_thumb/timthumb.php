@@ -117,7 +117,7 @@ class timthumb
         global $ALLOWED_SITES;
         $this->startTime = microtime(true);
         date_default_timezone_set('UTC');
-        $this->debug(1, 'Starting new request from ' . $this->getIP() . ' to ' . $_SERVER['REQUEST_URI']);
+        $this->debug(1, 'Starting new request from ' . Network::get_remote_ip() . ' to ' . $_SERVER['REQUEST_URI']);
         $this->calcDocRoot();
         //On windows systems I'm assuming fileinode returns an empty string or a number that doesn't change. Check this.
         $this->salt = @filemtime(__FILE__) . '-' . @fileinode(__FILE__);
@@ -926,33 +926,6 @@ class timthumb
         }
 
         return $image;
-    }
-
-    protected function getIP()
-    {
-        $rem = @$_SERVER['REMOTE_ADDR'];
-        $ff = @$_SERVER['HTTP_X_FORWARDED_FOR'];
-        $ci = @$_SERVER['HTTP_CLIENT_IP'];
-        if (preg_match('/^(?:192\.168|172\.16|10\.|127\.)/', $rem)) {
-            if ($ff) {
-                return $ff;
-            }
-            if ($ci) {
-                return $ci;
-            }
-            return $rem;
-        }
-
-        if ($rem) {
-            return $rem;
-        }
-        if ($ff) {
-            return $ff;
-        }
-        if ($ci) {
-            return $ci;
-        }
-        return 'UNKNOWN';
     }
 
     protected function debug($level, $msg)

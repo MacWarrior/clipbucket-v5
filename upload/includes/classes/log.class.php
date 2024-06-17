@@ -10,7 +10,7 @@ class CBLogs
     function insert($type, $details_array)
     {
         global $db, $userquery;
-        $ip = $_SERVER['REMOTE_ADDR'];
+        $ip = Network::get_remote_ip();
 
         $userid = getArrayValue($details_array, 'userid');
         if (!$userid) {

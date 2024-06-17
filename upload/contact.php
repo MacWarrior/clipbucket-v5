@@ -26,7 +26,7 @@ if (isset($_POST['contact'])) {
             '{email}'      => substr($email, 0, 100),
             '{reason}'     => substr($reason, 0, 300),
             '{message}'    => $message,
-            '{ip_address}' => $_SERVER['REMOTE_ADDR'],
+            '{ip_address}' => Network::get_remote_ip(),
             '{now}'        => now()
         ];
 
