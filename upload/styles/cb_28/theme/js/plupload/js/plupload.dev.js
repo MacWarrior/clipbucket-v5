@@ -2698,7 +2698,10 @@ define('plupload/FileUploader', [
 						state: Queueable.DONE
 					}, chunk));
 
-					self.trigger('chunkuploaded', plupload.extendImmutable({}, chunk, result));
+					// Oxygenz : Hack to push event to whole document
+					$(document).trigger('chunkuploaded', plupload.extendImmutable({}, chunk, result, up));
+
+					//self.trigger('chunkuploaded', plupload.extendImmutable({}, chunk, result));
 
 					if (calcProcessed() >= file.size) {
 						self.progress(file.size, file.size);

@@ -46,9 +46,9 @@
 							{foreach from=$opt_list item=opt key=divid}
 								{$class = ""}
 								{if $counter == 1}
-									{$class = "active"}
+									{$class = " active"}
 								{/if}
-								<div class="tab-pane fade in clearfix {$class} uploadForm" id="{$divid}">
+								<div class="tab-pane fade in clearfix uploadForm{$class}" id="{$divid}">
 									{load_form name=$opt.function function_class=$opt.class button_class='cb_button_2' class='upload_form'}
 								</div>
 								{$counter = $counter + 1}
@@ -64,8 +64,8 @@
 </div>
 <script type="text/javascript">
 	var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
-	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize('mb')}";
-	var max_file_size ="{config('max_upload_size')}mb";
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb";
+	var max_file_size ="{config('max_upload_size')*1000}kb";
 	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
 	var back_extensions = '{$extensions}';
 	var theme = '{$theme}';

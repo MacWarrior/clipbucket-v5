@@ -73,8 +73,10 @@ switch ($mode) {
         break;
 
     case 'upload':
-        if ((int)$_SERVER['CONTENT_LENGTH'] > Clipbucket::getInstance()->getMaxUploadSize()) {
-            header('HTTP/1.1 500 Internal Server Error'); // This will trigger an uploadError event in SWFUpload
+        \DiscordLog::sendDump($_POST['chunk']);
+        sleep(2);
+
+        if ((int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize(Clipbucket::getInstance()->getMaxUploadSize('M')) ) {
             upload_error('POST exceeded maximum allowed size.');
             exit(0);
         }
@@ -96,12 +98,20 @@ switch ($mode) {
         ];
 
         if (isset($_FILES['Filedata']['error']) && $_FILES['Filedata']['error'] != 0) {
-            upload_error($uploadErrors[$_FILES['Filedata']['error']]);
+            if( in_dev() ){
+                upload_error($uploadErrors[$_FILES['Filedata']['error']]);
+            } else {
+                upload_error(lang('technical_error'));
+            }
             exit(0);
         }
 
         if (!isset($_FILES['Filedata']['tmp_name']) || !@is_uploaded_file($_FILES['Filedata']['tmp_name'])) {
-            upload_error('Upload failed is_uploaded_file test.');
+            if( in_dev() ){
+                upload_error('Upload failed is_uploaded_file test.');
+            } else {
+                upload_error(lang('technical_error'));
+            }
             exit(0);
         }
 
@@ -111,12 +121,17 @@ switch ($mode) {
         $supported_extensions = explode(',', $types);
 
         if( config('enable_chunk_upload') == 'yes'){
-            $chunk = $_REQUEST['chunk'] ?? false;
-            $chunks = $_REQUEST['chunks'] ?? false;
-            $original_filename = $_REQUEST['name'] ?? false;
+            $chunk = $_POST['chunk'] ?? false;
+            $chunks = $_POST['chunks'] ?? false;
+            $original_filename = $_POST['name'] ?? false;
+            $unique_id = $_POST['unique_id'] ?? false;
 
-            if( (empty($chunk) && $chunk != '0') || (empty($chunks) && $chunks != '0') || !$original_filename){
-                upload_error(lang('technical_error'));
+            if( (empty($chunk) && $chunk != '0') || (empty($chunks) && $chunks != '0') || !$original_filename || empty($unique_id) ){
+                if( in_dev() ){
+                    upload_error('file_uploader : missing infos');
+                } else {
+                    upload_error(lang('technical_error'));
+                }
                 exit();
             }
 
@@ -127,14 +142,61 @@ switch ($mode) {
 
             $supported_extensions[] = 'blob';
             $save_to_db = ($chunk+1 == $chunks);
+
+            $userid = user_id();
+            $temp_filename = $userid . '-' . $unique_id . '.part';
+            $temp_filepath = DirPath::get('temp') . $temp_filename;
+            $temp_file = @fopen($temp_filepath, $chunk == 0 ? 'wb' : 'ab');
+
+            if( !$temp_file ) {
+                if( in_dev() ){
+                    upload_error('file_uploader : can\'t open ' . $temp_filepath);
+                } else {
+                    upload_error(lang('technical_error'));
+                }
+                exit();
+            }
+
+            $part = @fopen($_FILES['Filedata']['tmp_name'], 'rb');
+            if( !$part ) {
+                if( in_dev() ){
+                    upload_error('file_uploader : can\'t read ' . $_FILES['Filedata']['tmp_name']);
+                } else {
+                    upload_error(lang('technical_error'));
+                }
+                exit();
+            }
+
+            while ($buff = fread($part, 4096)){
+                fwrite($temp_file, $buff);
+            }
+
+            @fclose($part);
+            @fclose($temp_file);
+            @unlink($_FILES['Filedata']['tmp_name']);
+
+            if( !$save_to_db ){
+                // Everything is fine, keep uploading
+                echo json_encode([]);
+                exit();
+            }
+
+            if( !file_exists($temp_filepath) ){
+                upload_error(lang('technical_error'));
+                exit();
+            }
+
+            $file_size = @filesize($temp_filepath);
+
         } else {
             if (!isset($_FILES['Filedata']['name'])) {
                 upload_error('File has no name.');
-                exit(0);
+                exit();
             }
 
             $original_filename = $_FILES['Filedata']['name'];
-            $file_size = @filesize($_FILES['Filedata']['tmp_name']);
+            $temp_filepath = $_FILES['Filedata']['tmp_name'];
+            $file_size = @filesize($temp_filepath);
 
             if( $content_type != 'video' ) {
                 upload_error('Invalid Content');
@@ -149,16 +211,13 @@ switch ($mode) {
             exit();
         }
 
-        $max_file_size_in_bytes = config('max_upload_size') * 1024 * 1024;
+        $max_file_size_in_bytes = getBytesFromFileSize(config('max_upload_size') . 'M');
 
         if (!$file_size || $file_size > $max_file_size_in_bytes) {
             upload_error(sprintf(lang('page_upload_video_limits'),config('max_upload_size'),config('max_video_duration')));
+            @unlink($temp_filepath);
             exit(0);
         }
-
-
-
-
 
         $file_name = time() . RandomString(5);
         $file_directory = date('Y/m/d');
@@ -172,12 +231,23 @@ switch ($mode) {
 
         $targetFileName = $file_name . '.' . $extension;
         $targetFile = DirPath::get('temp') . $targetFileName;
-        $moved = move_uploaded_file($_FILES['Filedata']['tmp_name'], $targetFile);
+
+        if( config('enable_chunk_upload') == 'yes'){
+            $moved = rename($temp_filepath, $targetFile);
+        } else {
+            $moved = move_uploaded_file($temp_filepath, $targetFile);
+        }
 
         if ($moved) {
             $log->writeLine('Temporary Uploading', 'File Uploaded to Temp directory successfully and video conversion file is being executed !');
         } else {
-            $log->writeLine('Temporary Uploading', 'Went something wrong in moving the file in Temp directory!');
+            if( in_dev() ){
+                upload_error('file_uploader : can\'t move temp file ' . $temp_filepath . ' to ' . $targetFile);
+            } else {
+                upload_error(lang('technical_error'));
+            }
+            @unlink($temp_filepath);
+            exit();
         }
 
         $filename_without_ext = pathinfo($original_filename, PATHINFO_FILENAME);

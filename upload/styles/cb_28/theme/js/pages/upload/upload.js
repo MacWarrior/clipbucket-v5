@@ -1,4 +1,3 @@
-var grabbed_json = 'nothing';
 var uploader;
 
 $(document).ready(function(){
@@ -26,6 +25,10 @@ $(document).ready(function(){
                 ]
             }
         });
+
+        var filesUploaded = 0;
+        var error = '';
+        var canceled = [];
 
         function reFreshTabs(up)
         {
@@ -193,21 +196,17 @@ $(document).ready(function(){
                 uploadedFiles[i].data.allow_rating = 'yes';
                 uploadedFiles[i].data.allow_embedding = 'yes';
                 uploadedFiles[i].data['category[]'] = [get_default_cid];
+                uploadedFiles[i].data.unique_id = (Math.random() + 1).toString(36).substring(7);
             }
+
             reFreshTabs(up);
 
-            //function for real progress bar
             $.each( uploadedFiles, function( key, fileNow ) {
                 var currentTitle = fileNow.name,
-                    plFileId = fileNow.id;
-
-                // appends progress bar along with title
-                // this progress bar is later updated on realtime
-                // via fileprogress event of pluploader
+                    plFileId = fileNow.data.unique_id;
 
                 $(".realProgressBars").append('<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5><button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">Cancel Uploading</button><div class="progress"><div class="progress-bar progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%;"><span class="sr-only">70% Complete</span><span class="realProgText_'+plFileId+'">50% completed</span></div></div>');
             });
-            //end function
 
             var index = 1;
             for (i = 0; i < up.files.length; i++ ){
@@ -241,24 +240,23 @@ $(document).ready(function(){
                 }
             });
 
-            /*
-            * Trigger element when "Cancel Uploading" button is clicked
-            * stops uploading
-            * hides uploading div
-            */
             $(".cancel_button").on('click',function(e) {
                 e.preventDefault();
                 var toCancel = $(this).attr('to_cancel');
                 var thecount = 0;
                 $(this).attr('disabled',true);
                 $(this).text('Canceled');
-                $.each( uploadedFiles, function( iNow, currentFile ){
-                    if (currentFile.id === toCancel) {
-                        uploader.removeFile(uploadedFiles[thecount]);
+                $.each( uploader.files, function( iNow, currentFile ){
+                    if (currentFile.data.unique_id === toCancel) {
+                        canceled.push(toCancel);
+                        uploader.removeFile(uploader.files[thecount]);
+                        uploader.stop();
+                        //uploader.start();
                         $(this).unbind().remove();
                         $('.progress-bar_'+toCancel).addClass('progress-bar-danger');
                         $('.realProgText_'+toCancel).text('Canceled');
                         $("#uploadMessage").removeClass("hidden").html('Upload has been canceled').attr('class', 'alert alert-danger container');
+                        error = 'Upload has been canceled';
                         setTimeout(function(){
                             $("#uploadMessage").addClass('hidden');
                         }, 5000);
@@ -274,31 +272,23 @@ $(document).ready(function(){
                 $('.allProgress').removeClass('hidden');
                 uploader.start();
             }, 1000);
-            // updating file title in the form
         });
 
-        uploader.bind('BeforeUpload', function(){
+        uploader.bind('BeforeUpload', function(uploader, file){
             $('#fileUploadProgress').removeClass('hidden');
             $('.progress-container').removeClass('hidden');
+
+            $.extend(uploader.settings.params, { unique_id : file.data.unique_id });
         });
 
-        /*
-        This is the event handler for UploadProgress,
-        It fires regularly after a certain amount of time when the the files are being uploaded
-        */
-
-        var filesUploaded = 0;
-        var errors = [];
-
-        uploader.bind('FileUploaded', function(up, fileDetails, response)
-        {
+        uploader.bind('FileUploaded', function(up, fileDetails, response) {
             var serverResponse = $.parseJSON(response.response);
             var id_error = '';
             if (serverResponse.error) {
-                errors.push(serverResponse.error);
+                error = serverResponse.error;
                 $('.progress-bar_'+fileDetails.id).addClass('progress-bar-danger');
                 id_error = fileDetails.id;
-            }else {
+            } else {
                 filesUploaded++;
             }
             $('#overallProgress').css('width', ((100/up.files.length)*(filesUploaded))+"%");
@@ -339,10 +329,6 @@ $(document).ready(function(){
                 index++
             });
 
-            /*
-            Submit the form with all the video details and options
-            to update the video information in the system
-            */
             $('.updateVideoInfoForm').on({
                 submit: function(e){
                     e.preventDefault();
@@ -378,20 +364,58 @@ $(document).ready(function(){
             });
         });
 
+        $(document).bind('chunkuploaded', function(event, result) {
+            let response = $.parseJSON(result.response);
+            let wanted_unique_id = result._options.params.unique_id;
+            let thecount = 0;
+
+            if (response.error) {
+                error = response.error;
+
+                $.each( uploader.files, function( iNow, currentFile ){
+                    if (wanted_unique_id === currentFile.data.unique_id) {
+                        uploader.removeFile(uploader.files[thecount]);
+                        uploader.stop();
+                        //uploader.start();
+                        $('.progress-bar_'+wanted_unique_id).addClass('progress-bar-danger');
+                        $('.realProgText_'+wanted_unique_id).text('Upload failed');
+                        $(".cancel_button[to_cancel='" + wanted_unique_id + "']").attr('disabled',true);
+                        setTimeout(function(){
+                            $("#uploadMessage").html(response.error).addClass('hidden');
+                        }, 5000);
+                    }
+                    thecount++;
+                });
+            }
+
+            console.log(result);
+            thecount = 0;
+            if( canceled.length > 0 ) {
+                console.log('canceled');
+                $.each( uploader.files, function( iNow, currentFile ){
+                    console.log(currentFile.data.unique_id + '?');
+                    canceled.forEach(function (unique_id) {
+                        if( unique_id === currentFile.data.unique_id){
+                            console.log(unique_id);
+                            uploader.removeFile(uploader.files[thecount]);
+                            $(this).stop();
+                            //uploader.start();
+                        }
+                    });
+                    thecount++;
+                });
+            }
+        });
+
         uploader.bind('UploadProgress', function(up, file) {
             // this the unique ID assigned to each file upload
-            var pluploadFileId = file.id,
+            var pluploadFileId = file.data.unique_id,
                 filePercentage = file.percent;
-            // update progress bar width
+
             $('.progress-bar_'+pluploadFileId).css('width',filePercentage+'%');
-            //update progress bar text to show percentage
             $('.realProgText_'+pluploadFileId).text(filePercentage+'% Completed');
-            // $("#progressNumber").text(file.percent + "%");
-            // meaning file has completely uploaded
             if (filePercentage === 100) {
-                // remove cancel button
-                $(".cancel_button[to_cancel='" + pluploadFileId + "']").fadeOut('slow');
-                // turn progress bar into green to show success
+                $(".cancel_button[to_cancel='" + pluploadFileId + "']").attr('disabled',true).fadeOut('slow');
                 if (!$('.progress-bar_'+pluploadFileId).hasClass('progress-bar-danger')) {
                     $('.progress-bar_'+pluploadFileId).addClass('progress-bar-success');
                 }
@@ -403,12 +427,10 @@ $(document).ready(function(){
             $("#uploadMore").removeClass('hidden');
             $(".uploadingProgressContainer").hide();
             uploader.refresh();
-            if (errors.length > 0 ) {
+            if (error.length > 0 ) {
                 $("#uploadMessage").html('');
-                errors.forEach(function (error) {
-                    $("#uploadMessage").append(error).attr('class', 'alert alert-danger container');
-                });
-                errors = [];
+                $("#uploadMessage").append(error).attr('class', 'alert alert-danger container');
+                error = '';
             } else {
                 $("#uploadMessage").html('File uploaded successfully').attr('class', 'alert alert-success container');
                 setTimeout(function(){
@@ -417,7 +439,7 @@ $(document).ready(function(){
             }
         });
 
-        uploader.bind('error', function(up, err) {
+        uploader.bind('Error', function(up, err) {
             $("#uploadMessage").removeClass('hidden');
             if(err){
                 $("#uploadMessage").html(err.message).attr('class', 'alert alert-danger container');
