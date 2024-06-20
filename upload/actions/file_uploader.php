@@ -74,7 +74,7 @@ switch ($mode) {
 
     case 'upload':
         \DiscordLog::sendDump($_POST['chunk']);
-        sleep(2);
+        sleep(10);
 
         if ((int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize(Clipbucket::getInstance()->getMaxUploadSize('M')) ) {
             upload_error('POST exceeded maximum allowed size.');
