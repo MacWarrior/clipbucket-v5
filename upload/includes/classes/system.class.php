@@ -527,4 +527,10 @@ class System{
 
         return shell_exec($cmd);
     }
+
+    public static function can_sse()
+    {
+        // Only available on PHP-FPM
+        return self::check_php_function('fastcgi_finish_request', 'web', false);
+    }
 }

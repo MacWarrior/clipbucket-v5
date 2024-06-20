@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"40",
+  "revision":"41",
   "status":"dev",
   "detail":[
     {
@@ -21,6 +21,7 @@
         ,"Fix online users display"
         ,"Fix login redirect"
         ,"Fix category creation interface"
+        ,"Fix timeout errors on non-PHP-FPM"
       ]
     },
     {
@@ -42,9 +43,10 @@
     {
       "title": "Miscellaneous",
       "description": [
-        "Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        ,"Update Readme"
         ,"Cleanup code"
-        ,"Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"

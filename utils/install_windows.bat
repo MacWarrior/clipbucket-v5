@@ -133,6 +133,7 @@ SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
 SET "PHP_VERSION=8.3.8"
+echo /!\ We're using PHP because PHP-FPM doesn't support Windows
 echo |set /p=Downloading PHP %PHP_VERSION%...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-%PHP_VERSION%-Win32-vs16-x64.zip"
 SET "PHP_ZIP_FILENAME=php-%PHP_VERSION%.zip"
