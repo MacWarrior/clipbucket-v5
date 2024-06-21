@@ -135,7 +135,9 @@ font-weight:bold;
 dt{font-weight:bold; float:left; width:125px; display:inline-block;padding:5px 3px; line-height:20px;}
 dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0; line-height:20px;}
 
-dd span,
+dd span{
+	padding-left: 130px;
+}
 dt span{
 	padding-left: 80px;
 }
@@ -144,7 +146,7 @@ dd:last-child{border-bottom:none}
 
 .red{color:#ed0000;}
 
-.ok, .alert_cross{
+.ok, .alert_cross, .warning{
 	background-repeat:no-repeat;
 	height:20px;
 	padding-left:23px;
@@ -158,8 +160,11 @@ dd:last-child{border-bottom:none}
 	background-image:url(images/cross_arrow.png);
 	background-position-x: 2px;
 }
+.warning{
+	background-image:url(images/warning.png);
+}
 
-dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999;}
+dl{background-color:#F7F7F7; padding:0; border:1px dotted #999;}
 
 dd.white,
 dt.white{

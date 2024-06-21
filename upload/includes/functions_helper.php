@@ -205,33 +205,34 @@ function showDevWitch()
  */
 function sendClientResponseAndContinue($callback, bool $ajax = true)
 {
-    ob_end_clean();
-    ignore_user_abort(true);
+    if (System::can_sse()) {
+        ob_end_clean();
+        ignore_user_abort(true);
 
-    ob_start();
+        ob_start();
 
-    header("Connection: close\r\n");
-    header("Content-Encoding: none\r\n");
+        header("Connection: close\r\n");
+        header("Content-Encoding: none\r\n");
 
-    $callback();
+        $callback();
 
-    $size = ob_get_length();
-    header("Content-Length: $size");
+        $size = ob_get_length();
+        header("Content-Length: $size");
 
-    // Flush all output.
-    ob_end_flush();
-    ob_flush();
-    flush();
+        // Flush all output.
+        ob_end_flush();
+        ob_flush();
+        flush();
 
-    // Close current session (if it exists).
-    if (session_id()) {
-        session_write_close();
-    }
+        // Close current session (if it exists).
+        if (session_id()) {
+            session_write_close();
+        }
 
-    if ($ajax) {
-        // PHP-FPM only
-        if (function_exists('fastcgi_finish_request')) {
+        if ($ajax) {
             fastcgi_finish_request();
         }
+    } else {
+        $callback();
     }
 }

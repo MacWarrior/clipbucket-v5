@@ -264,7 +264,7 @@
                             <img src="{$imageurl}/{if $phpWebExec}tick{else}alert{/if}.png"/>
                             <label>exec() :
                                 <strong>
-                                    {if $phpWebExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
+                                    {if $phpWebExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
@@ -272,9 +272,21 @@
                             <img src="{$imageurl}/{if $phpWebShellExec}tick{else}alert{/if}.png"/>
                             <label>shell_exec() :
                                 <strong>
-                                    {if $phpWebShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
+                                    {if $phpWebShellExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
+                        </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $phpWebSSE}tick{else}error{/if}.png"/>
+                            <label>fastcgi_finish_request() :
+                                <strong>
+                                    {if $phpWebSSE}{lang code='available'}{else}{lang code='unavailable'}{/if}
+                                </strong>
+                            </label>
+                            {if !$phpWebSSE}
+                            <br/>{lang code='sse_error_features_disabled'}
+                            <br/>{lang code='sse_error_please_use_php_fpm'}
+                            {/if}
                         </div>
 
                         {$show_warning = false}
@@ -327,6 +339,7 @@
                             <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
                         </div>
                         {/if}
+
                     </div>
                     {if $phpWebExec && $phpVersionCli != 0}
                     <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
@@ -350,7 +363,7 @@
                             <img src="{$imageurl}/{if $phpCliExec}tick{else}alert{/if}.png" />
                             <label>exec() :
                                 <strong>
-                                    {if $phpCliExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
+                                    {if $phpCliExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
@@ -358,7 +371,7 @@
                             <img src="{$imageurl}/{if $phpCliShellExec}tick{else}alert{/if}.png" />
                             <label>shell_exec() :
                                 <strong>
-                                    {if $phpCliShellExec}{lang code='enabled'}{else}{lang code='disabled'}{/if}
+                                    {if $phpCliShellExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>

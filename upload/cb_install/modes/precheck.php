@@ -83,6 +83,16 @@ $skippable_option = get_skippable_options();
                 $everything_good = false;
             }
         }
+
+        if( $php == 'php_web' ){
+            if( System::can_sse() ){
+                $msg = ['msg' => 'fastcgi_finish_request function available'];
+            } else {
+                $msg = ['war' => 'fastcgi_finish_request function unavailable'];
+            }
+            echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>fastcgi_finish_request()</dt>';
+            echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
+        }
     }
 
     foreach($required_softwares as $soft => $soft_name) {

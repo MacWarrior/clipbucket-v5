@@ -558,6 +558,12 @@ class System{
         return shell_exec($cmd);
     }
 
+    public static function can_sse(): bool
+    {
+        // Only available on PHP-FPM
+        return function_exists('fastcgi_finish_request');
+    }
+
     /**
      * @throws Exception
      */
@@ -648,5 +654,4 @@ class System{
 
         return '';
     }
-
 }

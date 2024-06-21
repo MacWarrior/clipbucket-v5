@@ -35,12 +35,17 @@ function button_danger($text, $params = null)
 
 function msg_arr($arr): string
 {
-    if (@$arr['msg']) {
+    $text = $type = '';
+
+    if (!empty($arr['msg'])) {
         $text = $arr['msg'];
         $type = 'ok';
-    } else {
+    } else if (!empty($arr['err']) ) {
         $text = $arr['err'];
         $type = 'alert_cross';
+    } else if (!empty($arr['war']) ) {
+        $text = $arr['war'];
+        $type = 'warning';
     }
 
     return '<span class="msg ' . $type . '">' . $text . '</span>';
