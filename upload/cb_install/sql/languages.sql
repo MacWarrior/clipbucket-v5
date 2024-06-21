@@ -1129,4 +1129,8 @@ VALUES ('admin_setting'),
        ('enabled'),
        ('disabled'),
        ('cloudflare_documentation'),
-       ('incorrect_configuration_413_error');
+       ('incorrect_configuration_413_error'),
+       ('available'),
+       ('unavailable'),
+       ('sse_error_features_disabled'),
+       ('sse_error_please_use_php_fpm');

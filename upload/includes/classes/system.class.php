@@ -528,9 +528,9 @@ class System{
         return shell_exec($cmd);
     }
 
-    public static function can_sse()
+    public static function can_sse(): bool
     {
         // Only available on PHP-FPM
-        return self::check_php_function('fastcgi_finish_request', 'web', false);
+        return function_exists('fastcgi_finish_request');
     }
 }

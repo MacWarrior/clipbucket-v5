@@ -41,6 +41,7 @@ assign('clientMaxBodySize', $client_max_body_size);
 
 assign('phpWebExec', System::check_php_function('exec', 'web', false));
 assign('phpWebShellExec', System::check_php_function('shell_exec', 'web', false));
+assign('phpWebSSE', System::can_sse());
 assign('phpCliExec', System::check_php_function('exec', 'cli', false));
 assign('phpCliShellExec', System::check_php_function('shell_exec', 'cli', false));
 
