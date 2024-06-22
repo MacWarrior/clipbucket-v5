@@ -99,6 +99,8 @@ assign('extensionsCLI', System::get_php_extensions('php_cli'));
 assign('extensionsWEB', System::get_php_extensions('php_web'));
 assign('php_extensions_list', System::get_php_extensions_list());
 
+assign('disks_usage', System::get_disks_usage());
+
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();
