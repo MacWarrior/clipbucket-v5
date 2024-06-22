@@ -94,7 +94,7 @@ echo |set /p=Creating MariaDB directory...
 SET "MARIADB_DIR=%CB_DIR%\mariadb"
 md %MARIADB_DIR%
 echo OK
-SET "MARIADB_VERSION=11.5.1"
+SET "MARIADB_VERSION=11.6.0"
 echo |set /p=Downloading MariaDB %MARIADB_VERSION%...
 SET "MARIADB_URL=https://mirrors.ircam.fr/pub/mariadb/mariadb-%MARIADB_VERSION%/winx64-packages/mariadb-%MARIADB_VERSION%-winx64.zip"
 SET "MARIADB_ZIP_FILENAME=mariadb-%MARIADB_VERSION%.zip"

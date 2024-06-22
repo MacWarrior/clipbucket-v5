@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"42",
+  "revision":"43",
   "status":"dev",
   "detail":[
     {
@@ -23,6 +23,7 @@
         ,"Fix login redirect"
         ,"Fix category creation interface"
         ,"Fix timeout errors on non-PHP-FPM"
+        ,"Fix Only keep max resolution option saving"
       ]
     },
     {
@@ -102,6 +103,7 @@
       "title": "External components",
       "description": [
         "Update VideoJS to version 8.14.1"
+        ,"Update Windows installation script MariaDB to 11.6.0"
       ]
     }
   ]
