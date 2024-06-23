@@ -533,4 +533,49 @@ class System{
         // Only available on PHP-FPM
         return function_exists('fastcgi_finish_request');
     }
+
+    public static function get_disks_usage(): array
+    {
+        $dir_names = ['root', 'files', 'avatars', 'backgrounds', 'category_thumbs', 'conversion_queue', 'logos', 'logs', 'mass_uploads', 'photos', 'subtitles', 'temp', 'thumbs', 'videos'];
+        $directories = [];
+        foreach ($dir_names as $dir) {
+            $directories[] = DirPath::get($dir);
+        }
+
+        $disks = [];
+        foreach($directories as $files_dirpath){
+            $space_total = disk_total_space($files_dirpath);
+            $space_free = disk_free_space($files_dirpath);
+
+            foreach($disks as $disk){
+                if( $disk['space_total'] == $space_total && $disk['space_free'] == $space_free ){
+                    continue 2;
+                }
+            }
+
+            $disks[] = [
+                'path' => $files_dirpath,
+                'space_total' => $space_total,
+                'space_free' => $space_free,
+                'space_usage_percent' => round($space_free / $space_total * 100, 2),
+                'readable_total' => self::get_readable_filesize($space_total, 2),
+                'readable_free' => self::get_readable_filesize($space_free, 2)
+            ];
+        }
+
+        return $disks;
+    }
+
+    public static function get_readable_filesize(int $bytes, int $round = 0): String
+    {
+        $size   = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        $value = $bytes / (1024 ** $factor);
+        if($round != 0){
+            $value = round($value, $round);
+        }
+
+        return $value . ' ' . $size[$factor];
+    }
 }

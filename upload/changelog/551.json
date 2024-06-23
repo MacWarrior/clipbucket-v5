@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"43",
+  "revision":"44",
   "status":"dev",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Implement TMDB mature content search"
         ,"Implement Cloudflare usage detection"
+        ,"Implement storage usage tracking"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Add SSE function check"

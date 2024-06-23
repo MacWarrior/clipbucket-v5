@@ -1133,4 +1133,5 @@ VALUES ('admin_setting'),
        ('available'),
        ('unavailable'),
        ('sse_error_features_disabled'),
-       ('sse_error_please_use_php_fpm');
+       ('sse_error_please_use_php_fpm'),
+       ('storage');
