@@ -411,7 +411,7 @@
                         <label>{$disk.path}</label>
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-{if $disk.space_usage_percent < 70}success{elseif $disk.space_usage_percent < 90}warning{else}danger{/if}" role="progressbar" style="width:{$disk.space_usage_percent}%">
-                                <span>{$disk.readable_free} / {$disk.readable_total} ({$disk.space_usage_percent} %)</span>
+                                <span>{$disk.readable_used} / {$disk.readable_total} ({$disk.space_usage_percent} %)</span>
                             </div>
                         </div>
                         {/foreach}
