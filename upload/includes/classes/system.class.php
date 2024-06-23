@@ -546,6 +546,7 @@ class System{
         foreach($directories as $files_dirpath){
             $space_total = disk_total_space($files_dirpath);
             $space_free = disk_free_space($files_dirpath);
+            $space_used = $space_total - $space_free;
 
             foreach($disks as $disk){
                 if( $disk['space_total'] == $space_total && $disk['space_free'] == $space_free ){
@@ -557,9 +558,11 @@ class System{
                 'path' => $files_dirpath,
                 'space_total' => $space_total,
                 'space_free' => $space_free,
-                'space_usage_percent' => round($space_free / $space_total * 100, 2),
+                'space_used' => $space_used,
+                'space_usage_percent' => round($space_used / $space_total * 100, 2),
                 'readable_total' => self::get_readable_filesize($space_total, 2),
-                'readable_free' => self::get_readable_filesize($space_free, 2)
+                'readable_free' => self::get_readable_filesize($space_free, 2),
+                'readable_used' => self::get_readable_filesize($space_used, 2)
             ];
         }
 
