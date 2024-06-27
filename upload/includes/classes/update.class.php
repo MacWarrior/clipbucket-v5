@@ -352,18 +352,7 @@ class Update
      */
     private function pluginsNeedDBUpdate(): bool
     {
-        $plugins_installed = Plugin::getInstance()->getAll();
-        foreach ($plugins_installed as $plugin) {
-            $plugin_details = CBPlugin::getInstance()->get_plugin_details($plugin['plugin_file'], $plugin['plugin_folder']);
-            if( !$plugin_details ){
-                continue;
-            }
-
-            if( $plugin_details['version'] > $plugin['plugin_version'] ){
-                return true;
-            }
-        }
-        return false;
+        return $this->getPluginUpdateFiles(true) >= 1;
     }
 
     /**

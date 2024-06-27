@@ -431,7 +431,7 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-12">
-									<label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Disallowed usernames</label>
+									<label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Disallowed usernames</label>
 									<textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{$row.disallowed_usernames}</textarea>
 								</div>
 							</div>
@@ -909,14 +909,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Allowed Video extensions</label>
+                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Allowed Video extensions</label>
                                     <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Sperate by commas"> Allowed Photo extensions</label>
+                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Allowed Photo extensions</label>
                                     <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
                                 </div>
                             </div>
@@ -1905,6 +1905,23 @@
 								<div class="col-md-2 row-size">
 									<input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-10">
+									<label class="nowrap" for="enable_comments_censor" title="{lang code='option_comments_censor'}">{lang code='option_comments_censor'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_comments_censor" id="enable_comments_censor" {if $row.enable_comments_censor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-12">
+									<label class="nowrap" for="comments_censored_words" title="{lang code='option_comments_censored_words'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> {lang code='option_comments_censored_words'}</label>
+									<textarea class="form-control" name="comments_censored_words" id="comments_censored_words" cols="45" rows="5">{$row.comments_censored_words}</textarea>
 								</div>
 							</div>
 							<hr/>

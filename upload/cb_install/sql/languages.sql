@@ -1134,4 +1134,7 @@ VALUES ('admin_setting'),
        ('unavailable'),
        ('sse_error_features_disabled'),
        ('sse_error_please_use_php_fpm'),
-       ('storage');
+       ('storage'),
+       ('option_comments_censor'),
+       ('option_comments_censored_words'),
+       ('separated_by_commas')

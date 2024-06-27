@@ -36,7 +36,7 @@
 			{/if}
 				</strong>
 				<div class="clearfix commented-txt">
-					<p>{display_clean($comment.comment)|comment}</p>
+					<p>{Comments::getClean($comment.comment)}</p>
 				</div>
 			{if user_id()}
 				<div class="com-info-actions clearfix">
@@ -84,7 +84,7 @@
 					{/if}
 				</strong>
 				<div class="clearfix commented-txt">
-					<p>{display_clean($comment.comment)|comment}</p>
+					<p>{Comments::getClean($comment.comment)}</p>
 				</div>
 				{if user_id()}
 				<div class="com-info-actions clearfix">
@@ -130,7 +130,7 @@
 							<span>{$reply.date_added|niceTime}</span>
 						</strong>
 						<div class="clearfix commented-txt">
-							<p>{display_clean($reply.comment)|comment}</p>
+							<p>{Comments::getClean($reply.comment)}</p>
 						</div>
 						{if user_id()}
 						<div class="com-info-actions clearfix">
