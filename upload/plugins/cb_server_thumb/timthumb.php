@@ -13,7 +13,7 @@
  * $Rev$
  */
 
-const VERSION = 'CB5.5.0';                     // Version of this script ; original version 2.8.14
+const VERSION = 'CB5.5.1';                     // Version of this script ; original version 2.8.14
 
 const DEBUG_ON = false;                       // Enable debug logging to web server error log (STDERR)
 const DEBUG_LEVEL = 1;                        // Debug level 1 is less noisy and 3 is the most noisy
@@ -117,7 +117,7 @@ class timthumb
         global $ALLOWED_SITES;
         $this->startTime = microtime(true);
         date_default_timezone_set('UTC');
-        $this->debug(1, 'Starting new request from ' . Network::get_remote_ip() . ' to ' . $_SERVER['REQUEST_URI']);
+        $this->debug(1, 'Starting new request from ' . $this->getIP() . ' to ' . $_SERVER['REQUEST_URI']);
         $this->calcDocRoot();
         //On windows systems I'm assuming fileinode returns an empty string or a number that doesn't change. Check this.
         $this->salt = @filemtime(__FILE__) . '-' . @fileinode(__FILE__);
@@ -926,6 +926,33 @@ class timthumb
         }
 
         return $image;
+    }
+
+    protected function getIP()
+    {
+        $rem = @$_SERVER['REMOTE_ADDR'];
+        $ff = @$_SERVER['HTTP_X_FORWARDED_FOR'];
+        $ci = @$_SERVER['HTTP_CLIENT_IP'];
+        if (preg_match('/^(?:192\.168|172\.16|10\.|127\.)/', $rem)) {
+            if ($ff) {
+                return $ff;
+            }
+            if ($ci) {
+                return $ci;
+            }
+            return $rem;
+        }
+
+        if ($rem) {
+            return $rem;
+        }
+        if ($ff) {
+            return $ff;
+        }
+        if ($ci) {
+            return $ci;
+        }
+        return 'UNKNOWN';
     }
 
     protected function debug($level, $msg)

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"45",
+  "revision":"46",
   "status":"dev",
   "detail":[
     {
@@ -98,6 +98,7 @@
       "title": "Internal components",
       "description": [
         "Update Player to version 2.0.3"
+        ,"Update Server Thumb for ClipBucket to version 2.0.3"
       ]
     },
     {
