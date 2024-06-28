@@ -123,22 +123,26 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-10">
+								<div class="col-md-4">
 									<label class="nowrap" for="enable_rss_feeds" title="Enable RSS feeds">Enable RSS feeds</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
 									<input value="yes" id="enable_rss_feeds" {if $row.enable_rss_feeds=='yes'}checked{/if} name="enable_rss_feeds" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
 									<span class="lbl"></span>
 								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
+								<div class="col-md-4">
 									<label class="nowrap" for="enable_sitemap" title="{lang code='option_enable_sitemap'}">{lang code='option_enable_sitemap'}</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
 									<input value="yes" id="enable_sitemap" {if $row.enable_sitemap=='yes'}checked{/if} name="enable_sitemap" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
 									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-12">
+									<label class="nowrap" for="censored_words" title="{lang code='option_censored_words'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> {lang code='option_censored_words'}</label>
+									<textarea class="form-control" name="censored_words" id="censored_words" cols="45" rows="5">{$row.censored_words}</textarea>
 								</div>
 							</div>
 							<hr/>
@@ -1411,6 +1415,30 @@
 									<input value="yes" name="enable_video_internal_sharing" id="enable_video_internal_sharing" {if $row.enable_video_internal_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_edit_button" title="{lang code='enable_edit_button'}">{lang code='enable_edit_button'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_edit_button" id="enable_edit_button" {if $row.enable_edit_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_description_censor" title="{lang code='option_enable_description_censor'}">{lang code='option_enable_description_censor'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_description_censor" id="enable_video_description_censor" {if $row.enable_video_description_censor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+								<div class="col-md-4">
+									<label class="nowrap" for="enable_video_description_link" title="{lang code='option_enable_description_link'}">{lang code='option_enable_description_link'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="enable_video_description_link" id="enable_video_description_link" {if $row.enable_video_description_link=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
 							</div>
 							<hr/>
 
@@ -1503,15 +1531,6 @@
 								</div>
 							</div>
 							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="enable_edit_button" title="{lang code='enable_edit_button'}">{lang code='enable_edit_button'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_edit_button" id="enable_edit_button" {if $row.enable_edit_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
 
 						</div>
 						<div class="col-md-4">
@@ -1915,13 +1934,6 @@
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_comments_censor" id="enable_comments_censor" {if $row.enable_comments_censor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-12">
-									<label class="nowrap" for="comments_censored_words" title="{lang code='option_comments_censored_words'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> {lang code='option_comments_censored_words'}</label>
-									<textarea class="form-control" name="comments_censored_words" id="comments_censored_words" cols="45" rows="5">{$row.comments_censored_words}</textarea>
 								</div>
 							</div>
 							<hr/>

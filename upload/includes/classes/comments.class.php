@@ -564,31 +564,14 @@ class Comments
         }
     }
 
-    private static function getCensored(string $comment): string
-    {
-        $censored_words = explode(',',config('comments_censored_words'));
-        foreach ($censored_words as $word) {
-            $word = trim($word);
-            $comment = str_ireplace($word, str_repeat('*', strlen($word)), $comment);
-        }
-
-        return $comment;
-    }
-
     public static function getClean(string $comment): string
     {
-        if( config('enable_comments_censor') == 'yes' ) {
-            $comment = self::getCensored($comment);
-        }
+        $params = [
+            'censor' => (config('enable_comments_censor') == 'yes'),
+            'functionList' => 'comment'
+        ];
 
-        $func_list = ClipBucket::getInstance()->getFunctionList('comment');
-        if (is_array($func_list) && count($func_list) > 0) {
-            foreach ($func_list as $func) {
-                $comment = $func($comment);
-            }
-        }
-
-        return nl2br(display_clean($comment));
+        return CMS::getInstance($comment, $params)->getClean();
     }
 
 }

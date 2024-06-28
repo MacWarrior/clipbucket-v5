@@ -574,6 +574,17 @@ class Video
         }
     }
 
+    public function getDescription(string $description): string
+    {
+        $params = [
+            'censor' => (config('enable_video_description_censor') == 'yes'),
+            'functionList' => 'video_description',
+            'links' => (config('enable_video_description_link') == 'yes')
+        ];
+
+        return CMS::getInstance($description, $params)->getClean();
+    }
+
 }
 
 class CBvideo extends CBCategory

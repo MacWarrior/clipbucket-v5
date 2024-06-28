@@ -1136,5 +1136,7 @@ VALUES ('admin_setting'),
        ('sse_error_please_use_php_fpm'),
        ('storage'),
        ('option_comments_censor'),
-       ('option_comments_censored_words'),
-       ('separated_by_commas')
+       ('option_censored_words'),
+       ('separated_by_commas'),
+       ('option_enable_description_censor'),
+       ('option_enable_description_link');

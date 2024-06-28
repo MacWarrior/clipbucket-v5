@@ -279,7 +279,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_tmdb_mature_content', 'no'),
     (NULL, 'tmdb_mature_content_age', '18'),
     (NULL, 'tmdb_enable_on_front_end', 'no'),
-    (NULL, 'enable_comments_censor', 'no');
+    (NULL, 'enable_comments_censor', 'no'),
+    (NULL, 'enable_video_description_censor', 'no'),
+    (NULL, 'enable_video_description_link', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

@@ -118,6 +118,8 @@ if (isset($_POST['update'])) {
         , 'enable_tmdb_mature_content'
         , 'tmdb_enable_on_front_end'
         , 'enable_comments_censor'
+        , 'enable_video_description_censor'
+        , 'enable_video_description_link'
     ];
 
     $config_booleans_to_refactor = [
@@ -247,7 +249,9 @@ if (isset($_POST['update'])) {
         'max_upload_size',
         'max_video_duration',
         'enable_comments_censor',
-        'comments_censored_words',
+        'enable_video_description_censor',
+        'enable_video_description_link',
+        'censored_words',
 
         'num_thumbs',
 
