@@ -282,7 +282,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_comments_censor', 'no'),
     (NULL, 'enable_video_description_censor', 'no'),
     (NULL, 'enable_video_description_link', 'yes'),
-    (NULL, 'censored_words', '');
+    (NULL, 'censored_words', ''),
+    (NULL, 'enable_edit_photo_button', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
