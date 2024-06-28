@@ -2,7 +2,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00049 extends \Migration
+class WIP extends \Migration
 {
     /**
      * @throws \Exception
