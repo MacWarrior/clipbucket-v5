@@ -58,7 +58,7 @@ switch ($mode) {
         $photo_arr = [
             'user'  => user_id(),
             'limit' => $get_limit,
-            'order' => ' date_added DESC'
+            'order' => 'collections.date_added DESC'
         ];
 
         if (get('query') != '') {

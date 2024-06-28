@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"48",
+  "revision":"49",
   "status":"dev",
   "detail":[
     {
@@ -45,6 +45,7 @@
         ,"Fix add video to collection"
         ,"Fix user's avatar display error"
         ,"Fix video description links display <i>(#373)</i>"
+        ,"Fix manage photo page SQL error"
       ]
     },
     {
