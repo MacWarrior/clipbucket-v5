@@ -95,7 +95,7 @@
 								</button>
 									{/if}
 								{/if}
-								{if config('enable_edit_button') == 'yes'}
+								{if config('enable_edit_photo_button') == 'yes'}
 									{if has_access('admin_access', true)}
 										{if user_id() && $photo.userid == user_id()}
 											<div class="dropdown">
