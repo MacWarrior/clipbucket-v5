@@ -76,7 +76,7 @@ if ($myquery->video_exists($video)) {
     assign('has_log', file_exists($file));
 } else {
     //add parameter to display message after redirect
-    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php?missing_video=1');
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php?missing_video=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
 }
 
 $resolution_list = getResolution_list($data);
