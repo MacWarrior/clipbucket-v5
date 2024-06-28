@@ -616,27 +616,27 @@ class System{
 
     public static function get_nginx_config(string $config_name): string
     {
-        if( !self::is_nginx() ){
+        if (!self::is_nginx()) {
             return '';
         }
 
         $nginx_path = self::get_binaries('nginx', false);
-        if( empty($nginx_path) || !file_exists($nginx_path) ){
+        if (empty($nginx_path) || !file_exists($nginx_path)) {
             return '';
         }
 
-        if( !self::check_php_function('shell_exec', 'web', false) ){
+        if (!self::check_php_function('shell_exec', 'web', false)) {
             return '';
         }
 
         chdir(dirname($nginx_path));
-        $data = shell_exec($nginx_path.' -T 2>&1');
+        $data = shell_exec($nginx_path . ' -T 2>&1');
 
         $separator = "\r\n";
         $line = strtok($data, $separator);
 
         while ($line !== false) {
-            if( strpos($line, $config_name) !== false ){
+            if (strpos($line, $config_name) !== false) {
 
                 // Clear RAM usage from strtok
                 unset($data);
@@ -653,5 +653,53 @@ class System{
         strtok('', '');
 
         return '';
+    }
+
+    public static function get_disks_usage(): array
+    {
+        $dir_names = ['root', 'files', 'avatars', 'backgrounds', 'category_thumbs', 'conversion_queue', 'logos', 'logs', 'mass_uploads', 'photos', 'subtitles', 'temp', 'thumbs', 'videos'];
+        $directories = [];
+        foreach ($dir_names as $dir) {
+            $directories[] = DirPath::get($dir);
+        }
+
+        $disks = [];
+        foreach($directories as $files_dirpath){
+            $space_total = disk_total_space($files_dirpath);
+            $space_free = disk_free_space($files_dirpath);
+            $space_used = $space_total - $space_free;
+
+            foreach($disks as $disk){
+                if( $disk['space_total'] == $space_total && $disk['space_free'] == $space_free ){
+                    continue 2;
+                }
+            }
+
+            $disks[] = [
+                'path' => $files_dirpath,
+                'space_total' => $space_total,
+                'space_free' => $space_free,
+                'space_used' => $space_used,
+                'space_usage_percent' => round($space_used / $space_total * 100, 2),
+                'readable_total' => self::get_readable_filesize($space_total, 2),
+                'readable_free' => self::get_readable_filesize($space_free, 2),
+                'readable_used' => self::get_readable_filesize($space_used, 2)
+            ];
+        }
+
+        return $disks;
+    }
+
+    public static function get_readable_filesize(int $bytes, int $round = 0): String
+    {
+        $size   = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        $factor = floor((strlen($bytes) - 1) / 3);
+
+        $value = $bytes / (1024 ** $factor);
+        if($round != 0){
+            $value = round($value, $round);
+        }
+
+        return $value . ' ' . $size[$factor];
     }
 }

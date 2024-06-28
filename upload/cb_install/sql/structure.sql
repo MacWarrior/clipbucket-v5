@@ -481,8 +481,6 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `fav_music` mediumtext NOT NULL,
   `fav_books` mediumtext NOT NULL,
   `background` mediumtext NOT NULL,
-  `profile_video` int(255) NOT NULL DEFAULT 0,
-  `profile_item` varchar(25) NOT NULL DEFAULT '',
   `rating` tinyint(2) NOT NULL DEFAULT 0,
   `voters` text NOT NULL,
   `rated_by` int(150) NOT NULL DEFAULT 0,

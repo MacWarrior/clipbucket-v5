@@ -53,7 +53,7 @@
                 {/if}
                 commented on a {$comment_type} named <a href="{$comment_obj_baseurl|cat:$comment.type_id}" title="{display_clean($comment.title)}">{display_clean($comment.title)|truncate:40}</a>
                 on {$comment.date_added|date_format} ({$comment.date_added|niceTime})
-                <div class="alert alert-info" style="padding:3px;margin-bottom:0;margin-top:3px;">{display_clean($comment.comment)|comment}</div>
+                <div class="alert alert-info" style="padding:3px;margin-bottom:0;margin-top:3px;">{Comments::getClean($comment.comment)}</div>
             </td>
             <td>
                 <div class="dropdown" style="text-align:center;">

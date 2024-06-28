@@ -4085,30 +4085,6 @@ function upload_image($type = 'logo')
     }
 }
 
-function AutoLinkUrls($str, $popup = false)
-{
-    if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches)) {
-        $pop = ($popup == true) ? " target=\"_blank\" " : "";
-        for ($i = 0; $i < count($matches['0']); $i++) {
-            $period = '';
-            if (preg_match("|\.$|", $matches['6'][$i])) {
-                $period = '.';
-                $matches['6'][$i] = substr($matches['6'][$i], 0, -1);
-            }
-            $str = str_replace($matches['0'][$i],
-                $matches['1'][$i] . '<a href="http' .
-                $matches['4'][$i] . '://' .
-                $matches['5'][$i] .
-                $matches['6'][$i] . '"' . $pop . '>http' .
-                $matches['4'][$i] . '://' .
-                $matches['5'][$i] .
-                $matches['6'][$i] . '</a>' .
-                $period, $str);
-        }
-    }
-    return $str;
-}
-
 /**
  * Check for the content mime type of a file provided
  * @param : { FILE } { $mainFile } { File to run check against }

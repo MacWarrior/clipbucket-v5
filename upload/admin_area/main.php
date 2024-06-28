@@ -115,6 +115,9 @@ if (isset($_POST['update'])) {
         , 'only_keep_max_resolution'
         , 'enable_tmdb_mature_content'
         , 'tmdb_enable_on_front_end'
+        , 'enable_comments_censor'
+        , 'enable_video_description_censor'
+        , 'enable_video_description_link'
         , 'enable_chunk_upload'
     ];
 
@@ -244,6 +247,10 @@ if (isset($_POST['update'])) {
         'max_comment_chr',
         'max_upload_size',
         'max_video_duration',
+        'enable_comments_censor',
+        'enable_video_description_censor',
+        'enable_video_description_link',
+        'censored_words',
 
         'num_thumbs',
 

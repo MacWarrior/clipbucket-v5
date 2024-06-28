@@ -564,4 +564,14 @@ class Comments
         }
     }
 
+    public static function getClean(string $comment): string
+    {
+        $params = [
+            'censor' => (config('enable_comments_censor') == 'yes'),
+            'functionList' => 'comment'
+        ];
+
+        return CMS::getInstance($comment, $params)->getClean();
+    }
+
 }

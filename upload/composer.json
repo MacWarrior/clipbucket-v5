@@ -7,5 +7,10 @@
     "smarty/smarty": "3.1.48",
     "oxygenzsas/composer_lib_discord": "dev-php7",
     "psr/http-server-middleware": "1.0.2"
+  },
+  "config": {
+    "platform": {
+      "php": "7.0.33"
+    }
   }
 }

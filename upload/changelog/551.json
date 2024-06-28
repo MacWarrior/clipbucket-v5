@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"42",
+  "revision":"50",
   "status":"dev",
   "detail":[
     {
@@ -8,9 +8,13 @@
       "description": [
         "Implement TMDB mature content search"
         ,"Implement Cloudflare usage detection"
+        ,"Implement storage usage tracking"
+        ,"Implement comments censor"
+        ,"Implement video description censor"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Add SSE function check"
+        ,"Add option to enable links in video description"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Fix TMDB import error display"
@@ -23,6 +27,7 @@
         ,"Fix login redirect"
         ,"Fix category creation interface"
         ,"Fix timeout errors on non-PHP-FPM"
+        ,"Fix Only keep max resolution option saving"
       ]
     },
     {
@@ -39,6 +44,8 @@
         ,"Fix channel background upload <i>(#370)</i>"
         ,"Fix add video to collection"
         ,"Fix user's avatar display error"
+        ,"Fix video description links display <i>(#373)</i>"
+        ,"Fix manage photo page SQL error"
       ]
     },
     {
@@ -48,6 +55,7 @@
         ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
         ,"Update Readme"
         ,"Cleanup code"
+        ,"Remove unused functions"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -96,12 +104,14 @@
       "title": "Internal components",
       "description": [
         "Update Player to version 2.0.3"
+        ,"Update Server Thumb for ClipBucket to version 2.0.3"
       ]
     },
     {
       "title": "External components",
       "description": [
         "Update VideoJS to version 8.14.1"
+        ,"Update Windows installation script MariaDB to 11.6.0"
       ]
     }
   ]
