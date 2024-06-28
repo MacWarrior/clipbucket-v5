@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"49",
+  "revision":"50",
   "status":"dev",
   "detail":[
     {
@@ -55,6 +55,7 @@
         ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
         ,"Update Readme"
         ,"Cleanup code"
+        ,"Remove unused functions"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"

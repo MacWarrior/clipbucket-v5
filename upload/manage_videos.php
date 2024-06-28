@@ -17,8 +17,6 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
 
 assign('queryString', queryString(null, ['type',
-    'makeProfileItem',
-    'removeProfileItem',
     'vid_delete']));
 switch ($mode) {
     case 'uploaded':
@@ -38,18 +36,6 @@ switch ($mode) {
             }
             $eh->flush();
             e(lang('vdo_multi_del_erro'), 'm');
-        }
-
-        //Setting Profile Video
-        if (isset($_GET['makeProfileItem'])) {
-            $item = mysql_clean($_GET['makeProfileItem']);
-            $type = mysql_clean($_GET['type']);
-            $userquery->setProfileItem($item, $type);
-        }
-
-        //Removing Profile Item
-        if (isset($_GET['removeProfileItem'])) {
-            $userquery->removeProfileItem();
         }
 
         //Getting Video List

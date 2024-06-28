@@ -19,8 +19,6 @@ assign(
     'queryString',
     queryString(null, [
             'type',
-            'makeProfileItem',
-            'removeProfileItem',
             'delete_photo']
     )
 );
@@ -41,18 +39,6 @@ switch ($mode) {
             }
             $eh->flush();
             e(sprintf(lang('total_photos_deleted'), $total), 'm');
-        }
-
-        //Setting Profile Photo
-        if (isset($_GET['makeProfileItem'])) {
-            $item = mysql_clean($_GET['makeProfileItem']);
-            $type = mysql_clean($_GET['type']);
-            $userquery->setProfileItem($item, $type);
-        }
-
-        //Removing Profile Item
-        if (isset($_GET['removeProfileItem'])) {
-            $userquery->removeProfileItem();
         }
 
         $photo_arr = [
