@@ -9,7 +9,7 @@ function get_user_fields($array = null)
  * Get name of a user from array
  *
  * @param { array } { $user_array } { array with user details }
- * @return { string } { $name } { name of user fetched from array }
+ * @return mixed|string { string } { $name } { name of user fetched from array }
  */
 function name($user_array)
 {
@@ -39,7 +39,7 @@ function profile_fileds_check($array): bool
     }
 
     if (!empty($array['web_url'])) {
-        if (is_numeric($array['web_url'])) {
+        if (!filter_var($array['web_url'], FILTER_VALIDATE_URL)) {
             e('Invalid URL provided.');
             $post_clean = false;
         }
@@ -61,8 +61,8 @@ function profile_fileds_check($array): bool
 /**
  * Resend verification email to a given user
  * @param: { integer } { $userid } { id of user to resend verification to }
- * @return: { boolean } { true if success, else false }
- * @throws \Exception
+ * @return false|mixed : { boolean } { true if success, else false }
+ * @throws Exception
  * @author: Saqib Razzaq
  * @since: March 10th, 2016 ClipBucket 2.8.1
  */

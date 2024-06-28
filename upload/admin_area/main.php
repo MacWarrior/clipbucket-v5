@@ -120,6 +120,7 @@ if (isset($_POST['update'])) {
         , 'enable_comments_censor'
         , 'enable_video_description_censor'
         , 'enable_video_description_link'
+        , 'enable_user_profil_censor'
     ];
 
     $config_booleans_to_refactor = [
@@ -252,6 +253,7 @@ if (isset($_POST['update'])) {
         'enable_video_description_censor',
         'enable_video_description_link',
         'censored_words',
+        'enable_user_profil_censor',
 
         'num_thumbs',
 

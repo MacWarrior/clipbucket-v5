@@ -269,6 +269,20 @@ class User
             Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [''], ' userid = ' . mysql_clean($userid));
         }
     }
+
+    public static function getClean(string $content, $no_edit = false): string
+    {
+        $params = [];
+        if( !$no_edit ){
+            $params = [
+                'censor' => (config('enable_user_profil_censor') == 'yes'),
+                'functionList' => 'user_profil',
+                'links' => true
+            ];
+        }
+
+        return CMS::getInstance($content, $params)->getClean();
+    }
 }
 
 
@@ -4303,7 +4317,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'about_me',
                 'id'         => 'about_me',
-                'value'      => mysql_clean($default['about_me']),
+                'value'      => $default['about_me'],
                 'db_field'   => 'about_me',
                 'auto_view'  => 'no',
                 'clean_func' => 'Replacer'
@@ -4413,7 +4427,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'schools',
                 'id'         => 'schools',
-                'value'      => mysql_clean($default['schools']),
+                'value'      => $default['schools'],
                 'db_field'   => 'schools',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
@@ -4426,7 +4440,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'occupation',
                 'id'         => 'occupation',
-                'value'      => mysql_clean($default['occupation']),
+                'value'      => $default['occupation'],
                 'db_field'   => 'occupation',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
@@ -4439,7 +4453,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'companies',
                 'id'         => 'companies',
-                'value'      => mysql_clean($default['companies']),
+                'value'      => $default['companies'],
                 'db_field'   => 'companies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
@@ -4452,7 +4466,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'hobbies',
                 'id'         => 'hobbies',
-                'value'      => mysql_clean($default['hobbies']),
+                'value'      => $default['hobbies'],
                 'db_field'   => 'hobbies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
@@ -4465,7 +4479,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'fav_movies',
                 'id'         => 'fav_movies',
-                'value'      => mysql_clean($default['fav_movies']),
+                'value'      => $default['fav_movies'],
                 'db_field'   => 'fav_movies',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
@@ -4478,7 +4492,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'fav_music',
                 'id'         => 'fav_music',
-                'value'      => mysql_clean($default['fav_music']),
+                'value'      => $default['fav_music'],
                 'db_field'   => 'fav_music',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
@@ -4491,7 +4505,7 @@ class userquery extends CBCategory
                 'type'       => 'textarea',
                 'name'       => 'fav_books',
                 'id'         => 'fav_books',
-                'value'      => mysql_clean($default['fav_books']),
+                'value'      => $default['fav_books'],
                 'db_field'   => 'fav_books',
                 'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'

@@ -63,12 +63,12 @@
 							<ul class="clearfix desc-list">
 								{if $p.profile_title}
 								<li>
-									<strong>{lang code='title'}</strong> : {display_clean($p.profile_title)}
+									<strong>{lang code='title'}</strong> : {User::getInstance()->getClean($p.profile_title)}
 								</li>
 								{/if}
 								{if $p.profile_desc}
 								<li>
-									<strong>{lang code='description'}</strong> : {display_clean($p.profile_desc)}
+									<strong>{lang code='description'}</strong> : {User::getInstance()->getClean($p.profile_desc)}
 								</li>
 								{/if}
 								<li>
@@ -106,10 +106,8 @@
 												<li>
 													{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
 														<strong>{$field.title}</strong> : {input_value input=$field}
-													{elseif $field.type =='textarea'}
-														<strong>{$field.title}</strong> : {display_clean($field.value)|nl2br}
 													{else}
-														<strong>{$field.title}</strong> : {input_value input=$field}
+														<strong>{$field.title}</strong> : {User::getInstance()->getClean($field.value)}
 													{/if}
 												</li>
 												{/if}

@@ -116,6 +116,7 @@ class formObj
         }
 
         if ($field['type'] == 'textarea') {
+            $field['value'] =
             $textField .= '>' . display_clean($field['value']);
         }
 
