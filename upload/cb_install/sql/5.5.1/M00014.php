@@ -22,7 +22,6 @@ class M00014 extends \Migration
             'fr' => 'Activer le bouton d\'édition'
         ]);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'enable_edit_button\',\'yes\');';
-        self::query($sql);
+        self::generateConfig('enable_edit_button', 'yes');
     }
 }

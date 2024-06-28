@@ -360,7 +360,7 @@
         });
 
         var extensions = "{$extensions}";
-        var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize('mb')}";
+        var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
         var max_file_size ="{config('max_photo_size')}mb";
         var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
         $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){

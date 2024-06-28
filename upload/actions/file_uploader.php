@@ -6,7 +6,7 @@ require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
 
 if( !has_access('allow_video_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
-    exit();
+    die();
 }
 
 global $cbvid, $Upload, $db, $eh;
@@ -31,7 +31,7 @@ switch ($mode) {
         } else {
             echo json_encode(['valid' => lang('video_detail_saved')]);
         }
-        exit();
+        die();
 
     case 'get_form':
         $title = getName($_POST['title']);
@@ -73,17 +73,14 @@ switch ($mode) {
         break;
 
     case 'upload':
-        \DiscordLog::sendDump($_POST['chunk']);
-        sleep(10);
-
         if ((int)$_SERVER['CONTENT_LENGTH'] > getBytesFromFileSize(Clipbucket::getInstance()->getMaxUploadSize('M')) ) {
             upload_error('POST exceeded maximum allowed size.');
-            exit(0);
+            die();
         }
 
         if (!isset($_FILES['Filedata'])) {
             upload_error('No file was selected');
-            exit(0);
+            die();
         }
 
         $uploadErrors = [
@@ -103,7 +100,7 @@ switch ($mode) {
             } else {
                 upload_error(lang('technical_error'));
             }
-            exit(0);
+            die();
         }
 
         if (!isset($_FILES['Filedata']['tmp_name']) || !@is_uploaded_file($_FILES['Filedata']['tmp_name'])) {
@@ -112,7 +109,7 @@ switch ($mode) {
             } else {
                 upload_error(lang('technical_error'));
             }
-            exit(0);
+            die();
         }
 
         $tempFile = $_FILES['Filedata']['tmp_name'];
@@ -132,12 +129,12 @@ switch ($mode) {
                 } else {
                     upload_error(lang('technical_error'));
                 }
-                exit();
+                die();
             }
 
             if( ($chunk == 0 && $content_type != 'video') || ($chunk > 0 && $content_type != 'application') ) {
                 upload_error('Invalid Content');
-                exit();
+                die();
             }
 
             $supported_extensions[] = 'blob';
@@ -154,7 +151,7 @@ switch ($mode) {
                 } else {
                     upload_error(lang('technical_error'));
                 }
-                exit();
+                die();
             }
 
             $part = @fopen($_FILES['Filedata']['tmp_name'], 'rb');
@@ -164,7 +161,7 @@ switch ($mode) {
                 } else {
                     upload_error(lang('technical_error'));
                 }
-                exit();
+                die();
             }
 
             while ($buff = fread($part, 4096)){
@@ -178,12 +175,12 @@ switch ($mode) {
             if( !$save_to_db ){
                 // Everything is fine, keep uploading
                 echo json_encode([]);
-                exit();
+                die();
             }
 
             if( !file_exists($temp_filepath) ){
                 upload_error(lang('technical_error'));
-                exit();
+                die();
             }
 
             $file_size = @filesize($temp_filepath);
@@ -191,7 +188,7 @@ switch ($mode) {
         } else {
             if (!isset($_FILES['Filedata']['name'])) {
                 upload_error('File has no name.');
-                exit();
+                die();
             }
 
             $original_filename = $_FILES['Filedata']['name'];
@@ -200,7 +197,7 @@ switch ($mode) {
 
             if( $content_type != 'video' ) {
                 upload_error('Invalid Content');
-                exit();
+                die();
             }
             $save_to_db = true;
         }
@@ -208,7 +205,7 @@ switch ($mode) {
         $extension = strtolower(getExt($original_filename));
         if( !in_array($extension, $supported_extensions)) {
             upload_error('Invalid video extension');
-            exit();
+            die();
         }
 
         $max_file_size_in_bytes = getBytesFromFileSize(config('max_upload_size') . 'M');
@@ -216,7 +213,7 @@ switch ($mode) {
         if (!$file_size || $file_size > $max_file_size_in_bytes) {
             upload_error(sprintf(lang('page_upload_video_limits'),config('max_upload_size'),config('max_video_duration')));
             @unlink($temp_filepath);
-            exit(0);
+            die();
         }
 
         $file_name = time() . RandomString(5);
@@ -247,7 +244,7 @@ switch ($mode) {
                 upload_error(lang('technical_error'));
             }
             @unlink($temp_filepath);
-            exit();
+            die();
         }
 
         $filename_without_ext = pathinfo($original_filename, PATHINFO_FILENAME);
@@ -280,7 +277,7 @@ switch ($mode) {
 
         if (!$vid) {
             upload_error($eh->get_error()[0]['val']);
-            exit();
+            die();
         }
 
         $Upload->add_conversion_queue($targetFileName);
@@ -303,7 +300,7 @@ switch ($mode) {
         $db->execute($query);
 
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
-        exit();
+        die();
 
     default:
         if( in_dev() ){
@@ -311,7 +308,7 @@ switch ($mode) {
         } else {
             upload_error('Unknown command');
         }
-        exit();
+        die();
 }
 
 //function used to display error

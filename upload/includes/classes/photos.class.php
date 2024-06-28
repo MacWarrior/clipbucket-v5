@@ -2031,7 +2031,7 @@ class CBPhotos
     /**
      * Used to create filename of photo
      */
-    function create_filename()
+    function create_filename(): string
     {
         return time() . RandomString(6);
     }
@@ -2039,7 +2039,7 @@ class CBPhotos
     /**
      * Construct extensions for SWF
      */
-    function extensions()
+    function extensions(): string
     {
         $exts = $this->exts;
         $list = '';
@@ -2054,7 +2054,7 @@ class CBPhotos
      * Function used to validate form fields
      *
      * @param null $array
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \PHPMailer\PHPMailer\Exception|Exception
      */
     function validate_form_fields($array = null)
     {

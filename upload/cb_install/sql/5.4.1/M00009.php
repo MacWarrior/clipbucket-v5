@@ -9,7 +9,6 @@ class M00009 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES (\'email_domain_restriction\', \'\');';
-        self::query($sql);
+        self::generateConfig('email_domain_restriction', '');
     }
 }

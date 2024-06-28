@@ -25,35 +25,14 @@ $(document).ready(function(){
         },
 
         init: {
-            PostInit: function() {
-                console.log('PostInit');
-            },
-
-            UploadFile: function(up, file){
-                console.log('UploadFile');
-                //console.log(up);
-                //console.log(file);
-
-                //up.removeFile(file);
-                //uploader.stop();
-                //up.stop();
-            },
-
             FilesRemoved: function(up) {
-                console.log('FilesRemoved');
                 reFreshTabs(up);
-            },
-
-            StateChanged: function(up){
-                console.log('StateChanged');
             }
-
         }
     });
 
     var filesUploaded = 0;
     var error = '';
-    var canceled = [];
 
     function reFreshTabs(up)
     {
@@ -148,7 +127,7 @@ $(document).ready(function(){
             });
 
             if( file.show_duration === true ){
-                $(oneUploadForm).find('#duration').removeClass('hidden').removeAttr('disabled');
+                $(oneUploadForm).find('#duration').removeAttr('disabled').parent().removeClass('hidden');
             }
 
             if( file.percent === 100 ){
@@ -231,9 +210,8 @@ $(document).ready(function(){
                     'Cancel Uploading' +
                 '</button>' +
                 '<div class="progress">' +
-                    '<div class="progress-bar progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0;">' +
-                        '<span class="sr-only">70% Complete</span>' +
-                        '<span class="realProgText_'+plFileId+'">50% completed</span>' +
+                    '<div class="progress-bar progress-bar-striped progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0;">' +
+                        '<span class="realProgText_'+plFileId+'"></span>' +
                     '</div>' +
                 '</div>';
 
@@ -250,7 +228,7 @@ $(document).ready(function(){
                 $('#tab'+index+' form').append(hiddenField_fileName);
             }
             if( up.files[i].show_duration === true ){
-                $('#tab'+index+' #duration').removeClass('hidden').removeAttr('disabled');
+                $('#tab'+index+' #duration').removeAttr('disabled').parent().removeClass('hidden');
             }
 
             if( up.files[i].percent < 100 ){
@@ -285,7 +263,6 @@ $(document).ready(function(){
             $('.progress-bar_'+toCancel).addClass('progress-bar-danger');
             $('.realProgText_'+toCancel).text('Canceled');
             $("#uploadMessage").removeClass("hidden").html('Upload has been canceled').attr('class', 'alert alert-danger container');
-            error = 'Upload has been canceled';
             setTimeout(function(){
                 $("#uploadMessage").addClass('hidden');
             }, 5000);
@@ -303,8 +280,6 @@ $(document).ready(function(){
         $('.progress-container').removeClass('hidden');
 
         $.extend(uploader.settings.params, { unique_id : file.data.unique_id });
-
-        console.log('BeforeUpload');
     });
 
     uploader.bind('FileUploaded', function(up, fileDetails, response) {
@@ -344,7 +319,7 @@ $(document).ready(function(){
 
                     if(serverResponse.extension === 'mp4' && stay_mp4 === 'yes' ){
                         file.show_duration = true;
-                        $('#tab'+index+' #duration').removeClass('hidden').removeAttr('disabled');
+                        $('#tab'+index+' #duration').removeAttr('disabled').parent().removeClass('hidden');
                     } else {
                         file.show_duration = false;
                     }
@@ -397,45 +372,22 @@ $(document).ready(function(){
         if (response.error) {
             error = response.error;
 
-            $.each( uploader.files, function( iNow, currentFile ){
-                if (wanted_unique_id === currentFile.data.unique_id) {
-                    uploader.removeFile(currentFile);
-                    uploader.stop();
-                    //uploader.start();
-                    $('.progress-bar_'+wanted_unique_id).addClass('progress-bar-danger');
-                    $('.realProgText_'+wanted_unique_id).text('Upload failed');
-                    $(".cancel_button[to_cancel='" + wanted_unique_id + "']").attr('disabled',true);
-                    setTimeout(function(){
-                        $("#uploadMessage").html(response.error).addClass('hidden');
-                    }, 5000);
-                }
-            });
-        }
-
-        if( canceled.length > 0 ) {
-            console.log('canceled');
-            $.each( uploader.files, function( iNow, currentFile ){
-                console.log(currentFile.data.unique_id + '?');
-                canceled.forEach(function (unique_id) {
-                    if( unique_id === currentFile.data.unique_id){
-                        console.log(unique_id);
-
-                        uploader.removeFile(currentFile);
-                        uploader.stop();
-                        //uploader.start();
-                    }
-                });
-            });
+            up.abort(wanted_unique_id);
+            $('.progress-bar_'+wanted_unique_id).addClass('progress-bar-danger');
+            $('.realProgText_'+wanted_unique_id).text('Upload failed');
+            $(".cancel_button[to_cancel='" + wanted_unique_id + "']").attr('disabled',true);
+            setTimeout(function(){
+                $("#uploadMessage").html(response.error).addClass('hidden');
+            }, 5000);
         }
     });
 
     uploader.bind('UploadProgress', function(up, file) {
-        console.log('UploadProgress');
         // this the unique ID assigned to each file upload
         var pluploadFileId = file.data.unique_id,
             filePercentage = file.percent;
 
-        $('.progress-bar_'+pluploadFileId).css('width',filePercentage+'%');
+        $('.progress-bar_'+pluploadFileId).css("width",filePercentage+"%");
         $('.realProgText_'+pluploadFileId).text(filePercentage+'% Completed');
         if (filePercentage === 100) {
             $(".cancel_button[to_cancel='" + pluploadFileId + "']").attr('disabled',true).fadeOut('slow');
@@ -463,7 +415,6 @@ $(document).ready(function(){
     });
 
     uploader.bind('Error', function(up, err) {
-        console.log('Error');
         $("#uploadMessage").removeClass('hidden');
         if(err){
             $("#uploadMessage").html(err.message).attr('class', 'alert alert-danger container');
