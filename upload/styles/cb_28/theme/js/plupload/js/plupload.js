@@ -1512,7 +1512,6 @@
 
 
 					stop: function() {
-						console.log('Oxygenz : Stop 4');
 						var prevState = this.state;
 
 						if (this.state === Queueable.IDLE) {
@@ -1524,11 +1523,52 @@
 
 						this.startedTimestamp = 0;
 
-						console.log(this);
-
-						//this.state = Queueable.IDLE;
+						this.state = Queueable.IDLE;
 						this.trigger('statechanged', this.state, prevState);
 						this.trigger('stopped');
+						return true;
+					},
+
+					/** Oxygenz : Création d'une méthode de cancel d'uplaod */
+					abort: function(uid_to_cancel) {
+						var prevState = this.state;
+
+						if (this.state === Queueable.IDLE) {
+							return false;
+						}
+
+						this.processed = 1;
+						this.percent = 0;
+						this.loaded = this.processed; // for backward compatibility
+
+						this.startedTimestamp = 0;
+
+						// definis si le fichier en cours correspond au ficher a stoper
+						let is_current_item = false;
+						this._queue.toArray().forEach(function(item){
+							if(
+								item._options.params === undefined
+								|| item._options.params.unique_id != uid_to_cancel
+								|| item.state != Queueable.PROCESSING
+							) {
+								return ;
+							}
+							is_current_item = true;
+						})
+
+						// kill la requete si ell est en cours
+						if(is_current_item === true) {
+							$(document).trigger('CancelCurrentUpload');
+						}
+
+						// ajoute le fichier dans la liste d'exclusion pour qu'il ne se relance pas ( ni un de ses chunk )
+						$(document).trigger('CancelFile', [ uid_to_cancel]);
+
+						// appel le prochain ficher a uploader
+						$(document).trigger('startNextFile');
+
+						this.trigger('statechanged', this.state, prevState);
+						this.trigger('processed');
 						return true;
 					},
 
@@ -1892,6 +1932,13 @@
 					 * @method start
 					 */
 					start: function() {
+						let self = this;
+
+						/** Oxygenz : abonnement pour lancer l'element suivant depuis un event */
+						$(document).bind('startNextFile', function() {
+							processNext.call(self)
+						});
+
 						if (!Queue.parent.start.call(this)) {
 							return false;
 						}
@@ -2427,6 +2474,16 @@
 
 						_xhr = new XMLHttpRequest();
 
+						/** Oxygenz : bloquer le demarrage des requetes lié a un fichier canceled */
+						if(
+							plupload.id_cancel !== undefined
+							&& plupload.id_cancel.indexOf(this._options.params.unique_id) !== -1
+						)
+						{
+							this.failed();
+							return ;
+						}
+
 						if (_xhr.upload) {
 							_xhr.upload.onprogress = function(e) {
 								self.progress(e.loaded, e.total);
@@ -2460,6 +2517,25 @@
 								}
 							}, 1);
 						};
+
+						/** Oxygenz : Kill la requete ajax brutalement */
+						$(document).bind('CancelCurrentUpload', function() {
+							if (_xhr) {
+								_xhr.abort();
+								_xhr = null;
+								self.failed();
+							}
+						});
+
+						/** Oxygenz : Ajoute le fichier dans la liste des fichier canceled */
+						$(document).bind('CancelFile', function( event, id_file) {
+
+							if(plupload.id_cancel === undefined) {
+								plupload.id_cancel = [];
+							}
+
+							plupload.id_cancel.push(id_file);
+						});
 
 						try {
 							url = options.multipart ? options.url : buildUrl(options.url, options.params);
@@ -2645,11 +2721,6 @@
 								self.failed(result);
 							});
 
-							// Oxygenz - Implement CancelUpload event
-							$(document).bind('CancelUpload', function() {
-								up.stop();
-							});
-
 							up.setOptions(self._options);
 
 							queue.addItem(up);
@@ -2723,11 +2794,6 @@
 
 						up.bind('processed', function() {
 							this.destroy();
-						});
-
-						// Oxygenz - Implement CancelUpload event
-						$(document).bind('CancelUpload', function() {
-							up.stop();
 						});
 
 						up.setOptions(_options);

@@ -277,33 +277,18 @@ $(document).ready(function(){
             var toCancel = $(this).attr('to_cancel');
             $(this).attr('disabled',true);
             $(this).text('Canceled');
-            $.each( up.files, function( iNow, currentFile ){
-                if (currentFile.data.unique_id === toCancel) {
 
-                    canceled.push(toCancel);
-                    up.removeFile(currentFile);
-                    uploader.removeFile(currentFile);
+            /** cancel un upload et appel l'element suivant */
+            up.abort(toCancel);
 
-                    up.refresh();
-                    uploader.refresh();
-
-                    console.log('up');
-                    //up.stop();
-                    console.log('uploader');
-                    //uploader.stop();
-
-                    $(document).trigger('CancelUpload');
-
-                    $(this).unbind().remove();
-                    $('.progress-bar_'+toCancel).addClass('progress-bar-danger');
-                    $('.realProgText_'+toCancel).text('Canceled');
-                    $("#uploadMessage").removeClass("hidden").html('Upload has been canceled').attr('class', 'alert alert-danger container');
-                    error = 'Upload has been canceled';
-                    setTimeout(function(){
-                        $("#uploadMessage").addClass('hidden');
-                    }, 5000);
-                }
-            });
+            $(this).unbind().remove();
+            $('.progress-bar_'+toCancel).addClass('progress-bar-danger');
+            $('.realProgText_'+toCancel).text('Canceled');
+            $("#uploadMessage").removeClass("hidden").html('Upload has been canceled').attr('class', 'alert alert-danger container');
+            error = 'Upload has been canceled';
+            setTimeout(function(){
+                $("#uploadMessage").addClass('hidden');
+            }, 5000);
         });
 
         $('#uploaderContainer').toggleClass('hidden');
