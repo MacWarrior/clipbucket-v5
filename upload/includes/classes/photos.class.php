@@ -1614,28 +1614,6 @@ class CBPhotos
     }
 
     /**
-     * Load Upload Form
-     *
-     * @param $params
-     *
-     * @return string
-     */
-    function loadUploadForm($params): string
-    {
-        $p = $params;
-        $output = '';
-        $should_include = $p['includeHeader'] ? $p['includeHeader'] : true;
-
-        if (file_exists(LAYOUT . '/blocks/upload_head.html') and $should_include == true) {
-            $output .= Fetch('blocks/upload_head.html');
-        }
-
-        $output .= Fetch('blocks/upload/photo_upload.html');
-
-        return $output;
-    }
-
-    /**
      * Load Required Form
      *
      * @param null $array

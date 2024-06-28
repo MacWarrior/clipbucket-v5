@@ -1,4 +1,3 @@
-{if $step == 1 || $step == ""}
 <div id="uploadMessage"></div>
 <div class="clearfix photoupload-block">
 
@@ -166,26 +165,3 @@
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
     var available_collection_tags = JSON.parse('{$available_collection_tags|json_encode|replace:"'": "\'"}');
 </script>
-
-{/if}
-
-{* These steps are no longer in use *}
-{if $step == 2}
-<h2>Enter Information</h2>
-    {DiscordLog::sendDump('2')}
-    {foreach item=item from=$photos}
-        {include file="$style_dir/blocks/upload/photo_form.html" photo=$item}
-    {/foreach}
-<button class="LoadMoreButton clearfix" onclick="callAjax(this);" type="button" name="insertPhotos" id="insertPhotos">Save All</button>
-{/if}
-
-{if $step == 3}
-{DiscordLog::sendDump('3')}
-<div class="photoBox">
-    <div style="background:#FFF; text-align:center; border-bottom:1px solid #ccc; color:#666; padding:8px; font:bold 14px Arial;">{lang code="photo_success_heading"}</div>
-    <div class="clearfix" style="padding:8px; font:normal 11px Tahoma;">
-        You can manage your photos from <strong><a href="{link name='manage_photos'}">{lang code='manage_photos'}</a></strong>.
-    </div>
-</div>
-{/if}
-

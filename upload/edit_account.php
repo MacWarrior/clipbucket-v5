@@ -25,6 +25,7 @@ if (isset($_POST['update_avatar_bg'])) {
 }
 
 if (isset($_FILES['backgroundPhoto'])) {
+    // TODO : Support for chunk upload
     if (get_mime_type($_FILES['backgroundPhoto']['tmp_name']) == 'image') {
         $extension = getExt($_FILES['backgroundPhoto']['name']);
         $types = strtolower(config('allowed_photo_types'));
@@ -97,33 +98,17 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(user_id()));
-        assign('mode', 'avatar_bg');
-        break;
-
     case 'channel_bg':
-        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(user_id()));
-        assign('mode', 'channel_bg');
-        break;
-
     case 'change_cover':
         assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
-        assign('mode', 'change_cover');
-        break;
-
-    case 'change_email':
-        assign('mode', 'change_email');
-        break;
-
-    case 'change_password':
-        assign('mode', 'change_password');
+        assign('mode', $mode);
         break;
 
     case 'block_users':
-        assign('mode', 'block_users');
+    case 'change_password':
+    case 'change_email':
+        assign('mode', $mode);
         break;
 
     case 'subscriptions':
@@ -157,7 +142,9 @@ if(in_dev()){
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',
-    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'plupload/js/moxie' . $min_suffixe . '.js'                 => 'admin',
+    'plupload/js/plupload' . $min_suffixe . '.js'              => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit'.$min_suffixe.'.css' => 'admin',

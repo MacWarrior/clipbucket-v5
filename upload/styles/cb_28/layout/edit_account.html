@@ -363,40 +363,57 @@
         var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
         var max_file_size ="{config('max_photo_size')}mb";
         var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-        $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
-            var uploader = new plupload.Uploader({
-                browse_button: 'selectCover',
-                runtimes : 'html5,silverlight,html4',
-                url : '/edit_account.php?mode=avatar_bg',
-                file_data_name : 'backgroundPhoto',
-                max_file_size: max_file_size,
-                chunk_size: chunk_upload ? max_upload_size : false,
-                filters: {
-                    mime_types : [ { title : 'Image files', extensions : extensions }, ],
-                    prevent_duplicates: true
-                }
-            });
-            window.uploader = uploader;
-            uploader.init();
-            uploader.bind("FilesAdded", function(up, uploadedFiles){
-                $("#backgroundPhoto").attr('src', '/images/loading.png');
-                up.start();
-            });
-            uploader.bind('UploadComplete', function(plupload, files, response){});
 
-            uploader.bind("FileUploaded", function(plupload, files, response){
-                var response = $.parseJSON(response.response);
-                if(response.status == true){
-                    $("#backgroundPhoto").attr("src", response.url);
-                } else {
-                    alert(response.msg);
-                }
-                plupload.refresh();
-            });
+        var uploader = new plupload.Uploader({
+            browse_button: 'selectCover',
+            runtimes : 'html5,silverlight,html4',
+            url : '/edit_account.php?mode=avatar_bg',
+            file_data_name : 'backgroundPhoto',
+            max_file_size: max_file_size,
+            chunk_size: chunk_upload ? max_upload_size : false,
+            filters: {
+                mime_types : [ { title : 'Image files', extensions : extensions }, ],
+                prevent_duplicates: true
+            }
+        });
 
-            uploader.bind("Error", function(plupload, error){
-                alert(error.message);
-            });
+        uploader.init();
+        uploader.bind("FilesAdded", function(up, uploadedFiles){
+            $("#backgroundPhoto").attr('src', '/images/loading.png');
+            for(i = 0; i < uploadedFiles.length; i++) {
+                uploadedFiles[i].data = [];
+                uploadedFiles[i].data.unique_id = (Math.random() + 1).toString(36).substring(7);
+            }
+            up.start();
+        });
+        uploader.bind('UploadComplete', function(plupload, files, response){});
+
+        $(document).bind('chunkuploaded', function(event, result) {
+            let response = $.parseJSON(result.response);
+            let wanted_unique_id = result._options.params.unique_id;
+
+            if (response.error) {
+                up.abort(wanted_unique_id);
+                alert(response.error);
+            }
+        });
+
+        uploader.bind('BeforeUpload', function(uploader, file){
+            $.extend(uploader.settings.params, { unique_id : file.data.unique_id });
+        });
+
+        uploader.bind("FileUploaded", function(plupload, files, response){
+            var response = $.parseJSON(response.response);
+            if(response.status == true){
+                $("#backgroundPhoto").attr("src", response.url);
+            } else {
+                alert(response.msg);
+            }
+            plupload.refresh();
+        });
+
+        uploader.bind("Error", function(plupload, error){
+            alert(error.message);
         });
 
         {if $on=='account'}
