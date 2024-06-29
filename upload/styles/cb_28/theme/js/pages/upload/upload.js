@@ -203,8 +203,7 @@ $(document).ready(function(){
                 // appends progress bar along with title
                 // this progress bar is later updated on realtime
                 // via fileprogress event of pluploader
-
-                $(".realProgressBars").append('<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5><button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">Cancel Uploading</button><div class="progress"><div class="progress-bar progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%;"><span class="sr-only">70% Complete</span><span class="realProgText_'+plFileId+'">50% completed</span></div></div>');
+                $(".realProgressBars").append('<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5><button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">' + cancel_uploading + '</button><div class="progress"><div class="progress-bar progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0%;"><span class="sr-only">70' + pourcent_completed + ' </span><span class="realProgText_'+plFileId+'">50' + pourcent_completed + '</span></div></div>');
             });
             //end function
 
@@ -384,7 +383,7 @@ $(document).ready(function(){
             // update progress bar width
             $('.progress-bar_'+pluploadFileId).css('width',filePercentage+'%');
             //update progress bar text to show percentage
-            $('.realProgText_'+pluploadFileId).text(filePercentage+'% Completed');
+            $('.realProgText_'+pluploadFileId).text(filePercentage + pourcent_completed);
             // $("#progressNumber").text(file.percent + "%");
             // meaning file has completely uploaded
             if (filePercentage === 100) {
