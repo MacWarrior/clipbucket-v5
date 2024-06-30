@@ -18,8 +18,6 @@ if (@$_GET['msg']) {
 $opt_list = Upload::getInstance()->get_upload_options();
 
 assign('opt_list', $opt_list);
-assign('post_max_size', ini_get('post_max_size'));
-assign('upload_max_size', ini_get('upload_max_filesize'));
 
 if (isset($_POST['update'])) {
     $config_booleans = [
@@ -120,6 +118,7 @@ if (isset($_POST['update'])) {
         , 'enable_comments_censor'
         , 'enable_video_description_censor'
         , 'enable_video_description_link'
+        , 'enable_chunk_upload'
     ];
 
     $config_booleans_to_refactor = [
@@ -327,6 +326,9 @@ if (isset($_POST['update'])) {
         'enable_collection_comments',
         'display_collection_comments',
         'enable_sitemap',
+        'enable_chunk_upload',
+        'chunk_upload_size',
+        'cloudflare_upload_limit',
 
         'thumb_width',
         'thumb_height',
@@ -484,6 +486,9 @@ if (isset($_POST['update'])) {
         'photo_thumb_height',
         'photo_med_width',
         'photo_med_height',
+
+        'chunk_upload_size',
+        'cloudflare_upload_limit'
     ];
 
     if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {

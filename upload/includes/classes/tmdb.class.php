@@ -98,6 +98,7 @@ class Tmdb
      * @param string $sort
      * @param string $sort_order
      * @param string $limit
+     * @param bool $count
      * @return array|int
      * @throws Exception
      */
@@ -316,6 +317,9 @@ class Tmdb
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function getInfoTmdb($videoid, $params, string $fileName= '')
     {
         $video_info = Video::getInstance()->getOne([
@@ -333,6 +337,9 @@ class Tmdb
         $title = !empty($params['video_title']) ? $params['video_title'] : $video_info['title'];
         $sort = empty($params['sort']) ? 'release_date' : $params['sort'];
         $sort_order = empty($params['sort_order']) ? 'DESC' : $params['sort_order'];
+        if( in_array($sort_order, ['ASC', 'DESC']) ){
+            $sort_order = 'DESC';
+        }
 
         $total_rows = 0;
         $cache_results = Tmdb::getInstance()->getSearchInfo($title);

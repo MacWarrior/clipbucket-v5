@@ -1614,28 +1614,6 @@ class CBPhotos
     }
 
     /**
-     * Load Upload Form
-     *
-     * @param $params
-     *
-     * @return string
-     */
-    function loadUploadForm($params): string
-    {
-        $p = $params;
-        $output = '';
-        $should_include = $p['includeHeader'] ? $p['includeHeader'] : true;
-
-        if (file_exists(LAYOUT . '/blocks/upload_head.html') and $should_include == true) {
-            $output .= Fetch('blocks/upload_head.html');
-        }
-
-        $output .= Fetch('blocks/upload/photo_upload.html');
-
-        return $output;
-    }
-
-    /**
      * Load Required Form
      *
      * @param null $array
@@ -2031,7 +2009,7 @@ class CBPhotos
     /**
      * Used to create filename of photo
      */
-    function create_filename()
+    function create_filename(): string
     {
         return time() . RandomString(6);
     }
@@ -2039,7 +2017,7 @@ class CBPhotos
     /**
      * Construct extensions for SWF
      */
-    function extensions()
+    function extensions(): string
     {
         $exts = $this->exts;
         $list = '';
@@ -2054,7 +2032,7 @@ class CBPhotos
      * Function used to validate form fields
      *
      * @param null $array
-     * @throws \PHPMailer\PHPMailer\Exception
+     * @throws \PHPMailer\PHPMailer\Exception|Exception
      */
     function validate_form_fields($array = null)
     {

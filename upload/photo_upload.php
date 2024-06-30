@@ -12,24 +12,6 @@ if (isset($_GET['collection'])) {
     assign('selected_collection', $cbphoto->collection->get_collection($selected_collection));
 }
 
-if (isset($_POST['EnterInfo'])) {
-    assign('step', 2);
-    $datas = $_POST['photoIDS'];
-    $moreData = explode(',', $datas);
-    $details = [];
-
-    foreach ($moreData as $key => $data) {
-        $data = str_replace(' ', '', $data);
-        $data = $cbphoto->decode_key($data);
-        $details[] = $data;
-    }
-    assign('photos', $details);
-}
-
-if (isset($_POST['updatePhotos'])) {
-    assign('step', 3);
-}
-
 $collections = $cbphoto->collection->get_collections_list(0, null, null, 'photos', user_id());
 
 assign('collections', $collections);
@@ -53,7 +35,9 @@ if (in_dev()) {
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/photo_upload/photo_upload' . $min_suffixe . '.js'   => 'admin',
-    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'plupload/js/moxie' . $min_suffixe . '.js'                 => 'admin',
+    'plupload/js/plupload' . $min_suffixe . '.js'              => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',

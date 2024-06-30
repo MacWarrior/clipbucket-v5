@@ -9,8 +9,8 @@ class M00016 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (name, value) VALUES (\'only_keep_max_resolution\', \'no\');';
-        self::query($sql);
+        self::generateConfig('only_keep_max_resolution', 'no');
+
         self::generateTranslation('only_keep_max_resolution', [
             'en' => 'Only keep max resolution',
             'fr' => 'Conserver uniquement la résolution maximale'

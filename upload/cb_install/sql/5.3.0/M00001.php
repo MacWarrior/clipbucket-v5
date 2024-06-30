@@ -9,19 +9,17 @@ class M00001 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
-            (\'logo_name\', \'\'),
-            (\'favicon_name\', \'\'),
-            (\'comment_per_page\', \'10\'),
-            (\'stay_mp4\', \'no\'),
-            (\'allow_conversion_1_percent\', \'no\'),
-            (\'force_8bits\', \'1\'),
-            (\'bits_color_warning\', \'1\'),
-            (\'control_bar_logo\', \'yes\'),
-            (\'contextual_menu_disabled\', \'\'),
-            (\'control_bar_logo_url\', \'/images/icons/player-logo.png\'),
-            (\'player_thumbnails\', \'yes\');';
-        self::query($sql);
+        self::generateConfig('logo_name', '');
+        self::generateConfig('favicon_name', '');
+        self::generateConfig('comment_per_page', '10');
+        self::generateConfig('stay_mp4', 'no');
+        self::generateConfig('allow_conversion_1_percent', 'no');
+        self::generateConfig('force_8bits', '1');
+        self::generateConfig('bits_color_warning', '1');
+        self::generateConfig('control_bar_logo', 'yes');
+        self::generateConfig('contextual_menu_disabled', '');
+        self::generateConfig('control_bar_logo_url', '/images/icons/player-logo.png');
+        self::generateConfig('player_thumbnails', 'yes');
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_levels_permissions` MODIFY COLUMN `plugins_perms` TEXT NULL DEFAULT NULL;', [
             'table'  =>'user_levels_permissions',

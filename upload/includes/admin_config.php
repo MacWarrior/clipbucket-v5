@@ -39,12 +39,12 @@ define('TEMPLATE', config('template_dir'));
 
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
-/*
-* Calling this function to check server configs
-* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
-* If any of these configs are less than required value, warning is shown
-*/
-check_server_confs();
+
+if( THIS_PAGE != 'system_info'){
+    if( !System::check_php_configs() ){
+        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
+    }
+}
 
 Assign('baseurl', BASEURL);
 Assign('admindir', DirPath::getUrl('admin_area'));

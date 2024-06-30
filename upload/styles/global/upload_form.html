@@ -39,24 +39,30 @@
                 {ANCHOR place="before_upload_form_required_fields"}
                 <div class="requiredFields">
                     {foreach $requiredFields.fields as $field}
-                        <div class="form-group">
+
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}
                         {if $field.type == 'radiobutton'}
+                    <div class="form-group">
                             {$field.label_class='radio'}
                             {$field.class=''}
                             {$formObj->createField($field)}
+                    </div>
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
                         {elseif $field.id == 'tags_video'}
+                    <div class="form-group">
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
                             <ul id="list_{$field.id}"></ul>
+                    </div>
                         {elseif !$field.id|strstr:'tags'}
+                    <div class="form-group">
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
+                    </div>
                         {/if}
-                        </div>
+
                     {/foreach}
 
                     <div class="form-group hidden">
@@ -69,15 +75,15 @@
                     <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent hidden">
                         {foreach $requiredFields.fields as $field}
-                        <div class="form-group">
                             {$field.class='form-control'}
                             {$field.notShowSeprator='yes'}
                             {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
+                        <div class="form-group">
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
                             <ul id="list_{$field.id}"></ul>
-                            {/if}
                         </div>
+                            {/if}
                         {/foreach}
                     </div>
                 </div>

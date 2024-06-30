@@ -15,11 +15,8 @@ class M00048 extends \Migration
         $sql = 'UPDATE `{tbl_prefix}languages_keys` SET language_key = \'option_censored_words\' WHERE language_key = \'option_comments_censored_words\'';
         self::query($sql);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'enable_video_description_censor\', \'no\');';
-        self::query($sql);
-
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'enable_video_description_link\', \'yes\');';
-        self::query($sql);
+        self::generateConfig('enable_video_description_censor', 'no');
+        self::generateConfig('enable_video_description_link', 'yes');
 
         self::generateTranslation('option_enable_description_censor', [
             'fr' => 'Activer la censure des descriptions',

@@ -9,7 +9,6 @@ class M00115 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES (\'player_default_resolution\', \'360\');';
-        self::query($sql);
+        self::generateConfig('player_default_resolution', '360');
     }
 }

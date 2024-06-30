@@ -9,13 +9,11 @@ class M00020 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES
-        (\'proxy_enable\', \'no\'),
-        (\'proxy_auth\', \'no\'),
-        (\'proxy_url\', \'\'),
-        (\'proxy_port\', \'\'),
-        (\'proxy_username\', \'\'),
-        (\'proxy_password\', \'\');';
-        self::query($sql);
+        self::generateConfig('proxy_enable', 'no');
+        self::generateConfig('proxy_auth', 'no');
+        self::generateConfig('proxy_url', '');
+        self::generateConfig('proxy_port', '');
+        self::generateConfig('proxy_username', '');
+        self::generateConfig('proxy_password', '');
     }
 }

@@ -49,7 +49,7 @@ function photo_embed_codes($params)
 function plupload_photo_uploader()
 {
     $photoUploaderDetails = [
-        'uploadScriptPath' => '/actions/photo_uploader.php?plupload=true'
+        'uploadScriptPath' => '/actions/photo_uploader.php'
     ];
 
     assign('photoUploaderDetails', $photoUploaderDetails);
