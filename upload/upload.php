@@ -2,13 +2,13 @@
 define('THIS_PAGE', 'upload');
 define('PARENT_PAGE', 'upload');
 require 'includes/config.inc.php';
-global $pages, $Upload, $eh, $userquery;
-$pages->page_redir();
-$userquery->logincheck('allow_video_upload', true);
+global $eh;
+Pages::getInstance()->page_redir();
+userquery::getInstance()->logincheck('allow_video_upload', true);
 
 subtitle('upload');
 
-if (empty($Upload->get_upload_options())) {
+if (empty(Upload::getInstance()->get_upload_options())) {
     e(lang('video_upload_disabled'));
     ClipBucket::getInstance()->show_page = false;
     display_it();
@@ -17,7 +17,7 @@ if (empty($Upload->get_upload_options())) {
 
 $step = 1;
 if (isset($_POST['submit_data'])) {
-    $Upload->validate_video_upload_form();
+    Upload::getInstance()->validate_video_upload_form();
     if (empty($eh->get_error())) {
         $step = 2;
     }
