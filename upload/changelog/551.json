@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"50",
+  "revision":"51",
   "status":"dev",
   "detail":[
     {
@@ -15,6 +15,8 @@
         ,"Refactor system infos"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
+        ,"Add Nginx check"
+        ,"Update server configurations check"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Fix TMDB import error display"
@@ -34,6 +36,7 @@
       "title": "Front office",
       "description": [
         "Implement TMDB search on front office"
+        ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Add edit button on video page <i>(#319)</i>"
@@ -46,6 +49,8 @@
         ,"Fix user's avatar display error"
         ,"Fix video description links display <i>(#373)</i>"
         ,"Fix manage photo page SQL error"
+        ,"Fix video & photo upload cancelation"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -56,6 +61,7 @@
         ,"Update Readme"
         ,"Cleanup code"
         ,"Remove unused functions"
+        ,"Remove unused files"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -77,8 +83,11 @@
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
+        ,"Add Nginx check"
         ,"Stop migration on first error if occurs"
+        ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
+        ,"Update config creations"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"

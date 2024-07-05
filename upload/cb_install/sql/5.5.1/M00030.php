@@ -28,6 +28,7 @@ class M00030 extends \Migration
             )
             SELECT `configid` FROM all_duplicated_except_one_of_each;';
         self::query($sql);
+
         $sql = 'DELETE FROM `{tbl_prefix}config` WHERE `configid` IN(SELECT `configid` FROM tmb_config_to_delete);';
         self::query($sql);
     }

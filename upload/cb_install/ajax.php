@@ -120,7 +120,8 @@ if ($mode == 'adminsettings') {
                 'ffprobe' => ['which' => 'ffprobe', 'config' => 'ffprobe_path'],
                 'git' => ['which' => 'git', 'config' => 'git_path'],
                 'media_info' => ['which' => 'mediainfo', 'config' => 'media_info'],
-                'php_cli' => ['which' => 'php', 'config' => 'php_path']
+                'php_cli' => ['which' => 'php', 'config' => 'php_path'],
+                'nginx' => ['which' => 'nginx', 'config' => 'nginx_path']
             ];
 
             $skippable_options = get_skippable_options();

@@ -275,6 +275,24 @@ class Migration
     /**
      * @throws Exception
      */
+    public static function generateConfig(string $config_name, string $config_value)
+    {
+        $sql = 'INSERT IGNORE INTO `' . tbl('config') . '` (`name`, `value`) VALUES (\''.mysql_clean($config_name).'\', \''.mysql_clean($config_value).'\');';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function deleteConfig(string $config_name)
+    {
+        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE name = \''.mysql_clean($config_name).'\';';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    /**
+     * @throws Exception
+     */
     public static function query($sql)
     {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);

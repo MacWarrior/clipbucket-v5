@@ -767,7 +767,7 @@ class ClipBucket
             }
         }
 
-        $output = "";
+        $output = '';
         foreach ($main_menu as $menu) {
             $selected = getArrayValue($menu, 'active');
             $output .= '<li ';
@@ -872,6 +872,27 @@ class ClipBucket
             }
             $_REQUEST = $clean_request;
         }
+    }
+
+    function getMaxUploadSize($suffix = ''): string
+    {
+        $list_upload_limits = [];
+
+        $post_max_size = ini_get('post_max_size');
+        $list_upload_limits[] = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $list_upload_limits[] = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+
+        if( config('enable_chunk_upload') == 'yes' ){
+            $list_upload_limits[] = (int)config('chunk_upload_size');
+        }
+
+        if( Network::is_cloudflare() ){
+            $list_upload_limits[] = (int)config('cloudflare_upload_limit');
+        }
+
+        return min($list_upload_limits).$suffix;
     }
 
 }
