@@ -24,10 +24,7 @@ class M00047 extends \Migration
             'en' => 'Separated by commas'
         ]);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'enable_comments_censor\', \'no\');';
-        self::query($sql);
-
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'comments_censored_words\', \'\');';
-        self::query($sql);
+        self::generateConfig('enable_comments_censor', 'no');
+        self::generateConfig('comments_censored_words', '');
     }
 }

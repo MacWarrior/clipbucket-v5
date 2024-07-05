@@ -167,7 +167,7 @@ class System{
 
     public static function get_php_cli_config($config_name){
         if( empty(self::$configsCli) ){
-            self::init_php_extensions('cli');
+            self::init_php_extensions('php_cli');
         }
 
         return self::$configsCli[$config_name] ?? false;
@@ -333,6 +333,32 @@ class System{
                 $version = array_pop($matches);
                 return $verbose ? ['msg' => sprintf('Found Git %s : %s', $version, $binary_path)] : $version;
 
+            case 'nginx':
+                $functions = ['exec', 'shell_exec'];
+                foreach($functions as $function) {
+                    if (!System::check_php_function($function, 'web', false)) {
+                        return $verbose ? ['err' => 'Can\'t be tested because ' . $function . '() function is not enabled'] : false;
+                    }
+                }
+                $binary_path = $custom_filepath ?? System::get_binaries($software, false);
+                if (empty($binary_path) || !file_exists($binary_path)) {
+                    return $verbose ? ['err' => 'Unable to find Nginx'] : false;
+                }
+
+                $nginx_version = System::shell_output($binary_path . ' -v 2>&1');
+                if( empty($nginx_version) ){
+                    return $verbose ? ['err' => 'Nginx is not correctly configured'] : false;
+                }
+
+                preg_match('/nginx\/(.+)$/', strtolower($nginx_version), $matches);
+
+                if (empty($matches[1])) {
+                    return $verbose ? ['err' => 'Unable to find Nginx'] : false;
+                }
+
+                $version = array_pop($matches);
+                return $verbose ? ['msg' => sprintf('Found Nginx %s : %s', $version, $binary_path)] : $version;
+
             default:
                 e('Wrong System::get_software_version software : ' . $software);
                 return '';
@@ -475,6 +501,10 @@ class System{
                     $software_path = config('git_path');
                     break;
 
+                case 'nginx':
+                    $software_path = config('nginx_path');
+                    break;
+
                 default:
                     $software_path = '';
                     break;
@@ -532,6 +562,97 @@ class System{
     {
         // Only available on PHP-FPM
         return function_exists('fastcgi_finish_request');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function check_php_configs(): bool
+    {
+        if( ini_get('max_execution_time') < 7200 ){
+            return false;
+        }
+
+        $target_upload_size = config('max_upload_size');
+        $chunk_upload = config('enable_chunk_upload') == 'yes';
+
+        $post_max_size = ini_get('post_max_size');
+        $post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+
+        $upload_max_filesize = ini_get('upload_max_filesize');
+        $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+
+        if( !$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb) ){
+            return false;
+        }
+
+        $chunk_upload_size = config('chunk_upload_size');
+
+        if( $chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb) ){
+            return false;
+        }
+
+        $cloudflare_upload_limit = config('cloudflare_upload_limit');
+        if( Network::is_cloudflare() ){
+            if( !$chunk_upload && $target_upload_size > $cloudflare_upload_limit ){
+                return false;
+            }
+            if( $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit ){
+                return false;
+            }
+        }
+
+        if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function is_nginx(): bool
+    {
+        return strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false;
+    }
+
+    public static function get_nginx_config(string $config_name): string
+    {
+        if (!self::is_nginx()) {
+            return '';
+        }
+
+        $nginx_path = self::get_binaries('nginx', false);
+        if (empty($nginx_path) || !file_exists($nginx_path)) {
+            return '';
+        }
+
+        if (!self::check_php_function('shell_exec', 'web', false)) {
+            return '';
+        }
+
+        chdir(dirname($nginx_path));
+        $data = shell_exec($nginx_path . ' -T 2>&1');
+
+        $separator = "\r\n";
+        $line = strtok($data, $separator);
+
+        while ($line !== false) {
+            if (strpos($line, $config_name) !== false) {
+
+                // Clear RAM usage from strtok
+                unset($data);
+                strtok('', '');
+
+                return explode(' ', str_replace(';', '', $line))[1];
+            }
+
+            $line = strtok($separator);
+        }
+
+        // Clear RAM usage from strtok
+        unset($data);
+        strtok('', '');
+
+        return '';
     }
 
     public static function get_disks_usage(): array

@@ -18,8 +18,6 @@ if (@$_GET['msg']) {
 $opt_list = Upload::getInstance()->get_upload_options();
 
 assign('opt_list', $opt_list);
-assign('post_max_size', ini_get('post_max_size'));
-assign('upload_max_size', ini_get('upload_max_filesize'));
 
 if (isset($_POST['update'])) {
     $config_booleans = [
@@ -120,6 +118,7 @@ if (isset($_POST['update'])) {
         , 'enable_comments_censor'
         , 'enable_video_description_censor'
         , 'enable_video_description_link'
+        , 'enable_chunk_upload'
         , 'enable_edit_photo_button'
     ];
 
@@ -274,7 +273,6 @@ if (isset($_POST['update'])) {
         'photo_user_favorites',
         'photo_other_limit',
         'photo_ratio',
-        'photo_multi_upload',
         'photo_lar_width',
         'photo_crop',
         'max_photo_size',
@@ -328,6 +326,9 @@ if (isset($_POST['update'])) {
         'enable_collection_comments',
         'display_collection_comments',
         'enable_sitemap',
+        'enable_chunk_upload',
+        'chunk_upload_size',
+        'cloudflare_upload_limit',
 
         'thumb_width',
         'thumb_height',
@@ -479,13 +480,15 @@ if (isset($_POST['update'])) {
         'collection_collection_top_collections',
         'collection_photos_top_collections',
 
-        'photo_multi_upload',
         'photo_lar_width',
         'max_photo_size',
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
         'photo_med_height',
+
+        'chunk_upload_size',
+        'cloudflare_upload_limit'
     ];
 
     if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {

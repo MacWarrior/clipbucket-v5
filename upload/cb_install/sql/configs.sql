@@ -114,7 +114,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'photo_med_height', '116'),
 	(NULL, 'photo_lar_width', '600'),
 	(NULL, 'photo_crop', '1'),
-	(NULL, 'photo_multi_upload', '5'),
 	(NULL, 'photo_comments', '1'),
 	(NULL, 'photo_rating', '1'),
 	(NULL, 'max_photo_size', '2'),
@@ -283,6 +282,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_description_censor', 'no'),
     (NULL, 'enable_video_description_link', 'yes'),
     (NULL, 'censored_words', ''),
+    (NULL, 'enable_chunk_upload', 'yes'),
+    (NULL, 'chunk_upload_size', '2'),
+    (NULL, 'cloudflare_upload_limit', '100'),
+    (NULL, 'nginx_path', ''),
     (NULL, 'enable_edit_photo_button', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

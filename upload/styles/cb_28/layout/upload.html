@@ -15,7 +15,7 @@
 						</div>
 						<div class="col-md-10">
 							<div class="progress">
-								<div id="overallProgress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+								<div id="overallProgress" class="progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
 									<span class="sr-only">40% Complete (success)</span>
 								</div>
 							</div>
@@ -46,9 +46,9 @@
 							{foreach from=$opt_list item=opt key=divid}
 								{$class = ""}
 								{if $counter == 1}
-									{$class = "active"}
+									{$class = " active"}
 								{/if}
-								<div class="tab-pane fade in clearfix {$class} uploadForm" id="{$divid}">
+								<div class="tab-pane fade in clearfix uploadForm{$class}" id="{$divid}">
 									{load_form name=$opt.function function_class=$opt.class button_class='cb_button_2' class='upload_form'}
 								</div>
 								{$counter = $counter + 1}
@@ -56,7 +56,6 @@
 						</div>
 					</div>
 				</div>
-					
 			</div>
 		</div>
 	<div>
@@ -65,7 +64,9 @@
 </div>
 <script type="text/javascript">
 	var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
-	var max_upload_size ='{$Cbucket->configs.max_upload_size}';
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb";
+	var max_file_size ="{config('max_upload_size')*1000}kb";
+	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
 	var back_extensions = '{$extensions}';
 	var theme = '{$theme}';
 	var max_video_title = "{config('max_video_title')}";

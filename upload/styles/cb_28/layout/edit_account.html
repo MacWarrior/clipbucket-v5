@@ -140,30 +140,13 @@
     </div>
     {/if}
 
-    {if $mode == "change_cover"}
-    <div class="row cb-box">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
-            {include file="$style_dir/blocks/manage/userMenuLeft.html"}
-        </div>
-        <div class="col-md-9 col-sm-9 col-xs-12">
-            <div class="backgroundPhotoContainer">
-                <img src="{$backgroundPhoto}" alt="backgroundPhoto" id="backgroundPhoto" class="edit-img-thumbnail img-responsive"/>
-            </div>
-            <div class="avatar_bg">
-                <input type="file" name="backgroundPhoto" style="display:none;">
-                <a href="javascript:none" id="selectCover" class="btn btn-primary">Select Cover</a>
-            </div>
-        </div>
-    </div>
-    {/if}
-
     {if $mode == 'avatar_bg' || $mode == 'channel_bg'}
     <div class="row cb-box">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
             {include file="$style_dir/blocks/manage/userMenuLeft.html"}
         </div>
         <div class="col-md-9 col-sm-9 col-xs-12">
-            <div id="uavatar" class="tab-pane {if $mode == 'avatar_bg'} active {/if}">
+            <div id="uavatar" class="tab-pane {if $mode=='avatar_bg'}active{/if}">
                 <form method="post" enctype="multipart/form-data">
                     <h2>{lang code='user_user_avatar'}</h2>
                     <div class="show-image">
@@ -348,59 +331,11 @@
 
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    $(document).ready(function(){
-        $('#dob').datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            changeMonth: true,
-            dateFormat:"{get_date_js()}",
-            changeYear: true,
-            yearRange: "-99y:+0",
-            regional:"{$lang_obj->getLang()}"
-        });
-
-        var extensions = "{$extensions}";
-        $.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
-            var uploader = new plupload.Uploader({
-                browse_button: 'selectCover',
-                runtimes : 'html5,flash,silverlight,html4',
-                url : "/edit_account.php?mode=avatar_bg",
-                file_data_name : "backgroundPhoto",
-                filters: {
-                    mime_types : [ { title : "Image files", extensions : extensions }, ],
-                    max_file_size: "2mb",
-                    prevent_duplicates: true
-                }
-            });
-            window.uploader = uploader;
-            uploader.init();
-            uploader.bind("FilesAdded", function(up, uploadedFiles){
-                $("#backgroundPhoto").attr("src", "/images/loading.png");
-                up.start();
-            });
-            uploader.bind('UploadComplete', function(plupload, files, response){});
-
-            uploader.bind("FileUploaded", function(plupload, files, response){
-                var response = $.parseJSON(response.response);
-                if(response.status == true){
-                    $("#backgroundPhoto").attr("src", response.url);
-                } else {
-                    alert(response.msg);
-                }
-                plupload.refresh();
-            });
-
-            uploader.bind("Error", function(plupload, error){
-                alert(error.message);
-            });
-        });
-
-        {if $on=='account'}
-            $('#accountSettings').toggle();
-            $('#accntSettingHead').toggleClass('accntSettingHeadarrowup')
-        {else}
-            $('#accntProfileSettings').toggle();
-            $('#accntProfileSettingHead').toggleClass('accntSettingHeadarrowup')
-        {/if}
-    });
+    var format_date_js = '{get_date_js()}';
+    var lang = '{$lang_obj->getLang()}';
+    var photo_extensions = "{config('allowed_photo_types')}";
+    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
+    var max_file_size ="{config('max_photo_size')}mb";
+    var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
+    var mode = "{$on}";
 </script>

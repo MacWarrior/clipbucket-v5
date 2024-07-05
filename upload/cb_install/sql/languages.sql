@@ -1139,4 +1139,12 @@ VALUES ('admin_setting'),
        ('option_censored_words'),
        ('separated_by_commas'),
        ('option_enable_description_censor'),
-       ('option_enable_description_link');
+       ('option_enable_description_link'),
+       ('option_enable_chunk_upload'),
+       ('tips_enable_chunk_upload'),
+       ('mb'),
+       ('kb'),
+       ('in_x'),
+       ('cloudflare_upload_limit'),
+       ('option_nginx_path'),
+       ('file_size_cant_exceeds_x_x');
