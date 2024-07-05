@@ -36,7 +36,7 @@
       "title": "Front office",
       "description": [
         "Implement TMDB search on front office"
-        ,"Implement chunk upload for videos & photos <i>(#314)</i>"
+        ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Add edit button on video page <i>(#319)</i>"
