@@ -2,14 +2,13 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class WIP extends \Migration
+class M00053 extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-
         self::generateTranslation('video_deleted', [
             'fr' => 'La vidéo a été supprimée',
             'en' => 'Video has been deleted'
