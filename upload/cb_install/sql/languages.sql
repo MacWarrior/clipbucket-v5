@@ -1147,4 +1147,6 @@ VALUES ('admin_setting'),
        ('in_x'),
        ('cloudflare_upload_limit'),
        ('option_nginx_path'),
-       ('file_size_cant_exceeds_x_x');
+       ('file_size_cant_exceeds_x_x'),
+       ('video_deleted'),
+       ('confirm_delete_video');

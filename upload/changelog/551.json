@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"52",
+  "revision":"53",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
+        ,"Add video deletion menu on video edition page"
         ,"Update server configurations check"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"

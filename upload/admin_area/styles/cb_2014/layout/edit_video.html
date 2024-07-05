@@ -46,6 +46,7 @@
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}
+						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
 					</ul>
 				</div>
 			</h2>
