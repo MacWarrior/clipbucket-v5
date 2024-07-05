@@ -88,6 +88,7 @@ switch ($mode) {
         FileUpload::getInstance($params)->processUpload();
         $DestinationFilePath = FileUpload::getInstance()->getDestinationFilePath();
         $original_filename = FileUpload::getInstance()->getOriginalFileName();
+        $extension = FileUpload::getInstance()->getExtension();
 
         create_dated_folder(DirPath::get('logs'));
         $file_directory = date('Y/m/d');
@@ -131,7 +132,7 @@ switch ($mode) {
             die();
         }
 
-        $Upload->add_conversion_queue($DestinationFilePath);
+        $Upload->add_conversion_queue($file_name . '.' . $extension);
 
         $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
         if (stristr(PHP_OS, 'WIN')) {

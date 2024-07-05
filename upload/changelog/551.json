@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"53",
+  "revision":"54",
   "status":"dev",
   "detail":[
     {
@@ -52,6 +52,7 @@
         ,"Fix manage photo page SQL error"
         ,"Fix video & photo upload cancelation"
         ,"Fix possible SQL injection"
+        ,"Fix video upload"
       ]
     },
     {
