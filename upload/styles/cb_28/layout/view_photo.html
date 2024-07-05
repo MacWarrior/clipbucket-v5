@@ -108,11 +108,11 @@
 													<li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
 												</ul>
 											</div>
-											{else}
+										{else}
 											<a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
 										{/if}
-										{elseif user_id() && $video.userid == user_id()}
-										<a class="btn btn-success" style=" font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
+									{elseif user_id() && $video.userid == user_id()}
+										<a class="btn btn-success" style="font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
 									{/if}
 								{/if}
 							</div>
