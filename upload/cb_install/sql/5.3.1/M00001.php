@@ -9,7 +9,6 @@ class M00001 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT INTO `{tbl_prefix}config`(`name`, `value`) VALUES (\'enable_update_checker\', \'1\');';
-        self::query($sql);
+        self::generateConfig('enable_update_checker', '1');
     }
 }

@@ -125,8 +125,13 @@ function getBytesFromFileSize($size)
     ];
 
     $size = trim($size);
-    $unit = preg_replace('/[0-9]/', '', $size);
+    $unit = preg_replace('/[0-9.]/', '', $size);
     $size = preg_replace('/[^0-9]/', '', $size);
+    if( !isset($units[$unit]) ) {
+        $msg = 'getBytesFromFileSize - Unknown unit : ' . $unit;
+        error_log($msg);
+        DiscordLog::sendDump($msg);
+    }
     return $size * $units[$unit];
 }
 
@@ -3883,29 +3888,6 @@ function find_string($needle_start, $needle_end, $results)
     return false;
 }
 
-/*
-	* Function used to check server configs
-	* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
-	* If any of these configs are less than required value, warning is shown
-    */
-/**
- * @throws Exception
- */
-function check_server_confs()
-{
-    $post_max_size = ini_get('post_max_size');
-    $memory_limit = ini_get('memory_limit');
-    $upload_max_filesize = ini_get('upload_max_filesize');
-    $max_execution_time = ini_get('max_execution_time');
-
-    if (getBytesFromFileSize($post_max_size) < getBytesFromFileSize('50M')
-        || getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M')
-        || getBytesFromFileSize($upload_max_filesize) < getBytesFromFileSize('50M')
-        || $max_execution_time < 7200) {
-        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
-    }
-}
-
 /**
  * @throws Exception
  */
@@ -4111,7 +4093,8 @@ function upload_image($type = 'logo')
 /**
  * Check for the content mime type of a file provided
  * @param : { FILE } { $mainFile } { File to run check against }
- * @return : { string/boolean } { type or false }
+ * @param int $offset
+ * @return false|string : { string/boolean } { type or false }
  * @since : 10 January, 2018
  * @todo : will Check for the content mime type of a file provided
  * @author : Fahad Abbas

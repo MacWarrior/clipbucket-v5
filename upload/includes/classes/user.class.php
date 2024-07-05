@@ -2284,7 +2284,7 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid', 'show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'avatar', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'profile_video', 'profile_item', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = ['userid', 'show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'avatar', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
 
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
@@ -2694,57 +2694,54 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    public function updateBackground($file = []): array
+    public function updateBackground(array $data = []): array
     {
-        if (empty($file)) {
+        if (empty($data)) {
             return [
                 'status' => false,
                 'msg'    => 'no data was sent'
             ];
         }
 
-        if ($file['size'] / 1024 > config('max_bg_size')) {
-            return [
-                'status' => false,
-                'msg'    => sprintf(lang('file_size_exceeds'), config('max_bg_size'))
-            ];
-        }
-
-        $av_details = getimagesize($file['tmp_name']);
-        if ($av_details[0] > config('max_bg_width')) {
-            return [
-                'status' => false,
-                'msg'    => lang('File width exeeds') . ' ' . config('max_bg_width') . 'px'
-            ];
-        }
-
-        if (!file_exists($file['tmp_name'])) {
+        if (!file_exists($data['filepath'])) {
             return [
                 'status' => false,
                 'msg'    => lang('class_error_occured')
             ];
         }
 
-        User::getInstance()->delBackground($file['userid']);
+        $av_details = getimagesize($data['filepath']);
+        if ($av_details[0] > config('max_bg_width')) {
+            unlink($data['filepath']);
+            return [
+                'status' => false,
+                'msg'    => lang('File width exeeds') . ' ' . config('max_bg_width') . 'px'
+            ];
+        }
 
-        $ext = getext($file['name']);
-        $file_name = $file['userid'] . '.' . $ext;
+        User::getInstance()->delBackground($data['user_id']);
+
+        $file_name = $data['user_id'] . '.' . $data['extension'];
         $file_path = DirPath::get('backgrounds') . $file_name;
-        if (move_uploaded_file($file['tmp_name'], $file_path)) {
+
+        if (rename($data['filepath'], $file_path)) {
+            unlink($data['filepath']);
             $imgObj = new ResizeImage();
-            if (!$imgObj->ValidateImage($file_path, $ext)) {
+            if (!$imgObj->ValidateImage($file_path,  $data['extension'])) {
                 @unlink($file_path);
                 return [
                     'status' => false,
                     'msg'    => 'Invalid file type'
                 ];
             }
-            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . mysql_clean($file['userid']));
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . mysql_clean($data['user_id']));
             return [
                 'status' => true,
                 'msg'    => 'Succesfully Uploaded'
             ];
         }
+
+        unlink($data['filepath']);
         return [
             'status' => false,
             'msg'    => lang('class_error_occured')
@@ -4200,261 +4197,6 @@ class userquery extends CBCategory
             }
             e(lang('all_user_sent_messages_deleted'), 'm');
         }
-    }
-
-    /**
-     * This will get user subscriptions
-     * uploaded videos and photos
-     * This is a test function
-     *
-     * @param        $uid
-     * @param int $limit
-     * @param string $uploadsType
-     * @param string $uploadsTimeSpan
-     *
-     * @return bool|array
-     * @throws Exception
-     */
-    function getSubscriptionsUploadsWeek($uid, $limit = 20, $uploadsType = 'both', $uploadsTimeSpan = 'this_week')
-    {
-        $user_cond = "";
-        $users = $this->get_user_subscriptions($uid);
-        if ($users) {
-            foreach ($users as $user) {
-                if ($user_cond) {
-                    $user_cond .= ' OR ';
-                }
-                $user_cond .= tbl('users.userid') . "='" . $user[0] . "' ";
-            }
-            $user_cond = ' (' . $user_cond . ') ';
-            global $cbphoto, $cbvideo;
-            $photoCount = 1;
-            $videoCount = 1;
-            switch ($uploadsType) {
-                case 'both':
-                default:
-                    $photos = $cbphoto->get_photos(['limit' => $limit, 'extra_cond' => $user_cond, 'order' => ' date_added DESC', 'date_span' => $uploadsTimeSpan]);
-                    $videos = $cbvideo->get_videos(['limit' => $limit, 'cond' => ' AND' . $user_cond, 'order' => ' date_added DESC', 'date_span' => $uploadsTimeSpan]);
-                    if (!empty($photos) && !empty($videos)) {
-                        $finalResult = array_merge($videos, $photos);
-                    } elseif (empty($photos) && !empty($videos)) {
-                        $finalResult = array_merge($videos, []);
-                    } elseif (!empty($photos) && empty($videos)) {
-                        $finalResult = array_merge($photos, []);
-                    }
-
-                    if (!empty($finalResult)) {
-                        foreach ($finalResult as $result) {
-                            if ($result['videoid']) {
-                                $videoArr[] = $result;
-                                $return['videos'] = [
-                                    'title' => lang('videos'),
-                                    'total' => $videoCount++,
-                                    'items' => $videoArr
-                                ];
-                            }
-
-                            if ($result['photo_id']) {
-                                $photosArr[] = $result;
-                                $return['photos'] = [
-                                    'title' => lang('photos'),
-                                    'total' => $photoCount++,
-                                    'items' => $photosArr
-                                ];
-                            }
-                        }
-                        return $return;
-                    }
-                    return false;
-
-
-                case 'photos':
-                case 'photo' :
-                case 'p':
-                    $photos = $cbphoto->get_photos(['limit' => $limit, 'extra_cond' => $user_cond, 'order' => ' date_added DESC', 'date_span' => $uploadsTimeSpan]);
-                    if ($photos) {
-                        foreach ($photos as $photo) {
-                            $photosArr[] = $photo;
-                            $return['photos'] = [
-                                'title' => lang('photos'),
-                                'total' => $photoCount++,
-                                'items' => $photosArr
-                            ];
-                        }
-                    } else {
-                        return false;
-                    }
-                    break;
-
-                case 'videos':
-                case 'video':
-                case 'v':
-                    $videos = $cbvideo->get_videos(['limit' => $limit, 'cond' => ' AND' . $user_cond, 'order' => ' date_added DESC', 'date_span' => $uploadsTimeSpan]);
-                    if ($videos) {
-                        foreach ($videos as $video) {
-                            $videoArr[] = $video;
-                            $return['videos'] = [
-                                'title' => lang('videos'),
-                                'total' => $videoCount++,
-                                'items' => $videoArr
-                            ];
-                        }
-                    } else {
-                        return false;
-                    }
-                    break;
-            }
-            return $return;
-        }
-    }
-
-    /**
-     * Function used to set item as profile item
-     *
-     * @param        $id
-     * @param string $type
-     * @param null $uid
-     *
-     * @return bool|void
-     * @throws Exception
-     */
-    function setProfileItem($id, $type = 'v', $uid = null)
-    {
-        global $cbvid, $db, $cbphoto;
-        if (!$uid) {
-            $uid = user_id();
-        }
-
-        if (!$uid) {
-            e('user_doesnt_exist');
-            return false;
-        }
-
-        switch ($type) {
-            case 'v':
-                if ($cbvid->video_exists($id)) {
-                    $array['type'] = 'v';
-                    $array['id'] = $id;
-                    $db->update(tbl('user_profile'), ['profile_item'], ['|no_mc|' . json_encode($array)]
-                        , " userid='$uid' ");
-
-                    e(sprintf(lang('this_has_set_profile_item'), lang('video')), 'm');
-                } else {
-                    e('class_vdo_del_err');
-                }
-                break;
-
-            case 'p':
-                if ($cbphoto->photo_exists($id)) {
-                    $array['type'] = 'p';
-                    $array['id'] = $id;
-                    $db->update(tbl('user_profile'), ['profile_item'], ['|no_mc|' . json_encode($array)]
-                        , " userid='$uid' ");
-
-                    e(sprintf(lang('this_has_set_profile_item'), lang('photo')), 'm');
-                } else {
-                    e('photo_not_exist');
-                }
-                break;
-        }
-    }
-
-    /**
-     * Remove Profile item
-     *
-     * @param null $uid
-     *
-     * @return bool|void
-     * @throws Exception
-     */
-    function removeProfileItem($uid = null)
-    {
-        global $db;
-        if (!$uid) {
-            $uid = user_id();
-        }
-
-        if (!$uid) {
-            e('user_doesnt_exist');
-            return false;
-        }
-
-        $db->update(tbl('user_profile'), ['profile_item'], [''], " userid='$uid' ");
-
-        e(lang('profile_item_removed'), 'm');
-    }
-
-    /**
-     * function used to get profile item
-     *
-     * @param null $uid
-     * @param bool $withDetails
-     *
-     * @return bool|mixed|STRING
-     * @throws Exception
-     */
-    function getProfileItem($uid = null, $withDetails = false)
-    {
-        global $db, $cbvid, $cbphoto;
-        if (!$uid) {
-            $uid = user_id();
-        }
-
-        if (!$uid) {
-            e('user_doesnt_exist');
-            return false;
-        }
-
-        if ($uid == user_id() && $this->profileItem && !$withDetails) {
-            return $this->profileItem;
-        }
-
-        $profileItem = $db->select(tbl('user_profile'), 'profile_item', " userid='$uid'");
-        $profileItem = $profileItem[0]['profile_item'];
-
-        $profileItem = json_decode($profileItem, true);
-
-        if ($withDetails) {
-            switch ($profileItem['type']) {
-                case 'p':
-                    $photo = $cbphoto->get_photo($profileItem['id']);
-                    $photo['type'] = 'p';
-                    if ($photo) {
-                        return $photo;
-                    }
-                    break;
-
-                case 'v':
-                    $video = $cbvid->get_video($profileItem['id']);
-                    $video['type'] = 'v';
-                    if ($video) {
-                        return $video;
-                    }
-                    break;
-            }
-        }
-        return $this->profileItem = $profileItem;
-    }
-
-    /**
-     * Function used to check weather input given item
-     * is profile item or not
-     *
-     * @param        $id
-     * @param string $type
-     * @param null $uid
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function isProfileItem($id, $type = 'v', $uid = null): bool
-    {
-        $profileItem = $this->getProfileItem($uid);
-
-        if ($profileItem['type'] == $type && $profileItem['id'] == $id) {
-            return true;
-        }
-        return false;
     }
 
     /**

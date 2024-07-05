@@ -10,10 +10,8 @@ class M00020 extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'enable_tmdb_mature_content\', \'no\');';
-        self::query($sql);
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'tmdb_mature_content_age\', \'18\');';
-        self::query($sql);
+        self::generateConfig('enable_tmdb_mature_content', 'no');
+        self::generateConfig('tmdb_mature_content_age', '18');
 
         self::generateTranslation('enable_tmdb_mature_content', [
             'en' => 'Enable mature content',

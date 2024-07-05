@@ -159,13 +159,18 @@ function install_execute_sql_file($cnnct, $path, $dbprefix, $dbname): bool
 
 function get_required_softwares(): array
 {
-    return [
+    $softwares = [
         'ffmpeg' => 'FFmpeg',
         'ffprobe' => 'FFprobe',
         'media_info' => 'Media Info',
         'mysql_client' => 'MySQL Client',
         'git' => 'Git'
     ];
+
+    if( System::is_nginx() ){
+        $softwares['nginx'] = 'Nginx';
+    }
+    return $softwares;
 }
 
 function get_required_php(): array
