@@ -286,7 +286,7 @@ class Migration
      */
     public static function deleteConfig(string $config_name)
     {
-        $sql = 'DELETE FROM `{tbl_prefix}config` WHERE name = \''.mysql_clean($config_name).'\';';
+        $sql = 'DELETE FROM `' . tbl('config') . '` WHERE name = \''.mysql_clean($config_name).'\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 
