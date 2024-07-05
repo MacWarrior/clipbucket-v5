@@ -1146,4 +1146,5 @@ VALUES ('admin_setting'),
        ('kb'),
        ('in_x'),
        ('cloudflare_upload_limit'),
-       ('option_nginx_path');
+       ('option_nginx_path'),
+       ('file_size_cant_exceeds_x_x');
