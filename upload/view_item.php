@@ -65,12 +65,20 @@ if (!$cbcollection->is_viewable($cid)) {
             e(lang('error_age_restriction'));
             ClipBucket::getInstance()->show_page = false;
         }
+
+        //link edit
+        assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_photo.php?photo=' . $photo['photo_id']);
+        assign('link_edit_fo',  '/edit_photo.php?photo=' . $photo['photo_id']);
     } else {
         e(lang('item_not_exist'));
         ClipBucket::getInstance()->show_page = false;
     }
 }
 
+$eeb = config('enable_edit_button');
+$haa =  has_access('admin_access', true);
+$ui = user_id();
+$photo_user_id =  $photo['userid'];
 //Getting Collection Lists
 $page = $_GET['page'];
 $get_limit = create_query_limit($page, COLLPP);

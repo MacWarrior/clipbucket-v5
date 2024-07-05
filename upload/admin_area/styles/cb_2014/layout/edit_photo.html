@@ -25,6 +25,9 @@
         <a class="btn btn-primary btn-xs" href="recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
             Re-create Photo
         </a>
+        <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
+            {lang code='activate'}
+        </a>
         <a class="btn btn-primary btn-xs" href="javascript:void(0);" onClick="javascript:_cb.Confirm_Delete('photo_manager.php?delete_photo={$data.photo_id}')">
             Delete This Photo
         </a>

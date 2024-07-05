@@ -40,7 +40,7 @@
         ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
-        ,"Add edit button on video page <i>(#319)</i>"
+        ,"Add edit button on video & photo pages <i>(#319)</i>"
         ,"Update translations"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"

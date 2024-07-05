@@ -119,6 +119,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_description_censor'
         , 'enable_video_description_link'
         , 'enable_chunk_upload'
+        , 'enable_edit_photo_button'
     ];
 
     $config_booleans_to_refactor = [
@@ -421,6 +422,7 @@ if (isset($_POST['update'])) {
         'enable_video_poster',
         'enable_video_backdrop',
         'enable_edit_button',
+        'enable_edit_photo_button',
         'tmdb_enable_on_front_end',
 
         'hide_empty_collection',
