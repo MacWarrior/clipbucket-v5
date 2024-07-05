@@ -1143,6 +1143,7 @@ VALUES ('admin_setting'),
        ('option_enable_chunk_upload'),
        ('tips_enable_chunk_upload'),
        ('mb'),
+       ('kb'),
        ('in_x'),
        ('cloudflare_upload_limit'),
        ('option_nginx_path');

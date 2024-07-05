@@ -125,8 +125,13 @@ function getBytesFromFileSize($size)
     ];
 
     $size = trim($size);
-    $unit = preg_replace('/[0-9]/', '', $size);
+    $unit = preg_replace('/[0-9.]/', '', $size);
     $size = preg_replace('/[^0-9]/', '', $size);
+    if( !isset($units[$unit]) ) {
+        $msg = 'getBytesFromFileSize - Unknown unit : ' . $unit;
+        error_log($msg);
+        DiscordLog::sendDump($msg);
+    }
     return $size * $units[$unit];
 }
 

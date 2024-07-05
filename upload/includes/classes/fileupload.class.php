@@ -174,7 +174,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function manageFile(): bool
+    private function manageFile()
     {
         if( config('enable_chunk_upload') == 'yes'){
             $this->manageChunkedFile();
@@ -193,7 +193,7 @@ class FileUpload
         $max_file_size_in_bytes = getBytesFromFileSize($this->maxFileSize . 'M');
         if (empty($this->finalFileSize) || $this->finalFileSize > $max_file_size_in_bytes) {
             @unlink($this->tempFilePath);
-            $this->error(sprintf(lang('page_upload_video_limits'),config('max_upload_size'),config('max_video_duration')));
+            $this->error(sprintf(lang('page_upload_video_limits'),$this->maxFileSize,config('max_video_duration')));
         }
 
         if( $this->keepExtension ){
@@ -214,11 +214,11 @@ class FileUpload
     /**
      * @throws Exception
      */
-    public function processUpload(): bool
+    public function processUpload()
     {
         $this->checkUploadedSize();
         $this->checkFileData();
-        return $this->manageFile();
+        $this->manageFile();
     }
 
     public function getExtension(): string

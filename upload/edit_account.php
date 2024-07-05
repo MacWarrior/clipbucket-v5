@@ -24,39 +24,38 @@ if (isset($_POST['update_avatar_bg'])) {
     $userquery->update_user_avatar_bg($array);
 }
 
-if (isset($_FILES['backgroundPhoto'])) {
-    // TODO : Support for chunk upload
-    if (get_mime_type($_FILES['backgroundPhoto']['tmp_name']) == 'image') {
-        $extension = getExt($_FILES['backgroundPhoto']['name']);
-        $types = strtolower(config('allowed_photo_types'));
-        $supported_extensions = explode(',', $types);
-
-        if (!in_array($extension, $supported_extensions)) {
-            $response = [
-                'status' => false,
-                'msg'    => 'Invalid extension provided',
-                'url'    => false
-            ];
-            echo json_encode($response);
-            die();
-        }
-
-        $array = $_FILES['backgroundPhoto'];
-        $array['userid'] = user_id();
-        $coverUpload = $userquery->updateBackground($array);
-        $timeStamp = time();
-        $response = [
-            'status' => $coverUpload['status'],
-            'msg'    => $coverUpload['msg'],
-            'url'    => $userquery->getBackground(user_id()) . '?' . $timeStamp
-        ];
-        echo json_encode($response);
+if (isset($_FILES['Filedata'])) {
+    $user_id = user_id();
+    if( !$user_id ){
+        echo json_encode([
+            'error' => lang('insufficient_privileges_loggin')
+        ]);
         die();
     }
+    $timeStamp = time();
+    $destinationFilePath = DirPath::get('temp') . 'background-' . $user_id . '-'. $timeStamp;
+
+    $params = [
+        'fileData' => 'Filedata',
+        'mimeType' => 'image',
+        'destinationFilePath' => $destinationFilePath,
+        'keepExtension' => true,
+        'maxFileSize' => config('max_bg_size') / 1024,
+        'allowedExtensions' => config('allowed_photo_types')
+    ];
+
+    FileUpload::getInstance($params)->processUpload();
+    $data = [
+        'extension' => FileUpload::getInstance()->getExtension(),
+        'filepath' => FileUpload::getInstance()->getDestinationFilePath(),
+        'user_id' => $user_id
+    ];
+
+    $coverUpload = $userquery->updateBackground($data);
     $response = [
-        'status' => false,
-        'msg'    => 'Invalid Image provided',
-        'url'    => false
+        'status' => $coverUpload['status'],
+        'msg'    => $coverUpload['msg'],
+        'url'    => $userquery->getBackground(user_id()) . '?' . $timeStamp
     ];
     echo json_encode($response);
     die();
@@ -99,8 +98,6 @@ switch ($mode) {
 
     case 'avatar_bg':
     case 'channel_bg':
-    case 'change_cover':
-        assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
         assign('mode', $mode);
         break;

@@ -140,23 +140,6 @@
     </div>
     {/if}
 
-    {if $mode == "change_cover"}
-    <div class="row cb-box">
-        <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
-            {include file="$style_dir/blocks/manage/userMenuLeft.html"}
-        </div>
-        <div class="col-md-9 col-sm-9 col-xs-12">
-            <div class="backgroundPhotoContainer">
-                <img src="{$backgroundPhoto}" alt="backgroundPhoto" id="backgroundPhoto" class="edit-img-thumbnail img-responsive"/>
-            </div>
-            <div class="avatar_bg">
-                <input type="file" name="backgroundPhoto" style="display:none;">
-                <a href="javascript:none" id="selectCover" class="btn btn-primary">Select Cover</a>
-            </div>
-        </div>
-    </div>
-    {/if}
-
     {if $mode == 'avatar_bg' || $mode == 'channel_bg'}
     <div class="row cb-box">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
@@ -348,80 +331,11 @@
 
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    $(document).ready(function(){
-        $('#dob').datepicker({
-            showOtherMonths: true,
-            selectOtherMonths: false,
-            changeMonth: true,
-            dateFormat:"{get_date_js()}",
-            changeYear: true,
-            yearRange: "-99y:+0",
-            regional:"{$lang_obj->getLang()}"
-        });
-
-        var extensions = "{$extensions}";
-        var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
-        var max_file_size ="{config('max_photo_size')}mb";
-        var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-
-        var uploader = new plupload.Uploader({
-            browse_button: 'selectCover',
-            runtimes : 'html5,silverlight,html4',
-            url : '/edit_account.php?mode=avatar_bg',
-            file_data_name : 'backgroundPhoto',
-            max_file_size: max_file_size,
-            chunk_size: chunk_upload ? max_upload_size : false,
-            filters: {
-                mime_types : [ { title : 'Image files', extensions : extensions }, ],
-                prevent_duplicates: true
-            }
-        });
-
-        uploader.init();
-        uploader.bind("FilesAdded", function(up, uploadedFiles){
-            $("#backgroundPhoto").attr('src', '/images/loading.png');
-            for(i = 0; i < uploadedFiles.length; i++) {
-                uploadedFiles[i].data = [];
-                uploadedFiles[i].data.unique_id = (Math.random() + 1).toString(36).substring(7);
-            }
-            up.start();
-        });
-        uploader.bind('UploadComplete', function(plupload, files, response){});
-
-        $(document).bind('chunkuploaded', function(event, result) {
-            let response = $.parseJSON(result.response);
-            let wanted_unique_id = result._options.params.unique_id;
-
-            if (response.error) {
-                up.abort(wanted_unique_id);
-                alert(response.error);
-            }
-        });
-
-        uploader.bind('BeforeUpload', function(uploader, file){
-            $.extend(uploader.settings.params, { unique_id : file.data.unique_id });
-        });
-
-        uploader.bind("FileUploaded", function(plupload, files, response){
-            var response = $.parseJSON(response.response);
-            if(response.status == true){
-                $("#backgroundPhoto").attr("src", response.url);
-            } else {
-                alert(response.msg);
-            }
-            plupload.refresh();
-        });
-
-        uploader.bind("Error", function(plupload, error){
-            alert(error.message);
-        });
-
-        {if $on=='account'}
-            $('#accountSettings').toggle();
-            $('#accntSettingHead').toggleClass('accntSettingHeadarrowup')
-        {else}
-            $('#accntProfileSettings').toggle();
-            $('#accntProfileSettingHead').toggleClass('accntSettingHeadarrowup')
-        {/if}
-    });
+    var format_date_js = '{get_date_js()}';
+    var lang = '{$lang_obj->getLang()}';
+    var photo_extensions = "{config('allowed_photo_types')}";
+    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
+    var max_file_size ="{config('max_photo_size')}mb";
+    var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
+    var mode = "{$on}";
 </script>

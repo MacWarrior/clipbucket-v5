@@ -167,7 +167,7 @@ class System{
 
     public static function get_php_cli_config($config_name){
         if( empty(self::$configsCli) ){
-            self::init_php_extensions('cli');
+            self::init_php_extensions('php_cli');
         }
 
         return self::$configsCli[$config_name] ?? false;

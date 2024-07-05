@@ -416,24 +416,6 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_profile_pic_size" title="Max profile pic size"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In KBs"> Max profile pic size</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="max_profile_pic_size" id="max_profile_pic_size" value="{$row.max_profile_pic_size}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_bg_size" title="Max Background Size"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In KBs"> Max Background Size</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
 								<div class="col-md-12">
 									<label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Disallowed usernames</label>
 									<textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{$row.disallowed_usernames}</textarea>
@@ -765,7 +747,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="nowrap" for="max_upload_size" title="Max upload file size">
-                                        <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Maximum filesize allowed to be uploaded">
+                                        <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Global maximum filesize allowed to be uploaded">
                                         Max upload file size
 									</label>
                                 </div>
@@ -801,60 +783,30 @@
 								</div>
 							</div>
 							<hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" title="Video title size">Video title size</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="min_video_title" title="Min">Min</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="min_video_title" id="min_video_title" value="{$row.min_video_title}"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="max_video_title" title="Max">Max</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="max_video_title" id="max_video_title" value="{$row.max_video_title}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" title="Video description size">Video description size</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="min_video_desc" title="Min">Min</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="min_video_desc" id="min_video_desc" value="{$row.min_video_desc}"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="max_video_desc" title="Max">Max</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" title="Video tags size">Video tags size</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="min_video_tags" title="Min">Min</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="min_video_tags" id="min_video_tags" value="{$row.min_video_tags}"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="max_video_tags" title="Max">Max</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="max_video_tags" id="max_video_tags" value="{$row.max_video_tags}"/>
-                                </div>
-                            </div>
-                            <hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="max_profile_pic_size" title="Max profile pic size">Max profile pic size</label>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group">
+										<input class="form-control" name="max_profile_pic_size" id="max_profile_pic_size" value="{$row.max_profile_pic_size}" size="45"/>
+										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('kb'))}">{lang code='kb'}</span>
+									</div>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="max_bg_size" title="Max Background Size">Max Background Size</label>
+								</div>
+								<div class="col-md-6">
+									<div class="input-group">
+										<input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}" size="45"/>
+										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('kb'))}">{lang code='kb'}</span>
+									</div>
+								</div>
+							</div>
+							<hr/>
 
                         </div>
                         <div class="col-md-4">
@@ -1561,6 +1513,60 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" title="Video title size">Video title size</label>
+								</div>
+								<div class="col-md-2">
+									<label class="nowrap" for="min_video_title" title="Min">Min</label>
+								</div>
+								<div class="col-md-2">
+									<input class="form-control" name="min_video_title" id="min_video_title" value="{$row.min_video_title}"/>
+								</div>
+								<div class="col-md-2">
+									<label class="nowrap" for="max_video_title" title="Max">Max</label>
+								</div>
+								<div class="col-md-2">
+									<input class="form-control" name="max_video_title" id="max_video_title" value="{$row.max_video_title}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" title="Video description size">Video description size</label>
+								</div>
+								<div class="col-md-2">
+									<label class="nowrap" for="min_video_desc" title="Min">Min</label>
+								</div>
+								<div class="col-md-2">
+									<input class="form-control" name="min_video_desc" id="min_video_desc" value="{$row.min_video_desc}"/>
+								</div>
+								<div class="col-md-2">
+									<label class="nowrap" for="max_video_desc" title="Max">Max</label>
+								</div>
+								<div class="col-md-2">
+									<input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
+								</div>
+							</div>
+							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" title="Video tags size">Video tags size</label>
+								</div>
+								<div class="col-md-2">
+									<label class="nowrap" for="min_video_tags" title="Min">Min</label>
+								</div>
+								<div class="col-md-2">
+									<input class="form-control" name="min_video_tags" id="min_video_tags" value="{$row.min_video_tags}"/>
+								</div>
+								<div class="col-md-2">
+									<label class="nowrap" for="max_video_tags" title="Max">Max</label>
+								</div>
+								<div class="col-md-2">
+									<input class="form-control" name="max_video_tags" id="max_video_tags" value="{$row.max_video_tags}"/>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -1743,12 +1749,6 @@
                                         <option class="form-control" value="16:9" {if $row.photo_ratio=='16:9'}selected{/if}>16:9</option>
                                         <option class="form-control" value="16:10" {if $row.photo_ratio=='16:10'}selected{/if}>16:10</option>
                                     </select>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="photo_multi_upload" title="Multi-upload"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos, user can upload at once"> Multi-upload</label>
-								</div>
-								<div class="col-md-2 row-size">
-                                    <input class="form-control" type="text" name="photo_multi_upload" id="photo_multi_upload" value="{$row.photo_multi_upload}"/>
 								</div>
 							</div>
 							<hr/>

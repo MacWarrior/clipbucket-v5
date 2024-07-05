@@ -372,7 +372,7 @@ $(document).ready(function(){
         if (response.error) {
             error = response.error;
 
-            up.abort(wanted_unique_id);
+            uploader.abort(wanted_unique_id);
             $('.progress-bar_'+wanted_unique_id).addClass('progress-bar-danger');
             $('.realProgText_'+wanted_unique_id).text('Upload failed');
             $(".cancel_button[to_cancel='" + wanted_unique_id + "']").attr('disabled',true);

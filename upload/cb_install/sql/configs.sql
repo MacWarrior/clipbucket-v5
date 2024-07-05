@@ -114,7 +114,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'photo_med_height', '116'),
 	(NULL, 'photo_lar_width', '600'),
 	(NULL, 'photo_crop', '1'),
-	(NULL, 'photo_multi_upload', '5'),
 	(NULL, 'photo_comments', '1'),
 	(NULL, 'photo_rating', '1'),
 	(NULL, 'max_photo_size', '2'),

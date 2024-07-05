@@ -272,7 +272,6 @@ if (isset($_POST['update'])) {
         'photo_user_favorites',
         'photo_other_limit',
         'photo_ratio',
-        'photo_multi_upload',
         'photo_lar_width',
         'photo_crop',
         'max_photo_size',
@@ -479,7 +478,6 @@ if (isset($_POST['update'])) {
         'collection_collection_top_collections',
         'collection_photos_top_collections',
 
-        'photo_multi_upload',
         'photo_lar_width',
         'max_photo_size',
         'photo_thumb_width',
