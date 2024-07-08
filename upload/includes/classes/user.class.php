@@ -2708,57 +2708,54 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    public function updateBackground($file = []): array
+    public function updateBackground(array $data = []): array
     {
-        if (empty($file)) {
+        if (empty($data)) {
             return [
                 'status' => false,
                 'msg'    => 'no data was sent'
             ];
         }
 
-        if ($file['size'] / 1024 > config('max_bg_size')) {
-            return [
-                'status' => false,
-                'msg'    => sprintf(lang('file_size_exceeds'), config('max_bg_size'))
-            ];
-        }
-
-        $av_details = getimagesize($file['tmp_name']);
-        if ($av_details[0] > config('max_bg_width')) {
-            return [
-                'status' => false,
-                'msg'    => lang('File width exeeds') . ' ' . config('max_bg_width') . 'px'
-            ];
-        }
-
-        if (!file_exists($file['tmp_name'])) {
+        if (!file_exists($data['filepath'])) {
             return [
                 'status' => false,
                 'msg'    => lang('class_error_occured')
             ];
         }
 
-        User::getInstance()->delBackground($file['userid']);
+        $av_details = getimagesize($data['filepath']);
+        if ($av_details[0] > config('max_bg_width')) {
+            unlink($data['filepath']);
+            return [
+                'status' => false,
+                'msg'    => lang('File width exeeds') . ' ' . config('max_bg_width') . 'px'
+            ];
+        }
 
-        $ext = getext($file['name']);
-        $file_name = $file['userid'] . '.' . $ext;
+        User::getInstance()->delBackground($data['user_id']);
+
+        $file_name = $data['user_id'] . '.' . $data['extension'];
         $file_path = DirPath::get('backgrounds') . $file_name;
-        if (move_uploaded_file($file['tmp_name'], $file_path)) {
+
+        if (rename($data['filepath'], $file_path)) {
+            unlink($data['filepath']);
             $imgObj = new ResizeImage();
-            if (!$imgObj->ValidateImage($file_path, $ext)) {
+            if (!$imgObj->ValidateImage($file_path,  $data['extension'])) {
                 @unlink($file_path);
                 return [
                     'status' => false,
                     'msg'    => 'Invalid file type'
                 ];
             }
-            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . mysql_clean($file['userid']));
+            Clipbucket_db::getInstance()->update(tbl('users'), ['background'], [$file_name], ' userid = ' . mysql_clean($data['user_id']));
             return [
                 'status' => true,
                 'msg'    => 'Succesfully Uploaded'
             ];
         }
+
+        unlink($data['filepath']);
         return [
             'status' => false,
             'msg'    => lang('class_error_occured')

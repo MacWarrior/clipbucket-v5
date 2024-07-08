@@ -186,32 +186,54 @@ $(document).ready(function (){
 
     var uploader = new plupload.Uploader({
         browse_button: 'changeCover',
-        runtimes : 'html5,flash,silverlight,html4',
-        url : "/edit_account.php?mode=avatar_bg",
-        file_data_name : "backgroundPhoto",
-        max_file_size: "2Mb",
+        runtimes : 'html5,silverlight,html4',
+        url : '/edit_account.php?mode=update_cover',
+        file_data_name : 'Filedata',
+        chunk_size: chunk_upload ? max_upload_size : false,
+        max_file_size : max_file_size,
         filters: {
-            mime_types : [
-                { title : "Image files", extensions : extensions },
-            ],
-            prevent_duplicates: false,
+            mime_types : [ { title : 'Image files', extensions : photo_extensions } ]
+        },
+        init: {
+            BeforeUpload: function(uploader, file) {
+                $.extend(uploader.settings.params, { unique_id : file.data.unique_id });
+            }
         }
     });
-    window.uploader = uploader;
+
     uploader.init();
     uploader.bind("FilesAdded", function(up, uploadedFiles){
         $(".cb-live-background").attr("src",'/images/loading.png');
+        for(let i = 0; i < uploadedFiles.length; i++){
+            uploadedFiles[i].data = [];
+            uploadedFiles[i].data.unique_id = (Math.random() + 1).toString(36).substring(7);
+        }
         up.start();
     });
-    uploader.bind('UploadComplete', function(plupload, files, response){});
+
+    $(document).bind('chunkuploaded', function(event, result) {
+        let response = $.parseJSON(result.response);
+        let wanted_unique_id = result._options.params.unique_id;
+
+        if (response.error) {
+            uploader.abort(wanted_unique_id);
+            alert(response.error);
+        }
+    });
 
     uploader.bind("FileUploaded", function(plupload, files, response){
-        var response = $.parseJSON(response.response);
-        if(response.status == true){
-            $(".cb-live-background").attr("src",response.url);
-        }else{
-            $(".cb-live-background").attr("src",response.url);
-            alert(response.msg);
+        var data = $.parseJSON(response.response);
+
+        if( data.error ){
+            $('.cb-live-background').attr('src', '/images/background_default.jpg');
+            alert(data.error);
+        } else {
+            if(data.status === true){
+                $(".cb-live-background").attr("src",data.url);
+            }else{
+                $(".cb-live-background").attr("src",data.url);
+                alert(data.msg);
+            }
         }
     });
 

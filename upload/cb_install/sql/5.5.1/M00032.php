@@ -14,7 +14,6 @@ class M00032 extends \Migration
             'en' => 'Enable TMDB on front end'
         ]);
 
-        $sql = 'INSERT IGNORE INTO `{tbl_prefix}config` (`name`, `value`) VALUES (\'tmdb_enable_on_front_end\', \'no\');';
-        self::query($sql);
+        self::generateConfig('tmdb_enable_on_front_end', 'no');
     }
 }

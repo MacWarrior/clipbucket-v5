@@ -43,8 +43,8 @@ Greetings young adventurer ! Don't worry, we've thought about you and created so
 All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree/master/utils">Installation scripts</a><br/>
 <i>It should also be noted that these scripts are meant for testing and development purposes only</i>
 ### Advanced users
-<i>“Your path you must decide.”</i><br/> 
-Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
+<i>“Your path you must decide.”</i><br/>
+Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
 Recommended : MariaDB 10.3+ ; PHP 8.2+ ; FFmpeg 4.3+
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
