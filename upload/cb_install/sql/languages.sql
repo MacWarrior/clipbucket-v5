@@ -1149,4 +1149,6 @@ VALUES ('admin_setting'),
        ('option_nginx_path'),
        ('file_size_cant_exceeds_x_x'),
        ('video_deleted'),
-       ('confirm_delete_video');
+       ('confirm_delete_video'),
+       ('cancel_uploading'),
+       ('pourcent_completed');

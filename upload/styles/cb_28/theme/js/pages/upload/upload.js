@@ -207,7 +207,7 @@ $(document).ready(function(){
 
             let html = '<h5 class="realProgTitle_'+plFileId+'">'+currentTitle+'</h5>' +
                 '<button class="clearfix cancel_button btn btn-danger" to_cancel="'+plFileId+'" style="float:right; margin-top: -8px; margin-left:10px;">' +
-                    'Cancel Uploading' +
+                    cancel_uploading +
                 '</button>' +
                 '<div class="progress">' +
                     '<div class="progress-bar progress-bar-striped progress-bar_'+plFileId+'" role="progressbar" aria-valuenow="70" aria-valuemin="0" aria-valuemax="100" style="width:0;">' +
@@ -227,6 +227,7 @@ $(document).ready(function(){
                 hiddenField_fileName.value = up.files[i].file_name;
                 $('#tab'+index+' form').append(hiddenField_fileName);
             }
+
             if( up.files[i].show_duration === true ){
                 $('#tab'+index+' #duration').removeAttr('disabled').parent().removeClass('hidden');
             }
@@ -388,7 +389,7 @@ $(document).ready(function(){
             filePercentage = file.percent;
 
         $('.progress-bar_'+pluploadFileId).css("width",filePercentage+"%");
-        $('.realProgText_'+pluploadFileId).text(filePercentage+'% Completed');
+        $('.realProgText_'+pluploadFileId).text(filePercentage + pourcent_completed);
         if (filePercentage === 100) {
             $(".cancel_button[to_cancel='" + pluploadFileId + "']").attr('disabled',true).fadeOut('slow');
             if (!$('.progress-bar_'+pluploadFileId).hasClass('progress-bar-danger')) {
