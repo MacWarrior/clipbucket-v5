@@ -256,14 +256,6 @@ set "SEARCH=;extension_dir = \"./\""
 set "REPLACEMENT=extension_dir = \"%PHP_DIR%\ext\""
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
-set "SEARCH=post_max_size = 8M"
-set "REPLACEMENT=post_max_size = 100M"
-Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
-
-set "SEARCH=upload_max_filesize = 2M"
-set "REPLACEMENT=upload_max_filesize = 100M"
-Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
-
 set "SEARCH=max_execution_time = 30"
 set "REPLACEMENT=max_execution_time = 7200"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
@@ -296,7 +288,7 @@ echo. >> %NGINX_CONF%
 echo 		root "c:\\ClipBucketV5\\www\\upload\\";>> %NGINX_CONF%
 echo 		index index.php;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		client_max_body_size 100M;>> %NGINX_CONF%
+echo 		client_max_body_size 2M;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		# set expiration of assets to MAX for caching>> %NGINX_CONF%
 echo 		location ~* \.(ico^|css^|js)(\?[0-9]+)?$ {>> %NGINX_CONF%

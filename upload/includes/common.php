@@ -160,6 +160,7 @@ if (!Update::isVersionSystemInstalled()) {
 require_once DirPath::get('classes') . 'search.class.php';
 require_once DirPath::get('classes') . 'signup.class.php';
 require_once DirPath::get('classes') . 'image.class.php';
+require_once DirPath::get('classes') . 'fileupload.class.php';
 require_once DirPath::get('classes') . 'upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
 require_once DirPath::get('classes') . 'form.class.php';

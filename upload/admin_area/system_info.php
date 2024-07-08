@@ -11,33 +11,43 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('system_info'), 'url' => DirPath::getUrl('admin_area') . 'cb_server_conf_info.php'];
 
-$isNginx = (strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false);
+$isNginx = System::is_nginx();
 $can_access_nginx = false;
 $client_max_body_size = '';
+$client_max_body_size_mb = '';
 if( $isNginx ){
-    if( System::check_php_function('exec', 'web', false) ){
-        $nginx_path = System::get_binaries('nginx', false);
-        if( !empty($nginx_path) ){
-            $client_max_body_size = exec($nginx_path.' -T 2>&1 | grep client_max_body_size | awk \'BEGIN{RS=";"; FS="client_max_body_size "}NF>1{print $NF}\'');
-
-            if( !empty($client_max_body_size) ){
-                $can_access_nginx = true;
-            }
-        }
-    } else {
+    $client_max_body_size = System::get_nginx_config('client_max_body_size');
+    if( empty($client_max_body_size) ){
         $can_access_nginx = false;
+    } else {
+        $client_max_body_size_mb = (int)$client_max_body_size * pow(1024, stripos('KMGT', strtoupper(substr($client_max_body_size, -1)))) / 1024;
+        $can_access_nginx = true;
     }
 }
 
 assign('is_cloudflare', Network::is_cloudflare());
+assign('cloudflare_upload_limit', config('cloudflare_upload_limit'));
+assign('chunk_upload', config('enable_chunk_upload') == 'yes');
+assign('chunk_upload_size', config('chunk_upload_size'));
 
-assign('post_max_size', ini_get('post_max_size'));
+$post_max_size = ini_get('post_max_size');
+$post_max_size_mb = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+assign('post_max_size', $post_max_size);
+assign('post_max_size_mb', $post_max_size_mb);
+
+$upload_max_filesize = ini_get('upload_max_filesize');
+$upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+assign('upload_max_filesize', $upload_max_filesize);
+assign('upload_max_filesize_mb', $upload_max_filesize_mb);
+
+assign('target_upload_size', config('max_upload_size'));
+
 assign('memory_limit', ini_get('memory_limit'));
-assign('upload_max_filesize', ini_get('upload_max_filesize'));
 assign('max_execution_time', ini_get('max_execution_time'));
 assign('isNginx', $isNginx);
 assign('canAccessNginx', $can_access_nginx);
-assign('clientMaxBodySize', $client_max_body_size);
+assign('client_max_body_size', $client_max_body_size);
+assign('client_max_body_size_mb', $client_max_body_size_mb);
 
 assign('phpWebExec', System::check_php_function('exec', 'web', false));
 assign('phpWebShellExec', System::check_php_function('shell_exec', 'web', false));
@@ -91,9 +101,7 @@ $phpVersionCli = System::get_software_version('php_cli');
 
 assign('phpVersionCli', $phpVersionCli);
 assign('phpVersionCliOK', $phpVersionCli >= $phpVersionReq);
-assign('post_max_size_cli', System::get_php_cli_config('post_max_size') ?? 0);
 assign('memory_limit_cli', System::get_php_cli_config('memory_limit') ?? 0);
-assign('upload_max_filesize_cli', System::get_php_cli_config('upload_max_filesize') ?? 0);
 assign('max_execution_time_cli', System::get_php_cli_config('max_execution_time') ?? 1);
 assign('extensionsCLI', System::get_php_extensions('php_cli'));
 assign('extensionsWEB', System::get_php_extensions('php_web'));
