@@ -518,8 +518,8 @@ class cb_pm
     {
         global $cbemail, $userquery;
         $sender = $userquery->get_user_field_only($array['from'], 'username');
-        $content = clean($array['content']);
-        $subject = clean($array['subj']);
+        $content = mysql_clean($array['content']);
+        $subject = mysql_clean($array['subj']);
         $msgid = $array['msg_id'];
         //Get To(Emails)
         $emails = $this->get_users_emails($array['to']);

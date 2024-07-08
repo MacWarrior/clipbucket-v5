@@ -2140,7 +2140,7 @@ class Collections extends CBCategory
             }
             if ($type == 'vi' || $type == 'view_item' || $type == 'item') {
                 if (SEO == 'yes') {
-                    return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(clean(str_replace(' ', '-', $details['photo_title'])));
+                    return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
                 }
                 return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
             }

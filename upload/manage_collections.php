@@ -21,7 +21,7 @@ switch ($mode) {
     case 'manage':
     default:
         if (isset($_GET['delete_collection'])) {
-            $cid = clean($_GET['delete_collection']);
+            $cid = $_GET['delete_collection'];
             $cbcollection->delete_collection($cid);
         }
 
@@ -87,7 +87,7 @@ switch ($mode) {
     case 'collection_items':
     case 'items':
     case 'manage_items':
-        $type = clean($_GET['type']);
+        $type = $_GET['type'];
         assign('type', $type);
         $get_limit = create_query_limit($page, COLLIP);
         switch ($type) {

@@ -2033,6 +2033,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to get custom permissions
+     * @throws Exception
      */
     function get_access_type_list(): array
     {
@@ -4316,8 +4317,7 @@ class userquery extends CBCategory
                 'id'         => 'about_me',
                 'value'      => $default['about_me'],
                 'db_field'   => 'about_me',
-                'auto_view'  => 'no',
-                'clean_func' => 'Replacer'
+                'auto_view'  => 'no'
             ];
         }
 
@@ -4426,7 +4426,6 @@ class userquery extends CBCategory
                 'id'         => 'schools',
                 'value'      => $default['schools'],
                 'db_field'   => 'schools',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4439,7 +4438,6 @@ class userquery extends CBCategory
                 'id'         => 'occupation',
                 'value'      => $default['occupation'],
                 'db_field'   => 'occupation',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4452,7 +4450,6 @@ class userquery extends CBCategory
                 'id'         => 'companies',
                 'value'      => $default['companies'],
                 'db_field'   => 'companies',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4465,7 +4462,6 @@ class userquery extends CBCategory
                 'id'         => 'hobbies',
                 'value'      => $default['hobbies'],
                 'db_field'   => 'hobbies',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4478,7 +4474,6 @@ class userquery extends CBCategory
                 'id'         => 'fav_movies',
                 'value'      => $default['fav_movies'],
                 'db_field'   => 'fav_movies',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4491,7 +4486,6 @@ class userquery extends CBCategory
                 'id'         => 'fav_music',
                 'value'      => $default['fav_music'],
                 'db_field'   => 'fav_music',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4504,7 +4498,6 @@ class userquery extends CBCategory
                 'id'         => 'fav_books',
                 'value'      => $default['fav_books'],
                 'db_field'   => 'fav_books',
-                'clean_func' => 'Replacer',
                 'auto_view'  => 'yes'
             ];
         }
@@ -4623,8 +4616,7 @@ class userquery extends CBCategory
             'id'         => 'profile_desc',
             'value'      => $default['profile_desc'],
             'db_field'   => 'profile_desc',
-            'auto_view'  => 'yes',
-            'clean_func' => 'Replacer'
+            'auto_view'  => 'yes'
         ];
 
         $return['show_my_friends'] = [

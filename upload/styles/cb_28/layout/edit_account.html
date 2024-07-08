@@ -320,12 +320,36 @@
 </div>
 
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var format_date_js = '{get_date_js()}';
-    var lang = '{$lang_obj->getLang()}';
-    var photo_extensions = "{config('allowed_photo_types')}";
-    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
-    var max_file_size ="{config('max_photo_size')}mb";
-    var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-    var mode = "{$on}";
+    {if config('enable_user_dob_edition') == 'yes'}
+        let format_date_js = '{get_date_js()}';
+        let lang = '{$lang_obj->getLang()}';
+    {/if}
+
+    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+
+    let mode = "{$on}";
+
+    let user_about_me = "{base64_encode($user['about_me'])}";
+    let user_profile_desc = "{base64_encode($user['profile_desc'])}";
+    {if config('enable_user_schools')=='yes'}
+    let user_schools = "{base64_encode($user['schools'])}";
+    {/if}
+    {if config('enable_user_occupation')=='yes'}
+    let user_occupation = "{base64_encode($user['occupation'])}";
+    {/if}
+    {if config('enable_user_compagnies')=='yes'}
+    let user_companies = "{base64_encode($user['companies'])}";
+    {/if}
+    {if config('enable_user_hobbies')=='yes'}
+    let user_hobbies = "{base64_encode($user['hobbies'])}";
+    {/if}
+    {if config('enable_user_favorite_movies')=='yes'}
+    let user_movies = "{base64_encode($user['fav_movies'])}";
+    {/if}
+    {if config('enable_user_favorite_music')=='yes'}
+    let user_music = "{base64_encode($user['fav_music'])}";
+    {/if}
+    {if config('enable_user_favorite_books')=='yes'}
+    let user_books = "{base64_encode($user['fav_books'])}";
+    {/if}
 </script>
