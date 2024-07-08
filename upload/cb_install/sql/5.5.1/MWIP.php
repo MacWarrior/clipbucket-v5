@@ -15,5 +15,7 @@ class MWIP extends \Migration
         ]);
 
         self::generateConfig('enable_user_profil_censor', 'no');
+
+        self::deleteTranslation('view_channels');
     }
 }

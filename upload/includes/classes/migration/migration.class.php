@@ -158,6 +158,25 @@ class Migration
     }
 
     /**
+     * @throws Exception
+     */
+    public static function deleteTranslation(string $translatioon_key)
+    {
+        $sql = 'DELETE FROM `' . tbl('languages_translations') . '`
+            WHERE `id_language_key` = (
+                SELECT id_language_key FROM `' . tbl('languages_keys') . '`
+                WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\'
+                )
+            );';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+
+        $sql = 'DELETE FROM `' . tbl('languages_keys') . '`
+            WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\'
+            );';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    /**
      * @param $sql_alter
      * @param array $params_exists fields available : table, column, constraint_name, constraint_type, constraint_schema
      * @param array $params_not_exists

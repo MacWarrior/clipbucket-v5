@@ -3,16 +3,18 @@ class User
 {
     private static $user;
     private $tablename = '';
+    private $tablename_profile = '';
     private $fields = [];
+    private $fields_profile = [];
     private $display_block = '';
     private $search_limit = 0;
     private $display_var_name = '';
-    private $current_user = [];
+    private $user_data = [];
 
     /**
      * @throws Exception
      */
-    public function __construct(){
+    public function __construct(int $user_id){
         $this->tablename = 'users';
         $this->fields = [
             'userid'
@@ -65,33 +67,90 @@ class User
             ,'likes'
             ,'is_live'
         ];
+
+        $this->tablename_profile = 'user_profile';
+        $this->fields_profile = [
+            'show_my_collections'
+            ,'profile_title'
+            ,'profile_desc'
+            ,'featured_video'
+            ,'first_name'
+            ,'last_name'
+            ,'avatar'
+            ,'show_dob'
+            ,'postal_code'
+            ,'time_zone'
+            ,'web_url'
+            ,'fb_url'
+            ,'twitter_url'
+            ,'insta_url'
+            ,'hometown'
+            ,'city'
+            ,'online_status'
+            ,'show_profile'
+            ,'allow_comments'
+            ,'allow_ratings'
+            ,'allow_subscription'
+            ,'content_filter'
+            ,'icon_id'
+            ,'browse_criteria'
+            ,'about_me'
+            ,'education'
+            ,'schools'
+            ,'occupation'
+            ,'companies'
+            ,'relation_status'
+            ,'hobbies'
+            ,'fav_movies'
+            ,'fav_music'
+            ,'fav_books'
+            ,'background'
+            ,'rating'
+            ,'voters'
+            ,'rated_by'
+            ,'show_my_videos'
+            ,'show_my_photos'
+            ,'show_my_subscriptions'
+            ,'show_my_subscribers'
+            ,'show_my_friends'
+        ];
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
 
-        $user_id = user_id();
         if( $user_id ){
             $params = [];
             $params['userid'] = $user_id;
             $params['first_only'] = true;
-            $this->current_user = $this->getAll($params);
+            $this->user_data = $this->getAll($params);
         }
-
     }
 
-    public static function getInstance(): self
+    /**
+     * @throws Exception
+     */
+    public static function getInstance(int $user_id = null): self
     {
-        if( empty(self::$user) ){
-            self::$user = new self();
+        if( empty($user_id) ){
+            $user_id = user_id();
         }
-        return self::$user;
+        if( empty(self::$user[$user_id]) ){
+            self::$user[$user_id] = new self($user_id);
+        }
+        return self::$user[$user_id];
     }
 
     private function getAllFields(): array
     {
-        return array_map(function($field) {
+        $fields_user = array_map(function($field) {
             return $this->tablename . '.' . $field;
         }, $this->fields);
+
+        $fields_profile = array_map(function($field) {
+            return $this->tablename_profile . '.' . $field;
+        }, $this->fields_profile);
+
+        return array_merge($fields_user, $fields_profile);
     }
 
     public function getSearchLimit(): int
@@ -233,24 +292,24 @@ class User
      */
     public function getCurrentUserAge()
     {
-        if( empty($this->current_user) ){
+        if( empty($this->user_data) ){
             return false;
         }
 
         $current_date = new DateTime();
-        $date_of_birth = new DateTime($this->current_user['dob']);
+        $date_of_birth = new DateTime($this->user_data['dob']);
         $diff = $current_date->diff($date_of_birth);
         return $diff->y;
     }
 
     public function isUserConnected(): bool
     {
-        return !empty($this->current_user);
+        return !empty($this->user_data);
     }
 
     public function getCurrentUserID()
     {
-        return $this->current_user['userid'] ?? false;
+        return $this->user_data['userid'] ?? false;
     }
 
     /**
@@ -282,6 +341,45 @@ class User
         }
 
         return CMS::getInstance($content, $params)->getClean();
+    }
+
+    public function get(string $value)
+    {
+        if( !isset($this->user_data[$value]) ){
+            if( in_dev() ){
+                $msg = 'User->get() - Unknown value : ' . $value;
+                error_log($msg);
+                DiscordLog::sendDump($msg);
+            }
+            return false;
+        }
+        return $this->user_data[$value];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getLink(string $type): string
+    {
+        $seo_enabled = (config('seo') == 'yes');
+
+        switch($type)
+        {
+            case 'channel':
+                $username = display_clean($this->get('username'));
+                if( $seo_enabled ){
+                    return '/user/' . $username;
+                }
+                return '/view_channel.php?user=' . $username;
+
+            default:
+                if( in_dev() ){
+                    $msg = 'User->getLink() - Unknown type : ' . $type;
+                    error_log($msg);
+                    DiscordLog::sendDump($msg);
+                }
+                return '';
+        }
     }
 }
 
@@ -2196,7 +2294,7 @@ class userquery extends CBCategory
         }
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);
-        if (SEO != 'yes') {
+        if (config('seo') != 'yes') {
             return '/view_channel.php?user=' . $username;
         }
 
