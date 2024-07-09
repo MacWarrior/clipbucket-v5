@@ -10,9 +10,7 @@
 			</div>
 			{/if}
 
-			<!-- ******************************************* -->
-			<!-- ************ EDITORS BLOCK END ************ -->
-			<!-- ******************************************* -->
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row"></div>
@@ -30,6 +28,7 @@
 					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="{lang code='load_more'}">{lang code="load_more"}</button>
 				</div>
 			</section>
+			{/if}
 		</div>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}
@@ -43,14 +42,16 @@
 				{foreach $feature_users as $user}
 
 				<div class="clearfix channel-item">
-					<a href="{$userquery->profile_link($user)}" class="avatar">
-						<img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle">
+					<a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
+						<img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h3>
+						<h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
 						<div class="clearfix views-videos">
-							<span>{prettyNum($user.profile_hits|number_format)} {lang code='views'}</span>
-							<span>{prettyNum($user.total_videos|number_format)} {lang code='videos'}</span>
+							<span>{prettyNum(User::getInstance($user.userid)->get('profile_hits')|number_format)} {lang code='views'}</span>
+							{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+							<span>{prettyNum(User::getInstance($user.userid)->get('total_videos')|number_format)} {lang code='videos'}</span>
+							{/if}
 						</div>
 					</div>
 				</div>

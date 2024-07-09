@@ -142,7 +142,6 @@ if (isset($_POST['update'])) {
         , 'bits_color_warning'
         , 'video_comments'
         , 'photo_comments'
-        , 'channel_comments'
         , 'video_rating'
         , 'own_video_rating'
         , 'photo_rating'
@@ -191,7 +190,6 @@ if (isset($_POST['update'])) {
 
         'closed',
         'closed_msg',
-        'channel_comments',
         'channels_list_per_page',
         'channelsSection',
         'channel_rating',
@@ -498,9 +496,6 @@ if (isset($_POST['update'])) {
     }
     if (empty($_POST['display_photo_comments']) || $_POST['display_photo_comments'] == 'no') {
         $_POST['photo_comments'] = '0';
-    }
-    if (empty($_POST['display_channel_comments']) || $_POST['display_channel_comments'] == 'no') {
-        $_POST['channel_comments'] = '0';
     }
     if (empty($_POST['display_collection_comments']) || $_POST['display_collection_comments'] == 'no') {
         $_POST['collection_comments'] = '0';

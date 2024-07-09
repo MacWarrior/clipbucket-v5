@@ -71,6 +71,8 @@ class Language
             $this->lang = $this->lang_iso = $default['language_code'];
             $this->lang_id = $default['language_id'];
         }
+
+        $this->loadTranslations($this->lang_id);
     }
 
     /**

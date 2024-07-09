@@ -23,7 +23,7 @@
 	{/if}
 	<div class="clearfix">
 		<section id="content" class="clearfix">
-			{if $uservideos}
+			{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes' && $uservideos}
 			<div class="clearfix player-holder">
 				<div id="cb_player" class="clearfix cb_player">
 					{show_player vdetails=$first_video}
@@ -233,14 +233,16 @@
 					{continue}
 				{/if}
 				<div class="clearfix channel-item">
-					<a href="{$userquery->profile_link($popular)}" class="avatar">
-						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle">
+					<a href="{User::getInstance($popular.userid)->getLink('channel')}" class="avatar">
+						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle"/>
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($popular)}">{display_clean($popular.username)}</a></h3>
+						<h3><a href="{User::getInstance($popular.userid)->getLink('channel')}">{display_clean(User::getInstance($popular.userid)->get('username'))}</a></h3>
 						<div class="clearfix views-videos">
-							<span>{$popular.profile_hits|number_format} {lang code='views'}</span>
-							<span>{$popular.total_videos|number_format} {lang code='videos'}</span>
+							<span>{User::getInstance($popular.userid)->get('profile_hits')|number_format} {lang code='views'}</span>
+							{if isSectionEnabled('videos') && User::getInstance($popular.userid)->get('show_my_videos') == 'yes'}
+							<span>{User::getInstance($popular.userid)->get('total_videos')|number_format} {lang code='videos'}</span>
+							{/if}
 						</div>
 					</div>
 				</div>

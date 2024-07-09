@@ -13,20 +13,6 @@ if (isset($_POST['mode'])) {
 
 if (!empty($mode)) {
     switch ($mode) {
-        case 'recent_viewed_vids':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
-                exit();
-            }
-
-            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'last_viewed DESC']);
-            if ($videos) {
-                foreach ($videos as $video) {
-                    assign('video', $video);
-                    Template('blocks/video.html');
-                }
-            }
-            break;
-
         case 'most_viewed':
             if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
                 exit();
@@ -41,73 +27,12 @@ if (!empty($mode)) {
             }
             break;
 
-        case 'recently_added':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
-                exit();
-            }
-
-            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'date_added DESC']);
-            if ($videos) {
-                foreach ($videos as $video) {
-                    assign('video', $video);
-                    Template('blocks/video.html');
-                }
-            }
-            break;
-
-        case 'featured_videos':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
-                exit();
-            }
-
-            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'featured' => 'yes', 'order' => 'featured_date DESC']);
-            if ($videos) {
-                foreach ($videos as $video) {
-                    assign('video', $video);
-                    Template('blocks/video.html');
-                }
-            }
-            break;
-
         case 'load_more':
             $limit = $_POST['limit'];
             $total = $_POST['total'];
 
             $inner_mode = $_POST['inner_mode'];
             switch ($inner_mode) {
-                case 'load_more_videos':
-                    $videos_arr = ['order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
-                    $results = get_videos($videos_arr);
-                    $next_limit = $limit + $limit;
-                    $videos_arr_next = ['order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
-                    $videos_next = get_videos($videos_arr_next);
-                    if ($total == $next_limit || $total < $next_limit) {
-                        $count_next = 0;
-                    } else {
-                        $count_next = count($videos_next);
-                    }
-                    $total_results = $total;
-                    $template_path = 'blocks/videos/video.html';
-                    $assigned_variable_smarty = 'video';
-                    break;
-
-                case 'load_more_users':
-                    $users_arr = ['limit' => '' . $limit . ',' . $limit];
-                    $results = get_users($users_arr);
-                    $next_limit = $limit + $limit;
-                    $users_arr_next = ['limit' => '' . $next_limit . ',' . $next_limit];
-                    $users_next = get_videos($users_arr_next);
-                    if ($total == $next_limit || $total < $next_limit) {
-                        $count_next = 0;
-                    } else {
-                        $count_next = count($users_next);
-                    }
-                    $count_next = (int)$count_next;
-                    $total_results = $total;
-                    $template_path = 'blocks/channels.html';
-                    $assigned_variable_smarty = 'user';
-                    break;
-
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
                     $play_arr = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];

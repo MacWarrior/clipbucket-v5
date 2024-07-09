@@ -218,10 +218,13 @@ class User
         $group = [];
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+            if( !$param_count ){
+                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $group[] = 'users.userid';
+            }
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
-            $group[] = 'users.userid';
+
         }
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
@@ -257,6 +260,7 @@ class User
             . $having
             . $order
             . $limit;
+
 
         $result = Clipbucket_db::getInstance()->_select($sql);
 
@@ -4728,27 +4732,31 @@ class userquery extends CBCategory
             'sep'      => '&nbsp;'
         ];
 
-        $return['show_my_videos'] = [
-            'title'    => lang('show_my_videos'),
-            'type'     => 'radiobutton',
-            'name'     => 'show_my_videos',
-            'id'       => 'show_my_videos',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-            'checked'  => strtolower($default['show_my_videos']),
-            'db_field' => 'show_my_videos',
-            'sep'      => '&nbsp;'
-        ];
+        if( isSectionEnabled('videos') ){
+            $return['show_my_videos'] = [
+                'title'    => lang('show_my_videos'),
+                'type'     => 'radiobutton',
+                'name'     => 'show_my_videos',
+                'id'       => 'show_my_videos',
+                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'checked'  => strtolower($default['show_my_videos']),
+                'db_field' => 'show_my_videos',
+                'sep'      => '&nbsp;'
+            ];
+        }
 
-        $return['show_my_photos'] = [
-            'title'    => lang('show_my_photos'),
-            'type'     => 'radiobutton',
-            'name'     => 'show_my_photos',
-            'id'       => 'show_my_photos',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-            'checked'  => strtolower($default['show_my_photos']),
-            'db_field' => 'show_my_photos',
-            'sep'      => '&nbsp;'
-        ];
+        if( isSectionEnabled('photos') ) {
+            $return['show_my_photos'] = [
+                'title'    => lang('show_my_photos'),
+                'type'     => 'radiobutton',
+                'name'     => 'show_my_photos',
+                'id'       => 'show_my_photos',
+                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'checked'  => strtolower($default['show_my_photos']),
+                'db_field' => 'show_my_photos',
+                'sep'      => '&nbsp;'
+            ];
+        }
 
         $return['show_my_subscriptions'] = [
             'title'    => lang('show_my_subscriptions'),

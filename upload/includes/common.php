@@ -125,7 +125,6 @@ try {
 }
 
 Language::getInstance()->init();
-$arrayTranslations = Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
 $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
@@ -278,31 +277,13 @@ $Cbucket->set_the_template();
 
 $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
-define('ALLOWED_VDO_CATS', $row['video_categories']);
 
 Assign('NEED_UPDATE', NEED_UPDATE);
 
 Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
-Assign('slogan', SLOGAN);
-Assign('category_thumbs', DirPath::get('category_thumbs'));
-Assign('video_thumbs', DirPath::getUrl('thumbs'));
-
-Assign('email_verification', EMAIL_VERIFICATION);
-Assign('languages', (isset($languages)) ? $languages : false);
 
 Assign('PLUG_URL', DirPath::getUrl('plugins'));
-
-#Remote and Embed
-Assign('remoteUpload', $row['remoteUpload']);
-Assign('embedUpload', $row['embedUpload']);
-
-# Video Options
-Assign('video_comment', $row['video_comments']);
-Assign('video_rating', $row['video_rating']);
-Assign('comment_rating', $row['comment_rating']);
-Assign('video_download', $row['video_download']);
-Assign('video_embed', $row['video_embed']);
 
 if (!file_exists(DirPath::get('playlist_covers'))) {
     mkdir(DirPath::get('playlist_covers'), 0777);
@@ -324,8 +305,6 @@ if (config('enable_video_remote_upload') == 'yes') {
     ];
 }
 
-Assign('LANG', $arrayTranslations);
-
 # Configuration of time format
 $config['date'] = '%I:%M %p';
 $config['time'] = '%H:%M';
@@ -341,7 +320,6 @@ $Smarty->assign_by_ref('myquery', $myquery);
 $Smarty->assign_by_ref('userquery', $userquery);
 $Smarty->assign_by_ref('signup', $signup);
 $Smarty->assign_by_ref('Upload', $Upload);
-$Smarty->assign_by_ref('db', $db);
 $Smarty->assign_by_ref('adsObj', $adsObj);
 $Smarty->assign_by_ref('formObj', $formObj);
 $Smarty->assign_by_ref('Cbucket', $Cbucket);

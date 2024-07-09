@@ -324,7 +324,7 @@ class myquery
             case 'users':
             case 'u':
             case 'c':
-                if ($obj['allow_comments'] == 'Yes' && config('channel_comments') == 1) {
+                if ($obj['allow_comments'] == 'Yes' && config('display_channel_comments') == 'yes') {
                     return true;
                 }
                 break;

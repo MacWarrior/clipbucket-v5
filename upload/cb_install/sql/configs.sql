@@ -78,7 +78,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'welcome_email', 'webmaster@localhost'),
 	(NULL, 'date_format', 'Y-m-d'),
 	(NULL, 'autoplay_video', 'no'),
-	(NULL, 'channel_comments', '1'),
 	(NULL, 'max_profile_pic_size', '2500'),
 	(NULL, 'max_profile_pic_width', '230'),
 	(NULL, 'gravatars', ''),
