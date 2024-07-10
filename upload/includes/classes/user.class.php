@@ -1493,10 +1493,9 @@ class userquery extends CBCategory
             return false;
         }
 
-        $count = $db->count(tbl('contacts'),
+        return $db->count(tbl('contacts'),
             tbl('contacts.contact_userid'),
             tbl('contacts.contact_userid') . "='$uid' AND " . tbl('contacts.confirmed') . "='no' AND " . tbl('contacts') . ".contact_group_id='$group' ");
-        return $count;
     }
 
     /**
@@ -1527,7 +1526,7 @@ class userquery extends CBCategory
      * @param $userid
      * @throws Exception
      */
-    function increment_watched_vides($userid)
+    function increment_watched_videos($userid)
     {
         global $db;
         $db->update(tbl($this->dbtbl['users']), ['total_watched'], ['|f|total_watched+1'], ' userid=\'' . $userid . '\'');
@@ -1990,7 +1989,7 @@ class userquery extends CBCategory
     /**
      * Function used to get user level and its details
      *
-     * @param INT userid
+     * @param INT $uid userid
      * @param bool $is_level
      *
      * @return bool|mixed
@@ -3091,7 +3090,6 @@ class userquery extends CBCategory
             lang('block_users')       => 'edit_account.php?mode=block_users',
             lang('user_change_pass')  => 'edit_account.php?mode=change_password',
             lang('user_change_email') => 'edit_account.php?mode=change_email',
-            lang('com_manage_subs')   => 'edit_account.php?mode=subscriptions',
             lang('account_settings')  => 'edit_account.php?mode=account'
         ];
 
@@ -3099,6 +3097,19 @@ class userquery extends CBCategory
         if (config('picture_upload') == 'yes' || config('picture_url') == 'yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar'])) {
             $array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
         }
+
+        if( config('channelsSection') == 'yes' ){
+            $array[lang('account')][] = [
+                lang('com_manage_subs')   => 'edit_account.php?mode=subscriptions'
+            ];
+        }
+
+        $array[lang('messages')] = [
+            lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
+            lang('notifications')                                             => 'private_message.php?mode=notification',
+            lang('sent')                                                      => 'private_message.php?mode=sent',
+            lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new']),
+        ];
 
         if (isSectionEnabled('channels')) {
             $array[lang('user_channel_profiles')] = [
@@ -3114,18 +3125,11 @@ class userquery extends CBCategory
             ];
         }
 
-        if (isSectionEnabled('playlists')) {
+        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
             $array[lang('playlists')] = [
                 lang('manage_playlists') => 'manage_playlists.php',
             ];
         }
-
-        $array[lang('messages')] = [
-            lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
-            lang('notifications')                                             => 'private_message.php?mode=notification',
-            lang('sent')                                                      => 'private_message.php?mode=sent',
-            lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new']),
-        ];
 
         if (count($this->user_account) > 0) {
             foreach ($this->user_account as $key => $acc) {
@@ -4780,16 +4784,18 @@ class userquery extends CBCategory
             'sep'      => '&nbsp;'
         ];
 
-        $return['show_my_collections'] = [
-            'title'    => lang('show_my_collections'),
-            'type'     => 'radiobutton',
-            'name'     => 'show_my_collections',
-            'id'       => 'show_my_collections',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
-            'checked'  => strtolower($default['show_my_collections']),
-            'db_field' => 'show_my_collections',
-            'sep'      => '&nbsp;'
-        ];
+        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ){
+            $return['show_my_collections'] = [
+                'title'    => lang('show_my_collections'),
+                'type'     => 'radiobutton',
+                'name'     => 'show_my_collections',
+                'id'       => 'show_my_collections',
+                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'checked'  => strtolower($default['show_my_collections']),
+                'db_field' => 'show_my_collections',
+                'sep'      => '&nbsp;'
+            ];
+        }
 
         return $return;
     }

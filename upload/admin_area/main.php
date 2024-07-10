@@ -25,6 +25,7 @@ if (isset($_POST['update'])) {
         , 'store_guest_session'
         , 'videosSection'
         , 'photosSection'
+        , 'playlistsSection'
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
@@ -429,7 +430,8 @@ if (isset($_POST['update'])) {
         'display_video_comments',
         'display_photo_comments',
         'display_channel_comments',
-        'only_keep_max_resolution'
+        'only_keep_max_resolution',
+        'playlistsSection'
     ];
 
     foreach ($opt_list as $optl) {

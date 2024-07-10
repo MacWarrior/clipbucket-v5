@@ -429,7 +429,7 @@ class Upload
                 'name'              => 'category[]',
                 'id'                => 'category',
                 'value'             => $cat_array,
-                'hint_1'            => sprintf(lang('vdo_cat_msg'), ALLOWED_VDO_CATS),
+                'hint_1'            => sprintf(lang('vdo_cat_msg'), config('video_categories')),
                 'required'          => 'yes',
                 'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('vdo_cat_err3'),

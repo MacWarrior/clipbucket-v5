@@ -686,49 +686,38 @@ class ClipBucket
     /**
      * Function used to load head menu
      *
-     * @param null $params
-     *
      * @return array|void
      * @throws Exception
      */
-    function head_menu($params = null)
+    function head_menu()
     {
         $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => BASEURL, 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
-        $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home'];
-        $this->head_menu[] = ['name' => lang('photos'), 'icon' => '<i class="fa fa-camera"></i>', 'link' => cblink(['name' => 'photos']), 'this' => 'photos'];
-        $this->head_menu[] = ['name' => lang('channels'), 'icon' => '<i class="fa fa-desktop"></i>', 'link' => cblink(['name' => 'channels']), 'this' => 'channels', 'section' => 'channels'];
-        $this->head_menu[] = ['name' => lang('collections'), 'icon' => '<i class="fa fa-bars"></i>', 'link' => cblink(['name' => 'collections']), 'this' => 'collections', 'section' => 'collections'];
 
-        /* Calling custom functions for headMenu. This can be used to add new tabs */
-        if ($params['assign']) {
-            assign($params['assign'], $this->head_menu);
-        } else {
-            return $this->head_menu;
+        if( config('videosSection') == 'yes' ){
+            $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home'];
         }
+        if( config('photosSection') == 'yes' ) {
+            $this->head_menu[] = ['name' => lang('photos'), 'icon' => '<i class="fa fa-camera"></i>', 'link' => cblink(['name' => 'photos']), 'this' => 'photos'];
+        }
+        if( config('channelsSection') == 'yes' ) {
+            $this->head_menu[] = ['name' => lang('channels'), 'icon' => '<i class="fa fa-desktop"></i>', 'link' => cblink(['name' => 'channels']), 'this' => 'channels', 'section' => 'channels'];
+        }
+        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ) {
+            $this->head_menu[] = ['name' => lang('collections'), 'icon' => '<i class="fa fa-bars"></i>', 'link' => cblink(['name' => 'collections']), 'this' => 'collections', 'section' => 'collections'];
+        }
+
+        return $this->head_menu;
     }
 
     /**
      * @throws Exception
      */
-    function cbMenu($params = null)
+    function cbMenu()
     {
-        $this->head_menu($params);
+        $this->head_menu();
 
-        if (!$params['class']) {
-            $params['class'] = '';
-        }
-
-        if (!isset($params['getSubTab'])) {
-            $params['getSubTab'] = '';
-        }
-
-        if (!isset($params['parentTab'])) {
-            $params['parentTab'] = '';
-        }
-
-        if (!isset($params['selectedTab'])) {
-            $params['selectedTab'] = '';
-        }
+        $params = [];
+        $params['class'] = '';
 
         $headMenu = $this->head_menu;
 
@@ -757,14 +746,12 @@ class ClipBucket
 
         $main_menu = [];
         foreach ($headMenu as $menu) {
-            if (isSectionEnabled($menu['this'])) {
-                $selected = current_page(['page' => $menu['this']]);
-                if ($selected) {
-                    $menu['active'] = true;
-                }
-
-                $main_menu[] = $menu;
+            $selected = current_page(['page' => $menu['this']]);
+            if ($selected) {
+                $menu['active'] = true;
             }
+
+            $main_menu[] = $menu;
         }
 
         $output = '';

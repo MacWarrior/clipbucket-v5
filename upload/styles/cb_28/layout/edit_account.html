@@ -7,11 +7,13 @@
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
+                    {if config('channelsSection') == 'yes'}
                     <li class="{if $mode=='profile_settings'}active{/if}">
                         <a  href="/edit_account.php?mode=profile">
                             <h5>{lang code='channel_profile_settings'}</h5>
                         </a>
                     </li>
+                    {/if}
                     <li class="{if $mode=='account_settings'}active{/if}">
                         <a  href="/edit_account.php?mode=account">
                             <h5>{lang code='account_settings'}</h5>
@@ -21,6 +23,7 @@
                 <br>
                 <form method="post" class="accountForm">
                     <div class="tab-content clearfix">
+                        {if config('channelsSection') == 'yes'}
                         <div id="cpsetting" class="tab-pane{if $mode=='profile_settings'} active{/if}">
                             <div class="channelSettings col-md-10">
                                 {$channel_profile_fields = $userquery->load_user_fields($user)}
@@ -56,6 +59,7 @@
                                 </div>
                             </div>
                         </div>
+                        {/if}
 
                         <div id="asettings" class="tab-pane {if $mode=='account_settings'}active{/if}">
                             <div class="accountSettings col-md-6">
@@ -191,26 +195,28 @@
         <div class="col-md-8 col-sm-8 col-xs-12">
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab2">
-                    <li class="{if $mode =='block_users'}active {/if}">
+                    <li class="{if $mode =='block_users'}active{/if}">
                         <a href="/edit_account.php?mode=block_users">
                             <h5>{lang code='block_users'}</h5>
                         </a>
                     </li>
-                    <li class="{if $mode =='change_password'}active {/if}">
+                    <li class="{if $mode =='change_password'}active{/if}">
                         <a href="/edit_account.php?mode=change_password">
                             <h5>{lang code='user_change_pass'}</h5>
                         </a>
                     </li>
-                    <li class="{if $mode =='change_email'}active {/if}">
+                    <li class="{if $mode =='change_email'}active{/if}">
                         <a href="/edit_account.php?mode=change_email">
                             <h5>{lang code='user_change_email'}</h5>
                         </a>
                     </li>
-                    <li class="{if $mode =='subs'}active {/if}">
+                    {if config('channelsSection') == 'yes'}
+                    <li class="{if $mode =='subs'}active{/if}">
                         <a href="/edit_account.php?mode=subscriptions">
                             <h5>{lang code='com_manage_subs'}</h5>
                         </a>
                     </li>
+                    {/if}
                 </ul>
                 <br/>
                 <div class="tab-content clearfix">
@@ -273,6 +279,8 @@
                             </div>
                         </form>
                     </div>
+
+                    {if config('channelsSection') == 'yes'}
                     <div id="msubscription" class="tab-pane {if $mode =='subs'}active{/if}">
                         <h2>{lang code='com_manage_subs'}</h2>
                         {if $subs}
@@ -312,6 +320,8 @@
                         <div><em><strong>{lang code='no_subs_found'}</strong></em></div>
                         {/if}
                     </div>
+                    {/if}
+
                 </div>
             </div>
         </div>

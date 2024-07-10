@@ -677,43 +677,47 @@ class CBvideo extends CBCategory
         if (NEED_UPDATE) {
             return;
         }
-        global $Cbucket, $userquery;
+        global $userquery;
         $per = $userquery->get_user_level(user_id());
 
         if ($per['video_moderation'] == 'yes' && isSectionEnabled('videos')) {
             $menu_video = [
                 'title'   => lang('videos')
                 , 'class' => 'glyphicon glyphicon-facetime-video'
-                , 'sub'   => [
-                    [
-                        'title' => lang('videos_manager')
-                        , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'
-                    ]
-                    , [
-                        'title' => lang('manage_playlists')
-                        , 'url' => DirPath::getUrl('admin_area') . 'manage_playlist.php'
-                    ]
-                    , [
-                        'title' => lang('manage_categories')
-                        , 'url' => DirPath::getUrl('admin_area') . 'category.php'
-                    ]
-                    , [
-                        'title' => 'List Flagged Videos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_videos.php'
-                    ]
-                    , [
-                        'title' => 'Mass Upload Videos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'mass_uploader.php'
-                    ]
-                    , [
-                        'title' => 'List Inactive Videos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php?search=search&active=no'
-                    ]
-                    , [
-                        'title' => 'Notification settings'
-                        , 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'
-                    ]
-                ]
+                , 'sub'   => []
+            ];
+
+            $menu_video['sub'][] =  [
+                'title' => lang('videos_manager')
+                , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'
+            ];
+
+            if( isSectionEnabled('playlists') ){
+                $menu_video['sub'][] =  [
+                    'title' => lang('manage_playlists')
+                    , 'url' => DirPath::getUrl('admin_area') . 'manage_playlist.php'
+                ];
+            }
+
+            $menu_video['sub'][] = [
+                'title' => lang('manage_categories')
+                , 'url' => DirPath::getUrl('admin_area') . 'category.php'
+            ];
+            $menu_video['sub'][] = [
+                'title' => 'List Flagged Videos'
+                , 'url' => DirPath::getUrl('admin_area') . 'flagged_videos.php'
+            ];
+            $menu_video['sub'][] = [
+                'title' => 'Mass Upload Videos'
+                , 'url' => DirPath::getUrl('admin_area') . 'mass_uploader.php'
+            ];
+            $menu_video['sub'][] = [
+                'title' => 'List Inactive Videos'
+                , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php?search=search&active=no'
+            ];
+            $menu_video['sub'][] = [
+                'title' => 'Notification settings'
+                , 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'
             ];
 
             ClipBucket::getInstance()->addMenuAdmin($menu_video, 70);

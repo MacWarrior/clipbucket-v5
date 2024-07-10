@@ -128,11 +128,13 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
 		</span>
+		{if isSectionEnabled('videos')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
 			<br/>
 			<span class="line-height-1 smaller-90"> {lang code='watched'} </span>
 		</span>
+		{/if}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_comments')|number_format}</span>
 			<br/>
@@ -145,6 +147,7 @@
 			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
 		</span>
 		{/if}
+		{if config('channelsSection') == 'yes'}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
 			<br/>
@@ -155,5 +158,6 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='subscribers'}</span>
 		</span>
+		{/if}
 	</div>
 </div>

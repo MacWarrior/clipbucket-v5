@@ -1152,4 +1152,5 @@ VALUES ('admin_setting'),
        ('confirm_delete_video'),
        ('cancel_uploading'),
        ('pourcent_completed'),
-       ('option_enable_user_profil_censor');
+       ('option_enable_user_profil_censor'),
+       ('option_enable_playlists');

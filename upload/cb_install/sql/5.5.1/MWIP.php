@@ -14,6 +14,11 @@ class MWIP extends \Migration
             'en' => 'Enable user profil censor'
         ]);
 
+        self::generateTranslation('option_enable_playlists', [
+            'fr' => 'Activer les playlists',
+            'en' => 'Enable playlists'
+        ]);
+
         self::generateConfig('enable_user_profil_censor', 'no');
 
         self::deleteTranslation('view_channels');

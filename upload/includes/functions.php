@@ -2544,34 +2544,6 @@ function delete_collection_photos($details)
 }
 
 /**
- * Get ClipBucket's header menu
- * @param null $params
- *
- * @return array
- * @throws Exception
- * @uses : { class : $Cbucket } { function : head_menu }
- */
-function head_menu($params = null)
-{
-    global $Cbucket;
-    return $Cbucket->head_menu($params);
-}
-
-/**
- * Get ClipBucket's menu
- * @param null $params
- *
- * @return array|string
- * @uses : { class : $Cbucket } { function : cbMenu }
- *
- */
-function cbMenu($params = null)
-{
-    global $Cbucket;
-    return $Cbucket->cbMenu($params);
-}
-
-/**
  * Get ClipBucket's footer menu
  * @param null $params
  *
@@ -2581,8 +2553,7 @@ function cbMenu($params = null)
  */
 function foot_menu($params = null)
 {
-    global $Cbucket;
-    return $Cbucket->foot_menu($params);
+    return Clipbucket::getInstance()->foot_menu($params);
 }
 
 /**

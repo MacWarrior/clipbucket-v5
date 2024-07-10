@@ -74,14 +74,12 @@ function Assign($name, $value)
 /**
  * Return Head menu of CLipBucket front-end
  *
- * @param array $params
  * @return array
  * @throws Exception
  */
-function cb_menu($params = null)
+function cb_menu()
 {
-    global $Cbucket;
-    return $Cbucket->cbMenu($params);
+    return ClipBucket::getInstance()->cbMenu();
 }
 
 /**

@@ -885,7 +885,7 @@ function call_watch_video_function($vdo)
 
     $userid = user_id();
     if ($userid) {
-        $userquery->increment_watched_vides($userid);
+        $userquery->increment_watched_videos($userid);
     }
 }
 

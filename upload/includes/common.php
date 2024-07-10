@@ -369,7 +369,6 @@ $Smarty->register_function('private_message', 'private_message');
 $Smarty->register_function('show_video_rating', 'show_video_rating');
 $Smarty->register_function('load_captcha', 'load_captcha');
 $Smarty->register_function('cbtitle', 'cbtitle');
-$Smarty->register_function('head_menu', 'head_menu');
 $Smarty->register_function('foot_menu', 'foot_menu');
 $Smarty->register_function('include_header', 'include_header');
 $Smarty->register_function('include_template_file', 'include_template_file');
@@ -381,7 +380,6 @@ $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('uploadButton', 'upload_photo_button');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
-$Smarty->register_function('cbMenu', 'cbMenu');
 
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');

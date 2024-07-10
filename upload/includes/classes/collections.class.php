@@ -244,7 +244,6 @@ class Collection
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \',\') AS category_names';
-                $group[] = $this->getTableName() . '.collection_id';
             }
 
             if( $param_category ){
@@ -262,7 +261,6 @@ class Collection
 
         $order = '';
         if( $param_order && !$param_count){
-            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
 
@@ -511,11 +509,10 @@ class Collections extends CBCategory
      */
     function setting_up_collections()
     {
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
+        $per = userquery::getInstance()->get_user_level(user_id());
         // Adding My Account Links    
-        if (isSectionEnabled('collections') && !NEED_UPDATE) {
-            $userquery->user_account[lang('collections')] = [
+        if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !NEED_UPDATE) {
+            userquery::getInstance()->user_account[lang('collections')] = [
                 lang('add_new_collection')          => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']),
                 lang('manage_collections')          => cblink(['name' => 'manage_collections']),
                 lang('manage_favorite_collections') => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=favorite'])
