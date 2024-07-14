@@ -55,7 +55,7 @@ function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
                 attrb.css('display','none');
             }
 
-            $('#'+inner_mode).html('Laod More...');
+            $('#'+inner_mode).html('Load more...');
         }
     });
 }

@@ -43,7 +43,7 @@ if (isset($_POST['load_type'])) {
     switch ($load_type) {
         case 'video':
             $params['count_only'] = false;
-            $data = get_videos($params);
+            $data = Video::getInstance()->getAll($params);
             break;
         case 'users':
             $data = get_users($params);
@@ -56,34 +56,33 @@ if (isset($_POST['load_type'])) {
             break;
 
         default:
-            $data = get_videos($params);
+            $data = Video::getInstance()->getAll($params);
             break;
     }
 
-    if (is_array($data)) {
-        if (count($data) >= 1) {
-            $json_string['array_meta'] = $data;
-            if ($load_mode == 'recent') {
-                $display_type = 'ajaxHome';
-            } else {
-                $display_type = 'featuredHome';
-            }
-            $quicklists = $_COOKIE['fast_qlist'];
-            $clean_cookies = str_replace(["[", "]"], "", $quicklists);
-            $clean_cookies = explode(",", $clean_cookies);
-            $clean_cookies = array_filter($clean_cookies);
-            assign("qlist_vids", $clean_cookies);
-            foreach ($data as $key => $video) {
-                assign("video", $video);
-                assign("display_type", $display_type);
-                Template('blocks/videos/video.html');
-            }
+    if (!empty($data)) {
+        $json_string['array_meta'] = $data;
+        if ($load_mode == 'recent') {
+            $display_type = 'ajaxHome';
         } else {
-            $msg = [];
-            $msg['notice'] = "You've reached end of list";
-            echo json_encode($msg);
+            $display_type = 'featuredHome';
         }
+        $quicklists = $_COOKIE['fast_qlist'];
+        $clean_cookies = str_replace(["[", "]"], "", $quicklists);
+        $clean_cookies = explode(",", $clean_cookies);
+        $clean_cookies = array_filter($clean_cookies);
+        assign("qlist_vids", $clean_cookies);
+        foreach ($data as $key => $video) {
+            assign("video", $video);
+            assign("display_type", $display_type);
+            Template('blocks/videos/video.html');
+        }
+    } else {
+        $msg = [];
+        $msg['notice'] = "You've reached end of list";
+        echo json_encode($msg);
     }
+
 } else {
     $msg = [];
     $msg['error'] = "Invalid request made";

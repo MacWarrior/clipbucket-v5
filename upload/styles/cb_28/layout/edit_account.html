@@ -7,11 +7,13 @@
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
+                    {if config('channelsSection') == 'yes'}
                     <li class="{if $mode=='profile_settings'}active{/if}">
                         <a  href="/edit_account.php?mode=profile">
                             <h5>{lang code='channel_profile_settings'}</h5>
                         </a>
                     </li>
+                    {/if}
                     <li class="{if $mode=='account_settings'}active{/if}">
                         <a  href="/edit_account.php?mode=account">
                             <h5>{lang code='account_settings'}</h5>
@@ -21,41 +23,32 @@
                 <br>
                 <form method="post" class="accountForm">
                     <div class="tab-content clearfix">
+                        {if config('channelsSection') == 'yes'}
                         <div id="cpsetting" class="tab-pane{if $mode=='profile_settings'} active{/if}">
                             <div class="channelSettings col-md-10">
                                 {$channel_profile_fields = $userquery->load_user_fields($user)}
                                 {foreach from=$channel_profile_fields item=field_group}
                                     {if count($field_group.fields) > 1}
                                 <h2>{display_clean($field_group.group_name)}</h2>
-                                    {foreach from=$field_group.fields item=field}
+                                        {foreach from=$field_group.fields item=field}
                                 <div class="form-group">
-                                        {if $field.type == 'radiobutton'}
+                                            {if $field.type == 'radiobutton'}
+                                                {$field.label_class = 'radio-inline'}
+                                                {$field.class = ''}
+                                            {else}
+                                                {$field.class = 'form-control'}
+                                            {/if}
+
                                     <label for="{$field.id}" class="show">{$field.title}</label>
                                             {if $field.hint_1}
                                                 {$field.hint_1}
                                             {/if}
-                                            {$field.label_class = 'radio-inline'}
-                                            {$field.class = ''}
                                             {ANCHOR place=$field.anchor_before}
                                             {$formObj->createField($field)}
                                             {ANCHOR place=$field.anchor_after}
                                             {$field.hint_2}
-                                        {else}
-                                    <label for="{$field.id}">{$field.title}</label>
-                                            {if $field.hint_1}
-                                                {$field.hint_1}
-                                            {/if}
-                                            {$field.class = 'form-control'}
-                                            {ANCHOR place=$field.anchor_before}
-                                            {if $field.id == 'profile_tags'}
-                                                <ul id="list_tags"></ul>
-                                            {/if}
-                                            {$formObj->createField($field)}
-                                            {ANCHOR place=$field.anchor_after}
-                                            {$field.hint_2}
-                                        {/if}
                                 </div>
-                                    {/foreach}
+                                        {/foreach}
                                     {/if}
                                 {/foreach}
 
@@ -66,6 +59,7 @@
                                 </div>
                             </div>
                         </div>
+                        {/if}
 
                         <div id="asettings" class="tab-pane {if $mode=='account_settings'}active{/if}">
                             <div class="accountSettings col-md-6">
@@ -129,7 +123,7 @@
                                 {/if}
 
                                 <div class="form-group">
-                                    <button name="update_profile" id="button" value="submit" class="btn btn-primary"> {lang code='update'}</button>
+                                    <button name="update_profile" value="submit" class="btn btn-primary"> {lang code='update'}</button>
                                 </div>
                             </div>
                         </div>
@@ -201,26 +195,28 @@
         <div class="col-md-8 col-sm-8 col-xs-12">
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab2">
-                    <li class="{if $mode =='block_users'}active {/if}">
+                    <li class="{if $mode =='block_users'}active{/if}">
                         <a href="/edit_account.php?mode=block_users">
                             <h5>{lang code='block_users'}</h5>
                         </a>
                     </li>
-                    <li class="{if $mode =='change_password'}active {/if}">
+                    <li class="{if $mode =='change_password'}active{/if}">
                         <a href="/edit_account.php?mode=change_password">
                             <h5>{lang code='user_change_pass'}</h5>
                         </a>
                     </li>
-                    <li class="{if $mode =='change_email'}active {/if}">
+                    <li class="{if $mode =='change_email'}active{/if}">
                         <a href="/edit_account.php?mode=change_email">
                             <h5>{lang code='user_change_email'}</h5>
                         </a>
                     </li>
-                    <li class="{if $mode =='subs'}active {/if}">
+                    {if config('channelsSection') == 'yes'}
+                    <li class="{if $mode =='subs'}active{/if}">
                         <a href="/edit_account.php?mode=subscriptions">
                             <h5>{lang code='com_manage_subs'}</h5>
                         </a>
                     </li>
+                    {/if}
                 </ul>
                 <br/>
                 <div class="tab-content clearfix">
@@ -283,6 +279,8 @@
                             </div>
                         </form>
                     </div>
+
+                    {if config('channelsSection') == 'yes'}
                     <div id="msubscription" class="tab-pane {if $mode =='subs'}active{/if}">
                         <h2>{lang code='com_manage_subs'}</h2>
                         {if $subs}
@@ -322,6 +320,8 @@
                         <div><em><strong>{lang code='no_subs_found'}</strong></em></div>
                         {/if}
                     </div>
+                    {/if}
+
                 </div>
             </div>
         </div>
@@ -330,12 +330,36 @@
 </div>
 
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var format_date_js = '{get_date_js()}';
-    var lang = '{$lang_obj->getLang()}';
-    var photo_extensions = "{config('allowed_photo_types')}";
-    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb}";
-    var max_file_size ="{config('max_photo_size')}mb";
-    var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-    var mode = "{$on}";
+    {if config('enable_user_dob_edition') == 'yes'}
+        let format_date_js = '{get_date_js()}';
+        let lang = '{$lang_obj->getLang()}';
+    {/if}
+
+    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+
+    let mode = "{$on}";
+
+    let user_about_me = "{base64_encode($user['about_me'])}";
+    let user_profile_desc = "{base64_encode($user['profile_desc'])}";
+    {if config('enable_user_schools')=='yes'}
+    let user_schools = "{base64_encode($user['schools'])}";
+    {/if}
+    {if config('enable_user_occupation')=='yes'}
+    let user_occupation = "{base64_encode($user['occupation'])}";
+    {/if}
+    {if config('enable_user_compagnies')=='yes'}
+    let user_companies = "{base64_encode($user['companies'])}";
+    {/if}
+    {if config('enable_user_hobbies')=='yes'}
+    let user_hobbies = "{base64_encode($user['hobbies'])}";
+    {/if}
+    {if config('enable_user_favorite_movies')=='yes'}
+    let user_movies = "{base64_encode($user['fav_movies'])}";
+    {/if}
+    {if config('enable_user_favorite_music')=='yes'}
+    let user_music = "{base64_encode($user['fav_music'])}";
+    {/if}
+    {if config('enable_user_favorite_books')=='yes'}
+    let user_books = "{base64_encode($user['fav_books'])}";
+    {/if}
 </script>

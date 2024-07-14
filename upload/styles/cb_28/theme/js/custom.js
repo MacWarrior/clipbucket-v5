@@ -308,14 +308,12 @@ function homePageVideos(qlist_items)
 
             success: function(data)
             {
-                try
-                {
+                try {
                     var json = jQuery.parseJSON(data);
-                    if(json.notice)
-                    {
-                        if(!first_launch)
+                    if(json.notice) {
+                        if(!first_launch) {
                             _cb.throwHeadMsg('warning', json.notice, 3000,true);
-                        else {
+                        } else {
                             $(main_object).remove();
                             if (loadMode == 'featured') {
                                 $('#featured_load_more').hide();
@@ -329,20 +327,17 @@ function homePageVideos(qlist_items)
                         }
                         return true;
                     }
-                    if(json.error)
-                    {
+                    if(json.error) {
                         _cb.throwHeadMsg('error', json.error, 3000,true);
                         return true;
                     }
                 }
-                catch(err)
-                {
+
+                catch(err) {
                     $(main_object).removeAttr('disabled');
                     $(main_object).text(loadMoreLang);
-                    if (loadType == 'video')
-                    {
-                        if (loadMode == 'recent')
-                        {
+                    if (loadType == 'video') {
+                        if (loadMode == 'recent') {
                             $('#recent_load_more').remove();
                             $('#recent_pre').html('');
                             $(data).appendTo('#recent_vids_sec').fadeIn('slow');
@@ -354,7 +349,6 @@ function homePageVideos(qlist_items)
                             if (gotMoreRecent > 0) {
                                 $(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
                             }
-
                         } else {
                             $('#featured_load_more').remove();
                             $('#featured_pre').html('');

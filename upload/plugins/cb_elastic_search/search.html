@@ -64,7 +64,7 @@
                          
                         {foreach $users as $user}
                             {$user_details = $userquery->get_user_details($user.userid)}
-                                {include file="$style_dir/blocks/user.html" display_type='normal'}
+                                {include file="$style_dir/blocks/user.html"}
                         {/foreach}
                          </div><!-- users list -->
                     </div><!-- users -->
@@ -142,7 +142,7 @@
                             {if $users}
                             {foreach $users as $user}
                                 {$user_details = $userquery->get_user_details($user.userid)}
-                                {include file="$style_dir/blocks/user.html" display_type='normal'}
+                                {include file="$style_dir/blocks/user.html"}
                             {/foreach}
                             <div class="pagination-holder clearfix">
 								<div class="pagination-holder clearfix">

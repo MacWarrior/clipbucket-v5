@@ -57,7 +57,6 @@ require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
     Language::getInstance()->make_default($_POST['language']);
     Language::getInstance()->init();
-    Language::getInstance()->loadTranslations(Language::getInstance()->lang_id);
     $has_translation = true;
 }
 require_once DirPath::get('cb_install') . 'modes/body.php';

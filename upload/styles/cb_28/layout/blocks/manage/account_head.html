@@ -1,17 +1,16 @@
-
 <div class="message">
 	<div class="row accountprofile">
 		<div class="col-md-10">
 			<div class="media">
 				<a class="pull-left" href="#">
-					<img class="media-object imgobject" src="{$userquery->getUserThumb($user)}" width="142" alt="...">
+					<img class="media-object imgobject" src="{$userquery->getUserThumb($user)}" width="142" alt="..."/>
 				</a>
 				<div class="media-body">
 					<div class="row">
 						<div class="col-md-12 procolor">
-							<h4 class="media-heading headcolor">{display_clean($user.username)}</h4>
-							<b>{lang code='since'} :</b> ({$user.doj|date_format})
-							<b>{lang code='last_Login'} :</b> ({$user.last_logged|nicetime})
+							<h4 class="media-heading headcolor">{display_clean(User::getInstance()->get('username'))}</h4>
+							<b>{lang code='since'} : </b>({User::getInstance()->get('doj')|date_format})
+							<b>{lang code='last_Login'} : </b>({User::getInstance()->get('last_logged')|nicetime})
 						</div>
 					</div>
 				</div>
@@ -19,7 +18,8 @@
 		</div>
 	</div>
 </div>
-<hr class="newhr1">
+<hr/>
+{if isSectionEnabled('videos')}
 <div class="mvideo accountprofile">
 	<span class="lead">
 		{lang code='latest_videos'}
@@ -32,7 +32,6 @@
 		{if $videos}
 		
 		{foreach from=$videos item=video}
-
 		<tr>
 			<td>
 				<div class="row">
@@ -46,17 +45,22 @@
 							</div>
 							<div class="col-md-9">
 								<a href="edit_video.php?vid={$video.videoid}">
-									{display_clean($video.title|truncate:80)} </a><br>
+									{display_clean($video.title|truncate:80)}
+								</a><br/>
 								<span class="maccountlabels"> <strong>{$video.date_added|niceTime}</strong>
-								{lang code='views'} : <strong>{$video.views|number_format}</strong></span>
+								{lang code='views'} : <strong>{$video.views|number_format}</strong>
+								</span>
 								<div class="labels">
 									{if $video.featured=='yes'}<span class="label label-primary">{lang code="featured"}{/if}</span>
-										<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">
-											{if $video.active=='yes'}{lang code="active"}{else}{lang code="inactive"}{/if}</span>
-										<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-											{if $video.status=='Successful'}{lang code="successful"}{else}{lang code="processing"}{/if}</span>
-										<span class="label label-info">
-										   {lang code='viewed'} {$video.last_viewed|niceTime}</span>
+									<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">
+										{if $video.active=='yes'}{lang code="active"}{else}{lang code="inactive"}{/if}
+									</span>
+									<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
+										{if $video.status=='Successful'}{lang code="successful"}{else}{lang code="processing"}{/if}
+									</span>
+									<span class="label label-info">
+									   {lang code='viewed'} {$video.last_viewed|niceTime}
+									</span>
 								</div>
 							</div>
 						</div>
@@ -69,22 +73,24 @@
 							<div class="col-md-1"><i class="icon-lock"></i></div>
 							{/if}
 						</div>
-						<a href="view_channel.php?user={$video.userid}">{display_clean($video.username)}</a>
+						<a href="view_channel.php?user={$video.userid}">{display_clean($video.user_username)}</a>
 					</div>
 				</div>
 			</td>
 			<td>
 				<div class="dropdown">
-					<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+					<button id="dropdownMenu1" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
 						Actions <i class="caret"></i></button>
 					<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-						<li><a role="menuitem" tabindex="-1"
-							   href="/edit_video.php?vid={$video.videoid}">{lang code="edit"}</a></li>
-						<li><a role="menuitem" tabindex="-1"
-							   href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code="watch"}</a>
-
+						<li>
+							<a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code="edit"}</a>
+						</li>
+						<li>
+							<a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code="watch"}</a>
+						</li>
 						<li class="divider"></li>
-						<li><a role="menuitem" tabindex="-1" href="/myaccount.php?delete_video={$video.videoid}">{lang code="delete"}</a>
+						<li>
+							<a role="menuitem" tabindex="-1" href="/myaccount.php?delete_video={$video.videoid}">{lang code="delete"}</a>
 						</li>
 						{foreach from=$cbvid->video_manager_links item=links}
 						    {$cbvid->video_manager_link($links,$video)}
@@ -99,133 +105,59 @@
 	<div align="center"><strong><em>{lang code="no_videos_found"}</em></strong></div>
 	{/if}
 </div>
-<div class="flaggedtable accountprofile1">
-	<table class="table table-bordered table-striped">
-		{if has_access("admin_access")}
-			<div id="fobjects" class="tab-pane" >
-				<div class="widget-box">
-					<td>
-						<div class="widget-header">
-							<h5><i class="glyphicon glyphicon-flag"></i>{lang code="flagged_obj"}</h5>
-						</div>
-
-						<div class="widget-body">
-
-							<div class="tabbable tabs-left">
-								<ul class="nav nav-tabs" id="myTab">
-									<li class="active">
-										<a data-toggle="tab" href="#fvideos">{lang code="videos"}</a>
-									</li>
-									{if $Cbucket->configs['photosSection'] == "yes"}
-									<li class="photos">
-										<a data-toggle="tab" href="#fphotos">{lang code="photos"}</a>
-									</li>
-									{/if}
-								</ul>
-								<br>
-								<div class="tab-content">
-									<div id="fvideos" class="tab-pane active">
-										{section name=list loop=$flagedVideos}
-										<div class="row">
-											<div class="col-md-3">
-												<img src="{getThumb vdetails=$flagedVideos[list]}" width="85" height="70" id="thumbs_{$flagedVideos[list].videoid}"/>
-											</div>
-											<div class="col-md-6 fvideos">
-												{display_clean($flagedVideos[list].title|truncate:50)}
-											</div>
-
-											<div class="col-md-7 fvideos">
-												<label class="label label-danger">Uploaded {$flagedVideos[list].date_added|niceTime}</label>
-												<label class="label label-default"> {lang code='views'} : {$flagedVideos.views|number_format}</label>
-												<label class="label label-primary"> Flags:{$count_flagged_videos}</label>
-											</div>
-										</div>
-										<hr class="newhr">
-										{/section}
-									</div>
-									{if $Cbucket->configs['photosSection'] == "yes"}
-									<div id="fphotos" class="tab-pane">
-										{section name=list loop=$flagedPhotos}
-										<div class="row">
-											<div class="col-md-3">
-												<img src="{getThumb vdetails=$flagedPhotos[list]}" width="85" height="70" id="thumbs_{$flagedPhotos[list].photoid}"/>
-											</div>
-											<div class="col-md-6 fusers">
-												{display_clean($flagedphotos[list].title|truncate:50)}
-											</div>
-											<div class="col-md-2">
-												<strong class="btn btn-primary btn-xs pull-right"> Flags:{$count_flagged_photos}</strong>
-											</div>
-											<div class="col-md-7 fusers">
-												<label class="label label-danger">Uploaded {$flagedPhotos[list].date_added|niceTime}</label>
-												<label class="label label-default"> {lang code='views'} : {$flagedPhotos.views|number_format}</label>
-
-											</div>
-										</div>
-										{/section}
-									</div>
-									{/if}
-								</div>
-							</div>
-							<!-- /widget-main -->
-						</div><!-- /widget-body -->
-				</div>
-			</div>
-		{/if}
-	</table>
-</div>
+{/if}
 
 <div class="col-md-12">
 	<div class="padding38">
-		{if $user.userid == user_id()}
-		<button class="btn btn-primary new1" style="background-color: #000000;color: white;">
-			<span class="line-height-1 bigger-170 blue">{$user.total_videos}</span>
-			<br>
-			<span class="line-height-1 smaller-90 new1"> {lang code='videos'} </span>
-		</button>
-			{if $Cbucket->configs['photosSection'] == "yes"}
-			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.total_photos}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code="photos"} </span>
-			</span>
-			{/if}
-			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.num_visits|number_format}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code='total_logins'} </span>
-			</span>
-			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.total_watched|number_format}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code='watched'} </span>
-			</span>
-			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.total_comments|number_format}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code='comments'} </span>
-			</span>
-			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.total_collections|number_format}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code='collections'} </span>
-			</span>
-			<span class="btn btn-primary new1" style="background-color: #000000; color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.profile_hits}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code='views'} </span>
-			</span>
-			<span class="btn btn-primary new1" style="background-color: #000000;color: #ffffff">
-				<span class="line-height-1 bigger-170 blue">{$user.subscribers}</span>
-				<br>
-				<span class="line-height-1 smaller-90 new1"> {lang code='subscribers'} </span>
-			</span>
+		{if isSectionEnabled('videos')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_videos')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='videos'}</span>
+		</span>
+		{/if}
+		{if isSectionEnabled('photos')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_photos')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code="photos"}</span>
+		</span>
+		{/if}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('num_visits')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
+		</span>
+		{if isSectionEnabled('videos')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90"> {lang code='watched'} </span>
+		</span>
+		{/if}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_comments')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='comments'}</span>
+		</span>
+		{if isSectionEnabled('collections')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_collections')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
+		</span>
+		{/if}
+		{if config('channelsSection') == 'yes'}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='views'}</span>
+		</span>
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('subscribers')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='subscribers'}</span>
+		</span>
 		{/if}
 	</div>
 </div>
-
-<style type="text/css">
-	.label {
-		font-size: 85%;
-	}
-</style>

@@ -25,6 +25,7 @@ if (isset($_POST['update'])) {
         , 'store_guest_session'
         , 'videosSection'
         , 'photosSection'
+        , 'playlistsSection'
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
@@ -120,6 +121,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_description_link'
         , 'enable_chunk_upload'
         , 'enable_edit_photo_button'
+        , 'enable_user_profil_censor'
     ];
 
     $config_booleans_to_refactor = [
@@ -141,7 +143,6 @@ if (isset($_POST['update'])) {
         , 'bits_color_warning'
         , 'video_comments'
         , 'photo_comments'
-        , 'channel_comments'
         , 'video_rating'
         , 'own_video_rating'
         , 'photo_rating'
@@ -190,7 +191,6 @@ if (isset($_POST['update'])) {
 
         'closed',
         'closed_msg',
-        'channel_comments',
         'channels_list_per_page',
         'channelsSection',
         'channel_rating',
@@ -252,6 +252,7 @@ if (isset($_POST['update'])) {
         'enable_video_description_censor',
         'enable_video_description_link',
         'censored_words',
+        'enable_user_profil_censor',
 
         'num_thumbs',
 
@@ -429,7 +430,8 @@ if (isset($_POST['update'])) {
         'display_video_comments',
         'display_photo_comments',
         'display_channel_comments',
-        'only_keep_max_resolution'
+        'only_keep_max_resolution',
+        'playlistsSection'
     ];
 
     foreach ($opt_list as $optl) {
@@ -496,9 +498,6 @@ if (isset($_POST['update'])) {
     }
     if (empty($_POST['display_photo_comments']) || $_POST['display_photo_comments'] == 'no') {
         $_POST['photo_comments'] = '0';
-    }
-    if (empty($_POST['display_channel_comments']) || $_POST['display_channel_comments'] == 'no') {
-        $_POST['channel_comments'] = '0';
     }
     if (empty($_POST['display_collection_comments']) || $_POST['display_collection_comments'] == 'no') {
         $_POST['collection_comments'] = '0';

@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-if( !isSectionEnabled('collections') ){
+if( config('collectionsSection') != 'yes' || (config('videosSection') != 'yes' && config('photosSection') != 'yes') ) {
     redirect_to(BASEURL);
 }
 

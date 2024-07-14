@@ -10,9 +10,7 @@
 			</div>
 			{/if}
 
-			<!-- ******************************************* -->
-			<!-- ************ EDITORS BLOCK END ************ -->
-			<!-- ******************************************* -->
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row"></div>
@@ -30,51 +28,53 @@
 					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="{lang code='load_more'}">{lang code="load_more"}</button>
 				</div>
 			</section>
+			{/if}
 		</div>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 
-			{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
-			{if $feature_users}
+			{if config('channelsSection') == 'yes'}
+				{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
+				{if $feature_users}
 			<h2>{lang code="featured_users"}</h2>
 			<div class="clearfix sidebar-channels">
-				{foreach $feature_users as $user}
+					{foreach $feature_users as $user}
 
 				<div class="clearfix channel-item">
-					<a href="{$userquery->profile_link($user)}" class="avatar">
-						<img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle">
+					<a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
+						<img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h3>
+						<h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
 						<div class="clearfix views-videos">
-							<span>{prettyNum($user.profile_hits|number_format)} {lang code='views'}</span>
-							<span>{prettyNum($user.total_videos|number_format)} {lang code='videos'}</span>
+							<span>{prettyNum(User::getInstance($user.userid)->get('profile_hits')|number_format)} {lang code='views'}</span>
+							{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+							<span>{prettyNum(User::getInstance($user.userid)->get('total_videos')|number_format)} {lang code='videos'}</span>
+							{/if}
 						</div>
 					</div>
 				</div>
-				{/foreach}
+					{/foreach}
 			</div>
+				{/if}
 			{/if}
 
-			{if config('collectionsSection') == 'yes'}
-				{$collections = $cbcollection->get_collections(['limit'=>config('collection_home_top_collections'), 'active'=>'yes', 'order'=>'COUNT( DISTINCT CASE WHEN collections.type = \'photos\' THEN photos.photo_id ELSE video.videoid END ) DESC', 'parents_only'=>true, 'has_items'=>true])}
-                {if $collections}
+			{if config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !empty($top_collections)}
 				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
 				<div class="clearfix sidebar-items collections-grid">
 					<div class="clearfix row">
-						{foreach from=$collections item=collection}
+						{foreach from=$top_collections item=collection}
 							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
 								{include file="$style_dir/blocks/collection-item.html"}
 							</div>
 						{/foreach}
 					</div>
 				</div>
-                {/if}
 			{/if}
 
-			{if config('playlistsSection') == 'yes'}
+			{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
 				{$playlists = get_playlists(['limit'=>4, 'order'=>'playlists.total_items DESC'])}
 				{$playlists = activePlaylists($playlists)}
 				{if $playlists}
@@ -105,10 +105,6 @@
 					</div>
 					{/foreach}
 				</div>
-				{else}
-					{if has_access('admin_access')}
-				<div class="clearfix well">{lang code="no_playlists"}</div>
-					{/if}
 				{/if}
 			{/if}
 		</aside>

@@ -19,7 +19,7 @@ $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url'
 $breadcrumb[3] = ['title' => 'Manage Video Thumbs', 'url' => DirPath::getUrl('admin_area') . 'upload_thumbs.php?video=' . display_clean($video)];
 
 if (@$_GET['msg']) {
-    $msg[] = clean($_GET['msg']);
+    $msg[] = display_clean($_GET['msg']);
 }
 
 //Check Video Exists or Not

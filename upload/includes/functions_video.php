@@ -400,16 +400,16 @@ function video_link($vdetails, $type = null): string
 
         switch (config('seo_vido_url')) {
             default:
-                $link = BASEURL . '/video/' . $vdetails['videokey'] . '/' . SEO(clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 1:
-                $link = BASEURL . '/' . SEO(clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
+                $link = BASEURL . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
                 break;
             case 2:
-                $link = BASEURL . '/video/' . $vdetails['videoid'] . '/' . SEO(clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 3:
-                $link = BASEURL . '/video/' . $vdetails['videoid'] . '_' . SEO(clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
         }
     } else {
@@ -885,7 +885,7 @@ function call_watch_video_function($vdo)
 
     $userid = user_id();
     if ($userid) {
-        $userquery->increment_watched_vides($userid);
+        $userquery->increment_watched_videos($userid);
     }
 }
 

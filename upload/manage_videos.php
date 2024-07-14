@@ -4,6 +4,10 @@ define('PARENT_PAGE', "videos");
 
 require 'includes/config.inc.php';
 
+if( config('videosSection') != 'yes' ){
+    redirect_to(BASEURL);
+}
+
 global $userquery, $cbvideo, $eh, $pages, $cbvid;
 
 $userquery->logincheck();

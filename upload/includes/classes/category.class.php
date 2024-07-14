@@ -360,8 +360,8 @@ class Category
             return false;
         }
 
-        if (count($new_array) > ALLOWED_VDO_CATS) {
-            e(sprintf(lang('vdo_cat_err2'), ALLOWED_VDO_CATS));
+        if (count($new_array) > config('video_categories')) {
+            e(sprintf(lang('vdo_cat_err2'), config('video_categories')));
             return false;
         }
 

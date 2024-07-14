@@ -7,7 +7,7 @@ global $userquery, $myquery, $db, $Upload;
 $userquery->logincheck();
 
 if (@$_GET['msg']) {
-    $msg[] = clean($_GET['msg']);
+    $msg[] = display_clean($_GET['msg']);
 }
 
 $video = mysql_clean($_GET['video']);

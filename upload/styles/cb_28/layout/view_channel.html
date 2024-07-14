@@ -2,7 +2,6 @@
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
 {lang code='channel' assign='object_type'}
 {$loadMoreLang ={lang code="load_more"}}
-{$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>9])}
 
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
@@ -23,7 +22,7 @@
 	{/if}
 	<div class="clearfix">
 		<section id="content" class="clearfix">
-			{if $uservideos}
+			{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes' && $uservideos}
 			<div class="clearfix player-holder">
 				<div id="cb_player" class="clearfix cb_player">
 					{show_player vdetails=$first_video}
@@ -33,42 +32,44 @@
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
 			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
-					<li>
+					<li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} class="active"{/if}>
 						<a href="#user-info" data-toggle="tab">{lang code='info'}</a>
 					</li>
-					{if isSectionEnabled('videos') && $user.show_my_videos!='no'}
+					{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
 					<li class="active">
 						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
 					</li>
 					{/if}
-					{if isSectionEnabled('photos') && $user.show_my_photos != 'no'}
-					<li {if $user.show_my_videos=='no' || !isSectionEnabled('videos')}class="active"{/if}>
+					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+					<li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' || !isSectionEnabled('videos')} class="active"{/if}>
 						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
 					</li>
 					<li>
 					{/if}
+					{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
 					<li>
 						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
-					{if config('display_channel_comments') == 'yes'}
-						<li>
-							<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
-						</li>
+					{/if}
+					{if config('display_channel_comments') == 'yes' && User::getInstance($user.userid)->get('allow_comments') == 'yes'}
+					<li>
+						<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
+					</li>
 					{/if}
 				</ul>
 				<div class="tab-content clearfix">
-					<div class="tab-pane fade in clearfix{if $user.show_my_videos=='no' && $user.show_my_photos=='no'} active{/if}" id="user-info">
+					<div class="tab-pane fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} active{/if}" id="user-info">
 						<div class="clearfix watch-vid-details">
 							<h2>{lang code='user_activity'}</h2>
 							<ul class="clearfix desc-list">
 								{if $p.profile_title}
 								<li>
-									<strong>{lang code='title'}</strong> : {display_clean($p.profile_title)}
+									<strong>{lang code='title'}</strong> : {User::getClean($p.profile_title)}
 								</li>
 								{/if}
 								{if $p.profile_desc}
 								<li>
-									<strong>{lang code='description'}</strong> : {display_clean($p.profile_desc)}
+									<strong>{lang code='description'}</strong> : {User::getClean($p.profile_desc)}
 								</li>
 								{/if}
 								<li>
@@ -102,14 +103,15 @@
 											{/if}
 
 											{foreach from=$field_group.fields item=field}
+												{if is_string($field.value) && empty(trim($field.value))}
+													{continue}
+												{/if}
 												{if $field.auto_view=='yes' && $field.value}
 												<li>
 													{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
 														<strong>{$field.title}</strong> : {input_value input=$field}
-													{elseif $field.type =='textarea'}
-														<strong>{$field.title}</strong> : {display_clean($field.value)|nl2br}
 													{else}
-														<strong>{$field.title}</strong> : {input_value input=$field}
+														<strong>{$field.title}</strong> : {User::getClean($field.value)}
 													{/if}
 												</li>
 												{/if}
@@ -132,7 +134,9 @@
 							{/if}
 						</div>
 					</div>
-					<div class="tab-pane videos fade in clearfix {if $user.show_my_videos != 'no'}active{/if}" id="user-videos">
+
+					{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+					<div class="tab-pane videos fade in clearfix active" id="user-videos">
 							{if $uservideos}
 						<div class="clearfix row user_vids">
 							<div id="usr-vids" class="clearfix">
@@ -152,8 +156,10 @@
 						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 					</div>
+					{/if}
 
-					<div class="tab-pane photos fade in clearfix {if $user.show_my_videos == 'no'}active{/if}" id="user-photos">
+					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+					<div class="tab-pane photos fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes'} active{/if}" id="user-photos">
 						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
 							{if $photos}
 						<div id="usr-photos" class="clearfix row user_photos">
@@ -172,7 +178,9 @@
 						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 					</div>
+					{/if}
 
+					{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
 					<div class="tab-pane playlist fade in clearfix" id="user-playlist">
 						{$playlists = $cbvid->action->get_playlists(["user"=>$user.userid,"order"=>"date_added DESC","limit"=>""])}
 						
@@ -190,25 +198,20 @@
 							<div class="well well-info">{lang code='no_playlists'}</div>
 						{/if}
 					</div>
-					{if config('display_channel_comments') == 'yes'}
+					{/if}
+
+					{if config('display_channel_comments') == 'yes' && User::getInstance($user.userid)->get('allow_comments') == 'yes'}
 						<div class="tab-pane comment fade in clearfix" id="user-comments">
-							{if $myquery->is_commentable($p,'channel')}
+							<div class="collectionComments addComment">
+								<div id="bloc-comment" >
+									{include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
 
-								<div class="collectionComments addComment">
-									<div id="bloc-comment" >
-										{include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
-
-										<div class="userComments">
-											<ul id="userCommentsList" style="margin-left:-40px;">
-											</ul>
-										</div>
+									<div class="userComments">
+										<ul id="userCommentsList" style="margin-left:-40px;">
+										</ul>
 									</div>
 								</div>
-							{else}
-								<div align="center" class="moveL no_comments">
-									{sprintf(lang('comment_disabled_for'),strtolower(lang('channel')))}
-								</div>
-							{/if}
+							</div>
 						</div>
 					{/if}
 				</div>
@@ -234,14 +237,16 @@
 					{continue}
 				{/if}
 				<div class="clearfix channel-item">
-					<a href="{$userquery->profile_link($popular)}" class="avatar">
-						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle">
+					<a href="{User::getInstance($popular.userid)->getLink('channel')}" class="avatar">
+						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle"/>
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($popular)}">{display_clean($popular.username)}</a></h3>
+						<h3><a href="{User::getInstance($popular.userid)->getLink('channel')}">{display_clean(User::getInstance($popular.userid)->get('username'))}</a></h3>
 						<div class="clearfix views-videos">
-							<span>{$popular.profile_hits|number_format} {lang code='views'}</span>
-							<span>{$popular.total_videos|number_format} {lang code='videos'}</span>
+							<span>{User::getInstance($popular.userid)->get('profile_hits')|number_format} {lang code='views'}</span>
+							{if isSectionEnabled('videos') && User::getInstance($popular.userid)->get('show_my_videos') == 'yes'}
+							<span>{User::getInstance($popular.userid)->get('total_videos')|number_format} {lang code='videos'}</span>
+							{/if}
 						</div>
 					</div>
 				</div>

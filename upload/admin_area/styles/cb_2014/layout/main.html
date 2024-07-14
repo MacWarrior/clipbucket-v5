@@ -531,6 +531,16 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-8">
+									<label class="nowrap" for="enable_user_profil_censor" title="{lang code='option_enable_user_profil_censor'}">{lang code='option_enable_user_profil_censor'}</label>
+								</div>
+								<div class="col-md-4 row-size">
+									<input value="yes" name="enable_user_profil_censor" id="enable_user_profil_censor" {if $row.enable_user_profil_censor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 
@@ -1423,6 +1433,16 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="playlistsSection" title="{lang code='option_enable_playlists'}">{lang code='option_enable_playlists'}</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="playlistsSection" id="playlistsSection" {if $row.playlistsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
 
 						</div>
 						<div class="col-md-4">
@@ -1872,19 +1892,9 @@
                                     <span class="lbl"></span>
                                 </div>
                             </div>
-                            <hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="channel_comments" title="Channel comments">Channel comments</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="channel_comments" id="channel_comments" {if $row.channel_comments=='1'}checked{/if} {if $row.display_channel_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-10">
 									<label class="nowrap" for="collection_comments" title="{lang code='enable_collection_comments'}">{lang code='enable_collection_comments'}</label>
 								</div>
 								<div class="col-md-2 row-size">
@@ -1895,7 +1905,7 @@
 						</div>
 						<div class="col-md-4">
 							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-10">
 									<label class="nowrap" for="display_video_comments" title="{lang code='option_display_video_comments'}">{lang code='option_display_video_comments'}</label>
 								</div>
 								<div class="col-md-2 row-size">
@@ -1905,7 +1915,7 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-10">
 									<label class="nowrap" for="display_photo_comments" title="{lang code='option_display_photo_comments'}">{lang code='option_display_photo_comments'}</label>
 								</div>
 								<div class="col-md-2 row-size">
@@ -1915,7 +1925,7 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-10">
 									<label class="nowrap" for="display_channel_comments" title="{lang code='option_display_channel_comments'}">{lang code='option_display_channel_comments'}</label>
 								</div>
 								<div class="col-md-2 row-size">
@@ -1925,7 +1935,7 @@
 							</div>
 							<hr/>
 							<div class="row">
-								<div class="col-md-4">
+								<div class="col-md-10">
 									<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
 								</div>
 								<div class="col-md-2 row-size">

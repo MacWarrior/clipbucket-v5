@@ -6,41 +6,6 @@ require 'define_php_links.php';
 include_once 'upload_forms.php';
 
 /**
- * Cleans a string by putting it through multiple layers
- *
- * @param : { string } { string to be cleaned }
- *
- * @return string : { string } { $string } { cleaned string }
- */
-function Replacer($string): string
-{
-    //Wp-Magic Quotes
-    $string = preg_replace("/'s/", '&#8217;s', $string);
-    $string = preg_replace("/'(\d\d(?:&#8217;|')?s)/", "&#8217;$1", $string);
-    $string = preg_replace('/(\s|\A|")\'/', '$1&#8216;', $string);
-    $string = preg_replace('/(\d+)"/', '$1&#8243;', $string);
-    $string = preg_replace("/(\d+)'/", '$1&#8242;', $string);
-    $string = preg_replace("/(\S)'([^'\s])/", "$1&#8217;$2", $string);
-    $string = preg_replace('/(\s|\A)"(?!\s)/', '$1&#8220;$2', $string);
-    $string = preg_replace('/"(\s|\S|\Z)/', '&#8221;$1', $string);
-    $string = preg_replace("/'([\s.]|\Z)/", '&#8217;$1', $string);
-    $string = preg_replace("/ \(tm\)/i", ' &#8482;', $string);
-    $string = str_replace("''", '&#8221;', $string);
-    $array = ['/& /'];
-    $replace = ['&amp; '];
-    return $string = preg_replace($array, $replace, $string);
-}
-
-function clean($string, $allow_html = false)
-{
-    if ($allow_html == false) {
-        $string = strip_tags($string);
-        $string = Replacer($string);
-    }
-    return $string;
-}
-
-/**
  * This function is for Securing Password, you may change its combination for security reason but
  * make sure do not change once you made your script run
  * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
@@ -72,8 +37,7 @@ function pass_code($string, $userid): string
  */
 function mysql_clean($var): string
 {
-    global $db;
-    return $db->clean_var($var);
+    return Clipbucket_db::getInstance()->clean_var($var);
 }
 
 function display_clean($var, $clean_quote = true): string
@@ -2580,34 +2544,6 @@ function delete_collection_photos($details)
 }
 
 /**
- * Get ClipBucket's header menu
- * @param null $params
- *
- * @return array
- * @throws Exception
- * @uses : { class : $Cbucket } { function : head_menu }
- */
-function head_menu($params = null)
-{
-    global $Cbucket;
-    return $Cbucket->head_menu($params);
-}
-
-/**
- * Get ClipBucket's menu
- * @param null $params
- *
- * @return array|string
- * @uses : { class : $Cbucket } { function : cbMenu }
- *
- */
-function cbMenu($params = null)
-{
-    global $Cbucket;
-    return $Cbucket->cbMenu($params);
-}
-
-/**
  * Get ClipBucket's footer menu
  * @param null $params
  *
@@ -2617,8 +2553,7 @@ function cbMenu($params = null)
  */
 function foot_menu($params = null)
 {
-    global $Cbucket;
-    return $Cbucket->foot_menu($params);
+    return Clipbucket::getInstance()->foot_menu($params);
 }
 
 /**
