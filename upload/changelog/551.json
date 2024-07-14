@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"55",
+  "revision":"56",
   "status":"dev",
   "detail":[
     {
@@ -53,6 +53,7 @@
         ,"Fix video & photo upload cancelation"
         ,"Fix possible SQL injection"
         ,"Fix video upload"
+        ,"Fix video uploader's username display <i>(#382)</i>"
       ]
     },
     {
