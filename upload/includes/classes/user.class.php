@@ -3099,9 +3099,7 @@ class userquery extends CBCategory
         }
 
         if( config('channelsSection') == 'yes' ){
-            $array[lang('account')][] = [
-                lang('com_manage_subs')   => 'edit_account.php?mode=subscriptions'
-            ];
+            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 
         $array[lang('messages')] = [
