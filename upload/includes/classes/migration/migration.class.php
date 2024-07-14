@@ -166,13 +166,11 @@ class Migration
             WHERE `id_language_key` = (
                 SELECT id_language_key FROM `' . tbl('languages_keys') . '`
                 WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\'
-                )
-            );';
+                );';
         Clipbucket_db::getInstance()->executeThrowException($sql);
 
         $sql = 'DELETE FROM `' . tbl('languages_keys') . '`
-            WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\'
-            );';
+            WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 
