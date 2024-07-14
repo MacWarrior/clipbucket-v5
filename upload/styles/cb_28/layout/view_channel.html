@@ -2,7 +2,6 @@
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
 {lang code='channel' assign='object_type'}
 {$loadMoreLang ={lang code="load_more"}}
-{$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>9])}
 
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}

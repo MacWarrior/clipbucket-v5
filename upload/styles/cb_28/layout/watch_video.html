@@ -38,9 +38,9 @@
 
 						<h2 class="user-title">
 						{if isSectionEnabled('channels')}
-							<a href="{$userquery->profile_link($video)}">{display_clean($video.username)}</a>
+							<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
 						{else}
-							{display_clean($video.username)}
+							{display_clean($video.user_username)}
 						{/if}
 						</h2>
 						<div class="views-counter">
