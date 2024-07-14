@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"56",
+  "revision":"57",
   "status":"dev",
   "detail":[
     {
@@ -11,12 +11,14 @@
         ,"Implement storage usage tracking"
         ,"Implement comments censor"
         ,"Implement video description censor"
+        ,"Implement user profile censor"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
         ,"Add video deletion menu on video edition page"
+        ,"Add option to enable playlists"
         ,"Update server configurations check"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
@@ -31,6 +33,7 @@
         ,"Fix category creation interface"
         ,"Fix timeout errors on non-PHP-FPM"
         ,"Fix Only keep max resolution option saving"
+        ,"Fix possible XSS injection"
       ]
     },
     {
@@ -40,6 +43,7 @@
         ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
+        ,"Refactor user profile options"
         ,"Add edit button on video & photo pages <i>(#319)</i>"
         ,"Update translations"
         ,"Fix pagination on videos, collections & photos"
@@ -54,6 +58,8 @@
         ,"Fix possible SQL injection"
         ,"Fix video upload"
         ,"Fix video uploader's username display <i>(#382)</i>"
+        ,"Fix user profile info saving"
+        ,"Fix page access rights"
       ]
     },
     {
