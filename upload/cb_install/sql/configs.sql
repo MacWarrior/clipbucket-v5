@@ -22,7 +22,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'php_path', ''),
 	(NULL, 'videos_list_per_page', '30'),
 	(NULL, 'channels_list_per_page', '25'),
-	(NULL, 'video_comments', '1'),
 	(NULL, 'video_rating', '1'),
 	(NULL, 'comment_rating', '1'),
 	(NULL, 'video_download', '1'),
@@ -113,7 +112,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'photo_med_height', '116'),
 	(NULL, 'photo_lar_width', '600'),
 	(NULL, 'photo_crop', '1'),
-	(NULL, 'photo_comments', '1'),
 	(NULL, 'photo_rating', '1'),
 	(NULL, 'max_photo_size', '2'),
 	(NULL, 'watermark_photo', '0'),
@@ -244,11 +242,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_global_age_restriction', 'no'),
     (NULL, 'enable_quicklist', 'yes'),
     (NULL, 'hide_empty_collection', 'yes'),
-    (NULL, 'display_video_comments', 'yes'),
-    (NULL, 'display_photo_comments', 'yes'),
-    (NULL, 'display_channel_comments', 'yes'),
-    (NULL, 'enable_collection_comments', 'yes'),
-    (NULL, 'display_collection_comments', 'yes'),
     (NULL, 'enable_sitemap', 'yes'),
     (NULL, 'git_path', ''),
     (NULL, 'tmdb_get_genre', 'yes'),
@@ -285,7 +278,11 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'chunk_upload_size', '2'),
     (NULL, 'cloudflare_upload_limit', '100'),
     (NULL, 'nginx_path', ''),
-    (NULL, 'enable_edit_photo_button', 'yes');
+    (NULL, 'enable_edit_photo_button', 'yes'),
+    (NULL, 'enable_comments_video', 'yes'),
+    (NULL, 'enable_comments_photo', 'yes'),
+    (NULL, 'enable_comments_collection', 'yes'),
+    (NULL, 'enable_comments_channel', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

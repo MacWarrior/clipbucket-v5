@@ -51,7 +51,7 @@
 						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
 					{/if}
-					{if config('display_channel_comments') == 'yes' && User::getInstance($user.userid)->get('allow_comments') == 'yes'}
+					{if config('enable_comments_channel') == 'yes'}
 					<li>
 						<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
 					</li>
@@ -200,18 +200,21 @@
 					</div>
 					{/if}
 
-					{if config('display_channel_comments') == 'yes' && User::getInstance($user.userid)->get('allow_comments') == 'yes'}
+					{if config('enable_comments_channel') == 'yes'}
 						<div class="tab-pane comment fade in clearfix" id="user-comments">
+							{if User::getInstance($user.userid)->get('allow_comments') == 'yes'}
 							<div class="collectionComments addComment">
-								<div id="bloc-comment" >
+								<div id="bloc-comment">
 									{include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
 
 									<div class="userComments">
-										<ul id="userCommentsList" style="margin-left:-40px;">
-										</ul>
+										<ul id="userCommentsList" style="margin-left:-40px;"></ul>
 									</div>
 								</div>
 							</div>
+							{else}
+							<span class="well well-info btn-block">{sprintf(lang('comment_disabled_for'),strtolower(lang('channel')))}</span>
+							{/if}
 						</div>
 					{/if}
 				</div>

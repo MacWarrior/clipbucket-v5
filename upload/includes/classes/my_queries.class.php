@@ -314,7 +314,7 @@ class myquery
             case 'vdo':
             case 'videos':
             case 'vid':
-                if ($obj['allow_comments'] == 'yes' && config('video_comments') == 1) {
+                if ($obj['allow_comments'] == 'yes' && config('enable_comments_video') == 'yes') {
                     return true;
                 }
                 break;
@@ -324,7 +324,7 @@ class myquery
             case 'users':
             case 'u':
             case 'c':
-                if ($obj['allow_comments'] == 'Yes' && config('display_channel_comments') == 'yes') {
+                if ($obj['allow_comments'] == 'yes' && config('enable_comments_channel') == 'yes') {
                     return true;
                 }
                 break;
@@ -340,7 +340,7 @@ class myquery
             case 'photo':
             case 'p':
             case 'photos':
-                if ($obj['allow_comments'] == 'yes' && config('photo_comments') == 1) {
+                if ($obj['allow_comments'] == 'yes' && config('enable_comments_photo') == 'yes') {
                     return true;
                 }
         }

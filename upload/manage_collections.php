@@ -73,7 +73,7 @@ switch ($mode) {
             $cbcollection->update_collection($_POST);
         }
 
-        $collection = $cbcollection->get_collection($cid);
+        $collection = Collection::getInstance()->getOne(['collection_id' => $cid]);
         $reqFields = $cbcollection->load_required_fields($collection);
         $otherFields = $cbcollection->load_other_fields($collection);
 

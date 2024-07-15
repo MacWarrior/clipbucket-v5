@@ -828,7 +828,7 @@ class CBvideo extends CBCategory
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $types = Tags::getVideoTypes();
             foreach ($types as $type) {
-                $select_tag .= ', GROUP_CONCAT( CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                $select_tag .= ', GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
             }
             $join_tag = ' LEFT JOIN ' . cb_sql_table('video_tags') . ' ON video.videoid = video_tags.id_video 
                     LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';

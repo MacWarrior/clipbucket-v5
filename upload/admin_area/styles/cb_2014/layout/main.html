@@ -1874,75 +1874,46 @@
 					<div class="row">
 						<div class="col-md-4">
 							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="video_comments" title="Video comments">Video comments</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="video_comments" id="video_comments" {if $row.video_comments=='1'}checked{/if} {if $row.display_video_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="photo_comments" title="Photo comments">Photo comments</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="photo_comments" id="photo_comments" {if $row.photo_comments=='1'}checked{/if} {if $row.display_photo_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-							<hr/>
-							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="collection_comments" title="{lang code='enable_collection_comments'}">{lang code='enable_collection_comments'}</label>
+									<label class="nowrap" for="enable_comments_video" title="{lang code='option_enable_comments_video'}">{lang code='option_enable_comments_video'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_collection_comments" id="collection_comments" {if $row.enable_collection_comments=='yes'}checked{/if}  {if $row.display_collection_comments=='no'}disabled{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="display_video_comments" title="{lang code='option_display_video_comments'}">{lang code='option_display_video_comments'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="display_video_comments" id="display_video_comments" {if $row.display_video_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="enable_comments_video" id="enable_comments_video" {if $row.enable_comments_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="display_photo_comments" title="{lang code='option_display_photo_comments'}">{lang code='option_display_photo_comments'}</label>
+									<label class="nowrap" for="enable_comments_photo" title="{lang code='option_enable_comments_photo'}">{lang code='option_enable_comments_photo'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="display_photo_comments" id="display_photo_comments" {if $row.display_photo_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="enable_comments_photo" id="enable_comments_photo" {if $row.enable_comments_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="display_channel_comments" title="{lang code='option_display_channel_comments'}">{lang code='option_display_channel_comments'}</label>
+									<label class="nowrap" for="enable_comments_collection" title="{lang code='option_enable_comments_collection'}">{lang code='option_enable_comments_collection'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="display_channel_comments" id="display_channel_comments" {if $row.display_channel_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="enable_comments_collection" id="enable_comments_collection" {if $row.enable_comments_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="display_collection_comments" title="{lang code='display_collection_comments'}">{lang code='display_collection_comments'}</label>
+									<label class="nowrap" for="enable_comments_channel" title="{lang code='option_enable_comments_channel'}">{lang code='option_enable_comments_channel'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="display_collection_comments" id="display_collection_comments" {if $row.display_collection_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<input value="yes" name="enable_comments_channel" id="enable_comments_channel" {if $row.enable_comments_channel=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
+							<hr/>
+
 						</div>
 						<div class="col-md-4">
 							<div class="row">

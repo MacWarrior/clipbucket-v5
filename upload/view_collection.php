@@ -18,8 +18,7 @@ $order = 'collection_items.ci_id DESC';
 if ($cbcollection->is_viewable($c)) {
     $params = [];
     $params['collection_id'] = $c;
-    $params['first_only'] = true;
-    $cdetails = Collection::getInstance()->getAll($params);
+    $cdetails = Collection::getInstance()->getOne($params);
 
     if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !has_access('admin_access', true)) ){
         $Cbucket->show_page = false;

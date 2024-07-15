@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"59",
+  "revision":"60",
   "status":"dev",
   "detail":[
     {
@@ -14,6 +14,7 @@
         ,"Implement user profile censor"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
+        ,"Refactor comments options"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -36,6 +37,7 @@
         ,"Fix Only keep max resolution option saving"
         ,"Fix possible XSS injection"
         ,"Fix user search by category"
+        ,"Fix collection's tags saving"
       ]
     },
     {
@@ -64,6 +66,8 @@
         ,"Fix page access rights"
         ,"Fix user's avatar display <i>(#382)</i>"
         ,"Fix channel's video load more <i>(#382)</i>"
+        ,"Fix collection edition"
+        ,"Fix collection total objects count"
       ]
     },
     {

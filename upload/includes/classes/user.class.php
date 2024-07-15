@@ -218,7 +218,7 @@ class User
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
@@ -2407,7 +2407,7 @@ class userquery extends CBCategory
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $group = $select;
-            $select[] = 'GROUP_CONCAT(T.name SEPARATOR \',\') as profile_tags';
+            $select[] = 'GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
                     LEFT JOIN ' . tbl('tags') . ' T ON T.id_tag = UT.id_tag';
         }
@@ -4635,7 +4635,7 @@ class userquery extends CBCategory
             'sep'      => '&nbsp;'
         ];
 
-        if( config('display_channel_comments') == 'yes' ){
+        if( config('enable_comments_channel') == 'yes' ){
             $return['allow_comments'] = [
                 'title'    => lang('vdo_allow_comm'),
                 'type'     => 'radiobutton',

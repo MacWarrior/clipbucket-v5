@@ -258,7 +258,7 @@
 				</div>
 			</section>
 
-			{if config('display_video_comments') == 'yes'}
+			{if config('enable_comments_video') == 'yes'}
 				<div class="clearfix comments-block">
 					{if $myquery->is_commentable($vdo,'v')}
 					<div class="collectionComments addComment">

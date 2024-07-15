@@ -387,7 +387,6 @@
 
             </div>
 
-
             <div class="col-md-4">
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="myTab">
@@ -397,7 +396,7 @@
                         <li>
                             <a data-toggle="tab" href="#recent">Recent Activity Log</a>
                         </li>
-                        {if config('display_channel_comments') == 'yes'}
+                        {if config('enable_comments_channel') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#comments">{lang code='comments'}</a>
                         </li>
@@ -508,7 +507,7 @@
                                 </table>
                             </div>
                         </div>
-                        {if config('display_channel_comments') == 'yes'}
+                        {if config('enable_comments_channel') == 'yes'}
                         <div id="comments" class="tab-pane">
                             {assign var=id value=$u.userid}{include file="$style_dir/blocks/comments.html" type=u id=$u.userid link="user=$id"}
                         </div>

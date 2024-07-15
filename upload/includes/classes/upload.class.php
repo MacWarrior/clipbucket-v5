@@ -214,7 +214,7 @@ class Upload
             $db->insert(tbl('video'),$query_field, $query_val);
             $insert_id = $db->insert_id();
 
-            \Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
+            Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
             $version = Update::getInstance()->getDBVersion();
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
@@ -640,7 +640,7 @@ class Upload
             'use_func_val'      => true
         ];
 
-        if( config('display_video_comments') == 'yes' ){
+        if( config('enable_comments_video') == 'yes' ){
             $fields['comments'] = [
                 'type'              => 'checkboxv2',
                 'name'              => 'allow_comments',

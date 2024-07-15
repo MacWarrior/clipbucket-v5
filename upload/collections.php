@@ -20,6 +20,13 @@ $params['limit'] = $get_limit;
 $collections = Collection::getInstance()->getAll($params);
 assign('collections', $collections);
 
+$params = [
+    'limit'   => config('collection_home_top_collections')
+    , 'order' => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
+];
+
+assign('top_collections', Collection::getInstance()->getAll($params));
+
 if( empty($collections) ){
     $count = 0;
 } else if( count($collections) < config('collection_per_page') && $page == 1 ){

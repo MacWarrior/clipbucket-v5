@@ -84,11 +84,6 @@ if (isset($_POST['update'])) {
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
         , 'hide_empty_collection'
-        , 'display_video_comments'
-        , 'display_photo_comments'
-        , 'display_channel_comments'
-        , 'enable_collection_comments'
-        , 'display_collection_comments'
         , 'enable_sitemap'
         , 'enable_tmdb'
         , 'tmdb_get_genre'
@@ -122,6 +117,10 @@ if (isset($_POST['update'])) {
         , 'enable_chunk_upload'
         , 'enable_edit_photo_button'
         , 'enable_user_profil_censor'
+        , 'enable_comments_video'
+        , 'enable_comments_photo'
+        , 'enable_comments_collection'
+        , 'enable_comments_channel'
     ];
 
     $config_booleans_to_refactor = [
@@ -141,8 +140,6 @@ if (isset($_POST['update'])) {
         , 'video_embed'
         , 'video_download'
         , 'bits_color_warning'
-        , 'video_comments'
-        , 'photo_comments'
         , 'video_rating'
         , 'own_video_rating'
         , 'photo_rating'
@@ -253,6 +250,10 @@ if (isset($_POST['update'])) {
         'enable_video_description_link',
         'censored_words',
         'enable_user_profil_censor',
+        'enable_comments_video',
+        'enable_comments_photo',
+        'enable_comments_collection',
+        'enable_comments_channel',
 
         'num_thumbs',
 
@@ -324,8 +325,6 @@ if (isset($_POST['update'])) {
         'enable_user_dob_edition',
         'enable_blur_restricted_content',
         'enable_global_age_restriction',
-        'enable_collection_comments',
-        'display_collection_comments',
         'enable_sitemap',
         'enable_chunk_upload',
         'chunk_upload_size',
@@ -354,8 +353,6 @@ if (isset($_POST['update'])) {
         'video_download',
         'bits_color_warning',
         'video_embed',
-        'video_comments',
-        'photo_comments',
         'video_rating',
         'photo_rating',
         'video_categories',
@@ -427,9 +424,6 @@ if (isset($_POST['update'])) {
         'tmdb_enable_on_front_end',
 
         'hide_empty_collection',
-        'display_video_comments',
-        'display_photo_comments',
-        'display_channel_comments',
         'only_keep_max_resolution',
         'playlistsSection'
     ];
@@ -493,15 +487,6 @@ if (isset($_POST['update'])) {
         'cloudflare_upload_limit'
     ];
 
-    if (empty($_POST['display_video_comments']) || $_POST['display_video_comments'] == 'no') {
-        $_POST['video_comments'] = '0';
-    }
-    if (empty($_POST['display_photo_comments']) || $_POST['display_photo_comments'] == 'no') {
-        $_POST['photo_comments'] = '0';
-    }
-    if (empty($_POST['display_collection_comments']) || $_POST['display_collection_comments'] == 'no') {
-        $_POST['collection_comments'] = '0';
-    }
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {

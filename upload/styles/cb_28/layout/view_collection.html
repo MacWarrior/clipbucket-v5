@@ -89,9 +89,9 @@
 					</li>
 				</ul>
 			</div>
-			{if config('display_collection_comments') == 'yes'}
+			{if config('enable_comments_collection') == 'yes'}
 				<div class="clearfix comments-block">
-					{if $myquery->is_commentable($c,'collection') && config('enable_collection_comments') == 'yes'}
+					{if $myquery->is_commentable($c,'collection')}
 
 					<div class="collectionComments addComment">
 						<h2>

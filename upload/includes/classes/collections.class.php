@@ -179,11 +179,11 @@ class Collection
 
         $conditions = [];
         if( $param_collection_id ){
-            $conditions[] = $this->getTableName() . '.collection_id = \''.mysql_clean($param_collection_id).'\'';
+            $conditions[] = $this->getTableName() . '.collection_id = '.(int)$param_collection_id;
         }
 
         if( $param_userid ){
-            $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = $this->getTableName() . '.userid = '.(int)$param_userid;
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -194,7 +194,7 @@ class Collection
 
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
             if( $param_collection_id_parent ){
-                $conditions[] = $this->getTableName() . '.collection_id_parent = \''.mysql_clean($param_collection_id_parent).'\'';
+                $conditions[] = $this->getTableName() . '.collection_id_parent = '.(int)$param_collection_id_parent;
             }
             if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id){
                 $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
@@ -224,14 +224,14 @@ class Collection
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username';
-            $select[] = 'COUNT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) AS total_objects';
+            $select[] = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) AS total_objects';
         }
 
         $join = [];
         $group = [$this->getTableName() . '.collection_id'];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('collection_tags') . ' ON ' . $this->getTableName() . '.collection_id = collection_tags.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
@@ -338,6 +338,15 @@ class Collection
     /**
      * @throws Exception
      */
+    public function getOne(array $params = [])
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
+    }
+
+    /**
+     * @throws Exception
+     */
     public function getItems(array $params = [])
     {
         if( empty($params['collection_id']) ){
@@ -345,8 +354,7 @@ class Collection
             return false;
         }
         $params['with_items'] = true;
-        $params['first_only'] = true;
-        return $this->getAll($params)['items'];
+        return $this->getOne($params)['items'];
     }
 
     /**
@@ -629,7 +637,7 @@ class Collections extends CBCategory
         $select_tag = '';
         $join_tag = '';
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS collection_tags';
+            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS collection_tags';
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' CT ON collections.collection_id = CT.id_collection  
                     LEFT JOIN ' . tbl('tags') . ' T ON CT.id_tag = T.id_tag';
         }
@@ -916,7 +924,7 @@ class Collections extends CBCategory
         $select_tag = '';
         $join_tag = '';
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') AS collection_tags';
+            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS collection_tags';
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON collections.collection_id = CT.id_collection 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
         }
@@ -1828,7 +1836,7 @@ class Collections extends CBCategory
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
 
                 Category::getInstance()->saveLinks('collection', $cid, $array['category']);
-                Tags::saveTags($array['tags'], 'collection', $cid);
+                Tags::saveTags($array['collection_tags'], 'collection', $cid);
 
                 e(lang('collection_updated'), 'm');
 

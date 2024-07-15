@@ -231,26 +231,7 @@ define('MAINPLIST', $row['photo_main_list']);
 define('COLLPP', $row['collection_per_page']);
 define('COLLIP', $row['collection_items_page']);
 
-# Video Options
-define('VIDEO_COMMENT', $row['video_comments']);
-define('VIDEO_RATING', $row['video_rating']);
-define('COMMENT_RATING', $row['comment_rating']);
-define('VIDEO_DOWNLOAD', $row['video_download']);
-define('VIDEO_EMBED', $row['video_embed']);
-
-# Required Settings For Video Conversion
-define('VBRATE', $row['vbrate']);
-define('SRATE', $row['srate']);
-define('SBRATE', $row['sbrate']);
-define('R_HEIGHT', $row['r_height']);
-define('R_WIDTH', $row['r_width']);
-define('RESIZE', $row['resize']);
-define('MAX_UPLOAD_SIZE', $row['max_upload_size']);
-define('THUMB_HEIGHT', $row['thumb_height']);
-define('THUMB_WIDTH', $row['thumb_width']);
-
 define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
-define('USER_COMMENT_OWN', $Cbucket->configs['user_comment_own']);
 
 # SETTING PHOTO SETTING
 $cbphoto->thumb_width = $row['photo_thumb_width'];
@@ -293,15 +274,15 @@ ClipBucket::getInstance()->upload_opt_list = [];
 
 if (config('enable_video_file_upload') == 'yes') {
     ClipBucket::getInstance()->upload_opt_list['file_upload_div'] = [
-        'title'      => lang('upload_file'),
-        'function'  => 'enable_video_file_upload'
+        'title'    => lang('upload_file'),
+        'function' => 'enable_video_file_upload'
     ];
 }
 
 if (config('enable_video_remote_upload') == 'yes') {
     ClipBucket::getInstance()->upload_opt_list['remote_upload_div'] = [
-        'title'      => lang('remote_upload'),
-        'function'  => 'enable_video_remote_upload'
+        'title'    => lang('remote_upload'),
+        'function' => 'enable_video_remote_upload'
     ];
 }
 
@@ -404,5 +385,3 @@ cb_register_function('plupload_photo_uploader', 'uploaderDetails');
 cb_register_action('increment_playlist_played', 'view_playlist');
 
 include('admin.functions.php');
-# Other settings
-define('SEND_COMMENT_NOTIFICATION', config('send_comment_notification'));

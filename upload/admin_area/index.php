@@ -121,7 +121,7 @@ switch ($mode) {
 $params = [];
 $params['limit'] = 10;
 $params['order'] = 'date_added DESC';
-if (config('display_video_comments') != 'yes' && config('display_photo_comments') != 'yes' && config('display_channel_comments') != 'yes' && config('display_collection_comments') != 'yes') {
+if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') != 'yes' && config('enable_comments_channel') != 'yes' && config('enable_comments_collection') != 'yes') {
     $comments = false;
 } else {
     $comments = Comments::getAll($params);

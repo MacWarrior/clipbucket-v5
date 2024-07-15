@@ -144,7 +144,7 @@ class Playlist
         $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('playlist_tags') . ' ON playlists.playlist_id = playlist_tags.id_playlist';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON playlist_tags.id_tag = tags.id_tag';
@@ -155,7 +155,7 @@ class Playlist
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON playlists_categories.id_category = categories.category_id';
 
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
             }
 
             if( $param_category ){

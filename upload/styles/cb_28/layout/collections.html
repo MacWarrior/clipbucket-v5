@@ -86,12 +86,11 @@
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 			{if config('collectionsSection') == 'yes'}
-                {$collections = $cbcollection->get_collections(['limit'=>config('collection_collection_top_collections'), 'active'=>'yes', 'parents_only'=>true, 'has_items'=>true])}
-                {if $collections}
+                {if $top_collections}
 			<h2>{lang code="top_collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
-				{foreach from=$collections item=collection}
+				{foreach from=$top_collections item=collection}
 					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
 						{include file="$style_dir/blocks/collection-item.html"}
 					</div>

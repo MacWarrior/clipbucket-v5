@@ -217,7 +217,7 @@ class Photo
         $version = Update::getInstance()->getDBVersion();
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(tags.name SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'photos.photo_id';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
@@ -229,7 +229,7 @@ class Photo
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
 
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT(categories.category_id SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
                 $group[] = 'photos.photo_id';
             }
         }
@@ -761,7 +761,7 @@ class CBPhotos
         $join_tag = '';
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as photo_tags';
             $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
         }
@@ -931,7 +931,7 @@ class CBPhotos
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             $match_tag = 'T.name';
-            $select_complement = ', GROUP_CONCAT(T.name SEPARATOR \',\') as photo_tags';
+            $select_complement = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
             $group_tag = ' GROUP BY photos.photo_id';
@@ -1853,13 +1853,13 @@ class CBPhotos
             $array = $_POST;
         }
 
-        $comments = config('photo_comments') ? $array['allow_comments'] : 'no';
+        $comments = config('enable_comments_photo') == 'yes' ? $array['allow_comments'] : 'no';
         $embedding = $array['allow_embedding'];
         $rating = $array['allow_rating'];
 
         $return = [];
 
-        if( config('display_photo_comments') == 'yes' ){
+        if( config('enable_comments_photo') == 'yes' ){
             $return['comments'] = [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
@@ -1871,7 +1871,7 @@ class CBPhotos
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'yes',
-                'extra_tags'        => config('photo_comments') ? '' : 'disabled="disabled" ',
+                'extra_tags'        => config('enable_comments_photo') == 'yes' ? '' : 'disabled="disabled" ',
             ];
         }
 
