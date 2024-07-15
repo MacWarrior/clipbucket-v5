@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"58",
+  "revision":"59",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,7 @@
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
         ,"Update server configurations check"
+        ,"Update user levels edition breadcrumb"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Fix TMDB import error display"
@@ -34,6 +35,7 @@
         ,"Fix timeout errors on non-PHP-FPM"
         ,"Fix Only keep max resolution option saving"
         ,"Fix possible XSS injection"
+        ,"Fix user search by category"
       ]
     },
     {
@@ -77,6 +79,7 @@
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Fix video files detection"
+        ,"Fix PHP8.X compatibility"
       ]
     },
     {

@@ -75,10 +75,7 @@
         <div class="col-md-3">
             <div class="form-group">
                 <label>Category</label>
-                {$cat_array.type = 'dropdown'}
-                {$cat_array.category_type = 'user'}
-                {$cat_array.class = "form-control"}
-                {$formObj->createField($cat_array)}
+                {cbCategories output="dropdown" class='form-control' selected=$smarty.get.category name="category" blank_option=TRUE type='user' echo=TRUE}
             </div>
         </div>
     </div>

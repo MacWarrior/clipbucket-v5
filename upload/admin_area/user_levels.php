@@ -48,6 +48,8 @@ switch ($mode) {
         $plugin_perms = $level_perms['plugins_perms'];
         $plugin_perms = json_decode($plugin_perms, true);
 
+        $breadcrumb[] = ['title' => 'Editing : ' . display_clean(display_clean($levelDetails['user_level_name'])), 'url' => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($lid)];
+
         assign('plugin_perms', $plugin_perms);
         Assign('level_perms', $level_perms);
         Assign('view', 'edit');
