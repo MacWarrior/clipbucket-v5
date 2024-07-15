@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"57",
+  "revision":"58",
   "status":"dev",
   "detail":[
     {
@@ -60,6 +60,8 @@
         ,"Fix video uploader's username display <i>(#382)</i>"
         ,"Fix user profile info saving"
         ,"Fix page access rights"
+        ,"Fix user's avatar display <i>(#382)</i>"
+        ,"Fix channel's video load more <i>(#382)</i>"
       ]
     },
     {

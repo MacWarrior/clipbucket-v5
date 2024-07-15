@@ -452,7 +452,6 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `featured_video` mediumtext NOT NULL,
   `first_name` varchar(100) NOT NULL DEFAULT '',
   `last_name` varchar(100) NOT NULL DEFAULT '',
-  `avatar` varchar(225) NOT NULL DEFAULT 'no_avatar.png',
   `show_dob` enum('no','yes') DEFAULT 'no',
   `postal_code` varchar(20) NOT NULL DEFAULT '',
   `time_zone` tinyint(4) NOT NULL DEFAULT 0,
