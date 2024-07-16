@@ -325,40 +325,48 @@ class ClipBucket
             $menu_general = [
                 'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
-                , 'sub'   => [
-                    [
-                        'title' => 'Reports &amp; Stats'
-                        , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
-                    ]
-                    , [
-                        'title' => 'Website Configurations'
-                        , 'url' => DirPath::getUrl('admin_area') . 'main.php'
-                    ]
-                    , [
-                        'title' => 'Email Templates'
-                        , 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'
-                    ]
-                    , [
-                        'title' => 'Language Settings'
-                        , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
-                    ]
-                    , [
-                        'title' => 'Manage Pages'
-                        , 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'
-                    ]
-                    , [
-                        'title' => 'Manage Comments'
-                        , 'url' => DirPath::getUrl('admin_area') . 'comments.php'
-                    ]
-                    , [
-                        'title' => 'Update Logos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'
-                    ]
-                    , [
-                        'title' => lang('manage_tags')
-                        , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
-                    ]
-                ]
+                , 'sub'   => []
+            ];
+
+            $menu_general['sub'][] = [
+                'title' => 'Reports &amp; Stats'
+                , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
+            ];
+            $menu_general['sub'][] = [
+                'title' => 'Website Configurations'
+                , 'url' => DirPath::getUrl('admin_area') . 'main.php'
+            ];
+
+            if( config('disable_email') != 'yes' ){
+                $menu_general['sub'][] = [
+                    'title' => 'Email Templates'
+                    , 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'
+                ];
+            }
+
+            $menu_general['sub'][] = [
+                'title' => 'Language Settings'
+                , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
+            ];
+            $menu_general['sub'][] = [
+                'title' => 'Manage Pages'
+                , 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'
+            ];
+
+            if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' || config('enable_comments_collection') == 'yes') {
+                $menu_general['sub'][] = [
+                    'title' => 'Manage Comments'
+                    , 'url' => DirPath::getUrl('admin_area') . 'comments.php'
+                ];
+            }
+
+            $menu_general['sub'][] = [
+                'title' => 'Update Logos'
+                , 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'
+            ];
+            $menu_general['sub'][] = [
+                'title' => lang('manage_tags')
+                , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
             $this->addMenuAdmin($menu_general, 10);

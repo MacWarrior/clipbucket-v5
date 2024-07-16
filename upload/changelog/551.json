@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"61",
+  "revision":"62",
   "status":"dev",
   "detail":[
     {
@@ -22,6 +22,7 @@
         ,"Add option to enable playlists"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
+        ,"Update menu"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Fix TMDB import error display"
