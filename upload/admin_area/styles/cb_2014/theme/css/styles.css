@@ -383,8 +383,6 @@ ul.mainTabs{
     text-align: right;
 }
 
-
-
 .oneNote{
     background-color: #FBF4AC;
     border-radius: 2px;
@@ -407,6 +405,15 @@ ul.mainTabs{
 .addTodoButton{
     position: relative;
     right: 20px;
+}
+
+.notesList li{
+    list-style-type: none;
+    margin-bottom: 5px;
+}
+
+.todosList li{
+    list-style-type: none;
 }
 
 

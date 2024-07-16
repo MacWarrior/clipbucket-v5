@@ -125,7 +125,7 @@ if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') 
     $comments = false;
 } else {
     $comments = Comments::getAll($params);
-    if ($comments === false) {
+    if( empty($comments) ){
         $comments = [];
     }
 }

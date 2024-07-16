@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"60",
+  "revision":"61",
   "status":"dev",
   "detail":[
     {
@@ -38,6 +38,7 @@
         ,"Fix possible XSS injection"
         ,"Fix user search by category"
         ,"Fix collection's tags saving"
+        ,"Fix dashboard display"
       ]
     },
     {
@@ -73,9 +74,7 @@
     {
       "title": "Miscellaneous",
       "description": [
-        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
-        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
-        ,"Update Readme"
+        "Update Readme"
         ,"Cleanup code"
         ,"Remove unused functions"
         ,"Remove unused files"
@@ -118,7 +117,9 @@
     {
       "title": "Translations",
       "description": [
-        "Fix missing translation"
+        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        ,"Fix missing translation"
       ]
     },
     {

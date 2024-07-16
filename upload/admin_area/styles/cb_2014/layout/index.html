@@ -4,14 +4,14 @@
 {$active = 'class="active"'}
 <div class="row display-flex">
 	<div class="col-md-6">
-		<ul class="nav nav-tabs" style="height: 53px;">
+		<ul class="nav nav-tabs">
 			{if $comments !== false}
 				<li {$active}>
 					<a data-toggle="tab" href="#rcomments">
 						<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
 					</a>
 				</li>
-			{$active = ''}
+				{$active = ''}
 			{/if}
 			<li {$active}>
 				<a data-toggle="tab" href="#todolist">
@@ -24,85 +24,80 @@
 				</a>
 			</li>
 		</ul>
-		<div class="tab-content" style="height: calc(100% - 72px);">
-			{if $comments}
-				<div id="rcomments" class="tab-pane active" style="height: 100%; ">
-					<div class="widgetBox" style="height: 100%; min-height: 200px;">
-						{foreach from=$comments item=comment}
-						{$userdetails = $userquery->get_user_details($comment.userid)}
-						<div class="itemdiv dialogdiv">
-							<div class="user">
-								<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+
+		{$active = 'active'}
+		<div class="tab-content" style="height:259px;overflow-y:scroll;">
+			{if $comments !== false}
+				<div id="rcomments" class="tab-pane {$active}">
+					{foreach from=$comments item=comment}
+					{$userdetails = $userquery->get_user_details($comment.userid)}
+					<div class="itemdiv dialogdiv">
+						<div class="user">
+							<img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+						</div>
+						<div class="body">
+							<div class="time">
+								<i class="icon-time"></i>
+								<span class="green">{$comment.date_added|date_format}</span>
 							</div>
-							<div class="body">
-								<div class="time">
-									<i class="icon-time"></i>
-									<span class="green">{$comment.date_added|date_format}</span>
-								</div>
-								<div class="name">
-									<a href="#">{display_clean($comment.anonym_name)}</a>
-								</div>
-								<div class="text">{Comments::getClean($comment.comment)}</div>
-								<div class="tools">
-									<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
-										<i class="icon-only icon-share-alt"></i>
-									</a>
-								</div>
+							<div class="name">
+								<a href="#">{display_clean($comment.anonym_name)}</a>
+							</div>
+							<div class="text">{Comments::getClean($comment.comment)}</div>
+							<div class="tools">
+								<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
+									<i class="icon-only icon-share-alt"></i>
+								</a>
 							</div>
 						</div>
-						{/foreach}
 					</div>
+					{/foreach}
 				</div>
+				{$active = ''}
 			{/if}
-			<div id="todolist" class="tab-pane"  style="height: 100%; ">
-				<div class="widgetBox" style="height: 100%;min-height: 200px;">
-					<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
-						<div class="row">
-							<div class="from-group relative">
-								<div class="from-group">
-									<input type="text" name="addTodo" class="form-control addTodoText"/>
-									<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
-								</div>
+			<div id="todolist" class="tab-pane {$active}">
+				<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
+					<div class="row">
+						<div class="from-group relative">
+							<div class="from-group">
+								<input type="text" name="addTodo" class="form-control addTodoText"/>
+								<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
 							</div>
 						</div>
 					</div>
-					{assign var=todos value=$myquery->get_todos()}
-					<ul class="row todosList" id="note-{$the_note.note_id}">
-						{foreach from=$todos item=note}
-						<li class="col-md-12">
-							<div class="col-md-12">
-								<p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
-									{display_clean($note.todo)}
-								</p>
-								<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
-							</div>
-						</li>
-						{/foreach}
-					</ul>
 				</div>
+				{assign var=todos value=$myquery->get_todos()}
+				<ul class="row todosList">
+					{foreach from=$todos item=note}
+					<li class="col-md-12 oneTodo">
+						<span class="paddingLeftSmall col-md-10" id="{$note.todo_id}">
+							{display_clean($note.todo)}
+						</span>
+						<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
+					</li>
+					{/foreach}
+				</ul>
 			</div>
-			<div id="pnotes" class="tab-pane"  style="height: 100%; ">
-				<div class="widgetBox" style="height: 100%; min-height: 200px;">
-					<div class="addNote form-group paddingRightSmall">
-						<textarea class="form-control" name="note"></textarea>
-						<div class="alignRight marginTopSmall">
-							<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
-						</div>
+			<div id="pnotes" class="tab-pane">
+				<div class="addNote form-group paddingRightSmall">
+					<textarea class="form-control" name="note"></textarea>
+					<div class="alignRight marginTopSmall">
+						<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
 					</div>
-					{assign var=notes value=$myquery->get_notes()}
-					<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}">
-						{foreach from=$notes item=note}
-						<li class="col-md-4">
-							<div>
-								<p class="oneNote" id="{$note.note_id}">
-									{display_clean($note.note)}
-									<a href="#" class="delete">×</a>
-								</p>
-							</div>
-						</li>
-						{/foreach}
-					</ul>
 				</div>
+				{assign var=notes value=$myquery->get_notes()}
+				<ul class="notesList row paddingRightSmall">
+					{foreach from=$notes item=note}
+					<li class="col-md-4">
+						<div>
+							<p class="oneNote" id="{$note.note_id}">
+								{display_clean($note.note)}
+								<a href="#" class="delete">×</a>
+							</p>
+						</div>
+					</li>
+					{/foreach}
+				</ul>
 			</div>
 		</div>
 	</div>
