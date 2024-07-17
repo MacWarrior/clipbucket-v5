@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"64",
+  "revision":"65",
   "status":"dev",
   "detail":[
     {
@@ -75,6 +75,7 @@
         ,"Fix collection & channel most commented sort"
         ,"Fix profile tags"
         ,"Fix myaccount page display"
+        ,"Fix large file chunked upload"
       ]
     },
     {
@@ -84,6 +85,7 @@
         ,"Cleanup code"
         ,"Remove unused functions"
         ,"Remove unused files"
+        ,"Remove temp files on failed upload"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"

@@ -274,7 +274,7 @@
 	var loadMoreLang = "{$loadMoreLang}";
 	var libelle_type_channel = "{Comments::$libelle_type_channel}";
 	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb";
-	var max_file_size ="{config('max_bg_size')}kb";
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+	var max_file_size ="{config('max_upload_size')}Mb";
 	var photo_extensions = "{config('allowed_photo_types')}";
 </script>
