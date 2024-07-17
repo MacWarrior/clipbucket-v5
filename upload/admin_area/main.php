@@ -121,6 +121,7 @@ if (isset($_POST['update'])) {
         , 'enable_comments_photo'
         , 'enable_comments_collection'
         , 'enable_comments_channel'
+        , 'enable_visual_editor_comments'
     ];
 
     $config_booleans_to_refactor = [
@@ -254,6 +255,7 @@ if (isset($_POST['update'])) {
         'enable_comments_photo',
         'enable_comments_collection',
         'enable_comments_channel',
+        'enable_visual_editor_comments',
 
         'num_thumbs',
 
@@ -564,11 +566,7 @@ if( !empty($_POST['discord_error_log']) ){
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
 ClipBucket::getInstance()->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
 template_files('main.html');

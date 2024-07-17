@@ -467,6 +467,7 @@ function delete_comment(cid)
                     $('#comment_count').html((count- data.nb).toString());
                     setTimeout(function(){
                         $('#comment_msg_output').fadeOut();
+                        $("#comment_"+cid).remove();
                     }, 3000);
                 }
                 if(data.err){
@@ -940,6 +941,17 @@ function getAllComments(type,type_id,last_update,pageNum,total,object_type,admin
         },
         success: function(comments){
             $("#userCommentsList").html(comments);
+            if( visual_editor_comments_enabled ){
+                Array.from(document.querySelectorAll('#userCommentsList .commented-txt p')).forEach((comment,index) =>
+                {
+                    new toastui.Editor.factory({
+                        el: comment,
+                        viewer: true,
+                        usageStatistics: false,
+                        initialValue: comment.innerHTML
+                    });
+                });
+            }
         },
         dataType: 'text'
     });
@@ -995,173 +1007,6 @@ function callURLParser()
             window.location.href = lastVisited.replace("#!",'');
         }
     }
-}
-
-var ua = navigator.userAgent.toLowerCase();
-if (ua.indexOf(' chrome/') >= 0 || ua.indexOf(' firefox/') >= 0 || ua.indexOf(' gecko/') >= 0) {
-    var StringMaker = function () {
-        this.str = '';
-        this.length = 0;
-        this.append = function (s) {
-            this.str += s;
-            this.length += s.length;
-        }
-        this.prepend = function (s) {
-            this.str = s + this.str;
-            this.length += s.length;
-        }
-        this.toString = function () {
-            return this.str;
-        }
-    }
-} else {
-    var StringMaker = function () {
-        this.parts = [];
-        this.length = 0;
-        this.append = function (s) {
-            this.parts.push(s);
-            this.length += s.length;
-        }
-        this.prepend = function (s) {
-            this.parts.unshift(s);
-            this.length += s.length;
-        }
-        this.toString = function () {
-            return this.parts.join('');
-        }
-    }
-}
-
-var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
-
-function encode64(input) {
-    var output = new StringMaker();
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
-
-    while (i < input.length) {
-        chr1 = input.charCodeAt(i++);
-        chr2 = input.charCodeAt(i++);
-        chr3 = input.charCodeAt(i++);
-
-        enc1 = chr1 >> 2;
-        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
-        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
-        enc4 = chr3 & 63;
-
-        if (isNaN(chr2)) {
-            enc3 = enc4 = 64;
-        } else if (isNaN(chr3)) {
-            enc4 = 64;
-        }
-
-        output.append(keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4));
-    }
-
-    return output.toString();
-}
-
-function decode64(input) {
-    var output = new StringMaker();
-    var chr1, chr2, chr3;
-    var enc1, enc2, enc3, enc4;
-    var i = 0;
-
-    // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
-    input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
-
-    while (i < input.length) {
-        enc1 = keyStr.indexOf(input.charAt(i++));
-        enc2 = keyStr.indexOf(input.charAt(i++));
-        enc3 = keyStr.indexOf(input.charAt(i++));
-        enc4 = keyStr.indexOf(input.charAt(i++));
-
-        chr1 = (enc1 << 2) | (enc2 >> 4);
-        chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-        chr3 = ((enc3 & 3) << 6) | enc4;
-
-        output.append(String.fromCharCode(chr1));
-
-        if (enc3 != 64) {
-            output.append(String.fromCharCode(chr2));
-        }
-        if (enc4 != 64) {
-            output.append(String.fromCharCode(chr3));
-        }
-    }
-
-    return output.toString();
-}
-
-function add_comment_js(form_id)
-{
-    $('#add_comment_result').css('display','block');
-    $('#add_comment_button').val(lang_loading);
-    $('#add_comment_button').attr('disabled',true);
-    $(".add-reply").attr('disabled',true);
-
-    //First we will get all values of form_id and then serialize them
-    //so we can forward details to ajax.php
-    var formObjectData = $('#' + form_id).serialize() + '&mode=add_comment';
-    $.post(page,formObjectData,
-        function(data) {
-            if(!data){
-                alert('No data');
-            } else {
-                $('#add_comment_result').css('display','block');
-                if(data.err != '' && data.err != null) {
-                    $('#comment_err_output').fadeIn();
-                    $('#comment_err_output').html(data.err);
-                    setTimeout(function(){
-                        $('#comment_err_output').fadeOut();
-                    }, 10000);
-
-                    var str = data.err;
-                    var string_finder = str.substring(0, 12);
-                    if (string_finder != 'Mailer Error'){
-
-                        clear_comment_form();
-                    }
-                }
-                if(data.msg!='') {
-                    $('#comment_box').val('');
-                }
-                if(data.cid) {
-                    $('.no-comments').remove();
-                    get_the_comment(data.cid,data.type_id,'#comments-ul');
-                    var count = parseInt($('#comment_count').html());
-                    $('#comment_count').html((count+1).toString());
-                }
-
-            }
-        },'json');
-}
-
-function get_the_comment(id,type_id,div)
-{
-    $.post(page, {
-        mode : 'get_comment',
-        cid : id,
-        type_id : type_id
-    },
-    function(data) {
-        if(!data){
-            alert("No data");
-        } else {
-            if (data.parent_id) {
-                $('.reply-box-' + data.parent_id).hide();
-                $('.comments-reply-' + data.parent_id).append(data.li_data).slideDown();
-                $('html, body').animate({
-                    scrollTop: $('#reply-' + id).offset().top
-                }, 1000);
-                comment_transition('.reply-',id);
-            } else {
-                $(data.li_data).hide().prependTo('#comments-ul').slideDown("slow");
-            }
-        }
-        clear_comment_form();
-    },'json');
 }
 
 function reply_box(cid,type,type_id)

@@ -73,15 +73,24 @@ assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);
 $min_suffixe = in_dev() ? '' : '.min';
 
 ClipBucket::getInstance()->addJS([
-    'tag-it' . $min_suffixe . '.js'                              => 'admin',
-    'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin',
-    'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
+    'tag-it' . $min_suffixe . '.js'                               => 'admin'
+    ,'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin'
+    ,'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
-    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
-    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',
-    'readonly_tag' . $min_suffixe . '.css'     => 'admin'
+    'jquery.tagit' . $min_suffixe . '.css'      => 'admin'
+    ,'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+    ,'readonly_tag' . $min_suffixe . '.css'     => 'admin'
 ]);
+
+if( config('enable_comments_video') == 'yes' ){
+    ClipBucket::getInstance()->addJS(['pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin']);
+
+    if( config('enable_visual_editor_comments') == 'yes' ){
+        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'admin']);
+        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'admin']);
+    }
+}
 
 template_files('watch_video.html');
 display_it();

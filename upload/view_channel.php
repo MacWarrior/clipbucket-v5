@@ -117,14 +117,17 @@ if (ClipBucket::getInstance()->show_page || $udetails) {
 
     template_files('view_channel.html');
 
-    if(in_dev()){
-        $min_suffixe = '';
-    } else {
-        $min_suffixe = '.min';
-    }
+    $min_suffixe = in_dev() ? '' : '.min';
+    ClipBucket::getInstance()->addJS([
+        'pages/view_channel/view_channel'.$min_suffixe.'.js' => 'admin'
+        ,'/plupload/js/plupload.full.min.js' => 'admin'
+    ]);
 
-    ClipBucket::getInstance()->addJS(['pages/view_channel/view_channel'.$min_suffixe.'.js' => 'admin']);
-    ClipBucket::getInstance()->addJS(['/plupload/js/plupload.full.min.js' => 'admin']);
+    if( config('enable_comments_channel') == 'yes' ){
+        ClipBucket::getInstance()->addJS([
+            'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
+        ]);
+    }
 }
 
 $params = [
