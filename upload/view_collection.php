@@ -86,18 +86,18 @@ if ($cbcollection->is_viewable($c)) {
     $Cbucket->show_page = false;
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addJS([
+    'tag-it'.$min_suffixe.'.js'                                 => 'admin'
+    ,'pages/view_collection/view_collection'.$min_suffixe.'.js' => 'admin'
+    ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
+]);
 
-ClipBucket::getInstance()->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-ClipBucket::getInstance()->addJS(['pages/view_collection/view_collection'.$min_suffixe.'.js' => 'admin']);
-ClipBucket::getInstance()->addJS(['init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin']);
-ClipBucket::getInstance()->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-ClipBucket::getInstance()->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
-ClipBucket::getInstance()->addCSS(['readonly_tag'.$min_suffixe.'.css' => 'admin']);
+ClipBucket::getInstance()->addCSS([
+    'jquery.tagit'.$min_suffixe.'.css'      => 'admin'
+    ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
+    ,'readonly_tag'.$min_suffixe.'.css'     => 'admin'
+]);
 
 template_files('view_collection.html');
 display_it();

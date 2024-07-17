@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"63",
+  "revision":"64",
   "status":"dev",
   "detail":[
     {
@@ -73,6 +73,8 @@
         ,"Fix collection edition"
         ,"Fix collection total objects count"
         ,"Fix collection & channel most commented sort"
+        ,"Fix profile tags"
+        ,"Fix myaccount page display"
       ]
     },
     {
