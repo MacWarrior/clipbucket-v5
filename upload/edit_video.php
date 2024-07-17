@@ -42,11 +42,7 @@ if ($vdetails['userid'] != $userid) {
     assign('vidthumbs_custom', get_thumb($vdetails,TRUE,'168x105','custom'));
 }
 
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

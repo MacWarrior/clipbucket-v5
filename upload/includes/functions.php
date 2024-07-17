@@ -1524,12 +1524,12 @@ function get_functions($name)
 /**
  * Function used to add js in ClipBuckets JSArray
  * @param $files
+ * @throws Exception
  * @uses { class : $Cbucket } { function : addJS }
  *
  */
 function add_js($files)
 {
-    global $Cbucket;
     ClipBucket::getInstance()->addJS($files);
 }
 
@@ -3723,32 +3723,6 @@ function parent_page($name = '')
         return $page;
     }
     return false;
-}
-
-/**
- * Function used for building sort links that are used
- * on main pages such as videos.php, photos.php etc
- * @return array : { array } { $array } { an array with all possible sort sorts }
- * @throws Exception
- * @internal param $ : { none }
- */
-function sorting_links(): array
-{
-    if (!isset($_GET['sort'])) {
-        $_GET['sort'] = 'most_recent';
-    }
-    if (!isset($_GET['time'])) {
-        $_GET['time'] = 'all_time';
-    }
-
-    return [
-        'view_all'       => lang('all'),
-        'most_recent'    => lang('most_recent'),
-        'most_viewed'    => lang('mostly_viewed'),
-        'featured'       => lang('featured'),
-        'top_rated'      => lang('top_rated'),
-        'most_commented' => lang('most_comments')
-    ];
 }
 
 /**

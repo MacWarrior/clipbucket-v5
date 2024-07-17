@@ -27,6 +27,9 @@ if( $child_ids ){
 $videos = Video::getInstance()->getAll($params);
 assign('videos', $videos);
 
+assign('sort_list', Video::getInstance()->getSortList());
+assign('time_list', time_links());
+
 if( empty($videos) ){
     $count = 0;
 } else if( count($videos) < config('videos_list_per_page') && $page == 1 ){

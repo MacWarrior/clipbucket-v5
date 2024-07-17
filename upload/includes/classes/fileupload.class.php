@@ -98,7 +98,7 @@ class FileUpload
             }
 
             if( ($chunk == 0 && $content_type != $this->mimeType) || ($chunk > 0 && $content_type != 'application') ){
-                $this->error('Invalid Content');
+                $this->error('Invalid Content : ' . $content_type);
             }
         } else {
             if (!isset($_FILES[$this->fileData]['name'])) {

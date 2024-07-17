@@ -28,12 +28,7 @@ if (empty($photo)) {
     assign('p', $photo);
 }
 
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
-
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_photo/edit_photo' . $min_suffixe . '.js'       => 'admin',

@@ -33,11 +33,7 @@ sendClientResponseAndContinue(function () use ($tool){
     $admin_tool_list = AdminTool::getAllTools();
     assign('admin_tool_list', $admin_tool_list);
 
-    if (in_dev()) {
-        $min_suffixe = '';
-    } else {
-        $min_suffixe = '.min';
-    }
+    $min_suffixe = in_dev() ? '' : '.min';
     ClipBucket::getInstance()->addAdminJS(['pages/admin_tool/admin_tool' . $min_suffixe . '.js' => 'admin']);
 
     subtitle(lang('admin_tool'));

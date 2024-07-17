@@ -1152,4 +1152,5 @@ VALUES ('admin_setting'),
        ('option_enable_comments_video'),
        ('option_enable_comments_photo'),
        ('option_enable_comments_collection'),
-       ('option_enable_comments_channel');
+       ('option_enable_comments_channel'),
+       ('sort_most_items');
