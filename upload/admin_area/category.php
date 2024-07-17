@@ -103,11 +103,7 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
     ]));
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/category/category'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(lang('manage_categories') . ' - ' . ucfirst(lang($type)));

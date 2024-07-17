@@ -45,7 +45,7 @@
 						</h2>
 						<div class="views-counter">
 							<span>
-								{if $Cbucket->configs.video_round_views=='yes'}
+								{if config('video_round_views') =='yes'}
 									{prettyNum($vdo.views)}
 								{else}
 									{( $vdo.views )}
@@ -98,7 +98,7 @@
 								{/if}
 							{/if}
 
-							{if $Cbucket->configs.video_download==1 && $cbvid->downloadable($vdo)}
+							{if config('video_download') == 1 && $cbvid->downloadable($vdo)}
 							<div class="dropdown">
 								<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
 									{lang code='download'}
@@ -277,8 +277,7 @@
 							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 
 							<div class="userComments">
-								<ul id="userCommentsList" style="margin-left:-40px;">
-								</ul>
+								<ul id="userCommentsList" style="margin-left:-40px;"></ul>
 							</div>
 						</div>
 					</div>

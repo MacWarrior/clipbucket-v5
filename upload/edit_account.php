@@ -130,12 +130,7 @@ if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
-
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',

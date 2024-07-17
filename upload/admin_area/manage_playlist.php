@@ -151,16 +151,13 @@ switch ($mode) {
         }
         break;
 }
-ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
-    'tag-it' . $min_suffixe . '.js'                            => 'admin',
-    'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
-    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+    'tag-it' . $min_suffixe . '.js'                            => 'admin'
+    ,'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin'
+    ,'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+    ,'jquery-ui-1.13.2.min.js' => 'admin'
 ]);
 
 ClipBucket::getInstance()->addAdminCSS([

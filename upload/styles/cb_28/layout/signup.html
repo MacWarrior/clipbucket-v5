@@ -149,7 +149,7 @@
 	$(document).ready(function(){
 		var pageMode = "{display_clean($smarty.get.mode)}";
 		if (pageMode == 'login') {
-			document.title = 'Login - {$Cbucket->configs.site_title}';
+			document.title = 'Login - {config("site_title")}';
 		}
 		jQuery('#dob').datepicker({
 			showOtherMonths: true,

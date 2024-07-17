@@ -23,11 +23,7 @@ if ($file_details) {
     assign('conversion_log', $file_details);
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/view_conversion_log/view_conversion_log'.$min_suffixe.'.js' => 'admin']);
 
 assign('videoDetails', $data);

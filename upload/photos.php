@@ -19,6 +19,9 @@ $params['limit'] = $get_limit;
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
+assign('sort_list', Photo::getInstance()->getSortList());
+assign('time_list', time_links());
+
 if( empty($photos) ){
     $count = 0;
 } else if( count($photos) < config('photo_main_list') && $page == 1 ){

@@ -105,11 +105,7 @@ function format_number($number)
     return $number;
 }
 
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/edit_video/edit_video' . $min_suffixe . '.js'       => 'admin',

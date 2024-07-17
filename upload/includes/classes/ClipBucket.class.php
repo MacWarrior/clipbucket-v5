@@ -87,11 +87,6 @@ class ClipBucket
 
         if( !isset($_GET['sort']) ){
             $_GET['sort'] = 'most_recent';
-        } else {
-            $sort_array = sorting_links();
-            if( !isset($sort_array[$_GET['sort']]) ){
-                $_GET['sort'] = 'most_recent';
-            }
         }
 
         if( !isset($_GET['time']) ){

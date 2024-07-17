@@ -27,11 +27,8 @@ if (!isSectionEnabled('photos')) {
         $Cbucket->show_page = false;
     }
 }
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                            => 'admin',
     'pages/photo_upload/photo_upload' . $min_suffixe . '.js'   => 'admin',
@@ -39,11 +36,11 @@ ClipBucket::getInstance()->addJS([
     'plupload/js/moxie' . $min_suffixe . '.js'                 => 'admin',
     'plupload/js/plupload' . $min_suffixe . '.js'              => 'admin'
 ]);
+
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
 
 $available_tags = Tags::fill_auto_complete_tags('photo');
 assign('available_tags', $available_tags);

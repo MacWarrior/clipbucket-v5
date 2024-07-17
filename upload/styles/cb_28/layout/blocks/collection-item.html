@@ -1,4 +1,4 @@
-{if $Cbucket->configs.seo == 'no'}
+{if config('seo') != 'yes'}
 	{$main_url = "/view_collection.php?cid={$collection.collection_id}"}
 {else}
 	{$main_url = "/collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}

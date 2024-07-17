@@ -47,12 +47,7 @@ foreach ($msg as $ms) {
     e($ms, 'm');
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
-
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/upload_thumbs/upload_thumbs'.$min_suffixe.'.js' => 'admin']);
 
 subtitle('Video Thumbs Manager');

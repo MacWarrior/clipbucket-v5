@@ -1,10 +1,6 @@
 <?php
 global $Cbucket;
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminCSS([
     'bootstrap.min.css'                          => 'admin',
     'font-awesome.min.css'                       => 'admin',

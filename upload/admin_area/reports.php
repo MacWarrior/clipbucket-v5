@@ -26,11 +26,7 @@ assign('user_bg', $user_bg);
 assign('cat_thumbs', $cat_thumbs);
 assign('db_size', formatfilesize(get_db_size()));
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/reports/reports'.$min_suffixe.'.js' => 'admin']);
 template_files('reports.html');
 display_it();
