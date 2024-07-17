@@ -43,7 +43,11 @@
                                             {if $field.hint_1}
                                                 {$field.hint_1}
                                             {/if}
+
                                             {ANCHOR place=$field.anchor_before}
+                                    {if $field.id == 'profile_tags'}
+                                    <ul id="list_tags"></ul>
+                                    {/if}
                                             {$formObj->createField($field)}
                                             {ANCHOR place=$field.anchor_after}
                                             {$field.hint_2}

@@ -108,10 +108,16 @@
 												{/if}
 												{if $field.auto_view=='yes' && $field.value}
 												<li>
-													{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
+													{if !in_array($field.type, ['textarea', 'text', 'textfield', 'hidden'])}
 														<strong>{$field.title}</strong> : {input_value input=$field}
 													{else}
+														{if $field.id == 'profile_tags'}
+														<strong class="pull-left">{$field.title} : </strong>
+														<input type="hidden" id="profile_tags" value="{User::getClean($field.value)}">
+														<ul id="list_tags_profile" style="border: 0;"></ul>
+														{else}
 														<strong>{$field.title}</strong> : {User::getClean($field.value)}
+														{/if}
 													{/if}
 												</li>
 												{/if}

@@ -4418,7 +4418,7 @@ class userquery extends CBCategory
         }
 
         $return = [
-            'show_dob'        => [
+            'show_dob' => [
                 'title'       => lang('show_dob'),
                 'type'        => 'radiobutton',
                 'name'        => 'show_dob',
@@ -4430,13 +4430,15 @@ class userquery extends CBCategory
                 'auto_view'   => 'no',
                 'sep'         => '&nbsp;'
             ],
-            'profile_tags'    => [
-                'title'     => lang('profile_tags'),
-                'type'      => 'hidden',
-                'name'      => 'profile_tags',
-                'id'        => 'profile_tags',
-                'value'     => genTags($default['profile_tags']),
-                'auto_view' => 'no'
+            'profile_tags' => [
+                'title'             => lang('profile_tags'),
+                'type'              => 'hidden',
+                'name'              => 'profile_tags',
+                'id'                => 'profile_tags',
+                'value'             => genTags($default['profile_tags']),
+                'required'          => 'no',
+                'validate_function' => 'genTags',
+                'auto_view'         => 'yes'
             ]
         ];
 
@@ -4921,14 +4923,14 @@ class userquery extends CBCategory
         }
 
         if ($getChannelSettings) {
-            $channel_settings = [
-                [
-                    'group_name' => lang('channel_settings'),
-                    'group_id'   => 'channel_settings',
-                    'fields'     => array_merge($this->load_channel_settings($default)
-                        , $this->load_privacy_field($default))
-                ]
-            ];
+            $channel_settings = [[
+                'group_name' => lang('channel_settings'),
+                'group_id'   => 'channel_settings',
+                'fields'     => array_merge(
+                    $this->load_channel_settings($default)
+                    ,$this->load_privacy_field($default)
+                )
+            ]];
         }
 
         if ($getProfileSettings) {

@@ -567,7 +567,10 @@ assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
 
 $min_suffixe = in_dev() ? '' : '.min';
-ClipBucket::getInstance()->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
-ClipBucket::getInstance()->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
+ClipBucket::getInstance()->addAdminJS([
+    'jquery-ui-1.13.2.min.js'             => 'global'
+    ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
+]);
+
 template_files('main.html');
 display_it();

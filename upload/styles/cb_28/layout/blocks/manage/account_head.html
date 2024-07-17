@@ -19,18 +19,75 @@
 	</div>
 </div>
 <hr/>
+
+<div style="text-align:center;">
+	<div class="padding38">
+		{if isSectionEnabled('videos')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_videos')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='videos'}</span>
+		</span>
+		{/if}
+		{if isSectionEnabled('photos')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_photos')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code="photos"}</span>
+		</span>
+		{/if}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('num_visits')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
+		</span>
+		{if isSectionEnabled('videos')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90"> {lang code='watched'} </span>
+		</span>
+		{/if}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_comments')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='comments'}</span>
+		</span>
+		{if isSectionEnabled('collections')}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_collections')|number_format}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
+		</span>
+		{/if}
+		{if config('channelsSection') == 'yes'}
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='views'}</span>
+		</span>
+		<span class="btn" style="background-color:#000000;color:#ffffff;">
+			<span class="line-height-1 bigger-170">{User::getInstance()->get('subscribers')}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='subscribers'}</span>
+		</span>
+		{/if}
+	</div>
+</div>
+<hr/>
+
 {if isSectionEnabled('videos')}
 <div class="mvideo accountprofile">
 	<span class="lead">
 		{lang code='latest_videos'}
 	</span>
+
+		{if $videos}
 	<table class="table table-bordered table-striped manageUsersTable">
 		<tr>
 			<td><i class="icon-facetime-video"></i> {lang code="videos_details"}</td>
 			<td>{lang code="option"}</td>
 		</tr>
-		{if $videos}
-		
 		{foreach from=$videos item=video}
 		<tr>
 			<td>
@@ -106,58 +163,3 @@
 	{/if}
 </div>
 {/if}
-
-<div class="col-md-12">
-	<div class="padding38">
-		{if isSectionEnabled('videos')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_videos')}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='videos'}</span>
-		</span>
-		{/if}
-		{if isSectionEnabled('photos')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_photos')}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code="photos"}</span>
-		</span>
-		{/if}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('num_visits')|number_format}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
-		</span>
-		{if isSectionEnabled('videos')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
-			<br/>
-			<span class="line-height-1 smaller-90"> {lang code='watched'} </span>
-		</span>
-		{/if}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_comments')|number_format}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='comments'}</span>
-		</span>
-		{if isSectionEnabled('collections')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_collections')|number_format}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
-		</span>
-		{/if}
-		{if config('channelsSection') == 'yes'}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='views'}</span>
-		</span>
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
-			<span class="line-height-1 bigger-170">{User::getInstance()->get('subscribers')}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='subscribers'}</span>
-		</span>
-		{/if}
-	</div>
-</div>
