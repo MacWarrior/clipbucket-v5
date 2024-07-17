@@ -158,12 +158,17 @@ function display_language_edit()
 /**
  * @throws Exception
  */
-function display_thumb_list($data)
+function display_thumb_list($data, $display = true)
 {
     assign('data', $data);
-    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
+    $vidthumbs = get_thumb($data,TRUE,'168x105','auto');
+    assign('vidthumbs', $vidthumbs);
     assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
-    echo templateWithMsgJson('blocks/thumb_list.html');
+    if ($display) {
+        echo templateWithMsgJson('blocks/thumb_list.html');
+    } else {
+        return ['html'=>templateWithMsgJson('blocks/thumb_list.html',false), 'nb_thumbs'=>(is_array($vidthumbs) ? count($vidthumbs) : 0)];
+    }
 }
 
 function display_resolution_list($data)

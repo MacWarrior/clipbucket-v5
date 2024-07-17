@@ -21,7 +21,8 @@ $breadcrumb[3] = ['title' => 'Manage Video Thumbs', 'url' => DirPath::getUrl('ad
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);
 }
-
+$can_sse = System::can_sse() ? 'true' : 'false';
+assign('can_sse', $can_sse);
 //Check Video Exists or Not
 if ($myquery->video_exists($video)) {
     # Setting Default thumb

@@ -1,16 +1,21 @@
+var eventSource;
+var max_try = 2;
+
 function regenerateThumbs(videoid) {
     $.ajax({
         url: "/actions/regenerate_thumbs.php",
         type: "post",
-        data: {videoid: videoid, origin: 'upload_thumb'},
+        data: {videoid: videoid},
         dataType: 'json',
-        beforeSend: function(){
+        beforeSend: function () {
             showSpinner();
+            $('.icon-remove').parent().hide();
         },
-        success: function(response){
+        success: function (response) {
             $('#thumb_list').html(response['template']);
             $('.page-content').prepend(response['msg']);
             hideSpinner();
+            connectSSE();
         }
     });
 }
@@ -26,4 +31,38 @@ function delete_thumb(videoid, num) {
     }).always(function (result) {
         $('.page-content').prepend(result['msg']);
     });
+}
+
+$(function () {
+
+});
+
+function connectSSE() {
+    if (can_sse != 'true') {
+        return
+    }
+
+    var tries = 0;
+    // Create new event, the server script is sse.php
+    eventSource = new EventSource("/admin_area/sse/progress_generate_thumb.php?id_video=" + video_id);
+    // Event when receiving a message from the server
+    eventSource.addEventListener("message", function (e) {
+        var data = JSON.parse(e.data);
+        console.log(data);
+        $('#thumb_list').html(data.html);
+        if (data.is_max_thumb) {
+            eventSource.close();
+            $('.icon-remove').parent().show();
+        }
+    }, false);
+    eventSource.addEventListener('open', function (e) {
+        tries++
+        if (tries > max_try) {
+            eventSource.close();
+        }
+    }, false);
+
+    eventSource.addEventListener('error', function (e) {
+        eventSource.close();
+    }, false);
 }
