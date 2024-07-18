@@ -9,7 +9,7 @@ function regenerateThumbs(videoid) {
         dataType: 'json',
         beforeSend: function () {
             showSpinner();
-            $('.icon-remove').parent().hide();
+            $('#auto_thumbs .tools-bottom').hide();
         },
         success: function (response) {
             $('#thumb_list').html(response['template']);
@@ -33,10 +33,6 @@ function delete_thumb(videoid, num) {
     });
 }
 
-$(function () {
-
-});
-
 function connectSSE() {
     if (can_sse != 'true') {
         return
@@ -51,8 +47,9 @@ function connectSSE() {
         $('#thumb_list').html(data.html);
         if (data.is_max_thumb) {
             eventSource.close();
+            $('.page-content').prepend(data.msg);
         } else {
-            $('.icon-remove').parent().hide();
+            $('#auto_thumbs .tools-bottom').hide();
         }
     }, false);
     eventSource.addEventListener('open', function (e) {

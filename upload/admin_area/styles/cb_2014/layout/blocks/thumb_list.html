@@ -1,16 +1,20 @@
 <fieldset class="fieldset">
   <h4>{lang code="extracted_thumbs"}</h4>
-  {foreach from=$vidthumbs item=vid_thumb}
-    {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}
-  {/foreach}
+  <div id="auto_thumbs">
+    {foreach from=$vidthumbs item=vid_thumb}
+      {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}
+    {/foreach}
+  </div>
   <div style="clear:both;"></div>
 
   {if !empty($vidthumbs_custom)}
   <hr/>
   <h4>{lang code="custom_thumbs"}</h4>
-  {foreach from=$vidthumbs_custom item=vid_thumb}
-    {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}
-  {/foreach}
+  <div id="custom_thumbs">
+    {foreach from=$vidthumbs_custom item=vid_thumb}
+      {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}
+    {/foreach}
+  </div>
   <div style="clear:both;"></div>
   {/if}
 </fieldset>
