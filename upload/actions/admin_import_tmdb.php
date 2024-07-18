@@ -1,6 +1,6 @@
 <?php
+define('THIS_PAGE', 'admin_import_tmdb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-
 
 userquery::getInstance()->admin_login_check();
 
