@@ -48,11 +48,11 @@ function connectSSE() {
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);
-        console.log(data);
         $('#thumb_list').html(data.html);
         if (data.is_max_thumb) {
             eventSource.close();
-            $('.icon-remove').parent().show();
+        } else {
+            $('.icon-remove').parent().hide();
         }
     }, false);
     eventSource.addEventListener('open', function (e) {
