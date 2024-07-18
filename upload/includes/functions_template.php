@@ -171,6 +171,13 @@ function display_thumb_list($data, $display = true)
     }
 }
 
+function display_thumb_list_custom_only($data)
+{
+    assign('data', $data);
+    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
+    echo templateWithMsgJson('blocks/thumb_list.html');
+}
+
 function display_resolution_list($data)
 {
     assign('resolution_list', $data);

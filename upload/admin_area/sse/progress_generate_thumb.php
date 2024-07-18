@@ -5,10 +5,14 @@ require_once DirPath::get('classes') . 'SSE.class.php';
 userquery::getInstance()->admin_login_check();
 
 SSE::processSSE(function (){
-    //TODO get thumbs
     $data = get_video_details($_GET['id_video']);
+     if (config('num_thumbs') > $data['duration']) {
+         $max_thumb = (int)$data['duration'];
+    } else {
+         $max_thumb = config('num_thumbs');
+     }
     $thumbs= display_thumb_list($data, false);
-    $results['is_max_thumb'] = $thumbs['nb_thumbs'] == config('num_thumbs');
+    $results['is_max_thumb'] = $thumbs['nb_thumbs'] == $max_thumb;
     $results['html'] = $thumbs['html']['template'];
     $output = 'data: ' . json_encode($results);
     return['output'=> $output];

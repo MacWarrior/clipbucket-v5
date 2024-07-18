@@ -9,7 +9,7 @@ $userquery->admin_login_check();
 $data = get_video_details($_POST['videoid']);
 
 sendClientResponseAndContinue(function () use($data) {
-    display_thumb_list($data);
+    display_thumb_list_custom_only($data);
 });
 generatingMoreThumbs($data, true);
 die();

@@ -14,8 +14,8 @@ function regenerateThumbs(videoid) {
         success: function (response) {
             $('#thumb_list').html(response['template']);
             $('.page-content').prepend(response['msg']);
-            hideSpinner();
             connectSSE();
+            hideSpinner();
         }
     });
 }
