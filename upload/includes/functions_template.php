@@ -220,7 +220,12 @@ function display_thumb_list_regenerate ($data)
 {
 
     $vidthumbs = get_thumb($data,TRUE,'168x105','auto');
-    $nb_thumbs = (is_array($vidthumbs) ? count($vidthumbs) : 0);
+    if (is_array($vidthumbs)) {
+        $nb_thumbs = count($vidthumbs);
+    } else {
+        $nb_thumbs = 0;
+        $vidthumbs = [$vidthumbs];
+    }
     if (config('num_thumbs') > $data['duration']) {
         $max_thumb = (int)$data['duration'];
     } else {
