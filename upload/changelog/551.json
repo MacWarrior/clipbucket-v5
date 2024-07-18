@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"66",
+  "revision":"67",
   "status":"dev",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Fix user search by category"
         ,"Fix collection's tags saving"
         ,"Fix dashboard display"
+        ,"Fix discord config"
       ]
     },
     {
