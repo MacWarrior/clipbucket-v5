@@ -121,6 +121,8 @@ if (isset($_POST['update'])) {
         , 'enable_comments_photo'
         , 'enable_comments_collection'
         , 'enable_comments_channel'
+        , 'photo_rating'
+        , 'own_photo_rating'
     ];
 
     $config_booleans_to_refactor = [
@@ -142,8 +144,6 @@ if (isset($_POST['update'])) {
         , 'bits_color_warning'
         , 'video_rating'
         , 'own_video_rating'
-        , 'photo_rating'
-        , 'own_photo_rating'
         , 'comment_rating'
         , 'collection_rating'
         , 'own_collection_rating'
@@ -545,18 +545,18 @@ if (!empty($_POST)) {
             assign('DEVELOPMENT_MODE', false);
         }
     }
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
-}
 
-if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
-    if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
-        e(lang('discord_webhook_url_invalid'));
+    if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
+            e(lang('discord_webhook_url_invalid'));
+        } else {
+            DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
+        }
     } else {
-        DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
+        DiscordLog::getInstance()->disable();
     }
 } else {
-    DiscordLog::getInstance()->disable();
+    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());

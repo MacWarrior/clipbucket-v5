@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"67",
+  "revision":"68",
   "status":"dev",
   "detail":[
     {
@@ -55,6 +55,7 @@
         ,"Add edit button on video & photo pages <i>(#319)</i>"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
+        ,"Hide collection comments option when collection comments are disabled"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
