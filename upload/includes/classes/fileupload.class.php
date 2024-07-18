@@ -35,6 +35,10 @@ class FileUpload
      */
     private function error($error)
     {
+        if( file_exists($this->tempFilePath) ){
+            unlink($this->tempFilePath);
+        }
+
         if( in_dev() ){
             error_log($error);
             DiscordLog::sendDump($error);
@@ -85,7 +89,7 @@ class FileUpload
         }
 
         $tempFile = $_FILES[$this->fileData]['tmp_name'];
-        $content_type = get_mime_type($tempFile);
+
 
         if( config('enable_chunk_upload') == 'yes'){
             $chunk = $_POST['chunk'] ?? false;
@@ -93,20 +97,31 @@ class FileUpload
             $original_filename = $_POST['name'] ?? false;
             $unique_id = $_POST['unique_id'] ?? false;
 
+            $userid = user_id();
+            if( !$userid ) {
+                $this->error('User not logged in');
+            }
+
+            $this->tempFilePath = DirPath::get('temp') . $userid . '-' . $unique_id . '.part';
+
             if( (empty($chunk) && $chunk != '0') || (empty($chunks) && $chunks != '0') || !$original_filename || empty($unique_id) ){
                 $this->error('file_uploader : missing infos');
             }
 
-            if( ($chunk == 0 && $content_type != $this->mimeType) || ($chunk > 0 && $content_type != 'application') ){
-                $this->error('Invalid Content');
+            if( $chunk == 0 ){
+                $content_type = get_mime_type($tempFile);
+                if( $content_type != $this->mimeType ) {
+                    $this->error('Invalid Content : ' . $content_type);
+                }
             }
         } else {
             if (!isset($_FILES[$this->fileData]['name'])) {
                 $this->error('File has no name.');
             }
 
+            $content_type = get_mime_type($tempFile);
             if( $content_type != $this->mimeType ) {
-                $this->error('Invalid Content');
+                $this->error('Invalid Content : ' . $content_type);
             }
         }
     }
@@ -131,14 +146,7 @@ class FileUpload
         $this->fileExtension = getExt($filename) ?? false;
         $this->originalFileName = $filename;
 
-        $userid = user_id();
-        if( !$userid ) {
-            $this->error('User not logged in');
-        }
-
-        $this->tempFilePath = DirPath::get('temp') . $userid . '-' . $unique_id . '.part';
         $temp_file = @fopen($this->tempFilePath, $chunk == 0 ? 'wb' : 'ab');
-
         if( !$temp_file ) {
             $this->error('manageChunkedFile : can\'t open ' . $this->tempFilePath);
         }
@@ -192,7 +200,6 @@ class FileUpload
 
         $max_file_size_in_bytes = getBytesFromFileSize($this->maxFileSize . 'M');
         if (empty($this->finalFileSize) || $this->finalFileSize > $max_file_size_in_bytes) {
-            @unlink($this->tempFilePath);
             $this->error(sprintf(lang('file_size_cant_exceeds_x_x'),$this->maxFileSize,lang('mb')));
 
         }
@@ -207,7 +214,6 @@ class FileUpload
             $moved = move_uploaded_file($this->tempFilePath, $this->destinationFilePath);
         }
         if( !$moved ) {
-            @unlink($this->tempFilePath);
             $this->error('manageFile : can\'t move temp file ' . $this->tempFilePath . ' to ' . $this->destinationFilePath);
         }
     }

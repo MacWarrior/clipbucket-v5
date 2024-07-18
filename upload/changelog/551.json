@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"62",
+  "revision":"66",
   "status":"dev",
   "detail":[
     {
@@ -47,11 +47,13 @@
       "description": [
         "Implement TMDB search on front office"
         ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
+        ,"Implement collection & channel most items sort"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
         ,"Add edit button on video & photo pages <i>(#319)</i>"
         ,"Update translations"
+        ,"Update video, photo, collection & channel sorts"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -70,6 +72,10 @@
         ,"Fix channel's video load more <i>(#382)</i>"
         ,"Fix collection edition"
         ,"Fix collection total objects count"
+        ,"Fix collection & channel most commented sort"
+        ,"Fix profile tags"
+        ,"Fix myaccount page display"
+        ,"Fix large file chunked upload"
       ]
     },
     {
@@ -79,6 +85,7 @@
         ,"Cleanup code"
         ,"Remove unused functions"
         ,"Remove unused files"
+        ,"Remove temp files on failed upload"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"

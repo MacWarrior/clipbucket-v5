@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE', 'channels');
-
 require 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();
@@ -10,38 +9,13 @@ if( !isSectionEnabled('channels') ){
     redirect_to(BASEURL);
 }
 
-$params = [];
+$params = User::getInstance()->getFilterParams($_GET['sort'], []);
+$params = User::getInstance()->getFilterParams($_GET['time'], $params);
 
-$conditions = [];
-if( !empty($_GET['cat']) ){
-    $conditions[] = 'categories.category_id = ' . (int)$_GET['cat'];
+
+if( config('enable_user_category') == 'yes' && !empty($_GET['cat']) ){
+    $params['category'] = (int)$_GET['cat'];
 }
-
-if( !empty($_GET['time']) ){
-    $conditions[] = Search::date_margin('users.doj', $_GET['time']);
-}
-
-$sort = $_GET['sort'] ?? '';
-switch ($sort) {
-    case 'most_recent':
-    default:
-        $params['order'] = 'users.doj DESC';
-        break;
-    case 'most_viewed':
-        $params['order'] = 'users.profile_hits DESC';
-        break;
-    case 'featured':
-        $conditions[] = 'users.featured = \'yes\'';
-        break;
-    case 'top_rated':
-        $params['order'] = 'user_profile.rating DESC';
-        break;
-    case 'most_commented':
-        $params['order'] = 'users.total_comments DESC';
-        break;
-}
-
-$params['condition'] = implode(' AND ', $conditions);
 
 $params['count'] = true;
 $count = User::getInstance()->getAll($params);
@@ -57,6 +31,10 @@ $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';
 pages::getInstance()->paginate($total_pages, $page, null, $extra_params, $tag);
 subtitle(lang('channels'));
-Assign('users', $users);
+assign('users', $users);
+
+assign('sort_list', User::getInstance()->getSortList());
+assign('time_list', time_links());
+
 template_files('channels.html');
 display_it();

@@ -139,6 +139,16 @@ class User
         return self::$user[$user_id];
     }
 
+    public function getTableName(): string
+    {
+        return $this->tablename;
+    }
+
+    public function getTableNameProfile(): string
+    {
+        return $this->tablename_profile;
+    }
+
     private function getAllFields(): array
     {
         $fields_user = array_map(function($field) {
@@ -167,6 +177,77 @@ class User
         return $this->display_var_name;
     }
 
+    public function getFilterParams(string $value, array $params): array
+    {
+        switch ($value) {
+            case 'most_recent':
+            default:
+                $params['order'] = $this->getTableName() . '.doj DESC';
+                break;
+
+            case 'most_viewed':
+                $params['order'] = $this->getTableName() . '.profile_hits DESC';
+                break;
+
+            case 'featured':
+                $params['featured'] = true;
+                break;
+
+            case 'top_rated':
+                $params['order'] = $this->getTableNameProfile() . '.rating DESC';
+                break;
+
+            case 'most_items':
+                if(config('videosSection') == 'yes' || config('photosSection') == 'yes') {
+                    $params['order'] = '(' . $this->getTableName() . '.total_videos + ' . $this->getTableName() . '.total_photos)  DESC';
+                }
+                break;
+
+            case 'most_commented':
+                if( config('enable_comments_channel') == 'yes' ){
+                    $params['order'] = $this->getTableName() . '.total_comments DESC';
+                }
+                break;
+
+            case 'all_time':
+            case 'today':
+            case 'yesterday':
+            case 'this_week':
+            case 'last_week':
+            case 'this_month':
+            case 'last_month':
+            case 'this_year':
+            case 'last_year':
+                $column = $this->getTableName() . '.doj';
+                $params['condition'] = Search::date_margin($column, $value);
+                break;
+        }
+        return $params;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getSortList(): array
+    {
+        $sorts = [
+            'most_recent'  => lang('most_recent')
+            ,'most_viewed' => lang('mostly_viewed')
+            ,'top_rated'   => lang('top_rated')
+            ,'featured'    => lang('featured')
+        ];
+
+        if(config('videosSection') == 'yes' || config('photosSection') == 'yes') {
+            $sorts['most_items'] = lang('sort_most_items');
+        }
+
+        if( config('enable_comments_channel') == 'yes' ){
+            $sorts['most_commented'] = lang('most_comments');
+        }
+
+        return $sorts;
+    }
+
     /**
      * @throws Exception
      */
@@ -183,12 +264,18 @@ class User
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
 
+        $param_category = $params['category'] ?? false;
+
         $conditions = [];
         if( $param_userid ){
             $conditions[] = 'users.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
+        }
+
+        if( $param_category ){
+            $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -4331,7 +4418,7 @@ class userquery extends CBCategory
         }
 
         $return = [
-            'show_dob'        => [
+            'show_dob' => [
                 'title'       => lang('show_dob'),
                 'type'        => 'radiobutton',
                 'name'        => 'show_dob',
@@ -4343,13 +4430,15 @@ class userquery extends CBCategory
                 'auto_view'   => 'no',
                 'sep'         => '&nbsp;'
             ],
-            'profile_tags'    => [
-                'title'     => lang('profile_tags'),
-                'type'      => 'hidden',
-                'name'      => 'profile_tags',
-                'id'        => 'profile_tags',
-                'value'     => genTags($default['profile_tags']),
-                'auto_view' => 'no'
+            'profile_tags' => [
+                'title'             => lang('profile_tags'),
+                'type'              => 'hidden',
+                'name'              => 'profile_tags',
+                'id'                => 'profile_tags',
+                'value'             => genTags($default['profile_tags']),
+                'required'          => 'no',
+                'validate_function' => 'genTags',
+                'auto_view'         => 'yes'
             ]
         ];
 
@@ -4834,14 +4923,14 @@ class userquery extends CBCategory
         }
 
         if ($getChannelSettings) {
-            $channel_settings = [
-                [
-                    'group_name' => lang('channel_settings'),
-                    'group_id'   => 'channel_settings',
-                    'fields'     => array_merge($this->load_channel_settings($default)
-                        , $this->load_privacy_field($default))
-                ]
-            ];
+            $channel_settings = [[
+                'group_name' => lang('channel_settings'),
+                'group_id'   => 'channel_settings',
+                'fields'     => array_merge(
+                    $this->load_channel_settings($default)
+                    ,$this->load_privacy_field($default)
+                )
+            ]];
         }
 
         if ($getProfileSettings) {

@@ -200,7 +200,9 @@ class Video
                 break;
 
             case 'most_commented':
-                $params['order'] = $this->getTableName() . '.comments_count DESC';
+                if( config('enable_comments_video') == 'yes' ) {
+                    $params['order'] = $this->getTableName() . '.comments_count DESC';
+                }
                 break;
 
             case 'all_time':
@@ -217,6 +219,29 @@ class Video
                 break;
         }
         return $params;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getSortList(): array
+    {
+        if (!isset($_GET['sort'])) {
+            $_GET['sort'] = 'most_recent';
+        }
+
+        $sorts = [
+            'most_recent'  => lang('most_recent')
+            ,'most_viewed' => lang('mostly_viewed')
+            ,'top_rated'   => lang('top_rated')
+            ,'featured'    => lang('featured')
+        ];
+
+        if( config('enable_comments_video') == 'yes' ){
+            $sorts['most_commented'] = lang('most_comments');
+        }
+
+        return $sorts;
     }
 
     /**

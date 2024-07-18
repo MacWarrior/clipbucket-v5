@@ -132,11 +132,7 @@ assign('collections', $collections);
 $total_pages = count_pages(count($collections), config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'                                  => 'admin',
     'tag-it' . $min_suffixe . '.js'                            => 'admin',

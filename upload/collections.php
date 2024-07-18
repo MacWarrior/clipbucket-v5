@@ -27,6 +27,9 @@ $params = [
 
 assign('top_collections', Collection::getInstance()->getAll($params));
 
+assign('sort_list', Collection::getInstance()->getSortList());
+assign('time_list', time_links());
+
 if( empty($collections) ){
     $count = 0;
 } else if( count($collections) < config('collection_per_page') && $page == 1 ){

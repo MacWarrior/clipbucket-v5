@@ -99,9 +99,7 @@ if (user_id() != $udetails['userid']) {
 
 subtitle(sprintf(lang('user_s_channel'), $udetails['username']));
 
-add_js(['jquery_plugs/compressed/jquery.jCarousel.js' => 'view_channel']);
-
-if (ClipBucket::getInstance()->show_page || $udetails) {
+if( ClipBucket::getInstance()->show_page ){
     $channel_profile_fields = userquery::getInstance()->load_user_fields($p,'profile');
 
     $location_fields = [];
@@ -117,23 +115,28 @@ if (ClipBucket::getInstance()->show_page || $udetails) {
 
     template_files('view_channel.html');
 
-    if(in_dev()){
-        $min_suffixe = '';
-    } else {
-        $min_suffixe = '.min';
-    }
+    $min_suffixe = in_dev() ? '' : '.min';
+    ClipBucket::getInstance()->addJS([
+        'pages/view_channel/view_channel'.$min_suffixe.'.js'      => 'admin'
+        ,'plupload/js/plupload.full.min.js'                       => 'admin'
+        ,'tag-it'.$min_suffixe.'.js'                              => 'admin'
+        ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
+    ]);
 
-    ClipBucket::getInstance()->addJS(['pages/view_channel/view_channel'.$min_suffixe.'.js' => 'admin']);
-    ClipBucket::getInstance()->addJS(['/plupload/js/plupload.full.min.js' => 'admin']);
+    ClipBucket::getInstance()->addCSS([
+        'jquery.tagit'.$min_suffixe.'.css'      => 'admin'
+        ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
+        ,'readonly_tag'.$min_suffixe.'.css'     => 'admin'
+    ]);
+
+    $params = [
+        'userid' => $udetails['userid']
+        ,'order' => 'date_added DESC'
+        ,'limit' => 9
+    ];
+    $videos = Video::getInstance()->getAll($params);
+
+    assign('uservideos', $videos);
 }
-
-$params = [
-    'userid' => $udetails['userid']
-    ,'order' => 'date_added DESC'
-    ,'limit' => 9
-];
-$videos = Video::getInstance()->getAll($params);
-
-assign('uservideos', $videos);
 
 display_it();

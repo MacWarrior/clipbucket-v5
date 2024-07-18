@@ -206,7 +206,7 @@ function doUpdateVideo(formId,ID)
 
 {if $smarty.const.THIS_PAGE == 'view_item'}
 <script type="text/javascript">
-    var Seo = '{$Cbucket->configs.seo}';
+    var Seo = "{config('seo')}";
     onReload_item();
 </script>
 {/if}

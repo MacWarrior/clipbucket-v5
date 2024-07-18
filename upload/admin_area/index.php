@@ -145,11 +145,7 @@ if( config('enable_update_checker') == '1' ){
     Assign('update_checker_content', $update->getUpdateHTML());
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 template_files('index.html');

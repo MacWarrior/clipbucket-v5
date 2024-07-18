@@ -121,7 +121,13 @@ class Collection
                 break;
 
             case 'most_commented':
-                $params['order'] = $this->getTableName() . '.comments_count DESC';
+                if( config('enable_comments_collection') == 'yes' ){
+                    $params['order'] = $this->getTableName() . '.total_comments DESC';
+                }
+                break;
+
+            case 'most_items':
+                $params['order'] = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) DESC';
                 break;
 
             case 'all_time':
@@ -138,6 +144,26 @@ class Collection
                 break;
         }
         return $params;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function getSortList(): array
+    {
+        $sorts = [
+            'most_recent'  => lang('most_recent')
+            ,'most_viewed' => lang('mostly_viewed')
+            ,'top_rated'   => lang('top_rated')
+            ,'most_items'  => lang('sort_most_items')
+            ,'featured'    => lang('featured')
+        ];
+
+        if( config('enable_comments_collection') == 'yes' ){
+            $sorts['most_commented'] = lang('most_comments');
+        }
+
+        return $sorts;
     }
 
     /**
@@ -2181,25 +2207,6 @@ class Collections extends CBCategory
         } else {
             Clipbucket_db::getInstance()->update(tbl($this->items), ['collection_id'], [$new], ' collection_id = ' . $old . ' AND type = \'' . $this->objType . '\' AND object_id = ' . $obj);
         }
-    }
-
-    /**
-     * Sorting links for collection
-     * @throws Exception
-     */
-    function sorting_links()
-    {
-        if (!isset($_GET['sort'])) {
-            $_GET['sort'] = 'most_recent';
-        }
-
-        return [
-            'most_recent'    => lang('most_recent'),
-            'most_viewed'    => lang('mostly_viewed'),
-            'featured'       => lang('featured'),
-            'most_items'     => lang('Most Items'),
-            'most_commented' => lang('most_comments')
-        ];
     }
 
     /**

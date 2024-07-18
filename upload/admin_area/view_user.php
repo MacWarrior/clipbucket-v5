@@ -84,12 +84,8 @@ if ($udetails) {
     e('No User Found');
     Clipbucket::getInstance()->show_page = false;
 }
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
 
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
     'pages/view_user/view_user' . $min_suffixe . '.js'         => 'admin',
     'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',

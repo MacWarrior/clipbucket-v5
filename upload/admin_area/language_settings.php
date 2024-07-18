@@ -52,11 +52,7 @@ if (!empty($_GET['edit_language']) && Language::getInstance()->getLangById($_GET
     pages::getInstance()->paginate($total_pages, $current_page);
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
+$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_settings'.$min_suffixe.'.js' => 'admin']);
 
 assign('client_id', Clipbucket::getInstance()->configs['clientid']);
