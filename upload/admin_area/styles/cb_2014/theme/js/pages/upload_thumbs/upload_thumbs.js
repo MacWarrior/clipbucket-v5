@@ -46,6 +46,7 @@ function connectSSE() {
         var data = JSON.parse(e.data);
         $('#thumb_list').html(data.html);
         if (data.is_max_thumb) {
+            $('.alert-dismissable .close').trigger('click');
             eventSource.close();
             $('.page-content').prepend(data.msg);
         } else {
