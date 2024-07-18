@@ -1878,10 +1878,6 @@ class CBPhotos
             $array = $_POST;
         }
 
-        $comments = config('enable_comments_photo') == 'yes' ? $array['allow_comments'] : 'no';
-        $embedding = $array['allow_embedding'];
-        $rating = $array['allow_rating'];
-
         $return = [];
 
         if( config('enable_comments_photo') == 'yes' ){
@@ -1892,7 +1888,7 @@ class CBPhotos
                 'type'              => 'radiobutton',
                 'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
                 'required'          => 'no',
-                'checked'           => $comments,
+                'checked'           => config('enable_comments_photo') == 'yes' ? $array['allow_comments'] : 'no',
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'yes',
@@ -1906,7 +1902,7 @@ class CBPhotos
             'name'              => 'allow_embedding',
             'db_field'          => 'allow_embedding',
             'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
-            'checked'           => $embedding,
+            'checked'           => $array['allow_embedding'],
             'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'yes'
@@ -1918,7 +1914,7 @@ class CBPhotos
             'type'              => 'radiobutton',
             'db_field'          => 'allow_rating',
             'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
-            'checked'           => $rating,
+            'checked'           => $array['allow_rating'],
             'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'yes'
@@ -2778,11 +2774,11 @@ class CBPhotos
 
         if (!user_id()) {
             e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && !config('own_photo_rating')) {
+        } elseif (user_id() == $c_rating['userid'] && config('own_photo_rating') != 'yes') {
             e(lang('you_cannot_rate_own_photo'));
         } elseif (!empty($already_voted)) {
             e(lang('you_hv_already_rated_photo'));
-        } elseif ($c_rating['allow_rating'] == 'no' || !config('photo_rating')) {
+        } elseif ($c_rating['allow_rating'] == 'no' || config('photo_rating') != 'yes') {
             e(lang('photo_rate_disabled'));
         } else {
             $voters[user_id()] = [

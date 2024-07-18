@@ -1974,27 +1974,27 @@
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
+									<label class="nowrap" for="photo_rating" title="Video rating">Photo rating</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="yes" name="photo_rating" id="photo_rating" {if $row.photo_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+							</div>
+							<hr/>
+                            <div class="row">
+								<div class="col-md-4">
 									<label class="nowrap" for="own_video_rating" title="Rate own video">Rate own video</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="1" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
-							</div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="photo_rating" title="Video rating">Photo rating</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="photo_rating" id="photo_rating" {if $row.photo_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="own_photo_rating" title="Rate own photo">Rate own photo</label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="1" name="own_photo_rating" id="own_photo_rating" {if $row.own_photo_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <input value="yes" name="own_photo_rating" id="own_photo_rating" {if $row.own_photo_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -2011,33 +2011,21 @@
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
-									<label class="nowrap" for="own_collection_rating" title="Rate own collection">Rate own collection</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-4">
 									<label class="nowrap" for="channel_rating" title="Channel rating">Channel rating</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="1" name="channel_rating" id="channel_rating" {if $row.channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+
+							</div>
+							<hr/>
+                            <div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="own_collection_rating" title="Rate own collection">Rate own collection</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="1" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
@@ -2047,6 +2035,21 @@
 									<input value="1" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
+
+                            </div>
+                            <hr/>
+
+						</div>
+						<div class="col-md-4">
+							<div class="row">
+								<div class="col-md-4">
+									<label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
+								</div>
+								<div class="col-md-2 row-size">
+									<input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+									<span class="lbl"></span>
+								</div>
+
 							</div>
 							<hr/>
 

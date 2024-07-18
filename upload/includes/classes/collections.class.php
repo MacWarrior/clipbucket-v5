@@ -178,6 +178,8 @@ class Collection
         $param_search = $params['search'] ?? false;
         $param_hide_empty_collection = $params['hide_empty_collection'];
         $param_featured = $params['featured'] ?? false;
+        $param_type = $params['type'] ?? false;
+        $param_parents_only = $params['parents_only'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -190,7 +192,7 @@ class Collection
         }
 
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
-            $hide_empty_collection = 'COUNT( DISTINCT collection_items.ci_id > 0 )';
+            $hide_empty_collection = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) > 0';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
                 $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
             }
@@ -216,6 +218,12 @@ class Collection
         }
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+        }
+        if( $param_type ){
+            $conditions[] = $this->getTableName() . '.type = \'' . mysql_clean($param_type) . '\'';
+        }
+        if( $param_parents_only ){
+            $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
         }
 
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
@@ -1324,21 +1332,23 @@ class Collections extends CBCategory
             $default = $_POST;
         }
 
-        $return = [
-            'broadcast'     => [
-                'title'             => lang('vdo_br_opt'),
-                'type'              => 'radiobutton',
-                'name'              => 'broadcast',
-                'id'                => 'broadcast',
-                'value'             => ['public' => lang('collect_borad_pub'), 'private' => lang('collect_broad_pri')],
-                'checked'           => $default['broadcast'],
-                'db_field'          => 'broadcast',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'yes'
-            ],
-            'comments'      => [
+        $return = [];
+        $return['broadcast'] = [
+            'title'             => lang('vdo_br_opt'),
+            'type'              => 'radiobutton',
+            'name'              => 'broadcast',
+            'id'                => 'broadcast',
+            'value'             => ['public' => lang('collect_borad_pub'), 'private' => lang('collect_broad_pri')],
+            'checked'           => $default['broadcast'],
+            'db_field'          => 'broadcast',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'yes'
+        ];
+
+        if( config('enable_comments_collection') == 'yes' ) {
+            $return['comments'] = [
                 'title'             => lang('comments'),
                 'type'              => 'radiobutton',
                 'id'                => 'allow_comments',
@@ -1350,20 +1360,21 @@ class Collections extends CBCategory
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'yes'
-            ],
-            'public_upload' => [
-                'title'             => lang('collect_allow_public_up'),
-                'type'              => 'radiobutton',
-                'id'                => 'public_upload',
-                'name'              => 'public_upload',
-                'value'             => ['no' => lang('collect_pub_up_dallow'), 'yes' => lang('collect_pub_up_allow')],
-                'checked'           => $default['public_upload'],
-                'db_field'          => 'public_upload',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'no'
-            ]
+            ];
+        }
+
+        $return['public_upload'] = [
+            'title'             => lang('collect_allow_public_up'),
+            'type'              => 'radiobutton',
+            'id'                => 'public_upload',
+            'name'              => 'public_upload',
+            'value'             => ['no' => lang('collect_pub_up_dallow'), 'yes' => lang('collect_pub_up_allow')],
+            'checked'           => $default['public_upload'],
+            'db_field'          => 'public_upload',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'no'
         ];
 
         return $return;
