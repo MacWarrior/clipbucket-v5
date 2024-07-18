@@ -90,8 +90,14 @@ $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it'.$min_suffixe.'.js'                                 => 'admin'
     ,'pages/view_collection/view_collection'.$min_suffixe.'.js' => 'admin'
-    ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
+    ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js'   => 'admin'
 ]);
+
+if( config('enable_comments_collection') == 'yes' ){
+    ClipBucket::getInstance()->addJS([
+        'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
+    ]);
+}
 
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit'.$min_suffixe.'.css'      => 'admin'

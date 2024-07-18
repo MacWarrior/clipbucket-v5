@@ -123,6 +123,12 @@ if( ClipBucket::getInstance()->show_page ){
         ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
     ]);
 
+    if( config('enable_comments_channel') == 'yes' ){
+        ClipBucket::getInstance()->addJS([
+            'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
+        ]);
+    }
+
     ClipBucket::getInstance()->addCSS([
         'jquery.tagit'.$min_suffixe.'.css'      => 'admin'
         ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
