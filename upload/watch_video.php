@@ -9,8 +9,11 @@ if (!userquery::getInstance()->perm_check('view_video', true) || config('videosS
 }
 
 $vkey = $_GET['v'] ?? false;
-$vdo = $cbvid->get_video($vkey);
+if( empty($vkey) ){
+    redirect_to(BASEURL);
+}
 
+$vdo = Video::getInstance()->getOne(['videokey' => $vkey]);
 if( !video_playable($vdo) ) {
     redirect_to(BASEURL);
 }
@@ -50,21 +53,8 @@ if( !$is_playlist ){
 call_watch_video_function($vdo);
 subtitle(ucfirst($vdo['title']));
 
-//Return category id without '#'
-$v_cat = $vdo['category'];
-if ($v_cat[2] == '#') {
-    $video_cat = $v_cat[1];
-} else {
-    $video_cat = $v_cat[1] . $v_cat[2];
-}
-$vid_cat = str_replace('%#%', '', $video_cat);
-$assign_arry['vid_cat'] = $vid_cat;
-
-
-
 # assigning all variables
 array_val_assign($assign_arry);
-
 
 //link edit
 assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_video.php?video=' . $vdo['videoid']);
