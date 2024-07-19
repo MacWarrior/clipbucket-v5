@@ -14,11 +14,15 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, Adm
 }
 
 sendClientResponseAndContinue(function () use ($core_tool) {
-    $core_tool->setToolInProgress();
     echo json_encode([
-       'success' => true
+        'success' => true
     ]);
 });
-$core_tool->launch();
-$db_tool->setToolInProgress();
-$db_tool->launch();
+if ($_POST['type'] == 'core') {
+    $core_tool->setToolInProgress();
+    $core_tool->launch();
+}
+if ($_POST['type'] == 'core' || $_POST['type'] == 'db') {
+    $db_tool->setToolInProgress();
+    $db_tool->launch();
+}

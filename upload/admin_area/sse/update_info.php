@@ -32,7 +32,8 @@ SSE::processSSE(function () {
             $current_update = 'db';
         }
     }
-
+    //need to flush here to get last version
+    Update::getInstance()->flush();
     ob_start();
     Update::getInstance()->displayGlobalSQLUpdateAlert($current_update);
 

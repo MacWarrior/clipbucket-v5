@@ -168,7 +168,7 @@ $(document).ready(function(){
 
 function update(type){
     $.ajax({
-        url: "/admin_area/update_app.php",
+        url: "/actions/admin_launch_update.php",
         type: "post",
         data: {
             type: type
