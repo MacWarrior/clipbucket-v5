@@ -158,12 +158,87 @@ function display_language_edit()
 /**
  * @throws Exception
  */
-function display_thumb_list($data)
+function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb_thumbs, $display = true)
 {
     assign('data', $data);
-    assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
-    assign('vidthumbs_custom', get_thumb($data,TRUE,'168x105','custom'));
-    echo templateWithMsgJson('blocks/thumb_list.html');
+    assign('vidthumbs', $vidthumbs);
+    assign('vidthumbs_custom', $vidthumbs_custom);
+
+    if ($display) {
+        echo templateWithMsgJson('blocks/thumb_list.html');
+        return true;
+    }
+
+    return [
+        'html'      => templateWithMsgJson('blocks/thumb_list.html', false),
+        'nb_thumbs' => $nb_thumbs
+    ];
+}
+
+/**
+ * @param $data
+ * @return void
+ * @throws Exception
+ */
+function display_thumb_list($data)
+{
+    $vidthumbs = get_thumb($data, true, '168x105', 'auto');
+    $vidthumbs_custom = get_thumb($data, true, '168x105', 'custom');
+    display_thumb_list_with_param(
+        $data, $vidthumbs
+        , $vidthumbs_custom
+        , (is_array($vidthumbs) ? count($vidthumbs) : 0)
+    );
+}
+
+/**
+ * @param $data
+ * @return void
+ * @throws Exception
+ */
+function display_thumb_list_start($data)
+{
+    $vidthumbs = [];
+    if (config('num_thumbs') > $data['duration']) {
+        $max_thumb = (int)$data['duration'];
+    } else {
+        $max_thumb = config('num_thumbs');
+    }
+    for ($i = 0; $i < $max_thumb; $i++) {
+        $vidthumbs[] = default_thumb();
+    };
+    $vidthumbs_custom = get_thumb($data, true, '168x105', 'custom');
+    display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom,0);
+}
+
+/**
+ * @param $data
+ * @return array|true
+ * @throws Exception
+ */
+function display_thumb_list_regenerate ($data)
+{
+    $vidthumbs = get_thumb($data,TRUE,'168x105','auto');
+    if( !is_array($vidthumbs) ){
+        $vidthumbs = [$vidthumbs];
+    }
+
+    if (config('num_thumbs') > $data['duration']) {
+        $max_thumb = (int)$data['duration'];
+    } else {
+        $max_thumb = config('num_thumbs');
+    }
+
+    $nb_thumbs = count($vidthumbs);
+    for ($i = $nb_thumbs; $i < $max_thumb; $i++) {
+        $vidthumbs[] = default_thumb();
+    }
+    $vidthumbs_custom = get_thumb($data,TRUE,'168x105','custom');
+
+    if ($nb_thumbs == $max_thumb) {
+        e(lang('thumb_regen_end'), 'message');
+    }
+    return display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom,$nb_thumbs, false);
 }
 
 function display_resolution_list($data)

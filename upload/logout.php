@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'logout');
-global $userquery;
 require_once 'includes/config.inc.php';
-$userquery->logout();
+
+userquery::getInstance()->logout();
 set_cookie_secure('is_logout', 'yes');
 redirect_to(BASEURL);

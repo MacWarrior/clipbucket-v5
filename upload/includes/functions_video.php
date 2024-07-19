@@ -109,7 +109,7 @@ function video_playable($id): bool
  * @return array|string
  * @throws Exception
  */
-function get_thumb($vdetails, $multi = false, $size = false, $type = false)
+function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max_id = null)
 {
     if (is_array($vdetails)) {
         if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
@@ -174,6 +174,10 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 
     if ($type) {
         $where[] = ' type = \'' . $type . '\'';
+    }
+
+    if (!empty($max_id)) {
+        $where[] = ' id > ' . mysql_clean($max_id);
     }
 
     $resThumb = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
