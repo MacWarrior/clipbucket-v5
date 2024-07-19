@@ -193,7 +193,7 @@ class System{
                 }
 
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
-                if (empty($binary_path) || !file_exists($binary_path)) {
+                if (empty($binary_path)) {
                     return $verbose ? ['err' => 'Unable to find PHP CLI'] : false;
                 }
 

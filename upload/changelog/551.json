@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"69",
+  "revision":"70",
   "status":"dev",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Fix collection's tags saving"
         ,"Fix dashboard display"
         ,"Fix discord config"
+        ,"Fix PHP CLI infos"
       ]
     },
     {
