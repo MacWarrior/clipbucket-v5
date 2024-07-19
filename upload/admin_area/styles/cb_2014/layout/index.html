@@ -183,7 +183,7 @@
 			</div>
 			{/if}
 		</div>
-		<div class="row row-no-gutters" style="margin-top:5px;">
+		<div class="row row-no-gutters" style="margin-top:5px;" id="update_div">
 			{Update::getInstance()->displayGlobalSQLUpdateAlert()}
 		</div>
 	</div>
@@ -232,6 +232,8 @@
 </div>
 
 <script type="text/javascript">
+	is_update_processing = `{$is_update_processing}`;
+	can_sse = `{$can_sse}`;
 	AmCharts.makeChart("piechart", {
 		"type": "pie",
 		"adjustPrecision": true,

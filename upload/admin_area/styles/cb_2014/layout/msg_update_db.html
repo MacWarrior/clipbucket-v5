@@ -1,43 +1,86 @@
-{if !$need_db_update && !$is_plugin_db}
-<div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
-    <ul class="list-unstyled">
-        <li>
-            <img alt='msg' src="{$imageurl}/ok.png"/>
-            {lang code='db_up_to_date'}
-        </li>
-    </ul>
-</div>
-{else if $need_db_update}
-<div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
-    <ul class="list-unstyled">
-        <li>
-            <img alt='warning' src="{$imageurl}/error.png"/>
-
-            {$nb_db_update}
-            <a href="admin_tool.php?{if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}code_tool={AdminTool::CODE_UPDATE_DATABASE_VERSION}{else}id_tool=5{/if}">{lang code='update'}</a>
-        </li>
-    </ul>
-</div>
-{/if}
-
 {if !$is_plugin_db && $show_core_update}
-    {if $need_core_update}
-<div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
-    <ul class="list-unstyled">
-        <li>
-            <img alt='warning' src="{$imageurl}/error.png"/>
-            {lang code='core_upgrade_avaible'}<a href="admin_tool.php?{if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}code_tool=update_core{else}id_tool=11{/if}">{lang code='update'}</a>
-        </li>
-    </ul>
-</div>
+    {if $current_updating}
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(100% - 4px);margin-left:5px;">
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {if $current_updating == 'core'}
+                        {lang code='core_updating'}
+                    {else}
+                        {lang code='db_updating'}
+                    {/if}
+                </li>
+            </ul>
+        </div>
+    {elseif $need_core_update}
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(100% - 4px);margin-left:5px;">
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {lang code='core_upgrade_avaible'}<span class="link update_core"></span>
+                    <a style="pointer: cursor">{lang code='update'}</a>
+                </li>
+            </ul>
+        </div>
     {else}
-<div class="alert alert-success alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
-    <ul class="list-unstyled">
-        <li>
-            <img alt='msg' src="{$imageurl}/ok.png"/>
-            {lang code='core_up_to_date'}
-        </li>
-    </ul>
-</div>
+        {if !$need_db_update }
+            <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='msg' src="{$imageurl}/ok.png"/>
+                    {lang code='db_up_to_date'}
+                </li>
+            </ul>
+            </div>
+            {else if $need_db_update}
+            <div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+
+                    {$nb_db_update}<span class="link update_db"></span>
+                    <a style="pointer: cursor">{lang code='update'}</a>
+                </li>
+            </ul>
+            </div>
+        {/if}
+        <div class="alert alert-success alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='msg' src="{$imageurl}/ok.png"/>
+                    {lang code='core_up_to_date'}
+                </li>
+            </ul>
+        </div>
+    {/if}
+{else}
+    {if $current_updating}
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(100% - 4px);margin-left:5px;">
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {lang code='db_updating'}
+                </li>
+            </ul>
+        </div>
+    {else if !$need_db_update && !$is_plugin_db}
+        <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+        <ul class="list-unstyled">
+            <li>
+                <img alt='msg' src="{$imageurl}/ok.png"/>
+                {lang code='db_up_to_date'}
+            </li>
+        </ul>
+        </div>
+    {else if $need_db_update}
+        <div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
+        <ul class="list-unstyled">
+            <li>
+                <img alt='warning' src="{$imageurl}/error.png"/>
+                {$nb_db_update}
+                <a style="pointer: cursor">{lang code='update'}</a>
+            </li>
+        </ul>
+        </div>
     {/if}
 {/if}

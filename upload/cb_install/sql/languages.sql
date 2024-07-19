@@ -1152,4 +1152,6 @@ VALUES ('admin_setting'),
        ('option_enable_comments_photo'),
        ('option_enable_comments_collection'),
        ('option_enable_comments_channel'),
-       ('sort_most_items');
+       ('sort_most_items'),
+       ('db_updating'),
+       ('core_updating');

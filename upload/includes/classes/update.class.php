@@ -369,7 +369,7 @@ class Update
     /**
      * @throws Exception
      */
-    public function displayGlobalSQLUpdateAlert()
+    public function displayGlobalSQLUpdateAlert($current_updating = false)
     {
         $nb_db_update = 0;
         if( $this->needCodeDBUpdate() ){
@@ -379,11 +379,12 @@ class Update
         if( $this->pluginsNeedDBUpdate() ){
             $nb_db_update += $this->getPluginUpdateFiles(true);
         }
-
         assign('need_db_update', ($nb_db_update > 0));
         if ($nb_db_update > 0) {
             assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
         }
+
+        assign('current_updating', $current_updating);
 
         assign('need_core_update', false);
         assign('show_core_update', false);
@@ -753,6 +754,22 @@ class Update
     {
         $version_db = Update::getInstance()->getDBVersion();
         return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function IsUpdateProcessing()
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+            $and = ' AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';
+        } else {
+            $and = ' AND id_tool IN (11, 5)';
+        }
+        $tools = AdminTool::getTools([
+            ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\') ' . $and
+        ]);
+        return !empty($tools);
     }
 
 }
