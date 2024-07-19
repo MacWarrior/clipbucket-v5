@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"68",
+  "revision":"69",
   "status":"dev",
   "detail":[
     {
@@ -78,6 +78,7 @@
         ,"Fix profile tags"
         ,"Fix myaccount page display"
         ,"Fix large file chunked upload"
+        ,"Fix video page display <i>(#387)</i>"
       ]
     },
     {
