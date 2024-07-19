@@ -34,11 +34,11 @@ function delete_thumb(videoid, num) {
 }
 
 function connectSSE() {
-    if (can_sse != 'true') {
-        return
+    if (can_sse !== 'true') {
+        return;
     }
 
-    var tries = 0;
+    let tries = 0;
     // Create new event, the server script is sse.php
     eventSource = new EventSource("/admin_area/sse/progress_generate_thumb.php?id_video=" + video_id);
     // Event when receiving a message from the server
@@ -53,6 +53,7 @@ function connectSSE() {
             $('#auto_thumbs .tools-bottom').hide();
         }
     }, false);
+
     eventSource.addEventListener('open', function (e) {
         tries++
         if (tries > max_try) {

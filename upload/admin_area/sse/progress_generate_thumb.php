@@ -8,10 +8,10 @@ SSE::processSSE(function (){
     $data = get_video_details($_GET['id_video']);
      if (config('num_thumbs') > $data['duration']) {
          $max_thumb = (int)$data['duration'];
-    } else {
+     } else {
          $max_thumb = config('num_thumbs');
      }
-    $thumbs= display_thumb_list_regenerate($data);
+    $thumbs = display_thumb_list_regenerate($data);
     $results['is_max_thumb'] = $thumbs['nb_thumbs'] == $max_thumb;
     if ($results['is_max_thumb'] ) {
         e(lang('thumb_regen_end'), 'message');

@@ -161,18 +161,18 @@ function display_language_edit()
 function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb_thumbs, $display = true)
 {
     assign('data', $data);
-
     assign('vidthumbs', $vidthumbs);
     assign('vidthumbs_custom', $vidthumbs_custom);
+
     if ($display) {
         echo templateWithMsgJson('blocks/thumb_list.html');
         return true;
-    } else {
-        return [
-            'html'      => templateWithMsgJson('blocks/thumb_list.html', false),
-            'nb_thumbs' => $nb_thumbs
-        ];
     }
+
+    return [
+        'html'      => templateWithMsgJson('blocks/thumb_list.html', false),
+        'nb_thumbs' => $nb_thumbs
+    ];
 }
 
 /**
@@ -218,19 +218,18 @@ function display_thumb_list_start($data)
  */
 function display_thumb_list_regenerate ($data)
 {
-
     $vidthumbs = get_thumb($data,TRUE,'168x105','auto');
-    if (is_array($vidthumbs)) {
-        $nb_thumbs = count($vidthumbs);
-    } else {
-        $nb_thumbs = 0;
+    if( !is_array($vidthumbs) ){
         $vidthumbs = [$vidthumbs];
     }
+
     if (config('num_thumbs') > $data['duration']) {
         $max_thumb = (int)$data['duration'];
     } else {
         $max_thumb = config('num_thumbs');
     }
+
+    $nb_thumbs = count($vidthumbs);
     for ($i = $nb_thumbs; $i < $max_thumb; $i++) {
         $vidthumbs[] = default_thumb();
     }
