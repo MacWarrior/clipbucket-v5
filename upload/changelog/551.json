@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"71",
+  "revision":"72",
   "status":"dev",
   "detail":[
     {
@@ -43,6 +43,7 @@
         ,"Fix dashboard display"
         ,"Fix discord config"
         ,"Fix PHP CLI infos"
+        ,"Fix video file deletion <i>(#390)</i>"
       ]
     },
     {
@@ -81,6 +82,7 @@
         ,"Fix myaccount page display"
         ,"Fix large file chunked upload"
         ,"Fix video page display <i>(#387)</i>"
+        ,"Fix user avatar on video page <i>(#389)</i>"
       ]
     },
     {
