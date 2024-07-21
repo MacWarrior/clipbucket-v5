@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"72",
+  "revision":"73",
   "status":"dev",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Update menu"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
+        ,"Use video poster in video manager if available"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
