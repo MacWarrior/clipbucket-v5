@@ -11,13 +11,14 @@ $(document).ready(function(){
             },
             function(data) {
                 $('#note-'+id).slideUp();
-            },'text');
+            },'text'
+        );
     }
 
     $('.oneNote .delete').on({
         click: function(e){
             e.preventDefault();
-            var noteId = $(this).parent().attr('id');
+            let noteId = $(this).parent().attr('id');
             delete_note(noteId);
             $(this).parents('li').remove();
         }
@@ -26,7 +27,7 @@ $(document).ready(function(){
     $('#add_new_note').on({
         click: function(e){
             e.preventDefault();
-            var note = $(this).parents('.addNote').find('textarea').val();
+            let note = $(this).parents('.addNote').find('textarea').val();
             if(!note){
                 alert('Please enter something');
             } else {
@@ -64,10 +65,8 @@ $(document).ready(function(){
     $("#addTodo").on({
         click: function(e){
             e.preventDefault();
-            var self = this;
-            var newVal = $(this).parents('.addTodo').find('input').val();
-            if(newVal.length)
-            {
+            let newVal = $(this).parents('.addTodo').find('input').val();
+            if(newVal.length) {
                 $(this).parents('.addTodo').find('input').val("");
                 $.ajax({
                     url: page,
@@ -117,25 +116,23 @@ $(document).ready(function(){
 
     $("#todolist .delete").on("click", function(e){
         e.preventDefault();
-        var self = this;
-        var id = $(this).prev().attr("id");
+
         $.ajax({
             url: page,
             type: "post",
             data: {
-                id: id,
+                id: $(this).prev().attr("id"),
                 mode: "delete_todo"
             },
             success: function (data) {
-                $(self).parents("li").remove();
+                this.parents("li").remove();
             }
         });
     });
 
     $("#todolist").on("click", ".editable-clear-x", function(e){
         e.preventDefault();
-        var self = this;
-        var id = $(this).parents(".editable-container").prev().attr("id");
+        let id = $(this).parents(".editable-container").prev().attr("id");
         id = id.match(/([0-9]+)$/g);
         id = id.pop();
         $.ajax({
@@ -146,14 +143,14 @@ $(document).ready(function(){
                 mode: "delete_todo"
             },
             success: function (data) {
-                $(self).parents("p").remove();
-                $(self).parents(".editable-container").remove();
+                $(this).parents("p").remove();
+                $(this).parents(".editable-container").remove();
             }
         });
         e.stopPropagation();
     });
 
-    if (can_sse == 'true' && is_update_processing == 'true') {
+    if (can_sse === 'true' && is_update_processing === 'true') {
         connectSSE();
     }
 
@@ -181,12 +178,12 @@ function update(type){
 
 function connectSSE() {
     var tries = 0;
-// Create new event, the server script is sse.php
+    // Create new event, the server script is sse.php
     eventSource = new EventSource("/admin_area/sse/update_info.php");
-// Event when receiving a message from the server
+    // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);
-        if (data.is_updating == 'false') {
+        if (data.is_updating === 'false') {
             eventSource.close();
         }
         $('#update_div').html(data.html);
