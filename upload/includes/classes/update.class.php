@@ -708,9 +708,10 @@ class Update
             return false;
         }
 
-        $filepath = DirPath::get('temp') . 'install.me';
-        if( file_exists($filepath) ){
-            unlink($filepath);
+        $filepath_install_me = DirPath::get('temp') . 'install.me';
+        $filepath_install_me_not = $filepath_install_me . '.not';
+        if( file_exists($filepath_install_me) && !file_exists($filepath_install_me_not) ){
+            unlink($filepath_install_me);
         }
         return true;
     }
