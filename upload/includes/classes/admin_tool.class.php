@@ -527,7 +527,7 @@ class AdminTool
         if ($this->tool['language_key_title'] != 'in_progress') {
             return false;
         }
-        $version = Update::getInstance()->getDBVersion();
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
         } else {
