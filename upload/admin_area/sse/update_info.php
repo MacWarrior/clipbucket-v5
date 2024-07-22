@@ -1,6 +1,5 @@
 <?php
-
-const THIS_PAGE = 'progress';
+const THIS_PAGE = 'update_info';
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'SSE.class.php';
 userquery::getInstance()->admin_login_check();
@@ -28,7 +27,7 @@ SSE::processSSE(function () {
     foreach ($tools as $tool) {
         if ($tool[$column] == $core) {
             $current_update = 'core';
-        } elseif ($current_update == false && $tool[$column] == $db) {
+        } elseif (!$current_update && $tool[$column] == $db) {
             $current_update = 'db';
         }
     }
