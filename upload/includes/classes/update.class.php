@@ -48,6 +48,8 @@ class Update
 
     public function flush(){
         $this->dbVersion = [];
+        $this->version = '';
+        $this->revision = '';
     }
 
     public function getDBVersion(): array
