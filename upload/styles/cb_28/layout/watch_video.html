@@ -28,11 +28,11 @@
 
 						{if isSectionEnabled('channels')}
 							<a href="{$userquery->profile_link($video)}" class="avatar">
-								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive no_select"/>
+								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
 							</a>
 						{else}
 							<span class="avatar">
-								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive no_select"/>
+								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
 							</span>
 						{/if}
 
@@ -156,50 +156,52 @@
 								{if $video.age_restriction}<p class="age_restriction">{sprintf(lang('access_forbidden_under_age'),$video.age_restriction)}</p>{/if}
 								<p style="white-space: pre-line;">{Video::getInstance()->getDescription($video.description)}</p>
 								<ul class="clearfix desc-list">
-									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category}</li>
+									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category_names}</li>
 									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
 									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
+									{if !empty($vdo.tags_video)}
 									<li>
 										<strong class="pull-left" id="label_tags_video">{lang('tag_title')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_video" value="{$vdo.tags_video}">
 										<ul id="list_tags_video" style="border: 0;"></ul>
 									</li>
-									{if config('enable_video_genre') == 'yes'}
+									{/if}
+									{if config('enable_video_genre') == 'yes' && !empty($vdo.tags_genre)}
 									<li>
 										<strong class="pull-left" id="label_tags_genre">{lang('genre')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_genre" value="{$vdo.tags_genre}">
 										<ul id="list_tags_genre" style="border: 0;"></ul>
 									</li>
 									{/if}
-									{if config('enable_video_actor') == 'yes'}
+									{if config('enable_video_actor') == 'yes' && !empty($vdo.tags_actors)}
 									<li>
 										<strong class="pull-left" id="label_tags_actors">{lang('actors')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_actors" value="{$vdo.tags_actors}">
 										<ul id="list_tags_actors" style="border: 0;"></ul>
 									</li>
 									{/if}
-									{if config('enable_video_producer') == 'yes'}
+									{if config('enable_video_producer') == 'yes' && !empty($vdo.tags_producer)}
 									<li>
 										<strong class="pull-left" id="label_tags_producer">{lang('producer')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_producer" value="{$vdo.tags_producer}">
 										<ul id="list_tags_producer" style="border: 0;"></ul>
 									</li>
 									{/if}
-									{if config('enable_video_executive_producer') == 'yes'}
+									{if config('enable_video_executive_producer') == 'yes' && !empty($vdo.tags_executive_producer)}
 									<li>
 										<strong class="pull-left" id="label_tags_executive_producer">{lang('executive_producer')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_executive_producer" value="{$vdo.tags_executive_producer}">
 										<ul id="list_tags_executive_producer" style="border: 0;"></ul>
 									</li>
 									{/if}
-									{if config('enable_video_director') == 'yes'}
+									{if config('enable_video_director') == 'yes' && !empty($vdo.tags_director)}
 									<li>
 										<strong class="pull-left" id="label_tags_director">{lang('director')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_director" value="{$vdo.tags_director}">
 										<ul id="list_tags_director" style="border: 0;"></ul>
 									</li>
 									{/if}
-									{if config('enable_video_crew') == 'yes'}
+									{if config('enable_video_crew') == 'yes' && !empty($vdo.tags_crew)}
 									<li>
 										<strong class="pull-left" id="label_tags_crew">{lang('crew')}:&nbsp;&nbsp;</strong>
 										<input type="hidden" id="tags_crew" value="{$vdo.tags_crew}">

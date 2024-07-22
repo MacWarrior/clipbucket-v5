@@ -1,7 +1,7 @@
 <?php
 
 const THIS_PAGE = 'progress';
-require_once dirname(__FILE__, 3) . '/includes/config.inc.php';
+require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'SSE.class.php';
 userquery::getInstance()->admin_login_check();
 

@@ -1153,5 +1153,7 @@ VALUES ('admin_setting'),
        ('option_enable_comments_collection'),
        ('option_enable_comments_channel'),
        ('sort_most_items'),
+       ('thumb_regen_end'),
+       ('thumb_regen_start'),
        ('db_updating'),
        ('core_updating');

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"68",
+  "revision":"73",
   "status":"dev",
   "detail":[
     {
@@ -12,6 +12,7 @@
         ,"Implement comments censor"
         ,"Implement video description censor"
         ,"Implement user profile censor"
+        ,"Implement video thumbs regeneration through SSE"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -25,6 +26,7 @@
         ,"Update menu"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
+        ,"Use video poster in video manager if available"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
@@ -41,6 +43,8 @@
         ,"Fix collection's tags saving"
         ,"Fix dashboard display"
         ,"Fix discord config"
+        ,"Fix PHP CLI infos"
+        ,"Fix video file deletion <i>(#390)</i>"
       ]
     },
     {
@@ -78,6 +82,8 @@
         ,"Fix profile tags"
         ,"Fix myaccount page display"
         ,"Fix large file chunked upload"
+        ,"Fix video page display <i>(#387)</i>"
+        ,"Fix user avatar on video page <i>(#389)</i>"
       ]
     },
     {
