@@ -1,6 +1,6 @@
 {if !$is_plugin_db && $show_core_update}
     {if $current_updating}
-        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(100% - 4px);margin-left:5px;">
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:100%;">
             <ul class="list-unstyled">
                 <li>
                     <img alt='warning' src="{$imageurl}/error.png"/>
@@ -13,7 +13,7 @@
             </ul>
         </div>
     {elseif $need_core_update}
-        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:calc(100% - 4px);margin-left:5px;">
+        <div class="alert alert-warning alert-dismissable" style="display:inline-block;width:100%;">
             <ul class="list-unstyled">
                 <li>
                     <img alt='warning' src="{$imageurl}/error.png"/>
@@ -23,25 +23,25 @@
             </ul>
         </div>
     {else}
-        {if !$need_db_update }
+        {if !$need_db_update}
             <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
-            <ul class="list-unstyled">
-                <li>
-                    <img alt='msg' src="{$imageurl}/ok.png"/>
-                    {lang code='db_up_to_date'}
-                </li>
-            </ul>
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt='msg' src="{$imageurl}/ok.png"/>
+                        {lang code='db_up_to_date'}
+                    </li>
+                </ul>
             </div>
-            {else if $need_db_update}
+        {else}
             <div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
-            <ul class="list-unstyled">
-                <li>
-                    <img alt='warning' src="{$imageurl}/error.png"/>
+                <ul class="list-unstyled">
+                    <li>
+                        <img alt='warning' src="{$imageurl}/error.png"/>
 
-                    {$nb_db_update}
-                    <a style="cursor :pointer;"  class="update_db">{lang code='update'}</a>
-                </li>
-            </ul>
+                        {$nb_db_update}
+                        <a style="cursor :pointer;" class="update_db">{lang code='update'}</a>
+                    </li>
+                </ul>
             </div>
         {/if}
         <div class="alert alert-success alert-dismissable" style="display:inline-block;width:calc(50% - 4px);margin-left:5px;">
@@ -65,22 +65,22 @@
         </div>
     {else if !$need_db_update && !$is_plugin_db}
         <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
-        <ul class="list-unstyled">
-            <li>
-                <img alt='msg' src="{$imageurl}/ok.png"/>
-                {lang code='db_up_to_date'}
-            </li>
-        </ul>
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='msg' src="{$imageurl}/ok.png"/>
+                    {lang code='db_up_to_date'}
+                </li>
+            </ul>
         </div>
     {else if $need_db_update}
         <div class="alert alert-warning alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
-        <ul class="list-unstyled">
-            <li>
-                <img alt='warning' src="{$imageurl}/error.png"/>
-                {$nb_db_update}
-                <a style="cursor :pointer;" class="update_db">{lang code='update'}</a>
-            </li>
-        </ul>
+            <ul class="list-unstyled">
+                <li>
+                    <img alt='warning' src="{$imageurl}/error.png"/>
+                    {$nb_db_update}
+                    <a style="cursor :pointer;" class="update_db">{lang code='update'}</a>
+                </li>
+            </ul>
         </div>
     {/if}
 {/if}
