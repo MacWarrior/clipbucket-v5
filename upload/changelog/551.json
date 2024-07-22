@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"73",
+  "revision":"74",
   "status":"dev",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
+        ,"Update self-update interface"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"

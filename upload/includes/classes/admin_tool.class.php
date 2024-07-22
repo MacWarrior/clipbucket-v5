@@ -79,7 +79,7 @@ class AdminTool
     {
         $where = implode(' AND ', $condition);
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
-            $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, 
+            $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, code,
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
                 FROM ' . cb_sql_table('tools') . '
                 LEFT JOIN (
@@ -240,6 +240,7 @@ class AdminTool
         }
         $this->array_loop = $files;
         $this->executeTool('execute_migration_file', true);
+        Update::getInstance()->flush();
     }
 
     /**
@@ -526,7 +527,7 @@ class AdminTool
         if ($this->tool['language_key_title'] != 'in_progress') {
             return false;
         }
-        $version = Update::getInstance()->getDBVersion();
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
         } else {
