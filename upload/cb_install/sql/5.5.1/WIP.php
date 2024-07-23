@@ -11,13 +11,13 @@ class WIP extends \Migration
     {
         self::insertTool('delete_unused_resolution_files', 'AdminTool::deleteUnusedResolutionFile');
         self::generateTranslation('delete_unused_resolution_files_label', [
-            'fr'=>'Suppression des résolutions non utilisés',
-            'en'=>'Delete unused resolutions'
+            'fr'=>'Suppression des résolutions désactivées',
+            'en'=>'Delete disabled resolutions'
         ]);
 
         self::generateTranslation('delete_unused_resolution_files_description', [
-            'fr'=>'Supprime les fichiers vidéos des résolutions non utilisées ,lors de la conversion des vidéos',
-            'en'=> 'Delete unused resolution\'s videos files for video conversion'
+            'fr'=>'Supprime les fichiers vidéo des résolutions désactivées pour la conversion des vidéos',
+            'en'=> 'Delete disabled video\'s resolutions files for video conversion'
         ]);
     }
 }
