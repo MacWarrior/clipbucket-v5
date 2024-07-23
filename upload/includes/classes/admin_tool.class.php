@@ -619,4 +619,15 @@ class AdminTool
         $this->array_loop = array_column($photos, 'photo_id');
         $this->executeTool('Photo::generatePhoto');
     }
+
+    public function deleteUnusedResolutionFile()
+    {
+        $sql = 'SELECT V.videoid
+                    FROM '.tbl('video').' V
+                    WHERE  JSON_CONTAINS(video_files,(SELECT GROUP_CONCAT(height) FROM '.tbl('video_resolution').' WHERE enabled = false))
+                    ;';
+        $videos = Clipbucket_db::getInstance()->_select($sql);
+        $this->array_loop = array_column($videos, 'videoid');
+        $this->executeTool('Video::deleteUnusedVideoFIles');
+    }
 }
