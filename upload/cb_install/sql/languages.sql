@@ -1156,4 +1156,6 @@ VALUES ('admin_setting'),
        ('thumb_regen_end'),
        ('thumb_regen_start'),
        ('db_updating'),
-       ('core_updating');
+       ('core_updating'),
+       ('delete_unused_resolution_files_label'),
+       ('delete_unused_resolution_files_description');
