@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"74",
+  "revision":"75",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Fix discord config"
         ,"Fix PHP CLI infos"
         ,"Fix video file deletion <i>(#390)</i>"
+        ,"Fix video mass upload tags"
       ]
     },
     {
@@ -129,6 +130,7 @@
         ,"Fix categories creation in update 5.5.0 - 331"
         ,"Fix dependancies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
+        ,"Fix SQL typo"
       ]
     },
     {
