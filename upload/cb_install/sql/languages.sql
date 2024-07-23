@@ -1156,4 +1156,6 @@ VALUES ('admin_setting'),
        ('thumb_regen_end'),
        ('thumb_regen_start'),
        ('db_updating'),
-       ('core_updating');
+       ('core_updating'),
+       ('correct_video_categorie_label'),
+       ('correct_video_categorie_description');

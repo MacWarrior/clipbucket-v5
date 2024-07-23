@@ -619,4 +619,13 @@ class AdminTool
         $this->array_loop = array_column($photos, 'photo_id');
         $this->executeTool('Photo::generatePhoto');
     }
+
+    public function correctVideoCategorie()
+    {
+        $videos = Video::getInstance()->getAll([
+            'condition'=> ' videoid NOT IN (select id_video from '.tbl('videos_categories').' )'
+        ]);
+        $this->array_loop = array_column($videos, 'videoid');
+        $this->executeTool('Video::correctVideoCategorie');
+    }
 }
