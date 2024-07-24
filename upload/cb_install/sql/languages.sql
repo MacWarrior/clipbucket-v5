@@ -1156,4 +1156,10 @@ VALUES ('admin_setting'),
        ('thumb_regen_end'),
        ('thumb_regen_start'),
        ('db_updating'),
-       ('core_updating');
+       ('core_updating'),
+       ('interfaces'),
+       ('global'),
+       ('option_default_theme'),
+       ('option_default_theme_light_original'),
+       ('option_default_theme_light_new'),
+       ('option_default_theme_dark');

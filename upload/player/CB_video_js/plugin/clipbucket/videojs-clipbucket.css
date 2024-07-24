@@ -103,7 +103,7 @@
 	display: table;
 }
 
-.video-js .vjs-big-play-button {
+html:not(.dark,.light) .video-js .vjs-big-play-button {
 	border-radius: initial !important;
 }
 

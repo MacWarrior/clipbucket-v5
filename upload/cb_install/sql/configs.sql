@@ -29,14 +29,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'seo', 'no'),
 	(NULL, 'admin_pages', '100'),
 	(NULL, 'search_list_per_page', '25'),
-	(NULL, 'recently_viewed_limit', '10'),
 	(NULL, 'max_upload_size', '1000'),
 	(NULL, 'sbrate', '128000'),
 	(NULL, 'thumb_width', '120'),
 	(NULL, 'thumb_height', '90'),
 	(NULL, 'allow_upload', ''),
 	(NULL, 'allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,mkv,webm'),
-	(NULL, 'allow_template_change', '1'),
 	(NULL, 'allow_language_change', '1'),
 	(NULL, 'default_site_lang', ''),
 	(NULL, 'video_require_login', ''),
@@ -282,7 +280,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_comments_video', 'yes'),
     (NULL, 'enable_comments_photo', 'yes'),
     (NULL, 'enable_comments_collection', 'yes'),
-    (NULL, 'enable_comments_channel', 'yes');
+    (NULL, 'enable_comments_channel', 'yes'),
+    (NULL, 'default_theme', 'light');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

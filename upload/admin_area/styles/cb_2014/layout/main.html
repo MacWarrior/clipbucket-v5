@@ -14,6 +14,11 @@
                     </a>
                 </li>
                 <li>
+                    <a data-toggle="tab" href="#config_interfaces">
+                        <h8>{lang code='interfaces'}</h8>
+                    </a>
+                </li>
+                <li>
                     <a data-toggle="tab" href="#config_upload">
                         <h8>Upload</h8>
                     </a>
@@ -202,30 +207,10 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-10">
-									<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
 									<label class="nowrap" for="enable_age_restriction" title="{lang code='option_enable_age_restriction'}">{lang code='option_enable_age_restriction'}</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
 									<input value="yes" id="enable_age_restriction" {if $row.enable_age_restriction=='yes'}checked{/if} name="enable_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_blur_restricted_content'}"/> {lang code='option_enable_blur_restricted_content'}</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input value="yes" id="enable_blur_restricted_content" {if $row.enable_blur_restricted_content=='yes'}checked{/if} name="enable_blur_restricted_content" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
 									<span class="lbl"></span>
 								</div>
 							</div>
@@ -286,23 +271,6 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="allow_language_change" title="Allow language change">Allow language change</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input value="1" name="allow_language_change" id="allow_language_change" {if $row.allow_language_change=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="allow_template_change" title="Allow template change">Allow template change</label>
-								</div>
-								<div class="col-md-2 row-size no_padding">
-									<input value="1" id="allow_template_change" {if $row.allow_template_change=='1'}checked{/if} name="allow_template_change" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
 									<label class="nowrap" for="use_cached_pagin" title="Use cached pagination">Use cached pagination</label>
 								</div>
 								<div class="col-md-2 row-size no_padding">
@@ -333,18 +301,93 @@
 								<div class="col-md-2 row-size no_padding">
 									<input class="form-control" name="comments_per_page" id="comments_per_page" value="{$row.comments_per_page}" size="5"/>
 								</div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="recently_viewed_limit" title="Recently viewed videos">Recently viewed videos</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input class="form-control" name="recently_viewed_limit" id="recently_viewed_limit" value="{$row.recently_viewed_limit}" size="5"/>
-                                </div>
 							</div>
 							<hr/>
 
 						</div>
 					</div>
 				</div>
+
+				<div id="config_interfaces" class="tab-pane">
+					<div class="row">
+						<div class="col-md-2">
+							<ul class="nav nav-pills nav-stacked interfaces" style="margin:0;">
+								<li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
+								<li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
+							</ul>
+						</div>
+						<div class="col-md-10 tab-content">
+							<div class="tab-pane interfaces active" id="interfaces_global">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="allow_language_change" title="Allow language change">Allow language change</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="1" name="allow_language_change" id="allow_language_change" {if $row.allow_language_change=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+												<span class="lbl"></span>
+											</div>
+										</div>
+										<hr/>
+										<div class="col-md-6">
+											<label class="nowrap" for="default_theme" title="{lang code='option_default_theme'}">{lang code='option_default_theme'}</label>
+										</div>
+										<div class="col-md-6 row-size">
+											<select class="form-control" name="default_theme" id="default_theme">
+												<option value="" {if $row.default_theme==''}selected{/if}>{lang code='option_default_theme_light_original'}</option>
+												<option value="light" {if $row.default_theme=='light'}selected{/if}>{lang code='option_default_theme_light_new'}</option>
+												<option value="dark" {if $row.default_theme=='dark'}selected{/if}>{lang code='option_default_theme_dark'}</option>
+											</select>
+										</div>
+										<hr/>
+
+									</div>
+									<div class="col-md-4">
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+												<span class="lbl"></span>
+											</div>
+										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_blur_restricted_content'}"/> {lang code='option_enable_blur_restricted_content'}</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="yes" id="enable_blur_restricted_content" {if $row.enable_blur_restricted_content=='yes'}checked{/if} name="enable_blur_restricted_content" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+												<span class="lbl"></span>
+											</div>
+										</div>
+										<hr/>
+									</div>
+
+								</div>
+							</div>
+							<div class="tab-pane interfaces" id="interfaces_home">
+								<div class="row">
+									<div class="col-md-4">
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="popup_video" title="Home Page Popup Video">Home Page Popup Video</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="yes" name="popup_video" id="popup_video" {if $row.popup_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+												<span class="lbl"></span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</div>
+				</div>
+
 				<div id="config_users" class="tab-pane">
 					<div class="row">
 						<div class="col-md-4">
@@ -2125,16 +2168,6 @@
 								</div>
 								<div class="col-md-4 row-size">
 									<input class="form-control" name="tmdb_search" id="tmdb_search" value="{$row.tmdb_search}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="popup_video" title="Home Page Popup Video">Home Page Popup Video</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input value="yes" name="popup_video" id="popup_video" {if $row.popup_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
 								</div>
 							</div>
 							<hr/>
