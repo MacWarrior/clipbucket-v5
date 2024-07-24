@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"75",
+  "revision":"76",
   "status":"dev",
   "detail":[
     {
@@ -61,6 +61,7 @@
         ,"Add edit button on video & photo pages <i>(#319)</i>"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
+        ,"Update collection creation on photo upload"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
@@ -86,6 +87,8 @@
         ,"Fix large file chunked upload"
         ,"Fix video page display <i>(#387)</i>"
         ,"Fix user avatar on video page <i>(#389)</i>"
+        ,"Fix collection creation when comments are fully disabled"
+        ,"Fix photo report"
       ]
     },
     {

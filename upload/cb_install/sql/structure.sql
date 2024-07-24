@@ -55,7 +55,7 @@ CREATE TABLE `{tbl_prefix}collections` (
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
-  `allow_comments` varchar(4) NOT NULL,
+  `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
   `total_comments` bigint(20) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
