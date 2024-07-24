@@ -150,12 +150,13 @@
 											<a href="/view_collection.php?cid={$c.collection_id}">{display_clean($c.collection_name)}</a>
 											{/if}
 										</li>
-										<li><strong>{lang('views')}</strong>:&nbsp; <span id="views">{$photo.views}</span></li>
+										{if !empty($photo.photo_tags)}
 										<li>
 											<strong class="pull-left" id="label_tags">{lang('tags')} : </strong>
 											<input type="hidden" id="tags" value="{$photo.photo_tags}">
 											<ul id="list_tags" style="border: 0;"></ul>
 										</li>
+										{/if}
 									</ul>
 								</div>
 							</div>
@@ -251,8 +252,7 @@
 			{if config("enable_advertisement") == "yes"}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
-			{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags,
-			'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'photos.date_added DESC'])}
+			{$related_photos=get_photos(['title'=>$photo.photo_title,'tags'=>$photo.photo_tags, 'exclude'=>$photo.photo_id,'show_related'=>'yes','limit'=>6,'order'=>'photos.date_added DESC'])}
 			{if $related_photos}
 			<h2>{lang code='related_photos'}</h2>
 			<div class="clearfix sidebar-items">
