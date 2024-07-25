@@ -27,7 +27,6 @@
 		<meta name="distribution" content="global">
 
 		<title>{cbtitle}</title>
-		{* Getting quicklist videos and assigning *}
 		{if config('enable_quicklist') == 'yes'}
 			{assign var=qlist_videos value=get_fast_qlist()}
 			{assign var=litems_count value=$qlist_videos|@count}

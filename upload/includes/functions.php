@@ -2892,6 +2892,9 @@ function include_css($params)
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
                 break;
+            case 'custom':
+                $url = DirPath::getUrl('files');
+                break;
         }
         return '<link rel="stylesheet" href="' . $url . $file . '">';
     }

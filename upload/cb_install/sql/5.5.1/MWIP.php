@@ -33,10 +33,15 @@ class MWIP extends \Migration
             'fr' => 'Sombre',
             'en' => 'Dark'
         ]);
+        self::generateTranslation('option_custom_css', [
+            'fr' => 'CSS personnalisé',
+            'en' => 'Custom CSS'
+        ]);
 
         self::deleteConfig('allow_template_change');
         self::deleteConfig('recently_viewed_limit');
 
         self::generateConfig('default_theme', '');
+        self::generateConfig('custom_css', '');
     }
 }

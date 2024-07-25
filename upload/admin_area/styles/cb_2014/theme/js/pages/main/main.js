@@ -30,11 +30,8 @@ $(document).ready(function () {
         }
     });
     $('ul.nav-pills.interfaces a').click(function () {
-        console.log('click');
         if (!$(this).parent().hasClass('active')) {
-            console.log('!active');
             let href = $(this).attr('href');
-            console.log(href);
             $('#' + href).addClass('active').siblings().removeClass('active');
         }
     });

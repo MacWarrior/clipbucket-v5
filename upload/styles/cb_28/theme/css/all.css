@@ -7888,6 +7888,7 @@ textarea#comment_box {
 /* Dark theme*/
 html.dark body {
   background-image: url('../../images/dark.jpg');
+  background-attachment: fixed;
 }
 
 html.dark #header,
@@ -7943,9 +7944,18 @@ html.dark .nav-tabs>li.active>a{
   color: #f9f9f9;
 }
 
-html.dark .navbar-default .right-menu.navbar-nav>li>a.btn-upload:hover,
 html.dark #header .search .cbsearchtype,
-html.dark #header .search .cbsearchtype .search-drop,
+html.dark #header .search .cbsearchtype .search-drop{
+  background: linear-gradient(rgb(48, 50, 62), rgb(30, 31, 42));
+}
+
+html.dark #header .search .cbsearchtype .search-drop {
+  border-right: 1px solid #f9f9f9;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+html.dark .navbar-default .right-menu.navbar-nav>li>a.btn-upload:hover,
 html.dark .btn-loadmore,
 html.dark .videos .video-info,
 html.dark .sidebar-items,
@@ -7964,6 +7974,10 @@ html.dark .channel-tabs,
 html.dark .manage-page button{
   background: linear-gradient(rgb(48, 50, 62), rgb(30, 31, 42));
   box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.80);
+}
+
+html.dark #header{
+  box-shadow: 0 5px 50px 0 rgba(0, 0, 0, 0.80);
 }
 
 html.dark .item-video .thumb-holder .video-link{
@@ -8081,4 +8095,96 @@ html.dark .manage-page .nav-pills>li{
   border-right: none;
   border-color: #f9f9f9;
   border-radius: 0;
+}
+
+/* Light Theme */
+html.light body {
+  background-image: url('../../images/light.jpg');
+  background-attachment: fixed;
+}
+
+html.light .navbar-default .right-menu.navbar-nav>li>a.btn-upload:hover,
+html.light .btn-loadmore,
+html.light .videos .video-info,
+html.light .sidebar-items,
+html.light .collections-grid .title,
+html.light .item-channel .info,
+html.light .collections .title,
+html.light .filter-dropdowns .cat-col .btn-default,
+html.light .cover .profile-buttons,
+html.light .cover .avatar,
+html.light .video-details,
+html.light .item-photo .photo-info,
+html.light .view-details,
+html.light .breadcrumb,
+html.light .cb-box,
+html.light .channel-tabs,
+html.light .manage-page button{
+  background: linear-gradient(#F6F6F6, #C6C6C6);
+  box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.60);
+}
+
+html.light #header{
+  box-shadow: 0 5px 50px 0 rgba(0, 0, 0, 0.60);
+}
+
+html.light .item-video .thumb-holder .video-link{
+  box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.60);
+}
+
+html.light .videos .video-info,
+html.light .featured-videos .item-video .video-link .img-responsive,
+html.light .featured-videos .item-video .video-link,
+html.light .featured-videos .item-video .video-link .title,
+html.light .featured-videos .item-video .video-link:after,
+html.light .collections .title,
+html.light .cover .profile-buttons,
+html.light .item-photo .photo-info,
+html.light .photo-view,
+html.light #gallery,
+html.light .channel-tabs{
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+html.light .item-video .thumb-holder .video-link .img-responsive,
+html.light .item-video .thumb-holder .video-link,
+html.light .item-channel .user-block,
+html.light .collections .photo-block img,
+html.light .video-js .vjs-tech,
+html.light .video-js .vjs-big-play-button,
+html.light .vjs-has-started .vjs-cb-header-caption,
+html.light .item-photo .photo-holder,
+html.light .photo-view,
+html.light #gallery{
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+html.light .item-channel .channel-holder{
+  border-width: 2px;
+}
+
+html.light .sidebar-items,
+html.light .collections-grid .photo-block img,
+html.light .popular-video .img-responsive,
+html.light .video-details,
+html.light .view-details,
+html.light .breadcrumb,
+html.light .item-channel .channel-holder,
+html.light .cb-box,
+html.light .manageVid_thumb img,
+html.light .media-object.imgobject{
+  border-radius: 5px;
+}
+
+html.light .featured-video{
+  background: none;
+}
+
+html.light .dropdown-menu>li>a:hover,
+html.light .select-options .item-selected a,
+html.light .filter-dropdowns .dropdown-menu>li>div:hover,
+html.light .filter-dropdowns .sorting-col .dropdown-menu>li a:hover{
+  background: #0080b4;
 }
