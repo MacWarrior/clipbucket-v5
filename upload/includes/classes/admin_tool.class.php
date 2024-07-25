@@ -622,10 +622,13 @@ class AdminTool
 
     public function deleteUnusedResolutionFile()
     {
+        Clipbucket_db::getInstance()->execute('set @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM '.tbl('video_resolution').' WHERE enabled = false);');
         $sql = 'SELECT V.videoid
                     FROM '.tbl('video').' V
-                    WHERE  JSON_CONTAINS(video_files,(SELECT GROUP_CONCAT(height) FROM '.tbl('video_resolution').' WHERE enabled = false))
-                    ;';
+                    WHERE  JSON_CONTAINS_PATH(
+                        CONCAT(\'{"a":\',video_files,\', "b":\', @disabled_res,\'}\')
+                        ,\'one\', \'$.a\', \'$.b\'
+                    );';
         $videos = Clipbucket_db::getInstance()->_select($sql);
         $this->array_loop = array_column($videos, 'videoid');
         $this->executeTool('Video::deleteUnusedVideoFIles');
