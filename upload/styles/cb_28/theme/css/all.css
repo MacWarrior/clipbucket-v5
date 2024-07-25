@@ -4261,6 +4261,7 @@ textarea#comment_box {
 .cb-box {
   background: #fff;
   padding: 16px;
+  margin-bottom: 20px;
 }
 
 /* groups */
@@ -7929,7 +7930,16 @@ html.dark .item-photo .photo-info strong a,
 html.dark .view-details header.details h1,
 html.dark .view-details header.details .user-video-info .user-title a,
 html.dark .flat-tabs .nav-tabs.nav>li.active>a,
-html.dark .flat-tabs .nav-tabs.nav>li:not(.active)>a:hover{
+html.dark .flat-tabs .nav-tabs.nav>li:not(.active)>a:hover,
+html.dark #footer .langdrop .dropdown-menu li a,
+html.dark .manage-page .nav-pills>li>a,
+html.dark a,
+html.dark .manage-page,
+html.dark h5,
+html.dark button:hover,
+html.dark button:focus,
+html.dark .account_box,
+html.dark .nav-tabs>li.active>a{
   color: #f9f9f9;
 }
 
@@ -7949,8 +7959,14 @@ html.dark .video-details,
 html.dark .item-photo .photo-info,
 html.dark .view-details,
 html.dark .breadcrumb,
-html.dark .cb-box{
+html.dark .cb-box,
+html.dark .channel-tabs,
+html.dark .manage-page button{
   background: linear-gradient(rgb(48, 50, 62), rgb(30, 31, 42));
+  box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.80);
+}
+
+html.dark .item-video .thumb-holder .video-link{
   box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.80);
 }
 
@@ -7959,7 +7975,10 @@ html.dark .select-area,
 html.dark .select-area .select-opener,
 html.dark .select-options,
 html.dark .nav-tabs>li.active>a,
-html.dark .nav-tabs>li.active>a:hover{
+html.dark .nav-tabs>li.active>a:hover,
+html.dark .nav>li>a:hover,
+html.dark .nav>li>a:focus,
+html.dark .table-striped>tbody>tr:nth-of-type(odd){
   background-color: #2a2a2a;
 }
 
@@ -7979,7 +7998,8 @@ html.dark .collections .title,
 html.dark .cover .profile-buttons,
 html.dark .item-photo .photo-info,
 html.dark .photo-view,
-html.dark #gallery{
+html.dark #gallery,
+html.dark .channel-tabs{
   border-bottom-left-radius: 5px;
   border-bottom-right-radius: 5px;
 }
@@ -8009,7 +8029,9 @@ html.dark .video-details,
 html.dark .view-details,
 html.dark .breadcrumb,
 html.dark .item-channel .channel-holder,
-html.dark .cb-box{
+html.dark .cb-box,
+html.dark .manageVid_thumb img,
+html.dark .media-object.imgobject{
   border-radius: 5px;
 }
 
@@ -8018,11 +8040,45 @@ html.dark .featured-video{
 }
 
 html.dark .dropdown-menu>li>a:hover,
-html.dark .select-options .item-selected a{
+html.dark .select-options .item-selected a,
+html.dark .filter-dropdowns .dropdown-menu>li>div:hover,
+html.dark .filter-dropdowns .sorting-col .dropdown-menu>li a:hover{
   background: #0080b4;
 }
 
 html.dark .view-tabs .nav-tabs.nav>li,
 html.dark .flat-tabs .nav-tabs.nav>li:not(.active)>a{
   color: #cacaca;
+}
+
+html.dark .btn-loadmore:hover,
+html.dark button:hover{
+  border-color: #0080b4;
+}
+
+html.dark .well{
+  background: none;
+}
+
+html.dark .video-js .vjs-big-play-button {
+  border-bottom-left-radius: initial;
+  border-bottom-right-radius: initial;
+}
+
+html.dark .manage-page .nav-pills>li.active>a{
+  background: #0080b4;
+}
+
+html.dark .manage-page .nav-pills>li.active,
+html.dark .manage-page .nav-pills>li:has(+ li.active),
+html.dark .manage-page .nav-pills>li:not(:has(+ li)){
+  border: none;
+}
+
+html.dark .manage-page .nav-pills>li{
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-color: #f9f9f9;
+  border-radius: 0;
 }
