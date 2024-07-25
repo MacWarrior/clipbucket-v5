@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.14.1 <http://videojs.com/>
+ * Video.js 8.17.2 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 })(this, (function () { 'use strict';
 
-  var version$5 = "8.14.1";
+  var version$5 = "8.17.2";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array
@@ -237,9 +237,9 @@
      * @param    {...*} args
      *           One or more messages or objects that should be logged.
      */
-    const log = function (...args) {
+    function log(...args) {
       logByType('log', level, args);
-    };
+    }
 
     // This is the logByType helper that the logging methods below use
     logByType = LogByTypeFactory(name, log, styles);
@@ -247,7 +247,7 @@
     /**
      * Create a new subLogger which chains the old name to the new name.
      *
-     * For example, doing `videojs.log.createLogger('player')` and then using that logger will log the following:
+     * For example, doing `mylogger = videojs.log.createLogger('player')` and then using that logger will log the following:
      * ```js
      *  mylogger('foo');
      *  // > VIDEOJS: player: foo
@@ -2171,7 +2171,6 @@
         /* eslint-enable */
       }
     }
-
     event.fixed_ = true;
     // Returns fixed-up instance
     return event;
@@ -3488,6 +3487,14 @@
   /** @import Player from './player' */
 
   /**
+   * A callback to be called if and when the component is ready.
+   * `this` will be the Component instance.
+   *
+   * @callback ReadyCallback
+   * @returns  {void}
+   */
+
+  /**
    * Base class for all UI Components.
    * Components are UI objects which represent both a javascript object and an element
    * in the DOM. They can be children of other components, and can have
@@ -3496,14 +3503,6 @@
    * Components can also use methods from {@link EventTarget}
    */
   class Component$1 {
-    /**
-     * A callback that is called when a component is ready. Does not have any
-     * parameters and any callback value will be ignored.
-     *
-     * @callback ReadyCallback
-     * @this Component
-     */
-
     /**
      * Creates an instance of this class.
      *
@@ -4254,9 +4253,6 @@
      *
      * @param {ReadyCallback} fn
      *        Function that gets called when the `Component` is ready.
-     *
-     * @return {Component}
-     *         Returns itself; method can be chained.
      */
     ready(fn, sync = false) {
       if (!fn) {
@@ -7480,18 +7476,13 @@
 
   var _extends_1 = createCommonjsModule(function (module) {
     function _extends() {
-      module.exports = _extends = Object.assign ? Object.assign.bind() : function (target) {
-        for (var i = 1; i < arguments.length; i++) {
-          var source = arguments[i];
-          for (var key in source) {
-            if (Object.prototype.hasOwnProperty.call(source, key)) {
-              target[key] = source[key];
-            }
-          }
+      return (module.exports = _extends = Object.assign ? Object.assign.bind() : function (n) {
+        for (var e = 1; e < arguments.length; e++) {
+          var t = arguments[e];
+          for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
         }
-        return target;
-      }, module.exports.__esModule = true, module.exports["default"] = module.exports;
-      return _extends.apply(this, arguments);
+        return n;
+      }, module.exports.__esModule = true, module.exports["default"] = module.exports), _extends.apply(null, arguments);
     }
     module.exports = _extends, module.exports.__esModule = true, module.exports["default"] = module.exports;
   });
@@ -7508,6 +7499,217 @@
     // IE8 and below
     fn === window.setTimeout || fn === window.alert || fn === window.confirm || fn === window.prompt);
   }
+
+  function _createForOfIteratorHelperLoose(o, allowArrayLike) {
+    var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"];
+    if (it) return (it = it.call(o)).next.bind(it);
+    if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") {
+      if (it) o = it;
+      var i = 0;
+      return function () {
+        if (i >= o.length) return {
+          done: true
+        };
+        return {
+          done: false,
+          value: o[i++]
+        };
+      };
+    }
+    throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for (var i = 0, arr2 = new Array(len); i < len; i++) {
+      arr2[i] = arr[i];
+    }
+    return arr2;
+  }
+  var InterceptorsStorage = /*#__PURE__*/function () {
+    function InterceptorsStorage() {
+      this.typeToInterceptorsMap_ = new Map();
+      this.enabled_ = false;
+    }
+    var _proto = InterceptorsStorage.prototype;
+    _proto.getIsEnabled = function getIsEnabled() {
+      return this.enabled_;
+    };
+    _proto.enable = function enable() {
+      this.enabled_ = true;
+    };
+    _proto.disable = function disable() {
+      this.enabled_ = false;
+    };
+    _proto.reset = function reset() {
+      this.typeToInterceptorsMap_ = new Map();
+      this.enabled_ = false;
+    };
+    _proto.addInterceptor = function addInterceptor(type, interceptor) {
+      if (!this.typeToInterceptorsMap_.has(type)) {
+        this.typeToInterceptorsMap_.set(type, new Set());
+      }
+      var interceptorsSet = this.typeToInterceptorsMap_.get(type);
+      if (interceptorsSet.has(interceptor)) {
+        // already have this interceptor
+        return false;
+      }
+      interceptorsSet.add(interceptor);
+      return true;
+    };
+    _proto.removeInterceptor = function removeInterceptor(type, interceptor) {
+      var interceptorsSet = this.typeToInterceptorsMap_.get(type);
+      if (interceptorsSet && interceptorsSet.has(interceptor)) {
+        interceptorsSet.delete(interceptor);
+        return true;
+      }
+      return false;
+    };
+    _proto.clearInterceptorsByType = function clearInterceptorsByType(type) {
+      var interceptorsSet = this.typeToInterceptorsMap_.get(type);
+      if (!interceptorsSet) {
+        return false;
+      }
+      this.typeToInterceptorsMap_.delete(type);
+      this.typeToInterceptorsMap_.set(type, new Set());
+      return true;
+    };
+    _proto.clear = function clear() {
+      if (!this.typeToInterceptorsMap_.size) {
+        return false;
+      }
+      this.typeToInterceptorsMap_ = new Map();
+      return true;
+    };
+    _proto.getForType = function getForType(type) {
+      return this.typeToInterceptorsMap_.get(type) || new Set();
+    };
+    _proto.execute = function execute(type, payload) {
+      var interceptors = this.getForType(type);
+      for (var _iterator = _createForOfIteratorHelperLoose(interceptors), _step; !(_step = _iterator()).done;) {
+        var interceptor = _step.value;
+        try {
+          payload = interceptor(payload);
+        } catch (e) {//ignore
+        }
+      }
+      return payload;
+    };
+    return InterceptorsStorage;
+  }();
+  var interceptors = InterceptorsStorage;
+
+  var RetryManager = /*#__PURE__*/function () {
+    function RetryManager() {
+      this.maxAttempts_ = 1;
+      this.delayFactor_ = 0.1;
+      this.fuzzFactor_ = 0.1;
+      this.initialDelay_ = 1000;
+      this.enabled_ = false;
+    }
+    var _proto = RetryManager.prototype;
+    _proto.getIsEnabled = function getIsEnabled() {
+      return this.enabled_;
+    };
+    _proto.enable = function enable() {
+      this.enabled_ = true;
+    };
+    _proto.disable = function disable() {
+      this.enabled_ = false;
+    };
+    _proto.reset = function reset() {
+      this.maxAttempts_ = 1;
+      this.delayFactor_ = 0.1;
+      this.fuzzFactor_ = 0.1;
+      this.initialDelay_ = 1000;
+      this.enabled_ = false;
+    };
+    _proto.getMaxAttempts = function getMaxAttempts() {
+      return this.maxAttempts_;
+    };
+    _proto.setMaxAttempts = function setMaxAttempts(maxAttempts) {
+      this.maxAttempts_ = maxAttempts;
+    };
+    _proto.getDelayFactor = function getDelayFactor() {
+      return this.delayFactor_;
+    };
+    _proto.setDelayFactor = function setDelayFactor(delayFactor) {
+      this.delayFactor_ = delayFactor;
+    };
+    _proto.getFuzzFactor = function getFuzzFactor() {
+      return this.fuzzFactor_;
+    };
+    _proto.setFuzzFactor = function setFuzzFactor(fuzzFactor) {
+      this.fuzzFactor_ = fuzzFactor;
+    };
+    _proto.getInitialDelay = function getInitialDelay() {
+      return this.initialDelay_;
+    };
+    _proto.setInitialDelay = function setInitialDelay(initialDelay) {
+      this.initialDelay_ = initialDelay;
+    };
+    _proto.createRetry = function createRetry(_temp) {
+      var _ref = _temp === void 0 ? {} : _temp,
+        maxAttempts = _ref.maxAttempts,
+        delayFactor = _ref.delayFactor,
+        fuzzFactor = _ref.fuzzFactor,
+        initialDelay = _ref.initialDelay;
+      return new Retry({
+        maxAttempts: maxAttempts || this.maxAttempts_,
+        delayFactor: delayFactor || this.delayFactor_,
+        fuzzFactor: fuzzFactor || this.fuzzFactor_,
+        initialDelay: initialDelay || this.initialDelay_
+      });
+    };
+    return RetryManager;
+  }();
+  var Retry = /*#__PURE__*/function () {
+    function Retry(options) {
+      this.maxAttempts_ = options.maxAttempts;
+      this.delayFactor_ = options.delayFactor;
+      this.fuzzFactor_ = options.fuzzFactor;
+      this.currentDelay_ = options.initialDelay;
+      this.currentAttempt_ = 1;
+    }
+    var _proto2 = Retry.prototype;
+    _proto2.moveToNextAttempt = function moveToNextAttempt() {
+      this.currentAttempt_++;
+      var delayDelta = this.currentDelay_ * this.delayFactor_;
+      this.currentDelay_ = this.currentDelay_ + delayDelta;
+    };
+    _proto2.shouldRetry = function shouldRetry() {
+      return this.currentAttempt_ < this.maxAttempts_;
+    };
+    _proto2.getCurrentDelay = function getCurrentDelay() {
+      return this.currentDelay_;
+    };
+    _proto2.getCurrentMinPossibleDelay = function getCurrentMinPossibleDelay() {
+      return (1 - this.fuzzFactor_) * this.currentDelay_;
+    };
+    _proto2.getCurrentMaxPossibleDelay = function getCurrentMaxPossibleDelay() {
+      return (1 + this.fuzzFactor_) * this.currentDelay_;
+    }
+    /**
+     * For example fuzzFactor is 0.1
+     * This means ±10% deviation
+     * So if we have delay as 1000
+     * This function can generate any value from 900 to 1100
+     */;
+    _proto2.getCurrentFuzzedDelay = function getCurrentFuzzedDelay() {
+      var lowValue = this.getCurrentMinPossibleDelay();
+      var highValue = this.getCurrentMaxPossibleDelay();
+      return lowValue + Math.random() * (highValue - lowValue);
+    };
+    return Retry;
+  }();
+  var retry = RetryManager;
 
   var httpResponseHandler = function httpResponseHandler(callback, decodeResponseBody) {
     if (decodeResponseBody === void 0) {
@@ -7558,6 +7760,9 @@
   var httpHandler = httpResponseHandler;
 
   createXHR.httpHandler = httpHandler;
+  createXHR.requestInterceptorsStorage = new interceptors();
+  createXHR.responseInterceptorsStorage = new interceptors();
+  createXHR.retryManager = new retry();
   /**
    * @license
    * slighly modified parse-headers 2.0.2 <https://github.com/kesla/parse-headers/>
@@ -7632,6 +7837,24 @@
   function _createXHR(options) {
     if (typeof options.callback === "undefined") {
       throw new Error("callback argument missing");
+    } // call all registered request interceptors for a given request type:
+
+    if (options.requestType && createXHR.requestInterceptorsStorage.getIsEnabled()) {
+      var requestInterceptorPayload = {
+        uri: options.uri || options.url,
+        headers: options.headers || {},
+        body: options.body,
+        metadata: options.metadata || {},
+        retry: options.retry,
+        timeout: options.timeout
+      };
+      var updatedPayload = createXHR.requestInterceptorsStorage.execute(options.requestType, requestInterceptorPayload);
+      options.uri = updatedPayload.uri;
+      options.headers = updatedPayload.headers;
+      options.body = updatedPayload.body;
+      options.metadata = updatedPayload.metadata;
+      options.retry = updatedPayload.retry;
+      options.timeout = updatedPayload.timeout;
     }
     var called = false;
     var callback = function cbOnce(err, response, body) {
@@ -7641,7 +7864,9 @@
       }
     };
     function readystatechange() {
-      if (xhr.readyState === 4) {
+      // do not call load 2 times when response interceptors are enabled
+      // why do we even need this 2nd load?
+      if (xhr.readyState === 4 && !createXHR.responseInterceptorsStorage.getIsEnabled()) {
         setTimeout(loadFunc, 0);
       }
     }
@@ -7662,10 +7887,33 @@
     }
     function errorFunc(evt) {
       clearTimeout(timeoutTimer);
+      clearTimeout(options.retryTimeout);
       if (!(evt instanceof Error)) {
         evt = new Error("" + (evt || "Unknown XMLHttpRequest Error"));
       }
-      evt.statusCode = 0;
+      evt.statusCode = 0; // we would like to retry on error:
+
+      if (!aborted && createXHR.retryManager.getIsEnabled() && options.retry && options.retry.shouldRetry()) {
+        options.retryTimeout = setTimeout(function () {
+          options.retry.moveToNextAttempt(); // we want to re-use the same options and the same xhr object:
+
+          options.xhr = xhr;
+          _createXHR(options);
+        }, options.retry.getCurrentFuzzedDelay());
+        return;
+      } // call all registered response interceptors for a given request type:
+
+      if (options.requestType && createXHR.responseInterceptorsStorage.getIsEnabled()) {
+        var responseInterceptorPayload = {
+          headers: failureResponse.headers || {},
+          body: failureResponse.body,
+          responseUrl: xhr.responseURL,
+          responseType: xhr.responseType
+        };
+        var _updatedPayload = createXHR.responseInterceptorsStorage.execute(options.requestType, responseInterceptorPayload);
+        failureResponse.body = _updatedPayload.body;
+        failureResponse.headers = _updatedPayload.headers;
+      }
       return callback(evt, failureResponse);
     } // will load the data & process the response in a special response object
 
@@ -7673,6 +7921,7 @@
       if (aborted) return;
       var status;
       clearTimeout(timeoutTimer);
+      clearTimeout(options.retryTimeout);
       if (options.useXDR && xhr.status === undefined) {
         //IE8 CORS GET successful response doesn't have a status field, but body is fine
         status = 200;
@@ -7696,6 +7945,18 @@
         }
       } else {
         err = new Error("Internal XMLHttpRequest Error");
+      } // call all registered response interceptors for a given request type:
+
+      if (options.requestType && createXHR.responseInterceptorsStorage.getIsEnabled()) {
+        var responseInterceptorPayload = {
+          headers: response.headers || {},
+          body: response.body,
+          responseUrl: xhr.responseURL,
+          responseType: xhr.responseType
+        };
+        var _updatedPayload2 = createXHR.responseInterceptorsStorage.execute(options.requestType, responseInterceptorPayload);
+        response.body = _updatedPayload2.body;
+        response.headers = _updatedPayload2.headers;
       }
       return callback(err, response, response.body);
     }
@@ -7742,6 +8003,7 @@
     };
     xhr.onabort = function () {
       aborted = true;
+      clearTimeout(options.retryTimeout);
     };
     xhr.ontimeout = errorFunc;
     xhr.open(method, uri, !sync, options.username, options.password); //has to be after open
@@ -11813,7 +12075,9 @@
    *         A {@link Player} instance.
    */
   function clearCacheForPlayer(player) {
-    middlewareInstances[player.id()] = null;
+    if (middlewareInstances.hasOwnProperty(player.id())) {
+      delete middlewareInstances[player.id()];
+    }
   }
 
   /**
@@ -12037,7 +12301,7 @@
     return src;
   }
 
-  var icons = "<svg xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-play\">\n      <path d=\"M16 10v28l22-14z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-pause\">\n      <path d=\"M12 38h8V10h-8v28zm16-28v28h8V10h-8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-audio\">\n      <path d=\"M24 2C14.06 2 6 10.06 6 20v14c0 3.31 2.69 6 6 6h6V24h-8v-4c0-7.73 6.27-14 14-14s14 6.27 14 14v4h-8v16h6c3.31 0 6-2.69 6-6V20c0-9.94-8.06-18-18-18z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-captions\">\n      <path d=\"M38 8H10c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM22 22h-3v-1h-4v6h4v-1h3v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2zm14 0h-3v-1h-4v6h4v-1h3v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-subtitles\">\n      <path d=\"M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-fullscreen-enter\">\n      <path d=\"M14 28h-4v10h10v-4h-6v-6zm-4-8h4v-6h6v-4H10v10zm24 14h-6v4h10V28h-4v6zm-6-24v4h6v6h4V10H28z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-fullscreen-exit\">\n      <path d=\"M10 32h6v6h4V28H10v4zm6-16h-6v4h10V10h-4v6zm12 22h4v-6h6v-4H28v10zm4-22v-6h-4v10h10v-4h-6z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-play-circle\">\n      <path d=\"M20 33l12-9-12-9v18zm4-29C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-mute\">\n      <path d=\"M33 24c0-3.53-2.04-6.58-5-8.05v4.42l4.91 4.91c.06-.42.09-.85.09-1.28zm5 0c0 1.88-.41 3.65-1.08 5.28l3.03 3.03C41.25 29.82 42 27 42 24c0-8.56-5.99-15.72-14-17.54v4.13c5.78 1.72 10 7.07 10 13.41zM8.55 6L6 8.55 15.45 18H6v12h8l10 10V26.55l8.51 8.51c-1.34 1.03-2.85 1.86-4.51 2.36v4.13a17.94 17.94 0 0 0 7.37-3.62L39.45 42 42 39.45l-18-18L8.55 6zM24 8l-4.18 4.18L24 16.36V8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-low\">\n      <path d=\"M14 18v12h8l10 10V8L22 18h-8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-medium\">\n      <path d=\"M37 24c0-3.53-2.04-6.58-5-8.05v16.11c2.96-1.48 5-4.53 5-8.06zm-27-6v12h8l10 10V8L18 18h-8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-high\">\n      <path d=\"M6 18v12h8l10 10V8L14 18H6zm27 6c0-3.53-2.04-6.58-5-8.05v16.11c2.96-1.48 5-4.53 5-8.06zM28 6.46v4.13c5.78 1.72 10 7.07 10 13.41s-4.22 11.69-10 13.41v4.13c8.01-1.82 14-8.97 14-17.54S36.01 8.28 28 6.46z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-spinner\">\n      <path d=\"M18.8 21l9.53-16.51C26.94 4.18 25.49 4 24 4c-4.8 0-9.19 1.69-12.64 4.51l7.33 12.69.11-.2zm24.28-3c-1.84-5.85-6.3-10.52-11.99-12.68L23.77 18h19.31zm.52 2H28.62l.58 1 9.53 16.5C41.99 33.94 44 29.21 44 24c0-1.37-.14-2.71-.4-4zm-26.53 4l-7.8-13.5C6.01 14.06 4 18.79 4 24c0 1.37.14 2.71.4 4h14.98l-2.31-4zM4.92 30c1.84 5.85 6.3 10.52 11.99 12.68L24.23 30H4.92zm22.54 0l-7.8 13.51c1.4.31 2.85.49 4.34.49 4.8 0 9.19-1.69 12.64-4.51L29.31 26.8 27.46 30z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-hd\">\n      <path d=\"M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 12H9.5v-2h-2v2H6V9h1.5v2.5h2V9H11v6zm2-6h4c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1h-4V9zm1.5 4.5h2v-3h-2v3z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-chapters\">\n      <path d=\"M6 26h4v-4H6v4zm0 8h4v-4H6v4zm0-16h4v-4H6v4zm8 8h28v-4H14v4zm0 8h28v-4H14v4zm0-20v4h28v-4H14z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 40 40\" id=\"vjs-icon-downloading\">\n      <path d=\"M18.208 36.875q-3.208-.292-5.979-1.729-2.771-1.438-4.812-3.729-2.042-2.292-3.188-5.229-1.146-2.938-1.146-6.23 0-6.583 4.334-11.416 4.333-4.834 10.833-5.5v3.166q-5.167.75-8.583 4.646Q6.25 14.75 6.25 19.958q0 5.209 3.396 9.104 3.396 3.896 8.562 4.646zM20 28.417L11.542 20l2.083-2.083 4.917 4.916v-11.25h2.916v11.25l4.875-4.916L28.417 20zm1.792 8.458v-3.167q1.833-.25 3.541-.958 1.709-.708 3.167-1.875l2.333 2.292q-1.958 1.583-4.25 2.541-2.291.959-4.791 1.167zm6.791-27.792q-1.541-1.125-3.25-1.854-1.708-.729-3.541-1.021V3.042q2.5.25 4.77 1.208 2.271.958 4.271 2.5zm4.584 21.584l-2.25-2.25q1.166-1.5 1.854-3.209.687-1.708.937-3.541h3.209q-.292 2.5-1.229 4.791-.938 2.292-2.521 4.209zm.541-12.417q-.291-1.833-.958-3.562-.667-1.73-1.833-3.188l2.375-2.208q1.541 1.916 2.458 4.208.917 2.292 1.167 4.75z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-file-download\">\n      <path d=\"M10.8 40.55q-1.35 0-2.375-1T7.4 37.15v-7.7h3.4v7.7h26.35v-7.7h3.4v7.7q0 1.4-1 2.4t-2.4 1zM24 32.1L13.9 22.05l2.45-2.45 5.95 5.95V7.15h3.4v18.4l5.95-5.95 2.45 2.45z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-file-download-done\">\n      <path d=\"M9.8 40.5v-3.45h28.4v3.45zm9.2-9.05L7.4 19.85l2.45-2.35L19 26.65l19.2-19.2 2.4 2.4z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-file-download-off\">\n      <path d=\"M4.9 4.75L43.25 43.1 41 45.3l-4.75-4.75q-.05.05-.075.025-.025-.025-.075-.025H10.8q-1.35 0-2.375-1T7.4 37.15v-7.7h3.4v7.7h22.05l-7-7-1.85 1.8L13.9 21.9l1.85-1.85L2.7 7zm26.75 14.7l2.45 2.45-3.75 3.8-2.45-2.5zM25.7 7.15V21.1l-3.4-3.45V7.15z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-share\">\n      <path d=\"M36 32.17c-1.52 0-2.89.59-3.93 1.54L17.82 25.4c.11-.45.18-.92.18-1.4s-.07-.95-.18-1.4l14.1-8.23c1.07 1 2.5 1.62 4.08 1.62 3.31 0 6-2.69 6-6s-2.69-6-6-6-6 2.69-6 6c0 .48.07.95.18 1.4l-14.1 8.23c-1.07-1-2.5-1.62-4.08-1.62-3.31 0-6 2.69-6 6s2.69 6 6 6c1.58 0 3.01-.62 4.08-1.62l14.25 8.31c-.1.42-.16.86-.16 1.31A5.83 5.83 0 1 0 36 32.17z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-cog\">\n      <path d=\"M38.86 25.95c.08-.64.14-1.29.14-1.95s-.06-1.31-.14-1.95l4.23-3.31c.38-.3.49-.84.24-1.28l-4-6.93c-.25-.43-.77-.61-1.22-.43l-4.98 2.01c-1.03-.79-2.16-1.46-3.38-1.97L29 4.84c-.09-.47-.5-.84-1-.84h-8c-.5 0-.91.37-.99.84l-.75 5.3a14.8 14.8 0 0 0-3.38 1.97L9.9 10.1a1 1 0 0 0-1.22.43l-4 6.93c-.25.43-.14.97.24 1.28l4.22 3.31C9.06 22.69 9 23.34 9 24s.06 1.31.14 1.95l-4.22 3.31c-.38.3-.49.84-.24 1.28l4 6.93c.25.43.77.61 1.22.43l4.98-2.01c1.03.79 2.16 1.46 3.38 1.97l.75 5.3c.08.47.49.84.99.84h8c.5 0 .91-.37.99-.84l.75-5.3a14.8 14.8 0 0 0 3.38-1.97l4.98 2.01a1 1 0 0 0 1.22-.43l4-6.93c.25-.43.14-.97-.24-1.28l-4.22-3.31zM24 31c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-square\">\n      <path d=\"M36 8H12c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h24c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zm0 28H12V12h24v24z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-circle\">\n      <circle cx=\"24\" cy=\"24\" r=\"20\"></circle>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-circle-outline\">\n      <path d=\"M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-circle-inner-circle\">\n      <path d=\"M24 4C12.97 4 4 12.97 4 24s8.97 20 20 20 20-8.97 20-20S35.03 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16zm6-16c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6 6 2.69 6 6z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-cancel\">\n      <path d=\"M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm10 27.17L31.17 34 24 26.83 16.83 34 14 31.17 21.17 24 14 16.83 16.83 14 24 21.17 31.17 14 34 16.83 26.83 24 34 31.17z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-replay\">\n      <path d=\"M24 10V2L14 12l10 10v-8c6.63 0 12 5.37 12 12s-5.37 12-12 12-12-5.37-12-12H8c0 8.84 7.16 16 16 16s16-7.16 16-16-7.16-16-16-16z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-repeat\">\n      <path d=\"M14 14h20v6l8-8-8-8v6H10v12h4v-8zm20 20H14v-6l-8 8 8 8v-6h24V26h-4v8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-5\">\n      <path d=\"M17.689 98l-8.697 8.696 8.697 8.697 2.486-2.485-4.32-4.319h1.302c4.93 0 9.071 1.722 12.424 5.165 3.352 3.443 5.029 7.638 5.029 12.584h3.55c0-2.958-.553-5.73-1.658-8.313-1.104-2.583-2.622-4.841-4.555-6.774-1.932-1.932-4.19-3.45-6.773-4.555-2.584-1.104-5.355-1.657-8.313-1.657H15.5l4.615-4.615zm-8.08 21.659v13.861h11.357v5.008H9.609V143h12.7c.834 0 1.55-.298 2.146-.894.596-.597.895-1.31.895-2.145v-7.781c0-.835-.299-1.55-.895-2.147a2.929 2.929 0 0 0-2.147-.894h-8.227v-5.096H25.35v-4.384z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-10\">\n      <path d=\"M42.315 125.63c0-4.997-1.694-9.235-5.08-12.713-3.388-3.479-7.571-5.218-12.552-5.218h-1.315l4.363 4.363-2.51 2.51-8.787-8.786L25.221 97l2.45 2.45-4.662 4.663h1.375c2.988 0 5.788.557 8.397 1.673 2.61 1.116 4.892 2.65 6.844 4.602 1.953 1.953 3.487 4.234 4.602 6.844 1.116 2.61 1.674 5.41 1.674 8.398zM8.183 142v-19.657H3.176V117.8h9.643V142zm13.63 0c-1.156 0-2.127-.393-2.912-1.178-.778-.778-1.168-1.746-1.168-2.902v-16.04c0-1.156.393-2.127 1.178-2.912.779-.779 1.746-1.168 2.902-1.168h7.696c1.156 0 2.126.392 2.911 1.177.779.78 1.168 1.747 1.168 2.903v16.04c0 1.156-.392 2.127-1.177 2.912-.779.779-1.746 1.168-2.902 1.168zm.556-4.636h6.583v-15.02H22.37z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-30\">\n      <path d=\"M26.047 97l-8.733 8.732 8.733 8.733 2.496-2.494-4.336-4.338h1.307c4.95 0 9.108 1.73 12.474 5.187 3.367 3.458 5.051 7.668 5.051 12.635h3.565c0-2.97-.556-5.751-1.665-8.346-1.109-2.594-2.633-4.862-4.574-6.802-1.94-1.941-4.208-3.466-6.803-4.575-2.594-1.109-5.375-1.664-8.345-1.664H23.85l4.634-4.634zM2.555 117.531v4.688h10.297v5.25H5.873v4.687h6.979v5.156H2.555V142H13.36c1.061 0 1.95-.395 2.668-1.186.718-.79 1.076-1.772 1.076-2.94v-16.218c0-1.168-.358-2.149-1.076-2.94-.717-.79-1.607-1.185-2.668-1.185zm22.482.14c-1.149 0-2.11.39-2.885 1.165-.78.78-1.172 1.744-1.172 2.893v15.943c0 1.149.388 2.11 1.163 2.885.78.78 1.745 1.172 2.894 1.172h7.649c1.148 0 2.11-.388 2.884-1.163.78-.78 1.17-1.745 1.17-2.894v-15.943c0-1.15-.386-2.111-1.16-2.885-.78-.78-1.746-1.172-2.894-1.172zm.553 4.518h6.545v14.93H25.59z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-5\">\n      <path d=\"M29.508 97l-2.431 2.43 4.625 4.625h-1.364c-2.965 0-5.742.554-8.332 1.66-2.589 1.107-4.851 2.629-6.788 4.566-1.937 1.937-3.458 4.2-4.565 6.788-1.107 2.59-1.66 5.367-1.66 8.331h3.557c0-4.957 1.68-9.16 5.04-12.611 3.36-3.45 7.51-5.177 12.451-5.177h1.304l-4.326 4.33 2.49 2.49 8.715-8.716zm-9.783 21.61v13.89h11.382v5.018H19.725V142h12.727a2.93 2.93 0 0 0 2.15-.896 2.93 2.93 0 0 0 .896-2.15v-7.798c0-.837-.299-1.554-.896-2.152a2.93 2.93 0 0 0-2.15-.896h-8.245V123h11.29v-4.392z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-10\">\n      <path d=\"M23.119 97l-2.386 2.383 4.538 4.538h-1.339c-2.908 0-5.633.543-8.173 1.63-2.54 1.085-4.76 2.577-6.66 4.478-1.9 1.9-3.392 4.12-4.478 6.66-1.085 2.54-1.629 5.264-1.629 8.172h3.49c0-4.863 1.648-8.986 4.944-12.372 3.297-3.385 7.368-5.078 12.216-5.078h1.279l-4.245 4.247 2.443 2.442 8.55-8.55zm-9.52 21.45v4.42h4.871V142h4.513v-23.55zm18.136 0c-1.125 0-2.066.377-2.824 1.135-.764.764-1.148 1.709-1.148 2.834v15.612c0 1.124.38 2.066 1.139 2.824.764.764 1.708 1.145 2.833 1.145h7.489c1.125 0 2.066-.378 2.824-1.136.764-.764 1.145-1.709 1.145-2.833v-15.612c0-1.125-.378-2.067-1.136-2.825-.764-.764-1.708-1.145-2.833-1.145zm.54 4.42h6.408v14.617h-6.407z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-30\">\n      <path d=\"M25.549 97l-2.437 2.434 4.634 4.635H26.38c-2.97 0-5.753.555-8.347 1.664-2.594 1.109-4.861 2.633-6.802 4.574-1.94 1.94-3.465 4.207-4.574 6.802-1.109 2.594-1.664 5.377-1.664 8.347h3.565c0-4.967 1.683-9.178 5.05-12.636 3.366-3.458 7.525-5.187 12.475-5.187h1.307l-4.335 4.338 2.495 2.494 8.732-8.732zm-11.553 20.53v4.689h10.297v5.249h-6.978v4.688h6.978v5.156H13.996V142h10.808c1.06 0 1.948-.395 2.666-1.186.718-.79 1.077-1.771 1.077-2.94v-16.217c0-1.169-.36-2.15-1.077-2.94-.718-.79-1.605-1.186-2.666-1.186zm21.174.168c-1.149 0-2.11.389-2.884 1.163-.78.78-1.172 1.745-1.172 2.894v15.942c0 1.15.388 2.11 1.162 2.885.78.78 1.745 1.17 2.894 1.17h7.649c1.149 0 2.11-.386 2.885-1.16.78-.78 1.17-1.746 1.17-2.895v-15.942c0-1.15-.387-2.11-1.161-2.885-.78-.78-1.745-1.172-2.894-1.172zm.552 4.516h6.542v14.931h-6.542z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" id=\"vjs-icon-audio-description\">\n      <g fill-rule=\"evenodd\"><path d=\"M227.29 381.351V162.993c50.38-1.017 89.108-3.028 117.631 17.126 27.374 19.342 48.734 56.965 44.89 105.325-4.067 51.155-41.335 94.139-89.776 98.475-24.085 2.155-71.972 0-71.972 0s-.84-1.352-.773-2.568m48.755-54.804c31.43 1.26 53.208-16.633 56.495-45.386 4.403-38.51-21.188-63.552-58.041-60.796v103.612c-.036 1.466.575 2.22 1.546 2.57\"></path><path d=\"M383.78 381.328c13.336 3.71 17.387-11.06 23.215-21.408 12.722-22.571 22.294-51.594 22.445-84.774.221-47.594-18.343-82.517-35.6-106.182h-8.51c-.587 3.874 2.226 7.315 3.865 10.276 13.166 23.762 25.367 56.553 25.54 94.194.2 43.176-14.162 79.278-30.955 107.894\"></path><path d=\"M425.154 381.328c13.336 3.71 17.384-11.061 23.215-21.408 12.721-22.571 22.291-51.594 22.445-84.774.221-47.594-18.343-82.517-35.6-106.182h-8.511c-.586 3.874 2.226 7.315 3.866 10.276 13.166 23.762 25.367 56.553 25.54 94.194.2 43.176-14.162 79.278-30.955 107.894\"></path><path d=\"M466.26 381.328c13.337 3.71 17.385-11.061 23.216-21.408 12.722-22.571 22.292-51.594 22.445-84.774.221-47.594-18.343-82.517-35.6-106.182h-8.51c-.587 3.874 2.225 7.315 3.865 10.276 13.166 23.762 25.367 56.553 25.54 94.194.2 43.176-14.162 79.278-30.955 107.894M4.477 383.005H72.58l18.573-28.484 64.169-.135s.065 19.413.065 28.62h48.756V160.307h-58.816c-5.653 9.537-140.85 222.697-140.85 222.697zm152.667-145.282v71.158l-40.453-.27 40.453-70.888z\"></path></g>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-next-item\">\n      <path d=\"M12 36l17-12-17-12v24zm20-24v24h4V12h-4z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-previous-item\">\n      <path d=\"M12 12h4v24h-4zm7 12l17 12V12z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-shuffle\">\n      <path d=\"M21.17 18.34L10.83 8 8 10.83l10.34 10.34 2.83-2.83zM29 8l4.09 4.09L8 37.17 10.83 40l25.09-25.09L40 19V8H29zm.66 18.83l-2.83 2.83 6.26 6.26L29 40h11V29l-4.09 4.09-6.25-6.26z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-cast\">\n      <path d=\"M42 6H6c-2.21 0-4 1.79-4 4v6h4v-6h36v28H28v4h14c2.21 0 4-1.79 4-4V10c0-2.21-1.79-4-4-4zM2 36v6h6c0-3.31-2.69-6-6-6zm0-8v4c5.52 0 10 4.48 10 10h4c0-7.73-6.27-14-14-14zm0-8v4c9.94 0 18 8.06 18 18h4c0-12.15-9.85-22-22-22z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-picture-in-picture-enter\">\n      <path d=\"M38 22H22v11.99h16V22zm8 16V9.96C46 7.76 44.2 6 42 6H6C3.8 6 2 7.76 2 9.96V38c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4zm-4 .04H6V9.94h36v28.1z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 22 18\" id=\"vjs-icon-picture-in-picture-exit\">\n      <path d=\"M18 4H4v10h14V4zm4 12V1.98C22 .88 21.1 0 20 0H2C.9 0 0 .88 0 1.98V16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H2V1.97h18v14.05z\"></path>\n      <path fill=\"none\" d=\"M-1-3h24v24H-1z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-facebook\">\n      <path d=\"M1343 12v264h-157q-86 0-116 36t-30 108v189h293l-39 296h-254v759H734V905H479V609h255V391q0-186 104-288.5T1115 0q147 0 228 12z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-linkedin\">\n      <path d=\"M477 625v991H147V625h330zm21-306q1 73-50.5 122T312 490h-2q-82 0-132-49t-50-122q0-74 51.5-122.5T314 148t133 48.5T498 319zm1166 729v568h-329v-530q0-105-40.5-164.5T1168 862q-63 0-105.5 34.5T999 982q-11 30-11 81v553H659q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5T1285 602q171 0 275 113.5t104 332.5z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-twitter\">\n      <path d=\"M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5T1369.5 1125 1185 1335.5t-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5T285 1033q33 5 61 5 43 0 85-11-112-23-185.5-111.5T172 710v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5T884 653q-8-38-8-74 0-134 94.5-228.5T1199 256q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-tumblr\">\n      <path d=\"M1328 1329l80 237q-23 35-111 66t-177 32q-104 2-190.5-26T787 1564t-95-106-55.5-120-16.5-118V676H452V461q72-26 129-69.5t91-90 58-102 34-99T779 12q1-5 4.5-8.5T791 0h244v424h333v252h-334v518q0 30 6.5 56t22.5 52.5 49.5 41.5 81.5 14q78-2 134-29z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-pinterest\">\n      <path d=\"M1664 896q0 209-103 385.5T1281.5 1561 896 1664q-111 0-218-32 59-93 78-164 9-34 54-211 20 39 73 67.5t114 28.5q121 0 216-68.5t147-188.5 52-270q0-114-59.5-214T1180 449t-255-63q-105 0-196 29t-154.5 77-109 110.5-67 129.5T377 866q0 104 40 183t117 111q30 12 38-20 2-7 8-31t8-30q6-23-11-43-51-61-51-151 0-151 104.5-259.5T904 517q151 0 235.5 82t84.5 213q0 170-68.5 289T980 1220q-61 0-98-43.5T859 1072q8-35 26.5-93.5t30-103T927 800q0-50-27-83t-77-33q-62 0-105 57t-43 142q0 73 25 122l-99 418q-17 70-13 177-206-91-333-281T128 896q0-209 103-385.5T510.5 231 896 128t385.5 103T1561 510.5 1664 896z\"></path>\n    </symbol>\n  </defs>\n</svg>";
+  var icons = "<svg xmlns=\"http://www.w3.org/2000/svg\">\n  <defs>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-play\">\n      <path d=\"M16 10v28l22-14z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-pause\">\n      <path d=\"M12 38h8V10h-8v28zm16-28v28h8V10h-8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-audio\">\n      <path d=\"M24 2C14.06 2 6 10.06 6 20v14c0 3.31 2.69 6 6 6h6V24h-8v-4c0-7.73 6.27-14 14-14s14 6.27 14 14v4h-8v16h6c3.31 0 6-2.69 6-6V20c0-9.94-8.06-18-18-18z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-captions\">\n      <path d=\"M38 8H10c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h28c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM22 22h-3v-1h-4v6h4v-1h3v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2zm14 0h-3v-1h-4v6h4v-1h3v2a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-subtitles\">\n      <path d=\"M40 8H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zM8 24h8v4H8v-4zm20 12H8v-4h20v4zm12 0h-8v-4h8v4zm0-8H20v-4h20v4z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-fullscreen-enter\">\n      <path d=\"M14 28h-4v10h10v-4h-6v-6zm-4-8h4v-6h6v-4H10v10zm24 14h-6v4h10V28h-4v6zm-6-24v4h6v6h4V10H28z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-fullscreen-exit\">\n      <path d=\"M10 32h6v6h4V28H10v4zm6-16h-6v4h10V10h-4v6zm12 22h4v-6h6v-4H28v10zm4-22v-6h-4v10h10v-4h-6z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-play-circle\">\n      <path d=\"M20 33l12-9-12-9v18zm4-29C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-mute\">\n      <path d=\"M33 24c0-3.53-2.04-6.58-5-8.05v4.42l4.91 4.91c.06-.42.09-.85.09-1.28zm5 0c0 1.88-.41 3.65-1.08 5.28l3.03 3.03C41.25 29.82 42 27 42 24c0-8.56-5.99-15.72-14-17.54v4.13c5.78 1.72 10 7.07 10 13.41zM8.55 6L6 8.55 15.45 18H6v12h8l10 10V26.55l8.51 8.51c-1.34 1.03-2.85 1.86-4.51 2.36v4.13a17.94 17.94 0 0 0 7.37-3.62L39.45 42 42 39.45l-18-18L8.55 6zM24 8l-4.18 4.18L24 16.36V8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-low\">\n      <path d=\"M14 18v12h8l10 10V8L22 18h-8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-medium\">\n      <path d=\"M37 24c0-3.53-2.04-6.58-5-8.05v16.11c2.96-1.48 5-4.53 5-8.06zm-27-6v12h8l10 10V8L18 18h-8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-volume-high\">\n      <path d=\"M6 18v12h8l10 10V8L14 18H6zm27 6c0-3.53-2.04-6.58-5-8.05v16.11c2.96-1.48 5-4.53 5-8.06zM28 6.46v4.13c5.78 1.72 10 7.07 10 13.41s-4.22 11.69-10 13.41v4.13c8.01-1.82 14-8.97 14-17.54S36.01 8.28 28 6.46z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-spinner\">\n      <path d=\"M18.8 21l9.53-16.51C26.94 4.18 25.49 4 24 4c-4.8 0-9.19 1.69-12.64 4.51l7.33 12.69.11-.2zm24.28-3c-1.84-5.85-6.3-10.52-11.99-12.68L23.77 18h19.31zm.52 2H28.62l.58 1 9.53 16.5C41.99 33.94 44 29.21 44 24c0-1.37-.14-2.71-.4-4zm-26.53 4l-7.8-13.5C6.01 14.06 4 18.79 4 24c0 1.37.14 2.71.4 4h14.98l-2.31-4zM4.92 30c1.84 5.85 6.3 10.52 11.99 12.68L24.23 30H4.92zm22.54 0l-7.8 13.51c1.4.31 2.85.49 4.34.49 4.8 0 9.19-1.69 12.64-4.51L29.31 26.8 27.46 30z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 24 24\" id=\"vjs-icon-hd\">\n      <path d=\"M19 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-8 12H9.5v-2h-2v2H6V9h1.5v2.5h2V9H11v6zm2-6h4c.55 0 1 .45 1 1v4c0 .55-.45 1-1 1h-4V9zm1.5 4.5h2v-3h-2v3z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-chapters\">\n      <path d=\"M6 26h4v-4H6v4zm0 8h4v-4H6v4zm0-16h4v-4H6v4zm8 8h28v-4H14v4zm0 8h28v-4H14v4zm0-20v4h28v-4H14z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 40 40\" id=\"vjs-icon-downloading\">\n      <path d=\"M18.208 36.875q-3.208-.292-5.979-1.729-2.771-1.438-4.812-3.729-2.042-2.292-3.188-5.229-1.146-2.938-1.146-6.23 0-6.583 4.334-11.416 4.333-4.834 10.833-5.5v3.166q-5.167.75-8.583 4.646Q6.25 14.75 6.25 19.958q0 5.209 3.396 9.104 3.396 3.896 8.562 4.646zM20 28.417L11.542 20l2.083-2.083 4.917 4.916v-11.25h2.916v11.25l4.875-4.916L28.417 20zm1.792 8.458v-3.167q1.833-.25 3.541-.958 1.709-.708 3.167-1.875l2.333 2.292q-1.958 1.583-4.25 2.541-2.291.959-4.791 1.167zm6.791-27.792q-1.541-1.125-3.25-1.854-1.708-.729-3.541-1.021V3.042q2.5.25 4.77 1.208 2.271.958 4.271 2.5zm4.584 21.584l-2.25-2.25q1.166-1.5 1.854-3.209.687-1.708.937-3.541h3.209q-.292 2.5-1.229 4.791-.938 2.292-2.521 4.209zm.541-12.417q-.291-1.833-.958-3.562-.667-1.73-1.833-3.188l2.375-2.208q1.541 1.916 2.458 4.208.917 2.292 1.167 4.75z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-file-download\">\n      <path d=\"M10.8 40.55q-1.35 0-2.375-1T7.4 37.15v-7.7h3.4v7.7h26.35v-7.7h3.4v7.7q0 1.4-1 2.4t-2.4 1zM24 32.1L13.9 22.05l2.45-2.45 5.95 5.95V7.15h3.4v18.4l5.95-5.95 2.45 2.45z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-file-download-done\">\n      <path d=\"M9.8 40.5v-3.45h28.4v3.45zm9.2-9.05L7.4 19.85l2.45-2.35L19 26.65l19.2-19.2 2.4 2.4z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-file-download-off\">\n      <path d=\"M4.9 4.75L43.25 43.1 41 45.3l-4.75-4.75q-.05.05-.075.025-.025-.025-.075-.025H10.8q-1.35 0-2.375-1T7.4 37.15v-7.7h3.4v7.7h22.05l-7-7-1.85 1.8L13.9 21.9l1.85-1.85L2.7 7zm26.75 14.7l2.45 2.45-3.75 3.8-2.45-2.5zM25.7 7.15V21.1l-3.4-3.45V7.15z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-share\">\n      <path d=\"M36 32.17c-1.52 0-2.89.59-3.93 1.54L17.82 25.4c.11-.45.18-.92.18-1.4s-.07-.95-.18-1.4l14.1-8.23c1.07 1 2.5 1.62 4.08 1.62 3.31 0 6-2.69 6-6s-2.69-6-6-6-6 2.69-6 6c0 .48.07.95.18 1.4l-14.1 8.23c-1.07-1-2.5-1.62-4.08-1.62-3.31 0-6 2.69-6 6s2.69 6 6 6c1.58 0 3.01-.62 4.08-1.62l14.25 8.31c-.1.42-.16.86-.16 1.31A5.83 5.83 0 1 0 36 32.17z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-cog\">\n      <path d=\"M38.86 25.95c.08-.64.14-1.29.14-1.95s-.06-1.31-.14-1.95l4.23-3.31c.38-.3.49-.84.24-1.28l-4-6.93c-.25-.43-.77-.61-1.22-.43l-4.98 2.01c-1.03-.79-2.16-1.46-3.38-1.97L29 4.84c-.09-.47-.5-.84-1-.84h-8c-.5 0-.91.37-.99.84l-.75 5.3a14.8 14.8 0 0 0-3.38 1.97L9.9 10.1a1 1 0 0 0-1.22.43l-4 6.93c-.25.43-.14.97.24 1.28l4.22 3.31C9.06 22.69 9 23.34 9 24s.06 1.31.14 1.95l-4.22 3.31c-.38.3-.49.84-.24 1.28l4 6.93c.25.43.77.61 1.22.43l4.98-2.01c1.03.79 2.16 1.46 3.38 1.97l.75 5.3c.08.47.49.84.99.84h8c.5 0 .91-.37.99-.84l.75-5.3a14.8 14.8 0 0 0 3.38-1.97l4.98 2.01a1 1 0 0 0 1.22-.43l4-6.93c.25-.43.14-.97-.24-1.28l-4.22-3.31zM24 31c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-square\">\n      <path d=\"M36 8H12c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h24c2.21 0 4-1.79 4-4V12c0-2.21-1.79-4-4-4zm0 28H12V12h24v24z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-circle\">\n      <circle cx=\"24\" cy=\"24\" r=\"20\"></circle>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-circle-outline\">\n      <path d=\"M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-circle-inner-circle\">\n      <path d=\"M24 4C12.97 4 4 12.97 4 24s8.97 20 20 20 20-8.97 20-20S35.03 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16zm6-16c0 3.31-2.69 6-6 6s-6-2.69-6-6 2.69-6 6-6 6 2.69 6 6z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-cancel\">\n      <path d=\"M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm10 27.17L31.17 34 24 26.83 16.83 34 14 31.17 21.17 24 14 16.83 16.83 14 24 21.17 31.17 14 34 16.83 26.83 24 34 31.17z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-replay\">\n      <path d=\"M24 10V2L14 12l10 10v-8c6.63 0 12 5.37 12 12s-5.37 12-12 12-12-5.37-12-12H8c0 8.84 7.16 16 16 16s16-7.16 16-16-7.16-16-16-16z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-repeat\">\n      <path d=\"M14 14h20v6l8-8-8-8v6H10v12h4v-8zm20 20H14v-6l-8 8 8 8v-6h24V26h-4v8z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-5\">\n      <path d=\"M17.689 98l-8.697 8.696 8.697 8.697 2.486-2.485-4.32-4.319h1.302c4.93 0 9.071 1.722 12.424 5.165 3.352 3.443 5.029 7.638 5.029 12.584h3.55c0-2.958-.553-5.73-1.658-8.313-1.104-2.583-2.622-4.841-4.555-6.774-1.932-1.932-4.19-3.45-6.773-4.555-2.584-1.104-5.355-1.657-8.313-1.657H15.5l4.615-4.615zm-8.08 21.659v13.861h11.357v5.008H9.609V143h12.7c.834 0 1.55-.298 2.146-.894.596-.597.895-1.31.895-2.145v-7.781c0-.835-.299-1.55-.895-2.147a2.929 2.929 0 0 0-2.147-.894h-8.227v-5.096H25.35v-4.384z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-10\">\n      <path d=\"M42.315 125.63c0-4.997-1.694-9.235-5.08-12.713-3.388-3.479-7.571-5.218-12.552-5.218h-1.315l4.363 4.363-2.51 2.51-8.787-8.786L25.221 97l2.45 2.45-4.662 4.663h1.375c2.988 0 5.788.557 8.397 1.673 2.61 1.116 4.892 2.65 6.844 4.602 1.953 1.953 3.487 4.234 4.602 6.844 1.116 2.61 1.674 5.41 1.674 8.398zM8.183 142v-19.657H3.176V117.8h9.643V142zm13.63 0c-1.156 0-2.127-.393-2.912-1.178-.778-.778-1.168-1.746-1.168-2.902v-16.04c0-1.156.393-2.127 1.178-2.912.779-.779 1.746-1.168 2.902-1.168h7.696c1.156 0 2.126.392 2.911 1.177.779.78 1.168 1.747 1.168 2.903v16.04c0 1.156-.392 2.127-1.177 2.912-.779.779-1.746 1.168-2.902 1.168zm.556-4.636h6.583v-15.02H22.37z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-replay-30\">\n      <path d=\"M26.047 97l-8.733 8.732 8.733 8.733 2.496-2.494-4.336-4.338h1.307c4.95 0 9.108 1.73 12.474 5.187 3.367 3.458 5.051 7.668 5.051 12.635h3.565c0-2.97-.556-5.751-1.665-8.346-1.109-2.594-2.633-4.862-4.574-6.802-1.94-1.941-4.208-3.466-6.803-4.575-2.594-1.109-5.375-1.664-8.345-1.664H23.85l4.634-4.634zM2.555 117.531v4.688h10.297v5.25H5.873v4.687h6.979v5.156H2.555V142H13.36c1.061 0 1.95-.395 2.668-1.186.718-.79 1.076-1.772 1.076-2.94v-16.218c0-1.168-.358-2.149-1.076-2.94-.717-.79-1.607-1.185-2.668-1.185zm22.482.14c-1.149 0-2.11.39-2.885 1.165-.78.78-1.172 1.744-1.172 2.893v15.943c0 1.149.388 2.11 1.163 2.885.78.78 1.745 1.172 2.894 1.172h7.649c1.148 0 2.11-.388 2.884-1.163.78-.78 1.17-1.745 1.17-2.894v-15.943c0-1.15-.386-2.111-1.16-2.885-.78-.78-1.746-1.172-2.894-1.172zm.553 4.518h6.545v14.93H25.59z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-5\">\n      <path d=\"M29.508 97l-2.431 2.43 4.625 4.625h-1.364c-2.965 0-5.742.554-8.332 1.66-2.589 1.107-4.851 2.629-6.788 4.566-1.937 1.937-3.458 4.2-4.565 6.788-1.107 2.59-1.66 5.367-1.66 8.331h3.557c0-4.957 1.68-9.16 5.04-12.611 3.36-3.45 7.51-5.177 12.451-5.177h1.304l-4.326 4.33 2.49 2.49 8.715-8.716zm-9.783 21.61v13.89h11.382v5.018H19.725V142h12.727a2.93 2.93 0 0 0 2.15-.896 2.93 2.93 0 0 0 .896-2.15v-7.798c0-.837-.299-1.554-.896-2.152a2.93 2.93 0 0 0-2.15-.896h-8.245V123h11.29v-4.392z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-10\">\n      <path d=\"M23.119 97l-2.386 2.383 4.538 4.538h-1.339c-2.908 0-5.633.543-8.173 1.63-2.54 1.085-4.76 2.577-6.66 4.478-1.9 1.9-3.392 4.12-4.478 6.66-1.085 2.54-1.629 5.264-1.629 8.172h3.49c0-4.863 1.648-8.986 4.944-12.372 3.297-3.385 7.368-5.078 12.216-5.078h1.279l-4.245 4.247 2.443 2.442 8.55-8.55zm-9.52 21.45v4.42h4.871V142h4.513v-23.55zm18.136 0c-1.125 0-2.066.377-2.824 1.135-.764.764-1.148 1.709-1.148 2.834v15.612c0 1.124.38 2.066 1.139 2.824.764.764 1.708 1.145 2.833 1.145h7.489c1.125 0 2.066-.378 2.824-1.136.764-.764 1.145-1.709 1.145-2.833v-15.612c0-1.125-.378-2.067-1.136-2.825-.764-.764-1.708-1.145-2.833-1.145zm.54 4.42h6.408v14.617h-6.407z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 96 48 48\" id=\"vjs-icon-forward-30\">\n      <path d=\"M25.549 97l-2.437 2.434 4.634 4.635H26.38c-2.97 0-5.753.555-8.347 1.664-2.594 1.109-4.861 2.633-6.802 4.574-1.94 1.94-3.465 4.207-4.574 6.802-1.109 2.594-1.664 5.377-1.664 8.347h3.565c0-4.967 1.683-9.178 5.05-12.636 3.366-3.458 7.525-5.187 12.475-5.187h1.307l-4.335 4.338 2.495 2.494 8.732-8.732zm-11.553 20.53v4.689h10.297v5.249h-6.978v4.688h6.978v5.156H13.996V142h10.808c1.06 0 1.948-.395 2.666-1.186.718-.79 1.077-1.771 1.077-2.94v-16.217c0-1.169-.36-2.15-1.077-2.94-.718-.79-1.605-1.186-2.666-1.186zm21.174.168c-1.149 0-2.11.389-2.884 1.163-.78.78-1.172 1.745-1.172 2.894v15.942c0 1.15.388 2.11 1.162 2.885.78.78 1.745 1.17 2.894 1.17h7.649c1.149 0 2.11-.386 2.885-1.16.78-.78 1.17-1.746 1.17-2.895v-15.942c0-1.15-.387-2.11-1.161-2.885-.78-.78-1.745-1.172-2.894-1.172zm.552 4.516h6.542v14.931h-6.542z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 512 512\" id=\"vjs-icon-audio-description\">\n      <g fill-rule=\"evenodd\"><path d=\"M227.29 381.351V162.993c50.38-1.017 89.108-3.028 117.631 17.126 27.374 19.342 48.734 56.965 44.89 105.325-4.067 51.155-41.335 94.139-89.776 98.475-24.085 2.155-71.972 0-71.972 0s-.84-1.352-.773-2.568m48.755-54.804c31.43 1.26 53.208-16.633 56.495-45.386 4.403-38.51-21.188-63.552-58.041-60.796v103.612c-.036 1.466.575 2.22 1.546 2.57\"></path><path d=\"M383.78 381.328c13.336 3.71 17.387-11.06 23.215-21.408 12.722-22.571 22.294-51.594 22.445-84.774.221-47.594-18.343-82.517-35.6-106.182h-8.51c-.587 3.874 2.226 7.315 3.865 10.276 13.166 23.762 25.367 56.553 25.54 94.194.2 43.176-14.162 79.278-30.955 107.894\"></path><path d=\"M425.154 381.328c13.336 3.71 17.384-11.061 23.215-21.408 12.721-22.571 22.291-51.594 22.445-84.774.221-47.594-18.343-82.517-35.6-106.182h-8.511c-.586 3.874 2.226 7.315 3.866 10.276 13.166 23.762 25.367 56.553 25.54 94.194.2 43.176-14.162 79.278-30.955 107.894\"></path><path d=\"M466.26 381.328c13.337 3.71 17.385-11.061 23.216-21.408 12.722-22.571 22.292-51.594 22.445-84.774.221-47.594-18.343-82.517-35.6-106.182h-8.51c-.587 3.874 2.225 7.315 3.865 10.276 13.166 23.762 25.367 56.553 25.54 94.194.2 43.176-14.162 79.278-30.955 107.894M4.477 383.005H72.58l18.573-28.484 64.169-.135s.065 19.413.065 28.62h48.756V160.307h-58.816c-5.653 9.537-140.85 222.697-140.85 222.697zm152.667-145.282v71.158l-40.453-.27 40.453-70.888z\"></path></g>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-next-item\">\n      <path d=\"M12 36l17-12-17-12v24zm20-24v24h4V12h-4z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-previous-item\">\n      <path d=\"M12 12h4v24h-4zm7 12l17 12V12z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-shuffle\">\n      <path d=\"M21.17 18.34L10.83 8 8 10.83l10.34 10.34 2.83-2.83zM29 8l4.09 4.09L8 37.17 10.83 40l25.09-25.09L40 19V8H29zm.66 18.83l-2.83 2.83 6.26 6.26L29 40h11V29l-4.09 4.09-6.25-6.26z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-cast\">\n      <path d=\"M42 6H6c-2.21 0-4 1.79-4 4v6h4v-6h36v28H28v4h14c2.21 0 4-1.79 4-4V10c0-2.21-1.79-4-4-4zM2 36v6h6c0-3.31-2.69-6-6-6zm0-8v4c5.52 0 10 4.48 10 10h4c0-7.73-6.27-14-14-14zm0-8v4c9.94 0 18 8.06 18 18h4c0-12.15-9.85-22-22-22z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 48 48\" id=\"vjs-icon-picture-in-picture-enter\">\n      <path d=\"M38 22H22v11.99h16V22zm8 16V9.96C46 7.76 44.2 6 42 6H6C3.8 6 2 7.76 2 9.96V38c0 2.2 1.8 4 4 4h36c2.2 0 4-1.8 4-4zm-4 .04H6V9.94h36v28.1z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 22 18\" id=\"vjs-icon-picture-in-picture-exit\">\n      <path d=\"M18 4H4v10h14V4zm4 12V1.98C22 .88 21.1 0 20 0H2C.9 0 0 .88 0 1.98V16c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2zm-2 .02H2V1.97h18v14.05z\"></path>\n      <path fill=\"none\" d=\"M-1-3h24v24H-1z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-facebook\">\n      <path d=\"M1343 12v264h-157q-86 0-116 36t-30 108v189h293l-39 296h-254v759H734V905H479V609h255V391q0-186 104-288.5T1115 0q147 0 228 12z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-linkedin\">\n      <path d=\"M477 625v991H147V625h330zm21-306q1 73-50.5 122T312 490h-2q-82 0-132-49t-50-122q0-74 51.5-122.5T314 148t133 48.5T498 319zm1166 729v568h-329v-530q0-105-40.5-164.5T1168 862q-63 0-105.5 34.5T999 982q-11 30-11 81v553H659q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5T1285 602q171 0 275 113.5t104 332.5z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1200 1227\" id=\"vjs-icon-twitter\">\n      <path d=\"M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.137 519.284H714.163ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.854V687.828Z\"/>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-tumblr\">\n      <path d=\"M1328 1329l80 237q-23 35-111 66t-177 32q-104 2-190.5-26T787 1564t-95-106-55.5-120-16.5-118V676H452V461q72-26 129-69.5t91-90 58-102 34-99T779 12q1-5 4.5-8.5T791 0h244v424h333v252h-334v518q0 30 6.5 56t22.5 52.5 49.5 41.5 81.5 14q78-2 134-29z\"></path>\n    </symbol>\n    <symbol viewBox=\"0 0 1792 1792\" id=\"vjs-icon-pinterest\">\n      <path d=\"M1664 896q0 209-103 385.5T1281.5 1561 896 1664q-111 0-218-32 59-93 78-164 9-34 54-211 20 39 73 67.5t114 28.5q121 0 216-68.5t147-188.5 52-270q0-114-59.5-214T1180 449t-255-63q-105 0-196 29t-154.5 77-109 110.5-67 129.5T377 866q0 104 40 183t117 111q30 12 38-20 2-7 8-31t8-30q6-23-11-43-51-61-51-151 0-151 104.5-259.5T904 517q151 0 235.5 82t84.5 213q0 170-68.5 289T980 1220q-61 0-98-43.5T859 1072q8-35 26.5-93.5t30-103T927 800q0-50-27-83t-77-33q-62 0-105 57t-43 142q0 73 25 122l-99 418q-17 70-13 177-206-91-333-281T128 896q0-209 103-385.5T510.5 231 896 128t385.5 103T1561 510.5 1664 896z\"></path>\n    </symbol>\n  </defs>\n</svg>";
 
   // /**
 
@@ -18146,7 +18410,7 @@
      * @listens keydown
      */
     handleKeyDown(event) {
-      if (['Tab', 'Escape', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
+      if (!['Tab', 'Escape', 'ArrowUp', 'ArrowLeft', 'ArrowRight', 'ArrowDown'].includes(event.key)) {
         // Pass keydown handling up for unused keys
         super.handleKeyDown(event);
       }
@@ -19244,7 +19508,7 @@
     createEl(type, props, attrs) {
       const el = super.createEl(type, props, attrs);
       const parentSpan = el.querySelector('.vjs-menu-item-text');
-      if (['main-desc', 'description'].indexOf(this.options_.track.kind) >= 0) {
+      if (['main-desc', 'descriptions'].indexOf(this.options_.track.kind) >= 0) {
         parentSpan.appendChild(createEl('span', {
           className: 'vjs-icon-placeholder'
         }, {
@@ -19808,11 +20072,10 @@
      * @param {string} [options.id]
      *        A text with part of an string to create atribute of aria-labelledby.
      *
-     * @param {array} [options.SelectOptions]
+     * @param {Array} [options.SelectOptions]
      *        Array that contains the value & textContent of for each of the
      *        options elements.
      */
-
     constructor(player, options = {}) {
       super(player, options);
       this.el_.setAttribute('aria-labelledby', this.selectLabelledbyIds);
@@ -19831,7 +20094,10 @@
       const selectoptions = createEl('select', {
         id: this.options_.id
       }, {}, this.options_.SelectOptions.map(optionText => {
-        const optionId = this.options_.labelId + '-' + optionText[1].replace(/\W+/g, '');
+        // Constructs an id for the <option>.
+        // For the colour settings that have two <selects> with a <label> each, generates an id based off the label value
+        // For font size/family and edge style with one <select> and no <label>, generates an id with a guid
+        const optionId = (this.options_.labelId ? this.options_.labelId : `vjs-track-option-${newGUID()}`) + '-' + optionText[1].replace(/\W+/g, '');
         const option = createEl('option', {
           id: optionId,
           value: this.localize(optionText[0]),
@@ -20096,7 +20362,7 @@
       this.addChild(ElFgColorFieldset);
       const ElBgColorFieldset = new TextTrackFieldset(player, {
         id_,
-        legendId: `captions-background-${id_}`,
+        legendId: `captions-edge-style-${id_}`,
         legendText: this.localize('Text Edge Style'),
         className: 'vjs-edge-style vjs-track-setting',
         selects: this.options_.fieldSets[1],
@@ -20659,7 +20925,7 @@
 
   /** @import Player from './player' */
 
-  const defaults = {
+  const defaults$1 = {
     trackingThreshold: 20,
     liveTolerance: 15
   };
@@ -20693,7 +20959,7 @@
      */
     constructor(player, options) {
       // LiveTracker does not need an element
-      const options_ = merge$2(defaults, options, {
+      const options_ = merge$2(defaults$1, options, {
         createEl: false
       });
       super(player, options_);
@@ -21131,6 +21397,120 @@
     }
   }
   Component$1.registerComponent('TitleBar', TitleBar);
+
+  /** @import Player from './player' */
+
+  /**
+   * @typedef {object} TransientButtonOptions
+   * @property {string} [controlText] Control text, usually visible for these buttons
+   * @property {number} [initialDisplay=4000] Time in ms that button should initially remain visible
+   * @property {Array<'top'|'neartop'|'bottom'|'left'|'right'>} [position] Array of position strings to add basic styles for positioning
+   * @property {string} [className] Class(es) to add
+   * @property {boolean} [takeFocus=false] Whether element sohuld take focus when shown
+   * @property {Function} [clickHandler] Function called on button activation
+   */
+
+  /** @type {TransientButtonOptions} */
+  const defaults = {
+    initialDisplay: 4000,
+    position: [],
+    takeFocus: false
+  };
+
+  /**
+   * A floating transient button.
+   * It's recommended to insert these buttons _before_ the control bar with the this argument to `addChild`
+   * for a logical tab order.
+   *
+   * @example
+   * ```
+   * player.addChild(
+   *   'TransientButton',
+   *   options,
+   *   player.children().indexOf(player.getChild("ControlBar"))
+   * )
+   * ```
+   *
+   * @extends Button
+   */
+  class TransientButton extends Button {
+    /**
+     * TransientButton constructor
+     *
+     * @param {Player} player The button's player
+     * @param {TransientButtonOptions} options Options for the transient button
+     */
+    constructor(player, options) {
+      options = merge$2(defaults, options);
+      super(player, options);
+      this.controlText(options.controlText);
+      this.hide();
+
+      // When shown, the float button will be visible even if the user is inactive.
+      // Clear this if there is any interaction.
+      this.on(this.player_, ['useractive', 'userinactive'], e => {
+        this.removeClass('force-display');
+      });
+    }
+
+    /**
+     * Return CSS class including position classes
+     *
+     * @return {string} CSS class list
+     */
+    buildCSSClass() {
+      return `vjs-transient-button focus-visible ${this.options_.position.map(c => `vjs-${c}`).join(' ')}`;
+    }
+
+    /**
+     * Create the button element
+     *
+     * @return {HTMLButtonElement} The button element
+     */
+    createEl() {
+      /** @type HTMLButtonElement */
+      const el = createEl('button', {}, {
+        type: 'button',
+        class: this.buildCSSClass()
+      }, createEl('span'));
+      this.controlTextEl_ = el.querySelector('span');
+      return el;
+    }
+
+    /**
+     * Show the button. The button will remain visible for the `initialDisplay` time, default 4s,
+     * and when there is user activity.
+     */
+    show() {
+      super.show();
+      this.addClass('force-display');
+      if (this.options_.takeFocus) {
+        this.el().focus({
+          preventScroll: true
+        });
+      }
+      this.forceDisplayTimeout = this.player_.setTimeout(() => {
+        this.removeClass('force-display');
+      }, this.options_.initialDisplay);
+    }
+
+    /**
+     * Hide the display, even if during the `initialDisplay` time.
+     */
+    hide() {
+      this.removeClass('force-display');
+      super.hide();
+    }
+
+    /**
+     * Dispose the component
+     */
+    dispose() {
+      this.player_.clearTimeout(this.forceDisplayTimeout);
+      super.dispose();
+    }
+  }
+  Component$1.registerComponent('TransientButton', TransientButton);
 
   /** @import Html5 from './html5' */
 
@@ -23334,6 +23714,12 @@
   /** @import { TimeRange } from './utils/time' */
   /** @import HtmlTrackElement from './tracks/html-track-element' */
 
+  /**
+   * @callback PlayerReadyCallback
+   * @this     {Player}
+   * @returns  {void}
+   */
+
   // The following tech events are simply re-triggered
   // on the player when they happen
   const TECH_EVENTS_RETRIGGER = [
@@ -23558,7 +23944,7 @@
      * @param {Object} [options]
      *        Object of option names and values.
      *
-     * @param {Function} [ready]
+     * @param {PlayerReadyCallback} [ready]
      *        Ready callback function.
      */
     constructor(tag, options, ready) {
@@ -29014,6 +29400,8 @@
    * @module videojs
    */
 
+  /** @import { PlayerReadyCallback } from './player' */
+
   /**
    * Normalize an `id` value by trimming off a leading `#`
    *
@@ -29025,13 +29413,6 @@
    *          The string, without any leading `#`.
    */
   const normalizeId = id => id.indexOf('#') === 0 ? id.slice(1) : id;
-
-  /**
-   * A callback that is called when a component is ready. Does not have any
-   * parameters and any callback value will be ignored. See: {@link Component~ReadyCallback}
-   *
-   * @callback ReadyCallback
-   */
 
   /**
    * The `videojs()` function doubles as the main function for users to create a
@@ -29094,7 +29475,7 @@
    *         Options object for providing settings.
    *         See: [Options Guide](https://docs.videojs.com/tutorial-options.html).
    *
-   * @param  {ReadyCallback} [ready]
+   * @param  {PlayerReadyCallback} [ready]
    *         A function to be called when the {@link Player} and {@link Tech} are
    *         ready.
    *
@@ -30063,7 +30444,6 @@
      * type of event through `on`
      * @return {boolean} if we could turn it off or not
      */;
-
     _proto.off = function off(type, listener) {
       if (!this.listeners[type]) {
         return false;
@@ -30087,7 +30467,6 @@
      *
      * @param {string} type the event name
      */;
-
     _proto.trigger = function trigger(type) {
       var callbacks = this.listeners[type];
       if (!callbacks) {
@@ -30113,7 +30492,6 @@
     /**
      * Destroys the stream and cleans up.
      */;
-
     _proto.dispose = function dispose() {
       this.listeners = {};
     }
@@ -30125,7 +30503,6 @@
      * @param {Stream} destination the stream that will receive all `data` events
      * @see http://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
      */;
-
     _proto.pipe = function pipe(destination) {
       this.on('data', function (data) {
         destination.push(data);
@@ -32400,7 +32777,7 @@
       var ls = list._refresh(list._node);
       __set__(list, 'length', ls.length);
       if (!list.$$length || ls.length < list.$$length) {
-        for (var i = ls.length; (i in list); i++) {
+        for (var i = ls.length; i in list; i++) {
           if (Object.prototype.hasOwnProperty.call(list, i)) {
             delete list[i];
           }
@@ -33112,7 +33489,6 @@
     if (cp) {
       cp.removeChild(node); //remove and update
     }
-
     if (node.nodeType === DOCUMENT_FRAGMENT_NODE) {
       var newFirst = node.firstChild;
       if (newFirst == null) {
@@ -33571,7 +33947,6 @@
         ];
       }
     }
-
     serializeToString(this, buf, isHtml, nodeFilter, visibleNamespaces);
     //console.log('###',this.nodeType,uri,prefix,buf.join(''))
     return buf.join('');
@@ -33634,7 +34009,6 @@
       }
       //buf.sort.apply(attrs, attributeSorter);
     }
-
     switch (node.nodeType) {
       case ELEMENT_NODE:
         var attrs = node.attributes;
@@ -33832,11 +34206,9 @@
       //can not hit in level3
       //default:throw e;
     }
-
     if (!node2) {
       node2 = node.cloneNode(false); //false
     }
-
     node2.ownerDocument = doc;
     node2.parentNode = null;
     if (deep) {
@@ -36225,7 +36597,6 @@
         locator.lineNumber++;
         //console.log('line++:',locator,startPos,endPos)
       }
-
       locator.columnNumber = p - lineStart + 1;
     }
     var lineStart = 0;
@@ -36394,7 +36765,6 @@
             //fatalError: equal must after attrName or space after attrName
             throw new Error('attribute equal must after attrName'); // No known test case
           }
-
           break;
         case '\'':
         case '"':
@@ -36425,7 +36795,6 @@
             //fatalError: no equal before
             throw new Error('attribute value must after "="'); // No known test case
           }
-
           break;
         case '/':
           switch (s) {
@@ -36447,7 +36816,6 @@
               throw new Error("attribute invalid close char('/')");
             // No known test case
           }
-
           break;
         case '':
           //end document
@@ -36589,7 +36957,6 @@
           _copy(currentNSMap, currentNSMap = {});
           //console.log(currentNSMap,1)
         }
-
         currentNSMap[nsPrefix] = localNSMap[nsPrefix] = value;
         a.uri = NAMESPACE$1.XMLNS;
         domBuilder.startPrefixMapping(nsPrefix, value);
@@ -36611,7 +36978,6 @@
         }
       }
     }
-
     var nsp = tagName.indexOf(':');
     if (nsp > 0) {
       prefix = el.prefix = tagName.slice(0, nsp);
@@ -36660,7 +37026,6 @@
         //}
       }
     }
-
     return elStartEnd + 1;
   }
   function fixSelfClosed(source, elStartEnd, tagName, closeMap) {
@@ -36678,7 +37043,6 @@
     return pos < elStartEnd;
     //}
   }
-
   function _copy(source, target) {
     for (var n in source) {
       if (Object.prototype.hasOwnProperty.call(source, n)) {
@@ -36800,7 +37164,6 @@
     //	getType:function(uri,localName){}
     //	getType:function(i){},
   };
-
   function split(source, start) {
     var match;
     var buf = [];
@@ -37011,7 +37374,6 @@
           this.doc.appendChild(charNode);
           //process xml
         }
-
         this.locator && position(this.locator, charNode);
       }
     },
@@ -40303,7 +40665,7 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 3.13.0 @license Apache-2.0 */
+  /*! @name @videojs/http-streaming @version 3.13.2 @license Apache-2.0 */
 
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
@@ -44808,7 +45170,6 @@
       // reserved
       0x56, 0x69, 0x64, 0x65, 0x6f, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x00 // name: 'VideoHandler'
       ]);
-
       AUDIO_HDLR = new Uint8Array([0x00,
       // version 0
       0x00, 0x00, 0x00,
@@ -44825,7 +45186,6 @@
       // reserved
       0x53, 0x6f, 0x75, 0x6e, 0x64, 0x48, 0x61, 0x6e, 0x64, 0x6c, 0x65, 0x72, 0x00 // name: 'SoundHandler'
       ]);
-
       HDLR_TYPES = {
         video: VIDEO_HDLR,
         audio: AUDIO_HDLR
@@ -44844,7 +45204,6 @@
       // version 0
       0x00, 0x00, 0x01 // entry_flags
       ]);
-
       SMHD = new Uint8Array([0x00,
       // version
       0x00, 0x00, 0x00,
@@ -44853,14 +45212,12 @@
       // balance, 0 means centered
       0x00, 0x00 // reserved
       ]);
-
       STCO = new Uint8Array([0x00,
       // version
       0x00, 0x00, 0x00,
       // flags
       0x00, 0x00, 0x00, 0x00 // entry_count
       ]);
-
       STSC = STCO;
       STSZ = new Uint8Array([0x00,
       // version
@@ -44870,7 +45227,6 @@
       // sample_size
       0x00, 0x00, 0x00, 0x00 // sample_count
       ]);
-
       STTS = STCO;
       VMHD = new Uint8Array([0x00,
       // version
@@ -44881,7 +45237,6 @@
       0x00, 0x00, 0x00, 0x00, 0x00, 0x00 // opcolor
       ]);
     })();
-
     box = function (type) {
       var payload = [],
         size = 0,
@@ -44949,7 +45304,6 @@
       track.audioobjecttype << 3 | track.samplingfrequencyindex >>> 1, track.samplingfrequencyindex << 7 | track.channelcount << 3, 0x06, 0x01, 0x02 // GASpecificConfig
       ]));
     };
-
     ftyp = function () {
       return box(types.ftyp, MAJOR_BRAND, MINOR_VERSION, MAJOR_BRAND, AVC1_BRAND);
     };
@@ -44995,7 +45349,6 @@
       (sequenceNumber & 0xFF000000) >> 24, (sequenceNumber & 0xFF0000) >> 16, (sequenceNumber & 0xFF00) >> 8, sequenceNumber & 0xFF // sequence_number
       ]));
     };
-
     minf = function (track) {
       return box(types.minf, track.type === 'video' ? box(types.vmhd, VMHD) : box(types.smhd, SMHD), dinf(), stbl(track));
     };
@@ -45059,7 +45412,6 @@
       // pre_defined
       0xff, 0xff, 0xff, 0xff // next_track_ID
       ]);
-
       return box(types.mvhd, bytes);
     };
     sdtp = function (track) {
@@ -45156,7 +45508,6 @@
         // maxBitrate
         0x00, 0x2d, 0xc6, 0xc0 // avgBitrate
         ]))];
-
         if (track.sarRatio) {
           var hSpacing = track.sarRatio[0],
             vSpacing = track.sarRatio[1];
@@ -45220,7 +45571,6 @@
       // width
       (track.height & 0xFF00) >> 8, track.height & 0xFF, 0x00, 0x00 // height
       ]);
-
       return box(types.tkhd, result);
     };
     /**
@@ -45244,7 +45594,6 @@
       // default_sample_size
       0x00, 0x00, 0x00, 0x00 // default_sample_flags
       ]));
-
       upperWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime / MAX_UINT32);
       lowerWordBaseMediaDecodeTime = Math.floor(track.baseMediaDecodeTime % MAX_UINT32);
       trackFragmentDecodeTime = box(types.tfdt, new Uint8Array([0x01,
@@ -45349,7 +45698,6 @@
         (offset & 0xFF000000) >>> 24, (offset & 0xFF0000) >>> 16, (offset & 0xFF00) >>> 8, offset & 0xFF // data_offset
         ];
       };
-
       videoTrun = function (track, offset) {
         var bytesOffest, bytes, header, samples, sample, i;
         samples = track.samples || [];
@@ -45380,7 +45728,6 @@
           bytes[bytesOffest++] = (sample.compositionTimeOffset & 0xFF00) >>> 8;
           bytes[bytesOffest++] = sample.compositionTimeOffset & 0xFF; // sample_composition_time_offset
         }
-
         return box(types.trun, bytes);
       };
       audioTrun = function (track, offset) {
@@ -45403,7 +45750,6 @@
           bytes[bytesOffest++] = (sample.size & 0xFF00) >>> 8;
           bytes[bytesOffest++] = sample.size & 0xFF; // sample_size
         }
-
         return box(types.trun, bytes);
       };
       trun$1 = function (track, offset) {
@@ -45902,7 +46248,6 @@
           duration: 1024 // For AAC audio, all samples contain 1024 samples
         });
       }
-
       return samples;
     }; // generate the track's sample table from an array of frames
 
@@ -46216,13 +46561,11 @@
       // eslint-disable-line no-use-before-define
       new Cea608Stream(1, 1) // eslint-disable-line no-use-before-define
       ];
-
       if (this.parse708captions_) {
         this.cc708Stream_ = new Cea708Stream({
           captionServices: options.captionServices
         }); // eslint-disable-line no-use-before-define
       }
-
       this.reset(); // forward data and done events from CCs to this CaptionStream
 
       this.ccStreams_.forEach(function (cc) {
@@ -46457,7 +46800,6 @@
       // ⎡
       0x10a0: 0x3138 // ㄸ (CC char)
     };
-
     var get708CharFromCode = function (code) {
       var newCode = CHARACTER_TRANSLATION_708[code] || code;
       if (code & 0x1000 && code === newCode) {
@@ -47439,7 +47781,6 @@
       // └
       0x033f: 0x2518 // ┘
     };
-
     var getCharFromCode = function (code) {
       if (code === null) {
         return '';
@@ -47652,7 +47993,6 @@
         } // finish data processing
       };
     };
-
     Cea608Stream.prototype = new Stream$7(); // Trigger a cue point that captures the current state of the
     // display buffer
 
@@ -49231,7 +49571,6 @@
           // the number is odd if the low order bit is set
           return 1 + valu >>> 1; // add 1 to make it even, and divide by 2
         }
-
         return -1 * (valu >>> 1); // divide by two then make it negative
       }; // Some convenience functions
       // :Boolean
@@ -49600,7 +49939,6 @@
           if (chromaFormatIdc === 3) {
             expGolombDecoder.skipBits(1); // separate_colour_plane_flag
           }
-
           expGolombDecoder.skipUnsignedExpGolomb(); // bit_depth_luma_minus8
 
           expGolombDecoder.skipUnsignedExpGolomb(); // bit_depth_chroma_minus8
@@ -49639,7 +49977,6 @@
             expGolombDecoder.skipExpGolomb(); // offset_for_ref_frame[ i ]
           }
         }
-
         expGolombDecoder.skipUnsignedExpGolomb(); // max_num_ref_frames
 
         expGolombDecoder.skipBits(1); // gaps_in_frame_num_value_allowed_flag
@@ -49650,7 +49987,6 @@
         if (frameMbsOnlyFlag === 0) {
           expGolombDecoder.skipBits(1); // mb_adaptive_frame_field_flag
         }
-
         expGolombDecoder.skipBits(1); // direct_8x8_inference_flag
 
         if (expGolombDecoder.readBoolean()) {
@@ -49795,7 +50131,6 @@
     var parseIso88591 = function (bytes, start, end) {
       return unescape(percentEncode(bytes, start, end)); // jshint ignore:line
     };
-
     var parseAdtsSize = function (header, byteIndex) {
       var lowThree = (header[byteIndex + 5] & 0xE0) >> 5,
         middle = header[byteIndex + 4] << 3,
@@ -52234,7 +52569,6 @@
           pes.dts += (packet[offset + 18] & 0x06) >>> 1; // OR by the two LSBs
         }
       }
-
       return pes;
     };
     var parseNalUnitType = function (type) {
@@ -53269,7 +53603,6 @@
       dequeue(transmuxer);
       /* eslint-enable */
     };
-
     const handleError = () => {
       const error = {
         message: 'Received an error message from the transmuxer worker',
@@ -54247,11 +54580,7 @@
           triggerSegmentEventFn({
             type: 'segmentdecryptionstart',
             segment
-          }); // add -init to the "id" to differentiate between segment
-          // and init segment decryption, just in case they happen
-          // at the same time at some point in the future.
-
-          segment.requestId += '-init';
+          });
           return decrypt({
             decryptionWorker,
             // add -init to the "id" to differentiate between segment
@@ -55930,6 +56259,32 @@
     }
     return false;
   };
+  const shouldFixBadTimelineChanges = timelineChangeController => {
+    if (!timelineChangeController) {
+      return false;
+    }
+    const pendingAudioTimelineChange = timelineChangeController.pendingTimelineChange({
+      type: 'audio'
+    });
+    const pendingMainTimelineChange = timelineChangeController.pendingTimelineChange({
+      type: 'main'
+    });
+    const hasPendingTimelineChanges = pendingAudioTimelineChange && pendingMainTimelineChange;
+    const differentPendingChanges = hasPendingTimelineChanges && pendingAudioTimelineChange.to !== pendingMainTimelineChange.to;
+    const isNotInitialPendingTimelineChange = hasPendingTimelineChanges && pendingAudioTimelineChange.from !== -1 && pendingMainTimelineChange.from !== -1;
+    if (isNotInitialPendingTimelineChange && differentPendingChanges) {
+      return true;
+    }
+    return false;
+  };
+  const fixBadTimelineChange = segmentLoader => {
+    if (!segmentLoader) {
+      return;
+    }
+    segmentLoader.pause();
+    segmentLoader.resetEverything();
+    segmentLoader.load();
+  };
   const mediaDuration = timingInfos => {
     let maxDuration = 0;
     ['video', 'audio'].forEach(function (type) {
@@ -57439,6 +57794,9 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
         loaderType: this.loaderType_,
         audioDisabled: this.audioDisabled_
       })) {
+        if (shouldFixBadTimelineChanges(this.timelineChangeController_)) {
+          fixBadTimelineChange(this);
+        }
         return false;
       }
       return true;
@@ -57480,7 +57838,8 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
 
       if (hasAudio && !this.audioDisabled_ && !isMuxed && !segmentInfo.audioTimingInfo) {
         return false;
-      }
+      } // we need to allow an append here even if we're moving to different timelines.
+
       if (shouldWaitForTimelineChange({
         timelineChangeController: this.timelineChangeController_,
         currentTimeline: this.currentTimeline_,
@@ -57488,6 +57847,9 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
         loaderType: this.loaderType_,
         audioDisabled: this.audioDisabled_
       })) {
+        if (shouldFixBadTimelineChanges(this.timelineChangeController_)) {
+          fixBadTimelineChange(this);
+        }
         return false;
       }
       return true;
@@ -59320,7 +59682,7 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
     videoTimestampOffset(offset) {
       if (typeof offset !== 'undefined' && this.videoBuffer &&
       // no point in updating if it's the same
-      this.videoTimestampOffset !== offset) {
+      this.videoTimestampOffset_ !== offset) {
         pushQueue({
           type: 'video',
           sourceUpdater: this,
@@ -60869,7 +61231,6 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
        * type of event through `on`
        * @return {boolean} if we could turn it off or not
        */;
-
       _proto.off = function off(type, listener) {
         if (!this.listeners[type]) {
           return false;
@@ -60893,7 +61254,6 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
        *
        * @param {string} type the event name
        */;
-
       _proto.trigger = function trigger(type) {
         var callbacks = this.listeners[type];
         if (!callbacks) {
@@ -60919,7 +61279,6 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       /**
        * Destroys the stream and cleans up.
        */;
-
       _proto.dispose = function dispose() {
         this.listeners = {};
       }
@@ -60931,7 +61290,6 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
        * @param {Stream} destination the stream that will receive all `data` events
        * @see http://nodejs.org/api/stream.html#stream_readable_pipe_destination_options
        */;
-
       _proto.pipe = function pipe(destination) {
         this.on('data', function (data) {
           destination.push(data);
@@ -61425,7 +61783,6 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       /* eslint-enable */
     };
   }));
-
   var Decrypter = factory(workerCode);
   /* rollup-plugin-worker-factory end for worker!/home/runner/work/http-streaming/http-streaming/src/decrypter-worker.js */
 
@@ -63605,16 +63962,11 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       this.waitingForFastQualityPlaylistReceived_ = true;
     }
     runFastQualitySwitch_() {
-      this.waitingForFastQualityPlaylistReceived_ = false; // Delete all buffered data to allow an immediate quality switch, then seek to give
-      // the browser a kick to remove any cached frames from the previous rendtion (.04 seconds
-      // ahead was roughly the minimum that will accomplish this across a variety of content
-      // in IE and Edge, but seeking in place is sufficient on all other browsers)
-      // Edge/IE bug: https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/14600375/
-      // Chrome bug: https://bugs.chromium.org/p/chromium/issues/detail?id=651904
+      this.waitingForFastQualityPlaylistReceived_ = false; // Delete all buffered data to allow an immediate quality switch.
 
       this.mainSegmentLoader_.pause();
       this.mainSegmentLoader_.resetEverything(() => {
-        this.tech_.setCurrentTime(this.tech_.currentTime());
+        this.mainSegmentLoader_.load();
       }); // don't need to reset audio as it is reset when media changes
     }
     /**
@@ -65652,7 +66004,7 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
   const reloadSourceOnError = function (options) {
     initPlugin(this, options);
   };
-  var version$4 = "3.13.0";
+  var version$4 = "3.13.2";
   var version$3 = "7.0.3";
   var version$2 = "1.3.0";
   var version$1 = "7.1.0";

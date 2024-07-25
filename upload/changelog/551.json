@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"76",
+  "revision":"77",
   "status":"dev",
   "detail":[
     {
@@ -160,7 +160,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.14.1"
+        "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
       ]
     }
