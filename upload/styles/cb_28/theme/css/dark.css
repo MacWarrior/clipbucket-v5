@@ -1,0 +1,225 @@
+/* Dark theme*/
+html.dark body {
+    background-image: url('../../images/dark.jpg');
+    background-attachment: fixed;
+    background-position: center;
+}
+
+html.dark #header,
+html.dark .dropdown-menu,
+html.dark .item-channel .user-block,
+html.dark .item-channel .channel-holder{
+    background: #0e0b14;
+}
+
+html.dark #header .main-links>ul>li>a,
+html.dark .navbar-default .right-menu.navbar-nav>li>a,
+html.dark #header .dropdown-menu>li>a,
+html.dark h1,
+html.dark #header .search .cbsearchtype .search-drop .btn-default .search-type,
+html.dark #sidebar h2,
+html.dark #header .search .cbsearchtype .btn-default,
+html.dark .videos .video-info .title a,
+html.dark .btn-loadmore,
+html.dark .collections-grid .title,
+html.dark .item-channel .info strong span,
+html.dark .item-channel h2,
+html.dark .collections .title,
+html.dark .filter-dropdowns .cat-col .btn-default,
+html.dark .user-activities .feed,
+html.dark .cover .profile-buttons h2,
+html.dark .featured-video .title a,
+html.dark .featured-video .views-date span,
+html.dark .video-details header.details h1,
+html.dark .video-details header.details .user-video-info .user-title a,
+html.dark body,
+html.dark .view-tabs .alert-info,
+html.dark .watch-vid-details .desc-list,
+html.dark .dropdown-menu>li>a,
+html.dark .view-tabs .nav-tabs.nav>li:not(.active)>a:hover,
+html.dark .form-control,
+html.dark .select-area,
+html.dark .select-area .select-opener,
+html.dark .select-options ul a,
+html.dark .item-photo .photo-info strong a,
+html.dark .view-details header.details h1,
+html.dark .view-details header.details .user-video-info .user-title a,
+html.dark .flat-tabs .nav-tabs.nav>li.active>a,
+html.dark .flat-tabs .nav-tabs.nav>li:not(.active)>a:hover,
+html.dark #footer .langdrop .dropdown-menu li a,
+html.dark .manage-page .nav-pills>li>a,
+html.dark a,
+html.dark .manage-page,
+html.dark h5,
+html.dark button:hover,
+html.dark button:focus,
+html.dark .account_box,
+html.dark .nav-tabs>li.active>a,
+html.dark .fav-repo .desc-list,
+html.dark .sidebar-channels .channel-item .channel-info h3 a{
+    color: #f9f9f9;
+}
+
+html.dark #header .search .cbsearchtype,
+html.dark #header .search .cbsearchtype .search-drop{
+    background: linear-gradient(rgb(48, 50, 62), rgb(30, 31, 42));
+}
+
+html.dark #header .search .cbsearchtype .search-drop {
+    border-right: 1px solid #f9f9f9;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+html.dark .navbar-default .right-menu.navbar-nav>li>a.btn-upload:hover,
+html.dark .btn-loadmore,
+html.dark .videos .video-info,
+html.dark .sidebar-items,
+html.dark .collections-grid .title,
+html.dark .item-channel .info,
+html.dark .collections .title,
+html.dark .filter-dropdowns .cat-col .btn-default,
+html.dark .cover .profile-buttons,
+html.dark .cover .avatar,
+html.dark .video-details,
+html.dark .item-photo .photo-info,
+html.dark .view-details,
+html.dark .breadcrumb,
+html.dark .cb-box,
+html.dark .channel-tabs,
+html.dark .manage-page button,
+html.dark .fav-repo,
+html.dark .sidebar-channels,
+html.dark .sidebar-playlists .playlist{
+    background: linear-gradient(rgb(48, 50, 62), rgb(30, 31, 42));
+    box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.80);
+}
+
+html.dark #header{
+    box-shadow: 0 5px 50px 0 rgba(0, 0, 0, 0.80);
+}
+
+html.dark .featured-videos .cd-popup-trigger{
+    box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.80);
+}
+
+html.dark .form-control,
+html.dark .select-area,
+html.dark .select-area .select-opener,
+html.dark .select-options,
+html.dark .nav-tabs>li.active>a,
+html.dark .nav-tabs>li.active>a:hover,
+html.dark .nav>li>a:hover,
+html.dark .nav>li>a:focus,
+html.dark .table-striped>tbody>tr:nth-of-type(odd),
+html.dark .btn-ghost{
+    background-color: #2a2a2a;
+}
+
+html.dark #header .dropdown-menu>li>a,
+html.dark .navbar-default .right-menu.navbar-nav>li>a.btn-upload,
+html.dark .item-channel .channel-holder,
+html.dark .breadcrumb{
+    border-color: #2a2a2a;
+}
+
+html.dark .videos .video-info,
+html.dark .featured-videos .item-video .video-link .img-responsive,
+html.dark .featured-videos .item-video .video-link,
+html.dark .featured-videos .item-video .video-link .title,
+html.dark .featured-videos .item-video .video-link:after,
+html.dark .collections .title,
+html.dark .cover .profile-buttons,
+html.dark .item-photo .photo-info,
+html.dark .photo-view,
+html.dark #gallery,
+html.dark .channel-tabs{
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+html.dark .item-video .thumb-holder .video-link .img-responsive,
+html.dark .item-video .thumb-holder .video-link,
+html.dark .item-channel .user-block,
+html.dark .collections .photo-block img,
+html.dark .video-js .vjs-tech,
+html.dark .video-js .vjs-big-play-button,
+html.dark .vjs-has-started .vjs-cb-header-caption,
+html.dark .item-photo .photo-holder,
+html.dark .photo-view,
+html.dark #gallery{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+html.dark .item-channel .channel-holder{
+    border-width: 2px;
+}
+
+html.dark .sidebar-items,
+html.dark .collections-grid .photo-block img,
+html.dark .popular-video .img-responsive,
+html.dark .video-details,
+html.dark .view-details,
+html.dark .breadcrumb,
+html.dark .item-channel .channel-holder,
+html.dark .cb-box,
+html.dark .manageVid_thumb img,
+html.dark .media-object.imgobject,
+html.dark .fav-repo,
+html.dark .sidebar-channels,
+html.dark .sidebar-playlists .playlist,
+html.dark .sidebar-playlists .playlist .img-responsive{
+    border-radius: 5px;
+}
+
+html.dark .dropdown-menu>li>a:hover,
+html.dark .select-options .item-selected a,
+html.dark .filter-dropdowns .dropdown-menu>li>div:hover,
+html.dark .filter-dropdowns .sorting-col .dropdown-menu>li a:hover{
+    background: #0080b4;
+}
+
+html.dark .view-tabs .nav-tabs.nav>li,
+html.dark .flat-tabs .nav-tabs.nav>li:not(.active)>a{
+    color: #cacaca;
+}
+
+html.dark .btn-loadmore:hover,
+html.dark button:hover{
+    border-color: #0080b4;
+}
+
+html.dark .featured-video,
+html.dark .well,
+html.dark .sidebar-channels .channel-item{
+    background: none;
+}
+
+html.dark .video-js .vjs-big-play-button {
+    border-bottom-left-radius: initial;
+    border-bottom-right-radius: initial;
+}
+
+html.dark .manage-page .nav-pills>li.active>a{
+    background: #0080b4;
+}
+
+html.dark .manage-page .nav-pills>li.active,
+html.dark .manage-page .nav-pills>li:has(+ li.active),
+html.dark .manage-page .nav-pills>li:not(:has(+ li)){
+    border: none;
+}
+
+html.dark .manage-page .nav-pills>li{
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    border-color: #f9f9f9;
+    border-radius: 0;
+}
+
+html.dark .msg,
+html.dark .error{
+    color: #30323E;
+}

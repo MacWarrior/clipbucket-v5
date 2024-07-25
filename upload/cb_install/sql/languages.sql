@@ -1161,5 +1161,5 @@ VALUES ('admin_setting'),
        ('global'),
        ('option_default_theme'),
        ('option_default_theme_light_original'),
-       ('option_default_theme_light_new'),
+       ('option_default_theme_light'),
        ('option_default_theme_dark');

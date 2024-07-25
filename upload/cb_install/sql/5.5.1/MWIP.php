@@ -25,7 +25,7 @@ class MWIP extends \Migration
             'fr' => 'Clair (Original)',
             'en' => 'Light (Original)'
         ]);
-        self::generateTranslation('option_default_theme_light_new', [
+        self::generateTranslation('option_default_theme_light', [
             'fr' => 'Clair',
             'en' => 'Light'
         ]);
