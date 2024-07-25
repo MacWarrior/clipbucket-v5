@@ -9,8 +9,10 @@ class WIP extends \Migration
      */
     public function start()
     {
-        $sql = 'INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`) VALUES
+        $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`) VALUES
     (\'correct_video_categorie_label\', \'correct_video_categorie_description\', \'AdminTool::correctVideoCategorie\', \'correct_video_categorie\')';
+        self::query($sql);
+
         self::generateTranslation('correct_video_categorie_label', [
             'fr' => 'Correction des vidéos sans catégorie',
             'en' => 'Correct video categories'
