@@ -49,10 +49,11 @@ class Migration
     }
 
     /**
+     * @param bool $upgrade_version
      * @return bool
      * @throws Exception
      */
-    public function launch(): bool
+    public function launch(bool $upgrade_version = true): bool
     {
         Clipbucket_db::getInstance()->begin_transaction();
         try {
@@ -73,7 +74,9 @@ class Migration
             throw new Exception($e->getMessage());
         }
         Clipbucket_db::getInstance()->commit();
-        $this->updateVersion();
+        if ($upgrade_version) {
+            $this->updateVersion();
+        }
         return true;
     }
 

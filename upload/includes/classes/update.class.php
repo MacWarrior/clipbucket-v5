@@ -287,6 +287,17 @@ class Update
         return false;
     }
 
+    public function isWIPFile()
+    {
+        if (!in_dev()) {
+            return false;
+        }
+        if (!file_exists(DirPath::get('sql') . $this->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * @param bool $count
      * @param string $version
@@ -387,6 +398,7 @@ class Update
         }
 
         assign('current_updating', $current_updating);
+        assign('launch_wip', $this->isWIPFile());
 
         assign('need_core_update', false);
         assign('show_core_update', false);
