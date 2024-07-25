@@ -54,7 +54,7 @@ $(document).ready(function () {
             singleField: true,
             fieldName: "tags",
             readOnly: false,
-            singleFieldNode: $('#tags' + id),
+            singleFieldNode: $('#tags_video' + id),
             animate: true,
             caseSensitive:false
         });

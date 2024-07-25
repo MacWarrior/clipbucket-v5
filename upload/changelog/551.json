@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"74",
+  "revision":"77",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Fix discord config"
         ,"Fix PHP CLI infos"
         ,"Fix video file deletion <i>(#390)</i>"
+        ,"Fix video mass upload tags"
       ]
     },
     {
@@ -60,6 +61,7 @@
         ,"Add edit button on video & photo pages <i>(#319)</i>"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
+        ,"Update collection creation on photo upload"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
@@ -85,6 +87,8 @@
         ,"Fix large file chunked upload"
         ,"Fix video page display <i>(#387)</i>"
         ,"Fix user avatar on video page <i>(#389)</i>"
+        ,"Fix collection creation when comments are fully disabled"
+        ,"Fix photo report"
       ]
     },
     {
@@ -129,6 +133,7 @@
         ,"Fix categories creation in update 5.5.0 - 331"
         ,"Fix dependancies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
+        ,"Fix SQL typo"
       ]
     },
     {
@@ -155,7 +160,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.14.1"
+        "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
       ]
     }
