@@ -1,14 +1,14 @@
 {assign var='requiredFields' value=$Upload->loadRequiredFields($file)}
 
 {$requiredFields.title.class='form-control'}
-{$requiredFields.tags.class='form-control'}
+{$requiredFields.tags_video.class='form-control'}
 
 {$requiredFields.cat.class='form-control'}
 
 {assign var='hash' value=hash('sha512', $file.path|cat:$file.file)}
 
 {$requiredFields.title.name="{$hash|cat:'_title'}"}
-{$requiredFields.tags.name="{$hash|cat:'_tags'}"}
+{$requiredFields.tags_video.name="{$hash|cat:'_tags'}"}
 
 {$requiredFields.desc.name="{$hash|cat:'_description'}"}
 {$requiredFields.cat.name="{$hash|cat:'_cat[]'}"}
@@ -17,7 +17,7 @@
 	{$requiredFields.audio_track.name="{$hash|cat:'_track'}"}
 	{$requiredFields.audio_track.class='form-control'}
 {/if}
-{$requiredFields.tags.id="{$requiredFields.tags.id|cat:$index}"}
+{$requiredFields.tags_video.id="{$requiredFields.tags_video.id|cat:$index}"}
 
 <div class="well">
 	<input type="checkbox" name="{$hash}" class="checkboxMassImport"/>
@@ -30,8 +30,8 @@
 			</div>
 
 			<div class="col-md-6">
-				<label for="{$requiredFields.tags.id}"><b style="color:#000000;">{$requiredFields.tags.title}</b></label>
-				{$formObj->createField($requiredFields.tags)}
+				<label for="{$requiredFields.tags_video.id}"><b style="color:#000000;">{$requiredFields.tags_video.title}</b></label>
+				{$formObj->createField($requiredFields.tags_video)}
 				<ul id="list_tags{$index}" data-id="{$index}"></ul>
 			</div>
 		</div>
