@@ -1159,4 +1159,6 @@ VALUES ('admin_setting'),
        ('core_updating'),
        ('launch_wip'),
        ('correct_video_categorie_label'),
-       ('correct_video_categorie_description');
+       ('correct_video_categorie_description'),
+       ('delete_unused_resolution_files_label'),
+       ('delete_unused_resolution_files_description');
