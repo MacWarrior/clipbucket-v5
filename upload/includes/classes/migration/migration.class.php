@@ -329,7 +329,7 @@ class Migration
     public static function insertTool(string $code, string $tool_function)
     {
         $label = mysql_clean($code);
-        $sql = 'INSERT INTO ' . tbl('tools') . ' (language_key_label, language_key_description, function_name, code) 
+        $sql = 'INSERT IGNORE INTO ' . tbl('tools') . ' (language_key_label, language_key_description, function_name, code) 
             VALUES (\'' . $label . '_label\', \'' . $label . '_description\', \'' . mysql_clean($tool_function) . '\', \'' . $label . '\' )';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }

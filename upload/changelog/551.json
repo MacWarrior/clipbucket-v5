@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"79",
+  "revision":"80",
   "status":"dev",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Implement video thumbs regeneration through SSE"
         ,"Implement WIP migration"
         ,"Implement missing video categorie fix tool"
+        ,"Implement video resolutions files deletion tool"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"

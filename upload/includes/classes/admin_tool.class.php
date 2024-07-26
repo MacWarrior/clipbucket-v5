@@ -636,9 +636,12 @@ class AdminTool
         $this->executeTool('Video::correctVideoCategorie');
     }
 
+    /**
+     * @throws Exception
+     */
     public function deleteUnusedResolutionFile()
     {
-        Clipbucket_db::getInstance()->execute('set @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM '.tbl('video_resolution').' WHERE enabled = false);');
+        Clipbucket_db::getInstance()->execute('SET @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM '.tbl('video_resolution').' WHERE enabled = false);');
         $sql = 'SELECT V.videoid
                     FROM '.tbl('video').' V
                     WHERE  JSON_CONTAINS_PATH(
@@ -646,7 +649,9 @@ class AdminTool
                         ,\'one\', \'$.a\', \'$.b\'
                     );';
         $videos = Clipbucket_db::getInstance()->_select($sql);
-        $this->array_loop = array_column($videos, 'videoid');
+        if( !empty($videos) ){
+            $this->array_loop = array_column($videos, 'videoid');
+        }
         $this->executeTool('Video::deleteUnusedVideoFIles');
     }
 }
