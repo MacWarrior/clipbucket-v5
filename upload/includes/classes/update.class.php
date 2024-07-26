@@ -287,15 +287,18 @@ class Update
         return false;
     }
 
-    public function isWIPFile()
+    /**
+     * @throws Exception
+     */
+    public function isWIPFile(): bool
     {
         if (!in_dev()) {
             return false;
         }
-        if (!file_exists(DirPath::get('sql') . $this->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
-            return false;
+        if (file_exists(DirPath::get('sql') . $this->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
