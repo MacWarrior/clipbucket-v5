@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"77",
+  "revision":"78",
   "status":"dev",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Implement video description censor"
         ,"Implement user profile censor"
         ,"Implement video thumbs regeneration through SSE"
+        ,"Implement WIP migration"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
