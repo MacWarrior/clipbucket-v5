@@ -610,6 +610,9 @@ class Video
         return CMS::getInstance($description, $params)->getClean();
     }
 
+    /**
+     * @throws Exception
+     */
     public static function correctVideoCategorie($id)
     {
         Category::getInstance()->link('video', $id, Category::getInstance()->getDefaultByType('video')['category_id']);

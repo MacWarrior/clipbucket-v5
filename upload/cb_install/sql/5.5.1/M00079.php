@@ -2,7 +2,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class WIP extends \Migration
+class MWIP extends \Migration
 {
     /**
      * @throws \Exception
@@ -10,7 +10,7 @@ class WIP extends \Migration
     public function start()
     {
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`) VALUES
-    (\'correct_video_categorie_label\', \'correct_video_categorie_description\', \'AdminTool::correctVideoCategorie\', \'correct_video_categorie\')';
+            (\'correct_video_categorie_label\', \'correct_video_categorie_description\', \'AdminTool::correctVideoCategorie\', \'correct_video_categorie\')';
         self::query($sql);
 
         self::generateTranslation('correct_video_categorie_label', [
