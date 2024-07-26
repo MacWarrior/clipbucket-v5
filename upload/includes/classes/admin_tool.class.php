@@ -619,4 +619,20 @@ class AdminTool
         $this->array_loop = array_column($photos, 'photo_id');
         $this->executeTool('Photo::generatePhoto');
     }
+
+    /**
+     * @throws Exception
+     */
+    public function correctVideoCategorie()
+    {
+        $videos = Video::getInstance()->getAll([
+            'condition'=> 'videos_categories.id_video IS NULL'
+        ]);
+
+        if( !empty($videos) ){
+            $this->array_loop = array_column($videos, 'videoid');
+        }
+
+        $this->executeTool('Video::correctVideoCategorie');
+    }
 }
