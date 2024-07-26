@@ -611,6 +611,14 @@ class Video
     }
 
     /**
+     * @throws Exception
+     */
+    public static function correctVideoCategorie($id)
+    {
+        Category::getInstance()->link('video', $id, Category::getInstance()->getDefaultByType('video')['category_id']);
+    }
+
+    /**
      * @param $videoid
      * @return void
      * @throws Exception
@@ -630,7 +638,6 @@ class Video
             }
         }
     }
-
 }
 
 class CBvideo extends CBCategory

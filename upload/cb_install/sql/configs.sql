@@ -308,6 +308,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('update_core_label', 'update_core_description', 'AdminTool::updateCore', 'update_core'),
     ('clean_session_table_label', 'clean_session_table_description', 'AdminTool::cleanSessionTable', 'clean_session_table'),
     ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 'tool_recalcul_video_file'),
+    ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 'recreate_thumb'),
+    ('correct_video_categorie_label', 'correct_video_categorie_description', 'AdminTool::correctVideoCategorie', 'correct_video_categorie'),
     ('delete_unused_resolution_files_label', 'delete_unused_resolution_files_description', 'AdminTool::deleteUnusedResolutionFile', 'delete_unused_resolution_files');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');

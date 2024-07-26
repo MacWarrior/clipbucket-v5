@@ -620,6 +620,22 @@ class AdminTool
         $this->executeTool('Photo::generatePhoto');
     }
 
+    /**
+     * @throws Exception
+     */
+    public function correctVideoCategorie()
+    {
+        $videos = Video::getInstance()->getAll([
+            'condition'=> 'videos_categories.id_video IS NULL'
+        ]);
+
+        if( !empty($videos) ){
+            $this->array_loop = array_column($videos, 'videoid');
+        }
+
+        $this->executeTool('Video::correctVideoCategorie');
+    }
+
     public function deleteUnusedResolutionFile()
     {
         Clipbucket_db::getInstance()->execute('set @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM '.tbl('video_resolution').' WHERE enabled = false);');
