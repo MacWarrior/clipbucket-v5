@@ -12,9 +12,13 @@ ClipBucket::getInstance()->addCSS([
 
 if( config('default_theme') != '' ){
     ClipBucket::getInstance()->addCSS([
-        config('default_theme') . $min_suffixe . '.css' => 'admin'
+        'themes/' . config('default_theme') . $min_suffixe . '.css' => 'admin'
     ]);
 }
+
+ClipBucket::getInstance()->addCSS([
+    'themes/default' . $min_suffixe . '.css' => 'admin'
+]);
 
 ClipBucket::getInstance()->addJS([
     'jquery-3.7.1.min.js'                        => 'admin',

@@ -1,0 +1,128 @@
+/* Default theme*/
+
+/* Variables */
+html {
+    --color-main-01 : #0080b4;
+    --color-main-02 : #fff;
+
+    --color-01 : #fff;
+    --color-02 : #404040;
+    --color-03 : #d9d9d9;
+    --color-04 : #757575;
+
+    --color-header-search-category : #ececec;
+    --color-header-search : #f9f9f9;
+    --color-footer-dropdown : #c8efff;
+}
+
+/* Generic */
+/* Dropdown menu */
+.dropdown-menu{
+    background: var(--color-01);
+}
+.dropdown-menu>li>a{
+    color: var(--color-02);
+    border-color: var(--color-03);
+}
+.dropdown-menu>li>a:hover,
+.dropdown-menu>.active>a,
+.dropdown-menu>.active>a:focus,
+.dropdown-menu>.active>a:hover{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+
+/* Titles */
+h1,
+h2,
+h3{
+    color: var(--color-02);
+}
+
+/* Buttons */
+.btn-loadmore{
+    border-color: var(--color-02);
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+.btn-loadmore:hover,
+.btn-loadmore:focus{
+    border-color: var(--color-main-01);
+    color: var(--color-main-01);
+}
+
+
+/* Menu Top */
+#header{
+    background: var(--color-01);
+}
+#header .main-links>ul>li>a,
+.navbar-default .right-menu.navbar-nav>li>a{
+    color: var(--color-02);
+}
+#header .search .cbsearchtype .btn-default.btn-search{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#header .main-links>ul>li>a:focus,
+#header .main-links>ul>li>a:hover {
+    color: var(--color-main-01);
+}
+#header .main-links>ul>li>a:hover:after,
+#header .main-links>ul>li>a:focus:after,
+#header .main-links>ul>li.active a:after{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#header .search input[type="text"]{
+    color: var(--color-02);
+}
+#header .search .cbsearchtype .btn-default{
+    color: var(--color-02);
+}
+#header .search .cbsearchtype .search-drop{
+    background-color: var(--color-header-search-category);
+}
+#header .search .cbsearchtype{
+    background-color: var(--color-header-search);
+}
+
+/* Footer */
+#footer{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#footer a{
+    color: var(--color-main-02);
+}
+#footer .langdrop button{
+    background-color: var(--color-footer-dropdown);
+    color: var(--color-02);
+}
+#footer .langdrop .dropdown-menu li.selected a,
+#footer .langdrop .dropdown-menu li:hover a{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#footer .langdrop .dropdown-menu li a{
+    color: var(--color-02);
+}
+
+/* Sidebar */
+.sidebar-channels,
+.sidebar-items,
+.sidebar-playlists .playlist{
+    background-color: var(--color-01);
+}
+.sidebar-channels .channel-item .channel-info,
+.sidebar-playlists .playlist .videos-count{
+    color: var(--color-04);
+}
+.sidebar-channels .channel-item .channel-info h3 a,
+.collections-grid .title{
+    color: var(--color-02);
+}
+.sidebar-channels .channel-item .channel-info h3 a:hover,
+.sidebar-playlists .playlist h3:hover{
+    color: var(--color-main-01);
+}

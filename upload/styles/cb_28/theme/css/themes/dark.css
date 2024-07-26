@@ -1,0 +1,55 @@
+/* Dark theme*/
+
+/* Variables */
+html.dark {
+    --color-01 : #0e0b14;
+    --color-02 : #f9f9f9;
+    --color-03 : #2a2a2a;
+
+    --color-header-search-category : #30323E;
+    --color-header-search : #2a2a2a;
+    --color-footer-dropdown : #30323E;
+
+    --color-gradient-start : #30323E;
+    --color-gradient-end : #1E1F2A;
+    --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
+    --generic-box-shadow : 0 20px 24px 0 rgba(0, 0, 0, 0.80);
+    --border-radius : 5px;
+
+    /* TEST */
+    --color-main-01 : yellow;
+    --color-main-02 : red;
+}
+
+/* Background */
+html.dark body {
+    background-image: url('../../../images/dark.jpg');
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* Menu Top */
+html.dark #header{
+    box-shadow: var(--generic-box-shadow);
+}
+html.dark #header .search input[type="text"]{
+    background-color: var(--color-gradient-end);
+}
+
+/* Sidebar */
+.sidebar-channels,
+.sidebar-items,
+.sidebar-playlists .playlist{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+.sidebar-playlists .playlist img,
+.sidebar-items .collection-item img{
+    border-radius: var(--border-radius);
+}
+
+/* Home */
+#featured_vid_sec .item-video .video-link img{
+    border-radius: var(--border-radius);
+}
