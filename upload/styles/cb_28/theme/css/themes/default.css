@@ -50,7 +50,62 @@ h3{
     border-color: var(--color-main-01);
     color: var(--color-main-01);
 }
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-success,
+.btn-success:hover,
+.btn-success:active {
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
 
+/* Forms */
+.form-control:focus{
+    border-color: var(--color-main-01);
+}
+.account-container .form-group .chk-checked{
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+.ui-widget-header{
+    border-color: var(--color-main-01);
+}
+.ui-datepicker{
+    background-color: var(--color-03);
+}
+.ui-widget-content{
+    color: var(--color-02);
+    border-color: var(--color-main-01);
+    background-color: var(--color-03);
+    background-image: none;
+}
+
+/* Pop-ins */
+.modal-content{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+
+/* Tabs */
+.view-tabs .nav-tabs.nav>li.active>a,
+.view-tabs .nav-tabs.nav>li.active>a:hover,
+.view-tabs .nav-tabs.nav>li.active>a:focus{
+    color: var(--color-main-01);
+}
+.view-tabs .nav-tabs.nav>li>a:hover {
+    color: var(--color-main-01);
+    border-color: var(--color-main-01);
+}
+
+/* Miscellaneous */
+pre{
+    background-color: var(--color-03);
+    color: var(--color-02);
+    border-color: var(--color-02);
+}
 
 /* Menu Top */
 #header{
@@ -86,6 +141,10 @@ h3{
 #header .search .cbsearchtype{
     background-color: var(--color-header-search);
 }
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:hover{
+    border-color: var(--color-main-01);
+    color: var(--color-main-01);
+}
 
 /* Footer */
 #footer{
@@ -119,10 +178,90 @@ h3{
     color: var(--color-04);
 }
 .sidebar-channels .channel-item .channel-info h3 a,
-.collections-grid .title{
+.collections-grid .title,
+.featured-video .title a{
     color: var(--color-02);
 }
 .sidebar-channels .channel-item .channel-info h3 a:hover,
-.sidebar-playlists .playlist h3:hover{
+.sidebar-playlists .playlist h3:hover,
+.featured-video .title a:hover,
+.featured-video .author,
+.featured-video .author a {
     color: var(--color-main-01);
+}
+
+/* Login */
+.signin-block h2,
+.account-container,
+.account-container a{
+    color: var(--color-02);
+}
+.signin-block .user-form{
+    background-color: var(--color-01);
+}
+.signin-block .form-control{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+
+/* Signup */
+.signup-block .user-form{
+    background-color: var(--color-01);
+}
+.signup-block h2{
+    color: var(--color-02);
+}
+
+/* Video Bloc */
+.videos .video-info{
+    background: var(--color-03);
+    color: var(--color-04);
+}
+.videos .video-info .author,
+.videos .video-info .author a,
+.videos .video-info .title a:hover{
+    color: var(--color-main-01);
+}
+.videos .video-info .title a{
+    color: var(--color-02);
+}
+
+/* Channels */
+.item-channel .user-block{
+    background-color: var(--color-01);
+    border-color: var(--color-03);
+}
+.item-channel .channel-holder{
+    border-color: var(--color-03);
+}
+.item-channel .info strong span{
+    color: var(--color-02);
+}
+.item-channel .info{
+    background-color: var(--color-03);
+}
+.item-channel .info strong{
+    color: var(--color-04);
+    border-top-color: var(--color-04);
+}
+.item-channel .info .col{
+    border-left-color: var(--color-04);
+}
+.item-channel .channel-holder .user-block:hover h2{
+    color: var(--color-main-01);
+}
+
+/* Video */
+.rating .like-dislike.rated a,
+.rating .like-dislike a:hover,
+.video-details header.details .user-video-info .user-title a:hover{
+    color: var(--color-main-01);
+}
+.video-details{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+.watch-vid-details .desc-list,
+.video-details header.details .user-video-info .user-title a{
+    color: var(--color-02);
 }

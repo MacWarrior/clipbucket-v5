@@ -636,7 +636,6 @@ h1 {
 }
 
 .featured-video {
-  background: #fff;
   font-size: 13px;
   line-height: 15px;
   font-family: "source_sans_prolight", sans-serif;
@@ -696,21 +695,14 @@ h1 {
 }
 
 .featured-video .title a {
-  color: #000;
   text-decoration: none;
-}
-
-.featured-video .title a:hover {
-  color: #0080b4;
 }
 
 .featured-video .author {
   margin: 0 0 2px;
-  color: #0080b4;
 }
 
 .featured-video .author a {
-  color: #0080b4;
   text-decoration: none;
 }
 
@@ -971,9 +963,7 @@ h1 {
   font-size: 14px;
   line-height: 16px;
   font-family: "source_sans_prolight", sans-serif;
-  color: #757575;
   padding: 8px;
-  background: #fff;
   height: 100px;
   position: relative;
 }
@@ -989,22 +979,15 @@ h1 {
 }
 
 .videos .video-info .title a {
-  color: #000;
   text-decoration: none;
-}
-
-.videos .video-info .title a:hover {
-  color: #0080b4;
 }
 
 .videos .video-info .author {
   display: block;
   margin: 0 0 5px;
-  color: #0080b4;
 }
 
 .videos .video-info .author a {
-  color: #0080b4;
   text-decoration: none;
 }
 
@@ -1712,10 +1695,9 @@ h1 {
 .view-details header.details h1,
 .video-details header.details h1 {
   font-size: 25px;
-  line-height: 25 px;
+  line-height: 25px;
   margin: 0 0 16px;
   font-family: "source_sans_prosemibold", sans-serif;
-  color: #333;
 }
 
 .view-details header.details .user-video-info,
@@ -1759,6 +1741,7 @@ h1 {
 .view-details header.details .user-video-info .user-title a,
 .video-details header.details .user-video-info .user-title a {
   color: #000;
+  text-decoration: none;
 }
 
 .view-details header.details .user-video-info .views-counter,
@@ -1831,14 +1814,6 @@ h1 {
   display: inline-block;
   vertical-align: middle;
   margin: 0 10px 0 0;
-}
-
-.rating .like-dislike a:hover {
-  color: #0080b4;
-}
-
-.rating .like-dislike.rated a {
-  color: #0080b4;
 }
 
 .rating .like-error {
@@ -1996,9 +1971,7 @@ h1 {
 }
 
 .view-tabs .nav-tabs.nav>li>a:hover {
-  border-color: #0080b4;
   background: none;
-  color: #000;
 }
 
 .view-tabs .nav-tabs.nav>li>a span {
@@ -2012,7 +1985,6 @@ h1 {
 .view-tabs .nav-tabs.nav>li.active>a,
 .view-tabs .nav-tabs.nav>li.active>a:hover,
 .view-tabs .nav-tabs.nav>li.active>a:focus {
-  color: #0080b4;
   background: none;
 }
 
@@ -2874,8 +2846,8 @@ textarea#comment_box {
 }
 
 .item-channel .channel-holder {
-  background: #fff;
-  border: 1px solid #d9d9d9;
+  border-style: solid;
+  border-width: 1px;
   color: #000;
   font-size: 13px;
   line-height: 13px;
@@ -2884,10 +2856,9 @@ textarea#comment_box {
 
 .item-channel .user-block {
   display: block;
-  background: #fff;
-  color: #000;
   padding: 22px 0 0;
-  border-bottom: 1px solid #d9d9d9;
+  border-style: solid;
+  border-width: 1px;
 }
 
 .item-channel .user-block:hover {
@@ -2921,7 +2892,8 @@ textarea#comment_box {
   width: 50%;
   float: left;
   padding: 0 10px;
-  border-left: 1px solid #d9d9d9;
+  border-left-style: solid;
+  border-left-width: 1px;
 }
 
 .item-channel .info .col:first-child {
@@ -2932,11 +2904,11 @@ textarea#comment_box {
   display: block;
   padding: 10px 0 0;
   margin: 0 0 10px;
-  border-top: 1px solid #d9d9d9;
+  border-top-style: solid;
+  border-top-width: 1px;
   font-size: 13px;
   line-height: 13px;
   font-family: "source_sans_prolight", sans-serif;
-  color: #a3a3a3;
 }
 
 .item-channel .info strong:first-child {
@@ -2948,7 +2920,6 @@ textarea#comment_box {
   display: block;
   margin: 10px 0 0;
   font: 14px/14px "source_sans_prosemibold", sans-serif;
-  color: #000;
 }
 
 .item-channel .btn-subscribe {
@@ -3294,10 +3265,6 @@ textarea#comment_box {
   color: #8f8f8f;
 }
 
-.account-container a {
-  color: #8f8f8f;
-}
-
 .account-container .forgot-block,
 .account-container .signin-block,
 .account-container .signup-block {
@@ -3329,8 +3296,7 @@ textarea#comment_box {
 }
 
 .signup-block h2,
-.forgot-block h2,
-.signin-block h2 {
+.forgot-block h2{
   font-size: 34px;
   line-height: 34px;
   font-family: "source_sans_prolight", sans-serif;
@@ -3358,8 +3324,7 @@ textarea#comment_box {
 }
 
 .signup-block .user-form,
-.forgot-block .user-form,
-.signin-block .user-form {
+.forgot-block .user-form{
   background: #fff;
   width: 54%;
   padding: 50px 90px;
@@ -5229,7 +5194,6 @@ textarea#comment_box {
 
 .navbar-default .right-menu .upload_link .btn-default.btn-login:hover,
 .navbar-default .right-menu .upload_link .btn-default.btn-login:active,
-.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:hover,
 .navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:active {
   background: #4caf50;
 }
@@ -5917,10 +5881,6 @@ textarea#comment_box {
   font-style: normal;
 }
 
-/* variables */
-/**/
-/**/
-/* buttons */
 .btn-default {
   background: #ececec;
   border-color: #ececec;
@@ -5957,17 +5917,7 @@ textarea#comment_box {
 }
 
 .btn-primary {
-  background: #0080b4;
-  border-color: #0080b4;
   font-family: "source_sans_proregular", sans-serif;
-  color: #fff;
-}
-
-.btn-primary:hover,
-.btn-primary:active {
-  background: #0080b4;
-  border-color: #0080b4;
-  color: #fff;
 }
 
 .btn-success {

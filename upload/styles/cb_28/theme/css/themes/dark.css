@@ -43,13 +43,50 @@ html.dark #header .search input[type="text"]{
     border-radius: var(--border-radius);
     background: var(--background-gradient);
 }
-
 .sidebar-playlists .playlist img,
-.sidebar-items .collection-item img{
+.sidebar-items .collection-item img,
+.sidebar-items .featured-video img{
     border-radius: var(--border-radius);
 }
 
 /* Home */
-#featured_vid_sec .item-video .video-link img{
+#featured_vid_sec .item-video .video-link img,
+.cb-popup-container .player-holder .vjs-big-play-button,
+.cb-popup-container .player-holder video{
     border-radius: var(--border-radius);
+}
+
+/* Video Bloc */
+:not(#featured_vid_sec) .item-video .video-link img{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+:not(#featured_vid_sec) .item-video .video-info{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Login */
+.signin-block .user-form{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Signup */
+.signup-block .user-form{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Channels */
+.item-channel .channel-holder{
+    border-radius: var(--border-radius);
+}
+.item-channel .channel-holder .user-block{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.item-channel .info{
+    background: var(--background-gradient);
 }
