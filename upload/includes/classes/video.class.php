@@ -610,6 +610,34 @@ class Video
         return CMS::getInstance($description, $params)->getClean();
     }
 
+    /**
+     * @throws Exception
+     */
+    public static function correctVideoCategorie($id)
+    {
+        Category::getInstance()->link('video', $id, Category::getInstance()->getDefaultByType('video')['category_id']);
+    }
+
+    /**
+     * @param $videoid
+     * @return void
+     * @throws Exception
+     */
+    public static function deleteUnusedVideoFIles($videoid)
+    {
+        $video = CBvideo::getInstance()->get_video($videoid);
+        $files = json_decode($video['video_files']);
+        $nb_files = count($files);
+        sort($files);
+        $unused_resolutions = array_column(Clipbucket_db::getInstance()->select(tbl('video_resolution'), 'height', ' enabled = false', false, 'height ASC'), 'height');
+
+        foreach ($files as $file) {
+            if (in_array($file, $unused_resolutions) && $nb_files > 1) {
+                CBvideo::getInstance()->remove_resolution($file, $video);
+                $nb_files--;
+            }
+        }
+    }
 }
 
 class CBvideo extends CBCategory

@@ -619,4 +619,39 @@ class AdminTool
         $this->array_loop = array_column($photos, 'photo_id');
         $this->executeTool('Photo::generatePhoto');
     }
+
+    /**
+     * @throws Exception
+     */
+    public function correctVideoCategorie()
+    {
+        $videos = Video::getInstance()->getAll([
+            'condition'=> 'videos_categories.id_video IS NULL'
+        ]);
+
+        if( !empty($videos) ){
+            $this->array_loop = array_column($videos, 'videoid');
+        }
+
+        $this->executeTool('Video::correctVideoCategorie');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function deleteUnusedResolutionFile()
+    {
+        Clipbucket_db::getInstance()->execute('SET @disabled_res = (SELECT CONCAT(\'[\', GROUP_CONCAT(height),\']\') FROM '.tbl('video_resolution').' WHERE enabled = false);');
+        $sql = 'SELECT V.videoid
+                    FROM '.tbl('video').' V
+                    WHERE  JSON_CONTAINS_PATH(
+                        CONCAT(\'{"a":\',video_files,\', "b":\', @disabled_res,\'}\')
+                        ,\'one\', \'$.a\', \'$.b\'
+                    );';
+        $videos = Clipbucket_db::getInstance()->_select($sql);
+        if( !empty($videos) ){
+            $this->array_loop = array_column($videos, 'videoid');
+        }
+        $this->executeTool('Video::deleteUnusedVideoFIles');
+    }
 }

@@ -161,6 +161,20 @@ $(document).ready(function(){
         update('db')
     });
 
+    $('.launch_wip').on('click', function () {
+        showSpinner();
+        $.ajax({
+            url: "/actions/admin_launch_wip.php",
+            type: "post",
+            dataType: "json",
+            success: function (data) {
+                hideSpinner();
+                if (data.success == false) {
+                    $(".page-content").prepend(data.msg)
+                }
+            }
+        });
+    })
 });
 
 function update(type){

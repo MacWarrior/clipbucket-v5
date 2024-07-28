@@ -49,10 +49,11 @@ class Migration
     }
 
     /**
+     * @param bool $upgrade_version
      * @return bool
      * @throws Exception
      */
-    public function launch(): bool
+    public function launch(bool $upgrade_version = true): bool
     {
         Clipbucket_db::getInstance()->begin_transaction();
         try {
@@ -73,7 +74,9 @@ class Migration
             throw new Exception($e->getMessage());
         }
         Clipbucket_db::getInstance()->commit();
-        $this->updateVersion();
+        if ($upgrade_version) {
+            $this->updateVersion();
+        }
         return true;
     }
 
@@ -314,6 +317,20 @@ class Migration
     {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
         $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->db_name, $sql);
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    /**
+     * @param string $code
+     * @param string $tool_function ex AdminTool::function
+     * @return void
+     * @throws Exception
+     */
+    public static function insertTool(string $code, string $tool_function)
+    {
+        $label = mysql_clean($code);
+        $sql = 'INSERT IGNORE INTO ' . tbl('tools') . ' (language_key_label, language_key_description, function_name, code) 
+            VALUES (\'' . $label . '_label\', \'' . $label . '_description\', \'' . mysql_clean($tool_function) . '\', \'' . $label . '\' )';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 
