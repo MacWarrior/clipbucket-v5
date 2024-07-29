@@ -2122,7 +2122,8 @@ class userquery extends CBCategory
     function get_levels($filter = null)
     {
         global $db;
-        $results = $db->select(tbl('user_levels'), '*', null, null, ' user_level_id ASC');
+        if( !empty($filter)) $filter = ' AND ' . $filter;
+        $results = $db->select(tbl('user_levels'), '*', 'user_level_active = \'yes\'  ' . $filter, null, ' user_level_id ASC');
 
         if (count($results) > 0) {
             return $results;

@@ -129,7 +129,7 @@
                                                     <select class="form-control" name="level" id="level">
                                                         {assign var=levels value=$userquery->get_levels()}
                                                         {foreach from=$levels item=level}
-                                                        <option value="{$level.user_level_id}" {if $u.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
+                                                            <option value="{$level.user_level_id}" {if $u.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
                                                         {/foreach}
                                                     </select>
                                                 </div>
