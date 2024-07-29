@@ -32,7 +32,7 @@
 {foreach from=$users item=u}
 <tr>
     <td>
-      <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" />
+      <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" {if $u.userid == $anonymous_id} disabled="disabled" {/if} />
     </td>
     <td>
       {$u.userid}
@@ -84,46 +84,47 @@
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
 		<li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='edit'}</a></li>
-		  {if isSectionEnabled('channels')}
-        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
-		  {/if}
-        <li><a role="menuitem" tabindex="-1" href="manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
+        {if $u.userid != $anonymous_id}
+              {if isSectionEnabled('channels')}
+                <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
+              {/if}
+            <li><a role="menuitem" tabindex="-1" href="manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
 
-        {if $u.usr_status == Ok}
-        <li><a role="menuitem" tabindex="-1" href="?deactivate={$u.userid}">{lang code='deactivate'}</a></li>
-        {elseif $u.usr_status == ToActivate}
-        <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
-        <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a></li>
-        {/if}
-        {if $u.ban_status == yes}
-        <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
-        {/if}
-        {if $u.ban_status == no}
-        <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
-        {/if}
-        {if $u.featured == no}
-        <li><a role="menuitem" tabindex="-1" href="?featured={$u.userid}">Feature Member</a></li>
-        {/if}
-        {if $u.featured == yes}
-        <li><a role="menuitem" tabindex="-1" href="?unfeatured={$u.userid}">Unfeature Member</a></li>
-        {/if}
-        <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
-        <li class="divider"></li>
-        {if function_exists('channels_control')}
-        {if $u.private == private}
-        <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
-        {/if}
-        {if $u.private == public || $u.private == '' }
-        <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
-        {/if}
-        {/if}
-        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
-        
-        
-       {foreach from=$userquery->user_manager_link item=links}
-       {$userquery->user_manager_link($links,$u)}
-       {/foreach} 
+            {if $u.usr_status == Ok}
+                <li><a role="menuitem" tabindex="-1" href="?deactivate={$u.userid}" >{lang code='deactivate'}</a></li>
+            {elseif $u.usr_status == ToActivate}
+                <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
+                <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a></li>
+            {/if}
+            {if $u.ban_status == yes}
+                <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
+            {/if}
+            {if $u.ban_status == no}
+                <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
+            {/if}
+            {if $u.featured == no}
+                <li><a role="menuitem" tabindex="-1" href="?featured={$u.userid}">Feature Member</a></li>
+            {/if}
+            {if $u.featured == yes}
+                <li><a role="menuitem" tabindex="-1" href="?unfeatured={$u.userid}">Unfeature Member</a></li>
+            {/if}
+            <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
+            <li class="divider"></li>
+            {if function_exists('channels_control')}
+                {if $u.private == private}
+                    <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
+                {/if}
+                {if $u.private == public || $u.private == '' }
+                    <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
+                {/if}
+            {/if}
+            <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
 
+
+           {foreach from=$userquery->user_manager_link item=links}
+           {$userquery->user_manager_link($links,$u)}
+           {/foreach}
+          {/if}
       </ul>
 
     </div>
@@ -155,3 +156,7 @@
 
 <!-- DIsplaying Videos Ends-->
 {include file="$style_dir/blocks/pagination.html" }
+
+<script>
+
+</script>

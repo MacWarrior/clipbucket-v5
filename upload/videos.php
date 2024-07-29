@@ -40,7 +40,7 @@ if( empty($videos) ){
     $params['count'] = true;
     $count = Video::getInstance()->getAll($params);
 }
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $total_pages = count_pages($count, config('videos_list_per_page'));
 //Pagination
 $extra_params = null;

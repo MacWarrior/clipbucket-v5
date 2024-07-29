@@ -26,20 +26,19 @@
 					<h1>{display_clean($video.title)}</h1>
 					<div class="user-video-info clearfix">
 
-						{if isSectionEnabled('channels')}
+						{if isSectionEnabled('channels')  && $anonymous_id != $video.userid}
 							<a href="{$userquery->profile_link($video)}" class="avatar">
 								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
 							</a>
-						{else}
+						{else if $anonymous_id != $video.userid}
 							<span class="avatar">
 								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
 							</span>
 						{/if}
-
 						<h2 class="user-title">
-						{if isSectionEnabled('channels')}
+						{if isSectionEnabled('channels') && $anonymous_id != $video.userid}
 							<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-						{else}
+						{elseif $anonymous_id != $video.userid}
 							{display_clean($video.user_username)}
 						{/if}
 						</h2>
@@ -65,7 +64,7 @@
 							{/if}
 						</div>
 						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							{if user_id() && $video.userid != user_id()}
+							{if user_id() && $video.userid != user_id() && $video.userid != $anonymous_id}
 								{if $userquery->is_subscribed($video.userid,user_id())}
 									<button onclick="_cb.unsubscribeToChannel('{$video.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
 										{lang code="unsubscribe"}

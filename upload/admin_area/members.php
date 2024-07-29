@@ -23,15 +23,25 @@ if ($_GET['view'] == 'search') {
     $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 }
 
+$anonymous_id = $userquery->get_anonymous_user();
+assign('anonymous_id', $anonymous_id);
 //Delete User
 if (isset($_GET['deleteuser'])) {
-    $userquery->delete_user($_GET['deleteuser']);
+    if ($anonymous_id == $_GET['deleteuser']) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->delete_user($_GET['deleteuser']);
+    }
 }
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->delete_user($userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anynomous_locked'));
+        } else {
+            $userquery->delete_user($userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -42,18 +52,30 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
 //Activate User
 if (isset($_GET['activate'])) {
     $user = mysql_clean($_GET['activate']);
-    $userquery->action('activate', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->action('activate', $user);
+    }
 }
 //Deactivate User
 if (isset($_GET['deactivate'])) {
     $user = mysql_clean($_GET['deactivate']);
-    $userquery->action('deactivate', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->action('deactivate', $user);
+    }
 }
 
 //Using Multiple Action
 if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('activate', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            $userquery->action('activate', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -63,7 +85,11 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
 
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('deactivate', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            $userquery->action('deactivate', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -73,30 +99,46 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
 
 if (isset($_GET['resend_verif'])) {
     $revrfy_user = $_GET['resend_verif'];
-    $send_mail = resend_verification($revrfy_user);
-    if ($send_mail) {
-        e('Reverification email has been sent to user <strong>' . $send_mail . '</strong>', 'm');
+    if ($anonymous_id == $revrfy_user) {
+        e(lang('anonymous_locked'));
     } else {
-        e('Something went wrong trying to send reverification email');
+        $send_mail = resend_verification($revrfy_user);
+        if ($send_mail) {
+            e('Reverification email has been sent to user <strong>' . $send_mail . '</strong>', 'm');
+        } else {
+            e('Something went wrong trying to send reverification email');
+        }
     }
 }
 
 //Make User Featured
 if (isset($_GET['featured'])) {
     $user = mysql_clean($_GET['featured']);
-    $userquery->action('featured', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->action('featured', $user);
+    }
 }
 
 //Make User UnFeatured
 if (isset($_GET['unfeatured'])) {
     $user = mysql_clean($_GET['unfeatured']);
-    $userquery->action('unfeatured', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->action('unfeatured', $user);
+    }
 }
 
 //Using Multiple Action
 if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('featured', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            $userquery->action('featured', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -105,7 +147,11 @@ if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
 }
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('unfeatured', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            $userquery->action('unfeatured', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -116,19 +162,31 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user']))
 //Ban User
 if (isset($_GET['ban'])) {
     $user = mysql_clean($_GET['ban']);
-    $userquery->action('ban', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->action('ban', $user);
+    }
 }
 
 //UnBan User
 if (isset($_GET['unban'])) {
     $user = mysql_clean($_GET['unban']);
-    $userquery->action('unban', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        $userquery->action('unban', $user);
+    }
 }
 
 //Using Multiple Action
 if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('ban', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            $userquery->action('ban', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -138,7 +196,11 @@ if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
 
 if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('unban', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            $userquery->action('unban', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();

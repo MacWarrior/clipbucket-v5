@@ -924,7 +924,7 @@ class userquery extends CBCategory
     function get_user_id($username)
     {
         global $db;
-        $results = $db->select(tbl('users'), 'userid', "(username='$username' OR userid='$username')");
+        $results = $db->select(tbl('users'), 'userid', "(username='$username' OR BINARY userid='$username')");
         if (count($results) > 0) {
             return $results[0];
         }
@@ -1023,15 +1023,16 @@ class userquery extends CBCategory
         $this->remove_user_subscriptions($uid);
         $this->remove_user_subscribers($uid);
 
+        $anonymous_id = $this->get_anonymous_user();
         //Changing User Videos To Anonymous
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $this->get_anonymous_user() . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         //Deleting User Contacts
         $this->remove_contacts($uid);
 
         //Deleting User PMS
         $this->remove_user_pms($uid);
         //Changing From Messages to Anonymous
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $this->get_anonymous_user() . '\' WHERE message_from=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $anonymous_id . '\' WHERE message_from=' . mysql_clean($uid));
 
         //Remove tags
         Tags::deleteTags('profile', $uid);
@@ -1635,6 +1636,8 @@ class userquery extends CBCategory
 
         if (!$this->user_exists($to)) {
             e(lang('usr_exist_err'));
+        } elseif ($to_user['userid'] == $this->get_anonymous_user()) {
+            e(lang('technical_error'));
         } elseif (!$user) {
             e(sprintf(lang('please_login_subscribe'), $to_user['username']));
         } elseif ($this->is_subscribed($to, $user)) {
@@ -1704,6 +1707,10 @@ class userquery extends CBCategory
             $uid = user_id();
         }
 
+        if ($subid == $this->get_anonymous_user()) {
+            e(lang('technical_error'));
+            return false;
+        }
         if ($this->is_subscribed($subid, $uid)) {
             $db->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . " WHERE userid='$uid' AND subscribed_to='$subid'");
             e(lang('class_unsub_msg'), 'm');
@@ -4297,39 +4304,16 @@ class userquery extends CBCategory
      */
     function get_anonymous_user()
     {
-        global $db;
         /*Added to resolve bug 222*/
-        $result = $db->select(tbl('users'), 'userid', " username='anonymous%' AND email='anonymous%'", '1');
-        if ($result[0]['userid']) {
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
+        if (isset($result[0]['userid'])) {
             return $result[0]['userid'];
         }
 
-        $result = $db->select(tbl('users'), 'userid', " level='6' AND usr_status='ToActivate' ", '1');
-        if ($result[0]['userid']) {
-            return $result[0]['userid'];
-        }
+        execute_sql_file(\DirPath::get('cb_install') . DIRECTORY_SEPARATOR . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
-        $pass = RandomString(10);
-
-        if ($_SERVER['HTTP_HOST'] != 'localhost' && $_SERVER['HTTP_HOST'] != '127.0.0.1') {
-            $email = 'anonymous' . RandomString(5) . '@' . $_SERVER['HTTP_HOST'];
-        } else {
-            $email = 'anonymous' . RandomString(5) . '@' . $_SERVER['HTTP_HOST'] . '.tld';
-        }
-
-        //Create Anonymous user
-        return $this->signup_user([
-            'username'  => 'anonymous' . RandomString(5),
-            'email'     => $email,
-            'password'  => $pass,
-            'cpassword' => $pass,
-            'country'   => config('default_country_iso2'),
-            'gender'    => 'Male',
-            'dob'       => '2000-10-10',
-            'level'     => '6',
-            'active'    => 'yes',
-            'agree'     => 'yes'
-        ], false);
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous%' AND email='anonymous%'", '1');
+        return $result[0]['userid'];
     }
 
     /**

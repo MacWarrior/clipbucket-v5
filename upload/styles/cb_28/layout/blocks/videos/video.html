@@ -10,12 +10,12 @@
 	<div class="details_block">
 		<strong class="title"><a href="{video_link($pop_video)}">{display_clean($pop_video.title|truncate:50)}</a></strong>
 
-		<span class="author">{lang code="by"}
-		{if isSectionEnabled('channels')}
-			<a href="{$userquery->profile_link($pop_video)}">{display_clean($pop_video.username)}</a>
-		{else}
-			{display_clean($pop_video.username)}
-		{/if}
+		<span class="author">
+		{if isSectionEnabled('channels') && $anonymous_id != $pop_video.userid}
+				{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+			{elseif $anonymous_id != $pop_video.userid}
+				{lang code="by"} {display_clean($video.user_username)}
+			{/if}
 		</span>
 
 		<div class="views-date">
@@ -42,11 +42,11 @@
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
 
-		<span class="author">{lang code="by"}
-			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-			{else}
-				{display_clean($video.user_username)}
+		<span class="author">
+			{if isSectionEnabled('channels') && $anonymous_id != $video.userid}
+				{lang code="by"}<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+			{elseif $anonymous_id != $video.userid}
+				{lang code="by"}{display_clean($video.user_username)}
 			{/if}
 		</span>
 
@@ -83,11 +83,11 @@
 			<a href="{video_link($video)}">{display_clean($video.title)|truncate:50}</a>
 		</h2>
 
-		<span class="author">{lang code="by"}
-			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-			{else}
-				{display_clean($video.user_username)}
+		<span class="author">
+			{if isSectionEnabled('channels') && $anonymous_id != $video.userid}
+				{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+			{elseif $anonymous_id != $video.userid}
+				{lang code="by"} {display_clean($video.user_username)}
 			{/if}
 		</span>
 
@@ -112,8 +112,10 @@
 		<div class="details_block">
 			<strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>
 			<span class="author">{lang code='by'}
-			{if isSectionEnabled('channels')}
+			{if isSectionEnabled('channels') && $anonymous_id != $video.userid}
 				<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+			{elseif $anonymous_id == $video.userid}
+				{display_clean(lang($video.user_username))}
 			{else}
 				{display_clean($video.user_username)}
 			{/if}
@@ -167,11 +169,11 @@
 	</div>
 	<div class="clearfix video-info">
 		<h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
-		<span class="author">{lang code="by"}
-			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-			{else}
-				{display_clean($video.user_username)}
+		<span class="author">3333
+			{if isSectionEnabled('channels') && $anonymous_id != $video.userid}
+				{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+			{elseif $anonymous_id != $video.userid}
+				{lang code="by"} {display_clean($video.user_username)}
 			{/if}
 		</span>
 		<div class="clearfix views-date">
@@ -246,11 +248,11 @@
 			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:15)} </a>
 		</h5>
 
-		<h5>{lang code="by"}
+		<h5>4444
 			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+				{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
 			{else}
-				{display_clean(name($video))}
+				{lang code="by"} {display_clean(name($video))}
 			{/if}
 		</h5>
 
@@ -318,11 +320,11 @@
 			<a data-hover="dropdown" data-toggle="dropdown" class="dropdown-toggle" data-delay="1000" data-close-others="false" onClick="location.href='{video_link($video)}'" href="{video_link($video)}">{display_clean($video.title|truncate:30)} </a>
 		</h5>
 
-		<h5>{lang code="by"}
+		<h5>55555
 			{if isSectionEnabled('channels')}
-				<a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
-			{else}
-				{display_clean(name($video))}
+				{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+			{elseif $anonymous_id != $video.userid}}
+				{lang code="by"} {display_clean(name($video))}
 			{/if}
 			{$video.date_added|niceTime}
 		</h5>
