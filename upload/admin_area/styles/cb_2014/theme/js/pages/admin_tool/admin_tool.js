@@ -2,6 +2,7 @@ var max_try = 5;
 var eventSource;
 var eventSourceLog;
 var ids_stopped=[];
+var ids_error=[];
 $(function () {
     if (can_sse == 'true') {
         connectSSE();
@@ -86,6 +87,10 @@ function connectSSE () {
             $('#done-' + tool.id).html(tool.elements_done);
             $('#total-' + tool.id).html(tool.elements_total);
             ids_tool.push(tool.id);
+            if (tool.status == 'on_error') {
+                $('#span-' + tool.id).html(tool.status_title);
+                ids_error.push(tool.id);
+            }
         });
 
         $('.progress-bar:visible').each(function (index, elem) {
@@ -96,12 +101,12 @@ function connectSSE () {
                     elem.addClass('progress-bar-striped ').addClass('active');
                     const index = ids_stopped.indexOf(parseInt(id));
                     const x = ids_stopped.splice(index, 1);
-                } else {
+                } else if (!ids_error.includes(parseInt(id))) {
                     elem.addClass('progress-bar-success');
                     elem.width('100%');
                     $('.launch[data-id='+id+']').parent().removeClass('disabled');
-                    $('.stop[data-id='+id+']').parent().addClass('disabled');+
-                        $('#span-' + id).html(lang.completed);
+                    $('.stop[data-id='+id+']').parent().addClass('disabled');
+                    $('#span-' + id).html(lang.completed);
                     $('#progress-bar-' + id).attr('aria-valuenow',100).width(100 + '%');
                     $('#done-' + id).html($('#total-' + id).html());
                     $('#pourcent-' + id).html(100);
