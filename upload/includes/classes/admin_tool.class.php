@@ -142,7 +142,6 @@ class AdminTool
             e(lang('class_error_occured'));
             return false;
         }
-        $number = 15 / 0;
         call_user_func_array([$this, $this->tool['function_name']], []);
     }
 
