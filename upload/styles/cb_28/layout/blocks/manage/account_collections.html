@@ -41,16 +41,16 @@
 					<label for="check_item-{$collection.videoid}">
 						<img src="{getThumb vdetails=$collection size=168x105}" width="40" height="30" border="0" class="acc_usr_video_thumb img-responsive" style="float:left;margin-right:10px;">
 						<span>{display_clean($collection.title)|truncate:100}</span>
-					</label><br>
+					</label><br/>
 					<span class="video_control">
-						<a href="{$cbcollection->collection_links($collection,'view_item')}">{lang code="view_video"}</a>
+						<a href="{videoLink vdetails=$collection}">{lang code="view_video"}</a>
 					</span>
 				</td>
 				<td width="15%">{$collection.date_added|date_format}</td>
 				<td width="25%">{$collection.views|number_format}</td>
 				<td width="7%">
 					<a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.videoid}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.videoid}" href="javascript:void(0);">
-						<img src="{$imageurl}/cancel.png" width="16" height="16">
+						<img src="{$imageurl}/cancel.png" width="16" height="16"/>
 					</a>
 					<div id="removeItemContainer_{$collection.videoid}" style="display:none;"></div>
 				</td>

@@ -89,7 +89,23 @@ switch ($mode) {
     case 'manage_items':
         $type = $_GET['type'];
         assign('type', $type);
-        $get_limit = create_query_limit($page, COLLIP);
+        $get_limit = create_query_limit($page, config('collection_items_page'));
+
+        $params = [
+            'collection_id' => $cid
+            ,'with_items'   => true
+            ,'limit' => $get_limit
+        ];
+        $objs = Collection::getInstance()->getOne($params);
+
+        if( $objs['total_objects'] < config('collection_items_page') && $page == 1 ){
+            $total_rows = $objs['total_objects'];
+        } else {
+            unset($params['limit']);
+            unset($params['with_items']);
+            $total_rows = Collection::getInstance()->getOne($params)['total_objects'];
+        }
+
         switch ($type) {
             default:
             case 'videos':
@@ -101,9 +117,6 @@ switch ($mode) {
                     $eh->flush();
                     e(sprintf(lang('selected_items_removed'), 'videos'), 'm');
                 }
-
-                $objs = $cbvideo->collection->get_collection_items_with_details($cid, $order, $get_limit);
-                $total_rows = $cbvideo->collection->get_collection_items_with_details($cid, $order, null, true);
                 break;
 
             case 'photos':
@@ -116,8 +129,6 @@ switch ($mode) {
                     $eh->flush();
                     e(sprintf(lang('selected_items_removed'), 'photos'), 'm');
                 }
-                $objs = $cbphoto->collection->get_collection_items_with_details($cid, $order, $get_limit);
-                $total_rows = $cbphoto->collection->get_collection_items_with_details($cid, $order, null, true);
                 break;
         }
 
