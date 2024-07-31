@@ -26,7 +26,7 @@ if ($_GET['view'] == 'search') {
 $anonymous_id = $userquery->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //Delete User
-if (isset($_GET['deleteuser'])) {
+if (isset($_GET['deleteuser']) && user_id() != $_GET['deleteuser']) {
     if ($anonymous_id == $_GET['deleteuser']) {
         e(lang('anonymous_locked'));
     } else {
@@ -50,7 +50,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
 }
 
 //Activate User
-if (isset($_GET['activate'])) {
+if (isset($_GET['activate']) && user_id() != $_GET['deleteuser']) {
     $user = mysql_clean($_GET['activate']);
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
@@ -73,7 +73,7 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
-        } else {
+        } elseif($userid != user_id()) {
             $userquery->action('activate', $userid);
         }
     }
@@ -87,7 +87,7 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
-        } else {
+        } elseif($userid != user_id()) {
             $userquery->action('deactivate', $userid);
         }
     }
@@ -160,7 +160,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user']))
 }
 
 //Ban User
-if (isset($_GET['ban'])) {
+if (isset($_GET['ban']) && user_id() != $_GET['ban']) {
     $user = mysql_clean($_GET['ban']);
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
@@ -170,7 +170,7 @@ if (isset($_GET['ban'])) {
 }
 
 //UnBan User
-if (isset($_GET['unban'])) {
+if (isset($_GET['unban']) && user_id() != $_GET['unban']) {
     $user = mysql_clean($_GET['unban']);
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
@@ -184,7 +184,7 @@ if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
-        } else {
+        } elseif($userid != user_id()) {
             $userquery->action('ban', $userid);
         }
     }
@@ -198,7 +198,7 @@ if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
-        } else {
+        } elseif($userid != user_id()) {
             $userquery->action('unban', $userid);
         }
     }

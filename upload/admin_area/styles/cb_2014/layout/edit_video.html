@@ -205,16 +205,24 @@
                             <div class="row">
                                 <div class="col-md-10">
                                     <table class="myTable" style="width:100%;">
-                                        <tr>
-                                            <td class="first"><label>User Id</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.userid}</span></p>
-                                            </td>
-                                        </tr>
+                                        {if $data.userid == $anonymous_id}
+                                            <tr>
+                                                <td class="first"><label>User Id</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.userid}</span></p>
+                                                </td>
+                                            </tr>
+                                        {/if}
                                         <tr>
                                             <td class="first"><label>{lang code='username'}</label></td>
                                             <td class="last">
-                                                <p><span>{display_clean($data.userid|get_username)}</span></p>
+                                                <p><span>
+                                                    {if $data.userid != $anonymous_id}
+                                                        {display_clean($data.user_username)}
+                                                    {else}
+                                                        {display_clean(lang($data.user_username))}
+                                                    {/if}
+                                                </span></p>
                                             </td>
                                         </tr>
                                         <tr>

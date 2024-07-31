@@ -1034,6 +1034,14 @@ class userquery extends CBCategory
         //Changing From Messages to Anonymous
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $anonymous_id . '\' WHERE message_from=' . mysql_clean($uid));
 
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('photos') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collections') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+
+
         //Remove tags
         Tags::deleteTags('profile', $uid);
         //Remove categories
@@ -2142,7 +2150,7 @@ class userquery extends CBCategory
     function get_level_details($lid)
     {
         global $db;
-        $results = $db->select(tbl('user_levels'), '*', " user_level_id='$lid' ");
+        $results = $db->select(tbl('user_levels'), '*', " user_level_id='$lid' AND user_level_id NOT IN (SELECT user_level_id FROM ".tbl('user_levels')." WHERE user_level_name LIKE 'Anonymous')");
         if (count($results) > 0) {
             return $results[0];
         }
@@ -3906,7 +3914,7 @@ class userquery extends CBCategory
         $limit = $params['limit'];
         $order = $params['order'];
 
-        $cond = '';
+        $cond = ' users.userid != ' . userquery::getInstance()->get_anonymous_user();
         if (!has_access('admin_access', true) && !$force_admin) {
             $cond .= " users.usr_status='Ok' AND users.ban_status ='no' ";
         } else {
@@ -4030,6 +4038,8 @@ class userquery extends CBCategory
             $cond .= ' ' . $params['cond'] . ' ';
         }
 
+
+
         if (empty($params['count_only'])) {
             $fields = [
                 'users'   => get_user_fields(),
@@ -4041,7 +4051,7 @@ class userquery extends CBCategory
             $query .= ' LEFT JOIN ' . cb_sql_table('user_profile', 'profile') . ' ON users.userid = profile.userid ';
 
             if ($cond) {
-                $query .= ' WHERE ' . $cond;
+                $query .= ' WHERE  ' . $cond;
             }
 
             if ($order) {

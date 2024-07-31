@@ -64,13 +64,15 @@
 						<h1>{display_clean($photo.photo_title)}</h1>
 						<h1 id="img-title"></h1>
 						<div class="user-video-info clearfix">
-							<a href="{$userquery->profile_link($user)}" class="avatar">
-								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive"/>
-							</a>
-							<h2 class="user-title">
-								<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
-							</h2>
-							<div class="views-counter">
+							{if $photo.userid != $anonymous_id}
+								<a href="{$userquery->profile_link($user)}" class="avatar">
+									<img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+								</a>
+								<h2 class="user-title">
+									<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
+								</h2>
+							{/if}
+							<div class="views-counter" style="float: right;">
 								<span>{lang code="views"} {prettyNum($photo.views)}</span>
 
 							</div>

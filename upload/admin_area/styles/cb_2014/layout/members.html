@@ -91,16 +91,16 @@
                     {/if}
                     <li><a role="menuitem" tabindex="-1" href="manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
 
-                    {if $u.usr_status == Ok}
+                    {if $u.usr_status == Ok && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?deactivate={$u.userid}">{lang code='deactivate'}</a></li>
-                    {elseif $u.usr_status == ToActivate}
+                    {elseif $u.usr_status == ToActivate && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
                         <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a></li>
                     {/if}
-                    {if $u.ban_status == yes}
+                    {if $u.ban_status == yes && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
                     {/if}
-                    {if $u.ban_status == no}
+                    {if $u.ban_status == no && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
                     {/if}
                     {if $u.featured == no}
@@ -109,7 +109,9 @@
                     {if $u.featured == yes}
                         <li><a role="menuitem" tabindex="-1" href="?unfeatured={$u.userid}">Unfeature Member</a></li>
                     {/if}
-                    <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
+                    {if $u.userid != user_id()}
+                        <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
+                    {/if}
                     <li class="divider"></li>
                     {if function_exists('channels_control')}
                         {if $u.private == private}
@@ -119,12 +121,10 @@
                             <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
                         {/if}
                     {/if}
-                    <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
+                    {if $u.userid != user_id()}
+                        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
+                    {/if}
 
-
-                    {foreach from=$userquery->user_manager_link item=links}
-                        {$userquery->user_manager_link($links,$u)}
-                    {/foreach}
                 </ul>
 
             </div>

@@ -11,9 +11,9 @@ $userquery->login_check('member_moderation');
 
 $uid = $_GET['uid'];
 unset($_REQUEST['uid']);
-$udetails = $userquery->get_user_details($uid);
-$anonymous_id = $userquery->get_anonymous_user();
-assign('anonymous_id', $anonymous_id);
+if ($uid != $userquery->get_anonymous_user()) {
+    $udetails = $userquery->get_user_details($uid);
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -22,11 +22,6 @@ $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath:
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => DirPath::getUrl('admin_area') . 'view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
-    if ($uid == $anonymous_id) {
-        if (!empty($_REQUEST)) {
-            e(lang('anonymous_locked'));
-        }
-    } else {
         //Deactivating User
         if (isset($_GET['deactivate'])) {
             $userquery->action('deactivate', $uid);
@@ -77,7 +72,6 @@ if ($udetails) {
                 $udetails = $userquery->get_user_details($uid);
             }
         }
-    }
 
     $profile = $userquery->get_user_profile($udetails['userid']);
     if (is_array($profile)) {

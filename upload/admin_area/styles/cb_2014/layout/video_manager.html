@@ -102,7 +102,9 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
+                        {if $video.userid != $anonymous_id}
+                            <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
+                        {/if}
                     </div>
                 </div>
             </td>
