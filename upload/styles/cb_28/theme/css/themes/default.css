@@ -99,6 +99,28 @@ h3{
     color: var(--color-main-01);
     border-color: var(--color-main-01);
 }
+.flat-tabs .nav-tabs.nav>li.active>a,
+.flat-tabs .nav-tabs.nav>li.active>a:hover,
+.flat-tabs .nav-tabs.nav>li.active>a:active{
+    border-color: var(--color-main-01);
+    color: var(--color-02);
+    background-color: var(--color-03);
+}
+.flat-tabs .nav-tabs.nav>li>a:hover,
+.flat-tabs .nav-tabs.nav>li.active>a:hover{
+    border-color: var(--color-main-01);
+    color: var(--color-main-01);
+}
+.tab-content .tab-pane .well{
+    background: none;
+    color: var(--color-02);
+}
+.flat-tabs .nav-tabs.nav>li>a{
+    color: var(--color-02);
+}
+.flat-tabs .nav-tabs.nav>li:not(.active)>a:hover{
+    background:none;
+}
 
 /* Miscellaneous */
 pre{
@@ -179,14 +201,16 @@ pre{
 }
 .sidebar-channels .channel-item .channel-info h3 a,
 .collections-grid .title,
-.featured-video .title a{
+.featured-video .title a,
+.user-activities .text{
     color: var(--color-02);
 }
 .sidebar-channels .channel-item .channel-info h3 a:hover,
 .sidebar-playlists .playlist h3:hover,
 .featured-video .title a:hover,
 .featured-video .author,
-.featured-video .author a {
+.featured-video .author a,
+.user-activities .text span a{
     color: var(--color-main-01);
 }
 
@@ -263,5 +287,28 @@ pre{
 }
 .watch-vid-details .desc-list,
 .video-details header.details .user-video-info .user-title a{
+    color: var(--color-02);
+}
+
+/* Channel */
+.cover .profile-buttons{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+.channel-tabs{
+    background-color: var(--color-01);
+}
+.cover .changeCover{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02)
+}
+.playlist-item .playlist-thumb .playlist-info{
+    background-color: var(--color-03);
+    color: var(--color-02)
+}
+.playlist-item .playlist-thumb .playlist-info h2 a:hover{
+    color: var(--color-main-01);
+}
+.playlist-item .playlist-thumb h2 a{
     color: var(--color-02);
 }

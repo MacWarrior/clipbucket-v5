@@ -1897,21 +1897,15 @@ h1 {
   border-color: #fff;
   margin: 0;
   padding: 8px 15px;
-  color: #000;
 }
 
 .flat-tabs .nav-tabs.nav>li>a:hover {
   border-width: 0 0 3px;
-  border-color: #0080b4;
-  background: none;
-  color: #000;
 }
 
 .flat-tabs .nav-tabs.nav>li.active>a,
 .flat-tabs .nav-tabs.nav>li.active>a:hover,
 .flat-tabs .nav-tabs.nav>li.active>a:active {
-  border-color: #0080b4;
-  color: black;
   font-family: "source_sans_probold", sans-serif;
 }
 
@@ -2961,9 +2955,7 @@ textarea#comment_box {
 
 .cover .changeCover {
   display: none;
-  background: #0080b4;
   border-radius: 4px;
-  color: #fff;
   position: absolute;
   top: 10px;
   left: 10px;
@@ -3043,8 +3035,6 @@ textarea#comment_box {
 
 .cover .profile-buttons {
   padding: 20px 20px 20px 190px;
-  background: #fff;
-  color: #000;
 }
 
 .cover .profile-buttons h2 {
@@ -3086,7 +3076,6 @@ textarea#comment_box {
 }
 
 .channel-tabs {
-  background: #fff;
   padding: 10px 16px;
 }
 
@@ -3133,7 +3122,6 @@ textarea#comment_box {
 
 .user-activities .text span a {
   font-family: "source_sans_prosemibold", sans-serif;
-  color: #0080b4;
 }
 
 /* end view channel page */
@@ -3151,10 +3139,6 @@ textarea#comment_box {
   line-height: 12px;
   margin: 0 0 5px;
   font-family: "source_sans_prosemibold", sans-serif;
-}
-
-.playlist-item .playlist-thumb h2 a {
-  color: #333;
 }
 
 .playlist-item .playlist-thumb h2 a:hover {
@@ -3205,9 +3189,7 @@ textarea#comment_box {
   font-size: 14px;
   line-height: 16px;
   font-family: "source_sans_prolight", sans-serif;
-  color: #757575;
   padding: 8px;
-  background: #f6f6f6;
   position: relative;
 }
 
@@ -3222,38 +3204,9 @@ textarea#comment_box {
 }
 
 .playlist-item .playlist-thumb .playlist-info h2 a {
-  color: #000;
   text-decoration: none;
 }
 
-.playlist-item .playlist-thumb .playlist-info h2 a:hover {
-  color: #0080b4;
-}
-
-/**/
-.buy-premium {
-  left: auto !important;
-  right: 20px;
-  text-indent: 0 !important;
-  font-size: 0;
-  line-height: 0;
-  z-index: 4 !important;
-}
-
-.buy-premium i~span {
-  opacity: 0;
-}
-
-.buy-premium:hover {
-  font-size: 14px;
-  line-height: 44px;
-}
-
-.buy-premium:hover i~span {
-  opacity: 1;
-}
-
-/* signin signup area */
 .account-container {
   display: table;
   width: 100%;

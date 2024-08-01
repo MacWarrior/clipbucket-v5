@@ -90,3 +90,14 @@ html.dark #header .search input[type="text"]{
 .item-channel .info{
     background: var(--background-gradient);
 }
+
+/* Channel */
+.cover .profile-buttons{
+    background: var(--background-gradient);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.channel-tabs{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
