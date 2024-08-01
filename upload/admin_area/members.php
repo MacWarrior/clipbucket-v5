@@ -10,6 +10,9 @@ $pages->page_redir();
 $udetails = $userquery->get_user_details(user_id());
 $userLevel = $udetails['level'];
 
+if (!empty($_GET['user_not_found'])) {
+    e(lang('user_doesnt_exist'));
+}
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];

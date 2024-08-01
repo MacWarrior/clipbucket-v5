@@ -86,16 +86,16 @@
 							{else}
 							<div class="clearfix subscribe-col col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							{/if}
-								{if user_id() && $photo.userid != user_id()}
+								{if user_id() && $photo.userid != user_id() && $photo.userid != $anonymous_id}
 									{if $userquery->is_subscribed($photo.userid,user_id())}
-								<button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
-									{lang code="unsubscribe"}
-								</button>
+										<button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+											{lang code="unsubscribe"}
+										</button>
 
-									{else}
-								<button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
-									{lang code="subscribe"}
-								</button>
+											{else}
+										<button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+											{lang code="subscribe"}
+										</button>
 									{/if}
 								{/if}
 								{if config('enable_edit_photo_button') == 'yes'}

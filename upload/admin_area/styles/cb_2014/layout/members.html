@@ -112,17 +112,19 @@
                     {if $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
                     {/if}
-                    <li class="divider"></li>
-                    {if function_exists('channels_control')}
-                        {if $u.private == private}
-                            <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
+                    {if function_exists('channels_control') || $u.userid != user_id()}
+                        <li class="divider"></li>
+                        {if function_exists('channels_control')}
+                            {if $u.private == private}
+                                <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
+                            {/if}
+                            {if $u.private == public || $u.private == '' }
+                                <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
+                            {/if}
                         {/if}
-                        {if $u.private == public || $u.private == '' }
-                            <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
+                        {if $u.userid != user_id()}
+                            <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
                         {/if}
-                    {/if}
-                    {if $u.userid != user_id()}
-                        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
                     {/if}
 
                 </ul>

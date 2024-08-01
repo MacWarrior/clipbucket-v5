@@ -50,7 +50,11 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$collections[list].userid}">{display_clean($collections[list].username)}</a>
+                        {if $collections[list].userid != $anonymous_id}
+                            <a href="view_user.php?uid={$collections[list].userid}">{display_clean($collections[list].username)}</a>
+                        {else}
+                            {display_clean(lang($collections[list].username))}
+                        {/if}
                     </div>
                 </div>
             </td>

@@ -43,5 +43,8 @@ class MWIP extends \Migration
             'fr'=>'Anonyme',
             'en'=>'Anonymous'
         ]);
+        self::generateTranslation('user_doesnt_exist', [
+            'fr'=>'L\'utilisateur n\'existe pas',
+        ]);
     }
 }

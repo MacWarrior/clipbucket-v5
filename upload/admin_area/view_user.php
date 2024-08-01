@@ -14,7 +14,9 @@ unset($_REQUEST['uid']);
 if ($uid != $userquery->get_anonymous_user()) {
     $udetails = $userquery->get_user_details($uid);
 }
-
+if (empty($udetails)) {
+    redirect_to('/members.php?user_not_found=1');
+}
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];

@@ -470,6 +470,24 @@ class User
                 return '';
         }
     }
+
+    /**
+     * @param $userid
+     * @return void
+     * @throws Exception
+     */
+    public function removeUserFromContact($userid)
+    {
+        $uid = mysql_clean($userid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
+    }
+
+    public function cleanUserMessages($userid)
+    {
+        $uid = mysql_clean($userid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
+    }
+
 }
 
 
@@ -1027,7 +1045,7 @@ class userquery extends CBCategory
         //Changing User Videos To Anonymous
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         //Deleting User Contacts
-        $this->remove_contacts($uid);
+        User::getInstance()->removeUserFromContact($uid);
 
         //Deleting User PMS
         $this->remove_user_pms($uid);
@@ -3916,9 +3934,15 @@ class userquery extends CBCategory
 
         $cond = ' users.userid != ' . userquery::getInstance()->get_anonymous_user();
         if (!has_access('admin_access', true) && !$force_admin) {
+             if ($cond != '') {
+                    $cond .= ' AND';
+                }
             $cond .= " users.usr_status='Ok' AND users.ban_status ='no' ";
         } else {
             if (!empty($params['ban'])) {
+                 if ($cond != '') {
+                    $cond .= ' AND';
+                }
                 $cond .= " users.ban_status ='" . $params['ban'] . "'";
             }
 
@@ -4391,11 +4415,15 @@ class userquery extends CBCategory
             $outs = $cbpm->get_user_outbox_messages($uid);
             if (is_array($outs)) {
                 foreach ($outs as $out) {
-                    $cbpm->delete_msg($out['message_id'], $uid, 'out');
+                    $cbpm->delete_msg($out['message_id'], $uid,  'out');
                 }
             }
             e(lang('all_user_sent_messages_deleted'), 'm');
         }
+        //UPDATE
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . '
+                SET message_to = REPLACE(message_to, \'#'.mysql_clean($uid).'#\', \'#'.mysql_clean(userquery::getInstance()->get_anonymous_user()).'#\')
+                WHERE message_to LIKE \'%#'.mysql_clean($uid).'#%\'');
     }
 
     /**

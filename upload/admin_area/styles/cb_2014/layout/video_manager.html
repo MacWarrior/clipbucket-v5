@@ -104,6 +104,8 @@
                     <div class="col-md-2">
                         {if $video.userid != $anonymous_id}
                             <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
+                        {else}
+                        {display_clean(lang($video.user_username))}
                         {/if}
                     </div>
                 </div>

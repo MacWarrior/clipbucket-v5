@@ -205,14 +205,6 @@
                             <div class="row">
                                 <div class="col-md-10">
                                     <table class="myTable" style="width:100%;">
-                                        {if $data.userid == $anonymous_id}
-                                            <tr>
-                                                <td class="first"><label>User Id</label></td>
-                                                <td class="last">
-                                                    <p><span>{$data.userid}</span></p>
-                                                </td>
-                                            </tr>
-                                        {/if}
                                         <tr>
                                             <td class="first"><label>{lang code='username'}</label></td>
                                             <td class="last">
@@ -225,32 +217,34 @@
                                                 </span></p>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="first"><label>DOB</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.dob}</span></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="first"><label>Email</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.email}</span></p>
-                                            </td>
-                                        </tr>
-                                        {if config('enable_gender') == 'yes'}
-                                        <tr>
-                                            <td class="first"><label>{lang code='gender'}</label></td>
-                                            <td class="last">
-                                                <p><span>{lang code="{$data.sex}"}</span></p>
-                                            </td>
-                                        </tr>
+                                        {if $data.userid != $anonymous_id}
+                                            <tr>
+                                                <td class="first"><label>DOB</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.dob}</span></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="first"><label>Email</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.email}</span></p>
+                                                </td>
+                                            </tr>
+                                            {if config('enable_gender') == 'yes'}
+                                            <tr>
+                                                <td class="first"><label>{lang code='gender'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{lang code="{$data.sex}"}</span></p>
+                                                </td>
+                                            </tr>
+                                            {/if}
+                                            <tr>
+                                                <td class="first"><label>{lang code='rating'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.rating}</span></p>
+                                                </td>
+                                            </tr>
                                         {/if}
-                                        <tr>
-                                            <td class="first"><label>{lang code='rating'}</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.rating}</span></p>
-                                            </td>
-                                        </tr>
                                     </table>
                                 </div>
                                 <div class="col-md-2">
