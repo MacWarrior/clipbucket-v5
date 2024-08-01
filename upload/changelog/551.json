@@ -50,6 +50,7 @@
         ,"Fix PHP CLI infos"
         ,"Fix video file deletion <i>(#390)</i>"
         ,"Fix video mass upload tags"
+        ,"Fix admin tools stuck on error"
       ]
     },
     {
