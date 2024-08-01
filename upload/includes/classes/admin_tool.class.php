@@ -594,7 +594,6 @@ class AdminTool
         }
     }
 
-
     /**
      * @return void
      * @throws Exception
@@ -665,6 +664,10 @@ class AdminTool
         }
         $this->executeTool('Video::deleteUnusedVideoFIles');
     }
+
+    /**
+     * @throws Exception
+     */
     public function setToolError($id_tool)
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
