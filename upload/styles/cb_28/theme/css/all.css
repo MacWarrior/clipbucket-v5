@@ -1940,7 +1940,6 @@ h1 {
 
 .view-tabs .alert-info {
   background: none;
-  color: #000;
   font-size: 13px;
   line-height: 18px;
   border: none;
@@ -1949,8 +1948,8 @@ h1 {
 
 .view-tabs .nav-tabs.nav {
   font-size: 16px;
-  border: 1px solid #d9d9d9;
-  border-width: 1px 0;
+  border-top: 1px solid #d9d9d9;
+  border-bottom: 1px solid #d9d9d9;
 }
 
 .view-tabs .nav-tabs.nav>li {
@@ -2001,7 +2000,6 @@ h1 {
   list-style: none;
   padding: 0;
   margin: 0;
-  color: #000;
   font-size: 14px;
 }
 
@@ -2164,7 +2162,6 @@ h1 {
 
 .item-photo .photo-info {
   overflow: hidden;
-  background: #fff;
   padding: 10px;
   font-size: 14px;
   line-height: 14px;
@@ -2184,28 +2181,17 @@ h1 {
   margin: 0 0 8px;
 }
 
-.item-photo .photo-info strong a {
-  color: #000;
-}
-
 .item-photo .photo-info span {
   position: absolute;
   z-index: 2;
   left: 10px;
   bottom: 10px;
-  color: #0080b4;
 }
 
-.item-photo .photo-info span a {
-  color: #0080b4;
-}
-
-/**/
 .photos .heading {
   margin: 0 0 10px;
 }
 
-/* view photo */
 .photo-view {
   position: relative;
   background: #fff;
@@ -2473,13 +2459,9 @@ h1 {
   font-size: 24px;
   line-height: 26px;
   padding: 5px 0 10px;
-  border-bottom: 1px solid #d9d9d9;
+  border-style: solid;
+  border-width: 1px;
   border-radius: 0;
-  background: #f8f8f8;
-}
-
-.breadcrumb>li+li:before {
-  color: #555;
 }
 
 .breadcrumb>.active {
@@ -2517,7 +2499,6 @@ h1 {
 }
 
 .fav-repo {
-  background: #fff;
   padding: 16px;
   margin: 0 0 20px;
 }
@@ -4308,57 +4289,17 @@ textarea#comment_box {
 }
 
 .btn-primary {
-  background: #0080b4;
-  border-color: #0080b4;
   font-family: "source_sans_proregular", sans-serif;
-  color: #fff;
-}
-
-.btn-primary:hover,
-.btn-primary:active {
-  background: #0080b4;
-  border-color: #0080b4;
-  color: #fff;
 }
 
 .btn-success {
-  background: #4caf50;
-  border-color: #4caf50;
   font-family: "source_sans_proregular", sans-serif;
-  color: #fff;
 }
 
-.btn-success:hover,
-.btn-success:active {
-  background: #4caf50;
-  border-color: #4caf50;
-  color: #fff;
-}
-
-.btn-black {
-  background: #212121;
-  border-color: #212121;
-  font-family: "source_sans_proregular", sans-serif;
-  font-size: 15px;
-  color: #fff;
-}
-
-.btn-black:hover,
-.btn-black:active {
-  background: #212121;
-  border-color: #212121;
-  color: #fff;
-}
-
-/* form elements */
 .form-control {
-  color: #000;
-  background: #f6f6f6;
-  border-color: #d9d9d9;
   font-size: 15px;
   line-height: 28px;
   height: 42px;
-  /* placeholder input styles */
 }
 
 .form-control input[type="text"]::-webkit-input-placeholder {

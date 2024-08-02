@@ -45,7 +45,8 @@ html.dark #header .search input[type="text"]{
 }
 .sidebar-playlists .playlist img,
 .sidebar-items .collection-item img,
-.sidebar-items .featured-video img{
+.sidebar-items .featured-video img,
+.sidebar-items .item-photo .photo-holder img{
     border-radius: var(--border-radius);
 }
 
@@ -91,6 +92,16 @@ html.dark #header .search input[type="text"]{
     background: var(--background-gradient);
 }
 
+/* Video */
+.playlist.featured-video.active{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.video-details{
+    background: var(--background-gradient);
+    border-radius: var(--border-radius);
+}
+
 /* Channel */
 .cover .profile-buttons{
     background: var(--background-gradient);
@@ -100,4 +111,15 @@ html.dark #header .search input[type="text"]{
 .channel-tabs{
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
+}
+
+/* Photo bloc */
+.item-photo .photo-info{
+    background: var(--background-gradient);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.item-photo .photo-holder img{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
 }
