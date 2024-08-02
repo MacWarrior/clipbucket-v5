@@ -1162,5 +1162,6 @@ VALUES ('admin_setting'),
        ('correct_video_categorie_description'),
        ('delete_unused_resolution_files_label'),
        ('delete_unused_resolution_files_description'),
+       ('on_error'),
        ('anonymous'),
        ('anonymous_locked');
