@@ -4,8 +4,9 @@ ob_start();
 require_once 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
+require_once DirPath::get('classes') . 'WhoopsManager.php';
 
-$whoops = new \Whoops\Run;
+$whoops = \WhoopsManager::getInstance();
 if (file_exists(DirPath::get('temp') . 'development.dev')) {
     if( !defined('DEVELOPMENT_MODE') ){
         define('DEVELOPMENT_MODE', true);
