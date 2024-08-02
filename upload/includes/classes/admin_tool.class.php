@@ -120,6 +120,13 @@ class AdminTool
         return true;
     }
 
+    public function toolErrorHandler($e)
+    {
+        $this->addLog('Error : ' . $e->getMessage());
+        $this->setToolError($this->id_tool);
+        return false;
+    }
+
     /**
      * check if tool exist and execute the function stored in database
      * @return false|void
@@ -127,6 +134,10 @@ class AdminTool
      */
     public function launch()
     {
+        $whoops = WhoopsManager::getInstance();
+        $whoops->pushHandler([$this, 'toolErrorHandler']);
+
+        $whoops->register();
         if (empty($this->tool)) {
             e(lang('class_error_occured'));
             return false;
@@ -513,7 +524,7 @@ class AdminTool
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
             $this->addLog(lang('tool_ended'));
         } else {
-            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
         }
     }
 
@@ -582,7 +593,6 @@ class AdminTool
             Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
         }
     }
-
 
     /**
      * @return void
@@ -653,5 +663,18 @@ class AdminTool
             $this->array_loop = array_column($videos, 'videoid');
         }
         $this->executeTool('Video::deleteUnusedVideoFIles');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setToolError($id_tool)
+    {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+            $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
+            $this->addLog(lang('tool_ended'));
+        } else {
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
+        }
     }
 }
