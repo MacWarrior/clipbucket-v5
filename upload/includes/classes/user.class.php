@@ -482,10 +482,31 @@ class User
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
     }
 
+    /**
+     * @param $userid
+     * @return void
+     * @throws Exception
+     */
     public function cleanUserMessages($userid)
     {
         $uid = mysql_clean($userid);
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
+    }
+
+    /**
+     * @param $userid
+     * @return void
+     */
+    public function cleanUserFeed($userid)
+    {
+        $userid = mysql_clean($userid);
+        $userfeeds = rglob(DirPath::get('userfeeds') . $userid . DIRECTORY_SEPARATOR . '*.feed');
+        foreach ($userfeeds as $userfeed) {
+            unlink($userfeed);
+        }
+        if (is_dir(DirPath::get('userfeeds') . $userid)) {
+            rmdir(DirPath::get('userfeeds') . $userid);
+        }
     }
 
 }
@@ -1068,6 +1089,8 @@ class userquery extends CBCategory
         //Finally Removing Database entry of user
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
+
+        User::getInstance()->cleanUserFeed($uid);
 
         if( empty(errorhandler::getInstance()->get_error()) ){
             e(lang('usr_del_msg'), 'm');

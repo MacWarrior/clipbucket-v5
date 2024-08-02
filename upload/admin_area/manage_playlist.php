@@ -166,7 +166,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('playlist');
 assign('available_tags',$available_tags);
-
+assign('anonymous_id', $userquery->get_anonymous_user());
 //- manage play front end
 template_files('manage_playlist.html');
 display_it();
