@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"82",
+  "revision":"83",
   "status":"dev",
   "detail":[
     {
@@ -139,6 +139,7 @@
         ,"Fix dependancies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
         ,"Fix SQL typo"
+        ,"Fix SSE DB update"
       ]
     },
     {
