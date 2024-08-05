@@ -10,16 +10,12 @@ assign('user', $userquery->get_user_details(user_id()));
 $videos = $userquery->get_user_vids(user_id(), false, false, true);
 assign('videos', $videos);
 
-$result_array['limit'] = $get_limit;
-$result_array['user'] = $udetails["userid"];
-$get_limit = create_query_limit($page, 5);
+$get_limit = create_query_limit($_GET['page'], 5);
 $videos = $cbvid->action->get_flagged_objects($get_limit);
 Assign('flagedVideos', $videos);
 Assign('count_flagged_videos', $cbvid->action->count_flagged_objects());
 
-$result_array['limit'] = $get_limit;
-$result_array['user'] = $udetails["userid"];
-$get_limit = create_query_limit($page, 5);
+$get_limit = create_query_limit($_GET['page'], 5);
 $photos = $cbphoto->action->get_flagged_objects($get_limit);
 assign('flagedPhotos', $photos);
 Assign('count_flagged_photos', $cbphoto->action->count_flagged_objects());
@@ -28,6 +24,11 @@ if (isset($_GET['delete_video'])) {
     $video = mysql_clean($_GET['delete_video']);
     $cbvideo->delete_video($video);
 }
+$storage_use = null;
+if (config('enable_storage_history_fo')) {
+    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUse(user_id()), 2);
+}
+assign('storage_use', $storage_use);
 
 subtitle(lang('my_account'));
 template_files('myaccount.html');

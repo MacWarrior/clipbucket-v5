@@ -1192,3 +1192,15 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
     ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
+(
+    `id_user`       BIGINT   NOT NULL,
+    `datetime`      DATETIME NOT NULL DEFAULT NOW(),
+    `storage_used`  BIGINT   NOT NULL,
+    PRIMARY KEY (`id_user`, `datetime`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}users_storage_histo`
+    ADD CONSTRAINT `id_user_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;

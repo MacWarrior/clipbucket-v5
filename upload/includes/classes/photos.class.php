@@ -419,6 +419,35 @@ class Photo
         CBPhotos::getInstance()->generate_photos($id);
     }
 
+    /**
+     * @param string|int $id
+     * @param string $file_name
+     * @param string $file_directory
+     * @param string $extension
+     * @return int
+     * @throws Exception
+     */
+    public function getUsage($id, string $file_name, string $file_directory, string $extension, string $photo_key): int
+    {
+        $total = 0;
+        $details = [
+            'photo_id' => $id,
+            'photo_key' => $photo_key,
+            'file_directory'=>$file_directory,
+            'filename'=>$file_name,
+            'ext'=>$extension
+        ];
+        $files = get_image_file(['details' => $details, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                $file_dir = DirPath::get('photos') . $file;
+                if (file_exists($file_dir)) {
+                    $total += filesize($file_dir);
+                }
+            }
+        }
+        return $total;
+    }
 }
 
 class CBPhotos

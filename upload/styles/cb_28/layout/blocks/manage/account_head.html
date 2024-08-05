@@ -72,6 +72,13 @@
 			<span class="line-height-1 smaller-90">{lang code='subscribers'}</span>
 		</span>
 		{/if}
+		{if $storage_use !== null}
+		<span class="btn" style="background-color:#000000;color:#ffffff; margin-top: 5px">
+			<span class="line-height-1 bigger-170">{$storage_use}</span>
+			<br/>
+			<span class="line-height-1 smaller-90">{lang code='user_current_storage'}</span>
+		</span>
+		{/if}
 	</div>
 </div>
 <hr/>

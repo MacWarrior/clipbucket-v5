@@ -282,7 +282,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_comments_video', 'yes'),
     (NULL, 'enable_comments_photo', 'yes'),
     (NULL, 'enable_comments_collection', 'yes'),
-    (NULL, 'enable_comments_channel', 'yes');
+    (NULL, 'enable_comments_channel', 'yes'),
+    (NULL, 'enable_storage_history', 'yes'),
+    (NULL, 'enable_storage_history_fo', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
@@ -310,7 +312,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('tool_recalcul_video_file_label', 'tool_recalcul_video_file_description', 'AdminTool::recalculVideoFile', 'tool_recalcul_video_file'),
     ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 'recreate_thumb'),
     ('correct_video_categorie_label', 'correct_video_categorie_description', 'AdminTool::correctVideoCategorie', 'correct_video_categorie'),
-    ('delete_unused_resolution_files_label', 'delete_unused_resolution_files_description', 'AdminTool::deleteUnusedResolutionFile', 'delete_unused_resolution_files');
+    ('delete_unused_resolution_files_label', 'delete_unused_resolution_files_description', 'AdminTool::deleteUnusedResolutionFile', 'delete_unused_resolution_files'),
+    ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 

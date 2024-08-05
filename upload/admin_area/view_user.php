@@ -137,6 +137,12 @@ foreach($channel_profile_fields AS $field){
     }
 }
 assign('channel_settings', $channel_settings);
+$storage_use = 0;
+if (config('enable_storage_history') == 'yes') {
+    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUse($uid),2);
+}
+assign('storage_use',$storage_use);
+
 $version = Update::getInstance()->getDBVersion();
 assign('show_categ', ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)));
 subtitle('View User');

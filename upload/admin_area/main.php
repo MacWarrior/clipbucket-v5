@@ -123,6 +123,8 @@ if (isset($_POST['update'])) {
         , 'enable_comments_channel'
         , 'photo_rating'
         , 'own_photo_rating'
+        , 'enable_storage_history'
+        , 'enable_storage_history_fo'
     ];
 
     $config_booleans_to_refactor = [
@@ -425,7 +427,9 @@ if (isset($_POST['update'])) {
 
         'hide_empty_collection',
         'only_keep_max_resolution',
-        'playlistsSection'
+        'playlistsSection',
+        'enable_storage_history',
+        'enable_storage_history_fo'
     ];
 
     foreach ($opt_list as $optl) {

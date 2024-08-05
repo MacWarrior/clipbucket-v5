@@ -1162,4 +1162,10 @@ VALUES ('admin_setting'),
        ('correct_video_categorie_description'),
        ('delete_unused_resolution_files_label'),
        ('delete_unused_resolution_files_description'),
-       ('on_error');
+       ('on_error'),
+       ('unknown_type'),
+       ('calc_user_storage_label'),
+       ('calc_user_storage_description'),
+       ('enable_storage_history'),
+       ('enable_storage_history_fo'),
+       ('user_current_storage');

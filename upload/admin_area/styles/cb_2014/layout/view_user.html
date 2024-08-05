@@ -405,6 +405,14 @@
                     <div class="tab-content">
                         <div id="activity" class="tab-pane active">
                             <table class="table table-striped table-bordered">
+                                {if config('enable_storage_history') == 'yes' && $storage_use != 0}
+                                    <tr>
+                                        <td class="first"><label for="user_storage">{lang code='user_current_storage'}</label></td>
+                                        <td>
+                                            <span  type="text" id="user_storage">{$storage_use}</span>
+                                        </td>
+                                    </tr>
+                                {/if}
                                 <tr>
                                     <td class="first"><label for="dob">{lang code='user_date_of_birth'}</label></td>
                                     <td>
