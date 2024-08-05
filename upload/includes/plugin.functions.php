@@ -186,7 +186,7 @@ function add_admin_menu($header, $name, $link, $plug_folder = false, $is_player_
         ]
     ];
 
-    $Cbucket->addMenuAdmin($menu_plugin);
+    ClipBucket::getInstance()->addMenuAdmin($menu_plugin);
 }
 
 /**
@@ -296,30 +296,30 @@ function register_after_video_upload_action($func)
  * Function used to add actions that will be performed
  * when video is going to play, it will check which player to use
  * what type to use and what to do
- * @param string Function name
+ * @param string $method Function name
  */
-function register_actions_play_video($func)
+function register_actions_play_video(string $method, string $class = null): bool
 {
+    if (empty($method)) {
+        return false;
+    }
+
     global $Cbucket;
-    $Cbucket->actions_play_video[] = $func;
+    if (empty($class)) {
+        $Cbucket->actions_play_video[] = $method;
+    } else {
+        $Cbucket->actions_play_video[] = [
+            'class'    => $class
+            , 'method' => $method
+        ];
+    }
+    return true;
 }
 
 function register_collection_delete_functions($func)
 {
     global $cbcollection;
     $cbcollection->collection_delete_functions[] = $func;
-}
-
-/**
- * Function used to add links in admin area
- *
- * @param array $array
- */
-function add_admin_link($array)
-{
-    $area = $array['area'];
-    $title = $array['title'];
-    $link = $array['link'];
 }
 
 /**
@@ -484,11 +484,3 @@ function get_remote_url_function()
     return 'check_remote_url()';
 }
 
-function plug_url($file, $dir, $admin_base = false)
-{
-    $url = 'plugin.php?folder=' . $dir . '&file=' . $file;
-    if ($admin_base) {
-        $url = ADMIN_BASEURL . '/' . $url;
-    }
-    return $url;
-}

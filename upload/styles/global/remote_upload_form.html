@@ -1,10 +1,5 @@
 <div class="alert alert-info marginTop">
 	{lang('upload_remote_video_msg')}
-	{if has_access("admin_access")}
-		{if $Cbucket->configs.youtube_api_key|strlen < 10}
-			<div class="alert alert-danger">YouTube API key provided in Website Settings & Configurations > General is of invalid length hence, Grab From YouTube may not work <a target="_blank" href="https://developers.google.com/youtube/v3/getting-started">Get API Key</a></div>
-		{/if}
-	{/if}
 </div>
 {$class = ""}
 {if $params.class}
@@ -43,8 +38,6 @@
 		</div>                
 	*}
 	<div class="align-right marginTop">
-		<!--<input type="button" name="ytUploadBttn" id="ytUploadBttn" value="{lang('grab_from_youtube')}" onClick="_cb.youtube_upload()" class="btn btn-primary btn-lg">-->
-		<input type="button" name="ytUploadBttn"  data-loading-text="Loading..." id="ytUploadBttn" value="{lang('grab_from_youtube')}" onClick="youtube_upload()" class="btn btn-primary btn-lg">
 		<input type="button" name="remoteUploadBttn" id="remoteUploadBttn" data-loading-text="Loading..." value="{lang('upload')}" onClick="{get_remote_url_function()}" class="btn btn-primary btn-lg">
 		<input type="button" name="remoteUploadBttnStop" id="remoteUploadBttnStop" value="{lang('cancel')}"  class="btn btn-primary btn-lg" style="display:none;"/>
 	</div>

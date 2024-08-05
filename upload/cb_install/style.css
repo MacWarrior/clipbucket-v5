@@ -36,11 +36,6 @@ a{color:#06c}
 	margin:auto; margin-bottom:5px;
 }
 
-
-.cb_container.arvixe_banner{
-background:url(images/Arvixe-Banner.png) ;
-}
-
 .grey-text{
 color:#797979;
 }
@@ -137,24 +132,44 @@ font-weight:bold;
 
 #logo{font-family: 'Cabin', arial, serif; font-size:28px; font-weight:bold; padding: 5px 0px 15px 20px;}
 
-.bttnleft,.bttncenter,.bttnright,.bttnrightalt
-{
-	height:34px; display:inline-block;line-height:32px; font-size:14px; font-weight:bold; font-family:Arial, Helvetica, sans-serif; color:#fff;
-	cursor:pointer;
-}
-.bttnleft{background-image:url(images/bttnleft.png); width:14px; }
-.bttncenter{background-image:url(images/bttncenter.png);min-width:50px;padding-right:10px; }
-.bttnright{background-image:url(images/bttnright.png);width:37px; }
-.bttnrightalt{background-image:url(images/bttnrightalt.png); width:14px;  }
+dt{font-weight:bold; float:left; width:125px; display:inline-block;padding:5px 3px; line-height:20px;}
+dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0; line-height:20px;}
 
-dt{font-weight:bold; float:left; width:80px; display:inline-block;border-bottom:1px dotted #999; padding:5px 3px; line-height:20px; }
-dd{ width:auto; border-bottom:1px dotted #999; padding:5px 3px; margin:0px; line-height:20px;}  
-dd .red{color:ed0000} dd .green{color:#060; } 
-dd .ok{background-image:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
-dd .alert_cross{background-image:url(images/cross_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block}
+dd span{
+	padding-left: 130px;
+}
+dt span{
+	padding-left: 80px;
+}
 
 dd:last-child{border-bottom:none}
-dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
+
+.red{color:#ed0000;}
+
+.ok, .alert_cross, .warning{
+	background-repeat:no-repeat;
+	height:20px;
+	padding-left:23px;
+	display:inline-block;
+	background-position-y: 4px;
+}
+.ok{
+	background-image:url(images/tick_arrow.png);
+}
+.alert_cross{
+	background-image:url(images/cross_arrow.png);
+	background-position-x: 2px;
+}
+.warning{
+	background-image:url(images/warning.png);
+}
+
+dl{background-color:#F7F7F7; padding:0; border:1px dotted #999;}
+
+dd.white,
+dt.white{
+	background-color: #ffffff;
+}
 
 .inside_shadow
 {
@@ -183,7 +198,6 @@ dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
 	margin-bottom: 0 !important;
 }
 
-.ok{background:url(images/tick_arrow.png); background-repeat:no-repeat; height:20px; padding-left:23px; display:inline-block;line-height:20px}
 .line{height: 1px; background-color: #C9C9C9; margin-top: 10px; margin-bottom: 10px;}
 .green{display:block; margin-bottom:10px}
 
@@ -209,4 +223,33 @@ dl{background-color:#F7F7F7; padding:0px; border:1px dotted #999}
 
 .small{
 	line-height: 8px;
+}
+
+.glyphicon:not(.disabled){
+	cursor: pointer;
+}
+
+.glyphicon.disabled{
+	cursor: no-drop;
+}
+
+.glyphicon:not(.disabled):hover{
+	background-color: #d5d5d5;
+}
+
+.glyphicon.glyphicon-ok{
+	background-color:#DFF0D8;
+	color: #3c763d;
+}
+
+.glyphicon.glyphicon-ok:hover{
+	background-color: #d2eeca;
+}
+
+.glyphicon.glyphicon-remove{
+	background-color:#F2DEDE;
+	color: #a94442;
+}
+.glyphicon.glyphicon-remove:hover{
+	background-color: #f3d3d3;
 }

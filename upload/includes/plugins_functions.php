@@ -1,25 +1,4 @@
 <?php
-/**
- * Function used to modify comment, if there is any plugin installed
- *
- * @param : comment
- *
- * @return string
- */
-function comment($comment): string
-{
-    global $Cbucket;
-    $comment = nl2br($comment);
-    //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('comment');
-    //Applying Function
-    if (is_array($func_list) && count($func_list) > 0) {
-        foreach ($func_list as $func) {
-            $comment = $func($comment);
-        }
-    }
-    return $comment;
-}
 
 /**
  * Function used to modify description, if there is any plugin installed
@@ -30,9 +9,8 @@ function comment($comment): string
  */
 function description($description): string
 {
-    global $Cbucket;
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('description');
+    $func_list = ClipBucket::getInstance()->getFunctionList('description');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {
@@ -52,16 +30,15 @@ function description($description): string
  */
 function title($title): string
 {
-    global $Cbucket;
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('title');
+    $func_list = ClipBucket::getInstance()->getFunctionList('title');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {
             $title = $func($title);
         }
     }
-    return $title;
+    return $title ?? '';
 }
 
 /**
@@ -71,10 +48,10 @@ function title($title): string
  */
 function private_message($array)
 {
-    global $cbpm, $Cbucket;
+    global $cbpm;
     $array = $array['pm'];
     $message = $array['message_content'];
-    $func_list = $Cbucket->getFunctionList('private_message');
+    $func_list = ClipBucket::getInstance()->getFunctionList('private_message');
 
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
@@ -126,34 +103,10 @@ function tags($input, $type, $sep = ', ', $class = ''): string
  * @param null $object_name
  *
  * @return string
- * @throws \Exception
+ * @throws Exception
  */
 function categories($input, $type, $sep = ', ', $object_name = null): string
 {
-    global $cbvideo;
-    switch ($type) {
-        case 'video':
-            $obj = $cbvideo;
-            break;
-
-        case 'user':
-        case 'users':
-            global $userquery;
-            $obj = $userquery;
-            break;
-
-        case 'collection':
-        case 'collections':
-            global $cbcollection;
-            $obj = $cbcollection;
-            break;
-
-        default:
-            global ${$object_name};
-            $obj = ${$object_name};
-            break;
-    }
-
     preg_match_all('/#([0-9]+)#/', $input, $m);
     $cat_array = [$m[1]];
     $cat_array = $cat_array[0];
@@ -162,7 +115,7 @@ function categories($input, $type, $sep = ', ', $object_name = null): string
     $total = count($cat_array);
     $cats = '';
     foreach ($cat_array as $cat) {
-        $cat_details = $obj->get_category($cat);
+        $cat_details = Category::getInstance()->getById($cat);
 
         $cats .= '<a href="' . category_link($cat_details, $type) . '">' . display_clean($cat_details['category_name']) . '</a>';
         if ($count < $total) {
@@ -182,9 +135,8 @@ function categories($input, $type, $sep = ', ', $object_name = null): string
  */
 function page($content): string
 {
-    global $Cbucket;
     //Getting List of comment functions
-    $func_list = $Cbucket->getFunctionList('page');
+    $func_list = ClipBucket::getInstance()->getFunctionList('page');
     //Applying Function
     if (is_array($func_list) && count($func_list) > 0) {
         foreach ($func_list as $func) {

@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'orphan_photos');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $cbphoto, $eh, $db;
 
@@ -12,7 +12,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Orphan Photos', 'url' => ADMIN_BASEURL . '/orphan_photos.php'];
+$breadcrumb[1] = ['title' => 'Orphan Photos', 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'];
 
 if (isset($_GET['delete_photo'])) {
     $id = mysql_clean($_GET['delete_photo']);

@@ -12,22 +12,45 @@
         {$field.class = 'form-control'}
         <div class="col-md-4">
            <label for="{$field.id}">{$field.title}</label>
-           {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
 
         {$field = $required_fields.email}
         {$field.class = 'form-control'}
         <div class="col-md-4">
            <label for="{$field.id}">{$field.title}</label>
-           {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
         {$field = $required_fields.dob}
         {$field.class = 'form-control'}
-        {$field.id = 'datecreated'}
-        <div class="col-md-4 ">
+        <div class="col-md-4">
             <span class="glyphicon glyphicon-calendar"></span>
             <label for="{$field.id}">{$field.title}</label>
-            {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
     </div>
     <br>
@@ -36,13 +59,29 @@
         {$field.class = 'form-control'}
         <div class="col-md-4">
             <label for="{$field.id}">{$field.title}</label>
-            {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
         {$field = $required_fields.cpassword}
         {$field.class = 'form-control'}
         <div class="col-md-4">
             <label for="{$field.id}">{$field.title}</label>
-            {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
         <div class="col-md-4">
             <label for="active">Status</label>
@@ -54,12 +93,22 @@
     </div>
     <br>
     <div class="row">
-        {$field = $required_fields.gender}
-        {$field.class = 'form-control'}
-           <div class="col-md-4">
-            <label for="{$field.id}">{$field.title}</label><br>
-            {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+        {if config('enable_gender')=='yes'}
+            {$field = $required_fields.gender}
+            {$field.class = 'form-control'}
+        <div class="col-md-4">
+            <label for="{$field.id}">{$field.title}</label><br/>
+            {if $field.hint_1}
+                {$field.hint_1}<br/>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
+        {/if}
         <div class="col-md-4">
             <label for="level">User level</label>
             <select class="form-control" name="level" id="level">
@@ -69,24 +118,45 @@
                 {/foreach}
             </select>
         </div>
-        {$field = $required_fields.country}
-        {$field.class = 'form-control'}
-        {$field.type = 'dropdown'}
+        {if config('enable_country')=='yes'}
+            {$field = $required_fields.country}
+            {$field.class = 'form-control'}
+            {$field.type = 'dropdown'}
         <div class="col-md-4">
             <label for="{$field.id}">{$field.title}</label>
-            {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
+        {/if}
     </div>
     <br>
+
+    {if config('enable_user_category')=='yes'}
     <div class="row">
         {$field = $required_fields.cat}
         {$field.class = 'form-control'}
         <div class="col-md-4">
             <label for="{$field.id}">{$field.title}</label>
-            {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}{$field.hint_2}{/if}
+            {if $field.hint_1}
+                {$field.hint_1}<br>
+            {/if}
+            {ANCHOR place=$field.anchor_before}
+            {$formObj->createField($field,false,true)}
+            {ANCHOR place=$field.anchor_after}
+            {if $field.hint_2}
+                {$field.hint_2}
+            {/if}
         </div>
     </div>
     <br>
+    {/if}
 
     {if $custom_field}
     <h3>Other Settings</h3>
@@ -94,7 +164,15 @@
     <div class="form-group">
         <label for="{$field.id}" class="label">{$field.title}</label>
         {$field.class=form-control}
-        {if $field.hint_1}{$field.hint_1}<br>{/if}{ANCHOR place=$field.anchor_before}{$formObj->createField($field,false,true)}{ANCHOR place=$field.anchor_after}{if $field.hint_2}<br>{$field.hint_2}{/if}
+        {if $field.hint_1}
+            {$field.hint_1}<br>
+        {/if}
+        {ANCHOR place=$field.anchor_before}
+        {$formObj->createField($field,false,true)}
+        {ANCHOR place=$field.anchor_after}
+        {if $field.hint_2}
+            <br>{$field.hint_2}
+        {/if}
     </div>
         {/foreach}
     {/if}
@@ -102,6 +180,3 @@
         <input type="submit" name="add_member" value="Add Member" class="btn btn-info" id="add_member"/>
     </div>
 </form>
-<script>
-    var date_format = '{get_date_js()}';
-</script>

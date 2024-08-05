@@ -67,7 +67,7 @@
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$collections[list].collection_id}">{lang code='edit'}</a></li>
-                        <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="/view_collection.php?cid={$collections[list].collection_id}&type={$collections[list].type}">{lang code='watch'}</a></li>
+                        <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="/view_collection.php?cid={$collections[list].collection_id}">{lang code='watch'}</a></li>
                         {if $collections[list].active == yes}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$collections[list].collection_id}">{lang code='deactivate'}</a></li>
                         {else}
@@ -94,3 +94,8 @@
 {/if}
 
 {include file="$style_dir/blocks/pagination.html" }
+
+<script>
+    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var id_input = 'tags';
+</script>

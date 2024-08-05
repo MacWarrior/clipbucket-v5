@@ -6,6 +6,18 @@ class Upload
     var $custom_upload_fields = []; //Step 2 of Uploading
     var $actions_after_video_upload = ['activate_video_with_file'];
 
+    var $types_thumb = [
+        'c' => 'custom',
+        'p' => 'poster',
+        'b' => 'backdrop',
+        'a' => 'auto'
+    ];
+
+    public static function getInstance(){
+        global $Upload;
+        return $Upload;
+    }
+
     /**
      * Function used to validate upload form fields
      *
@@ -49,11 +61,11 @@ class Upload
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     function submit_upload($array = null)
     {
-        global $eh, $db, $userquery;
+        global $eh, $db;
 
         if (!$array) {
             $array = $_POST;
@@ -69,7 +81,7 @@ class Upload
         $userid = user_id();
         if (!$userid) {
             if (has_access('allow_video_upload', true, false)) {
-                $userid = $userquery->get_anonymous_user();
+                $userid = userquery::getInstance()->get_anonymous_user();
             } else {
                 e(lang('you_not_logged_in'));
                 return false;
@@ -84,7 +96,6 @@ class Upload
         $option_fields = $this->loadOptionFields($array);
         $empty_fields = [
             'voter_ids'
-            , 'featured_description'
         ];
 
         $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
@@ -105,6 +116,10 @@ class Upload
             $name = formObj::rmBrackets($field['name']);
             $val = $array[$name];
 
+            if (empty($val) && !empty($field['default_value'])) {
+                $val = $field['default_value'];
+            }
+
             if( empty($val) && $field['required'] == 'no'){
                 continue;
             }
@@ -117,20 +132,8 @@ class Upload
                 $query_field[] = $field['db_field'];
             }
 
-            if (is_array($val)) {
-                $new_val = '';
-                foreach ($val as $v) {
-                    $new_val .= '#' . $v . '# ';
-                }
-                $val = $new_val;
-            }
-
             if( !empty($field['clean_func']) && !apply_func($field['clean_func'], $val) ){
                 $val = apply_func($field['clean_func'], $val);
-            }
-
-            if (empty($val) && !empty($field['default_value'])) {
-                $val = $field['default_value'];
             }
 
             if (!empty($field['db_field'])) {
@@ -179,7 +182,7 @@ class Upload
 
         //Upload Ip
         $query_field[] = 'uploader_ip';
-        $query_val[] = $_SERVER['REMOTE_ADDR'];
+        $query_val[] = Network::get_remote_ip();
 
         //Setting Activation Option
         $query_field[] = 'active';
@@ -203,9 +206,19 @@ class Upload
                 $query_field[] = 'status';
                 $query_val[] = 'Successful';
             }
-
+            $version = Update::getInstance()->getDBVersion();
+            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+                $query_field[] = 'tags';
+                $query_val[] = '';
+            }
             $db->insert(tbl('video'),$query_field, $query_val);
             $insert_id = $db->insert_id();
+
+            Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
+            $version = Update::getInstance()->getDBVersion();
+            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+                Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
+            }
 
             //logging Upload
             $log_array = [
@@ -239,58 +252,71 @@ class Upload
      *
      * @param $file_name
      * @return string
-     * @throws \Exception
+     * @throws Exception
      */
     function get_next_available_num($file_name): string
     {
-        global $db;
-        $res = $db->select(tbl('video_thumbs'), 'MAX(num) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
+        $res = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'MAX(CAST(num AS UNSIGNED)) + 1 as num_max', ' videoid = (SELECT videoid FROM ' . tbl('video') . ' WHERE file_name LIKE \'' . mysql_clean($file_name) . '\')');
         if (empty($res)) {
             $code = 0;
         } else {
             $code = $res[0]['num_max'];
         }
-        return str_pad((string)$code, strlen(config('num_thumbs')), '0', STR_PAD_LEFT);
+        return str_pad((string)$code, 4, '0', STR_PAD_LEFT);
     }
 
-    function upload_thumb($file_name, $file_array, $key = 0, $files_dir = null, $thumbs_ver = false)
+    /**
+     * @throws Exception
+     */
+    function upload_thumb($video_file_name, $file_array, $key = 0, $files_dir = null, $type = 'c')
     {
         global $imgObj;
         $file = $file_array;
         if (!empty($file['name'][$key])) {
             define('dir', $files_dir);
 
-            $file_num = $this->get_next_available_num($file_name);
-            $ext = getExt($file['name'][$key]);
-            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext)) {
+            $file_num = $this->get_next_available_num($video_file_name);
+            $ext_original = getExt($file['name'][$key]);
+            $ext = 'jpg';
+            if ($imgObj->ValidateImage($file['tmp_name'][$key], $ext_original)) {
                 $thumbs_settings_28 = thumbs_res_settings_28();
-                $temp_file_path = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $file_num . '.' . $ext;
+                $temp_file_path = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $video_file_name . '-' . $file_num . '-'.$type.'.' . $ext;
 
                 $imageDetails = getimagesize($file['tmp_name'][$key]);
-
-                move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                if (is_uploaded_file($file['tmp_name'][$key])) {
+                    move_uploaded_file($file['tmp_name'][$key], $temp_file_path);
+                } else {
+                    rename($file['tmp_name'][$key], $temp_file_path);
+                }
 
                 foreach ($thumbs_settings_28 as $key => $thumbs_size) {
                     $height_setting = $thumbs_size[1];
                     $width_setting = $thumbs_size[0];
                     if ($key != 'original') {
+                        if ($type != 'c') {
+                            continue;
+                        }
                         $dimensions = implode('x', $thumbs_size);
                     } else {
                         $dimensions = 'original';
                         $width_setting = $imageDetails[0];
                         $height_setting = $imageDetails[1];
                     }
-                    $outputFilePath = THUMBS_DIR . DIRECTORY_SEPARATOR . $files_dir . DIRECTORY_SEPARATOR . $file_name . '-' . $dimensions . '-' . $file_num . '.' . $ext;
-                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext, $height_setting, false);
+                    $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
+                    $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
+                    $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
                     global $db;
-                    $rs = $db->select(tbl('video'), 'videoid', 'file_name LIKE \'' . $file_name . '\'');
+                    $rs = $db->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
                     if (!empty($rs)) {
                         $videoid = $rs[0]['videoid'];
                     } else {
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$videoid, $dimensions, $file_num, $ext, VERSION]);
+                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
+                    if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
+                        Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
+                    }
                 }
 
                 unlink($temp_file_path);
@@ -305,22 +331,21 @@ class Upload
      * @param      $file_name
      * @param      $file_array
      * @param null $files_dir
-     * @param bool $thumbs_ver
-     *
-     * @throws \Exception
+     * @param string $type
+     * @throws Exception
      * @internal param $FILE_NAME
      * @internal param array $_FILES name
      */
-    function upload_thumbs($file_name, $file_array, $files_dir = null, $thumbs_ver = false)
+    function upload_thumbs($file_name, $file_array, $files_dir = null, string $type = 'c')
     {
         if (count($file_array['name']) > 1) {
             for ($i = 0; $i < count($file_array['name']); $i++) {
-                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $thumbs_ver);
+                $this->upload_thumb($file_name, $file_array, $i, $files_dir, $type);
             }
             e(lang('upload_vid_thumbs_msg'), 'm');
         } else {
             $file = $file_array;
-            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $thumbs_ver);
+            $this->upload_thumb($file_name, $file, $key = 0, $files_dir, $type);
         }
     }
 
@@ -334,7 +359,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function loadRequiredFields($default = null): array
     {
@@ -346,13 +371,11 @@ class Upload
         $desc = $default['description'];
 
         if (is_array($default['category'])) {
-            $cat_array = [$default['category']];
+            $cat_array = $default['category'];
         } else {
-            preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-            $cat_array = [$m[1]];
+            $cat_array = explode(',', $default['category']);
         }
 
-        $tags = $default['tags'];
 
         $uploadFormRequiredFieldsArray = [
             /**
@@ -405,26 +428,102 @@ class Upload
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
-                'value'             => ['category', $cat_array],
-                'hint_1'            => sprintf(lang('vdo_cat_msg'), ALLOWED_VDO_CATS),
-                'db_field'          => 'category',
+                'value'             => $cat_array,
+                'hint_1'            => sprintf(lang('vdo_cat_msg'), config('video_categories')),
                 'required'          => 'yes',
-                'validate_function' => 'validate_vid_category',
+                'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('vdo_cat_err3'),
                 'display_function'  => 'convert_to_categories'
             ],
-            'tags'  => [
+            'tags_video'  => [
                 'title'             => lang('tag_title'),
                 'type'              => 'hidden',
-                'name'              => 'tags',
-                'id'                => 'tags',
-                'value'             => genTags($tags),
+                'name'              => 'tags_video',
+                'id'                => 'tags_video',
+                'value'             => genTags($default['tags_video']),
                 'hint_1'            => '',
-                'db_field'          => 'tags',
-                'required'          => 'yes',
+                'required'          => 'no',
                 'validate_function' => 'genTags'
             ]
         ];
+
+        if( config('enable_video_genre') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_genre'] = [
+                'title'             => lang('genre'),
+                'type'              => 'hidden',
+                'name'              => 'tags_genre',
+                'id'                => 'tags_genre',
+                'value'             => genTags($default['tags_genre']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_actor') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_actors'] = [
+                'title'             => lang('actors'),
+                'type'              => 'hidden',
+                'name'              => 'tags_actors',
+                'id'                => 'tags_actors',
+                'value'             => genTags($default['tags_actors']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_producer') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_producer'] = [
+                'title'             => lang('producer'),
+                'type'              => 'hidden',
+                'name'              => 'tags_producer',
+                'id'                => 'tags_producer',
+                'value'             => genTags($default['tags_producer']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_executive_producer') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_executive_producer'] = [
+                'title'             => lang('executive_producer'),
+                'type'              => 'hidden',
+                'name'              => 'tags_executive_producer',
+                'id'                => 'tags_executive_producer',
+                'value'             => genTags($default['tags_executive_producer']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_director') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_director'] = [
+                'title'             => lang('director'),
+                'type'              => 'hidden',
+                'name'              => 'tags_director',
+                'id'                => 'tags_director',
+                'value'             => genTags($default['tags_director']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
+
+        if( config('enable_video_crew') == 'yes' ){
+            $uploadFormRequiredFieldsArray['tags_crew'] = [
+                'title'             => lang('crew'),
+                'type'              => 'hidden',
+                'name'              => 'tags_crew',
+                'id'                => 'tags_crew',
+                'value'             => genTags($default['tags_crew']),
+                'hint_1'            => '',
+                'required'          => 'no',
+                'validate_function' => 'genTags'
+            ];
+        }
 
         $tracks = $default['tracks'];
         if (!empty($tracks)) {
@@ -456,7 +555,7 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function loadOptionFields($default = null): array
     {
@@ -478,53 +577,71 @@ class Upload
             }
         }
 
-        return [
-            'broadcast'      => [
-                'title'             => lang('vdo_br_opt'),
-                'type'              => 'radiobutton',
-                'name'              => 'broadcast',
-                'value'             => ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')],
-                'checked'           => $broadcast,
-                'db_field'          => 'broadcast',
+        $fields = [];
+        if( config('enable_age_restriction') == 'yes' ) {
+            $fields['age_restriction'] = [
+                'title'             => lang('age_restriction'),
+                'type'              => 'textfield',
+                'name'              => 'age_restriction',
+                'id'                => 'age_restriction',
+                'value'             => $default['age_restriction'],
+                'db_field'          => 'age_restriction',
                 'required'          => 'no',
-                'validate_function' => 'yes_or_no',
-                'display_function'  => 'display_sharing_opt',
-                'default_value'     => 'public',
-                'extra_tags'        => ' onClick="
+                'hint_2'            => lang('info_age_restriction'),
+                'validate_function' => 'ageRestriction',
+                'use_func_val'      => true
+            ];
+        }
+
+        $fields['broadcast'] = [
+            'title'             => lang('vdo_br_opt'),
+            'type'              => 'radiobutton',
+            'name'              => 'broadcast',
+            'value'             => ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')],
+            'checked'           => $broadcast,
+            'db_field'          => 'broadcast',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no',
+            'display_function'  => 'display_sharing_opt',
+            'default_value'     => 'public',
+            'extra_tags'        => ' onClick="
 				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
                     $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
 					if($(this).val()==\'unlisted\'){
 					    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',false);
 					} else if($(this).val()==\'private\') {
 					    $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',false);
-                    }"
-                '
-            ],
-            'video_password' => [
-                'title'      => lang('video_password'),
-                'type'       => 'password',
-                'name'       => 'video_password',
-                'id'         => 'video_password',
-                'value'      => $default['video_password'],
-                'db_field'   => 'video_password',
-                'required'   => 'no',
-                'extra_tags' => " $video_pass_disable ",
-                'hint_2'     => lang('set_video_password')
-            ],
-            'video_users'    => [
-                'title'             => lang('video_users'),
-                'type'              => 'textarea',
-                'name'              => 'video_users',
-                'id'                => 'video_users',
-                'value'             => $default['video_users'],
-                'db_field'          => 'video_users',
-                'required'          => 'no',
-                'extra_tags'        => " $video_user_disable ",
-                'hint_2'            => lang('specify_video_users'),
-                'validate_function' => 'video_users',
-                'use_func_val'      => true
-            ],
-            'comments'       => [
+                    }"'
+        ];
+
+        $fields['video_password'] = [
+            'title'      => lang('video_password'),
+            'type'       => 'password',
+            'name'       => 'video_password',
+            'id'         => 'video_password',
+            'value'      => $default['video_password'],
+            'db_field'   => 'video_password',
+            'required'   => 'no',
+            'extra_tags' => " $video_pass_disable ",
+            'hint_2'     => lang('set_video_password')
+        ];
+
+        $fields['video_users'] =[
+            'title'             => lang('video_users'),
+            'type'              => 'textarea',
+            'name'              => 'video_users',
+            'id'                => 'video_users',
+            'value'             => $default['video_users'],
+            'db_field'          => 'video_users',
+            'required'          => 'no',
+            'extra_tags'        => " $video_user_disable ",
+            'hint_2'            => lang('specify_video_users'),
+            'validate_function' => 'video_users',
+            'use_func_val'      => true
+        ];
+
+        if( config('enable_comments_video') == 'yes' ){
+            $fields['comments'] = [
                 'type'              => 'checkboxv2',
                 'name'              => 'allow_comments',
                 'value'             => 'yes',
@@ -533,8 +650,9 @@ class Upload
                 'db_field'          => 'allow_comments',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no'
-            ],
-            'commentsvote'   => [
+            ];
+
+            $fields['commentsvote'] = [
                 'type'              => 'checkboxv2',
                 'name'              => 'comment_voting',
                 'value'             => 'yes',
@@ -543,28 +661,32 @@ class Upload
                 'db_field'          => 'comment_voting',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no'
-            ],
-            'rating'         => [
-                'type'              => 'checkboxv2',
-                'name'              => 'allow_rating',
-                'value'             => 'yes',
-                'label'             => lang('vdo_allow_rating'),
-                'checked'           => $default['allow_rating'] ?? 'yes',
-                'db_field'          => 'allow_rating',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no'
-            ],
-            'embedding'      => [
-                'type'              => 'checkboxv2',
-                'name'              => 'allow_embedding',
-                'value'             => 'yes',
-                'label'             => lang('vdo_embed_opt1'),
-                'checked'           => $default['allow_embedding'] ?? 'yes',
-                'db_field'          => 'allow_embedding',
-                'required'          => 'no',
-                'validate_function' => 'yes_or_no'
-            ]
+            ];
+        }
+
+        $fields['rating'] = [
+            'type'              => 'checkboxv2',
+            'name'              => 'allow_rating',
+            'value'             => 'yes',
+            'label'             => lang('vdo_allow_rating'),
+            'checked'           => $default['allow_rating'] ?? 'yes',
+            'db_field'          => 'allow_rating',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no'
         ];
+
+        $fields['embedding'] = [
+            'type'              => 'checkboxv2',
+            'name'              => 'allow_embedding',
+            'value'             => 'yes',
+            'label'             => lang('vdo_embed_opt1'),
+            'checked'           => $default['allow_embedding'] ?? 'yes',
+            'db_field'          => 'allow_embedding',
+            'required'          => 'no',
+            'validate_function' => 'yes_or_no'
+        ];
+
+        return $fields;
     }
 
     /**
@@ -576,12 +698,10 @@ class Upload
      * @param null $default
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function loadLocationFields($default = null): array
     {
-        global $Cbucket;
-
         if ($default == null) {
             $default = $_POST;
         }
@@ -591,18 +711,13 @@ class Upload
             $date_recorded = $default['datecreated'];
         }
 
-        $datecreated = DateTime::createFromFormat('Y-m-d', $date_recorded);
-        if ($datecreated) {
-            $datecreated = $datecreated->format(DATE_FORMAT);
-        }
-
         return [
             'country'       => [
                 'title'         => lang('country'),
                 'type'          => 'dropdown',
                 'name'          => 'country',
                 'id'            => 'country',
-                'value'         => $Cbucket->get_countries(),
+                'value'         => ClipBucket::getInstance()->get_countries(),
                 'checked'       => $default['country'],
                 'db_field'      => 'country',
                 'required'      => 'no',
@@ -637,7 +752,6 @@ class Upload
         ];
     }
 
-
     /**
      * Function used to add files in conversion queue
      *
@@ -645,7 +759,7 @@ class Upload
      * @param string $sub_directory
      * @param string $cqueue_name
      * @return bool|int
-     * @throws \Exception
+     * @throws Exception
      */
     function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
     {
@@ -661,7 +775,7 @@ class Upload
             $cqueue_name = $name;
         }
 
-        $tmp_filepath = TEMP_DIR . DIRECTORY_SEPARATOR . $sub_directory . $file;
+        $tmp_filepath = DirPath::get('temp') . $sub_directory . $file;
         //Checking file exists or not
         if (!file_exists($tmp_filepath)) {
             return false;
@@ -675,7 +789,7 @@ class Upload
                 $tmp_ext = $Cbucket->temp_exts;
                 $tmp_ext = $tmp_ext[rand(0, count($tmp_ext) - 1)];
                 //Creating New File Name
-                $dest_filepath = TEMP_DIR . DIRECTORY_SEPARATOR . $sub_directory . $name . '.' . $tmp_ext;
+                $dest_filepath = DirPath::get('temp') . $sub_directory . $name . '.' . $tmp_ext;
 
                 //Renaming File for security purpose
                 rename($tmp_filepath, $dest_filepath);
@@ -766,7 +880,6 @@ class Upload
         return $new_array;
     }
 
-
     /**
      * Function used to load custom form fields
      *
@@ -833,7 +946,7 @@ class Upload
      * @param        $uid
      *
      * @return string|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function upload_user_file(string $type, $file, $uid)
     {
@@ -869,14 +982,14 @@ class Upload
 
                 $ext = getext($file['name']);
                 $file_name = $uid . '.' . $ext;
-                $file_path = AVATARS_DIR . DIRECTORY_SEPARATOR . $file_name;
+                $file_path = DirPath::get('avatars') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
                     if (!$imgObj->ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
                         @unlink($file_path);
                         return false;
                     }
-                    $small_size = AVATARS_DIR . DIRECTORY_SEPARATOR . $uid . '-small.' . $ext;
+                    $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
                     $cbphoto->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
                     $cbphoto->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
                     return $file_name;
@@ -903,7 +1016,7 @@ class Upload
 
                 $ext = getext($file['name']);
                 $file_name = $uid . '.' . $ext;
-                $file_path = USER_BG_DIR . DIRECTORY_SEPARATOR . $file_name;
+                $file_path = DirPath::get('backgrounds') . $file_name;
                 if (move_uploaded_file($file['tmp_name'], $file_path)) {
                     if (!$imgObj->ValidateImage($file_path, $ext)) {
                         e(lang('Invalid file type'));
@@ -933,7 +1046,7 @@ class Upload
             $ext = getExt($file['name']);
             $file_name = 'plaery-logo';
             if ($imgObj->ValidateImage($file['tmp_name'], $ext)) {
-                $file_path = BASEDIR . '/images/' . $file_name . '.' . $ext;
+                $file_path = DirPath::get('images') . $file_name . '.' . $ext;
                 if (file_exists($file_path)) {
                     if (!unlink($file_path)) {
                         e("Unable to remove '$file_path', please chmod it to 0777");
@@ -961,13 +1074,12 @@ class Upload
      * in clipbucket v2.5 , video fields are loaded in form of groups arrays
      * each group has it name and fields wrapped in array
      * and that array will be part of video fields
-     * @throws \Exception
+     * @throws Exception
      */
     function load_video_fields($input): array
     {
         $fields = [
             [
-                'group_name' => lang('required_fields'),
                 'group_id'   => 'required_fields',
                 'fields'     => $this->loadRequiredFields($input)
             ],
@@ -1054,4 +1166,6 @@ class Upload
 
         return $fields;
     }
+
+
 }	

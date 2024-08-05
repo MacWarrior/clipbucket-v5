@@ -1,106 +1,58 @@
 <?php
 define('THIS_PAGE', 'dashboard');
-global $userquery, $myquery, $db, $cbvid, $eh, $cbphoto, $Cbucket;
 
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+userquery::getInstance()->admin_login_check();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 
-$result_array = $array;
-//Getting Video List
-$result_array['limit'] = $get_limit;
-if (!$array['order']) {
-    $result_array['order'] = ' doj DESC LIMIT 5 ';
-}
-
 if (!empty($_GET['finish_upgrade'])) {
-    $eh->add_message('Your database has been successfuly updated to version ' . display_clean($_GET['version']));
+    e('Your database has been successfuly updated to version ' . display_clean($_GET['version']), 'm');
 }
 
-$users = get_users($result_array);
-
-Assign('users', $users);
-
-//////////////////getting todolist/////////////
 $mode = $_POST['mode'];
 if (!isset($mode)) {
     $mode = $_GET['mode'];
 }
+
 switch ($mode) {
     case 'add_todo':
         $response = [];
         $value = $_POST['val'];
         if (!empty($value)) {
-            $myquery->insert_todo($value);
+            myquery::getInstance()->insert_todo($value);
             $response['todo'] = nl2br($value);
-            $response['id'] = $db->insert_id();
+            $response['id'] = Clipbucket_db::getInstance()->insert_id();
             echo json_encode($response);
         }
         die();
 
-    case 'update_todo': /* Never used yet */
-        $id = $_POST['pk'];
-        $value = trim($_POST['value']);
-        $myquery->update_todo($value, $id);
-        echo json_encode(['msg' => 'success']);
-        die();
-
-    case 'update_pharse': /* Never used yet */
-        $id = $_POST['pk'];
-        $value = trim($_POST['value']);
-        $myquery->update_pharse($value, $id);
-        echo json_encode(['msg' => 'success']);
-        die();
-
     case 'delete_todo':
         $id = mysql_clean($_POST['id']);
-        $myquery->delete_todo($id);
+        myquery::getInstance()->delete_todo($id);
         die();
-}
-///////////////////ends here/////////////
 
-////////////////getting notes
-$mode = $_POST['mode'];
-switch ($mode) {
     case 'add_note':
         $response = [];
         $value = $_POST['note'];
-        $myquery->insert_note($value);
+        myquery::getInstance()->insert_note($value);
         $response['note'] = nl2br($value);
-        $response['id'] = $db->insert_id();
+        $response['id'] = Clipbucket_db::getInstance()->insert_id();
         echo json_encode($response);
         die();
 
     case 'delete_note':
         $id = mysql_clean($_POST['id']);
-        $myquery->delete_note($id);
+        myquery::getInstance()->delete_note($id);
         die();
 
     case 'delete_comment':
-        $type = $_POST['type'];
-        switch ($type) {
-            case 'v':
-            case 'video':
-            default:
-                $cid = mysql_clean($_POST['cid']);
-                $type_id = $myquery->delete_comment($cid);
-                $cbvid->update_comments_count($type_id);
-                break;
-
-            case 'u':
-            case 'c':
-                $cid = mysql_clean($_POST['cid']);
-                $type_id = $myquery->delete_comment($cid);
-                $userquery->update_comments_count($type_id);
-                break;
-        }
-
-        $error = $eh->get_error();
-        $warning = $eh->get_warning();
-        $message = $eh->get_message();
+        Comments::delete(['comment_id' => $_POST['cid']]);
+        $error = errorhandler::getInstance()->get_error();
+        $warning = errorhandler::getInstance()->get_warning();
+        $message = errorhandler::getInstance()->get_message();
 
         if ($error) {
             $err = $error[0]['val'];
@@ -120,11 +72,10 @@ switch ($mode) {
         break;
 
     case 'spam_comment':
-        $cid = mysql_clean($_POST['cid']);
-        $rating = $myquery->spam_comment($cid);
-        $error = $eh->get_error();
-        $warning = $eh->get_warning();
-        $message = $eh->get_message();
+        $rating = Comments::setSpam($_POST['cid']);
+        $error = errorhandler::getInstance()->get_error();
+        $warning = errorhandler::getInstance()->get_warning();
+        $message = errorhandler::getInstance()->get_message();
 
         if ($error) {
             $err = $error[0]['val'];
@@ -144,11 +95,10 @@ switch ($mode) {
         break;
 
     case 'remove_spam':
-        $cid = mysql_clean($_POST['cid']);
-        $rating = $myquery->remove_spam($cid);
-        $error = $eh->get_error();
-        $warning = $eh->get_warning();
-        $message = $eh->get_message();
+        Comments::unsetSpam($_POST['cid']);
+        $error = errorhandler::getInstance()->get_error();
+        $warning = errorhandler::getInstance()->get_warning();
+        $message = errorhandler::getInstance()->get_message();
 
         if ($error) {
             $err = $error[0]['val'];
@@ -168,42 +118,38 @@ switch ($mode) {
         break;
 }
 
-/////////////////////////ending notes
-if (!$array['order']) {
-    $result_array['order'] = ' views DESC LIMIT 8 ';
-}
-
-$videos = get_videos($result_array);
-
-Assign('videos', $videos);
-
-$comment_cond['limit'] = 10;
-$comment_cond['order'] = 'date_added DESC';
-$comments = getComments($comment_cond);
-Assign('comments', $comments);
-
-$get_limit = create_query_limit($page, 5);
-$videos = $cbvid->action->get_flagged_objects($get_limit);
-Assign('flaggedVideos', $videos);
-
-$get_limit = create_query_limit($page, 5);
-$users = $userquery->action->get_flagged_objects($get_limit);
-Assign('flaggedUsers', $users);
-
-$get_limit = create_query_limit($page, 5);
-$photos = $cbphoto->action->get_flagged_objects($get_limit);
-Assign('flaggedPhotos', $photos);
-
-Assign('baseurl', BASEURL);
-Assign('VERSION', VERSION);
-Assign('STATE', STATE);
-
-if(in_dev()){
-    $min_suffixe = '';
+$params = [];
+$params['limit'] = 10;
+$params['order'] = 'date_added DESC';
+if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') != 'yes' && config('enable_comments_channel') != 'yes' && config('enable_comments_collection') != 'yes') {
+    $comments = false;
 } else {
-    $min_suffixe = '.min';
+    $comments = Comments::getAll($params);
+    if( empty($comments) ){
+        $comments = [];
+    }
 }
-$Cbucket->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
+
+$update = Update::getInstance();
+$can_sse = System::can_sse() ? 'true' : 'false';
+assign('can_sse', $can_sse);
+Assign('VERSION', $update->getCurrentCoreVersion());
+Assign('STATE', strtoupper($update->getCurrentCoreState()));
+Assign('comments', $comments);
+Assign('changelog_551', $update->getChangelogHTML('551'));
+Assign('changelog_550', $update->getChangelogHTML('550'));
+Assign('changelog_541', $update->getChangelogHTML('541'));
+Assign('changelog_540', $update->getChangelogHTML('540'));
+Assign('changelog_531', $update->getChangelogHTML('531'));
+Assign('changelog_530', $update->getChangelogHTML('530'));
+Assign('is_update_processing', (Update::IsUpdateProcessing() ? 'true' : 'false'));
+if( config('enable_update_checker') == '1' ){
+    Assign('update_checker_status', $update->getCoreUpdateStatus());
+    Assign('update_checker_content', $update->getUpdateHTML());
+}
+
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 template_files('index.html');
 display_it();

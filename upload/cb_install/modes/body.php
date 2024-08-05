@@ -3,12 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ClipBucket v<?php echo VERSION . ' ' . STATE; ?> Installer</title>
-    <link href="style.css" rel="stylesheet" type="text/css"/>
-    <link href='//fonts.googleapis.com/css?family=Cabin:regular,bold' rel='stylesheet' type='text/css'/>
-    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.5.0/jquery.min.js"></script>
-    <script type="text/javascript" src="functions.js"></script>
-    <link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
-    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" src="/js/jquery-3.7.1.min.js"></script>
+    <script type="text/javascript" src="./functions.js"></script>
+    <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
+    <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="top clearfix">
@@ -17,7 +16,7 @@
             <li><a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug Report</a></li>
         </ul>
     </div>
-    <p></p> <span id="logo"><span style="color:#09c;">ClipBucket</span> Installer v<?php echo VERSION . ' - Revision ' . REV . ' <i>(' . STATE . ')</i>'; ?></span>
+    <p></p> <span id="logo"><span style="color:#09c;">ClipBucketV5</span> Installer v<?php echo VERSION . ' - Revision ' . REV . ' <i>(' . STATE . ')</i>'; ?></span>
     <p></p>
 </div>
 
@@ -25,14 +24,14 @@
     <div class="cb_container">
         <div class="cb_navbar">
             <ul class="headstatus">
-                <li <?php echo selected('agreement'); ?>>Agreement</li>
-                <li <?php echo selected('precheck'); ?>>Pre Check<span></span></li>
-                <li <?php echo selected('permission'); ?>>Permissions<span></span></li>
-                <li <?php echo selected('database'); ?>>Database<span></span></li>
-                <li <?php echo selected('dataimport'); ?>>Data import<span></span></li>
-                <li <?php echo selected('adminsettings'); ?>>Admin Settings<span></span></li>
-                <li <?php echo selected('sitesettings'); ?>>Site Settings<span></span></li>
-                <li <?php echo selected('finish'); ?>>Finish<span></span></li>
+                <li <?php echo selected('agreement'); ?>><?php echo($has_translation ? lang('agreement') : 'Agreement'); ?></li>
+                <li <?php echo selected('precheck'); ?>> <?php echo($has_translation ? lang('pre_check') : 'Pre Check'); ?><span></span></li>
+                <li <?php echo selected('permission'); ?>> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?><span></span></li>
+                <li <?php echo selected('database'); ?>> <?php echo($has_translation ? lang('database') : 'Database'); ?><span></span></li>
+                <li <?php echo selected('dataimport'); ?>> <?php echo($has_translation ? lang('data_import') : 'Data import'); ?><span></span></li>
+                <li <?php echo selected('adminsettings'); ?>> <?php echo($has_translation ? lang('admin_setting') : 'Admin Settings'); ?><span></span></li>
+                <li <?php echo selected('sitesettings'); ?>> <?php echo($has_translation ? lang('site_setting') : 'Site Settings'); ?><span></span></li>
+                <li <?php echo selected('finish'); ?>> <?php echo($has_translation ? lang('finish') : 'Finish'); ?><span></span></li>
             </ul>
         </div>
     </div>

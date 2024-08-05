@@ -53,7 +53,8 @@
 }
 
 .vjs-cb-header-caption .captionBlock .vidTitle {
-	width: 70%
+	width: 70%;
+	text-align: left;
 }
 
 .vjs-cb-header-caption .captionBlock a {

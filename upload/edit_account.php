@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'edit_account');
 
-global $userquery, $Cbucket;
+global $userquery;
 
 require 'includes/config.inc.php';
 $userquery->logincheck();
@@ -24,38 +24,38 @@ if (isset($_POST['update_avatar_bg'])) {
     $userquery->update_user_avatar_bg($array);
 }
 
-if (isset($_FILES['backgroundPhoto'])) {
-    if (get_mime_type($_FILES['backgroundPhoto']['tmp_name']) == 'image') {
-        $extension = getExt($_FILES['backgroundPhoto']['name']);
-        $types = strtolower(config('allowed_photo_types'));
-        $supported_extensions = explode(',', $types);
-
-        if (!in_array($extension, $supported_extensions)) {
-            $response = [
-                'status' => false,
-                'msg'    => 'Invalid extension provided',
-                'url'    => false
-            ];
-            echo json_encode($response);
-            die();
-        }
-
-        $array = $_FILES['backgroundPhoto'];
-        $array['userid'] = user_id();
-        $coverUpload = $userquery->updateBackground($array);
-        $timeStamp = time();
-        $response = [
-            'status' => $coverUpload['status'],
-            'msg'    => $coverUpload['msg'],
-            'url'    => $userquery->getBackground(user_id()) . '?' . $timeStamp
-        ];
-        echo json_encode($response);
+if (isset($_FILES['Filedata'])) {
+    $user_id = user_id();
+    if( !$user_id ){
+        echo json_encode([
+            'error' => lang('insufficient_privileges_loggin')
+        ]);
         die();
     }
+    $timeStamp = time();
+    $destinationFilePath = DirPath::get('temp') . 'background-' . $user_id . '-'. $timeStamp;
+
+    $params = [
+        'fileData' => 'Filedata',
+        'mimeType' => 'image',
+        'destinationFilePath' => $destinationFilePath,
+        'keepExtension' => true,
+        'maxFileSize' => config('max_bg_size') / 1024,
+        'allowedExtensions' => config('allowed_photo_types')
+    ];
+
+    FileUpload::getInstance($params)->processUpload();
+    $data = [
+        'extension' => FileUpload::getInstance()->getExtension(),
+        'filepath' => FileUpload::getInstance()->getDestinationFilePath(),
+        'user_id' => $user_id
+    ];
+
+    $coverUpload = $userquery->updateBackground($data);
     $response = [
-        'status' => false,
-        'msg'    => 'Invalid Image provided',
-        'url'    => false
+        'status' => $coverUpload['status'],
+        'msg'    => $coverUpload['msg'],
+        'url'    => $userquery->getBackground(user_id()) . '?' . $timeStamp
     ];
     echo json_encode($response);
     die();
@@ -97,33 +97,15 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        Assign('extensions', $Cbucket->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(user_id()));
-        assign('mode', 'avatar_bg');
-        break;
-
     case 'channel_bg':
-        Assign('extensions', $Cbucket->get_extensions('photo'));
         assign('backgroundPhoto', $userquery->getBackground(user_id()));
-        assign('mode', 'channel_bg');
-        break;
-
-    case 'change_cover':
-        Assign('extensions', $Cbucket->get_extensions('photo'));
-        assign('backgroundPhoto', $userquery->getBackground(user_id()));
-        assign('mode', 'change_cover');
-        break;
-
-    case 'change_email':
-        assign('mode', 'change_email');
-        break;
-
-    case 'change_password':
-        assign('mode', 'change_password');
+        assign('mode', $mode);
         break;
 
     case 'block_users':
-        assign('mode', 'block_users');
+    case 'change_password':
+    case 'change_email':
+        assign('mode', $mode);
         break;
 
     case 'subscriptions':
@@ -144,20 +126,38 @@ switch ($mode) {
 
 $udetails = $userquery->get_user_details(user_id());
 $profile = $userquery->get_user_profile($udetails['userid']);
-
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
+if (is_array($profile)) {
+    $udetails = array_merge($profile, $udetails);
 }
 
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['pages/edit_account/edit_account'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addJS([
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'pages/edit_account/edit_account' . $min_suffixe . '.js'   => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'plupload/js/moxie' . $min_suffixe . '.js'                 => 'admin',
+    'plupload/js/plupload' . $min_suffixe . '.js'              => 'admin'
+]);
+ClipBucket::getInstance()->addCSS([
+    'jquery.tagit'.$min_suffixe.'.css' => 'admin',
+    'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
+]);
+
+$datepicker_js_lang = '';
+if( Language::getInstance()->getLang() != 'en'){
+    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+}
+ClipBucket::getInstance()->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+
+$available_tags = Tags::fill_auto_complete_tags('profile');
+assign('available_tags', $available_tags);
 
 assign('user', $udetails);
-assign('p', $user_profile);
+
+assign('signup_fields', $userquery->load_signup_fields($udetails));
+assign('cust_signup_fields', $userquery->load_custom_signup_fields($udetails,false,true));
+assign('myAccountLinks', $userquery->my_account_links());
+
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');
 display_it();

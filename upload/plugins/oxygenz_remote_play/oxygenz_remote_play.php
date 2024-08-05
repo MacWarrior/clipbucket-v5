@@ -3,15 +3,14 @@
 	Plugin Name: Oxygenz - Remote Play
 	Description: Allow to add external videos from URL
 	Author: Oxygenz
-    Author Website: https://oxygenz.fr
-    Version: 1.0.3
-	ClipBucket Version: 5.5.0
+    Author Website: https://clipbucket.oxygenz.fr
+    Version: 1.0.6
+	ClipBucket Version: 5.5.1
 	Website: https://github.com/MacWarrior/clipbucket-v5/
 */
 
 class oxygenz_remote_play {
-    static $template_dir = PLUG_DIR.DIRECTORY_SEPARATOR.self::class.DIRECTORY_SEPARATOR.'template'.DIRECTORY_SEPARATOR;
-    static $media_dir = DIRECTORY_SEPARATOR.'media'.DIRECTORY_SEPARATOR;
+    static $media_dir = 'media'.DIRECTORY_SEPARATOR;
     static $js_dir = DIRECTORY_SEPARATOR.'js'.DIRECTORY_SEPARATOR;
     static $lang_prefix = 'plugin_'.self::class.'_';
 
@@ -29,9 +28,7 @@ class oxygenz_remote_play {
      * @throws Exception
      */
     private function add_upload_form(){
-        global $Cbucket;
-
-        $Cbucket->upload_opt_list['link_video_link'] = [
+        ClipBucket::getInstance()->upload_opt_list['link_video_link'] = [
             'title'      => lang(self::$lang_prefix.'remote_play'),
             'class'      => self::class,
             'function'   => 'load_form'
@@ -49,8 +46,8 @@ class oxygenz_remote_play {
         }
         add_js([self::class.'/js/'.$js_file => 'plugin']);
 
-        global $Cbucket;
-        $Cbucket->add_header(PLUG_DIR . DIRECTORY_SEPARATOR.self::class.self::$js_dir.'header.html');
+        assign('plugin_url', DirPath::getUrl('plugins'));
+        ClipBucket::getInstance()->add_header(DirPath::get('plugins') . self::class.self::$js_dir.'header.html');
     }
 
     /**
@@ -58,6 +55,7 @@ class oxygenz_remote_play {
      */
     private function register_custom_upload_field()
     {
+        global $cb_columns;
         $link_vid_field_array['remote_play_url'] = [
             'title'		        => lang(self::$lang_prefix.'input_url'),
             'name'		        => 'remote_play_url',
@@ -70,6 +68,8 @@ class oxygenz_remote_play {
         ];
 
         register_custom_upload_field($link_vid_field_array);
+
+        $cb_columns->object('videos')->add_column('remote_play_url');
     }
 
     private function register_custom_video_file_funcs(){
@@ -81,9 +81,10 @@ class oxygenz_remote_play {
      */
     public static function load_form()
     {
-        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL.PLUG_URL.self::$media_dir.'example.mp4' );
+        $template_dir = DirPath::get('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
+        $plugin_cb_link_video_input_url_example = sprintf( lang(self::$lang_prefix.'input_url_example'), BASEURL . DirPath::getUrl('plugins') . self::class . DIRECTORY_SEPARATOR . self::$media_dir . 'example.mp4' );
         assign('placeholder_url', $plugin_cb_link_video_input_url_example);
-        Template(self::$template_dir.'first-form.html', false);
+        Template($template_dir.'first-form.html', false);
     }
 
     public static function isValidVideoURL($video_url){
@@ -126,7 +127,7 @@ class oxygenz_remote_play {
 
         $file_directory = create_dated_folder();
         $vdetails = get_video_details($video_id);
-        $logFile = LOGS_DIR . DIRECTORY_SEPARATOR . $file_directory . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
+        $logFile = DirPath::get('logs') . $file_directory . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
 
         $log = new SLog($logFile);
         $ffmpeg = new FFMpeg($log);
@@ -168,8 +169,7 @@ class oxygenz_remote_play {
             ,'status' => 'Successful'
         ];
 
-        global $db;
-        $db->update(tbl('video'), array_keys($fields), array_values($fields), ' videoid = \''.$video_id.'\'');
+        Clipbucket_db::getInstance()->update(tbl('video'), array_keys($fields), array_values($fields), ' videoid = \''.$video_id.'\'');
 
         $ffmpeg->unLock();
 

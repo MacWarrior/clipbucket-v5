@@ -8,18 +8,18 @@
 		{/if}
 
 		<div class="ratting-counts clearfix">
-			{if $user.userid != user_id() && config('channel_rating')=='1' }
+			{if user_id() && $user.userid != user_id() && config('channel_rating') == '1' }
 			<div class="user-ratting" id="rating_container">
 				{show_video_rating rating=$p.rating ratings=$p.rated_by total='10' id=$user.userid type=user}
 			</div>
 			{/if}
 			<ul class="counters">
-			{if isSectionEnabled('videos')}
+			{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
 				<li>
 					<i class="icon-videos"></i>{prettyNum($user.total_videos)} &nbsp;<span>{lang code='videos'}</span>
 				</li>
 			{/if}
-			{if isSectionEnabled('photos')}
+			{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
 				<li>
 					<i class="icon-photos"></i>{prettyNum($user.total_photos)} &nbsp;<span>{lang code='photos'}</span>
 				</li>
@@ -27,14 +27,15 @@
 				<li>
 					<i class="icon-views"></i>{prettyNum($user.profile_hits)} &nbsp;<span>{lang code='views'}</span>
 				</li>
+			{if User::getInstance($user.userid)->get('show_my_subscribers') == 'yes'}
 				<li>
 					<i class="icon-subscribers"></i><span id="user_subscribers_{$user.userid}">{prettyNum($user.subscribers)}</span> &nbsp;<span>{lang code='subscribers'}</span>
-				
 				</li>
+			{/if}
 			</ul>
 		</div>
 		<div class="friend-block clearfix">
-			{if $user.userid != user_id()}
+			{if user_id() && $user.userid != user_id()}
 				{$friend_status = $userquery->friendship_status(user_id(), $user.userid)}
 				{if $friend_status == "f"}
 				<a href="/manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
@@ -65,8 +66,10 @@
 	<div class="profile-buttons clearfix">
 		<h2>{display_clean($user.username)}</h2>
 		<div class="btn-holder">
-			{if $user.userid != user_id()}
+			{if user_id() && $user.userid != user_id()}
 				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>
+			{/if}
+			{if user_id() && $user.userid != user_id()}
 				<a href="/private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-default">
 					{lang code="user_send_message"}
 				</a>

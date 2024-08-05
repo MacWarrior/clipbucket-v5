@@ -1,5 +1,6 @@
 <?php
-require_once '../includes/admin_config.php';
+define('THIS_PAGE', 'members');
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $eh;
 
@@ -13,28 +14,29 @@ $userLevel = $udetails['level'];
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
 if ($_GET['view'] == 'search') {
-    $breadcrumb[1] = ['title' => 'Search Members', 'url' => ADMIN_BASEURL . '/members.php?search=Search'];
+    $breadcrumb[1] = ['title' => 'Search Members', 'url' => DirPath::getUrl('admin_area') . 'members.php?search=Search'];
 } elseif ($_GET['search'] == 'yes' && $_GET['status'] == 'ToActivate') {
-    $breadcrumb[1] = ['title' => 'Inactive Only', 'url' => ADMIN_BASEURL . '/members.php?status=ToActivate&search=Search'];
+    $breadcrumb[1] = ['title' => 'Inactive Only', 'url' => DirPath::getUrl('admin_area') . 'members.php?status=ToActivate&search=Search'];
 } elseif ($_GET['search'] == 'yes' && $_GET['status'] == 'Ok') {
-    $breadcrumb[1] = ['title' => 'Active Only', 'url' => ADMIN_BASEURL . '/members.php?status=Ok&search=Search'];
+    $breadcrumb[1] = ['title' => 'Active Only', 'url' => DirPath::getUrl('admin_area') . 'members.php?status=Ok&search=Search'];
 } else {
-    $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => ADMIN_BASEURL . '/members.php'];
+    $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 }
 
 //Delete User
 if (isset($_GET['deleteuser'])) {
-    $deleteuser = mysql_clean($_GET['deleteuser']);
-    $userquery->delete_user($deleteuser);
+    $userquery->delete_user($_GET['deleteuser']);
 }
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->delete_user($_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->delete_user($userid);
     }
-    $eh->flush();
-    e('Selected users have been deleted', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been deleted', 'm');
+    }
 }
 
 //Activate User
@@ -50,19 +52,23 @@ if (isset($_GET['deactivate'])) {
 
 //Using Multiple Action
 if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('activate', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('activate', $userid);
     }
-    $eh->flush();
-    e('Selected users have been activated', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been activated', 'm');
+    }
 }
 
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('deactivate', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('deactivate', $userid);
     }
-    $eh->flush();
-    e('Selected users have been deactivated', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been deactivated', 'm');
+    }
 }
 
 if (isset($_GET['resend_verif'])) {
@@ -89,18 +95,22 @@ if (isset($_GET['unfeatured'])) {
 
 //Using Multiple Action
 if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('featured', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('featured', $userid);
     }
-    $eh->flush();
-    e('Selected users have been set as featured', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been set as featured', 'm');
+    }
 }
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('unfeatured', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('unfeatured', $userid);
     }
-    $eh->flush();
-    e('Selected users have been removed from featured list', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been removed from featured list', 'm');
+    }
 }
 
 //Ban User
@@ -117,19 +127,23 @@ if (isset($_GET['unban'])) {
 
 //Using Multiple Action
 if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('ban', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('ban', $userid);
     }
-    $eh->flush();
-    e('Selected users have been banned', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been banned', 'm');
+    }
 }
 
 if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
-    for ($id = 0; $id <= count($_POST['check_user']); $id++) {
-        $userquery->action('unban', $_POST['check_user'][$id]);
+    foreach($_POST['check_user'] AS $userid){
+        $userquery->action('unban', $userid);
     }
-    $eh->flush();
-    e('Selected users have been unbanned', 'm');
+    if( empty(errorhandler::getInstance()->get_error()) ) {
+        $eh->flush();
+        e('Selected users have been unbanned', 'm');
+    }
 }
 
 //Calling Video Manager Functions
@@ -137,7 +151,7 @@ call_functions($userquery->user_manager_func);
 
 //Getting Member List
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 if (isset($_GET['category'])) {
     if ($_GET['category'][0] == 'all') {
@@ -182,7 +196,7 @@ Assign('userLevel', (int)$userLevel);
 $mcount = $array;
 $mcount['count_only'] = true;
 $total_rows = get_users($mcount);
-$total_pages = count_pages($total_rows, RESULTS);
+$total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
 //Pagination
@@ -200,7 +214,7 @@ $cat_array = [
     'type'             => 'checkbox',
     'name'             => 'category[]',
     'id'               => 'category',
-    'value'            => ['category', $cats_array],
+    'value'            => [$cats_array],
     'hint_1'           => lang('vdo_cat_msg'),
     'display_function' => 'convert_to_categories',
     'category_type'    => 'user'

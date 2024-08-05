@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'verify_converted_videos');
 
-global $ffmpeg, $db, $cbvideo, $userquery;
+global $db, $cbvideo, $userquery;
 
 $in_bg_cron = true;
 
@@ -20,48 +20,27 @@ if (is_array($files)) {
     foreach ($files as $file) {
         $file_details = get_file_details($fileName, true);
 
-        //Thanks to pandusetiawan @ forums.clip-bucket.com
-        if ($file_details['conversion_status'] == 'failed' || strpos($file_details['conversion_log'], 'Conversion_status : failed') > 0) {
-            update_processed_video($file, 'Failed');
+        $db->update(tbl('conversion_queue'),
+            ['cqueue_conversion', 'time_completed'],
+            ['yes', time()], " cqueue_id = '" . $file['cqueue_id'] . "'");
 
-            $db->update(tbl('conversion_queue'),
-                ['cqueue_conversion'],
-                ['yes'], " cqueue_id = '" . $file['cqueue_id'] . "'");
-
-            /**
-             * Calling Functions after converting Video
-             */
-            if (get_functions('after_convert_functions')) {
-                foreach (get_functions('after_convert_functions') as $func) {
-                    if (@function_exists($func)) {
-                        $func($file_details);
-                    }
+        /**
+         * Calling Functions after converting Video
+         */
+        if (get_functions('after_convert_functions')) {
+            foreach (get_functions('after_convert_functions') as $func) {
+                if (@function_exists($func)) {
+                    $func($file_details);
                 }
             }
+        }
 
-        } elseif ($file_details['conversion_status'] == 'completed' || strpos($file_details['conversion_log'], 'Conversion_status : completed') > 0 || $file_details['conversion_status'] == 'Successful' || strpos($file_details['conversion_log'], 'Conversion_status : Successful') > 0) {
-            update_processed_video($file, 'Successful');
-            $db->update(tbl('conversion_queue'),
-                ['cqueue_conversion', 'time_completed'],
-                ['yes', time()], " cqueue_id = '" . $file['cqueue_id'] . "'");
-
-            /**
-             * Calling Functions after converting Video
-             */
-            if (get_functions('after_convert_functions')) {
-                foreach (get_functions('after_convert_functions') as $func) {
-                    if (@function_exists($func)) {
-                        $func($file_details);
-                    }
-                }
-            }
-
+        if(config('disable_email') == 'no') {
             //Sending Subscription Emails
             $videoDetails = $cbvideo->get_video($file['cqueue_name'], true);
-            if ($videoDetails) {
-                if (($videoDetails['broadcast'] == 'public' || $videoDetails['logged']) && $videoDetails['active'] == 'yes') {
-                    $userquery->sendSubscriptionEmail($videoDetails, true);
-                }
+
+            if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
+                $userquery->sendSubscriptionEmail($videoDetails, true);
             }
         }
     }

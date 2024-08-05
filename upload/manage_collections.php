@@ -21,7 +21,7 @@ switch ($mode) {
     case 'manage':
     default:
         if (isset($_GET['delete_collection'])) {
-            $cid = clean($_GET['delete_collection']);
+            $cid = $_GET['delete_collection'];
             $cbcollection->delete_collection($cid);
         }
 
@@ -33,7 +33,10 @@ switch ($mode) {
             $eh->flush();
             e('selected_collects_del', 'm');
         }
-        $collectArray = ['user' => user_id(), 'limit' => $get_limit];
+        $collectArray = [
+            'user'  => user_id(),
+            'limit' => $get_limit
+        ];
         $usr_collections = $cbcollection->get_collections($collectArray);
 
         assign('usr_collects', $usr_collections);
@@ -70,7 +73,7 @@ switch ($mode) {
             $cbcollection->update_collection($_POST);
         }
 
-        $collection = $cbcollection->get_collection($cid);
+        $collection = Collection::getInstance()->getOne(['collection_id' => $cid]);
         $reqFields = $cbcollection->load_required_fields($collection);
         $otherFields = $cbcollection->load_other_fields($collection);
 
@@ -84,9 +87,25 @@ switch ($mode) {
     case 'collection_items':
     case 'items':
     case 'manage_items':
-        $type = clean($_GET['type']);
+        $type = $_GET['type'];
         assign('type', $type);
-        $get_limit = create_query_limit($page, COLLIP);
+        $get_limit = create_query_limit($page, config('collection_items_page'));
+
+        $params = [
+            'collection_id' => $cid
+            ,'with_items'   => true
+            ,'limit' => $get_limit
+        ];
+        $objs = Collection::getInstance()->getOne($params);
+
+        if( $objs['total_objects'] < config('collection_items_page') && $page == 1 ){
+            $total_rows = $objs['total_objects'];
+        } else {
+            unset($params['limit']);
+            unset($params['with_items']);
+            $total_rows = Collection::getInstance()->getOne($params)['total_objects'];
+        }
+
         switch ($type) {
             default:
             case 'videos':
@@ -98,9 +117,6 @@ switch ($mode) {
                     $eh->flush();
                     e(sprintf(lang('selected_items_removed'), 'videos'), 'm');
                 }
-
-                $objs = $cbvideo->collection->get_collection_items_with_details($cid, $order, $get_limit);
-                $total_rows = $cbvideo->collection->get_collection_items_with_details($cid, $order, null, true);
                 break;
 
             case 'photos':
@@ -113,8 +129,6 @@ switch ($mode) {
                     $eh->flush();
                     e(sprintf(lang('selected_items_removed'), 'photos'), 'm');
                 }
-                $objs = $cbphoto->collection->get_collection_items_with_details($cid, $order, $get_limit);
-                $total_rows = $cbphoto->collection->get_collection_items_with_details($cid, $order, null, true);
                 break;
         }
 
@@ -151,7 +165,12 @@ switch ($mode) {
             $cond = ' (collection.collection_name LIKE \'%' . mysql_clean(get('query')) . '%\' OR collection.collection_tags LIKE \'%' . mysql_clean(get('query')) . '%\' )';
         }
 
-        $col_arr = ['user' => user_id(), 'limit' => $get_limit, 'order' => tbl('favorites.date_added DESC'), 'cond' => $cond];
+        $col_arr = [
+            'user'  => user_id(),
+            'limit' => $get_limit,
+            'order' => tbl('favorites.date_added DESC'),
+            'cond'  => $cond
+        ];
         $collections = $cbcollection->action->get_favorites($col_arr);
         assign('collections', $collections);
 
@@ -164,16 +183,19 @@ switch ($mode) {
         subtitle(lang('manage_favorite_collections'));
 }
 
-if(in_dev()){
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
-$Cbucket->addJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addJS(['pages/manage_collections/manage_collections'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addCSS(['jquery.tagit'.$min_suffixe.'.css' => 'admin']);
-$Cbucket->addCSS(['tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin']);
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addJS([
+    'tag-it' . $min_suffixe . '.js'                                      => 'admin',
+    'pages/manage_collections/manage_collections' . $min_suffixe . '.js' => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js'           => 'admin'
+]);
+ClipBucket::getInstance()->addCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
 
+$available_tags = Tags::fill_auto_complete_tags('collection');
+assign('available_tags', $available_tags);
 
 template_files('manage_collections.html');
 display_it();

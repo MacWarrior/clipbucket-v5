@@ -1,3 +1,5 @@
+{include file="$style_dir/blocks/spinner.html" }
+
 {ANCHOR place="before_footer"}
 <footer id="footer" class="clearfix">
 	<div class="container">
@@ -6,34 +8,34 @@
 			<ul class="footer-links column">
 				{$foot_menu=foot_menu()}
 				{foreach from=$foot_menu item=fm}
-				{if $fm.name!=''}
-					<li><a href="{$fm.link}" {if $fm.target} target="{$fm.target}"{/if} {if $fm.onclick} onclick="{$fm.onclick}" {/if}>{$fm.name}</a></li>
-				{/if}
+					{if $fm.name!=''}
+						<li><a href="{$fm.link}" {if $fm.target} target="{$fm.target}"{/if} {if $fm.onclick} onclick="{$fm.onclick}" {/if}>{$fm.name}</a></li>
+					{/if}
 				{/foreach}
 			</ul>
 			{ANCHOR place="after_footer_menu"}
 			<div class="lang_wrapper column">
 				{if config("allow_language_change")}
-				{$langs = $lang_obj->get_langs('yes')}
-				{$total_langs = count($langs)}
-				{if $total_langs >= 2}
-					<div class="langdrop dropup">
-					<button title="Change website language" class="btn btn-default dropdown-toggle" id="cblang-selector" type="button" data-toggle="dropdown">
-						<span>{$lang_obj->lang_name}</span>
-						<i class="icon-down-arrow"></i>
-					</button>
-					<ul class="dropdown-menu">
-						{foreach $langs as $lang}
-							{if $lang_obj->lang == $lang.language_code}
-								{$selected = "selected" }
-							{else}
-								{$selected = "" }
-							{/if}
-							<li data-lang="{$lang.language_id}" class="pick-lang {$selected}"><a href="javascript:void(0);">{display_clean($lang.language_name)}</a></li>
-						{/foreach}
-				 	</ul>
-				</div>
-				{/if}
+					{$langs = $lang_obj->get_langs('yes')}
+					{$total_langs = count($langs)}
+					{if $total_langs >= 2}
+						<div class="langdrop dropup">
+						<button title="Change website language" class="btn btn-default dropdown-toggle" id="cblang-selector" type="button" data-toggle="dropdown">
+							<span>{$lang_obj->lang_name}</span>
+							<i class="icon-down-arrow"></i>
+						</button>
+						<ul class="dropdown-menu">
+							{foreach $langs as $lang}
+								{if $lang_obj->lang == $lang.language_code}
+									{$selected = "selected" }
+								{else}
+									{$selected = "" }
+								{/if}
+								<li data-lang="{$lang.language_id}" class="pick-lang {$selected}"><a href="javascript:void(0);">{display_clean($lang.language_name)}</a></li>
+							{/foreach}
+						</ul>
+					</div>
+					{/if}
 				{/if}
 			</div>
 			{ANCHOR place="before_copyright"}
@@ -41,13 +43,14 @@
 				{if in_dev()}
 					<i class="fa fa-bug open-modal" title="{lang code='open_debug'}" data-toggle="modal" data-target="#devModal"></i>
 				{/if}
-				<span>©ClipBucket, {lang code='edited_by'} <a href='https://clipbucket.oxygenz.fr' target='_blank'>Oxygenz</a></span>
+				<span>©ClipBucketV5, {lang code='edited_by'} <a href='https://clipbucket.oxygenz.fr' target='_blank'>Oxygenz</a></span>
 			</div>
 			{ANCHOR place="after_copyright"}
 		</div>
-	</div><!-- end of custom-container -->
+	</div>
 </footer>
-<!-- cd-popup -->
+
+{if config('popup_video') == 'yes'}
 <div class="cd-popup" role="alert">
 	<div class="cb-popup-container clearfix">
 		<div class="modal-inset">	
@@ -56,25 +59,8 @@
 	</div>
 	<a class="cd-popup-close" href="#">close</a>
 </div>
+{/if}
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $(document).on('click', '#cbsearch', function (e) {
-            e.preventDefault();
-            searchForm = $('.search-form');
-            searchQuery = $('#query').val();
-            queryLen = searchQuery.length;
-            if (queryLen <= 2) {
-                msg = '{lang code="search_too_short" sprintf="<b>' + searchQuery + '</b>"}';
-                _cb.throwHeadMsg('warning', msg, 3000, true);
-            } else {
-                $('.search-form').submit();
-            }
-        });
-    });
-</script>
-
-<!-- close-cd-popup -->
 {if in_dev()}
 <script type="text/javascript" src="/js/photos.js"></script>
 {else}

@@ -145,13 +145,11 @@
 	</div>
 {/if}
 
-<script type="text/javascript" src="/js/jquery-ui-1.13.2.min.js"></script>
-<script type="text/javascript" src="/js/jquery_plugs/datepicker{if $lang_obj->getLang()!='en'}_languages/datepicker-{$lang_obj->getLang()}{/if}.js"></script>
 <script>
 	$(document).ready(function(){
 		var pageMode = "{display_clean($smarty.get.mode)}";
 		if (pageMode == 'login') {
-			document.title = 'Login - {$Cbucket->configs.site_title}';
+			document.title = 'Login - {config("site_title")}';
 		}
 		jQuery('#dob').datepicker({
 			showOtherMonths: true,
@@ -159,7 +157,7 @@
 			changeMonth: true,
 			dateFormat:"{get_date_js()}",
 			changeYear: true,
-			yearRange: "-56:+0",
+			yearRange: "-99:+0",
 			regional:"{$lang_obj->getLang()}"
 		});
 		$('.simple_container').addClass('alert-success alert container');

@@ -7,9 +7,6 @@
     <div class="row">
         <div class="col-md-8">
             <div id="updateVideoInfo">
-                <fieldset>
-                    <legend>{$requiredFields.group_name}</legend>
-                </fieldset>
                 <div class="requiredFields">
                   {foreach $requiredFields.fields as $field}
                         <div class="form-group">
@@ -21,7 +18,7 @@
                             {$formObj->createField($field)}
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
-                        {else}
+                        {elseif !$field.id|strstr:'tags'}
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
                         {/if}
@@ -29,6 +26,22 @@
                     {/foreach}
                 </div>
 
+                <div class="formSection clear">
+                    <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $requiredFields.fields as $field}
+                            <div class="form-group">
+                                {$field.class='form-control'}
+                                {$field.notShowSeprator='yes'}
+                                {if $field.id|strstr:'tags'}
+                                    <label for="{$field.id}">{$field.title}</label>
+                                    {$formObj->createField($field)}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
                 <div class="formSection clear">
                     <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent hidden">
@@ -96,6 +109,8 @@
 
 <script type="text/javascript">
 $(document).ready(function(){
+
+    alert(' onnarrad');
     $(".formSection h4").on({
         click: function(e){
             e.preventDefault();
@@ -107,6 +122,10 @@ $(document).ready(function(){
                 $(this).next().toggleClass("hidden");
             }
         }
+    });
+
+    $("[id^=tags]").each(function(elem){
+        init_tags(this.id, available_tags,'#list_'+this.id);
     });
 
     //update form

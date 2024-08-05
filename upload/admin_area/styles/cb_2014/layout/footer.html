@@ -2,15 +2,14 @@
 <footer class="footer clearfix ">
 	<div class="footer_grey_bar col-lg-12 col-md-6 col-sm-12">
 	<div class="col-lg-6 col-md-6 col-sm-12 col">
-		Thanks for using ClipBucket | &copy; Copyright 2007 &#8211; {$smarty.now|date_format:"%Y"}
+		Thanks for using &copy;<a href='https://clipbucket.oxygenz.fr' style="text-decoration:none;color:white;" target='_blank'>ClipBucketV5</a>
 	</div>
 		<div class="col-lg-6 col-md-6 col-sm-12 col">
 			<div class="col-right" style="float:right;color:#fff;">
 				{if in_dev()}
 					<i class="icon-bug open-modal" title="{lang code='open_debug'}" data-toggle="modal" data-target="#devModal"></i>
 				{/if}
-				<em><a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">{$Cbucket->cbinfo.version}</a></em> | <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug report</a> | <a href="http://www.opensource.org/licenses/attribution.php">Attribution
-				Assurance License</a>
+				<em><a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">V{$Cbucket->cbinfo.version} - {$Cbucket->cbinfo.rev}</a></em> | <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug report</a>
 			</div>
 		</div>
 	</div>

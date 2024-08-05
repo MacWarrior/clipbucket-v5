@@ -11,8 +11,8 @@
 // Get a key from https://www.google.com/recaptcha/admin
 
 define("_RECAPTCHA_V2_", basename(dirname(__FILE__)));
-define("RECAPTCHA_V2_DIR", PLUG_DIR . '/' . _RECAPTCHA_V2_);
-define("RECAPTCHA_V2_URL", PLUG_URL . '/' . _RECAPTCHA_V2_);
+define("RECAPTCHA_V2_DIR", DirPath::get('plugins') . _RECAPTCHA_V2_);
+define("RECAPTCHA_V2_URL", DirPath::getUrl('plugins') . _RECAPTCHA_V2_);
 assign("recaptcha_v2_dir", RECAPTCHA_V2_DIR);
 assign("recaptcha_v2_url", RECAPTCHA_V2_URL);
 
@@ -42,7 +42,7 @@ function validrecaptcha_v2()
         'https://www.google.com/recaptcha/api/siteverify?secret=%s&response=%s&remoteip=%s',
         $privatekey,
         $_POST['g-recaptcha-response'],
-        $_SERVER['REMOTE_ADDR']
+        Network::get_remote_ip()
     ));
 
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);

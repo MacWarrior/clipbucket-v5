@@ -1,19 +1,22 @@
 function regenerateThumbs(videoid) {
-    showSpinner();
     $.ajax({
         url: "/actions/regenerate_thumbs.php",
         type: "post",
         data: {videoid: videoid, origin: 'edit_video'},
-        dataType: 'json'
-    }).done(function (result) {
-        $('#thumbnails').html(result['template']);
-        $('.page-content').prepend(result['msg']);
-        $('#player').html(result['player']);
-        setTimeout(function () {
-            new_player_height(65);
-        }, 300);
-    }).always(function () {
-        hideSpinner();
+        dataType: 'json',
+        beforeSend: function(){
+            showSpinner();
+        },
+        success: function(response){
+            $('#thumbnails').html(response['template']);
+            $('.page-content').prepend(response['msg']);
+
+            videojs($('#player').find('video')[0]).dispose();
+            setTimeout(function(){
+                $('#player').html(response['player']);
+                hideSpinner();
+            }, 200);
+        }
     });
 }
 
@@ -72,12 +75,82 @@ function saveSubtitle(number) {
         }
     });
 }
-$(function () {
-    $('#list_tags').tagit({
-        singleField:true,
-        fieldName:"tags",
-        readOnly:false,
-        singleFieldNode:$('#tags'),
-        animate:true,
+
+function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/admin_info_tmdb.php",
+        type: "POST",
+        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            var modal = $('#myModal');
+            modal.html(result['template']);
+            modal.modal();
+            $('.page-content').prepend(result['msg']);
+        }
     });
+}
+
+function saveInfoTmdb(tmdb_video_id) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/admin_import_tmdb.php",
+        type: "POST",
+        data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
+        dataType: 'json',
+        success: function (result) {
+            if (result.success == false) {
+                $('.close').click();
+                hideSpinner();
+                $('.page-content').prepend(result['msg']);
+            } else {
+                location.reload();
+            }
+        },
+    });
+}
+
+function pageInfoTmdb(page) {
+    let sort_type;
+    let sort;
+    if ($('.icon-sort-up').length > 0) {
+        sort_type = $('.icon-sort-up').data('type');
+        sort = 'ASC';
+    } else if ($('.icon-sort-down').length > 0) {
+        sort_type = $('.icon-sort-down').data('type');
+        sort = 'DESC';
+    }
+
+    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
+}
+
+$(function () {
+    $("[id^=tags]").each(function(elem){
+        init_tags(this.id, available_tags, '#list_'+this.id);
+    });
+
+    $('#button_info_tmdb').on('click', function () {
+        var video_title = $('#title').val();
+        getInfoTmdb(videoid, video_title, 1);
+    });
+}); 
+
+$( document ).ready(function() {
+    $('.poster li').click(function(){
+            $('.poster li.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    );
+    $('.backdrop li').click(function(){
+            $('.backdrop li.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    );
+    $('.thumb li').click(function(){
+            $('.thumb li.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    );
 });

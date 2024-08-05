@@ -112,7 +112,7 @@ class cbfeeds
     function getFeedFile($uid)
     {
         $time = time();
-        $ufeedDir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $uid;
+        $ufeedDir = DirPath::get('userfeeds') . $uid;
         //checking user feed folder exists or not
         if (!file_exists($ufeedDir)) {
             mkdir($ufeedDir, 0755, true);
@@ -134,12 +134,9 @@ class cbfeeds
         }
 
         $feeds = [];
-        $ufeedDir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $uid;
+        $ufeedDir = DirPath::get('userfeeds') . $uid;
         if (file_exists($ufeedDir)) {
-            $time = time();
-            $time = substr($time, 0, strlen($time) - 3);
-
-            $files = glob($ufeedDir . DIRECTORY_SEPARATOR . $time . '*.feed');
+            $files = glob($ufeedDir . DIRECTORY_SEPARATOR . '*.feed');
             rsort($files);
             foreach ($files as $file) {
                 $feed['content'] = file_get_contents($file);
@@ -158,12 +155,12 @@ class cbfeeds
      * @param $user
      *
      * @return array|bool
-     * @throws \Exception
+     * @throws Exception
      */
     function getUserFeeds($user)
     {
         global $cbphoto, $userquery, $cbvid, $cbcollection;
-        $allowed_feeds = USER_ACTIVITY_FEEDS_LIMIT;
+        $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
 
@@ -179,12 +176,11 @@ class cbfeeds
                 break;
             }
             $feedArray = json_decode($feed['content'], true);
-            if ($feed && count($feedArray) > 0) {
+            if ($feed && !empty($feedArray)) {
                 $remove_feed = false;
                 $farr = $feedArray;
 
                 $action = $farr['action'];
-                $object = $farr['object'];
                 $object_id = $farr['object_id'];
                 $farr['user'] = $user;
                 $farr['file'] = getName($feed['file']);
@@ -278,17 +274,17 @@ class cbfeeds
                             $farr['title'] = $collection['collection_name'];
                             $collection_link = $cbcollection->collection_links($collection, 'view');
                             $farr['link'] = $collection_link;
-                            $farr['object_content'] =
-                                $collection['collection_description'] . '<br>' .
-                                $collection['total_objects'] . ' ' . $collection['type'];
+                            $farr['object_content'] = $collection['collection_description'] . '<br>' . $collection['total_objects'] . ' ' . $collection['type'];
                             $farr['icon'] = 'photos.png';
                             $farr['links'][] = ['link' => $collection_link, 'text' => lang('view_collection')];
                         }
                         break;
 
                     case 'add_comment':
-                        global $myquery;
-                        $comment = $myquery->get_comment($object_id);
+                        $params = [];
+                        $params['comment_id'] = $object_id;
+                        $params['first_only'] = true;
+                        $comment = Comments::getAll($params);
 
                         //If photo does not exists, simply remove the feed
                         if (!$comment) {
@@ -327,7 +323,7 @@ class cbfeeds
      */
     function deleteFeed($uid, $feedid)
     {
-        $ufeedDir = USER_FEEDS_DIR . DIRECTORY_SEPARATOR . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
+        $ufeedDir = DirPath::get('userfeeds') . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
         if (file_exists($ufeedDir)) {
             unlink($ufeedDir);
         }

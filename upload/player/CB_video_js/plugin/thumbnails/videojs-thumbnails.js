@@ -79,7 +79,7 @@
             // Android doesn't support :active and :hover on non-anchor and non-button elements
             // so, we need to fake the :active selector for thumbnails to show up.
             if (navigator.userAgent.toLowerCase().indexOf("android") !== -1) {
-                progressControl = player.controlBar.progressControl;
+                progressControl = player.controlBar.ProgressControl;
 
                 addFakeActive = function() {
                     progressControl.addClass('fake-active');
@@ -124,7 +124,7 @@
         });
 
         // add the thumbnail to the player
-        progressControl = player.controlBar.progressControl;
+        progressControl = player.controlBar.ProgressControl;
         progressControl.el().appendChild(div);
 
         // find the proper element to use for time calculations

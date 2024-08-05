@@ -20,8 +20,8 @@ class CBTemplate
 
         $Smarty->setCompileCheck(true);
         $Smarty->setDebugging(false);
-        $Smarty->setTemplateDir(BASEDIR . '/styles');
-        $Smarty->setCompileDir(BASEDIR . '/cache/views');
+        $Smarty->setTemplateDir(DirPath::get('styles'));
+        $Smarty->setCompileDir(DirPath::get('views'));
 
         if (in_dev()) {
             $Smarty->clearAllCache();
@@ -79,7 +79,7 @@ class CBTemplate
      */
     function get_templates(): array
     {
-        $dir = STYLES_DIR;
+        $dir = DirPath::get('styles');
         //Scaning Dir
         $dirs = scandir($dir);
         foreach ($dirs as $tpl) {
@@ -100,9 +100,9 @@ class CBTemplate
         return $tpls;
     }
 
-    function get_template_details($temp, $file = 'template.xml')
+    function get_template_details($temp)
     {
-        $file = STYLES_DIR . DIRECTORY_SEPARATOR . $temp . '/template.xml';
+        $file = DirPath::get('styles') . $temp . '/template.xml';
         if (file_exists($file)) {
             $content = file_get_contents($file);
             preg_match('/<name>(.*)<\/name>/', $content, $name);
@@ -136,7 +136,7 @@ class CBTemplate
                 'dir'            => $temp,
                 'min_version'    => $min_version,
                 'smarty_version' => $smarty_version,
-                'path'           => TEMPLATEFOLDER . DIRECTORY_SEPARATOR . $temp
+                'path'           => DirPath::get('styles') . $temp
             ];
         }
         return false;
@@ -151,13 +151,13 @@ class CBTemplate
      */
     function get_preview_thumb($template): string
     {
-        $path = TEMPLATEFOLDER . DIRECTORY_SEPARATOR . $template . '/images/preview.';
+        $path = DirPath::getUrl('styles') . $template . '/images/preview.';
         $exts = ['png', 'jpg', 'gif'];
-        $thumb_path = '/images/icons/no_thumb_template.png';
+        $thumb_path = DirPath::getUrl('images') . 'icons/no_thumb_template.png';
         foreach ($exts as $ext) {
-            $file = BASEDIR . '/' . $path . $ext;
+            $file = DirPath::get('root') . $path . $ext;
             if (file_exists($file)) {
-                $thumb_path = '/' . $path . $ext;
+                $thumb_path = $path . $ext;
                 break;
             }
         }
@@ -207,7 +207,7 @@ class CBTemplate
         switch ($type) {
             case 'layout':
             default:
-                $style_dir = STYLES_DIR . "/$template/layout/";
+                $style_dir = DirPath::get('styles') . "$template/layout/";
                 $files_patt = $style_dir . '*.html';
                 $files = glob($files_patt);
                 /**
@@ -230,7 +230,7 @@ class CBTemplate
                 return $new_files;
 
             case 'theme':
-                $style_dir = STYLES_DIR . "/$template/theme/";
+                $style_dir = DirPath::get('styles') . "$template/theme/";
                 $files_patt = $style_dir . '*.css';
                 $files = glob($files_patt);
                 /**

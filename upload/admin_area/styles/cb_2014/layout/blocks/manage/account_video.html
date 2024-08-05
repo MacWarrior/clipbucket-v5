@@ -1,8 +1,8 @@
 {if $control=='' || $control =='view'}
-{if $mode ==''}{assign var='mode' value='favorites'}{/if}
-
+	{if $mode ==''}
+		{assign var='mode' value='favorites'}
+	{/if}
 {/if}
-
 
 {if $control =='full'}
 <tr>
@@ -10,8 +10,13 @@
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
 				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" id="thumbs_{$video.videoid}" class="vthumb"/>
-				<span class="duration">({if
-				$video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
+				<span class="duration">(
+					{if $video.duration>1}
+						{$video.duration|SetTime}
+					{else}
+						00:00
+					{/if}
+				)</span>
 			</a>
 		</div>
 		<div class="col-md-9">
@@ -31,17 +36,6 @@
 			</div>
 		</div>
 	</td>
-	
-	{*<td>
-		<div class="clearfix">
-			{if $video.broadcast=='public'}
-			<div class="col-md-1"><i class="icon-globe"></i></div>
-			{elseif $video.broadcast!='public'}
-			<div class="col-md-1"><i class="icon-lock"></i></div>
-			{/if}
-		</div>
-		<a href="view_user.php?uid={$video.userid}">{display_clean($video.username)}</a>
-	</td>*}
 		
 	<td>
 		<div class="dropdown text-center">
@@ -116,11 +110,10 @@
 <div class="featured-video clearfix" {if $ajax_load=="yes"}style="display:none;"{/if}>
 	<a href="{video_link($video)}">
 		<div class="video_thumb">
-			<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive">
-			<img src="{$theme}/images/thumb-ratio.png" alt="" class="thumb-ratio">
-			<time datetime="2016-15-03" class="duration">
+			<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
+			<time class="duration">
 			{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
-		</div> <!--VIDEO_THUMB END-->
+		</div>
 	</a>
 	<div class="details_block">
 		<strong class="title"><a href="{video_link($video)}">{display_clean($video.title)|truncate:50}</a></strong>

@@ -35,9 +35,14 @@ class Language
         return self::$_instance;
     }
 
+    public function getLangISO()
+    {
+        return $this->lang_iso;
+    }
+
     /**
      * INIT
-     * @throws \Exception
+     * @throws Exception
      */
     public function init()
     {
@@ -66,6 +71,8 @@ class Language
             $this->lang = $this->lang_iso = $default['language_code'];
             $this->lang_id = $default['language_id'];
         }
+
+        $this->loadTranslations($this->lang_id);
     }
 
     /**
@@ -75,18 +82,17 @@ class Language
      * @param STRING $language_id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTranslationByKey($language_key, $language_id)
     {
         if ($this->uninstalled) {
             return false;
         }
-        global $db;
 
         $select = tbl('languages_translations') . ' AS LT
         INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = $db->select($select, '*', ' language_key = \'' . mysql_clean($language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
+        $results = Clipbucket_db::getInstance()->select($select, '*', ' language_key = \'' . mysql_clean($language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
         if (!empty($results)) {
             return $results[0];
         }
@@ -100,18 +106,17 @@ class Language
      * @param STRING $language_id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getTranslationByIdKey($id_language_key, $language_id)
     {
         if ($this->uninstalled) {
             return false;
         }
-        global $db;
 
         $select = tbl('languages_translations') . ' AS LT
         INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = $db->select($select, '*', ' id_language_key = \'' . mysql_clean($id_language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
+        $results = Clipbucket_db::getInstance()->select($select, '*', ' id_language_key = \'' . mysql_clean($id_language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
         if (!empty($results)) {
             return $results[0];
         }
@@ -127,20 +132,19 @@ class Language
      * @param null $extra_param
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function getAllTranslations($language_id = 1, $fields = 'language_key, translation', $limit = null, $extra_param = null): array
     {
         if ($this->uninstalled) {
             return [];
         }
-        global $db;
 
         $select = tbl('languages_keys') . ' AS LK
         LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
 
         /** concat aaaaaaa to sort when translation is missing */
-        return $db->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600);
+        return Clipbucket_db::getInstance()->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600);
     }
 
     /**
@@ -150,18 +154,18 @@ class Language
      * @param null $extra_param
      *
      * @return int
-     * @throws \Exception
+     * @throws Exception
      */
     public function countTranslations($language_id = null, $extra_param = null): int
     {
         if ($this->uninstalled) {
             return false;
         }
-        global $db;
+
         $select = tbl('languages_keys') . ' AS LK
         LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . $language_id;
 
-        $results = $db->select($select, 'COUNT(LK.id_language_key) as total', $extra_param);
+        $results = Clipbucket_db::getInstance()->select($select, 'COUNT(LK.id_language_key) as total', $extra_param);
 
         if (!empty($results)) {
             return $results[0]['total'];
@@ -175,17 +179,15 @@ class Language
      * @param int $id_language_key
      * @param string $translation
      * @param int $language_id
-     * @throws \Exception
+     * @throws Exception
      */
     public function update_phrase($id_language_key, $translation, $language_id = 1)
     {
-        global $db;
-
         //First checking if phrase already exists or not
         if ($this->getTranslationByIdKey($id_language_key, $language_id)) {
-            $db->update(tbl('languages_translations'), ['translation'], [mysql_clean($translation)], ' id_language_key = ' . mysql_clean($id_language_key) . ' AND language_id = ' . mysql_clean($language_id));
+            Clipbucket_db::getInstance()->update(tbl('languages_translations'), ['translation'], [mysql_clean($translation)], ' id_language_key = ' . mysql_clean($id_language_key) . ' AND language_id = ' . mysql_clean($language_id));
         } else {
-            $db->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [mysql_clean($translation), mysql_clean($id_language_key), mysql_clean($language_id)]);
+            Clipbucket_db::getInstance()->insert(tbl('languages_translations'), ['translation,id_language_key,language_id'], [mysql_clean($translation), mysql_clean($id_language_key), mysql_clean($language_id)]);
         }
         CacheRedis::flushAll();
     }
@@ -197,7 +199,7 @@ class Language
      * @param int $langId
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function loadTranslations($langId): array
     {
@@ -223,6 +225,11 @@ class Language
         return $lang;
     }
 
+    public function isTranslationSystemInstalled(): bool
+    {
+        return !$this->uninstalled;
+    }
+
 
     /**
      * Function used to get list of languages installed
@@ -230,14 +237,13 @@ class Language
      * @param bool $active
      * @param bool $countTrads
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     public function get_langs(bool $active = false, bool $countTrads = false): array
     {
         if ($this->uninstalled) {
             return [];
         }
-        global $db;
 
         if ($active) {
             $cond = ' language_active=\'yes\' ';
@@ -245,15 +251,15 @@ class Language
             $cond = '1 ';
         }
 
-        $select = tbl('languages') . ' AS L ';
+        $select = tbl('languages') . ' L ';
         $field = 'L.* ';
         if ($countTrads) {
-            $select .= ' LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LT.language_id = L.language_id ';
-            $field .= ' , COUNT(LT.id_language_key) as nb_trads, (select count(id_language_key) from cb_languages_keys) as nb_codes ';
+            $select .= ' LEFT JOIN ' . tbl('languages_translations') . ' LT ON LT.language_id = L.language_id ';
+            $field .= ' , COUNT(LT.id_language_key) AS nb_trads, (SELECT COUNT(id_language_key) FROM ' . tbl('languages_keys') . ') as nb_codes ';
             $cond .= ' GROUP BY L.language_id ';
         }
 
-        return $db->select($select, $field, $cond);
+        return Clipbucket_db::getInstance()->select($select, $field, $cond);
     }
 
     /**
@@ -264,14 +270,12 @@ class Language
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getLangById($id)
     {
-        global $db;
-
         $id = mysql_clean($id);
-        $results = $db->select(tbl('languages'), '*', 'language_id = ' . mysql_clean($id), false, false, false, 3600);
+        $results = Clipbucket_db::getInstance()->select(tbl('languages'), '*', 'language_id = ' . mysql_clean($id), false, false, false, 3600);
 
         if (!empty($results)) {
             return $results[0];
@@ -283,16 +287,15 @@ class Language
      * Make Language Default
      *
      * @param $lid
-     * @throws \Exception
+     * @throws Exception
      */
     public function make_default($lid)
     {
-        global $db;
         $lang = self::getLangById($lid);
         if ($lang) {
             set_cookie_secure('cb_lang', $lid);
-            $db->update(tbl('languages'), ['language_default'], ['no'], ' language_default=\'yes\'');
-            $db->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\'' . $lid . '\'');
+            Clipbucket_db::getInstance()->update(tbl('languages'), ['language_default'], ['no'], 'language_default=\'yes\'');
+            Clipbucket_db::getInstance()->update(tbl('languages'), ['language_default'], ['yes'], ' language_id=\'' . $lid . '\'');
             e($lang['language_name'] . ' has been set as default language', 'm');
             CacheRedis::flushAll();
         }
@@ -300,12 +303,11 @@ class Language
 
     /**
      * function used to get default language
-     * @throws \Exception
+     * @throws Exception
      */
     public static function getDefaultLanguage()
     {
-        global $db;
-        $result = $db->select(tbl('languages'), '*', ' language_default=\'yes\' ', false, false, false, 3600);
+        $result = Clipbucket_db::getInstance()->select(tbl('languages'), '*', 'language_default=\'yes\' ', false, false, false, 3600, 'default_language');
         return $result[0];
     }
 
@@ -314,19 +316,18 @@ class Language
      * Function used to delete language
      *
      * @param $i
-     * @throws \Exception
+     * @throws Exception
      */
     public static function delete_lang($i)
     {
-        global $db;
         $lang = self::getLangById($i);
         if (!$lang) {
             e(lang('language_does_not_exist'));
         } elseif ($lang['language_default'] == 'yes' || $i == 1) {
             e(lang('default_lang_del_error'));
         } else {
-            $db->delete(tbl('languages_translations'), ['language_id'], [$lang['language_id']]);
-            $db->delete(tbl('languages'), ['language_id'], [$lang['language_id']]);
+            Clipbucket_db::getInstance()->delete(tbl('languages_translations'), ['language_id'], [$lang['language_id']]);
+            Clipbucket_db::getInstance()->delete(tbl('languages'), ['language_id'], [$lang['language_id']]);
             e(lang('lang_deleted'), 'm');
             CacheRedis::flushAll();
         }
@@ -336,11 +337,10 @@ class Language
      * Function used to update language
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function update_lang($array)
     {
-        global $db;
         $lang = self::getLangById($array['language_id']);
         if (!$lang) {
             e(lang('language_does_not_exist'));
@@ -349,7 +349,7 @@ class Language
         } elseif (empty($array['code'])) {
             e(lang('lang_code_empty'));
         } else {
-            $db->update(tbl('languages'), ['language_name', 'language_code'], [$array['name'], $array['code']], ' language_id=\'' . $array['language_id'] . '\'');
+            Clipbucket_db::getInstance()->update(tbl('languages'), ['language_name', 'language_code'], [$array['name'], $array['code']], ' language_id=\'' . $array['language_id'] . '\'');
             e(lang('lang_updated'), 'm');
             CacheRedis::flushAll();
         }
@@ -359,31 +359,29 @@ class Language
      * Function used to update language
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function add_lang($array)
     {
-        global $db;
         if (empty($array['name'])) {
             e(lang('lang_name_empty'));
         } elseif (empty($array['code'])) {
             e(lang('lang_code_empty'));
         } else {
-            $db->insert(tbl('languages'), ['language_name', 'language_default', 'language_code'], [$array['name'], 'no', $array['code']]);
+            Clipbucket_db::getInstance()->insert(tbl('languages'), ['language_name', 'language_default', 'language_code'], [$array['name'], 'no', $array['code']]);
             e(lang('lang_added'), 'm');
         }
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function set_lang($ClientId, $secertId)
     {
-        global $db;
         $cl = $ClientId;
         $sc = $secertId;
-        $db->update(tbl('config'), ['value'], [$cl], ' name=\'clientid\' ');
-        $db->update(tbl('config'), ['value'], [$sc], ' name=\'secretId\' ');
+        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$cl], ' name=\'clientid\' ');
+        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$sc], ' name=\'secretId\' ');
     }
 
     public function getLang()
@@ -395,7 +393,7 @@ class Language
      * Function used to update language
      *
      * @param $array
-     * @throws \Exception
+     * @throws Exception
      */
     public static function restore_lang($code)
     {
@@ -406,10 +404,11 @@ class Language
                 'en'    => 'ENG',
                 'fr'    => 'FRA',
                 'pt-BR' => 'POR',
-                'de'    => 'DEU'
+                'de'    => 'DEU',
+                'esp'   => 'ESP'
             ];
 
-            $path = DIR_SQL . 'language_' . $restorable_langs[$code] . '.sql';
+            $path = DirPath::get('sql') . 'language_' . $restorable_langs[$code] . '.sql';
             if (file_exists($path)) {
                 execute_sql_file($path);
             }

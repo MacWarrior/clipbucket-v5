@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'flagged_photos');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $cbphoto, $eh;
 
@@ -11,7 +11,7 @@ $pages->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Flagged Photos', 'url' => ADMIN_BASEURL . '/flagged_photos.php'];
+$breadcrumb[1] = ['title' => 'Flagged Photos', 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'];
 
 $mode = $_GET['mode'];
 

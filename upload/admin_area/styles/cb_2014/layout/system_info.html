@@ -22,14 +22,14 @@
     {/literal}
 </style>
 <div class="heading">
-    <h2>{lang code = 'system_info'}</h2>
+    <h2>{lang code='system_info'}</h2>
 </div>
 <div class="row">
     <div class="col-md-12">
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#hosting">
-                    <h6>{lang code = 'hosting'}</h6>
+                    <h6>{lang code='hosting'}</h6>
                 </a>
             </li>
             <li>
@@ -39,7 +39,7 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#services">
-                    <h6>{lang code = 'services'}</h6>
+                    <h6>{lang code='services'}</h6>
                 </a>
             </li>
         </ul>
@@ -64,11 +64,86 @@
             </div>
             <div id="services" class="tab-pane">
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffmpegVersion}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $phpVersionWeb && $phpVersionWebOK}tick{else}alert{/if}.png"/>
+                    <label>
+                        PHP WEB -
+                        {if !$phpVersionWeb || !$phpVersionWebOK}
+                        <div class="alert alert-danger">
+                            {if !$phpVersionWeb}
+                                {lang code='not_found'}
+                            {elseif !$phpVersionWebOK}
+                                {sprintf(lang("not_required_version"), 'PHP WEB',$phpVersionWeb, $phpVersionReq)}
+                            {/if}
+                        </div>
+                        {else}
+                        Version <strong>{$phpVersionWeb}</strong>
+                        - {lang code='info_php_web'}
+                        {/if}
+                    </label>
+
+                    {foreach $php_extensions_list as $key => $extension}
+                    <div class="row ml-2">
+                        <div class="col-lg-10">
+                            <img src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
+                            <label>
+                                {$extension.display} extension -
+                                {if !$extensionsWEB.$key}
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
+                                {else}
+                                <strong>{$extensionsWEB.$key}</strong>
+                                {/if}
+                            </label>
+                        </div>
+                    </div>
+                    {/foreach}
+
+                </div>
+                <div class="row">
+                    <img src="{$imageurl}/{if $phpVersionCli && $phpVersionCliOK}tick{else}alert{/if}.png"/>
+                    <label>
+                        PHP CLI -
+                        {if !$phpVersionCli || !$phpVersionCliOK}
+                            <span class="alert-danger">
+                                 {if !$phpVersionCli}
+                                    {lang code='php_cli_not_found'}
+                                 {elseif !$phpVersionCliOK}
+                                    {sprintf(lang("not_required_version"), 'PHP CLI',$phpVersionCli, $phpVersionReq)}
+                                {/if}
+                            </span>
+                        {else}
+                        <strong>{$phpVersionCli}</strong>
+                        - {lang code='info_php_cli'}
+                        {/if}
+                    </label>
+
+                    {foreach $php_extensions_list as $key => $extension}
+                    <div class="row ml-2">
+                        <div class="col-lg-10">
+                            <img src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
+                            <label>
+                                {$extension.display} extension -
+                                {if !$extensionsCLI.$key}
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
+                                {else}
+                                <strong>{$extensionsCLI.$key}</strong>
+                                {/if}
+                            </label>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+                <div class="row">
+                    <img src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>
                     <label>
                         FFMPEG -
-                        {if !$ffmpegVersion}
-                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                            {if !$ffmpegVersion || !$ffmpegVersionOK}
+                            <div class="alert alert-danger">
+                                {if !$ffmpegVersion}
+                                    {lang code='not_found'}
+                                {elseif !$ffmpegVersionOK}
+                                    {sprintf(lang("not_required_version"), 'FFMPEG',$ffmpegVersion, $ffReq)}
+                                {/if}
+                            </div>
                         {else}
                             Version <strong>{$ffmpegVersion}</strong>
                             - {lang code='info_ffmpeg'}
@@ -76,13 +151,19 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $ffprobe_path}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $ffprobe_path && $ffprobe_path_OK}tick{else}alert{/if}.png"/>
                     <label>
                         FFProbe -
-                        {if !$ffprobe_path}
-                            <p class="alert alert-danger">Imagick {lang code = 'not_found'}</p>
-                            {if $ffprobe_path.error}
-                                <br><span style="color:#e70000">{$ffprobe_path.error}</span>
+                        {if !$ffprobe_path || !$ffprobe_path_OK}
+                            <p class="alert alert-danger">
+                                {if !$ffprobe_path}
+                                    {lang code='not_found'}
+                                {elseif !$ffprobe_path_OK}
+                                    {sprintf(lang("not_required_version"), 'FFProbe',$ffprobe_path, $ffReq)}
+                                {/if}
+                            </p>
+                            {if is_array($ffprobe_path) && $ffprobe_path.error}
+                                <br/><span style="color:#e70000;">{$ffprobe_path.error}</span>
                             {/if}
                         {else}
                             Version <strong>{$ffprobe_path}</strong>
@@ -91,155 +172,291 @@
                     </label>
                 </div>
                 <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $media_info}tick{else}alert{/if}.png"/>
+                    <img src="{$imageurl}/{if $media_info}tick{else}alert{/if}.png"/>
                     <label>
                         Media Info -
                         {if !$media_info}
-                            <div class="alert alert-danger">{lang code = 'not_found'}</div>
+                            <div class="alert alert-danger">{lang code='not_found'}</div>
                         {else}
                             Version <strong>{$media_info}</strong>
                              - {lang code='info_media_info'}
                         {/if}
                     </label>
                 </div>
+                <div class="row">
+                    <img src="{$imageurl}/{if $serverMySqlVersion && $serverMySqlVersionOk}tick{else}alert{/if}.png"/>
+                    <label>
+                        {lang code="mysql_server"} -
+                        {if !$serverMySqlVersion || !$serverMySqlVersionOk}
+                            <p class="alert alert-danger">
+                                {if !$serverMySqlVersion}
+                                    {lang code='not_found'}
+                                {elseif !$serverMySqlVersionOk}
+                                    {sprintf(lang("not_required_version"), lang('mysql_client'),$serverMySqlVersion, $mysqlReq)}
+                                {/if}
+                            </p>
+                        {else}
+                            Version <strong>{$serverMySqlVersion}</strong>
+                        {/if}
+                    </label>
+                </div>
+                <div class="row">
+                    <img src="{$imageurl}/{if $git_version}tick{else}error{/if}.png"/>
+                    <label>
+                        [{lang|strtoupper code='optional'}] Git -
+                        {if !$git_version}
+                        <p class="alert alert-danger">
+                            {lang code='not_found'}
+                        </p>
+                        {else}
+                        Version <strong>{$git_version}</strong>
+                        {/if}
+                    </label>
+                </div>
 
-                <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionWeb}tick{else}alert{/if}.png"/>
-                    <label>
-                        PHP WEB -
-                        {if !$phpVersionWeb}
-                            <div class="alert alert-danger">php {lang code = 'not_found'}</div>
-                        {else}
-                            Version <strong>{$phpVersionWeb}</strong>
-                             - {lang code='info_php_web'}
-                        {/if}
-                    </label>
-                </div>
-                <div class="row">
-                    <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/{if $phpVersionCli}tick{else}alert{/if}.png"/>
-                    <label>
-                        PHP CLI - {if !$phpVersionCli}<span class="alert-danger">{lang code = 'php_cli_not_found'}</span>
-                        {else}
-                            Version <strong>{$phpVersionCli}</strong>
-                             - {lang code='info_php_cli'}
-                        {/if}
-                    </label>
-                </div>
             </div>
             <div id="hosting" class="tab-pane active">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <h3>PHP WEB</h3>
                     </div>
-                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
+                    <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
                         <h3>PHP CLI</h3>
                     </div>
-                    <div class="col-md-4 {if !$isNginx}hidden{/if}">
+                    <div class="col-md-3 {if !$isNginx}hidden{/if}">
                         <h3>Nginx</h3>
+                    </div>
+                    <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
+                        <h3>Cloudflare</h3>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($post_max_size) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                            />
-                            <label>post_max_size :
-                                <strong> {$post_max_size} {if getBytesFromFileSize($post_max_size) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
-                                </strong>
+                            <img src="{$imageurl}/{if $target_upload_size < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb < $post_max_size_mb)}tick{else}alert{/if}.png"/>
+                            <label>
+                                post_max_size : <b>{$post_max_size}</b>
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                            />
-                            <label>upload_max_size :
-                                <strong> {$upload_max_filesize} {if getBytesFromFileSize($upload_max_filesize) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
-                                </strong>
+                            <img src="{$imageurl}/{if $upload_max_filesize_mb >= $target_upload_size || ($chunk_upload && $chunk_upload_size_mb < $upload_max_filesize_mb)}tick{else}alert{/if}.png"/>
+                            <label>
+                                upload_max_size : <b>{$upload_max_filesize}</b>
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"/>
                             <label>memory_limit :
                                 <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M{/if}
                                 </strong>
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"/>
                             <label>max_execution_time :
                                 <strong> {$max_execution_time} {if $max_execution_time < 7200 }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 7200{/if}
                                 </strong>
                             </label>
                         </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $phpWebExec}tick{else}alert{/if}.png"/>
+                            <label>exec() :
+                                <strong>
+                                    {if $phpWebExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $phpWebShellExec}tick{else}alert{/if}.png"/>
+                            <label>shell_exec() :
+                                <strong>
+                                    {if $phpWebShellExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $phpWebSSE}tick{else}error{/if}.png"/>
+                            <label>fastcgi_finish_request() :
+                                <strong>
+                                    {if $phpWebSSE}{lang code='available'}{else}{lang code='unavailable'}{/if}
+                                </strong>
+                            </label>
+                            {if !$phpWebSSE}
+                            <br/>{lang code='sse_error_features_disabled'}
+                            <br/>{lang code='sse_error_please_use_php_fpm'}
+                            {/if}
+                        </div>
+
+                        {$show_warning = false}
+
+                        {if !$chunk_upload && $target_upload_size > $post_max_size_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                            but post_max_size is set to <b>{$post_max_size_mb}{lang code='mb'}</b>.<br/>
+                            You should probably enable <i>Chunk upload</i> option<br/>
+                            or update <i>post_max_size</i> configuration.
+                        </div>
+                        {/if}
+
+                        {if !$chunk_upload && $target_upload_size > $upload_max_filesize_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                            but upload_max_filesize is set to <b>{$upload_max_filesize_mb}{lang code='mb'}</b>.<br/>
+                            You should probably enable <i>Chunk upload</i> option<br/>
+                            or update <i>upload_max_filesize</i> configuration.
+                        </div>
+                        {/if}
+
+                        {if $chunk_upload && $chunk_upload_size > $post_max_size_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current chunk size is set to <b>{$chunk_upload_size_mb}{lang code='mb'}</b><br/>
+                            but post_max_size is set to <b>{$post_max_size_mb}{lang code='mb'}</b>.<br/>
+                            You should probably reduce <i>Chunk size</i> option.
+                        </div>
+                        {/if}
+
+                        {if $chunk_upload && $chunk_upload_size > $upload_max_filesize_mb}
+                            {$show_warning = true}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/alert.png"/>Current chunk size is set to <b>{$chunk_upload_size_mb}{lang code='mb'}</b><br/>
+                            but upload_max_filesize is set to <b>{$upload_max_filesize_mb}{lang code='mb'}</b>.<br/>
+                            You should probably reduce <i>Chunk size</i> option.
+                        </div>
+                        {/if}
+
+                        {if $show_warning}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
+                        </div>
+                        {/if}
+
                     </div>
-                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
+                    {if $phpWebExec && $phpVersionCli != 0}
+                    <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($post_max_size_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                            />
-                            <label>post_max_size :
-                                <strong> {$post_max_size_cli} {if getBytesFromFileSize($post_max_size_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
-                                </strong>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if getBytesFromFileSize($upload_max_filesize_cli) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                            />
-                            <label>upload_max_size :
-                                <strong> {$upload_max_filesize_cli} {if getBytesFromFileSize($upload_max_filesize_cli) <= getBytesFromFileSize('50M') }
-                                    {lang code = 'must_be_least'} : 50M {/if}
-                                </strong>
-                            </label>
-                        </div>
-                        <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"/>
                             <label>memory_limit :
                                 <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
-                                    {lang code = 'must_be_least'} : 128M {/if}
+                                    {lang code='must_be_least'} : 128M {/if}
                                 </strong>
                             </label>
                         </div>
                         <div class="row">
-                            <img style="margin-left: 1em; margin-top: 0.4em;"
-                                 src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"
-                            />
+                            <img src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"/>
                             <label>max_execution_time :
                                 <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
-                                    {lang code = 'must_be_least'} : 7200 {/if}
+                                    {lang code='must_be_least'} : 7200 {/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $phpCliExec}tick{else}alert{/if}.png" />
+                            <label>exec() :
+                                <strong>
+                                    {if $phpCliExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
+                                </strong>
+                            </label>
+                        </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $phpCliShellExec}tick{else}alert{/if}.png" />
+                            <label>shell_exec() :
+                                <strong>
+                                    {if $phpCliShellExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
                         </div>
                     </div>
-                    <div class="col-md-4 {if !$isNginx}hidden{/if}">
-                    {if !$canAccessNginx}
-                        <img style="margin-left: 1em; margin-top: 0.4em;" src="{$imageurl}/help.png"/>
-                        PHP is unable to check Nginx configuration.<br/>
-                        Please make sure <b>client_max_body_size</b> is set correctly.<br/>
-                        Minimum configuration recommended is <b>50M</b>.<br/>
-                        Incorrect configuration might cause 413 errors.
-                    {else}
-                        <img style="margin-left: 1em; margin-top: 0.4em;"
-                             src="{$imageurl}/{if getBytesFromFileSize($clientMaxBodySize) > getBytesFromFileSize('50M')}tick{else}alert{/if}.png"
-                        />
-                        <label>client_max_body_size :
-                            <strong> {$clientMaxBodySize} {if getBytesFromFileSize($clientMaxBodySize) <= getBytesFromFileSize('50M') }
-                                {lang code = 'must_be_least'} : 50M {/if}
-                            </strong>
-                        </label>
                     {/if}
+                    <div class="col-md-3 {if !$isNginx}hidden{/if}">
+                    {$show_warning = false}
+                    {if !$canAccessNginx}
+                        {$show_warning = true}
+                        <div class="row">
+                            <img src="{$imageurl}/help.png"/>
+                            PHP is unable to check Nginx configuration.<br/>
+                            Please make sure <b>client_max_body_size</b> is set correctly.<br/>
+
+                            {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
+                        </div>
+                    {else}
+                        <img src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"/>
+                        <label>
+                            client_max_body_size : <b>{$client_max_body_size}</b>
+                        </label>
+
+                        {if !$chunk_upload && $target_upload_size > $client_max_body_size_mb}
+                            {$show_warning = true}
+                            <div class="row">
+                                <br/>
+                                <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                                but client_max_body_size is set to <b>{$client_max_body_size_mb}{lang code='mb'}</b>.<br/>
+                                You should probably enable <i>Chunk upload</i> option<br/>
+                                or update <i>client_max_body_size</i> configuration.
+                            </div>
+                        {/if}
+                    {/if}
+
+                    {if $show_warning}
+                        <div class="row">
+                            <br/>
+                            <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
+                        </div>
+                    {/if}
+                    </div>
+
+                    <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
+                        <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank">
+                            <img alt="help" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
+                        </a>
+                        Using Cloudflare implies max upload size limits,<br/>
+                        depending of your subscription rank.<br/>
+                        Maximum upload size is currently set to <b>100M</b>.
+
+                        {if !$chunk_upload && $target_upload_size > $cloudflare_upload_limit}
+                            <br/><br/>
+                            <img src="{$imageurl}/alert.png"/>Current max upload size is set to <b>{$target_upload_size}{lang code='mb'}</b><br/>
+                            but Cloudflare limit is set to <b>{$cloudflare_upload_limit}{lang code='mb'}</b>.<br/>
+                            You should probably enable <i>Chunk upload</i> option<br/>
+                            or update <i>{lang code='cloudflare_upload_limit'}</i> option.
+                        {/if}
+
+                        {if $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit}
+                            <br/><br/>
+                            <img src="{$imageurl}/alert.png"/>Current chunk upload size is set to <b>{$chunk_upload_size}{lang code='mb'}</b><br/>
+                            but Cloudflare limit is set to <b>{$cloudflare_upload_limit}{lang code='mb'}</b>.<br/>
+                            You should probably reduce <i>Chunk size</i> option.
+                        {/if}
+
+                        <br/><br/>
+                        <img src="{$imageurl}/error.png"/> {lang code='incorrect_configuration_413_error'}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h3>{lang code='storage'}</h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {foreach $disks_usage as $disk}
+                        <label>{$disk.path}</label>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-{if $disk.space_usage_percent < 70}success{elseif $disk.space_usage_percent < 90}warning{else}danger{/if}" role="progressbar" style="width:{$disk.space_usage_percent}%">
+                                <span>{$disk.readable_used} / {$disk.readable_total} ({$disk.space_usage_percent} %)</span>
+                            </div>
+                        </div>
+                        {/foreach}
                     </div>
                 </div>
             </div>

@@ -20,7 +20,7 @@
 				{display_clean($c.collection_name)}&nbsp;
 				({$c.total_objects}&nbsp;{lang code="{$c.type}"})
 				{lang code='collection' assign='object_type'}
-				{uploadButton details=$c output='link' target="_blank" class='btn btn-success pull-right'}
+				{uploadButton details=$c output='link' class='btn btn-success pull-right'}
 			</h1>
 
             {if $collections}
@@ -39,7 +39,7 @@
 			<div class="photos clearfix">
 				{section name=list loop=$objects}
 				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-				{include file="$style_dir/blocks/photo.html" object=$objects[list] display_type=collection_item}
+				{include file="$style_dir/blocks/photo.html" photo=$objects[list] display_type=collection_item}
 				</div>
 				{sectionelse}
 				<div class="well well-info">{lang code='no_photos_found'}</div>
@@ -59,9 +59,7 @@
 			</div>
 			{/if}
 
-            <!-- Pagination -->
             {include file="$style_dir/blocks/pagination.html"}
-            <!-- end of Pagination -->
 
 			<div class="clearfix fav-repo">
 				<div class="show clearfix photoStats">
@@ -82,45 +80,48 @@
 						<strong>{lang code="views"}:</strong>&nbsp;{$c.views|number_format}
 					</li>
 					<li>
-						<strong>{lang code="category"}:</strong>&nbsp;{$c.category|categories:collections}
+						<strong>{lang code="category"}:</strong>&nbsp;{$c.category_names}
 					</li>
 					<li>	
-						<strong>{lang code="tags"}:</strong>&nbsp;{$c.collection_tags|tags:collections}
+						<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
+						<input type="hidden" id="tags" value="{$c.tags}">
+						<ul id="list_tags" style="border:0;"></ul>
 					</li>
 				</ul>
 			</div>
+			{if config('enable_comments_collection') == 'yes'}
+				<div class="clearfix comments-block">
+					{if $myquery->is_commentable($c,'collection')}
 
-			<div class="clearfix comments-block">
-				{if $myquery->is_commentable($c,'collection')}
+					<div class="collectionComments addComment">
+						<h2>
+							{if $c.total_comments <= 1 }
+								{lang code='comment'}
+							{else}
+								{{lang code='comments'} }
+							{/if}
+							(<span id="comment_count">{$c.total_comments}</span>)
+						</h2>
+						<a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
+							<span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
+						</a>
+						<div id="bloc-comment" class="collapse">
+							{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
 
-				<div class="collectionComments addComment">
-					<h2>
-						{if $c.total_comments <= 1 }
-							{lang code='comment'}
-						{else}
-							{{lang code='comments'} }
-						{/if}
-						({$c.total_comments})
-					</h2>
-					<span id="show-comments" class="icon-down-arrow" title="{lang code='show_comments'}"></span>
-					<span id="hide-comments" class="icon-up-arrow" title="{lang code='hide_comments'}" style="display:none;"></span>
-
-					<div id="bloc-comment" style="display:none;">
-						{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
-
-						<div class="userComments">
-							<ul id="userCommentsList" style="margin-left:-40px;">
-							</ul>
+							<div class="userComments">
+								<ul id="userCommentsList" style="margin-left:-40px;">
+								</ul>
+							</div>
 						</div>
 					</div>
-				</div>
 
-				{else}
-				<div align="center" class="moveL no_comments">
-					{lang code='comm_disabled_for_collection'}
+					{else}
+					<div align="center" class="moveL no_comments">
+						{sprintf(lang('comment_disabled_for'),strtolower(lang('collection')))}
+					</div>
+					{/if}
 				</div>
-				{/if}
-			</div>
+			{/if}
 		</section>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}
@@ -160,15 +161,10 @@
 			{/if}
 		</aside>
 	</div>
-	<script>
-		$(document).ready(function(){
-			getAllComments('cl','{$c.collection_id}','{$c.last_commented}',1,'{$c.total_comments}','{$object_type}');
-			var adHtml = $('.ad-holder').html();
-			if(adHtml<1){
-				$('.ad-holder').parent().remove();
-				$('#photos').parent().removeClass('col-lg-10 col-md-10 col-sm-10');
-				$('#photos').parent().addClass('clearfix col-lg-12 col-md-12 col-sm-12');
-			}
-		});
-	</script>
 </div>
+<script>
+	var collection_id = "{$c.collection_id}";
+	var last_commented = "{$c.last_commented}";
+	var total_comments = "{$c.total_comments}";
+	var object_type = "{$object_type}";
+</script>

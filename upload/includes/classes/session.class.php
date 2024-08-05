@@ -2,9 +2,8 @@
 
 class Session
 {
-    var $tbl = 'sessions';
+    const tbl = 'sessions';
     var $id = '';
-    var $overwrite = false;
 
     //Use cookies over sessions
     var $cookie = true;
@@ -19,6 +18,12 @@ class Session
         $this->timeout = COOKIE_TIMEOUT;
     }
 
+    public static function getInstance(): Session
+    {
+        global $sess;
+        return $sess;
+    }
+
     /**
      * Function used to add session
      *
@@ -27,13 +32,11 @@ class Session
      * @param bool $value
      * @param bool $reg
      *
-     * @throws \Exception
+     * @throws Exception
      * @todo: Find a proper solution to avoid database crashing because of sessions insertion and updation
      */
-
     function add_session($user, $name, $value = false, $reg = false)
     {
-        global $db, $pages;
         if (!$value) {
             $value = $this->id;
         }
@@ -41,19 +44,17 @@ class Session
         $sessions = $this->get_user_session($user, $name, true);
 
         if (count($sessions) > 0) {
-            $db->delete(tbl($this->tbl), ['session_string', 'session'], [$name, $this->id]);
+            Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session_string', 'session'], [$name, $this->id]);
         }
 
-        $cur_url = $pages->GetCurrentUrl();
+        $cur_url = pages::getInstance()->GetCurrentUrl();
 
-        if (getConstant('THIS_PAGE') != 'cb_install') {
-            if ($name == 'guest' && config('store_guest_session') != 'yes') {
-                // do nothing
-            } else {
-                $db->insert(tbl($this->tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
-                    'last_active', 'referer', 'agent', 'current_page'],
-                    [$user, $this->id, $name, $_SERVER['REMOTE_ADDR'], $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
-            }
+        if ($name == 'guest' && config('store_guest_session') != 'yes') {
+            // do nothing
+        } else {
+            Clipbucket_db::getInstance()->insert(tbl(self::tbl), ['session_user', 'session', 'session_string', 'ip', 'session_value', 'session_date',
+                'last_active', 'referer', 'agent', 'current_page'],
+                [$user, $this->id, $name, Network::get_remote_ip(), $value, now(), now(), getArrayValue($_SERVER, 'HTTP_REFERER'), $_SERVER['HTTP_USER_AGENT'], $cur_url]);
         }
 
         if ($reg) {
@@ -70,11 +71,10 @@ class Session
      * @param bool $phpsess
      *
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_user_session($user, $session_name = false, $phpsess = false): array
     {
-        global $db;
         $session_cond = false;
         if ($session_name) {
             $session_cond = ' session_string=\'' . mysql_clean($session_name) . '\'';
@@ -85,27 +85,26 @@ class Session
             }
             $session_cond .= ' session =\'' . $this->id . '\' ';
         }
-        return $db->select(tbl($this->tbl), '*', $session_cond);
+        return Clipbucket_db::getInstance()->select(tbl(self::tbl), '*', $session_cond);
     }
 
     /**
      * Function used to get sessins
      *
-     * @throws \Exception
+     * @throws Exception
      * @todo : They are updated on every page refresh, highly  critical for performance.
      */
     function get_sessions(): array
     {
-        global $db, $pages;
-        $results = $db->select(tbl($this->tbl), '*', 'session =\'' . $this->id . '\' ');
+        $results = Clipbucket_db::getInstance()->select(tbl(self::tbl), '*', 'session =\'' . $this->id . '\' ');
 
-        $cur_url = $pages->GetCurrentUrl();
+        $cur_url = pages::getInstance()->GetCurrentUrl();
 
         if (getConstant('THIS_PAGE') != 'cb_install') {
             if (getConstant('THIS_PAGE') != 'ajax') {
-                $db->update(tbl($this->tbl), ['last_active', 'current_page'], [now(), $cur_url], ' session=\'' . $this->id . '\' ');
+                Clipbucket_db::getInstance()->update(tbl(self::tbl), ['last_active', 'current_page'], [now(), $cur_url], ' session=\'' . $this->id . '\' ');
             } else {
-                $db->update(tbl($this->tbl), ['last_active'], [now()], ' session=\'' . $this->id . '\' ');
+                Clipbucket_db::getInstance()->update(tbl(self::tbl), ['last_active'], [now()], ' session=\'' . $this->id . '\' ');
             }
         }
 
@@ -192,50 +191,22 @@ class Session
 
     /**
      * Destroy Session
-     * @throws \Exception
+     * @throws Exception
      */
     function destroy()
     {
-        global $db;
-        $db->delete(tbl($this->tbl), ['session'], [$this->id]);
+        Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session'], [$this->id]);
         session_destroy();
     }
 
     /**
-     * Function set cookie
-     *
-     * @param $name
-     * @param $val
-     */
-    function set_cookie($name, $val)
-    {
-        set_cookie_secure($name, $val);
-    }
-
-    /**
-     * Function get cookie
-     *
-     * @param $name
-     *
-     * @return bool|string
-     */
-    function get_cookie($name)
-    {
-        if (isset($_COOKIE[$name])) {
-            return stripslashes(($_COOKIE[$name]));
-        }
-        return false;
-    }
-
-    /**
-     * @throws \Exception
+     * @throws Exception
      */
     function kick($id): bool
     {
-        global $db;
         //Getting little details from sessions such that
         //some lower class user can kick admins out ;)
-        $results = $db->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
+        $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
 		(' . tbl('sessions') . '.session_user=' . tbl('users') . '.userid)', tbl('sessions') . '.*,
 		' . tbl('users') . '.level', 'session_id=\'' . $id . '\'');
 
@@ -245,7 +216,17 @@ class Session
             e('You cannot kick administrators');
             return false;
         }
-        $db->delete(tbl($this->tbl), ['session_id'], [$id]);
+        $this->deleteById($id);
         return true;
+    }
+
+    /**
+     * @param $id
+     * @return void
+     * @throws Exception
+     */
+    public static function deleteById($id)
+    {
+        Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session_id'], [$id]);
     }
 }

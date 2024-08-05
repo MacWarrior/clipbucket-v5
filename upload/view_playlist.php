@@ -1,12 +1,4 @@
 <?php
-/*
- ******************************************************************
- | Copyright (c) 2007-2009 Clip-Bucket.com. All rights reserved.
- | @ Author : ArslanHassan
- | @ Software : ClipBucket , © PHPBucket.com
- *******************************************************************
-*/
-
 define('THIS_PAGE', 'view_playlist');
 define('PARENT_PAGE', 'videos');
 
@@ -34,7 +26,7 @@ if (is_playlist_viewable($playlist) and isset($playlist)) {
 
     subtitle($playlist['playlist_name']);
 } else {
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 }
 
 //Displaying The Template

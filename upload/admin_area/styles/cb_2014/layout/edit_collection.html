@@ -1,10 +1,6 @@
 {assign var=requiredFields value=$cbcollection->load_required_fields($data)}
 {assign var=otherFields value=$cbcollection->load_other_fields($data)}
 
-{if strlen($data.category) < 1}
-	{$data.category = '#1#'}
-{/if}
-
 <div class="heading clearfix marginBottomLarge paddingBottomSmall">
 	<h2 class="pull-left">Editing <small>&gt; {display_clean($data.collection_name)}</small></h2>
 	<div class="pull-right">
@@ -88,11 +84,9 @@
 									<label for="collecionID">Collection Id</label>
 								</td>
 								<td class="last">
-									<p>
-                                        <span>
-                                            <input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
-                                        </span>
-									</p>
+									<div>
+										<input disabled="disabled" name="collecionID" type="text" id="collecionID" value="{$data.collection_id}" size="30" />
+									</div>
 								</td>
 							</tr>
 
@@ -100,15 +94,14 @@
 							<tr>
 								<td class="first"><label>{$field.title}</label></td>
 								<td class="last">
-									<p>
-										<span>
-											{if $field.id == 'collection_tags'}
-												{$field.type='hidden'}
-												<ul id="list_tags"></ul>
-											{/if}
-											{$formObj->createField($field)}
-										</span>
-									</p>
+									<div>
+										{if $field.id == 'collection_tags'}
+										{$field.type='hidden'}
+										<ul id="list_tags" style="margin: 1px 0 0 0"></ul>
+										{/if}
+										{$formObj->createField($field)}
+									</div>
+
 								</td>
 							</tr>
 							{/foreach}
@@ -137,10 +130,12 @@
 								<td class="first"><label>Email</label></td>
 								<td class="last"><p><span>{$data.email}</span></p></td>
 							</tr>
+							{if config('enable_gender') == 'yes'}
 							<tr>
 								<td class="first"><label>Gender</label></td>
 								<td class="last"><p><span>{$data.sex}</span></p></td>
 							</tr>
+							{/if}
 							<tr>
 								<td class="first"><label>Rating</label></td>
 								<td class="last"><p><span>{$data.rating}</span></p></td>
@@ -222,3 +217,6 @@
 		</div>
 	</div>
 </form>
+<script>
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+</script>

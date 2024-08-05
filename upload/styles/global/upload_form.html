@@ -26,7 +26,9 @@
     <div class="align-right hidden" id="uploadMore">
         <a href="#" class="btn btn-primary uploadMoreVideos" id="uploadMoreVideos">{lang code="upload_more_videos"}</a>
     </div>
-    <div id="files"></div>
+    <div id="files">
+        <ul class="nav nav-tabs" id="selectedFilesList"></ul>
+    </div>
     <div id="allUploadForms" class="tab-content allUploadForms"></div>
 </div>
 
@@ -35,30 +37,54 @@
         <div class="col-md-8">
             <div id="updateVideoInfo">
                 {ANCHOR place="before_upload_form_required_fields"}
-                <fieldset>
-                    <legend>{$requiredFields.group_name}</legend>
-                </fieldset>
                 <div class="requiredFields">
                     {foreach $requiredFields.fields as $field}
-                        <div class="form-group">
+
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}
                         {if $field.type == 'radiobutton'}
+                    <div class="form-group">
                             {$field.label_class='radio'}
                             {$field.class=''}
                             {$formObj->createField($field)}
+                    </div>
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
-                        {else}
+                        {elseif $field.id == 'tags_video'}
+                    <div class="form-group">
                             <label for="{$field.id}">{$field.title}</label>
                             {$formObj->createField($field)}
+                            <ul id="list_{$field.id}"></ul>
+                    </div>
+                        {elseif !$field.id|strstr:'tags'}
+                    <div class="form-group">
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                    </div>
                         {/if}
-                        </div>
+
                     {/foreach}
 
                     <div class="form-group hidden">
                         <label for="duration">Duration</label>
                         <input type="text" placeholder="" name="duration" id="duration" class="form-control" disabled>
+                    </div>
+                </div>
+
+                <div class="formSection clear">
+                    <h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                    <div class="sectionContent hidden">
+                        {foreach $requiredFields.fields as $field}
+                            {$field.class='form-control'}
+                            {$field.notShowSeprator='yes'}
+                            {if $field.id|strstr:'tags' && $field.id != 'tags_video'}
+                        <div class="form-group">
+                            <label for="{$field.id}">{$field.title}</label>
+                            {$formObj->createField($field)}
+                            <ul id="list_{$field.id}"></ul>
+                        </div>
+                            {/if}
+                        {/foreach}
                     </div>
                 </div>
                 {ANCHOR place="after_upload_form_required_fields"}
@@ -147,6 +173,11 @@
                 </div>
                 {ANCHOR place="after_upload_form_submit"}
             </div>
+        </div>
+        <div class="col-md-4" >
+        {if config('enable_tmdb') == 'yes' && config('tmdb_token') != '' && config('tmdb_enable_on_front_end') == 'yes'}
+            <button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
+        {/if}
         </div>
         <div class="col-md-4 uploadFormSidebarDiv">
             {ANCHOR place="before_upload_form_categories_field"}

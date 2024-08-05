@@ -1,6 +1,6 @@
 <?php
 global $userquery, $pages;
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();
@@ -15,9 +15,9 @@ $player = str_replace('..', '', $player);
 
 if ($folder && $file) {
     if (!$player) {
-        $file = PLUG_DIR . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
+        $file = DirPath::get('plugins') . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
     } else {
-        $file = PLAYER_DIR . DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR . $file;
+        $file = DirPath::get('player') . $folder . DIRECTORY_SEPARATOR . $file;
     }
 
     if (file_exists($file)) {

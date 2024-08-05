@@ -7,6 +7,7 @@ function get_photo_fields()
 
 /**
  * function used to get photos
+ * @throws Exception
  */
 function get_photos($param)
 {
@@ -15,12 +16,18 @@ function get_photos($param)
 }
 
 //Photo File Fetcher
+/**
+ * @throws Exception
+ */
 function get_photo($params)
 {
     return get_image_file($params);
 }
 
 //Photo Upload Button
+/**
+ * @throws Exception
+ */
 function upload_photo_button($params)
 {
     global $cbphoto;
@@ -28,6 +35,9 @@ function upload_photo_button($params)
 }
 
 //Photo Embed Cides
+/**
+ * @throws Exception
+ */
 function photo_embed_codes($params)
 {
     global $cbphoto;
@@ -39,7 +49,7 @@ function photo_embed_codes($params)
 function plupload_photo_uploader()
 {
     $photoUploaderDetails = [
-        'uploadScriptPath' => '/actions/photo_uploader.php?plupload=true'
+        'uploadScriptPath' => '/actions/photo_uploader.php'
     ];
 
     assign('photoUploaderDetails', $photoUploaderDetails);
@@ -52,7 +62,7 @@ function plupload_photo_uploader()
  *
  * @param INT|array $photo_id
  * @return bool|string $directory
- * @throws \Exception
+ * @throws Exception
  */
 function get_photo_date_folder($photo_id)
 {
@@ -86,7 +96,7 @@ function get_photo_date_folder($photo_id)
         /**
          * Making sure file exists at path
          */
-        $path = PHOTOS_DIR . DIRECTORY_SEPARATOR . $directory . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $photo['ext'];
+        $path = DirPath::get('photos') . $directory . DIRECTORY_SEPARATOR . $photo['filename'] . '.' . $photo['ext'];
         $photo['file_path'] = $path;
         $photo = apply_filters($photo, 'checking_photo_at_structured_path');
 
@@ -109,6 +119,9 @@ function get_photo_default_thumb($size = null, $output = null)
     return $cbphoto->default_thumb($size, $output);
 }
 
+/**
+ * @throws Exception
+ */
 function get_image_file($params)
 {
     global $cbphoto, $Cbucket;
@@ -147,9 +160,15 @@ function get_image_file($params)
         $functions = $Cbucket->custom_get_photo_funcs;
         foreach ($functions as $func) {
             if (function_exists($func)) {
+                ob_start();
                 $func_data = $func($params);
                 if ($func_data) {
                     return $func_data;
+                }
+                $html = ob_get_contents();
+                ob_end_clean();
+                if( !empty($html) ){
+                    return $html;
                 }
             }
         }
@@ -160,10 +179,10 @@ function get_image_file($params)
     $with_original = $params['with_orig'] ?? false;
 
     if ($directory) {
-        $directory .= '/';
+        $directory .= DIRECTORY_SEPARATOR;
     }
 
-    $path = PHOTOS_DIR . '/' . $directory;
+    $path = DirPath::get('photos') . $directory;
     $filename = $photo['filename'] . '%s.' . $photo['ext'];
 
     $files = glob($path . sprintf($filename, '*'));
@@ -175,10 +194,10 @@ function get_image_file($params)
             $thumb_type = $cbphoto->get_image_type($thumb_name);
 
             if ($with_original) {
-                $thumbs[] = (($with_path) ? PHOTOS_URL . '/' : '') . $directory . $thumb_name;
+                $thumbs[] = (($with_path) ? DirPath::getUrl('photos') : '') . $directory . $thumb_name;
             } else {
                 if (!empty($thumb_type)) {
-                    $thumbs[] = (($with_path) ? PHOTOS_URL . '/' : '') . $directory . $thumb_name;
+                    $thumbs[] = (($with_path) ? DirPath::getUrl('photos') : '') . $directory . $thumb_name;
                 }
             }
         }

@@ -26,4 +26,4 @@ function produce_beast()
     $db->execute("INSERT INTO  " . tbl('social_beast_links') . " (`id`, `facebook`, `twitter`, `google`, `linkedin`, `pinterest`, `reddit`, `youtube`, `vine`, `rss`, `github`, `dropbox`, `stumbleupon`) VALUES (NULL, '', '', '', '', '', '', '', '', '', '', '', '');");
 }
 
-produce_beast()
+produce_beast();

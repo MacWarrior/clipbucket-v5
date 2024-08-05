@@ -14,8 +14,14 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'Psr\\Http\\Server\\' => 16,
+            'Psr\\Http\\Message\\' => 17,
             'Predis\\' => 7,
             'PHPMailer\\PHPMailer\\' => 20,
+        ),
+        'O' => 
+        array (
+            'OxygenzSAS\\Discord\\' => 19,
         ),
     );
 
@@ -28,6 +34,15 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
+        'Psr\\Http\\Server\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-server-handler/src',
+            1 => __DIR__ . '/..' . '/psr/http-server-middleware/src',
+        ),
+        'Psr\\Http\\Message\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+        ),
         'Predis\\' => 
         array (
             0 => __DIR__ . '/..' . '/predis/predis/src',
@@ -36,6 +51,10 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
+        'OxygenzSAS\\Discord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/oxygenzsas/composer_lib_discord/src',
+        ),
     );
 
     public static $classMap = array (
@@ -43,7 +62,7 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'Smarty' => __DIR__ . '/..' . '/smarty/smarty/libs/Smarty.class.php',
         'SmartyBC' => __DIR__ . '/..' . '/smarty/smarty/libs/SmartyBC.class.php',
         'SmartyCompilerException' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartycompilerexception.php',
-        'SmartyCompilerException74' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartycompilerexception74.php',
+        'SmartyCompilerException80' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartycompilerexception80.php',
         'SmartyException' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smartyexception.php',
         'Smarty_Autoloader' => __DIR__ . '/..' . '/smarty/smarty/libs/Autoloader.php',
         'Smarty_CacheResource' => __DIR__ . '/..' . '/smarty/smarty/libs/sysplugins/smarty_cacheresource.php',

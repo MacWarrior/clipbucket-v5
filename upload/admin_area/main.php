@@ -1,24 +1,23 @@
 <?php
+define('THIS_PAGE', 'website_configurations');
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-require_once '../includes/admin_config.php';
-global $userquery, $pages, $Upload, $myquery, $Cbucket, $breadcrumb;
-$userquery->admin_login_check();
-$userquery->login_check('web_config_access');
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('web_config_access');
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => ADMIN_BASEURL . '/main.php'];
+global $breadcrumb;
+$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
+$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => DirPath::getUrl('admin_area') . 'main.php'];
 
 if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-$opt_list = $Upload->get_upload_options();
+$opt_list = Upload::getInstance()->get_upload_options();
 
 assign('opt_list', $opt_list);
-assign('post_max_size', ini_get('post_max_size'));
-assign('upload_max_size', ini_get('upload_max_filesize'));
 
 if (isset($_POST['update'])) {
     $config_booleans = [
@@ -26,6 +25,7 @@ if (isset($_POST['update'])) {
         , 'store_guest_session'
         , 'videosSection'
         , 'photosSection'
+        , 'playlistsSection'
         , 'collectionsSection'
         , 'channelsSection'
         , 'enable_advertisement'
@@ -58,6 +58,71 @@ if (isset($_POST['update'])) {
         , 'enable_country'
         , 'enable_gender'
         , 'enable_user_category'
+        , 'enable_rss_feeds'
+        , 'enable_user_firstname_lastname'
+        , 'enable_user_relation_status'
+        , 'enable_user_postcode'
+        , 'enable_user_hometown'
+        , 'enable_user_city'
+        , 'enable_user_education'
+        , 'enable_user_schools'
+        , 'enable_user_occupation'
+        , 'enable_user_compagnies'
+        , 'enable_user_hobbies'
+        , 'enable_user_favorite_movies'
+        , 'enable_user_favorite_music'
+        , 'enable_user_favorite_books'
+        , 'enable_user_website'
+        , 'enable_user_about'
+        , 'enable_user_status'
+        , 'enable_video_social_sharing'
+        , 'enable_video_internal_sharing'
+        , 'enable_video_link_sharing'
+        , 'enable_age_restriction'
+        , 'enable_user_dob_edition'
+        , 'enable_blur_restricted_content'
+        , 'enable_global_age_restriction'
+        , 'enable_quicklist'
+        , 'hide_empty_collection'
+        , 'enable_sitemap'
+        , 'enable_tmdb'
+        , 'tmdb_get_genre'
+        , 'tmdb_get_actors'
+        , 'tmdb_get_producer'
+        , 'tmdb_get_executive_producer'
+        , 'tmdb_get_director'
+        , 'tmdb_get_crew'
+        , 'tmdb_get_poster'
+        , 'tmdb_get_release_date'
+        , 'tmdb_get_title'
+        , 'tmdb_get_description'
+        , 'tmdb_get_backdrop'
+        , 'tmdb_get_age_restriction'
+        , 'enable_video_genre'
+        , 'enable_video_actor'
+        , 'enable_video_producer'
+        , 'enable_video_executive_producer'
+        , 'enable_video_director'
+        , 'enable_video_crew'
+        , 'enable_video_poster'
+        , 'enable_video_backdrop'
+        , 'enable_edit_button'
+        , 'enable_sub_collection'
+        , 'only_keep_max_resolution'
+        , 'enable_tmdb_mature_content'
+        , 'tmdb_enable_on_front_end'
+        , 'enable_comments_censor'
+        , 'enable_video_description_censor'
+        , 'enable_video_description_link'
+        , 'enable_chunk_upload'
+        , 'enable_edit_photo_button'
+        , 'enable_user_profil_censor'
+        , 'enable_comments_video'
+        , 'enable_comments_photo'
+        , 'enable_comments_collection'
+        , 'enable_comments_channel'
+        , 'photo_rating'
+        , 'own_photo_rating'
     ];
 
     $config_booleans_to_refactor = [
@@ -77,13 +142,8 @@ if (isset($_POST['update'])) {
         , 'video_embed'
         , 'video_download'
         , 'bits_color_warning'
-        , 'video_comments'
-        , 'photo_comments'
-        , 'channel_comments'
         , 'video_rating'
         , 'own_video_rating'
-        , 'photo_rating'
-        , 'own_photo_rating'
         , 'comment_rating'
         , 'collection_rating'
         , 'own_collection_rating'
@@ -92,7 +152,6 @@ if (isset($_POST['update'])) {
         , 'keep_audio_tracks'
         , 'keep_subtitles'
         , 'extract_subtitles'
-        , 'enable_sub_collection'
         , 'photo_crop'
     ];
 
@@ -118,6 +177,7 @@ if (isset($_POST['update'])) {
         'extract_subtitles',
         'conversion_type',
         'enable_sub_collection',
+        'enable_rss_feeds',
 
         'background_color',
         'background_upload',
@@ -128,7 +188,6 @@ if (isset($_POST['update'])) {
 
         'closed',
         'closed_msg',
-        'channel_comments',
         'channels_list_per_page',
         'channelsSection',
         'channel_rating',
@@ -143,8 +202,6 @@ if (isset($_POST['update'])) {
         'collection_home_top_collections',
         'collection_collection_top_collections',
         'collection_photos_top_collections',
-
-        'embed_type',
 
         'date_format',
         'description',
@@ -188,6 +245,15 @@ if (isset($_POST['update'])) {
         'max_comment_chr',
         'max_upload_size',
         'max_video_duration',
+        'enable_comments_censor',
+        'enable_video_description_censor',
+        'enable_video_description_link',
+        'censored_words',
+        'enable_user_profil_censor',
+        'enable_comments_video',
+        'enable_comments_photo',
+        'enable_comments_collection',
+        'enable_comments_channel',
 
         'num_thumbs',
 
@@ -197,6 +263,7 @@ if (isset($_POST['update'])) {
         'own_photo_rating',
 
         'php_path',
+        'git_path',
         'picture_url',
         'picture_upload',
         'photosSection',
@@ -208,7 +275,6 @@ if (isset($_POST['update'])) {
         'photo_user_favorites',
         'photo_other_limit',
         'photo_ratio',
-        'photo_multi_upload',
         'photo_lar_width',
         'photo_crop',
         'max_photo_size',
@@ -236,6 +302,33 @@ if (isset($_POST['update'])) {
         'enable_country',
         'enable_gender',
         'enable_user_category',
+        'enable_user_firstname_lastname',
+        'enable_user_relation_status',
+        'enable_user_postcode',
+        'enable_user_hometown',
+        'enable_user_city',
+        'enable_user_education',
+        'enable_user_schools',
+        'enable_user_occupation',
+        'enable_user_compagnies',
+        'enable_user_hobbies',
+        'enable_user_favorite_movies',
+        'enable_user_favorite_music',
+        'enable_user_favorite_books',
+        'enable_user_website',
+        'enable_user_about',
+        'enable_user_status',
+        'enable_video_social_sharing',
+        'enable_video_internal_sharing',
+        'enable_video_link_sharing',
+        'enable_age_restriction',
+        'enable_user_dob_edition',
+        'enable_blur_restricted_content',
+        'enable_global_age_restriction',
+        'enable_sitemap',
+        'enable_chunk_upload',
+        'chunk_upload_size',
+        'cloudflare_upload_limit',
 
         'thumb_width',
         'thumb_height',
@@ -260,8 +353,6 @@ if (isset($_POST['update'])) {
         'video_download',
         'bits_color_warning',
         'video_embed',
-        'video_comments',
-        'photo_comments',
         'video_rating',
         'photo_rating',
         'video_categories',
@@ -269,7 +360,6 @@ if (isset($_POST['update'])) {
         'vrate',
         'video_require_login',
         'feedsSection',
-        'youtube_api_key',
         'website_email',
         'welcome_email',
         'store_guest_session',
@@ -280,6 +370,7 @@ if (isset($_POST['update'])) {
         'enable_video_file_upload',
         'enable_video_remote_upload',
         'enable_photo_file_upload',
+        'enable_quicklist',
 
         'allow_conversion_1_percent',
 
@@ -301,7 +392,40 @@ if (isset($_POST['update'])) {
         'cache_auth',
         'cache_host',
         'cache_port',
-        'cache_password'
+        'cache_password',
+
+        'enable_tmdb',
+        'tmdb_token',
+        'tmdb_get_genre',
+        'tmdb_get_actors',
+        'tmdb_get_producer',
+        'tmdb_get_executive_producer',
+        'tmdb_get_director',
+        'tmdb_get_crew',
+        'tmdb_get_poster',
+        'tmdb_get_release_date',
+        'tmdb_get_title',
+        'tmdb_get_description',
+        'tmdb_get_backdrop',
+        'tmdb_get_age_restriction',
+        'tmdb_search',
+        'enable_tmdb_mature_content',
+        'tmdb_mature_content_age',
+        'enable_video_genre',
+        'enable_video_actor',
+        'enable_video_producer',
+        'enable_video_executive_producer',
+        'enable_video_director',
+        'enable_video_crew',
+        'enable_video_poster',
+        'enable_video_backdrop',
+        'enable_edit_button',
+        'enable_edit_photo_button',
+        'tmdb_enable_on_front_end',
+
+        'hide_empty_collection',
+        'only_keep_max_resolution',
+        'playlistsSection'
     ];
 
     foreach ($opt_list as $optl) {
@@ -335,6 +459,7 @@ if (isset($_POST['update'])) {
         'videos_item_channel_page',
         'videos_list_per_page',
         'video_categories',
+        'tmdb_mature_content_age',
 
         'photo_main_list',
         'photo_home_tabs',
@@ -351,18 +476,24 @@ if (isset($_POST['update'])) {
         'collection_collection_top_collections',
         'collection_photos_top_collections',
 
-        'photo_multi_upload',
         'photo_lar_width',
         'max_photo_size',
         'photo_thumb_width',
         'photo_thumb_height',
         'photo_med_width',
-        'photo_med_height'
+        'photo_med_height',
+
+        'chunk_upload_size',
+        'cloudflare_upload_limit'
     ];
 
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
+            if ($field == 'min_age_reg' && ($value > 99 || $value <= 0 || !is_numeric($value) )) {
+                e(lang('error_age_restriction_save'));
+                break;
+            }
             if ($value <= 0 || !is_numeric($value)) {
                 $value = 1;
             }
@@ -378,31 +509,63 @@ if (isset($_POST['update'])) {
             }
         }
 
-        $myquery->Set_Website_Details($field, $value);
+        myquery::getInstance()->Set_Website_Details($field, $value);
     }
     CacheRedis::flushAll();
 
-    $myquery->saveVideoResolutions($_POST);
+    myquery::getInstance()->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');
 }
 
-$row = $myquery->Get_Website_Details();
+$row = myquery::getInstance()->Get_Website_Details();
 Assign('row', $row);
 
-$video_resolutions = $myquery->getVideoResolutions();
+$video_resolutions = myquery::getInstance()->getVideoResolutions();
 Assign('video_resolutions', $video_resolutions);
 
-$ffmpeg_version = check_version('ffmpeg');
+$ffmpeg_version = System::get_software_version('ffmpeg');
 Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
-if(in_dev()){
-    $min_suffixe = '';
+if (!empty($_POST)) {
+    $filepath_dev_file = DirPath::get('temp') . 'development.dev';
+    if (!empty($_POST['enable_dev_mode'])) {
+        if (is_writable(DirPath::get('temp'))) {
+            file_put_contents($filepath_dev_file, '');
+            if (file_exists($filepath_dev_file)) {
+                assign('DEVELOPMENT_MODE', true);
+            }
+        } else {
+            e('"temp" directory is not writeable');
+        }
+    } else {
+        unlink($filepath_dev_file);
+        if (!file_exists($filepath_dev_file)) {
+            assign('DEVELOPMENT_MODE', false);
+        }
+    }
+
+    if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
+        if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
+            e(lang('discord_webhook_url_invalid'));
+        } else {
+            DiscordLog::getInstance()->enable($_POST['discord_webhook_url']);
+        }
+    } else {
+        DiscordLog::getInstance()->disable();
+    }
 } else {
-    $min_suffixe = '.min';
+    assign('DEVELOPMENT_MODE', in_dev());
 }
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'global']);
-$Cbucket->addAdminJS(['pages/main/main'.$min_suffixe.'.js' => 'admin']);
+
+assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
+assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
+
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'jquery-ui-1.13.2.min.js'             => 'global'
+    ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
+]);
 template_files('main.html');
 display_it();

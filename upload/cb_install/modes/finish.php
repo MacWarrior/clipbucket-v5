@@ -9,22 +9,22 @@ $myquery->Set_Website_Details('site_title', $title);
 $myquery->Set_Website_Details('site_slogan', $slogan);
 $myquery->Set_Website_Details('baseurl', $baseurl);
 
-if (file_exists(FILES_DIR . '/temp/install.me')) {
-    unlink(FILES_DIR . '/temp/install.me');
+if (file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::get('temp') . 'install.me.not')) {
+    unlink(DirPath::get('temp') . 'install.me');
 }
 ?>
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-        <h4 style="color:#fff;">ClipBucket <?php echo VERSION; ?> has been installed successfully !</h4>
+        <h4 style="color:#fff;">ClipBucketV5 - v<?php echo VERSION; ?> <?php echo lang('successful_install'); ?></h4>
     </div>
 </div>
 
 <div id="sub_container">
     <div style="margin-top:40px;text-align:center;">
         <?php
-        button_danger('Continue to Admin Area', ' onclick="window.location=\'/admin_area\'" ');
-        button('Continue to ' . display_clean(config('site_title')), ' onclick="window.location=\'/\'" ');
+        button_danger(lang('continue_admin_area'), ' onclick="window.location=\'/admin_area\'" ');
+        button(lang('continue_to') . ' ' . display_clean(config('site_title')), ' onclick="window.location=\'/\'" ');
         ?>
     </div>
 </div>

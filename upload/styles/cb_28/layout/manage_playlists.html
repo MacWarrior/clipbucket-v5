@@ -9,8 +9,7 @@
 				{if $mode =='manage_playlist'}
 				<h2>{lang code='manage_playlists'}</h2>
 
-				<!-- ADD NEW PLAYLIST -->
-				{if (has_access('allow_create_playlist',false,$verify_logged_user))}
+				{if (has_access('allow_create_playlist',false,false))}
 				<div class="account_form">
 					<form method="post" name="edit_profile">
 						<h3>{lang code='add_new_playlist'}</h3>
@@ -22,18 +21,13 @@
 					</form>
 				</div>
 				{else}
-				
 				<div class="alert alert-danger">
 					<strong>{lang code="creating_playlist_is_disabled"}</strong>
 				</div>
-				
 				{/if}
 
-				<!-- Add new playlist -->
-
 				<hr>
-				
-				<!-- Getting List of Playlist -->
+
 				<form class="marginTop" name="manage_playlists" method="post">
 					<div>
 						<input type="submit" class="btn btn-primary btn-sm" value="{lang code='delete_selected'}" name="delete_playlists"/>
@@ -62,9 +56,9 @@
 
 										{assign var=firstitem value=$playlist_items[0]}
 										{if $firstitem}
-										<a class="btn btn-success btn-xs" href="{video_link($firstitem)}" target="_blank">{lang code='play'}</a>
+										<a class="btn btn-success btn-xs" href="{video_link($firstitem)}" target="_blank">{lang code='watch'}</a>
 										{else}
-										<a class="btn btn-success btn-xs" onclick="_cb.throwHeadMsg('danger','{lang code=no_vid_in_playlist}', 5000, true);">{lang code='play'}</a> 
+										<a class="btn btn-success btn-xs" onclick="_cb.throwHeadMsg('danger','{lang code=no_vid_in_playlist}', 5000, true);">{lang code='watch'}</a>
 										{/if}
 
 										<a class="btn btn-default btn-xs" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$playlists[plist].playlist_id}','{lang code="remove_playlist_confirm"}','?mode=manage_playlist&amp;delete_pl={$playlists[plist].playlist_id}')" id="delete_icon_a-{$playlists[plist].playlist_id}">{lang code='delete'}</a>
@@ -77,7 +71,6 @@
 						</table>
 					</div>
 				</form>
-				<!-- Getting List of Playlist -->
 				{/if}
 
 				{if $mode =='edit_playlist'}
@@ -93,6 +86,9 @@
 						<div class="form-group">
 							<label class="label-heading" for="{$field.id}">{$field.title}</label>
 							{$field.class='form-control'}
+							{if $field.id == 'tags'}
+							<ul id="list_tags"></ul>
+							{/if}
 							{$formObj->createField($field)}
 						</div>
 							{/foreach}
@@ -131,3 +127,6 @@
 			</div>
 		</div>
 	</div>
+<script>
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+</script>

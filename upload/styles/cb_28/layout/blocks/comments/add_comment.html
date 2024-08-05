@@ -20,11 +20,7 @@
 				<div class="clearfix ">
 					<label>{lang code="comment_as"}&nbsp;</label>
 					<span>
-						{if $userquery->udetails.fullname}
-							{display_clean($userquery->udetails.fullname)}
-						{else}
-							{display_clean($userquery->username)}
-						{/if}
+						{display_clean($userquery->username)}
 					</span>
 				</div>
 			{/if}
@@ -45,7 +41,7 @@
 			
 			<div class="form-group clearfix">
 				<div class="avatar_comment_as">
-					<img alt="avatar" src="{$userquery->avatar(false,'m',user_id())}" class="img-circle"/>
+					<img alt="avatar" src="{$userquery->getUserThumb(false,'m',user_id())}" class="img-circle"/>
 				</div>
 				<div class="comment_txt_area">
 					<textarea style="resize: vertical;" name="comment" id="comment_box" cols="30" rows="1" class="form-control" placeholder="{lang code='type_comment_box'}"></textarea>
@@ -59,10 +55,7 @@
 		<div class="clearfix" id="msg_container"></div>
 	</form>
 	{else}
-		<span class="sizeSmall bold error"></span>
-		<div class="col-lg-10 col-md-9 col-sm-9 col-xs-9">
-			<span class="alert-warning alert msg-display">{lang code='please_login_to_comment'}</span>
-		</div>
+		<span class="alert-warning alert msg-display col-md-12">{lang code='please_login_to_comment'}</span>
 	{/if}
 
 </div>
@@ -71,15 +64,13 @@
 	$(document).ready(function(){
 		var form_selector = 'comment_form';
 		var type = '{$type}';
-		var video_id = '{$vdo.video_id}';
-		$('body').on("click","#add_comment_button",function(){
-			add_comment_js(form_selector,type,video_id);
+		$('#add_comment_button').on("click",function(){
+			add_comment_js(form_selector);
 		});
 		$('#comment_box').keypress(function(e){
-			if(e.keyCode == 13 && !e.shiftKey)
-			{
+			if(e.keyCode == 13 && !e.shiftKey) {
 				e.preventDefault();
-				add_comment_js(form_selector,type,video_id);
+				add_comment_js(form_selector);
 			}
 		});
 	});

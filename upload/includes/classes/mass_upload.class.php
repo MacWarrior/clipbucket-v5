@@ -7,9 +7,19 @@ class mass_upload extends Upload
         return $this->get_video_files_list(true);
     }
 
-    function get_video_files_list($listonly = false, $dir = MASS_UPLOAD_DIR)
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
+    function get_video_files_list($listonly = false, $dir = null)
     {
-        require_once BASEDIR . '/includes/classes/conversion/ffmpeg.class.php';
+        if( is_null($dir) ){
+            $dir = DirPath::get('mass_uploads');
+        } else if (substr($dir, -1) !== DIRECTORY_SEPARATOR) {
+            $dir .= DIRECTORY_SEPARATOR;
+        }
+
+        require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
         $cache_key = 'vid_info:';
         $allowed_exts = get_vid_extensions();
         $FILES = scandir($dir);
@@ -20,9 +30,13 @@ class mass_upload extends Upload
                 continue;
             }
 
-            $filepath = $dir . DIRECTORY_SEPARATOR . $filename;
+            $filepath = $dir . $filename;
 
-            if (is_dir($filepath)) {
+            if( !is_readable($filepath) ){
+                continue;
+            }
+
+            if (is_dir($filepath . DIRECTORY_SEPARATOR)) {
                 $new_files = $this->get_video_files_list($listonly, $filepath);
 
                 if ($new_files) {
@@ -47,7 +61,6 @@ class mass_upload extends Upload
                         $video_file['file'] = $filename;
                         $video_file['title'] = $filename;
                         $video_file['description'] = $filename;
-                        $video_file['tags'] = gentags(str_replace(' ', ',', $filename));
                         $video_file['size'] = formatfilesize(filesize($filepath));
                         if ($tracks = FFMpeg::get_track_title($filepath, 'audio')) {
                             $video_file['tracks'] = $tracks;
@@ -78,7 +91,7 @@ class mass_upload extends Upload
     {
         $file = $file_arr['file'];
         $mass_file = $file_arr['path'] . DIRECTORY_SEPARATOR . $file;
-        $temp_file = TEMP_DIR . DIRECTORY_SEPARATOR . $file_key . '.' . getExt($file);
+        $temp_file = DirPath::get('temp') . $file_key . '.' . getExt($file);
         if (file_exists($mass_file) && is_file($mass_file)) {
             copy($mass_file, $temp_file);
             return $file_key . '.' . getExt($file);

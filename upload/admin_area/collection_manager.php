@@ -1,16 +1,22 @@
 <?php
 define('THIS_PAGE', 'collection_manager');
-global $userquery, $pages, $cbcollection, $eh, $Cbucket;
+global $userquery, $pages, $cbcollection, $eh;
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => ADMIN_BASEURL . '/collection_manager.php'];
+$breadcrumb[0] = [
+    'title' => lang('collections'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_collections'),
+    'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
+];
 
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -111,7 +117,7 @@ if ($_GET['search']) {
 
 /* CREATING LIMIT */
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $carray['limit'] = $get_limit;
 if (!empty($carray['order'])) {
@@ -123,21 +129,23 @@ if (!empty($carray['order'])) {
 $collections = $cbcollection->get_collections($carray);
 assign('collections', $collections);
 
-$total_pages = count_pages(count($collections), RESULTS);
+$total_pages = count_pages(count($collections), config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-$Cbucket->addAdminJS(['tag-it'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['advanced_search/advanced_search'.$min_suffixe.'.js' => 'admin']);
-$Cbucket->addAdminJS(['init_default_tag/init_default_tag'.$min_suffixe.'.js' => 'admin']);
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'jquery-ui-1.13.2.min.js'                                  => 'admin',
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'advanced_search/advanced_search' . $min_suffixe . '.js'   => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin'
+]);
 
-$Cbucket->addAdminCSS(['jquery.tagit'.$min_suffixe.'.css'=>'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk'.$min_suffixe.'.css'=>'admin']);
+ClipBucket::getInstance()->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+$available_tags = Tags::fill_auto_complete_tags('collection');
+assign('available_tags', $available_tags);
 
 subtitle(lang('manage_collections'));
 template_files('collection_manager.html');

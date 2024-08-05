@@ -7,7 +7,7 @@ global $userquery, $myquery, $db, $Upload;
 $userquery->logincheck();
 
 if (@$_GET['msg']) {
-    $msg[] = clean($_GET['msg']);
+    $msg[] = display_clean($_GET['msg']);
 }
 
 $video = mysql_clean($_GET['video']);
@@ -21,17 +21,13 @@ $video = mysql_clean($_GET['video']);
 
 
 if ($myquery->video_exists($video)) {
-    # Setting Default thumb
-    if (isset($_POST['update_default_thumb'])) {
-        $myquery->set_default_thumb($video, $_POST['default_thumb']);
-    }
 
     $data = get_video_details($video);
-    $vid_file = VIDEOS_DIR . DIRECTORY_SEPARATOR . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
+    $vid_file = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
 
     # Uploading Thumbs
-    if (isset($_POST['upload_thumbs'])) {
-        $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $data['thumbs_version']);
+    if (!empty($_FILES['vid_thumb'])) {
+        $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory']);
     }
 } else {
     $msg[] = lang('class_vdo_del_err');

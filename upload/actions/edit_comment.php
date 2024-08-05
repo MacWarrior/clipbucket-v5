@@ -1,18 +1,12 @@
 <?php
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+global $userquery, $myquery;
 
-/**
- * This file is used to update
- * Comment
- * Author : Arslan Hassan
- * Since : 10 Aug, 2009
- */
-
-require_once '../includes/admin_config.php';
 $userquery->admin_login_check();
 
 $cid = $_POST['id'];
 $value = $_POST['value'];
 
-$myquery->update_comment($cid, $value);
+Comments::update($cid, $value);
 
 echo display_clean($value);

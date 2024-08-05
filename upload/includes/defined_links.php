@@ -1,10 +1,4 @@
 <?php
-/**
- * ALL LINKS ARE DEFINED HERE
- * YOU CAN CHANGE THEM IF REQUIRED
- * ARRAY( [name]=> Array([Non SEO Link], [SEO Link])) - Without BASEURL
- */
-
 $cbLinks = [
     'channels'           => ['channels.php', 'channels/'],
     'compose_new'        => ['private_message.php?mode=new_msg', 'private_message.php?mode=new_msg'],
@@ -14,7 +8,7 @@ $cbLinks = [
     'login_success'      => ['login_success.php', 'login_success.php'],
     'logout'             => ['logout.php', 'logout.php'],
     'logout_success'     => ['logout_success.php', 'logout_success.php'],
-    'my_account'         => ['myaccount.php?user=', 'my_account'],
+    'my_account'         => ['myaccount.php', 'my_account'],
     'my_videos'          => ['manage_videos.php', 'manage_videos.php'],
     'my_favorites'       => ['manage_videos.php?mode=favorites', 'manage_videos.php?mode=favorites'],
     'my_playlists'       => ['manage_playlists.php', 'manage_playlists.php'],

@@ -8,7 +8,7 @@ define('CB_PM_MAX_INBOX', 500); // 0 - OFF , U - Unlimited
  * @param array => 'attachment_video'
  *
  * @return string|void
- * @throws \Exception
+ * @throws Exception
  */
 function attach_video($array)
 {
@@ -22,6 +22,7 @@ function attach_video($array)
  * Function used to pars video from attachment
  *
  * @param $att
+ * @throws Exception
  */
 function parse_and_attach_video($att)
 {
@@ -29,7 +30,7 @@ function parse_and_attach_video($att)
     preg_match('/{v:(.*)}/', $att, $matches);
     $vkey = $matches[1];
     if (!empty($vkey)) {
-        assign('video', $cbvid->get_video_details($vkey));
+        assign('video', $cbvid->get_video($vkey));
         assign('only_once', true);
         echo '<h3>Attached Video</h3>';
         echo '<div class="clearfix videos row">';
@@ -40,6 +41,7 @@ function parse_and_attach_video($att)
 
 /**
  * Function used to add custom video attachment form field
+ * @throws Exception
  */
 function video_attachment_form(): array
 {
@@ -92,6 +94,7 @@ class cb_pm
 
     /**
      * Sending PM
+     * @throws Exception
      */
     function send_pm($array): bool
     {
@@ -156,7 +159,7 @@ class cb_pm
      * @param $sender
      *
      * @return bool|string
-     * @throws \Exception
+     * @throws Exception
      */
     function check_users($input, $sender)
     {
@@ -200,7 +203,6 @@ class cb_pm
         return false;
     }
 
-
     /**
      * Function used to get user
      */
@@ -212,7 +214,6 @@ class cb_pm
         }
         return $user;
     }
-
 
     /**
      * Function used to make attachment valid
@@ -240,7 +241,7 @@ class cb_pm
      * @param $uid
      *
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     function is_reply($id, $uid): bool
     {
@@ -259,7 +260,7 @@ class cb_pm
      * @param $id
      *
      * @return bool|array
-     * @throws \Exception
+     * @throws Exception
      */
     function get_message($id)
     {
@@ -277,8 +278,8 @@ class cb_pm
      *
      * @param $mid
      * @param null $uid
-     * @return bool
-     * @throws \Exception
+     * @return bool|array
+     * @throws Exception
      */
     function get_inbox_message($mid, $uid = null)
     {
@@ -300,8 +301,8 @@ class cb_pm
      *
      * @param $mid
      * @param null $uid
-     * @return bool
-     * @throws \Exception
+     * @return bool|array
+     * @throws Exception
      */
     function get_outbox_message($mid, $uid = null)
     {
@@ -311,7 +312,7 @@ class cb_pm
         }
         $result = $db->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.userid,users.username'), " message_id='$mid' AND message_from='$uid' AND userid=" . tbl($this->tbl . ".message_from"));
 
-        if (count($result) > 0) {
+        if( !empty($result) ) {
             return $result[0];
         }
         e(lang('no_pm_exist'));
@@ -319,16 +320,8 @@ class cb_pm
     }
 
     /**
-     * Get Total PM
-     */
-    function pm_count()
-    {
-        global $db;
-        return $db->count(tbl($this->tbl), 'message_id');
-    }
-
-    /**
      * Function used to get user inbox messages
+     * @throws Exception
      */
     function get_user_messages($uid, $box = 'all', $count_only = false)
     {
@@ -366,7 +359,6 @@ class cb_pm
                     $result = $db->select(tbl($this->tbl . ',users'), tbl($this->tbl . '.*,users.username AS message_from_user '),
                         tbl($this->tbl) . ".message_from = '$uid' AND " . tbl("users") . ".userid = " . tbl($this->tbl) . ".message_from 
 										  AND " . tbl($this->tbl) . ".message_box ='out'", null, " date_added DESC");
-                    //echo $db->db_query;
                     //One More Query Need To be executed to get username of recievers
                     $count = 0;
 
@@ -375,7 +367,7 @@ class cb_pm
                         foreach ($result as $re) {
                             $cond = '';
                             preg_match_all("/#(.*)#/Ui", $re['message_to'], $receivers);
-                            //pr($receivers);
+
                             foreach ($receivers[1] as $to_user) {
 
                                 if (!empty($to_user)) {
@@ -416,22 +408,31 @@ class cb_pm
                 }
         }
 
-        if ($result) {
+        if( !empty($result) ){
             return $result;
         }
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_inbox_messages($uid, $count_only = false)
     {
         return $this->get_user_messages($uid, 'in', $count_only);
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_outbox_messages($uid, $count_only = false)
     {
         return $this->get_user_messages($uid, 'out', $count_only);
     }
 
+    /**
+     * @throws Exception
+     */
     function get_user_notification_messages($uid, $count_only = false)
     {
         return $this->get_user_messages($uid, 'notification', $count_only);
@@ -458,6 +459,7 @@ class cb_pm
 
     /**
      * Function used to create PM FORM
+     * @throws Exception
      */
     function load_compose_form(): array
     {
@@ -510,17 +512,18 @@ class cb_pm
 
     /**
      * Function used to send PM EMAIL
+     * @throws Exception
      */
     function send_pm_email($array)
     {
         global $cbemail, $userquery;
         $sender = $userquery->get_user_field_only($array['from'], 'username');
-        $content = clean($array['content']);
-        $subject = clean($array['subj']);
+        $content = mysql_clean($array['content']);
+        $subject = mysql_clean($array['subj']);
         $msgid = $array['msg_id'];
         //Get To(Emails)
         $emails = $this->get_users_emails($array['to']);
-        #pr($emails,true);
+
         $vars = [
             '{sender}'  => $sender,
             '{content}' => $content,
@@ -537,9 +540,9 @@ class cb_pm
 
     /**
      * Function used to get emails of users from input
+     * @throws Exception
      */
-
-    function get_users_emails($input)
+    function get_users_emails($input): string
     {
         global $userquery, $db;
         //check if usernames are sperated by colon ';'
@@ -567,6 +570,7 @@ class cb_pm
 
     /**
      * Function used to set private message status as read
+     * @throws Exception
      */
     function set_message_status($mid, $status = 'read')
     {
@@ -578,6 +582,7 @@ class cb_pm
 
     /**
      * Function used to delete message from user messages box
+     * @throws Exception
      */
     function delete_msg($mid, $uid, $box = 'in')
     {
@@ -586,26 +591,26 @@ class cb_pm
             $inbox = $this->get_inbox_message($mid, $uid);
             if ($inbox) {
                 $inbox_user = $inbox['message_to'];
-                $inbox_user = preg_replace("/#" . $uid . "#/Ui", "", $inbox_user);
+                $inbox_user = preg_replace('/#' . $uid . '#/Ui', '', $inbox_user);
                 if (empty($inbox_user)) {
-                    $db->delete(tbl($this->tbl), ["message_id"], [$mid]);
+                    $db->delete(tbl($this->tbl), ['message_id'], [$mid]);
                 } else {
-                    $db->update(tbl($this->tbl), ["message_to"], [$inbox_user], " message_id='" . $inbox['message_id'] . "'  ");
+                    $db->update(tbl($this->tbl), ['message_to'], [$inbox_user], ' message_id=\'' . $inbox['message_id'] . '\' ');
                 }
                 e(lang('msg_delete_inbox'), 'm');
             }
         } else {
             $outbox = $this->get_outbox_message($mid, $uid);
             if ($outbox) {
-                $db->delete(tbl($this->tbl), ["message_id"], [$mid]);
+                $db->delete(tbl($this->tbl), ['message_id'], [$mid]);
                 e(lang('msg_delete_outbox'), 'm');
             }
         }
     }
-
-
+    
     /**
      * Function used to get new messages
+     * @throws Exception
      */
     function get_new_messages($uid = null, $type = 'pm')
     {
@@ -616,17 +621,17 @@ class cb_pm
         switch ($type) {
             case 'pm':
             default:
-                $count = $db->count(tbl($this->tbl), "message_id", " message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='pm' AND message_status='unread'");
+                $count = $db->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='pm' AND message_status='unread'");
                 break;
 
             case 'notification':
-                $count = $db->count(tbl($this->tbl), "message_id", " message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='notification' AND message_status='unread'");
+                $count = $db->count(tbl($this->tbl), 'message_id', " message_to LIKE '%#$uid#%' AND message_box='in' AND message_type='notification' AND message_status='unread'");
                 break;
         }
 
         if ($count > 0) {
             return $count;
         }
-        return "0";
+        return '0';
     }
 }

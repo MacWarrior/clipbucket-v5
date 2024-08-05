@@ -1,27 +1,17 @@
 var cookieToSave, commentDataCheck;
-
-/*Cookie based comments backup end*/
-
-
-/*Playlist load more end*/
-
-var aspect_ratio = 1.77778
+var link_type = "videos";
 
 $(document).ready(function () {
-
-    var $cb_player = $("#cb_player");
-
-    cookieToSave = 'comment_data_u' + userid + "v" + current_video
-        commentDataCheck = $.cookie(cookieToSave);
-
-    if (commentDataCheck !== null) {
+    cookieToSave = 'comment_data_u' + userid + "v" + current_video;
+    commentDataCheck = $.cookie(cookieToSave);
+    if (commentDataCheck !== 'null') {
         $('#comment_box').val(commentDataCheck);
     }
 
     $('#ShareUsers').on("keyup", function () {
-        console.log('treztr');
-        if ($('#ShareUsers').val() === "")
+        if ($('#ShareUsers').val() === ""){
             return;
+        }
 
         var typed = $(this).val();
         $.ajax({
@@ -45,10 +35,7 @@ $(document).ready(function () {
         });
     });
 
-
     getAllComments('v', videoid, last_commented, 1, comments_count, object_type);
-
-    $cb_player.height($cb_player.width() / aspect_ratio);
 
     var videoInfo = $("#videoDescription").text();
     var newInfo = videoInfo.replace(/(((https?:\/\/)|([\s\t]))(www.)?([a-z0-9]+)\.[a-z]+)/g, '<a href="$1">$1</a>');
@@ -72,7 +59,6 @@ $(document).ready(function () {
         $('.ad-holder').remove();
     }
 
-
     /*Playlist load more start*/
     $('#playlist-pull').on("click", function () {
         var __this = $(this);
@@ -91,7 +77,7 @@ $(document).ready(function () {
                 "playlist": playlist
             },
             beforeSend: function () {
-                $(__this).text(lang_loading);
+                $(__this).html(loading);
             },
 
             success: function (data) {
@@ -99,7 +85,7 @@ $(document).ready(function () {
                 if (playlist_total <= loaded) {
                     $(__this).remove();
                 } else {
-                    $(__this).text(lang_load_more);
+                    $(__this).html(loading);
                 }
                 if (data == 'none') {
                     $('#playlist-pull').remove();
@@ -118,41 +104,7 @@ $(document).ready(function () {
     $('#add_comment_button').on("click", function () {
         set_cookie_secure(cookieToSave, null);
     });
-
-
-
-/*    labels.on('mouseup', function (e) {
-        switch (e.which)
-        {
-            // Left Click.
-            case 1:
-                //Ctrl+Click
-                if (e.ctrlKey) {
-                    window.open(url);
-                } else {
-                    // Standard LeftClick behaviour.
-                    window.location.href = url;
-                }
-                break;
-
-            // Middle click.
-            case 2:
-                e.preventDefault();
-                window.open(url);
-                return false;
-                break;
-            // Default behaviour for right click.
-        }
-        return true;
-    });*/
-    var labels = $('.tagit-label');
-    labels.each(function () {
-        $(this).parent().wrap('<a href="/search_result.php?query=' + $(this).html()+ '&type=tag"></a>');
+    $("[id^=tags]").each(function(elem){
+        init_readonly_tags(this.id, '#list_'+this.id);
     });
 });
-
-var resizePlayer = _cb.debounce(function () {
-    $cb_player.height($cb_player.width() / aspect_ratio);
-}, 500, false);
-
-$(window).resize(resizePlayer);

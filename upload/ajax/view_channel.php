@@ -13,7 +13,14 @@ if (isset($_POST['mode'])) {
             $start = $load_limit * $load_hit - $load_limit;
             $sql_limit = "$start, $load_limit";
             $total_items = $_POST['totalVids'];
-            $items = get_videos(['user' => $user, 'order' => 'date_added DESC', 'limit' => $sql_limit]);
+
+            $params = [
+                'userid' => $user
+                ,'order' => 'date_added DESC'
+                ,'limit' => $sql_limit
+            ];
+            $items = Video::getInstance()->getAll($params);
+
             if ($start >= $total_items) {
                 return false;
             }

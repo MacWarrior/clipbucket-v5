@@ -15,7 +15,7 @@
 						</div>
 						<div class="col-md-10">
 							<div class="progress">
-								<div id="overallProgress" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+								<div id="overallProgress" class="progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
 									<span class="sr-only">40% Complete (success)</span>
 								</div>
 							</div>
@@ -33,7 +33,6 @@
 								{if $counter == 1}
 									{$class = "active"}
 								{/if}
-								{* Checking weather to show uploadin option to user or not *}
 
 								{assign var='no_upload' value='no'}
 								<li class="{$class}">
@@ -42,38 +41,40 @@
 								{$counter = $counter + 1}
 							{/foreach}
 						</ul>
-						<!-- the div for upload file remote/normal-->
 						<div class="tab-content uploadFormDiv">
 							{$counter = 1}
-							{foreach from=$opt_list item=opt key=divid}     
-								{* Checking weather to show uploadin option to user or not *}
+							{foreach from=$opt_list item=opt key=divid}
 								{$class = ""}
 								{if $counter == 1}
-									{$class = "active"}
+									{$class = " active"}
 								{/if}
-								<div class="tab-pane fade in clearfix {$class} uploadForm" id="{$divid}">
-								<!-- this line call everything related to upload on the page -->
+								<div class="tab-pane fade in clearfix uploadForm{$class}" id="{$divid}">
 									{load_form name=$opt.function function_class=$opt.class button_class='cb_button_2' class='upload_form'}
 								</div>
 								{$counter = $counter + 1}
 							{/foreach}
 						</div>
-						<!-- ending of the div for upload file remote/normal-->
 					</div>
 				</div>
-					
 			</div>
 		</div>
 	<div>
 </div>
+<div class="modal fade" id="myModal" role="dialog">
+</div>
 <script type="text/javascript">
 	var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
-	var max_upload_size ='{$Cbucket->configs.max_upload_size}';
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+	var max_file_size ="{config('max_upload_size')}Mb";
+	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
 	var back_extensions = '{$extensions}';
 	var theme = '{$theme}';
 	var max_video_title = "{config('max_video_title')}";
 	var default_country_iso2 = "{config('default_country_iso2')}";
 	var date_format_time = "{date(config('date_format'),time())}";
-	var get_default_cid = "{$cbvid->get_default_cid()}";
+	var get_default_cid = "{$default_category_id}";
 	var stay_mp4 = "{config('stay_mp4')}";
+	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+	var pourcent_completed = '{$pourcent_completed}';
+	var cancel_uploading = '{$cancel_uploading}';
 </script>

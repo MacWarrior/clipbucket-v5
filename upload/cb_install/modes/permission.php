@@ -1,7 +1,7 @@
 <div class="nav_des clearfix">
     <div class="cb_container">
-        <h4 style="color:#fff;">Checking File &amp; Directories Permissions</h4>
-        <p style="color:#fff; font-size:13px;">ClipBucket need some files and folders permissions in order to store files properly, please make sure all files given below are chmod properly.<br/>
+        <h4 style="color:#fff;">Checking File & Directories Permissions</h4>
+        <p style="color:#fff; font-size:13px;">ClipBucketV5 need some files and folders permissions in order to store files properly, please make sure all files given below are chmod properly.<br/>
             <em>CHMOD : the chmod command (abbreviated from <strong>ch</strong>ange <strong>mod</strong>e) is a shell command and C language function in Unix and Unix-like environments.</em></p>
     </div>
 </div>
@@ -24,6 +24,8 @@
             button('Continue To Next Step', ' onclick="$(\'#installation\').submit()" ');
             ?>
         </div>
+
+        <?php show_hidden_inputs(); ?>
 
         <input type="hidden" name="mode" value="database" id="mode"/>
     </form>

@@ -35,10 +35,6 @@
 {$photoMode = lang('photos')|lower}
 {$channelsMode = lang('channels')|lower}
 
-<div id="quick_container">
-	<div id="quicklist_box"></div>
-</div> 
-
 <header id="header" class="clearfix">
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
@@ -47,7 +43,7 @@
 				<div class="navbar-header clearfix">
 
 					{ANCHOR place="before_logo"}
-					<h1 class="logo">
+					<h1 class="logo no_select">
 						<a href="/">
 							<img src="{get_website_logo_path()}" class="img-responsive"/>
 						</a>
@@ -106,7 +102,7 @@
 											</button>
 											<ul class="dropdown-menu">
 												{foreach $types_list item=stype}
-													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype} class="active" {/if}>
+													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype}class="active"{/if}>
 														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
 													</li>
 												{/foreach}
@@ -117,7 +113,7 @@
 										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type">
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
-								</form><!-- form Ends -->
+								</form>
 							</div>
 							{/if}
 							<ul class="nav navbar-nav navbar-right right-menu">
@@ -140,20 +136,19 @@
 								<li class="dropdown myaccount-dd">
 									<a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
 										{$user_det = $userquery->get_user_details(user_id())}
-										<img src="{$userquery->getUserThumb($user_det)}" width="35" height="35"/>
+										<img src="{$userquery->getUserThumb($user_det)}" class="no_select" width="35" height="35"/>
 										<span>{display_clean($userquery->username|truncate:15)}</span>
 									</a>
 									<ul class="dropdown-menu">
 										{if has_access('admin_access')}
 										<li class="hidden-xs"><a href="{$admin_baseurl}">{lang code="admin_area"}</a></li>
 										{/if}
-										<li class="hidden-xs"><a href="{link name='my_account'}{userid}">{lang code="my_account"}</a></li>
+										<li class="hidden-xs"><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
 										{if isSectionEnabled('videos')}
 										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
 										{/if}
 										{if isSectionEnabled('channels')}
-										<li><a href="{link name='channels'}">{lang code="view_channels"}</a></li>
-										<li><a href="/view_channel.php?user={display_clean($userquery->username)}">{lang code="my_channel"}</a></li>
+										<li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
 										{/if}
 										{if isSectionEnabled('playlists')}
 										<li><a href="/manage_playlists.php?user={display_clean($userquery->username)}">{lang code="my_playlists"}</a></li>
@@ -191,8 +186,8 @@
 		$(".cbsearchtype a").on({
 			click: function(e){
 				e.preventDefault();
-				var prent_li = $(this).parents();
-				var theNewVal = $(this).attr('valNow');
+				let prent_li = $(this).parents();
+				let theNewVal = $(this).attr('valNow');
 				$('.type').val(theNewVal);
 				$('.cbsearchtype li').removeClass('active');
 				prent_li.addClass('active');
@@ -200,9 +195,43 @@
 		});
 
 		$('.s-types').on("click", function(){
-			var _this = $(this);
-			var text = _this.html();
+			let text = $(this).html();
 			$('.search-type').html(text);
 		});
+
+		$('#cbsearch').on("click", function(e){
+			e.preventDefault();
+			let searchQuery = $('#query').val();
+			let queryLen = searchQuery.length;
+			if (queryLen <= 2) {
+				let msg = '{lang code="search_too_short"}';
+				msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
+				_cb.throwHeadMsg('warning', msg, 3000, true);
+			} else {
+				$('.search-form').submit();
+			}
+		});
+
+		window.addEventListener('resize', adaptRatioPlayer);
 	});
+	function adaptRatioPlayer(){
+		var div = document.querySelector('.player-holder');
+
+		if(div === null){
+			return;
+		}
+
+		const clean_class = div.className.replace(" fix_ratio ", "");
+
+		const ratio_window = window.innerWidth / window.innerHeight;
+		const ratio_div = document.querySelector('.player-holder video').videoWidth / document.querySelector('.player-holder video').videoHeight;
+
+		div.style.aspectRatio = ratio_div;
+
+		if ( ratio_window > ratio_div) {
+			div.className = clean_class+' fix_ratio '
+		} else {
+			div.className = clean_class
+		}
+	}
 </script>

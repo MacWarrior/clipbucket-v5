@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'photo_manager');
 
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $userquery, $pages, $cbphoto, $eh, $cbcollection;
 
@@ -13,9 +13,9 @@ $pages->page_redir();
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
 if (isset($_GET['search']) && isset($_GET['active']) && $_GET['active'] == 'no') {
-    $breadcrumb[1] = ['title' => 'Inactive Photos', 'url' => ADMIN_BASEURL . '/photo_manager.php?search=search&active=no'];
+    $breadcrumb[1] = ['title' => 'Inactive Photos', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'];
 } else {
-    $breadcrumb[1] = ['title' => 'Photo Manager', 'url' => ADMIN_BASEURL . '/photo_manager.php'];
+    $breadcrumb[1] = ['title' => 'Photo Manager', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
 }
 
 //Photo Actions are following
@@ -124,11 +124,11 @@ if (isset($_GET['search'])) {
 
 // Creating Limit
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, RESULTS);
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $parr['limit'] = $get_limit;
 if (!$parr['order']) {
-    $parr['order'] = ' date_added DESC ';
+    $parr['order'] = ' photos.date_added DESC ';
 } else {
     $parr['order'] = $parr['order'] . ' DESC';
 }
@@ -140,7 +140,7 @@ Assign('photos', $photos);
 $pcount = $parr;
 $pcount['count_only'] = true;
 $total_rows = $cbphoto->get_photos($pcount);
-$total_pages = count_pages($total_rows, RESULTS);
+$total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
 subtitle('Photo Manager');

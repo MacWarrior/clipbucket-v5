@@ -1,0 +1,174 @@
+{
+  "version":"5.5.1",
+  "revision":"83",
+  "status":"dev",
+  "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Implement TMDB mature content search"
+        ,"Implement Cloudflare usage detection"
+        ,"Implement storage usage tracking"
+        ,"Implement comments censor"
+        ,"Implement video description censor"
+        ,"Implement user profile censor"
+        ,"Implement video thumbs regeneration through SSE"
+        ,"Implement WIP migration"
+        ,"Implement missing video categorie fix tool"
+        ,"Implement video resolutions files deletion tool"
+        ,"Refactor category creation and edition interface"
+        ,"Refactor system infos"
+        ,"Refactor comments options"
+        ,"Add SSE function check"
+        ,"Add option to enable links in video description"
+        ,"Add Nginx check"
+        ,"Add video deletion menu on video edition page"
+        ,"Add option to enable playlists"
+        ,"Update server configurations check"
+        ,"Update user levels edition breadcrumb"
+        ,"Update menu"
+        ,"Update self-update interface"
+        ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Move sub-collections option to collection config tab"
+        ,"Use video poster in video manager if available"
+        ,"Fix TMDB import error display"
+        ,"Fix PHP error on user deletion"
+        ,"Fix video search"
+        ,"Fix video manager pagination"
+        ,"Fix website configurations display"
+        ,"Fix video saving with poster ou default enabled"
+        ,"Fix online users display"
+        ,"Fix login redirect"
+        ,"Fix category creation interface"
+        ,"Fix timeout errors on non-PHP-FPM"
+        ,"Fix Only keep max resolution option saving"
+        ,"Fix possible XSS injection"
+        ,"Fix user search by category"
+        ,"Fix collection's tags saving"
+        ,"Fix dashboard display"
+        ,"Fix discord config"
+        ,"Fix PHP CLI infos"
+        ,"Fix video file deletion <i>(#390)</i>"
+        ,"Fix video mass upload tags"
+        ,"Fix admin tools stuck on error"
+      ]
+    },
+    {
+      "title": "Front office",
+      "description": [
+        "Implement TMDB search on front office"
+        ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
+        ,"Implement collection & channel most items sort"
+        ,"Refactor collections page"
+        ,"Refactor video edition interface"
+        ,"Refactor user profile options"
+        ,"Add edit button on video & photo pages <i>(#319)</i>"
+        ,"Update translations"
+        ,"Update video, photo, collection & channel sorts"
+        ,"Update collection creation on photo upload"
+        ,"Hide collection comments option when collection comments are disabled"
+        ,"Fix pagination on videos, collections & photos"
+        ,"Fix comments display on photos collection <i>(#91)</i>"
+        ,"Fix video upload max filesize check"
+        ,"Fix channel background upload <i>(#370)</i>"
+        ,"Fix add video to collection"
+        ,"Fix user's avatar display error"
+        ,"Fix video description links display <i>(#373)</i>"
+        ,"Fix manage photo page SQL error"
+        ,"Fix video & photo upload cancelation"
+        ,"Fix possible SQL injection"
+        ,"Fix video upload"
+        ,"Fix video uploader's username display <i>(#382)</i>"
+        ,"Fix user profile info saving"
+        ,"Fix page access rights"
+        ,"Fix user's avatar display <i>(#382)</i>"
+        ,"Fix channel's video load more <i>(#382)</i>"
+        ,"Fix collection edition"
+        ,"Fix collection total objects count"
+        ,"Fix collection & channel most commented sort"
+        ,"Fix profile tags"
+        ,"Fix myaccount page display"
+        ,"Fix large file chunked upload"
+        ,"Fix video page display <i>(#387)</i>"
+        ,"Fix user avatar on video page <i>(#389)</i>"
+        ,"Fix collection creation when comments are fully disabled"
+        ,"Fix photo report"
+        ,"Fix collection item management page"
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Update Readme"
+        ,"Cleanup code"
+        ,"Remove unused functions"
+        ,"Remove unused files"
+        ,"Remove temp files on failed upload"
+        ,"Fix SSL detection"
+        ,"Fix MySQL8 compatibility"
+        ,"Fix old videos without quality specified"
+        ,"Fix video files detection"
+        ,"Fix PHP8.X compatibility"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Refactor log system"
+        ,"Add option to only keep maximum resolution"
+        ,"Reduce converted video filesize"
+      ]
+    },
+    {
+      "title": "Installation & Update",
+      "description": [
+        "Implement Windows installion script"
+        ,"Refactor migration system"
+        ,"Refactor installation process"
+        ,"Add SSE function check"
+        ,"Add Nginx check"
+        ,"Stop migration on first error if occurs"
+        ,"Reduce minimum upload size required by default"
+        ,"Update Debian 10 installation script"
+        ,"Update config creations"
+        ,"Fix SSE error on update from old version"
+        ,"Fix revision check when current revision is 0"
+        ,"Fix update status when working on new version"
+        ,"Fix hardcoded prefix in update 5.5.0 - 349"
+        ,"Fix categories creation in update 5.5.0 - 331"
+        ,"Fix dependancies check during installation process"
+        ,"Fix upgrade from 4.2 RC1"
+        ,"Fix SQL typo"
+        ,"Fix SSE DB update"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
+        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        ,"Fix missing translation"
+      ]
+    },
+    {
+      "title": "Plugins",
+      "description": [
+        "Update compatibility notice to 5.5.1"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update Player to version 2.0.3"
+        ,"Update Server Thumb for ClipBucket to version 2.0.3"
+      ]
+    },
+    {
+      "title": "External components",
+      "description": [
+        "Update VideoJS to version 8.17.2"
+        ,"Update Windows installation script MariaDB to 11.6.0"
+      ]
+    }
+  ]
+}

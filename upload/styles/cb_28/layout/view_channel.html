@@ -2,7 +2,6 @@
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
 {lang code='channel' assign='object_type'}
 {$loadMoreLang ={lang code="load_more"}}
-{$uservideos=get_videos(["user"=>$user.userid, "order"=>"date_added DESC","limit" =>9])}
 
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
@@ -16,126 +15,134 @@
 	<div class="clearfix">
 		{include file="$style_dir/blocks/view_channel/channel_header.html"}
 	</div>
+	{if user_id() && $user.userid != user_id()}
 	<div class="clearfix report-block" id="report-user-form" style="display:none;">
 		{show_flag_form id=$user.userid type=user}	
 	</div>
+	{/if}
 	<div class="clearfix">
 		<section id="content" class="clearfix">
-			{if $uservideos}
-			<div class="player-items">
-				<div class="clearfix player-holder">
-					<div id="cb_player" class="clearfix cb_player">
-						{FlashPlayer vdetails=$first_video width='100%' height='355'}
-					</div>
+			{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes' && $uservideos}
+			<div class="clearfix player-holder">
+				<div id="cb_player" class="clearfix cb_player">
+					{show_player vdetails=$first_video}
 				</div>
-				<img src="{$theme}/images/player-ratio.png" class="playerRatio"/>
 			</div>
 			{/if}
 			<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
 			<div class="channel-tabs flat-tabs clearfix">
 				<ul class="clearfix nav nav-tabs">
-					<li>
+					<li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} class="active"{/if}>
 						<a href="#user-info" data-toggle="tab">{lang code='info'}</a>
 					</li>
-					{if isSectionEnabled('videos') && $u.show_my_videos!='no'}
+					{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
 					<li class="active">
 						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
 					</li>
 					{/if}
-					{if isSectionEnabled('photos') && $u.show_my_photos != 'no'}
-					<li {if $u.show_my_videos=='no' || !isSectionEnabled('videos')}class="active"{/if}>
+					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+					<li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' || !isSectionEnabled('videos')} class="active"{/if}>
 						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
 					</li>
 					<li>
 					{/if}
+					{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
 					<li>
 						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
 					</li>
+					{/if}
+					{if config('enable_comments_channel') == 'yes'}
+					<li>
+						<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
+					</li>
+					{/if}
 				</ul>
 				<div class="tab-content clearfix">
-					<div class="tab-pane fade in clearfix {if $u.show_my_videos == 'no' && $u.show_my_photos == 'no'}active{/if}}" id="user-info">
+					<div class="tab-pane fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} active{/if}" id="user-info">
 						<div class="clearfix watch-vid-details">
 							<h2>{lang code='user_activity'}</h2>
 							<ul class="clearfix desc-list">
 								{if $p.profile_title}
 								<li>
-									<strong>{lang code='title'}</strong>:{display_clean($p.profile_title)}
+									<strong>{lang code='title'}</strong> : {User::getClean($p.profile_title)}
 								</li>
 								{/if}
 								{if $p.profile_desc}
 								<li>
-									<strong>{lang code='description'}</strong>:{display_clean($p.profile_desc)}
+									<strong>{lang code='description'}</strong> : {User::getClean($p.profile_desc)}
 								</li>
 								{/if}
 								<li>
-									<strong>{lang code='joined'}</strong>:&nbsp;{$u.doj|niceTime}
+									<strong>{lang code='joined'}</strong> : {$user.doj|niceTime}
 								</li>
 								<li>
-									<strong>{lang code='user_last_login'}</strong>:{$u.last_logged|niceTime}
+									<strong>{lang code='user_last_login'}</strong> : {$user.last_logged|niceTime}
 								</li>
+								{if config('enable_user_status') == 'yes'}
 								<li>
-									<strong>{lang code='online_status'}</strong>:&nbsp;
-									{if $userquery->isOnline($u.last_active,$p.online_status)}
+									<strong>{lang code='online_status'}</strong> :
+									{if $userquery->isOnline($user.last_active,$p.online_status)}
 										<span style="color:#060;">{lang code='online'}</span>
 									{else}
 										<span style="color:#ed0000;">{lang code='offline'}</span>
 									{/if}
 								</li>
-								{$usercat = $userquery->get_category_name($user.category)}
-								<li><strong>{lang code='category'}: </strong>{display_clean($usercat.category_name)}</li>
+								{/if}
 							</ul>
-							{assign var='channel_profile_fields' value=$userquery->load_user_fields($p,'profile')}
-							{foreach from=$channel_profile_fields item=field_group name=profile_groups}
-							{if $smarty.foreach.profile_groups.iteration==2}
-							<div id="moreDetailsDIV" style="display:none;">
-							{/if}
-							{if $field_group.channel_view !='no'}     
-								<div class="clearfix">
-									<h2>{display_clean($field_group.group_name)}</h2>
-									<ul class="clearfix desc-list">
-										{if $field_group.group_id=='profile_location'}
-										<li>
-											<strong>{lang code='country'}</strong>:&nbsp;{$u.country|country}
-										</li>
-										{/if}
 
-										{foreach from=$field_group.fields item=field}
-										{if $field.auto_view=='yes' && $field.value}
-										<li>
-										{if $field.type !='textarea' && $field.type !='text' && $field.type !='textfield'}
-											<strong>{$field.title}</strong>:&nbsp;{input_value input=$field}
-										{elseif $field.type =='textarea'}
-											<strong>{$field.title}</strong>:&nbsp;{$field.value|nl2br}
-										{else}
-											<strong>{$field.title}</strong>:&nbsp;{input_value input=$field}
-										{/if}
-										</li>
-										{/if}
-										{if $field_group.group_id=='profile_basic_info' 
-											  && $field.name=='relation_status'
-											  && $p.show_dob!='no'}
-										<li>
-											<strong>{lang code='user_date_of_birth'}</strong>:&nbsp;{cbdate(NULL, $u.dob)}
-										</li>
-										{/if}
-										{/foreach}
-										{if $smarty.foreach.profile_groups.iteration==1}
-											{$usercat = $userquery->get_category_name($user.category)}
-											<li><strong>Category: </strong>{$usercat.category_name}</li>
-										{/if}
-									</ul>
-								</div>
+							{if $field_group.channel_view != 'no'}
+								{foreach from=$channel_profile_fields item=field_group name=profile_groups}
+									{if count($field_group.fields) > 0 || ($field_group.group_id=='profile_location' && config('enable_country')=='yes') || ($field_group.group_id=='profile_basic_info' && ($p.show_dob!='no' || config('enable_user_category')=='yes') ) }
+									<div class="clearfix">
+										<h2>{display_clean($field_group.group_name)}</h2>
+										<ul class="clearfix desc-list">
+											{if $field_group.group_id=='profile_location' && config('enable_country')=='yes'}
+											<li>
+												<strong>{lang code='country'}</strong> : {$user.country|country}
+											</li>
+											{/if}
+
+											{foreach from=$field_group.fields item=field}
+												{if is_string($field.value) && empty(trim($field.value))}
+													{continue}
+												{/if}
+												{if $field.auto_view=='yes' && $field.value}
+												<li>
+													{if !in_array($field.type, ['textarea', 'text', 'textfield', 'hidden'])}
+														<strong>{$field.title}</strong> : {input_value input=$field}
+													{else}
+														{if $field.id == 'profile_tags'}
+														<strong class="pull-left">{$field.title} : </strong>
+														<input type="hidden" id="profile_tags" value="{User::getClean($field.value)}">
+														<ul id="list_tags_profile" style="border: 0;"></ul>
+														{else}
+														<strong>{$field.title}</strong> : {User::getClean($field.value)}
+														{/if}
+													{/if}
+												</li>
+												{/if}
+											{/foreach}
+
+											{if $field_group.group_id=='profile_basic_info'}
+												{if $p.show_dob!='no'}
+												<li>
+													<strong>{lang code='user_date_of_birth'}</strong> : {cbdate(NULL, $user.dob)}
+												</li>
+												{/if}
+												{if config('enable_user_category')=='yes'}
+													<li><strong>Category : </strong>{$user_category}</li>
+												{/if}
+											{/if}
+										</ul>
+									</div>
+									{/if}
+								{/foreach}
 							{/if}
-							{if $smarty.foreach.profile_groups.last}
-							</div>
-							{/if}
-							{/foreach}
-							<div id="moreDetails" class="channelFieldset">
-								<a class="btn btn-primary btn-sm channelLegend" href="javascript:void(0);" onClick="$('#moreDetails').hide(); $('#moreDetailsDIV').show();">{lang code='more'}</a>
-							</div>
 						</div>
 					</div>
-					<div class="tab-pane videos fade in clearfix {if $u.show_my_videos != 'no'}active{/if}" id="user-videos">
+
+					{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+					<div class="tab-pane videos fade in clearfix active" id="user-videos">
 							{if $uservideos}
 						<div class="clearfix row user_vids">
 							<div id="usr-vids" class="clearfix">
@@ -155,8 +162,10 @@
 						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 					</div>
-					<div class="tab-pane photos fade in clearfix {if $u.show_my_videos == 'no'}active{/if}" id="user-photos">
+					{/if}
 
+					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+					<div class="tab-pane photos fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes'} active{/if}" id="user-photos">
 						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
 							{if $photos}
 						<div id="usr-photos" class="clearfix row user_photos">
@@ -175,9 +184,11 @@
 						<div class="well well-info">{lang code='no_results_found'}</div>
 							{/if}
 					</div>
+					{/if}
+
+					{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
 					<div class="tab-pane playlist fade in clearfix" id="user-playlist">
-						{*$u.userid*}
-						{$playlists = $cbvid->action->get_playlists(["user"=>$u.userid,"order"=>"date_added DESC","limit"=>""])}
+						{$playlists = $cbvid->action->get_playlists(["user"=>$user.userid,"order"=>"date_added DESC","limit"=>""])}
 						
 						{if $playlists}
 						<div class="clearfix row ch-playlists">
@@ -193,11 +204,30 @@
 							<div class="well well-info">{lang code='no_playlists'}</div>
 						{/if}
 					</div>
+					{/if}
+
+					{if config('enable_comments_channel') == 'yes'}
+						<div class="tab-pane comment fade in clearfix" id="user-comments">
+							{if User::getInstance($user.userid)->get('allow_comments') == 'yes'}
+							<div class="collectionComments addComment">
+								<div id="bloc-comment">
+									{include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
+
+									<div class="userComments">
+										<ul id="userCommentsList" style="margin-left:-40px;"></ul>
+									</div>
+								</div>
+							</div>
+							{else}
+							<span class="well well-info btn-block">{sprintf(lang('comment_disabled_for'),strtolower(lang('channel')))}</span>
+							{/if}
+						</div>
+					{/if}
 				</div>
 			</div>
 		</section>
 		<aside id="sidebar">
-			{assign var=userFeeds value=$cbfeeds->getUserFeeds($u)}
+			{assign var=userFeeds value=$cbfeeds->getUserFeeds($user)}
 			{if $userFeeds && user_id()}
 			<h2>{lang code="user_activity"}</h2>
 			<div id="userFeeds" class="user-activities clearfix sidebar-items">
@@ -206,7 +236,8 @@
 				{/foreach}
 			</div>
 			{/if}
-			{$popular_users = get_users(['order'=>'profile_hits DESC limit 5'])}
+
+			{$popular_users = get_users(['cond' => 'users.username != \''|cat:$smarty.get.user|cat:'\'', 'order'=>'users.profile_hits DESC limit 5'])}
 			{if $popular_users}
 			<h2>{lang code="popular_users"}</h2>
 			<div class="clearfix sidebar-channels">
@@ -215,14 +246,16 @@
 					{continue}
 				{/if}
 				<div class="clearfix channel-item">
-					<a href="{$userquery->profile_link($popular)}" class="avatar">
-						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle">
+					<a href="{User::getInstance($popular.userid)->getLink('channel')}" class="avatar">
+						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle"/>
 					</a>
 					<div class="channel-info">
-						<h3><a href="{$userquery->profile_link($popular)}">{display_clean($popular.username)}</a></h3>
+						<h3><a href="{User::getInstance($popular.userid)->getLink('channel')}">{display_clean(User::getInstance($popular.userid)->get('username'))}</a></h3>
 						<div class="clearfix views-videos">
-							<span>{$popular.profile_hits|number_format} {lang code='views'}</span>
-							<span>{$popular.total_videos|number_format} {lang code='videos'}</span>
+							<span>{User::getInstance($popular.userid)->get('profile_hits')|number_format} {lang code='views'}</span>
+							{if isSectionEnabled('videos') && User::getInstance($popular.userid)->get('show_my_videos') == 'yes'}
+							<span>{User::getInstance($popular.userid)->get('total_videos')|number_format} {lang code='videos'}</span>
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -235,224 +268,13 @@
 		
 </div>
 <script>
-(function(window){
-  $(document).ready(function(){
-	$("#report-user").on("click",function(){
-		$("#report-user-form").toggle();
-	});
-	var extensions = "{$extensions}";
-	var baseurl = '/';
 	var channelId = "{$user['userid']}";
-	$.get("{$theme}/js/plupload/js/plupload.full.min.js", function(e){
-	  var uploader = new plupload.Uploader({
-		  browse_button: 'changeCover',
-		  runtimes : 'html5,flash,silverlight,html4',
-		  url : "/edit_account.php?mode=avatar_bg",
-		  file_data_name : "backgroundPhoto",
-		  filters: {
-			mime_types : [
-			  { title : "Image files", extensions : extensions },
-			],
-			max_file_size: "2mb",
-			prevent_duplicates: false,
-		  }
-	  });
-	  window.uploader = uploader;
-	  uploader.init();
-	  uploader.bind("FilesAdded", function(up, uploadedFiles){
-		$(".cb-live-background").attr("src",'/images/loading.png');
-		up.start();
-	  });
-	  uploader.bind('UploadComplete', function(plupload, files, response){});
-
-	  uploader.bind("FileUploaded", function(plupload, files, response){
-		var response = $.parseJSON(response.response);
-		if(response.status == true){
-		  $(".cb-live-background").attr("src",response.url);
-		}else{
-		  $(".cb-live-background").attr("src",response.url);
-		  alert(response.msg);
-		}
-	  });
-
-	  uploader.bind("Error", function(plupload, error){
-		alert(error.message);
-	  });
-	});
-	$("#coverContainer").hover(function(e){
-		$("#changeCover").show();
-	}, function(e){
-		$("#changeCover").hide();
-	});
-	$("#channelVoteUp, #channelVoteDown").one({
-	  click: function(e){
-		var vote = "";
-		var id = "" + this.id;
-		var likes = parseInt($("#likes").text());
-		var totalVotes = parseInt($("#totalVotes").text()) + 1;
-		if(this.id == "channelVoteDown"){
-		  vote  = "no";
-		   likes = likes - 1;
-
-		}else{
-		  vote = "yes";
-		  likes = likes + 1;
-		}
-		$.ajax({
-		  type: "POST",
-		  url: "/actions/vote_channel.php",
-		  data: { vote: vote, channelId : channelId},
-          success: function(){
-              $("#likes").text(likes);
-              $("#totalVotes").text(totalVotes);
-          }
-		});
-	  }
-	})
-  });
-})(window);
-
-	function userActivities(){
-		if($(window).width() > 991) {
-			var bannerHeight = $(".player-items").height();
-			$(".user-activities").css({
-				"max-height" : (bannerHeight-43)+"px",
-				"overflow-y" : "auto"
-			});
-		} else {
-			$(".user-activities").css("max-height","auto");
-		}
-	}
-
-	$(document).ready(function (){
-        userActivities();
-		var id ='{$user.userid}';
-		$('#subscribe_channel').on({
-			click: function(e){
-				e.preventDefault();
-				_cb.subscribeToChannelNew(id,'subscribe_user');
-		 	}
-		});
-	});
-
-	$('#myTab a, #reportTab a').click(function (e) {
-		e.preventDefault()
-		$(this).tab('show')
-	});
-	$('#load_more_playlist').click(function() 
-	 { 
-	  var limit = $(this).attr("limit");
-	  var mode = 'load_more';
-	  var inner_mode = 'load_more_playlist';
-	  var append_id = 'load_more_channel_playlist';
-	  var attrb = $(this);
-	  var cat_id = $(this).attr("cat-id");
-	  var total = $(this).attr("total");
-	  load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total);
-	 });
-
+	var totalVids = "{$total_videos}";
+	var totalPhotos = "{$total_photos}";
 	var loadMoreLang = "{$loadMoreLang}";
-	$('#container').on("click","#more-view-channel",function(){
-		loadHit = $(this).attr('dataHit');
-		loadLimit = $(this).attr('dataLimit');
-		user = "{$user['userid']}";
-		totalVids = "{$total_videos}";
-		totalShown = loadHit * 9 - 9;
-		if (totalVids - totalShown <= 9) {
-			loadMore = false;
-		} else {
-			loadMore = true;
-		}
-
-		nextHit = parseInt(loadHit) + 1;
-		$.ajax({
-			url: "/ajax/view_channel.php",
-			type: "post",
-			dataType: "html",
-			data: {
-				"mode":'channelMore',
-				"loadHit":loadHit,
-				"loadLimit":loadLimit,
-				"totalVids":totalVids,
-				"userid":user,
-			},
-			beforeSend: function() {
-				$(document).find('#more-view-channel').text('Loading videos..')
-			},
-
-			success: function(data) {
-				$('#more-view-channel').remove();
-				if (data.length > 1) {
-					$(data).appendTo('#usr-vids').fadeIn('slow');
-					if (loadMore == true) {
-						$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">'+loadMoreLang+'</button></div>').appendTo('.user_vids').fadeIn('slow');
-					}
-					var moveTo = $( ".recentAppending" ).last().offset().top,
-					currWidth = $(window).width();
-					moveTo = moveTo - 630;
-					if (currWidth > 767) {
-						thakkiLoading(moveTo);
-					}
-				} else {
-					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
-				}
-			}
-		});
-	});
-
-	$('#container').on("click","#more-channel-photos",function(){
-		loadHit = $(this).attr('dataHit');
-		loadLimit = $(this).attr('dataLimit');
-		user = "{$smarty.get.user}";
-		totalPhotos = "{$total_photos}";
-		totalShown = loadHit * 9 - 9;
-		if (totalPhotos - totalShown <= 9) {
-			loadMore = false;
-		} else {
-			loadMore = true;
-		}
-
-		nextHit = parseInt(loadHit) + 1;
-		$.ajax({
-			url: "/ajax/view_channel.php",
-			type: "post",
-			dataType: "html",
-			data: {
-				"mode":'channelMorePhotos',
-				"loadHit":loadHit,
-				"loadLimit":loadLimit,
-				"totalPhotos":totalPhotos,
-				"userid":user,
-			},
-			beforeSend: function() {
-				$(document).find('#more-channel-photos').text('Loading photos..')
-			},
-
-			success: function(data) {
-				$('#more-channel-photos').remove();
-				if (data.length > 1) {
-					$(data).appendTo('#usr-photos').fadeIn('slow');
-					if (loadMore == true) {
-						$('<div class="clearfix text-center"><button id="more-channel-photos" class="btn btn-loadmore" dataLimit="'+loadLimit+'" dataHit="'+nextHit+'">{lang code='load_more'}</button></div>').appendTo('.user_photos').fadeIn('slow');
-					}
-
-					var moveTo = $( ".photoAppending" ).last().offset().top,
-					currWidth = $(window).width();
-					moveTo = moveTo + 240;
-					if (currWidth > 767) {
-						thakkiLoading(moveTo);
-					}
-				} else {
-					$('<div class="clearfix text-center"><button id="more-view-channel" class="btn btn-loadmore" disabled="disabled">Unable to fetch more</button></div>').appendTo('.user_vids').fadeIn('slow');
-				}
-			}
-		});
-	});
-
-	$('.playerRatio').on('load', function(){
-        userActivities();
-	});
-	$(window).resize(function() {
-        userActivities();
-	});
+	var libelle_type_channel = "{Comments::$libelle_type_channel}";
+	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+	var max_file_size ="{config('max_upload_size')}Mb";
+	var photo_extensions = "{config('allowed_photo_types')}";
 </script>

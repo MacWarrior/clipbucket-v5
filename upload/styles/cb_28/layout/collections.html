@@ -8,9 +8,8 @@
 				{AD place='ad_728x90'}
 			</div>
 			{/if}
-			{assign var=sorting_links value=sorting_links()}
 			<div class="filter-dropdowns clearfix">
-				{if (has_access('allow_create_collection',false,$verify_logged_user))}
+				{if (has_access('allow_create_collection',false,false))}
 				<div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
 					<a class="btn btn-default" href="/manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
 				</div>
@@ -22,10 +21,9 @@
 				</div>
 				{/if}
 				<div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-					<!--Sorting By View-->
 					<div class="dropdown">
 						{if $smarty.get.sort}
-						{foreach from=$sorting_links item=name key=sort name=sorts}
+						{foreach from=$sort_list item=name key=sort name=sorts}
 							{if $smarty.get.sort==$sort && isset($smarty.get.sort)} 
 							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
 							{/if}
@@ -35,20 +33,18 @@
 						{/if}    
 
 						<ul class="dropdown-menu">
-							{foreach from=$sorting_links item=name key=sort}
+							{foreach from=$sort_list item=name key=sort}
 							<li>
 								<a href="{link name=sort sort=$sort type=collections}&sorting=sort" {if $smarty.get.sort==$sort}class="selected"{/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
 							</li>
 							{/foreach}
 						</ul>
 					</div>
-					
-					<!--Sorting By time-->
-					{assign var=time_links value=time_links()}
+
 					<div class="dropdown">
 						{if $smarty.get.time} 
 
-						{foreach from=$time_links item=name key=sort name=times}
+						{foreach from=$time_list item=name key=sort name=times}
 							{if $smarty.get.time==$sort && isset($smarty.get.time)} 
 							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
 							{/if}
@@ -57,7 +53,7 @@
 							<a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">all time <span class="icon-down-arrow"></span></a>
 						{/if}  
 						  <ul class="dropdown-menu">
-							{foreach from=$time_links item=name key=sort name=times}
+							{foreach from=$time_list item=name key=sort name=times}
 								<li>
 									<a href="{link name=time sort=$sort type=collections}&timing=time" {if $smarty.get.time==$sort}class="selected"{/if}>{if $smarty.get.time==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
 								</li>
@@ -66,7 +62,7 @@
 					</div>
 				</div>
 			</div>
-			<!-- /Page Heading -->
+
 			<div class="collections clearfix">
 				<div class="row clearfix">
 				{if $collections}
@@ -81,21 +77,18 @@
 				</div>
 			</div>
 
-            <!-- Pagination -->
             {include file="$style_dir/blocks/pagination.html"}
-            <!-- end of Pagination -->
 		</section>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 			{if config('collectionsSection') == 'yes'}
-                {$collections = $cbcollection->get_collections(['limit'=>config('collection_collection_top_collections'), 'active'=>'yes', 'parents_only'=>true, 'has_items'=>true])}
-                {if $collections}
+                {if $top_collections}
 			<h2>{lang code="top_collections"}</h2>
 			<div class="clearfix sidebar-items collections-grid">
 				<div class="clearfix row">
-				{foreach from=$collections item=collection}
+				{foreach from=$top_collections item=collection}
 					<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
 						{include file="$style_dir/blocks/collection-item.html"}
 					</div>

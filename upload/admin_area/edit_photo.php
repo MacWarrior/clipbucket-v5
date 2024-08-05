@@ -1,7 +1,7 @@
 <?php
-global $userquery, $pages, $cbphoto, $Cbucket, $breadcrumb;
+global $userquery, $pages, $cbphoto, $breadcrumb;
 define('THIS_PAGE', 'edit_photo');
-require_once '../includes/admin_config.php';
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
@@ -9,9 +9,18 @@ $pages->page_redir();
 
 // TODO : Complete URL
 /* Generating breadcrumb */
-$breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Photo Manager', 'url' => ADMIN_BASEURL . '/photo_manager.php'];
-$breadcrumb[2] = ['title' => 'Edit Photo', 'url' => ''];
+$breadcrumb[0] = [
+    'title' => 'Photos',
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => 'Photo Manager',
+    'url'   => DirPath::getUrl('admin_area') . 'photo_manager.php'
+];
+$breadcrumb[2] = [
+    'title' => 'Edit Photo',
+    'url'   => ''
+];
 
 $id = mysql_clean($_GET['photo']);
 
@@ -34,18 +43,19 @@ $otherFields = $cbphoto->load_other_forms($p);
 assign('requiredFields', $requiredFields);
 assign('otherFields', $otherFields);
 
-if (in_dev()) {
-    $min_suffixe = '';
-} else {
-    $min_suffixe = '.min';
-}
-$Cbucket->addAdminJS(['jquery-ui-1.13.2.min.js' => 'admin']);
-$Cbucket->addAdminJS(['tag-it' . $min_suffixe . '.js' => 'admin']);
-$Cbucket->addAdminJS(['init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin']);
-$Cbucket->addAdminJS(['pages/edit_photo/edit_photo' . $min_suffixe . '.js' => 'admin']);
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'tag-it' . $min_suffixe . '.js'                            => 'admin',
+    'init_default_tag/init_default_tag' . $min_suffixe . '.js' => 'admin',
+    'pages/edit_photo/edit_photo' . $min_suffixe . '.js'       => 'admin'
+]);
 
-$Cbucket->addAdminCSS(['jquery.tagit' . $min_suffixe . '.css' => 'admin']);
-$Cbucket->addAdminCSS(['tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin']);
+ClipBucket::getInstance()->addAdminCSS([
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+]);
+$available_tags = Tags::fill_auto_complete_tags('photo');
+assign('available_tags', $available_tags);
 
 subtitle('Edit Photo');
 template_files('edit_photo.html');

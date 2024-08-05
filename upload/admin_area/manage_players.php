@@ -1,18 +1,24 @@
 <?php
+define('THIS_PAGE', 'manage_players');
 
-require_once '../includes/admin_config.php';
-global $userquery, $pages, $Upload, $myquery, $cbplayer;
-$userquery->admin_login_check();
-$pages->page_redir();
-$userquery->login_check('admin_access');
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+global $Upload, $myquery, $cbplayer;
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
+userquery::getInstance()->login_check('admin_access');
+
+if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_settings' ){
+    redirect_to(BASEURL . DirPath::getUrl('admin_area'));
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
 if ($_GET['mode'] == 'show_settings') {
-    $breadcrumb[1] = ['title' => lang('player_settings'), 'url' => ADMIN_BASEURL . '/manage_players.php?mode=show_settings'];
+    $breadcrumb[1] = ['title' => lang('player_settings'), 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'];
 } else {
-    $breadcrumb[1] = ['title' => 'Players Manager', 'url' => ADMIN_BASEURL . '/manage_players.php'];
+    $breadcrumb[1] = ['title' => 'Players Manager', 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'];
 }
 
 //Set Mode
@@ -24,7 +30,6 @@ if (isset($_POST['update'])) {
         'embed_player_height',
         'embed_player_width',
         'autoplay_embed',
-        'pakplayer_contextmsg',
         'chromecast',
         'control_bar_logo',
         'contextual_menu_disabled',
@@ -49,11 +54,11 @@ if (isset($_POST['update'])) {
             if (is_null($_FILES[$field]) || empty($_FILES[$field]['tmp_name'])) {
                 continue;
             }
-            if (file_exists(LOGOS_DIR . '/player-logo.png')) {
-                unlink(LOGOS_DIR . '/player-logo.png');
+            if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
+                unlink(DirPath::get('logos') . 'player-logo.png');
             }
-            $_POST['control_bar_logo_url'] = LOGOS_URL . '/player-logo.png';
-            move_uploaded_file($_FILES[$field]['tmp_name'], LOGOS_DIR . '/player-logo.png');
+            $_POST['control_bar_logo_url'] = DirPath::getUrl('logos') . 'player-logo.png';
+            move_uploaded_file($_FILES[$field]['tmp_name'], DirPath::get('logos') . 'player-logo.png');
         }
 
         $value = mysql_clean($_POST[$field]);
@@ -63,8 +68,8 @@ if (isset($_POST['update'])) {
 }
 
 if (isset($_POST['reset_control_bar_logo_url'])) {
-    if (file_exists(LOGOS_DIR . '/player-logo.png')) {
-        unlink(LOGOS_DIR . '/player-logo.png');
+    if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
+        unlink(DirPath::get('logos') . 'player-logo.png');
     }
     $myquery->Set_Website_Details('control_bar_logo_url', '/images/icons/player-logo.png');
     e(lang('player_logo_reset'), 'm');

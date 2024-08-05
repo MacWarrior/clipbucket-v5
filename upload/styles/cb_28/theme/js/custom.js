@@ -200,26 +200,12 @@ $(document).ready(function()
         $(".navbar-header").toggleClass('show-search');
     });
     loginHeight();
-
-    if( $("#show-comments") && $("#hide-comments") )
-    {
-        $("#show-comments").click(function(){
-            $("#show-comments").hide();
-            $("#hide-comments").show();
-            $('#bloc-comment').slideDown();
-        });
-
-        $("#hide-comments").click(function(){
-            $("#hide-comments").hide();
-            $("#show-comments").show();
-            $('#bloc-comment').slideUp();
-        });
-    }
 });
+
 
 function homePageVideos(qlist_items)
 {
-    console.log("Hey there Pumpkin! Looks like you really like what we do, hence trying to look under the hood. Happy sneaking buddy! Drop us an email for any questions : info@clipbucket.com")
+    console.log("Greetings Adventurers ! Having a look under the hood ? Happy sneaking buddy ! Drop us an email for any questions : contact+clipbucket@oxygenz.fr")
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
         var loadLink = '/ajax/home.php',
@@ -322,41 +308,36 @@ function homePageVideos(qlist_items)
 
             success: function(data)
             {
-                try
-                {
+                try {
                     var json = jQuery.parseJSON(data);
-                    if(json.notice)
-                    {
-                        if(!first_launch)
+                    if(json.notice) {
+                        if(!first_launch) {
                             _cb.throwHeadMsg('warning', json.notice, 3000,true);
-                        else {
+                        } else {
                             $(main_object).remove();
                             if (loadMode == 'featured') {
                                 $('#featured_load_more').hide();
                                 $('#featured_pre').hide();
-                                $("#featured_vid_sec").html('<div class="break2"></div><span class="well well-info btn-block">'+langCo+'</span>');
+                                $("#featured_vid_sec").html('<span class="well well-info btn-block">'+langCo+'</span>');
                             } else if (loadMode == 'recent') {
                                 $('#recent_load_more').remove();
                                 $('#recent_pre').remove();
-                                $("#recent_vids_sec").html('<div class="break2"></div><span class="well well-info btn-block">'+noRecent+'</span>');
+                                $("#recent_vids_sec").html('<span class="well well-info btn-block">'+noRecent+'</span>');
                             }
                         }
                         return true;
                     }
-                    if(json.error)
-                    {
+                    if(json.error) {
                         _cb.throwHeadMsg('error', json.error, 3000,true);
                         return true;
                     }
                 }
-                catch(err)
-                {
+
+                catch(err) {
                     $(main_object).removeAttr('disabled');
                     $(main_object).text(loadMoreLang);
-                    if (loadType == 'video')
-                    {
-                        if (loadMode == 'recent')
-                        {
+                    if (loadType == 'video') {
+                        if (loadMode == 'recent') {
                             $('#recent_load_more').remove();
                             $('#recent_pre').html('');
                             $(data).appendTo('#recent_vids_sec').fadeIn('slow');
@@ -368,7 +349,6 @@ function homePageVideos(qlist_items)
                             if (gotMoreRecent > 0) {
                                 $(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
                             }
-
                         } else {
                             $('#featured_load_more').remove();
                             $('#featured_pre').html('');

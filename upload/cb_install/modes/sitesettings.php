@@ -6,7 +6,7 @@ global $db, $userquery;
 $db->update(
     tbl('users'),
     ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip'],
-    [post('username'), $pass, post('email'), now(), 1, $_SERVER['REMOTE_ADDR'], $_SERVER['REMOTE_ADDR']]
+    [post('username'), $pass, post('email'), now(), 1, Network::get_remote_ip(), Network::get_remote_ip()]
     , 'userid=1'
 );
 
@@ -16,9 +16,9 @@ $userquery->login_user(post('username'), post('password'))
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-        <h4 style="color:#fff;">Website basic configurations</h4>
+        <h4 style="color:#fff;"><?php echo lang('website_configuration'); ?></h4>
         <p style="color:#fff; font-size:13px;">
-            Here you can set basic configuration of your website, you can change them later by going to Admin area > Website Configurations
+            <?php echo lang('website_configuration_info'); ?>
         </p>
     </div>
 </div>
@@ -28,32 +28,32 @@ $userquery->login_user(post('username'), post('password'))
         <form name="installation" method="post" id="installation" style="background-image:url(images/site_setting.png);background-repeat:no-repeat;background-position:right;">
             <br/>
             <div class="field">
-                <label for="title">Website title</label>
-                <input name="title" type="text" id="title" class="form-control" value="ClipBucket v<?php echo VERSION . ' ' . STATE; ?>">
+                <label for="title"><?php echo lang('website_title'); ?></label>
+                <input name="title" type="text" id="title" class="form-control" value="ClipBucketV5 - v<?php echo VERSION . ' ' . STATE; ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    Its your website title and you can change it from admin area
+                    <?php echo lang('website_title_hint'); ?>
                 </p>
             </div>
 
             <div class="field">
-                <label for="slogan">Website Slogan</label>
+                <label for="slogan"> <?php echo lang('website_slogan'); ?></label>
                 <input name="slogan" type="text" id="slogan" class="form-control" value="A way to broadcast yourself">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    Its a slogan of your website and you can change it from admin area
+                    <?php echo lang('website_slogan_hint'); ?>
                 </p>
             </div>
 
             <div class="field">
-                <label for="baseurl">Website URL</label>
+                <label for="baseurl"><?php echo lang('website_url'); ?></label>
                 <input name="baseurl" type="text" id="baseurl" class="form-control" value="<?php echo BASEURL; ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    without trailing slash '/'
+                    <?php echo lang('website_url_hint'); ?>
                 </p>
             </div>
 
             <br/>
             <input type="hidden" name="mode" value="finish"/>
-            <?php button('Save and Continue', ' onclick="$(\'#installation\').submit()" '); ?>
+            <?php button(lang('save_continue'), ' onclick="$(\'#installation\').submit()" '); ?>
         </form>
     </div>
 </div>

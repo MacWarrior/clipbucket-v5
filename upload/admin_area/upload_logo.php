@@ -1,16 +1,15 @@
 <?php
-/*
-* File is used for uploading logo in ClipBucket
-*/
+define('THIS_PAGE', 'upload_logo');
 
-require_once '../includes/admin_config.php';
-$userquery->admin_login_check();
-$pages->page_redir();
+require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'General Configurations', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Update Logos', 'url' => ADMIN_BASEURL . '/upload_logo.php'];
+$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
+$breadcrumb[1] = ['title' => 'Update Logos', 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'];
 
 // Upload and Rename File
 if (isset($_POST['submit_logo'])) {
@@ -23,6 +22,6 @@ if (isset($_POST['submit_logo'])) {
     }
 }
 
-subtitle("Update Logos");
+subtitle('Update Logos');
 template_files('upload_logo.html');
 display_it();

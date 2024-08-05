@@ -3,30 +3,41 @@ define('THIS_PAGE', 'photos');
 define('PARENT_PAGE', 'photos');
 
 require 'includes/config.inc.php';
-global $cbphoto, $cbcollection, $pages, $userquery;
 
-$pages->page_redir();
-$userquery->perm_check('view_photos', true);
+if( !isSectionEnabled('photos') ){
+    redirect_to(BASEURL);
+}
 
-$sort = $_GET['sort'];
-$cond = ['category' => mysql_clean($_GET['cat']), 'date_span' => $_GET['time'], 'active' => 'yes'];
-$table_name = 'photos';
-$cond = build_sort_photos($sort, $cond);
+pages::getInstance()->page_redir();
+userquery::getInstance()->perm_check('view_photos', true);
+
 $page = mysql_clean($_GET['page']);
-
-$clist = $cond;
-$clist['limit'] = create_query_limit($page, MAINPLIST);
-$photos = get_photos($clist);
-
-//Collecting Data for Pagination
-$ccount = $cond;
-$ccount['count_only'] = true;
-$total_rows = get_photos($ccount);
-$total_pages = count_pages($total_rows, MAINPLIST);
-//Pagination
-$pages->paginate($total_pages, $page);
-
+$get_limit = create_query_limit($page, config('photo_main_list'));
+$params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
+$params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
+$params['limit'] = $get_limit;
+$photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
+
+assign('sort_list', Photo::getInstance()->getSortList());
+assign('time_list', time_links());
+
+if( empty($photos) ){
+    $count = 0;
+} else if( count($photos) < config('photo_main_list') && $page == 1 ){
+    $count = count($photos);
+} else {
+    unset($params['limit']);
+    unset($params['order']);
+    $params['count'] = true;
+    $count = Photo::getInstance()->getAll($params);
+}
+
+$total_pages = count_pages($count, config('photo_main_list'));
+
+//Pagination
+pages::getInstance()->paginate($total_pages, $page);
+
 subtitle(lang('photos'));
 //Displaying The Template
 template_files('photos.html');

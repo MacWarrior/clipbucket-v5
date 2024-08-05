@@ -7,7 +7,7 @@ $mode = $request['mode'];
 $page = $request['page'];
 $content_limit = 20;
 
-$api_keys = $Cbucket->api_keys;
+$api_keys = ClipBucket::getInstance()->api_keys;
 if ($api_keys) {
     if (!in_array($request['api_key'], $api_keys)) {
         exit(json_encode(['err' => 'App authentication error']));

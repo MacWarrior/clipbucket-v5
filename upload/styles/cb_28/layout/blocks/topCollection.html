@@ -3,7 +3,7 @@
 	<div class="thumb">
 		<img class="img-responsive" src="{$cbcollection->coll_first_thumb($collection,'m')}">
 	</div>
-	<a href="/view_collection.php?cid={$collection.collection_id}&type={$collection.type}" title="{display_clean($collection.collection_name)}">
+	<a href="/view_collection.php?cid={$collection.collection_id}" title="{display_clean($collection.collection_name)}">
 		<div class="details">
 			<span>{display_clean($collection.collection_name)|truncate:30}<br>{$collection.total_objects} {lang code="{$collection.type}"}</span>
 		</div>

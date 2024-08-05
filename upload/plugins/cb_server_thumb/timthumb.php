@@ -13,11 +13,7 @@
  * $Rev$
  */
 
-const VERSION = 'CB5.5.0';                     // Version of this script ; original version 2.8.14
-
-if (!defined('BASEDIR')) {
-    define('BASEDIR', __DIR__ . '/../../');
-}
+const VERSION = 'CB5.5.1';                     // Version of this script ; original version 2.8.14
 
 const DEBUG_ON = false;                       // Enable debug logging to web server error log (STDERR)
 const DEBUG_LEVEL = 1;                        // Debug level 1 is less noisy and 3 is the most noisy
@@ -717,7 +713,8 @@ class timthumb
 
     protected function calcDocRoot()
     {
-        $this->docRoot = BASEDIR;
+        require_once dirname(__DIR__, 2). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
+        $this->docRoot = DirPath::get('root');
     }
 
     protected function getLocalImagePath($src)

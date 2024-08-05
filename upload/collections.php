@@ -4,70 +4,47 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $pages, $userquery, $cbcollection;
-
-$pages->page_redir();
-$userquery->perm_check('view_collections', true);
-$sort = $_GET['sort'];
-
-$cond = ['date_span' => mysql_clean($_GET['time'])];
-if (config('enable_sub_collection')) {
-    $cond['parents_only'] = true;
+if( config('collectionsSection') != 'yes' || (config('videosSection') != 'yes' && config('photosSection') != 'yes') ) {
+    redirect_to(BASEURL);
 }
 
-switch ($sort) {
-    case 'most_recent':
-    default:
-        $cond['order'] = ' date_added DESC';
-        break;
+pages::getInstance()->page_redir();
+userquery::getInstance()->perm_check('view_collections', true);
 
-    case 'featured':
-        $cond['featured'] = 'yes';
-        break;
-
-    case 'most_viewed':
-        $cond['order'] = ' views DESC';
-        break;
-
-    case 'most_commented':
-        $cond['order'] = ' total_comments DESC';
-        break;
-
-    case 'most_items':
-        $cond['order'] = ' total_objects DESC';
-        break;
-}
-
-//Getting Collection List
-$page = $_GET['page'];
+$page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('collection_per_page'));
+$params = Collection::getInstance()->getFilterParams($_GET['sort'], []);
+$params = Collection::getInstance()->getFilterParams($_GET['time'], $params);
+$params['limit'] = $get_limit;
 
-if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
-    $cond['type'] = 'none';
+$collections = Collection::getInstance()->getAll($params);
+assign('collections', $collections);
+
+$params = [
+    'limit'   => config('collection_home_top_collections')
+    , 'order' => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
+];
+
+assign('top_collections', Collection::getInstance()->getAll($params));
+
+assign('sort_list', Collection::getInstance()->getSortList());
+assign('time_list', time_links());
+
+if( empty($collections) ){
+    $count = 0;
+} else if( count($collections) < config('collection_per_page') && $page == 1 ){
+    $count = count($collections);
 } else {
-    if (!isSectionEnabled('photos')) {
-        $cond['type'] = 'videos';
-    } else {
-        if (!isSectionEnabled('videos')) {
-            $cond['type'] = 'photos';
-        }
-    }
+    unset($params['limit']);
+    unset($params['order']);
+    $params['count'] = true;
+    $count = Collection::getInstance()->getAll($params);
 }
 
-$collection_count = $cond;
-$collection_count['count_only'] = true;
-
-$cond['limit'] = $get_limit;
-$collections = $cbcollection->get_collections($cond);
-
-Assign('collections', $collections);
-
-//Collecting Data for Pagination
-$total_rows = $cbcollection->get_collections($collection_count);
-$total_pages = count_pages($total_rows, config('collection_per_page'));
+$total_pages = count_pages($count, config('collection_per_page'));
 
 //Pagination
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 subtitle(lang('collections'));
 //Displaying The Template

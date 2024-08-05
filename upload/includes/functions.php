@@ -6,61 +6,6 @@ require 'define_php_links.php';
 include_once 'upload_forms.php';
 
 /**
- * This Funtion is use to get CURRENT PAGE DIRECT URL
- * @return string : { string } { $pageURL } { url of current page }
- */
-function curPageURL(): string
-{
-    $pageURL = 'http';
-    if (@$_SERVER["HTTPS"] == 'on') {
-        $pageURL .= 's';
-    }
-    $pageURL .= '://';
-    $pageURL .= $_SERVER['SERVER_NAME'];
-    $pageURL .= $_SERVER['PHP_SELF'];
-    $query_string = $_SERVER['QUERY_STRING'];
-    if (!empty($query_string)) {
-        $pageURL .= '?' . $query_string;
-    }
-    return $pageURL;
-}
-
-/**
- * Cleans a string by putting it through multiple layers
- *
- * @param : { string } { string to be cleaned }
- *
- * @return string : { string } { $string } { cleaned string }
- */
-function Replacer($string): string
-{
-    //Wp-Magic Quotes
-    $string = preg_replace("/'s/", '&#8217;s', $string);
-    $string = preg_replace("/'(\d\d(?:&#8217;|')?s)/", "&#8217;$1", $string);
-    $string = preg_replace('/(\s|\A|")\'/', '$1&#8216;', $string);
-    $string = preg_replace('/(\d+)"/', '$1&#8243;', $string);
-    $string = preg_replace("/(\d+)'/", '$1&#8242;', $string);
-    $string = preg_replace("/(\S)'([^'\s])/", "$1&#8217;$2", $string);
-    $string = preg_replace('/(\s|\A)"(?!\s)/', '$1&#8220;$2', $string);
-    $string = preg_replace('/"(\s|\S|\Z)/', '&#8221;$1', $string);
-    $string = preg_replace("/'([\s.]|\Z)/", '&#8217;$1', $string);
-    $string = preg_replace("/ \(tm\)/i", ' &#8482;', $string);
-    $string = str_replace("''", '&#8221;', $string);
-    $array = ['/& /'];
-    $replace = ['&amp; '];
-    return $string = preg_replace($array, $replace, $string);
-}
-
-function clean($string, $allow_html = false)
-{
-    if ($allow_html == false) {
-        $string = strip_tags($string);
-        $string = Replacer($string);
-    }
-    return $string;
-}
-
-/**
  * This function is for Securing Password, you may change its combination for security reason but
  * make sure do not change once you made your script run
  * TODO : Multiple md5/sha1 is useless + this is totally unsecure, must be replaced by sha512 + salt
@@ -92,8 +37,7 @@ function pass_code($string, $userid): string
  */
 function mysql_clean($var): string
 {
-    global $db;
-    return $db->clean_var($var);
+    return Clipbucket_db::getInstance()->clean_var($var);
 }
 
 function display_clean($var, $clean_quote = true): string
@@ -114,7 +58,7 @@ function set_cookie_secure($name, $val, $time = null)
     $flag_secure = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
     $flag_httponly = true;
 
-    if (version_compare(phpversion(), '7.3.0', '>=')) {
+    if (version_compare(System::get_software_version('php_web'), '7.3.0', '>=')) {
         setcookie($name, $val, [
             'expires'  => $time,
             'path'     => $path,
@@ -144,8 +88,14 @@ function getBytesFromFileSize($size)
         'YB' => pow(1024, 8)
     ];
 
-    $unit = preg_replace('/[0-9]/', '', $size);
+    $size = trim($size);
+    $unit = preg_replace('/[0-9.]/', '', $size);
     $size = preg_replace('/[^0-9]/', '', $size);
+    if( !isset($units[$unit]) ) {
+        $msg = 'getBytesFromFileSize - Unknown unit : ' . $unit;
+        error_log($msg);
+        DiscordLog::sendDump($msg);
+    }
     return $size * $units[$unit];
 }
 
@@ -172,7 +122,7 @@ function RandomString($length): string
  * @return bool
  * @param_list : { content, subject, to, from, to_name, from_name }
  *
- * @throws \Exception
+ * @throws Exception
  * @author : Arslan Hassan
  */
 function cbmail($array, $force = false)
@@ -254,7 +204,7 @@ function cbmail($array, $force = false)
  * @param $message
  *
  * @return bool
- * @throws \Exception
+ * @throws Exception
  * @uses : { function : cbmail }
  */
 function send_email($from, $to, $subj, $message)
@@ -399,7 +349,7 @@ function get_directory_size(string $path, array $excluded = []): array
     $dircount = 0;
     if ($handle = opendir($path)) {
         while (false !== ($file = readdir($handle))) {
-            $nextpath = $path . DIRECTORY_SEPARATOR . $file;
+            $nextpath = $path . $file;
             if ($file != '.' && $file != '..' && !is_link($nextpath)) {
                 if (is_dir($nextpath)) {
                     $dircount++;
@@ -450,107 +400,16 @@ function formatfilesize($data): string
     return round(($data / 1024000000), 1) . ' GB';
 }
 
-/**
- * Function used to get shell output
- *
- * @param : { string } { $cmd } { command to run }
- *
- * @return mixed
- */
-function shell_output($cmd)
-{
-    if (!stristr(PHP_OS, 'WIN')) {
-        $cmd = "PATH=\$PATH:/bin:/usr/bin:/usr/local/bin bash -c \"$cmd\" 2>&1";
-    }
-    return shell_exec($cmd);
-}
-
 function getCommentAdminLink($type, $id): string
 {
-    return '/admin_area/edit_video.php?video=' . $id;
-}
-
-/**
- * FUNCTION USED TO GET COMMENTS
- *
- * @param : { array } { $params } { array of parameters e.g order,limit,type }
- *
- * @return array|bool : { array } { $results } { array of fetched comments }
- * { $results } { array of fetched comments }
- * @throws \Exception
- */
-function getComments($params = null)
-{
-    global $db;
-    $order = $params['order'];
-    $limit = $params['limit'];
-    $type = $params['type'];
-    $cond = '';
-    if (!empty($params['videoid'])) {
-        $cond .= 'type_id=' . $params['videoid'];
-        $cond .= ' AND ';
-    }
-    if (empty($type)) {
-        $type = 'v';
-    }
-    $cond .= tbl('comments.type') . " = '" . $type . "'";
-    if ($params['type_id'] && $params['sectionTable']) {
-        if ($cond != "") {
-            $cond .= " AND ";
-        }
-        $cond .= tbl('comments.type_id') . ' = ' . tbl($params['sectionTable'] . '.' . $params['type_id']);
-    }
-
-    if ($params['cond']) {
-        if ($cond != '') {
-            $cond .= ' AND ';
-        }
-        $cond .= $params['cond'];
-    }
-
-    $query = 'SELECT * , ' . tbl('comments.userid') . ' AS c_userid FROM ' . tbl('comments' . ($params['sectionTable'] ? ',' . $params['sectionTable'] : null));
-
-    if ($cond) {
-        $query .= ' WHERE ' . $cond;
-    }
-    if ($order) {
-        $query .= ' ORDER BY ' . $order;
-    }
-    if ($limit) {
-        $query .= ' LIMIT ' . $limit;
-    }
-    if (!$params['count_only']) {
-        $result = db_select($query);
-    }
-
-    if ($params['count_only']) {
-        $cond = tbl('comments.type') . "= '" . $params['type'] . "'";
-        $result = $db->count(tbl('comments'), '*', $cond);
-    }
-
-    if ($result) {
-        return $result;
-    }
-    return false;
-}
-
-/**
- * Fetches comments using params, built for smarty
- *
- * @param $params
- *
- * @return bool|mixed
- * @throws \Exception
- * @uses : { class : $myquery } { function : getComments }
- */
-function getSmartyComments($params)
-{
-    global $myquery;
-    $comments = $myquery->getComments($params);
-    if ($params['assign']) {
-        assign($params['assign'], $comments);
-    } else {
-        return $comments;
+    switch($type){
+        default:
+        case 'v':
+            return '/admin_area/edit_video.php?video=' . $id;
+        case 'p':
+            return '/admin_area/edit_photo.php?photo=' . $id;
+        case 'cl':
+            return '/admin_area/edit_collection.php?collection=' . $id;
     }
 }
 
@@ -560,7 +419,7 @@ function getSmartyComments($params)
  * @param : { array } { $params } { array of parameters }
  *
  * @return string
- * @throws \Exception
+ * @throws Exception
  */
 function getAd($params): string
 {
@@ -582,7 +441,7 @@ function getAd($params): string
  * @param : { array } { $params } { array of parameters }
  *
  * @return mixed
- * @throws \Exception
+ * @throws Exception
  */
 function getSmartyThumb($params)
 {
@@ -627,8 +486,7 @@ function genTags($tags, $sep = ','): string
  */
 function isValidtag($tag): bool
 {
-    $disallow_array = ['of', 'is', 'no', 'on', 'off', 'a', 'the', 'why', 'how', 'what', 'in'];
-    if (!in_array($tag, $disallow_array) && strlen($tag) > 2) {
+    if (strlen($tag) <= 128 && strlen($tag) >= 3) {
         return true;
     }
     return false;
@@ -639,15 +497,15 @@ function isValidtag($tag): bool
  *
  * @param array $params
  *
- * @return array|bool|string : { array } { $cats } { array of categories }
+ * @return array|bool|string|void : { array } { $cats } { array of categories }
+ * @throws Exception
  * @internal param $ : { array } { $params } { array of parameters e.g type } { $params } { array of parameters e.g type }
  */
 function getCategoryList($params = [])
 {
-    global $cats;
-    $cats = '';
-    $type = $params['type'];
-    switch ($type) {
+    $params['echo'] = $params['echo'] ?: false;
+    $version = Update::getInstance()->getDBVersion();
+    switch ($params['type']) {
         default:
             cb_call_functions('categoryListing', $params);
             break;
@@ -655,25 +513,41 @@ function getCategoryList($params = [])
         case 'video':
         case 'videos':
         case 'v':
-            global $cbvid;
-            $cats = $cbvid->cbCategories($params);
+            $type = 'video';
             break;
 
         case 'users':
         case 'user':
         case 'u':
         case 'channels':
-            global $userquery;
-            $cats = $userquery->cbCategories($params);
+            $type = 'user';
             break;
-
         case 'collection':
         case 'collections':
         case 'cl':
-            global $cbcollection;
-            $cats = $cbcollection->cbCategories($params);
+            $type = 'collection';
+            break;
+        case 'photo':
+            $type = 'photo';
             break;
     }
+    $cats = [];
+    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
+        $params['parent_only'] = true;
+        $cats = Category::getInstance()->getAll($params);
+        foreach ($cats as &$cat) {
+            $cat['children'] = Category::getInstance()->getChildren($cat['category_id']);
+        }
+    }
+    if (!empty($params['with_all'])) {
+        $cats[] = ['category_id' => 'all', 'category_name' => lang('cat_all')];
+    }
+    if (!empty($params['echo'])) {
+        echo CBvideo::getInstance()->displayDropdownCategory($cats, $params);
+        return;
+    }
+
     return $cats;
 }
 
@@ -682,6 +556,7 @@ function getCategoryList($params = [])
  * @param $params
  *
  * @return array|bool|string
+ * @throws Exception
  * @uses { function : getCategoryList }
  *
  */
@@ -696,7 +571,7 @@ function getSmartyCategoryList($params)
  * @param      $flds
  * @param      $vls
  * @param null $ep
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $db } { function : dbInsert }
  */
 function dbInsert($tbl, $flds, $vls, $ep = null)
@@ -773,6 +648,23 @@ function user_name()
     return $userquery->get_logged_username();
 }
 
+function user_email()
+{
+    global $userquery;
+    if ($userquery->email) {
+        return $userquery->email;
+    }
+    return false;
+}
+function user_dob()
+{
+    global $userquery;
+    if ($userquery->udetails['dob']) {
+        return $userquery->udetails['dob'];
+    }
+    return false;
+}
+
 /**
  * Function used to check weather user access or not
  * @param      $access
@@ -780,7 +672,7 @@ function user_name()
  * @param bool $verify_logged_user
  *
  * @return bool
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $userquery } { function : login_check }
  */
 function has_access($access, $check_only = true, $verify_logged_user = true): bool
@@ -895,7 +787,7 @@ function yes_or_no($input, $return = 'yes'): string
  * @param null $array
  *
  * @return bool
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $cbcollection } { function : validate_collection_category }
  */
 function validate_collection_category($array = null)
@@ -911,6 +803,7 @@ function validate_collection_category($array = null)
  * @params_in_$param : details, size, uid
  *
  * @return string
+ * @throws Exception
  * @uses : { class : $userquery } { function : avatar }
  */
 function avatar($param)
@@ -919,7 +812,7 @@ function avatar($param)
     $udetails = $param['details'];
     $size = $param['size'];
     $uid = $param['uid'];
-    return $userquery->avatar($udetails, $size, $uid);
+    return $userquery->getUserThumb($udetails, $size, $uid);
 }
 
 /**
@@ -942,96 +835,6 @@ function load_form($param)
     }
 
     error_log('Unknown method : ' . $func . ' for class : ' . $class);
-}
-
-/**
- * Function used to get PHP Path
- */
-function php_path()
-{
-    if (PHP_PATH != '') {
-        return PHP_PATH;
-    }
-    return '/usr/bin/php';
-}
-
-/**
- * Function used to get binary paths
- *
- * @param : { string } { $path } { element to get path for }
- *
- * @return string
- */
-function get_binaries($path): string
-{
-    $type = '';
-    if (is_array($path)) {
-        $type = $path['type'];
-        $path = $path['path'];
-    }
-
-    $path = strtolower($path);
-    if ($type == '' || $type == 'user') {
-        switch ($path) {
-            case 'php':
-                $software_path = php_path();
-                break;
-
-            case 'media_info':
-                $software_path = config('media_info');
-                break;
-
-            case 'ffprobe':
-                $software_path = config('ffprobe_path');
-                break;
-
-            case 'ffmpeg':
-                $software_path = config('ffmpegpath');
-                break;
-
-            default:
-                $software_path = '';
-                break;
-        }
-
-        if ($software_path != '') {
-            return $software_path;
-        }
-    }
-
-    switch ($path) {
-        case 'php':
-            $return_path = shell_output('which php');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find PHP path';
-
-        case 'media_info':
-            $return_path = shell_output('which mediainfo');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find media_info path';
-
-        case 'ffprobe':
-            $return_path = shell_output('which ffprobe');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find ffprobe path';
-
-        case 'ffmpeg':
-            $return_path = shell_output('which ffmpeg');
-            if ($return_path) {
-                return $return_path;
-            }
-            return 'Unable to find ffmpeg path';
-
-        default:
-            error_log('get_binaries wrong path : ' . $path);
-            return 'Unknown path : ' . $path;
-    }
 }
 
 /**
@@ -1085,7 +888,7 @@ function input_value($params)
     }
 
     if ($input['return_checked']) {
-        return $input['checked'];
+        return display_clean($input['checked']);
     }
 
     if (function_exists($input['display_function'])) {
@@ -1094,17 +897,17 @@ function input_value($params)
 
     if ($input['type'] == 'dropdown') {
         if ($input['checked']) {
-            return $value[$input['checked']];
+            return display_clean($value[$input['checked']]);
         }
-        return $value[0];
+        return display_clean($value[0]);
     }
-    return $input['value'];
+    return display_clean($input['value']);
 }
 
 /**
  * Function used to convert input to categories
  * @param { string / array } { $input } { categories to be converted e.g #12# }
- * @throws \Exception
+ * @throws Exception
  */
 function convert_to_categories($input)
 {
@@ -1114,25 +917,18 @@ function convert_to_categories($input)
                 foreach ($in as $i) {
                     if (is_array($i)) {
                         foreach ($i as $info) {
-                            $cat_details = get_category($info);
-                            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                            $cat_details = Category::getInstance()->getById($info);
+                            $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                         }
                     } elseif (is_numeric($i)) {
-                        $cat_details = get_category($i);
-                        $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                        $cat_details = Category::getInstance()->getById($i);
+                        $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
                     }
                 }
             } elseif (is_numeric($in)) {
-                $cat_details = get_category($in);
-                $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
+                $cat_details = Category::getInstance()->getById($in);
+                $cat_array[] = [$cat_details['category_id'], $cat_details['category_name']];
             }
-        }
-    } else {
-        preg_match_all('/#([0-9]+)#/', $default['category'], $m);
-        $cat_array = [$m[1]];
-        foreach ($cat_array as $i) {
-            $cat_details = get_category($i);
-            $cat_array[] = [$cat_details['categoryid'], $cat_details['category_name']];
         }
     }
     $count = 1;
@@ -1147,19 +943,6 @@ function convert_to_categories($input)
     }
 }
 
-/**
- * Function used to get categorie details
- * @param $id
- *
- * @return array
- * @throws \Exception
- * @uses : { class : $myquery } { function : get_category }
- */
-function get_category($id): array
-{
-    global $myquery;
-    return $myquery->get_category($id);
-}
 
 /**
  * Sharing OPT displaying
@@ -1182,7 +965,7 @@ function display_sharing_opt($input)
  * @param bool $count_only
  *
  * @return array|bool|int
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $userquery } { function : get_user_vids }
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
@@ -1219,11 +1002,10 @@ function msg_list(): array
  */
 function template_files($file, $folder = false, $follow_show_page = true)
 {
-    global $ClipBucket;
     if (!$folder) {
-        $ClipBucket->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
+        ClipBucket::getInstance()->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
     } else {
-        $ClipBucket->template_files[] = ['file' => $file, 'folder' => $folder, 'follow_show_page' => $follow_show_page];
+        ClipBucket::getInstance()->template_files[] = ['file' => $file, 'folder' => $folder, 'follow_show_page' => $follow_show_page];
     }
 }
 
@@ -1250,7 +1032,7 @@ function include_template_file($params)
  * @param : { string } { $username } { username to be checked }
  *
  * @return bool : { boolean } { true or false depending on situation }
- * @throws \Exception
+ * @throws Exception
  */
 function username_check($username): bool
 {
@@ -1284,7 +1066,7 @@ function username_check($username): bool
  * @param $user
  *
  * @return bool
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $userquery } { function : username_exists }
  */
 function user_exists($user): bool
@@ -1324,6 +1106,22 @@ function error($param = 'array')
 {
     global $eh;
     $error = $eh->get_error();
+    if (count($error) > 0) {
+        if ($param != 'array') {
+            if ($param == 'single') {
+                $param = 0;
+            }
+            return $error[$param];
+        }
+        return $error;
+    }
+    return false;
+}
+
+function warning($param = 'array')
+{
+    global $eh;
+    $error = $eh->get_warning();
     if (count($error) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -1377,15 +1175,12 @@ function load_plugin()
  */
 function create_query_limit($page, $result): string
 {
-    $page = mysql_clean($page);
-    $result = mysql_clean($result);
-    $limit = $result;
     if (empty($page) || $page == 0 || !is_numeric($page)) {
         $page = 1;
     }
     $from = $page - 1;
-    $from = $from * $limit;
-    return $from . ',' . $result;
+    $from = $from * $result;
+    return mysql_clean($from) . ',' . mysql_clean($result);
 }
 
 /**
@@ -1438,7 +1233,7 @@ function post_form_val($val, $filter = false)
  *
  * @param      $var
  * @return array|string|string[]
- * @throws \Exception|\Exception
+ * @throws Exception
  */
 function lang($var)
 {
@@ -1452,10 +1247,13 @@ function lang($var)
 
         if (!array_key_exists($var, Language::getInstance()->arrayTranslation)) {
             $translation = $var;
-            error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
 
-            if (in_dev()) {
-                error_log(debug_backtrace_string());
+            if( Language::getInstance()->isTranslationSystemInstalled() ){
+                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+
+                if (in_dev()) {
+                    error_log(debug_backtrace_string());
+                }
             }
         }
     } else {
@@ -1469,7 +1267,7 @@ function lang($var)
 
 /**
  * @return mixed
- * @throws \Exception
+ * @throws Exception
  */
 function get_current_language()
 {
@@ -1482,7 +1280,7 @@ function get_current_language()
  * @param : { array } { $param } { array of parameters }
  *
  * @return array|string|string[]|void
- * @throws \Exception
+ * @throws Exception
  * @uses : { function lang() }
  */
 function smarty_lang($param)
@@ -1541,7 +1339,6 @@ function getConstant($constantName = false)
  */
 function cblink($params, $fullurl = false)
 {
-    global $ClipBucket;
     $name = getArrayValue($params, 'name');
     if ($name == 'category') {
         return category_link($params['data'], $params['type']);
@@ -1570,11 +1367,11 @@ function cblink($params, $fullurl = false)
         $link = '';
     }
 
-    if (isset($ClipBucket->links[$name])) {
-        if (strpos(get_server_protocol(), $ClipBucket->links[$name][$val]) !== false) {
-            $link .= $ClipBucket->links[$name][$val];
+    if (isset(ClipBucket::getInstance()->links[$name])) {
+        if (strpos(get_server_protocol(), ClipBucket::getInstance()->links[$name][$val]) !== false) {
+            $link .= ClipBucket::getInstance()->links[$name][$val];
         } else {
-            $link .= '/' . $ClipBucket->links[$name][$val];
+            $link .= '/' . ClipBucket::getInstance()->links[$name][$val];
         }
     } else {
         $link = false;
@@ -1727,13 +1524,13 @@ function get_functions($name)
 /**
  * Function used to add js in ClipBuckets JSArray
  * @param $files
+ * @throws Exception
  * @uses { class : $Cbucket } { function : addJS }
  *
  */
 function add_js($files)
 {
-    global $Cbucket;
-    $Cbucket->addJS($files);
+    ClipBucket::getInstance()->addJS($files);
 }
 
 /**
@@ -1750,7 +1547,7 @@ function add_js($files)
 function add_header($files)
 {
     global $Cbucket;
-    $Cbucket->add_header($files);
+    ClipBucket::getInstance()->add_header($files);
 }
 
 /**
@@ -1762,13 +1559,13 @@ function add_header($files)
 function add_admin_header($files)
 {
     global $Cbucket;
-    $Cbucket->add_admin_header($files);
+    ClipBucket::getInstance()->add_admin_header($files);
 }
 
 /**
  * Functions used to call functions when users views a channel
  * @param : { array } { $u } { array with details of user }
- * @throws \Exception
+ * @throws Exception
  */
 function call_view_channel_functions($u)
 {
@@ -1786,7 +1583,7 @@ function call_view_channel_functions($u)
 /**
  * Functions used to call functions when users views a collection
  * @param : { array } { $cdetails } { array with details of collection }
- * @throws \Exception
+ * @throws Exception
  */
 function call_view_collection_functions($cdetails)
 {
@@ -1797,7 +1594,7 @@ function call_view_collection_functions($cdetails)
                 $func($cdetails);
             }
         }
-    };
+    }
     increment_views($cdetails['collection_id'], 'collection');
 }
 
@@ -1807,7 +1604,7 @@ function call_view_collection_functions($cdetails)
  * @param      $id
  * @param null $type
  *
- * @throws \Exception
+ * @throws Exception
  * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
@@ -1865,7 +1662,7 @@ function increment_views($id, $type = null)
  * @param      $id
  * @param null $type
  *
- * @throws \Exception
+ * @throws Exception
  * @internal param $ : { string } { $type } { type of object e.g video, user } { $type } { type of object e.g video, user }
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
@@ -1881,8 +1678,8 @@ function increment_views_new($id, $type = null)
                 $vdetails = get_video_details($id);
                 // Cookie life time at least 1 hour else if video duration is bigger set at video time.
                 $cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videoid='$id' OR videokey='$id'");
-                set_cookie_secure('video_' . $id, 'watched');
+                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
+                set_cookie_secure('video_' . $id, 'watched', $cookieTime);
 
                 $userid = user_id();
                 if ($userid) {
@@ -1945,7 +1742,7 @@ function post($var)
 /**
  * Function used to show flag form
  * @param : { array } { $array } { array of parameters }
- * @throws \Exception
+ * @throws Exception
  */
 function show_share_form($array)
 {
@@ -1992,6 +1789,7 @@ function show_playlist_form($array)
 
 /**
  * Function used to show collection form
+ * @throws Exception
  * @internal param $ : { array } { $params } { array with parameters }
  */
 function show_collection_form()
@@ -2056,6 +1854,9 @@ function cbdatetime($format = null, $timestamp = null)
  */
 function count_pages($total, $count)
 {
+    if (empty($total)){
+        return 0;
+    }
     if ($count < 1) {
         $count = 1;
     }
@@ -2084,7 +1885,7 @@ function get_user_level($id)
  * @param string $margin
  *
  * @return string : { string  }{ status of user e.g online or offline }
- * @throws \Exception
+ * @throws Exception
  */
 function is_online($time, $margin = '5'): string
 {
@@ -2106,7 +1907,7 @@ function is_online($time, $margin = '5'): string
  * @param $input
  * @param $array
  *
- * @throws \Exception
+ * @throws Exception
  * @internal param $ : { array } { $input } { array of form values } { $input } { array of form values }
  * @internal param $ : { array } { $array } { array of form fields } { $array } { array of form fields }
  */
@@ -2115,6 +1916,7 @@ function validate_cb_form($input, $array)
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
         foreach ($input as $field) {
+            $funct_err = false;
             $field['name'] = formObj::rmBrackets($field['name']);
             $title = $field['title'];
             $val = $array[$field['name']];
@@ -2146,9 +1948,15 @@ function validate_cb_form($input, $array)
                 } else {
                     $block = false;
                 }
+            } else {
+                //if field not required and empty it's valid
+                $funct_err = true;
             }
-            $funct_err = is_valid_value($field['validate_function'], $val);
-            if ($block != true) {
+            if (!empty($val) || $val === '0') {
+                //don't test validity if field is empty
+                $funct_err = is_valid_value($field['validate_function'], $val);
+            }
+            if (!$block) {
                 //Checking Syntax
                 if (!$funct_err) {
                     if (!empty($function_error_msg)) {
@@ -2202,24 +2010,6 @@ function validate_cb_form($input, $array)
 }
 
 /**
- * Function used to count age from date
- *
- * @param : { string } { $input } { date to count age }
- *
- * @return float|false : { integer } { $iYears } { years old }
- */
-function get_age($input)
-{
-    $time = strtotime($input);
-    $iMonth = date('m', $time);
-    $iDay = date('d', $time);
-    $iYear = date('Y', $time);
-    $iTimeStamp = (mktime() - 86400) - mktime(0, 0, 0, $iMonth, $iDay, $iYear);
-    $iDays = $iTimeStamp / 86400;
-    return floor($iDays / 365);
-}
-
-/**
  * Function used to check time span a time difference function that outputs the
  * time passed in facebook's style: 1 day ago, or 4 months ago. I took andrew dot
  * macrobert at gmail dot com function and tweaked it a bit. On a strict enviroment
@@ -2231,7 +2021,7 @@ function get_age($input)
  * @param bool $istime
  *
  * @return string
- * @throws \Exception
+ * @throws Exception
  * @uses : { function : lang() }
  */
 function nicetime($date, $istime = false): string
@@ -2284,14 +2074,19 @@ function nicetime($date, $istime = false): string
  * @param : { string } { $out } { link to some webpage }
  *
  * @return string : { string } { HTML anchor tag with link in place }
+ * @throws Exception
  */
-function outgoing_link($out): string
+function outgoing_link($url): string
 {
-    preg_match("/http/", $out, $matches);
-    if (empty($matches[0])) {
-        $out = "http://" . $out;
+    if (filter_var($url, FILTER_VALIDATE_URL) === false) {
+        return lang('incorrect_url');
     }
-    return '<a href="' . $out . '" target="_blank">' . $out . '</a>';
+
+    if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {
+        $url = 'http://' . $url;
+    }
+
+    return '<a href="' . display_clean($url) . '" target="_blank">' . display_clean($url) . '</a>';
 }
 
 /**
@@ -2300,14 +2095,12 @@ function outgoing_link($out): string
  * @param : { string } { $code } { country code name }
  *
  * @return bool|string : { string } { country name of flag }
- * @throws \Exception
+ * @throws Exception
  */
 function get_country($code)
 {
-    global $db;
-    $result = $db->select(tbl("countries"), "name_en,iso2", " iso2='$code' OR iso3='$code'");
+    $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
-        $flag = '';
         $result = $result[0];
         $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];
@@ -2320,7 +2113,7 @@ function get_country($code)
  * @param $param
  *
  * @return array|bool
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $cbcollection } { function : get_collections }
  */
 function get_collections($param)
@@ -2334,7 +2127,7 @@ function get_collections($param)
  * @param $param
  *
  * @return bool|mixed
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $userquery } { function : get_users }
  */
 function get_users($param)
@@ -2465,7 +2258,7 @@ function category_link($data, $type): string
  * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
  * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
  */
-function sort_link($sort, $mode, $type)
+function sort_link($sort, $mode, $type): string
 {
     switch ($type) {
         case 'video':
@@ -2717,7 +2510,7 @@ function get_username($uid)
  * @param string $field
  *
  * @return bool
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $cbcollection } { function : get_collection_field }
  */
 function get_collection_field($cid, $field = 'collection_name')
@@ -2732,7 +2525,7 @@ function get_collection_field($cid, $field = 'collection_name')
  *
  * @param : { array } { $details } { an array with collection's details }
  *
- * @throws \Exception
+ * @throws Exception
  * @action: makes photos orphan
  */
 function delete_collection_photos($details)
@@ -2751,45 +2544,16 @@ function delete_collection_photos($details)
 }
 
 /**
- * Get ClipBucket's header menu
- * @param null $params
- *
- * @return array
- * @throws \Exception
- * @uses : { class : $Cbucket } { function : head_menu }
- */
-function head_menu($params = null)
-{
-    global $Cbucket;
-    return $Cbucket->head_menu($params);
-}
-
-/**
- * Get ClipBucket's menu
- * @param null $params
- *
- * @return array|string
- * @uses : { class : $Cbucket } { function : cbMenu }
- *
- */
-function cbMenu($params = null)
-{
-    global $Cbucket;
-    return $Cbucket->cbMenu($params);
-}
-
-/**
  * Get ClipBucket's footer menu
  * @param null $params
  *
  * @return array
- * @throws \Exception
+ * @throws Exception
  * @uses : { class : $Cbucket } { function : foot_menu }
  */
 function foot_menu($params = null)
 {
-    global $Cbucket;
-    return $Cbucket->foot_menu($params);
+    return Clipbucket::getInstance()->foot_menu($params);
 }
 
 /**
@@ -3012,19 +2776,18 @@ function array2xml($array, $level = 1)
  * @param : { array } { $params } { parameters array e.g file, type }
  *
  * @return bool : { false }
- * @throws \Exception
+ * @throws Exception
  */
 function include_header($params)
 {
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
     if ($file == 'global_header') {
-
-        Template(BASEDIR . '/styles/global/head.html', false);
+        Template(DirPath::get('styles') . 'global/head.html', false);
         return false;
     }
     if (!$type) {
-        $type = "global";
+        $type = 'global';
     }
     if (is_includeable($type)) {
         Template($file, false);
@@ -3072,7 +2835,7 @@ function include_js($params)
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
-                    return '<script src="' . JS_URL . '/' . $file . '" type="text/javascript"></script>';
+                    return '<script src="' . DirPath::getUrl('js') . $file . '" type="text/javascript"></script>';
                 }
             }
         }
@@ -3080,10 +2843,13 @@ function include_js($params)
         switch ($type) {
             default:
             case 'global:':
-                $url = JS_URL . '/';
+                $url = DirPath::getUrl('js');
                 break;
             case 'plugin':
-                $url = PLUG_URL . '/';
+                $url = DirPath::getUrl('plugins');
+                break;
+            case 'player':
+                $url = DirPath::getUrl('player');
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
@@ -3106,7 +2872,8 @@ function include_css($params)
         if (is_array($type)) {
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
-                    return '<link rel="stylesheet" href="' . CSS_URL . '/' . $file . '" ">';
+                    error_log(DirPath::getUrl('css') . $file);
+                    return '<link rel="stylesheet" href="' . DirPath::getUrl('css') . $file . '" ">';
                 }
             }
         }
@@ -3114,10 +2881,13 @@ function include_css($params)
         switch ($type) {
             default:
             case 'global:':
-                $url = CSS_URL . '/';
+                $url = DirPath::getUrl('css');
                 break;
             case 'plugin':
-                $url = PLUG_URL . '/';
+                $url = DirPath::getUrl('plugins');
+                break;
+            case 'player':
+                $url = DirPath::getUrl('player');
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
@@ -3153,64 +2923,13 @@ function get_ffmpeg_codecs($type)
 
     $codec_installed = [];
     foreach ($codecs as $codec) {
-        $get_codec = shell_output(get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
+        $get_codec = System::shell_output(System::get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
         if ($get_codec) {
             $codec_installed[] = $codec;
         }
     }
 
     return $codec_installed;
-}
-
-function check_version($name)
-{
-    switch ($name) {
-        case 'ffmpeg':
-        case 'ffprobe':
-            $path = get_binaries($name);
-            $matches = [];
-            $result = shell_output($path . ' -version | head -n1');
-            if ($result) {
-                if (preg_match('/git/i', $result)) {
-                    preg_match('@^(?:' . $name . ' version)?([^C]+)@i', $result, $matches);
-                    return $matches[1];
-                }
-
-                // for three-part version number
-                preg_match('/(?:' . $name . '\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-
-                // for two-part version number
-                preg_match('#(?:' . $name . '\\s)(?:version\\s)?(\\d\\.\\d)#i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-
-                return false;
-            }
-            return false;
-
-        case 'media_info':
-            $path = get_binaries($name);
-            $result = shell_output($path . ' --version');
-            $media_info_version = explode('v', $result);
-            return $media_info_version[1];
-
-        case 'php':
-            $path = get_binaries($name);
-            $matches = [];
-            $result = shell_output($path . ' --version | head -n1');
-            if ($result) {
-                preg_match('/(?:php\\s)(?:version\\s)?(\\d\\.\\d\\.(?:\\d|[\\w]+))/i', strtolower($result), $matches);
-                if (count($matches) > 0) {
-                    return array_pop($matches);
-                }
-                return false;
-            }
-            return false;
-    }
 }
 
 /**
@@ -3237,6 +2956,9 @@ function footer()
  */
 function rss_feeds($params)
 {
+    if( config('enable_rss_feeds') == 'no'){
+        return false;
+    }
     /**
      * setting up the feeds arrays..
      * if you want to call em in your functions..simply call the global variable $rss_feeds
@@ -3267,7 +2989,7 @@ function rss_feeds($params)
  * Function used to insert Log
  * @param $type
  * @param $details
- * @throws \Exception
+ * @throws Exception
  * @uses { class : $cblog } { function : insert }
  */
 function insert_log($type, $details)
@@ -3279,7 +3001,7 @@ function insert_log($type, $details)
 /**
  * Function used to get database size
  * @return int : { $dbsize }
- * @throws \Exception
+ * @throws Exception
  */
 function get_db_size(): int
 {
@@ -3302,7 +3024,6 @@ function get_db_size(): int
 function marked_spammed($comment): bool
 {
     $spam_voters = explode("|", $comment['spam_voters']);
-    $spam_votes = $comment['spam_votes'];
     $admin_vote = in_array('1', $spam_voters);
     if (user_id() && in_array(user_id(), $spam_voters)) {
         return true;
@@ -3312,20 +3033,6 @@ function marked_spammed($comment): bool
         return true;
     }
     return false;
-}
-
-/**
- * Function used to get object type from its code
- *
- * @param : { string } { $type } { shortcode of type ie v=>video }
- *
- * @return string|void : { string } { complete type name }
- */
-function get_obj_type($type)
-{
-    if ($type == 'v') {
-        return 'video';
-    }
 }
 
 /**
@@ -3382,7 +3089,7 @@ function get_server_url(): string
  */
 function get_server_protocol()
 {
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+    if (is_ssl()) {
         return 'https://';
     }
 
@@ -3403,7 +3110,7 @@ function get_server_protocol()
  * @param mixed A string, or an array from a file() function.
  * @return boolean
  */
-function isUTF8($string)
+function isUTF8($string): bool
 {
     if (is_array($string)) {
         $enc = implode('', $string);
@@ -3419,10 +3126,9 @@ function isUTF8($string)
  *
  * @return string : { string } { $code } { embed code for video }
  */
-function embeded_code($vdetails)
+function embeded_code($vdetails): string
 {
-    $code = '';
-    $code .= '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
+    $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
     $code .= '<param name="allowFullScreen" value="true">';
     $code .= '</param><param name="allowscriptaccess" value="always"></param>';
     //Replacing Height And Width
@@ -3459,7 +3165,7 @@ function datecreated($in): string
  * @internal param $ { none }
  * @since 2.6.0
  */
-function is_ssl()
+function is_ssl(): bool
 {
     if (isset($_SERVER['HTTPS'])) {
         if ('on' == strtolower($_SERVER['HTTPS'])) {
@@ -3486,7 +3192,7 @@ function is_ssl()
  * @param $id
  * @param string $op
  *
- * @throws \Exception
+ * @throws Exception
  * @action : database updation
  */
 function updateObjectStats($type, $object, $id, $op = '+')
@@ -3533,10 +3239,10 @@ function updateObjectStats($type, $object, $id, $op = '+')
  * @return bool { boolean } { true if conversion lock exists, else false }
  * { true if conversion lock exists, else false }
  */
-function conv_lock_exists()
+function conv_lock_exists(): bool
 {
     for ($i = 0; $i < config('max_conversion'); $i++) {
-        if (file_exists(TEMP_DIR . DIRECTORY_SEPARATOR . 'conv_lock' . $i . '.loc')) {
+        if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
             return true;
         }
     }
@@ -3581,78 +3287,11 @@ function queryString($var = false, $remove = false)
 }
 
 /**
- * Download a remote file and store in given directory
- *
- * @param      $snatching_file
- * @param      $destination
- * @param      $dest_name
- * @param bool $rawdecode
- *
- * @return string
- * @internal param $ : { string } { $snatching_file } { file to be downloaded }
- * @internal param $ : { string } { $destination } { where to save the downloaded file }
- * @internal param $ : { string } { $dest_name } { new name for file }
- *
- */
-function snatch_it($snatching_file, $destination, $dest_name, $rawdecode = true)
-{
-    if ($rawdecode == true) {
-        $snatching_file = rawurldecode($snatching_file);
-    }
-    if (PHP_OS == "Linux") {
-        $destination . '/' . $dest_name;
-        $saveTo = $destination . '/' . $dest_name;
-    } elseif (PHP_OS == "WINNT") {
-        $destination . '\\' . $dest_name;
-        $saveTo = $destination . '/' . $dest_name;
-    }
-    cURLdownload($snatching_file, $saveTo);
-    return $saveTo;
-}
-
-/**
- * This Function gets a file using curl method in php
- *
- * @param : { string } { $url } { file to be downloaded }
- * @param : { string } { $file } { where to save the downloaded file }
- *
- * @return string
- */
-function cURLdownload($url, $file)
-{
-    $ch = curl_init();
-    if ($ch) {
-        $fp = fopen($file, "w");
-        if ($fp) {
-            if (!curl_setopt($ch, CURLOPT_URL, $url)) {
-                fclose($fp); // to match fopen()
-                curl_close($ch); // to match curl_init()
-                return "FAIL: curl_setopt(CURLOPT_URL)";
-            }
-            if (!curl_setopt($ch, CURLOPT_FILE, $fp)) {
-                return "FAIL: curl_setopt(CURLOPT_FILE)";
-            }
-            if (!curl_setopt($ch, CURLOPT_HEADER, 0)) {
-                return "FAIL: curl_setopt(CURLOPT_HEADER)";
-            }
-            if (!curl_exec($ch)) {
-                return "FAIL: curl_exec()";
-            }
-            curl_close($ch);
-            fclose($fp);
-            return "SUCCESS: $file [$url]";
-        }
-        return "FAIL: fopen()";
-    }
-    return "FAIL: curl_init()";
-}
-
-/**
  * Checks if CURL is installed on server
  * @return bool : { boolean } { true if curl found, else false }
  * @internal param $ : { none }
  */
-function isCurlInstalled()
+function isCurlInstalled(): bool
 {
     if (in_array('curl', get_loaded_extensions())) {
         return true;
@@ -3683,32 +3322,23 @@ function uploaderDetails()
  * Checks if given section is enabled or not e.g videos, photos
  *
  * @param : { string } { $input } { section to check }
- * @param bool $restrict
- *
- * @return bool : { boolean } { true of false depending on situation }
+ * @return bool|void
  */
-function isSectionEnabled($input, $restrict = false)
+function isSectionEnabled($input)
 {
-    global $Cbucket;
-    $section = $Cbucket->configs[$input . 'Section'];
-    if (!$restrict) {
-        return $section == 'yes';
-    }
+    $section = config($input . 'Section');
 
-    if ($section == 'yes' || THIS_PAGE == 'cb_install') {
+    if ($section == 'yes' || (defined('THIS_PAGE') && THIS_PAGE == 'cb_install') ) {
         return true;
     }
-
-    template_files('blocked.html');
-    display_it();
-    exit();
+    return false;
 }
 
 /**
  * Updates last commented data - helps cache refresh
  * @param $type
  * @param $id
- * @throws \Exception
+ * @throws Exception
  * @action : database updation
  */
 function update_last_commented($type, $id)
@@ -3921,10 +3551,13 @@ function get_browser_details($in = null, $assign = false)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function update_user_voted($array, $userid = null)
 {
     global $userquery;
-    return $userquery->update_user_voted($array, $userid);
+    $userquery->update_user_voted($array, $userid);
 }
 
 /**
@@ -3945,7 +3578,7 @@ function delete_video_from_collection($vdetails)
  *
  * @return bool : { boolean } { true if file exists, else false }
  */
-function checkRemoteFile($url)
+function checkRemoteFile($url): bool
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
@@ -3962,76 +3595,16 @@ function checkRemoteFile($url)
 }
 
 /**
- * Fetch total count for videos, photos and channels
- *
- * @param $section
- * @param $query
- *
- * @return bool : { integer } { $select[0]['counts'] } { count for requested field }
- * @throws \Exception
- * @internal param $ : { string } { $section } { section to select count for }
- * @internal param $ : { string } { $query } { query to fetch data against }
- */
-function get_counter($section, $query)
-{
-    global $db;
-
-    if (!config('use_cached_pagin')) {
-        return false;
-    }
-    $timeRefresh = config('cached_pagin_time');
-    $timeRefresh = $timeRefresh * 60;
-    $validTime = time() - $timeRefresh;
-    unset($query['order']);
-    $je_query = json_encode($query);
-    $query_md5 = md5($je_query);
-    $select = $db->select(tbl('counters'), "*", "section='$section' AND query_md5='$query_md5' 
-		AND '$validTime' < date_added");
-    if (count($select) > 0) {
-        return $select[0]['counts'];
-    }
-    return false;
-}
-
-/**
- * Updates total count for videos, photos and channels
- *
- * @param $section
- * @param $query
- * @param $counter
- *
- * @throws \Exception
- * @internal param $ : { string } { $section } { section to update counter for }
- * @internal param $ : { string } { $query } { query to run for updating }
- * @internal param $ : { integer } { $counter } { count to update }
- */
-function update_counter($section, $query, $counter)
-{
-    global $db;
-    unset($query['order']);
-    $je_query = json_encode($query);
-    $query_md5 = md5($je_query);
-    $count = $db->count(tbl('counters'), "*", "section='$section' AND query_md5='$query_md5'");
-    if ($count) {
-        $db->update(tbl('counters'), ['counts', 'date_added'], [$counter, strtotime(now())],
-            "section='$section' AND query_md5='$query_md5'");
-    } else {
-        $db->insert(tbl('counters'), ['section', 'query', 'query_md5', 'counts', 'date_added'],
-            [$section, '|no_mc|' . $je_query, $query_md5, $counter, strtotime(now())]);
-    }
-}
-
-/**
  * function used to verify user age
  *
  * @param : { string } { $dob } { date of birth of user }\
  *
  * @return bool : { boolean } { true / false depending on situation }
  */
-function verify_age($dob)
+function verify_age($dob): bool
 {
     $allowed_age = config('min_age_reg');
-    if ($allowed_age < 1) {
+    if (empty($allowed_age) || $allowed_age < 1) {
         return true;
     }
     $age_time = strtotime($dob);
@@ -4111,7 +3684,7 @@ function show_cb_error($e)
  *
  * @param string $name
  *
- * @return bool|mixed|string : { string / boolean } { page name if found, else false }
+ * @return bool|string : { string / boolean } { page name if found, else false }
  * @internal param $ { string } { $name } { name of page to check against } { $name } { name of page to check against }
  */
 function this_page($name = '')
@@ -4153,36 +3726,10 @@ function parent_page($name = '')
 }
 
 /**
- * Function used for building sort links that are used
- * on main pages such as videos.php, photos.php etc
- * @return array : { array } { $array } { an array with all possible sort sorts }
- * @throws \Exception
- * @internal param $ : { none }
- */
-function sorting_links(): array
-{
-    if (!isset($_GET['sort'])) {
-        $_GET['sort'] = 'most_recent';
-    }
-    if (!isset($_GET['time'])) {
-        $_GET['time'] = 'all_time';
-    }
-
-    return [
-        'view_all'       => lang('all'),
-        'most_recent'    => lang('most_recent'),
-        'most_viewed'    => lang('mostly_viewed'),
-        'featured'       => lang('featured'),
-        'top_rated'      => lang('top_rated'),
-        'most_commented' => lang('most_comments')
-    ];
-}
-
-/**
  * Function used for building time links that are used
  * on main pages such as videos.php, photos.php etc
  * @return array : { array } { $array } { an array with all possible time sorts }
- * @throws \Exception
+ * @throws Exception
  * @internal param $ : { none }
  */
 function time_links(): array
@@ -4198,16 +3745,6 @@ function time_links(): array
         'this_year'  => lang('thisyear'),
         'last_year'  => lang('lastyear')
     ];
-}
-
-/**
- * Calls $lang_obj variable and returns a string
- * @return String
- */
-function get_locale()
-{
-    global $lang_obj;
-    return $lang_obj->lang_iso;
 }
 
 /*assign results to template for load more buttons on all_videos.html*/
@@ -4260,81 +3797,8 @@ function find_string($needle_start, $needle_end, $results)
     return false;
 }
 
-/*
-	* Function used to check server configs
-	* Checks : MEMORY_LIMIT, UPLOAD_MAX_FILESIZE, POST_MAX_SIZE, MAX_EXECUTION_TIME
-	* If any of these configs are less than required value, warning is shown
-    */
-function check_server_confs()
-{
-    define('POST_MAX_SIZE', ini_get('post_max_size'));
-    define('MEMORY_LIMIT', ini_get('memory_limit'));
-    define('UPLOAD_MAX_FILESIZE', ini_get('upload_max_filesize'));
-    define('MAX_EXECUTION_TIME', ini_get('max_execution_time'));
-
-    if (getBytesFromFileSize(POST_MAX_SIZE) < getBytesFromFileSize('50M') || getBytesFromFileSize(MEMORY_LIMIT) < getBytesFromFileSize('128M') || getBytesFromFileSize(UPLOAD_MAX_FILESIZE) < getBytesFromFileSize('50M') && MAX_EXECUTION_TIME < 7200) {
-        e('You must update <strong>"Server Configurations"</strong>. Click here <a href=/admin_area/cb_server_conf_info.php>for details</a>', 'w', false);
-    }
-}
-
 /**
- * Get part of a string between two characters
- *
- * @param $str
- * @param $from
- * @param $to
- *
- * @return string : { string } { requested part of stirng }
- * { requested part of stirng }
- * @internal param $ : { string } { $str } { string to read } { $str } { string to read }
- * @internal param $ : { string } { $from } { character to start cutting } { $from } { character to start cutting }
- * @internal param $ : { string } { $to } { character to stop cutting } { $to } { character to stop cutting }
- * @since : 3rd March, 2016 ClipBucket 2.8.1
- * @author : Saqib Razzaq
- */
-function getStringBetween($str, $from, $to): string
-{
-    $sub = substr($str, strpos($str, $from) + strlen($from), strlen($str));
-    return substr($sub, 0, strpos($sub, $to));
-}
-
-/**
- * Convert default youtube api timestamp in usable CB time
- *
- * @param : { string } { $time } { youtube time stamp }
- *
- * @return bool|string : { integer } { $total } { video duration in seconds }
- * @since : 3rd March, 2016 ClipBucket 2.8.1
- * @author : Saqib Razzaq
- */
-function yt_time_convert($time)
-{
-    if (!empty($time)) {
-        $str = $time;
-        $str = str_replace('P', '', $str);
-        $from = 'T';
-        $to = 'H';
-        $hours = getStringBetween($str, $from, $to);
-        $from = 'H';
-        $to = 'M';
-        $mins = getStringBetween($str, $from, $to);
-        $from = 'M';
-        $to = 'S';
-        $secs = getStringBetween($str, $from, $to);
-
-        $hours = $hours * 3600;
-        $mins = $mins * 60;
-        $total = $hours + $mins + $secs;
-        if (is_numeric($total)) {
-            return $total;
-        }
-        return false;
-    }
-    return false;
-}
-
-/**
- * @throws \Exception
+ * @throws Exception
  */
 function fetch_action_logs($params)
 {
@@ -4401,91 +3865,6 @@ function fetch_action_logs($params)
 }
 
 /**
- * Fetch user's geolocation related data
- *
- * @param : { string } { $ip } { ip address to perform checks against }
- * @param string $purpose
- * @param bool $deep_detect
- *
- * @return array|null|string
- * @since : 11th April, 2016 ClipBucket 2.8.1
- *
- * @author: manuelbcd [http://stackoverflow.com/users/3518053/manuelbcd]
- */
-function ip_info($ip = null, $purpose = "location", $deep_detect = true)
-{
-    $output = null;
-    if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
-        $ip = $_SERVER["REMOTE_ADDR"];
-        if ($deep_detect) {
-            if (filter_var(@$_SERVER['HTTP_X_FORWARDED_FOR'], FILTER_VALIDATE_IP)) {
-                $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-            }
-            if (filter_var(@$_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP)) {
-                $ip = $_SERVER['HTTP_CLIENT_IP'];
-            }
-        }
-    }
-    $purpose = str_replace(["name", "\n", "\t", " ", "-", "_"], null, strtolower(trim($purpose)));
-    $support = ["country", "countrycode", "state", "region", "city", "location", "address"];
-    $continents = [
-        "AF" => "Africa",
-        "AN" => "Antarctica",
-        "AS" => "Asia",
-        "EU" => "Europe",
-        "OC" => "Australia (Oceania)",
-        "NA" => "North America",
-        "SA" => "South America"
-    ];
-    if (filter_var($ip, FILTER_VALIDATE_IP) && in_array($purpose, $support)) {
-        $ipdat = @json_decode(cb_curl("http://www.geoplugin.net/json.gp?ip=" . $ip));
-        if (@strlen(trim($ipdat->geoplugin_countryCode)) == 2) {
-            switch ($purpose) {
-                case "location":
-                    $output = [
-                        "city"           => @$ipdat->geoplugin_city,
-                        "state"          => @$ipdat->geoplugin_regionName,
-                        "country"        => @$ipdat->geoplugin_countryName,
-                        "country_code"   => @$ipdat->geoplugin_countryCode,
-                        "continent"      => @$continents[strtoupper($ipdat->geoplugin_continentCode)],
-                        "continent_code" => @$ipdat->geoplugin_continentCode
-                    ];
-                    break;
-
-                case "address":
-                    $address = [$ipdat->geoplugin_countryName];
-                    if (@strlen($ipdat->geoplugin_regionName) >= 1) {
-                        $address[] = $ipdat->geoplugin_regionName;
-                    }
-                    if (@strlen($ipdat->geoplugin_city) >= 1) {
-                        $address[] = $ipdat->geoplugin_city;
-                    }
-                    $output = implode(", ", array_reverse($address));
-                    break;
-
-                case "city":
-                    $output = @$ipdat->geoplugin_city;
-                    break;
-
-                case "state":
-                case "region":
-                    $output = @$ipdat->geoplugin_regionName;
-                    break;
-
-                case "country":
-                    $output = @$ipdat->geoplugin_countryName;
-                    break;
-
-                case "countrycode":
-                    $output = @$ipdat->geoplugin_countryCode;
-                    break;
-            }
-        }
-    }
-    return $output;
-}
-
-/**
  * Checks if a user has rated a video / photo and returns rating status
  *
  * @param      $userid
@@ -4493,7 +3872,7 @@ function ip_info($ip = null, $purpose = "location", $deep_detect = true)
  * @param bool $type
  *
  * @return bool|string : { string / boolean } { rating status if found, else false }
- * @throws \Exception
+ * @throws Exception
  * @internal param $ : { integer } { $userid } { id of user to check rating by } { $userid } { id of user to check rating by }
  * @internal param $ : { integer } { $itemid } { id of item to check rating for } { $itemid } { id of item to check rating for }
  * @internal param $ : { boolean } { false by default, type of item [video / photo] } { false by default, type of item [video / photo] }
@@ -4545,105 +3924,6 @@ function has_rated($userid, $itemid, $type = false)
 }
 
 /**
- * Fetches max quality thumbnail of a youtube video
- *
- * @param : { string / array } { $video } { youtube video id or json decoded api content }
- * @param bool $thumbarray
- *
- * @return array : { array } { $toreturn } { width, height and thumb url }
- * @since : 14th April, 2016 ClipBucket 2.8.1
- * @author : Saqib Razzaq
- */
-function maxres_youtube($video, $thumbarray = false)
-{
-    if (is_array($video) || $thumbarray) {
-        $content = $video;
-        if (!is_array($thumbarray)) {
-            $thumbs_array = $content['items'][0]['snippet']['thumbnails'];
-        } else {
-            $thumbs_array = $thumbarray;
-        }
-        $maxres = $thumbs_array['maxres'];
-        $standard = $thumbs_array['standard'];
-        $high = $thumbs_array['high'];
-        $medium = $thumbs_array['medium'];
-        $default = $thumbs_array['default'];
-
-        $all_qualities = [$maxres, $standard, $high, $medium, $default];
-
-        foreach ($all_qualities as $key => $value) {
-            if (!empty($value['url'])) {
-                $toreturn = [];
-                $toreturn['width'] = $value['width'];
-                $toreturn['height'] = $value['height'];
-                $toreturn['thumb'] = $value['url'];
-                return $toreturn;
-            }
-        }
-    } else {
-        $maxres = $thumbs_array['maxres'];
-        $standard = $thumbs_array['standard'];
-        $high = $thumbs_array['high'];
-        $medium = $thumbs_array['medium'];
-        $default = $thumbs_array['default'];
-
-        $all_qualities = [$maxres, $standard, $high, $medium, $default];
-
-        foreach ($all_qualities as $key => $value) {
-            if (!empty($value['url'])) {
-                $toreturn = [];
-                $toreturn['width'] = $value['width'];
-                $toreturn['height'] = $value['height'];
-                $toreturn['thumb'] = $value['url'];
-                return $toreturn;
-            }
-        }
-    }
-}
-
-/**
- * Takes thumb file and generates upto 5 possible qualities from it
- * @param : { array } { $params } { an array of parameters }
- * @throws \Exception
- * @since : 14th April, 2016 ClipBucket 2.8.1
- * @author : Saqib Razzaq
- */
-function thumbs_black_magic($params)
-{
-    global $imgObj, $Upload;
-    $files_dir = $params['files_dir'];
-    $file_name = $params['file_name'];
-    $filepath = $params['filepath'];
-    $width = $params['width'];
-    $height = $params['height'];
-    $ms = $params['ms'];
-    $ext = pathinfo($filepath, PATHINFO_EXTENSION);
-
-    $thumbs_settings_28 = thumbs_res_settings_28();
-    foreach ($thumbs_settings_28 as $key => $thumbs_size) {
-        $file_num = $Upload->get_next_available_num($file_name);
-        $height_setting = $thumbs_size[1];
-        $width_setting = $thumbs_size[0];
-        if ($key != 'original') {
-            $dimensions = implode('x', $thumbs_size);
-        } else {
-            $dimensions = 'original';
-            $width_setting = $width;
-            $height_setting = $height;
-        }
-
-        if (!$ms) {
-            $outputFilePath = THUMBS_DIR . '/' . $files_dir . '/' . $file_name . '-' . $dimensions . '-' . $file_num . '.' . $ext;
-        } else {
-            $outputFilePath = $files_dir . '/' . $file_name . '-' . $dimensions . '-' . $file_num . '.' . $ext;
-        }
-
-        $imgObj->CreateThumb($filepath, $outputFilePath, $width_setting, $ext, $height_setting, false);
-    }
-    unlink($filepath);
-}
-
-/**
  * Assigns smarty values to an array
  * @param : { array } { $vals } { an associative array to assign vals }
  */
@@ -4656,71 +3936,11 @@ function array_val_assign($vals)
     }
 }
 
-function build_sort($sort, $vid_cond)
-{
-    if (!empty($sort)) {
-        switch ($sort) {
-            case 'most_recent':
-            default:
-                $vid_cond['order'] = ' date_added DESC ';
-                break;
-
-            case 'most_viewed':
-                $vid_cond['order'] = 'views DESC ';
-                $vid_cond['date_span_column'] = 'last_viewed';
-                break;
-
-            case 'featured':
-                $vid_cond['featured'] = 'yes';
-                break;
-
-            case 'top_rated':
-                $vid_cond['order'] = ' rating DESC, rated_by DESC';
-                break;
-
-            case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
-                break;
-        }
-        return $vid_cond;
-    }
-}
-
-function build_sort_photos($sort, $vid_cond)
-{
-    if (!empty($sort)) {
-        switch ($sort) {
-            case 'most_recent':
-            default:
-                $vid_cond['order'] = ' date_added DESC ';
-                break;
-
-            case 'most_viewed':
-                $vid_cond['order'] = ' views DESC ';
-                $vid_cond['date_span_column'] = 'last_viewed';
-                break;
-
-            case 'featured':
-                $vid_cond['featured'] = 'yes';
-                break;
-
-            case 'top_rated':
-                $vid_cond['order'] = ' photos.rating DESC';
-                break;
-
-            case 'most_commented':
-                $vid_cond['order'] = ' comments_count DESC';
-                break;
-        }
-    }
-    return $vid_cond;
-}
-
 function get_website_logo_path()
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
-        return LOGOS_URL . DIRECTORY_SEPARATOR . $logo_name;
+        return DirPath::getUrl('logos') . $logo_name;
     }
     if (defined('TEMPLATEURLFO')) {
         return TEMPLATEURLFO . '/theme' . '/images/logo.png';
@@ -4732,7 +3952,7 @@ function get_website_favicon_path()
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
-        return LOGOS_URL . DIRECTORY_SEPARATOR . $favicon_name;
+        return DirPath::getUrl('logos') . $favicon_name;
     }
     if (defined('TEMPLATEURLFO')) {
         return TEMPLATEURLFO . '/theme' . '/images/favicon.png';
@@ -4740,6 +3960,9 @@ function get_website_favicon_path()
     return TEMPLATEURL . '/theme' . '/images/favicon.png';
 }
 
+/**
+ * @throws Exception
+ */
 function upload_image($type = 'logo')
 {
     if (!in_array($type, ['logo', 'favicon'])) {
@@ -4756,7 +3979,7 @@ function upload_image($type = 'logo')
 
     if (in_array($file_ext, $allowed_file_types) && ($filesize < 4000000)) {
         // Rename file
-        $logo_path = LOGOS_DIR . DIRECTORY_SEPARATOR . $file_basename . '-' . $type . '.' . $file_ext;
+        $logo_path = DirPath::get('logos') . $file_basename . '-' . $type . '.' . $file_ext;
         unlink($logo_path);
         move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $logo_path);
 
@@ -4776,46 +3999,11 @@ function upload_image($type = 'logo')
     }
 }
 
-function AutoLinkUrls($str, $popup = false)
-{
-    if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $str, $matches)) {
-        $pop = ($popup == true) ? " target=\"_blank\" " : "";
-        for ($i = 0; $i < count($matches['0']); $i++) {
-            $period = '';
-            if (preg_match("|\.$|", $matches['6'][$i])) {
-                $period = '.';
-                $matches['6'][$i] = substr($matches['6'][$i], 0, -1);
-            }
-            $str = str_replace($matches['0'][$i],
-                $matches['1'][$i] . '<a href="http' .
-                $matches['4'][$i] . '://' .
-                $matches['5'][$i] .
-                $matches['6'][$i] . '"' . $pop . '>http' .
-                $matches['4'][$i] . '://' .
-                $matches['5'][$i] .
-                $matches['6'][$i] . '</a>' .
-                $period, $str);
-        }
-    }
-    return $str;
-}
-
-function cb_curl($url)
-{
-    $ch = curl_init();
-    $timeout = 5;
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-    $data = curl_exec($ch);
-    curl_close($ch);
-    return $data;
-}
-
 /**
  * Check for the content mime type of a file provided
  * @param : { FILE } { $mainFile } { File to run check against }
- * @return : { string/boolean } { type or false }
+ * @param int $offset
+ * @return false|string : { string/boolean } { type or false }
  * @since : 10 January, 2018
  * @todo : will Check for the content mime type of a file provided
  * @author : Fahad Abbas
@@ -4842,7 +4030,7 @@ function get_date_js()
 
 function isset_check($input_arr, $key_name, $mysql_clean = false)
 {
-    if (isset($input_arr[$key_name]) && !empty($input_arr[$key_name])) {
+    if (!empty($input_arr[$key_name])) {
         if (!is_array($input_arr[$key_name]) && !is_numeric($input_arr[$key_name]) && $mysql_clean) {
             $input_arr[$key_name] = mysql_clean($input_arr[$key_name]);
         }
@@ -4959,114 +4147,8 @@ function generic_curl($input_arr = [])
 }
 
 /**
- * This function is used to clean a string removing all special chars
- * @param string
- * @return string
- * @author Mohammad Shoaib
- */
-function cleanString($string)
-{
-    $string = str_replace("â€™", "'", $string);
-    return preg_replace('/[^A-Za-z0-9 !@#$%^&*()_?<>|{}\[\].,+-;\/:"\'\-]/', "'", $string);
-}
-
-function display_changelog($version, $title = null)
-{
-    if (!is_array($version)) {
-        $filepath = __DIR__ . '/../changelog/' . $version . '.json';
-        if (!file_exists($filepath)) {
-            echo lang('error_occured') . '<br/>';
-            echo 'File don\' exists :' . $filepath;
-            return;
-        }
-        $content_json = json_decode(file_get_contents($filepath), true);
-    } else {
-        $content_json = $version;
-    }
-    echo '<div class="well changelog">';
-    if (is_null($title)) {
-        echo '<h3>' . $content_json['version'] . ' Changelog - ' . ucfirst($content_json['status']) . '</h3>';
-    } else {
-        echo '<h3>' . $title . '</h3>';
-    }
-    foreach ($content_json['detail'] as $detail) {
-        echo '<b>' . $detail['title'] . '</b>';
-        if (!isset($detail['description'])) {
-            continue;
-        }
-        echo '<ul>';
-        foreach ($detail['description'] as $description) {
-            echo '<li>' . $description . '</li>';
-        }
-        echo '</ul>';
-    }
-    echo '</div>';
-}
-
-function display_changelog_diff($current, $new)
-{
-    $detail_current = $current['detail'];
-    $detail_new = $new['detail'];
-    $diff = [
-        'version'    => $new['version']
-        , 'revision' => $new['revision']
-        , 'status'   => $new['status']
-        , 'detail'   => []
-    ];
-
-    foreach ($detail_new as $categ) {
-        $categ_exists = false;
-        foreach ($detail_current as $categ_current) {
-            if ($categ['title'] != $categ_current['title']) {
-                continue;
-            }
-
-            foreach ($categ['description'] as $element) {
-                $element_exists = false;
-                foreach ($categ_current['description'] as $element_current) {
-                    if ($element == $element_current) {
-                        $element_exists = true;
-                        break;
-                    }
-                }
-
-                if (!$element_exists) {
-                    $element_diff_exists = false;
-                    foreach ($diff['detail'] as &$element_diff) {
-                        if ($element_diff['title'] == $categ_current['title']) {
-                            $element_diff['description'][] = $element;
-                            $element_diff_exists = true;
-                            break;
-                        }
-                    }
-
-                    if (!$element_diff_exists) {
-                        $diff['detail'][] = [
-                            'title'         => $categ_current['title']
-                            , 'description' => [$element]
-                        ];
-                    }
-                }
-
-            }
-
-            $categ_exists = true;
-        }
-
-        if (!$categ_exists) {
-            $diff['detail'][] = $categ;
-        }
-    }
-
-    if (empty($diff['detail'])) {
-        echo 'The new revision has the same changelog';
-    } else {
-        display_changelog($diff, 'Additions from your current version');
-    }
-}
-
-/**
- * @return array|null
+ * @param string $format
+ * @return resource
  */
 function get_proxy_settings(string $format = '')
 {
@@ -5086,171 +4168,8 @@ function get_proxy_settings(string $format = '')
                     $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
                 }
             }
-            return $context;
+            return stream_context_create($context);
     }
-}
-
-/**
- * @param bool
- * @return string|void
- * @throws \Exception
- */
-function get_update_status($only_flag = false)
-{
-    if (config('enable_update_checker') != 1) {
-        return '';
-    }
-
-    if (!ini_get('allow_url_fopen')) {
-        if ($only_flag) {
-            return 'red';
-        }
-        return '<div class="well changelog"><h5>' . lang('dashboard_php_config_allow_url_fopen') . '</h5></div>';
-    }
-
-    $base_url = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
-    $current_version = VERSION;
-    $current_status = strtolower(STATE);
-    $current_revision = REV;
-
-    $context = get_proxy_settings('file_get_contents');
-
-    $versions_url = $base_url . '/latest.json';
-    $versions = json_decode(file_get_contents($versions_url, false, $context), true);
-    if (!isset($versions[$current_status])) {
-        if ($only_flag) {
-            return 'red';
-        }
-        echo lang('error_occured') . '<br/>';
-        echo lang('error_file_download') . ' : ' . $versions_url;
-        return;
-    }
-
-    $changelog_url = $base_url . '/' . $versions[$current_status] . '.json';
-    $changelog = json_decode(file_get_contents($changelog_url, false, $context), true);
-    if (!isset($changelog['version'])) {
-        if ($only_flag) {
-            return 'red';
-        }
-        echo lang('error_occured') . '<br/>';
-        echo lang('error_file_download') . ' : ' . $changelog_url;
-        return;
-    }
-
-    if (!$only_flag) {
-        echo '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>' . $current_revision . '</b> <i>(' . ucfirst($current_status) . ')</i><br/>';
-        echo 'Latest version <i>(' . ucfirst($current_status) . ')</i> : <b>' . $changelog['version'] . '</b> - Revision <b>' . $changelog['revision'] . '</b></h5></div>';
-    }
-
-    $is_new_version = $current_version > $changelog['version'];
-    $is_new_revision = $is_new_version || $current_revision > $changelog['revision'];
-
-    if ($current_version == $changelog['version'] && $current_revision == $changelog['revision']) {
-        if ($only_flag) {
-            return 'green';
-        }
-        echo '<h3 style="text-align:center;">Your Clipbucket seems up-to-date !</h3>';
-    } else {
-        if ($is_new_version || $is_new_revision) {
-            if ($only_flag) {
-                return 'green';
-            }
-
-            echo '<h3 style="text-align:center;">Keep working on this new version ! :)</h3>';
-
-        } else {
-            if ($only_flag) {
-                return 'orange';
-            }
-            echo '<h3 style="text-align:center;">Update <b>' . $changelog['version'] . '</b> - Revision <b>' . $changelog['revision'] . '</b> is available !</h3>';
-
-            if ($current_version != $changelog['version']) {
-                display_changelog($changelog);
-            } else {
-                $current_changelog = json_decode(file_get_contents(realpath(__DIR__ . '/../changelog') . '/' . CHANGELOG . '.json'), true);
-                display_changelog_diff($current_changelog, $changelog);
-            }
-        }
-    }
-
-    if ($current_status == 'dev') {
-        echo '<div class="well changelog"><h5>Thank you for using the developpement version of Clipbucket !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5></div>';
-    }
-}
-
-function get_db_update_status()
-{
-    global $db;
-    $version = $db->select(tbl('version'), '*')[0];
-    $folder_version = $version['version'];
-    $revision = $version['revision'];
-
-    $need_db_upgrade = check_need_upgrade($folder_version, $revision);
-
-    $nb_db_update = 0;
-    if ($need_db_upgrade) {
-        $nb_db_update += get_files_to_upgrade($folder_version, $revision, true);
-    }
-
-    $nb_db_update += get_plugin_db_update_status(true);
-
-    assign('need_db_update', ($nb_db_update > 0));
-    if ($nb_db_update > 0) {
-        assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
-    }
-    Template('msg_update_db.html');
-}
-
-function get_plugin_db_update_status($only_nb = false)
-{
-    global $db;
-
-    $installed_plugins = $db->select(tbl('plugins'), '*');
-
-    $need_db_plugin_upgrade = false;
-    foreach ($installed_plugins as $installed_plugin) {
-        $need_db_plugin_upgrade = check_need_plugin_upgrade($installed_plugin);
-        if ($need_db_plugin_upgrade) {
-            break;
-        }
-    }
-    $nb_db_update = 0;
-    if ($need_db_plugin_upgrade) {
-        $nb_db_update += get_plugins_files_to_upgrade($installed_plugins, true);
-    }
-    if ($only_nb) {
-        return $nb_db_update;
-    }
-    if ($nb_db_update > 0) {
-        assign('nb_db_update', str_replace('%s', $nb_db_update, lang('need_db_upgrade')));
-    }
-    assign('need_db_update', $need_db_plugin_upgrade);
-    assign('is_plugin_db', true);
-    Template('msg_update_db.html');
-}
-
-/**
- * @return bool
- * @throws \Exception
- */
-function need_to_update_version(): bool
-{
-    global $db;
-
-    try {
-        $db->select(tbl('version'), '*')[0];
-    } catch (\Exception $e) {
-        if ($e->getMessage() == 'version_not_installed') {
-            if (BACK_END) {
-                e('Version system isn\'t installed, please connect and follow upgrade instructions.');
-            } elseif (in_dev()) {
-                e('Version system isn\'t installed, please contact your administrator.');
-            }
-            return true;
-        }
-        throw $e;
-    }
-    return false;
 }
 
 function error_lang_cli($msg)
@@ -5278,7 +4197,7 @@ function rglob($pattern, $flags = 0)
  * @param $path
  * @return bool
  */
-function delete_empty_directories($path)
+function delete_empty_directories($path): bool
 {
     if (!is_dir($path)) {
         return false;
@@ -5311,13 +4230,25 @@ function get_restorable_languages(array $list_language = []): array
         'en'    => 'English',
         'fr'    => 'Français',
         'pt-BR' => 'Portuguesa',
-        'de'    => 'Deutsche'
+        'de'    => 'Deutsche',
+        'esp'   => 'Español'
     ];
 
     return array_filter($restorable_langs, function ($lang) use ($list_language) {
         $column = array_column($list_language, 'language_name');
         return !in_array($lang, $column);
     });
+}
+
+function ageRestriction($var) {
+    $var = (int)$var;
+    if (empty($var)) {
+        return 'null';
+    }
+    if ($var > 99 || $var < 0) {
+        return false;
+    }
+    return $var;
 }
 
 include('functions_db.php');

@@ -2,53 +2,50 @@
 define('THIS_PAGE', 'videos');
 define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
-global $cbvid, $pages, $userquery;
-$pages->page_redir();
-$userquery->perm_check('view_videos', true);
-$sort = $_GET['sort'];
-$child_ids = '';
-$assign_arry = [];
+
+pages::getInstance()->page_redir();
+userquery::getInstance()->perm_check('view_videos', true);
+
+if( !isSectionEnabled('videos') ){
+    redirect_to(BASEURL);
+}
+
+$child_ids = false;
 if ($_GET['cat'] && is_numeric($_GET['cat'])) {
-    $childs = $cbvid->get_sub_categories($_GET['cat']);
-    $child_ids = [];
-    if ($childs) {
-        foreach ($childs as $child) {
-            $child_ids[] = $child['category_id'];
-            $subchilds = $childs = $cbvid->get_sub_categories($child['category_id']);
-            if ($subchilds) {
-                foreach ($subchilds as $subchild) {
-                    $child_ids[] = $subchild['category_id'];
-                }
-            }
-        }
-    }
+    $child_ids = Category::getInstance()->getChildren($_GET['cat'], false, true);
     $child_ids[] = mysql_clean($_GET['cat']);
 }
-$vid_cond = ['category' => $child_ids, 'date_span' => mysql_clean($_GET['time']), 'sub_cats'];
-$vid_cond = build_sort($sort, $vid_cond);
-//Getting Video List
+
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, VLISTPP);
-$vlist = $vid_cond;
-$count_query = $vid_cond;
-$vlist['limit'] = $get_limit;
-$videos = get_videos($vlist);
-$assign_arry['videos'] = $videos;
-$vcount = $vid_cond;
-$counter = get_counter('video', $count_query);
-if (!$counter) {
-    $vcount['count_only'] = true;
-    $total_rows = get_videos($vcount);
-    $total_pages = count_pages($total_rows, VLISTPP);
-    $counter = $total_rows ?: 0;
-    update_counter('video', $count_query, $counter);
+$get_limit = create_query_limit($page, config('videos_list_per_page'));
+$params = Video::getInstance()->getFilterParams($_GET['sort'], []);
+$params = Video::getInstance()->getFilterParams($_GET['time'], $params);
+$params['limit'] = $get_limit;
+if( $child_ids ){
+    $params['category'] = $child_ids;
 }
-$total_pages = count_pages($counter, VLISTPP);
+$videos = Video::getInstance()->getAll($params);
+assign('videos', $videos);
+
+assign('sort_list', Video::getInstance()->getSortList());
+assign('time_list', time_links());
+
+if( empty($videos) ){
+    $count = 0;
+} else if( count($videos) < config('videos_list_per_page') && $page == 1 ){
+    $count = count($videos);
+} else {
+    unset($params['limit']);
+    unset($params['order']);
+    $params['count'] = true;
+    $count = Video::getInstance()->getAll($params);
+}
+
+$total_pages = count_pages($count, config('videos_list_per_page'));
 //Pagination
 $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';
-$pages->paginate($total_pages, $page, null, $extra_params, $tag);
+pages::getInstance()->paginate($total_pages, $page, null, $extra_params, $tag);
 subtitle(lang('videos'));
-array_val_assign($assign_arry);
 template_files('videos.html');
 display_it();

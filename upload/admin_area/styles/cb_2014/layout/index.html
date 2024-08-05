@@ -1,15 +1,19 @@
 <div class="heading">
     <h2>ClipBucket V{$VERSION} {$STATE} Dashboard</h2>
 </div>
+{$active = 'class="active"'}
 <div class="row display-flex">
 	<div class="col-md-6">
-		<ul class="nav nav-tabs" style="height: 53px;">
-			<li class="active">
-				<a data-toggle="tab" href="#rcomments">
-					<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
-				</a>
-			</li>
-			<li>
+		<ul class="nav nav-tabs">
+			{if $comments !== false}
+				<li {$active}>
+					<a data-toggle="tab" href="#rcomments">
+						<h5><i class="glyphicon glyphicon-comment"></i> Recent Comments</h5>
+					</a>
+				</li>
+				{$active = ''}
+			{/if}
+			<li {$active}>
 				<a data-toggle="tab" href="#todolist">
 					<h5><i class="glyphicon glyphicon-list-alt"></i> ToDo List</h5>
 				</a>
@@ -20,10 +24,11 @@
 				</a>
 			</li>
 		</ul>
-		<div class="tab-content" style="height: calc(100% - 72px);">
-			<div id="rcomments" class="tab-pane active" style="height: 100%; ">
-				<div class="widgetBox" style="height: 100%; min-height: 200px;">
-					{if $comments}
+
+		{$active = 'active'}
+		<div class="tab-content" style="height:259px;overflow-y:scroll;">
+			{if $comments !== false}
+				<div id="rcomments" class="tab-pane {$active}">
 					{foreach from=$comments item=comment}
 					{$userdetails = $userquery->get_user_details($comment.userid)}
 					<div class="itemdiv dialogdiv">
@@ -38,7 +43,7 @@
 							<div class="name">
 								<a href="#">{display_clean($comment.anonym_name)}</a>
 							</div>
-							<div class="text">{display_clean($comment.comment|comment)}</div>
+							<div class="text">{Comments::getClean($comment.comment)}</div>
 							<div class="tools">
 								<a href="{getCommentAdminLink($comment.type, $comment.type_id)}" class="btn btn-minier btn-info">
 									<i class="icon-only icon-share-alt"></i>
@@ -47,58 +52,52 @@
 						</div>
 					</div>
 					{/foreach}
-					{/if}
 				</div>
-			</div>
-			<div id="todolist" class="tab-pane"  style="height: 100%; ">
-				<div class="widgetBox" style="height: 100%;min-height: 200px;">
-					<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
-						<div class="row">
-							<div class="from-group relative">
-								<div class="from-group">
-									<input type="text" name="addTodo" class="form-control addTodoText"/>
-									<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
-								</div>
+				{$active = ''}
+			{/if}
+			<div id="todolist" class="tab-pane {$active}">
+				<div class="addTodo paddingRightSmall paddingLeftLarge marginBottomLarge">
+					<div class="row">
+						<div class="from-group relative">
+							<div class="from-group">
+								<input type="text" name="addTodo" class="form-control addTodoText"/>
+								<button id="addTodo" class="btn btn-primary btn-sm">{lang code='add'}</button>
 							</div>
 						</div>
 					</div>
-					{assign var=todos value=$myquery->get_todos()}
-					<ul class="row todosList" id="note-{$the_note.note_id}">
-						{foreach from=$todos item=note}
-						<li class="col-md-12">
-							<div class="col-md-12">
-								<p class="oneTodo paddingLeftSmall col-md-10" id="{$note.todo_id}">
-									{display_clean($note.todo)}
-								</p>
-								<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
-							</div>
-						</li>
-						{/foreach}
-					</ul>
 				</div>
+				{assign var=todos value=$myquery->get_todos()}
+				<ul class="row todosList">
+					{foreach from=$todos item=note}
+					<li class="col-md-12 oneTodo">
+						<span class="paddingLeftSmall col-md-10" id="{$note.todo_id}">
+							{display_clean($note.todo)}
+						</span>
+						<a href="#" class="btn btn-danger btn-xs delete col-md-2">{lang code='delete'}</a>
+					</li>
+					{/foreach}
+				</ul>
 			</div>
-			<div id="pnotes" class="tab-pane"  style="height: 100%; ">
-				<div class="widgetBox" style="height: 100%; min-height: 200px;">
-					<div class="addNote form-group paddingRightSmall">
-						<textarea class="form-control" name="note"></textarea>
-						<div class="alignRight marginTopSmall">
-							<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
-						</div>
+			<div id="pnotes" class="tab-pane">
+				<div class="addNote form-group paddingRightSmall">
+					<textarea class="form-control" name="note"></textarea>
+					<div class="alignRight marginTopSmall">
+						<a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
 					</div>
-					{assign var=notes value=$myquery->get_notes()}
-					<ul class="notesList row paddingRightSmall" id="note-{$the_note.note_id}">
-						{foreach from=$notes item=note}
-						<li class="col-md-4">
-							<div>
-								<p class="oneNote" id="{$note.note_id}">
-									{display_clean($note.note)}
-									<a href="#" class="delete">×</a>
-								</p>
-							</div>
-						</li>
-						{/foreach}
-					</ul>
 				</div>
+				{assign var=notes value=$myquery->get_notes()}
+				<ul class="notesList row paddingRightSmall">
+					{foreach from=$notes item=note}
+					<li class="col-md-4">
+						<div>
+							<p class="oneNote" id="{$note.note_id}">
+								{display_clean($note.note)}
+								<a href="#" class="delete">×</a>
+							</p>
+						</div>
+					</li>
+					{/foreach}
+				</ul>
 			</div>
 		</div>
 	</div>
@@ -108,6 +107,11 @@
 				<h5><i class="glyphicon glyphicon-list-alt"></i> {lang code='dashboard_changelogs'}</h5>
 			</li>
 			<li class="active">
+				<a data-toggle="tab" href="#551">
+					<h5>5.5.1</h5>
+				</a>
+			</li>
+			<li>
 				<a data-toggle="tab" href="#550">
 					<h5>5.5.0</h5>
 				</a>
@@ -135,48 +139,52 @@
 			{if config('enable_update_checker')=='1'}
 			<li class="right">
 				<a data-toggle="tab" href="#update">
-					<h5>{lang code='dashboard_update_status'} <span class="status-{get_update_status(true)}"></span></h5>
+					<h5>{lang code='dashboard_update_status'} <span class="status-{$update_checker_status}"></span></h5>
 				</a>
 			</li>
 			{/if}
 		</ul>
 		<div class="tab-content nopadding">
-			<div id="550" class="tab-pane active">
+			<div id="551" class="tab-pane active">
 				<div class="widgetBox">
-					{display_changelog('550')}
+					{$changelog_551}
+				</div>
+			</div>
+			<div id="550" class="tab-pane">
+				<div class="widgetBox">
+					{$changelog_550}
 				</div>
 			</div>
 			<div id="541" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('541')}
+					{$changelog_541}
 				</div>
 			</div>
 			<div id="540" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('540')}
+					{$changelog_540}
 				</div>
 			</div>
 			<div id="531" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('531')}
+					{$changelog_531}
 				</div>
 			</div>
 			<div id="530-500" class="tab-pane">
 				<div class="widgetBox">
-					{display_changelog('530')}
+					{$changelog_530}
 				</div>
 			</div>
 			{if config('enable_update_checker')=='1'}
 			<div id="update" class="tab-pane">
 				<div class="widgetBox">
-					{get_update_status()}
+					{$update_checker_content}
 				</div>
 			</div>
 			{/if}
 		</div>
-		<!--		message version -->
-		<div>
-			{get_db_update_status()}
+		<div class="row" style="margin-top:5px;" id="update_div">
+			{Update::getInstance()->displayGlobalSQLUpdateAlert()}
 		</div>
 	</div>
 </div>
@@ -192,7 +200,7 @@
 			</li>
 			<li>
 				<a data-toggle="tab" href="#flagged_objects">
-					<h5>Flagged Objects</h5>
+					<h5>{lang code="flagged_obj"}</h5>
 				</a>
 			</li>
 			<li>
@@ -224,6 +232,8 @@
 </div>
 
 <script type="text/javascript">
+	is_update_processing = `{$is_update_processing}`;
+	can_sse = `{$can_sse}`;
 	AmCharts.makeChart("piechart", {
 		"type": "pie",
 		"adjustPrecision": true,

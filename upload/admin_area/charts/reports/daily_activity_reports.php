@@ -1,5 +1,7 @@
 <?php
-require_once('../../../includes/admin_config.php');
+define('THIS_PAGE', 'daily_activity_reports');
+
+require_once dirname(__FILE__, 4) . '/includes/admin_config.php';
 
 $days = 10;
 $last_week = time() - 86400 * $days + 86400;
@@ -11,26 +13,26 @@ $vid_stats = json_decode($vid_stats);
 $year = [];
 for ($i = 0; $i < $days; $i++) {
     if ($i < $days) {
-        $date_pattern = date("Y-m-d", $last_week + ($i * 86400));
-        $data = $db->select(tbl("stats"), "*", " date_added LIKE '%$date_pattern%' ", 1);
+        $date_pattern = date('Y-m-d', $last_week + ($i * 86400));
+        $data = Clipbucket_db::getInstance()->select(tbl('stats'), '*', ' date_added LIKE \'%'.$date_pattern.'%\' ', 1);
         $data = $data[0];
         $datas[] = $data;
     }
 
-    $year[] = date("M d", $last_week + ($i * 86400));
+    $year[] = date('M d', $last_week + ($i * 86400));
 }
 
 //Videos
-$videos['uploads'] = $cbvid->get_videos(["count_only" => true, "date_span" => "today"], true);
-$videos['processing'] = $cbvid->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "today"], true);
-$videos['active'] = $cbvid->get_videos(["count_only" => true, "active" => "yes", "date_span" => "today"], true);
+$videos['uploads'] = CBvideo::getInstance()->get_videos(['count_only' => true, 'date_span' => 'today'], true);
+$videos['processing'] = CBvideo::getInstance()->get_videos(['count_only' => true, 'status' => 'Processing', 'date_span' => 'today'], true);
+$videos['active'] = CBvideo::getInstance()->get_videos(['count_only' => true, 'active' => 'yes', 'date_span' => 'today'], true);
 $V = [[lang('uploaded'), $videos['uploads']], [lang('processing'), $videos['processing']], [lang('active'), $videos['active']]];
 $array_video = ['label' => lang('videos'), 'data' => $V];
 
 //Users
-$users['signups'] = $userquery->get_users(["count_only" => true, "date_span" => "today"]);
-$users['inactive'] = $userquery->get_users(["count_only" => true, "date_span" => "today", "status" => 'ToActivate']);
-$users['active'] = $userquery->get_users(["count_only" => true, "date_span" => "today", "status" => 'Ok']);
+$users['signups'] = userquery::getInstance()->get_users(['count_only' => true, 'date_span' => 'today']);
+$users['inactive'] = userquery::getInstance()->get_users(['count_only' => true, 'date_span' => 'today', 'status' => 'ToActivate']);
+$users['active'] = userquery::getInstance()->get_users(['count_only' => true, 'date_span' => 'today', 'status' => 'Ok']);
 $U = [[lang('signups'), $users['signups']], [lang('inactive'), $users['inactive']], [lang('active_users'), $users['active']]];
 $array_user = ['label' => lang('users'), 'data' => $U];
 

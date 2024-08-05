@@ -1,21 +1,4 @@
-function new_player_height (videoid) {
-	var player_ratio = 1.77777;
-
-	var native_player = $(".cb_video_js_"+videoid+"-dimensions");
-	var native_player_width = native_player.width();
-
-	if( native_player_width === null || native_player_width === undefined ){
-	    return;
-    }
-
-	var native_player_height = native_player_width/player_ratio;
-
-	native_player.css("height",native_player_height+"px");
-}
-
 $(document).ready(function() {
-	new_player_height();
-
 	var body = $('body');
 
     body.keydown(function(e)
@@ -28,10 +11,11 @@ $(document).ready(function() {
             if( e.keyCode === 0 || e.keyCode === 32 )
             {
                 e.preventDefault();
-                if( cb_player.paused() )
+                if( cb_player.paused() ){
                     cb_player.play();
-                else
-                    cb_player.pause()
+                } else {
+                    cb_player.pause();
+                }
             }
         }
     });
@@ -47,10 +31,6 @@ $(document).ready(function() {
                 e.preventDefault();
         }
     });
-});
-
-$(window).resize(function() {
-	new_player_height();
 });
 
 // Header

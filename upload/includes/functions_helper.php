@@ -27,10 +27,10 @@ function config($input)
 function website_logo(): string
 {
     $logo_file = config('player_logo_file');
-    if ($logo_file && file_exists(BASEDIR . '/images/' . $logo_file)) {
-        return '/images/' . $logo_file;
+    if ($logo_file && file_exists(DirPath::get('images') . $logo_file)) {
+        return DirPath::getUrl('images') . $logo_file;
     }
-    return '/images/logo.png';
+    return DirPath::getUrl('images') . 'logo.png';
 }
 
 /**
@@ -66,12 +66,12 @@ function create_dated_folder($headFolder = null, $custom_date = null)
     }
 
     if (!$headFolder) {
-        @mkdir(VIDEOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(THUMBS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(ORIGINAL_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(PHOTOS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(LOGS_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
-        @mkdir(SUBTITLES_DIR . DIRECTORY_SEPARATOR . $folder, 0777, true);
+        @mkdir(DirPath::get('videos') . $folder, 0777, true);
+        @mkdir(DirPath::get('thumbs') . $folder, 0777, true);
+        @mkdir(DirPath::get('original') . $folder, 0777, true);
+        @mkdir(DirPath::get('photos') . $folder, 0777, true);
+        @mkdir(DirPath::get('logs') . $folder, 0777, true);
+        @mkdir(DirPath::get('subtitles') . $folder, 0777, true);
     } else {
         if (!file_exists($headFolder . DIRECTORY_SEPARATOR . $folder)) {
             @mkdir($headFolder . DIRECTORY_SEPARATOR . $folder, 0777, true);
@@ -102,44 +102,6 @@ function cb_create_html_tag($tag = 'p', $self_closing = false, $attrs = [], $con
     return $open . $attributes . $close;
 }
 
-/**
- * Pulls categories without needing any parameters
- * making it easy to use in smarty. Decides type using page
- *
- * @param bool $page
- *
- * @return array|bool : { array } { $all_cats } { array with all details of all categories }
- * @since : March 22nd, 2016 ClipBucket 2.8.1
- * @author : Saqib Razzaq
- */
-function pullCategories($page = false)
-{
-    global $cbvid, $userquery, $cbphoto;
-    $params = [];
-    if (!$page) {
-        $page = THIS_PAGE;
-    }
-
-    switch ($page) {
-        case 'photos':
-            $all_cats = $cbphoto->cbCategories($params);
-            break;
-
-        case 'channels':
-            $all_cats = $userquery->cbCategories($params);
-            break;
-
-        case 'videos':
-        default:
-            $all_cats = $cbvid->cbCategories($params);
-            break;
-    }
-
-    if (is_array($all_cats)) {
-        return $all_cats;
-    }
-    return false;
-}
 
 /**
  * Takes a number and returns more human friendly format of it e.g 1000 == 1K
@@ -232,7 +194,7 @@ function devWitch($query, $query_type, $time, $cache = false): array
 
 function showDevWitch()
 {
-    $file = BASEDIR . '/styles/global/devmode.html';
+    $file = DirPath::get('styles') . 'global/devmode.html';
     Template($file, false);
 }
 
@@ -241,31 +203,36 @@ function showDevWitch()
  * @param $callback
  * @param bool $ajax
  */
-function sendClientResponseAndContinue($callback, $ajax = true)
+function sendClientResponseAndContinue($callback, bool $ajax = true)
 {
-    ob_end_clean();
-    ignore_user_abort(true);
+    if (System::can_sse()) {
+        ob_end_clean();
+        ignore_user_abort(true);
 
-    ob_start();
+        ob_start();
 
-    header("Connection: close\r\n");
-    header("Content-Encoding: none\r\n");
+        header("Connection: close\r\n");
+        header("Content-Encoding: none\r\n");
 
-    $callback();
+        $callback();
 
-    $size = ob_get_length();
-    header("Content-Length: $size");
+        $size = ob_get_length();
+        header("Content-Length: $size");
 
-    // Flush all output.
-    ob_end_flush();
-    ob_flush();
-    flush();
+        // Flush all output.
+        ob_end_flush();
+        ob_flush();
+        flush();
 
-    // Close current session (if it exists).
-    if (session_id()) {
-        session_write_close();
-    }
-    if ($ajax) {
-        fastcgi_finish_request();
+        // Close current session (if it exists).
+        if (session_id()) {
+            session_write_close();
+        }
+
+        if ($ajax) {
+            fastcgi_finish_request();
+        }
+    } else {
+        $callback();
     }
 }

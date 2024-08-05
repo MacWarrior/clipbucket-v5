@@ -37,8 +37,8 @@
                             </div>
                             <div class="col-md-9 labels1">
                                 <a href="edit_video.php?video={$videos[list].videoid}" target="_blank">
-                                    {$videos[list].title|truncate:80}
-                                </a>-({if $videos[list].duration>1}{$videos[list].duration|SetTime}{else}00:00{/if})<br/>
+                                    {display_clean($videos[list].title)|truncate:80}
+                                </a> ({if $videos[list].duration>1}{$videos[list].duration|SetTime}{else}00:00{/if})<br/>
                                 <span class="labels1">
                                     {$videos[list].date_added|niceTime}
                                     {lang code='views'} : {$videos.views|number_format}

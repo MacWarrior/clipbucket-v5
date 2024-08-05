@@ -63,6 +63,7 @@ ul.tagit input[type="text"] {
     margin: 0;
     display:block;
     float: left;
+    z-index: 999;
 }
 .tagit-autocomplete.ui-menu .ui-menu {
     margin-top: -3px;

@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 require 'includes/config.inc.php';
 
-global $userquery, $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds;
+global $userquery, $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds, $pages;
 
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
@@ -13,20 +13,6 @@ if (isset($_POST['mode'])) {
 
 if (!empty($mode)) {
     switch ($mode) {
-        case 'recent_viewed_vids':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
-                exit();
-            }
-
-            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'last_viewed DESC']);
-            if ($videos) {
-                foreach ($videos as $video) {
-                    assign('video', $video);
-                    Template('blocks/video.html');
-                }
-            }
-            break;
-
         case 'most_viewed':
             if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
                 exit();
@@ -41,73 +27,12 @@ if (!empty($mode)) {
             }
             break;
 
-        case 'recently_added':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
-                exit();
-            }
-
-            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'order' => 'date_added DESC']);
-            if ($videos) {
-                foreach ($videos as $video) {
-                    assign('video', $video);
-                    Template('blocks/video.html');
-                }
-            }
-            break;
-
-        case 'featured_videos':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
-                exit();
-            }
-
-            $videos = get_videos(['limit' => config('videos_items_hme_page'), 'featured' => 'yes', 'order' => 'featured_date DESC']);
-            if ($videos) {
-                foreach ($videos as $video) {
-                    assign('video', $video);
-                    Template('blocks/video.html');
-                }
-            }
-            break;
-
         case 'load_more':
             $limit = $_POST['limit'];
             $total = $_POST['total'];
 
             $inner_mode = $_POST['inner_mode'];
             switch ($inner_mode) {
-                case 'load_more_videos':
-                    $videos_arr = ['order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
-                    $results = get_videos($videos_arr);
-                    $next_limit = $limit + $limit;
-                    $videos_arr_next = ['order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
-                    $videos_next = get_videos($videos_arr_next);
-                    if ($total == $next_limit || $total < $next_limit) {
-                        $count_next = 0;
-                    } else {
-                        $count_next = count($videos_next);
-                    }
-                    $total_results = $total;
-                    $template_path = 'blocks/videos/video.html';
-                    $assigned_variable_smarty = 'video';
-                    break;
-
-                case 'load_more_users':
-                    $users_arr = ['limit' => '' . $limit . ',' . $limit];
-                    $results = get_users($users_arr);
-                    $next_limit = $limit + $limit;
-                    $users_arr_next = ['limit' => '' . $next_limit . ',' . $next_limit];
-                    $users_next = get_videos($users_arr_next);
-                    if ($total == $next_limit || $total < $next_limit) {
-                        $count_next = 0;
-                    } else {
-                        $count_next = count($users_next);
-                    }
-                    $count_next = (int)$count_next;
-                    $total_results = $total;
-                    $template_path = 'blocks/channels.html';
-                    $assigned_variable_smarty = 'user';
-                    break;
-
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
                     $play_arr = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
@@ -460,45 +385,10 @@ if (!empty($mode)) {
                     }
                 }
             }
-            echo $msg;
-            break;
-
-        case 'rate_comment':
-            $thumb = $_POST['thumb'];
-            $cid = mysql_clean($_POST['cid']);
-            $rate = ($thumb == 'down') ? -1 : 1;
-            $rating = $myquery->rate_comment($rate, $cid);
-
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
-
-            if ($error) {
-                $msg = $error[0]['val'];
-            } else {
-                if ($warning) {
-                    $msg = $warning[0]['val'];
-                } else {
-                    if ($message) {
-                        $msg = $message[0]['val'];
-                    }
-                }
-            }
-            $ajax['msg'] = $msg;
-            $ajax['rate'] = comment_rating($rating);
-
-            //updating last update...
-            $type = $_POST['type'];
-            $typeid = $_POST['typeid'];
-            update_last_commented($type, $typeid);
-
-            echo json_encode($ajax);
             break;
 
         case 'spam_comment':
-            $cid = mysql_clean($_POST['cid']);
-
-            $rating = $myquery->spam_comment($cid);
+            $rating = Comments::setSpam($_POST['cid']);
 
             if (msg()) {
                 $msg = msg_list();
@@ -530,28 +420,7 @@ if (!empty($mode)) {
                 $comment = '';
             }
 
-            switch ($type) {
-                case 'v':
-                case 'video':
-                default:
-                    $cid = $cbvid->add_comment($comment, $id, $reply_to);
-                    break;
-
-                case 'u':
-                case 'c':
-                    $cid = $userquery->add_comment($comment, $id, $reply_to);
-                    break;
-
-                case 'cl':
-                case 'collection':
-                    $cid = $cbcollection->add_comment($comment, $id, $reply_to);
-                    break;
-
-                case 'p':
-                case 'photo':
-                    $cid = $cbphoto->add_comment($comment, $id, $reply_to);
-                    break;
-            }
+            $comment_id = Comments::add($comment, $id, $type, $reply_to);
 
             if (msg()) {
                 $msg = msg_list();
@@ -567,8 +436,8 @@ if (!empty($mode)) {
             }
 
             //Getting Comment
-            if ($cid) {
-                $ajax['cid'] = $cid;
+            if ($comment_id) {
+                $ajax['cid'] = $comment_id;
                 $ajax['type_id'] = $id;
             }
 
@@ -578,7 +447,11 @@ if (!empty($mode)) {
         case 'get_comment';
             $id = mysql_clean($_POST['cid']);
             $type_id = mysql_clean($_POST['type_id']);
-            $new_com = $myquery->get_comment($id);
+
+            $params = [];
+            $params['comment_id'] = $id;
+            $params['first_only'] = true;
+            $new_com = Comments::getAll($params);
 
             //getting parent id if it is a reply comment
             $parent_id = $new_com['parent_id'];
@@ -661,55 +534,8 @@ if (!empty($mode)) {
             }
             break;
 
-
-        case 'quicklist':
-            $todo = $_POST['todo'];
-            $id = mysql_clean($_POST['vid']);
-
-            if ($todo == 'add') {
-                echo $cbvid->add_to_quicklist($id);
-            } else {
-                echo $cbvid->remove_from_quicklist($id);
-            }
-
-            break;
-
-        case 'getquicklistbox';
-            if ($cbvid->total_quicklist() > 0) {
-                TEMPLATE('blocks/quicklist/block.html');
-            }
-            break;
-
-        case 'clear_quicklist':
-            $cbvid->clear_quicklist();
-            return 'removed';
-
         case 'delete_comment':
-            $type = $_POST['type'];
-            $cid = mysql_clean($_POST['cid']);
-            $type_id = $myquery->delete_comment($cid);
-            switch ($type) {
-                case 'v':
-                case 'video':
-                default:
-                    $cbvid->update_comments_count($type_id);
-                    break;
-
-                case 'u':
-                case 'c':
-                    $userquery->update_comments_count($type_id);
-                    break;
-
-                case 'photo':
-                case 'p':
-                    $cbphoto->update_total_comments($type_id);
-                    break;
-
-                case 'cl':
-                case 'collection':
-                    $cbcollection->update_total_comments($type_id);
-                    break;
-            }
+            $nb_affected = Comments::delete(['comment_id' => $_POST['cid']]);
             $error = $eh->get_error();
             $warning = $eh->get_warning();
             $message = $eh->get_message();
@@ -726,6 +552,7 @@ if (!empty($mode)) {
             }
             $ajax['msg'] = $msg;
             $ajax['err'] = $err;
+            $ajax['nb'] = $nb_affected;
 
             echo json_encode($ajax);
             break;
@@ -823,17 +650,15 @@ if (!empty($mode)) {
             if ($N_item) {
                 $ajax['key'] = $N_item[0]['videokey'];
                 $ajax['cid'] = $N_item[0]['collection_id'];
-                assign('type', $t);
                 assign('user', $userquery->get_user_details($N_item[0]['userid']));
-                assign('object', $N_item[0]);
-                $ajax['content'] = Fetch('view_item.html');
+                assign('photo', $N_item[0]);
+                $ajax['content'] = Fetch('view_photo.html');
                 echo json_encode($ajax);
             } else {
                 return false;
             }
             break;
 
-        case "load_more_items":
         case "more_items":
         case "moreItems":
             $cid = mysql_clean($_POST['cid']);
@@ -841,7 +666,7 @@ if (!empty($mode)) {
             $newPage = $page + 1;
             $type = $_POST['type'];
             $limit = create_query_limit($page, COLLIP);
-            $order = tbl("collection_items") . ".ci_id DESC";
+            $order = 'collection_items.ci_id DESC';
 
             switch ($type) {
                 case "videos":
@@ -889,7 +714,7 @@ if (!empty($mode)) {
                 'broadcast'              => 'public',
                 'public_upload'          => 'yes'
             ];
-            if (config('enable_sub_collection')) {
+            if (config('enable_sub_collection') == 'yes') {
                 $CollectParams['collection_id_parent'] = $_POST['collection_id_parent'];
             }
             $insert_id = $cbcollection->create_collection($CollectParams);
@@ -945,7 +770,7 @@ if (!empty($mode)) {
                     case "vid":
                     case "v":
                     case "vdo":
-                        $video = $cbvideo->get_video_details(mysql_clean($_POST['objID']));
+                        $video = $cbvideo->get_video(mysql_clean($_POST['objID']));
                         if ($video) {
                             assign('object', $video);
                             $content = Fetch('/blocks/view_channel/channel_item.html');
@@ -972,17 +797,11 @@ if (!empty($mode)) {
             }
             break;
 
-        case "viewCollectionRating":
-            $cid = mysql_clean($_POST['cid']);
-            $returnedArray = $cbcollection->collection_voters($cid);
-            echo($returnedArray);
-            break;
-
-        case "loadAjaxPhotos":
+        case 'loadAjaxPhotos':
             $photosType = $_POST['photosType'];
-            $cond = ['limit' => config("photo_home_tabs")];
+            $cond = ['limit' => config('photo_home_tabs')];
             switch ($photosType) {
-                case "last_viewed":
+                case 'last_viewed':
                 default:
                     $cond['order'] = " last_viewed DESC";
                     break;
@@ -1033,70 +852,68 @@ if (!empty($mode)) {
         /**
          * Getting comments along with template
          */
-        case "getComments":
-            $params = [];
-
+        case 'getComments':
             $limit = config('comment_per_page') ? config('comment_per_page') : 10;
             $page = $_POST['page'];
-            $params['type'] = mysql_clean($_POST['type']);
-            $params['type_id'] = mysql_clean($_POST['type_id']);
-            $params['last_update'] = mysql_clean($_POST['last_update']);
-            $params['limit'] = create_query_limit($page, $limit);
-            $params['cache'] = 'no';
 
-            $admin = "";
+            $params = [];
+            $params['type'] = $_POST['type'];
+            $params['type_id'] = $_POST['type_id'];
+            $params['limit'] = create_query_limit($page, $limit);
+            $params['hierarchy'] = true;
+            $comments = Comments::getAll($params);
+
+            $admin = '';
             if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
-                $params['cache'] = 'no';
-                $admin = "yes";
+                $admin = 'yes';
             }
-            $comments = $myquery->getComments($params);
+
             //Adding Pagination
             $total_pages = count_pages($_POST['total_comments'], $limit);
             assign('object_type', $_POST['object_type']);
+
             //Pagination
             $pages->paginate($total_pages, $page, null, null, '<li><a href="javascript:void(0);"
-            onClick="_cb.getAllComments(\'' . $params['type'] . '\',\'' . $params['type_id'] . '\',\'' . $params['last_update'] . '\',
-            \'#page#\',\'' . $_POST['total_comments'] . '\',\'' . mysql_clean($_POST['object_type']) . '\',\'' . $admin . '\')">#page#</a></li>');
+            onClick="_cb.getAllComments(\'' . display_clean($_POST['type']) . '\',\'' . display_clean($_POST['type_id']) . '\',\'' .display_clean($_POST['last_update']) . '\',
+            \'#page#\',\'' . $_POST['total_comments'] . '\',\'' . display_clean($_POST['object_type']) . '\',\'' . $admin . '\')">#page#</a></li>');
 
             assign('comments', $comments);
-            assign('type', $params['type']);
-            assign('type_id', $params['type_id']);
-            assign('last_update', $params['last_update']);
+            assign('type', $_POST['type']);
+            assign('type_id', $_POST['type_id']);
+            assign('last_update', $_POST['last_update']);
             assign('total', $_POST['total_comments']);
             assign('total_pages', $total_pages);
             assign('comments_voting', $_POST['comments_voting']);
-            assign('commentPagination', 'yes');
             assign('commentPagination', 'yes');
 
             Template('blocks/comments/comments.html');
             Template('blocks/pagination.html');
             break;
 
-        case "getCommentsNew":
-            $params = [];
-
+        case 'getCommentsNew':
             $limit = config('comment_per_page') ? config('comment_per_page') : 10;
             $page = $_POST['page'];
-            $params['type'] = mysql_clean($_POST['type']);
-            $params['type_id'] = mysql_clean($_POST['type_id']);
-            $params['last_update'] = mysql_clean($_POST['last_update']);
-            $params['limit'] = create_query_limit($page, $limit);
-            $params['cache'] = 'no';
 
-            $admin = "";
+            $params = [];
+            $params['type'] = $_POST['type'];
+            $params['type_id'] = $_POST['type_id'];
+            $params['limit'] = create_query_limit($page, $limit);
+            $params['hierarchy'] = true;
+            $comments = Comments::getAll($params);
+
+            $admin = '';
             if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
-                $params['cache'] = 'no';
-                $admin = "yes";
+                $admin = 'yes';
             }
-            $comments = $myquery->getComments($params);
+
             //Adding Pagination
             $total_pages = count_pages($_POST['total_comments'], $limit);
             assign('object_type', mysql_clean($_POST['object_type']));
 
             assign('comments', $comments);
-            assign('type', $params['type']);
-            assign('type_id', $params['type_id']);
-            assign('last_update', $params['last_update']);
+            assign('type', $_POST['type']);
+            assign('type_id', $_POST['type_id']);
+            assign('last_update', $_POST['last_update']);
             assign('total', $_POST['total_comments']);
             assign('total_pages', $total_pages);
             assign('comments_voting', $_POST['comments_voting']);
@@ -1104,50 +921,8 @@ if (!empty($mode)) {
             if ($comments) {
                 Template('blocks/comments/comments.html');
             } else {
-                echo "";
+                echo '';
             }
-            break;
-
-        case "delete_feed":
-            $uid = mysql_clean($_POST['uid']);
-            $file = mysql_clean($_POST['file']) . '.feed';
-            if ($uid && $file) {
-                if ($uid == user_id() || has_access("admin_access", true)) {
-                    $cbfeeds->deleteFeed($uid, $file);
-                    $array['msg'] = lang("feed_has_been_deleted");
-                } else {
-                    $array['err'] = lang("you_cant_del_this_feed");
-                }
-            }
-            echo json_encode($array);
-            break;
-
-        case "become_contributor" :
-            $uid = user_id();
-            $cid = $_POST['cid'];
-            $array = [];
-
-            if ($cbcollection->add_contributor($cid, $uid)) {
-                $array['msg'] = 'Successfully added as contributor';
-            } else {
-                $array['err'] = error('single');
-            }
-
-            echo json_encode($array);
-            break;
-
-        case "remove_contributor" :
-            $uid = user_id();
-            $cid = $_POST['cid'];
-            $array = [];
-
-            if ($cbcollection->remove_contributor($cid, $uid)) {
-                $array['msg'] = 'Successfully removed from contributors';
-            } else {
-                $array['err'] = error('single');
-            }
-
-            echo json_encode($array);
             break;
 
         case 'photo_ajax':
@@ -1167,7 +942,7 @@ if (!empty($mode)) {
                     $response['collection_id'] = $collection;
                     echo json_encode($response);
                 }
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $response["error_ex"] = true;
                 $response["msg"] = 'Message: ' . $e->getMessage();
                 echo(json_encode($response));
@@ -1178,18 +953,18 @@ if (!empty($mode)) {
             global $db;
             $typed = mysql_clean($_POST['typed']);
             if (empty($typed)) {
-                return "none";
+                return 'none';
             }
-            $raw_users = $db->select(tbl("users"), "username", "username LIKE '%$typed%' LIMIT 0,5");
+            $raw_users = $db->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
             $matching_users['matching_users'] = [];
             foreach ($raw_users as $key => $userdata) {
                 $matching_users['matching_users'][] = $userdata['username'];
             }
             if (empty($matching_users)) {
-                return "none";
-            } else {
-                echo json_encode($matching_users);
+                return 'none';
             }
+
+            echo json_encode($matching_users);
             break;
 
         default:
