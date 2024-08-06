@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"88",
+  "revision":"89",
   "status":"dev",
   "detail":[
     {
@@ -54,6 +54,7 @@
         ,"Fix admin tools stuck on error"
         ,"Fix admin tools SSE"
         ,"Fix TMDB posters grabbing"
+        ,"Fix Nginx path not saving"
       ]
     },
     {
