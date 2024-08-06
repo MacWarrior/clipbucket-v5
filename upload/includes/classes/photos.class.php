@@ -178,6 +178,12 @@ class Photo
         $param_photo_key = $params['photo_key'] ?? false;
         $param_filename = $params['filename'] ?? false;
         $param_userid = $params['userid'] ?? false;
+
+        $param_title = $params['title'] ?? false;
+        $param_tags = $params['tags'] ?? false;
+        $param_extension = $params['extension'] ?? false;
+        $param_active = $params['active'] ?? false;
+
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
         $param_exclude_orphan = $params['exclude_orphan'] ?? false;
@@ -199,14 +205,26 @@ class Photo
         if( $param_photo_key ){
             $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_photo_key).'\'';
         }
+        if( $param_title ){
+            $conditions[] = 'LOWER(' . $this->getTableName() . '.photo_title) LIKE LOWER(\'%'.mysql_clean($param_title).'%\')';
+        }
+        if( $param_extension ){
+            $conditions[] = 'LOWER(' . $this->getTableName() . '.extension) = LOWER(\''.mysql_clean($param_extension).'\')';
+        }
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_filename ){
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_filename).'\'';
         }
+        if( $param_active ){
+            $conditions[] = $this->getTableName() . '.active = LOWER(\''.mysql_clean($param_active).'\')';
+        }
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+        }
+        if( $param_tags ){
+            $conditions[] = 'tags.name LIKE \'%'.mysql_clean($param_tags).'%\'';
         }
 
         if( $param_condition ){
