@@ -250,16 +250,17 @@ class FFMpeg
 
         $resolutions = $this->get_eligible_resolutions();
         if (config('only_keep_max_resolution')=='yes') {
-            $max_resolution = $resolutions[0]['height'];
-            $max_key = 0;
-            foreach ($resolutions as $key=> $resolution) {
+            $max_resolution = -1;
+            $max_key = -1;
+            foreach ($resolutions as $key => $resolution) {
                 if ($resolution['height'] > $max_resolution) {
                     $max_resolution = $resolution['height'];
                     $max_key = $key;
                 }
             }
-            $resolutions= array($resolutions[$max_key]);
+            $resolutions = [ $resolutions[$max_key] ];
         }
+
         $this->log->newSection('FFMpeg '.strtoupper($this->conversion_type).' conversion');
         if (!empty($resolutions)) {
             switch ($this->conversion_type) {
@@ -356,8 +357,7 @@ class FFMpeg
      */
     public function get_eligible_resolutions(): array
     {
-        global $myquery;
-        $resolutions = $myquery->getEnabledVideoResolutions();
+        $resolutions = myquery::getInstance()->getEnabledVideoResolutions();
         $eligible_resolutions = [];
 
         foreach ($resolutions as $key => $value) {
