@@ -1296,21 +1296,6 @@
 			}
 		}
 
-		this.subscribeToChannelNew = function(user,type){
-			curObj = this;
-			$.post(page, {
-					mode : type,
-					subscribe_to : user
-				},
-				function(data){
-					if(!data){
-						alert('No data');
-					} else {
-						curObj.showMeTheMsg(data);
-					}
-				},'text');
-		};
-
 		this.add_friendNew = function (uid,result_cont){
 			curObj = this;
 			$('#'+result_cont).css('display','block').html(this.loading);
@@ -1331,22 +1316,6 @@
 				}
 				,'text'
 			);
-		};
-
-		this.subscribeToChannelNew = function(user,type){
-			var curObj = this;
-
-			$.post(page, {
-					mode : type,
-					subscribe_to : user
-				},
-				function(data){
-					if(!data){
-						alert('No data');
-					} else {
-						curObj.showMeTheMsg(data);
-					}
-				},'text');
 		};
 
 		this.add_to_favNew = function(type,id){
@@ -1549,10 +1518,15 @@
 					alert('No data');
 				} else {
 					data = JSON.parse(data);
-					if(data.typ === 'err')
-						curObj.showMeTheMsg('<div class="error">'+data.msg+'</div>');
-					else
-						curObj.showMeTheMsg('<div class="msg">'+data.msg+'</div>');
+					if(data.typ === 'err') {
+						curObj.showMeTheMsg('<div class="error">' + data.msg + '</div>');
+						Array.prototype.forEach.call(elems, function(el) {
+							el.disabled = false;
+						});
+						return false;
+					} else {
+						curObj.showMeTheMsg('<div class="msg">' + data.msg + '</div>');
+					}
 
 					if(data.severity<2){
 						// for channels page
@@ -1589,6 +1563,10 @@
 					data = JSON.parse(data);
 					if(data.typ === 'err'){
 						curObj.showMeTheMsg('<div class="error">'+data.msg+'</div>');
+						Array.prototype.forEach.call(elems, function(el) {
+							el.disabled = false;
+						});
+						return false;
 					} else {
 						curObj.showMeTheMsg('<div class="msg">'+data.msg+'</div>');
 					}

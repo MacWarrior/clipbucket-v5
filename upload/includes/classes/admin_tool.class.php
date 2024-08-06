@@ -303,7 +303,7 @@ class AdminTool
         $videos_hls = glob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
         $thumbs = rglob(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
         $subtitles = rglob(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
-        $userfeeds = rglob(DirPath::getUrl('userfeeds') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
+        $userfeeds = rglob(DirPath::get('userfeeds') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
 
         $files = array_merge(
             array_map(function ($log) use (&$video_file_name) {

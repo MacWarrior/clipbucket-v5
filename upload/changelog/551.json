@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"83",
+  "revision":"87",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
         ,"Update self-update interface"
+        ,"Update activate photo button on photo edition page"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
@@ -51,6 +52,7 @@
         ,"Fix video file deletion <i>(#390)</i>"
         ,"Fix video mass upload tags"
         ,"Fix admin tools stuck on error"
+        ,"Fix admin tools SSE"
       ]
     },
     {
@@ -67,6 +69,7 @@
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
         ,"Hide collection comments option when collection comments are disabled"
+        ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -94,12 +97,14 @@
         ,"Fix collection creation when comments are fully disabled"
         ,"Fix photo report"
         ,"Fix collection item management page"
+        ,"Fix photo display on Windows hosts"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
-        "Update Readme"
+        "Refactor anonymous user"
+        ,"Update Readme"
         ,"Cleanup code"
         ,"Remove unused functions"
         ,"Remove unused files"
@@ -117,12 +122,13 @@
         "Refactor log system"
         ,"Add option to only keep maximum resolution"
         ,"Reduce converted video filesize"
+        ,"Fix video conversion on Windows hosts"
       ]
     },
     {
       "title": "Installation & Update",
       "description": [
-        "Implement Windows installion script"
+        "Implement Windows installation script"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -168,6 +174,9 @@
       "description": [
         "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
+        ,"Update Windows installation script PHP to 8.3.10"
+        ,"Update Windows installation script FFMpeg to 7.0.2"
+        ,"Update Windows installation script MediaInfo to 24.06"
       ]
     }
   ]

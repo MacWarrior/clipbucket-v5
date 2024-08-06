@@ -45,7 +45,11 @@
                                     <span class="label label-primary">
                                         <strong>{lang code='playlist_owner'} :
                                             {assign var=obj value=$userquery->get_user_details($playlists[plist].userid)}
-                                            {display_clean($obj['username'])}
+                                            {if $playlists[plist].userid != $anonymous_id}
+                                                {display_clean($obj['username'])}
+                                            {else}
+                                                {display_clean(lang($obj['username']))}
+                                            {/if}
                                         </strong>
                                     </span>
                                     <span class="label label-primary"><strong>{lang code='playlist_privacy'} : {lang($playlists[plist].privacy)}</strong></span>
@@ -122,7 +126,7 @@
     
     <!-- Manage playlist backend -->
     <!-- lines added for pagination -->
-    {include file="$style_dir/blocks/pagination.html" }
+    {include file="$style_dir/blocks/pagination.html"}
     <div class="marginBottomLarge"></div>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');

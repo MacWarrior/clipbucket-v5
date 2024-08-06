@@ -206,48 +206,52 @@
                                 <div class="col-md-10">
                                     <table class="myTable" style="width:100%;">
                                         <tr>
-                                            <td class="first"><label>User Id</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.userid}</span></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td class="first"><label>{lang code='username'}</label></td>
                                             <td class="last">
-                                                <p><span>{display_clean($data.userid|get_username)}</span></p>
+                                                <p><span>
+                                                    {if $data.userid != $anonymous_id}
+                                                        {display_clean($data.user_username)}
+                                                    {else}
+                                                        {display_clean(lang($data.user_username))}
+                                                    {/if}
+                                                </span></p>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="first"><label>DOB</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.dob}</span></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="first"><label>Email</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.email}</span></p>
-                                            </td>
-                                        </tr>
-                                        {if config('enable_gender') == 'yes'}
-                                        <tr>
-                                            <td class="first"><label>{lang code='gender'}</label></td>
-                                            <td class="last">
-                                                <p><span>{lang code="{$data.sex}"}</span></p>
-                                            </td>
-                                        </tr>
+                                        {if $data.userid != $anonymous_id}
+                                            <tr>
+                                                <td class="first"><label>DOB</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.dob}</span></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="first"><label>Email</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.email}</span></p>
+                                                </td>
+                                            </tr>
+                                            {if config('enable_gender') == 'yes'}
+                                            <tr>
+                                                <td class="first"><label>{lang code='gender'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{lang code="{$data.sex}"}</span></p>
+                                                </td>
+                                            </tr>
+                                            {/if}
+                                            <tr>
+                                                <td class="first"><label>{lang code='rating'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.rating}</span></p>
+                                                </td>
+                                            </tr>
                                         {/if}
-                                        <tr>
-                                            <td class="first"><label>{lang code='rating'}</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.rating}</span></p>
-                                            </td>
-                                        </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-2">
-                                    <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
-                                </div>
+                                {if $data.userid != $anonymous_id}
+                                    <div class="col-md-2">
+                                        <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                    </div>
+                                {/if}
                             </div>
                         </div>
                         <div id="privacyoption" class="tab-pane">

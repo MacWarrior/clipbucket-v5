@@ -133,8 +133,10 @@ if (!$parr['order']) {
     $parr['order'] = $parr['order'] . ' DESC';
 }
 
-$photos = $cbphoto->get_photos($parr);
+$parr['get_orphans'] = true;
 
+$photos = $cbphoto->get_photos($parr);
+assign('anonymous_id', $userquery->get_anonymous_user());
 Assign('photos', $photos);
 
 $pcount = $parr;

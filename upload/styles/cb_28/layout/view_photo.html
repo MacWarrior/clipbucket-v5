@@ -28,7 +28,7 @@
 				</div>
 				{/if}
 
-				<div class="clearfix photo-view" >
+				<div class="clearfix photo-view">
 					<div id="gallery">
 						<i id="enlarge" class="fa fa-expand fa-2x" style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"></i>
 						<div class="image-holder">
@@ -64,15 +64,16 @@
 						<h1>{display_clean($photo.photo_title)}</h1>
 						<h1 id="img-title"></h1>
 						<div class="user-video-info clearfix">
-							<a href="{$userquery->profile_link($user)}" class="avatar">
-								<img src="{$userquery->getUserThumb($video,'m',user_id())}" class="img-responsive"/>
-							</a>
-							<h2 class="user-title">
-								<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
-							</h2>
-							<div class="views-counter">
+							{if $photo.userid != $anonymous_id}
+								<a href="{$userquery->profile_link($user)}" class="avatar">
+									<img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+								</a>
+								<h2 class="user-title">
+									<a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
+								</h2>
+							{/if}
+							<div class="views-counter" style="float: right;">
 								<span>{lang code="views"} {prettyNum($photo.views)}</span>
-
 							</div>
 						</div>
 						<div class="user-likes-sub clearfix">
@@ -84,16 +85,16 @@
 							{else}
 							<div class="clearfix subscribe-col col-lg-12 col-md-12 col-sm-12 col-xs-12">
 							{/if}
-								{if user_id() && $photo.userid != user_id()}
+								{if user_id() && $photo.userid != user_id() && $photo.userid != $anonymous_id}
 									{if $userquery->is_subscribed($photo.userid,user_id())}
-								<button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
-									{lang code="unsubscribe"}
-								</button>
+										<button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+											{lang code="unsubscribe"}
+										</button>
 
-									{else}
-								<button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
-									{lang code="subscribe"}
-								</button>
+											{else}
+										<button onclick="_cb.subscribeToChannelNew('{$photo.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
+											{lang code="subscribe"}
+										</button>
 									{/if}
 								{/if}
 								{if config('enable_edit_photo_button') == 'yes'}
