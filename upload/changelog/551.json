@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"84",
+  "revision":"85",
   "status":"dev",
   "detail":[
     {
@@ -51,6 +51,7 @@
         ,"Fix video file deletion <i>(#390)</i>"
         ,"Fix video mass upload tags"
         ,"Fix admin tools stuck on error"
+        ,"Fix admin tools SSE"
       ]
     },
     {
