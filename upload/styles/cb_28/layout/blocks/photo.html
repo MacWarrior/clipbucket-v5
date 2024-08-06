@@ -17,9 +17,11 @@
 		{else}
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
-		<span>{if $photo.userid != $anonymous_id}
-					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
-				{/if}</a></span>
+		<span>
+			{if $photo.userid != $anonymous_id}
+				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{/if}
+		</span>
 	</div>
 </div>
 {/if}
@@ -59,9 +61,11 @@
 		{else}
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
-		<span>{if $photo.userid != $anonymous_id}
-					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
-				{/if}</a></span>
+		<span>
+			{if $photo.userid != $anonymous_id}
+				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{/if}
+		</span>
 	</div>
 </div>
 {/if}
@@ -78,9 +82,11 @@
 		{else}
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
-		<span>{if $photo.userid != $anonymous_id}
-					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
-				{/if}</a></span>
+		<span>
+			{if $photo.userid != $anonymous_id}
+				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{/if}
+		</span>
 	</div>
 {/if}
 
@@ -106,9 +112,11 @@
 		{else}
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
-		<span>{if $photo.userid != $anonymous_id}
-					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
-				{/if}</a></span>
+		<span>
+			{if $photo.userid != $anonymous_id}
+				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{/if}
+		</span>
 	</div>
 {/if}
 
@@ -118,7 +126,9 @@
 			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo output='html' width='120' class='photoThumbBox moveL' style='margin-right:5px;'}
 		</a>
-		<div class="photoTitle" style="margin-bottom:5px;"><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a></div>
+		<div class="photoTitle" style="margin-bottom:5px;">
+			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
+		</div>
 		<span class="photoInfo">{$photo.views|number_format} {lang code="views"} <br/> {$photo.total_comments} {lang code="comments"}</span>
 		{show_rating rating=$photo.rating total='10' class='rating moveL'}
 	</div>
@@ -136,7 +146,8 @@
 	<div class="grid_view clearfix" style="width:auto; margin-right:4px;">
 		<a href="{$cbphoto->photo_links($photo,'view_item')}">{get_photo details=$photo output='html' class='photoThumbBox' width='110'}</a>
 		<div class="photoTitle" style="margin:5px 0px; font:bold 11px Arial;">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a></div>
+			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
+		</div>
 		{show_rating rating=$photo.rating total='10' class='rating'}
 		<div style="font-size:10px; margin:2px;">{$photo.views|number_format} {lang code="views"}</div>
 		<a href="{$userquery->profile_link($photo)}" style="font:bold 10px Arial; text-decoration:none;">{display_clean($photo.username)|truncate:20}</a>
@@ -149,13 +160,13 @@
 			{ANCHOR place='in_photo_thumb' data=$photo}
 			{get_photo details=$photo output='html' width='82' class='photoThumbBox'}
 		</a>
-		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px">
-		<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
+		<div class="photoTitle" style="font:bold 10px Arial; margin:1px 0px;">
+			<a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:15}</a>
 		</div>
-	<div class="watch_video_box_details">
-		<span style="color:#666; font:normal 10px Arial;">{lang code='views'}: {$photo.views|number_format}</span><br>
-		<a style="font:bold 10px Arial; text-decoration:none;" href="{$userquery->profile_link($photo)}" title="{display_clean($photo.username)}" alt="{display_clean($photo.username)}">{display_clean($photo.username)|truncate:12}</a>
-	</div>        
+		<div class="watch_video_box_details">
+			<span style="color:#666; font:normal 10px Arial;">{lang code='views'}: {$photo.views|number_format}</span><br>
+			<a style="font:bold 10px Arial; text-decoration:none;" href="{$userquery->profile_link($photo)}" title="{display_clean($photo.username)}" alt="{display_clean($photo.username)}">{display_clean($photo.username)|truncate:12}</a>
+		</div>
 	</div>
 {/if}
 
@@ -179,9 +190,11 @@
         {else}
         <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
         {/if}
-        <span>{if $photo.userid != $anonymous_id}
-					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
-				{/if}</a></span>
+        <span>
+			{if $photo.userid != $anonymous_id}
+				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{/if}
+		</span>
     </div>
 </div>
 {/if}

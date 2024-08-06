@@ -67,15 +67,16 @@
 </div>
 </form>
 
-
-
-
 {if $pr_msg !=''}
 
 <div>
   <div style="padding:5px;" align="right">
-    <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
-    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}" {if $pr_msg.message_from == $anonymous_id} disabled="disabled" {/if}><img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="{lang code='reply'}!"/></a>
+    <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}">
+        <img src="{$imageurl}/dot.gif" border="0" class="delete_icon"/>
+    </a>
+    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}" {if $pr_msg.message_from == $anonymous_id}disabled="disabled"{/if}>
+      <img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="{lang code='reply'}!"/>
+    </a>
   </div>
   <div class="pm_message_top" align="left">
     <div class="pm_line">

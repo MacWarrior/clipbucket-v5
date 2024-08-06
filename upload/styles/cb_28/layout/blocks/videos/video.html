@@ -12,10 +12,10 @@
 
 		<span class="author">
 		{if isSectionEnabled('channels') && $anonymous_id != $pop_video.userid}
-				{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($pop_video.username)}</a>
-			{elseif $anonymous_id != $pop_video.userid}
-				{lang code="by"} {display_clean($pop_video.username)}
-			{/if}
+			{lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($pop_video.username)}</a>
+		{elseif $anonymous_id != $pop_video.userid}
+			{lang code="by"} {display_clean($pop_video.username)}
+		{/if}
 		</span>
 
 		<div class="views-date">

@@ -105,7 +105,7 @@
                         {if $video.userid != $anonymous_id}
                             <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
                         {else}
-                        {display_clean(lang($video.user_username))}
+                            {display_clean(lang($video.user_username))}
                         {/if}
                     </div>
                 </div>
@@ -170,5 +170,5 @@
     {/if}
 </form>
 
-{include file="$style_dir/blocks/pagination.html" }
+{include file="$style_dir/blocks/pagination.html"}
 <div class="marginBottomLarge"></div>

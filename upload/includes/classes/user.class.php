@@ -1072,14 +1072,11 @@ class userquery extends CBCategory
         $this->remove_user_pms($uid);
         //Changing From Messages to Anonymous
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $anonymous_id . '\' WHERE message_from=' . mysql_clean($uid));
-
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('photos') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collections') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-
 
         //Remove tags
         Tags::deleteTags('profile', $uid);
@@ -4084,8 +4081,6 @@ class userquery extends CBCategory
             }
             $cond .= ' ' . $params['cond'] . ' ';
         }
-
-
 
         if (empty($params['count_only'])) {
             $fields = [

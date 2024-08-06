@@ -32,7 +32,7 @@
 {foreach from=$users item=u}
 <tr>
     <td>
-      <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" {if $u.userid == $anonymous_id} disabled="disabled" {/if} />
+      <input name="check_user[]" type="checkbox" id="check_user" value="{$u.userid}" {if $u.userid == $anonymous_id}disabled="disabled"{/if}/>
     </td>
     <td>
       {$u.userid}
@@ -155,11 +155,4 @@
 	<div align="center"><strong><em>NO USER FOUND</em></strong></div>
 {/if}
 
-
-
-<!-- DIsplaying Videos Ends-->
-{include file="$style_dir/blocks/pagination.html" }
-
-<script>
-
-</script>
+{include file="$style_dir/blocks/pagination.html"}

@@ -24,56 +24,56 @@ $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath:
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => DirPath::getUrl('admin_area') . 'view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
-        //Deactivating User
-        if (isset($_GET['deactivate'])) {
-            $userquery->action('deactivate', $uid);
+    //Deactivating User
+    if (isset($_GET['deactivate'])) {
+        $userquery->action('deactivate', $uid);
+        $udetails = $userquery->get_user_details($uid);
+    }
+
+    //Activating User
+    if (isset($_GET['activate'])) {
+        $userquery->action('activate', $uid);
+        $udetails = $userquery->get_user_details($uid);
+    }
+
+    //Banning User
+    if (isset($_GET['ban'])) {
+        $userquery->action('ban', $uid);
+        $udetails = $userquery->get_user_details($uid);
+    }
+
+    //Unbanning User
+    if (isset($_GET['unban'])) {
+        $userquery->action('unban', $uid);
+        $udetails = $userquery->get_user_details($uid);
+    }
+
+    //Deleting User
+    if (isset($_GET['delete'])) {
+        $userquery->delete_user($uid);
+    }
+
+    //Deleting User Videos
+    if (isset($_GET['delete_vids'])) {
+        $userquery->delete_user_vids($uid);
+    }
+
+    //Deleting User Contacts
+    if (isset($_GET['delete_contacts'])) {
+        $userquery->remove_contacts($uid);
+    }
+
+    //Deleting User Pms
+    if (isset($_GET['delete_pms'])) {
+        $userquery->remove_user_pms($uid);
+    }
+
+    if (isset($_POST['update_user'])) {
+        $userquery->update_user($_POST);
+        if (!error()) {
             $udetails = $userquery->get_user_details($uid);
         }
-
-        //Activating User
-        if (isset($_GET['activate'])) {
-            $userquery->action('activate', $uid);
-            $udetails = $userquery->get_user_details($uid);
-        }
-
-        //Banning User
-        if (isset($_GET['ban'])) {
-            $userquery->action('ban', $uid);
-            $udetails = $userquery->get_user_details($uid);
-        }
-
-        //Unbanning User
-        if (isset($_GET['unban'])) {
-            $userquery->action('unban', $uid);
-            $udetails = $userquery->get_user_details($uid);
-        }
-
-        //Deleting User
-        if (isset($_GET['delete'])) {
-            $userquery->delete_user($uid);
-        }
-
-        //Deleting User Videos
-        if (isset($_GET['delete_vids'])) {
-            $userquery->delete_user_vids($uid);
-        }
-
-        //Deleting User Contacts
-        if (isset($_GET['delete_contacts'])) {
-            $userquery->remove_contacts($uid);
-        }
-
-        //Deleting User Pms
-        if (isset($_GET['delete_pms'])) {
-            $userquery->remove_user_pms($uid);
-        }
-
-        if (isset($_POST['update_user'])) {
-            $userquery->update_user($_POST);
-            if (!error()) {
-                $udetails = $userquery->get_user_details($uid);
-            }
-        }
+    }
 
     $profile = $userquery->get_user_profile($udetails['userid']);
     if (is_array($profile)) {
