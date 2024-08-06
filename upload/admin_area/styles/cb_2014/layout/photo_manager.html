@@ -56,7 +56,11 @@
                 </div>
             </div>
             <div class="col-md-2">
-                <a href="view_user.php?uid={$photos[list].userid}">{display_clean($photos[list].username)}</a>
+                {if $photos[list].userid != $anonymous_id}
+                    <a href="view_user.php?uid={$photos[list].userid}">{display_clean($photos[list].username)}</a>
+                {else}
+                    {display_clean(lang($photos[list].username))}
+                {/if}
             </div>
         </div>
 
@@ -111,5 +115,5 @@
 {else}
 	<div align="center"><strong><em>No Photo Found</em></strong></div>
 {/if}
-{include file="$style_dir/blocks/pagination.html" }
+{include file="$style_dir/blocks/pagination.html"}
 </form>

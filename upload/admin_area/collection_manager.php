@@ -1,8 +1,8 @@
 <?php
 define('THIS_PAGE', 'collection_manager');
-global $userquery, $pages, $cbcollection, $eh;
-
+global  $pages, $cbcollection, $eh;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+$userquery = userquery::getInstance();
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();
@@ -146,6 +146,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
+assign('anonymous_id', $userquery->get_anonymous_user());
 
 subtitle(lang('manage_collections'));
 template_files('collection_manager.html');

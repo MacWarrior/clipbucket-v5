@@ -17,6 +17,10 @@ if( config('enable_user_category') == 'yes' && !empty($_GET['cat']) ){
     $params['category'] = (int)$_GET['cat'];
 }
 
+if (isset($_GET['no_user']) && $_GET['no_user'] == 1) {
+    e(lang('usr_exist_err'));
+}
+
 $params['count'] = true;
 $count = User::getInstance()->getAll($params);
 

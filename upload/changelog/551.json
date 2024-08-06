@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"85",
+  "revision":"86",
   "status":"dev",
   "detail":[
     {
@@ -101,7 +101,8 @@
     {
       "title": "Miscellaneous",
       "description": [
-        "Update Readme"
+        "Refactor anonymous user"
+        ,"Update Readme"
         ,"Cleanup code"
         ,"Remove unused functions"
         ,"Remove unused files"

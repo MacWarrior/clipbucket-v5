@@ -71,6 +71,8 @@ if (isset($_POST['load_type'])) {
         $clean_cookies = str_replace(["[", "]"], "", $quicklists);
         $clean_cookies = explode(",", $clean_cookies);
         $clean_cookies = array_filter($clean_cookies);
+        $anonymous_id = userquery::getInstance()->get_anonymous_user();
+        assign('anonymous_id', $anonymous_id);
         assign("qlist_vids", $clean_cookies);
         foreach ($data as $key => $video) {
             assign("video", $video);

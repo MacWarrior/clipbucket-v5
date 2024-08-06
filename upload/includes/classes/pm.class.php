@@ -181,7 +181,7 @@ class cb_pm
                     e(sprintf(lang('cant_pm_banned_user'), $username));
                 } elseif ($userquery->is_user_banned(user_name(), $username)) {
                     e(sprintf(lang('cant_pm_user_banned_you'), $username));
-                } elseif (!$userquery->user_exists($username)) {
+                } elseif (!$userquery->user_exists($username) || $user_id == $userquery->get_anonymous_user()) {
                     e(lang('unknown_reciever'));
                 } elseif ($user_id == $sender) {
                     e(lang('you_cant_send_pm_yourself'));
