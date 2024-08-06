@@ -136,7 +136,7 @@ if (!$parr['order']) {
 $parr['get_orphans'] = true;
 
 $photos = $cbphoto->get_photos($parr);
-
+assign('anonymous_id', $userquery->get_anonymous_user());
 Assign('photos', $photos);
 
 $pcount = $parr;

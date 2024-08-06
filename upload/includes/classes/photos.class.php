@@ -1366,6 +1366,7 @@ class CBPhotos
             default:
                 return false;
         }
+        imagedestroy($image);
         imagedestroy($canvas);
     }
 
@@ -1392,14 +1393,17 @@ class CBPhotos
 
         $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_o.' . $extension, $extension);
         $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_t.' . $extension, $extension, $this->thumb_width, $this->thumb_height);
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_m.' . $extension, $extension, $this->mid_width, $this->mid_height);
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_l.' . $extension, $extension, $this->lar_width);
 
-        $should_watermark = config('watermark_photo');
+        if (empty(errorhandler::getInstance()->get_error())) {
+            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_m.' . $extension, $extension, $this->mid_width, $this->mid_height);
+            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_l.' . $extension, $extension, $this->lar_width);
 
-        if (!empty($should_watermark) && $should_watermark == 1) {
-            $this->watermark_image($path . $filename . '_l.' . $extension, $path . $filename . '_l.' . $extension);
-            $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
+            $should_watermark = config('watermark_photo');
+
+            if (!empty($should_watermark) && $should_watermark == 1) {
+                $this->watermark_image($path . $filename . '_l.' . $extension, $path . $filename . '_l.' . $extension);
+                $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
+            }
         }
 
         /* GETTING DETAILS OF IMAGES AND STORING THEM IN DB */
@@ -1463,6 +1467,7 @@ class CBPhotos
      * @param null $d_width
      * @param null $d_height
      * @param bool $force_copy
+     * @throws Exception
      */
     function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false)
     {
@@ -1472,12 +1477,30 @@ class CBPhotos
         $org_height = $info[1];
 
         if ($org_width > $d_width && !empty($d_width)) {
+
+            if( stristr(PHP_OS, 'WIN') ) {
+                // On Windows hosts, imagecreatefromX functions consumes lots of RAM
+                $memory_needed = Image::getMemoryNeededForImage($from);
+                $memory_limit = ini_get('memory_limit');
+                if ($memory_needed > getBytesFromFileSize($memory_limit)) {
+                    $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
+                    if (in_dev()) {
+                        e($msg);
+                    } else {
+                        e(lang('technical_error'));
+                    }
+                    DiscordLog::sendDump($msg);
+                    return;
+                }
+            }
+
             $ratio = $org_width / $d_width; // We will resize it according to Width
 
             $width = $org_width / $ratio;
             $height = $org_height / $ratio;
 
             $image_r = imagecreatetruecolor($width, $height);
+
             if (!empty($d_height) && $height > $d_height && $this->cropping == 1) {
                 $crop_image = true;
             }
@@ -1516,6 +1539,7 @@ class CBPhotos
                     break;
             }
             imagedestroy($image_r);
+            imagedestroy($image);
         } else {
             if (!file_exists($to) || $force_copy === true) {
                 if (!is_dir($from)) {
@@ -1825,8 +1849,10 @@ class CBPhotos
                 $this->generate_photos($photo);
             }
 
-            $eh->flush();
-            e(sprintf(lang('photo_is_saved_now'), display_clean($photo['photo_title'])), 'm');
+            if (empty(errorhandler::getInstance()->get_error())) {
+                e(sprintf(lang('photo_is_saved_now'), display_clean($photo['photo_title'])), 'm');
+            }
+
             $db->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
 
             //Adding Photo Feed

@@ -35,7 +35,7 @@ if( empty($photos) ){
 }
 
 $total_pages = count_pages($count, config('photo_main_list'));
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);
 

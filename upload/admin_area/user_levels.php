@@ -40,6 +40,10 @@ switch ($mode) {
 
         //Getting Details of $level
         $levelDetails = $userquery->get_level_details($lid);
+        if (empty($levelDetails)) {
+            Assign('view', 'view');
+            break;
+        }
         Assign('level_details', $levelDetails);
 
         //Getting Level Permission

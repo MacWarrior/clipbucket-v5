@@ -84,7 +84,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
-
+assign('anonymous_id', $userquery->get_anonymous_user());
 assign('randon_number', rand(-5000, 5000));
 subtitle('Edit Collection');
 template_files('edit_collection.html');
