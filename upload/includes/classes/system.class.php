@@ -690,13 +690,13 @@ class System{
         return $disks;
     }
 
-    public static function get_readable_filesize(int $bytes, int $round = 0): String
+    public static function get_readable_filesize(int $bytes, int $round = -1): String
     {
         $size   = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $factor = floor((strlen($bytes) - 1) / 3);
 
         $value = $bytes / (1024 ** $factor);
-        if($round != 0){
+        if($round != -1){
             $value = round($value, $round);
         }
 
