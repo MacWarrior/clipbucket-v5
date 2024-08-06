@@ -25,16 +25,13 @@ switch ($mode) {
         $_POST['filename'] = mysql_clean($_POST['file_name']);
         $insert_id = $cbphoto->insert_photo();
 
-        if (error()) {
+        if (!empty(errorhandler::getInstance()->get_error())) {
             $response['error'] = error('single');
-        }
-
-        if (msg()) {
-            $response['success'] = msg('single');
+        } else {
             $response['photoID'] = $insert_id;
             $details = $cbphoto->get_photo($insert_id);
             $details['filename'] = $_POST['file_name'];
-            $cbphoto->generate_photos($details);
+            $response['success'] = msg('single');
             $params = ['details' => $details, 'size' => 'm', 'static' => true];
             $response['photoPreview'] = get_image_file($params);
         }
