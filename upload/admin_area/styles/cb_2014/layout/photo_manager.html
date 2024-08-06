@@ -51,6 +51,9 @@
 									{lang code='inactive'}
 								{/if}
 							</span>
+                            {if $photos[list].collection_id == 0}
+                                <span class="label label-primary">{lang code='orphan'}</span>
+                            {/if}
                         </div>
                     </div>
                 </div>

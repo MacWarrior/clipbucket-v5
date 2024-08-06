@@ -16,6 +16,7 @@ $get_limit = create_query_limit($page, config('photo_main_list'));
 $params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
 $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
+$params['must_collection'] = true;
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
