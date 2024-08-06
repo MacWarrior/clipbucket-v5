@@ -76,7 +76,7 @@ class Tmdb
 
     public function moviePosterBackdrops($movie_id)
     {
-        return $this->requestAPI('movie/' . $movie_id . '/images', ['include_image_language' => $this->language . ',null']);
+        return $this->requestAPI('movie/' . $movie_id . '/images',['language'=>'']);
     }
 
     public function setLanguage($language)
@@ -86,7 +86,7 @@ class Tmdb
 
     public function requestAPI($url, $param = [])
     {
-        if (empty($param['language'])) {
+        if (!isset($param['language'])) {
             $param['language'] = $this->language;
         }
         $param['include_adult'] = config('enable_tmdb_mature_content') == 'yes' ? 'true' : 'false';
@@ -227,7 +227,15 @@ class Tmdb
         if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes' ){
             Video::getInstance()->deletePictures($video_info, 'poster');
             $movie_posters = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['posters'];
-            foreach ($movie_posters as $movie_poster) {
+            $language_movie_posters = array_filter($movie_posters, function ($elem){
+                return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
+            });
+            if (count($language_movie_posters) > 0) {
+                $poster_iterate = $language_movie_posters;
+            } else {
+                $poster_iterate = $movie_posters;
+            }
+            foreach ($poster_iterate as $movie_poster) {
                 $path_without_slash = str_replace('/','', $movie_poster['file_path']);
                 $url = Tmdb::IMAGE_URL . $movie_poster['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
@@ -246,7 +254,15 @@ class Tmdb
         if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 'yes' ){
             Video::getInstance()->deletePictures($video_info, 'backdrop');
             $movie_backdrops = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['backdrops'];
-            foreach ($movie_backdrops as $movie_backdrop) {
+            $language_movie_backdrops = array_filter($movie_backdrops, function ($elem){
+                return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
+            });
+            if (count($language_movie_backdrops) > 0) {
+                $backdrop_iterate = $language_movie_backdrops;
+            } else {
+                $backdrop_iterate = $movie_backdrops;
+            }
+            foreach ($backdrop_iterate as $movie_backdrop) {
                 $path_without_slash = str_replace('/','', $movie_backdrop['file_path']);
                 $url = Tmdb::IMAGE_URL . $movie_backdrop['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
