@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"87",
+  "revision":"88",
   "status":"dev",
   "detail":[
     {
@@ -53,6 +53,7 @@
         ,"Fix video mass upload tags"
         ,"Fix admin tools stuck on error"
         ,"Fix admin tools SSE"
+        ,"Fix TMDB posters grabbing"
       ]
     },
     {
