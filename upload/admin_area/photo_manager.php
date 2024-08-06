@@ -133,6 +133,8 @@ if (!$parr['order']) {
     $parr['order'] = $parr['order'] . ' DESC';
 }
 
+$parr['get_orphans'] = true;
+
 $photos = $cbphoto->get_photos($parr);
 assign('anonymous_id', $userquery->get_anonymous_user());
 Assign('photos', $photos);

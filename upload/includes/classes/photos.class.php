@@ -180,6 +180,7 @@ class Photo
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
+        $param_exclude_orphan = $params['exclude_orphan'] ?? false;
         $param_featured = $params['featured'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
@@ -207,6 +208,7 @@ class Photo
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
+
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
@@ -262,6 +264,9 @@ class Photo
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
+        } else if( $param_exclude_orphan ){
+            $collection_items_table = Collection::getInstance()->getTableNameItems();
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
