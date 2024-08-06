@@ -4,7 +4,7 @@ var eventSourceLog;
 var ids_stopped=[];
 var ids_error=[];
 $(function () {
-    if (can_sse == 'true') {
+    if (can_sse === 'true') {
         connectSSE();
     }
     $('.launch').on('click', function () {
@@ -87,7 +87,7 @@ function connectSSE () {
             $('#done-' + tool.id).html(tool.elements_done);
             $('#total-' + tool.id).html(tool.elements_total);
             ids_tool.push(parseInt(tool.id));
-            if (tool.status == 'on_error') {
+            if (tool.status === 'on_error') {
                 $('#span-' + tool.id).html(tool.status_title);
                 if (ids_error.includes(parseInt(tool.id)) === false) {
                     ids_error.push(parseInt(tool.id));
@@ -98,7 +98,6 @@ function connectSSE () {
         $('.progress-bar:visible').each(function (index, elem) {
             elem = $(elem);
             let id = elem.attr('data-id');
-            console.log(ids_tool);
             if (!ids_tool.includes(parseInt(id))) {
                 if (ids_stopped.includes(parseInt(id))) {
                     elem.addClass('progress-bar-striped').addClass('active');
