@@ -146,6 +146,24 @@ class AdminTool
     }
 
     /**
+     * start a tool on another process with CLI
+     * @param int $id_tool
+     * @return void
+     */
+    public static function launchCli(int $id_tool)
+    {
+        $cmd = System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.$id_tool;
+        if (stristr(PHP_OS, 'WIN')) {
+            $complement = '';
+        } elseif (stristr(PHP_OS, 'darwin')) {
+            $complement = ' </dev/null >/dev/null &';
+        } else { // for ubuntu or linux
+            $complement = ' > /dev/null &';
+        }
+        exec($cmd . $complement);
+    }
+
+    /**
      * return all tools
      * @return array
      * @throws Exception
@@ -524,7 +542,7 @@ class AdminTool
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
             $this->addLog(lang('tool_ended'));
         } else {
-            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
         }
     }
 
@@ -676,5 +694,210 @@ class AdminTool
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
         }
+    }
+
+    /**
+     * @param int|null $id_tool
+     * @return array
+     * @throws Exception
+     */
+    public static function getToolsReadyForLaunch( int $id_tool = null) :array
+    {
+
+        $where = '';
+        if(!empty($idTask)){
+            $where = ' AND id_tool = '. $id_tool;
+        }
+
+        /** get all tools with frequency */
+        $query = /** @lang MySQL */'SELECT 
+                        T.*
+                        , TH.date_start AS last_date_start
+                        , T.previous_calculated_datetime
+                    FROM '.tbl('tools').' T
+
+                    -- exclude tools already running and get date_start
+                    INNER JOIN (
+                        SELECT MAX(TH.date_debut) AS date_debut, TH.id_tool
+                        FROM '.tbl('tools_histo').' TH
+                        WHERE TH.id_tool NOT IN (
+                            SELECT DISTINCT id_tool
+                            FROM '.tbl('tools_histo').'
+                            WHERE statut IN (\'in_progress\',\'stopping\') '.$where.'
+                        )
+                        WHERE true '.$where.'
+                        GROUP BY TH.id_tool
+                    ) TH ON T.id_tool = TH.id_tool
+                    
+                    WHERE COALESCE(T.frequency, \'\') != \'\' 
+                      AND COALESCE(T.previous_calculated_datetime, \'\') != \'\'
+                      AND T.is_automatable = true
+                      AND T.is_disabled = false
+                      '.$where;
+        $array_tools = Clipbucket_db::getInstance()->_select($query);
+        $array_tools_ready = [];
+        foreach ($array_tools as $tool) {
+            /** check if a tool should be launch */
+            if( self::shouldCronBeExecuted($tool['frequency'], $tool['last_date_start'], $tool['previous_calculated_datetime'], $tool['id_tool']) ){
+                $array_tools_ready[] = $tool;
+            }
+        }
+
+        return $array_tools_ready;
+    }
+
+    /**
+     * Tools for start automate if necessary
+     * @return void
+     * @throws Exception
+     */
+    public function checkAndStartToolsByFrequency()
+    {
+        foreach (self::getToolsReadyForLaunch() as $tool) {
+            /** start tools from CLI */
+            self::launchCli($tool['id_tool']);
+        }
+    }
+
+    /**
+     * @param string $cron
+     * @param string $last_date_start
+     * @param string $previous_calculated_datetime
+     * @param int|null $id_tool
+     * @return bool
+     * @throws Exception
+     */
+    public static function shouldCronBeExecuted(string $cron, string $last_date_start, string $previous_calculated_datetime, int $id_tool = null): bool
+    {
+
+        if( !empty($last_date_start) && $last_date_start < $previous_calculated_datetime){
+            if($previous_calculated_datetime > date('Y-m-d H:i:s')){
+                /* should not run because next_date is futur */
+                return false;
+            }
+
+            /* should run because last run is before previous_calculated_date */
+            return true;
+        }
+
+        $data_task_date = self::getDateStat($cron, $last_date_start, $previous_calculated_datetime, $id_tool);
+        return $data_task_date['next_date'] <= date('Y-m-d H:i:s');
+    }
+
+    /**
+     * @param string $cron
+     * @param string $last_date_start
+     * @param string $date_previsionnel_precedente_source
+     * @param int|null $id_tool
+     * @return array
+     * @throws Exception
+     */
+    public static function getDateStat(string $cron, string $last_date_start, string $date_previsionnel_precedente_source, int $id_tool = null): array
+    {
+        $next_date =null;
+        $date_previsionnel_precedente = null;
+        do {
+            $timestamp = self::getNextDate($cron, MAX($last_date_start,$next_date), MAX($date_previsionnel_precedente,$date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
+            $date = new \DateTime();
+            $date->setTimeStamp($timestamp);
+            $continue = $date->format('Y-m-d H:i:s.u') < date('Y-m-d H:i:s');
+            if($continue || empty($next_date)){
+                $next_date = $date->format('Y-m-d H:i:s.u');
+            }
+        }while($continue);
+
+        if(
+            !empty($id_tool)
+            && (empty($date_previsionnel_precedente_source) || $date_previsionnel_precedente_source < $last_date_start)
+            && !empty($date_previsionnel_precedente)
+        ){
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['previous_calculated_datetime'],[$date_previsionnel_precedente], 'id_tool = '.$id_tool);
+        }
+
+        return [
+            'date_execution_precedente' => $last_date_start
+            ,'date_previsionnel_precedente' => $date_previsionnel_precedente
+            ,'next_date' => $next_date
+        ];
+    }
+
+    /**
+     * @param string $cron
+     * @param string $date
+     * @param string $date_previsionnel
+     * @param string|null $last_previsionnel_date
+     * @return bool|int
+     */
+    public static function getNextDate(string $cron, string $date, string $date_previsionnel, string &$last_previsionnel_date = null)
+    {
+
+        /**
+         * remplacer le L du mois par le dernier jour du mois en cours si l'on est au moin le 28 du mois
+         * sinon utiliser la notation 28-31
+         */
+        $cron = trim($cron);
+        $e = explode(' ', $cron ?? '');
+        if($e[2] == 'L'){
+            $last_day_of_month = date('t');
+            $current_day = date('j');
+            if($current_day < 28){
+                $e[2] = '28-31';
+            } else {
+                $e[2] = $last_day_of_month;
+            }
+            $cron = implode(' ', $e);
+        }
+
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s.u',$date);
+
+        try{
+            $expression = new \CronExpression($cron);
+            $next_date = \DateTime::createFromFormat('Y-m-d H:i:s.u',$date_previsionnel);
+
+            do{
+                $next_date = $expression->getNext($next_date);
+                if($next_date < $date->getTimestamp()){
+                    $date_pre = new \DateTime();
+                    $date_pre->setTimeStamp($next_date);
+                    $last_previsionnel_date = $date_pre->format('Y-m-d H:i:s.u');
+                }
+
+            }while($next_date < $date->getTimestamp());
+
+            return $next_date;
+        } catch(\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * return true if tool not already running and frequency ready for next run
+     * @return bool
+     * @throws Exception
+     */
+    public function isReadyForAutomaticLaunch() :bool
+    {
+        /** check if tool should be launch in cli mode */
+        $found = false;
+        foreach (self::getToolsReadyForLaunch($this->id_tool) as $tool) {
+            if($found === false && $tool['id_tool'] == $this->id_tool) {
+                $found = true;
+            }
+        }
+        return $found;
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function isAlreadyLaunch() :bool
+    {
+        /** get all tools running */
+        $query = /** @lang MySQL */'SELECT DISTINCT id_tool
+                            FROM '.tbl('tools_histo').'
+                            WHERE statut IN (\'in_progress\',\'stopping\') AND id_tool = '.( (int) $this->id_tool);
+        $rs = Clipbucket_db::getInstance()->_select($query);
+        return !empty($rs);
     }
 }

@@ -5,7 +5,10 @@ class CLI
 
     private static $cache = [];
 
-    public static function getParams()
+    /**
+     * @return array
+     */
+    public static function getParams() :array
     {
         global $argv;
         if (!empty(self::$cache)) {
@@ -33,10 +36,15 @@ class CLI
         return $param;
     }
 
-    public static function isRequiredParam(string $key)
+    /**
+     * @param string $key
+     * @return void
+     * @throws Exception
+     */
+    public static function checkRequiredParam(string $key)
     {
-        if (empty(self::getParams()[$key] ?? '')) {
-            throw new InvalidArgumentException('param[' . $key . '].missing');
+        if (empty(self::getParams()[$key])) {
+            throw new Exception('Missing parameter: '.$key);
         }
     }
 

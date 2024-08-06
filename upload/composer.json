@@ -6,7 +6,8 @@
     "phpmailer/phpmailer": "^6.9.1",
     "smarty/smarty": "3.1.48",
     "oxygenzsas/composer_lib_discord": "dev-php7",
-    "psr/http-server-middleware": "1.0.2"
+    "psr/http-server-middleware": "1.0.2",
+    "ext-json": "*"
   },
   "config": {
     "platform": {

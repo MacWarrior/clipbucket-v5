@@ -67,6 +67,7 @@ require_once DirPath::get('classes') . 'rediscache.class.php';
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'cli.class.php';
 
 check_install('before');
 if (file_exists(DirPath::get('includes') . 'config.php')) {
