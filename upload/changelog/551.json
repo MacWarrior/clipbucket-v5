@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"86",
+  "revision":"87",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
         ,"Update self-update interface"
+        ,"Update activate photo button on photo edition page"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
@@ -68,6 +69,7 @@
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
         ,"Hide collection comments option when collection comments are disabled"
+        ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
