@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'ajax');
+define('THIS_PAGE', 'form_category');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 userquery::getInstance()->admin_login_check();

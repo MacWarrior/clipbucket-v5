@@ -1,9 +1,9 @@
 <?php
 define('THIS_PAGE', 'view_conversion_log');
-global $userquery, $pages, $myquery, $Cbucket;
+global $pages, $myquery, $Cbucket;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 $file_name = $_GET['file_name'];

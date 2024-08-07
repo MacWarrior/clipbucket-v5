@@ -3,9 +3,9 @@ define('THIS_PAGE', 'flagged_collections');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $cbcollection, $cbphoto, $eh;
+global $pages, $cbcollection, $cbphoto, $eh;
 
-$userquery->admin_login_check();
+userquery::getInstance()->admin_login_check();
 $pages->page_redir();
 
 $mode = $_GET['mode'];

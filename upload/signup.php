@@ -3,8 +3,8 @@ define('THIS_PAGE', 'signup');
 define('PARENT_PAGE', 'signup');
 
 require 'includes/config.inc.php';
-global $userquery, $eh;
-if ($userquery->login_check('', true)) {
+global $eh;
+if (userquery::getInstance()->login_check('', true)) {
     redirect_to(BASEURL);
 }
 
@@ -31,17 +31,17 @@ if (isset($_POST['signup'])) {
         $signup_data['password'] = mysql_clean($signup_data['password']);
         $signup_data['cpassword'] = mysql_clean($signup_data['cpassword']);
         $signup_data['email'] = mysql_clean($signup_data['email']);
-        $signup = $userquery->signup_user($signup_data);
+        $signup = userquery::getInstance()->signup_user($signup_data);
 
         // checking if user signup was successful
         if ($signup) {
             // user signed up, lets get his details
-            $udetails = $userquery->get_user_details($signup);
+            $udetails = userquery::getInstance()->get_user_details($signup);
             $eh->flush();
             assign('udetails', $udetails);
             if (empty(ClipBucket::getInstance()->configs['email_verification'])) {
                 // login user and redirect to home page
-                $userquery->login_as_user($udetails['userid']);
+                userquery::getInstance()->login_as_user($udetails['userid']);
                 header('Location: ' . BASEURL);
             } else {
                 assign('mode', 'signup_success');
@@ -60,7 +60,7 @@ if (isset($_POST['login'])) {
         $remember = true;
     }
 
-    if ($userquery->login_user($username, $password, $remember)) {
+    if (userquery::getInstance()->login_user($username, $password, $remember)) {
         if ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {

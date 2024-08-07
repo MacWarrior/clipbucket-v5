@@ -335,7 +335,7 @@ $(document).ready(function(){
             dataType: "JSON",
             success: function(msg){
                 if( msg.error ){
-                    $("#uploadMessage").html(msg.error.val).attr("class", "alert alert-danger container");p
+                    $("#uploadMessage").html(msg.error.val).attr("class", "alert alert-danger container");
                 } else {
                     $("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");
                     setTimeout(function(){

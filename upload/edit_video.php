@@ -8,15 +8,15 @@ if( config('videosSection') != 'yes' ){
     redirect_to(BASEURL);
 }
 
-global $userquery, $pages, $cbvid, $Upload, $eh;
+global $pages, $cbvid, $Upload, $eh;
 
-$userquery->logincheck();
+userquery::getInstance()->logincheck();
 $pages->page_redir();
 
 $userid = user_id();
-$udetails = $userquery->get_user_details($userid);
+$udetails = userquery::getInstance()->get_user_details($userid);
 assign('user', $udetails);
-assign('p', $userquery->get_user_profile($udetails['userid']));
+assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $vid = mysql_clean($_GET['vid']);
 //get video details

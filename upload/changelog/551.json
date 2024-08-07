@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"90",
+  "revision":"92",
   "status":"dev",
   "detail":[
     {
@@ -56,6 +56,7 @@
         ,"Fix TMDB posters grabbing"
         ,"Fix Nginx path not saving"
         ,"Fix photo manager search"
+        ,"Fix conversion queue log url"
       ]
     },
     {

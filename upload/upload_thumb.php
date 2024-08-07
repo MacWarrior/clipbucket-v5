@@ -2,9 +2,9 @@
 define('THIS_PAGE', 'upload_thumb');
 require 'includes/config.inc.php';
 
-global $userquery, $myquery, $db, $Upload;
+global $myquery, $db, $Upload;
 
-$userquery->logincheck();
+userquery::getInstance()->logincheck();
 
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);

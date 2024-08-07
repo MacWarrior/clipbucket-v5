@@ -667,11 +667,11 @@ class CBPhotos
 
     /**
      * Create Admin Area menu for photos
+     * @throws Exception
      */
     function photos_admin_menu()
     {
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
+        $per = userquery::getInstance()->get_user_level(user_id());
 
         if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
@@ -714,7 +714,6 @@ class CBPhotos
      */
     function setting_other_things()
     {
-        global $userquery;
         // Search type
         if (isSectionEnabled('photos')) {
             ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
@@ -726,7 +725,7 @@ class CBPhotos
             lang('manage_favorite_photos') => "manage_photos.php?mode=favorite",
         ];
         if (isSectionEnabled('photos')) {
-            $userquery->user_account[lang('photos')] = $accountLinks;
+            userquery::getInstance()->user_account[lang('photos')] = $accountLinks;
         }
 
         //Setting Cbucket links
@@ -2736,10 +2735,8 @@ class CBPhotos
      */
     function photo_voters($id, $return_array = false, $show_all = false)
     {
-        global $json;
         $p = $this->get_photo($id);
         if ((!empty($p) && $p['userid'] == user_id()) || $show_all === true) {
-            global $userquery;
             $voters = $p['voters'];
             $voters = json_decode($voters, true);
 
@@ -2751,7 +2748,7 @@ class CBPhotos
                 foreach ($voters as $id => $details) {
                     $username = get_username($id);
                     $output = '<li id=\'user' . $id . $p['photo_id'] . '\' class=\'PhotoRatingStats\'>';
-                    $output .= '<a href=\'' . $userquery->profile_link($id) . '\'>' . display_clean($username) . '</a>';
+                    $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . display_clean($username) . '</a>';
                     $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
                     $output .= niceTime($details['time']) . ')</small>';
                     $output .= '</li>';
