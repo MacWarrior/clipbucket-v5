@@ -116,7 +116,7 @@ ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
+assign('anonymous_id', $userquery->get_anonymous_user());
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
 

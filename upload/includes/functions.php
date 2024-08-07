@@ -246,7 +246,7 @@ function GetName($file)
         return $server_thumb_name;
     }
     /*server thumb files END */
-    $path = explode('/', $file);
+    $path = explode(DIRECTORY_SEPARATOR, $file);
     if (is_array($path)) {
         $file = $path[count($path) - 1];
     }

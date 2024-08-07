@@ -86,6 +86,7 @@ if ($cbcollection->is_viewable($c)) {
     $Cbucket->show_page = false;
 }
 
+assign('anonymous_id', $userquery->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it'.$min_suffixe.'.js'                                 => 'admin'

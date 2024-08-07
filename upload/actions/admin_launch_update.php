@@ -22,6 +22,7 @@ if ($_POST['type'] == 'core') {
     $core_tool->setToolInProgress();
     $core_tool->launch();
 }
+Update::getInstance()->flush();
 if ($_POST['type'] == 'core' || $_POST['type'] == 'db') {
     $db_tool->setToolInProgress();
     $db_tool->launch();

@@ -132,6 +132,6 @@ switch ($mode) {
 
         subtitle(lang('title_crt_new_msg'));
 }
-
+assign('anonymous_id', $userquery->get_anonymous_user());
 template_files('private_message.html');
 display_it();

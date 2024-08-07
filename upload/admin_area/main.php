@@ -423,6 +423,7 @@ if (isset($_POST['update'])) {
         'hide_empty_collection',
         'only_keep_max_resolution',
         'playlistsSection',
+        'nginx_path',
         'default_theme'
     ];
 
