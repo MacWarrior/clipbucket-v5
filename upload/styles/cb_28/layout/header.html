@@ -141,11 +141,11 @@
 									</a>
 									<ul class="dropdown-menu">
 										{if has_access('admin_access')}
-										<li class="hidden-xs"><a href="{$admin_baseurl}">{lang code="admin_area"}</a></li>
+										<li><a href="{$admin_baseurl}">{lang code="admin_area"}</a></li>
 										{/if}
-										<li class="hidden-xs"><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
+										<li><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
 										{if isSectionEnabled('videos')}
-										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
+										<li><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
 										{/if}
 										{if isSectionEnabled('channels')}
 										<li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>

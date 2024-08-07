@@ -101,6 +101,11 @@ class ClipBucket
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
             $_GET['page'] = 1;
         }
+
+        $filepath_custom_css = DirPath::get('files') . 'custom.css';
+        if( file_exists($filepath_custom_css) ){
+            $this->addCSS(['custom.css' => 'custom']);
+        }
     }
 
     /**

@@ -130,7 +130,6 @@ if (isset($_POST['update'])) {
         , 'enable_update_checker'
         , 'allow_language_change'
         , 'allow_registeration'
-        , 'allow_template_change'
         , 'pick_geo_country'
         , 'email_verification'
         , 'show_collapsed_checkboxes'
@@ -162,7 +161,6 @@ if (isset($_POST['update'])) {
         'allow_unicode_usernames',
         'allow_username_spaces',
         'allow_registeration',
-        'allow_template_change',
         'enable_advertisement',
         'allow_upload',
         'anonym_comments',
@@ -285,7 +283,6 @@ if (isset($_POST['update'])) {
 
         'resize',
         'remoteUpload',
-        'recently_viewed_limit',
 
         'send_comment_notification',
         'site_title',
@@ -426,7 +423,8 @@ if (isset($_POST['update'])) {
         'hide_empty_collection',
         'only_keep_max_resolution',
         'playlistsSection',
-        'nginx_path'
+        'nginx_path',
+        'default_theme'
     ];
 
     foreach ($opt_list as $optl) {
@@ -444,8 +442,6 @@ if (isset($_POST['update'])) {
         'min_video_title',
         'min_video_tags',
         'min_video_desc',
-
-        'recently_viewed_limit',
 
         'search_list_per_page',
 
@@ -529,6 +525,9 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
+$filepath_custom_css = DirPath::get('files') . 'custom.css';
+assign('custom_css', $_POST['custom_css'] ?? file_get_contents($filepath_custom_css));
+
 if (!empty($_POST)) {
     $filepath_dev_file = DirPath::get('temp') . 'development.dev';
     if (!empty($_POST['enable_dev_mode'])) {
@@ -556,6 +555,17 @@ if (!empty($_POST)) {
     } else {
         DiscordLog::getInstance()->disable();
     }
+
+    if( !empty($_POST['custom_css']) ){
+        if (is_writable(DirPath::get('files'))) {
+            file_put_contents($filepath_custom_css, $_POST['custom_css']);
+        } else {
+            e('"files" directory is not writeable');
+        }
+    } else {
+        unlink($filepath_custom_css);
+    }
+
 } else {
     assign('DEVELOPMENT_MODE', in_dev());
 }

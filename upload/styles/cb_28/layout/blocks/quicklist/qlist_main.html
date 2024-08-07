@@ -1,4 +1,4 @@
-<div id="qlist_main" class="quicklist_box" style="display: none;">
+<div id="qlist_main" class="quicklist_box" style="display:none;">
 	<div class="quicklist_box_head clearfix">
 		<span class="quick_title">{lang code='quicklists'} (<span id="qlist_count">{$litems_count}</span>)</span>
 		<div class="btn-group">
@@ -6,7 +6,7 @@
 			<a class="ql_rem glyphicon glyphicon-trash btn btn-danger btn-sm" href="javascript:void(0);"></a>
 		</div>
 	</div>
-	<div id="quicklist_cont" class="quicklist_cont" style="display: block;">
+	<div id="quicklist_cont" class="quicklist_cont" style="display:block;">
 		{foreach $qlist_videos as $ql_item}
 			{include file="$style_dir/blocks/quicklist/fast_qlist.html"}
 		{/foreach}
@@ -14,10 +14,3 @@
 		</div>
 	</div>
 </div>
-
-<style type="text/css">
-	.btn-danger {
-		background-color: #0080b4;
-		border-color: #0080b4;
-	}
-</style>

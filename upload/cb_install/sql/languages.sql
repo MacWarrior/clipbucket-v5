@@ -1165,4 +1165,10 @@ VALUES ('admin_setting'),
        ('on_error'),
        ('anonymous'),
        ('anonymous_locked'),
-       ('orphan');
+       ('orphan'),
+       ('interfaces'),
+       ('global'),
+       ('option_default_theme'),
+       ('option_default_theme_light_original'),
+       ('option_default_theme_light'),
+       ('option_default_theme_dark');
