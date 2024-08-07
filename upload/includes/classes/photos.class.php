@@ -250,11 +250,13 @@ class Photo
             $conditions[] = $cond;
         }
 
+        $collection_items_table = Collection::getInstance()->getTableNameItems();
         if( $param_count ){
             $select = ['COUNT(DISTINCT photos.photo_id) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username';
+            $select[] = $collection_items_table . '.collection_id AS join_collection_id';
         }
 
         $join = [];
@@ -280,11 +282,11 @@ class Photo
         }
 
         if( $param_collection_id ){
-            $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else if( $param_exclude_orphan ){
-            $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+        } else {
+            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -505,11 +507,14 @@ class CBPhotos
         if ($vdo['active'] == 'no') {
             $text = sprintf(lang('photo_is'), strtolower(lang('inactive')) );
             $class = 'label-danger';
-        }
-
-        if( !empty($text) ){
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
+        if (empty($vdo['collection_id'])) {
+            $text = sprintf(lang('photo_is'), strtolower(lang('orphan')) );
+            $class = 'label-danger';
+            echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
+        }
+
     }
 
     /**

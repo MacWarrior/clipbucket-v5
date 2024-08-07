@@ -1165,4 +1165,5 @@ VALUES ('admin_setting'),
        ('on_error'),
        ('anonymous'),
        ('anonymous_locked'),
-       ('orphan');
+       ('orphan'),
+       ('manage_x');

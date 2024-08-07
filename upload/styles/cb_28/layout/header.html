@@ -145,13 +145,19 @@
 										{/if}
 										<li class="hidden-xs"><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
 										{if isSectionEnabled('videos')}
-										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang code="manage_videos"}</a></li>
+										<li class="hidden-xs"><a href="{link name='my_videos'}">{lang('manage_x')|replace:'%s':(lang('videos')|lower)}</a></li>
+										{/if}
+										{if isSectionEnabled('photos')}
+										<li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x')|replace:'%s':(lang('photos')|lower)}</a></li>
+										{/if}
+										{if isSectionEnabled('collections')}
+										<li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x')|replace:'%s':(lang('collections')|lower)}</a></li>
+										{/if}
+										{if isSectionEnabled('playlists')}
+										<li><a href="/manage_playlists.php?user={display_clean($userquery->username)}">{lang('manage_x')|replace:'%s':(lang('playlists')|lower)}</a></li>
 										{/if}
 										{if isSectionEnabled('channels')}
 										<li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
-										{/if}
-										{if isSectionEnabled('playlists')}
-										<li><a href="/manage_playlists.php?user={display_clean($userquery->username)}">{lang code="my_playlists"}</a></li>
 										{/if}
 										{ANCHOR place="inside_user_menu"}
 										<li class="divider"></li>
