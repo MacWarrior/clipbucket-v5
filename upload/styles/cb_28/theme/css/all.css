@@ -1047,22 +1047,19 @@ h1 {
 .quicklist_box {
   bottom: 0;
   right: 0;
-  background-color: #f1f1f1;
   width: 350px;
-  color: #fff;
   position: fixed;
   z-index: 1000;
-  border: 1px solid #d5d5d5;
+  border-style: solid;
+  border-width: 1px;
   font-size: 13px;
   line-height: 15px;
 }
 
 .quicklist_box_head {
   line-height: 30px;
-  color: #000;
   font-family: "source_sans_prosemibold", sans-serif;
   font-size: 16px;
-  line-height: 30px;
   padding: 5px;
   text-align: right;
 }
@@ -1113,9 +1110,9 @@ h1 {
 }
 
 .qlist_item {
-  background-color: #fff;
   padding: 10px 5px;
-  border-top: 1px solid #d5d5d5;
+  border-top-style: solid;
+  border-top-width: 1px;
   position: relative;
 }
 
@@ -1130,17 +1127,15 @@ h1 {
   position: absolute;
   bottom: 5px;
   right: 5px;
-  background: rgba(0, 0, 0, 0.6);
+  padding: 1px 4px;
+  background: #000;
+  color: #fff;
+  border-radius: 2px;
 }
 
 .pl_details {
   overflow: hidden;
   padding: 0 36px 0 0;
-  color: #212121;
-}
-
-.pl_details a {
-  color: #212121;
 }
 
 .pl_thumb a {
@@ -1495,21 +1490,13 @@ h1 {
 }
 
 .filter-dropdowns .cat-col .btn-default {
-  background: #eee;
-  border: 2px solid #000;
+  border-style: solid;
+  border-width: 2px;
   padding: 5px 10px;
   font-family: "source_sans_proregular", sans-serif;
   font-size: 15px;
   line-height: 21px;
-  color: #000;
   margin: 0 0 0 10px;
-}
-
-.filter-dropdowns .cat-col .btn-default:hover,
-.filter-dropdowns .cat-col .btn-default:active {
-  background: #0080b4;
-  border-color: #0080b4;
-  color: #fff;
 }
 
 .filter-dropdowns .sorting-col {
@@ -1920,11 +1907,6 @@ h1 {
   margin: 0 5px 0 0;
 }
 
-.flat-tabs .item-photo .photo-info,
-.flat-tabs .videos .video-info {
-  background: #f6f6f6;
-}
-
 .flat-tabs .playlist-item {
   margin: 0 0 10px;
 }
@@ -2273,14 +2255,14 @@ h1 {
   position: absolute;
   right: 20px;
   top: 20px;
-  border: none;
   width: 30px;
   height: 30px;
   font-size: 20px;
-  line-height: 20px;
-  background: #f3f3f3;
+  line-height: 22px;
   border-radius: 50%;
   text-align: center;
+  border-style: solid;
+  border-width: 1px;
 }
 
 .photo-view .overlay a {
@@ -2347,14 +2329,14 @@ h1 {
   position: absolute;
   right: 20px;
   top: 20px;
-  border: none;
   width: 30px;
   height: 30px;
   font-size: 20px;
   line-height: 20px;
-  background: #f3f3f3;
   border-radius: 50%;
   text-align: center;
+  border-style: solid;
+  border-width: 1px;
 }
 
 #gallery .image-holder {
@@ -4111,7 +4093,6 @@ textarea#comment_box {
 }
 
 .cb-box {
-  background: #fff;
   padding: 16px;
   margin-bottom: 20px;
 }
@@ -4253,25 +4234,17 @@ textarea#comment_box {
 }
 
 .btn-ghost {
-  background: #fff;
-  border: 2px solid #000;
+  border-style: solid;
+  border-width: 2px;
   padding: 5px 10px;
   font-family: "source_sans_proregular", sans-serif;
   font-size: 15px;
   line-height: 21px;
-  color: #000;
 }
 
 .btn-ghost.btn-lg {
   font-size: 18px;
   line-height: 36px;
-}
-
-.btn-ghost:hover,
-.btn-ghost:active {
-  background: #0080b4;
-  border-color: #0080b4;
-  color: #fff;
 }
 
 .btn-primary {

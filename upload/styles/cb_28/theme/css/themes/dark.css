@@ -5,11 +5,13 @@ html.dark {
     --color-01 : #0e0b14;
     --color-02 : #f9f9f9;
     --color-03 : #2a2a2a;
+    --color-04 : #757575;
+    --color-05 : #2a2a2a;
 
     --color-header-search-category : #30323E;
     --color-header-search : #2a2a2a;
     --color-footer-dropdown : #30323E;
-    --color-channel-info: #2a2a2a;
+
     --color-background: #292929;
 
     --color-gradient-start : #30323E;
@@ -52,7 +54,8 @@ html.dark #header .search input[type="text"]{
 /* Sidebar */
 .sidebar-channels,
 .sidebar-items,
-.sidebar-playlists .playlist{
+.sidebar-playlists .playlist,
+.playlist-item .playlist-thumb .playlist-info{
     border-radius: var(--border-radius);
     background: var(--background-gradient);
 }
@@ -152,4 +155,13 @@ html.dark #header .search input[type="text"]{
 .collections .title{
     border-bottom-left-radius: var(--border-radius);
     border-bottom-right-radius: var(--border-radius);
+}
+
+/* Quicklist */
+.quicklist_box{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.quicklist_box .qlist_item .pl_thumb img{
+    border-radius: var(--border-radius);
 }

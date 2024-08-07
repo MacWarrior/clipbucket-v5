@@ -9,11 +9,12 @@ html {
     --color-02 : #404040;
     --color-03 : #d9d9d9;
     --color-04 : #757575;
+    --color-05 : #f6f6f6;
 
     --color-header-search-category : #ececec;
     --color-header-search : #f9f9f9;
     --color-footer-dropdown : #c8efff;
-    --color-channel-info: #f6f6f6;
+    
     --color-background: #eee;
 }
 
@@ -37,7 +38,8 @@ html {
 /* Titles */
 h1,
 h2,
-h3{
+h3,
+h4{
     color: var(--color-02);
 }
 
@@ -59,10 +61,22 @@ h3{
 .btn-primary:active:focus,
 .btn-success,
 .btn-success:hover,
-.btn-success:active {
+.btn-success:active,
+.filter-dropdowns .cat-col .btn-default:hover,
+.filter-dropdowns .cat-col .btn-default:active,
+.btn-ghost:hover,
+.btn-ghost:active,
+.btn-danger{
     background-color: var(--color-main-01);
     border-color: var(--color-main-01);
     color: var(--color-main-02);
+}
+.filter-dropdowns .cat-col .btn-default,
+.btn-ghost,
+.btn-ghost:focus{
+    background-color: var(--color-01);
+    color: var(--color-02);
+    border-color: var(--color-03);
 }
 
 /* Forms */
@@ -141,7 +155,7 @@ h3{
 .flat-tabs .nav-tabs.nav>li.active>a:active{
     border-color: var(--color-main-01);
     color: var(--color-02);
-    background-color: var(--color-03);
+    background: none;
 }
 .flat-tabs .nav-tabs.nav>li>a:hover,
 .flat-tabs .nav-tabs.nav>li.active>a:hover{
@@ -173,6 +187,9 @@ pre{
 body{
     color: var(--color-02);
     background-color: var(--color-background);
+}
+.cb-box{
+    background-color: var(--color-01);
 }
 
 /* Menu Top */
@@ -308,7 +325,7 @@ body{
     color: var(--color-02);
 }
 .item-channel .info{
-    background-color: var(--color-channel-info);
+    background-color: var(--color-05);
 }
 .item-channel .info strong{
     color: var(--color-04);
@@ -351,14 +368,16 @@ body{
     background-color: var(--color-main-01);
     color: var(--color-main-02)
 }
-.playlist-item .playlist-thumb .playlist-info{
-    background-color: var(--color-03);
-    color: var(--color-02)
-}
 .playlist-item .playlist-thumb .playlist-info h2 a:hover{
     color: var(--color-main-01);
 }
 .playlist-item .playlist-thumb h2 a{
+    color: var(--color-02);
+}
+.flat-tabs .videos .video-info,
+.flat-tabs .item-photo .photo-info,
+.playlist-item .playlist-thumb .playlist-info{
+    background-color: var(--color-05);
     color: var(--color-02);
 }
 
@@ -408,7 +427,9 @@ body{
     color: var(--color-main-02);
 }
 .photo-view .view-photo-nxt,
-.photo-view .view-photo-pre{
+.photo-view .view-photo-pre,
+#gallery #enlarge,
+.photo-view .overlay .img-close{
     background-color: var(--color-01);
     color: var(--color-02);
     border-color: var(--color-03);
@@ -417,7 +438,9 @@ body{
 .photo-view .view-photo-nxt:focus,
 .photo-view .view-photo-nxt:hover,
 .photo-view .view-photo-pre:focus,
-.photo-view .view-photo-pre:hover{
+.photo-view .view-photo-pre:hover,
+#gallery #enlarge:hover,
+.photo-view .overlay .img-close:hover{
     color: var(--color-main-01);
 }
 
@@ -445,4 +468,34 @@ body{
 /* Collections */
 .collections .title{
     background-color: var(--color-01);
+}
+
+/* Quicklist */
+.quicklist_box{
+    background-color: var(--color-05);
+    border-color: var(--color-05);
+}
+.quicklist_box_head{
+    color: var(--color-02);
+}
+.qlist_item{
+    background-color: var(--color-01);
+    border-color: var(--color-05);
+}
+.pl_details a,
+.pl_details{
+    color: var(--color-02);
+}
+.pl_details a:hover{
+    color: var(--color-main-01);
+}
+.item-video .thumb-holder .cb_quickie.icon-tick{
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+
+/* My account */
+.manage-page{
+    color: var(--color-02);
 }
