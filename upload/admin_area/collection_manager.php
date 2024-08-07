@@ -1,11 +1,11 @@
 <?php
 define('THIS_PAGE', 'collection_manager');
-global  $pages, $cbcollection, $eh;
+global $cbcollection, $eh;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 $userquery = userquery::getInstance();
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -130,7 +130,7 @@ $collections = $cbcollection->get_collections($carray);
 assign('collections', $collections);
 
 $total_pages = count_pages(count($collections), config('admin_pages'));
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

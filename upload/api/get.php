@@ -51,8 +51,7 @@ class API extends REST
         $type = $_REQUEST['type'];
 
         if ($type == 'u' || $type == 'user' || $type == 'users') {
-            global $userquery;
-            $categories = $userquery->getCbCategories(['indexes_only' => true]);
+            $categories = userquery::getInstance()->getCbCategories(['indexes_only' => true]);
             if (!empty($categories)) {
                 $data = ['code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $categories];
                 $this->response($this->json($data));
@@ -112,7 +111,6 @@ class API extends REST
         $videos = $cbvid->get_videos($request);
 
         $new_videos = [];
-        global $userquery;
         if ($videos) {
             foreach ($videos as $video) {
                 $video['title'] = utf8_encode($video['title']);
@@ -120,7 +118,7 @@ class API extends REST
                 $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big')];
 
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($video);
 
                 foreach ($blacklist_fields as $field)
                     unset($video[$field]);
@@ -245,18 +243,17 @@ class API extends REST
             'password', 'video_password', 'avcode', 'session'
         ];
 
-        global $userquery;
         if (!empty($items)) {
             $new_videos = [];
             foreach ($items as $video) {
                 if (!$video['email']) {
-                    $udetails = $userquery->get_user_details($video['userid']);
+                    $udetails = userquery::getInstance()->get_user_details($video['userid']);
                 }
                 $video = array_merge($video, $udetails);
 
                 $video['thumbs'] = ['default' => get_thumb($video)];
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($video);
 
                 foreach ($blacklist_fields as $field) {
                     unset($video[$field]);
@@ -310,8 +307,7 @@ class API extends REST
             $this->response($this->json($data));
         }
 
-        global $userquery;
-        $subscribers = $userquery->get_user_subscribers_detail($uid);
+        $subscribers = userquery::getInstance()->get_user_subscribers_detail($uid);
 
         if ($subscribers) {
             $blacklist_fields = [
@@ -350,8 +346,7 @@ class API extends REST
             $this->response($this->json($data));
         }
 
-        global $userquery;
-        $subscribers = $userquery->get_user_subscriptions($uid);
+        $subscribers = userquery::getInstance()->get_user_subscriptions($uid);
 
         if ($subscribers) {
             $the_subscribers = [];
@@ -407,19 +402,18 @@ class API extends REST
         $params['count_only'] = 'yes';
         $total_rows = $cbvid->action->get_favorites($params);
 
-        global $userquery;
         if ($total_rows > 0) {
             $new_videos = [];
             foreach ($videos as $video) {
                 if (!$video['email']) {
-                    $udetails = $userquery->get_user_details($video['userid']);
+                    $udetails = userquery::getInstance()->get_user_details($video['userid']);
                 }
 
                 $video = array_merge($video, $udetails);
 
                 $video['thumbs'] = ['default' => get_thumb($video)];
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($video);
 
                 foreach ($blacklist_fields as $field) {
                     unset($video[$field]);
@@ -452,11 +446,10 @@ class API extends REST
 
         $users = get_users($request);
 
-        global $userquery;
         $new_users = [];
         if ($users) {
             foreach ($users as $user) {
-                $user['avatar'] = $user['user_photo'] = $userquery->getUserThumb($user);
+                $user['avatar'] = $user['user_photo'] = userquery::getInstance()->getUserThumb($user);
                 $new_users[] = $user;
             }
         }
@@ -563,8 +556,7 @@ class API extends REST
             $this->response($this->json($data));
         }
 
-        global $userquery;
-        $friends = $userquery->get_contacts($uid);
+        $friends = userquery::getInstance()->get_contacts($uid);
 
         if (!empty($friends)) {
             $data = ['code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $friends];
@@ -624,16 +616,16 @@ class API extends REST
 
         $userid = mysql_clean($request['userid']);
         $user = [];
-        global $userquery;
+
         if ($userid) {
-            $user = $userquery->get_user_details_with_profile($userid);
+            $user = userquery::getInstance()->get_user_details_with_profile($userid);
         }
 
         if ($user) {
-            $user['avatar'] = $user['user_photo'] = $userquery->getUserThumb($user);
-            $user['avatars']['medium'] = $userquery->getUserThumb($user, 'medium');
-            $user['avatars']['xmedium'] = $userquery->getUserThumb($user, 'xmedium');
-            $user['avatars']['large'] = $userquery->getUserThumb($user, 'large');
+            $user['avatar'] = $user['user_photo'] = userquery::getInstance()->getUserThumb($user);
+            $user['avatars']['medium'] = userquery::getInstance()->getUserThumb($user, 'medium');
+            $user['avatars']['xmedium'] = userquery::getInstance()->getUserThumb($user, 'xmedium');
+            $user['avatars']['large'] = userquery::getInstance()->getUserThumb($user, 'large');
             // $user['name'] = name($user);
             //echo json_encode($user);
             $data = ['code' => '200', 'status' => 'success', 'msg' => 'success', 'data' => $user];
@@ -653,7 +645,6 @@ class API extends REST
         global $cbvid;
         $videos = $cbvid->get_videos(['featured' => 'yes', 'limit' => 10, 'order' => 'featured_date DESC']);
 
-        global $userquery;
         $new_videos = [];
         if ($videos) {
 
@@ -662,10 +653,10 @@ class API extends REST
                 $video['description'] = utf8_encode($video['description']);
                 $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big'), '640x480' => get_thumb($video, '640x480')];
                 $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
-                $video['avatars']['medium'] = $userquery->getUserThumb($video, 'small');
-                $video['avatars']['xmedium'] = $userquery->getUserThumb($video, 'xmedium');
-                $video['avatars']['large'] = $userquery->getUserThumb($video, 'large');
+                $video['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($video);
+                $video['avatars']['medium'] = userquery::getInstance()->getUserThumb($video, 'small');
+                $video['avatars']['xmedium'] = userquery::getInstance()->getUserThumb($video, 'xmedium');
+                $video['avatars']['large'] = userquery::getInstance()->getUserThumb($video, 'large');
                 $new_videos[] = $video;
             }
         }
@@ -697,10 +688,10 @@ class API extends REST
                     $video['thumbs'] = ['default' => get_thumb($video), 'big' => get_thumb($video, 'big'), '640x480' => get_thumb($video, '640x480')];
 
                     $video['url'] = $video['video_link'] = $video['videoLink'] = video_link($video);
-                    $video['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($video);
-                    $video['avatars']['medium'] = $userquery->getUserThumb($video, 'medium');
-                    $video['avatars']['xmedium'] = $userquery->getUserThumb($video, 'xmedium');
-                    $video['avatars']['large'] = $userquery->getUserThumb($video, 'large');
+                    $video['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($video);
+                    $video['avatars']['medium'] = userquery::getInstance()->getUserThumb($video, 'medium');
+                    $video['avatars']['xmedium'] = userquery::getInstance()->getUserThumb($video, 'xmedium');
+                    $video['avatars']['large'] = userquery::getInstance()->getUserThumb($video, 'large');
 
                     $new_videos[] = $video;
                 }

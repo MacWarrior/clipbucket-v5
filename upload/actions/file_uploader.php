@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'ajax');
+define('THIS_PAGE', 'file_uploader');
 
 include('../includes/config.inc.php');
 require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');

@@ -1,6 +1,6 @@
 <?php
 global $cbphoto;
-define('THIS_PAGE', 'ajax');
+define('THIS_PAGE', 'photo_uploader');
 include('../includes/config.inc.php');
 
 if ($_FILES['Filedata']) {

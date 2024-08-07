@@ -3,10 +3,10 @@ define('THIS_PAGE', 'photo_settings');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $myquery, $cbphoto;
+global $pages, $myquery, $cbphoto;
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 /* Generating breadcrumb */

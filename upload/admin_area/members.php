@@ -2,12 +2,12 @@
 define('THIS_PAGE', 'members');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $eh;
+global $pages, $eh;
 
-$userquery->admin_login_check();
-$userquery->login_check('member_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('member_moderation');
 $pages->page_redir();
-$udetails = $userquery->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(user_id());
 $userLevel = $udetails['level'];
 
 if (!empty($_GET['user_not_found'])) {
@@ -26,14 +26,14 @@ if ($_GET['view'] == 'search') {
     $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 }
 
-$anonymous_id = $userquery->get_anonymous_user();
+$anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //Delete User
 if (isset($_GET['deleteuser']) && user_id() != $_GET['deleteuser']) {
     if ($anonymous_id == $_GET['deleteuser']) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->delete_user($_GET['deleteuser']);
+        userquery::getInstance()->delete_user($_GET['deleteuser']);
     }
 }
 
@@ -43,7 +43,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anynomous_locked'));
         } else {
-            $userquery->delete_user($userid);
+            userquery::getInstance()->delete_user($userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -58,7 +58,7 @@ if (isset($_GET['activate']) && user_id() != $_GET['deleteuser']) {
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->action('activate', $user);
+        userquery::getInstance()->action('activate', $user);
     }
 }
 //Deactivate User
@@ -67,7 +67,7 @@ if (isset($_GET['deactivate'])) {
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->action('deactivate', $user);
+        userquery::getInstance()->action('deactivate', $user);
     }
 }
 
@@ -77,7 +77,7 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
         } elseif($userid != user_id()) {
-            $userquery->action('activate', $userid);
+            userquery::getInstance()->action('activate', $userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -91,7 +91,7 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
         } elseif($userid != user_id()) {
-            $userquery->action('deactivate', $userid);
+            userquery::getInstance()->action('deactivate', $userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -120,7 +120,7 @@ if (isset($_GET['featured'])) {
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->action('featured', $user);
+        userquery::getInstance()->action('featured', $user);
     }
 }
 
@@ -130,7 +130,7 @@ if (isset($_GET['unfeatured'])) {
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->action('unfeatured', $user);
+        userquery::getInstance()->action('unfeatured', $user);
     }
 }
 
@@ -140,7 +140,7 @@ if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
         } else {
-            $userquery->action('featured', $userid);
+            userquery::getInstance()->action('featured', $userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -153,7 +153,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user']))
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
         } else {
-            $userquery->action('unfeatured', $userid);
+            userquery::getInstance()->action('unfeatured', $userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -168,7 +168,7 @@ if (isset($_GET['ban']) && user_id() != $_GET['ban']) {
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->action('ban', $user);
+        userquery::getInstance()->action('ban', $user);
     }
 }
 
@@ -178,7 +178,7 @@ if (isset($_GET['unban']) && user_id() != $_GET['unban']) {
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
     } else {
-        $userquery->action('unban', $user);
+        userquery::getInstance()->action('unban', $user);
     }
 }
 
@@ -188,7 +188,7 @@ if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
         } elseif($userid != user_id()) {
-            $userquery->action('ban', $userid);
+            userquery::getInstance()->action('ban', $userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -202,7 +202,7 @@ if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
         if ($anonymous_id == $userid) {
             e(lang('anonymous_locked'));
         } elseif($userid != user_id()) {
-            $userquery->action('unban', $userid);
+            userquery::getInstance()->action('unban', $userid);
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
@@ -212,7 +212,7 @@ if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
 }
 
 //Calling Video Manager Functions
-call_functions($userquery->user_manager_func);
+call_functions(userquery::getInstance()->user_manager_func);
 
 //Getting Member List
 $page = mysql_clean($_GET['page']);
