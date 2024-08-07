@@ -22,3 +22,6 @@
 	text-align: center;
 	z-index: 3;
 }
+.thumb_banner + .thumb_banner {
+	top: 18px;
+}
