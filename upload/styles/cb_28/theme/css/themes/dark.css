@@ -9,6 +9,8 @@ html.dark {
     --color-header-search-category : #30323E;
     --color-header-search : #2a2a2a;
     --color-footer-dropdown : #30323E;
+    --color-channel-info: #2a2a2a;
+    --color-background: #292929;
 
     --color-gradient-start : #30323E;
     --color-gradient-end : #1E1F2A;
@@ -34,6 +36,17 @@ html.dark #header{
 }
 html.dark #header .search input[type="text"]{
     background-color: var(--color-gradient-end);
+}
+
+/* Breadcrumb */
+.breadcrumb{
+    border-radius: var(--border-radius);
+}
+
+/* Miscellaneous */
+.well{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
 }
 
 /* Sidebar */
@@ -122,4 +135,21 @@ html.dark #header .search input[type="text"]{
 .item-photo .photo-holder img{
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
+}
+
+/* Photo */
+#gallery,
+.view-details{
+    border-radius: var(--border-radius);
+}
+
+/* Comments */
+.comments-block{
+    border-radius: var(--border-radius);
+}
+
+/* Collections */
+.collections .title{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }

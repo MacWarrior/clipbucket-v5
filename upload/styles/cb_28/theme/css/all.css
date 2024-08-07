@@ -428,9 +428,7 @@ html {
 body {
   min-width: 320px;
   margin: 0;
-  color: #000;
   font: 14px/16px "source_sans_proregular", sans-serif;
-  background: #eee;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: none;
 }
@@ -1338,7 +1336,6 @@ h1 {
 
 .collections .title {
   display: block;
-  background: #fff;
   padding: 9px 10px;
 
   overflow: hidden;
@@ -2019,8 +2016,7 @@ h1 {
   display: none;
 }
 
-.fav-repo .desc-list li a,
-.watch-vid-details .desc-list li a {
+.fav-repo .desc-list li a{
   color: #0080b4;
 }
 
@@ -2194,7 +2190,6 @@ h1 {
 
 .photo-view {
   position: relative;
-  background: #fff;
   margin: 0 0 16px;
   height: 474px;
 }
@@ -2213,16 +2208,15 @@ h1 {
 
 .photo-view .view-photo-nxt,
 .photo-view .view-photo-pre {
-  border: none;
   width: 48px;
   height: 48px;
   padding: 12px;
   font-size: 24px;
   line-height: 24px;
-  background: #f3f3f3;
   border-radius: 50%;
   text-align: center;
-  float: left;
+  border-style: solid;
+  border-width: 1px;
 }
 
 .photo-view .view-photo-nxt i,
@@ -2235,9 +2229,7 @@ h1 {
 .photo-view .view-photo-nxt:hover,
 .photo-view .view-photo-pre:focus,
 .photo-view .view-photo-pre:hover {
-  background: #f3f3f3;
   box-shadow: none;
-  color: #0080b4;
 }
 
 .photo-view .view-photo-nxt {
@@ -2343,7 +2335,6 @@ h1 {
 
 /* The Overlay (background) */
 #gallery {
-  background: #fff none repeat scroll 0 0;
   height: 474px;
   margin: 0 0 16px;
   position: relative;
@@ -2517,7 +2508,6 @@ h1 {
 
 /* comments */
 .comments-block {
-  background: #fff;
   padding: 16px;
 }
 
@@ -2545,8 +2535,8 @@ h1 {
   font-family: "source_sans_proregular", sans-serif;
   margin: 0 0 11px;
   padding: 0 0 16px;
-  border-bottom: 1px solid #d9d9d9;
-  color: #000;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
 }
 
 .addComment .com-txtarea {
@@ -2753,10 +2743,6 @@ textarea#comment_box {
   vertical-align: middle;
 }
 
-.comments>ul>li .com-info-actions .reply a {
-  color: #9e9e9e;
-}
-
 .comments>ul>li .view-date {
   padding: 5px 0 0 4px;
 }
@@ -2832,8 +2818,8 @@ textarea#comment_box {
 .item-channel .user-block {
   display: block;
   padding: 22px 0 0;
-  border-style: solid;
-  border-width: 1px;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
 }
 
 .item-channel .user-block:hover {
