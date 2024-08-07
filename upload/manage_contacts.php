@@ -4,23 +4,21 @@ define('PARENT_PAGE', 'channels');
 
 require 'includes/config.inc.php';
 
-global $userquery;
+userquery::getInstance()->logincheck();
 
-$userquery->logincheck();
-
-$udetails = $userquery->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
-assign('p', $userquery->get_user_profile($udetails['userid']));
+assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $mode = $_GET['mode'];
 if ($mode = 'request' && isset($_GET['confirm'])) {
     $confirm = mysql_clean($_GET['confirm']);
-    $userquery->confirm_request($confirm);
+    userquery::getInstance()->confirm_request($confirm);
 }
 
 if ($mode = 'delete' && isset($_GET['userid'])) {
     $userid = mysql_clean($_GET['userid']);
-    $userquery->remove_contact($userid);
+    userquery::getInstance()->remove_contact($userid);
 }
 
 assign('mode', 'manage');

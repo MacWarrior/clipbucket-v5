@@ -1,8 +1,8 @@
 <?php
 require_once dirname(__FILE__, 2).'/includes/admin_config.php';
-global $userquery, $eh;
+
 $need_to_create_version_table = true;
-$eh->flush_error();
+errorhandler::getInstance()->flush_error();
 $error=false;
 $array_42 = ['4.2-RC1-free', '4.2-RC1-premium'];
 if (php_sapi_name() == 'cli') {
@@ -55,7 +55,7 @@ if (php_sapi_name() == 'cli') {
     }
 
 } else {
-    $userquery->admin_login_check();
+    userquery::getInstance()->admin_login_check();
     if (empty($_REQUEST['version']) || empty($_REQUEST['revision'])) {
         error_lang_cli('Version or revision is missing');
         $error = true;

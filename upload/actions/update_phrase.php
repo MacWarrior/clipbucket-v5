@@ -1,7 +1,8 @@
 <?php
+define('THIS_PAGE', 'update_phrase');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-global $userquery;
-$userquery->admin_login_check();
+
+userquery::getInstance()->admin_login_check();
 
 $id_language_key = $_POST['id_language_key'];
 $translation = $_POST['translation'];

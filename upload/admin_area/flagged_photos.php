@@ -3,9 +3,9 @@ define('THIS_PAGE', 'flagged_photos');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $cbphoto, $eh;
+global $pages, $cbphoto, $eh;
 
-$userquery->admin_login_check();
+userquery::getInstance()->admin_login_check();
 $pages->page_redir();
 
 /* Generating breadcrumb */

@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 require 'includes/config.inc.php';
 
-global $userquery, $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds, $pages;
+global $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds, $pages;
 
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
@@ -14,7 +14,7 @@ if (isset($_POST['mode'])) {
 if (!empty($mode)) {
     switch ($mode) {
         case 'most_viewed':
-            if (!isSectionEnabled('videos') || !$userquery->perm_check('view_videos', false, true)) {
+            if (!isSectionEnabled('videos') || !userquery::getInstance()->perm_check('view_videos', false, true)) {
                 exit();
             }
 
@@ -119,7 +119,7 @@ if (!empty($mode)) {
                 case 'user':
                     $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $userquery->rate_user($id, $rating);
+                    $result = userquery::getInstance()->rate_user($id, $rating);
                     $result['is_rating'] = true;
                     $cbvid->show_video_rating($result);
 
@@ -238,7 +238,7 @@ if (!empty($mode)) {
 
                 case 'u':
                 case 'user':
-                    $userquery->action->report_it($id);
+                    userquery::getInstance()->action->report_it($id);
                     break;
 
                 case 'p':
@@ -271,8 +271,8 @@ if (!empty($mode)) {
 
         case 'subscribe_user':
             $subscribe_to = mysql_clean($_POST['subscribe_to']);
-            $mailId = $userquery->get_user_details($subscribe_to, false, true);
-            $userquery->subscribe_user($subscribe_to);
+            $mailId = userquery::getInstance()->get_user_details($subscribe_to, false, true);
+            userquery::getInstance()->subscribe_user($subscribe_to);
 
             $error = $eh->get_error();
             $warning = $eh->get_warning();
@@ -300,7 +300,7 @@ if (!empty($mode)) {
 
         case 'unsubscribe_user':
             $subscribe_to = mysql_clean($_POST['subscribe_to']);
-            $userquery->unsubscribe_user($subscribe_to);
+            userquery::getInstance()->unsubscribe_user($subscribe_to);
 
             $error = $eh->get_error();
             $warning = $eh->get_warning();
@@ -330,7 +330,7 @@ if (!empty($mode)) {
         case 'get_subscribers_count':
             $userid = $_POST['userid'];
             if (isset($userid)) {
-                $sub_count = $userquery->get_user_subscribers($userid, true);
+                $sub_count = userquery::getInstance()->get_user_subscribers($userid, true);
                 echo json_encode(['subscriber_count' => $sub_count]);
             } else {
                 echo json_encode(['msg' => 'Userid is empty']);
@@ -342,11 +342,11 @@ if (!empty($mode)) {
             $friend = mysql_clean($_POST['uid']);
             $userid = user_id();
             $username = user_name();
-            $mailId = $userquery->get_user_details($friend, false, true);
+            $mailId = userquery::getInstance()->get_user_details($friend, false, true);
             $cbemail->friend_request_email($mailId['email'], $username);
 
             if ($userid) {
-                $userquery->add_contact($userid, $friend);
+                userquery::getInstance()->add_contact($userid, $friend);
                 $error = $eh->get_error();
                 $warning = $eh->get_warning();
                 $message = $eh->get_message();
@@ -369,7 +369,7 @@ if (!empty($mode)) {
 
         case 'ban_user':
             $user = $_POST['user'];
-            $userquery->ban_user($user);
+            userquery::getInstance()->ban_user($user);
             $error = $eh->get_error();
             $warning = $eh->get_warning();
             $message = $eh->get_message();
@@ -650,7 +650,7 @@ if (!empty($mode)) {
             if ($N_item) {
                 $ajax['key'] = $N_item[0]['videokey'];
                 $ajax['cid'] = $N_item[0]['collection_id'];
-                assign('user', $userquery->get_user_details($N_item[0]['userid']));
+                assign('user', userquery::getInstance()->get_user_details($N_item[0]['userid']));
                 assign('photo', $N_item[0]);
                 $ajax['content'] = Fetch('view_photo.html');
                 echo json_encode($ajax);
