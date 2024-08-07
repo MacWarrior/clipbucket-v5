@@ -9,14 +9,14 @@ $mode = $_GET['mode'];
 if (config('disable_email') == 'yes') {
     redirect_to(config('baseurl'));
 }
-global $userquery;
+
 /**
  * Reseting Password
  * Sending Email
  */
 if (isset($_POST['reset'])) {
     $input = post('forgot_username');
-    $userquery->reset_password(1, $input);
+    userquery::getInstance()->reset_password(1, $input);
 }
 
 /**
@@ -27,7 +27,7 @@ $user = mysql_clean(get('user'));
 if ($mode == 'reset_pass' && $user) {
     $input = mysql_clean(get('user'));
     $avcode = mysql_clean(get('avcode'));
-    if ($userquery->reset_password(2, $input, $avcode)) {
+    if (userquery::getInstance()->reset_password(2, $input, $avcode)) {
         assign('pass_recover', 'success');
     }
 }
@@ -37,7 +37,7 @@ if ($mode == 'reset_pass' && $user) {
  */
 if (isset($_POST['recover_username'])) {
     $email = mysql_clean($_POST['forgot_email']);
-    $msg = $userquery->recover_username($email);
+    $msg = userquery::getInstance()->recover_username($email);
 }
 
 assign('mode', $mode);

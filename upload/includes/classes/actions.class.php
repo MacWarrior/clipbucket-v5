@@ -241,7 +241,6 @@ class cbactions
      */
     function share_content($id)
     {
-        global $userquery;
         $ok = true;
         $tpl = $this->share_template_name;
         $var = $this->val_array;
@@ -253,7 +252,7 @@ class cbactions
                 $users = explode(',', $post_users);
                 if (is_array($users) && !empty($post_users)) {
                     foreach ($users as $user) {
-                        if (!$userquery->user_exists($user) && !isValidEmail($user)) {
+                        if (!userquery::getInstance()->user_exists($user) && !isValidEmail($user)) {
                             e(sprintf(lang('user_no_exist_wid_username'), $user));
                             $ok = false;
                             break;
@@ -261,7 +260,7 @@ class cbactions
 
                         $email = $user;
                         if (!isValidEmail($user)) {
-                            $email = $userquery->get_user_field_only($user, 'email');
+                            $email = userquery::getInstance()->get_user_field_only($user, 'email');
                         }
                         $emails_array[] = $email;
                     }
@@ -275,7 +274,7 @@ class cbactions
                         $msg = $cbemail->replace($tpl['email_template'], $var);
 
                         //Now Finally Sending Email
-                        $from = $userquery->get_user_field_only(user_name(), 'email');
+                        $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
 
                         cbmail(['to' => $emails_array, 'from' => $from, 'from_name' => user_name(), 'subject' => $subj, 'content' => $msg, 'use_boundary' => true]);
                         e(sprintf(lang('thnx_sharing_msg'), $this->name), 'm');

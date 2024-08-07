@@ -1,6 +1,7 @@
 <?php
 define('THIS_PAGE', 'ajax');
 require '../includes/config.inc.php';
+
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
     global $db;
@@ -13,8 +14,7 @@ if (isset($_POST['mode'])) {
                 break;
             }
 
-            global $userquery;
-            if (!$userquery->check_email_domain($_POST['email'])) {
+            if (!userquery::getInstance()->check_email_domain($_POST['email'])) {
                 echo 'unauthorized';
                 break;
             }

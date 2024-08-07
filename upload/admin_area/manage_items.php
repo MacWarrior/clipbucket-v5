@@ -1,10 +1,11 @@
 <?php
+define('THIS_PAGE', 'manage_items');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $cbcollection, $cbphoto, $eh, $cbvideo, $db;
+global $pages, $cbcollection, $cbphoto, $eh, $cbvideo, $db;
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 $id = mysql_clean($_GET['collection']);

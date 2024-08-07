@@ -106,9 +106,8 @@ function resend_verification($userid)
 
 function userMainVideo($userVideos)
 {
-    global $userquery;
     if (is_array($userVideos)) {
-        $userid = $userquery->userid;
+        $userid = userquery::getInstance()->userid;
         foreach ($userVideos as $key => $video) {
             $vBroadcast = trim($video['broadcast']);
             $vKey = $video['videokey'];

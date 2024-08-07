@@ -627,9 +627,8 @@ function pr($text, $pretty = false)
  */
 function user_id()
 {
-    global $userquery;
-    if ($userquery->userid != '' && $userquery->is_login) {
-        return $userquery->userid;
+    if (userquery::getInstance()->userid != '' && userquery::getInstance()->is_login) {
+        return userquery::getInstance()->userid;
     }
     return false;
 }
@@ -641,26 +640,23 @@ function user_id()
  */
 function user_name()
 {
-    global $userquery;
-    if ($userquery->user_name) {
-        return $userquery->user_name;
+    if (userquery::getInstance()->user_name) {
+        return userquery::getInstance()->user_name;
     }
-    return $userquery->get_logged_username();
+    return userquery::getInstance()->get_logged_username();
 }
 
 function user_email()
 {
-    global $userquery;
-    if ($userquery->email) {
-        return $userquery->email;
+    if (userquery::getInstance()->email) {
+        return userquery::getInstance()->email;
     }
     return false;
 }
 function user_dob()
 {
-    global $userquery;
-    if ($userquery->udetails['dob']) {
-        return $userquery->udetails['dob'];
+    if (userquery::getInstance()->udetails['dob']) {
+        return userquery::getInstance()->udetails['dob'];
     }
     return false;
 }
@@ -677,8 +673,7 @@ function user_dob()
  */
 function has_access($access, $check_only = true, $verify_logged_user = true): bool
 {
-    global $userquery;
-    return $userquery->login_check($access, $check_only, $verify_logged_user);
+    return userquery::getInstance()->login_check($access, $check_only, $verify_logged_user);
 }
 
 /**
@@ -808,11 +803,10 @@ function validate_collection_category($array = null)
  */
 function avatar($param)
 {
-    global $userquery;
     $udetails = $param['details'];
     $size = $param['size'];
     $uid = $param['uid'];
-    return $userquery->getUserThumb($udetails, $size, $uid);
+    return userquery::getInstance()->getUserThumb($udetails, $size, $uid);
 }
 
 /**
@@ -970,8 +964,7 @@ function display_sharing_opt($input)
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
 {
-    global $userquery;
-    return $userquery->get_user_vids($uid, $cond, $count_only);
+    return userquery::getInstance()->get_user_vids($uid, $cond, $count_only);
 }
 
 function error_list(): array
@@ -1071,8 +1064,7 @@ function username_check($username): bool
  */
 function user_exists($user): bool
 {
-    global $userquery;
-    return $userquery->username_exists($user);
+    return userquery::getInstance()->username_exists($user);
 }
 
 /**
@@ -1085,14 +1077,12 @@ function user_exists($user): bool
  */
 function email_exists($user): bool
 {
-    global $userquery;
-    return $userquery->duplicate_email($user);
+    return userquery::getInstance()->duplicate_email($user);
 }
 
 function check_email_domain($email): bool
 {
-    global $userquery;
-    return $userquery->check_email_domain($email);
+    return userquery::getInstance()->check_email_domain($email);
 }
 
 /**
@@ -1748,8 +1738,7 @@ function show_share_form($array)
 {
     assign('params', $array);
 
-    global $userquery;
-    $contacts = $userquery->get_contacts(user_id());
+    $contacts = userquery::getInstance()->get_contacts(user_id());
     assign('contacts', $contacts);
     Template('blocks/common/share.html');
 }
@@ -1874,8 +1863,7 @@ function count_pages($total, $count)
  */
 function get_user_level($id)
 {
-    global $userquery;
-    return $userquery->usr_levels[$id];
+    return userquery::getInstance()->usr_levels[$id];
 }
 
 /**
@@ -2132,8 +2120,7 @@ function get_collections($param)
  */
 function get_users($param)
 {
-    global $userquery;
-    return $userquery->get_users($param);
+    return userquery::getInstance()->get_users($param);
 }
 
 /**
@@ -2498,8 +2485,7 @@ function subtitle($title)
  */
 function get_username($uid)
 {
-    global $userquery;
-    return $userquery->get_username($uid);
+    return userquery::getInstance()->get_username($uid);
 }
 
 /**
@@ -3556,8 +3542,7 @@ function get_browser_details($in = null, $assign = false)
  */
 function update_user_voted($array, $userid = null)
 {
-    global $userquery;
-    $userquery->update_user_voted($array, $userid);
+    userquery::getInstance()->update_user_voted($array, $userid);
 }
 
 /**

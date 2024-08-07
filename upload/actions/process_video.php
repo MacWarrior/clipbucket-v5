@@ -1,5 +1,6 @@
 <?php
-include(dirname(__FILE__) . "/../includes/config.inc.php");
+define('THIS_PAGE', 'process_video');
+include(dirname(__FILE__) . '/../includes/config.inc.php');
 
 //Get vid
 $vid = $_SERVER['argv'][1];

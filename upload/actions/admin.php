@@ -2,8 +2,8 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $myquery, $cbvid, $eh, $db;
-$userquery->admin_login_check();
+global $myquery, $cbvid, $eh, $db;
+userquery::getInstance()->admin_login_check();
 
 $mode = $_POST['mode'];
 switch ($mode) {

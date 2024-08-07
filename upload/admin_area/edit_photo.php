@@ -1,10 +1,10 @@
 <?php
-global $userquery, $pages, $cbphoto, $breadcrumb;
+global $pages, $cbphoto, $breadcrumb;
 define('THIS_PAGE', 'edit_photo');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 // TODO : Complete URL

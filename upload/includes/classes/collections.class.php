@@ -749,8 +749,6 @@ class Collections extends CBCategory
      */
     function is_viewable($cid): bool
     {
-        global $userquery;
-
         $params = [];
         $params['collection_id'] = $cid;
         $params['first_only'] = true;
@@ -771,11 +769,10 @@ class Collections extends CBCategory
         }
 
         $userid = user_id();
-        if ($c['broadcast'] == 'private' && !$userquery->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
+        if ($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
             e(sprintf(lang('collection_is'), strtolower(lang('private'))));
             return false;
         }
-
 
         return true;
     }
@@ -1978,7 +1975,6 @@ class Collections extends CBCategory
     {
         $c = $this->get_collection($id);
         if ((!empty($c) && $c['userid'] == user_id()) || $show_all === true) {
-            global $userquery;
             $voters = $c['voters'];
             $voters = json_decode($voters, true);
 
@@ -1990,7 +1986,7 @@ class Collections extends CBCategory
                 foreach ($voters as $id => $details) {
                     $username = get_username($id);
                     $output = '<li id=\'user' . $id . $c['collection_id'] . '\' class=\'PhotoRatingStats\'>';
-                    $output .= '<a href=\'' . $userquery->profile_link($id) . '\'>' . $username . '</a>';
+                    $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . $username . '</a>';
                     $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
                     $output .= niceTime($details['time']) . ')</small>';
                     $output .= '</li>';
