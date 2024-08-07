@@ -1164,4 +1164,5 @@ VALUES ('admin_setting'),
        ('delete_unused_resolution_files_description'),
        ('on_error'),
        ('anonymous'),
-       ('anonymous_locked');
+       ('anonymous_locked'),
+       ('orphan');
