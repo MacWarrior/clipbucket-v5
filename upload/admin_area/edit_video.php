@@ -1,10 +1,10 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
+global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 $video = $_GET['video'];
@@ -50,7 +50,7 @@ if ($myquery->video_exists($video)) {
         Comments::delete(['comment_id' => $cid]);
     }
 
-    assign('udata', $userquery->get_user_details($data['userid']));
+    assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
     $data['date_added'] = $date_added->format(DATE_FORMAT);
@@ -116,7 +116,7 @@ ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-assign('anonymous_id', $userquery->get_anonymous_user());
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
 

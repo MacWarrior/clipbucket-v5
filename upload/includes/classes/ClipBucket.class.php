@@ -303,8 +303,7 @@ class ClipBucket
      */
     function initAdminMenu()
     {
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
+        $per = userquery::getInstance()->get_user_level(user_id());
 
         $menu_dashboard = [
             'title'   => 'Dashboard'
@@ -399,7 +398,7 @@ class ClipBucket
                 ]
             ];
 
-            if ($per['allow_manage_user_level'] == 'yes' || $userquery->level == 1) {
+            if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
                 $menu_users['sub'][] = [
                     'title' => 'User Levels'
                     , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'

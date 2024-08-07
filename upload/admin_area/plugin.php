@@ -1,9 +1,10 @@
 <?php
-global $userquery, $pages;
+define('THIS_PAGE', 'plugin');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
-$pages->page_redir();
+
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
+pages::getInstance()->page_redir();
 
 $file = get('file');
 $folder = get('folder');

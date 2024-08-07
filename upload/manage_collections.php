@@ -3,10 +3,10 @@ define('THIS_PAGE', 'manage_collections');
 define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
-global $userquery, $cbcollection, $eh, $pages, $cbvideo, $cbphoto, $Cbucket;
+global $cbcollection, $eh, $pages, $cbvideo, $cbphoto, $Cbucket;
 
-$userquery->logincheck();
-$udetails = $userquery->get_user_details(user_id());
+userquery::getInstance()->logincheck();
+$udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 $order = 'collection_items.date_added DESC';
 

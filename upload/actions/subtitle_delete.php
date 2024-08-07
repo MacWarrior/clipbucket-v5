@@ -1,8 +1,8 @@
 <?php
-define('THIS_PAGE', 'ajax');
+define('THIS_PAGE', 'subtitle_delete');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-global $userquery;
-$userquery->admin_login_check();
+
+userquery::getInstance()->admin_login_check();
 
 $video = $_POST['videoid'];
 $number = $_POST['number'];

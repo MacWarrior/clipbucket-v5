@@ -1,10 +1,8 @@
 <?php
 define('THIS_PAGE', 'edit_account');
 
-global $userquery;
-
 require 'includes/config.inc.php';
-$userquery->logincheck();
+userquery::getInstance()->logincheck();
 
 //Updating Profile
 if (isset($_POST['update_profile'])) {
@@ -13,7 +11,7 @@ if (isset($_POST['update_profile'])) {
     /*Checks profile fields data*/
     $post_clean = profile_fileds_check($array);
     if ($post_clean) {
-        $userquery->update_user($array);
+        userquery::getInstance()->update_user($array);
     }
 }
 
@@ -21,7 +19,7 @@ if (isset($_POST['update_profile'])) {
 if (isset($_POST['update_avatar_bg'])) {
     $array = $_POST;
     $array['userid'] = user_id();
-    $userquery->update_user_avatar_bg($array);
+    userquery::getInstance()->update_user_avatar_bg($array);
 }
 
 if (isset($_FILES['Filedata'])) {
@@ -51,11 +49,11 @@ if (isset($_FILES['Filedata'])) {
         'user_id' => $user_id
     ];
 
-    $coverUpload = $userquery->updateBackground($data);
+    $coverUpload = userquery::getInstance()->updateBackground($data);
     $response = [
         'status' => $coverUpload['status'],
         'msg'    => $coverUpload['msg'],
-        'url'    => $userquery->getBackground(user_id()) . '?' . $timeStamp
+        'url'    => userquery::getInstance()->getBackground(user_id()) . '?' . $timeStamp
     ];
     echo json_encode($response);
     die();
@@ -65,19 +63,19 @@ if (isset($_FILES['Filedata'])) {
 if (isset($_POST['change_email'])) {
     $array = $_POST;
     $array['userid'] = user_id();
-    $userquery->change_email($array);
+    userquery::getInstance()->change_email($array);
 }
 
 //Changing User Password
 if (isset($_POST['change_password'])) {
     $array = $_POST;
     $array['userid'] = user_id();
-    $userquery->change_password($array);
+    userquery::getInstance()->change_password($array);
 }
 
 //Banning Users
 if (isset($_POST['block_users'])) {
-    $userquery->block_users($_POST['users']);
+    userquery::getInstance()->block_users($_POST['users']);
 }
 
 $mode = $_GET['mode'];
@@ -98,7 +96,7 @@ switch ($mode) {
 
     case 'avatar_bg':
     case 'channel_bg':
-        assign('backgroundPhoto', $userquery->getBackground(user_id()));
+        assign('backgroundPhoto', userquery::getInstance()->getBackground(user_id()));
         assign('mode', $mode);
         break;
 
@@ -112,10 +110,10 @@ switch ($mode) {
         //Removing subscription
         if (isset($_GET['delete_subs'])) {
             $sid = mysql_clean($_GET['delete_subs']);
-            $userquery->unsubscribe_user($sid);
+            userquery::getInstance()->unsubscribe_user($sid);
         }
         assign('mode', 'subs');
-        assign('subs', $userquery->get_user_subscriptions(user_id()));
+        assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
         break;
 
     default:
@@ -124,8 +122,8 @@ switch ($mode) {
         break;
 }
 
-$udetails = $userquery->get_user_details(user_id());
-$profile = $userquery->get_user_profile($udetails['userid']);
+$udetails = userquery::getInstance()->get_user_details(user_id());
+$profile = userquery::getInstance()->get_user_profile($udetails['userid']);
 if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);
 }
@@ -154,9 +152,9 @@ assign('available_tags', $available_tags);
 
 assign('user', $udetails);
 
-assign('signup_fields', $userquery->load_signup_fields($udetails));
-assign('cust_signup_fields', $userquery->load_custom_signup_fields($udetails,false,true));
-assign('myAccountLinks', $userquery->my_account_links());
+assign('signup_fields', userquery::getInstance()->load_signup_fields($udetails));
+assign('cust_signup_fields', userquery::getInstance()->load_custom_signup_fields($udetails,false,true));
+assign('myAccountLinks', userquery::getInstance()->my_account_links());
 
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');

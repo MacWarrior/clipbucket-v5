@@ -8,12 +8,12 @@ if( config('videosSection') != 'yes' ){
     redirect_to(BASEURL);
 }
 
-global $userquery, $cbvideo, $eh, $pages, $cbvid;
+global $cbvideo, $eh, $pages, $cbvid;
 
-$userquery->logincheck();
-$udetails = $userquery->get_user_details(user_id());
+userquery::getInstance()->logincheck();
+$udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
-assign('p', $userquery->get_user_profile($udetails['userid']));
+assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $mode = $_GET['mode'];
 
