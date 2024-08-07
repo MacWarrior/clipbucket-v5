@@ -47,7 +47,6 @@ if( THIS_PAGE != 'system_info'){
 }
 
 Assign('baseurl', BASEURL);
-Assign('admindir', DirPath::getUrl('admin_area'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');
