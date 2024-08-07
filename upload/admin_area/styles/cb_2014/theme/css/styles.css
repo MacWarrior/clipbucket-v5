@@ -987,3 +987,7 @@ a[role='menuitem'] {
 .no_overflow{
     overflow: hidden;
 }
+
+.btn_save_frequency {
+    top:0;color:white;cursor:pointer;vertical-align: middle;
+}

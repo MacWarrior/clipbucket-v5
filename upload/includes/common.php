@@ -91,6 +91,9 @@ require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 
+/** @todo convert to config */
+date_default_timezone_set('Europe/Paris');
+
 $cb_columns = new cb_columns();
 $myquery = new myquery();
 $row = $myquery->Get_Website_Details();

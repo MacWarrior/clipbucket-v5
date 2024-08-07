@@ -1,5 +1,7 @@
 <?php
 
+require_once DirPath::get('classes') . 'cron_expression.class.php';
+
 class AdminTool
 {
     private static $_instance = null;
@@ -81,6 +83,7 @@ class AdminTool
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, code,
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
+                    ,tools.is_automatable, tools.is_disabled, tools.frequency
                 FROM ' . cb_sql_table('tools') . '
                 LEFT JOIN (
                     SELECT id_tool, MAX(date_start) AS max_date
@@ -118,6 +121,33 @@ class AdminTool
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'in_progress\')'], 'id_tool = ' . mysql_clean($this->id_tool));
         }
         return true;
+    }
+
+    /**
+     * Change is_disabled of tool
+     * @param bool $value
+     * @return void
+     * @throws Exception
+     */
+    public function updateIsDisabled(bool $value)
+    {
+        Clipbucket_db::getInstance()->update(tbl('tools'), ['is_disabled'], [(int) $value], 'id_tool = ' . mysql_clean($this->id_tool));
+    }
+
+    /**
+     * @param string $frequency
+     * @return void
+     * @throws Exception
+     */
+    public function updateFrequency(string $frequency)
+    {
+        /** check si le format cron is ok */
+        $expression = new \CronExpression($frequency);
+        if($expression->isValid() === false && !empty($frequency)) {
+            throw new Exception('Format cron invalid');
+        }
+
+        Clipbucket_db::getInstance()->update(tbl('tools'), ['frequency', 'previous_calculated_datetime'], [$frequency, date('Y-m-d H:i:s')], 'id_tool = ' . mysql_clean($this->id_tool));
     }
 
     public function toolErrorHandler($e)
@@ -718,14 +748,14 @@ class AdminTool
 
                     -- exclude tools already running and get date_start
                     INNER JOIN (
-                        SELECT MAX(TH.date_debut) AS date_debut, TH.id_tool
+                        SELECT MAX(TH.date_start) AS date_start, TH.id_tool
                         FROM '.tbl('tools_histo').' TH
                         WHERE TH.id_tool NOT IN (
-                            SELECT DISTINCT id_tool
-                            FROM '.tbl('tools_histo').'
-                            WHERE statut IN (\'in_progress\',\'stopping\') '.$where.'
-                        )
-                        WHERE true '.$where.'
+                            SELECT DISTINCT TH.id_tool
+                            FROM '.tbl('tools_histo').' TH
+                            INNER JOIN '.tbl('tools_histo_status').' THS ON THS.id_tools_histo_status = TH.id_tools_histo_status
+                            WHERE THS.language_key_title IN (\'in_progress\',\'stopping\') '.$where.'
+                        ) '.$where.'
                         GROUP BY TH.id_tool
                     ) TH ON T.id_tool = TH.id_tool
                     
@@ -737,6 +767,11 @@ class AdminTool
         $array_tools = Clipbucket_db::getInstance()->_select($query);
         $array_tools_ready = [];
         foreach ($array_tools as $tool) {
+
+            if(empty($tool['previous_calculated_datetime'])) {
+                continue;
+            }
+
             /** check if a tool should be launch */
             if( self::shouldCronBeExecuted($tool['frequency'], $tool['last_date_start'], $tool['previous_calculated_datetime'], $tool['id_tool']) ){
                 $array_tools_ready[] = $tool;
@@ -747,16 +782,35 @@ class AdminTool
     }
 
     /**
-     * Tools for start automate if necessary
      * @return void
      * @throws Exception
      */
     public function checkAndStartToolsByFrequency()
     {
-        foreach (self::getToolsReadyForLaunch() as $tool) {
-            /** start tools from CLI */
-            self::launchCli($tool['id_tool']);
+
+        $this->array_loop = self::getToolsReadyForLaunch();
+
+        $details = [];
+        if(System::isDateTimeSynchro($details) === false) {
+            $error = lang('datetime_synchro_error');
+            e($error);
+            $this->addLog($error);
+            DiscordLog::sendDump($error.' '.print_r($details, true));
+            $this->array_loop = [];
         }
+
+        $this->executeTool('AdminTool::automate');
+    }
+
+    /**
+     * Tools for start automate if necessary
+     * @return void
+     * @throws Exception
+     */
+    public function automate(array $tool)
+    {
+        /** start tools from CLI */
+        self::launchCli($tool['id_tool']);
     }
 
     /**
@@ -781,7 +835,7 @@ class AdminTool
         }
 
         $data_task_date = self::getDateStat($cron, $last_date_start, $previous_calculated_datetime, $id_tool);
-        return $data_task_date['next_date'] <= date('Y-m-d H:i:s');
+        return ( empty($last_date_start) || $last_date_start < $data_task_date['next_date']) && $data_task_date['next_date'] <= date('Y-m-d H:i:s');
     }
 
     /**
@@ -800,9 +854,9 @@ class AdminTool
             $timestamp = self::getNextDate($cron, MAX($last_date_start,$next_date), MAX($date_previsionnel_precedente,$date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
             $date = new \DateTime();
             $date->setTimeStamp($timestamp);
-            $continue = $date->format('Y-m-d H:i:s.u') < date('Y-m-d H:i:s');
+            $continue = $date->format('Y-m-d H:i:s') < date('Y-m-d H:i:s');
             if($continue || empty($next_date)){
-                $next_date = $date->format('Y-m-d H:i:s.u');
+                $next_date = $date->format('Y-m-d H:i:s');
             }
         }while($continue);
 
@@ -848,18 +902,18 @@ class AdminTool
             $cron = implode(' ', $e);
         }
 
-        $date = \DateTime::createFromFormat('Y-m-d H:i:s.u',$date);
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s',$date);
 
         try{
             $expression = new \CronExpression($cron);
-            $next_date = \DateTime::createFromFormat('Y-m-d H:i:s.u',$date_previsionnel);
+            $next_date = \DateTime::createFromFormat('Y-m-d H:i:s',$date_previsionnel);
 
             do{
                 $next_date = $expression->getNext($next_date);
                 if($next_date < $date->getTimestamp()){
                     $date_pre = new \DateTime();
                     $date_pre->setTimeStamp($next_date);
-                    $last_previsionnel_date = $date_pre->format('Y-m-d H:i:s.u');
+                    $last_previsionnel_date = $date_pre->format('Y-m-d H:i:s');
                 }
 
             }while($next_date < $date->getTimestamp());
@@ -894,9 +948,10 @@ class AdminTool
     public function isAlreadyLaunch() :bool
     {
         /** get all tools running */
-        $query = /** @lang MySQL */'SELECT DISTINCT id_tool
-                            FROM '.tbl('tools_histo').'
-                            WHERE statut IN (\'in_progress\',\'stopping\') AND id_tool = '.( (int) $this->id_tool);
+        $query = /** @lang MySQL */'SELECT DISTINCT TH.id_tool
+                            FROM '.tbl('tools_histo').' TH
+                            INNER JOIN '.tbl('tools_histo_status').' THS ON THS.id_tools_histo_status = TH.id_tools_histo_status
+                            WHERE THS.language_key_title IN (\'in_progress\',\'stopping\') AND TH.id_tool = '.( (int) $this->id_tool);
         $rs = Clipbucket_db::getInstance()->_select($query);
         return !empty($rs);
     }
