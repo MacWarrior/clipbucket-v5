@@ -1165,4 +1165,8 @@ VALUES ('admin_setting'),
        ('on_error'),
        ('anonymous'),
        ('anonymous_locked'),
-       ('orphan');
+       ('orphan'),
+       ('upload_poster'),
+       ('upload_backdrop'),
+       ('poster_list'),
+       ('backdrop_list');

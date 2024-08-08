@@ -8,5 +8,5 @@ userquery::getInstance()->admin_login_check();
 $data = get_video_details($_POST['videoid']);
 
 $num = $_POST['num'];
-delete_video_thumb($data, $num);
-display_thumb_list($data);
+//delete_video_thumb($data, $num);
+display_thumb_list($data, $_POST['type']);

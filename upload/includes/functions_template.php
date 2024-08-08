@@ -158,9 +158,10 @@ function display_language_edit()
 /**
  * @throws Exception
  */
-function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb_thumbs, $display = true)
+function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb_thumbs, $display = true, $type = 'thumbs')
 {
     assign('data', $data);
+    assign('type', $type);
     assign('vidthumbs', $vidthumbs);
     assign('vidthumbs_custom', $vidthumbs_custom);
 
@@ -180,14 +181,23 @@ function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb
  * @return void
  * @throws Exception
  */
-function display_thumb_list($data)
+function display_thumb_list($data, $type)
 {
-    $vidthumbs = get_thumb($data, true, '168x105', 'auto');
-    $vidthumbs_custom = get_thumb($data, true, '168x105', 'custom');
+    $size= false;
+    if ($type == 'thumbs') {
+        $size = '168x105';
+        $vidthumbs = get_thumb($data, true, $size, 'auto');
+        $vidthumbs_custom = get_thumb($data, true, $size, 'custom');
+    } else {
+        $vidthumbs = get_thumb($data, true, $size, $type);
+    }
     display_thumb_list_with_param(
         $data, $vidthumbs
-        , $vidthumbs_custom
+        , ($vidthumbs_custom ?? [])
         , (is_array($vidthumbs) ? count($vidthumbs) : 0)
+        , true
+        , $type
+
     );
 }
 
