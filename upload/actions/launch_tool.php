@@ -7,7 +7,14 @@ require_once DirPath::get('classes') .'admin_tool.class.php';
 $tool = new AdminTool();
 
 /** if CLI , example : php launch_tool.php id_tool=7 */
-if(php_sapi_name() === 'cli') {
+if (php_sapi_name() === 'cli') {
+
+    /** @todo change after finish migration */
+    require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE) === false) {
+        return ;
+    }
+
     $param = CLI::getParams(); // get cli params
 
     /** check if required params are satisfied , else trow exception */

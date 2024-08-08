@@ -4,6 +4,10 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 
 class MWIP extends \Migration
 {
+
+    CONST MIN_VERSION_CODE = '5.5.2';
+    CONST MIN_REVISION_CODE = '5000000';
+
     /**
      * @throws \Exception
      */

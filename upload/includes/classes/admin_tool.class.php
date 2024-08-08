@@ -79,11 +79,20 @@ class AdminTool
      */
     public static function getTools(array $condition = [])
     {
+
         $where = implode(' AND ', $condition);
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
-            $sql = 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, code,
+
+            $complement_select = '';
+            /** @todo change after finish migration */
+            require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE)) {
+                $complement_select = ',tools.is_automatable, tools.is_disabled, tools.frequency';
+            }
+
+            $sql = /** @lang MySQL */ 'SELECT tools.id_tool, language_key_label, language_key_description, elements_total, elements_done, COALESCE(NULLIF(language_key_title, \'\'), \'ready\') as language_key_title, function_name, code,
                    CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress, tools_histo.id_histo
-                    ,tools.is_automatable, tools.is_disabled, tools.frequency
+                    '.$complement_select.'
                 FROM ' . cb_sql_table('tools') . '
                 LEFT JOIN (
                     SELECT id_tool, MAX(date_start) AS max_date
@@ -793,21 +802,29 @@ class AdminTool
      */
     public function checkAndStartToolsByFrequency()
     {
+        /** @todo change after finish migration */
+        require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE) === false) {
+            $this->setToolError($this->id_tool);
+            return ;
+        }
+
         $details = [];
 
         if (config('automate_launch_mode') == 'disabled') {
-            $this->array_loop = [];
             $this->addLog(lang('automate_laucn_disabled_in_config'));
+            $this->setToolError($this->id_tool);
+            return ;
         } elseif (System::isDateTimeSynchro($details) === false) {
             $error = lang('datetime_synchro_error');
             e($error);
             $this->addLog($error);
             DiscordLog::sendDump($error.' '.print_r($details, true));
-            $this->array_loop = [];
-        } else {
-            $this->array_loop = self::getToolsReadyForLaunch();
+            $this->setToolError($this->id_tool);
+            return ;
         }
 
+        $this->array_loop = self::getToolsReadyForLaunch();
         $this->executeTool('AdminTool::automate');
     }
 
