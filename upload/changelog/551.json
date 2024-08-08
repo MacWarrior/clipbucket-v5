@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"91",
+  "revision":"95",
   "status":"dev",
   "detail":[
     {
@@ -56,6 +56,7 @@
         ,"Fix TMDB posters grabbing"
         ,"Fix Nginx path not saving"
         ,"Fix photo manager search"
+        ,"Fix conversion queue log url"
       ]
     },
     {
@@ -101,6 +102,7 @@
         ,"Fix photo report"
         ,"Fix collection item management page"
         ,"Fix photo display on Windows hosts"
+        ,"Fix popular users avatar"
       ]
     },
     {
@@ -149,6 +151,7 @@
         ,"Fix upgrade from 4.2 RC1"
         ,"Fix SQL typo"
         ,"Fix SSE DB update"
+        ,"Fix migration on windows hosts"
       ]
     },
     {
@@ -170,6 +173,7 @@
       "description": [
         "Update Player to version 2.0.3"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
+        ,"Update Global Announcement to version 2.0.4"
       ]
     },
     {
