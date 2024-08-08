@@ -28,8 +28,6 @@ sendClientResponseAndContinue(function () use ($core_tool) {
     ]);
 });
 
-die();
-
 if ($_POST['type'] == 'core' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
