@@ -396,4 +396,17 @@ cb_register_function('plupload_photo_uploader', 'uploaderDetails');
 
 cb_register_action('increment_playlist_played', 'view_playlist');
 
+/** Load automatic tools from user_activity */
+if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity') {
+    require_once DirPath::get('classes') .'admin_tool.class.php';
+    $tool = new AdminTool();
+
+    $dateTime = new DateTime();
+    $dateTime->modify('-1 minutes');
+
+    if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
+        AdminTool::launchCli($tool->getId());
+    }
+}
+
 include('admin.functions.php');

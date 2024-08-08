@@ -969,4 +969,25 @@ class AdminTool
         $rs = Clipbucket_db::getInstance()->_select($query);
         return !empty($rs);
     }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public function getLastStart() :string
+    {
+        /** get all tools running */
+        $query = /** @lang MySQL */'SELECT tools_histo.date_start
+                            FROM '.cb_sql_table('tools_histo').'
+                            WHERE tools_histo.id_tool = '.( (int) $this->id_tool).'
+                            ORDER BY tools_histo.date_start DESC LIMIT 1';
+        $rs = Clipbucket_db::getInstance()->_select($query);
+        return $rs[0]['date_start'] ?? '200-01-01 00:00:01';
+    }
+
+    public function getId()
+    {
+        return $this->id_tool;
+    }
+
 }
