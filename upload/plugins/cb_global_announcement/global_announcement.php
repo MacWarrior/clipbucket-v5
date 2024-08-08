@@ -3,7 +3,7 @@
     Plugin Name: CB - Global announcement
     Description: This will let you post a global announcement on your website
     Author: Arslan Hassan & MacWarrior
-    Version: 2.0.3
+    Version: 2.0.4
     Website: https://github.com/MacWarrior/clipbucket-v5/
     ClipBucket Version: 5.5.1
 */
