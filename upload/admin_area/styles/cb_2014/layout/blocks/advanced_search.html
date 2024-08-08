@@ -5,8 +5,8 @@
 		<i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
     </a>
 </div>
-<div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
-    <form id="video_search" name="video_search" method="get" action="video_manager.php" class="video_search">
+<div class="search_box well" id="searchdiv" {if $url_active == 'no'} style="display:none;"{/if}>
+    <form id="video_search" name="video_search" method="POST" action="video_manager.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
               <div class="form-group">
@@ -39,8 +39,8 @@
                     <label for="featured">{lang code='featured'}</label>
                     <select class="form-control" name="featured" id="featured">
                         <option value=""> </option>
-                        <option value="no" {if $smarty.get.featured=='no'}selected{/if}>{lang code='no'}</option>
-                        <option value="yes" {if $smarty.get.featured=='yes'}selected{/if}>{lang code='yes'}</option>
+                        <option value="no" {if $param_search.featured=='no'}selected{/if}>{lang code='no'}</option>
+                        <option value="yes" {if $param_search.featured=='yes'}selected{/if}>{lang code='yes'}</option>
                     </select>
                 </div>
             </div>
@@ -50,8 +50,8 @@
                     <label for="active">Active</label>
                     <select class="form-control" name="active" id="active">
                         <option value=""> </option>
-                        <option value="yes" {if $smarty.get.active=='yes'}selected{/if}>{lang code='yes'}</option>
-                        <option value="no" {if $smarty.get.active=='no'}selected{/if}>{lang code='no'}</option>
+                        <option value="yes" {if $param_search.active=='yes'}selected{/if}>{lang code='yes'}</option>
+                        <option value="no" {if $param_search.active=='no'}selected{/if}>{lang code='no'}</option>
                     </select>
                 </div>
             </div>
@@ -60,9 +60,10 @@
                     <label for="status">Conversion Status</label>
                     <select class="form-control" name="status" id="status">
                         <option value=""> </option>
-                        <option value="Successful" {if $smarty.get.status=='Successful'}selected{/if}>Successful</option>
-                        <option value="Processing" {if $smarty.get.status=='Processing'}selected{/if}>Processing</option>
-                        <option value="Failed" {if $smarty.get.status=='Failed'}selected{/if}>Failed</option>
+                        <option value="Successful" {if $param_search.status=='Successful'}selected{/if}>{lang code='successful'}</option>
+                        <option value="Processing" {if $param_search.status=='Processing'}selected{/if}>{lang code='processing'}</option>
+                        <option value="Processing" {if $param_search.status=='Waiting'}selected{/if}>{lang code='waiting'}</option>
+                        <option value="Failed" {if $param_search.status=='Failed'}selected{/if}>{lang code='failed'}</option>
                     </select>
                 </div>
             </div>
@@ -75,7 +76,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>{lang code="category"}</label>
-                    {cbCategories output="dropdown" class='form-control' selected=$smarty.get.category name="category" blank_option=TRUE type='video' echo=TRUE}
+                    {cbCategories output="dropdown" class='form-control' selected=$param_search.category name="category" blank_option=TRUE type='video' echo=TRUE}
                 </div>
             </div>
         </div>
