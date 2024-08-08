@@ -736,34 +736,35 @@ class AdminTool
 
         $where = '';
         if(!empty($idTask)){
-            $where = ' AND tools_histo.id_tool = '. $id_tool;
+            $where = ' AND tools.id_tool = '. $id_tool;
         }
 
         /** get all tools with frequency */
         $query = /** @lang MySQL */'SELECT 
                         tools.*
                         , tools_histo.date_start AS last_date_start
-                        , tools.previous_calculated_datetime
                     FROM '.cb_sql_table('tools').' 
 
                     -- exclude tools already running and get date_start
                     INNER JOIN (
-                        SELECT MAX(tools_histo.date_start) AS date_start, tools_histo.id_tool
-                        FROM '.cb_sql_table('tools_histo').'
-                        WHERE tools_histo.id_tool NOT IN (
-                            SELECT DISTINCT tools_histo.id_tool
-                            FROM '.cb_sql_table('tools_histo').'
+                        SELECT MAX(tools_histo.date_start) AS date_start, tools.id_tool
+                        FROM '.cb_sql_table('tools').'
+                        LEFT JOIN '.cb_sql_table('tools_histo').' ON tools_histo.id_tool = tools.id_tool
+                        WHERE tools.id_tool NOT IN (
+                            SELECT DISTINCT tools.id_tool
+                            FROM '.cb_sql_table('tools').'
+                            INNER JOIN '.cb_sql_table('tools_histo').' ON tools_histo.id_tool = tools.id_tool
                             INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
                             WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') '.$where.'
                         ) '.$where.'
-                        GROUP BY tools_histo.id_tool
+                        GROUP BY tools.id_tool
                     ) tools_histo ON tools.id_tool = tools_histo.id_tool
                     
                     WHERE COALESCE(tools.frequency, \'\') != \'\' 
                       AND COALESCE(tools.previous_calculated_datetime, \'\') != \'\'
                       AND tools.is_automatable = true
                       AND tools.is_disabled = false
-                      '.$where;
+                      '.$where.';';
         $array_tools = Clipbucket_db::getInstance()->_select($query);
         $array_tools_ready = [];
 
@@ -819,13 +820,13 @@ class AdminTool
 
     /**
      * @param string $cron
-     * @param string $last_date_start
+     * @param $last_date_start
      * @param string $previous_calculated_datetime
      * @param int|null $id_tool
      * @return bool
      * @throws Exception
      */
-    public static function shouldCronBeExecuted(string $cron, string $last_date_start, string $previous_calculated_datetime, int $id_tool = null): bool
+    public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, int $id_tool = null): bool
     {
 
         if( !empty($last_date_start) && $last_date_start < $previous_calculated_datetime){
@@ -844,17 +845,22 @@ class AdminTool
 
     /**
      * @param string $cron
-     * @param string $last_date_start
+     * @param $last_date_start
      * @param string $date_previsionnel_precedente_source
      * @param int|null $id_tool
      * @return array
      * @throws Exception
      */
-    public static function getDateStat(string $cron, string $last_date_start, string $date_previsionnel_precedente_source, int $id_tool = null): array
+    public static function getDateStat(string $cron, $last_date_start, string $date_previsionnel_precedente_source, int $id_tool = null): array
     {
         $next_date =null;
         $date_previsionnel_precedente = null;
         do {
+
+            if(is_null($last_date_start)) {
+                $last_date_start='2000-01-01 01:00:00';
+            }
+
             $timestamp = self::getNextDate($cron, MAX($last_date_start,$next_date), MAX($date_previsionnel_precedente,$date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
             $date = new \DateTime();
             $date->setTimeStamp($timestamp);
