@@ -3,15 +3,12 @@ define('BACK_END', true);
 define('FRONT_END', false);
 define('SLOGAN', 'Administration Panel');
 
-//Admin Area
-$admin_area = true;
-
-include('common.php');
+require_once 'common.php';
 ClipBucket::getInstance()->initAdminMenu();
 
 //Including Massuploader Class,
-require_once('classes/mass_upload.class.php');
-require_once('classes/ads.class.php');
+require_once DirPath::get('classes') . 'mass_upload.class.php';
+require_once DirPath::get('classes') . 'ads.class.php';
 
 global $db, $Smarty, $myquery;
 
@@ -36,7 +33,6 @@ define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles' . DIRECTORY_SEPAR
 define('TEMPLATEURLFO', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', config('template_dir'));
-
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 

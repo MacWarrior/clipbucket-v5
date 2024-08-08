@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"93",
+  "revision":"94",
   "status":"dev",
   "detail":[
     {
@@ -151,6 +151,7 @@
         ,"Fix upgrade from 4.2 RC1"
         ,"Fix SQL typo"
         ,"Fix SSE DB update"
+        ,"Fix migration on windows hosts"
       ]
     },
     {

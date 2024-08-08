@@ -242,9 +242,12 @@ class AdminTool
 
         $installed_plugins = Clipbucket_db::getInstance()->select(tbl('plugins'), '*');
         $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
+
         if (empty($files)) {
+            $version = $update->getCurrentCoreVersion();
+            $revision = $update->getCurrentCoreRevision();
             //update to current revision
-            $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean(VERSION) . '\' , revision = ' . mysql_clean(REV);
+            $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
             Clipbucket_db::getInstance()->mysqli->query($sql);
             CacheRedis::flushAll();
             Update::getInstance()->flush();
