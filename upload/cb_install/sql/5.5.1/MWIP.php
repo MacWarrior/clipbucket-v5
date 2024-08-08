@@ -53,6 +53,10 @@ class MWIP extends \Migration
                 VALUES (\'automate_label\', \'automate_description\', \'AdminTool::checkAndStartToolsByFrequency\', \'automate\', NULL, NULL, 0, 0)';
         self::query($sql);
 
+        self::generateTranslation('tool_not_found', [
+            'fr'=>'L\'outil est introuvable',
+            'en'=>'Tool not found'
+        ]);
         self::generateTranslation('tips_automate_launch_mode', [
             'fr'=>'Avec l\'activité des utilisateurs, les automates sont lancés en tâche de fond au chargement des pages',
             'en'=>'With user activity, automates are launched in backgound at page loading'

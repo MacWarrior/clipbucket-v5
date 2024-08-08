@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'launch_tool');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-require_once('../includes/classes/admin_tool.class.php');
+require_once DirPath::get('classes') .'admin_tool.class.php';
 
 $tool = new AdminTool();
 
@@ -13,26 +13,41 @@ if(php_sapi_name() === 'cli') {
     /** check if required params are satisfied , else trow exception */
     CLI::checkRequiredParam('id_tool');
 
-    $tool->initById((int) $param['id_tool']);
+    if($tool->initById((int) $param['id_tool']) === false) {
+        echo 'id_tool '.$param['id_tool'].' not exists';
+        die();
+    }
 
     if( ($param['automatic'] ?? '') == 'true' ) {
 
         if(config('automate_launch_mode') == 'disabled') {
-            throw new Exception('config automate_launch_mode disabled');
+            echo'config automate_launch_mode disabled';
+            die();
         }
 
         if( $tool->isReadyForAutomaticLaunch() === false) {
-            throw new Exception('id_tool '.((int) $param['id_tool']).' not ready for launch');
+            echo'id_tool '.((int) $param['id_tool']).' not ready for launch';
+            die();
         }
+
     } else if($tool->isAlreadyLaunch()) {
-        throw new Exception('id_tool '.((int) $param['id_tool']).' already launch');
+        echo'id_tool '.((int) $param['id_tool']).' already launch';
+        die();
     }
 
     $tool->setToolInProgress();
 }
 else {
     userquery::getInstance()->admin_login_check();
-    $tool->initById($_POST['id_tool']);
+
+    if($tool->initById($_POST['id_tool']) === false) {
+        e(lang('tool_not_found'));
+        echo json_encode([
+            'msg'              => getTemplateMsg()
+            , 'libelle_status' => lang('on_error')
+        ]);
+        die();
+    }
 
     if($tool->isAlreadyLaunch()) {
         e(lang('tool_already_launched'));
