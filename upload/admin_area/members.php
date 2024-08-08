@@ -2,14 +2,17 @@
 define('THIS_PAGE', 'members');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $eh;
+global $pages, $eh;
 
-$userquery->admin_login_check();
-$userquery->login_check('member_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('member_moderation');
 $pages->page_redir();
-$udetails = $userquery->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(user_id());
 $userLevel = $udetails['level'];
 
+if (!empty($_GET['user_not_found'])) {
+    e(lang('user_doesnt_exist'));
+}
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
@@ -23,15 +26,25 @@ if ($_GET['view'] == 'search') {
     $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 }
 
+$anonymous_id = userquery::getInstance()->get_anonymous_user();
+assign('anonymous_id', $anonymous_id);
 //Delete User
-if (isset($_GET['deleteuser'])) {
-    $userquery->delete_user($_GET['deleteuser']);
+if (isset($_GET['deleteuser']) && user_id() != $_GET['deleteuser']) {
+    if ($anonymous_id == $_GET['deleteuser']) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->delete_user($_GET['deleteuser']);
+    }
 }
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->delete_user($userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anynomous_locked'));
+        } else {
+            userquery::getInstance()->delete_user($userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -40,20 +53,32 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
 }
 
 //Activate User
-if (isset($_GET['activate'])) {
+if (isset($_GET['activate']) && user_id() != $_GET['deleteuser']) {
     $user = mysql_clean($_GET['activate']);
-    $userquery->action('activate', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->action('activate', $user);
+    }
 }
 //Deactivate User
 if (isset($_GET['deactivate'])) {
     $user = mysql_clean($_GET['deactivate']);
-    $userquery->action('deactivate', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->action('deactivate', $user);
+    }
 }
 
 //Using Multiple Action
 if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('activate', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } elseif($userid != user_id()) {
+            userquery::getInstance()->action('activate', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -63,7 +88,11 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
 
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('deactivate', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } elseif($userid != user_id()) {
+            userquery::getInstance()->action('deactivate', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -73,30 +102,46 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
 
 if (isset($_GET['resend_verif'])) {
     $revrfy_user = $_GET['resend_verif'];
-    $send_mail = resend_verification($revrfy_user);
-    if ($send_mail) {
-        e('Reverification email has been sent to user <strong>' . $send_mail . '</strong>', 'm');
+    if ($anonymous_id == $revrfy_user) {
+        e(lang('anonymous_locked'));
     } else {
-        e('Something went wrong trying to send reverification email');
+        $send_mail = resend_verification($revrfy_user);
+        if ($send_mail) {
+            e('Reverification email has been sent to user <strong>' . $send_mail . '</strong>', 'm');
+        } else {
+            e('Something went wrong trying to send reverification email');
+        }
     }
 }
 
 //Make User Featured
 if (isset($_GET['featured'])) {
     $user = mysql_clean($_GET['featured']);
-    $userquery->action('featured', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->action('featured', $user);
+    }
 }
 
 //Make User UnFeatured
 if (isset($_GET['unfeatured'])) {
     $user = mysql_clean($_GET['unfeatured']);
-    $userquery->action('unfeatured', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->action('unfeatured', $user);
+    }
 }
 
 //Using Multiple Action
 if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('featured', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            userquery::getInstance()->action('featured', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -105,7 +150,11 @@ if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
 }
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('unfeatured', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } else {
+            userquery::getInstance()->action('unfeatured', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -114,21 +163,33 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user']))
 }
 
 //Ban User
-if (isset($_GET['ban'])) {
+if (isset($_GET['ban']) && user_id() != $_GET['ban']) {
     $user = mysql_clean($_GET['ban']);
-    $userquery->action('ban', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->action('ban', $user);
+    }
 }
 
 //UnBan User
-if (isset($_GET['unban'])) {
+if (isset($_GET['unban']) && user_id() != $_GET['unban']) {
     $user = mysql_clean($_GET['unban']);
-    $userquery->action('unban', $user);
+    if ($anonymous_id == $user) {
+        e(lang('anonymous_locked'));
+    } else {
+        userquery::getInstance()->action('unban', $user);
+    }
 }
 
 //Using Multiple Action
 if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('ban', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } elseif($userid != user_id()) {
+            userquery::getInstance()->action('ban', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -138,7 +199,11 @@ if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
 
 if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
     foreach($_POST['check_user'] AS $userid){
-        $userquery->action('unban', $userid);
+        if ($anonymous_id == $userid) {
+            e(lang('anonymous_locked'));
+        } elseif($userid != user_id()) {
+            userquery::getInstance()->action('unban', $userid);
+        }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
         $eh->flush();
@@ -147,7 +212,7 @@ if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
 }
 
 //Calling Video Manager Functions
-call_functions($userquery->user_manager_func);
+call_functions(userquery::getInstance()->user_manager_func);
 
 //Getting Member List
 $page = mysql_clean($_GET['page']);

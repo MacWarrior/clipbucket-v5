@@ -132,7 +132,7 @@ echo |set /p=Creating PHP directory...
 SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
-SET "PHP_VERSION=8.3.8"
+SET "PHP_VERSION=8.3.10"
 echo /!\ We're using PHP because PHP-FPM doesn't support Windows
 echo |set /p=Downloading PHP %PHP_VERSION%...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-%PHP_VERSION%-Win32-vs16-x64.zip"
@@ -153,7 +153,7 @@ echo |set /p=Creating FFMpeg directory...
 SET "FFMPEG_DIR=%CB_DIR%\ffmpeg"
 md %FFMPEG_DIR%
 echo OK
-SET "FFMPEG_VERSION=7.0.1"
+SET "FFMPEG_VERSION=7.0.2"
 echo |set /p=Downloading FFMpeg %FFMPEG_VERSION%...
 SET "FFMPEG_URL=https://github.com/GyanD/codexffmpeg/releases/download/%FFMPEG_VERSION%/ffmpeg-%FFMPEG_VERSION%-full_build.zip"
 SET "FFMPEG_ZIP_FILENAME=ffmpeg-%FFMPEG_VERSION%.zip"
@@ -172,7 +172,7 @@ echo |set /p=Creating MediaInfo directory...
 SET "MEDIAINFO_DIR=%CB_DIR%\mediainfo"
 md %MEDIAINFO_DIR%
 echo OK
-SET "MEDIAINFO_VERSION=24.05"
+SET "MEDIAINFO_VERSION=24.06"
 echo |set /p=Downloading MediaInfo %MEDIAINFO_VERSION%...
 SET "MEDIAINFO_URL=https://mediaarea.net/download/binary/mediainfo/%MEDIAINFO_VERSION%/MediaInfo_CLI_%MEDIAINFO_VERSION%_Windows_x64.zip"
 SET "MEDIAINFO_ZIP_FILENAME=mediainfo-%MEDIAINFO_VERSION%.zip"
@@ -214,9 +214,9 @@ timeout 10 > NUL
 SET "MYSQL_BIN=%MARIADB_DIR%\bin\mysql.exe"
 SET "DB_PASS=%RANDOM%-%RANDOM%-%RANDOM%"
 %MYSQL_BIN% -u root -e "CREATE DATABASE clipbucket;"
-%MYSQL_BIN% -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '%DB_PASS%';"
-%MYSQL_BIN% -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost' IDENTIFIED BY '%DB_PASS%';"
-%MYSQL_BIN% -uroot -e "FLUSH PRIVILEGES;"
+%MYSQL_BIN% -u root -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '%DB_PASS%';"
+%MYSQL_BIN% -u root -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost' IDENTIFIED BY '%DB_PASS%';"
+%MYSQL_BIN% -u root -e "FLUSH PRIVILEGES;"
 
 taskkill /IM mariadbd.exe > NULL
 echo OK

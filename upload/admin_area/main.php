@@ -426,9 +426,8 @@ if (isset($_POST['update'])) {
         'hide_empty_collection',
         'only_keep_max_resolution',
         'playlistsSection',
-
+        'nginx_path',
         'automate_launch_mode'
-
     ];
 
     foreach ($opt_list as $optl) {

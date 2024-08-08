@@ -2,10 +2,10 @@
 define('THIS_PAGE', 'upload_thumb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $myquery, $db, $Upload, $pages;
+global $myquery, $db, $Upload, $pages;
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 $video = mysql_clean($_GET['video']);

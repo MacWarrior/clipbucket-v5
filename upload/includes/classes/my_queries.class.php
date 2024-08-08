@@ -183,8 +183,7 @@ class myquery
      */
     function check_user($username)
     {
-        global $userquery;
-        return $userquery->username_exists($username);
+        return userquery::getInstance()->username_exists($username);
     }
 
     /**
@@ -193,8 +192,7 @@ class myquery
      */
     function check_email($email)
     {
-        global $userquery;
-        return $userquery->email_exists($email);
+        return userquery::getInstance()->email_exists($email);
     }
 
     /**

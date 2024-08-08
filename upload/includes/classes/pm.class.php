@@ -98,11 +98,11 @@ class cb_pm
      */
     function send_pm($array): bool
     {
-        global $userquery, $db;
+        global $db;
         $to = $this->check_users($array['to'], $array['from']);
 
         //checking from user
-        if (!$userquery->user_exists($array['from'])) {
+        if (!userquery::getInstance()->user_exists($array['from'])) {
             e(lang('unknown_sender'));
             return false;
         }
@@ -163,8 +163,6 @@ class cb_pm
      */
     function check_users($input, $sender)
     {
-        global $userquery;
-
         if (empty($input)) {
             e(lang("unknown_reciever"));
         } else {
@@ -177,11 +175,11 @@ class cb_pm
             $valid_users = [];
             foreach ($usernames as $username) {
                 $user_id = $this->get_the_user($username);
-                if ($userquery->is_user_banned($username, user_id())) {
+                if (userquery::getInstance()->is_user_banned($username, user_id())) {
                     e(sprintf(lang('cant_pm_banned_user'), $username));
-                } elseif ($userquery->is_user_banned(user_name(), $username)) {
+                } elseif (userquery::getInstance()->is_user_banned(user_name(), $username)) {
                     e(sprintf(lang('cant_pm_user_banned_you'), $username));
-                } elseif (!$userquery->user_exists($username)) {
+                } elseif (!userquery::getInstance()->user_exists($username) || $user_id == userquery::getInstance()->get_anonymous_user()) {
                     e(lang('unknown_reciever'));
                 } elseif ($user_id == $sender) {
                     e(lang('you_cant_send_pm_yourself'));
@@ -208,9 +206,8 @@ class cb_pm
      */
     function get_the_user($user)
     {
-        global $userquery;
         if (!is_numeric($user)) {
-            return $userquery->get_user_field_only($user, 'userid');
+            return userquery::getInstance()->get_user_field_only($user, 'userid');
         }
         return $user;
     }
@@ -517,7 +514,7 @@ class cb_pm
     function send_pm_email($array)
     {
         global $cbemail, $userquery;
-        $sender = $userquery->get_user_field_only($array['from'], 'username');
+        $sender = userquery::getInstance()->get_user_field_only($array['from'], 'username');
         $content = mysql_clean($array['content']);
         $subject = mysql_clean($array['subj']);
         $msgid = $array['msg_id'];
@@ -544,7 +541,7 @@ class cb_pm
      */
     function get_users_emails($input): string
     {
-        global $userquery, $db;
+        global $db;
         //check if usernames are sperated by colon ';'
         $input = preg_replace('/;/', ',', $input);
         //Now Exploding Input and converting it to and array
@@ -560,7 +557,7 @@ class cb_pm
         }
 
         $emails = [];
-        $results = $db->select(tbl($userquery->dbtbl['users']), 'email', $cond);
+        $results = $db->select(tbl(userquery::getInstance()->dbtbl['users']), 'email', $cond);
         foreach ($results as $result) {
             $emails[] = $result['email'];
         }

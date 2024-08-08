@@ -137,7 +137,7 @@ function get_image_file($params)
         return get_photo_default_thumb($size, $output);
     }
     if ($static) {
-        return '/files/photos/' . $details['file_directory'] . '/' . $details['filename'] . '_' . $size . '.' . $details['ext'];
+        return DirPath::getUrl('photos') . $details['file_directory'] . '/' . $details['filename'] . '_' . $size . '.' . $details['ext'];
     }
 
     if (!is_array($details)) {
@@ -189,7 +189,7 @@ function get_image_file($params)
     if (!empty($files)) {
         $thumbs = [];
         foreach ($files as $file) {
-            $splitted = explode('/', $file);
+            $splitted = explode(DIRECTORY_SEPARATOR, $file);
             $thumb_name = end($splitted);
             $thumb_type = $cbphoto->get_image_type($thumb_name);
 
@@ -230,7 +230,7 @@ function get_image_file($params)
             $src = array_find($search_name, $thumbs);
 
             $src = (empty($src)) ? get_photo_default_thumb($size) : $src;
-            $attrs = ['src' => $src];
+            $attrs = ['src' => str_replace(DIRECTORY_SEPARATOR, '/', $src)];
 
             $attrs['id'] = (($params['id']) ? $params['id'] . '_' : 'photo_') . $photo['photo_id'];
 

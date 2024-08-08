@@ -10,11 +10,11 @@
 {$related_videos = json_encode($related_videos)}
 
 <script type="text/javascript">
-    var lang_by = "{lang code='by'}";
+    var lang_by = "{if $vdata.userid != $anonymous_id }{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";
     var video_id = "{$vdata.videoid}";
     var autoplay = "{$player_params.autoplay}" === 'yes';
-    var video_uploader = "{if !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}";
+    var video_uploader = "{if $vdata.userid == $anonymous_id }{elseif !empty($vdata.user_username)}{display_clean($vdata.user_username)}{else}{display_clean($vdata.username)}{/if}";
     var video_title = "{display_clean($vdata.title)}";
 </script>
 

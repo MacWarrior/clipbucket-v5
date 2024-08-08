@@ -56,7 +56,7 @@ $whoops->register();
 
 if (!@$in_bg_cron) {
     //Setting Session Max Life
-    ini_set('session.gc_maxlifetime', GARBAGE_TIMEOUT);
+    ini_set('session.gc_maxlifetime', COOKIE_TIMEOUT);
     session_set_cookie_params(COOKIE_TIMEOUT, '/');
     session_start();
 }
@@ -64,10 +64,6 @@ if (!@$in_bg_cron) {
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
-require_once DirPath::get('classes') . 'update.class.php';
-require_once DirPath::get('classes') . 'plugin.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
-require_once DirPath::get('classes') . 'cli.class.php';
 
 check_install('before');
 if (file_exists(DirPath::get('includes') . 'config.php')) {
@@ -76,6 +72,10 @@ if (file_exists(DirPath::get('includes') . 'config.php')) {
     require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
 
+require_once DirPath::get('classes') . 'update.class.php';
+require_once DirPath::get('classes') . 'plugin.class.php';
+require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';

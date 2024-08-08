@@ -1,7 +1,6 @@
 <?php
 include('../includes/config.inc.php');
 include('global.php');
-global $userquery;
 
 $request = $_REQUEST;
 $mode = strtolower($request['mode']);
@@ -20,30 +19,29 @@ switch ($mode) {
 
         $userDetails = [];
         foreach ($uDetails as $ud) {
-            $userDetails[$ud] = $userquery->udetails[$ud];
+            $userDetails[$ud] = userquery::getInstance()->udetails[$ud];
         }
 
         $userDetails['sess_id'] = $_COOKIE['PHPSESSID'];
         $username = $request['username'];
         $password = $request['password'];
 
-        if ($userquery->userid) {
-            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($userDetails);
-            exit(json_encode(['status' => 'ok', 'userid' => $userquery->userid, 'details' => $userDetails]));
+        if (userquery::getInstance()->userid) {
+            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($userDetails);
+            exit(json_encode(['status' => 'ok', 'userid' => userquery::getInstance()->userid, 'details' => $userDetails]));
         }
 
         function onLoginMobile()
         {
-            global $userquery;
             $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections'];
             $userDetails = [];
             foreach ($uDetails as $ud) {
-                $userDetails[$ud] = $userquery->udetails[$ud];
+                $userDetails[$ud] = userquery::getInstance()->udetails[$ud];
             }
 
             $userDetails['sess_id'] = $_COOKIE['PHPSESSID'];
-            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($userDetails);
-            exit(json_encode(['status' => 'ok', 'userid' => $userquery->userid, 'type' => 'custom', 'details' => $userDetails]));
+            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($userDetails);
+            exit(json_encode(['status' => 'ok', 'userid' => userquery::getInstance()->userid, 'type' => 'custom', 'details' => $userDetails]));
         }
 
         $onLogin = 'onLoginMobile';
@@ -52,7 +50,7 @@ switch ($mode) {
             cb_call_functions('signup_page');
         }
 
-        $userquery->login_user($username, $password);
+        userquery::getInstance()->login_user($username, $password);
 
         if (error()) {
             exit(json_encode(['status' => 'failed', 'msg' => error('single')]));
@@ -60,11 +58,11 @@ switch ($mode) {
             $uDetails = ['username', 'userid', 'email', 'total_videos', 'total_photos', 'total_collections'];
             $userDetails = [];
             foreach ($uDetails as $ud) {
-                $userDetails[$ud] = $userquery->udetails[$ud];
+                $userDetails[$ud] = userquery::getInstance()->udetails[$ud];
             }
             $userDetails['sess_id'] = $_COOKIE['PHPSESSID'];
-            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($userDetails);
-            exit(json_encode(['status' => 'ok', 'userid' => $userquery->userid, 'sess_id' => $_COOKIE['PHPSESSID'], 'details' => $userDetails]));
+            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($userDetails);
+            exit(json_encode(['status' => 'ok', 'userid' => userquery::getInstance()->userid, 'sess_id' => $_COOKIE['PHPSESSID'], 'details' => $userDetails]));
         }
         break;
 
@@ -81,17 +79,17 @@ switch ($mode) {
 
             $userDetails = [];
             foreach ($uDetails as $ud) {
-                $userDetails[$ud] = $userquery->udetails[$ud];
+                $userDetails[$ud] = userquery::getInstance()->udetails[$ud];
             }
 
             $userDetails['sess_id'] = $_COOKIE['PHPSESSID'];
-            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = $userquery->getUserThumb($userDetails);
+            $userDetails['avatar'] = $video['user_photo'] = $video['displayPic'] = userquery::getInstance()->getUserThumb($userDetails);
             exit(json_encode($userDetails));
         }
         break;
 
     case "logout":
-        $userquery->logout();
+        userquery::getInstance()->logout();
         if (cb_get_functions('logout')) {
             cb_call_functions('logout');
         }
