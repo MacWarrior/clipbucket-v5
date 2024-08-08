@@ -164,6 +164,7 @@ if (!$params['order']) {
     $params['order'] = ' videoid DESC ';
 }
 
+assign('anonymous_id', $userquery->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
 Assign('videos', $videos);
 

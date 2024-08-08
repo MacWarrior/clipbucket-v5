@@ -41,7 +41,7 @@ function video_playable($id): bool
         return true;
     }
     if ($vdo['broadcast'] == 'private'
-        && !$userquery->is_confirmed_friend($vdo['userid'], user_id())
+        && !userquery::getInstance()->is_confirmed_friend($vdo['userid'], user_id())
         && !is_video_user($vdo)
         && !has_access('video_moderation', true)
         && $vdo['userid'] != $uid) {
@@ -874,7 +874,6 @@ function remove_video_subtitles($vdetails)
  */
 function call_watch_video_function($vdo)
 {
-    global $userquery;
     $funcs = get_functions('watch_video_functions');
 
     if (is_array($funcs) && count($funcs) > 0) {
@@ -889,7 +888,7 @@ function call_watch_video_function($vdo)
 
     $userid = user_id();
     if ($userid) {
-        $userquery->increment_watched_videos($userid);
+        userquery::getInstance()->increment_watched_videos($userid);
     }
 }
 
@@ -966,13 +965,12 @@ function get_videos($param)
  */
 function video_users($users)
 {
-    global $userquery;
     if (!empty($users)) {
         $users_array = explode(',', $users);
     }
     $new_users = [];
     foreach ($users_array as $user) {
-        if ($user != user_name() && !is_numeric($user) && $userquery->user_exists($user)) {
+        if ($user != user_name() && !is_numeric($user) && userquery::getInstance()->user_exists($user)) {
             $new_users[] = $user;
         }
     }

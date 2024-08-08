@@ -30,17 +30,20 @@
       </td>
       {if $show_from}
       <td>
-        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{$user_msgs[msg].message_from_user}</a>
+        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">{if $user_msgs[msg].message_from != $anonymous_id }{$user_msgs[msg].message_from_user} {else} {lang($user_msgs[msg].message_from_user)}{/if}</a>
       </td>
       {/if}
       {if $show_to}
       <td>
-        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}"> 
-          {$to_id = $user_msgs[msg].message_to}
-          {$trimed_to = str_replace('#','', $to_id)}
-
+        <a href="?mode={$mode}&mid={$user_msgs[msg].message_id}">
+      {$to_id = $user_msgs[msg].message_to}
+      {$trimed_to = str_replace('#','', $to_id)}
+            {if $trimed_to != $anonymous_id}
           {ucfirst(get_username($trimed_to))}
+            {else}
 
+            {ucfirst(lang(get_username($trimed_to)))}
+            {/if}
         </a>
       </td>
       {/if}
@@ -54,7 +57,7 @@
       </td>
       <td>{$user_msgs[msg].date_added}</td>
       {if $mode =='inbox'}
-      <td><a href="/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" class="btn btn-primary">{lang code='reply'}</a></td>
+      <td><a {if $user_msgs[msg].message_from == $anonymous_id} disabled="disabled" {else} href="/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" {/if} class="btn btn-primary">{lang code='reply'}</a></td>
       {/if}
     </tr>
     {sectionelse}
@@ -64,21 +67,26 @@
 </div>
 </form>
 
-
-
-
 {if $pr_msg !=''}
 
 <div>
   <div style="padding:5px;" align="right">
-    <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="delete_icon" /></a>
-    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}"><img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="{lang code='reply'}!"/></a>
+    <a id="delete_icon-{$pr_msg.message_id}" href="?mode={$mode}&delete_mid={$pr_msg.message_id}">
+        <img src="{$imageurl}/dot.gif" border="0" class="delete_icon"/>
+    </a>
+    <a id="reply_icon-{$pr_msg.message_id}" href="?mode=new_msg&reply={$pr_msg.message_id}" {if $pr_msg.message_from == $anonymous_id}disabled="disabled"{/if}>
+      <img src="{$imageurl}/dot.gif" border="0" class="reply_icon" title="{lang code='reply'}!"/>
+    </a>
   </div>
   <div class="pm_message_top" align="left">
     <div class="pm_line">
       {lang code='from'} : 
       <strong>
-        <a href="{$userquery->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
+          {if $pr_msg.message_from != $anonymous_id}
+          <a href="{$userquery->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
+          {else}
+            {display_clean(lang($pr_msg.username))}
+          {/if}
       </strong> - {$pr_msg.date_added|date_format:"%A, %B %e, %Y %I:%M %p"}
     </div>
     <div class="pm_line">
@@ -86,9 +94,13 @@
       <strong>
         {$to_id = $pr_msg.message_to}
         {$trimed_to = str_replace('#','', $to_id)}
-        <a href="{$userquery->profile_link($trimed_to)}"> 
-          {display_clean(ucfirst(get_username($trimed_to)))}
-        </a>
+          {if $trimed_to != $anonymous_id}
+            <a href="{$userquery->profile_link($trimed_to)}">
+              {display_clean(ucfirst(get_username($trimed_to)))}
+            </a>
+          {else}
+            {display_clean(ucfirst(lang(get_username($trimed_to))))}
+          {/if}
       </strong> 
     </div>
     <div class="pm_line">

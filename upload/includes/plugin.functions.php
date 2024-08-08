@@ -245,11 +245,10 @@ function register_custom_form_field($array, $isGroup = false)
  */
 function register_signup_field($array)
 {
-    global $userquery;
     $name = key($array);
     if (is_array($array) && !empty($array[$name]['name'])) {
         foreach ($array as $key => $arr) {
-            $userquery->custom_signup_fields[$key] = $arr;
+            userquery::getInstance()->custom_signup_fields[$key] = $arr;
         }
     }
 }
@@ -265,18 +264,17 @@ function register_signup_field($array)
  */
 function register_custom_profile_field($array, $isGroup = false)
 {
-    global $userquery;
     $name = key($array);
 
     if (!$isGroup) {
         if (is_array($array) && !empty($array[$name]['name'])) {
             foreach ($array as $key => $arr) {
-                $userquery->custom_profile_fields[$key] = $arr;
+                userquery::getInstance()->custom_profile_fields[$key] = $arr;
             }
         }
     } else {
         if (is_array($array) && !empty($array['group_name'])) {
-            $userquery->custom_profile_fields_groups[] = $array;
+            userquery::getInstance()->custom_profile_fields_groups[] = $array;
         }
     }
 }

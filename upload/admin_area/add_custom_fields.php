@@ -1,8 +1,9 @@
 <?php
+define('THIS_PAGE', 'add_custom_fields');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-global $userquery, $pages;
-$userquery->admin_login_check();
-$pages->page_redir();
+
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 if (isset($_POST['add_field'])) {
     $array = $_POST;

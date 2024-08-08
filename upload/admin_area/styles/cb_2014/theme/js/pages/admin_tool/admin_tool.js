@@ -4,7 +4,6 @@ var eventSourceLog;
 var ids_stopped=[];
 var ids_error=[];
 $(function () {
-
     let showMsg = function(msg, type, autoDismiss){
 
         let randomid = 'ajax_msg_'+(Math.random() + 1).toString(36).substring(7);
@@ -22,7 +21,7 @@ $(function () {
 
     }
 
-    if (can_sse == 'true') {
+    if (can_sse === 'true') {
         connectSSE();
     }
     $('.launch').on('click', function () {
@@ -178,22 +177,24 @@ function connectSSE () {
             $('#pourcent-' + tool.id).html(tool.pourcent);
             $('#done-' + tool.id).html(tool.elements_done);
             $('#total-' + tool.id).html(tool.elements_total);
-            ids_tool.push(tool.id);
-            if (tool.status == 'on_error') {
+            ids_tool.push(parseInt(tool.id));
+            if (tool.status === 'on_error') {
                 $('#span-' + tool.id).html(tool.status_title);
-                ids_error.push(tool.id);
+                if (ids_error.includes(parseInt(tool.id)) === false) {
+                    ids_error.push(parseInt(tool.id));
+                }
             }
         });
 
         $('.progress-bar:visible').each(function (index, elem) {
             elem = $(elem);
             let id = elem.attr('data-id');
-            if (!ids_tool.includes(id)) {
+            if (!ids_tool.includes(parseInt(id))) {
                 if (ids_stopped.includes(parseInt(id))) {
-                    elem.addClass('progress-bar-striped ').addClass('active');
+                    elem.addClass('progress-bar-striped').addClass('active');
                     const index = ids_stopped.indexOf(parseInt(id));
                     const x = ids_stopped.splice(index, 1);
-                } else if (!ids_error.includes(parseInt(id))) {
+                } else {
                     elem.addClass('progress-bar-success');
                     elem.width('100%');
                     $('.launch[data-id='+id+']').parent().removeClass('disabled');
@@ -211,6 +212,11 @@ function connectSSE () {
                     $('#done-' + id).html(0);
                     $('#total-' + id).html(0);
                 }, 10000);
+            } else if (ids_error.includes(parseInt(id))){
+                elem.removeClass('progress-bar-success').addClass('progress-bar-danger').addClass('progress-bar-striped').attr('aria-valuenow', 100).width(100 + '%');
+                $('.launch[data-id='+id+']').parent().removeClass('disabled');
+                $('.stop[data-id='+id+']').parent().addClass('disabled');
+
             }
         });
     }, false);
@@ -225,6 +231,7 @@ function connectSSE () {
             eventSource.close();
     }, false);
 }
+
 function connectSSELog (max_id, id_tool) {
     var tries = 0;
     // Create new event, the server script is sse.php

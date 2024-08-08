@@ -334,17 +334,25 @@ $(document).ready(function(){
             },
             dataType: "JSON",
             success: function(msg){
-                var hiddenField_photoId = document.createElement('input');
-                hiddenField_photoId.name = 'photo_id';
-                hiddenField_photoId.type = 'hidden';
-                hiddenField_photoId.value = msg.photoID;
-                hideSpinner();
-                $('#tab'+current_index+' form').append(hiddenField_photoId);
-                $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
-                $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
+                if( msg.error ){
+                    $("#uploadMessage").html(msg.error.val).attr("class", "alert alert-danger container");
+                } else {
+                    $("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");
+                    setTimeout(function(){
+                        $("#uploadMessage").addClass("hidden");
+                    }, 5000);
+                    var hiddenField_photoId = document.createElement('input');
+                    hiddenField_photoId.name = 'photo_id';
+                    hiddenField_photoId.type = 'hidden';
+                    hiddenField_photoId.value = msg.photoID;
+                    hideSpinner();
+                    $('#tab'+current_index+' form').append(hiddenField_photoId);
+                    $('#tab'+current_index+' form').find('.edit-img-thumbnail > img').prop('src',msg.photoPreview);
+                    $('#tab'+current_index+' .savePhotoDetails').removeAttr('disabled');
 
-                fileDetails.data.photoThumb = msg.photoPreview;
-                fileDetails.data.photo_id = msg.photoID;
+                    fileDetails.data.photoThumb = msg.photoPreview;
+                    fileDetails.data.photo_id = msg.photoID;
+                }
             }
         });
     });
@@ -354,10 +362,6 @@ $(document).ready(function(){
         $("#uploadMore").removeClass("hidden");
         $(".uploadingProgressContainer").addClass("hidden");
         uploader.refresh();
-        $("#uploadMessage").html("All Files are uploaded Successfully").attr("class", "alert alert-success container");
-        setTimeout(function(){
-            $("#uploadMessage").addClass("hidden");
-        }, 5000);
     });
 
     uploader.bind('error', function(up, err) {

@@ -50,7 +50,11 @@
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$collections[list].userid}">{display_clean($collections[list].username)}</a>
+                        {if $collections[list].userid != $anonymous_id}
+                            <a href="view_user.php?uid={$collections[list].userid}">{display_clean($collections[list].username)}</a>
+                        {else}
+                            {display_clean(lang($collections[list].username))}
+                        {/if}
                     </div>
                 </div>
             </td>
@@ -93,7 +97,7 @@
     <div align="center"><strong><em>No collection Found</em></strong></div>
 {/if}
 
-{include file="$style_dir/blocks/pagination.html" }
+{include file="$style_dir/blocks/pagination.html"}
 
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');

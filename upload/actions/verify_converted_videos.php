@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'verify_converted_videos');
 
-global $db, $cbvideo, $userquery;
+global $db, $cbvideo;
 
 $in_bg_cron = true;
 
@@ -40,7 +40,7 @@ if (is_array($files)) {
             $videoDetails = $cbvideo->get_video($file['cqueue_name'], true);
 
             if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
-                $userquery->sendSubscriptionEmail($videoDetails, true);
+                userquery::getInstance()->sendSubscriptionEmail($videoDetails, true);
             }
         }
     }

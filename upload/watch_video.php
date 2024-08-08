@@ -55,7 +55,8 @@ subtitle(ucfirst($vdo['title']));
 
 # assigning all variables
 array_val_assign($assign_arry);
-
+$anonymous_id = userquery::getInstance()->get_anonymous_user();
+assign('anonymous_id', $anonymous_id);
 //link edit
 assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_video.php?video=' . $vdo['videoid']);
 assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);

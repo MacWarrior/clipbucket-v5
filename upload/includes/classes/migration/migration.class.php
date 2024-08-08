@@ -31,10 +31,10 @@ class Migration
     {
         $reflector = new ReflectionClass(get_called_class());
         $match = [];
-        $regex = '/\/(\d{1,3}\.\d{1,3}\.\d{1,3})\/(\D)(\d{5})\.php/';
+        $regex = '/\\' . DIRECTORY_SEPARATOR . '(\d{1,3}\.\d{1,3}\.\d{1,3})\\' . DIRECTORY_SEPARATOR . '(\D)(\d{5})\.php/';
         preg_match($regex, $reflector->getFileName(), $match);
         if (empty($match)) {
-            $regex = '/.*\/plugins\/(\w+)\/sql\/update\/(\D)(\d{0,3}_\d{0,3}_\d{0,3})\.php/';
+            $regex = '/.*\\' . DIRECTORY_SEPARATOR . 'plugins\\' . DIRECTORY_SEPARATOR . '(\w+)\\' . DIRECTORY_SEPARATOR . 'sql\\' . DIRECTORY_SEPARATOR . 'update\\' . DIRECTORY_SEPARATOR . '(\D)(\d{0,3}_\d{0,3}_\d{0,3})\.php/';
             preg_match($regex, $reflector->getFileName(), $match);
 
             $this->version = str_replace('_', '.', $match[3]);

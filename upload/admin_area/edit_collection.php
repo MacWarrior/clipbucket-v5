@@ -3,10 +3,10 @@ define('THIS_PAGE', 'edit_collection');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
+global $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 if (!isset($_GET['collection'])) {
@@ -84,7 +84,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 assign('randon_number', rand(-5000, 5000));
 subtitle('Edit Collection');
 template_files('edit_collection.html');

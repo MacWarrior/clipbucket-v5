@@ -3,15 +3,15 @@ define('THIS_PAGE', 'private_message');
 
 require 'includes/config.inc.php';
 
-global $userquery, $cbpm, $eh;
+global $cbpm, $eh;
 
 //Adding JS Scroll
 add_js('jquery_plugs/compressed/jquery.scrollTo-min.js');
 
-$userquery->logincheck();
-$udetails = $userquery->get_user_details(user_id());
+userquery::getInstance()->logincheck();
+$udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
-assign('p', $userquery->get_user_profile($udetails['userid']));
+assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $mode = $_GET['mode'];
 
@@ -112,7 +112,7 @@ switch ($mode) {
             $mid = mysql_clean($_GET['reply']);
             if (!isset($_POST['send_message']) && $cbpm->is_reply($mid, user_id())) {
                 $reply_msg = $cbpm->get_inbox_message($mid, user_id());
-                $_POST['to'] = $userquery->get_user_field_only($reply_msg['message_from'], 'username');
+                $_POST['to'] = userquery::getInstance()->get_user_field_only($reply_msg['message_from'], 'username');
                 $_POST['subj'] = 'Re:' . $reply_msg['message_subject'];
             }
         }
@@ -132,6 +132,6 @@ switch ($mode) {
 
         subtitle(lang('title_crt_new_msg'));
 }
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 template_files('private_message.html');
 display_it();

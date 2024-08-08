@@ -18,10 +18,9 @@ $u = $u ?: $_GET['u'];
 $u = mysql_clean($u);
 
 $udetails = userquery::getInstance()->get_user_details($u);
-if (!$udetails) {
-    if ($_GET['seo_diret'] != 'yes') {
-        e(lang('usr_exist_err'));
-        ClipBucket::getInstance()->show_page = false;
+if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous_user()) {
+    if ($_GET['seo_diret'] != 'yes' ) {
+        redirect_to('/channels.php?no_user=1');
     } else {
         header('HTTP/1.0 404 Not Found');
         if (file_exists(LAYOUT . '/404.html')) {
@@ -137,6 +136,12 @@ if( ClipBucket::getInstance()->show_page ){
     $videos = Video::getInstance()->getAll($params);
 
     assign('uservideos', $videos);
+    $popular_users = User::getInstance()->getAll([
+        'order'=>'users.profile_hits DESC',
+        'limit'=>'5',
+        'condition'=>'usr_status = \'ok\' AND users.userid != \''. mysql_clean($udetails['userid']).'\''
+    ]);
+    assign('popular_users',$popular_users);
 }
 
 display_it();

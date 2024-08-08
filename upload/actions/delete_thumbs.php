@@ -1,8 +1,8 @@
 <?php
+define('THIS_PAGE', 'delete_thumbs');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-global $userquery;
 
-$userquery->admin_login_check();
+userquery::getInstance()->admin_login_check();
 
 # Generating more thumbs
 $data = get_video_details($_POST['videoid']);
