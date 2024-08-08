@@ -2584,7 +2584,26 @@
 								</div>
 							</div>
 							<hr/>
-
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="automate_launch_mode" title="{lang code='option_automate_launch_mode'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_automate_launch_mode'}"> {lang code='option_automate_launch_mode'}</label>
+								</div>
+								<div class="col-md-6">
+									<select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
+										{assign var=array_automate value=[
+										 'crontab' => 'option_automate_launch_mode_crontab'
+										,'user_activity' => 'option_automate_launch_mode_user_activity'
+										,'disabled' => 'option_automate_launch_mode_disabled'
+										]}
+										{foreach from=$array_automate item=trad key=code}
+										<option {if $code==$row.automate_launch_mode}selected{/if} value="{$code}">
+											{lang code=$trad}
+										</option>
+										{/foreach}
+									</select>
+								</div>
+							</div>
+							<hr/>
 						</div>
 				</div>
 			</div>

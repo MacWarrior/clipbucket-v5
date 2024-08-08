@@ -736,36 +736,37 @@ class AdminTool
 
         $where = '';
         if(!empty($idTask)){
-            $where = ' AND id_tool = '. $id_tool;
+            $where = ' AND tools_histo.id_tool = '. $id_tool;
         }
 
         /** get all tools with frequency */
         $query = /** @lang MySQL */'SELECT 
-                        T.*
-                        , TH.date_start AS last_date_start
-                        , T.previous_calculated_datetime
-                    FROM '.tbl('tools').' T
+                        tools.*
+                        , tools_histo.date_start AS last_date_start
+                        , tools.previous_calculated_datetime
+                    FROM '.cb_sql_table('tools').' 
 
                     -- exclude tools already running and get date_start
                     INNER JOIN (
-                        SELECT MAX(TH.date_start) AS date_start, TH.id_tool
-                        FROM '.tbl('tools_histo').' TH
-                        WHERE TH.id_tool NOT IN (
-                            SELECT DISTINCT TH.id_tool
-                            FROM '.tbl('tools_histo').' TH
-                            INNER JOIN '.tbl('tools_histo_status').' THS ON THS.id_tools_histo_status = TH.id_tools_histo_status
-                            WHERE THS.language_key_title IN (\'in_progress\',\'stopping\') '.$where.'
+                        SELECT MAX(tools_histo.date_start) AS date_start, tools_histo.id_tool
+                        FROM '.cb_sql_table('tools_histo').'
+                        WHERE tools_histo.id_tool NOT IN (
+                            SELECT DISTINCT tools_histo.id_tool
+                            FROM '.cb_sql_table('tools_histo').'
+                            INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
+                            WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') '.$where.'
                         ) '.$where.'
-                        GROUP BY TH.id_tool
-                    ) TH ON T.id_tool = TH.id_tool
+                        GROUP BY tools_histo.id_tool
+                    ) tools_histo ON tools.id_tool = tools_histo.id_tool
                     
-                    WHERE COALESCE(T.frequency, \'\') != \'\' 
-                      AND COALESCE(T.previous_calculated_datetime, \'\') != \'\'
-                      AND T.is_automatable = true
-                      AND T.is_disabled = false
+                    WHERE COALESCE(tools.frequency, \'\') != \'\' 
+                      AND COALESCE(tools.previous_calculated_datetime, \'\') != \'\'
+                      AND tools.is_automatable = true
+                      AND tools.is_disabled = false
                       '.$where;
         $array_tools = Clipbucket_db::getInstance()->_select($query);
         $array_tools_ready = [];
+
         foreach ($array_tools as $tool) {
 
             if(empty($tool['previous_calculated_datetime'])) {
@@ -787,16 +788,19 @@ class AdminTool
      */
     public function checkAndStartToolsByFrequency()
     {
-
-        $this->array_loop = self::getToolsReadyForLaunch();
-
         $details = [];
-        if(System::isDateTimeSynchro($details) === false) {
+
+        if (config('automate_launch_mode') == 'disabled') {
+            $this->array_loop = [];
+            $this->addLog(lang('automate_laucn_disabled_in_config'));
+        } elseif (System::isDateTimeSynchro($details) === false) {
             $error = lang('datetime_synchro_error');
             e($error);
             $this->addLog($error);
             DiscordLog::sendDump($error.' '.print_r($details, true));
             $this->array_loop = [];
+        } else {
+            $this->array_loop = self::getToolsReadyForLaunch();
         }
 
         $this->executeTool('AdminTool::automate');
@@ -886,8 +890,7 @@ class AdminTool
     {
 
         /**
-         * remplacer le L du mois par le dernier jour du mois en cours si l'on est au moin le 28 du mois
-         * sinon utiliser la notation 28-31
+         * replace the L of the month with the last day of the current month if it is at least the 28th of the month, otherwise use the notation 28-31
          */
         $cron = trim($cron);
         $e = explode(' ', $cron ?? '');
@@ -938,6 +941,7 @@ class AdminTool
                 $found = true;
             }
         }
+
         return $found;
     }
 
@@ -948,10 +952,10 @@ class AdminTool
     public function isAlreadyLaunch() :bool
     {
         /** get all tools running */
-        $query = /** @lang MySQL */'SELECT DISTINCT TH.id_tool
-                            FROM '.tbl('tools_histo').' TH
-                            INNER JOIN '.tbl('tools_histo_status').' THS ON THS.id_tools_histo_status = TH.id_tools_histo_status
-                            WHERE THS.language_key_title IN (\'in_progress\',\'stopping\') AND TH.id_tool = '.( (int) $this->id_tool);
+        $query = /** @lang MySQL */'SELECT DISTINCT tools_histo.id_tool
+                            FROM '.cb_sql_table('tools_histo').'
+                            INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
+                            WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') AND tools_histo.id_tool = '.( (int) $this->id_tool);
         $rs = Clipbucket_db::getInstance()->_select($query);
         return !empty($rs);
     }

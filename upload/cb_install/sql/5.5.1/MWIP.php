@@ -9,6 +9,7 @@ class MWIP extends \Migration
      */
     public function start()
     {
+        self::generateConfig('automate_launch_mode', 'user_activity');
 
         self::alterTable(/** @lang MySQL */'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `frequency` varchar(30)', [
             'table' => 'tools'
@@ -52,6 +53,26 @@ class MWIP extends \Migration
                 VALUES (\'automate_label\', \'automate_description\', \'AdminTool::checkAndStartToolsByFrequency\', \'automate\', NULL, NULL, 0, 0)';
         self::query($sql);
 
+        self::generateTranslation('tips_automate_launch_mode', [
+            'fr'=>'Avec l\'activité des utilisateurs, les automates sont lancés en tâche de fond au chargement des pages',
+            'en'=>'With user activity, automates are launched in backgound at page loading'
+        ]);
+        self::generateTranslation('option_automate_launch_mode', [
+            'fr'=>'Lancement des automates',
+            'en'=>'Automate launching'
+        ]);
+        self::generateTranslation('option_automate_launch_mode_crontab', [
+            'fr'=>'Crontab',
+            'en'=>'Crontab'
+        ]);
+        self::generateTranslation('option_automate_launch_mode_user_activity', [
+            'fr'=>'Activité des utilisateurs',
+            'en'=>'Users activity'
+        ]);
+        self::generateTranslation('option_automate_launch_mode_disabled', [
+            'fr'=>'Désactivé',
+            'en'=>'Disabled'
+        ]);
         self::generateTranslation('frequence', [
             'fr'=>'Fréquence',
             'en'=>'Frequency'
@@ -87,6 +108,10 @@ class MWIP extends \Migration
         self::generateTranslation('datetime_synchro_error', [
             'fr'=>'Il existe un écart entre la date issue de PHP et la date issue de la base de donnée',
             'en'=>'There is a discrepancy between the date from PHP and the date from the database'
+        ]);
+        self::generateTranslation('automate_laucn_disabled_in_config', [
+            'fr'=>'Le lancement automatique des outils est désactivé',
+            'en'=>'Automatic launch of tools is disabled'
         ]);
     }
 }

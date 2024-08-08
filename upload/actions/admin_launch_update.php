@@ -18,12 +18,12 @@ sendClientResponseAndContinue(function () use ($core_tool) {
         'success' => true
     ]);
 });
-if ($_POST['type'] == 'core') {
+if ($_POST['type'] == 'core' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
 }
 Update::getInstance()->flush();
-if ($_POST['type'] == 'core' || $_POST['type'] == 'db') {
+if (($_POST['type'] == 'core' || $_POST['type'] == 'db') && $db_tool->isAlreadyLaunch() === false ) {
     $db_tool->setToolInProgress();
     $db_tool->launch();
 }

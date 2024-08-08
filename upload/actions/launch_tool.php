@@ -16,6 +16,11 @@ if(php_sapi_name() === 'cli') {
     $tool->initById((int) $param['id_tool']);
 
     if( ($param['automatic'] ?? '') == 'true' ) {
+
+        if(config('automate_launch_mode') == 'disabled') {
+            throw new Exception('config automate_launch_mode disabled');
+        }
+
         if( $tool->isReadyForAutomaticLaunch() === false) {
             throw new Exception('id_tool '.((int) $param['id_tool']).' not ready for launch');
         }
