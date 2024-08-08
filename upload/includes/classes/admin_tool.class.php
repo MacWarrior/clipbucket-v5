@@ -982,7 +982,7 @@ class AdminTool
                             WHERE tools_histo.id_tool = '.( (int) $this->id_tool).'
                             ORDER BY tools_histo.date_start DESC LIMIT 1';
         $rs = Clipbucket_db::getInstance()->_select($query);
-        return $rs[0]['date_start'] ?? '200-01-01 00:00:01';
+        return $rs[0]['date_start'] ?? '2000-01-01 00:00:01';
     }
 
     public function getId()
