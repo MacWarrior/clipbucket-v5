@@ -502,19 +502,17 @@ class CBPhotos
      */
     public static function display_banner($vdo = [])
     {
-        $text = '';
-        $class = '';
         if ($vdo['active'] == 'no') {
             $text = sprintf(lang('photo_is'), strtolower(lang('inactive')) );
             $class = 'label-danger';
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
+
         if (empty($vdo['collection_id'])) {
             $text = sprintf(lang('photo_is'), strtolower(lang('orphan')) );
-            $class = 'label-danger';
+            $class = 'label-warning';
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
-
     }
 
     /**
