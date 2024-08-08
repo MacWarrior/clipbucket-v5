@@ -58,7 +58,7 @@ assign('queues', $queue_list);
 $total_rows = get_videos($vcount);
 $total_pages = count_pages($db->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
-
+assign('admin_url', DirPath::getUrl('admin_area'));
 subtitle('Conversion Queue Manager');
 template_files('cb_conversion_queue.html');
 display_it();
