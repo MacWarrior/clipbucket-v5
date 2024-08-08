@@ -40,6 +40,14 @@ if ($vdetails['userid'] != $userid) {
     assign('v', $vdetails);
     assign('vidthumbs', get_thumb($vdetails,TRUE,'168x105','auto'));
     assign('vidthumbs_custom', get_thumb($vdetails,TRUE,'168x105','custom'));
+    if( config('enable_video_poster') == 'yes' ){
+        assign('vidthumbs_poster', get_thumb($vdetails,TRUE,'original','poster'));
+    }
+
+    if( config('enable_video_backdrop') == 'yes' ) {
+        assign('vidthumbs_backdrop', get_thumb($vdetails, TRUE, 'original', 'backdrop'));
+    }
+
 }
 
 $min_suffixe = in_dev() ? '' : '.min';
