@@ -10,7 +10,10 @@ $json = [];
 try {
     $tool = new AdminTool();
     userquery::getInstance()->admin_login_check();
-    $tool->initById($_POST['id_tool']);
+    if($tool->initById($_POST['id_tool']) === false) {
+        throw new Exception('tool not found');
+    }
+
     try{
         $tool->updateFrequency( $_POST['frequency'] );
         $json['success'] = true;
@@ -19,6 +22,7 @@ try {
         $json['error'] = lang('bad_format_cron');
         $json['success'] = false;
     }
+
 } catch(\Throwable $e) {
     $json['success'] = false;
     $json['error'] = lang('error_occured');

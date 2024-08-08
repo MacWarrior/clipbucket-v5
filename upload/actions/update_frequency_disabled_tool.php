@@ -9,7 +9,9 @@ $json = [];
 try {
     $tool = new AdminTool();
     userquery::getInstance()->admin_login_check();
-    $tool->initById($_POST['id_tool']);
+    if($tool->initById($_POST['id_tool']) === false) {
+        throw new Exception('tool not found');
+    }
     $tool->updateIsDisabled(( $_POST['is_disabled'] == 'true' ) );
     $json['success'] = true;
     $json['msg'] = lang('success_update_tools');

@@ -74,10 +74,10 @@ class AdminTool
      * Function used to get all tools
      *
      * @param array $condition
-     * @return array
+     * @return mixed
      * @throws Exception
      */
-    public static function getTools(array $condition = []): array
+    public static function getTools(array $condition = [])
     {
         $where = implode(' AND ', $condition);
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
@@ -195,10 +195,10 @@ class AdminTool
 
     /**
      * return all tools
-     * @return array
+     * @return mixed
      * @throws Exception
      */
-    public static function getAllTools(): array
+    public static function getAllTools()
     {
         return self::getTools();
     }
@@ -206,18 +206,19 @@ class AdminTool
     /**
      * Return an admin tool by his id
      * @param $id
-     * @return array
+     * @return mixed
      * @throws Exception
      */
-    public static function getToolById($id): array
+    public static function getToolById($id)
     {
         return self::getTools([' tools.id_tool = ' . mysql_clean($id)])[0];
     }
 
     /**
+     * @return mixed
      * @throws Exception
      */
-    public static function getToolByCode($code): array
+    public static function getToolByCode($code)
     {
         return self::getTools([' tools.code = \'' . mysql_clean($code) . '\''])[0];
     }
