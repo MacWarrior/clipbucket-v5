@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"95",
+  "revision":"96",
   "status":"dev",
   "detail":[
     {
@@ -103,6 +103,7 @@
         ,"Fix collection item management page"
         ,"Fix photo display on Windows hosts"
         ,"Fix popular users avatar"
+        ,"Fix video watching with SEO URL"
       ]
     },
     {
