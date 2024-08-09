@@ -90,12 +90,12 @@ class MWIP extends \Migration
             'en'=>'Automatic launch'
         ]);
         self::generateTranslation('cron_format_title', [
-            'fr'=>'Format cron : * * * * * ',
-            'en'=>'Format cron : * * * * * '
+            'fr'=>'Format crontab : * * * * * ',
+            'en'=>'Crontab format : * * * * * '
         ]);
         self::generateTranslation('bad_format_cron', [
             'fr'=>'La fréquence doit être un format CRON valide',
-            'en'=>'The frequency must be a valid CRON format'
+            'en'=>'Frequency must be a valid CRON format'
         ]);
         self::generateTranslation('tool_already_launched', [
             'fr'=>'Cet outils est déjà en cours',
@@ -103,7 +103,7 @@ class MWIP extends \Migration
         ]);
         self::generateTranslation('success_update_tools', [
             'fr'=>'L\'outil a bien était mis à jour',
-            'en'=>'The tool has been updated'
+            'en'=>'Tool has been updated'
         ]);
         self::generateTranslation('automate_label', [
             'fr'=>'Lancement automatique des outils',
@@ -115,7 +115,7 @@ class MWIP extends \Migration
         ]);
         self::generateTranslation('datetime_synchro_error', [
             'fr'=>'Il existe un écart entre la date issue de PHP et la date issue de la base de donnée',
-            'en'=>'There is a discrepancy between the date from PHP and the date from the database'
+            'en'=>'There is a discrepancy between PHP and database dates'
         ]);
         self::generateTranslation('automate_laucn_disabled_in_config', [
             'fr'=>'Le lancement automatique des outils est désactivé',
