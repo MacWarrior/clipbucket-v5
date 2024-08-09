@@ -132,5 +132,13 @@ class MWIP extends \Migration
             'fr'=>'Le lancement automatique des outils est désactivé',
             'en'=>'Automatic launch of tools is disabled'
         ]);
+        self::generateTranslation('crontab_link_label', [
+            'fr'=>'Ligne à copier dans Crontab',
+            'en'=>'Line to copy into Crontab'
+        ]);
+        self::generateTranslation('copy_clipboard', [
+            'fr'=>'Copier dans le presse-papier',
+            'en'=>'Copy to clipboard'
+        ]);
     }
 }

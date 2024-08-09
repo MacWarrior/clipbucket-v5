@@ -988,6 +988,20 @@ a[role='menuitem'] {
     overflow: hidden;
 }
 
-.btn_save_frequency {
+.btn_save_frequency, .btn_copy_clipboard {
     top:0;color:white;cursor:pointer;vertical-align: middle;
+}
+#floatingMessage {
+    position: absolute;
+    padding: 10px;
+    display: none;
+    z-index: 1000;
+    color:green;
+    font-size: 1.5rem;
+}
+#crontab_details_block > div {
+    background: rgba(0,0,0,0.03); border:1px solid rgba(0,0,0,0.1); padding:1rem; max-width: calc(100% - 30px); margin-left:15px;
+}
+#crontab_details_block {
+    min-height:calc(34px + 40px);max-height:calc(34px + 41px);padding-top:1rem;
 }

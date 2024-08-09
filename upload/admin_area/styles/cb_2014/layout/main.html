@@ -2591,7 +2591,7 @@
 								<div class="col-md-6">
 									<select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
 										{assign var=array_automate value=[
-										 'crontab' => 'option_automate_launch_mode_crontab'
+										'crontab' => 'option_automate_launch_mode_crontab'
 										,'user_activity' => 'option_automate_launch_mode_user_activity'
 										,'disabled' => 'option_automate_launch_mode_disabled'
 										]}
@@ -2601,6 +2601,15 @@
 										</option>
 										{/foreach}
 									</select>
+								</div>
+							</div>
+							<div class="row" id="crontab_details_block">
+								<div class="col-md-12">
+									{lang('crontab_link_label')}
+									<div class="input-group">
+										<input class="form-control" value="{$cron_copy_paste}" size="45" disabled />
+										<span class="input-group-addon btn_copy_clipboard btn-info input-group-addon glyphicon glyphicon-copy btn_save_frequency" title="{lang('copy_clipboard')}"></span>
+									</div>
 								</div>
 							</div>
 							<hr/>
@@ -2614,4 +2623,4 @@
 		<input type="submit" name="update" class="btn btn-primary btn-sm" value="Update Settings" id="udpate"/>
 	</div>
 </form>
-
+<span id="floatingMessage" class="glyphicon glyphicon-ok"></span>
