@@ -703,8 +703,8 @@ class MWIP extends \Migration
             'en'=>'Automatic launch'
         ]);
         self::generateTranslation('cron_format_title', [
-            'fr'=>'Format crontab : * * * * * ',
-            'en'=>'Crontab format : * * * * * '
+            'fr'=>'Format crontab : * * * * *',
+            'en'=>'Crontab format : * * * * *'
         ]);
         self::generateTranslation('bad_format_cron', [
             'fr'=>'La fréquence doit être un format CRON valide',
