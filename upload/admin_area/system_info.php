@@ -109,6 +109,11 @@ assign('php_extensions_list', System::get_php_extensions_list());
 
 assign('disks_usage', System::get_disks_usage());
 
+$datetime_datas = [];
+$check_time = System::isDateTimeSynchro($datetime_datas);
+assign('check_time', $check_time);
+assign('datetime_datas', $datetime_datas);
+
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();

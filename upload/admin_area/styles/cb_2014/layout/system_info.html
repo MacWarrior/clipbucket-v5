@@ -288,6 +288,29 @@
                             <br/>{lang code='sse_error_please_use_php_fpm'}
                             {/if}
                         </div>
+                        <div class="row">
+                            {if $check_time}
+                            <img src="{$imageurl}/tick.png"/>
+                            <label>Datetime :
+                                <strong>
+                                    {lang('datetime_synchro')}
+                                </strong>
+                            </label>
+                            {else}
+                            <label>PHP datetime :
+                                <strong>
+                                    {$datetime_datas['php']}
+                                </strong>
+                            </label>
+                            <label>DB datetime :
+                                <strong>
+                                    {$datetime_datas['bdd']}
+                                </strong>
+                            </label>
+                            <br/><img src="{$imageurl}/alert.png"/>
+                            {lang code='datetime_synchro_error'}
+                            {/if}
+                        </div>
 
                         {$show_warning = false}
 

@@ -567,7 +567,7 @@ class System{
     /**
      * @throws Exception
      */
-    public static function check_php_configs(): bool
+    public static function check_global_configs(): bool
     {
         if( ini_get('max_execution_time') < 7200 ){
             return false;
@@ -603,6 +603,10 @@ class System{
         }
 
         if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+            return false;
+        }
+
+        if( !self::isDateTimeSynchro() ){
             return false;
         }
 
