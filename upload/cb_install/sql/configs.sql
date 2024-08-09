@@ -698,7 +698,8 @@ INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES
     ('Atlantic/St_Helena'),
     ('Atlantic/Stanley'),
     ('Australia/ACT'),
-    ('Australia/Adelaide'),
+    ('Australia/Adelaide');
+INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES
     ('Australia/Brisbane'),
     ('Australia/Broken_Hill'),
     ('Australia/Canberra'),
