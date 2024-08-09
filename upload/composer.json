@@ -8,7 +8,9 @@
     "oxygenzsas/composer_lib_discord": "dev-php7",
     "psr/http-server-middleware": "1.0.2",
     "ext-json": "*",
-    "ext-mysqli": "*"
+    "ext-mysqli": "*",
+    "ext-ffi": "*",
+    "veka-server/onnx-php": "dev-php7"
   },
   "config": {
     "platform": {
