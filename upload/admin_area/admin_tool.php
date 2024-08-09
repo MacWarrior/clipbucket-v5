@@ -27,7 +27,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, Adm
 }
 assign('can_sse', $can_sse);
 sendClientResponseAndContinue(function () use ($tool){
-    if ($tool) {
+    if ($tool && $tool->isAlreadyLaunch() === false) {
         $tool->setToolInProgress();
     }
     $admin_tool_list = AdminTool::getAllTools();
@@ -41,7 +41,7 @@ sendClientResponseAndContinue(function () use ($tool){
     display_it();
 });
 
-if ($tool) {
+if ($tool && $tool->isAlreadyLaunch() === false) {
     //execute tool
     $tool->launch();
 }

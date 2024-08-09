@@ -702,4 +702,27 @@ class System{
 
         return $value . ' ' . $size[$factor];
     }
+
+    /**
+     * Check if date php and date BDD is synchro
+     * @param array $details detailed array with dates and diff
+     * @return bool
+     * @throws Exception
+     */
+    public static function isDateTimeSynchro(array &$details = []) :bool
+    {
+        $query = /** @lang MySQL */'SELECT NOW() AS t';
+        $rs = Clipbucket_db::getInstance()->_select($query);
+
+        $details['bdd'] = $rs[0]['t'];
+        $details['php'] = date('Y-m-d H:i:s');
+
+        $datetime1 = new \DateTime($details['bdd']);
+        $datetime2 = new \DateTime($details['php']);
+        $interval = $datetime1->diff($datetime2);
+        $details['diff_in_minute'] = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+        return $details['diff_in_minute'] <= 1;
+    }
+
 }
