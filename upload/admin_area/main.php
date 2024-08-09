@@ -427,7 +427,8 @@ if (isset($_POST['update'])) {
         'only_keep_max_resolution',
         'playlistsSection',
         'nginx_path',
-        'automate_launch_mode'
+        'automate_launch_mode',
+        'timezone'
     ];
 
     foreach ($opt_list as $optl) {
@@ -570,6 +571,20 @@ if(!empty($tool)) {
     $cron_line = '* * * * * '.System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.(int) $id_tool_automate;
 }
 assign('cron_copy_paste', $cron_line ?? '');
+
+$allTimezone = [];
+/** @todo change after finish migration */
+require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE)) {
+    $query = /** @lang MySQL */'SELECT timezones.timezone
+                            FROM '.cb_sql_table('timezones').'
+                            ORDER BY timezones.timezone';
+    $rs = Clipbucket_db::getInstance()->_select($query);
+    foreach ($rs as $timezone) {
+        $allTimezone[] = $timezone['timezone'];
+    }
+}
+assign('allTimezone', $allTimezone);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

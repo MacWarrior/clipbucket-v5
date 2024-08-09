@@ -91,9 +91,6 @@ require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 
-/** @todo convert to config */
-date_default_timezone_set('Europe/Paris');
-
 $cb_columns = new cb_columns();
 $myquery = new myquery();
 $row = $myquery->Get_Website_Details();
@@ -215,6 +212,11 @@ $cbphoto = new CBPhotos();
 $cbfeeds = new cbfeeds();
 
 check_install('after');
+
+$timezone = config('timezone');
+if(!empty($timezone) && $timezone !== false) {
+    date_default_timezone_set($timezone);
+}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];

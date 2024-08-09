@@ -2613,6 +2613,22 @@
 								</div>
 							</div>
 							<hr/>
+							<div class="row">
+								<div class="col-md-6">
+									<label class="nowrap" for="timezone" title="{lang code='option_timezone'}">{lang code='option_timezone'}</label>
+								</div>
+								<div class="col-md-6">
+									<select class="form-control" name="timezone" id="timezone">
+										<option {if ''==$row.timezone}selected{/if} value=""></option>
+										{foreach from=$allTimezone item=label key=code}
+										<option {if $label==$row.timezone}selected{/if} value="{$label}">
+											{$label}
+										</option>
+										{/foreach}
+									</select>
+								</div>
+							</div>
+							<hr/>
 						</div>
 				</div>
 			</div>
