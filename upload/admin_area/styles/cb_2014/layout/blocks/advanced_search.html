@@ -5,7 +5,7 @@
 		<i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
     </a>
 </div>
-<div class="search_box well" id="searchdiv" {if $url_active == 'no'} style="display:none;"{/if}>
+<div class="search_box well" id="searchdiv" {if $url_active != 'yes'} style="display:none;"{/if}>
     <form id="video_search" name="video_search" method="POST" action="video_manager.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
@@ -62,7 +62,7 @@
                         <option value=""> </option>
                         <option value="Successful" {if $param_search.status=='Successful'}selected{/if}>{lang code='successful'}</option>
                         <option value="Processing" {if $param_search.status=='Processing'}selected{/if}>{lang code='processing'}</option>
-                        <option value="Processing" {if $param_search.status=='Waiting'}selected{/if}>{lang code='waiting'}</option>
+                        <option value="Waiting" {if $param_search.status=='Waiting'}selected{/if}>{lang code='waiting'}</option>
                         <option value="Failed" {if $param_search.status=='Failed'}selected{/if}>{lang code='failed'}</option>
                     </select>
                 </div>
