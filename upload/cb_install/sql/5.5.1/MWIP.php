@@ -417,7 +417,9 @@ class MWIP extends \Migration
             (\'Atlantic/Reykjavik\'),
             (\'Atlantic/South_Georgia\'),
             (\'Atlantic/St_Helena\'),
-            (\'Atlantic/Stanley\'),
+            (\'Atlantic/Stanley\');');
+
+        self::query( /** @lang MySQL */'INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES
             (\'Australia/ACT\'),
             (\'Australia/Adelaide\'),
             (\'Australia/Brisbane\'),
