@@ -731,10 +731,10 @@ class MWIP extends \Migration
             'en'=>'There is a discrepancy between PHP and database dates'
         ]);
         self::generateTranslation('datetime_synchro', [
-            'fr'=>'Correctement synchronisée entre PHP et la base de donnée',
-            'en'=>'Correctly synced between PHP and database'
+            'fr'=>'Correctement synchronisée avec la base de donnée',
+            'en'=>'Correctly synced with database'
         ]);
-        self::generateTranslation('automate_laucn_disabled_in_config', [
+        self::generateTranslation('automate_launch_disabled_in_config', [
             'fr'=>'Le lancement automatique des outils est désactivé',
             'en'=>'Automatic launch of tools is disabled'
         ]);

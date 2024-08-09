@@ -812,7 +812,7 @@ class AdminTool
         $details = [];
 
         if (config('automate_launch_mode') == 'disabled') {
-            $this->addLog(lang('automate_laucn_disabled_in_config'));
+            $this->addLog(lang('automate_launch_disabled_in_config'));
             $this->setToolError($this->id_tool);
             return ;
         } elseif (System::isDateTimeSynchro($details) === false) {

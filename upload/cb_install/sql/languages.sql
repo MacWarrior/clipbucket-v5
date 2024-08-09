@@ -1182,7 +1182,7 @@ VALUES ('admin_setting'),
        ('automate_description'),
        ('datetime_synchro_error'),
        ('datetime_synchro'),
-       ('automate_laucn_disabled_in_config'),
+       ('automate_launch_disabled_in_config'),
        ('crontab_link_label'),
        ('copy_clipboard'),
        ('option_timezone');
