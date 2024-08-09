@@ -9,12 +9,12 @@
         <tr>
             <th class="col-md-2">{lang code='title'}</th>
             <th class="col-md-4">{lang code='description'}</th>
-            <th class="col-md-4">{lang code='vdo_status'}</th>
+            <th class="col-md-2">{lang code='vdo_status'}</th>
             {if config('automate_launch_mode')!='disabled'}
                 <th class="col-md-2">{lang code='frequence'}</th>
-                <th class="col-md-2">{lang code='frequence_enabled'}</th>
+                <th class="col-md-1">{lang code='frequence_enabled'}</th>
             {/if}
-            <th class="col-md-2">{lang code='vdo_actions'}</th>
+            <th class="col-md-1">{lang code='vdo_actions'}</th>
         </tr>
         {section name=tool_list loop=$admin_tool_list}
         <tr>

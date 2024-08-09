@@ -19,7 +19,7 @@ try {
         $json['success'] = true;
         $json['msg'] = lang('success_update_tools');
     }catch (\Throwable $exception){
-        $json['error'] = lang('bad_format_cron');
+        $json['error'] = lang('bad_format_cron').'.<br/>'.lang('cron_format_title');
         $json['success'] = false;
     }
 
