@@ -260,6 +260,7 @@ function display_tmdb_result($data, $videoid)
     assign('sort', $data['sort']);
     assign('sort_order', $data['sort_order']);
     assign('videoid', $videoid);
+    assign('years', $data['years']);
     echo templateWithMsgJson('blocks/tmdb_result.html');
 }
 

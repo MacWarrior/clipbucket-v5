@@ -76,16 +76,16 @@ function saveSubtitle(number) {
     });
 }
 
-function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
+function getInfoTmdb(video_id, video_title, page,sort, sort_order, year) {
     showSpinner();
     $.ajax({
         url: "/actions/admin_info_tmdb.php",
         type: "POST",
-        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
+        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order, year: year },
         dataType: 'json',
         success: function (result) {
             hideSpinner();
-            var modal = $('#myModal');
+            var modal = $('#myModal');-
             modal.html(result['template']);
             modal.modal();
             $('.page-content').prepend(result['msg']);

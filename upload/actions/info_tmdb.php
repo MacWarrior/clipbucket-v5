@@ -10,15 +10,17 @@ $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'], [
     'video_title' => $_POST['video_title'],
     'sort'        => $_POST['sort'],
     'sort_order'  => $_POST['sort_order'],
+    'year' =>
 ], $_POST['file_name'] ?? '');
 
-pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#, '.$results['videoid'].');');
+pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#, ' . $results['videoid'] . ');');
 
-assign('user_age'  , User::getInstance()->getCurrentUserAge());
+assign('user_age', User::getInstance()->getCurrentUserAge());
 display_tmdb_result([
     'results'    => $results['final_results'],
     'title'      => $results['title'],
     'sort'       => $results['sort'],
     'sort_order' => $results['sort_order'],
-    'videoid'     => $results['videoid'],
+    'videoid'    => $results['videoid'],
+    'years'      => $results['years'],
 ], $results['videoid']);

@@ -7,6 +7,16 @@
         <div class="modal-body tmdb">
             <div class="input-group">
                 <input name="title" type="text" class="form-control" id="search_title" value="{$search}"/>
+                <select name="selected_year" class="form-control" id="search_year">
+                    <option></option>
+                    {section name=year loop=$years}
+                        <option value="{$years[year]}"
+                                {if $years[year] == $selected_year}
+                                selected="selected"
+                                {/if}
+                                >{$years[year]}</option>
+                    {/section}
+                </select>
                 <span class="input-group-addon" id="search" title="{lang code='search'}">{lang code="search"}</span>
             </div>
 
@@ -58,7 +68,8 @@
         var videoid = $('#modal_videoid').val();
         $('#search').on('click', function () {
             var video_title = $('#search_title').val();
-            getInfoTmdb(videoid, video_title, 1);
+            var year = $('#selected_year').val();
+            getInfoTmdb(videoid, video_title, 1, year);
         });
         $('.icon-sort').parent().on('click', function () {
             var video_title = $('#search_title').val();

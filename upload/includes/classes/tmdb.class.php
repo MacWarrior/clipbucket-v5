@@ -157,12 +157,13 @@ class Tmdb
      * @param string $query
      * @param array $results
      * @param int $total_results
+     * @param string $years
      * @return bool|mysqli_result
      * @throws Exception
      */
-    public function setQueryInCache(string $query, array $results, int $total_results)
+    public function setQueryInCache(string $query, array $results, int $total_results, array $years)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower($query), $total_results]);
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results', 'list_years'], [strtolower($query), $total_results, json_encode($years)]);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
         $can_is_adult = false;
@@ -361,29 +362,39 @@ class Tmdb
         $cache_results = Tmdb::getInstance()->getSearchInfo($title);
         if (!empty($cache_results)) {
             $total_rows = $cache_results[0]['total_results'];
+            $years = json_decode($cache_results[0]['list_years']);
         } else {
             $tmdb_results = [];
             $page_tmdb = 1;
+            $years = [];
             do {
                 $results = Tmdb::getInstance()->searchMovie($title, $page_tmdb)['response'];
                 $total_rows = $results['total_results'];
                 $tmdb_results = array_merge($tmdb_results, $results['results']);
+
+                foreach ( $results['results'] as $result) {
+                    $year = substr($result['release_date'], 0,4);
+                    if (!in_array($year, $years) && !empty($year)) {
+                        $years[]=$year;
+                    }
+                }
                 $page_tmdb++;
                 if (!empty($results['error'])) {
                     e(lang($results['error']));
                     break;
                 }
             } while (!empty($results['results']));
-
             if (!empty($tmdb_results)) {
+            rsort($years);
                 try {
-                    Tmdb::getInstance()->setQueryInCache($title, $tmdb_results, $total_rows);
+                    Tmdb::getInstance()->setQueryInCache($title, $tmdb_results, $total_rows, $years);
                 } catch (Exception $e) {
                     e($e->getMessage());
                 }
             }
         }
         $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, $_POST['page']);
+
         //use different sql to get numbers of rows
         $total_rows = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, 0, true);
         $total_pages = count_pages($total_rows, config('tmdb_search'));
@@ -391,6 +402,7 @@ class Tmdb
             'final_results' => $final_results,
             'total_pages'   => $total_pages,
             'title'         => $title,
+            'years'         => $years,
             'sort_order'    => $sort_order,
             'videoid'       => $video_info['videoid']
         ];
