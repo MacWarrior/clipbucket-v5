@@ -53,6 +53,13 @@ class MWIP extends \Migration
             'constraint_name' => 'chk_frequency_previous_calculated_datetime_required',
         ]);
 
+        self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET is_disabled = TRUE');
+        self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET `frequency` = \'0 0 * * 7\', `previous_calculated_datetime` = CURRENT_TIMESTAMP,  is_disabled = FALSE WHERE code = \'clean_orphan_files\' ');
+        self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET `frequency` = \'0 1 * * 7\', `previous_calculated_datetime` = CURRENT_TIMESTAMP,  is_disabled = FALSE WHERE code = \'repair_video_duration\' ');
+        self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET `frequency` = \'0 2 * * 7\', `previous_calculated_datetime` = CURRENT_TIMESTAMP,  is_disabled = FALSE WHERE code = \'clean_orpha\' ');
+        self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET `frequency` = \'0 3 * * 7\', `previous_calculated_datetime` = CURRENT_TIMESTAMP,  is_disabled = FALSE WHERE code = \'clean_session_table\' ');
+        self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET `frequency` = \'0 4 * * 7\', `previous_calculated_datetime` = CURRENT_TIMESTAMP,  is_disabled = FALSE WHERE code = \'correct_video_categorie\' ');
+
         $sql = /** @lang MySQL */'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`, `frequency`, `previous_calculated_datetime`, `is_automatable`, `is_disabled`) 
                 VALUES (\'automate_label\', \'automate_description\', \'AdminTool::checkAndStartToolsByFrequency\', \'automate\', NULL, NULL, 0, 0)';
         self::query($sql);
