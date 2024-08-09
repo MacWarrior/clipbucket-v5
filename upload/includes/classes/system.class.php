@@ -720,6 +720,7 @@ class System{
 
         $details['bdd'] = $rs[0]['t'];
         $details['php'] = date('Y-m-d H:i:s');
+        $details['php_timezone_default'] = date_default_timezone_get();
 
         $datetime1 = new \DateTime($details['bdd']);
         $datetime2 = new \DateTime($details['php']);
