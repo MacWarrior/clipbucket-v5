@@ -61,7 +61,7 @@ class System{
 
                 $regex_version = '(\d+\.\d+\.\d+)';
                 $php_extensions = self::get_php_extensions_list();
-                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions'];
+                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime'];
 
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
@@ -610,6 +610,12 @@ class System{
             return false;
         }
 
+        $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+        $tmp = [];
+        if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
+            return false;
+        }
+
         return true;
     }
 
@@ -710,16 +716,17 @@ class System{
     /**
      * Check if date php and date BDD is synchro
      * @param array $details detailed array with dates and diff
+     * @param string $force_datetime
      * @return bool
      * @throws Exception
      */
-    public static function isDateTimeSynchro(array &$details = []) :bool
+    public static function isDateTimeSynchro(array &$details = [], string $force_datetime = null) :bool
     {
         $query = /** @lang MySQL */'SELECT NOW() AS t';
         $rs = Clipbucket_db::getInstance()->_select($query);
 
         $details['bdd'] = $rs[0]['t'];
-        $details['php'] = date('Y-m-d H:i:s');
+        $details['php'] = $force_datetime ?? date('Y-m-d H:i:s');
         $details['php_timezone_default'] = date_default_timezone_get();
 
         $datetime1 = new \DateTime($details['bdd']);
