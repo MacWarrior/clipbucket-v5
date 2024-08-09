@@ -10,7 +10,7 @@
             <th class="col-md-2">{lang code='title'}</th>
             <th class="col-md-4">{lang code='description'}</th>
             <th class="col-md-4">{lang code='vdo_status'}</th>
-            {if config('automate_launch_mode')!='disabled' && isset($admin_tool_list[tool_list].is_automatable) }
+            {if config('automate_launch_mode')!='disabled'}
                 <th class="col-md-2">{lang code='frequence'}</th>
                 <th class="col-md-2">{lang code='frequence_enabled'}</th>
             {/if}
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </td>
-            {if config('automate_launch_mode')!='disabled' && isset($admin_tool_list[tool_list].is_automatable) }
+            {if config('automate_launch_mode')!='disabled'}
                 <td style="vertical-align: middle;text-align:center;">
                     {if $admin_tool_list[tool_list].is_automatable == 1 }
                         <div class="input-group">
