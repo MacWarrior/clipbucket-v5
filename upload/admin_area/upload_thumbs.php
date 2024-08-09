@@ -9,15 +9,17 @@ userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
 $allowed_types = [
-    'thumbs',
-    'poster',
-    'backdrop'
+    'thumbs'=>'thumbs',
+    'posters'=>'poster',
+    'backdrops'=>'backdrop'
 ];
-if (empty($_GET['type']) || !in_array($_GET['type'], $allowed_types)) {
+$type = $_GET['type'] ?? $_POST['type'];
+$translation_type = array_search($type, $allowed_types);
+if (empty($_GET['type']) || !$translation_type) {
     e(lang('error'));
 }
-$type = $_GET['type'] ?? $_POST['type'];
 assign('type', $type);
+assign('translation_type', $translation_type);
 assign('db_type',array_search(( $type=='thumbs') ? 'custom': $type, Upload::getInstance()->types_thumb));
 $video = mysql_clean($_GET['video']);
 $data = get_video_details($video);
@@ -26,7 +28,7 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)];
-$breadcrumb[3] = ['title' => str_replace('%s',strtolower(lang($type)), lang('manage_x')), 'url' => DirPath::getUrl('admin_area') . 'upload_thumbs.php?video=' . display_clean($video) . '&type=' . display_clean($type)];
+$breadcrumb[3] = ['title' => str_replace('%s',strtolower(lang($translation_type)), lang('manage_x')), 'url' => DirPath::getUrl('admin_area') . 'upload_thumbs.php?video=' . display_clean($video) . '&type=' . display_clean($type)];
 
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);

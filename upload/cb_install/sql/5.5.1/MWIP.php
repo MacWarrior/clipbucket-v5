@@ -28,5 +28,30 @@ class MWIP extends \Migration
             'fr'=>'Liste des décors',
             'en'=>'Backdrop list'
         ]);
+
+        self::generateTranslation('posters', [
+            'fr'=>'affiches',
+            'en'=>'posters'
+        ]);
+
+        self::generateTranslation('backdrops', [
+            'fr'=>'décors',
+            'en'=>'backdrops '
+        ]);
+
+        self::generateTranslation('thumbs_upload_successfully', [
+            'fr'=>'La vignette a été téléversée avec succès',
+            'en'=>'Thumb uploaded successfully'
+        ]);
+
+        self::generateTranslation('poster_upload_successfully', [
+            'fr'=>'L\'affiche a été téléversée avec succès',
+            'en'=>'Poster uploaded successfully'
+        ]);
+        self::generateTranslation('backdrop_upload_successfully', [
+            'fr'=>'Le décor a été téléversé avec succès',
+            'en'=>'Backdrop uploaded successfully'
+        ]);
+
     }
 }
