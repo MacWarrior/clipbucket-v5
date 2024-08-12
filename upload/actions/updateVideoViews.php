@@ -1,5 +1,5 @@
 <?php
-
+define('THIS_PAGE', 'updateVideoViews');
 require_once("../includes/config.inc.php");
 
 global $db;

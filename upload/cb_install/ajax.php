@@ -166,6 +166,7 @@ if ($mode == 'adminsettings') {
 
             case 'add_admin':
                 install_execute_sql_file($cnnct, DirPath::get('sql') . 'add_admin.sql', $dbprefix, $dbname);
+                install_execute_sql_file($cnnct, DirPath::get('sql') . 'add_anonymous_user.sql', $dbprefix, $dbname);
                 $return['msg'] = '<div class="ok green">Admin account has been created</div>';
                 $return['status'] = 'Creating config files...';
                 $return['step'] = 'create_files';

@@ -2,8 +2,7 @@
 define('THIS_PAGE', 'rss');
 require 'includes/config.inc.php';
 
-global $userquery;
-if( !isSectionEnabled('videos') || config('enable_rss_feeds') == 'no' || !$userquery->perm_check('view_videos', true)){
+if( !isSectionEnabled('videos') || config('enable_rss_feeds') == 'no' || !userquery::getInstance()->perm_check('view_videos', true)){
     redirect_to(BASEURL);
     die;
 }
@@ -47,7 +46,7 @@ switch ($mode) {
     case 'user':
         $user = mysql_clean($_GET['username']);
         //Get userid from username
-        $uid = $userquery->get_user_field_only($user, 'userid');
+        $uid = userquery::getInstance()->get_user_field_only($user, 'userid');
         $uid = $uid ? $uid : 'x';
         $videos = get_videos(['limit' => $limit, 'user' => $uid, 'order' => 'date_added DESC']);
         //Count Total Videos of this user

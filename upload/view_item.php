@@ -95,6 +95,6 @@ ClipBucket::getInstance()->addCSS([
     ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
     ,'readonly_tag'.$min_suffixe.'.css'     => 'admin'
 ]);
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 template_files('view_photo.html');
 display_it();

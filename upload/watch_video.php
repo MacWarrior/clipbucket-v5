@@ -9,11 +9,18 @@ if (!userquery::getInstance()->perm_check('view_video', true) || config('videosS
 }
 
 $vkey = $_GET['v'] ?? false;
+
 if( empty($vkey) ){
     redirect_to(BASEURL);
 }
 
-$vdo = Video::getInstance()->getOne(['videokey' => $vkey]);
+if(is_numeric($vkey)){
+    $search = 'videoid';
+} else {
+    $search = 'videokey';
+}
+
+$vdo = Video::getInstance()->getOne([$search => $vkey]);
 if( !video_playable($vdo) ) {
     redirect_to(BASEURL);
 }
@@ -55,7 +62,8 @@ subtitle(ucfirst($vdo['title']));
 
 # assigning all variables
 array_val_assign($assign_arry);
-
+$anonymous_id = userquery::getInstance()->get_anonymous_user();
+assign('anonymous_id', $anonymous_id);
 //link edit
 assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_video.php?video=' . $vdo['videoid']);
 assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);

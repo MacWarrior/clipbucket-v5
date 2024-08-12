@@ -428,6 +428,9 @@ if (isset($_POST['update'])) {
         'hide_empty_collection',
         'only_keep_max_resolution',
         'playlistsSection',
+        'nginx_path',
+        'automate_launch_mode',
+        'timezone',
         'enable_storage_history',
         'enable_storage_history_fo'
     ];
@@ -565,6 +568,25 @@ if (!empty($_POST)) {
 
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
+
+$tool = AdminTool::getToolByCode('automate');
+if(!empty($tool)) {
+    $id_tool_automate = $tool['id_tool'];
+    $cron_line = '* * * * * '.System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.(int) $id_tool_automate;
+}
+assign('cron_copy_paste', $cron_line ?? '');
+
+$allTimezone = [];
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
+    $query = /** @lang MySQL */'SELECT timezones.timezone
+                            FROM '.cb_sql_table('timezones').'
+                            ORDER BY timezones.timezone';
+    $rs = Clipbucket_db::getInstance()->_select($query);
+    foreach ($rs as $timezone) {
+        $allTimezone[] = $timezone['timezone'];
+    }
+}
+assign('allTimezone', $allTimezone);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

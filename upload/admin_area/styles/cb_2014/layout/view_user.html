@@ -3,27 +3,32 @@
         <div class="heading clearfix">
             <h3 class="paddingLeftLarge pull-left">Editing <small>&gt; {display_clean($u.username)}</small>
                 <div class="actionBox clearfix">
-                    <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
-                    <ul class="dropdown-menu pull-left actionDropmenu" role="menu" aria-labelledby="dropdownMenu1">
-                        {if isSectionEnabled('channels')}
-                        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
-                        {/if}
-                        <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
-                        {if $u.usr_status=="Ok"}
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">{lang code='deactivate'}</a></li>
-                        {else}
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;activate=yes">{lang code='activate'}</a></li>
-                        {/if}
-                        {if $u.ban_status=="yes"}
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;unban=yes">Unban</a></li>
-                        {else}
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;ban=yes">Ban</a></li>
-                        {/if}
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete=yes">{lang code='delete'}</a></li>
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_vids=yes">Delete Videos</a></li>
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_contacts=yes">Delete Contacts</a></li>
-                        <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_pm=yes">Delete Private Messages</a></li>
-                    </ul>
+                    {if $u.userid != $anonymous_id}
+                        <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
+                        <ul class="dropdown-menu pull-left actionDropmenu" role="menu" aria-labelledby="dropdownMenu1">
+                            {if isSectionEnabled('channels')}
+                                <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
+                            {/if}
+                            {if $u.userid != user_id()}
+                                <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
+                                {if $u.usr_status=="Ok"}
+                                    <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">{lang code='deactivate'}</a></li>
+                                {else}
+                                    <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;activate=yes">{lang code='activate'}</a></li>
+                                {/if}
+
+                                {if $u.ban_status=="yes"}
+                                    <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;unban=yes">Unban</a></li>
+                                {else}
+                                    <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;ban=yes">Ban</a></li>
+                                {/if}
+                                <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete=yes">{lang code='delete'}</a></li>
+                            {/if}
+                            <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_vids=yes">Delete Videos</a></li>
+                            <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_contacts=yes">Delete Contacts</a></li>
+                            <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;delete_pm=yes">Delete Private Messages</a></li>
+                        </ul>
+                    {/if}
                 </div>
             </h3>
 
@@ -124,7 +129,7 @@
                                             <td class="first"> <label for="level">User level</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <select class="form-control" name="level" id="level">
+                                                    <select class="form-control" name="level" id="level" {if $u.userid == user_id()} disabled="disabled" {/if}>
                                                         {assign var=levels value=$userquery->get_levels()}
                                                         {foreach from=$levels item=level}
                                                         <option value="{$level.user_level_id}" {if $u.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
@@ -524,10 +529,11 @@
                 </div>
             </div>
         </div>
-
-        <div style="text-align:center;margin-top:10px;">
-            <input class="btn btn-primary btn-lg" type="submit" name="update_user" id="update_user" value="{lang code='update'}"/>
-        </div>
+        {if $u.userid != $anonymous_id}
+            <div style="text-align:center;margin-top:10px;">
+                <input class="btn btn-primary btn-lg" type="submit" name="update_user" id="update_user" value="{lang code='update'}"/>
+            </div>
+        {/if}
     </form>
     </div>
 

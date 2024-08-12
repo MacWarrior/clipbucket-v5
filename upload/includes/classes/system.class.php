@@ -61,7 +61,7 @@ class System{
 
                 $regex_version = '(\d+\.\d+\.\d+)';
                 $php_extensions = self::get_php_extensions_list();
-                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions'];
+                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime'];
 
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
@@ -393,7 +393,12 @@ class System{
 
         $return = [];
         $php_cli_info = [];
-        $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php';
+
+        $complement = '';
+        if( THIS_PAGE == 'cb_install' ){
+            $complement = ' install=true';
+        }
+        $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php' . $complement;
         exec($cmd, $php_cli_info);
 
         if( empty($php_cli_info) ){
@@ -567,7 +572,7 @@ class System{
     /**
      * @throws Exception
      */
-    public static function check_php_configs(): bool
+    public static function check_global_configs(): bool
     {
         if( ini_get('max_execution_time') < 7200 ){
             return false;
@@ -603,6 +608,16 @@ class System{
         }
 
         if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+            return false;
+        }
+
+        if( !self::isDateTimeSynchro() ){
+            return false;
+        }
+
+        $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+        $tmp = [];
+        if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
             return false;
         }
 
@@ -690,16 +705,41 @@ class System{
         return $disks;
     }
 
-    public static function get_readable_filesize(int $bytes, int $round = 0): String
+    public static function get_readable_filesize(int $bytes, int $round = -1): String
     {
         $size   = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $factor = floor((strlen($bytes) - 1) / 3);
 
         $value = $bytes / (1024 ** $factor);
-        if($round != 0){
+        if($round != -1){
             $value = round($value, $round);
         }
 
         return $value . ' ' . $size[$factor];
     }
+
+    /**
+     * Check if date php and date BDD is synchro
+     * @param array $details detailed array with dates and diff
+     * @param string $force_datetime
+     * @return bool
+     * @throws Exception
+     */
+    public static function isDateTimeSynchro(array &$details = [], string $force_datetime = null) :bool
+    {
+        $query = /** @lang MySQL */'SELECT NOW() AS t';
+        $rs = Clipbucket_db::getInstance()->_select($query);
+
+        $details['bdd'] = $rs[0]['t'];
+        $details['php'] = $force_datetime ?? date('Y-m-d H:i:s');
+        $details['php_timezone_default'] = date_default_timezone_get();
+
+        $datetime1 = new \DateTime($details['bdd']);
+        $datetime2 = new \DateTime($details['php']);
+        $interval = $datetime1->diff($datetime2);
+        $details['diff_in_minute'] = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
+
+        return $details['diff_in_minute'] <= 1;
+    }
+
 }

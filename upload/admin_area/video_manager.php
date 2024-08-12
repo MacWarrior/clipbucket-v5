@@ -143,27 +143,31 @@ if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version
         $all_category_ids[] = $cats['category_id'];
     }
 }
-
-if (isset($_GET['search'])) {
+if (!empty($_GET['active'])) {
+    $params = ['active' => $_GET['active']];
+    assign('url_active', $_GET['active']);
+}
+if (isset($_POST['search'])) {
     $params = [
-        'videoid'  => $_GET['videoid'] ?? false,
-        'videokey' => $_GET['videokey'] ?? false,
-        'title'    => $_GET['title'] ?? false,
-        'tags'     => $_GET['tags'] ?? false,
-        'userid'   => $_GET['userid'] ?? false,
-        'category' => $_GET['category'] ?? false,
-        'featured' => $_GET['featured'] ?? false,
-        'active'   => $_GET['active'] ?? false,
-        'status'   => $_GET['status'] ?? false
+        'videoid'  => $_POST['videoid'] ?? false,
+        'videokey' => $_POST['videokey'] ?? false,
+        'title'    => $_POST['title'] ?? false,
+        'tags'     => $_POST['tags'] ?? false,
+        'userid'   => $_POST['userid'] ?? false,
+        'category' => $_POST['category'] ?? false,
+        'featured' => $_POST['featured'] ?? false,
+        'active'   => $_POST['active'] ?? false,
+        'status'   => $_POST['status'] ?? false
     ];
 }
-
+assign('param_search', $params);
 //Getting Video List
 $params['limit'] = $get_limit;
 if (!$params['order']) {
     $params['order'] = ' videoid DESC ';
 }
 
+assign('anonymous_id', $userquery->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
 Assign('videos', $videos);
 

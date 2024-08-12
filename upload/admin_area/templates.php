@@ -2,10 +2,10 @@
 define('THIS_PAGE', 'templates');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $myquery, $cbtpl;
-$userquery->admin_login_check();
+global $pages, $myquery, $cbtpl;
+userquery::getInstance()->admin_login_check();
 $pages->page_redir();
-$userquery->perm_check('manage_template_access', true);
+userquery::getInstance()->perm_check('manage_template_access', true);
 
 if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
     redirect_to(BASEURL . DirPath::getUrl('admin_area'));
