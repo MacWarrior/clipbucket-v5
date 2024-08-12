@@ -10,7 +10,7 @@ $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'], [
     'video_title' => $_POST['video_title'],
     'sort'        => $_POST['sort'],
     'sort_order'  => $_POST['sort_order'],
-    'year' =>
+    'year' => $_POST['selected_year'] ?? ''
 ], $_POST['file_name'] ?? '');
 
 pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#, ' . $results['videoid'] . ');');
@@ -23,4 +23,5 @@ display_tmdb_result([
     'sort_order' => $results['sort_order'],
     'videoid'    => $results['videoid'],
     'years'      => $results['years'],
+    'selected_year' => $_POST['selected_year'],
 ], $results['videoid']);
