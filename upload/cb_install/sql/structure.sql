@@ -949,7 +949,14 @@ CREATE TABLE `{tbl_prefix}tools`(
     `language_key_description` VARCHAR(128) NOT NULL,
     `function_name`            VARCHAR(128) NOT NULL,
     `code`                     VARCHAR(32)  NOT NULL UNIQUE,
-    PRIMARY KEY (`id_tool`)
+    `frequency`                VARCHAR(30),
+    `previous_calculated_datetime` datetime,
+    `is_automatable`            BOOL DEFAULT TRUE,
+    `is_disabled`               BOOL DEFAULT FALSE,
+    PRIMARY KEY (`id_tool`),
+    CONSTRAINT chk_frequency_previous_calculated_datetime_required CHECK (
+        `frequency` IS NULL OR TRIM(`frequency`) = '' OR `previous_calculated_datetime` IS NOT NULL
+    )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}tools_histo_status`(
@@ -1192,3 +1199,10 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
     ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}timezones` (
+   `id` INT AUTO_INCREMENT PRIMARY KEY,
+   `timezone` VARCHAR(255) NOT NULL UNIQUE
+) ENGINE = InnoDB
+DEFAULT CHARSET = utf8mb4
+COLLATE utf8mb4_unicode_520_ci;
