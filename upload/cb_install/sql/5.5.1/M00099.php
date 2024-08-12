@@ -2,12 +2,8 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00099 extends \Migration
 {
-
-    CONST MIN_VERSION_CODE = '5.5.0';
-    CONST MIN_REVISION_CODE = '83';
-
     /**
      * @throws \Exception
      */

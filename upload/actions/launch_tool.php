@@ -8,10 +8,7 @@ $tool = new AdminTool();
 
 /** if CLI , example : php launch_tool.php id_tool=7 */
 if (php_sapi_name() === 'cli') {
-
-    /** @todo change after finish migration */
-    require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE) === false) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') === false) {
         return ;
     }
 

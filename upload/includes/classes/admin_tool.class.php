@@ -84,9 +84,7 @@ class AdminTool
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
 
             $complement_select = '';
-            /** @todo change after finish migration */
-            require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
                 $complement_select = ',tools.is_automatable, tools.is_disabled, tools.frequency';
             }
 
@@ -109,7 +107,8 @@ class AdminTool
         }
 
         $select = cb_sql_table('tools') . ' 
-    LEFT JOIN ' . cb_sql_table('tools_status') . ' ON tools_status.id_tools_status = tools.id_tools_status';
+            LEFT JOIN ' . cb_sql_table('tools_status') . ' ON tools_status.id_tools_status = tools.id_tools_status';
+
         return Clipbucket_db::getInstance()->select($select, 'id_tool, language_key_label, language_key_description, elements_total, elements_done, language_key_title, function_name, 
            CASE WHEN elements_total IS NULL OR elements_total = 0 THEN 0 ELSE elements_done * 100 / elements_total END AS pourcentage_progress'
             , $where
@@ -802,9 +801,7 @@ class AdminTool
      */
     public function checkAndStartToolsByFrequency()
     {
-        /** @todo change after finish migration */
-        require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE) === false) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') === false) {
             $this->setToolError($this->id_tool);
             return ;
         }
@@ -978,7 +975,7 @@ class AdminTool
      */
     public function isAlreadyLaunch() :bool
     {
-        /** get all tools running */
+        /** get all running tools */
         $query = /** @lang MySQL */'SELECT DISTINCT tools_histo.id_tool
                             FROM '.cb_sql_table('tools_histo').'
                             INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
@@ -993,7 +990,7 @@ class AdminTool
      */
     public function getLastStart() :string
     {
-        /** get all tools running */
+        /** get all running tools */
         $query = /** @lang MySQL */'SELECT tools_histo.date_start
                             FROM '.cb_sql_table('tools_histo').'
                             WHERE tools_histo.id_tool = '.( (int) $this->id_tool).'

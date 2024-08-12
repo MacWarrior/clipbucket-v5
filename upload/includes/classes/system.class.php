@@ -393,7 +393,12 @@ class System{
 
         $return = [];
         $php_cli_info = [];
-        $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php';
+
+        $complement = '';
+        if( THIS_PAGE == 'cb_install' ){
+            $complement = ' install=true';
+        }
+        $cmd = $php_path . ' ' . DirPath::get('root') . 'phpinfo.php' . $complement;
         exec($cmd, $php_cli_info);
 
         if( empty($php_cli_info) ){

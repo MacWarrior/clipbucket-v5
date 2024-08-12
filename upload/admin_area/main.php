@@ -573,9 +573,7 @@ if(!empty($tool)) {
 assign('cron_copy_paste', $cron_line ?? '');
 
 $allTimezone = [];
-/** @todo change after finish migration */
-require_once DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php';
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo(\V5_5_1\MWIP::MIN_VERSION_CODE, \V5_5_1\MWIP::MIN_REVISION_CODE)) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
     $query = /** @lang MySQL */'SELECT timezones.timezone
                             FROM '.cb_sql_table('timezones').'
                             ORDER BY timezones.timezone';
