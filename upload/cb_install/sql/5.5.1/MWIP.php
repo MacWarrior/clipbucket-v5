@@ -43,7 +43,6 @@ class MWIP extends \Migration
             'fr'=>'La vignette a été téléversée avec succès',
             'en'=>'Thumb uploaded successfully'
         ]);
-
         self::generateTranslation('poster_upload_successfully', [
             'fr'=>'L\'affiche a été téléversée avec succès',
             'en'=>'Poster uploaded successfully'
@@ -51,6 +50,19 @@ class MWIP extends \Migration
         self::generateTranslation('backdrop_upload_successfully', [
             'fr'=>'Le décor a été téléversé avec succès',
             'en'=>'Backdrop uploaded successfully'
+        ]);
+
+        self::generateTranslation('thumbs_delete_successfully', [
+            'fr'=>'La vignette a été supprimée avec succès',
+            'en'=>'Thumb deleted successfully'
+        ]);
+        self::generateTranslation('poster_delete_successfully', [
+            'fr'=>'L\'affiche a été supprimée avec succès',
+            'en'=>'Poster deleted successfully'
+        ]);
+        self::generateTranslation('backdrop_delete_successfully', [
+            'fr'=>'Le décor a été supprimé avec succès',
+            'en'=>'Backdrop deleted successfully'
         ]);
 
     }

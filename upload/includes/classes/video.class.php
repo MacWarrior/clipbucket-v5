@@ -638,6 +638,23 @@ class Video
             }
         }
     }
+
+    public function setDefautThumb($num, $type, $videoid)
+    {
+
+        if (!empty(Upload::getInstance()->types_thumb[$type])) {
+            $type_db = Upload::getInstance()->types_thumb[$type];
+        } elseif(in_array($type, Upload::getInstance()->types_thumb) || $type == 'thumb') {
+            $type_db = $type;
+        } else {
+            e(lang('error'));
+            return false;
+        }
+        if ($type_db == 'auto' || $type_db == 'custom') {
+            $type_db = 'thumb';
+        }
+        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['default_' . $type_db], [(int)$num], ' videoid = ' . mysql_clean($videoid));
+    }
 }
 
 class CBvideo extends CBCategory
@@ -1950,23 +1967,6 @@ class CBvideo extends CBCategory
 
         $this->action->share_template_name = 'share_video_template';
         $this->action->val_array = $this->email_template_vars;
-    }
-
-    /**
-     * Function used to update video and set a thumb as default
-     * @param $vid
-     * @param $thumb
-     * @throws Exception
-     */
-    function set_default_thumb($vid, $thumb)
-    {
-        global $db;
-        if (is_null($thumb)) {
-            return;
-        }
-        $num = get_thumb_num($thumb);
-        $db->update(tbl('video'), ['default_thumb'], [$num], ' videoid=\'' . mysql_clean($vid) . '\'');
-        e(lang('vid_thumb_changed'), 'm');
     }
 
     /**

@@ -32,8 +32,10 @@ if ($vdetails['userid'] != $userid) {
         if (empty($eh->get_error())) {
             $_POST['videoid'] = $vid;
             $cbvid->update_video();
-            $cbvid->set_default_thumb($vid, mysql_clean(post('default_thumb')));
-            $vdetails = $cbvid->get_video($vid);
+            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
+            Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
+            Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
+            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
         }
     }
 

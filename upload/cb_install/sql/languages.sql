@@ -1172,5 +1172,8 @@ VALUES ('admin_setting'),
        ('backdrop_list'),
        ('thumbs_upload_successfully'),
        ('poster_upload_successfully'),
-       ('backdrop_upload_successfully');
+       ('backdrop_upload_successfully'),
+       ('thumbs_delete_successfully'),
+       ('backdrop_delete_successfully'),
+       ('backdrop_delete_successfully');
 

@@ -5,8 +5,8 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 userquery::getInstance()->admin_login_check();
 
 # Generating more thumbs
-$data = get_video_details($_POST['videoid']);
+$data = Video::getInstance()->getOne(['videoid'=>$_POST['videoid']]);
 
 $num = $_POST['num'];
-delete_video_thumb($data, $num);
+delete_video_thumb($data, $num, $_POST['type']);
 display_thumb_list($data, $_POST['type']);
