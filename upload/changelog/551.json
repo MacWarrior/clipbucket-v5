@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"96",
+  "revision":"98",
   "status":"dev",
   "detail":[
     {
@@ -57,6 +57,7 @@
         ,"Fix Nginx path not saving"
         ,"Fix photo manager search"
         ,"Fix conversion queue log url"
+        ,"Fix video manager search"
       ]
     },
     {
