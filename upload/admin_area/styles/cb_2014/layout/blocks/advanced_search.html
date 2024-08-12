@@ -5,31 +5,31 @@
 		<i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
     </a>
 </div>
-<div class="search_box well" id="searchdiv" {if $url_active != 'yes'} style="display:none;"{/if}>
+<div class="search_box well" id="searchdiv" {if !$param_search } style="display:none;"{/if}>
     <form id="video_search" name="video_search" method="POST" action="video_manager.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
               <div class="form-group">
                     <label for="title">{lang code="vdo_title"}</label>
-                    <input name="title" type="text" class="form-control" id="title" value="{'title'|get_form_val:divue}" />
+                    <input name="title" type="text" class="form-control" id="title" value="{$param_search.title}" />
                 </div>  
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="videokey">Video key</label>
-                    <input class="form-control" name="videokey" type="text" id="videokey" value="{'videokey'|get_form_val:true}" />
+                    <input class="form-control" name="videokey" type="text" id="videokey" value="{$param_search.videokey}" />
                 </div>
             </div>
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="videoid">Video id</label>
-                    <input class="form-control" name="videoid" type="text" id="videoid" value="{'videoid'|get_form_val:true}" />
+                    <input class="form-control" name="videoid" type="text" id="videoid" value="{$param_search.videoid}" />
                 </div>
             </div>
             <div class="col-md-4">
               <div class="form-group">
                     <label for="tags">{lang code="tags"}</label>
-                    <input class="form-control" name="tags" type="text" id="tags" value="{'tags'|get_form_val:true}" />
+                    <input class="form-control" name="tags" type="text" id="tags" value="{$param_search.tags}" />
                 </div>  
             </div>
         </div>
