@@ -1,7 +1,5 @@
 #social_beast_links{
 	list-style: none;
-	padding: 0;
-	margin: 0;
 	text-align: center;
 	font-size: 16px;
 	line-height: 20px;
@@ -14,7 +12,6 @@
 #social_beast_links li a{
 	text-decoration: none;
 }
-/* vertical list */
 #social_beast_links.vertical-social{
 	text-align: left;
 }
