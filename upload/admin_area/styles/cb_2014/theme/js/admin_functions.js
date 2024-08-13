@@ -46,3 +46,13 @@ function admin_remove_spam(cid)
 		}
 	},'json');
 }
+
+function get_readable_filesize(bytes)
+{
+	var size   = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+	var factor = Math.floor((bytes.toString().length - 1) / 3);
+	var value = bytes / (1024 ** factor);
+	value = Math.round(value * 100 ) / 100;
+
+	return value + ' ' + size[factor];
+}
