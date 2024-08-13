@@ -7484,17 +7484,20 @@ textarea#comment_box {
 #main , #content {
   /*
   min-width: 100%;
-*/
+   */
 }
 
 .default-slider {
   width: 100%;
   box-sizing: border-box;
   position: relative;
+
+  /** definir les dimmension de chaque bloc di slider */
+  --height : 250px;
+  --width : 274px;
 }
 
 .default-slider h1 {
-  margin-left:2rem;
   margin-right:2rem;
   box-sizing: border-box;
   margin-bottom:0;
@@ -7539,33 +7542,36 @@ textarea#comment_box {
   position: relative;
   overflow: hidden;
   scroll-behavior: smooth;
-  padding: 1rem;
+  padding: 1rem 0;
 }
 
 .default-slider .slider-container {
-  height: 260px; /** dimmension maitre pour la hauteur */
+  height: var(--height); /** dimmension maitre pour la hauteur */
   width: max-content;
   box-sizing: border-box;
   display: block;
   position: relative;
-  margin-left:2rem;
 }
 
 .default-slider .slider-container .slider-video-container {
   position: relative;
   margin-right: 1rem;
   margin-left: 1rem;
-  height: 100%;
-  width: 300px ; /** dimmension maitre pour la largeur des block */
-  display: inline-block;
+
+  width: var(--width);
+  height: var(--height);
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
+
 
 .default-slider .slider-container .slider-video-container .thumb-video-padding {
   padding: 5px;
-  height: calc(100% - 72px); /*72px correspond a la hauteur du bloc de details */
   width: 100%;
   transition: transform .3s; /* Animation */
   cursor: pointer;
+  flex:1;
 }
 
 .default-slider .slider-container .slider-video-container .thumb-video-padding:before {
@@ -7600,9 +7606,9 @@ textarea#comment_box {
 }
 
 .default-slider .slider-container .slider-video-container .thumb-video-padding .thumb-video > img {
-  flex-shrink: 0;
   min-width: 100%;
   min-height: 100%;
+  object-fit: cover;
 }
 
 .default-slider .slider-container .slider-video-container .thumb-video-padding .thumb-video > .time {
@@ -7693,10 +7699,30 @@ textarea#comment_box {
   text-overflow: ellipsis;
 }
 
+.default-slider .slider-container .item-video {
+  margin-right: 8px;
+  margin-left: 8px;
+  width: var(--width);
+  height: var(--height);
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: white;
+  padding:0;
+}
 
+.default-slider .slider-container .item-video .thumb-holder {
+  flex:1;
+  overflow: hidden;
+}
 
+.default-slider .slider-container .item-video:first-of-type {
+  margin-left: 0;
+}
 
-
+.default-slider .slider-container .item-video:last-of-type {
+  margin-right: 0;
+}
 
 
 

@@ -23,6 +23,15 @@ if (!$userquery->perm_check('view_videos', false, false, true) && !user_id()) {
     $min_suffixe = in_dev() ? '' : '.min';
     ClipBucket::getInstance()->addJS(['pages/index/index' . $min_suffixe . '.js'  => 'admin']);
 
+
+    $page = mysql_clean($_GET['page']);
+    $get_limit = create_query_limit($page, config('videos_list_per_page'));
+    $params = Video::getInstance()->getFilterParams($_GET['sort'], []);
+    $params = Video::getInstance()->getFilterParams($_GET['time'], $params);
+    $params['limit'] = $get_limit;
+    $videos = Video::getInstance()->getAll($params);
+    assign('videos', $videos);
+
     template_files('index.html');
 }
 display_it();

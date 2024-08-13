@@ -10,7 +10,7 @@
 			</div>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && 1==2}
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && config("homepage_recent_videos_display") == "paginate"}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row"></div>
@@ -30,38 +30,37 @@
 			</section>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && config("homepage_recent_videos_display") == "slider"}
 			<section class="clearfix default-slider">
 				<h1>{lang code="recent_videos"}</h1>
 				<div class="slider-container-action">
 					<div class="prev"></div>
 					<div class="slider-container-overflow">
 						<div class="slider-container">
-							{for $foo=1 to 65}
-							<div class="slider-video-container">
-								<div class="thumb-video-padding">
-									<div class="thumb-video">
-										<img src="https://picsum.photos/seed/{math equation='rand(1000,10000000)'}/300/150" alt="thumbnail">
-										<div class="status"></div>
-										<div class="add-playlist" title="add to playlist"></div>
-										<div class="time">00:41</div>
+
+							{if config("config_ancien_ou_nouveau_template_miniature_video") == false}
+								{foreach $videos as $video}
+									{include file="$style_dir/blocks/video-new.html"}
+								{/foreach}
+							{elseif  config("config_ancien_ou_nouveau_template_miniature_video") == "old"}
+								<div class="videos">
+									{foreach $videos as $video}
+									<div class="item-video">
+										{include file="$style_dir/blocks/video.html" display_type='user-videos'}
 									</div>
+									{/foreach}
 								</div>
-								<div class="details">
-									{assign var=titre value='La chasse aux oeufs de paques le vendredi apres midi par un ciel de pleine lune'}
-									<div class="titre" title="{$titre}">{$titre}</div>
-									<div class="auteur">par thomas pesquet</div>
-									<div class="view">0 vue</div>
-									<div class="date">il y a 2 heures</div>
-								</div>
-							</div>
-							{/for}
+							{/if}
+
 						</div>
 					</div>
 					<div class="next"></div>
 				</div>
 			</section>
 			{/if}
+			{lang code='channel' assign='object_type'}
+			{include file="$style_dir/global_header.html"}
+			{include file="$style_dir/header.html"}
 		</div>
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}

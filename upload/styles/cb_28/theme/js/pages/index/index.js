@@ -3,7 +3,7 @@ $(function () {
     document.querySelectorAll('.default-slider').forEach(function(defaultslider){
 
         let slider = defaultslider.querySelector('.slider-container-overflow');
-        let miniatures = slider.querySelectorAll('.slider-video-container');
+        let miniatures = slider.querySelectorAll('.slider-video-container, .item-video');
         let remInPixels = parseFloat(getComputedStyle(document.documentElement).fontSize)*2;
 
         defaultslider.querySelector('.slider-container-action .next').addEventListener('click', function(){
