@@ -284,7 +284,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'automate_launch_mode', 'user_activity'),
     (NULL, 'timezone', ''),
     (NULL, 'default_theme', 'light'),
-    (NULL, 'custom_css', '');
+    (NULL, 'custom_css', ''),
+    (NULL, 'homepage_recent_videos_display', 'paginate'),
+    (NULL, 'homepage_featured_video_display', 'paginate');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

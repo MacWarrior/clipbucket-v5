@@ -1191,4 +1191,9 @@ VALUES ('admin_setting'),
        ('option_default_theme'),
        ('option_default_theme_light_original'),
        ('option_default_theme_light'),
-       ('option_default_theme_dark');
+       ('option_default_theme_dark'),
+       ('option_homepage_enable_popin_video'),
+       ('option_homepage_recent_videos_display'),
+       ('option_homepage_featured_video_display'),
+       ('option_paginate'),
+       ('option_slider');
