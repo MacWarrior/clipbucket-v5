@@ -52,7 +52,7 @@
 			</h2>
 			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
 				<span class="btn btn-app btn-sm btn-light no-hover">
-				<span class="line-height-1 smaller-90 blue">{$data.views|format_number}</span>
+				<span class="line-height-1 smaller-90 blue">{$data.views|prettyNum}</span>
 				<br/>
 				<span class="line-height-1 smaller-90"> Views </span>
 				</span>
@@ -210,7 +210,7 @@
                                             <td class="last">
                                                 <p><span>
                                                     {if $data.userid != $anonymous_id}
-                                                        {display_clean($data.user_username)}
+                                                        <a href="{$link_user}">{display_clean($data.user_username)}</a>
                                                     {else}
                                                         {display_clean(lang($data.user_username))}
                                                     {/if}
@@ -221,20 +221,20 @@
                                             <tr>
                                                 <td class="first"><label>DOB</label></td>
                                                 <td class="last">
-                                                    <p><span>{$data.dob}</span></p>
+                                                    <p><span>{$uploader_info.dob}</span></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="first"><label>Email</label></td>
                                                 <td class="last">
-                                                    <p><span>{$data.email}</span></p>
+                                                    <p><span>{$uploader_info.email}</span></p>
                                                 </td>
                                             </tr>
                                             {if config('enable_gender') == 'yes'}
                                             <tr>
                                                 <td class="first"><label>{lang code='gender'}</label></td>
                                                 <td class="last">
-                                                    <p><span>{lang code="{$data.sex}"}</span></p>
+                                                    <p><span>{lang code="{$uploader_info.sex}"}</span></p>
                                                 </td>
                                             </tr>
                                             {/if}
@@ -399,9 +399,10 @@
                             <div class="row">
                                 <label for="status"><strong>{lang code='vdo_status'}</strong></label>
                                 <select class="form-control" name="status" id="status">
-                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>Successfull</option>
-                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>Processing</option>
-                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>Failed</option>
+                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>{lang('successful')}</option>
+                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>{lang('processing')}</option>
+                                    <option class="form-control" value="waiting" {if $data.status=='Waiting'}selected{/if}>{lang('waiting')}</option>
+                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>{lang('failed')}</option>
                                 </select>
                             </div>
                             <hr/>
