@@ -738,6 +738,15 @@ class AdminTool
         }
     }
 
+    public function calcUserStorage()
+    {
+        $users = User::getInstance()->getAll([
+            'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
+        ]) ?: [];
+        $this->array_loop = array_column($users, 'userid') ;
+        $this->executeTool('User::calcUserStorage');
+    }
+
     /**
      * @param int|null $id_tool
      * @return array
