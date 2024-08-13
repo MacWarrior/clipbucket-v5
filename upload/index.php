@@ -20,6 +20,9 @@ if (!$userquery->perm_check('view_videos', false, false, true) && !user_id()) {
         assign('top_collections', Collection::getInstance()->getAll($params));
     }
 
+    $min_suffixe = in_dev() ? '' : '.min';
+    ClipBucket::getInstance()->addJS(['pages/index/index' . $min_suffixe . '.js'  => 'admin']);
+
     template_files('index.html');
 }
 display_it();
