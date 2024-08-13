@@ -88,6 +88,11 @@
                             <a data-toggle="tab" href="#education">{display_clean($education_interests_fields.group_name)}</a>
                         </li>
                         {/if}
+                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
+                            <li>
+                                <a data-toggle="tab" href="#storage_history">{lang code='storage_history'}</a>
+                            </li>
+                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="userinfo" class="tab-pane active">
@@ -101,7 +106,7 @@
                                             <td class="first"><label>User Id</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <input disabled="disabled" name="uid" type="text" id="uid" value="{$u.userid}" max-size="45"/>
+                                                    <input class="form-control" disabled="disabled" name="uid" type="text" id="uid" value="{$u.userid}" max-size="45"/>
                                                     <input name="userid" type="hidden" id="userid" value="{$u.userid}"/>
                                                 </div>
                                             </td>
@@ -110,7 +115,7 @@
                                             <td class="first"><label>{lang code='username'}</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <input name="username" type="text" id="username" value="{display_clean($u.username)}" max-size="45"/>
+                                                    <input class="form-control" name="username" type="text" id="username" value="{display_clean($u.username)}" max-size="45"/>
                                                     <input name="dusername" type="hidden" id="dusername" value="{display_clean($u.username)}"/>
                                                     <input name="admin_manager" type="hidden" value="yes"/>
                                                 </div>
@@ -120,7 +125,7 @@
                                             <td class="first"><label>Email</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <input name="email" type="text" id="email" value="{$u.email}" max-size="45"/>
+                                                    <input class="form-control" name="email" type="text" id="email" value="{$u.email}" max-size="45"/>
                                                     <input name="demail" type="hidden" id="demail" value="{$u.email}"/>
                                                 </div>
                                             </td>
@@ -138,6 +143,16 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
+                                        <tr>
+                                            <td class="first"><label >{lang code='user_current_storage'}</label></td>
+                                            <td class="last">
+                                                <div>
+                                                    <input class="form-control" disabled="disabled" type="text" id="user_storage" value="{$storage_use}"/>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {/if}
                                         {if config('enable_user_category')=='yes' && $show_categ}
                                         {$thecats = getCategoryList(['type'=>'user'])}
                                         <tr>
@@ -386,6 +401,11 @@
                             </div>
                         </div>
                         {/if}
+                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
+                            <div id="storage_history" class="tab-pane">
+                                <div id="history" style="height:400px;"></div>
+                            </div>
+                        {/if}
 
                     </div>
                 </div>
@@ -531,4 +551,62 @@
 
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+
+    AmCharts.makeChart("history", {
+        "type": "serial",
+        "dataDateFormat": "",
+        "startDuration": 1,
+        "mouseWheelZoomEnabled": true,
+        "autoDisplay": true,
+        "theme": "light",
+        "categoryField": "date_histo",
+        "categoryAxis": {
+            "gridPosition": "start",
+            "parseDates": true,
+        },
+        "trendLines": [],
+        "graphs": [
+            {
+                "id": "AmGraph-1",
+                "title": "graph 1",
+                "type": "line",
+                "valueField": "storage_used",
+                "bullet": "round",
+                "bulletBorderAlpha": 1,
+                "bulletColor": "#FFFFFF",
+                "bulletSize": 5,
+                "lineThickness": 2,
+                "lineColor": "#20acd4",
+                "useLineColorForBulletBorder": true,
+                "balloonText": "<b style='font-size: 130%'>[[value]]</b>",
+                "balloonFunction": function (item, graph) {
+                    var text = graph.balloonText;
+                    var value = get_readable_filesize(item.dataContext['storage_used']);
+                    return text.replace("[[value]]", value);
+                }
+            }
+        ],
+        "guides": [],
+        "valueAxes": [
+            {
+                "id": "ValueAxis-1",
+                "title": "{lang('storage_use')}",
+                "labelFunction": function(value) {
+                    return get_readable_filesize(value);
+                }
+            }
+        ],
+        "allLabels": [],
+        "balloon": {},
+        "titles": [
+            {
+                "bold": false,
+                "id": "Title-1",
+                "size": 15,
+                "text": "{lang('storage_history')}"
+            }
+        ],
+        "dataProvider": {json_encode($storage_history)}
+
+    });
 </script>
