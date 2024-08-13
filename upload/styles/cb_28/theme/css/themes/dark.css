@@ -23,7 +23,7 @@ html.dark {
 
 /* Background */
 body {
-    background-image: url('../../../images/dark.jpg');
+    background-image: url('../../../images/dark.webp');
     background-attachment: fixed;
     background-position: center;
 }

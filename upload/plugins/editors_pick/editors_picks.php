@@ -4,7 +4,7 @@
     Description: This plugin is used to display Editor's Pick Player On Home Page and also let you pick videos for editor's pick
     Author: Arslan Hassan & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    Version: 2.0.5
+    Version: 2.0.6
     ClipBucket Version: 5.5.1
 */
 
@@ -150,11 +150,17 @@ $cbvid->video_manager_link_new[] = 'admin_area_tab';
 //Calling Editor Picks Function
 $cbvid->video_manager_funcs[] = 'editors_pick';
 
-if (in_dev()) {
-    add_js(['editors_pick/assets/js/editors_pick.js' => 'plugin']);
-} else {
-    add_js(['editors_pick/assets/js/editors_pick.min.js' => 'plugin']);
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addJS(['editors_pick/assets/js/editors_pick' . $min_suffixe . '.js' => 'plugin']);
+ClipBucket::getInstance()->addCSS(['editors_pick/assets/css/themes/default' . $min_suffixe . '.css' => 'plugin']);
+
+$filepath = DirPath::get('plugins') . 'editors_pick/assets/css/themes/' . config('default_theme') . $min_suffixe . '.css';
+if( config('default_theme') != '' && file_exists($filepath) ){
+    ClipBucket::getInstance()->addCSS([
+        'editors_pick/assets/css/themes/' . config('default_theme') . $min_suffixe . '.css' => 'plugin'
+    ]);
 }
+
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 

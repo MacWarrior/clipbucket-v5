@@ -23,7 +23,7 @@ html.light {
 
 /* Background */
 body {
-    background-image: url('../../../images/light.jpg');
+    background-image: url('../../../images/light.webp');
     background-attachment: fixed;
     background-position: center;
 }

@@ -10,7 +10,8 @@ ClipBucket::getInstance()->addCSS([
     'jquery_ui' . $min_suffixe . '.css'  => 'admin'
 ]);
 
-if( config('default_theme') != '' ){
+$filepath = DirPath::get('admin') . 'themes/' . config('default_theme') . $min_suffixe . '.css';
+if( config('default_theme') != '' && file_exists($filepath) ){
     ClipBucket::getInstance()->addCSS([
         'themes/' . config('default_theme') . $min_suffixe . '.css' => 'admin'
     ]);
