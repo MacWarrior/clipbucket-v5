@@ -7484,7 +7484,7 @@ textarea#comment_box {
 #main , #content {
   /*
   min-width: 100%;
-   */
+  /* */
 }
 
 .default-slider {
@@ -7505,34 +7505,34 @@ textarea#comment_box {
 
 .default-slider .slider-container-action  {
   position: relative;
+  display: flex;
+  flex-direction: row;
 }
 .default-slider .prev, .default-slider .next {
-  height: calc(100% - 2rem) ;
   width: 50px;
-  position: absolute;
-  top: 1rem; left: 0;
-  z-index: 99999;
-}
-.default-slider .prev:after, .default-slider .next:after {
-  content:"\2039";
-  color:white;
-  font-size: 10rem;
-  position: absolute;
-  top: calc(260px - 60px - 100px); right: 0;
-  text-shadow: 1px 1px 2px black;
-  opacity: 0;
+  position: relative;
+  left: 0;
+  cursor: pointer;
+  color: white;
+  text-shadow: 1px 1px 10px black;
+  font-size: 3rem;
+  line-height: 100%;
+  text-align: center;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  transition: font-size 200ms;
+  border:1px solid rgba(0,0,0,0.1);
 }
 
-.default-slider .prev:hover:after, .default-slider .next:hover:after {
+.default-slider .prev:hover, .default-slider .next:hover {
   opacity: 1;
+  font-size: 3.5rem;
 }
 
 .default-slider .next {
-  right: 0; left: unset;
-}
-
-.default-slider .next:after {
-  content:"\203A";
   right: 0; left: unset;
 }
 
@@ -7563,6 +7563,21 @@ textarea#comment_box {
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
+}
+
+.default-slider .slider-container .slider-video-container .thumb_banner {
+    position: absolute;
+    top: 5px;
+    font-size: 10px;
+    text-align: center;
+    z-index: 3;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    color:white;
 }
 
 
@@ -7609,6 +7624,10 @@ textarea#comment_box {
   min-width: 100%;
   min-height: 100%;
   object-fit: cover;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .default-slider .slider-container .slider-video-container .thumb-video-padding .thumb-video > .time {
