@@ -31,6 +31,7 @@ ClipBucket::getInstance()->addAdminJS([
     'admin_functions' . $min_suffixe . '.js'       => 'admin',
     'jquery_plugs/cookie' . $min_suffixe . '.js'   => 'global',
     'summernote/summernote' . $min_suffixe . '.js' => 'admin',
+    'main' . $min_suffixe . '.js'                  => 'admin',
     'jquery.amcharts' . $min_suffixe . '.js'       => 'admin',
     'jquery.pie' . $min_suffixe . '.js'            => 'admin',
     'jquery.light' . $min_suffixe . '.js'          => 'admin',
