@@ -17,8 +17,6 @@ ClipBucket::getInstance()->addJS([
     'jquery_plugs/cookie' . $min_suffixe . '.js' => 'global',
     'functions' . $min_suffixe . '.js'           => 'global',
     'bootstrap' . $min_suffixe . '.js'           => 'admin',
-    'uslider_js/jquery.mousewheel.js'            => 'admin',
     'custom' . $min_suffixe . '.js'              => 'admin',
-    'ui_plugins.js'                              => 'admin',
     'fast_qlist' . $min_suffixe . '.js'          => 'admin'
 ]);

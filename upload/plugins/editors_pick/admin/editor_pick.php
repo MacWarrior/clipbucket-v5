@@ -1,10 +1,9 @@
 <?php
+define('THIS_PAGE', 'editor_pick');
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
-global $userquery, $pages, $eh;
-
-$userquery->admin_login_check();
-$pages->page_redir();
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
@@ -20,7 +19,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_video'])) {
     for ($id = 0; $id <= count($_POST['check_video']); $id++) {
         remove_vid_editors_pick($_POST['check_video'][$id]);
     }
-    $eh->flush();
+    errorhandler::getInstance()->flush();
     e(lang('plugin_editors_picks_removed_plural'), 'm');
 }
 

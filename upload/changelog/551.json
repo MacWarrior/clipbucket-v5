@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"99",
+  "revision":"104",
   "status":"dev",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Implement missing video categorie fix tool"
         ,"Implement video resolutions files deletion tool"
         ,"Implement automated tasks"
+        ,"Implement users storage usage & history"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -155,6 +156,7 @@
         ,"Fix SQL typo"
         ,"Fix SSE DB update"
         ,"Fix migration on windows hosts"
+        ,"Fix PHP Cli detection"
       ]
     },
     {
@@ -177,6 +179,7 @@
         "Update Player to version 2.0.3"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
+        ,"Update Editor's Pick to version 2.0.6"
       ]
     },
     {
