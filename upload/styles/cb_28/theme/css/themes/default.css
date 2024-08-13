@@ -61,6 +61,7 @@ h4{
 .btn-primary:active:focus,
 .btn-primary.disabled:hover,
 .btn-primary.disabled:focus,
+.open>.dropdown-toggle.btn-primary,
 .open>.dropdown-toggle.btn-primary:focus,
 .open>.dropdown-toggle.btn-primary:hover,
 .btn-success,
@@ -217,6 +218,12 @@ body{
 }
 .cb-box{
     background-color: var(--color-01);
+}
+a{
+    color: var(--color-02);
+}
+a:hover{
+    color: var(--color-main-01);
 }
 
 /* Menu Top */

@@ -162,6 +162,21 @@ body {
     border-radius: var(--border-radius);
 }
 
+/* My account */
+.manage-page .nav-pills>li:first-child,
+.manage-page .nav-pills>li:first-child a{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.manage-page .nav-pills>li:last-child,
+.manage-page .nav-pills>li:last-child a{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.manage-page .accountprofile img{
+    border-radius: var(--border-radius);
+}
+
 /* Shadows */
 .item-video:after,
 .item-photo:after,
