@@ -4,7 +4,7 @@
 html.dark {
     --color-01 : #0e0b14;
     --color-02 : #f9f9f9;
-    --color-03 : #2a2a2a;
+    --color-03 : #393939;
     --color-04 : #757575;
     --color-05 : #2a2a2a;
 
@@ -19,24 +19,20 @@ html.dark {
     --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
     --generic-box-shadow : 0 20px 24px 0 rgba(0, 0, 0, 0.80);
     --border-radius : 5px;
-
-    /* TEST */
-    --color-main-01 : yellow;
-    --color-main-02 : red;
 }
 
 /* Background */
-html.dark body {
+body {
     background-image: url('../../../images/dark.jpg');
     background-attachment: fixed;
     background-position: center;
 }
 
 /* Menu Top */
-html.dark #header{
+#header{
     box-shadow: var(--generic-box-shadow);
 }
-html.dark #header .search input[type="text"]{
+#header .search input[type="text"]{
     background-color: var(--color-gradient-end);
 }
 
@@ -164,4 +160,25 @@ html.dark #header .search input[type="text"]{
 }
 .quicklist_box .qlist_item .pl_thumb img{
     border-radius: var(--border-radius);
+}
+
+/* Shadows */
+.item-video:after,
+.item-photo:after,
+.item-channel:after,
+.collection-item:after,
+#coverContainer:after
+{
+    content: "";
+    position: absolute;
+    box-shadow: var(--generic-box-shadow);
+    left: 12px;
+    width: calc(100% - 24px);
+    bottom: 10px;
+    height: 33px;
+    z-index: -1;
+}
+.sidebar-items,
+.sidebar-channels{
+    box-shadow: var(--generic-box-shadow);
 }

@@ -7558,3 +7558,7 @@ textarea#comment_box {
   font-size: 1.5em;
   margin-right: 1em;
 }
+
+.nav-pills>li>a{
+  border-radius: 0;
+}

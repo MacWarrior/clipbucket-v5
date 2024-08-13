@@ -59,6 +59,8 @@ h4{
 .btn-primary:active,
 .btn-primary:focus,
 .btn-primary:active:focus,
+.open>.dropdown-toggle.btn-primary:focus,
+.open>.dropdown-toggle.btn-primary:hover,
 .btn-success,
 .btn-success:hover,
 .btn-success:active,
@@ -122,13 +124,19 @@ h4{
     background-color: var(--color-03);
     color: var(--color-main-01);
 }
-.form-control{
+.form-control,
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled]{
     color: var(--color-02);
-    background-color: var(--color-03);
-    border-color: var(--color-01);
+    background-color: var(--color-05);
+    border-color: var(--color-03);
 }
 .rad-checked{
     color: var(--color-main-01);
+}
+.table-striped>tbody>tr:nth-of-type(odd){
+    background-color: var(--color-05);
 }
 
 /* Pop-ins */
@@ -226,9 +234,13 @@ body{
 #header .search .cbsearchtype{
     background-color: var(--color-header-search);
 }
-.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:hover{
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:hover,
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:focus{
     border-color: var(--color-main-01);
     color: var(--color-main-01);
+}
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:active{
+    background-color: initial;
 }
 
 /* Footer */
@@ -279,14 +291,17 @@ body{
 
 /* Login */
 .signin-block h2,
+.forgot-block h2,
 .account-container,
 .account-container a{
     color: var(--color-02);
 }
-.signin-block .user-form{
+.signin-block .user-form,
+.forgot-block .user-form{
     background-color: var(--color-01);
 }
-.signin-block .form-control{
+.signin-block .form-control,
+.forgot-block .form-control{
     background-color: var(--color-03);
     color: var(--color-02);
 }
@@ -296,6 +311,10 @@ body{
     background-color: var(--color-01);
 }
 .signup-block h2{
+    color: var(--color-02);
+}
+.signup-block .form-control{
+    background-color: var(--color-03);
     color: var(--color-02);
 }
 
@@ -496,6 +515,38 @@ body{
 }
 
 /* My account */
-.manage-page{
+.manage-page,
+.manage-page .nav-pills>li>a,
+.manage-page .nav.nav-tabs a,
+.account_box{
     color: var(--color-02);
+}
+.manage-page .nav-pills>li>a:hover,
+.manage-page .nav-pills>li>a:focus,
+.manage-page .nav-pills>li.active>a:hover{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+.manage-page .nav.nav-tabs>li.active>a,
+.manage-page .nav-tabs>li>a:hover,
+.manage-page .nav-tabs>li>a:focus{
+    background-color: var(--color-01);
+    border-color: var(--color-02);
+    border-bottom-color: transparent;
+}
+.manage-page .nav.nav-tabs li.active a:hover,
+.manage-page .nav-tabs>li>a:hover{
+    color: var(--color-main-01);
+}
+.manage-page .nav-pills.nav-stacked>li.active>a{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+.manage-page .nav-stacked>li+li{
+    margin-top: 0;
+}
+
+/* Video manager */
+#updateVideoInfo .formSection h4{
+    background-color: var(--color-05);
 }
