@@ -588,7 +588,7 @@
         "valueAxes": [
             {
                 "id": "ValueAxis-1",
-                "title": "{lang('storage_used')}",
+                "title": "{lang('storage_use')}",
                 "labelFunction": function(value) {
                     return get_readable_filesize(value);
                 }
@@ -601,7 +601,7 @@
                 "bold": false,
                 "id": "Title-1",
                 "size": 15,
-                "text": "Users Statistics"
+                "text": "{lang('storage_history')}"
             }
         ],
         "dataProvider": {json_encode($storage_history)}
