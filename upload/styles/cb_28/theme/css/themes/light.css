@@ -1,225 +1,199 @@
-/* Light Theme */
-html.light body {
-    background-image: url('../../images/light.jpg');
+/* Light theme*/
+
+/* Variables */
+html.light {
+    --color-01 : #fff;
+    --color-02 : #404040;
+    --color-03 : #d9d9d9;
+    --color-04 : #757575;
+    --color-05 : #f6f6f6;
+
+    --color-header-search-category : #ececec;
+    --color-header-search : #f9f9f9;
+    --color-footer-dropdown : #c8efff;
+
+    --color-background: #eee;
+
+    --color-gradient-start : #ffffff;
+    --color-gradient-end : #e8e8e8;
+    --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
+    --generic-box-shadow : 0 10px 24px 0 rgba(0, 0, 0, 0.30);
+    --border-radius : 5px;
+}
+
+/* Background */
+body {
+    background-image: url('../../../images/light.webp');
     background-attachment: fixed;
     background-position: center;
 }
 
-html.light #header,
-html.light .dropdown-menu,
-html.light .item-channel .user-block,
-html.light .item-channel .channel-holder{
-    background: #0e0b14;
+/* Menu Top */
+#header{
+    box-shadow: var(--generic-box-shadow);
+}
+#header .search input[type="text"]{
+    background-color: var(--color-gradient-end);
 }
 
-html.light #header .main-links>ul>li>a,
-html.light .navbar-default .right-menu.navbar-nav>li>a,
-html.light #header .dropdown-menu>li>a,
-html.light h1,
-html.light #header .search .cbsearchtype .search-drop .btn-default .search-type,
-html.light #sidebar h2,
-html.light #header .search .cbsearchtype .btn-default,
-html.light .videos .video-info .title a,
-html.light .btn-loadmore,
-html.light .collections-grid .title,
-html.light .item-channel .info strong span,
-html.light .item-channel h2,
-html.light .collections .title,
-html.light .filter-dropdowns .cat-col .btn-default,
-html.light .user-activities .feed,
-html.light .cover .profile-buttons h2,
-html.light .featured-video .title a,
-html.light .featured-video .views-date span,
-html.light .video-details header.details h1,
-html.light .video-details header.details .user-video-info .user-title a,
-html.light body,
-html.light .view-tabs .alert-info,
-html.light .watch-vid-details .desc-list,
-html.light .dropdown-menu>li>a,
-html.light .view-tabs .nav-tabs.nav>li:not(.active)>a:hover,
-html.light .form-control,
-html.light .select-area,
-html.light .select-area .select-opener,
-html.light .select-options ul a,
-html.light .item-photo .photo-info strong a,
-html.light .view-details header.details h1,
-html.light .view-details header.details .user-video-info .user-title a,
-html.light .flat-tabs .nav-tabs.nav>li.active>a,
-html.light .flat-tabs .nav-tabs.nav>li:not(.active)>a:hover,
-html.light #footer .langdrop .dropdown-menu li a,
-html.light .manage-page .nav-pills>li>a,
-html.light a,
-html.light .manage-page,
-html.light h5,
-html.light button:hover,
-html.light button:focus,
-html.light .account_box,
-html.light .nav-tabs>li.active>a,
-html.light .fav-repo .desc-list,
-html.light .sidebar-channels .channel-item .channel-info h3 a{
-    color: #2a2a2a;
+/* Breadcrumb */
+.breadcrumb{
+    border-radius: var(--border-radius);
 }
 
-html.light #header .search .cbsearchtype,
-html.light #header .search .cbsearchtype .search-drop{
-    background: linear-gradient(rgb(48, 50, 62), rgb(30, 31, 42));
+/* Miscellaneous */
+.well{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
 }
 
-html.light #header .search .cbsearchtype .search-drop {
-    border-right: 1px solid #f9f9f9;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
+/* Sidebar */
+.sidebar-channels,
+.sidebar-items,
+.sidebar-playlists .playlist,
+.playlist-item .playlist-thumb .playlist-info{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+.sidebar-playlists .playlist img,
+.sidebar-items .collection-item img,
+.sidebar-items .featured-video img,
+.sidebar-items .item-photo .photo-holder img{
+    border-radius: var(--border-radius);
 }
 
-html.light .navbar-default .right-menu.navbar-nav>li>a.btn-upload:hover,
-html.light .btn-loadmore,
-html.light .videos .video-info,
-html.light .sidebar-items,
-html.light .collections-grid .title,
-html.light .item-channel .info,
-html.light .collections .title,
-html.light .filter-dropdowns .cat-col .btn-default,
-html.light .cover .profile-buttons,
-html.light .cover .avatar,
-html.light .video-details,
-html.light .item-photo .photo-info,
-html.light .view-details,
-html.light .breadcrumb,
-html.light .cb-box,
-html.light .channel-tabs,
-html.light .manage-page button,
-html.light .fav-repo,
-html.light .sidebar-channels,
-html.light .sidebar-playlists .playlist{
-    background: linear-gradient(#F6F6F6, #C6C6C6);
-    box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.60);
+/* Home */
+#featured_vid_sec .item-video .video-link img,
+.cb-popup-container .player-holder .vjs-big-play-button,
+.cb-popup-container .player-holder video{
+    border-radius: var(--border-radius);
 }
 
-html.light #header{
-    box-shadow: 0 5px 50px 0 rgba(0, 0, 0, 0.60);
+/* Video Bloc */
+:not(#featured_vid_sec) .item-video .video-link img{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+:not(#featured_vid_sec) .item-video .video-info{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    background: var(--background-gradient);
 }
 
-html.light .featured-videos .cd-popup-trigger{
-    box-shadow: 0 20px 24px 0 rgba(0, 0, 0, 0.60);
+/* Login */
+.signin-block .user-form{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
 }
 
-html.light .form-control,
-html.light .select-area,
-html.light .select-area .select-opener,
-html.light .select-options,
-html.light .nav-tabs>li.active>a,
-html.light .nav-tabs>li.active>a:hover,
-html.light .nav>li>a:hover,
-html.light .nav>li>a:focus,
-html.light .table-striped>tbody>tr:nth-of-type(odd),
-html.light .btn-ghost{
-    background-color: #2a2a2a;
+/* Signup */
+.signup-block .user-form{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
 }
 
-html.light #header .dropdown-menu>li>a,
-html.light .navbar-default .right-menu.navbar-nav>li>a.btn-upload,
-html.light .item-channel .channel-holder,
-html.light .breadcrumb{
-    border-color: #2a2a2a;
+/* Channels */
+.item-channel .channel-holder{
+    border-radius: var(--border-radius);
+}
+.item-channel .channel-holder .user-block{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.item-channel .info{
+    background: var(--background-gradient);
 }
 
-html.light .videos .video-info,
-html.light .featured-videos .item-video .video-link .img-responsive,
-html.light .featured-videos .item-video .video-link,
-html.light .featured-videos .item-video .video-link .title,
-html.light .featured-videos .item-video .video-link:after,
-html.light .collections .title,
-html.light .cover .profile-buttons,
-html.light .item-photo .photo-info,
-html.light .photo-view,
-html.light #gallery,
-html.light .channel-tabs{
-    border-bottom-left-radius: 5px;
-    border-bottom-right-radius: 5px;
+/* Video */
+.playlist.featured-video.active{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.video-details{
+    background: var(--background-gradient);
+    border-radius: var(--border-radius);
 }
 
-html.light .item-video .thumb-holder .video-link .img-responsive,
-html.light .item-video .thumb-holder .video-link,
-html.light .item-channel .user-block,
-html.light .collections .photo-block img,
-html.light .video-js .vjs-tech,
-html.light .video-js .vjs-big-play-button,
-html.light .vjs-has-started .vjs-cb-header-caption,
-html.light .item-photo .photo-holder,
-html.light .photo-view,
-html.light #gallery{
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+/* Channel */
+.cover .profile-buttons{
+    background: var(--background-gradient);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.channel-tabs{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
 
-html.light .item-channel .channel-holder{
-    border-width: 2px;
+/* Photo bloc */
+.item-photo .photo-info{
+    background: var(--background-gradient);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.item-photo .photo-holder img{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
 }
 
-html.light .sidebar-items,
-html.light .collections-grid .photo-block img,
-html.light .popular-video .img-responsive,
-html.light .video-details,
-html.light .view-details,
-html.light .breadcrumb,
-html.light .item-channel .channel-holder,
-html.light .cb-box,
-html.light .manageVid_thumb img,
-html.light .media-object.imgobject,
-html.light .fav-repo,
-html.light .sidebar-channels,
-html.light .sidebar-playlists .playlist,
-html.light .sidebar-playlists .playlist .img-responsive{
-    border-radius: 5px;
+/* Photo */
+#gallery,
+.view-details{
+    border-radius: var(--border-radius);
 }
 
-html.light .dropdown-menu>li>a:hover,
-html.light .select-options .item-selected a,
-html.light .filter-dropdowns .dropdown-menu>li>div:hover,
-html.light .filter-dropdowns .sorting-col .dropdown-menu>li a:hover{
-    background: #0080b4;
+/* Comments */
+.comments-block{
+    border-radius: var(--border-radius);
 }
 
-html.light .view-tabs .nav-tabs.nav>li,
-html.light .flat-tabs .nav-tabs.nav>li:not(.active)>a{
-    color: #cacaca;
+/* Collections */
+.collections .title{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
 }
 
-html.light .btn-loadmore:hover,
-html.light button:hover{
-    border-color: #0080b4;
+/* Quicklist */
+.quicklist_box{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.quicklist_box .qlist_item .pl_thumb img{
+    border-radius: var(--border-radius);
 }
 
-html.light .featured-video,
-html.light .well,
-html.light .sidebar-channels .channel-item{
-    background: none;
+/* My account */
+.manage-page .nav-pills>li:first-child,
+.manage-page .nav-pills>li:first-child a{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.manage-page .nav-pills>li:last-child,
+.manage-page .nav-pills>li:last-child a{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.manage-page .accountprofile img{
+    border-radius: var(--border-radius);
 }
 
-html.light .video-js .vjs-big-play-button {
-    border-bottom-left-radius: initial;
-    border-bottom-right-radius: initial;
+/* Shadows */
+.item-video:after,
+.item-photo:after,
+.item-channel:after,
+.collection-item:after,
+#coverContainer:after
+{
+    content: "";
+    position: absolute;
+    box-shadow: var(--generic-box-shadow);
+    left: 12px;
+    width: calc(100% - 24px);
+    bottom: 10px;
+    height: 33px;
+    z-index: -1;
 }
-
-html.light .manage-page .nav-pills>li.active>a{
-    background: #0080b4;
-}
-
-html.light .manage-page .nav-pills>li.active,
-html.light .manage-page .nav-pills>li:has(+ li.active),
-html.light .manage-page .nav-pills>li:not(:has(+ li)){
-    border: none;
-}
-
-html.light .manage-page .nav-pills>li{
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-color: #f9f9f9;
-    border-radius: 0;
-}
-
-html.light .msg,
-html.light .error{
-    color: #30323E;
+.sidebar-items,
+.sidebar-channels{
+    box-shadow: var(--generic-box-shadow);
 }

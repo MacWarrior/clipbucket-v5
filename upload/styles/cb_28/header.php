@@ -10,7 +10,8 @@ ClipBucket::getInstance()->addCSS([
     'jquery_ui' . $min_suffixe . '.css'  => 'admin'
 ]);
 
-if( config('default_theme') != '' ){
+$filepath = DirPath::get('styles') . ClipBucket::getInstance()->template . DIRECTORY_SEPARATOR . 'theme' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . config('default_theme') . $min_suffixe . '.css';
+if( config('default_theme') != '' && file_exists($filepath) ){
     ClipBucket::getInstance()->addCSS([
         'themes/' . config('default_theme') . $min_suffixe . '.css' => 'admin'
     ]);
@@ -27,8 +28,6 @@ ClipBucket::getInstance()->addJS([
     'jquery_plugs/cookie' . $min_suffixe . '.js' => 'global',
     'functions' . $min_suffixe . '.js'           => 'global',
     'bootstrap' . $min_suffixe . '.js'           => 'admin',
-    'uslider_js/jquery.mousewheel.js'            => 'admin',
     'custom' . $min_suffixe . '.js'              => 'admin',
-    'ui_plugins.js'                              => 'admin',
     'fast_qlist' . $min_suffixe . '.js'          => 'admin'
 ]);

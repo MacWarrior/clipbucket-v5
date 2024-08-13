@@ -440,7 +440,6 @@ img {
 
 a {
   text-decoration: none;
-  color: #000;
 }
 
 a:hover {
@@ -555,7 +554,6 @@ iframe {
   content: "";
 }
 
-/**/
 #main {
   position: relative;
   padding: 20px 0;
@@ -577,56 +575,6 @@ h1 {
   padding: 0 0 5px;
   border-bottom: 1px solid #d9d9d9;
   margin: 0 0 15px;
-}
-
-/**/
-.editorpick-holder {
-  padding: 0 16px 0 0;
-  float: left;
-  width: 65.3%;
-  position: relative;
-}
-
-.absolute-div {
-  position: absolute;
-  z-index: 2;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  padding: 0 16px 0 0;
-}
-
-.editorpick-videos {
-  padding: 6px 6px 6px 0;
-  float: right;
-  width: 34.7%;
-}
-
-.editorpick-videos .scrollable-area {
-  height: 293px;
-  overflow-y: auto;
-  padding: 0 4px 0 0;
-}
-
-#ep_video_container {
-  width: 100%;
-  height: 100%;
-}
-
-#ep_video_container>div {
-  width: 100%;
-  height: 100%;
-}
-
-#ep_video_container iframe {
-  width: 100%;
-  height: 100%;
-}
-
-.editorpick {
-  background: #fff;
-  margin: 0 0 20px;
 }
 
 .popular-vids {
@@ -6884,40 +6832,6 @@ textarea#comment_box {
 }
 
 @media only screen and (max-width: 991px) {
-  #ep_video_container>div.featured_video_details {
-    overflow: hidden;
-    height: auto;
-  }
-
-  .editorpick-holder {
-    float: none;
-    width: 100%;
-    margin: 0 0 16px;
-    padding: 0;
-  }
-
-  .absolute-div {
-    padding: 0;
-  }
-
-  .editorpick-videos {
-    float: none;
-    width: 100%;
-    padding: 0;
-  }
-
-  .editorpick-videos .scrollable-area {
-    height: auto !important;
-    width: 100% !important;
-    padding: 0 0 0 8px;
-  }
-
-  .editorpick-videos .scrollable-area:after {
-    content: "";
-    display: block;
-    clear: both;
-  }
-
   .scrollable-area-wrapper .hscrollbar,
   .scrollable-area-wrapper .vscrollbar {
     display: none !important;
@@ -7559,6 +7473,9 @@ textarea#comment_box {
   margin-right: 1em;
 }
 
+.nav-pills>li>a{
+  border-radius: 0;
+}
 
 
 /*  Debut CSS caroucel */
@@ -7775,6 +7692,7 @@ textarea#comment_box {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
 
 
 
