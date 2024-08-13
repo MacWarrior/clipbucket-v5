@@ -647,7 +647,7 @@ class Video
     public function getStorageUsage($video_id): int
     {
         $total = 0;
-        $video = $this->getOne(['videoid' => $video_id]);
+        $video = $this->getOne(['videoid' => $video_id, 'condition'=>' video_files != \'\' AND video_files IS NOT NULL']);
         if (empty($video)) {
             e(lang('class_vdo_exist_err'));
             return 0;

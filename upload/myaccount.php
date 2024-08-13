@@ -26,7 +26,7 @@ if (isset($_GET['delete_video'])) {
 }
 $storage_use = null;
 if (config('enable_storage_history_fo')) {
-    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUse(user_id()), 2);
+    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser(user_id()), 2);
 }
 assign('storage_use', $storage_use);
 

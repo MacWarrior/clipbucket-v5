@@ -16,7 +16,7 @@ class MWIP extends \Migration
             'en'=>'Unknown type'
         ]);
 
-        self::insertTool('calc_user_storage', 'AdminTool::calcUserStorage');
+        self::insertTool('calc_user_storage', 'AdminTool::calcUserStorage', '0 1 * * *', true);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
                 (
@@ -62,6 +62,14 @@ class MWIP extends \Migration
         self::generateTranslation('user_current_storage', [
             'fr'=>'Espace utilisé actuellement',
             'en'=>'Current storage used'
+        ]);
+        self::generateTranslation('storage_use', [
+            'fr'=>'Espace utilisé',
+            'en'=>'Storage use'
+        ]);
+        self::generateTranslation('storage_history', [
+            'fr'=>'Historique de l\'espace utilisé',
+            'en'=>'Storage history'
         ]);
 
     }

@@ -532,7 +532,12 @@ class User
         return Clipbucket_db::getInstance()->execute($sql);
     }
 
-    public function getLastStorageUse($userid)
+    /**
+     * @param int|string $userid
+     * @return int
+     * @throws Exception
+     */
+    public function getLastStorageUseByUser($userid): int
     {
         $sql = 'select storage_used from ' . tbl('users_storage_histo') . ' where id_user = ' . mysql_clean($userid) . ' group by id_user having max(datetime)';
         $results = Clipbucket_db::getInstance()->_select($sql);
@@ -540,6 +545,21 @@ class User
             return 0;
         }
         return $results[0]['storage_used'];
+    }
+
+    /**
+     * @param int|string $userid
+     * @return array
+     * @throws Exception
+     */
+    public function getStorageHistoryByUser($userid): array
+    {
+        $sql = 'select date(datetime) as date_histo, storage_used from ' . tbl('users_storage_histo') . ' where id_user = ' . mysql_clean($userid) ;
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            return [];
+        }
+        return $results;
     }
 
     /**

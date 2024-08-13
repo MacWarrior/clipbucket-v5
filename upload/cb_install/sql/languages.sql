@@ -1191,4 +1191,6 @@ VALUES ('admin_setting'),
        ('calc_user_storage_description'),
        ('enable_storage_history'),
        ('enable_storage_history_fo'),
-       ('user_current_storage');
+       ('user_current_storage'),
+       ('storage_use'),
+       ('storage_history');
