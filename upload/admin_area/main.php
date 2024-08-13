@@ -123,6 +123,8 @@ if (isset($_POST['update'])) {
         , 'enable_comments_channel'
         , 'photo_rating'
         , 'own_photo_rating'
+        , 'enable_storage_history'
+        , 'enable_storage_history_fo'
     ];
 
     $config_booleans_to_refactor = [
@@ -426,6 +428,8 @@ if (isset($_POST['update'])) {
         'nginx_path',
         'automate_launch_mode',
         'timezone',
+        'enable_storage_history',
+        'enable_storage_history_fo',
         'default_theme'
     ];
 
