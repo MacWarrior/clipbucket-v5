@@ -13,7 +13,7 @@
 	<div class="details">
 		{assign var=titre value='La chasse aux oeufs de paques le vendredi apres midi par un ciel de pleine lune'}
 		<div class="titre">
-			<a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>
+			<a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>{$video.videoid}
 		</div>
 		<div class="auteur">
 			{lang code="by"}

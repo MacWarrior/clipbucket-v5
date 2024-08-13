@@ -7505,26 +7505,24 @@ textarea#comment_box {
 
 .default-slider .slider-container-action  {
   position: relative;
-  display: flex;
-  flex-direction: row;
 }
 .default-slider .prev, .default-slider .next {
-  width: 50px;
-  position: relative;
-  left: 0;
+  width: calc( var(--width) / 4);
+  position: absolute;
+  top:0; left: 0;
   cursor: pointer;
   color: white;
   text-shadow: 1px 1px 10px black;
   font-size: 3rem;
   line-height: 100%;
   text-align: center;
-  height: auto;
-  display: flex;
+  height: 100%;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
   transition: font-size 200ms;
-  border:1px solid rgba(0,0,0,0.1);
+  border-left:1px solid rgba(0,0,0,0.1);
+  z-index:4;
+  padding-top:calc(var(--height) / 2 - 10px);
 }
 
 .default-slider .prev:hover, .default-slider .next:hover {
@@ -7534,6 +7532,8 @@ textarea#comment_box {
 
 .default-slider .next {
   right: 0; left: unset;
+  border-right:1px solid rgba(0,0,0,0.1);
+  border-left:1px solid transparent;
 }
 
 .default-slider .slider-container-overflow {
