@@ -47,6 +47,13 @@ $whoops->pushHandler(function($e){
 });
 $whoops->register();
 
+// Keep errors in php errors log file
+$whoops->pushHandler(function($e){
+    error_log($e->getMessage().PHP_EOL.$e->getTraceAsString());
+});
+
+$whoops->register();
+
 if (!@$in_bg_cron) {
     //Setting Session Max Life
     ini_set('session.gc_maxlifetime', COOKIE_TIMEOUT);
@@ -68,6 +75,7 @@ if (file_exists(DirPath::get('includes') . 'config.php')) {
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
@@ -204,6 +212,11 @@ $cbphoto = new CBPhotos();
 $cbfeeds = new cbfeeds();
 
 check_install('after');
+
+$timezone = config('timezone');
+if(!empty($timezone) && $timezone !== false) {
+    date_default_timezone_set($timezone);
+}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];
@@ -384,5 +397,18 @@ register_action_remove_video('remove_video_files');
 cb_register_function('plupload_photo_uploader', 'uploaderDetails');
 
 cb_register_action('increment_playlist_played', 'view_playlist');
+
+/** Load automatic tools from user_activity */
+if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity') {
+    require_once DirPath::get('classes') .'admin_tool.class.php';
+    $tool = new AdminTool();
+
+    $dateTime = new DateTime();
+    $dateTime->modify('-1 minutes');
+
+    if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
+        AdminTool::launchCli($tool->getId());
+    }
+}
 
 include('admin.functions.php');

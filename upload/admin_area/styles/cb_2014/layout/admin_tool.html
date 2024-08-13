@@ -1,13 +1,20 @@
+<div id="ajaxMessage"></div>
+
 <div class="heading">
     <h2>{lang code='admin_tool'}</h2>
 </div>
+
 <div id="language_list">
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
             <th class="col-md-2">{lang code='title'}</th>
             <th class="col-md-4">{lang code='description'}</th>
-            <th class="col-md-4">{lang code='vdo_status'}</th>
-            <th class="col-md-2">{lang code='vdo_actions'}</th>
+            <th class="col-md-2">{lang code='vdo_status'}</th>
+            {if config('automate_launch_mode')!='disabled'}
+                <th class="col-md-2">{lang code='frequence'}</th>
+                <th class="col-md-1">{lang code='frequence_enabled'}</th>
+            {/if}
+            <th class="col-md-1">{lang code='vdo_actions'}</th>
         </tr>
         {section name=tool_list loop=$admin_tool_list}
         <tr>
@@ -29,6 +36,22 @@
                     </div>
                 </div>
             </td>
+            {if config('automate_launch_mode')!='disabled'}
+                <td style="vertical-align: middle;text-align:center;">
+                    {if $admin_tool_list[tool_list].is_automatable == 1 }
+                        <div class="input-group">
+                            <input class="form-control" title="{lang code='cron_format_title'}" name="frequency" data-id="{$admin_tool_list[tool_list].id_tool}" value="{$admin_tool_list[tool_list].frequency}" size="45" />
+                            <span  title="{lang code='submit_now'}"  class="btn-success input-group-addon glyphicon glyphicon-floppy-disk btn_save_frequency {if $admin_tool_list[tool_list].is_automatable != 1}disabled{/if}" ></span>
+                        </div>
+                    {/if}
+                </td>
+                <td style="vertical-align: middle;text-align:center;">
+                    {if $admin_tool_list[tool_list].is_automatable == 1 }
+                        <input value="1" data-id="{$admin_tool_list[tool_list].id_tool}"  name="is_enabled" {if $admin_tool_list[tool_list].is_disabled != 1}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5">
+                        <span class="lbl"></span>
+                    {/if}
+                </td>
+            {/if}
             <td style="vertical-align: middle;">
                 <div class="dropdown clearfix alignCenter">
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -39,7 +62,7 @@
                                 {lang code='launch'}
                             </a>
                         </li>
-                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title!='in_progress'}class="disabled"{/if}>
+                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title!='in_progress'} class="disabled"{/if}>
                             <a role="menuitem" class="stop" data-id="{$admin_tool_list[tool_list].id_tool}" >
                                 {lang code='stop'}
                             </a>
@@ -77,5 +100,6 @@
     lang['ready'] = "{lang code='ready'}";
     lang['completed'] = "{lang code='completed'}";
     lang['on_error'] = "{lang code='on_error'}";
+    lang['error_occured'] = "{lang code='error_occured'}";
     var can_sse = '{$can_sse}';
 </script>

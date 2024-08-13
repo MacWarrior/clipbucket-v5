@@ -4,6 +4,23 @@ var eventSourceLog;
 var ids_stopped=[];
 var ids_error=[];
 $(function () {
+    let showMsg = function(msg, type, autoDismiss){
+
+        let randomid = 'ajax_msg_'+(Math.random() + 1).toString(36).substring(7);
+
+        /** show error msg */
+        $("#ajaxMessage").append('<div role="alert" id="'+randomid+'" class="alert alert-'+type+' alert-dismissible">' +
+            '    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+            '    <div class="msg">'+msg+'</div>' + '</div>');
+
+        if(autoDismiss === true) {
+            setTimeout(function(){
+                $("#"+randomid).addClass("hidden");
+            }, 5000);
+        }
+
+    }
+
     if (can_sse === 'true') {
         connectSSE();
     }
@@ -71,6 +88,80 @@ $(function () {
     $('#logModal').on('hidden.bs.modal', function () {
         eventSourceLog.close();
     });
+
+
+    $('.btn_save_frequency').click(function (e) {
+        if( $(this).attr('disabled') !== undefined || $(this).attr('readonly') !== undefined ){
+            return;
+        }
+
+        let input = $(this).closest('.input-group').find('input');
+        let value = $(input).val();
+
+        e.preventDefault();
+        $.ajax({
+            url: "/actions/update_frequency_tool.php",
+            type: "POST",
+            data: {id_tool: $(input).attr('data-id'), frequency: value},
+            dataType: 'json',
+            beforeSend: function(){
+                input.attr('readonly', 'readonly');
+            },
+            success: function (result) {
+
+                if( result['success'] === true ){
+                    showMsg(result['msg'], 'success', true);
+                } else {
+                    showMsg(result['error'], 'danger');
+                }
+
+            },
+            error: function () {
+                showMsg(lang['error_occured'], 'danger', true);
+            },
+            complete: function(){
+                input.removeAttr('readonly');
+            }
+        });
+    });
+
+    $('input[name="is_enabled"]').change(function (e) {
+        if( $(this).attr('disabled') !== undefined || $(this).attr('readonly') !== undefined ){
+            return;
+        }
+
+        let input = $(this)
+        let value = this.checked;
+
+        e.preventDefault();
+        $.ajax({
+            url: "/actions/update_frequency_disabled_tool.php",
+            type: "POST",
+            data: {id_tool: $(input).attr('data-id'), is_disabled: !value},
+            dataType: 'json',
+            beforeSend: function(){
+                input.attr('readonly', 'readonly');
+            },
+            success: function (result) {
+
+                if( result['success'] === true ){
+                    showMsg(result['msg'], 'success', true);
+                } else {
+                    showMsg(result['error'], 'danger');
+                    $(input)[0].checked = (value !== true);
+                }
+
+            },
+            error: function () {
+                showMsg(lang['error_occured'], 'danger');
+                $(input)[0].checked = (value !== true);
+            },
+            complete: function(){
+                input.removeAttr('readonly');
+            }
+        });
+    });
+
 });
 
 function connectSSE () {

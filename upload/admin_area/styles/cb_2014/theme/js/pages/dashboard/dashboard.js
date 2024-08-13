@@ -177,6 +177,23 @@ $(document).ready(function(){
     })
 });
 
+let showMsg = function(msg, type, autoDismiss){
+
+    let randomid = 'ajax_msg_'+(Math.random() + 1).toString(36).substring(7);
+
+    /** show error msg */
+    $("#update_div").append('<div role="alert" id="'+randomid+'" class="alert alert-'+type+' alert-dismissible">' +
+        '    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button>' +
+        '    <div class="msg">'+msg+'</div>' + '</div>');
+
+    if(autoDismiss === true) {
+        setTimeout(function(){
+            $("#"+randomid).addClass("hidden");
+        }, 5000);
+    }
+
+}
+
 function update(type){
     $.ajax({
         url: "/actions/admin_launch_update.php",
@@ -185,7 +202,27 @@ function update(type){
             type: type
         },
         success: function (data) {
+
+            let response;
+            try {
+                response = JSON.parse(data);
+            }catch (e) {
+                response.success = false
+            }
+
+            if(response.success !== true) {
+
+                let error_msg = lang.technical_error;
+                if(response.error_msg !== undefined && response.error_msg != null && response.error_msg != '') {
+                    error_msg = response.error_msg;
+                }
+
+                showMsg(error_msg, 'danger');
+                return ;
+            }
+
             connectSSE();
+
         }
     });
 }

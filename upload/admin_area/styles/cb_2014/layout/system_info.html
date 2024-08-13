@@ -288,6 +288,28 @@
                             <br/>{lang code='sse_error_please_use_php_fpm'}
                             {/if}
                         </div>
+                        <div class="row">
+                            {if $check_time}
+                            <label><img src="{$imageurl}/tick.png"/> Datetime :
+                                <strong>
+                                    {lang('datetime_synchro')}
+                                </strong>
+                            </label>
+                            {else}
+                            <label>PHP datetime :
+                                <strong>
+                                    {$datetime_datas['php']}
+                                </strong>
+                            </label>
+                            <label>DB datetime :
+                                <strong>
+                                    {$datetime_datas['bdd']}
+                                </strong>
+                            </label>
+                            <br/><img src="{$imageurl}/alert.png"/>
+                            {lang code='datetime_synchro_error'}
+                            {/if}
+                        </div>
 
                         {$show_warning = false}
 
@@ -374,6 +396,28 @@
                                     {if $phpCliShellExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
+                        </div>
+                        <div class="row">
+                            {if $check_time_cli}
+                            <label><img src="{$imageurl}/tick.png"/> Datetime :
+                                <strong>
+                                    {lang('datetime_synchro')}
+                                </strong>
+                            </label>
+                            {else}
+                            <label>PHP datetime :
+                                <strong>
+                                    {$datetime_datas_cli['php']}
+                                </strong>
+                            </label>
+                            <label>DB datetime :
+                                <strong>
+                                    {$datetime_datas_cli['bdd']}
+                                </strong>
+                            </label>
+                            <br/><img src="{$imageurl}/alert.png"/>
+                            {lang code='datetime_synchro_error'}
+                            {/if}
                         </div>
                     </div>
                     {/if}

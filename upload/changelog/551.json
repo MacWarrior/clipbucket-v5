@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"96",
+  "revision":"99",
   "status":"dev",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Implement WIP migration"
         ,"Implement missing video categorie fix tool"
         ,"Implement video resolutions files deletion tool"
+        ,"Implement automated tasks"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -57,6 +58,7 @@
         ,"Fix Nginx path not saving"
         ,"Fix photo manager search"
         ,"Fix conversion queue log url"
+        ,"Fix video manager search"
       ]
     },
     {
