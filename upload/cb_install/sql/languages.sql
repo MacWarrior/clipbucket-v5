@@ -1185,4 +1185,12 @@ VALUES ('admin_setting'),
        ('automate_launch_disabled_in_config'),
        ('crontab_link_label'),
        ('copy_clipboard'),
-       ('option_timezone');
+       ('option_timezone'),
+       ('unknown_type'),
+       ('calc_user_storage_label'),
+       ('calc_user_storage_description'),
+       ('enable_storage_history'),
+       ('enable_storage_history_fo'),
+       ('user_current_storage'),
+       ('storage_use'),
+       ('storage_history');

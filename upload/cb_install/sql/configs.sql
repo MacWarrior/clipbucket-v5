@@ -284,7 +284,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_comments_collection', 'yes'),
     (NULL, 'enable_comments_channel', 'yes'),
     (NULL, 'automate_launch_mode', 'user_activity'),
-    (NULL, 'timezone', '');
+    (NULL, 'timezone', ''),
+    (NULL, 'enable_storage_history', 'yes'),
+    (NULL, 'enable_storage_history_fo', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
@@ -313,7 +315,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('recreate_thumb_label', 'recreate_thumb_description', 'AdminTool::recreateThumb', 'recreate_thumb', NULL, NULL, '1', '1'),
     ('correct_video_categorie_label', 'correct_video_categorie_description', 'AdminTool::correctVideoCategorie', 'correct_video_categorie', '0 4 * * 7', CURRENT_TIMESTAMP, '1', '0'),
     ('delete_unused_resolution_files_label', 'delete_unused_resolution_files_description', 'AdminTool::deleteUnusedResolutionFile', 'delete_unused_resolution_files', NULL, NULL, '1', '1'),
-    ('automate_label', 'automate_description', 'AdminTool::checkAndStartToolsByFrequency', 'automate', NULL, NULL, '0', '0');
+    ('automate_label', 'automate_description', 'AdminTool::checkAndStartToolsByFrequency', 'automate', NULL, NULL, '0', '0'),
+    ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
