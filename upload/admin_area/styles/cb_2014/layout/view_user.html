@@ -106,7 +106,7 @@
                                             <td class="first"><label>User Id</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <input disabled="disabled" name="uid" type="text" id="uid" value="{$u.userid}" max-size="45"/>
+                                                    <input class="form-control" disabled="disabled" name="uid" type="text" id="uid" value="{$u.userid}" max-size="45"/>
                                                     <input name="userid" type="hidden" id="userid" value="{$u.userid}"/>
                                                 </div>
                                             </td>
@@ -115,7 +115,7 @@
                                             <td class="first"><label>{lang code='username'}</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <input name="username" type="text" id="username" value="{display_clean($u.username)}" max-size="45"/>
+                                                    <input class="form-control" name="username" type="text" id="username" value="{display_clean($u.username)}" max-size="45"/>
                                                     <input name="dusername" type="hidden" id="dusername" value="{display_clean($u.username)}"/>
                                                     <input name="admin_manager" type="hidden" value="yes"/>
                                                 </div>
@@ -125,7 +125,7 @@
                                             <td class="first"><label>Email</label></td>
                                             <td class="last">
                                                 <div>
-                                                    <input name="email" type="text" id="email" value="{$u.email}" max-size="45"/>
+                                                    <input class="form-control" name="email" type="text" id="email" value="{$u.email}" max-size="45"/>
                                                     <input name="demail" type="hidden" id="demail" value="{$u.email}"/>
                                                 </div>
                                             </td>
@@ -147,7 +147,9 @@
                                         <tr>
                                             <td class="first"><label >{lang code='user_current_storage'}</label></td>
                                             <td class="last">
-                                                <div><input disabled="disabled" type="text" id="user_storage" value="{$storage_use}"/></div>
+                                                <div>
+                                                    <input class="form-control" disabled="disabled" type="text" id="user_storage" value="{$storage_use}"/>
+                                                </div>
                                             </td>
                                         </tr>
                                         {/if}

@@ -11,6 +11,11 @@
 							<h4 class="media-heading headcolor">{display_clean(User::getInstance()->get('username'))}</h4>
 							<b>{lang code='since'} : </b>({User::getInstance()->get('doj')|date_format})
 							<b>{lang code='last_Login'} : </b>({User::getInstance()->get('last_logged')|nicetime})
+
+							{if $storage_use !== null}
+							<br/>
+							<b>{lang code='user_current_storage'}</b> : {$storage_use}
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -70,13 +75,6 @@
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('subscribers')}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='subscribers'}</span>
-		</span>
-		{/if}
-		{if $storage_use !== null}
-		<span class="btn" style="background-color:#000000;color:#ffffff; margin-top: 5px">
-			<span class="line-height-1 bigger-170">{$storage_use}</span>
-			<br/>
-			<span class="line-height-1 smaller-90">{lang code='user_current_storage'}</span>
 		</span>
 		{/if}
 	</div>

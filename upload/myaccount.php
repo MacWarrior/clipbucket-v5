@@ -25,7 +25,7 @@ if (isset($_GET['delete_video'])) {
     $cbvideo->delete_video($video);
 }
 $storage_use = null;
-if (config('enable_storage_history_fo')) {
+if (config('enable_storage_history_fo') == 'yes') {
     $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser(user_id()), 2);
 }
 assign('storage_use', $storage_use);

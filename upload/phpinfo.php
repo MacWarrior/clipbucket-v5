@@ -1,7 +1,6 @@
 <?php
-
 if (php_sapi_name() == 'cli') {
-    if( empty($_GET['install']) ) {
+    if( !in_array('install', $argv) ) {
         define('THIS_PAGE', 'phpinfo');
         require 'includes/config.inc.php';
     }

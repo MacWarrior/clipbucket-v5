@@ -3,14 +3,13 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00104 extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-
         self::generateTranslation('unknown_type', [
             'fr'=>'Type inconnu',
             'en'=>'Unknown type'
@@ -41,7 +40,6 @@ class MWIP extends \Migration
             'fr'=>'Calcul utilisation disque utilisateur',
             'en'=>'Calc user storage'
         ]);
-
         self::generateTranslation('calc_user_storage_description', [
             'fr'=>'Calcul pour un utilisateur le poids de tous ses fichiers uploadés',
             'en'=>'Calc for a user weight of all his uploaded files'
@@ -58,7 +56,6 @@ class MWIP extends \Migration
             'fr' => 'Afficher l\'historique de stockage sur le front office',
             'en' => 'Display storage history on front office'
         ]);
-
         self::generateTranslation('user_current_storage', [
             'fr'=>'Espace utilisé actuellement',
             'en'=>'Current storage used'
@@ -71,6 +68,5 @@ class MWIP extends \Migration
             'fr'=>'Historique de l\'espace utilisé',
             'en'=>'Storage history'
         ]);
-
     }
 }
