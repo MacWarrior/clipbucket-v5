@@ -9,39 +9,28 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('interfaces', [
-            'fr' => 'Interfaces',
-            'en' => 'Interfaces'
+        self::generateTranslation('option_homepage_enable_popin_video', [
+            'fr' => 'Activer les vidéos dans une pop-in',
+            'en' => 'Enable popin video'
         ]);
-        self::generateTranslation('global', [
-            'fr' => 'Global',
-            'en' => 'Global'
+        self::generateTranslation('option_homepage_recent_videos_display', [
+            'fr' => 'Mode d\'affichage des vidéos récentes',
+            'en' => 'Recent videos display mode'
         ]);
-        self::generateTranslation('option_default_theme', [
-            'fr' => 'Thème par défaut',
-            'en' => 'Default theme'
+        self::generateTranslation('option_homepage_featured_video_display', [
+            'fr' => 'Mode d\'affichage des vidéos mises en avant',
+            'en' => 'Featured videos display mode'
         ]);
-        self::generateTranslation('option_default_theme_light_original', [
-            'fr' => 'Clair (Original)',
-            'en' => 'Light (Original)'
+        self::generateTranslation('option_paginate', [
+            'fr' => 'Pagination',
+            'en' => 'Paginate'
         ]);
-        self::generateTranslation('option_default_theme_light', [
-            'fr' => 'Clair',
-            'en' => 'Light'
-        ]);
-        self::generateTranslation('option_default_theme_dark', [
-            'fr' => 'Sombre',
-            'en' => 'Dark'
-        ]);
-        self::generateTranslation('option_custom_css', [
-            'fr' => 'CSS personnalisé',
-            'en' => 'Custom CSS'
+        self::generateTranslation('option_slider', [
+            'fr' => 'Caroussel',
+            'en' => 'Slider'
         ]);
 
-        self::deleteConfig('allow_template_change');
-        self::deleteConfig('recently_viewed_limit');
-
-        self::generateConfig('default_theme', '');
-        self::generateConfig('custom_css', '');
+        self::generateConfig('homepage_recent_videos_display', 'paginate');
+        self::generateConfig('homepage_featured_video_display', 'paginate');
     }
 }

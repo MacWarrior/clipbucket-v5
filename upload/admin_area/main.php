@@ -426,7 +426,9 @@ if (isset($_POST['update'])) {
         'nginx_path',
         'automate_launch_mode',
         'timezone',
-        'default_theme'
+        'default_theme',
+        'homepage_featured_video_display',
+        'homepage_recent_videos_display'
     ];
 
     foreach ($opt_list as $optl) {
