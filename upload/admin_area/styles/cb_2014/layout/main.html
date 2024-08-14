@@ -456,6 +456,26 @@
 											</div>
 										</div>
 										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="homepage_recent_video_ratio" title="{lang code='option_video_ratio'}">{lang code='option_video_ratio'}</label>
+											</div>
+											<div class="col-md-6">
+												<select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
+													{assign var=array_styles value=[
+														'1.3333' => '4/3'
+														,'1.7777' => '16/9'
+														,'1.6' => '16/10'
+													]}
+													{foreach from=$array_styles item=value key=code}
+													<option {if $code==$row.homepage_recent_video_ratio}selected{/if} value="{$code}">
+														{$value}
+													</option>
+													{/foreach}
+												</select>
+											</div>
+										</div>
+										<hr/>
 
 									</div>
 								</div>
