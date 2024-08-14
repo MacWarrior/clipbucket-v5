@@ -593,7 +593,7 @@ class Video
         $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
         if (!empty($results)) {
             foreach ($results as $result) {
-                delete_video_thumb($video_detail, $result['num']);
+                delete_video_thumb($video_detail, $result['num'], $type);
             }
             Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
         }
