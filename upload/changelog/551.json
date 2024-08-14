@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"106",
+  "revision":"107",
   "status":"dev",
   "detail":[
     {
@@ -62,6 +62,7 @@
         ,"Fix photo manager search"
         ,"Fix conversion queue log url"
         ,"Fix video manager search"
+        ,"Fix debug popin on website configurations page"
       ]
     },
     {
