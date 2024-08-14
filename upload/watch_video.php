@@ -9,11 +9,18 @@ if (!userquery::getInstance()->perm_check('view_video', true) || config('videosS
 }
 
 $vkey = $_GET['v'] ?? false;
+
 if( empty($vkey) ){
     redirect_to(BASEURL);
 }
 
-$vdo = Video::getInstance()->getOne(['videokey' => $vkey]);
+if(is_numeric($vkey)){
+    $search = 'videoid';
+} else {
+    $search = 'videokey';
+}
+
+$vdo = Video::getInstance()->getOne([$search => $vkey]);
 if( !video_playable($vdo) ) {
     redirect_to(BASEURL);
 }

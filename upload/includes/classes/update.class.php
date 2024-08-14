@@ -777,7 +777,7 @@ class Update
     /**
      * @throws Exception
      */
-    public static function IsUpdateProcessing()
+    public static function IsUpdateProcessing(): bool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
             $and = ' AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';

@@ -320,7 +320,7 @@ class Upload
                 }
 
                 unlink($temp_file_path);
-                e(lang('upload_vid_thumb_msg'), 'm');
+                e(lang($this->types_thumb[$type] . '_upload_successfully'),'m');
             }
         }
     }

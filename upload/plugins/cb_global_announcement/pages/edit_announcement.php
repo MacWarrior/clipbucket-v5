@@ -1,4 +1,5 @@
 <?php
+define('THIS_PAGE', 'edit_announcement');
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
 global $userquery, $pages, $db;
