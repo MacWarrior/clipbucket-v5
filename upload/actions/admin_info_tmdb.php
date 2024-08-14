@@ -4,6 +4,10 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 userquery::getInstance()->admin_login_check();
 
+if (config('enable_tmdb') != 'yes' || config('tmdb_token') == '') {
+    return false;
+}
+
 $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, [
     'video_title' => $_POST['video_title'],
     'sort'        => $_POST['sort'],
@@ -13,6 +17,8 @@ $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, [
 
 pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#);');
 assign('user_age', User::getInstance()->getCurrentUserAge());
+include_once DirPath::get('sql') . '5.5.1' . DIRECTORY_SEPARATOR . 'MWIP.php';
+assign('can_search_year',  Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', \V5_5_1\MWIP::MIN_REVISION) );
 display_tmdb_result([
     'results'       => $results['final_results'],
     'title'         => $results['title'],
