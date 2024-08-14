@@ -37,7 +37,7 @@ define('TEMPLATE', config('template_dir'));
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
 if( THIS_PAGE != 'system_info'){
-    if( !System::check_php_configs() ){
+    if( !System::check_global_configs() ){
         e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
     }
 }

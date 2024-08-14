@@ -32,14 +32,24 @@ if ($vdetails['userid'] != $userid) {
         if (empty($eh->get_error())) {
             $_POST['videoid'] = $vid;
             $cbvid->update_video();
-            $cbvid->set_default_thumb($vid, mysql_clean(post('default_thumb')));
-            $vdetails = $cbvid->get_video($vid);
+            Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
+            Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
+            Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);
+            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
         }
     }
 
     assign('v', $vdetails);
     assign('vidthumbs', get_thumb($vdetails,TRUE,'168x105','auto'));
     assign('vidthumbs_custom', get_thumb($vdetails,TRUE,'168x105','custom'));
+    if( config('enable_video_poster') == 'yes' ){
+        assign('vidthumbs_poster', get_thumb($vdetails,TRUE,'original','poster'));
+    }
+
+    if( config('enable_video_backdrop') == 'yes' ) {
+        assign('vidthumbs_backdrop', get_thumb($vdetails, TRUE, 'original', 'backdrop'));
+    }
+
 }
 
 $min_suffixe = in_dev() ? '' : '.min';
