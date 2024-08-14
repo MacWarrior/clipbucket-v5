@@ -433,7 +433,8 @@ if (isset($_POST['update'])) {
         'default_theme',
         'default_theme',
         'homepage_featured_video_display',
-        'homepage_recent_videos_display'
+        'homepage_recent_videos_display',
+        'homepage_recent_video_style'
     ];
 
     foreach ($opt_list as $optl) {
