@@ -639,12 +639,134 @@ class Video
         }
     }
 
+    /**
+     * @param int|string $video_id
+     * @return int
+     * @throws Exception
+     */
+    public function getStorageUsage($video_id): int
+    {
+        $total = 0;
+        $video = $this->getOne(['videoid' => $video_id, 'condition'=>' video_files != \'\' AND video_files IS NOT NULL']);
+        if (empty($video)) {
+            e(lang('class_vdo_exist_err'));
+            return 0;
+        }
+        $total+= $this->getVideoFilesUsage($video['file_directory'], json_decode($video['video_files']), $video['file_type'], $video['file_name'], $video['video_version']);
+        $total+= $this->getThumbsUsage($video['file_directory'], $video['file_name']);
+        $total+= $this->getLogsUsage($video['file_name'], $video['file_directory']);
+        $total+= $this->getSubtitlesUsage($video_id, $video['file_directory'], $video['file_name']);
+        return $total;
+    }
+
+    /**
+     * @param string $file_directory
+     * @param array $resolutions
+     * @param string $file_type
+     * @param string $file_name
+     * @param string $video_version
+     * @return int
+     * @throws Exception
+     */
+    public function getVideoFilesUsage(string $file_directory, array $resolutions, string $file_type, string $file_name, string $video_version):int
+    {
+        $total = 0;
+        $directory_path = DirPath::get('videos') . $file_directory . DIRECTORY_SEPARATOR;
+        foreach ($resolutions as $resolution) {
+            switch ($file_type) {
+                case 'mp4':
+                    $file = $file_name . '-' . $resolution . '.mp4';
+
+                    if ($video_version) {
+                        if (file_exists($directory_path . $file) && is_file($directory_path . $file)) {
+                            $total += filesize($directory_path . $file);
+                        }
+                    } else {
+                        if (file_exists(DIRECTORY_SEPARATOR . $file) && is_file(DIRECTORY_SEPARATOR . $file)) {
+                            $total += filesize(DIRECTORY_SEPARATOR . $file);
+                        }
+                    }
+                    break;
+
+                case 'hls':
+                    $directory_path .= $file_name . DIRECTORY_SEPARATOR;
+                    $vid_files = glob($directory_path . 'video_' . $resolution . '*');
+                    foreach ($vid_files as $file) {
+                        $total += filesize($file);
+                    }
+                    break;
+                default:
+                    e(lang('unknown_type'));
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @param string $file_directory
+     * @param string $file_name
+     * @return int
+     */
+    public function getThumbsUsage(string $file_directory, string $file_name):int
+    {
+        $total = 0;
+        $pattern = DirPath::get('thumbs') . $file_directory . DIRECTORY_SEPARATOR . $file_name . '*';
+        $glob = glob($pattern);
+        foreach ($glob as $thumb) {
+            $total += filesize($thumb);
+        }
+        return $total;
+    }
+
+    /**
+     * @param string $file_name
+     * @param string $file_directory
+     * @return int
+     */
+    public function getLogsUsage(string $file_name, string $file_directory): int
+    {
+        $total = 0;
+        $str = $file_directory . DIRECTORY_SEPARATOR;
+        $file = DirPath::get('logs') . $str . $file_name . '.log';
+        if (file_exists($file) && is_file($file)) {
+            $total += filesize($file);
+        }
+        return $total;
+
+    }
+
+    /**
+     * @param $video_id
+     * @param string $file_directory
+     * @param string $file_name
+     * @return int
+     * @throws Exception
+     */
+    public function getSubtitlesUsage($video_id, string $file_directory, string $file_name):int
+    {
+        $total = 0;
+        $directory = DirPath::get('subtitles') . $file_directory . DIRECTORY_SEPARATOR;
+        $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' .$video_id;
+        $result = db_select($query);
+        if ($result) {
+            foreach ($result as $row) {
+                $filepath = $directory . $file_name . '-' . $row['number'] . '.srt';
+                if (file_exists($filepath)) {
+                    $total += filesize($filepath);
+                }
+            }
+        }
+        return $total;
+    }
+
+    /**
+     * @throws Exception
+     */
     public function setDefautThumb($num, $type, $videoid)
     {
-
         if (!empty(Upload::getInstance()->types_thumb[$type])) {
             $type_db = Upload::getInstance()->types_thumb[$type];
-        } elseif(in_array($type, Upload::getInstance()->types_thumb) || $type == 'thumb') {
+        } elseif (in_array($type, Upload::getInstance()->types_thumb) || $type == 'thumb') {
             $type_db = $type;
         } else {
             e(lang('error'));
@@ -1323,21 +1445,11 @@ class CBvideo extends CBCategory
     {
         global $db;
         $src = $vdetails['videoid'];
-        $file = DirPath::get('logs') . $vdetails['file_name'] . '.log';
         $db->execute('DELETE FROM ' . tbl('video_files') . ' WHERE src_name = \'' . mysql_clean($src) . '\'');
-        if (file_exists($file)) {
-            unlink($file);
-        }
-        $fn = $vdetails['file_name'];
-        $result = db_select('SELECT * FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($fn) . '\'');
-        if ($result) {
-            foreach ($result as $result1) {
-                $str = $result1['file_directory'] . DIRECTORY_SEPARATOR;
-                $file1 = DirPath::get('logs') . $str . $vdetails['file_name'] . '.log';
-                if (file_exists($file1) && is_file($file1)) {
-                    unlink($file1);
-                }
-            }
+        $str = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
+        $file1 = DirPath::get('logs') . $str . $vdetails['file_name'] . '.log';
+        if (file_exists($file1) && is_file($file1)) {
+            unlink($file1);
         }
         e(lang('vid_log_delete_msg'), 'm');
     }
