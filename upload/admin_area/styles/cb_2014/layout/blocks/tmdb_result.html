@@ -7,6 +7,18 @@
         <div class="modal-body tmdb">
             <div class="input-group">
                 <input name="title" type="text" class="form-control" id="search_title" value="{$search}"/>
+                {if $can_search_year}
+                <select name="selected_year" class="form-control" id="selected_year">
+                    <option></option>
+                    {section name=year loop=$years}
+                        <option value="{$years[year]}"
+                                {if $years[year] == $selected_year}
+                                selected="selected"
+                                {/if}
+                                >{$years[year]}</option>
+                    {/section}
+                </select>
+                {/if}
                 <span class="input-group-addon" id="search" title="{lang code='search'}">{lang code="search"}</span>
             </div>
 
@@ -54,29 +66,35 @@
     </div>
 </div>
 <script>
+    var selected_year;
+    var videoid;
+    var video_title;
     $(function () {
-        var videoid = $('#modal_videoid').val();
+        videoid = $('#modal_videoid').val();
+        selected_year = $('#selected_year').val();
+        video_title = $('#search_title').val();
         $('#search').on('click', function () {
-            var video_title = $('#search_title').val();
-            getInfoTmdb(videoid, video_title, 1);
+            video_title = $('#search_title').val();
+            selected_year = $('#selected_year').val();
+            getInfoTmdb(videoid, video_title, 1, 'release_date','ASC',selected_year);
         });
         $('.icon-sort').parent().on('click', function () {
-            var video_title = $('#search_title').val();
+            video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort');
             $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC');
+            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC', selected_year);
         });
         $('.icon-sort-up').parent().on('click', function () {
-            var video_title = $('#search_title').val();
+            video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort-up');
             $(this).children().first().addClass('icon-sort-down');
-            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'DESC');
+            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'DESC',selected_year);
         });
         $('.icon-sort-down').parent().on('click', function () {
-            var video_title = $('#search_title').val();
+            video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort-down');
             $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC');
+            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC',selected_year);
         });
         $('#search_title').keypress(function(event){
             if(event.keyCode == 13){
