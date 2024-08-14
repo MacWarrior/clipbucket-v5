@@ -41,9 +41,14 @@ class MWIP extends \Migration
             'fr' => 'Classique',
             'en' => 'Classic'
         ]);
+        self::generateTranslation('option_video_ratio', [
+            'fr' => 'Ratio d\'affichage des vidéos',
+            'en' => 'Video display ratio'
+        ]);
 
         self::generateConfig('homepage_recent_videos_display', 'paginate');
         self::generateConfig('homepage_featured_video_display', 'paginate');
         self::generateConfig('homepage_recent_video_style', 'classic');
+        self::generateConfig('homepage_recent_video_ratio', '1.3333');
     }
 }

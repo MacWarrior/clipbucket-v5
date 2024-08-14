@@ -289,7 +289,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'custom_css', ''),
     (NULL, 'homepage_recent_videos_display', 'paginate'),
     (NULL, 'homepage_featured_video_display', 'paginate'),
-    (NULL, 'homepage_recent_video_style', 'classic');
+    (NULL, 'homepage_recent_video_style', 'classic'),
+    (NULL, 'homepage_recent_video_ratio', '1.3333');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

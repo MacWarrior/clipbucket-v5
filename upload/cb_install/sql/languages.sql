@@ -1218,4 +1218,5 @@ VALUES ('admin_setting'),
        ('option_slider'),
        ('option_homepage_recent_video_style'),
        ('option_modern'),
-       ('option_classic');
+       ('option_classic'),
+       ('option_video_ratio');
