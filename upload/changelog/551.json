@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"105",
+  "revision":"106",
   "status":"dev",
   "detail":[
     {
@@ -19,6 +19,7 @@
         ,"Implement automated tasks"
         ,"Implement users storage usage & history"
         ,"Implement video posters & backdrops management"
+        ,"Implement TMDB search year filter"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
