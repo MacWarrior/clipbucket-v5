@@ -18,8 +18,6 @@ $(function () {
         let resizeMe = function(ratio){
 
             conteneurRect = slider.getBoundingClientRect();
-            first_miniature = window.getComputedStyle(miniatures[0]);
-            marginSum = parseInt(first_miniature.getPropertyValue('margin-left').replace('px', '')) + parseInt(first_miniature.getPropertyValue('margin-right').replace('px', ''));
 
             let height_fixe = 200;
             let fake_width = height_fixe * ratio;

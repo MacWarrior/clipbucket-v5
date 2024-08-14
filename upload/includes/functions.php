@@ -1229,7 +1229,14 @@ function lang($var)
                 error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
 
                 if (in_dev()) {
-                    error_log(debug_backtrace_string());
+
+                    /** Splitting the log message into 200-character chunks to avoid saturating the error_log buffer */
+                    $string = debug_backtrace_string();
+                    $chunks = str_split($string, 200);
+                    foreach ($chunks as $chunk) {
+                        error_log($chunk);
+                    }
+
                 }
             }
         }
