@@ -50,11 +50,11 @@
 								<div class="slider-container-overflow">
 									<div class="slider-container">
 
-										{if config('config_ancien_ou_nouveau_template_miniature_video') == 'new'}
-										{foreach $videos as $video}
-										{include file="$style_dir/blocks/video-new.html"}
-										{/foreach}
-										{elseif  in_array(config('config_ancien_ou_nouveau_template_miniature_video'), [false, 'old'])}
+										{if config('homepage_recent_video_style') == 'modern'}
+											{foreach $videos as $video}
+												{include file="$style_dir/blocks/video-new.html"}
+											{/foreach}
+										{elseif  in_array(config('homepage_recent_video_style'), [false, 'classic'])}
 										<div class="videos">
 											{foreach $videos as $video}
 											<div class="item-video">
