@@ -798,7 +798,7 @@ function delete_video_thumb($videoDetails, $num, $type)
         $type_search = '-' . $type_file . '.*';
         $lang_key = $type;
     } else {
-        $type_search = '-.]*';
+        $type_search = '[-.]*';
         $lang_key = 'thumbs';
     }
     $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .$type_search);
@@ -833,7 +833,7 @@ function delete_video_thumb($videoDetails, $num, $type)
             break;
         default:
             if ($videoDetails['default_thumb'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . 'AND type IN (\'auto\', \'custom\')) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
     }
