@@ -10,7 +10,7 @@
 			</div>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && in_array(config('homepage_recent_videos_display'), ['paginate', false])}
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row"></div>
@@ -19,44 +19,59 @@
 					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
 				</div>
 			</section>
-
-			<section class="clearfix videos">
-				<h1>{lang code="recent_videos"}</h1>
-				<div id="recent_vids_sec" class="clearfix row"></div>
-				<div id="recent_pre" class="clearfix"></div>
-				<div id="recent-loadmore" class="clearfix text-center">
-					<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="{lang code='load_more'}">{lang code="load_more"}</button>
-				</div>
-			</section>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && config('homepage_recent_videos_display') == 'slider'}
-			<section class="clearfix default-slider">
-				<h1>{lang code="recent_videos"}</h1>
-				<div class="slider-container-action">
-					<div class="prev"></div>
-					<div class="slider-container-overflow">
-						<div class="slider-container">
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
 
-							{if config('config_ancien_ou_nouveau_template_miniature_video') == 'new'}
-								{foreach $videos as $video}
-									{include file="$style_dir/blocks/video-new.html"}
-								{/foreach}
-							{elseif  in_array(config('config_ancien_ou_nouveau_template_miniature_video'), [false, 'old'])}
-								<div class="videos">
-									{foreach $videos as $video}
-									<div class="item-video">
-										{include file="$style_dir/blocks/video.html" display_type='user-videos'}
-									</div>
-									{/foreach}
-								</div>
-							{/if}
-
-						</div>
+				{if in_array(config('homepage_recent_videos_display'), ['paginate', false])}
+				<section class="clearfix videos">
+					<h1>{lang code="recent_videos"}</h1>
+					<div id="recent_vids_sec" class="clearfix row"></div>
+					<div id="recent_pre" class="clearfix"></div>
+					<div id="recent-loadmore" class="clearfix text-center">
+						<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="{lang code='load_more'}">{lang code="load_more"}</button>
 					</div>
-					<div class="next"></div>
-				</div>
-			</section>
+				</section>
+
+				{elseif config('homepage_recent_videos_display') == 'slider'}
+
+					{if is_array($video) }
+						<section class="clearfix featured-videos">
+							<h1>{lang code="recent_videos"}</h1>
+							<div id="featured_vid_sec" class="clearfix row">
+								<span class="well well-info btn-block">{lang code='no_recent_videos_found'}</span>
+							</div>
+						</section>
+					{else}
+						<section class="clearfix default-slider">
+							<h1>{lang code="recent_videos"}</h1>
+							<div class="slider-container-action">
+								<div class="prev"></div>
+								<div class="slider-container-overflow">
+									<div class="slider-container">
+
+										{if config('config_ancien_ou_nouveau_template_miniature_video') == 'new'}
+										{foreach $videos as $video}
+										{include file="$style_dir/blocks/video-new.html"}
+										{/foreach}
+										{elseif  in_array(config('config_ancien_ou_nouveau_template_miniature_video'), [false, 'old'])}
+										<div class="videos">
+											{foreach $videos as $video}
+											<div class="item-video">
+												{include file="$style_dir/blocks/video.html" display_type='user-videos'}
+											</div>
+											{/foreach}
+										</div>
+										{/if}
+
+									</div>
+								</div>
+								<div class="next"></div>
+							</div>
+						</section>
+					{/if}
+				{/if}
+
 			{/if}
 			{lang code='channel' assign='object_type'}
 			{include file="$style_dir/global_header.html"}

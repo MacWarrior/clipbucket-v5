@@ -5,7 +5,12 @@ $(function () {
         let number_of_block = 3;
 
         let slider = defaultslider.querySelector('.slider-container-overflow');
+        let slider_container = defaultslider.querySelector('.slider-container');
         let miniatures = slider.querySelectorAll('.slider-video-container, .item-video');
+
+        if(miniatures.length === 0) {
+            return ;
+        }
 
         let conteneurRect = slider.getBoundingClientRect();
         let first_miniature = window.getComputedStyle(miniatures[0]);
@@ -24,6 +29,16 @@ $(function () {
             }
         }
 
+        let prevListenerCallback = function(){
+            defaultslider.querySelector('.prev').dispatchEvent(new CustomEvent('click'));
+            this.removeEventListener("click", prevListenerCallback);
+        };
+
+        let nextListenerCallback = function(){
+            defaultslider.querySelector('.next').dispatchEvent(new CustomEvent('click'));
+            this.removeEventListener("click", nextListenerCallback);
+        };
+
         let setOpacity = function(){
 
             for (let i = 0; i < miniatures.length; i++) {
@@ -32,11 +47,7 @@ $(function () {
                 if (rect.left < conteneurRect.left && rect.right > conteneurRect.left) {
                     miniature.classList.add('disabled')
                     miniature.classList.add('disabled-prev')
-
-                    miniature.addEventListener('click', function(){
-                        defaultslider.querySelector('.prev').dispatchEvent(new CustomEvent('click'));
-                    })
-
+                    miniature.addEventListener('click', prevListenerCallback)
                     break;
                 }
             }
@@ -46,11 +57,7 @@ $(function () {
                 if (rect.left < conteneurRect.right && rect.right > conteneurRect.right) {
                     miniature.classList.add('disabled')
                     miniature.classList.add('disabled-next')
-
-                    miniature.addEventListener('click', function(){
-                        defaultslider.querySelector('.next').dispatchEvent(new CustomEvent('click'));
-                    })
-
+                    miniature.addEventListener('click', nextListenerCallback)
                     break;
                 }
             }
@@ -84,7 +91,6 @@ $(function () {
                     slider.classList.add('scrolling')
                     resetOpacity();
                     slider.scrollLeft += rect.left - conteneurRect.left - decalage;
-                    console.log(slider.scrollLeft+rect.left - conteneurRect.left - decalage)
                     break;
                 }
             }
