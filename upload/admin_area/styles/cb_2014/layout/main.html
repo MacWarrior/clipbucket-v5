@@ -415,6 +415,9 @@
 											</div>
 										</div>
 										<hr/>
+
+									</div>
+									<div class="col-md-4">
 										<div class="row">
 											<div class="col-md-6">
 												<label class="nowrap" for="homepage_recent_videos_display" title="{lang code='option_homepage_recent_videos_display'}">{lang code='option_homepage_recent_videos_display'}</label>
@@ -422,11 +425,30 @@
 											<div class="col-md-6">
 												<select class="form-control" name="homepage_recent_videos_display" id="homepage_recent_videos_display">
 													{assign var=array_modes value=[
-														'paginate' => 'option_paginate'
-														,'slider' => 'option_slider'
+													'paginate' => 'option_paginate'
+													,'slider' => 'option_slider'
 													]}
 													{foreach from=$array_modes item=trad key=code}
 													<option {if $code==$row.homepage_recent_videos_display}selected{/if} value="{$code}">
+														{lang code=$trad}
+													</option>
+													{/foreach}
+												</select>
+											</div>
+										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="homepage_recent_video_style" title="{lang code='option_homepage_recent_video_style'}">{lang code='option_homepage_recent_video_style'}</label>
+											</div>
+											<div class="col-md-6">
+												<select class="form-control" name="homepage_recent_video_style" id="homepage_recent_video_style">
+													{assign var=array_styles value=[
+														'modern' => 'option_modern'
+														,'classic' => 'option_classic'
+													]}
+													{foreach from=$array_styles item=trad key=code}
+													<option {if $code==$row.homepage_recent_video_style}selected{/if} value="{$code}">
 														{lang code=$trad}
 													</option>
 													{/foreach}
