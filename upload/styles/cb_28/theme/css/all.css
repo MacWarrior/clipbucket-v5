@@ -7483,7 +7483,7 @@ textarea#comment_box {
 
 /** @todo hack full width  */
 #main , #content {
-  /*
+  /* */
   min-width: 100%;
   /* */
 }
@@ -7494,7 +7494,7 @@ textarea#comment_box {
   position: relative;
 
   /** definir les dimension de chaque bloc di slider */
-  --height : 250px;
+  --height :250px;
   --width : 274px;
 }
 
@@ -7542,7 +7542,9 @@ textarea#comment_box {
 }
 
 .default-slider .slider-container {
+/*
   height: var(--height);
+ */
   width: max-content;
   box-sizing: border-box;
   display: block;
@@ -7558,7 +7560,9 @@ textarea#comment_box {
   justify-content: flex-start;
   transition: opacity 200ms ease;
   width: var(--width);
+/*
   height: var(--height);
+ */
 }
 
 .slider-video-container.disabled {
@@ -7678,7 +7682,10 @@ textarea#comment_box {
   padding: 5px;
   width: 100%;
   transition: transform .3s; /* Animation */
+/*
   flex:1;
+ */
+  height:var(--height);
 }
 
 .slider-video-container .thumb-video-padding:before {
@@ -7815,7 +7822,9 @@ textarea#comment_box {
   margin-right: 8px;
   margin-left: 8px;
   width: var(--width);
+/*
   height: var(--height);
+*/
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;

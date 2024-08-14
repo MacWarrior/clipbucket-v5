@@ -2,8 +2,6 @@ $(function () {
 
     document.querySelectorAll('.default-slider').forEach(function(defaultslider){
 
-        let number_of_block = 3;
-
         let slider = defaultslider.querySelector('.slider-container-overflow');
         let slider_container = defaultslider.querySelector('.slider-container');
         let miniatures = slider.querySelectorAll('.slider-video-container, .item-video');
@@ -16,9 +14,41 @@ $(function () {
         let first_miniature = window.getComputedStyle(miniatures[0]);
         let marginSum = parseInt(first_miniature.getPropertyValue('margin-left').replace('px', '')) + parseInt(first_miniature.getPropertyValue('margin-right').replace('px', ''));
 
-        let new_width = Math.floor( ( conteneurRect.width / ( number_of_block + 0.5 ) ) - (marginSum) - (marginSum)/number_of_block ) ;
-        defaultslider.style.setProperty('--width', new_width+'px');
-        let decalage = (new_width*0.25) + (marginSum);
+        let decalage = 0;
+        let resizeMe = function(ratio){
+
+            conteneurRect = slider.getBoundingClientRect();
+            first_miniature = window.getComputedStyle(miniatures[0]);
+            marginSum = parseInt(first_miniature.getPropertyValue('margin-left').replace('px', '')) + parseInt(first_miniature.getPropertyValue('margin-right').replace('px', ''));
+
+            let height_fixe = 200;
+            let fake_width = height_fixe * ratio;
+
+            let number_of_block_brut = (conteneurRect.width / fake_width) - 0.5;
+            let number_of_block = Math.floor(number_of_block_brut);
+
+            let new_width = Math.floor( ( conteneurRect.width / ( number_of_block + 0.5 ) ) - (marginSum) - (marginSum)/number_of_block ) ;
+
+            let new_height = new_width / ratio
+
+            defaultslider.style.setProperty('--width', new_width+'px');
+            defaultslider.style.setProperty('--height', new_height+'px');
+            decalage = (new_width*0.25) + (marginSum);
+        }
+
+        resizeMe(16/10);
+
+        let old_value = null;
+        setInterval(function(){
+
+            if(slider.offsetWidth === old_value) {
+                return ;
+            }
+            old_value = slider.offsetWidth;
+
+            resizeMe(16/10);
+            slider.dispatchEvent(new CustomEvent('scroll'));
+        }, 400)
 
         let resetOpacity = function(){
             for (let i = 0; i < miniatures.length; i++) {
