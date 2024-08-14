@@ -42,7 +42,14 @@
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                             {/if}
                         {/if}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}">Manage thumbnails</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x')|replace:'%s':(lang('thumbs')|lower)}</a></li>
+                        {if config('enable_video_poster') == 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x')|replace:'%s':(lang('posters')|lower)}</a></li>
+                        {/if}
+                        {if config('enable_video_backdrop') == 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x')|replace:'%s':(lang('backdrops')|lower)}</a></li>
+                        {/if}
+
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}

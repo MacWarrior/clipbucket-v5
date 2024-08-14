@@ -1498,6 +1498,18 @@ VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `languag
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'orphan'), 'Orphelin', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'upload_poster'), 'Téléverser une affiche', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'upload_backdrop'), 'Téléverser un décor', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'poster_list'), 'Liste des affiches', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'backdrop_list'), 'Liste des décors', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'posters'), 'décors', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'backdrops'), 'backdrops', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'thumb_regen_end'), 'La génération des vignettes est terminée', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'thumb_regen_start'), 'La génération des vignettes commence', @language_id);
@@ -1557,5 +1569,19 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'storage_use'), 'Espace utilisé', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'storage_history'), 'Historique de l''espace utilisé', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'thumbs_upload_successfully'), 'La vignette a été téléversée avec succès', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'poster_upload_successfully'), 'L''affiche a été téléversée avec succès', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'backdrop_upload_successfully'), 'Le décor a été téléversé avec succès', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'thumbs_delete_successfully'), 'La vignette a été supprimée avec succès', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'poster_delete_successfully'), 'L''affiche a été supprimée avec succès', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'backdrop_delete_successfully'), 'Le décor a été supprimé avec succès', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'manage_x'), 'Gestion des %s', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'remove_from_favorites'), 'Retirer des favoris', @language_id);
