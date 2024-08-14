@@ -263,10 +263,10 @@ class Clipbucket_db
     /**
      * Update database fields { table, fields, values style }
      *
-     * @param      $tbl
-     * @param      $flds
-     * @param      $vls
-     * @param      $cond
+     * @param      string $tbl
+     * @param      array $flds
+     * @param      array $vls
+     * @param      string $cond
      * @param null $ep
      *
      * @throws Exception
