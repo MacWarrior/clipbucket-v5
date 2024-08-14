@@ -1185,4 +1185,5 @@ VALUES ('admin_setting'),
        ('automate_launch_disabled_in_config'),
        ('crontab_link_label'),
        ('copy_clipboard'),
-       ('option_timezone');
+       ('option_timezone'),
+       ('remove_from_favorites');

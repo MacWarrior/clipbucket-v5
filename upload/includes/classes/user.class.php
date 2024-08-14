@@ -509,6 +509,21 @@ class User
         }
     }
 
+    /**
+     * @param string|int $userid
+     * @return array
+     * @throws Exception
+     */
+    public function getFavoritesVideos($userid): array
+    {
+        $sql = ' SELECT videoid FROM ' . tbl('video_favourites') . ' WHERE userid = ' . mysql_clean($userid);
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if ( empty($results)) {
+            return [];
+        }
+        return array_column($results, 'videoid');
+    }
+
 }
 
 

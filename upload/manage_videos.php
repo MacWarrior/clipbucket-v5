@@ -56,6 +56,8 @@ switch ($mode) {
         //Collecting Data for Pagination
         $vid_array['count_only'] = true;
         $total_rows = get_videos($vid_array);
+        $favorites = User::getInstance()->getFavoritesVideos($udetails['userid']);
+        assign('favorites', $favorites);
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
         //Pagination
