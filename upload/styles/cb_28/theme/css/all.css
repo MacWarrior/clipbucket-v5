@@ -7483,7 +7483,7 @@ textarea#comment_box {
 
 /** @todo hack full width  */
 #main , #content {
-  /* */
+  /*
   min-width: 100%;
   /* */
 }

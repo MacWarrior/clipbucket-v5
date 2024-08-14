@@ -2,8 +2,9 @@ $(function () {
 
     document.querySelectorAll('.default-slider').forEach(function(defaultslider){
 
+        let ratio = defaultslider.getAttribute('data-ratio') ?? 1;
+
         let slider = defaultslider.querySelector('.slider-container-overflow');
-        let slider_container = defaultslider.querySelector('.slider-container');
         let miniatures = slider.querySelectorAll('.slider-video-container, .item-video');
 
         if(miniatures.length === 0) {
@@ -19,7 +20,7 @@ $(function () {
 
             conteneurRect = slider.getBoundingClientRect();
 
-            let height_fixe = 200;
+            let height_fixe = 150;
             let fake_width = height_fixe * ratio;
 
             let number_of_block_brut = (conteneurRect.width / fake_width) - 0.5;
@@ -34,7 +35,7 @@ $(function () {
             decalage = (new_width*0.25) + (marginSum);
         }
 
-        resizeMe(16/10);
+        resizeMe(ratio);
 
         let old_value = null;
         setInterval(function(){
@@ -44,7 +45,7 @@ $(function () {
             }
             old_value = slider.offsetWidth;
 
-            resizeMe(16/10);
+            resizeMe(ratio);
             slider.dispatchEvent(new CustomEvent('scroll'));
         }, 400)
 

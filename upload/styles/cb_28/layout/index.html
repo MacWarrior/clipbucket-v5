@@ -43,7 +43,7 @@
 							</div>
 						</section>
 					{else}
-						<section class="clearfix default-slider">
+						<section class="clearfix default-slider" {if config('homepage_recent_video_ratio') !== false }data-ratio="{config('homepage_recent_video_ratio')}"{/if} >
 							<h1>{lang code="recent_videos"}</h1>
 							<div class="slider-container-action">
 								<div class="prev"></div>

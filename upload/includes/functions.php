@@ -1230,9 +1230,9 @@ function lang($var)
 
                 if (in_dev()) {
 
-                    /** Splitting the log message into 200-character chunks to avoid saturating the error_log buffer */
+                    /** Splitting the log message into 100-character chunks to avoid saturating the error_log buffer */
                     $string = debug_backtrace_string();
-                    $chunks = str_split($string, 200);
+                    $chunks = str_split($string, 100);
                     foreach ($chunks as $chunk) {
                         error_log($chunk);
                     }
