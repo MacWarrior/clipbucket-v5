@@ -4,6 +4,8 @@ require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRE
 
 class MWIP extends \Migration
 {
+
+    const MIN_REVISION = '100';
     /**
      * @throws \Exception
      */

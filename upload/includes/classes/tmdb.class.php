@@ -117,10 +117,10 @@ class Tmdb
         }
 
         $sql_year = '';
-        if ($year != '0000' && !empty($year)) {
-            $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
+        include_once DirPath::get('sql') . '5.5.1' . DIRECTORY_SEPARATOR . 'MWIP.php';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', \V5_5_1\MWIP::MIN_REVISION) && ($year != '0000' && !empty($year))) {
+                $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
         }
-
         $sql = 'SELECT TSR.* 
                 FROM ' . tbl('tmdb_search') . ' TS
                 INNER JOIN ' . tbl('tmdb_search_result') . ' TSR ON TS.id_tmdb_search = TSR.id_tmdb_search
@@ -170,7 +170,15 @@ class Tmdb
      */
     public function setQueryInCache(string $query, array $results, int $total_results, array $years)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results', 'list_years'], [strtolower($query), $total_results, json_encode($years)]);
+        include_once DirPath::get('sql') . '5.5.1' . DIRECTORY_SEPARATOR . 'MWIP.php';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', \V5_5_1\MWIP::MIN_REVISION)) {
+            $fields = ['search_key', 'total_results', 'list_years'];
+            $values = [strtolower($query), $total_results, json_encode($years)];
+        } else {
+            $fields = ['search_key', 'total_results'];
+            $values = [strtolower($query), $total_results];
+        }
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), $fields, $values);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
         $can_is_adult = false;
