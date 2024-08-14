@@ -17,8 +17,7 @@ $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, [
 
 pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#);');
 assign('user_age', User::getInstance()->getCurrentUserAge());
-include_once DirPath::get('sql') . '5.5.1' . DIRECTORY_SEPARATOR . 'MWIP.php';
-assign('can_search_year',  Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', \V5_5_1\MWIP::MIN_REVISION) );
+assign('can_search_year',  Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') );
 display_tmdb_result([
     'results'       => $results['final_results'],
     'title'         => $results['title'],

@@ -117,8 +117,7 @@ class Tmdb
         }
 
         $sql_year = '';
-        include_once DirPath::get('sql') . '5.5.1' . DIRECTORY_SEPARATOR . 'MWIP.php';
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', \V5_5_1\MWIP::MIN_REVISION) && ($year != '0000' && !empty($year))) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') && ($year != '0000' && !empty($year))) {
                 $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
         }
         $sql = 'SELECT TSR.* 
@@ -164,14 +163,13 @@ class Tmdb
      * @param string $query
      * @param array $results
      * @param int $total_results
-     * @param string $years
+     * @param array $years
      * @return bool|mysqli_result
      * @throws Exception
      */
     public function setQueryInCache(string $query, array $results, int $total_results, array $years)
     {
-        include_once DirPath::get('sql') . '5.5.1' . DIRECTORY_SEPARATOR . 'MWIP.php';
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', \V5_5_1\MWIP::MIN_REVISION)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106')) {
             $fields = ['search_key', 'total_results', 'list_years'];
             $values = [strtolower($query), $total_results, json_encode($years)];
         } else {
