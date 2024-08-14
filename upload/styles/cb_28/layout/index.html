@@ -10,7 +10,7 @@
 			</div>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && config("homepage_recent_videos_display") == "paginate"}
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && in_array(config('homepage_recent_videos_display'), ['paginate', false])}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row"></div>
@@ -30,7 +30,7 @@
 			</section>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && config("homepage_recent_videos_display") == "slider"}
+			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true) && config('homepage_recent_videos_display') == 'slider'}
 			<section class="clearfix default-slider">
 				<h1>{lang code="recent_videos"}</h1>
 				<div class="slider-container-action">
@@ -38,11 +38,11 @@
 					<div class="slider-container-overflow">
 						<div class="slider-container">
 
-							{if config("config_ancien_ou_nouveau_template_miniature_video") !== false}
+							{if config('config_ancien_ou_nouveau_template_miniature_video') == 'new'}
 								{foreach $videos as $video}
 									{include file="$style_dir/blocks/video-new.html"}
 								{/foreach}
-							{elseif  config("config_ancien_ou_nouveau_template_miniature_video") == false}
+							{elseif  in_array(config('config_ancien_ou_nouveau_template_miniature_video'), [false, 'old'])}
 								<div class="videos">
 									{foreach $videos as $video}
 									<div class="item-video">
