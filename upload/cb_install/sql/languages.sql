@@ -1203,4 +1203,5 @@ VALUES ('admin_setting'),
        ('backdrop_upload_successfully'),
        ('thumbs_delete_successfully'),
        ('backdrop_delete_successfully'),
-       ('backdrop_delete_successfully');
+       ('backdrop_delete_successfully'),
+       ('manage_x');
