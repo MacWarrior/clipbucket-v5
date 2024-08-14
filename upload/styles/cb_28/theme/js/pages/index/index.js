@@ -9,11 +9,11 @@ $(function () {
 
         let conteneurRect = slider.getBoundingClientRect();
         let first_miniature = window.getComputedStyle(miniatures[0]);
-        let paddingSum = parseInt(first_miniature.getPropertyValue('margin-left').replace('px', '')) + parseInt(first_miniature.getPropertyValue('margin-right').replace('px', ''));
+        let marginSum = parseInt(first_miniature.getPropertyValue('margin-left').replace('px', '')) + parseInt(first_miniature.getPropertyValue('margin-right').replace('px', ''));
 
-        let new_width = Math.floor( ( conteneurRect.width / ( number_of_block + 0.5 ) ) - (paddingSum) - (paddingSum)/number_of_block );
+        let new_width = Math.floor( ( conteneurRect.width / ( number_of_block + 0.5 ) ) - (marginSum) - (marginSum)/number_of_block ) ;
         defaultslider.style.setProperty('--width', new_width+'px');
-        let decalage = (new_width*0.25) + (paddingSum);
+        let decalage = (new_width*0.25) + (marginSum);
 
         let resetOpacity = function(){
             for (let i = 0; i < miniatures.length; i++) {
@@ -84,6 +84,7 @@ $(function () {
                     slider.classList.add('scrolling')
                     resetOpacity();
                     slider.scrollLeft += rect.left - conteneurRect.left - decalage;
+                    console.log(slider.scrollLeft+rect.left - conteneurRect.left - decalage)
                     break;
                 }
             }

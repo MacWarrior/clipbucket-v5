@@ -7590,12 +7590,14 @@ textarea#comment_box {
   z-index:100;
 }
 
-.default-slider .slider-container .slider-video-container.disabled .thumb-video {
+.default-slider .slider-container .slider-video-container.disabled .thumb-video,
+.default-slider .slider-container .item-video.disabled .thumb-holder{
   position: relative;
   pointer-events: none;
   cursor: default !important;
 }
-.default-slider .slider-container .slider-video-container.disabled .thumb-video:after {
+.default-slider .slider-container .slider-video-container.disabled .thumb-video:after,
+.default-slider .slider-container .item-video.disabled .thumb-holder:after{
   content: "\e080";
   font-family: "Glyphicons Halflings";
   font-style: normal;
@@ -7616,9 +7618,11 @@ textarea#comment_box {
   transition: color 200ms;
   color:var(--color-02);
   opacity: 0.6;
+  z-index:5;
 }
 
-.default-slider .slider-container .slider-video-container.disabled .thumb-video:before {
+.default-slider .slider-container .slider-video-container.disabled .thumb-video:before,
+.default-slider .slider-container .item-video.disabled .thumb-holder:before{
   content: "";
   display: flex;
   width: 100%;
@@ -7631,19 +7635,28 @@ textarea#comment_box {
   cursor: default !important;
   pointer-events: none;
   transition: color 200ms;
+  z-index:5;
+
 }
 
-.default-slider .slider-container .slider-video-container.disabled.disabled-next .thumb-video:after {
+.default-slider .slider-container .slider-video-container.disabled.disabled-next .thumb-video:after,
+.default-slider .slider-container .item-video.disabled.disabled-next .thumb-holder:after{
   padding-left: 1.5rem;
 }
 
-.default-slider .slider-container .slider-video-container.disabled.disabled-prev .thumb-video:after {
+.default-slider .slider-container .slider-video-container.disabled.disabled-prev .thumb-video:after,
+.default-slider .slider-container .item-video.disabled.disabled-prev .thumb-holder:after {
   padding-right: 1rem;
   text-align: right;
   content: "\e079";
 }
 
-.default-slider .slider-container .slider-video-container.disabled:hover .thumb-video:after {
+.default-slider .slider-container .item-video.disabled.disabled-next .thumb-holder:after {
+  padding-left: 0.25rem;
+}
+
+.default-slider .slider-container .slider-video-container.disabled:hover .thumb-video:after,
+.default-slider .slider-container .item-video.disabled:hover .thumb-holder:after {
   opacity:1;
 }
 
@@ -7808,6 +7821,7 @@ textarea#comment_box {
   justify-content: flex-start;
   background: white;
   padding:0;
+  vertical-align: top;
 }
 
 .default-slider .slider-container .item-video .thumb-holder {

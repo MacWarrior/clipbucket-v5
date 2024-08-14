@@ -38,11 +38,11 @@
 					<div class="slider-container-overflow">
 						<div class="slider-container">
 
-							{if config("config_ancien_ou_nouveau_template_miniature_video") == false}
+							{if config("config_ancien_ou_nouveau_template_miniature_video") !== false}
 								{foreach $videos as $video}
 									{include file="$style_dir/blocks/video-new.html"}
 								{/foreach}
-							{elseif  config("config_ancien_ou_nouveau_template_miniature_video") == "old"}
+							{elseif  config("config_ancien_ou_nouveau_template_miniature_video") == false}
 								<div class="videos">
 									{foreach $videos as $video}
 									<div class="item-video">
