@@ -376,7 +376,7 @@ function get_directory_size(string $path, array $excluded = []): array
 }
 
 /**
- * Format file size in readable format
+ * TODO delete func => call instead System::get_readable_filesize
  *
  * @param : { integer } { $data } { size in bytes }
  *
@@ -384,20 +384,7 @@ function get_directory_size(string $path, array $excluded = []): array
  */
 function formatfilesize($data): string
 {
-    // bytes
-    if ($data < 1024) {
-        return $data . ' bytes';
-    }
-    // kilobytes
-    if ($data < 1024000) {
-        return round(($data / 1024), 1) . 'KB';
-    }
-    // megabytes
-    if ($data < 1024000000) {
-        return round(($data / 1024000), 1) . ' MB';
-    }
-
-    return round(($data / 1024000000), 1) . ' GB';
+    return System::get_readable_filesize($data, 2);
 }
 
 function getCommentAdminLink($type, $id): string
