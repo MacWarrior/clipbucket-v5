@@ -13,5 +13,8 @@ class MWIP extends \Migration
             'fr'=>'Retirer des favoris',
             'en'=>'Remove from favorites'
         ]);
+
+        $sql = 'DROP TABLE IF EXISTS ' . tbl('video_favourites');
+        self::query($sql);
     }
 }

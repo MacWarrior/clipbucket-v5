@@ -607,7 +607,7 @@ class User
      */
     public function getFavoritesVideos($userid): array
     {
-        $sql = ' SELECT videoid FROM ' . tbl('video_favourites') . ' WHERE userid = ' . mysql_clean($userid);
+        $sql = ' SELECT id AS videoid FROM ' . tbl('favorites') . ' WHERE userid = ' . mysql_clean($userid) . ' AND type=\'v\'';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if ( empty($results)) {
             return [];
