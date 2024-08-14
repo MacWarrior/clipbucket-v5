@@ -1,11 +1,5 @@
-<link rel="stylesheet" type="text/css" href="{$SOCIAL_BEAST_ADMIN_URL}/styles/css/all.css">
-<link href='//fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700' rel='stylesheet' type='text/css'>
-<section class="clearfix form-elements cb-uikit">
-    <header class="clearfix">
-        <h3 class="bluecolor4">Social Links</h3>
-        <div id="honey_config_msg"></div>
-    </header>
-    <form name="social_beast" id="social_beast" class="form-horizontal" action="#">
+<section class="clearfix form-elements">
+    <form class="form-horizontal" action="social_networks.php" method="post">
         <div class="clearfix">
             <div class="col-lg-10 col-md-10 col-sm-10 col-xs-12">
             <div class="form-group">
@@ -108,27 +102,8 @@
                 </div>
             </div>
         </div>
-        <div class="clearfix">
-            <button type="submit" id="social_beast_submit" class="btn btn-success" value="update">Update Settings</button>
+        <div class="clearfix" style="text-align:center;">
+            <button type="submit" class="btn btn-success" value="update">{lang code='update'}</button>
         </div>
     </form>
 </section>
-
-<script type="text/javascript">
-	var ajax_file = '{$ajax_file}';
-
-	 $('#social_beast_submit').on("click",function(e){
-        e.preventDefault();
-        $('#honey_config_msg').hide();
-        var form_fields = $( "#social_beast" ).serialize();
-    	 $.ajax({
-    	 	url: ajax_file,
-    	 	type: "POST",
-    	 	data:form_fields,
-    	 	 success: function(result){
-    	 	 
-            $("#honey_config_msg").html("<div class='alert alert-success'>"+"Your social links has been updated!"+result+"</div>");
-            $('#honey_config_msg').fadeIn("slow");
-    	}});
-    });
-</script>

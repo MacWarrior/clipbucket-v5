@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}plugin_cb_social_beast` (
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}plugin_cb_social_networks` (
     `id` int(20) NOT NULL AUTO_INCREMENT,
     `facebook` TEXT NOT NULL DEFAULT '',
     `twitter` TEXT NOT NULL DEFAULT '',
@@ -15,23 +15,23 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}plugin_cb_social_beast` (
     PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-INSERT IGNORE INTO `{tbl_prefix}plugin_cb_social_beast` (id) VALUES (NULL);
+INSERT IGNORE INTO `{tbl_prefix}plugin_cb_social_networks` (id) VALUES (NULL);
 
 INSERT IGNORE INTO `{tbl_prefix}languages_keys` (language_key)
 VALUES
-    ('plugin_cb_social_beast_menu'),
-    ('plugin_cb_social_beast_subtitle');
+    ('plugin_cb_social_networks_menu'),
+    ('plugin_cb_social_networks_subtitle');
 
 SET @language_id_en = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'en');
 SET @language_id_fr = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = 'fr');
 
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_cb_social_beast_menu');
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_cb_social_networks_menu');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_en, @id_language_key, 'Social networks');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_fr, @id_language_key, 'Réseaux sociaux');
 
-SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_cb_social_beast_subtitle');
+SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'plugin_cb_social_networks_subtitle');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
     VALUES (@language_id_en, @id_language_key, 'Social networks manager');
 INSERT IGNORE INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)

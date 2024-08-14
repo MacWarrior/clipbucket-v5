@@ -1,14 +1,14 @@
 <?php
 /*
-    Plugin Name: Social Beast
-    Description: Display links to your social networks anywhere on website
-    Author: Saqib Razzaq & MacWarrior
+    Plugin Name: Social Networks
+    Description: Display links to your social networks in footer
+    Author: MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    Version: 2.0.0
+    Version: 1.0.0
     ClipBucket Version: 5.5.1
 */
 
-class cb_social_beast
+class cb_social_networks
 {
     private static $plugin;
     public $template_dir = '';
@@ -43,7 +43,7 @@ class cb_social_beast
      * @throws Exception
      */
     private function addAdminMenu(){
-        add_admin_menu('Plugin Manager', lang($this::$lang_prefix.'menu'), $this->pages_url.'links.php');
+        add_admin_menu('Plugin Manager', lang($this::$lang_prefix.'menu'), $this->pages_url.'social_networks.php');
     }
 
     private function register_anchor_function(){
@@ -58,7 +58,7 @@ class cb_social_beast
     private function add_css(){
         $min_suffixe = in_dev() ? '' : '.min';
         ClipBucket::getInstance()->addCSS([
-            self::class.'/assets/css/beast' . $min_suffixe . '.css' => 'plugin'
+            self::class.'/assets/css/social_networks' . $min_suffixe . '.css' => 'plugin'
         ]);
     }
 
@@ -82,7 +82,7 @@ class cb_social_beast
             $class = '';
         }
 
-        echo "<ul id='social_beast_links' $class>";
+        echo "<ul id='social_networks_links' $class>";
         foreach ($links as $name => $daLink) {
             if (empty($daLink)) {
                 continue;
@@ -101,4 +101,4 @@ class cb_social_beast
     }
 }
 
-new cb_social_beast();
+new cb_social_networks();
