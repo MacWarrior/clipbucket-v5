@@ -59,20 +59,7 @@ $(function () {
 
         let timeout = null;
         slider.addEventListener("scroll", function(event){
-            /*
-            let scroll_left = event.target.scrollLeft;
-            if(scroll_left <= 1) {
-                defaultslider.querySelector('.slider-container-action .prev').style.display = 'none';
-            } else {
-                defaultslider.querySelector('.slider-container-action .prev').style.display = 'block';
-            }
 
-            if(scroll_left + conteneurRect.width >= slider.querySelector('.slider-container').offsetWidth ) {
-                defaultslider.querySelector('.slider-container-action .next').style.display = 'none';
-            } else {
-                defaultslider.querySelector('.slider-container-action .next').style.display = 'block';
-            }
-             */
             if(timeout !== null) {
                 clearTimeout(timeout);
             }
@@ -81,6 +68,7 @@ $(function () {
                 resetOpacity();
                 setOpacity();
 
+                slider.classList.remove('scrolling')
                 clearTimeout(timeout);
             }, 100);
 
@@ -93,6 +81,7 @@ $(function () {
                 let miniature = miniatures[i];
                 let rect = miniature.getBoundingClientRect();
                 if (rect.right > conteneurRect.right) {
+                    slider.classList.add('scrolling')
                     resetOpacity();
                     slider.scrollLeft += rect.left - conteneurRect.left - decalage;
                     break;
@@ -108,6 +97,7 @@ $(function () {
                 if (
                      rect.left + slider.scrollLeft - conteneurRect.left > slider.scrollLeft - conteneurRect.width + decalage
                 ) {
+                    slider.classList.add('scrolling')
                     resetOpacity();
                     slider.scrollLeft += rect.left - conteneurRect.left - decalage;
                     break;

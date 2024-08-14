@@ -7492,7 +7492,7 @@ textarea#comment_box {
   box-sizing: border-box;
   position: relative;
 
-  /** definir les dimmension de chaque bloc di slider */
+  /** definir les dimension de chaque bloc di slider */
   --height : 250px;
   --width : 274px;
 }
@@ -7511,18 +7511,7 @@ textarea#comment_box {
   width: 1px;
   position: absolute;
   top:0; left: 0;
-  cursor: pointer;
-  color: white;
-  text-shadow: 1px 1px 10px black;
-  font-size: 3rem;
-  line-height: 100%;
-  text-align: center;
   height: 100%;
-  justify-content: center;
-  align-items: center;
-  transition: font-size 200ms;
-  border-left:1px solid rgba(0,0,0,0.1);
-  z-index:4;
   display: none;
 }
 
@@ -7535,16 +7524,24 @@ textarea#comment_box {
   padding: 1rem 0;
 }
 
-.default-slider .slider-container-overflow:has(.disabled-prev) {
+/* desactiver tout les clic des block pendant les deplacements */
+.default-slider .slider-container-overflow.scrolling > *{
+  pointer-events: none;
+  cursor: default !important;
+}
+
+.default-slider .slider-container-overflow:has(.disabled-prev),
+.default-slider .slider-container-overflow.scrolling{
   border-left:1px solid rgba(0,0,0,0.2);
 }
 
-.default-slider .slider-container-overflow:has(.disabled-next) {
+.default-slider .slider-container-overflow:has(.disabled-next),
+.default-slider .slider-container-overflow.scrolling {
   border-right:1px solid rgba(0,0,0,0.2);
 }
 
 .default-slider .slider-container {
-  height: var(--height); /** dimmension maitre pour la hauteur */
+  height: var(--height);
   width: max-content;
   box-sizing: border-box;
   display: block;
@@ -7611,14 +7608,29 @@ textarea#comment_box {
   position: absolute;
   top: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.6);
   cursor: default !important;
   pointer-events: none;
   font-size: 3rem;
-  color: white;
   flex-direction: column;
   justify-content: center;
-  transition: font-size 200ms;
+  transition: color 200ms;
+  color:var(--color-02);
+  opacity: 0.6;
+}
+
+.default-slider .slider-container .slider-video-container.disabled .thumb-video:before {
+  content: "";
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--color-background);
+  opacity: 0.6;
+  cursor: default !important;
+  pointer-events: none;
+  transition: color 200ms;
 }
 
 .default-slider .slider-container .slider-video-container.disabled.disabled-next .thumb-video:after {
@@ -7632,7 +7644,7 @@ textarea#comment_box {
 }
 
 .default-slider .slider-container .slider-video-container.disabled:hover .thumb-video:after {
-  font-size: 3.5rem;
+  opacity:1;
 }
 
 .default-slider .slider-container .slider-video-container .thumb_banner {
@@ -7659,7 +7671,7 @@ textarea#comment_box {
 
 .default-slider .slider-container .slider-video-container .thumb-video-padding:before {
   content: '';
-  border: 2px solid red;
+  border: 2px solid var(--color-main-01);
   height: 100%;
   width: 100%;
   border-radius: 5px;
