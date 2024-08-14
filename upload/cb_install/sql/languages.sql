@@ -1215,4 +1215,7 @@ VALUES ('admin_setting'),
        ('option_homepage_recent_videos_display'),
        ('option_homepage_featured_video_display'),
        ('option_paginate'),
-       ('option_slider');
+       ('option_slider'),
+       ('option_homepage_recent_video_style'),
+       ('option_modern'),
+       ('option_classic');

@@ -29,8 +29,21 @@ class MWIP extends \Migration
             'fr' => 'Caroussel',
             'en' => 'Slider'
         ]);
+        self::generateTranslation('option_homepage_recent_video_style', [
+            'fr' => 'Style des vidéos récentes',
+            'en' => 'Recent videos style'
+        ]);
+        self::generateTranslation('option_modern', [
+            'fr' => 'Moderne',
+            'en' => 'Modern'
+        ]);
+        self::generateTranslation('option_classic', [
+            'fr' => 'Classique',
+            'en' => 'Classic'
+        ]);
 
         self::generateConfig('homepage_recent_videos_display', 'paginate');
         self::generateConfig('homepage_featured_video_display', 'paginate');
+        self::generateConfig('homepage_recent_video_style', 'classic');
     }
 }
