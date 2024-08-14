@@ -113,13 +113,4 @@ $(function () {
         });
     })
 
-    document.querySelectorAll('.thumb-video').forEach(function(elem){
-        elem.addEventListener('click', function(event) {
-            if(event.target.tagName !== 'IMG' ) {
-                return ;
-            }
-            document.location.href = this.getAttribute('data-href');
-        });
-    })
-
 });

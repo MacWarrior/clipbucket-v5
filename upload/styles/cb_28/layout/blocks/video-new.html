@@ -1,4 +1,4 @@
-<div class="slider-video-container">
+<div class="slider-video-container" {if empty($width) === false }style="--width:{$width}px;"{/if}>
 	<div class="thumb-video-padding">
 		<div class="thumb-video" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
 			<img src="{getThumb vdetails=$video size=416x260}">
