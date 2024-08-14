@@ -19,7 +19,8 @@ $mode = $_GET['mode'];
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
-
+$favorites = User::getInstance()->getFavoritesVideos($udetails['userid']);
+assign('favorites', $favorites);
 assign('queryString', queryString(null, ['type',
     'vid_delete']));
 switch ($mode) {
@@ -56,8 +57,7 @@ switch ($mode) {
         //Collecting Data for Pagination
         $vid_array['count_only'] = true;
         $total_rows = get_videos($vid_array);
-        $favorites = User::getInstance()->getFavoritesVideos($udetails['userid']);
-        assign('favorites', $favorites);
+
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
         //Pagination
