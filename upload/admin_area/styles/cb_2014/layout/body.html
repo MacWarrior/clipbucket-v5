@@ -28,11 +28,11 @@
 	                        {/foreach}
 						{/if}
 
-						{if in_dev()}
-							{showDevWitch()}
-						{/if}
 					</div>
 				</div>
+				{if in_dev()}
+					{showDevWitch()}
+				{/if}
 			</div>
 			{include file="$layout_dir/blocks/spinner.html" }
 			{include file="$layout_dir/footer.html" }
