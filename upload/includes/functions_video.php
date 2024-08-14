@@ -790,17 +790,25 @@ function get_thumb_num($name): string
  * @param $num
  * @throws Exception
  */
-function delete_video_thumb($videoDetails, $num)
+function delete_video_thumb($videoDetails, $num, $type)
 {
-    global $db;
-    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .'[-.]*');
+    $db = Clipbucket_db::getInstance();
+    $type_file = array_search($type,Upload::getInstance()->types_thumb);
+    if (!empty($type_file) && in_array($type_file,['p','b']) ) {
+        $type_search = '-' . $type_file . '.*';
+        $lang_key = $type;
+    } else {
+        $type_search = '[-.]*';
+        $lang_key = 'thumbs';
+    }
+    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .$type_search);
     if ($files) {
         foreach ($files as $file) {
             if (file_exists($file)) {
                 unlink($file);
             }
         }
-        e(lang('video_thumb_delete_msg'), 'm');
+        e(lang($lang_key . '_delete_successfully'), 'm');
     } else {
         e(lang('video_thumb_delete_err'));
     }
@@ -812,8 +820,22 @@ function delete_video_thumb($videoDetails, $num)
     if (count($thumbs) == 0) {
         create_thumb($videoDetails, '', '');
     }
-    if ($videoDetails['default_thumb'] == $num) {
-        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+    switch ($type_file) {
+        case 'p':
+            if ($videoDetails['default_poster'] == $num) {
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
+        case 'b':
+            if ($videoDetails['default_backdrop'] == $num) {
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
+        default:
+            if ($videoDetails['default_thumb'] == $num) {
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
     }
 }
 

@@ -20,12 +20,12 @@ function regenerateThumbs(videoid) {
     });
 }
 
-function delete_thumb(videoid, num) {
+function delete_thumb(videoid, num, type) {
     $.ajax({
         url: "/actions/delete_thumbs.php",
         type: "post",
         dataType: 'json',
-        data: {videoid: videoid, num: num}
+        data: {videoid: videoid, num: num, type: type}
     }).done(function (result) {
         $('#thumb_list').html(result['template']);
     }).always(function (result) {
