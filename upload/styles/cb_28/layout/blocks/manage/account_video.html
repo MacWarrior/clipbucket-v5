@@ -54,13 +54,13 @@
 				<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 					<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='view_video'}</a></li>
 					{if in_array($video.videoid, $favorites)}
-						<li><a role="menuitem" tabindex="-1" href="/manage_videos.php?mode=favorites&vid_delete={$video.videoid}'">{lang code='remove_from_favorites'}</a></li>
+						<li><a role="menuitem" tabindex="-1" href="/manage_videos.php?mode=favorites&remove_fav_videoid={$video.videoid}">{lang code='remove_from_favorites'}</a></li>
 					{/if}
 					{if $cbvid->is_video_owner($video.videoid,$user.userid) }
 						<li class="divider"></li>
 						<li><a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
 						{if $mode != 'favorites'}
-							<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?remove_fav_videoid={$video.videoid}')">{lang code='delete'}</a></li>
+							<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a></li>
 						{/if}
 					{/if}
 
