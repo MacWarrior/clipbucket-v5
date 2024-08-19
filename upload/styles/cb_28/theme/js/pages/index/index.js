@@ -55,6 +55,7 @@ $(function () {
                 miniature.classList.remove('disabled')
                 miniature.classList.remove('disabled-prev')
                 miniature.classList.remove('disabled-next')
+                miniature.removeAttribute('title')
             }
         }
 
@@ -76,6 +77,9 @@ $(function () {
                 if (rect.left < conteneurRect.left && rect.right > conteneurRect.left) {
                     miniature.classList.add('disabled')
                     miniature.classList.add('disabled-prev')
+                    if(previousLang !== undefined) {
+                        miniature.setAttribute('title', previousLang)
+                    }
                     miniature.addEventListener('click', prevListenerCallback)
                     break;
                 }
@@ -86,6 +90,9 @@ $(function () {
                 if (rect.left < conteneurRect.right && rect.right > conteneurRect.right) {
                     miniature.classList.add('disabled')
                     miniature.classList.add('disabled-next')
+                    if(nextLang !== undefined) {
+                        miniature.setAttribute('title', nextLang)
+                    }
                     miniature.addEventListener('click', nextListenerCallback)
                     break;
                 }

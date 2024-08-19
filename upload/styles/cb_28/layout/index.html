@@ -38,7 +38,7 @@
 					{if is_array($video) }
 						<section class="clearfix featured-videos">
 							<h1>{lang code="recent_videos"}</h1>
-							<div id="featured_vid_sec" class="clearfix row">
+							<div id="recent_vids_sec" class="clearfix row">
 								<span class="well well-info btn-block">{lang code='no_recent_videos_found'}</span>
 							</div>
 						</section>
@@ -164,6 +164,8 @@
 	var langCo = "{lang code='no_featured_videos_found'}";
 	var noRecent = "{lang code='no_recent_videos_found'}";
 	var loadMoreLang = "{lang code='load_more'}";
+	var previousLang = "{lang code='previous'}";
+	var nextLang = "{lang code='next'}";
 
 	homePageVideos("{$got_qlitems}");
 
