@@ -7849,6 +7849,10 @@ textarea#comment_box {
   object-fit: cover;
 }
 
+.slider-video-container .thumb-video-padding .thumb-video > .add-playlist {
+  border-radius: 2px;
+}
+
 .slider-video-container .thumb-video-padding .thumb-video > .add-playlist.cb_quickie.icon-tick {
   background: #0080b4;
   border-color: #0080b4;
