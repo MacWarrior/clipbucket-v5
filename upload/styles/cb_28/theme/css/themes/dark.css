@@ -206,6 +206,3 @@ body {
 .slider-container-action .item-video:after{
     content: none;
 }
-.slider-video-container .thumb-video{
-    box-shadow: var(--generic-box-shadow);
-}

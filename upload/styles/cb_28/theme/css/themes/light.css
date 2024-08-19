@@ -203,3 +203,6 @@ body {
     border-radius: var(--border-radius);
     background-color: transparent;
 }
+.slider-container-action .item-video:after{
+    content: none;
+}
