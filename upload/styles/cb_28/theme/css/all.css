@@ -3174,7 +3174,8 @@ textarea#comment_box {
 }
 
 .signup-block .user-form,
-.forgot-block .user-form{
+.forgot-block .user-form,
+.signin-block .user-form{
   background: #fff;
   width: 54%;
   padding: 50px 90px;
