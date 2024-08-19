@@ -543,13 +543,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_backdrop` int(3) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}video_favourites` (
-  `fav_id` int(11) NOT NULL,
-  `videoid` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE `{tbl_prefix}video_files` (
   `id` int(10) UNSIGNED NOT NULL,
   `status` int(2) NOT NULL,
@@ -747,9 +740,6 @@ ALTER TABLE `{tbl_prefix}video`
 ALTER TABLE `{tbl_prefix}video`
   ADD FULLTEXT KEY `title` (`title`);
 
-ALTER TABLE `{tbl_prefix}video_favourites`
-  ADD PRIMARY KEY (`fav_id`);
-
 ALTER TABLE `{tbl_prefix}video_files`
   ADD PRIMARY KEY (`id`),
   ADD FULLTEXT KEY `src_bitrate` (`src_bitrate`);
@@ -864,9 +854,6 @@ ALTER TABLE `{tbl_prefix}user_profile`
 
 ALTER TABLE `{tbl_prefix}video`
   MODIFY `videoid` bigint(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}video_favourites`
-  MODIFY `fav_id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}video_files`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
