@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"109",
+  "revision":"110",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Add Nginx check"
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
+        ,"Add link from video edition page to uploader edition page"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -65,6 +66,7 @@
         ,"Fix video manager search"
         ,"Fix debug popin on website configurations page"
         ,"Fix video last thumb deletion SQL error"
+        ,"Fix video edition status list"
       ]
     },
     {
@@ -113,6 +115,7 @@
         ,"Fix photo display on Windows hosts"
         ,"Fix popular users avatar"
         ,"Fix video watching with SEO URL"
+        ,"Fix favorite videos deletion"
       ]
     },
     {
