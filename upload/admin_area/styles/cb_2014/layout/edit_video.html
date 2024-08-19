@@ -59,7 +59,7 @@
 			</h2>
 			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
 				<span class="btn btn-app btn-sm btn-light no-hover">
-				<span class="line-height-1 smaller-90 blue">{$data.views|format_number}</span>
+				<span class="line-height-1 smaller-90 blue">{$data.views|prettyNum}</span>
 				<br/>
 				<span class="line-height-1 smaller-90"> Views </span>
 				</span>
@@ -134,15 +134,6 @@
                                 <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
                             </a>
                         </li>
-                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
-                            || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        }
-                        <li>
-                            <a data-toggle="tab" href="#movie_infos">
-                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
-                            </a>
-                        </li>
-                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videodetail" class="tab-pane active">
@@ -217,7 +208,7 @@
                                             <td class="last">
                                                 <p><span>
                                                     {if $data.userid != $anonymous_id}
-                                                        {display_clean($data.user_username)}
+                                                        <a href="{$link_user}">{display_clean($data.user_username)}</a>
                                                     {else}
                                                         {display_clean(lang($data.user_username))}
                                                     {/if}
@@ -228,20 +219,20 @@
                                             <tr>
                                                 <td class="first"><label>DOB</label></td>
                                                 <td class="last">
-                                                    <p><span>{$data.dob}</span></p>
+                                                    <p><span>{$uploader_info.dob}</span></p>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td class="first"><label>Email</label></td>
                                                 <td class="last">
-                                                    <p><span>{$data.email}</span></p>
+                                                    <p><span>{$uploader_info.email}</span></p>
                                                 </td>
                                             </tr>
                                             {if config('enable_gender') == 'yes'}
                                             <tr>
                                                 <td class="first"><label>{lang code='gender'}</label></td>
                                                 <td class="last">
-                                                    <p><span>{lang code="{$data.sex}"}</span></p>
+                                                    <p><span>{lang code="{$uploader_info.sex}"}</span></p>
                                                 </td>
                                             </tr>
                                             {/if}
@@ -310,34 +301,6 @@
                             </div>
                             {/foreach}
                         </div>
-
-                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
-                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        }
-                        <div id="movie_infos" class="tab-pane">
-                            {foreach from=$video_fields item=field}
-                                {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
-                                    {continue}
-                                {/if}
-
-                            <div class="table">
-                                {$field.class='form-control'}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
-                                {if $field.hint_1}
-                                {$field.hint_1}<br/>
-                                {/if}
-                                {$formObj->createField($field)}
-                                {if $field.id|strstr:'tags'}
-                                <ul id="list_{$field.id}"></ul>
-                                {/if}
-                                {if $field.hint_2}<br/>
-                                {$field.hint_2}
-                                {/if}
-                            </div>
-                            {/foreach}
-                        </div>
-                        {/if}
-
                     </div>
                 </div>
                 <div class="tabbable paddingTop">
@@ -352,6 +315,15 @@
                                 <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
                             </a>
                         </li>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <li>
+                            <a data-toggle="tab" href="#movie_infos">
+                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                            </a>
+                        </li>
+                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane active">
@@ -406,9 +378,10 @@
                             <div class="row">
                                 <label for="status"><strong>{lang code='vdo_status'}</strong></label>
                                 <select class="form-control" name="status" id="status">
-                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>Successfull</option>
-                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>Processing</option>
-                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>Failed</option>
+                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>{lang('successful')}</option>
+                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>{lang('processing')}</option>
+                                    <option class="form-control" value="waiting" {if $data.status=='Waiting'}selected{/if}>{lang('waiting')}</option>
+                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>{lang('failed')}</option>
                                 </select>
                             </div>
                             <hr/>
@@ -470,6 +443,32 @@
                             </div>
                             {/if}
                         </div>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <div id="movie_infos" class="tab-pane">
+                            {foreach from=$video_fields item=field}
+                            {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                            {continue}
+                            {/if}
+
+                            <div class="table">
+                                {$field.class='form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
+                                {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.id|strstr:'tags'}
+                                <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
+                                {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        {/if}
                     </div>
                     <div class="form-group alignCenter">
                         <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
