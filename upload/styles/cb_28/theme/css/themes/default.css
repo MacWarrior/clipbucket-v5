@@ -46,7 +46,7 @@ h4{
 /* Buttons */
 .btn-loadmore{
     border-color: var(--color-02);
-    background-color: var(--color-03);
+    background-color: var(--color-01);
     color: var(--color-02);
 }
 .btn-loadmore:hover,

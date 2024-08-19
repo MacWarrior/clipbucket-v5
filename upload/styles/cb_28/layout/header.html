@@ -38,14 +38,13 @@
 <header id="header" class="clearfix">
 	<nav class="navbar navbar-default">
 		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="header-holder">
 				<div class="navbar-header clearfix">
 
 					{ANCHOR place="before_logo"}
 					<h1 class="logo no_select">
 						<a href="/">
-							<img src="{get_website_logo_path()}" class="img-responsive"/>
+							<img alt="logo" src="{get_website_logo_path()}" class="img-responsive"/>
 						</a>
 					</h1>
 					{ANCHOR place="after_logo"}
@@ -56,7 +55,7 @@
 						<i class="icon-search"></i>
 					</a>
 				</div>
-				<!-- Collect the nav links, forms, and other content for toggling -->
+
 				<div class="collapse navbar-collapse" id="bs-collapse">
 					<div class="menu-holder">
 						<div class="col">
@@ -109,8 +108,8 @@
 												{ANCHOR place="inside_search"}
 											</ul>
 										</div>
-										<input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query">
-										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type">
+										<input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query"/>
+										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type"/>
 										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
 									</div>
 								</form>
@@ -169,15 +168,14 @@
 								<li class="navbar-sm-login-links">
 									<a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
 								</li>
-								
-								<!-- Ends -->
+
 								{/if}
 							</ul>
 						</div>
 					</div>
-				</div><!--navbar-collapse-->
+				</div>
 			</div>
-		</div><!--container-fluid-->
+		</div>
 	</nav>
 </header>
 
