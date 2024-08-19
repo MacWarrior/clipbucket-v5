@@ -14,7 +14,7 @@ if (isset($_POST['update'])) {
     $Upload->validate_video_upload_form();
     if (empty($eh->get_error())) {
         $myquery->update_video();
-        Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']);
+        Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
         if( config('enable_video_poster') == 'yes' ){
             Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'] ?? '', 'poster');
