@@ -328,7 +328,7 @@ a:hover{
 }
 .signin-block .form-control,
 .forgot-block .form-control{
-    background-color: var(--color-03);
+    background-color: var(--color-01);
     color: var(--color-02);
 }
 

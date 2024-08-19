@@ -3169,7 +3169,8 @@ textarea#comment_box {
 }
 
 .signup-block .user-form,
-.forgot-block .user-form{
+.forgot-block .user-form,
+.signin-block .user-form{
   background: #fff;
   width: 54%;
   padding: 50px 90px;
@@ -7859,14 +7860,3 @@ slider-video-container .thumb-video-padding .thumb-video > .add-playlist.cb_quic
 .slider-video-container .thumb-video-padding .thumb-video + .restricted {
   color:white;
 }
-
-
-
-
-
-
-
-
-
-
-
