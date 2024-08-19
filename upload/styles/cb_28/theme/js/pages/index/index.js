@@ -1,6 +1,7 @@
 $(function () {
 
     document.querySelectorAll('.default-slider').forEach(function(defaultslider){
+        let last_first_item = null;
 
         let ratio = defaultslider.getAttribute('data-ratio') ?? 1;
 
@@ -39,13 +40,20 @@ $(function () {
 
         let old_value = null;
         setInterval(function(){
-
             if(slider.offsetWidth === old_value) {
                 return ;
             }
             old_value = slider.offsetWidth;
 
             resizeMe(ratio);
+
+            if(last_first_item !== null){
+                let rect = last_first_item.getBoundingClientRect();
+                slider.classList.add('scrolling')
+                resetOpacity();
+                slider.scrollLeft += rect.left - conteneurRect.left - decalage;
+            }
+
             slider.dispatchEvent(new CustomEvent('scroll'));
         }, 400)
 
@@ -127,6 +135,7 @@ $(function () {
                     slider.classList.add('scrolling')
                     resetOpacity();
                     slider.scrollLeft += rect.left - conteneurRect.left - decalage;
+                    last_first_item = miniature;
                     break;
                 }
             }
@@ -143,6 +152,7 @@ $(function () {
                     slider.classList.add('scrolling')
                     resetOpacity();
                     slider.scrollLeft += rect.left - conteneurRect.left - decalage;
+                    last_first_item = miniature;
                     break;
                 }
             }
