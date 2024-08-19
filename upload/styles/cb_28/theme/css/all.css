@@ -4798,7 +4798,6 @@ textarea#comment_box {
 
 .logo {
   width: 200px;
-  height: 40px;
   margin: 0;
   font-size: 0;
   line-height: 0;
@@ -4825,13 +4824,6 @@ textarea#comment_box {
   line-height: 0;
 }
 
-.logo a img {
-  width: 100%;
-  height: 100%;
-}
-
-/**/
-/**/
 .header-holder {
   position: relative;
   display: table;
