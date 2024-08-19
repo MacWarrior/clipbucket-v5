@@ -178,7 +178,7 @@ body {
 }
 
 /* Shadows */
-.item-video:after,
+:not(.slider-container) .item-video:after,
 .item-photo:after,
 .item-channel:after,
 .collection-item:after,
@@ -196,4 +196,10 @@ body {
 .sidebar-items,
 .sidebar-channels{
     box-shadow: var(--generic-box-shadow);
+}
+
+/* Default slider */
+.default-slider .slider-container .item-video{
+    border-radius: var(--border-radius);
+    background-color: transparent;
 }

@@ -770,12 +770,6 @@ h1 {
   cursor: pointer;
 }
 
-.item-video .thumb-holder .cb_quickie.icon-tick,
-.slider-video-container .thumb-video-padding .thumb-video > div.add-playlist.cb_quickie.icon-tick {
-  background: #0080b4;
-  border-color: #0080b4;
-}
-
 .item-video .thumb-holder .vid-type {
   position: absolute;
   top: 10px;
