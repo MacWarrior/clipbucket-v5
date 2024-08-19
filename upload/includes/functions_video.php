@@ -823,17 +823,17 @@ function delete_video_thumb($videoDetails, $num, $type)
     switch ($type_file) {
         case 'p':
             if ($videoDetails['default_poster'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = IFNULL((SELECT MIN(CAST(num AS UNSIGNED))  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
         case 'b':
             if ($videoDetails['default_backdrop'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = IFNULL((SELECT MIN(CAST(num AS UNSIGNED))  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
         default:
             if ($videoDetails['default_thumb'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = IFNULL((SELECT MIN(CAST(num AS UNSIGNED))  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) , 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
     }

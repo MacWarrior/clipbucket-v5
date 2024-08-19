@@ -134,15 +134,6 @@
                                 <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
                             </a>
                         </li>
-                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
-                            || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        }
-                        <li>
-                            <a data-toggle="tab" href="#movie_infos">
-                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
-                            </a>
-                        </li>
-                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videodetail" class="tab-pane active">
@@ -310,34 +301,6 @@
                             </div>
                             {/foreach}
                         </div>
-
-                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
-                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        }
-                        <div id="movie_infos" class="tab-pane">
-                            {foreach from=$video_fields item=field}
-                                {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
-                                    {continue}
-                                {/if}
-
-                            <div class="table">
-                                {$field.class='form-control'}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
-                                {if $field.hint_1}
-                                {$field.hint_1}<br/>
-                                {/if}
-                                {$formObj->createField($field)}
-                                {if $field.id|strstr:'tags'}
-                                <ul id="list_{$field.id}"></ul>
-                                {/if}
-                                {if $field.hint_2}<br/>
-                                {$field.hint_2}
-                                {/if}
-                            </div>
-                            {/foreach}
-                        </div>
-                        {/if}
-
                     </div>
                 </div>
                 <div class="tabbable paddingTop">
@@ -352,6 +315,15 @@
                                 <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
                             </a>
                         </li>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <li>
+                            <a data-toggle="tab" href="#movie_infos">
+                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                            </a>
+                        </li>
+                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane active">
@@ -471,6 +443,32 @@
                             </div>
                             {/if}
                         </div>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <div id="movie_infos" class="tab-pane">
+                            {foreach from=$video_fields item=field}
+                            {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                            {continue}
+                            {/if}
+
+                            <div class="table">
+                                {$field.class='form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
+                                {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.id|strstr:'tags'}
+                                <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
+                                {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        {/if}
                     </div>
                     <div class="form-group alignCenter">
                         <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
