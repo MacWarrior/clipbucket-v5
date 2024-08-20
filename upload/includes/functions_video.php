@@ -125,6 +125,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     } else {
         if (is_numeric($vdetails)) {
             $vid = $vdetails;
+            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
         } else {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
@@ -257,10 +258,6 @@ function create_thumb($video_db, $multi, $size)
                 $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], VERSION]);
             }
         }
-    } else {
-        //insert default
-        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_db['videoid'], '', '', '', VERSION, 'auto']);
-        error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
     return get_thumb($video_db['videoid'], $multi, $size);
 }
@@ -823,17 +820,17 @@ function delete_video_thumb($videoDetails, $num, $type)
     switch ($type_file) {
         case 'p':
             if ($videoDetails['default_poster'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = IFNULL((SELECT MIN(CAST(num AS UNSIGNED))  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
         case 'b':
             if ($videoDetails['default_backdrop'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = IFNULL((SELECT MIN(CAST(num AS UNSIGNED))  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
         default:
             if ($videoDetails['default_thumb'] == $num) {
-                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = IFNULL((SELECT MIN(CAST(num AS UNSIGNED))  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) , 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE cast(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) , 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
             }
             break;
     }
