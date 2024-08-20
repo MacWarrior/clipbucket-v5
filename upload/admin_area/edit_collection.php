@@ -61,9 +61,6 @@ switch ($c['type']) {
         break;
 }
 
-if (!empty($items)) {
-    assign('objects', $items);
-}
 assign('data', $c);
 
 $FlaggedPhotos = $cbvid->action->get_flagged_objects();

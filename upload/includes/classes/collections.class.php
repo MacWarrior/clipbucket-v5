@@ -299,7 +299,7 @@ class Collection
         }
 
         $limit = '';
-        if( $param_limit ){
+        if( $param_limit && !$param_count){
             $limit = ' LIMIT '.$param_limit;
         }
 
@@ -454,6 +454,36 @@ class Collection
         if( !empty($text) ){
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
+    }
+
+    public function getChildCollection($collection_id)
+    {
+        return $this->getAll(['collection_id_parent'=>$collection_id]);
+    }
+
+    /**
+     * @param string|int $collection_id collection to change
+     * @param string|int $new_parent_id new parent collection
+     * @return bool
+     * @throws Exception
+     */
+    public function changeParent($collection_id, $new_parent_id): bool
+    {
+        $new_parent_collection = $this->getOne(['collection_id'=>$new_parent_id] );
+        $collection = $this->getOne(['collection_id'=>$collection_id] );
+        if (empty($new_parent_collection) || empty($collection)) {
+            e(lang('no_collection_found'));
+        }
+        if ($new_parent_collection['parent_id'] == $collection['collection_id'] ) {
+            e(lang('cannot_be_own_parent'));
+            return false;
+        }
+        if ($new_parent_collection['type'] != $collection['type']) {
+            e(lang('collection_type_must_be_same_as_parent'));
+            return false;
+        }
+        Clipbucket_db::getInstance()->update(tbl('collections'), ['collection_id_parent'], [$new_parent_collection['collection_id']], ' collection_id = ' . $collection['collection_id']);
+        return true;
     }
 
 }
@@ -1124,7 +1154,7 @@ class Collections extends CBCategory
         if ($result) {
             return $result;
         }
-        return false;
+        return [];
     }
 
     /**
@@ -1246,6 +1276,11 @@ class Collections extends CBCategory
                 if ($parent) {
                     $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
                 }
+            }
+
+            if ($collection_id_parent && config('enable_sub_collection') == 'yes') {
+                $data['type']['disabled'] = true;
+                $data['type']['input_hidden'] = true;
             }
 
             $data['parent'] = [
@@ -2295,10 +2330,15 @@ class Collections extends CBCategory
         $first_item = Collection::getInstance()->getFirstItem($params);
 
         if( empty($first_item) ){
-            if( $col_data['type'] == 'videos' ){
-                return default_thumb();
+            $child_collection = Collection::getInstance()->getChildCollection($col_data['collection_id']);
+            if (!empty($child_collection)) {
+                return $this->coll_first_thumb($child_collection[0],$size);
             } else {
-                return get_photo_default_thumb();
+                if( $col_data['type'] == 'videos' ){
+                    return default_thumb();
+                } else {
+                    return get_photo_default_thumb();
+                }
             }
         }
 

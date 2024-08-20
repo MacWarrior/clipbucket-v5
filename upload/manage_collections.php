@@ -37,12 +37,12 @@ switch ($mode) {
             'user'  => user_id(),
             'limit' => $get_limit
         ];
-        $usr_collections = $cbcollection->get_collections($collectArray);
+        $usr_collections = Collection::getInstance()->getAll($collectArray);
 
         assign('usr_collects', $usr_collections);
 
-        $collectArray['count_only'] = true;
-        $total_rows = $cbcollection->get_collections($collectArray);
+        $collectArray['count'] = true;
+        $total_rows = Collection::getInstance()->getAll($collectArray);
         $total_pages = count_pages($total_rows, config('collection_per_page'));
 
         //Pagination

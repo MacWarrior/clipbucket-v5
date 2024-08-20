@@ -1207,4 +1207,6 @@ VALUES ('admin_setting'),
        ('backdrop_delete_successfully'),
        ('poster_delete_successfully'),
        ('manage_x'),
-       ('remove_from_favorites');
+       ('remove_from_favorites'),
+       ('cannot_be_own_parent'),
+       ('collection_type_must_be_same_as_parent');
