@@ -24,9 +24,14 @@ html {
 .filter-dropdowns .dropdown-menu{
     background: var(--color-01);
 }
+.filter-dropdowns .dropdown{
+    background-color: var(--color-02);
+}
+.filter-dropdowns .dropdown>a {
+    color: var(--color-01);
+}
 .dropdown-menu>li>a,
-.filter-dropdowns .dropdown-menu>li>a,
-.filter-dropdowns .dropdown>a{
+.filter-dropdowns .dropdown-menu>li>a{
     color: var(--color-02);
     border-color: var(--color-03);
 }

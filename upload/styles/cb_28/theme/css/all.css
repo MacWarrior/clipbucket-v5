@@ -1474,7 +1474,6 @@ h1 {
 .filter-dropdowns .dropdown {
   display: inline-block;
   vertical-align: top;
-  background: #212121;
   padding: 6px 10px;
   height: 34px;
   border-radius: 4px;
@@ -4523,7 +4522,6 @@ textarea#comment_box {
   padding: 0 10px;
   font-size: 14px;
   line-height: 16px;
-  color: #000;
   position: fixed;
   width: 100%;
   top: 0;
