@@ -19,9 +19,6 @@
 					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
 				</div>
 			</section>
-			{/if}
-
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
 
 				{if in_array(config('homepage_recent_videos_display'), ['paginate', false])}
 				<section class="clearfix videos">
@@ -35,26 +32,25 @@
 
 				{elseif config('homepage_recent_videos_display') == 'slider'}
 
-					{if is_array($video) }
+					{if !is_array($videos)}
 						<section class="clearfix featured-videos">
 							<h1>{lang code="recent_videos"}</h1>
-							<div id="recent_vids_sec" class="clearfix row">
+							<div class="clearfix row">
 								<span class="well well-info btn-block">{lang code='no_recent_videos_found'}</span>
 							</div>
 						</section>
 					{else}
-						<section class="clearfix default-slider" {if config('homepage_recent_video_ratio') !== false }data-ratio="{config('homepage_recent_video_ratio')}"{/if} >
+						<section class="clearfix default-slider" {if config('homepage_recent_video_ratio') !== false}data-ratio="{config('homepage_recent_video_ratio')}"{/if} >
 							<h1>{lang code="recent_videos"}</h1>
 							<div class="slider-container-action">
 								<div class="prev"></div>
 								<div class="slider-container-overflow">
 									<div class="slider-container">
-
 										{if config('homepage_recent_video_style') == 'modern'}
 											{foreach $videos as $video}
 												{include file="$style_dir/blocks/video-new.html"}
 											{/foreach}
-										{elseif  in_array(config('homepage_recent_video_style'), [false, 'classic'])}
+										{elseif in_array(config('homepage_recent_video_style'), [false, 'classic'])}
 										<div class="videos">
 											{foreach $videos as $video}
 											<div class="item-video">
@@ -63,7 +59,6 @@
 											{/foreach}
 										</div>
 										{/if}
-
 									</div>
 								</div>
 								<div class="next"></div>

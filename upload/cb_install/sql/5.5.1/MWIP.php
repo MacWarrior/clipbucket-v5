@@ -50,5 +50,14 @@ class MWIP extends \Migration
         self::generateConfig('homepage_featured_video_display', 'paginate');
         self::generateConfig('homepage_recent_video_style', 'classic');
         self::generateConfig('homepage_recent_video_ratio', '1.3333');
+
+        $sql = 'SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'en\');';
+        self::query($sql);
+        $sql = 'SET @language_key = \'no_recent_videos_found\' COLLATE utf8mb4_unicode_520_ci;';
+        self::query($sql);
+        $sql = 'SET @id_language_key = (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = @language_key);';
+        self::query($sql);
+        $sql = 'UPDATE `{tbl_prefix}languages_translations` SET `translation` = \'No recent videos found\' WHERE `id_language_key` = @id_language_key AND `language_id` = @language_id_eng;';
+        self::query($sql);
     }
 }
