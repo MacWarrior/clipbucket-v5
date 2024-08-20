@@ -1412,7 +1412,6 @@ h1 {
   text-decoration: none;
   font-family: "source_sans_proregular", sans-serif;
   padding: 6px 20px 6px 12px;
-  color: #fff;
 }
 
 .filter-dropdowns {
@@ -1470,7 +1469,6 @@ h1 {
 .filter-dropdowns .dropdown {
   display: inline-block;
   vertical-align: top;
-  background: #212121;
   padding: 6px 10px;
   height: 34px;
   border-radius: 4px;
@@ -1482,7 +1480,6 @@ h1 {
 }
 
 .filter-dropdowns .dropdown>a {
-  color: #fff;
   display: block;
 }
 
@@ -4520,7 +4517,6 @@ textarea#comment_box {
   padding: 0 10px;
   font-size: 14px;
   line-height: 16px;
-  color: #000;
   position: fixed;
   width: 100%;
   top: 0;
@@ -4783,13 +4779,6 @@ textarea#comment_box {
   line-height: 20px;
   font-family: "source_sans_proregular", sans-serif;
   padding: 5px 4px 9px;
-  color: #000;
-}
-
-.btn-search-toggle:active,
-.btn-search-toggle:focus,
-.btn-search-toggle:hover {
-  color: #000;
 }
 
 .logo {
@@ -5260,17 +5249,6 @@ textarea#comment_box {
     display: none;
   }
 
-  #header .menu-holder .col .main-links ul li a:hover {
-    background: #0080b4;
-    color: #fff;
-  }
-
-  #header .menu-holder .col .main-links ul li.active a {
-    background: #0080b4;
-    color: #fff;
-  }
-
-  /**/
   .btn-search-toggle {
     float: right;
   }
@@ -5308,7 +5286,6 @@ textarea#comment_box {
     position: absolute;
     top: 0;
     left: -999px;
-    background: #fff;
     padding: 0 10px 10px;
   }
 
@@ -5351,7 +5328,6 @@ textarea#comment_box {
   }
 
   .newuser-links>li.dropdown.upload_link {
-    width: 40px;
     float: right;
   }
 
@@ -5359,7 +5335,6 @@ textarea#comment_box {
     display: block;
     width: 100%;
     padding: 5px;
-    background: #fff;
     text-decoration: #000;
   }
 
@@ -5408,8 +5383,6 @@ textarea#comment_box {
   }
 
   .newuser-links>li.upload_link {
-    width: 40px;
-    height: 40px;
     top: 0;
     z-index: 2;
     right: 10px;
@@ -5418,11 +5391,10 @@ textarea#comment_box {
   .newuser-links>li.upload_link a.btn-default {
     text-align: center;
     padding: 4px 6px;
-    border: 2px solid #000;
-    border-radius: 50%;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 25%;
     line-height: 28px;
-    width: 40px;
-    height: 40px;
   }
 
   .newuser-links>li.upload_link a.btn-default:active:hover,
@@ -5435,13 +5407,6 @@ textarea#comment_box {
   .newuser-links>li.upload_link a.btn-default:active,
   .newuser-links>li.upload_link a.btn-default.active {
     border: 2px solid #000;
-  }
-
-  .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle:hover,
-  .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle:focus,
-  .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle.focus,
-  .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle {
-    border-color: #000;
   }
 
   .newuser-links>li.myaccount-dd a> {
@@ -5461,21 +5426,12 @@ textarea#comment_box {
     color: #fff;
   }
 
-  .newuser-links .open>.btn-default.dropdown-toggle:hover,
-  .newuser-links .open>.btn-default.dropdown-toggle:focus,
-  .newuser-links .open>.btn-default.dropdown-toggle:active {
-    background: #fff;
-    color: #000;
-  }
-
   .navbar-default .navbar-collapse {
     border: none;
   }
 
   #header {
     padding: 0;
-    /**/
-    /**/
   }
 
   #header .menu-holder {
@@ -5506,14 +5462,13 @@ textarea#comment_box {
   #header .upload_link .dropdown-menu>li>a {
     text-align: center;
     padding: 4px 6px;
-    border: 2px solid #000;
+    border-style: solid;
+    border-width: 2px;
     border-radius: 50%;
     width: 40px;
     height: 40px;
     font-size: 0;
     line-height: 0;
-    color: #000;
-    background: #fff;
     position: relative;
   }
 
@@ -5560,7 +5515,7 @@ textarea#comment_box {
   }
 
   #header .navbar-default .navbar-toggle {
-    margin: 0 0 0 14px;
+    margin: 0 14px 0 0;
     width: 40px;
     height: 40px;
     font-size: 0;
@@ -5577,7 +5532,6 @@ textarea#comment_box {
     height: 3px;
     width: 24px;
     margin: 0;
-    background: #000;
     position: absolute;
     left: 8px;
     top: 8px;
@@ -6984,13 +6938,10 @@ textarea#comment_box {
     margin: 0 0 2px;
     background: none;
     border-radius: 0;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
     line-height: 36px;
     height: 48px;
-  }
-
-  .filter-dropdowns .dropdown>a {
-    color: #212121;
   }
 
   .filter-dropdowns .dropdown>a span {
@@ -7000,7 +6951,6 @@ textarea#comment_box {
 
   .filter-dropdowns .dropdown-menu {
     width: 100%;
-    background: #fff;
     font-size: 15px;
     line-height: 36px;
   }
@@ -7254,7 +7204,7 @@ textarea#comment_box {
   }
 }
 
-@media only screen and (max-width: 360) {
+@media only screen and (max-width: 360px) {
   .cd-popup .cb-popup-container {
     width: 90%;
   }
@@ -7465,6 +7415,9 @@ textarea#comment_box {
   border-radius: 0;
 }
 
+.item-video .video-link img{
+  width: 100%;
+}
 
 /*  Debut CSS caroucel */
 
@@ -7757,7 +7710,6 @@ textarea#comment_box {
   opacity: 1;
   transform: scale(1.05);
 }
-
 
  .slider-video-container .details {
   margin:0 0.5rem;

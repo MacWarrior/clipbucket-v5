@@ -20,10 +20,19 @@ html {
 
 /* Generic */
 /* Dropdown menu */
-.dropdown-menu{
+.dropdown-menu,
+.filter-dropdowns .dropdown-menu{
     background: var(--color-01);
 }
-.dropdown-menu>li>a{
+.filter-dropdowns .dropdown{
+    background-color: var(--color-02);
+    border-color: var(--color-03);
+}
+.filter-dropdowns .dropdown>a {
+    color: var(--color-01);
+}
+.dropdown-menu>li>a,
+.filter-dropdowns .dropdown-menu>li>a{
     color: var(--color-02);
     border-color: var(--color-03);
 }
@@ -267,6 +276,11 @@ a:hover{
 }
 .navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:active{
     background-color: initial;
+}
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus,
+.navbar-default .navbar-nav>.open>a:hover {
+    color: var(--color-main-01);
 }
 
 /* Footer */
@@ -576,4 +590,57 @@ a:hover{
 /* Video manager */
 #updateVideoInfo .formSection h4{
     background-color: var(--color-05);
+}
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+    #header .navbar-default .navbar-toggle:after,
+    #header .navbar-default .navbar-toggle:before,
+    #header .navbar-default .navbar-toggle .icon-down-arrow {
+        background-color: var(--color-02);
+    }
+    .btn-search-toggle:active,
+    .btn-search-toggle:focus,
+    .btn-search-toggle:hover,
+    .btn-search-toggle{
+        color: var(--color-02);
+    }
+    .user_menu,
+    .newuser-links>li>a{
+        background-color: var(--color-01);
+    }
+    .newuser-links>li.upload_link a.btn-default span{
+        display: none;
+    }
+    .newuser-links>li.upload_link a.btn-default,
+    .newuser-links .open>.btn-default.dropdown-toggle:hover,
+    .newuser-links .open>.btn-default.dropdown-toggle:focus,
+    .newuser-links .open>.btn-default.dropdown-toggle:active,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle:hover,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle:focus,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle.focus,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle,
+    #header .upload_link .dropdown-menu>li>a{
+        background-color: var(--color-01);
+        border-color: var(--color-04);
+        color: var(--color-02);
+    }
+
+    #header .menu-holder .col .main-links ul li.active a,
+    #header .menu-holder .col .main-links ul li a:hover{
+        background-color: var(--color-main-01);
+        color: var(--color-main-02);
+    }
+
+    .filter-dropdowns .dropdown{
+        background-color: var(--color-01);
+    }
+    .filter-dropdowns .dropdown>a{
+        color: var(--color-02);
+    }
+}
+@media only screen and (max-width: 990px) {
+    #header .logo img{
+        max-height: 45px;
+    }
 }

@@ -198,6 +198,17 @@ body {
     box-shadow: var(--generic-box-shadow);
 }
 
+/* Mobile */
+@media only screen and (max-width: 767px) {
+    #header .menu-holder .col .main-links ul li.active a,
+    #header .menu-holder .col .main-links ul li a:hover{
+        border-radius: var(--border-radius);
+    }
+    .filter-dropdowns .dropdown{
+        border-radius: var(--border-radius);
+    }
+}
+
 /* Default slider */
 .default-slider .slider-container .item-video{
     border-radius: var(--border-radius);

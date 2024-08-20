@@ -431,7 +431,6 @@ if (isset($_POST['update'])) {
         'enable_storage_history',
         'enable_storage_history_fo',
         'default_theme',
-        'default_theme',
         'homepage_featured_video_display',
         'homepage_recent_videos_display',
         'homepage_recent_video_style',
