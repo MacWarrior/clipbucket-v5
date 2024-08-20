@@ -1207,4 +1207,10 @@ VALUES ('admin_setting'),
        ('backdrop_delete_successfully'),
        ('poster_delete_successfully'),
        ('manage_x'),
-       ('remove_from_favorites');
+       ('remove_from_favorites'),
+       ('interfaces'),
+       ('global'),
+       ('option_default_theme'),
+       ('option_default_theme_light_original'),
+       ('option_default_theme_light'),
+       ('option_default_theme_dark');
