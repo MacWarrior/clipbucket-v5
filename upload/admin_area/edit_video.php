@@ -90,20 +90,14 @@ if (isset($_POST['del_cmt'])) {
     Comments::delete(['comment_id' => $_POST['cmt_id']]);
 }
 
+assign('uploader_info', User::getInstance()->getOne(['userid'=>$data['userid']]));
+
 $params = [];
 $params['type'] = 'v';
 $params['type_id'] = $video_id;
 $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
-
-function format_number($number)
-{
-    if ($number >= 1000) {
-        return $number / 1000 . 'k'; // NB: you will want to round this
-    }
-    return $number;
-}
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
@@ -122,6 +116,8 @@ assign('available_tags',$available_tags);
 
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
+
+assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $data['userid']);
 
 subtitle('Edit Video');
 template_files('edit_video.html');

@@ -356,7 +356,7 @@ class cbactions
         }
         if ($this->fav_check($fav_id, $uid)) {
             $db->delete(tbl($this->fav_tbl), ['userid', 'type', 'id'], [$uid, $this->type, $fav_id]);
-            e(sprintf(lang('fav_remove_msg'), lang($this->name)), 'm');
+            e(sprintf(lang('fav_remove_msg'), ucfirst(lang($this->name))), 'm');
         } else {
             e(sprintf(lang('unknown_favorite'), lang($this->name)));
         }
