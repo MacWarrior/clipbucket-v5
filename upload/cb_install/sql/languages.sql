@@ -1207,5 +1207,4 @@ VALUES ('admin_setting'),
        ('backdrop_delete_successfully'),
        ('poster_delete_successfully'),
        ('manage_x'),
-       ('storage_history'),
        ('remove_from_favorites');
