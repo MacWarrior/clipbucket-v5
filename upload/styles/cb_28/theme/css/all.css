@@ -7799,11 +7799,6 @@ textarea#comment_box {
   padding-left: 4px;
   opacity: 0.8;
 }
-slider-video-container .thumb-video-padding .thumb-video > .add-playlist.cb_quickie.icon-tick {
-  font-size: 1.3rem;
-  padding-left: 4px;
-  opacity: 0.8;
-}
 
 .slider-video-container .thumb-video-padding .thumb-video > .add-playlist.cb_quickie.icon-tick:after {
   content:'';
