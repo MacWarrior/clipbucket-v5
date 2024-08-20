@@ -26,6 +26,7 @@ html {
 }
 .filter-dropdowns .dropdown{
     background-color: var(--color-02);
+    border-color: var(--color-03);
 }
 .filter-dropdowns .dropdown>a {
     color: var(--color-01);
@@ -630,4 +631,15 @@ a:hover{
         color: var(--color-main-02);
     }
 
+    .filter-dropdowns .dropdown{
+        background-color: var(--color-01);
+    }
+    .filter-dropdowns .dropdown>a{
+        color: var(--color-02);
+    }
+}
+@media only screen and (max-width: 990px) {
+    #header .logo img{
+        max-height: 45px;
+    }
 }

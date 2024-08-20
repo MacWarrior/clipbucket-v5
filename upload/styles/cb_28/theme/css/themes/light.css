@@ -204,4 +204,7 @@ body {
     #header .menu-holder .col .main-links ul li a:hover{
         border-radius: var(--border-radius);
     }
+    .filter-dropdowns .dropdown{
+        border-radius: var(--border-radius);
+    }
 }

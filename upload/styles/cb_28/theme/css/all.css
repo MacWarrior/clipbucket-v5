@@ -6943,13 +6943,10 @@ textarea#comment_box {
     margin: 0 0 2px;
     background: none;
     border-radius: 0;
-    border-bottom: 1px solid #d9d9d9;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
     line-height: 36px;
     height: 48px;
-  }
-
-  .filter-dropdowns .dropdown>a {
-    color: #212121;
   }
 
   .filter-dropdowns .dropdown>a span {
@@ -7212,7 +7209,7 @@ textarea#comment_box {
   }
 }
 
-@media only screen and (max-width: 360) {
+@media only screen and (max-width: 360px) {
   .cd-popup .cb-popup-container {
     width: 90%;
   }
@@ -7421,4 +7418,8 @@ textarea#comment_box {
 
 .nav-pills>li>a{
   border-radius: 0;
+}
+
+.item-video .video-link img{
+  width: 100%;
 }
