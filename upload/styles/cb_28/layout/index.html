@@ -77,10 +77,10 @@
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 
-			{if config('channelsSection') == 'yes' && !empty($feature_users)}
+			{if config('channelsSection') == 'yes' && !empty($featured_users)}
 			<h2>{lang code="featured_users"}</h2>
 			<div class="clearfix sidebar-channels">
-					{foreach $feature_users as $user}
+					{foreach $featured_users as $user}
 				<div class="clearfix channel-item">
 					<a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
 						<img src="{$userquery->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle"/>
