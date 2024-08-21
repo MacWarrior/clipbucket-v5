@@ -7419,6 +7419,24 @@ textarea#comment_box {
   width: 100%;
 }
 
+/* Homepage options */
+@media only screen and (min-width: 1200px) {
+  #main.fullwidth #sidebar{
+    max-width: 300px;
+  }
+  #main.fullwidth #content{
+    width: calc(100% - 320px);
+  }
+}
+#main.fullwidth{
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+/* Homepage options */
+
+
+
 /*  Debut CSS caroucel */
 
 /** @todo hack full width  */
@@ -7515,14 +7533,11 @@ textarea#comment_box {
   cursor: default !important;
 }
 
-
 .slider-video-container.disabled .details .titre {
   opacity: 0;
 }
 
-
 .slider-video-container.disabled:after {
-
   display: inline-block;
   width: 100%;
   height: 100%;
@@ -7579,7 +7594,6 @@ textarea#comment_box {
   pointer-events: none;
   transition: color 200ms;
   z-index:5;
-
 }
 
 .default-slider .slider-container .slider-video-container.disabled.disabled-next .thumb-video:after,

@@ -125,6 +125,7 @@ if (isset($_POST['update'])) {
         , 'own_photo_rating'
         , 'enable_storage_history'
         , 'enable_storage_history_fo'
+        , 'home_enable_fullwidth'
     ];
 
     $config_booleans_to_refactor = [
@@ -436,7 +437,8 @@ if (isset($_POST['update'])) {
         'homepage_recent_video_style',
         'homepage_recent_video_ratio',
         'option_list_recent_videos',
-        'list_featured_videos'
+        'list_featured_videos',
+        'home_enable_fullwidth'
     ];
 
     foreach ($opt_list as $optl) {
