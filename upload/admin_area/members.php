@@ -23,7 +23,7 @@ if ($_GET['view'] == 'search') {
 } elseif ($_GET['search'] == 'yes' && $_GET['status'] == 'Ok') {
     $breadcrumb[1] = ['title' => 'Active Only', 'url' => DirPath::getUrl('admin_area') . 'members.php?status=Ok&search=Search'];
 } else {
-    $breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
+    $breadcrumb[1] = ['title' => display_manage_x('users'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 }
 
 $anonymous_id = userquery::getInstance()->get_anonymous_user();
@@ -286,6 +286,6 @@ $cat_array = [
 ];
 assign('cat_array', $cat_array);
 
-subtitle(lang('grp_manage_members_title'));
+subtitle(display_manage_x('users'));
 template_files('members.html');
 display_it();

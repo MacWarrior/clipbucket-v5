@@ -3370,7 +3370,7 @@ class userquery extends CBCategory
 
         if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
             $array[lang('playlists')] = [
-                lang('manage_playlists') => 'manage_playlists.php',
+                display_manage_x('playlists') => 'manage_playlists.php',
             ];
         }
 

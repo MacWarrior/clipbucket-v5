@@ -601,7 +601,7 @@ class Collections extends CBCategory
                             , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                         , [
-                            'title' => lang('manage_categories')
+                            'title' => display_manage_x('categories')
                             , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
@@ -1325,8 +1325,8 @@ class Collections extends CBCategory
             $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
         }
 
-        if (!is_null($type)) {
-            $cond .= ' AND C.userid = ' . mysql_clean($userid);
+        if (!is_null($userid) && !userquery::getInstance()->admin_login_check(true)) {
+            $cond .= ' AND (C.userid = ' . mysql_clean($userid) . ' OR (broadcast = \'public\' AND public_upload = \'yes\') )';
         }
         if (!empty ($cond)) {
             $cond .= ' GROUP BY C.collection_id';

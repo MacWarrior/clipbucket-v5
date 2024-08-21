@@ -49,6 +49,11 @@
                 </div>
             </div>
             <div class="photoPreview">
+                {if empty($data.collection_id)}
+                <div class="thumb_banner label-warning">
+                    {sprintf(lang("photo_is"), strtolower(lang("orphan")))}
+                </div>
+                {/if}
                 {get_photo details=$data size='l' output='html' class='img-thumbnail'}
             </div>
         </div>

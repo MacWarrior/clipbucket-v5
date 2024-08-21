@@ -10,8 +10,8 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
+$breadcrumb[0] = ['title' => display_manage_x('plugins'), 'url' => ''];
+$breadcrumb[1] = ['title' => display_manage_x('plugins'), 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
 
 //uninstalling Plugin
 if (isset($_GET['uninstall'])) {
@@ -105,6 +105,6 @@ $installed_plugin_list = $cbplugin->getInstalledPlugins();
 
 Assign('installed_plugin_list', $installed_plugin_list);
 Assign('msg', @$msg);
-subtitle('Plugin Manager');
+subtitle(display_manage_x('plugins'));
 template_files('plugin_manager.html');
 display_it();

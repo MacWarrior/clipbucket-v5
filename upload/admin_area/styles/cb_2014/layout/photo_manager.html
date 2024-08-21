@@ -1,5 +1,5 @@
 <div class="heading clearfix">
-    <h2 class="pull-left">Photo Manager</h2>
+    <h2 class="pull-left">{display_manage_x('photos')}</h2>
     {include file="$layout_dir/blocks/advanced_photo_search.html" }
 </div>
 <form name="photo_manager" method="post">
@@ -77,9 +77,11 @@
            <li>
             <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
           </li>
-          <li>
-            <a href="/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='views'}</a>
-          </li>
+            {if !empty($photos[list]['collection_id'])}
+              <li>
+                <a href="/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='view'}</a>
+              </li>
+            {/if}
           <li>
             {if $photos[list]['active'] == 'yes'}
               <a href="?deactivate={$photos[list].photo_id}">{lang code='deactivate'}</a>

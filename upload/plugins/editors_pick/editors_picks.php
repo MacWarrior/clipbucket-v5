@@ -153,4 +153,4 @@ if (in_dev()) {
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');
+add_admin_menu(display_manage_x('plugins'), lang('plugin_editors_picks'), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');

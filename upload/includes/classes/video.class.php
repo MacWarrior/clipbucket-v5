@@ -880,19 +880,19 @@ class CBvideo extends CBCategory
             ];
 
             $menu_video['sub'][] =  [
-                'title' => lang('videos_manager')
+                'title' => display_manage_x('videos')
                 , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'
             ];
 
             if( isSectionEnabled('playlists') ){
                 $menu_video['sub'][] =  [
-                    'title' => lang('manage_playlists')
+                    'title' => display_manage_x('playlists')
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_playlist.php'
                 ];
             }
 
             $menu_video['sub'][] = [
-                'title' => lang('manage_categories')
+                'title' => display_manage_x('categories')
                 , 'url' => DirPath::getUrl('admin_area') . 'category.php'
             ];
             $menu_video['sub'][] = [

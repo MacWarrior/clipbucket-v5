@@ -11,7 +11,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Comments', 'url' => DirPath::getUrl('admin_area') . 'comments.php'];
+$breadcrumb[1] = ['title' => display_manage_x('comments'), 'url' => DirPath::getUrl('admin_area') . 'comments.php'];
 
 if( !empty($_POST['check_comments']) && is_array($_POST['check_comments']) ){
     foreach($_POST['check_comments'] AS $id){

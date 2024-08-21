@@ -14,7 +14,7 @@ if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Templates Manager', 'url' => DirPath::getUrl('admin_area') . 'templates.php'];
+$breadcrumb[1] = ['title' => display_manage_x('templates'), 'url' => DirPath::getUrl('admin_area') . 'templates.php'];
 
 if ($_GET['change']) {
     $myquery->set_template($_GET['change']);

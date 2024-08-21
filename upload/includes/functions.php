@@ -4223,6 +4223,11 @@ function ageRestriction($var) {
     return $var;
 }
 
+function display_manage_x($item)
+{
+    return str_replace('%s',strtolower(lang($item)),lang('manage_x'));
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

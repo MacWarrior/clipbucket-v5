@@ -375,6 +375,7 @@ $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('uploadButton', 'upload_photo_button');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
+$Smarty->register_function('display_manage_x', 'display_manage_x');
 
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');

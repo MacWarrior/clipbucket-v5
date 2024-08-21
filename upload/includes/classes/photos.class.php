@@ -711,7 +711,7 @@ class CBPhotos
                 , 'class' => 'glyphicon glyphicon-picture'
                 , 'sub'   => [
                     [
-                        'title' => 'Photo Manager'
+                        'title' => display_manage_x('photos')
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
@@ -731,7 +731,7 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
-                        'title' => lang('manage_categories')
+                        'title' => display_manage_x('categories')
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
                 ]
@@ -1740,8 +1740,7 @@ class CBPhotos
             $p['user'] = user_id();
         }
 
-        $p['type'] = 'photos';
-        $collections = $this->collection->get_collections($p);
+        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id());
         $cl_array = $this->parse_array($collections);
         $collection = $array['collection_id'];
         $this->unique = rand(0, 9999);
@@ -2100,7 +2099,7 @@ class CBPhotos
     {
         if (is_array($array)) {
             foreach ($array as $key => $v) {
-                $cl_arr[$v['collection_id']] = $v['collection_name'];
+                $cl_arr[$key] = $v['name'];
             }
             return $cl_arr;
         }
@@ -2250,8 +2249,9 @@ class CBPhotos
                             $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
-
-                            e(lang("photo_updated_successfully"), "m");
+                            if (empty(errorhandler::getInstance()->get_error)) {
+                                e(lang("photo_updated_successfully"), "m");
+                            }
                         }
                     }
                 }
