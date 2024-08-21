@@ -61,6 +61,10 @@ class MWIP extends \Migration
             'fr' => 'Affichage pleine largeur',
             'en' => 'Fullwidth display'
         ]);
+        self::generateTranslation('option_disable_sidebar', [
+            'fr' => 'Désactiver la sidebar',
+            'en' => 'Disable sidebar'
+        ]);
 
         self::generateConfig('homepage_recent_videos_display', 'paginate');
         self::generateConfig('homepage_featured_video_display', 'paginate');
@@ -69,6 +73,7 @@ class MWIP extends \Migration
         self::generateConfig('list_recent_videos', '20');
         self::generateConfig('list_featured_videos', '20');
         self::generateConfig('home_enable_fullwidth', 'no');
+        self::generateConfig('home_disable_sidebar', 'no');
 
         $sql = 'SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'en\');';
         self::query($sql);

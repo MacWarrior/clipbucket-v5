@@ -1,5 +1,5 @@
 {ANCHOR place="before_content"}
-<div id="main" class="clearfix container {if config('home_enable_fullwidth') == 'yes'}fullwidth{/if}">
+<div id="main" class="clearfix container {if config('home_enable_fullwidth') == 'yes'}fullwidth{/if} {if config('home_disable_sidebar') == 'yes'}nosidebar{/if}">
 	<div id="messageFav" class="alert alert-info marginTop" style="display:none; height:66px;"></div>
 	<div class="clearfix">
 		<div id="content">
@@ -70,21 +70,20 @@
 			{/if}
 			{lang code='channel' assign='object_type'}
 		</div>
+
+		{if config('home_disable_sidebar') != 'yes'}
 		<aside id="sidebar">
 			{if config("enable_advertisement") == "yes"}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
 
-			{if config('channelsSection') == 'yes'}
-				{$feature_users=get_users(['featured'=>'yes','limit'=>5])}
-				{if $feature_users}
+			{if config('channelsSection') == 'yes' && !empty($feature_users)}
 			<h2>{lang code="featured_users"}</h2>
 			<div class="clearfix sidebar-channels">
 					{foreach $feature_users as $user}
-
 				<div class="clearfix channel-item">
 					<a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
-						<img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
+						<img src="{$userquery->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle"/>
 					</a>
 					<div class="channel-info">
 						<h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
@@ -98,7 +97,6 @@
 				</div>
 					{/foreach}
 			</div>
-				{/if}
 			{/if}
 
 			{if config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !empty($top_collections)}
@@ -114,10 +112,7 @@
 				</div>
 			{/if}
 
-			{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
-				{$playlists = get_playlists(['limit'=>4, 'order'=>'playlists.total_items DESC'])}
-				{$playlists = activePlaylists($playlists)}
-				{if $playlists}
+			{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && !empty($playlists)}
 				<div class="clearfix sidebar-playlists">
 					<h2 title="Playlists with most videos">{lang code="top_playlists"}</h2>
 					{foreach $playlists as $playlist}
@@ -145,9 +140,9 @@
 					</div>
 					{/foreach}
 				</div>
-				{/if}
 			{/if}
 		</aside>
+		{/if}
 	</div>
 </div>
 

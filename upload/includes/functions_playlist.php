@@ -5,9 +5,11 @@ function get_playlist($list_id, $user = null)
     return $cbvid->action->get_playlist($list_id, $user);
 }
 
+/**
+ * @throws Exception
+ */
 function is_playlist_viewable($list_id)
 {
-
     if (is_array($list_id)) {
         $playlist = $list_id;
     } else {
@@ -15,14 +17,12 @@ function is_playlist_viewable($list_id)
     }
 
     if (isset($playlist['playlist_id'])) {
-
         if ($playlist['privacy'] == 'private' and $playlist['userid'] != user_id()) {
             e(lang('User has made this playlist private.'));
             return false;
         }
 
         $data = cb_do_action('is_playlist_viewable', ['playlist' => $playlist]);
-
         if ($data) {
             return $data;
         }
@@ -93,7 +93,7 @@ function get_playlist_thumb($playlist, $size = false)
     return ($thumb ? $thumb : get_playlist_default_thumb());
 }
 
-function get_playlist_default_thumb()
+function get_playlist_default_thumb(): string
 {
     $name = 'playlist_thumb.png';
     $template = TEMPLATEDIR;
@@ -150,7 +150,7 @@ function view_playlist($playlist_id)
 /**
  * @throws Exception
  */
-function playlist_upload_cover($args)
+function playlist_upload_cover($args): bool
 {
     global $db;
 
@@ -170,17 +170,18 @@ function playlist_upload_cover($args)
             $resizer->resize(1280, 800);
             $resizer->save();
 
-
             $db->update(tbl('playlists'), ['cover'], [$folder . '/' . $cover_name], " playlist_id = '" . $filename . "' ");
 
             return true;
         }
-
     }
 
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function increment_playlist_played($args = [])
 {
     global $db;

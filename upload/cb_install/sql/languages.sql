@@ -1227,4 +1227,5 @@ VALUES ('admin_setting'),
        ('option_list_recent_videos'),
        ('option_list_featured_videos'),
        ('tips_only_with_slider_option'),
-       ('option_enable_fullwidth');
+       ('option_enable_fullwidth'),
+       ('option_disable_sidebar');

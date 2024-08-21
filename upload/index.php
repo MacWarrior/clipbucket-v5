@@ -4,20 +4,40 @@ ini_set('display_errors', 1);
 
 define('THIS_PAGE', 'index');
 require 'includes/config.inc.php';
-global $pages, $userquery;
-$pages->page_redir();
-$anonymous_id = $userquery->get_anonymous_user();
+pages::getInstance()->page_redir();
+
+$anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
-if (!$userquery->perm_check('view_videos', false, false, true) && !user_id()) {
+
+if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && !user_id()) {
     template_files('signup_or_login.html');
 } else {
-    if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ) {
-        $params = [
-            'limit'   => config('collection_home_top_collections')
-            , 'order' => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
-        ];
+    if( config('home_disable_sidebar') != 'yes' ){
+        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ) {
+            $params = [
+                'limit'  => config('collection_home_top_collections')
+                ,'order' => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'
+            ];
 
-        assign('top_collections', Collection::getInstance()->getAll($params));
+            assign('top_collections', Collection::getInstance()->getAll($params));
+        }
+
+        if( config('channelsSection') == 'yes' ){
+            $params = [
+                'featured' => 'yes'
+                ,'limit'   => 5
+            ];
+            assign('featured_users', userquery::getInstance()->get_users($params));
+        }
+
+        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
+            $params = [
+                'limit'  => 4
+                ,'order' => 'playlists.total_items DESC'
+            ];
+            $playlists = get_playlists([]);
+            assign('playlists', activePlaylists($playlists));
+        }
     }
 
     $min_suffixe = in_dev() ? '' : '.min';
