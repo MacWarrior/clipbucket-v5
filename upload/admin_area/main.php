@@ -127,6 +127,7 @@ if (isset($_POST['update'])) {
         , 'enable_storage_history_fo'
         , 'home_enable_fullwidth'
         , 'home_disable_sidebar'
+        , 'home_display_featured_collections'
     ];
 
     $config_booleans_to_refactor = [
@@ -440,7 +441,11 @@ if (isset($_POST['update'])) {
         'option_list_recent_videos',
         'list_featured_videos',
         'home_enable_fullwidth',
-        'home_disable_sidebar'
+        'home_disable_sidebar',
+        'home_display_featured_collections',
+        'homepage_collection_video_style',
+        'homepage_collection_video_ratio',
+        'list_home_collection_videos'
     ];
 
     foreach ($opt_list as $optl) {

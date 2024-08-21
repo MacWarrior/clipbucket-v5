@@ -413,10 +413,7 @@
 										</div>
 										<hr/>
 
-									</div>
-
-									<!-- Not available yet
-									<div class="col-md-4">
+										<!-- Not available yet
 										<div class="row">
 											<div class="col-md-6">
 												<label class="nowrap" for="homepage_featured_video_display" title="{lang code='option_homepage_featured_video_display'}">{lang code='option_homepage_featured_video_display'}</label>
@@ -424,8 +421,8 @@
 											<div class="col-md-6">
 												<select class="form-control" name="homepage_featured_video_display" id="homepage_featured_video_display">
 													{assign var=array_modes value=[
-														'paginate' => 'option_paginate'
-														,'slider' => 'option_slider'
+													'paginate' => 'option_paginate'
+													,'slider' => 'option_slider'
 													]}
 													{foreach from=$array_modes item=trad key=code}
 													<option {if $code==$row.homepage_featured_video_display}selected{/if} value="{$code}">
@@ -445,9 +442,9 @@
 											</div>
 										</div>
 										<hr/>
+										-->
 
 									</div>
-									-->
 
 									<div class="col-md-4">
 										<div class="row">
@@ -490,7 +487,7 @@
 										<hr/>
 										<div class="row">
 											<div class="col-md-6">
-												<label class="nowrap" for="homepage_recent_video_ratio" title="{lang code='option_video_ratio'}">{lang code='option_video_ratio'}</label>
+												<label class="nowrap" for="homepage_recent_video_ratio" title="{lang code='option_homepage_recent_video_ratio'}">{lang code='option_homepage_recent_video_ratio'}</label>
 											</div>
 											<div class="col-md-6">
 												<select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
@@ -514,6 +511,67 @@
 											</div>
 											<div class="col-md-6">
 												<input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
+											</div>
+										</div>
+										<hr/>
+
+									</div>
+									<div class="col-md-4">
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="home_display_featured_collections" title="{lang code='option_home_display_featured_collections'}">{lang code='option_home_display_featured_collections'}</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="yes" name="home_display_featured_collections" id="home_display_featured_collections" {if $row.home_display_featured_collections=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+												<span class="lbl"></span>
+											</div>
+										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="homepage_collection_video_style" title="{lang code='option_homepage_collection_video_style'}">{lang code='option_homepage_collection_video_style'}</label>
+											</div>
+											<div class="col-md-6">
+												<select class="form-control" name="homepage_collection_video_style" id="homepage_collection_video_style">
+													{assign var=array_styles value=[
+														'modern' => 'option_modern'
+														,'classic' => 'option_classic'
+													]}
+													{foreach from=$array_styles item=trad key=code}
+													<option {if $code==$row.homepage_collection_video_style}selected{/if} value="{$code}">
+														{lang code=$trad}
+													</option>
+													{/foreach}
+												</select>
+											</div>
+										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="homepage_collection_video_ratio" title="{lang code='option_homepage_collection_video_ratio'}">{lang code='option_homepage_collection_video_ratio'}</label>
+											</div>
+											<div class="col-md-6">
+												<select class="form-control" name="homepage_collection_video_ratio" id="homepage_collection_video_ratio">
+													{assign var=array_styles value=[
+														'1.3333' => '4/3'
+														,'1.7777' => '16/9'
+														,'1.6' => '16/10'
+													]}
+													{foreach from=$array_styles item=value key=code}
+													<option {if $code==$row.homepage_collection_video_ratio}selected{/if} value="{$code}">
+														{$value}
+													</option>
+													{/foreach}
+												</select>
+											</div>
+										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="list_home_collection_videos" title="{lang code='option_list_home_collection_videos'}">{lang code='option_list_home_collection_videos'}</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{$row.list_home_collection_videos}" type="number" min="0"/>
 											</div>
 										</div>
 										<hr/>

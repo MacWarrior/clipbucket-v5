@@ -68,7 +68,7 @@ if (isset($_POST['make_featured_selected']) && is_array($_POST['check_collection
         $cbcollection->collection_actions('mcf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm');
+    e($total . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm',false);
 }
 
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
@@ -77,7 +77,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collecti
         $cbcollection->collection_actions('mcuf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm');
+    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
 }
 
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
@@ -86,7 +86,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collecti
         $cbcollection->collection_actions('mcuf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm');
+    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
 }
 
 if (isset($_POST['delete_selected']) && is_array($_POST['check_collection'])) {

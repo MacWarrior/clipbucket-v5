@@ -49,6 +49,16 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
         assign('recent_videos', Video::getInstance()->getAll($params));
     }
 
+    if( config('home_display_featured_collections') == 'yes' ){
+        $params = [
+            'featured'               => 'yes'
+            ,'type'                  => 'videos'
+            ,'hide_empty_collection' => true
+            ,'with_items'            => true
+        ];
+        assign('featured_collections', Collection::getInstance()->getAll($params));
+    }
+
     template_files('index.html');
 }
 display_it();

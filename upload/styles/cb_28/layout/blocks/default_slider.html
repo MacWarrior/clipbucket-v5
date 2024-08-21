@@ -1,0 +1,24 @@
+<section class="clearfix default-slider"{if $video_ratio !== false} data-ratio="{$video_ratio}"{/if}>
+<h1>{$title}</h1>
+<div class="slider-container-action">
+    <div class="prev"></div>
+    <div class="slider-container-overflow">
+        <div class="slider-container">
+            {if $video_style == 'modern'}
+                {foreach $video_list as $video}
+                    {include file="$style_dir/blocks/video-new.html"}
+                {/foreach}
+            {elseif in_array($video_style, [false, 'classic'])}
+            <div class="videos">
+                {foreach $video_list as $video}
+                <div class="item-video">
+                    {include file="$style_dir/blocks/video.html" display_type='user-videos'}
+                </div>
+                {/foreach}
+            </div>
+            {/if}
+        </div>
+    </div>
+    <div class="next"></div>
+</div>
+</section>

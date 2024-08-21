@@ -11,6 +11,7 @@
 			{/if}
 
 			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
+				{ANCHOR place='before_features_videos'}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>
 				<div id="featured_vid_sec" class="clearfix row"></div>
@@ -19,7 +20,9 @@
 					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
 				</div>
 			</section>
+				{ANCHOR place='after_features_videos'}
 
+				{ANCHOR place='before_recent_videos'}
 				{if in_array(config('homepage_recent_videos_display'), ['paginate', false])}
 				<section class="clearfix videos">
 					<h1>{lang code="recent_videos"}</h1>
@@ -40,35 +43,23 @@
 							</div>
 						</section>
 					{else}
-						<section class="clearfix default-slider" {if config('homepage_recent_video_ratio') !== false}data-ratio="{config('homepage_recent_video_ratio')}"{/if} >
-							<h1>{lang code="recent_videos"}</h1>
-							<div class="slider-container-action">
-								<div class="prev"></div>
-								<div class="slider-container-overflow">
-									<div class="slider-container">
-										{if config('homepage_recent_video_style') == 'modern'}
-											{foreach $recent_videos as $video}
-												{include file="$style_dir/blocks/video-new.html"}
-											{/foreach}
-										{elseif in_array(config('homepage_recent_video_style'), [false, 'classic'])}
-										<div class="videos">
-											{foreach $recent_videos as $video}
-											<div class="item-video">
-												{include file="$style_dir/blocks/video.html" display_type='user-videos'}
-											</div>
-											{/foreach}
-										</div>
-										{/if}
-									</div>
-								</div>
-								<div class="next"></div>
-							</div>
-						</section>
+						{include file="$style_dir/blocks/default_slider.html" video_ratio=config('homepage_recent_video_ratio') video_style=config('homepage_recent_video_style') video_list=$recent_videos title={lang code="recent_videos"}}
 					{/if}
+				{/if}
+				{ANCHOR place='after_recent_videos'}
+
+				{if config('home_display_featured_collections') == 'yes' && !empty($featured_collections)}
+					{ANCHOR place='before_featured_collections'}
+						{foreach $featured_collections as $collection}
+							{if empty($collection.items)}
+								{continue}
+							{/if}
+							{include file="$style_dir/blocks/default_slider.html" video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name}
+						{/foreach}
+					{ANCHOR place='after_featured_collections'}
 				{/if}
 
 			{/if}
-			{lang code='channel' assign='object_type'}
 		</div>
 
 		{if config('home_disable_sidebar') != 'yes'}

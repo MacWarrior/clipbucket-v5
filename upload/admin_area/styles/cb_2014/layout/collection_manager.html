@@ -8,6 +8,8 @@
 	<div class="btn-group marginBottomLarge">
 		<input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
 		<input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
 		<input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
     </div>
 
@@ -76,6 +78,12 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$collections[list].collection_id}">{lang code='deactivate'}</a></li>
                         {else}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$collections[list].collection_id}">{lang code='activate'}</a></li>
+                        {/if}
+                        {if $collections[list].featured == 'yes'}
+                        <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$collections[list].collection_id}">Make Unfeatured</a></li>
+                        {/if}
+                        {if $collections[list].featured == 'no'}
+                        <li><a role="menuitem" tabindex="-1" href="?make_feature={$collections[list].collection_id}">Make Featured</a></li>
                         {/if}
                         <li class="divider"></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_collection={$collections[list].collection_id}">{lang code='delete'}</a></li>

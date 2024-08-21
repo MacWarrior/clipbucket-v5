@@ -41,10 +41,6 @@ class MWIP extends \Migration
             'fr' => 'Classique',
             'en' => 'Classic'
         ]);
-        self::generateTranslation('option_video_ratio', [
-            'fr' => 'Ratio d\'affichage des vidéos',
-            'en' => 'Video display ratio'
-        ]);
         self::generateTranslation('option_list_recent_videos', [
             'fr' => 'Nombre de vidéos récentes',
             'en' => 'Number of recent videos'
@@ -65,6 +61,26 @@ class MWIP extends \Migration
             'fr' => 'Désactiver la sidebar',
             'en' => 'Disable sidebar'
         ]);
+        self::generateTranslation('option_home_display_featured_collections', [
+            'fr' => 'Afficher les collections vedettes',
+            'en' => 'Display featured collections'
+        ]);
+        self::generateTranslation('option_homepage_collection_video_style', [
+            'fr' => 'Style des vidéos de collection',
+            'en' => 'Collection\'s videos style'
+        ]);
+        self::generateTranslation('option_list_home_collection_videos', [
+            'fr' => 'Nombre de vidéos de collection',
+            'en' => 'Number of collection\'s videos'
+        ]);
+        self::generateTranslation('option_homepage_collection_video_ratio', [
+            'fr' => 'Ratio d\'affichage des vidéos de collection',
+            'en' => 'Collection\'s videos display ratio'
+        ]);
+        self::generateTranslation('option_homepage_recent_video_ratio', [
+            'fr' => 'Ratio d\'affichage des vidéos récentes',
+            'en' => 'Recent videos display ratio'
+        ]);
 
         self::generateConfig('homepage_recent_videos_display', 'paginate');
         self::generateConfig('homepage_featured_video_display', 'paginate');
@@ -74,6 +90,10 @@ class MWIP extends \Migration
         self::generateConfig('list_featured_videos', '20');
         self::generateConfig('home_enable_fullwidth', 'no');
         self::generateConfig('home_disable_sidebar', 'no');
+        self::generateConfig('home_display_featured_collections', 'yes');
+        self::generateConfig('homepage_collection_video_style', 'modern');
+        self::generateConfig('homepage_collection_video_ratio', '1.7777');
+        self::generateConfig('list_home_collection_videos', '20');
 
         $sql = 'SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'en\');';
         self::query($sql);
