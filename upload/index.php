@@ -43,7 +43,7 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
     $min_suffixe = in_dev() ? '' : '.min';
     ClipBucket::getInstance()->addJS(['pages/index/index' . $min_suffixe . '.js'  => 'admin']);
 
-    if( config('homepage_recent_videos_display') == 'slider' ){
+    if( config('home_display_recent_videos') == 'yes' && config('homepage_recent_videos_display') == 'slider' ){
         $params = Video::getInstance()->getFilterParams('most_recent', []);
         $params['limit'] = config('list_recent_videos') ?? 20;
         assign('recent_videos', Video::getInstance()->getAll($params));

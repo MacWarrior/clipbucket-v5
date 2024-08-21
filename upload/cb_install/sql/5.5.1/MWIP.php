@@ -81,6 +81,10 @@ class MWIP extends \Migration
             'fr' => 'Ratio d\'affichage des vidéos récentes',
             'en' => 'Recent videos display ratio'
         ]);
+        self::generateTranslation('option_home_display_recent_videos', [
+            'fr' => 'Afficher les vidéo récentes',
+            'en' => 'Display recent videos'
+        ]);
 
         self::generateConfig('homepage_recent_videos_display', 'paginate');
         self::generateConfig('homepage_featured_video_display', 'paginate');
@@ -94,6 +98,7 @@ class MWIP extends \Migration
         self::generateConfig('homepage_collection_video_style', 'modern');
         self::generateConfig('homepage_collection_video_ratio', '1.7777');
         self::generateConfig('list_home_collection_videos', '20');
+        self::generateConfig('home_display_recent_videos', 'yes');
 
         $sql = 'SET @language_id_eng = (SELECT `language_id` FROM `{tbl_prefix}languages` WHERE language_code = \'en\');';
         self::query($sql);
