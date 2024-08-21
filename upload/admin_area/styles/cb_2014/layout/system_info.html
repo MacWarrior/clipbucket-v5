@@ -84,13 +84,13 @@
                     {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if in_array($key,$extensionsWEB)}tick{else}alert{/if}.png"/>
                             <label>
-                                {$extension.display} extension -
-                                {if !$extensionsWEB.$key}
+                                {$extension.display} extension
+                                {if !in_array($key,$extensionsWEB)}
                                 <div class="alert alert-danger">{lang code='not_found'}</div>
                                 {else}
-                                <strong>{$extensionsWEB.$key}</strong>
+                                <strong>enabled</strong>
                                 {/if}
                             </label>
                         </div>
@@ -119,13 +119,13 @@
                     {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if in_array($key,$extensionsCLI)}tick{else}alert{/if}.png"/>
                             <label>
-                                {$extension.display} extension -
-                                {if !$extensionsCLI.$key}
+                                {$extension.display} extension
+                                {if !in_array($key,$extensionsCLI)}
                                 <div class="alert alert-danger">{lang code='not_found'}</div>
                                 {else}
-                                <strong>{$extensionsCLI.$key}</strong>
+                                <strong>enabled</strong>
                                 {/if}
                             </label>
                         </div>

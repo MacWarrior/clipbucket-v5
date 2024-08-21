@@ -282,27 +282,27 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.1",
-            "version_normalized": "1.1.0.0",
+            "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
-                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2 || ^8.0"
+                "php": ">=5.3.0"
             },
-            "time": "2023-04-04T09:50:52+00:00",
+            "time": "2016-08-06T14:39:51+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "installation-source": "dist",
@@ -332,7 +332,7 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/1.1"
+                "source": "https://github.com/php-fig/http-message/tree/master"
             },
             "install-path": "../psr/http-message"
         },
@@ -573,6 +573,61 @@
                 "source": "https://github.com/smarty-php/smarty/tree/v3.1.48"
             },
             "install-path": "../smarty/smarty"
+        },
+        {
+            "name": "veka-server/onnx-php",
+            "version": "dev-php7",
+            "version_normalized": "dev-php7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/veka-server/onnx-php.git",
+                "reference": "69f54a5cdde794cddd5a6871fc62a6603cdeba99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/veka-server/onnx-php/zipball/69f54a5cdde794cddd5a6871fc62a6603cdeba99",
+                "reference": "69f54a5cdde794cddd5a6871fc62a6603cdeba99",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ffi": "*",
+                "ext-mbstring": "*",
+                "php": ">= 7"
+            },
+            "time": "2024-08-09T15:46:41+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Onnx\\": "src/",
+                    "FFI\\Env\\": "env/src",
+                    "FFI\\WorkDirectory\\": "work-directory/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "veka-server",
+                    "email": "veka610@gmail.com"
+                }
+            ],
+            "description": "lib for use onnxruntime with php",
+            "keywords": [
+                "ai",
+                "llm",
+                "models",
+                "onnx",
+                "onnxruntime",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/veka-server/onnx-php/issues",
+                "source": "https://github.com/veka-server/onnx-php/tree/php7"
+            },
+            "install-path": "../veka-server/onnx-php"
         }
     ],
     "dev": true,
