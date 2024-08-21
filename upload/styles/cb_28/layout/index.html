@@ -76,7 +76,7 @@
 					{foreach $featured_users as $user}
 				<div class="clearfix channel-item">
 					<a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
-						<img src="{$userquery->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle"/>
+						<img src="{$userquery->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle no_select"/>
 					</a>
 					<div class="channel-info">
 						<h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
