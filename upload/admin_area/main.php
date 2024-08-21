@@ -434,7 +434,9 @@ if (isset($_POST['update'])) {
         'homepage_featured_video_display',
         'homepage_recent_videos_display',
         'homepage_recent_video_style',
-        'homepage_recent_video_ratio'
+        'homepage_recent_video_ratio',
+        'option_list_recent_videos',
+        'list_featured_videos'
     ];
 
     foreach ($opt_list as $optl) {

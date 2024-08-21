@@ -32,7 +32,7 @@
 
 				{elseif config('homepage_recent_videos_display') == 'slider'}
 
-					{if !is_array($videos)}
+					{if !is_array($recent_videos)}
 						<section class="clearfix featured-videos">
 							<h1>{lang code="recent_videos"}</h1>
 							<div class="clearfix row">
@@ -47,12 +47,12 @@
 								<div class="slider-container-overflow">
 									<div class="slider-container">
 										{if config('homepage_recent_video_style') == 'modern'}
-											{foreach $videos as $video}
+											{foreach $recent_videos as $video}
 												{include file="$style_dir/blocks/video-new.html"}
 											{/foreach}
 										{elseif in_array(config('homepage_recent_video_style'), [false, 'classic'])}
 										<div class="videos">
-											{foreach $videos as $video}
+											{foreach $recent_videos as $video}
 											<div class="item-video">
 												{include file="$style_dir/blocks/video.html" display_type='user-videos'}
 											</div>

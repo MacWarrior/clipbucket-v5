@@ -287,10 +287,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_storage_history_fo', 'yes'),
     (NULL, 'default_theme', 'light'),
     (NULL, 'custom_css', ''),
-    (NULL, 'homepage_recent_videos_display', 'paginate'),
+    (NULL, 'homepage_recent_videos_display', 'slider'),
     (NULL, 'homepage_featured_video_display', 'paginate'),
-    (NULL, 'homepage_recent_video_style', 'classic'),
-    (NULL, 'homepage_recent_video_ratio', '1.3333');
+    (NULL, 'homepage_recent_video_style', 'modern'),
+    (NULL, 'homepage_recent_video_ratio', '1.7777'),
+    (NULL, 'list_recent_videos', '20'),
+    (NULL, 'list_featured_videos', '20');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

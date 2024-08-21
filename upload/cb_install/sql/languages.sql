@@ -1223,4 +1223,7 @@ VALUES ('admin_setting'),
        ('option_homepage_recent_video_style'),
        ('option_modern'),
        ('option_classic'),
-       ('option_video_ratio');
+       ('option_video_ratio'),
+       ('option_list_recent_videos'),
+       ('option_list_featured_videos'),
+       ('tips_only_with_slider_option');

@@ -395,6 +395,7 @@
 
 									</div>
 
+									<!-- Not available yet
 									<div class="col-md-4">
 										<div class="row">
 											<div class="col-md-6">
@@ -415,8 +416,19 @@
 											</div>
 										</div>
 										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="list_featured_videos" title="{lang code='option_list_featured_videos'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_only_with_slider_option'}"> {lang code='option_list_featured_videos'}</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" name="list_featured_videos" id="list_featured_videos" value="{$row.list_featured_videos}" type="number" min="0"/>
+											</div>
+										</div>
+										<hr/>
 
 									</div>
+									-->
+
 									<div class="col-md-4">
 										<div class="row">
 											<div class="col-md-6">
@@ -473,6 +485,15 @@
 													</option>
 													{/foreach}
 												</select>
+											</div>
+										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_only_with_slider_option'}"> {lang code='option_list_recent_videos'}</label>
+											</div>
+											<div class="col-md-6">
+												<input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
 											</div>
 										</div>
 										<hr/>
