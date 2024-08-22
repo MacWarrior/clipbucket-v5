@@ -52,7 +52,6 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
             $view_more = false;
         } else {
             unset($params['limit']);
-            unset($params['order']);
             $params['count'] = true;
             $count_videos = Video::getInstance()->getAll($params);
             if( $count_videos > count($recent_videos) ){
