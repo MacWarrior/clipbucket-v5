@@ -68,5 +68,12 @@ class MWIP extends \Migration
         self::generateTranslation('selected_collects_del', [
             'fr'=>'Les collections sélectionnées ont été supprimées'
         ]);
+
+        self::generateTranslation('view_channel_comments', [
+            'fr'=>'Voir les commentaires de chaine',
+            'en'=>'View channel comments'
+        ]);
+
+        self::query('INSERT INTO ' . tbl('categories').' (id_category_type, category_name, is_default) VALUES((select id_category_type from '.tbl('categories_type').' where name = \'photo\'), \'Uncategorized\', \'yes\')');
     }
 }

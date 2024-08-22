@@ -1184,6 +1184,12 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
 
+        //Removing channel Comments
+        $params = [];
+        $params['type'] = 'channel';
+        $params['type_id'] = $uid;
+        Comments::delete($params);
+
         //Remove tags
         Tags::deleteTags('profile', $uid);
         //Remove categories

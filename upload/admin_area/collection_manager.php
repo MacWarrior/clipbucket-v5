@@ -18,6 +18,10 @@ $breadcrumb[1] = [
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 
+if (!empty($_GET['missing_collection'])) {
+    e(lang('collection_not_exist'));
+}
+
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
     $cbcollection->collection_actions('mcf', $id);

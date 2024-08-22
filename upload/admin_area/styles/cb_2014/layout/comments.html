@@ -8,6 +8,7 @@
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=v">View Video Comments</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=cl">View Collection Comments</a></li>
         <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=p">View Photo Comments</a></li>
+        <li role="presentation"><a role="menuitem" tabindex="-1" href="?type=channel">{lang('view_channel_comment')}</a></li>
     </ul>
 </div>
 <form name="comments_manager" method="post">
@@ -35,9 +36,12 @@
             {else if $comment.type == 'p'}
                 {assign var=comment_type value=lang('photo')}
                 {assign var=comment_obj_baseurl value='./edit_photo.php?photo='}
-            {else}
+            {else if $comment.type == 'cl'}
                 {assign var=comment_type value=lang('collection')}
                 {assign var=comment_obj_baseurl value='./edit_collection.php?collection='}
+            {else if $comment.type == 'channel'}
+                {assign var=comment_type value=lang('channel')}
+                {assign var=comment_obj_baseurl value='./view_user.php?uid='}
             {/if}
 
         <tr>
@@ -60,7 +64,7 @@
                     <button class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation">
-                            <a role="menuitem" tabindex="-1" href="{$comment_obj_baseurl|cat:$comment.type_id}" target="_blank">{lang code='view'}</a>
+                            <a role="menuitem" tabindex="-1" href="{$comment_obj_baseurl|cat:$comment.type_id}" target="_blank">{lang code='watch'}</a>
                         </li>
                         {if $comment.userid != user_id()}
                         <li role="presentation">

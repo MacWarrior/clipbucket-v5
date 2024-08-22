@@ -9,9 +9,7 @@ userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
-if (!isset($_GET['collection'])) {
-    redirect_to('/collection_manager.php');
-}
+
 
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
@@ -28,11 +26,13 @@ if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
 
-$c = Collection::getInstance()->getAll([
+$c = Collection::getInstance()->getOne([
     'collection_id'         => $id,
-    'first_only'            => true,
     'hide_empty_collection' => 'no'
 ]);
+if (empty($c)) {
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;

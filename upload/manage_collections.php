@@ -20,6 +20,10 @@ $get_limit = create_query_limit($page, config('collection_per_page'));
 switch ($mode) {
     case 'manage':
     default:
+        if (!empty($_GET['missing_collection'])) {
+            e(lang('collection_not_exist'));
+        }
+
         if (isset($_GET['delete_collection'])) {
             $cid = $_GET['delete_collection'];
             $cbcollection->delete_collection($cid);
@@ -74,7 +78,11 @@ switch ($mode) {
         }
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $cid]);
-        $reqFields = $cbcollection->load_required_fields($collection);
+        if (empty($collection)) {
+            redirect_to(BASEURL . '/manage_collections.php?missing_collection=1');
+        }
+
+    $reqFields = $cbcollection->load_required_fields($collection);
         $otherFields = $cbcollection->load_other_fields($collection);
 
         assign('fields', $reqFields);

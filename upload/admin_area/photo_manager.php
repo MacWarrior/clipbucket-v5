@@ -16,8 +16,15 @@ if (isset($_GET['search']) && isset($_GET['active']) && $_GET['active'] == 'no')
     $breadcrumb[1] = ['title' => display_manage_x('photos'), 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
 }
 
-//Photo Actions are following
+if (!empty($_GET['missing_photo'])) {
+    if ($_GET['missing_photo'] == '2') {
+        e(lang('photo_success_deleted'), 'message');
+    } else {
+        e(lang('no_photos_found'));
+    }
+}
 
+//Photo Actions are following
 //Feature
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
