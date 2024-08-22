@@ -64,5 +64,9 @@ class MWIP extends \Migration
         self::generateTranslation('collection_unfeatured', [
             'fr'=>'La collection a été retirée des vedettes'
         ]);
+
+        self::generateTranslation('selected_collects_del', [
+            'fr'=>'Les collections sélectionnées ont été supprimées'
+        ]);
     }
 }
