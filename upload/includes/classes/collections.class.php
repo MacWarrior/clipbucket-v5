@@ -180,6 +180,7 @@ class Collection
         $param_featured = $params['featured'] ?? false;
         $param_type = $params['type'] ?? false;
         $param_parents_only = $params['parents_only'] ?? false;
+        $param_allow_children = !empty($params['allow_children']);
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -230,7 +231,7 @@ class Collection
             if( $param_collection_id_parent ){
                 $conditions[] = $this->getTableName() . '.collection_id_parent = '.(int)$param_collection_id_parent;
             }
-            if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id){
+            if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id && !$param_allow_children){
                 $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
             }
         }
