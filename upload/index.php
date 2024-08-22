@@ -45,8 +45,20 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
 
     if( config('home_display_recent_videos') == 'yes' && config('homepage_recent_videos_display') == 'slider' ){
         $params = Video::getInstance()->getFilterParams('most_recent', []);
-        $params['limit'] = config('list_recent_videos') ?? 20;
-        assign('recent_videos', Video::getInstance()->getAll($params));
+        $params['limit'] = config('list_recent_videos');
+        $recent_videos = Video::getInstance()->getAll($params);
+        assign('recent_videos', $recent_videos);
+        if( empty($recent_videos) || count($recent_videos) < config('list_recent_videos') ) {
+            $view_more = false;
+        } else {
+            unset($params['limit']);
+            unset($params['order']);
+            $params['count'] = true;
+            $count_videos = Video::getInstance()->getAll($params);
+            if( $count_videos > count($recent_videos) ){
+                assign('view_more_recent', true);
+            }
+        }
     }
 
     if( config('home_display_featured_collections') == 'yes' ){

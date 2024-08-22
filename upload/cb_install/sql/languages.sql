@@ -1233,4 +1233,5 @@ VALUES ('admin_setting'),
        ('option_list_home_collection_videos'),
        ('option_homepage_collection_video_ratio'),
        ('option_homepage_recent_video_ratio'),
-       ('option_home_display_recent_videos');
+       ('option_home_display_recent_videos'),
+       ('view_more');

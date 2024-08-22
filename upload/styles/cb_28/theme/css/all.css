@@ -7828,3 +7828,14 @@ textarea#comment_box {
 .slider-video-container .thumb-video-padding .thumb-video + .restricted {
   color:white;
 }
+
+.slider-video-container .thumb-video-padding a.thumb-video{
+  font-size: 20px;
+  font-weight: 550;
+}
+.slider-video-container .thumb-video-padding a.thumb-video span{
+  position:absolute;
+}
+.default-slider h1 a{
+  text-decoration: none;
+}

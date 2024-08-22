@@ -644,3 +644,8 @@ a:hover{
         max-height: 45px;
     }
 }
+
+/* Default slider */
+.slider-video-container .thumb-video-padding a.thumb-video{
+    background-color: var(--color-01);
+}

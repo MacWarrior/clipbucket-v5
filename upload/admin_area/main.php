@@ -439,7 +439,7 @@ if (isset($_POST['update'])) {
         'homepage_recent_videos_display',
         'homepage_recent_video_style',
         'homepage_recent_video_ratio',
-        'option_list_recent_videos',
+        'list_recent_videos',
         'list_featured_videos',
         'home_enable_fullwidth',
         'home_disable_sidebar',

@@ -144,11 +144,7 @@
 									<ul class="clearfix desc-list">
 										<li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{display_clean($photo.photo_description)|truncate:90}</li>
 										<li><strong>{lang('collection_name')}</strong>:&nbsp;
-											{if config('seo') == 'yes'}
-											<a href="/collection/{$c.collection_id}/{$c.type}/{$c.collection_name}">{display_clean($c.collection_name)}</a>
-											{else}
-											<a href="/view_collection.php?cid={$c.collection_id}">{display_clean($c.collection_name)}</a>
-											{/if}
+											<a href="{$cbcollection->collection_links($c,'view')}">{display_clean($c.collection_name)}</a>
 										</li>
 										{if !empty($photo.photo_tags)}
 										<li>

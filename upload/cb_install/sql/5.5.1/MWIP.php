@@ -85,6 +85,10 @@ class MWIP extends \Migration
             'fr' => 'Afficher les vidéo récentes',
             'en' => 'Display recent videos'
         ]);
+        self::generateTranslation('view_more', [
+            'fr' => 'En voir plus',
+            'en' => 'View more'
+        ]);
 
         self::generateConfig('homepage_recent_videos_display', 'paginate');
         self::generateConfig('homepage_featured_video_display', 'paginate');
