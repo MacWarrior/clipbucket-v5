@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"114",
+  "revision":"115",
   "status":"dev",
   "detail":[
     {
@@ -120,6 +120,7 @@
         ,"Fix popular users avatar"
         ,"Fix video watching with SEO URL"
         ,"Fix favorite videos deletion"
+        ,"Fix sub-categories filter display"
       ]
     },
     {
