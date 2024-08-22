@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"111",
+  "revision":"114",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,8 @@
         ,"Implement users storage usage & history"
         ,"Implement video posters & backdrops management"
         ,"Implement TMDB search year filter"
+        ,"Implement Custom CSS"
+        ,"Implement per page configurations"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -67,6 +69,7 @@
         ,"Fix debug popin on website configurations page"
         ,"Fix video last thumb deletion SQL error"
         ,"Fix video edition status list"
+        ,"Fix default thumbnail after thumbnails regeneration"
       ]
     },
     {
@@ -76,6 +79,7 @@
         ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Implement collection & channel most items sort"
         ,"Implement video posters & backdrops management"
+        ,"Implement dark & light themes"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

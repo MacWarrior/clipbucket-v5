@@ -49,5 +49,10 @@ class MWIP extends \Migration
             'fr'=>'Pages',
             'en'=>'Pages'
         ]);
+
+        self::generateTranslation('make_feartured', [
+            'fr'=>'Mettre en vedette',
+            'en'=>'Make featured'
+        ]);
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html>
+<html class="{config('default_theme')}">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no">
@@ -27,7 +27,6 @@
 		<meta name="distribution" content="global">
 
 		<title>{cbtitle}</title>
-		{* Getting quicklist videos and assigning *}
 		{if config('enable_quicklist') == 'yes'}
 			{assign var=qlist_videos value=get_fast_qlist()}
 			{assign var=litems_count value=$qlist_videos|@count}

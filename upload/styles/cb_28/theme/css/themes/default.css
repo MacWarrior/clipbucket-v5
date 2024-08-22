@@ -1,0 +1,645 @@
+/* Default theme*/
+
+/* Variables */
+html {
+    --color-main-01 : #0080b4;
+    --color-main-02 : #fff;
+
+    --color-01 : #fff;
+    --color-02 : #404040;
+    --color-03 : #d9d9d9;
+    --color-04 : #757575;
+    --color-05 : #f6f6f6;
+
+    --color-header-search-category : #ececec;
+    --color-header-search : #f9f9f9;
+    --color-footer-dropdown : #c8efff;
+    
+    --color-background: #eee;
+}
+
+/* Generic */
+/* Dropdown menu */
+.dropdown-menu,
+.filter-dropdowns .dropdown-menu{
+    background: var(--color-01);
+}
+.filter-dropdowns .dropdown{
+    background-color: var(--color-02);
+    border-color: var(--color-03);
+}
+.filter-dropdowns .dropdown>a {
+    color: var(--color-01);
+}
+.dropdown-menu>li>a,
+.filter-dropdowns .dropdown-menu>li>a{
+    color: var(--color-02);
+    border-color: var(--color-03);
+}
+.dropdown-menu>li>a:hover,
+.dropdown-menu>.active>a,
+.dropdown-menu>.active>a:focus,
+.dropdown-menu>.active>a:hover{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+
+/* Titles */
+h1,
+h2,
+h3,
+h4{
+    color: var(--color-02);
+}
+
+/* Buttons */
+.btn-loadmore{
+    border-color: var(--color-02);
+    background-color: var(--color-01);
+    color: var(--color-02);
+}
+.btn-loadmore:hover,
+.btn-loadmore:focus{
+    border-color: var(--color-main-01);
+    color: var(--color-main-01);
+}
+.btn-primary,
+.btn-primary:hover,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:active:focus,
+.btn-primary.disabled:hover,
+.btn-primary.disabled:focus,
+.open>.dropdown-toggle.btn-primary,
+.open>.dropdown-toggle.btn-primary:focus,
+.open>.dropdown-toggle.btn-primary:hover,
+.btn-success,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active,
+.btn-success.active.focus,
+.btn-success.active:focus,
+.btn-success.active:hover,
+.btn-success:active.focus,
+.btn-success:active:focus,
+.btn-success:active:hover,
+.open>.dropdown-toggle.btn-success,
+.open>.dropdown-toggle.btn-success.focus,
+.open>.dropdown-toggle.btn-success:focus,
+.open>.dropdown-toggle.btn-success:hover,
+.open>.dropdown-toggle.btn-success:focus,
+.open>.dropdown-toggle.btn-success:hover,
+.filter-dropdowns .cat-col .btn-default:hover,
+.filter-dropdowns .cat-col .btn-default:active,
+.btn-ghost:hover,
+.btn-ghost:active,
+.btn-danger{
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+.filter-dropdowns .cat-col .btn-default,
+.btn-ghost,
+.btn-ghost:focus{
+    background-color: var(--color-01);
+    color: var(--color-02);
+    border-color: var(--color-03);
+}
+
+/* Forms */
+.form-control:focus{
+    border-color: var(--color-main-01);
+}
+.account-container .form-group .chk-checked{
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+.ui-widget-header{
+    border-color: var(--color-main-01);
+}
+.ui-datepicker{
+    background-color: var(--color-03);
+}
+.ui-widget-content{
+    color: var(--color-02);
+    border-color: var(--color-main-01);
+    background-color: var(--color-03);
+    background-image: none;
+}
+.select-area{
+    background-color: var(--color-01);
+    color: var(--color-02);
+    border-color: var(--color-03);
+}
+.select-area .select-opener{
+    background-color: var(--color-01);
+    color: var(--color-02);
+}
+.select-options{
+    background-color: var(--color-01);
+}
+.select-options .drop-holder{
+    border-color: var(--color-03);
+}
+.select-options ul a{
+    color: var(--color-02);
+}
+.select-options .item-selected a{
+    background-color: var(--color-03);
+    color: var(--color-main-01);
+}
+.form-control,
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled]{
+    color: var(--color-02);
+    background-color: var(--color-05);
+    border-color: var(--color-03);
+}
+.rad-checked{
+    color: var(--color-main-01);
+}
+.table-striped>tbody>tr:nth-of-type(odd){
+    background-color: var(--color-05);
+}
+
+/* Pop-ins */
+.modal-content{
+    background-color: var(--color-01);
+    color: var(--color-02);
+}
+.close,
+.close:hover{
+    color: var(--color-02);
+}
+
+/* Tabs */
+.view-tabs .nav-tabs.nav>li.active>a,
+.view-tabs .nav-tabs.nav>li.active>a:hover,
+.view-tabs .nav-tabs.nav>li.active>a:focus{
+    color: var(--color-main-01);
+}
+.view-tabs .nav-tabs.nav>li>a:hover {
+    color: var(--color-main-01);
+    border-color: var(--color-main-01);
+}
+.view-tabs .alert-info{
+    color: var(--color-02);
+}
+.flat-tabs .nav-tabs.nav>li.active>a,
+.flat-tabs .nav-tabs.nav>li.active>a:hover,
+.flat-tabs .nav-tabs.nav>li.active>a:active{
+    border-color: var(--color-main-01);
+    color: var(--color-02);
+    background: none;
+}
+.flat-tabs .nav-tabs.nav>li>a:hover,
+.flat-tabs .nav-tabs.nav>li.active>a:hover{
+    border-color: var(--color-main-01);
+    color: var(--color-main-01);
+}
+.tab-content .tab-pane .well{
+    background: none;
+    color: var(--color-02);
+}
+.flat-tabs .nav-tabs.nav>li>a{
+    color: var(--color-02);
+}
+.flat-tabs .nav-tabs.nav>li:not(.active)>a:hover{
+    background:none;
+}
+
+/* Miscellaneous */
+pre{
+    background-color: var(--color-03);
+    color: var(--color-02);
+    border-color: var(--color-02);
+}
+.well{
+    background-color: var(--color-01);
+    color: var(--color-02);
+    border-color: var(--color-03);
+}
+body{
+    color: var(--color-02);
+    background-color: var(--color-background);
+}
+.cb-box{
+    background-color: var(--color-01);
+}
+a{
+    color: var(--color-02);
+}
+a:hover{
+    color: var(--color-main-01);
+}
+
+/* Menu Top */
+#header{
+    background: var(--color-01);
+}
+#header .main-links>ul>li>a,
+.navbar-default .right-menu.navbar-nav>li>a{
+    color: var(--color-02);
+}
+#header .search .cbsearchtype .btn-default.btn-search{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#header .main-links>ul>li>a:focus,
+#header .main-links>ul>li>a:hover {
+    color: var(--color-main-01);
+}
+#header .main-links>ul>li>a:hover:after,
+#header .main-links>ul>li>a:focus:after,
+#header .main-links>ul>li.active a:after{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#header .search input[type="text"]{
+    color: var(--color-02);
+}
+#header .search .cbsearchtype .btn-default{
+    color: var(--color-02);
+}
+#header .search .cbsearchtype .search-drop{
+    background-color: var(--color-header-search-category);
+}
+#header .search .cbsearchtype{
+    background-color: var(--color-header-search);
+}
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:hover,
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:focus{
+    border-color: var(--color-main-01);
+    color: var(--color-main-01);
+}
+.navbar-default .right-menu .navbar-sm-login-links .btn-default.btn-login:active{
+    background-color: initial;
+}
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus,
+.navbar-default .navbar-nav>.open>a:hover {
+    color: var(--color-main-01);
+}
+
+/* Footer */
+#footer{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#footer a{
+    color: var(--color-main-02);
+}
+#footer .langdrop button{
+    background-color: var(--color-footer-dropdown);
+    color: var(--color-02);
+}
+#footer .langdrop .dropdown-menu li.selected a,
+#footer .langdrop .dropdown-menu li:hover a{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+#footer .langdrop .dropdown-menu li a{
+    color: var(--color-02);
+}
+
+/* Sidebar */
+.sidebar-channels,
+.sidebar-items,
+.sidebar-playlists .playlist{
+    background-color: var(--color-01);
+}
+.sidebar-channels .channel-item .channel-info,
+.sidebar-playlists .playlist .videos-count{
+    color: var(--color-04);
+}
+.sidebar-channels .channel-item .channel-info h3 a,
+.collections-grid .title,
+.featured-video .title a,
+.user-activities .text{
+    color: var(--color-02);
+}
+.sidebar-channels .channel-item .channel-info h3 a:hover,
+.sidebar-playlists .playlist h3:hover,
+.featured-video .title a:hover,
+.featured-video .author,
+.featured-video .author a,
+.user-activities .text span a{
+    color: var(--color-main-01);
+}
+
+/* Login */
+.signin-block h2,
+.forgot-block h2,
+.account-container,
+.account-container a{
+    color: var(--color-02);
+}
+.signin-block .user-form,
+.forgot-block .user-form{
+    background-color: var(--color-01);
+}
+.signin-block .form-control,
+.forgot-block .form-control{
+    background-color: var(--color-01);
+    color: var(--color-02);
+}
+
+/* Signup */
+.signup-block .user-form{
+    background-color: var(--color-01);
+}
+.signup-block h2{
+    color: var(--color-02);
+}
+.signup-block .form-control{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+
+/* Video Bloc */
+.videos .video-info{
+    background: var(--color-01);
+    color: var(--color-04);
+}
+.videos .video-info .author,
+.videos .video-info .author a,
+.videos .video-info .title a:hover{
+    color: var(--color-main-01);
+}
+.videos .video-info .title a{
+    color: var(--color-02);
+}
+
+/* Channels */
+.item-channel .user-block{
+    background-color: var(--color-01);
+    border-color: var(--color-03);
+}
+.item-channel .channel-holder{
+    border-color: var(--color-03);
+}
+.item-channel .info strong span{
+    color: var(--color-02);
+}
+.item-channel .info{
+    background-color: var(--color-05);
+}
+.item-channel .info strong{
+    color: var(--color-04);
+    border-top-color: var(--color-03);
+}
+.item-channel .info .col{
+    border-left-color: var(--color-03);
+}
+.item-channel .channel-holder .user-block:hover h2{
+    color: var(--color-main-01);
+}
+
+/* Video */
+.rating .like-dislike.rated a,
+.rating .like-dislike a:hover,
+.video-details header.details .user-video-info .user-title a:hover{
+    color: var(--color-main-01);
+}
+.video-details{
+    background-color: var(--color-01);
+    color: var(--color-02);
+}
+.watch-vid-details .desc-list,
+.video-details header.details .user-video-info .user-title a{
+    color: var(--color-02);
+}
+.playlist.featured-video.active{
+    background-color: var(--color-03)
+}
+
+/* Channel */
+.cover .profile-buttons{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+.channel-tabs{
+    background-color: var(--color-01);
+}
+.cover .changeCover{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02)
+}
+.playlist-item .playlist-thumb .playlist-info h2 a:hover{
+    color: var(--color-main-01);
+}
+.playlist-item .playlist-thumb h2 a{
+    color: var(--color-02);
+}
+.flat-tabs .videos .video-info,
+.flat-tabs .item-photo .photo-info,
+.playlist-item .playlist-thumb .playlist-info{
+    background-color: var(--color-05);
+    color: var(--color-02);
+}
+
+/* Photo bloc */
+.item-photo .photo-info{
+    background-color: var(--color-01);
+}
+.item-photo .photo-info span,
+.item-photo .photo-info span a{
+    color: var(--color-main-01);
+}
+.item-photo .photo-info strong a{
+    color: var(--color-02);
+}
+
+/* Breadcrumb */
+.breadcrumb{
+    background-color: var(--color-01);
+    border-color: var(--color-03);
+}
+.breadcrumb>li+li:before{
+    color: var(--color-02);
+}
+.breadcrumb>li>a{
+    color: var(--color-main-01);
+}
+
+/* Collection */
+.fav-repo{
+    background: var(--color-01);
+}
+.fav-repo .desc-list,
+.fav-repo .label-block{
+    color: var(--color-02);
+}
+
+/* Photo */
+#gallery,
+.view-details{
+    background-color: var(--color-01);
+}
+.view-details header.details .user-video-info .user-title a,
+.view-details header.details .user-video-info .views-counter{
+    color: var(--color-02);
+}
+.watch-vid-details .desc-list li a:hover{
+    color: var(--color-main-02);
+}
+.photo-view .view-photo-nxt,
+.photo-view .view-photo-pre,
+#gallery #enlarge,
+.photo-view .overlay .img-close{
+    background-color: var(--color-01);
+    color: var(--color-02);
+    border-color: var(--color-03);
+}
+.watch-vid-details .desc-list li a,
+.photo-view .view-photo-nxt:focus,
+.photo-view .view-photo-nxt:hover,
+.photo-view .view-photo-pre:focus,
+.photo-view .view-photo-pre:hover,
+#gallery #enlarge:hover,
+.photo-view .overlay .img-close:hover{
+    color: var(--color-main-01);
+}
+
+/* Comments */
+.comments-block{
+    background-color: var(--color-01);
+}
+.addComment h2{
+    border-color: var(--color-03);
+}
+.addComment a.collapsing_arrow span,
+.comments-box .commenter a,
+.addComment{
+    color: var(--color-02);
+}
+.addComment a.collapsing_arrow span:hover,
+.comments-box .commenter a:hover{
+    color: var(--color-main-01);
+}
+.comments>ul>li .comment-info .commenter span,
+.comments>ul>li .com-info-actions .reply a{
+    color: var(--color-04);
+}
+
+/* Collections */
+.collections .title{
+    background-color: var(--color-01);
+}
+
+/* Quicklist */
+.quicklist_box{
+    background-color: var(--color-05);
+    border-color: var(--color-05);
+}
+.quicklist_box_head{
+    color: var(--color-02);
+}
+.qlist_item{
+    background-color: var(--color-01);
+    border-color: var(--color-05);
+}
+.pl_details a,
+.pl_details{
+    color: var(--color-02);
+}
+.pl_details a:hover{
+    color: var(--color-main-01);
+}
+.item-video .thumb-holder .cb_quickie.icon-tick{
+    background-color: var(--color-main-01);
+    border-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+
+/* My account */
+.manage-page,
+.manage-page .nav-pills>li>a,
+.manage-page .nav.nav-tabs a,
+.account_box{
+    color: var(--color-02);
+}
+.manage-page .nav-pills>li>a:hover,
+.manage-page .nav-pills>li>a:focus,
+.manage-page .nav-pills>li.active>a:hover{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
+}
+.manage-page .nav.nav-tabs>li.active>a,
+.manage-page .nav-tabs>li>a:hover,
+.manage-page .nav-tabs>li>a:focus{
+    background-color: var(--color-01);
+    border-color: var(--color-02);
+    border-bottom-color: transparent;
+}
+.manage-page .nav.nav-tabs li.active a:hover,
+.manage-page .nav-tabs>li>a:hover{
+    color: var(--color-main-01);
+}
+.manage-page .nav-pills.nav-stacked>li.active>a{
+    background-color: var(--color-03);
+    color: var(--color-02);
+}
+.manage-page .nav-stacked>li+li{
+    margin-top: 0;
+}
+
+/* Video manager */
+#updateVideoInfo .formSection h4{
+    background-color: var(--color-05);
+}
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+    #header .navbar-default .navbar-toggle:after,
+    #header .navbar-default .navbar-toggle:before,
+    #header .navbar-default .navbar-toggle .icon-down-arrow {
+        background-color: var(--color-02);
+    }
+    .btn-search-toggle:active,
+    .btn-search-toggle:focus,
+    .btn-search-toggle:hover,
+    .btn-search-toggle{
+        color: var(--color-02);
+    }
+    .user_menu,
+    .newuser-links>li>a{
+        background-color: var(--color-01);
+    }
+    .newuser-links>li.upload_link a.btn-default span{
+        display: none;
+    }
+    .newuser-links>li.upload_link a.btn-default,
+    .newuser-links .open>.btn-default.dropdown-toggle:hover,
+    .newuser-links .open>.btn-default.dropdown-toggle:focus,
+    .newuser-links .open>.btn-default.dropdown-toggle:active,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle:hover,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle:focus,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle.focus,
+    .newuser-links>li.upload_link.open>a.btn-default.dropdown-toggle,
+    #header .upload_link .dropdown-menu>li>a{
+        background-color: var(--color-01);
+        border-color: var(--color-04);
+        color: var(--color-02);
+    }
+
+    #header .menu-holder .col .main-links ul li.active a,
+    #header .menu-holder .col .main-links ul li a:hover{
+        background-color: var(--color-main-01);
+        color: var(--color-main-02);
+    }
+
+    .filter-dropdowns .dropdown{
+        background-color: var(--color-01);
+    }
+    .filter-dropdowns .dropdown>a{
+        color: var(--color-02);
+    }
+}
+@media only screen and (max-width: 990px) {
+    #header .logo img{
+        max-height: 45px;
+    }
+}

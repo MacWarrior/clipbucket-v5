@@ -9,6 +9,11 @@
             </button>
             <ul class="dropdown-menu pull-right" role="menu">
                 <li><a href="manage_items.php?collection={$data.collection_id}&amp;type={$data.type}">{lang code='manage_items'}</a></li>
+                {if $modedata!='featured'}
+                    <li><a href="manage_items.php?collection={$data.collection_id}&amp;mode=featured">Make Featured</a></li>
+                {else}
+                    <li><a href="manage_items.php?collection={$data.collection_id}&amp;mode=unfeature">Make Unfeatured</a></li>
+                {/if}
             </ul>
         </div>
     </h2>
