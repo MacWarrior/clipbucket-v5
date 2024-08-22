@@ -36,7 +36,7 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('templates', [
-            'fr' => 'Modèles',
+            'fr' => 'Thèmes',
             'en' => 'Templates'
         ]);
 
@@ -50,9 +50,19 @@ class MWIP extends \Migration
             'en'=>'Pages'
         ]);
 
-        self::generateTranslation('make_feartured', [
+        self::generateTranslation('make_featured', [
             'fr'=>'Mettre en vedette',
             'en'=>'Make featured'
+        ]);
+        self::generateTranslation('make_unfeatured', [
+            'fr'=>'Retirer des vedettes',
+            'en'=>'Make unfeatured'
+        ]);
+        self::generateTranslation('collection_featured', [
+            'fr'=>'La collection a été ajoutée aux vedettes'
+        ]);
+        self::generateTranslation('collection_unfeatured', [
+            'fr'=>'La collection a été retirée des vedettes'
         ]);
     }
 }

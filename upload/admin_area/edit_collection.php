@@ -22,12 +22,12 @@ if (isset($_POST['delete_preview'])) {
     $cbcollection->delete_thumbs($id);
 }
 
-//Performing Actions
+$id = $_GET['collection'];
+//Performing Actionsf
 if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
 
-$id = $_GET['collection'];
 $c = Collection::getInstance()->getAll([
     'collection_id'         => $id,
     'first_only'            => true,
