@@ -1221,4 +1221,6 @@ VALUES ('admin_setting'),
        ('players'),
        ('pages'),
        ('make_featured'),
-       ('make_unfeatured');
+       ('make_unfeatured'),
+       ('object'),
+       ('objects');

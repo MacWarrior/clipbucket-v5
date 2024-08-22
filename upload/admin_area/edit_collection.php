@@ -28,9 +28,8 @@ if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
 
-$c = Collection::getInstance()->getAll([
+$c = Collection::getInstance()->getOne([
     'collection_id'         => $id,
-    'first_only'            => true,
     'hide_empty_collection' => 'no'
 ]);
 

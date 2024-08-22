@@ -68,5 +68,15 @@ class MWIP extends \Migration
         self::generateTranslation('selected_collects_del', [
             'fr'=>'Les collections sélectionnées ont été supprimées'
         ]);
+
+        self::generateTranslation('object', [
+            'fr' => 'objet',
+            'en' => 'object'
+        ]);
+
+        self::generateTranslation('objects', [
+            'fr' => 'objets',
+            'en' => 'objects'
+        ]);
     }
 }

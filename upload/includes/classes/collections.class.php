@@ -254,15 +254,28 @@ class Collection
             $conditions[] = $this->getGenericConstraints();
         }
 
+        $join = [];
+
         if( !$param_with_items && $param_count ){
             $select = ['COUNT(' . $this->getTableName() . '.collection_id) AS count, ' . $this->getTableName() . '.userid'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username';
-            $select[] = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) AS total_objects';
+
+            $total_objects = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END))';
+
+            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+                $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
+                $join[] = 'LEFT JOIN ' . tbl('collections') .' AS collections_enfant ON collections.collection_id = collections_enfant.collection_id_parent';
+
+                $select[] = 'collection_parent.collection_name AS collection_name_parent';
+                $join[] =' LEFT JOIN ' . tbl('collections') . ' collection_parent ON collections.collection_id_parent = collection_parent.collection_id';
+            }
+
+            $total_objects .= ' AS total_objects';
+            $select[] = $total_objects;
         }
 
-        $join = [];
         $group = [$this->getTableName() . '.collection_id'];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){

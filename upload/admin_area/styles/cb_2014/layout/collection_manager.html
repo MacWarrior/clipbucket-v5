@@ -38,7 +38,16 @@
                                 <img src="{$cbcollection->coll_first_thumb($collections[list],'s')}" width="128" height="80"/>
                             </div>
                             <div class="col-md-9">
-                                <a href="/admin_area/edit_collection.php?collection={$collections[list].collection_id}">{display_clean($collections[list].collection_name)}</a> ({$collections[list].total_objects} {$collections[list].type})
+                                <a href="/admin_area/edit_collection.php?collection={$collections[list].collection_id}">
+                                    {display_clean($collections[list].collection_name)}
+                                </a>
+                                ( {$collections[list].total_objects}
+                                {if $collections[list].total_objects > 1}
+                                    {lang code='objects'}
+                                {else}
+                                    {lang code='object'}
+                                {/if}
+                                )
 
                                 <div class="labels">
                                     {if $collections[list].featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
