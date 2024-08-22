@@ -1222,4 +1222,7 @@ VALUES ('admin_setting'),
        ('pages'),
        ('make_featured'),
        ('make_unfeatured'),
+       ('object'),
+       ('objects'),
+       ('make_unfeatured'),
        ('view_channel_comments');

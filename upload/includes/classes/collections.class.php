@@ -192,14 +192,6 @@ class Collection
             $param_having[] = $params['having'];
         }
 
-        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
-            $hide_empty_collection = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) > 0';
-            if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
-            }
-            $param_having[] = $hide_empty_collection;
-        }
-
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
@@ -254,15 +246,49 @@ class Collection
             $conditions[] = $this->getGenericConstraints();
         }
 
+        $join = [];
+
+        $need_collection_enfant = false;
+        $total_objects = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END))';
+        if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+            $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
+            $need_collection_enfant = true;
+        }
+
+
         if( !$param_with_items && $param_count ){
             $select = ['COUNT(' . $this->getTableName() . '.collection_id) AS count, ' . $this->getTableName() . '.userid'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username';
-            $select[] = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) AS total_objects';
+
+
+            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+                $need_collection_enfant = true;
+
+                $select[] = 'collection_parent.collection_name AS collection_name_parent';
+                $join[] =' LEFT JOIN ' . tbl('collections') . ' collection_parent ON collections.collection_id_parent = collection_parent.collection_id';
+            }
+
+            $select[] = $total_objects . ' AS total_objects';
         }
 
-        $join = [];
+        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
+            $hide_empty_collection = $total_objects . ' > 0';
+            if( !empty(User::getInstance()->getCurrentUserID()) ){
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+            }
+            $param_having[] = $hide_empty_collection;
+
+            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+                $need_collection_enfant = true;
+            }
+        }
+
+        if( $need_collection_enfant ){
+            $join[] = 'LEFT JOIN ' . tbl('collections') .' AS collections_enfant ON collections.collection_id = collections_enfant.collection_id_parent';
+        }
+
         $group = [$this->getTableName() . '.collection_id'];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
@@ -311,16 +337,21 @@ class Collection
             $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
-        $sql ='SELECT ' . implode(', ', $select) . '
+        $newline = ' ';
+        if( in_dev() ){
+            $newline = "\n";
+        }
+
+        $sql ='SELECT ' . implode($newline . ', ', $select) . '
                 FROM ' . cb_sql_table('collections') . '
                 LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
                 LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collections.collection_id = collection_items.collection_id
                 LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND collection_items.object_id = video.videoid' . $left_join_video_cond . '
                 LEFT JOIN ' . cb_sql_table('photos') . ' ON collections.type = \'photos\' AND collection_items.object_id = photos.photo_id' . $left_join_photos_cond
-            . ' ' . implode(' ', $join)
-            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
-            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
-            . (empty($param_having) ? '' : ' HAVING ' . implode(' AND ', $param_having))
+            . ' ' . implode($newline, $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode($newline . ' AND ', $conditions))
+            . (empty($group) ? '' : $newline . ' GROUP BY ' . implode($newline . ',', $group))
+            . (empty($param_having) ? '' : $newline . ' HAVING ' . implode($newline . ' AND ', $param_having))
             . $order
             . $limit;
 

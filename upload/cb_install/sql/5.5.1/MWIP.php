@@ -69,6 +69,16 @@ class MWIP extends \Migration
             'fr'=>'Les collections sélectionnées ont été supprimées'
         ]);
 
+        self::generateTranslation('object', [
+            'fr' => 'objet',
+            'en' => 'object'
+        ]);
+
+        self::generateTranslation('objects', [
+            'fr' => 'objets',
+            'en' => 'objects'
+        ]);
+
         self::generateTranslation('view_channel_comments', [
             'fr'=>'Voir les commentaires de chaine',
             'en'=>'View channel comments'
