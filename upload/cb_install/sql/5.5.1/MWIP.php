@@ -30,6 +30,25 @@ class MWIP extends \Migration
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;';
         self::query($sql);
 
+        self::alterTable('ALTER TABLE `{tbl_prefix}fontawesome_icons`
+            ADD PRIMARY KEY (`id_fontawesome_icon`),
+            ADD UNIQUE KEY `icon` (`icon`);', [
+            'table'  => 'fontawesome_icons',
+            'columns' => [
+                'id_fontawesome_icon',
+                'icon'
+            ]
+        ], [
+            'table'           => 'fontawesome_icons',
+            'constraint_name' => 'PRIMARY',
+            'constraint_type' => 'PRIMARY KEY'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}fontawesome_icons`
+            MODIFY `id_fontawesome_icon` int(11) NOT NULL AUTO_INCREMENT;', [
+            'table'   => 'fontawesome_icons',
+            'column' => 'id_fontawesome_icon'
+        ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}social_networks_links` (
                 `id_social_networks_link` int(11) NOT NULL,
@@ -61,7 +80,7 @@ class MWIP extends \Migration
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}social_networks_links`
-            ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_icon`) ON DELETE CASCADE ON UPDATE CASCADE;', [
+            ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;', [
             'table'  => 'social_networks_links',
             'column' => 'id_fontawesome_icon'
         ], [

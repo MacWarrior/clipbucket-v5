@@ -1212,7 +1212,10 @@ CREATE TABLE `{tbl_prefix}fontawesome_icons` (
     `icon` varchar(40) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    ADD PRIMARY KEY (`id_fontawesome_icon`),
     ADD UNIQUE KEY `icon` (`icon`);
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    MODIFY `id_fontawesome_icon` int(11) NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `{tbl_prefix}social_networks_links` (
     `id_social_networks_link` int(11) NOT NULL,
@@ -1227,4 +1230,5 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
 ALTER TABLE `{tbl_prefix}social_networks_links`
     MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `{tbl_prefix}social_networks_links`
-    ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_icon`) ON DELETE CASCADE ON UPDATE CASCADE;
+    ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;
+
