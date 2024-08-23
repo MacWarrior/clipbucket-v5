@@ -1231,4 +1231,3 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
     MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `{tbl_prefix}social_networks_links`
     ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;
-
