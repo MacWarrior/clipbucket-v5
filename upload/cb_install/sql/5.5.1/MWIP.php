@@ -28,13 +28,6 @@ class MWIP extends \Migration
             'en' => 'Collection\'s type must be the same as the parent one'
         ]);
 
-        self::deleteTranslation('view');
-
-        self::generateTranslation('view', [
-            'fr' => 'Visionner',
-            'en' => 'View'
-        ]);
-
         self::generateTranslation('templates', [
             'fr' => 'Thèmes',
             'en' => 'Templates'
