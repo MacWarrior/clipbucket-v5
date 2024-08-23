@@ -1224,5 +1224,4 @@ VALUES ('admin_setting'),
        ('make_unfeatured'),
        ('object'),
        ('objects'),
-       ('make_unfeatured'),
        ('view_channel_comments');
