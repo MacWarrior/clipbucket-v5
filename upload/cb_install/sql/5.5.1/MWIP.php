@@ -31,8 +31,7 @@ class MWIP extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}fontawesome_icons`
-            ADD PRIMARY KEY (`id_fontawesome_icon`),
-            ADD UNIQUE KEY `icon` (`icon`);', [
+            ADD PRIMARY KEY (`id_fontawesome_icon`);', [
             'table'  => 'fontawesome_icons',
             'columns' => [
                 'id_fontawesome_icon',
