@@ -20,6 +20,7 @@
     ,"fortawesome/font-awesome": "4.7.0"
 
     ,"components/jquery": "*"
+    ,"select2/select2": "*"
   },
   "config": {
     "platform": {
