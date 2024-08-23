@@ -2824,6 +2824,9 @@ function include_js($params)
             case 'player':
                 $url = DirPath::getUrl('player');
                 break;
+            case 'vendor':
+                $url = DirPath::getUrl('vendor');
+                break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
                 break;
@@ -2864,6 +2867,9 @@ function include_css($params)
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
+                break;
+            case 'vendor':
+                $url = DirPath::getUrl('vendor');
                 break;
             case 'custom':
                 $url = DirPath::getUrl('files');

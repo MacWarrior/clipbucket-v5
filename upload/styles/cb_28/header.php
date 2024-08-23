@@ -1,13 +1,13 @@
 <?php
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addCSS([
-    'bootstrap.min.css'                  => 'admin',
-    'font-awesome.min.css'               => 'admin',
-    'icon-font.css'                      => 'admin',
-    'custom-elements.css'                => 'admin',
-    'all' . $min_suffixe . '.css'        => 'admin',
-    'clipbucket' . $min_suffixe . '.css' => 'admin',
-    'jquery_ui' . $min_suffixe . '.css'  => 'admin'
+    'bootstrap.min.css'                                 => 'admin',
+    'fortawesome/font-awesome/css/font-awesome.min.css' => 'vendor',
+    'icon-font.css'                                     => 'admin',
+    'custom-elements.css'                               => 'admin',
+    'all' . $min_suffixe . '.css'                       => 'admin',
+    'clipbucket' . $min_suffixe . '.css'                => 'admin',
+    'jquery_ui' . $min_suffixe . '.css'                 => 'admin'
 ]);
 
 $filepath = DirPath::get('styles') . ClipBucket::getInstance()->template . DIRECTORY_SEPARATOR . 'theme' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . config('default_theme') . $min_suffixe . '.css';
