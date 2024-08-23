@@ -1,0 +1,29 @@
+<form method="post" enctype="multipart/form-data" name="edit_social_media" id="edit_social_media">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="title">{lang('title')}*</label>
+            <input name="title" class="form-control" type="text" id="title" size="65" />
+        </div>
+        <div class="col-md-4">
+            <label for="title">{lang('url')}*</label>
+            <input name="url" class="form-control" type="text" id="url" size="125" />
+        </div>
+        <div class="col-md-4">
+            <label for="title">{lang('order')}</label>
+            <input name="social_network_link_order" class="form-control" type="number" id="social_network_link_order" size="125" />
+        </div>
+    </div>
+    <div class="row marginTopLarge">
+        <div class="col-md-12">
+            <label>{lang('icon')}</label>
+            <select name="id_fontawesome_icon" id="icon">
+                {section name=icon loop=$list_icons}
+                    <option value="{$list_icons[icon].id_fontawesome_icon }"><span class="fa-{$list_icons[icon].icon}"></span>{$list_icons[icon].icon}</option>
+                {/section}
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <input type="submit" class="btn btn-primary" value="{lang('submit')}">
+    </div>
+</form>

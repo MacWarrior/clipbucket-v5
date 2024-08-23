@@ -19,10 +19,6 @@ $current_page = is_numeric($current_page) && $current_page > 0 ? $current_page :
 
 $curr_limit = ($current_page - 1) * $limit . ',' . $limit;
 
-
-
-
-
 $cond = [];
 if (!empty($_GET['search'])) {
     $cond[] = ' T.name LIKE \'%' . mysql_clean($_GET['search']) . '%\'';
@@ -33,7 +29,9 @@ if (!empty($_GET['id_tag_type'])) {
     $selected_tag_type = $_GET['id_tag_type'];
 }
 
-
+if (!empty($_POST)) {
+    SocialNetworks::getInstance()->createSocialNetwork($_POST);
+}
 
 $tags = Tags::getTags($curr_limit, $cond);
 $count = Tags::countTags($cond);
@@ -41,6 +39,17 @@ $total_pages = $count / $limit;
 $total_pages = round($total_pages + 0.49, 0);
 //Pagination
 pages::getInstance()->paginate($total_pages, $current_page);
+
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(['pages/manage_social_networks/manage_social_networks'.$min_suffixe.'.js' => 'admin']);
+
+ClipBucket::getInstance()->addAdminCSS(['font-awesome.min.css' => 'global']);
+
+$social_network_links = SocialNetworks::getInstance()->getAll([]);
+assign('social_network_links', $social_network_links);
+
+$list_icons = SocialNetworks::getInstance()->getAllIcons() ?? [];
+assign('list_icons', $list_icons);
 
 subtitle(lang('manage_social_networks_links'));
 template_files('manage_social_networks.html');

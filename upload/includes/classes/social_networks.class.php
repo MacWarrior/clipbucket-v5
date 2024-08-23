@@ -1,5 +1,7 @@
 <?php
-class SocialNetworks{
+
+class SocialNetworks
+{
     private static $social_networks;
     private $tablename;
     private $tablename_icons;
@@ -7,17 +9,59 @@ class SocialNetworks{
     /**
      * @throws Exception
      */
-    public function __construct(){
-        $this->tablename = 'social_networks';
+    public function __construct()
+    {
+        $this->tablename = 'social_networks_links';
         $this->tablename_icons = 'fontawesome_icons';
     }
 
     public static function getInstance(): self
     {
-        if( empty(self::$social_networks) ){
+        if (empty(self::$social_networks)) {
             self::$social_networks = new self();
         }
         return self::$social_networks;
+    }
+
+    public function createSocialNetwork(array $infos)
+    {
+        $sql = 'INSERT INTO ' . tbl($this->tablename) . ' (id_fontawesome_icon, title, url, social_network_link_order) VALUES(
+            ' . mysql_clean($infos['id_fontawesome_icon']) . ',
+            \'' . mysql_clean($infos['title']) . '\',
+            \'' . mysql_clean($infos['url']) . '\',
+            ' . mysql_clean($infos['social_network_link_order']) . '
+        ) ';
+        Clipbucket_db::getInstance()->execute($sql);
+
+    }
+
+    /**
+     * @param $id_social_networks_link
+     * @param string $title
+     * @param string $url
+     * @param int $social_network_link_order
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public function update($id_social_networks_link, string $title, string $url, int $social_network_link_order)
+    {
+        $sql = 'UPDATE ' . tbl($this->tablename) . ' 
+            SET title = \'' . mysql_clean($title) . '\',
+            url = \'' . mysql_clean($url) . '\',
+            social_network_link_order = ' . mysql_clean($social_network_link_order) . '
+           WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link) ;
+        return Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @param $id_social_networks_link
+     * @return bool|mysqli_result
+     * @throws Exception
+     */
+    public function delete($id_social_networks_link)
+    {
+        $sql = 'DELETE FROM ' . tbl($this->tablename) . ' WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link) ;
+        return Clipbucket_db::getInstance()->execute($sql);
     }
 
     private function getTableName(): string
@@ -35,7 +79,82 @@ class SocialNetworks{
      */
     public function getAllIcons(): array
     {
-        $sql = 'SELECT id_fontawesome_icon, icon FROM '.$this->tablename_icons;
+        $sql = 'SELECT id_fontawesome_icon, icon FROM ' . tbl($this->tablename_icons);
         return Clipbucket_db::getInstance()->_select($sql);
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getAll(array $params): array
+    {
+        $param_id_social_networks_link = $params['id_social_networks_link'] ?? false;
+        $param_order = $params['order'] ?? 'social_network_link_order';
+        $param_limit = $params['limit'] ?? false;
+        $param_having = $params['having'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        $order = '';
+        if( $param_order ){
+            $order = ' ORDER BY '.$param_order;
+        }
+
+        $limit = '';
+        if( $param_limit ){
+            $limit = ' LIMIT '.$param_limit;
+        }
+
+        $having = '';
+        if( $param_having ){
+            $having = ' HAVING '.$param_having;
+        }
+
+        $conditions = [];
+
+        if ($param_id_social_networks_link !== false) {
+            $conditions[] = 'id_social_networks_link = '. mysql_clean($param_id_social_networks_link);
+        }
+
+        $select = ['id_social_networks_link','icon' ,'title','url','social_network_link_order'];
+        $sql ='SELECT ' . implode(', ', $select) . '
+                FROM ' . cb_sql_table($this->tablename) . ' 
+                LEFT JOIN ' . cb_sql_table($this->tablename_icons) .' ON ' . $this->tablename . '.id_fontawesome_icon = ' . $this->tablename_icons . '.id_fontawesome_icon'
+            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
+            . $having
+            . $order
+            . $limit;
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if( $param_count ){
+            if( empty($result) ){
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if( !$result ){
+            return false;
+        }
+
+        if( $param_first_only ){
+            return $result[0];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $params
+     * @return array|false|int
+     * @throws Exception
+     */
+    public function getOne(array $params)
+    {
+        $params['first_only'] = true;
+        return $this->getAll($params);
     }
 }
