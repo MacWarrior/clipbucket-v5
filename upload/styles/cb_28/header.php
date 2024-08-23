@@ -22,7 +22,7 @@ ClipBucket::getInstance()->addCSS([
 ]);
 
 ClipBucket::getInstance()->addJS([
-    'jquery-3.7.1.min.js'                        => 'admin',
+    'components/jquery/jquery.min.js'            => 'vendor',
     'jquery-ui-1.13.2.min.js'                    => 'global',
     'clipbucket' . $min_suffixe . '.js'          => 'admin',
     'jquery_plugs/cookie' . $min_suffixe . '.js' => 'global',

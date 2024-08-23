@@ -20,7 +20,7 @@ if (!this_page('admin_login')) {
 }
 
 ClipBucket::getInstance()->addAdminJS([
-    'jquery-3.7.1.min.js'                          => 'admin',
+    'components/jquery/jquery.min.js'              => 'vendor',
     'jquery-ui-1.13.2.min.js'                      => 'global',
     'html5shiv' . $min_suffixe . '.js'             => 'admin',
     'respond.min.js'                               => 'admin',
