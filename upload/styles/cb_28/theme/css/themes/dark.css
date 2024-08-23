@@ -1,0 +1,210 @@
+/* Dark theme*/
+
+/* Variables */
+html.dark {
+    --color-01 : #0e0b14;
+    --color-02 : #f9f9f9;
+    --color-03 : #393939;
+    --color-04 : #757575;
+    --color-05 : #2a2a2a;
+
+    --color-header-search-category : #30323E;
+    --color-header-search : #2a2a2a;
+    --color-footer-dropdown : #30323E;
+
+    --color-background: #292929;
+
+    --color-gradient-start : #30323E;
+    --color-gradient-end : #1E1F2A;
+    --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
+    --generic-box-shadow : 0 20px 24px 0 rgba(0, 0, 0, 0.80);
+    --border-radius : 5px;
+}
+
+/* Background */
+body {
+    background-image: url('../../../images/dark.webp');
+    background-attachment: fixed;
+    background-position: center;
+}
+
+/* Menu Top */
+#header{
+    box-shadow: var(--generic-box-shadow);
+}
+#header .search input[type="text"]{
+    background-color: var(--color-gradient-end);
+}
+
+/* Breadcrumb */
+.breadcrumb{
+    border-radius: var(--border-radius);
+}
+
+/* Miscellaneous */
+.well{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Sidebar */
+.sidebar-channels,
+.sidebar-items,
+.sidebar-playlists .playlist,
+.playlist-item .playlist-thumb .playlist-info{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+.sidebar-playlists .playlist img,
+.sidebar-items .collection-item img,
+.sidebar-items .featured-video img,
+.sidebar-items .item-photo .photo-holder img{
+    border-radius: var(--border-radius);
+}
+
+/* Home */
+#featured_vid_sec .item-video .video-link img,
+.cb-popup-container .player-holder .vjs-big-play-button,
+.cb-popup-container .player-holder video{
+    border-radius: var(--border-radius);
+}
+
+/* Video Bloc */
+:not(#featured_vid_sec) .item-video .video-link img{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+:not(#featured_vid_sec) .item-video .video-info{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Login */
+.signin-block .user-form{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Signup */
+.signup-block .user-form{
+    border-radius: var(--border-radius);
+    background: var(--background-gradient);
+}
+
+/* Channels */
+.item-channel .channel-holder{
+    border-radius: var(--border-radius);
+}
+.item-channel .channel-holder .user-block{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.item-channel .info{
+    background: var(--background-gradient);
+}
+
+/* Video */
+.playlist.featured-video.active{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.video-details{
+    background: var(--background-gradient);
+    border-radius: var(--border-radius);
+}
+
+/* Channel */
+.cover .profile-buttons{
+    background: var(--background-gradient);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.channel-tabs{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+/* Photo bloc */
+.item-photo .photo-info{
+    background: var(--background-gradient);
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.item-photo .photo-holder img{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+
+/* Photo */
+#gallery,
+.view-details{
+    border-radius: var(--border-radius);
+}
+
+/* Comments */
+.comments-block{
+    border-radius: var(--border-radius);
+}
+
+/* Collections */
+.collections .title{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+
+/* Quicklist */
+.quicklist_box{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.quicklist_box .qlist_item .pl_thumb img{
+    border-radius: var(--border-radius);
+}
+
+/* My account */
+.manage-page .nav-pills>li:first-child,
+.manage-page .nav-pills>li:first-child a{
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+}
+.manage-page .nav-pills>li:last-child,
+.manage-page .nav-pills>li:last-child a{
+    border-bottom-left-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+}
+.manage-page .accountprofile img{
+    border-radius: var(--border-radius);
+}
+
+/* Shadows */
+.item-video:after,
+.item-photo:after,
+.item-channel:after,
+.collection-item:after,
+#coverContainer:after
+{
+    content: "";
+    position: absolute;
+    box-shadow: var(--generic-box-shadow);
+    left: 12px;
+    width: calc(100% - 24px);
+    bottom: 10px;
+    height: 33px;
+    z-index: -1;
+}
+.sidebar-items,
+.sidebar-channels{
+    box-shadow: var(--generic-box-shadow);
+}
+
+/* Mobile */
+@media only screen and (max-width: 767px) {
+    #header .menu-holder .col .main-links ul li.active a,
+    #header .menu-holder .col .main-links ul li a:hover{
+        border-radius: var(--border-radius);
+    }
+    .filter-dropdowns .dropdown{
+        border-radius: var(--border-radius);
+    }
+}

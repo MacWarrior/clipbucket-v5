@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"107",
+  "revision":"115",
   "status":"dev",
   "detail":[
     {
@@ -20,6 +20,8 @@
         ,"Implement users storage usage & history"
         ,"Implement video posters & backdrops management"
         ,"Implement TMDB search year filter"
+        ,"Implement Custom CSS"
+        ,"Implement per page configurations"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -28,11 +30,13 @@
         ,"Add Nginx check"
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
+        ,"Add link from video edition page to uploader edition page"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
         ,"Update self-update interface"
         ,"Update activate photo button on photo edition page"
+        ,"Update video edition page display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
@@ -63,6 +67,9 @@
         ,"Fix conversion queue log url"
         ,"Fix video manager search"
         ,"Fix debug popin on website configurations page"
+        ,"Fix video last thumb deletion SQL error"
+        ,"Fix video edition status list"
+        ,"Fix default thumbnail after thumbnails regeneration"
       ]
     },
     {
@@ -72,6 +79,7 @@
         ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Implement collection & channel most items sort"
         ,"Implement video posters & backdrops management"
+        ,"Implement dark & light themes"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -111,6 +119,8 @@
         ,"Fix photo display on Windows hosts"
         ,"Fix popular users avatar"
         ,"Fix video watching with SEO URL"
+        ,"Fix favorite videos deletion"
+        ,"Fix sub-categories filter display"
       ]
     },
     {
@@ -157,7 +167,7 @@
         ,"Fix categories creation in update 5.5.0 - 331"
         ,"Fix dependancies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
-        ,"Fix SQL typo"
+        ,"Fix SQL typo <i>(#417, #419)</i>"
         ,"Fix SSE DB update"
         ,"Fix migration on windows hosts"
         ,"Fix PHP Cli detection"

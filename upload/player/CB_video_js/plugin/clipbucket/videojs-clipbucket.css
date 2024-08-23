@@ -103,8 +103,8 @@
 	display: table;
 }
 
-.video-js .vjs-big-play-button {
-	border-radius: initial !important;
+html .video-js .vjs-big-play-button {
+	border-radius: initial;
 }
 
 .vjs-cblogo-brand a{
