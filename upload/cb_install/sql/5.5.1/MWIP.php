@@ -25,9 +25,49 @@ class MWIP extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}fontawesome_icons` (
+                `id_fontawesome_icon` int(11) NOT NULL,
                 `icon` varchar(40) NOT NULL UNIQUE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;';
         self::query($sql);
+
+
+        $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}social_networks_links` (
+                `id_social_networks_link` int(11) NOT NULL,
+                `id_fontawesome_icon` int(11) NOT NULL,
+                `title` varchar(64) NOT NULL,
+                `url` varchar(256) NOT NULL,
+                `social_network_link_order` int(10) UNSIGNED NOT NULL DEFAULT 0
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;';
+        self::query($sql);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}social_networks_links`
+            ADD PRIMARY KEY (`id_social_networks_link`),
+            ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);', [
+            'table'  => 'social_networks_links',
+            'columns' => [
+                'id_social_networks_link',
+                'id_fontawesome_icon'
+            ]
+        ], [
+            'table'           => 'social_networks_links',
+            'constraint_name' => 'PRIMARY',
+            'constraint_type' => 'PRIMARY KEY'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}social_networks_links`
+            MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;', [
+            'table'   => 'social_networks_links',
+            'column' => 'id_social_networks_link'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}social_networks_links`
+            ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_icon`) ON DELETE CASCADE ON UPDATE CASCADE;', [
+            'table'  => 'social_networks_links',
+            'column' => 'id_fontawesome_icon'
+        ], [
+            'constraint_name' => 'social_networks_links_ibfk_1',
+            'contraint_type'  => 'FOREIGN KEY'
+        ]);
 
         $sql = "INSERT IGNORE INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
                 ('500px'),
