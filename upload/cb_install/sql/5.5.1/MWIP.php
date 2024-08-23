@@ -78,5 +78,9 @@ class MWIP extends \Migration
         ]);
 
         self::query('INSERT INTO ' . tbl('categories').' (id_category_type, category_name, is_default) VALUES((select id_category_type from '.tbl('categories_type').' where name = \'photo\'), \'Uncategorized\', \'yes\')');
+
+        self::generateTranslation('collect_added_msg', [
+            'fr'=>'La collection a été ajoutée'
+        ]);
     }
 }

@@ -23,6 +23,9 @@ switch ($mode) {
         if (!empty($_GET['missing_collection'])) {
             e(lang('collection_not_exist'));
         }
+        if (!empty($_GET['new_collection'])) {
+            e(lang('collect_added_msg'), 'm');
+        }
 
         if (isset($_GET['delete_collection'])) {
             $cid = $_GET['delete_collection'];
@@ -65,9 +68,9 @@ switch ($mode) {
             $cbcollection->create_collection($_POST);
             if (!error()) {
                 $_POST = '';
+                redirect_to(BASEURL . '/manage_collections.php?new_collection=1');
             }
         }
-        subtitle(lang('create_collection'));
         break;
 
     case 'edit':
