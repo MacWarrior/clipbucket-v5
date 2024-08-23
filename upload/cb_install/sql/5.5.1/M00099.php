@@ -47,7 +47,7 @@ class M00099 extends \Migration
             'table'         => 'tools',
             'columns'         => ['frequency', 'previous_calculated_datetime']
         ],[
-            'constraint_name' => 'chk_frequency_previous_calculated_datetime_required',
+            'constraint_name' => 'chk_frequency_previous_calculated_datetime_required'
         ]);
 
         self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET is_disabled = TRUE');

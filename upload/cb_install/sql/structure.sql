@@ -1206,3 +1206,9 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}users_storage_histo`
     ADD CONSTRAINT `id_user_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE `{tbl_prefix}fontawesome_icons` (
+    `icon` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    ADD UNIQUE KEY `icon` (`icon`);
