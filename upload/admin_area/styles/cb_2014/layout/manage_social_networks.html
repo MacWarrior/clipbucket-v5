@@ -1,0 +1,38 @@
+<div class="heading paddingBottomSmall">
+    <div class="form-group">
+        <h2>
+            {lang code='manage_social_networks_links'}
+            <div class="dropdown pull-right">
+                <button id="hideshow" class="btn btn-primary pull-right dropdown-toggle" data-toggle="dropdown">
+                    {lang code='add_new_social_network_link'}
+                </button>
+            </div>
+        </h2>
+    </div>
+</div>
+
+
+
+<div class="form-group">
+    <form id="form2" name="form2" method="get" action="?">
+        <div class="row align-items-end">
+            <div class="col-md-2" style="padding-left: 0">
+                <label for="search">{lang code="tag_type"}</label>
+                <div style="vertical-align: bottom;">
+                    {html_options name=id_tag_type options=$tag_types class='form-control' style='vertical-align: middle;' selected=$selected_tag_type}
+                </div>
+            </div>
+            <div class="col-md-10">
+                <label for="search">{lang code="search"}</label>
+                <div style="vertical-align: bottom;">
+                    <input style="display: inline-block; width: calc(100% - 550px); vertical-align: middle;" name="search" class="form-control" type="text" id="search" value="{display_clean($smarty.get.search)}"/>
+                    <input style="display: inline-block; width: 120px; margin-left: 10px; height: 35px;padding: 0;" type="submit" name="search_phrase" class="btn btn-primary" value='{lang code="search"}' id="search_phrase"/>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+{include file="$style_dir/blocks/pagination.html"}

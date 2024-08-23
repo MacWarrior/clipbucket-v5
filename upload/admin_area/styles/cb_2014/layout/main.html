@@ -330,15 +330,27 @@
 											</div>
 										</div>
 										<hr/>
-										<div class="col-md-6">
-											<label class="nowrap" for="default_theme" title="{lang code='option_default_theme'}">{lang code='option_default_theme'}</label>
+										<div class="row">
+											<div class="col-md-6">
+												<label class="nowrap" for="default_theme" title="{lang code='option_default_theme'}">{lang code='option_default_theme'}</label>
+											</div>
+											<div class="col-md-6 row-size">
+												<select class="form-control" name="default_theme" id="default_theme">
+													<option value="light" {if $row.default_theme=='light'}selected{/if}>{lang code='option_default_theme_light'}</option>
+													<option value="dark" {if $row.default_theme=='dark'}selected{/if}>{lang code='option_default_theme_dark'}</option>
+													<option value="" {if $row.default_theme==''}selected{/if}>{lang code='option_default_theme_light_original'}</option>
+												</select>
+											</div>
 										</div>
-										<div class="col-md-6 row-size">
-											<select class="form-control" name="default_theme" id="default_theme">
-												<option value="light" {if $row.default_theme=='light'}selected{/if}>{lang code='option_default_theme_light'}</option>
-												<option value="dark" {if $row.default_theme=='dark'}selected{/if}>{lang code='option_default_theme_dark'}</option>
-												<option value="" {if $row.default_theme==''}selected{/if}>{lang code='option_default_theme_light_original'}</option>
-											</select>
+										<hr/>
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="enable_social_networks_links" title="{lang code='option_enable_social_networks_links'}">{lang code='option_enable_social_networks_links'}</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="yes" name="enable_social_networks_links" id="enable_social_networks_links" {if $row.enable_social_networks_links=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+												<span class="lbl"></span>
+											</div>
 										</div>
 										<hr/>
 

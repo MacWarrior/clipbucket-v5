@@ -1214,4 +1214,6 @@ VALUES ('admin_setting'),
        ('option_default_theme_light_original'),
        ('option_default_theme_light'),
        ('option_default_theme_dark'),
-       ('option_custom_css');
+       ('option_custom_css'),
+       ('option_enable_social_networks_links'),
+       ('add_new_social_network_link');

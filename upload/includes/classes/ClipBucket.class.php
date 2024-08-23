@@ -368,6 +368,13 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
+            if( config('enable_social_networks_links') == 'yes' ){
+                $menu_general['sub'][] = [
+                    'title' => lang('manage_social_networks_links')
+                    , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
+                ];
+            }
+
             $this->addMenuAdmin($menu_general, 10);
         }
 

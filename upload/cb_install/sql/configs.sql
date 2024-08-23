@@ -286,7 +286,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_storage_history', 'yes'),
     (NULL, 'enable_storage_history_fo', 'yes'),
     (NULL, 'default_theme', 'light'),
-    (NULL, 'custom_css', '');
+    (NULL, 'custom_css', ''),
+    (NULL, 'enable_social_networks_links', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

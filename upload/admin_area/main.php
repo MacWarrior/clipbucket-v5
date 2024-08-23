@@ -125,6 +125,7 @@ if (isset($_POST['update'])) {
         , 'own_photo_rating'
         , 'enable_storage_history'
         , 'enable_storage_history_fo'
+        , 'enable_social_networks_links'
     ];
 
     $config_booleans_to_refactor = [
@@ -430,7 +431,8 @@ if (isset($_POST['update'])) {
         'timezone',
         'enable_storage_history',
         'enable_storage_history_fo',
-        'default_theme'
+        'default_theme',
+        'enable_social_networks_links'
     ];
 
     foreach ($opt_list as $optl) {
