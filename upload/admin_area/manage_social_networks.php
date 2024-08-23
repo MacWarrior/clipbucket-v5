@@ -43,8 +43,6 @@ pages::getInstance()->paginate($total_pages, $current_page);
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_social_networks/manage_social_networks'.$min_suffixe.'.js' => 'admin']);
 
-ClipBucket::getInstance()->addAdminCSS(['font-awesome.min.css' => 'global']);
-
 $social_network_links = SocialNetworks::getInstance()->getAll([]);
 assign('social_network_links', $social_network_links);
 

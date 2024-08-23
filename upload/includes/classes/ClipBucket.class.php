@@ -312,7 +312,7 @@ class ClipBucket
 
         $menu_dashboard = [
             'title'   => 'Dashboard'
-            , 'class' => 'icon-dashboard'
+            , 'class' => 'glyphicon glyphicon-dashboard'
             , 'url'   => DirPath::getUrl('admin_area') . 'index.php'
         ];
         $this->addMenuAdmin($menu_dashboard, 1);
