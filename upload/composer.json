@@ -19,7 +19,7 @@
 
     ,"fortawesome/font-awesome": "4.7.0"
 
-    ,"components/jquery": "3.7.1"
+    ,"components/jquery": "*"
   },
   "config": {
     "platform": {
