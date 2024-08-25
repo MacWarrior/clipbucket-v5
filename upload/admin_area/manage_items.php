@@ -13,14 +13,25 @@ $c = $cbcollection->get_collection($id);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('collections'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('manage_collections'), 'url' => DirPath::getUrl('admin_area') . 'flagged_collections.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($c['collection_name']), 'url' => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)];
-$breadcrumb[3] = ['title' => lang('manage_collection_items'), 'url' => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($id) . '&type=videos'];
+$breadcrumb[0] = [
+    'title' => lang('collections'),
+    'url'   => ''
+];
+$breadcrumb[1] = [
+    'title' => lang('manage_collections'),
+    'url'   => DirPath::getUrl('admin_area') . 'flagged_collections.php'
+];
+$breadcrumb[2] = [
+    'title' => 'Editing : ' . display_clean($c['collection_name']),
+    'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)
+];
+$breadcrumb[3] = [
+    'title' => lang('manage_collection_items'),
+    'url'   => DirPath::getUrl('admin_area') . 'manage_items.php?collection=' . display_clean($id) . '&type=videos'
+];
 
 $type = mysql_clean($_GET['type']);
-$data = $cbcollection->get_collection_items($id);
-
+$items = [];
 switch ($type) {
     case 'photos':
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
@@ -70,10 +81,38 @@ switch ($type) {
         break;
 }
 
+if (config('enable_sub_collection') == 'yes') {
+    if (isset($_POST['remove_selected']) && is_array($_POST['check_collection'])) {
+        $count = 0;
+        foreach ($_POST['check_collection'] as $collection_id) {
+            $count++;
+            Collections::getInstance()->delete_collection($collection_id);
+        }
+        e(lang(''), 'm');
+    }
+    if (isset($_POST['move_selected']) && is_array($_POST['check_collection']) && !empty($_POST['collection_id'])) {
+        $count = 0;
+        foreach ($_POST['check_collection'] as $collection_id) {
+            $count++;
+            Collection::getInstance()->changeParent($collection_id, $_POST['collection_id']);
+        }
+        e(lang(''), 'm');
+    }
+
+    $childs = Collection::getInstance()->getChildCollection($id);
+    if (!empty($childs)) {
+        foreach ($childs as $child) {
+            $items[] = $child;
+        }
+    }
+}
+if (!empty($items)) {
+    assign('objects', $items);
+}
+
 $collections = $cbcollection->get_collections_list(0, null, null, $type, user_id());
 assign('collections', $collections);
 
-assign('data', $data);
 assign('obj', $items);
 assign('type', $type);
 assign('collection', $c);

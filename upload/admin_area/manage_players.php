@@ -18,7 +18,7 @@ $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
 if ($_GET['mode'] == 'show_settings') {
     $breadcrumb[1] = ['title' => lang('player_settings'), 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'];
 } else {
-    $breadcrumb[1] = ['title' => 'Players Manager', 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'];
+    $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('players'))), 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'];
 }
 
 //Set Mode

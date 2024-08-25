@@ -1,17 +1,17 @@
 <div class="heading clearfix">
-    <h2 class="pull-left">Photo Manager</h2>
+    <h2 class="pull-left">{lang('manage_x', lang('photos')|lower)}</h2>
     {include file="$layout_dir/blocks/advanced_photo_search.html" }
 </div>
 <form name="photo_manager" method="post">
-  <div class="btn-group marginBottom">
-    <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
+    <div class="btn-group marginBottom">
+        <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
         {if $smarty.get.active!='no'}
-        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
+            <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
         {/if}
-    <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
-    <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
-    <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"/>
-  </div>
+        <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
+        <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
+        <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s). This will permanently delete these photos from website.')"/>
+    </div>
     <table class="table table-bordered table-striped manageUsersTable">
         <tr>
             <td>
@@ -20,103 +20,105 @@
             <td>Photo Details</td>
             <td>&nbsp;</td>
         </tr>
-{if $photos}
-{section name=list loop=$photos}
-<tr>
-	<td class="moveL PhotoCheckBox">
-  	<div>
-      <input name="check_photo[]" type="checkbox" id="check_photo" value="{$photos[list].photo_id}" />
-    </div>
-  </td>
-    <td>{$photos[list].photo_id}</td>
-    <td>
-        <div class="row">
-            <div class="col-md-10">
-                <div class="row">
-                    <div class="col-md-3">
-						{get_photo details=$photos[list] output='html' class='acc_usr_video_thumb img-responsive'}
-                    </div>
-                    <div class="col-md-9">
-                        <a class="block" href="/admin_area/edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>
-                         <span class="labels1"> <strong>{$photos[list].date_added|niceTime}</strong>
-                            | {lang code='views'} : <strong>{$photos[list].views|number_format}</strong></span>
-                        <div class="labels">
-							{if $photos[list].photo_featured|lower=='yes'}
-							<span class="label label-primary">{lang code='featured'}</span>
-							{/if}
-							<span class="label {if $photos[list].active=='yes'}label-success{else}label-danger{/if}">
-								{if $photos[list].active=='yes'}
-									{lang code='active'}
-								{else}
-									{lang code='inactive'}
-								{/if}
-							</span>
-                            {if $photos[list].collection_id == 0}
-                                <span class="label label-primary">{lang code='orphan'}</span>
-                            {/if}
+        {if $photos}
+            {section name=list loop=$photos}
+                <tr>
+                    <td class="moveL PhotoCheckBox">
+                        <div>
+                            <input name="check_photo[]" type="checkbox" id="check_photo" value="{$photos[list].photo_id}"/>
                         </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-2">
-                {if $photos[list].userid != $anonymous_id}
-                    <a href="view_user.php?uid={$photos[list].userid}">{display_clean($photos[list].username)}</a>
-                {else}
-                    {display_clean(lang($photos[list].username))}
-                {/if}
-            </div>
-        </div>
+                    </td>
+                    <td>{$photos[list].photo_id}</td>
+                    <td>
+                        <div class="row">
+                            <div class="col-md-10">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        {get_photo details=$photos[list] output='html' class='acc_usr_video_thumb img-responsive'}
+                                    </div>
+                                    <div class="col-md-9">
+                                        <a class="block" href="/admin_area/edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>
+                                        <span class="labels1">
+                                            <strong>{$photos[list].date_added|niceTime}</strong>
+                                            | {lang code='views'} : <strong>{$photos[list].views|number_format}</strong>
+                                        </span>
+                                        <div class="labels">
+                                            {if $photos[list].photo_featured|lower=='yes'}
+                                                <span class="label label-primary">{lang code='featured'}</span>
+                                            {/if}
+                                            <span class="label {if $photos[list].active=='yes'}label-success{else}label-danger{/if}">
+                                                {if $photos[list].active=='yes'}
+                                                    {lang code='active'}
+                                                {else}
+                                                    {lang code='inactive'}
+                                                {/if}
+                                            </span>
+                                            {if $photos[list].collection_id == 0}
+                                                <span class="label label-primary">{lang code='orphan'}</span>
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                {if $photos[list].userid != $anonymous_id}
+                                    <a href="view_user.php?uid={$photos[list].userid}">{display_clean($photos[list].username)}</a>
+                                {else}
+                                    {display_clean(lang($photos[list].username))}
+                                {/if}
+                            </div>
+                        </div>
 
-    </td>
-    <td>
+                    </td>
+                    <td>
 
-      <div class="dropdown">
-        <button class="btn btn-primary btn-xs dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">Actions<i class="icon-angle-down icon-on-right"></i></button>
-        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                        <div class="dropdown">
+                            <button class="btn btn-primary btn-xs dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">Actions<i class="icon-angle-down icon-on-right"></i></button>
+                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                                <li>
+                                    <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
+                                </li>
+                                {if !empty($photos[list]['collection_id'])}
+                                    <li>
+                                        <a href="/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='watch'}</a>
+                                    </li>
+                                {/if}
+                                <li>
+                                    {if $photos[list]['active'] == 'yes'}
+                                        <a href="?deactivate={$photos[list].photo_id}">{lang code='deactivate'}</a>
+                                    {else}
+                                        <a href="?activate={$photos[list].photo_id}">{lang code='activate'}</a>
+                                    {/if}
+                                </li>
 
-           <li>
-            <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
-          </li>
-          <li>
-            <a href="/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='views'}</a>
-          </li>
-          <li>
-            {if $photos[list]['active'] == 'yes'}
-              <a href="?deactivate={$photos[list].photo_id}">{lang code='deactivate'}</a>
-            {else}
-              <a href="?activate={$photos[list].photo_id}">{lang code='activate'}</a>
+                                {if $photos[list].featured == 'yes'}
+                                    <li>
+                                        <a href="?make_unfeature={$photos[list].photo_id}">Make Unfeatured</a>
+                                    </li>
+                                {/if}
+                                {if $photos[list].featured == 'no'}
+                                    <li>
+                                        <a href="?make_feature={$photos[list].photo_id}">Make Featured</a>
+                                    </li>
+                                {/if}
+                                <li><a role="menuitem" tabindex="-1" id="delete-{$photos[list].photo_id}" href="?delete_photo={$photos[list].photo_id}">{lang code='delete'}</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {/section}
+        </table>
+        <div class="btn-group">
+            <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
+            {if $smarty.get.active!='no'}
+                <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
             {/if}
-          </li>
-         
-          
-          {if $photos[list].featured == 'yes'}
-          <li>
-            <a href="?make_unfeature={$photos[list].photo_id}">Make Unfeatured</a>
-          </li>
-          {/if}
-          {if $photos[list].featured == 'no'}
-          <li>
-            <a href="?make_feature={$photos[list].photo_id}">Make Featured</a>
-          </li>
-          {/if}
-            <li><a role="menuitem" tabindex="-1" id="delete-{$photos[list].photo_id}" href="?delete_photo={$photos[list].photo_id}">{lang code='delete'}</a></li>
-        </ul>
-      </div>
-    </td>
-</tr>
-{/section}
-</table>
-<div class="btn-group">
-  <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
-        {if $smarty.get.active!='no'}
-        <input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
-        {/if}
-  <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
-  <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
-  <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
-</div>
-{else}
-	<div align="center"><strong><em>No Photo Found</em></strong></div>
-{/if}
-{include file="$style_dir/blocks/pagination.html"}
+            <input type="submit" name="make_featured_selected" value="Make Featured" class="btn btn-primary btn-xs"/>
+            <input type="submit" name="make_unfeatured_selected" value="Make Unfeatured" class="btn btn-primary btn-xs"/>
+            <input type="submit" name="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-xs" onclick="return confirm_it('Are you sure you want to delete selected photos(s)')"/>
+        </div>
+    {else}
+        <div align="center"><strong><em>No Photo Found</em></strong></div>
+    {/if}
+    {include file="$style_dir/blocks/pagination.html"}
 </form>

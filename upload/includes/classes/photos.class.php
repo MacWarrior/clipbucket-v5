@@ -250,11 +250,13 @@ class Photo
             $conditions[] = $cond;
         }
 
+        $collection_items_table = Collection::getInstance()->getTableNameItems();
         if( $param_count ){
             $select = ['COUNT(DISTINCT photos.photo_id) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username';
+            $select[] = $collection_items_table . '.collection_id AS join_collection_id';
         }
 
         $join = [];
@@ -280,11 +282,11 @@ class Photo
         }
 
         if( $param_collection_id ){
-            $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else if( $param_exclude_orphan ){
-            $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+        } else {
+            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -382,7 +384,7 @@ class Photo
     public static function display_restricted($photo)
     {
         if( !empty($photo['age_restriction']) ){
-            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">' . sprintf(lang('access_forbidden_under_age_display'), $photo['age_restriction']) . '</span>';
+            echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $photo['age_restriction']) . '">' . lang('access_forbidden_under_age_display', $photo['age_restriction']) . '</span>';
         }
     }
 
@@ -529,14 +531,15 @@ class CBPhotos
      */
     public static function display_banner($vdo = [])
     {
-        $text = '';
-        $class = '';
         if ($vdo['active'] == 'no') {
-            $text = sprintf(lang('photo_is'), strtolower(lang('inactive')) );
+            $text = lang('photo_is', strtolower(lang('inactive')) );
             $class = 'label-danger';
+            echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
 
-        if( !empty($text) ){
+        if (empty($vdo['collection_id'])) {
+            $text = lang('photo_is', strtolower(lang('orphan')) );
+            $class = 'label-warning';
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
     }
@@ -708,7 +711,7 @@ class CBPhotos
                 , 'class' => 'glyphicon glyphicon-picture'
                 , 'sub'   => [
                     [
-                        'title' => 'Photo Manager'
+                        'title' => lang('manage_x', strtolower(lang('photos')))
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
@@ -728,7 +731,7 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
-                        'title' => lang('manage_categories')
+                        'title' => lang('manage_x', strtolower(lang('categories')))
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
                 ]
@@ -1299,7 +1302,7 @@ class CBPhotos
                 }
             }
 
-            e(sprintf(lang('success_delete_file'), display_clean($photo['photo_title'])), 'm');
+            e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
         }
     }
 
@@ -1737,8 +1740,7 @@ class CBPhotos
             $p['user'] = user_id();
         }
 
-        $p['type'] = 'photos';
-        $collections = $this->collection->get_collections($p);
+        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id());
         $cl_array = $this->parse_array($collections);
         $collection = $array['collection_id'];
         $this->unique = rand(0, 9999);
@@ -1896,7 +1898,7 @@ class CBPhotos
             }
 
             if (empty(errorhandler::getInstance()->get_error())) {
-                e(sprintf(lang('photo_is_saved_now'), display_clean($photo['photo_title'])), 'm');
+                e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
             }
 
             $db->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
@@ -2097,7 +2099,7 @@ class CBPhotos
     {
         if (is_array($array)) {
             foreach ($array as $key => $v) {
-                $cl_arr[$v['collection_id']] = $v['collection_name'];
+                $cl_arr[$key] = $v['name'];
             }
             return $cl_arr;
         }
@@ -2247,8 +2249,9 @@ class CBPhotos
                             $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
-
-                            e(lang("photo_updated_successfully"), "m");
+                            if (empty(errorhandler::getInstance()->get_error)) {
+                                e(lang("photo_updated_successfully"), "m");
+                            }
                         }
                     }
                 }

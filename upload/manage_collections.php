@@ -20,6 +20,13 @@ $get_limit = create_query_limit($page, config('collection_per_page'));
 switch ($mode) {
     case 'manage':
     default:
+        if (!empty($_GET['missing_collection'])) {
+            e(lang('collection_not_exist'));
+        }
+        if (!empty($_GET['new_collection'])) {
+            e(lang('collect_added_msg'), 'm');
+        }
+
         if (isset($_GET['delete_collection'])) {
             $cid = $_GET['delete_collection'];
             $cbcollection->delete_collection($cid);
@@ -37,12 +44,12 @@ switch ($mode) {
             'user'  => user_id(),
             'limit' => $get_limit
         ];
-        $usr_collections = $cbcollection->get_collections($collectArray);
+        $usr_collections = Collection::getInstance()->getAll($collectArray);
 
         assign('usr_collects', $usr_collections);
 
-        $collectArray['count_only'] = true;
-        $total_rows = $cbcollection->get_collections($collectArray);
+        $collectArray['count'] = true;
+        $total_rows = Collection::getInstance()->getAll($collectArray);
         $total_pages = count_pages($total_rows, config('collection_per_page'));
 
         //Pagination
@@ -61,9 +68,9 @@ switch ($mode) {
             $cbcollection->create_collection($_POST);
             if (!error()) {
                 $_POST = '';
+                redirect_to(BASEURL . '/manage_collections.php?new_collection=1');
             }
         }
-        subtitle(lang('create_collection'));
         break;
 
     case 'edit':
@@ -74,7 +81,11 @@ switch ($mode) {
         }
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $cid]);
-        $reqFields = $cbcollection->load_required_fields($collection);
+        if (empty($collection)) {
+            redirect_to(BASEURL . '/manage_collections.php?missing_collection=1');
+        }
+
+    $reqFields = $cbcollection->load_required_fields($collection);
         $otherFields = $cbcollection->load_other_fields($collection);
 
         assign('fields', $reqFields);
@@ -115,7 +126,7 @@ switch ($mode) {
                         $cbvideo->collection->remove_item($_POST['check_item'][$i], $cid);
                     }
                     $eh->flush();
-                    e(sprintf(lang('selected_items_removed'), 'videos'), 'm');
+                    e(lang('selected_items_removed', 'videos'), 'm');
                 }
                 break;
 
@@ -127,7 +138,7 @@ switch ($mode) {
                         $cbphoto->make_photo_orphan($cid, $_POST['check_item'][$i]);
                     }
                     $eh->flush();
-                    e(sprintf(lang('selected_items_removed'), 'photos'), 'm');
+                    e(lang('selected_items_removed', 'photos'), 'm');
                 }
                 break;
         }
@@ -157,7 +168,7 @@ switch ($mode) {
                 $cbcollection->action->remove_favorite($_POST['check_col'][$i]);
             }
             $eh->flush();
-            e(sprintf(lang('total_fav_collection_removed'), $total), 'm');
+            e(lang('total_fav_collection_removed', $total), 'm');
         }
 
         $cond = '';

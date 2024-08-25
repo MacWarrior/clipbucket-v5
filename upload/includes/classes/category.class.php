@@ -209,7 +209,7 @@ class Category
     public function saveLinks(string $categ_type, int $obj_id, array $categories): bool
     {
         if (!in_array($categ_type, $this->typeNamesByIds)) {
-            e(sprintf(lang('category_type_unknown'), $categ_type));
+            e(lang('category_type_unknown', $categ_type));
             return false;
         }
 
@@ -361,7 +361,7 @@ class Category
         }
 
         if (count($new_array) > config('video_categories')) {
-            e(sprintf(lang('vdo_cat_err2'), config('video_categories')));
+            e(lang('vdo_cat_err2', config('video_categories')));
             return false;
         }
 
@@ -456,7 +456,7 @@ class Category
         $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
         if (!in_array($ext, $supported_extensions)) {
-             e(sprintf(lang('error_allow_photo_types'), implode(', ', $supported_extensions)));
+             e(lang('error_allow_photo_types', implode(', ', $supported_extensions)));
             return false;
         }
 

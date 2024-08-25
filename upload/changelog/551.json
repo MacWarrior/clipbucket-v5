@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"115",
+  "revision":"116",
   "status":"dev",
   "detail":[
     {
@@ -25,6 +25,7 @@
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
+        ,"Refactor collection items management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -70,6 +71,7 @@
         ,"Fix video last thumb deletion SQL error"
         ,"Fix video edition status list"
         ,"Fix default thumbnail after thumbnails regeneration"
+        ,"Fix collection manager pagination"
       ]
     },
     {
@@ -83,10 +85,12 @@
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
-        ,"Add edit button on video & photo pages <i>(#319)</i>"
+        ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
+        ,"Add management menus"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
+        ,"Update orphan photos management"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -121,6 +125,7 @@
         ,"Fix video watching with SEO URL"
         ,"Fix favorite videos deletion"
         ,"Fix sub-categories filter display"
+        ,"Fix collection default thumb when using sub-collections"
       ]
     },
     {

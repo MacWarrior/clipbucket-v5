@@ -87,9 +87,9 @@ if (isset($_POST['start_test'])) {
         $test = cbmail($mail, true);
 
         if ($test == false) {
-            e(sprintf(lang('mail_not_send'), $to_email));
+            e(lang('mail_not_send', $to_email));
         } else {
-            e(sprintf(lang('mail_send'), $to_email), 'm');
+            e(lang('mail_send', $to_email), 'm');
         }
 
     } catch (\Exception $e) {

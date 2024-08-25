@@ -13,11 +13,18 @@ $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
 if (isset($_GET['search']) && isset($_GET['active']) && $_GET['active'] == 'no') {
     $breadcrumb[1] = ['title' => 'Inactive Photos', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'];
 } else {
-    $breadcrumb[1] = ['title' => 'Photo Manager', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
+    $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('photos'))), 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
+}
+
+if (!empty($_GET['missing_photo'])) {
+    if ($_GET['missing_photo'] == '2') {
+        e(lang('photo_success_deleted'), 'message');
+    } else {
+        e(lang('no_photos_found'));
+    }
 }
 
 //Photo Actions are following
-
 //Feature
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -157,6 +164,6 @@ pages::getInstance()->paginate($total_pages, $page);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 
-subtitle('Photo Manager');
+subtitle(lang('manage_x', strtolower(lang('photos'))));
 template_files('photo_manager.html');
 display_it();

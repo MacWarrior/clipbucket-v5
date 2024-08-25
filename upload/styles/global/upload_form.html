@@ -11,7 +11,7 @@
                 <span class="upload-logo"></span>
                 <strong class="block-title">{lang code="drag_drop"}</strong>
                 <p>
-                    {sprintf(lang(page_upload_video_limits),$Cbucket->configs['max_upload_size'],$Cbucket->configs['max_video_duration'])}
+                    {lang(page_upload_video_limits, [$Cbucket->configs['max_upload_size'],$Cbucket->configs['max_video_duration']])}
                 </p>
             </div>
             <div class="selectButtonContainer">

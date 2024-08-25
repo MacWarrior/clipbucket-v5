@@ -5,13 +5,13 @@
         </div>
 
         <h1>{lang code='age_verification'}</h1>
-        <p>{sprintf(lang('age_verification_text'),config('min_age_reg'))}</p>
+        <p>{lang('age_verification_text',config('min_age_reg'))}</p>
 
         <button class="enter" onclick="age_disclaimer(true);">
-            {sprintf(lang('disclaimer_older'),config('min_age_reg'))}
+            {lang('disclaimer_older',config('min_age_reg'))}
         </button>
         <button class="exit" onclick="age_disclaimer(false);">
-            {sprintf(lang('disclaimer_return'),config('min_age_reg'))}
+            {lang('disclaimer_return',config('min_age_reg'))}
         </button>
     </div>
 </div>

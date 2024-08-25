@@ -14,9 +14,13 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
+
+if (!empty($_GET['missing_collection'])) {
+    e(lang('collection_not_exist'));
+}
 
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -120,16 +124,20 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
 $carray['limit'] = $get_limit;
+$carray['allow_children'] = true;
+$carray['hide_empty_collection'] = 'no';
 if (!empty($carray['order'])) {
     $carray['order'] = $carray['order'] . ' DESC';
 } else {
     $carray['order'] = ' collection_id DESC';
 }
 
-$collections = $cbcollection->get_collections($carray);
+$collections = Collection::getInstance()->getAll($carray);
 assign('collections', $collections);
 
-$total_pages = count_pages(count($collections), config('admin_pages'));
+$carray['count'] = true;
+$count_collection =  Collection::getInstance()->getAll($carray);
+$total_pages = count_pages($count_collection, config('collection_per_page'));
 pages::getInstance()->paginate($total_pages, $page);
 
 $min_suffixe = in_dev() ? '' : '.min';

@@ -206,7 +206,7 @@ class cbfeeds
 
                             //Content Title
                             $farr['title'] = $photo['photo_title'];
-                            $farr['action_title'] = sprintf(lang('user_has_uploaded_new_photo'), $userlink);
+                            $farr['action_title'] = lang('user_has_uploaded_new_photo', $userlink);
 
                             $farr['links'][] = ['link' => ($cbphoto->photo_links($photo, 'view_item')), 'text' => lang('view_photo')];
 
@@ -227,10 +227,10 @@ class cbfeeds
                             //Content Title
                             $farr['title'] = $video['title'];
                             if ($action == 'upload_video') {
-                                $farr['action_title'] = sprintf(lang('user_has_uploaded_new_video'), $userlink);
+                                $farr['action_title'] = lang('user_has_uploaded_new_video', $userlink);
                             }
                             if ($action == 'add_favorite') {
-                                $farr['action_title'] = sprintf(lang('user_has_favorited_video'), $userlink);
+                                $farr['action_title'] = lang('user_has_favorited_video', $userlink);
                             }
                             $farr['link'] = video_link($video);
                             $farr['object_content'] = $video['description'];
@@ -245,7 +245,7 @@ class cbfeeds
                         break;
 
                     case 'signup':
-                        $farr['action_title'] = sprintf(lang('user_joined_us'), $userlink, TITLE, $userlink);
+                        $farr['action_title'] = lang('user_joined_us', [$userlink, TITLE, $userlink]);
                         $farr['icon'] = 'user.png';
                         break;
 
@@ -257,8 +257,7 @@ class cbfeeds
                             $remove_feed = true;
                         } else {
                             $friendlink = '<a href="' . $userquery->profile_link($friend) . '">' . display_clean($friend['username']) . '</a>';
-                            $farr['action_title'] = sprintf(lang('user_is_now_friend_with_other')
-                                , $userlink, $friendlink);
+                            $farr['action_title'] = lang('user_is_now_friend_with_other', [$userlink, $friendlink]);
                             $farr['icon'] = 'user_add.png';
                         }
                         break;
@@ -269,7 +268,7 @@ class cbfeeds
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
-                            $farr['action_title'] = sprintf(lang('user_has_created_new_collection'), $userlink);
+                            $farr['action_title'] = lang('user_has_created_new_collection', $userlink);
                             $farr['thumb'] = $cbcollection->get_thumb($collection, 'small');
                             $farr['title'] = $collection['collection_name'];
                             $collection_link = $cbcollection->collection_links($collection, 'view');

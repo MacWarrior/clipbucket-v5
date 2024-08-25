@@ -1209,16 +1209,17 @@ function post_form_val($val, $filter = false)
  * Function used to return LANG variable
  *
  * @param      $var
+ * @param $params
  * @return array|string|string[]
  * @throws Exception
  */
-function lang($var)
+function lang($var, $params = [])
 {
     if ($var == '') {
         return '';
     }
-    if (empty(Language::getInstance()->arrayTranslation[$var])) {
 
+    if (empty(Language::getInstance()->arrayTranslation[$var])) {
         //check default value in db
         $translation = Language::getInstance()->getTranslationByKey($var, Language::$english_id)['translation'];
 
@@ -1239,7 +1240,16 @@ function lang($var)
 
     $array_str = ['{title}'];
     $array_replace = ['Title'];
-    return str_replace($array_str, $array_replace, $translation);
+    $lang = str_replace($array_str, $array_replace, $translation);
+    if( empty($params) ){
+        return $lang;
+    }
+
+    if( !is_array($params) ){
+        $params = [$params];
+    }
+
+    return vsprintf($lang, $params);
 }
 
 /**
@@ -1948,7 +1958,7 @@ function validate_cb_form($input, $array)
                 }
                 if (isset($max_len)) {
                     if ($length > $max_len || $length < $min_len) {
-                        e(sprintf(lang('please_enter_val_bw_min_max'), $title, $min_len, $field['max_length']));
+                        e(lang('please_enter_val_bw_min_max', [$title, $min_len, $field['max_length']]));
                     }
                 }
                 if (function_exists($field['db_value_check_func'])) {
@@ -2040,7 +2050,7 @@ function nicetime($date, $istime = false): string
         $period = $period_sing[$j];
     }
 
-    return sprintf(lang($tense), $difference, $period);
+    return lang($tense, [$difference, $period]);
 }
 
 /**
