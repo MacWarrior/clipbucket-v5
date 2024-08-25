@@ -384,7 +384,7 @@ class Photo
     public static function display_restricted($photo)
     {
         if( !empty($photo['age_restriction']) ){
-            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">' . sprintf(lang('access_forbidden_under_age_display'), $photo['age_restriction']) . '</span>';
+            echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $photo['age_restriction']) . '">' . lang('access_forbidden_under_age_display', $photo['age_restriction']) . '</span>';
         }
     }
 
@@ -532,13 +532,13 @@ class CBPhotos
     public static function display_banner($vdo = [])
     {
         if ($vdo['active'] == 'no') {
-            $text = sprintf(lang('photo_is'), strtolower(lang('inactive')) );
+            $text = lang('photo_is', strtolower(lang('inactive')) );
             $class = 'label-danger';
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
 
         if (empty($vdo['collection_id'])) {
-            $text = sprintf(lang('photo_is'), strtolower(lang('orphan')) );
+            $text = lang('photo_is', strtolower(lang('orphan')) );
             $class = 'label-warning';
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
@@ -711,7 +711,7 @@ class CBPhotos
                 , 'class' => 'glyphicon glyphicon-picture'
                 , 'sub'   => [
                     [
-                        'title' => display_manage_x('photos')
+                        'title' => lang('manage_x', strtolower(lang('photos')))
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
@@ -731,7 +731,7 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
-                        'title' => display_manage_x('categories')
+                        'title' => lang('manage_x', strtolower(lang('categories')))
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
                 ]
@@ -1302,7 +1302,7 @@ class CBPhotos
                 }
             }
 
-            e(sprintf(lang('success_delete_file'), display_clean($photo['photo_title'])), 'm');
+            e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
         }
     }
 
@@ -1898,7 +1898,7 @@ class CBPhotos
             }
 
             if (empty(errorhandler::getInstance()->get_error())) {
-                e(sprintf(lang('photo_is_saved_now'), display_clean($photo['photo_title'])), 'm');
+                e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
             }
 
             $db->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");

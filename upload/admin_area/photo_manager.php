@@ -13,7 +13,7 @@ $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
 if (isset($_GET['search']) && isset($_GET['active']) && $_GET['active'] == 'no') {
     $breadcrumb[1] = ['title' => 'Inactive Photos', 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'];
 } else {
-    $breadcrumb[1] = ['title' => display_manage_x('photos'), 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
+    $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('photos'))), 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'];
 }
 
 if (!empty($_GET['missing_photo'])) {
@@ -164,6 +164,6 @@ pages::getInstance()->paginate($total_pages, $page);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 
-subtitle(display_manage_x('photos'));
+subtitle(lang('manage_x', strtolower(lang('photos'))));
 template_files('photo_manager.html');
 display_it();

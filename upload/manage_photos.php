@@ -38,7 +38,7 @@ switch ($mode) {
                 $cbphoto->delete_photo($_POST['check_photo'][$i]);
             }
             $eh->flush();
-            e(sprintf(lang('total_photos_deleted'), $total), 'm');
+            e(lang('total_photos_deleted', $total), 'm');
         }
 
         $params = [
@@ -75,7 +75,7 @@ switch ($mode) {
                 updateObjectStats('fav', 'photo', $_POST['check_photo'][$i], '-');
             }
             $eh->flush();
-            e(sprintf(lang('total_fav_photos_removed'), $total), 'm');
+            e(lang('total_fav_photos_removed', $total), 'm');
         }
 
         if (get('query') != '') {
@@ -119,7 +119,7 @@ switch ($mode) {
                 $cbphoto->delete_photo($_POST['check_photo'][$i], true);
             }
             $eh->flush();
-            e(sprintf(lang('total_photos_deleted'), $total), 'm');
+            e(lang('total_photos_deleted', $total), 'm');
         }
         $photo_arr = ['user' => user_id(), 'limit' => $get_limit, 'order' => ' date_added DESC', 'get_orphans' => true];
         $collection = $cbphoto->collection->get_collections(['user' => user_id(), 'type' => 'photos']);

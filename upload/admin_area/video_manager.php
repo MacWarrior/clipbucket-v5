@@ -22,7 +22,7 @@ $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 if ($_GET['active'] == 'no') {
     $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 } else {
-    $breadcrumb[1] = ['title' => display_manage_x('videos'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
+    $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 }
 
 if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
@@ -184,6 +184,6 @@ if( empty($videos) ){
 $total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
-subtitle(display_manage_x('videos'));
+subtitle(lang('manage_x', strtolower(lang('videos'))));
 template_files('video_manager.html');
 display_it();

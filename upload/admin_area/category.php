@@ -18,7 +18,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' =>display_manage_x('categories'),
+    'title' => lang('manage_x', strtolower(lang('categories'))),
     'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type
 ];
 

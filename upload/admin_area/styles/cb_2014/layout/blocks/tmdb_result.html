@@ -24,8 +24,8 @@
 
             <table class="table table-bordered table-striped">
                 <tr>
-                    <th class="col-md-1" style="cursor:pointer;" title="{sprintf(lang('sort_by'),lang('title'))}">{lang code='title'} <span class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></span></th>
-                    <th class="col-md-2" style="cursor:pointer;" title="{sprintf(lang('sort_by'),lang('release_date'))}">{lang code='release_date'}<span class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="release_date"></span></th>
+                    <th class="col-md-1" style="cursor:pointer;" title="{lang('sort_by',lang('title'))}">{lang code='title'} <span class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></span></th>
+                    <th class="col-md-2" style="cursor:pointer;" title="{lang('sort_by',lang('release_date'))}">{lang code='release_date'}<span class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="release_date"></span></th>
                     <th class="col-md-6">{lang code='description'}</th>
                     <th class="col-md-2">{lang code='poster'}</th>
                     <th class="col-md-1"></th>

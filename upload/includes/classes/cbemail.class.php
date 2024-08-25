@@ -393,7 +393,7 @@ class CBEmail
                 $sent_to = $total;
             }
 
-            e(sprintf(lang("Sending email from %s to %s"), $start_index + 1, $sent_to), "m");
+            e(lang('Sending email from %s to %s', [$start_index + 1, $sent_to]), 'm');
 
             $start_index = $start_index + $settings['loop_size'];
 

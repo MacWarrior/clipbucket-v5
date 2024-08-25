@@ -176,9 +176,9 @@ class cb_pm
             foreach ($usernames as $username) {
                 $user_id = $this->get_the_user($username);
                 if (userquery::getInstance()->is_user_banned($username, user_id())) {
-                    e(sprintf(lang('cant_pm_banned_user'), $username));
+                    e(lang('cant_pm_banned_user', $username));
                 } elseif (userquery::getInstance()->is_user_banned(user_name(), $username)) {
-                    e(sprintf(lang('cant_pm_user_banned_you'), $username));
+                    e(lang('cant_pm_user_banned_you', $username));
                 } elseif (!userquery::getInstance()->user_exists($username) || $user_id == userquery::getInstance()->get_anonymous_user()) {
                     e(lang('unknown_reciever'));
                 } elseif ($user_id == $sender) {

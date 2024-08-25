@@ -479,7 +479,7 @@ class Collection
         $text = '';
         $class = '';
         if ($collection['broadcast'] == 'private') {
-            $text = sprintf(lang('collection_is'), strtolower(lang('private')));
+            $text = lang('collection_is', strtolower(lang('private')));
             $class = 'label-warning';
         }
 
@@ -633,7 +633,7 @@ class Collections extends CBCategory
                             , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                         , [
-                            'title' => display_manage_x('categories')
+                            'title' => lang('manage_x', strtolower(lang('categories')))
                             , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
@@ -832,7 +832,7 @@ class Collections extends CBCategory
 
         $userid = user_id();
         if ($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
-            e(sprintf(lang('collection_is'), strtolower(lang('private'))));
+            e(lang('collection_is', strtolower(lang('private'))));
             return false;
         }
 
@@ -1602,14 +1602,14 @@ class Collections extends CBCategory
             if (!user_id()) {
                 e(lang('you_not_logged_in'));
             } elseif (!$this->object_exists($objID)) {
-                e(sprintf(lang('object_does_not_exists'), $this->objName));
+                e(lang('object_does_not_exists', $this->objName));
             } elseif ($this->object_in_collection($objID, $cid)) {
-                e(sprintf(lang('object_exists_collection'), $this->objName));
+                e(lang('object_exists_collection', $this->objName));
             } else {
                 $flds = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
                 $vls = [$cid, $objID, $this->objType, user_id(), NOW()];
                 Clipbucket_db::getInstance()->insert(tbl($this->items), $flds, $vls);
-                e(sprintf(lang('item_added_in_collection'), $this->objName), 'm');
+                e(lang('item_added_in_collection', $this->objName), 'm');
             }
         } else {
             e(lang('collect_not_exist'));
@@ -1772,12 +1772,12 @@ class Collections extends CBCategory
         if (!user_id()) {
             e(lang('you_not_logged_in'));
         } elseif (!$this->object_in_collection($id, $cid)) {
-            e(sprintf(lang('object_not_in_collect'), $this->objName));
+            e(lang('object_not_in_collect', $this->objName));
         } elseif (!$this->is_collection_owner($cid) && !has_access('admin_access', true)) {
             e(lang('cant_perform_action_collect'));
         } else {
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->items) . ' WHERE object_id = ' . $id . ' AND collection_id = ' . $cid);
-            e(sprintf(lang('collect_item_removed'), $this->objName), 'm');
+            e(lang('collect_item_removed', $this->objName), 'm');
         }
     }
 

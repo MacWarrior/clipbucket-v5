@@ -200,7 +200,7 @@ class FileUpload
 
         $max_file_size_in_bytes = getBytesFromFileSize($this->maxFileSize . 'M');
         if (empty($this->finalFileSize) || $this->finalFileSize > $max_file_size_in_bytes) {
-            $this->error(sprintf(lang('file_size_cant_exceeds_x_x'),$this->maxFileSize,lang('mb')));
+            $this->error(lang('file_size_cant_exceeds_x_x', [$this->maxFileSize,lang('mb')]));
 
         }
 

@@ -126,7 +126,7 @@ switch ($mode) {
                         $cbvideo->collection->remove_item($_POST['check_item'][$i], $cid);
                     }
                     $eh->flush();
-                    e(sprintf(lang('selected_items_removed'), 'videos'), 'm');
+                    e(lang('selected_items_removed', 'videos'), 'm');
                 }
                 break;
 
@@ -138,7 +138,7 @@ switch ($mode) {
                         $cbphoto->make_photo_orphan($cid, $_POST['check_item'][$i]);
                     }
                     $eh->flush();
-                    e(sprintf(lang('selected_items_removed'), 'photos'), 'm');
+                    e(lang('selected_items_removed', 'photos'), 'm');
                 }
                 break;
         }
@@ -168,7 +168,7 @@ switch ($mode) {
                 $cbcollection->action->remove_favorite($_POST['check_col'][$i]);
             }
             $eh->flush();
-            e(sprintf(lang('total_fav_collection_removed'), $total), 'm');
+            e(lang('total_fav_collection_removed', $total), 'm');
         }
 
         $cond = '';

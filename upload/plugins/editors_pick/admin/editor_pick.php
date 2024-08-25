@@ -6,7 +6,7 @@ userquery::getInstance()->admin_login_check();
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
-$breadcrumb[0] = ['title' => display_manage_x('plugins'), 'url' => ''];
+$breadcrumb[0] = ['title' => lang('manage_x', strtolower(lang('plugins'))), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('plugin_editors_picks'), 'url' => DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php'];
 
 //Removing

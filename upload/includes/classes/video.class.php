@@ -475,7 +475,7 @@ class Video
     public static function display_restricted($video)
     {
         if( !empty($video['age_restriction']) ){
-            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
+            echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
         }
     }
 
@@ -536,7 +536,7 @@ class Video
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
-                e(sprintf(lang('unknown_type'), $type));
+                e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
@@ -560,7 +560,7 @@ class Video
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
-                e(sprintf(lang('unknown_type'), $type));
+                e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
@@ -584,7 +584,7 @@ class Video
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
-                e(sprintf(lang('unknown_type'), $type));
+                e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
@@ -846,13 +846,13 @@ class CBvideo extends CBCategory
         $text = '';
         $class = '';
         if ($vdo['active'] == 'no') {
-            $text = sprintf(lang('video_is'), strtolower(lang('inactive')) );
+            $text = lang('video_is', strtolower(lang('inactive')) );
             $class = 'label-danger';
         } else if ($vdo['status'] != 'Successful') {
-            $text = sprintf(lang('video_is'), strtolower(lang(strtolower($vdo['status']))) );
+            $text = lang('video_is', strtolower(lang(strtolower($vdo['status']))) );
             $class = 'label-warning';
         } else if ($vdo['broadcast'] == 'unlisted') {
-            $text = sprintf(lang('video_is'), strtolower(lang('unlisted')));
+            $text = lang('video_is', strtolower(lang('unlisted')));
             $class = 'label-info';
         }
 
@@ -880,19 +880,19 @@ class CBvideo extends CBCategory
             ];
 
             $menu_video['sub'][] =  [
-                'title' => display_manage_x('videos')
+                'title' => lang('manage_x', strtolower(lang('videos')))
                 , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'
             ];
 
             if( isSectionEnabled('playlists') ){
                 $menu_video['sub'][] =  [
-                    'title' => display_manage_x('playlists')
+                    'title' => lang('manage_x', strtolower(lang('playlists')))
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_playlist.php'
                 ];
             }
 
             $menu_video['sub'][] = [
-                'title' => display_manage_x('categories')
+                'title' => lang('manage_x', strtolower(lang('categories')))
                 , 'url' => DirPath::getUrl('admin_area') . 'category.php'
             ];
             $menu_video['sub'][] = [
