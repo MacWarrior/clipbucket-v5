@@ -121,7 +121,7 @@ if ($_GET['search']) {
 
 /* CREATING LIMIT */
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, config('collection_per_page'));
+$get_limit = create_query_limit($page, config('admin_pages'));
 
 $carray['limit'] = $get_limit;
 $carray['allow_children'] = true;
