@@ -141,7 +141,7 @@
                                 {if !$ffmpegVersion}
                                     {lang code='not_found'}
                                 {elseif !$ffmpegVersionOK}
-                                    {lang('not_required_version'), ['FFMPEG',$ffmpegVersion, $ffReq])}
+                                    {lang('not_required_version', ['FFMPEG',$ffmpegVersion, $ffReq])}
                                 {/if}
                             </div>
                         {else}
@@ -159,7 +159,7 @@
                                 {if !$ffprobe_path}
                                     {lang code='not_found'}
                                 {elseif !$ffprobe_path_OK}
-                                    {lang('not_required_version'), ['FFProbe',$ffprobe_path, $ffReq])}
+                                    {lang('not_required_version', ['FFProbe',$ffprobe_path, $ffReq])}
                                 {/if}
                             </p>
                             {if is_array($ffprobe_path) && $ffprobe_path.error}
@@ -192,7 +192,7 @@
                                 {if !$serverMySqlVersion}
                                     {lang code='not_found'}
                                 {elseif !$serverMySqlVersionOk}
-                                    {lang('not_required_version'), [lang('mysql_client'),$serverMySqlVersion, $mysqlReq])}
+                                    {lang('not_required_version', [lang('mysql_client'),$serverMySqlVersion, $mysqlReq])}
                                 {/if}
                             </p>
                         {else}
