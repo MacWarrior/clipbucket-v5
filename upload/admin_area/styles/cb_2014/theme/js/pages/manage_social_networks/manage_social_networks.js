@@ -11,6 +11,7 @@ $(function () {
         $('#ok-' + id).show();
         $('#remove-' + id).show();
         $('.edit-' + id).hide();
+        $('#delete-' + id).hide();
         $('#edit-' + id).hide();
     });
 
@@ -21,6 +22,7 @@ $(function () {
         $('#ok-' + id).hide();
         $('#remove-' + id).hide();
         $('.edit-' + id).show();
+        $('#delete-' + id).show();
         $('#edit-' + id).show();
     });
 
@@ -44,6 +46,7 @@ $(function () {
                 $('#remove-' + id).hide();
                 $('#edit-' + id).show();
                 $('.edit-' + id).show();
+                $('#delete-' + id).show();
             }
         });
     });
