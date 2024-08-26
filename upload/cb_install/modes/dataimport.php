@@ -20,6 +20,7 @@
         <input type="hidden" name="dbuser" value="<?php echo $_POST['dbuser']; ?>"/>
         <input type="hidden" name="dbport" value="<?php echo $_POST['dbport']; ?>"/>
         <input type="hidden" name="dbprefix" value="<?php echo $_POST['dbprefix']; ?>"/>
+        <input type="hidden" name="reset_db" id="reset_db" value="<?php echo $_POST['reset_db'] ?? ''; ?>"/>
 
         <?php show_hidden_inputs(); ?>
 
@@ -30,6 +31,7 @@
 <script>
     $(document).ready()
     {
-        dodatabase('structure');
+        var reset_db = $('#reset_db').val();
+        dodatabase(reset_db== '1' ? 'reset_db' : 'structure');
     }
 </script>

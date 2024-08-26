@@ -10,6 +10,27 @@ $db->update(
     , 'userid=1'
 );
 
+require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
+require_once DirPath::get('vendor') . 'autoload.php';
+require_once DirPath::get('classes') . 'DiscordLog.php';
+require_once DirPath::get('classes') . 'update.class.php';
+require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'system.class.php';
+
+//clean lock
+if (conv_lock_exists()) {
+    for ($i = 0; $i < config('max_conversion'); $i++) {
+        if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
+            unlink(DirPath::get('temp') . 'conv_lock' . $i . '.loc');
+        }
+    }
+}
+//launch tool clean
+$tool = AdminTool::getToolByCode('clean_orphan_files');
+if (!empty($tool)) {
+    AdminTool::launchCli($tool['id_tool']);
+}
+
 //Login user
 $userquery->login_user(post('username'), post('password'))
 ?>

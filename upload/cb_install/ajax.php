@@ -18,6 +18,7 @@ $dbuser = $_POST['dbuser'];
 $dbname = $_POST['dbname'];
 $dbprefix = $_POST['dbprefix'];
 $dbport = $_POST['dbport'];
+$reset_db = $_POST['reset_db'];
 
 try{
     $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass, null, $dbport);
@@ -76,6 +77,9 @@ if ($mode == 'adminsettings') {
         'user_levels'     => 'user_levels.sql'
     ];
 
+    if ($reset_db == 1) {
+        $files = ['reset_db'=> 'reset_db.sql'] + $files;
+    }
     $next = false;
     if (array_key_exists($step, $files) && $step) {
         $total = count($files);
@@ -100,6 +104,9 @@ if ($mode == 'adminsettings') {
         }
 
         if ($current) {
+            //reset DB
+
+
             install_execute_sql_file($cnnct, DirPath::get('sql') . $files[$current], $dbprefix, $dbname);
         }
 
