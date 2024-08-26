@@ -23,18 +23,29 @@ $cond = [];
 if (!empty($_GET['search'])) {
     $cond[] = ' T.name LIKE \'%' . mysql_clean($_GET['search']) . '%\'';
 }
-$selected_tag_type = 0;
-if (!empty($_GET['id_tag_type'])) {
-    $cond[] = ' T.id_tag_type = ' . mysql_clean($_GET['id_tag_type']);
-    $selected_tag_type = $_GET['id_tag_type'];
+
+
+if( !empty($_POST['title']) && !empty($_POST['url']) && !empty($_POST['social_network_link_order']) && !empty($_POST['id_fontawesome_icon']) ) {
+    SocialNetworks::getInstance()->createSocialNetwork($_POST['id_fontawesome_icon'], $_POST['title'], $_POST['url'], $_POST['social_network_link_order']);
 }
 
-if (!empty($_POST)) {
-    SocialNetworks::getInstance()->createSocialNetwork($_POST);
+$params = [
+    'limit' =>   $curr_limit
+];
+
+$social_network_links = SocialNetworks::getInstance()->getAll($params);
+assign('social_network_links', $social_network_links);
+
+if( empty($social_network_links) ){
+    $count = 0;
+} else if( count($social_network_links) < config('admin_pages') && $current_page == 1 ){
+    $count = count($social_network_links);
+} else {
+    unset($params['limit']);
+    $params['count'] = true;
+    $count = SocialNetworks::getInstance()->getAll($params);
 }
 
-$tags = Tags::getTags($curr_limit, $cond);
-$count = Tags::countTags($cond);
 $total_pages = $count / $limit;
 $total_pages = round($total_pages + 0.49, 0);
 //Pagination
@@ -42,9 +53,6 @@ pages::getInstance()->paginate($total_pages, $current_page);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_social_networks/manage_social_networks'.$min_suffixe.'.js' => 'admin']);
-
-$social_network_links = SocialNetworks::getInstance()->getAll([]);
-assign('social_network_links', $social_network_links);
 
 $list_icons = SocialNetworks::getInstance()->getAllIcons() ?? [];
 assign('list_icons', $list_icons);

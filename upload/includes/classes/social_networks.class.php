@@ -31,13 +31,16 @@ class SocialNetworks
         return self::$social_networks;
     }
 
-    public function createSocialNetwork(array $infos)
+    /**
+     * @throws Exception
+     */
+    public function createSocialNetwork(int $id_fontawesome_icon, string $title, string $url, int $social_network_link_order)
     {
         $sql = 'INSERT INTO ' . tbl($this->tablename) . ' (id_fontawesome_icon, title, url, social_network_link_order) VALUES(
-            ' . mysql_clean($infos['id_fontawesome_icon']) . ',
-            \'' . mysql_clean($infos['title']) . '\',
-            \'' . mysql_clean($infos['url']) . '\',
-            ' . mysql_clean($infos['social_network_link_order']) . '
+            ' . mysql_clean($id_fontawesome_icon) . ',
+            \'' . mysql_clean($title) . '\',
+            \'' . mysql_clean($url) . '\',
+            ' . mysql_clean($social_network_link_order) . '
         ) ';
         Clipbucket_db::getInstance()->execute($sql);
 

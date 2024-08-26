@@ -1,7 +1,12 @@
-
-$(function () {
+$(document).ready(function() {
     $('#hideshow').on('click', function () {
-        $('#form_add_social_network').toggle();
+        $('#form_add_social_network').slideDown();
+        $(this).fadeOut();
+    });
+    $('#cancel').on('click', function (e) {
+        e.preventDefault();
+        $('#form_add_social_network').slideUp();
+        $('#hideshow').fadeIn();
     });
 
     $('.edit_social_network').on("click", function () {

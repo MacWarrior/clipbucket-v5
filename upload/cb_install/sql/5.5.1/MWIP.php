@@ -44,6 +44,10 @@ class MWIP extends \Migration
             'fr' => 'Icône',
             'en' => 'Icon'
         ]);
+        self::generateTranslation('validate', [
+            'fr' => 'Valider',
+            'en' => 'Validate'
+        ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}fontawesome_icons` (
                 `id_fontawesome_icon` int(11) NOT NULL,

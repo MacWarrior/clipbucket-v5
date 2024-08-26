@@ -1231,4 +1231,5 @@ VALUES ('admin_setting'),
        ('plugins'),
        ('url'),
        ('order'),
-       ('icon');
+       ('icon'),
+       ('validate');
