@@ -345,10 +345,10 @@
 										<hr/>
 										<div class="row">
 											<div class="col-md-10">
-												<label class="nowrap" for="enable_social_networks_links" title="{lang code='option_enable_social_networks_links'}">{lang code='option_enable_social_networks_links'}</label>
+												<label class="nowrap" for="enable_social_networks_links_footer" title="{lang code='option_enable_social_networks_links_footer'}">{lang code='option_enable_social_networks_links_footer'}</label>
 											</div>
 											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="enable_social_networks_links" id="enable_social_networks_links" {if $row.enable_social_networks_links=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+												<input value="yes" name="enable_social_networks_links_footer" id="enable_social_networks_links_footer" {if $row.enable_social_networks_links_footer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 												<span class="lbl"></span>
 											</div>
 										</div>
@@ -403,8 +403,21 @@
 												<span class="lbl"></span>
 											</div>
 										</div>
+										<hr/>
+										<div class="row">
+											<div class="col-md-10">
+												<label class="nowrap" for="enable_social_networks_links_home_sidebar" title="{lang code='option_enable_social_networks_links_sidebar'}">{lang code='option_enable_social_networks_links_sidebar'}</label>
+											</div>
+											<div class="col-md-2 row-size no_padding">
+												<input value="yes" name="enable_social_networks_links_home_sidebar" id="enable_social_networks_links_home_sidebar" {if $row.enable_social_networks_links_home_sidebar=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+												<span class="lbl"></span>
+											</div>
+										</div>
+										<hr/>
+
 									</div>
 								</div>
+								
 							</div>
 
 						</div>

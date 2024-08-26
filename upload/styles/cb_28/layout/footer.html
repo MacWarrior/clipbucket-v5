@@ -3,6 +3,9 @@
 {ANCHOR place="before_footer"}
 <footer id="footer" class="clearfix">
 	<div class="container">
+		{if config('enable_social_networks_links_footer')=='yes'}
+			{SocialNetworks::display('horizontal')}
+		{/if}
 		{ANCHOR place="before_footer_elements"}
 		<div class="footer-holder">
 			{ANCHOR place="before_footer_menu"}
