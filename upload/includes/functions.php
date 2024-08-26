@@ -1227,10 +1227,14 @@ function lang($var, $params = [])
             $translation = $var;
 
             if( Language::getInstance()->isTranslationSystemInstalled() ){
-                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+                $msg = '[LANG] Missing translation for "' . $var . '"' . PHP_EOL;
+                error_log($msg);
 
                 if (in_dev()) {
-                    error_log(debug_backtrace_string());
+                    DiscordLog::sendDump($msg);
+                    $backtrace = debug_backtrace_string();
+                    error_log($backtrace);
+                    DiscordLog::sendDump($backtrace);
                 }
             }
         }

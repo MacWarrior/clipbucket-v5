@@ -28,6 +28,22 @@ class MWIP extends \Migration
             'fr' => 'Ajouter un nouveau lien de réseau social',
             'en' => 'Add new social network link'
         ]);
+        self::generateTranslation('plugins', [
+            'fr' => 'plugins',
+            'en' => 'plugins'
+        ]);
+        self::generateTranslation('url', [
+            'fr' => 'URL',
+            'en' => 'URL'
+        ]);
+        self::generateTranslation('order', [
+            'fr' => 'Ordre',
+            'en' => 'Order'
+        ]);
+        self::generateTranslation('icon', [
+            'fr' => 'Icône',
+            'en' => 'Icon'
+        ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}fontawesome_icons` (
                 `id_fontawesome_icon` int(11) NOT NULL,

@@ -1227,4 +1227,8 @@ VALUES ('admin_setting'),
        ('view_channel_comments'),
        ('option_enable_social_networks_links_footer'),
        ('option_enable_social_networks_links_sidebar'),
-       ('add_new_social_network_link');
+       ('add_new_social_network_link'),
+       ('plugins'),
+       ('url'),
+       ('order'),
+       ('icon');
