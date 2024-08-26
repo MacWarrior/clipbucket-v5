@@ -721,6 +721,10 @@ ul.mainTabs{
 	border-radius: 5px;
 }
 
+.nav-list>li a>.arrow{
+    font-size: 12px !important;
+}
+
 .row-size {
 	height: 34px;
 }
