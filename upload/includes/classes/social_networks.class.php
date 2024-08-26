@@ -34,16 +34,36 @@ class SocialNetworks
     /**
      * @throws Exception
      */
-    public function createSocialNetwork(int $id_fontawesome_icon, string $title, string $url, int $social_network_link_order)
+    public function createSocialNetwork(int $id_fontawesome_icon, string $title, string $url, int $social_network_link_order): bool
     {
+        if( empty(trim($title)) ){
+            e(lang('title_cannot_be_empty'));
+            return false;
+        }
+
+        if( empty(trim($url)) ){
+            e(lang('url_cannot_be_empty'));
+            return false;
+        }
+
+        if( !filter_var($url, FILTER_VALIDATE_URL) ){
+            e(lang('incorrect_url'));
+            return false;
+        }
+
+        if( !$id_fontawesome_icon == 0 ){
+            e(lang('icon_is_required'));
+            return false;
+        }
+
         $sql = 'INSERT INTO ' . tbl($this->tablename) . ' (id_fontawesome_icon, title, url, social_network_link_order) VALUES(
             ' . mysql_clean($id_fontawesome_icon) . ',
             \'' . mysql_clean($title) . '\',
             \'' . mysql_clean($url) . '\',
             ' . mysql_clean($social_network_link_order) . '
-        ) ';
+        )';
         Clipbucket_db::getInstance()->execute($sql);
-
+        return true;
     }
 
     /**
@@ -60,7 +80,7 @@ class SocialNetworks
             SET title = \'' . mysql_clean($title) . '\',
             url = \'' . mysql_clean($url) . '\',
             social_network_link_order = ' . mysql_clean($social_network_link_order) . '
-           WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link) ;
+           WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link);
         return Clipbucket_db::getInstance()->execute($sql);
     }
 

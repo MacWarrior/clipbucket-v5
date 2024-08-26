@@ -48,6 +48,18 @@ class MWIP extends \Migration
             'fr' => 'Valider',
             'en' => 'Validate'
         ]);
+        self::generateTranslation('title_cannot_be_empty', [
+            'fr' => 'Le titre ne peut être vide',
+            'en' => 'Title cannot be empty'
+        ]);
+        self::generateTranslation('url_cannot_be_empty', [
+            'fr' => 'L\'URL ne peut être vide',
+            'en' => 'URL cannot be empty'
+        ]);
+        self::generateTranslation('icon_is_required', [
+            'fr' => 'L\'icône est requise',
+            'en' => 'Icon is required'
+        ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}fontawesome_icons` (
                 `id_fontawesome_icon` int(11) NOT NULL,

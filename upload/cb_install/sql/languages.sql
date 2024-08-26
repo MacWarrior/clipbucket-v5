@@ -1232,4 +1232,7 @@ VALUES ('admin_setting'),
        ('url'),
        ('order'),
        ('icon'),
-       ('validate');
+       ('validate'),
+       ('title_cannot_be_empty'),
+       ('url_cannot_be_empty'),
+       ('icon_is_required');

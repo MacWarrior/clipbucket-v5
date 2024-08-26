@@ -24,9 +24,8 @@ if (!empty($_GET['search'])) {
     $cond[] = ' T.name LIKE \'%' . mysql_clean($_GET['search']) . '%\'';
 }
 
-
-if( !empty($_POST['title']) && !empty($_POST['url']) && !empty($_POST['social_network_link_order']) && !empty($_POST['id_fontawesome_icon']) ) {
-    SocialNetworks::getInstance()->createSocialNetwork($_POST['id_fontawesome_icon'], $_POST['title'], $_POST['url'], $_POST['social_network_link_order']);
+if( isset($_POST['title']) && isset($_POST['url']) && isset($_POST['social_network_link_order']) && isset($_POST['id_fontawesome_icon']) ) {
+    SocialNetworks::getInstance()->createSocialNetwork((int)$_POST['id_fontawesome_icon'], $_POST['title'], $_POST['url'], (int)$_POST['social_network_link_order']);
 }
 
 $params = [

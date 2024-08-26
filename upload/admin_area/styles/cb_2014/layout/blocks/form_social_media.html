@@ -1,10 +1,10 @@
 <form method="post" enctype="multipart/form-data" name="edit_social_media" id="edit_social_media">
     <div class="row">
-        <div class="col-md-1">
+        <div class="col-md-2">
             <label for="id_fontawesome_icon">{lang('icon')}*</label>
             <select id="id_fontawesome_icon" name="id_fontawesome_icon" class="icon_select">
                 {section name=icon loop=$list_icons}
-                <option value="{$list_icons[icon].id_fontawesome_icon }">{$list_icons[icon].icon}</option>
+                <option value="{display_clean($list_icons[icon].id_fontawesome_icon)}">{display_clean($list_icons[icon].icon)}</option>
                 {/section}
             </select>
         </div>
@@ -12,7 +12,7 @@
             <label for="title">{lang('title')}*</label>
             <input id="title" name="title" class="form-control" type="text"/>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
             <label for="url">{lang('url')}*</label>
             <input id="url" name="url" class="form-control" type="text"/>
         </div>
