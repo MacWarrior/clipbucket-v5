@@ -4,7 +4,7 @@ $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminCSS([
     'bootstrap.min.css'                                 => 'admin',
     'fortawesome/font-awesome/css/font-awesome.min.css' => 'vendor',
-    'select2/select2/dist/css/select2.min.css'           => 'vendor',
+    'select2/select2/dist/css/select2.min.css'          => 'vendor',
     'ace-ie.min.css'                                    => 'admin',
     'styles' . $min_suffixe . '.css'                    => 'admin',
     'open_sans' . $min_suffixe . '.css'                 => 'admin',

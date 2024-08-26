@@ -1,7 +1,12 @@
-
-$(function () {
+$(document).ready(function() {
     $('#hideshow').on('click', function () {
-        $('#form_add_social_network').toggle();
+        $('#form_add_social_network').slideDown();
+        $(this).fadeOut();
+    });
+    $('#cancel').on('click', function (e) {
+        e.preventDefault();
+        $('#form_add_social_network').slideUp();
+        $('#hideshow').fadeIn();
     });
 
     $('.edit_social_network').on("click", function () {
@@ -10,6 +15,7 @@ $(function () {
         $('.input-' + id).show();
         $('#ok-' + id).show();
         $('#remove-' + id).show();
+        $('#delete-' + id).hide();
         $('.edit-' + id).hide();
         $('#delete-' + id).hide();
         $('#edit-' + id).hide();
@@ -21,6 +27,7 @@ $(function () {
         $('.input-' + id).hide();
         $('#ok-' + id).hide();
         $('#remove-' + id).hide();
+        $('#delete-' + id).show();
         $('.edit-' + id).show();
         $('#delete-' + id).show();
         $('#edit-' + id).show();
@@ -44,6 +51,7 @@ $(function () {
                 $('.input-' + id).hide();
                 $('#ok-' + id).hide();
                 $('#remove-' + id).hide();
+                $('#delete-' + id).show();
                 $('#edit-' + id).show();
                 $('.edit-' + id).show();
                 $('#delete-' + id).show();
