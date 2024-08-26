@@ -159,4 +159,4 @@ if( config('default_theme') != '' && file_exists($filepath) ){
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');
+add_admin_menu(lang('manage_x', strtolower(lang('plugins'))), strtolower(lang('plugin_editors_picks')), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');

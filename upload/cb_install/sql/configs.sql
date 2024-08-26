@@ -345,13 +345,19 @@ SET @type_video = (
     FROM `{tbl_prefix}categories_type`
     WHERE name LIKE 'video'
 );
+SET @type_photo = (
+    SELECT id_category_type
+    FROM `{tbl_prefix}categories_type`
+    WHERE name LIKE 'photo'
+);
 
 INSERT INTO `{tbl_prefix}categories` (`id_category_type`, `category_name`, `category_thumb`, `is_default`) VALUES
     (@type_collection, 'Uncategorized', '', 'yes'),
     (@type_user, 'Basic User', '', 'yes'),
     (@type_user, 'Gurus', '', 'no'),
     (@type_user, 'Comedian', '', 'no'),
-    (@type_video, 'Uncategorized','', 'yes');
+    (@type_video, 'Uncategorized','', 'yes'),
+    (@type_photo, 'Uncategorized','', 'yes');
 
 
 INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES

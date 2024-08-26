@@ -832,7 +832,7 @@
                                 <div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}" size="45"/>
-										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('minutes'))}">{lang code='minutes'}</span>
+										<span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
 									</div>
                                 </div>
                             </div>
@@ -847,7 +847,7 @@
                                 <div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" name="max_upload_size" id="max_upload_size" value="{$row.max_upload_size}" size="45"/>
-										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('mb'))}">{lang code='mb'}</span>
+										<span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
 									</div>
                                 </div>
                             </div>
@@ -871,7 +871,7 @@
 								<div class="col-md-3">
 									<div class="input-group">
 										<input class="form-control" name="chunk_upload_size" id="chunk_upload_size" value="{$row.chunk_upload_size}" size="45"/>
-										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('mb'))}">{lang code='mb'}</span>
+										<span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
 									</div>
 								</div>
 							</div>
@@ -883,7 +883,7 @@
 								<div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" name="max_profile_pic_size" id="max_profile_pic_size" value="{$row.max_profile_pic_size}" size="45"/>
-										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('kb'))}">{lang code='kb'}</span>
+										<span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
 									</div>
 								</div>
 							</div>
@@ -895,7 +895,7 @@
 								<div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}" size="45"/>
-										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('kb'))}">{lang code='kb'}</span>
+										<span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
 									</div>
 								</div>
 							</div>
@@ -1550,14 +1550,14 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_genre" title="{sprintf(lang('enable_x_field'),lang('genre'))}">{sprintf(lang('enable_x_field'),lang('genre'))}</label>
+									<label class="nowrap" for="enable_video_genre" title="{lang('enable_x_field',lang('genre'))}">{lang('enable_x_field',lang('genre'))}</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_video_genre" id="enable_video_genre" {if $row.enable_video_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_actor" title="{sprintf(lang('enable_x_field'),lang('actors'))}">{sprintf(lang('enable_x_field'),lang('actors'))}</label>
+									<label class="nowrap" for="enable_video_actor" title="{lang('enable_x_field',lang('actors'))}">{lang('enable_x_field',lang('actors'))}</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_video_actor" id="enable_video_actor" {if $row.enable_video_actor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1567,14 +1567,14 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_producer" title="{sprintf(lang('enable_x_field'),lang('producer'))}">{sprintf(lang('enable_x_field'),lang('producer'))}</label>
+									<label class="nowrap" for="enable_video_producer" title="{lang('enable_x_field',lang('producer'))}">{lang('enable_x_field',lang('producer'))}</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_video_producer" id="enable_video_producer" {if $row.enable_video_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_executive_producer" title="{sprintf(lang('enable_x_field'),lang('executive_producer'))}">{sprintf(lang('enable_x_field'),lang('executive_producer'))}</label>
+									<label class="nowrap" for="enable_video_executive_producer" title="{lang('enable_x_field',lang('executive_producer'))}">{lang('enable_x_field',lang('executive_producer'))}</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_video_executive_producer" id="enable_video_executive_producer" {if $row.enable_video_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1584,14 +1584,14 @@
 							<hr/>
 							<div class="row">
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_director" title="{sprintf(lang('enable_x_field'),lang('director'))}">{sprintf(lang('enable_x_field'),lang('director'))}</label>
+									<label class="nowrap" for="enable_video_director" title="{lang('enable_x_field',lang('director'))}">{lang('enable_x_field',lang('director'))}</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_video_director" id="enable_video_director" {if $row.enable_video_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 									<span class="lbl"></span>
 								</div>
 								<div class="col-md-4">
-									<label class="nowrap" for="enable_video_crew" title="{sprintf(lang('enable_x_field'),lang('crew'))}">{sprintf(lang('enable_x_field'),lang('crew'))}</label>
+									<label class="nowrap" for="enable_video_crew" title="{lang('enable_x_field',lang('crew'))}">{lang('enable_x_field',lang('crew'))}</label>
 								</div>
 								<div class="col-md-2 row-size">
 									<input value="yes" name="enable_video_crew" id="enable_video_crew" {if $row.enable_video_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1699,8 +1699,8 @@
 								</div>
 								<div class="col-md-6">
 									<div class="input-group">
-										<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if $row.enable_tmdb!='yes'}disabled="disabled" title="{sprintf(lang('option_require_x_enabled'),lang('enable_tmdb'))}"{/if}/>
-										<span class="input-group-addon glyphicon glyphicon-refresh {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test" title="{if $row.enable_tmdb == 'yes'}{lang code='tmdb_token_check'}{else}{sprintf(lang('option_require_x_enabled'),lang('enable_tmdb'))}{/if}"></span>
+										<input class="form-control" name="tmdb_token" id="tmdb_token" value="{$row.tmdb_token}" size="45" {if $row.enable_tmdb!='yes'}disabled="disabled" title="{lang('option_require_x_enabled',lang('enable_tmdb'))}"{/if}/>
+										<span class="input-group-addon glyphicon glyphicon-refresh {if $row.enable_tmdb != 'yes'}disabled{/if}" id="tmdb_token_test" title="{if $row.enable_tmdb == 'yes'}{lang code='tmdb_token_check'}{else}{lang('option_require_x_enabled',lang('enable_tmdb'))}{/if}"></span>
 										<input value="{$row.tmdb_token}" name="tmdb_token" id="tmdb_token_hidden" type="hidden" {if $row.enable_tmdb=='yes'}disabled="disabled"{/if}/>
 									</div>
 								</div>
@@ -1728,7 +1728,7 @@
 									<label class="nowrap" for="tmdb_get_genre" title="{lang code='option_tmdb_get_genre'}">{lang code='option_tmdb_get_genre'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_genre" id="tmdb_get_genre" {if $row.tmdb_get_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_genre!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),sprintf(lang('enable_x_field'),lang('genre')))}"{/if}/>
+									<input value="yes" name="tmdb_get_genre" id="tmdb_get_genre" {if $row.tmdb_get_genre=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_genre!='yes'}disabled title="{lang('option_require_x_enabled',lang('enable_x_field',lang('genre')))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_genre}" name="tmdb_get_genre" id="tmdb_get_genre_hidden" type="hidden" {if $row.enable_video_genre=='yes'}disabled{/if}/>
 								</div>
@@ -1736,7 +1736,7 @@
 									<label class="nowrap" for="tmdb_get_actors" title="{lang code='option_tmdb_get_actors'}">{lang code='option_tmdb_get_actors'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_actors" id="tmdb_get_actors" {if $row.tmdb_get_actors=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_actor!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),sprintf(lang('enable_x_field'),lang('actors')))}"{/if}/>
+									<input value="yes" name="tmdb_get_actors" id="tmdb_get_actors" {if $row.tmdb_get_actors=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_actor!='yes'}disabled title="{lang('option_require_x_enabled',lang('enable_x_field',lang('actors')))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_actors}" name="tmdb_get_actors" id="tmdb_get_actors_hidden" type="hidden" {if $row.enable_video_actor=='yes'}disabled{/if}/>
 								</div>
@@ -1747,7 +1747,7 @@
 									<label class="nowrap" for="tmdb_get_producer" title="{lang code='option_tmdb_get_producer'}">{lang code='option_tmdb_get_producer'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_producer" id="tmdb_get_producer" {if $row.tmdb_get_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_producer!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),sprintf(lang('enable_x_field'),lang('producer')))}"{/if}/>
+									<input value="yes" name="tmdb_get_producer" id="tmdb_get_producer" {if $row.tmdb_get_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_producer!='yes'}disabled title="{lang('option_require_x_enabled',lang('enable_x_field',lang('producer')))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_producer}" name="tmdb_get_producer" id="tmdb_get_producer_hidden" type="hidden" {if $row.enable_video_producer=='yes'}disabled{/if}/>
 								</div>
@@ -1755,7 +1755,7 @@
 									<label class="nowrap" for="tmdb_get_executive_producer" title="{lang code='option_tmdb_get_executive_producer'}">{lang code='option_tmdb_get_executive_producer'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer" {if $row.tmdb_get_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_executive_producer!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),sprintf(lang('enable_x_field'),lang('executive_producer')))}"{/if}/>
+									<input value="yes" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer" {if $row.tmdb_get_executive_producer=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_executive_producer!='yes'}disabled title="{lang('option_require_x_enabled',lang('enable_x_field',lang('executive_producer')))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_executive_producer}" name="tmdb_get_executive_producer" id="tmdb_get_executive_producer_hidden" type="hidden" {if $row.enable_video_executive_producer=='yes'}disabled{/if}/>
 								</div>
@@ -1766,7 +1766,7 @@
 									<label class="nowrap" for="tmdb_get_director" title="{lang code='option_tmdb_get_director'}">{lang code='option_tmdb_get_director'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_director" id="tmdb_get_director" {if $row.tmdb_get_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_director!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),sprintf(lang('enable_x_field'),lang('director')))}"{/if}/>
+									<input value="yes" name="tmdb_get_director" id="tmdb_get_director" {if $row.tmdb_get_director=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_director!='yes'}disabled title="{lang('option_require_x_enabled',lang('enable_x_field',lang('director')))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_director}" name="tmdb_get_director" id="tmdb_get_director_hidden" type="hidden" {if $row.enable_video_director=='yes'}disabled{/if}/>
 								</div>
@@ -1774,7 +1774,7 @@
 									<label class="nowrap" for="tmdb_get_crew" title="{lang code='option_tmdb_get_crew'}">{lang code='option_tmdb_get_crew'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_crew" id="tmdb_get_crew" {if $row.tmdb_get_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_crew!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),sprintf(lang('enable_x_field'),lang('crew')))}"{/if}/>
+									<input value="yes" name="tmdb_get_crew" id="tmdb_get_crew" {if $row.tmdb_get_crew=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_crew!='yes'}disabled title="{lang('option_require_x_enabled',lang('enable_x_field',lang('crew')))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_crew}" name="tmdb_get_crew" id="tmdb_get_crew_hidden" type="hidden" {if $row.enable_video_crew=='yes'}disabled{/if}/>
 								</div>
@@ -1802,7 +1802,7 @@
 									<label class="nowrap" for="tmdb_get_poster" title="{lang code='option_tmdb_get_poster'}">{lang code='option_tmdb_get_poster'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_poster" id="tmdb_get_poster" {if $row.tmdb_get_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_poster!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),lang('option_enable_video_poster'))}"{/if}/>
+									<input value="yes" name="tmdb_get_poster" id="tmdb_get_poster" {if $row.tmdb_get_poster=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_poster!='yes'}disabled title="{lang('option_require_x_enabled',lang('option_enable_video_poster'))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_poster}" name="tmdb_get_poster" id="tmdb_get_poster_hidden" type="hidden" {if $row.enable_video_poster=='yes'}disabled{/if}/>
 								</div>
@@ -1810,7 +1810,7 @@
 									<label class="nowrap" for="tmdb_get_backdrop" title="{lang code='option_tmdb_get_backdrop'}">{lang code='option_tmdb_get_backdrop'}</label>
 								</div>
 								<div class="col-md-2 row-size">
-									<input value="yes" name="tmdb_get_backdrop" id="tmdb_get_backdrop" {if $row.tmdb_get_backdrop=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_backdrop!='yes'}disabled title="{sprintf(lang('option_require_x_enabled'),lang('option_enable_video_backdrop'))}"{/if}/>
+									<input value="yes" name="tmdb_get_backdrop" id="tmdb_get_backdrop" {if $row.tmdb_get_backdrop=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if $row.enable_video_backdrop!='yes'}disabled title="{lang('option_require_x_enabled',lang('option_enable_video_backdrop'))}"{/if}/>
 									<span class="lbl"></span>
 									<input value="{$row.tmdb_get_backdrop}" name="tmdb_get_backdrop" id="tmdb_get_backdrop_hidden" type="hidden" {if $row.enable_video_backdrop=='yes'}disabled{/if}/>
 								</div>
@@ -2652,7 +2652,7 @@
 								<div class="col-md-6">
 									<div class="input-group">
 										<input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{$row.cloudflare_upload_limit}" size="45"/>
-										<span class="input-group-addon" title="{sprintf(lang('in_x'),lang('mb'))}">{lang code='mb'}</span>
+										<span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
 									</div>
 								</div>
 							</div>

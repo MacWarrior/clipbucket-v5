@@ -12,7 +12,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Pages', 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('pages'))), 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'];
 
 //Activating Page
 if (isset($_GET['activate'])) {
@@ -124,6 +124,6 @@ switch ($mode) {
 
 }
 
-subtitle('Manage Pages');
+subtitle(lang('manage_x', strtolower(lang('pages'))));
 template_files('manage_pages.html');
 display_it();

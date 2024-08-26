@@ -14,7 +14,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => 'Photo Manager',
+    'title' => lang('manage_x', strtolower(lang('photos'))),
     'url'   => DirPath::getUrl('admin_area') . 'photo_manager.php'
 ];
 $breadcrumb[2] = [
@@ -34,6 +34,9 @@ if ($_GET['mode'] != '') {
 }
 
 $p = $cbphoto->get_photo($id);
+if (empty($p)) {
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'photo_manager.php?missing_photo=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
+}
 $p['user'] = $p['userid'];
 
 assign('data', $p);

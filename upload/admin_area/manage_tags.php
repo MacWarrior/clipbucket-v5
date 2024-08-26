@@ -11,7 +11,7 @@ pages::getInstance()->page_redir();
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
-$breadcrumb[1] = ['title' => lang('manage_tags'), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('tags'))), 'url'   => DirPath::getUrl('admin_area') . 'manage_tags.php'];
 
 $limit = config('admin_pages');
 
@@ -48,6 +48,6 @@ assign('selected_tag_type', $selected_tag_type);
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/manage_tags/manage_tags' . $min_suffixe . '.js' => 'admin']);
 
-subtitle(lang('manage_tags'));
+subtitle(lang('manage_x', strtolower(lang('tags'))));
 template_files('manage_tags.html');
 display_it();
