@@ -15,6 +15,7 @@ $(document).ready(function() {
         $('.input-' + id).show();
         $('#ok-' + id).show();
         $('#remove-' + id).show();
+        $('#delete-' + id).hide();
         $('.edit-' + id).hide();
         $('#edit-' + id).hide();
     });
@@ -25,6 +26,7 @@ $(document).ready(function() {
         $('.input-' + id).hide();
         $('#ok-' + id).hide();
         $('#remove-' + id).hide();
+        $('#delete-' + id).show();
         $('.edit-' + id).show();
         $('#edit-' + id).show();
     });
@@ -47,6 +49,7 @@ $(document).ready(function() {
                 $('.input-' + id).hide();
                 $('#ok-' + id).hide();
                 $('#remove-' + id).hide();
+                $('#delete-' + id).show();
                 $('#edit-' + id).show();
                 $('.edit-' + id).show();
             }
