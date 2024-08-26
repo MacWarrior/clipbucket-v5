@@ -9,11 +9,16 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateConfig('enable_social_networks_links', 'yes');
+        self::generateConfig('enable_social_networks_links_footer', 'no');
+        self::generateConfig('enable_social_networks_links_home_sidebar', 'no');
 
-        self::generateTranslation('option_enable_social_networks_links', [
-            'fr' => 'Activer les liens de réseaux sociaux',
-            'en' => 'Enable social networks links'
+        self::generateTranslation('option_enable_social_networks_links_footer', [
+            'fr' => 'Activer les liens de réseaux sociaux dans le pied de page',
+            'en' => 'Enable social networks links in footer'
+        ]);
+        self::generateTranslation('option_enable_social_networks_links_sidebar', [
+            'fr' => 'Activer les liens de réseaux sociaux dans la barre latérale',
+            'en' => 'Enable social networks links in sidebar'
         ]);
         self::generateTranslation('manage_social_networks_links', [
             'fr' => 'Gestion des liens des réseaux sociaux',

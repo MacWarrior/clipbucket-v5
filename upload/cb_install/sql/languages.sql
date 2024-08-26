@@ -1225,5 +1225,6 @@ VALUES ('admin_setting'),
        ('object'),
        ('objects'),
        ('view_channel_comments'),
-       ('option_enable_social_networks_links'),
+       ('option_enable_social_networks_links_footer'),
+       ('option_enable_social_networks_links_sidebar'),
        ('add_new_social_network_link');
