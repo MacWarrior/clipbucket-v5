@@ -62,4 +62,14 @@ $(function () {
             });
         }
     });
+
+    $('.icon_select').select2({
+        templateSelection: select2_format_icon,
+        templateResult: select2_format_icon,
+        allowHtml: true
+    });
 });
+
+function select2_format_icon (icon) {
+    return $('<span><i class="fa fa-' + icon.text + '"></i> ' + icon.text + '</span>');
+}

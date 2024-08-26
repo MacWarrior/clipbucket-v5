@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<div style="display:none;" id="form_add_social_network">
+<div style="" id="form_add_social_network">
     {include file="$style_dir/blocks/form_social_media.html"}
 </div>
 
@@ -45,7 +45,7 @@
     </tr>
     {section name=i loop=$social_network_links}
     <tr id="tr_{$social_network_links[i].id_social_networks_link}">
-        <td class="col-md-2"><span class="fa-{$social_network_links[i].icon}"></span></td>
+        <td class="col-md-2"><span class="fa fa-{$social_network_links[i].icon}"></span></td>
         <td class="col-md-2">
             <span class="edit-{$social_network_links[i].id_social_networks_link}" id="title_{$social_network_links[i].id_social_networks_link}">{display_clean($social_network_links[i].title)}</span>
             <input type="text" class="form-control input-{$social_network_links[i].id_social_networks_link}" id="input_title-{$social_network_links[i].id_social_networks_link}" name="title" value="{display_clean($social_network_links[i].title)}" style="display:none;">

@@ -16,9 +16,9 @@
     <div class="row marginTopLarge">
         <div class="col-md-12">
             <label>{lang('icon')}</label>
-            <select name="id_fontawesome_icon" id="icon">
+            <select name="id_fontawesome_icon" class="icon_select" id="icon">
                 {section name=icon loop=$list_icons}
-                    <option value="{$list_icons[icon].id_fontawesome_icon }"><span class="fa-{$list_icons[icon].icon}"></span>{$list_icons[icon].icon}</option>
+                    <option value="{$list_icons[icon].id_fontawesome_icon }">{$list_icons[icon].icon}</option>
                 {/section}
             </select>
         </div>
