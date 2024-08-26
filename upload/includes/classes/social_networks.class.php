@@ -5,6 +5,7 @@ class SocialNetworks
     private static $social_networks;
     private $tablename;
     private $tablename_icons;
+    private $fields = [];
 
     /**
      * @throws Exception
@@ -13,6 +14,13 @@ class SocialNetworks
     {
         $this->tablename = 'social_networks_links';
         $this->tablename_icons = 'fontawesome_icons';
+        $this->fields = [
+            'id_social_networks_link'
+            ,'id_fontawesome_icon'
+            ,'title'
+            ,'url'
+            ,'social_network_link_order'
+        ];
     }
 
     public static function getInstance(): self
@@ -74,6 +82,24 @@ class SocialNetworks
         return $this->tablename_icons;
     }
 
+    private function getFields(): array
+    {
+        return $this->fields;
+    }
+
+    private function getSQLFields($prefix = false): array
+    {
+        $fields = $this->getFields();
+
+        return array_map(function($field) use ($prefix) {
+            $field_name = $this->getTableName() . '.' . $field;
+            if( $prefix ){
+                $field_name .= ' AS `'.$this->getTableName() . '.' . $field.'`';
+            }
+            return $field_name;
+        }, $fields);
+    }
+
     /**
      * @throws Exception
      */
@@ -85,13 +111,13 @@ class SocialNetworks
 
     /**
      * @param array $params
-     * @return array
+     * @return array|bool|int
      * @throws Exception
      */
-    public function getAll(array $params): array
+    public function getAll(array $params)
     {
         $param_id_social_networks_link = $params['id_social_networks_link'] ?? false;
-        $param_order = $params['order'] ?? 'social_network_link_order';
+        $param_order = $params['order'] ?? false;
         $param_limit = $params['limit'] ?? false;
         $param_having = $params['having'] ?? false;
         $param_count = $params['count'] ?? false;
@@ -118,7 +144,9 @@ class SocialNetworks
             $conditions[] = 'id_social_networks_link = '. mysql_clean($param_id_social_networks_link);
         }
 
-        $select = ['id_social_networks_link','icon' ,'title','url','social_network_link_order'];
+        $select = $this->getSQLFields();
+        $select[] = $this->getTableNameIcons() . '.icon';
+
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->tablename) . ' 
                 LEFT JOIN ' . cb_sql_table($this->tablename_icons) .' ON ' . $this->tablename . '.id_fontawesome_icon = ' . $this->tablename_icons . '.id_fontawesome_icon'
@@ -157,4 +185,24 @@ class SocialNetworks
         $params['first_only'] = true;
         return $this->getAll($params);
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function display(string $mode)
+    {
+        $params = [
+            'order' => 'social_network_link_order ASC'
+        ];
+        $datas = self::getInstance()->getAll($params);
+        if( empty($datas) ){
+            return;
+        }
+
+        assign('social_links', $datas);
+        assign('social_links_class', $mode);
+
+        Template('blocks/social_networks.html');
+    }
+
 }

@@ -107,6 +107,12 @@
 				</div>
 				{/if}
 			{/if}
+
+			{if config('enable_social_networks_links_home_sidebar')=='yes'}
+			<div class="clearfix sidebar-items">
+				{SocialNetworks::display('vertical')}
+			</div>
+			{/if}
 		</aside>
 	</div>
 </div>

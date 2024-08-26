@@ -1,0 +1,5 @@
+<ul class="social_links {$social_links_class}">
+{foreach $social_links as $link}
+    <li><a href="{$link.url}"><i class='fa fa-{$link.icon}'></i> {$link.title}</a></li>
+{/foreach}
+</ul>

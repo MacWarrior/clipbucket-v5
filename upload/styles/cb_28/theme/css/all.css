@@ -7414,3 +7414,23 @@ textarea#comment_box {
 .item-video .video-link img{
   width: 100%;
 }
+
+/* Social links */
+.social_links{
+  list-style: none;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0;
+}
+.social_links a:hover{
+  text-decoration: none;
+}
+.social_links.horizontal{
+  text-align: center;
+}
+.social_links.horizontal li{
+  display: inline-block;
+}
+.social_links.horizontal li:not(:first-child) {
+  padding-left: 20px;
+}
