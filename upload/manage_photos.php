@@ -38,26 +38,21 @@ switch ($mode) {
                 $cbphoto->delete_photo($_POST['check_photo'][$i]);
             }
             $eh->flush();
-            e(sprintf(lang('total_photos_deleted'), $total), 'm');
+            e(lang('total_photos_deleted', $total), 'm');
         }
 
-        $photo_arr = [
-            'user'  => user_id(),
+        $params = [
             'limit' => $get_limit,
-            'order' => 'collections.date_added DESC'
+            'search'=> $_GET['query'],
+            'order'=> 'photos.date_added DESC',
+            'userid'=>user_id()
         ];
-
-        if (get('query') != '') {
-            $photo_arr['title'] = mysql_clean(get('query'));
-            $photo_arr['tags'] = mysql_clean(get('query'));
-        }
-
-        $photos = get_photos($photo_arr);
+        $photos = Photo::getInstance()->getAll($params);
         assign('photos', $photos);
 
         //Collecting Data for Pagination
-        $photo_arr['count_only'] = true;
-        $total_rows = get_photos($photo_arr);
+        $params['count'] = true;
+        $total_rows = Photo::getInstance()->getAll($params);
         $total_pages = count_pages($total_rows, MAINPLIST);
 
         //Pagination
@@ -80,7 +75,7 @@ switch ($mode) {
                 updateObjectStats('fav', 'photo', $_POST['check_photo'][$i], '-');
             }
             $eh->flush();
-            e(sprintf(lang('total_fav_photos_removed'), $total), 'm');
+            e(lang('total_fav_photos_removed', $total), 'm');
         }
 
         if (get('query') != '') {
@@ -124,7 +119,7 @@ switch ($mode) {
                 $cbphoto->delete_photo($_POST['check_photo'][$i], true);
             }
             $eh->flush();
-            e(sprintf(lang('total_photos_deleted'), $total), 'm');
+            e(lang('total_photos_deleted', $total), 'm');
         }
         $photo_arr = ['user' => user_id(), 'limit' => $get_limit, 'order' => ' date_added DESC', 'get_orphans' => true];
         $collection = $cbphoto->collection->get_collections(['user' => user_id(), 'type' => 'photos']);

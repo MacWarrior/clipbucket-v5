@@ -39,7 +39,7 @@
                                     <input type="checkbox" name="check_playlist[]" id="check_playlist-{$playlists[plist].playlist_id}" value="{$playlists[plist].playlist_id}" />
                                 </td>
                                 <td valign="middle">
-                                    {display_clean($playlists[plist].playlist_name)|truncate:100}
+                                    <a href="?mode=edit_playlist&amp;pid={$playlists[plist].playlist_id}">{display_clean($playlists[plist].playlist_name)|truncate:100}</a>
                                 </td>
                                     <td valign="middle">
                                     <span class="label label-primary">

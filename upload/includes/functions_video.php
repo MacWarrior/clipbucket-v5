@@ -1355,10 +1355,10 @@ function update_castable_status($vdetails)
 
     if ($data <= 2 && $vdetails['is_castable'] == 0) {
         $db->update(tbl('video'), ['is_castable'], [true], 'videoid=' . $vdetails['videoid']);
-        e(sprintf(lang('castable_status_fixed'), $vdetails['title']), 'm');
+        e(lang('castable_status_fixed', $vdetails['title']), 'm');
     } else {
         if ($data > 2) {
-            e(sprintf(lang('castable_status_failed'), $vdetails['title'], $data), 'w');
+            e(lang('castable_status_failed', $vdetails['title'], $data), 'w');
         }
     }
 }

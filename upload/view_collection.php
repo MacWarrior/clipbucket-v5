@@ -81,6 +81,9 @@ if ($cbcollection->is_viewable($c)) {
     $Cbucket->show_page = false;
 }
 
+assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_collection.php?collection=' .$c);
+assign('link_edit_fo',  '/manage_collections.php?mode=edit_collection&cid=' . $c);
+
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([

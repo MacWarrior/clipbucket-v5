@@ -42,12 +42,12 @@
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                             {/if}
                         {/if}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x')|replace:'%s':(lang('thumbs')|lower)}</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x', lang('thumbs')|lower)}</a></li>
                         {if config('enable_video_poster') == 'yes'}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x')|replace:'%s':(lang('posters')|lower)}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x', lang('posters')|lower)}</a></li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x')|replace:'%s':(lang('backdrops')|lower)}</a></li>
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x', lang('backdrops')|lower)}</a></li>
                         {/if}
 
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
@@ -486,20 +486,20 @@
                         </li>
                         <li>
                             <a data-toggle="tab" href="#thumbnails">
-                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('thumbnail'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('thumbnail'))|ucfirst}
                             </a>
                         </li>
                         {if config('enable_video_poster') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#posters">
-                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('poster'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('poster'))|ucfirst}
                             </a>
                         </li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#backdrops">
-                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('backdrop'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('backdrop'))|ucfirst}
                             </a>
                         </li>
                         {/if}

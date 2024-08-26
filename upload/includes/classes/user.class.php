@@ -1184,6 +1184,12 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
 
+        //Removing channel Comments
+        $params = [];
+        $params['type'] = 'channel';
+        $params['type_id'] = $uid;
+        Comments::delete($params);
+
         //Remove tags
         Tags::deleteTags('profile', $uid);
         //Remove categories
@@ -1791,9 +1797,9 @@ class userquery extends CBCategory
         } elseif ($to_user['userid'] == $this->get_anonymous_user()) {
             e(lang('technical_error'));
         } elseif (!$user) {
-            e(sprintf(lang('please_login_subscribe'), $to_user['username']));
+            e(lang('please_login_subscribe', $to_user['username']));
         } elseif ($this->is_subscribed($to, $user)) {
-            e(sprintf(lang('usr_sub_err'), '<strong>' . $to_user['username'] . '</strong>'));
+            e(lang('usr_sub_err', '<strong>' . $to_user['username'] . '</strong>'));
         } elseif ($to_user['userid'] == $user) {
             e(lang('you_cant_sub_yourself'));
         } else {
@@ -1812,7 +1818,7 @@ class userquery extends CBCategory
             ];
             insert_log('subscribe', $log_array);
 
-            e(sprintf(lang('usr_sub_msg'), $to_user['username']), 'm');
+            e(lang('usr_sub_msg', $to_user['username']), 'm');
         }
     }
 
@@ -2448,7 +2454,7 @@ class userquery extends CBCategory
 
     /**
      * Function used to delete user levels
-     * @param INT level_id
+     * @param INT $id level_id
      * @throws Exception
      */
     function delete_user_level($id): bool
@@ -2461,13 +2467,13 @@ class userquery extends CBCategory
             if ($level_details['user_level_is_default'] == 'no') {
                 $db->delete(tbl('user_levels'), ['user_level_id'], [$id]);
                 $db->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
-                e(sprintf(lang('level_del_sucess'), $de_level['user_level_name']));
+                e(lang('level_del_sucess', $de_level['user_level_name']));
 
                 $db->update(tbl('users'), ['level'], [3], " level='$id'");
                 return true;
             }
 
-            e(lang("level_not_deleteable"));
+            e(lang('level_not_deleteable'));
             return false;
         }
     }
@@ -2622,7 +2628,7 @@ class userquery extends CBCategory
             if (!$check_login || user_id()) {
                 e(lang('insufficient_privileges'));
             } else {
-                e(sprintf(lang('insufficient_privileges_loggin'), cblink(['name' => 'signup']), cblink(['name' => 'signup'])));
+                e(lang('insufficient_privileges_loggin', [cblink(['name' => 'signup']), cblink(['name' => 'signup'])]));
             }
         }
 
@@ -2842,7 +2848,7 @@ class userquery extends CBCategory
         //Changing Date of birth
         if (isset($array['dob']) && $array['dob'] != '0000-00-00') {
             if (!verify_age($array['dob'])) {
-                e(sprintf(lang('edition_min_age_request'), config('min_age_reg')));
+                e(lang('edition_min_age_request', config('min_age_reg')));
             }
             $uquery_field[] = 'dob';
 
@@ -3351,7 +3357,7 @@ class userquery extends CBCategory
             lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
             lang('notifications')                                             => 'private_message.php?mode=notification',
             lang('sent')                                                      => 'private_message.php?mode=sent',
-            lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new']),
+            lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
         ];
 
         if (isSectionEnabled('channels')) {
@@ -3364,13 +3370,13 @@ class userquery extends CBCategory
         if (isSectionEnabled('videos')) {
             $array[lang('videos')] = [
                 lang('uploaded_videos') => 'manage_videos.php',
-                lang('user_fav_videos') => 'manage_videos.php?mode=favorites',
+                lang('user_fav_videos') => 'manage_videos.php?mode=favorites'
             ];
         }
 
         if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
             $array[lang('playlists')] = [
-                lang('manage_playlists') => 'manage_playlists.php',
+                lang('manage_x', strtolower(lang('playlists'))) => 'manage_playlists.php'
             ];
         }
 
@@ -3659,7 +3665,7 @@ class userquery extends CBCategory
                 'db_field'          => 'dob',
                 'required'          => 'yes',
                 'placehoder'        => lang('user_date_of_birth'),
-                'invalid_err'       => ((!empty(config('min_age_reg')) && (int)config('min_age_reg') != 0) ? sprintf(lang('register_min_age_request'), config('min_age_reg')) : lang('dob_required'))
+                'invalid_err'       => ((!empty(config('min_age_reg')) && (int)config('min_age_reg') != 0) ? lang('register_min_age_request', config('min_age_reg')) : lang('dob_required'))
             ]
         ];
 
@@ -5320,7 +5326,7 @@ class userquery extends CBCategory
             if ($total_subscribers > 1) {
                 $s = 's';
             }
-            e(sprintf(lang('subs_email_sent_to_users'), $total_subscribers, $s), 'm');
+            e(lang('subs_email_sent_to_users', [$total_subscribers, $s]), 'm');
         }
 
         //Updating video subscription email status to sent

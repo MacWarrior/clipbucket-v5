@@ -429,7 +429,7 @@ class Upload
                 'name'              => 'category[]',
                 'id'                => 'category',
                 'value'             => $cat_array,
-                'hint_1'            => sprintf(lang('vdo_cat_msg'), config('video_categories')),
+                'hint_1'            => lang('vdo_cat_msg', config('video_categories')),
                 'required'          => 'yes',
                 'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('vdo_cat_err3'),
@@ -966,7 +966,7 @@ class Upload
             case 'a':
             case 'avatar':
                 if ($file['size'] / 1024 > config('max_profile_pic_size')) {
-                    e(sprintf(lang('file_size_exceeds'), config('max_profile_pic_size')));
+                    e(lang('file_size_exceeds', config('max_profile_pic_size')));
                     return false;
                 }
 
@@ -1000,7 +1000,7 @@ class Upload
             case 'b':
             case 'background':
                 if ($file['size'] / 1024 > config('max_bg_size')) {
-                    e(sprintf(lang('file_size_exceeds'), config('max_bg_size')));
+                    e(lang('file_size_exceeds', config('max_bg_size')));
                     return false;
                 }
 

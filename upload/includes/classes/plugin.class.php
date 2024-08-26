@@ -406,7 +406,7 @@ class CBPlugin
         if ($this->is_installed($plugin_file)) {
             $db->execute('UPDATE ' . tbl('plugins') . " SET plugin_active='" . $active . "' WHERE plugin_file='" . $plugin_file . "' $folder_query");
             $active_msg = $active == 'yes' ? 'activated' : 'deactiveted';
-            $msg = e(sprintf(lang('plugin_has_been_s'), $active_msg), 'm');
+            $msg = e(lang('plugin_has_been_s', $active_msg), 'm');
         } else {
             $msg = e(lang('plugin_no_install_err'));
         }
