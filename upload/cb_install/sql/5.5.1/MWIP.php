@@ -802,5 +802,15 @@ class MWIP extends \Migration
                 ('youtube-square');";
         self::query($sql);
 
+        self::generateTranslation('confirm_delete_social_network', [
+            'fr' => 'Êtes-vous sûr de vouloir supprimer ce lien de réseau social ?',
+            'en'=> 'Are you sure you want to delete this social network link ?'
+        ]);
+        self::generateTranslation('missing_params', [
+            'fr' => 'Il manque des paramètres',
+            'en'=> 'Some parameters are missing '
+        ]);
     }
+
+
 }

@@ -15,7 +15,6 @@ $(document).ready(function() {
         $('.input-' + id).show();
         $('#ok-' + id).show();
         $('#remove-' + id).show();
-        $('#delete-' + id).hide();
         $('.edit-' + id).hide();
         $('#delete-' + id).hide();
         $('#edit-' + id).hide();
@@ -27,7 +26,6 @@ $(document).ready(function() {
         $('.input-' + id).hide();
         $('#ok-' + id).hide();
         $('#remove-' + id).hide();
-        $('#delete-' + id).show();
         $('.edit-' + id).show();
         $('#delete-' + id).show();
         $('#edit-' + id).show();
@@ -39,28 +37,33 @@ $(document).ready(function() {
         var title = $('#input_title-' + id).val();
         var url = $('#input_url-' + id).val();
         var order = $('#input_order-' + id).val();
+        var id_font_awesome = $('#input_id_fontawesome_icon-' + id).val();
         $.ajax({
             url: "/actions/admin_update_social_network.php",
             type: "post",
             dataType: 'json',
-            data: {id_social_networks_link : id, title: title, url: url, social_network_link_order: order},
+            data: {id_social_networks_link : id, title: title, url: url, social_network_link_order: order, id_fontawesome_icon: id_font_awesome},
             success: function (response) {
-                $('#title_' + id).html(response.title);
-                $('#url_' + id).html(response.url);
-                $('#order_' + id).html(response.social_network_link_order);
+                $('#title_' + id).html(response.data.title);
+                $('#url_' + id).html(response.data.url);
+                $('#order_' + id).html(response.data.social_network_link_order);
+                $('#icon_' + id + ' span.fa').removeClass().addClass('fa').addClass('fa-' + response.data.icon);
+                $('#icon_' + id + ' span.text-icon').html(response.data.icon);
+
+
                 $('.input-' + id).hide();
                 $('#ok-' + id).hide();
                 $('#remove-' + id).hide();
-                $('#delete-' + id).show();
                 $('#edit-' + id).show();
                 $('.edit-' + id).show();
                 $('#delete-' + id).show();
+                $('.page-content').prepend(response.msg);
             }
         });
     });
     $('.delete_social_network').on("click", function () {
         var _this = $(this);
-        if (confirm('Are you sure ? (TODO translate)')) {
+        if (confirm(lang_confirm_delete)) {
             var id  = _this.data('id');
             $.ajax({
                 url: "/actions/admin_delete_social_network.php",

@@ -100,7 +100,8 @@ class SocialNetworks
         $sql = 'UPDATE ' . tbl($this->tablename) . ' 
             SET title = \'' . mysql_clean($title) . '\',
             url = \'' . mysql_clean($url) . '\',
-            social_network_link_order = ' . mysql_clean($social_network_link_order) . '
+            social_network_link_order = ' . mysql_clean($social_network_link_order) . ',
+            id_fontawesome_icon = ' . mysql_clean($id_fontawesome_icon) . '
            WHERE id_social_networks_link = ' . mysql_clean($id_social_networks_link);
         return Clipbucket_db::getInstance()->execute($sql);
     }
