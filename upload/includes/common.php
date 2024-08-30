@@ -354,7 +354,6 @@ $Smarty->register_function('link', 'cblink');
 $Smarty->register_function('show_share_form', 'show_share_form');
 $Smarty->register_function('show_flag_form', 'show_flag_form');
 $Smarty->register_function('show_playlist_form', 'show_playlist_form');
-$Smarty->register_function('show_collection_form', 'show_collection_form');
 $Smarty->register_function('lang', 'smarty_lang');
 $Smarty->register_function('get_videos', 'get_videos');
 $Smarty->register_function('get_users', 'get_users');

@@ -32,6 +32,11 @@
 						<i id="enlarge" class="fa fa-expand fa-2x" style="float:right;cursor:pointer;" data-toggle="modal" data-target="#myModal"></i>
 						<div class="image-holder">
 							<div class="inner-holder">
+								{if empty($photo.collection_id)}
+									<div class="thumb_banner label-warning">
+										{lang("photo_is", strtolower(lang("orphan")))}
+									</div>
+								{/if}
 								{get_photo details=$photo size='l' class='img-responsive center-block' output='html' height="100"}
 							</div>
 						</div>
@@ -132,10 +137,12 @@
 							<li>
 								<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang('add_to')}</a>
 							</li>
-							<li>
-								<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
-								</a>
-							</li>
+								{if user_id() != $photo.userid}
+									<li>
+										<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang('report_this')}
+										</a>
+									</li>
+								{/if}
 							{/if}
 						</ul>
 						<div class="tab-content clearfix">
@@ -196,15 +203,23 @@
 							</div>
 
 							{if user_id()}
-							<div class="tab-pane fade in clearfix" id="cb-item-addto">
-								<div class="clearfix btn-fav">
-									<div id="video_action_result_cont"></div>
-									<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
+								<div class="tab-pane fade in clearfix" id="cb-item-addto">
+									<div class="clearfix btn-fav">
+										<div id="video_action_result_cont"></div>
+										<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('photo','{$photo.photo_id}');">{lang code='add_to_my_favorites'}</a>
+									</div>
+									{if isSectionEnabled('collections') && empty($photo.collection_id)}
+										<div class="clearfix btn-big">
+											<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
+											<div id="addCollectionCont" style="display:none;">
+												{include file="$style_dir/blocks/collection_form.html" id=$photo.photo_id type=photo}
+											</div>
+										</div>
+									{/if}
 								</div>
-							</div>
 							{/if}
 
-							{if user_id()}
+							{if user_id() && $photo.userid != user_id()}
 							<div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
 								{show_flag_form id=$photo.photo_id type=Photo}
 							</div>

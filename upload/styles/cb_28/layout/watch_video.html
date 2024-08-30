@@ -240,13 +240,13 @@
 							</div>
 							{/if}
 
-							{if isSectionEnabled('collections')}
-							<div class="clearfix btn-big">
-								<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
-								<div id="addCollectionCont" style="display:none;">
-									{show_collection_form()}
+							{if config('collectionsSection') == 'yes'}
+								<div class="clearfix btn-big">
+									<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
+									<div id="addCollectionCont" style="display:none;">
+										{include file="$style_dir/blocks/collection_form.html" id={$vdo.videoid} type=video}
+									</div>
 								</div>
-							</div>
 							{/if}
 						</div>
 

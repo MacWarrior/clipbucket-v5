@@ -187,6 +187,7 @@ class Photo
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
         $param_exclude_orphan = $params['exclude_orphan'] ?? false;
+        $param_see_own = $params['see_own'] ?? false;
         $param_featured = $params['featured'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
@@ -284,7 +285,11 @@ class Photo
         if( $param_collection_id ){
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else if( $param_exclude_orphan ){
-            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+            $join_orphan = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+            if ($param_see_own && user_id()) {
+                $join_orphan = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND photos.userid = ' . user_id();
+            }
+            $join[] = $join_orphan;
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
         }
@@ -983,7 +988,7 @@ class CBPhotos
             $cond .= $p['extra_cond'];
         }
 
-        if ($p['get_orphans']) {
+        if ($p['get_orphans'] || has_access('admin_access', true) || user_id() == ($p['user'] ?? 0)) {
             $p['collection'] = '0';
         }
 
@@ -991,7 +996,7 @@ class CBPhotos
             $cond .= ' AND ';
         }
 
-        if ($p['collection'] || $p['get_orphans']) {
+        if (isset($p['collection']) || $p['get_orphans']) {
             $cond .= $this->constructMultipleQuery(['ids' => $p['collection'], 'sign' => '=', 'operator' => 'OR', 'column' => 'collection_id']);
         } else {
             $cond .= 'photos.collection_id <> \'0\'';
@@ -1743,6 +1748,9 @@ class CBPhotos
         $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id());
         $cl_array = $this->parse_array($collections);
         $collection = $array['collection_id'];
+        if ($collection === '0') {
+            $cl_array = [0=>''] + $cl_array;
+        }
         $this->unique = rand(0, 9999);
         return [
             'name'       => [
@@ -1779,9 +1787,9 @@ class CBPhotos
                 'type'        => 'dropdown',
                 'value'       => $cl_array,
                 'db_field'    => 'collection_id',
-                'required'    => '',
+                'required'    => 'yes',
                 'checked'     => $collection,
-                'invalid_err' => lang('photo_collection_err')
+                'invalid_err' => lang('collection_not_found')
             ]
         ];
     }

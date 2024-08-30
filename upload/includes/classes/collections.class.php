@@ -518,6 +518,82 @@ class Collection
         return true;
     }
 
+    /**
+     * Function used to add item in collection
+     *
+     * @param int $item_id
+     * @param int $collection_id
+     * @param string $type
+     * @return bool
+     * @throws Exception
+     */
+    function addCollectionItem(int $item_id, int $collection_id, string $type): bool
+    {
+        $item_id = mysql_clean($item_id);
+        $collection_id = mysql_clean($collection_id);
+
+        if (!user_id()) {
+            e(lang('you_not_logged_in'));
+            return false;
+        }
+        $collection = $this->getOne(['collection_id' => $collection_id]);
+        if (empty($collection)) {
+            e(lang('collect_not_exist'));
+            return false;
+        }
+        if( $collection['type'] == 'videos' ){
+            $id_field = 'videoid';
+            $name_field = 'title';
+            $item = Video::getInstance()->getOne([$id_field=>$item_id]);
+        } else {
+            $id_field = 'photo_id';
+            $name_field = 'photo_title';
+            $item = Photo::getInstance()->getOne([$id_field=>$item_id]);
+        }
+
+        if (empty($item)) {
+            e(lang('obj_not_exists', lang($type)));
+            return false;
+        }
+
+        if($this->collectionHasItem($collection_id, $item_id, $type)) {
+            e(lang('object_exists_collection', $item[$name_field]));
+            return false;
+        }
+
+        $fields = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
+        $values = [$collection_id, $item_id, $type, user_id(), NOW()];
+
+        Clipbucket_db::getInstance()->insert(tbl($this->getTableNameItems()), $fields, $values);
+        e(lang('item_added_in_collection', strtolower(lang($type))), 'm');
+        return true;
+    }
+
+    /**
+     * @param int $collection_id
+     * @param int $item_id
+     * @param string $type
+     * @return bool
+     * @throws Exception
+     */
+    public function collectionHasItem(int $collection_id, int $item_id, string $type): bool
+    {
+        if ($type == 'videos') {
+            $id_field = 'videoid';
+        } else {
+            $id_field = 'photo_id';
+        }
+        $collection_items = $this->getItems(['collection_id' => $collection_id]) ?: [];
+        $found = false;
+        $i = 0;
+        while ($found == false && $i < count($collection_items)) {
+            if ($item_id == $collection_items[$i][$id_field]) {
+                $found = true;
+            }
+            $i++;
+        }
+        return $found;
+    }
 }
 
 
@@ -946,7 +1022,7 @@ class Collections extends CBCategory
             $cond .= 'collections.collection_id <> \'' . $p['exclude'] . '\'';
         }
 
-        if ($p['cid']) {
+        if (isset($p['cid'])) {
             if ($cond != '') {
                 $cond .= ' AND ';
             }
@@ -2221,9 +2297,6 @@ class Collections extends CBCategory
     function collection_links($details, $type = null): string
     {
         if (is_array($details)) {
-            if (empty($details['collection_id'])) {
-                return BASEURL;
-            }
             $cdetails = $details;
         } else {
             if (is_numeric($details)) {
@@ -2234,30 +2307,44 @@ class Collections extends CBCategory
         }
 
         if (!empty($cdetails)) {
-            if ($type == null || $type == 'main') {
-                return $this->get_base_url();
-            }
-            if ($type == 'vc' || $type == 'view_collection' || $type == 'view') {
-                if (SEO == 'yes') {
-                    return BASEURL . '/collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
-                }
-                return BASEURL . '/view_collection.php?cid=' . $cdetails['collection_id'];
-            }
-            if ($type == 'vi' || $type == 'view_item' || $type == 'item') {
-                if (SEO == 'yes') {
-                    return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
-                }
-                return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
-            }
-            if ($type == 'load_more' || $type == 'more_items' || $type = 'moreItems') {
-                if (empty($cdetails['page_no'])) {
-                    $cdetails['page_no'] = 2;
-                }
+            switch ($type) {
+                case 'main':
+                default:
+                    return $this->get_base_url();
+                case 'vc':
+                case 'view_collection':
+                case 'view':
+                    if (empty($details['collection_id'])) {
+                        return BASEURL;
+                    }
+                    if (SEO == 'yes') {
+                        return BASEURL . '/collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
+                    }
+                    return BASEURL . '/view_collection.php?cid=' . $cdetails['collection_id'];
+                case 'vi':
+                case 'view_item':
+                case 'item':
+                    if (SEO == 'yes') {
+                        if (empty($details['collection_id'])) {
+                            return BASEURL;
+                        }
+                        return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+                    }
+                    return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+                case 'load_more':
+                case 'more_items':
+                case 'moreItems':
+                    if (empty($details['collection_id'])) {
+                        return BASEURL;
+                    }
+                    if (empty($cdetails['page_no'])) {
+                        $cdetails['page_no'] = 2;
+                    }
 
-                if (SEO == 'yes') {
+                    if (SEO == 'yes') {
+                        return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
+                    }
                     return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
-                }
-                return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
             }
         }
         return BASEURL;

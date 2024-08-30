@@ -18,6 +18,7 @@ $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
 if (!has_access('admin_access', true)) {
     $params['exclude_orphan'] = true;
+    $params['see_own'] = true;
 }
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);

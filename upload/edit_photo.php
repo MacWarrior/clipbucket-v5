@@ -23,7 +23,7 @@ if (empty($photo)) {
 } else {
     if (isset($_POST['update_photo'])) {
         if (empty($_POST['collection_id'])) {
-            e(lang('collection_not_found'));
+            e(lang('collection_not_found'), 'w');
         }
         $cbphoto->update_photo();
         $photo = $cbphoto->get_photo($pid);

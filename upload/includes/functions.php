@@ -1778,15 +1778,6 @@ function show_playlist_form($array)
  * @throws Exception
  * @internal param $ : { array } { $params } { array with parameters }
  */
-function show_collection_form()
-{
-    global $cbcollection;
-    if (user_id()) {
-        $collections = $cbcollection->get_collections_list(0, null, null, 'videos', user_id());
-        assign('collections', $collections);
-    }
-    Template('blocks/collection_form.html');
-}
 
 /**
  * Convert timestamp to date

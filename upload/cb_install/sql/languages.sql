@@ -1224,4 +1224,5 @@ VALUES ('admin_setting'),
        ('make_unfeatured'),
        ('object'),
        ('objects'),
-       ('view_channel_comments');
+       ('view_channel_comments'),
+       ('collection_not_found');
