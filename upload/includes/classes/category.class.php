@@ -393,12 +393,11 @@ class Category
 
     /**
      * @param int $category_id
-     * @param bool $multi_level
      * @param $only_id bool
      * @return array|false|int|mixed
      * @throws Exception
      */
-    public function getChildren(int $category_id, bool $only_id = false ): array
+    public function getChildren(int $category_id, bool $only_id = false): array
     {
         if (empty($category_id)) {
             return [];
