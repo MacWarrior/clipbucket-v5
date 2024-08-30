@@ -104,9 +104,6 @@ if ($mode == 'adminsettings') {
         }
 
         if ($current) {
-            //reset DB
-
-
             install_execute_sql_file($cnnct, DirPath::get('sql') . $files[$current], $dbprefix, $dbname);
         }
 

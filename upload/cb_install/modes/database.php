@@ -1,5 +1,4 @@
 <?php
-var_dump(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'config.php');
 if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'config.php') && DEVELOPMENT_MODE) {
     require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'config.php';
 }
@@ -81,7 +80,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
                     <label class="grey-text" for="reset_db">Reset DataBase</label>
                     <input type="checkbox" name="reset_db" id="reset_db" value="1" class="">
                     <p class="grey-text font-size" style="margin-top:0;">
-                        Reset Database
+                        Delete all tables & datas
                     </p>
                 </div>
             <?php } ?>
