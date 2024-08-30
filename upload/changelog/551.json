@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"118",
+  "revision":"119",
   "status":"dev",
   "detail":[
     {
@@ -127,6 +127,7 @@
         ,"Fix sub-categories filter display"
         ,"Fix collection default thumb when using sub-collections"
         ,"Fix infinite loop when using sub-collections"
+        ,"Fix recursives categories"
       ]
     },
     {

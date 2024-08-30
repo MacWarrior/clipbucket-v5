@@ -392,12 +392,12 @@ class Category
     }
 
     /**
-     * @param $category_id
+     * @param int $category_id
      * @param $only_id bool
      * @return array|false|int|mixed
      * @throws Exception
      */
-    public function getChildren($category_id, bool $only_id = false): array
+    public function getChildren(int $category_id, bool $only_id = false): array
     {
         if (empty($category_id)) {
             return [];
@@ -405,28 +405,26 @@ class Category
         $children = $this->getAll([
             'parent_id' => $category_id
         ]);
-
         if (empty($children)) {
             return [];
         }
-
+        $children_to_add=[];
         foreach ($children as &$child) {
-            $children_of_child = $this->getChildren($child['category_id'], $only_id);
-
-            if( empty($children_of_child) ){
-                continue;
+            if ($only_id && is_array($child)) {
+                $child = $child['category_id'];
             }
-
-            $child['children'] = $children_of_child;
+            $children_of_child = $this->getChildren((is_array($child) ? $child['category_id'] : $child), $only_id);
+            if ($only_id) {
+                foreach ($children_of_child as $child_of_child) {
+                    $children_to_add[]= $child_of_child;
+                }
+            } else {
+                $child['children'] = $children_of_child;
+            }
         }
 
-        if ($only_id) {
-            $children = array_map(function ($elem){
-                return $elem['category_id'];
-            }, $children);
-        }
 
-        return $children;
+        return array_merge($children, $children_to_add);
     }
 
     /**
