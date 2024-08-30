@@ -3,6 +3,10 @@
 {ANCHOR place="before_footer"}
 <footer id="footer" class="clearfix">
 	<div class="container">
+		{if config('enable_social_networks_links_footer')=='yes'}
+			{SocialNetworks::display('horizontal')}
+		{/if}
+		{ANCHOR place="before_footer_elements"}
 		<div class="footer-holder">
 			{ANCHOR place="before_footer_menu"}
 			<ul class="footer-links column">
@@ -47,6 +51,7 @@
 			</div>
 			{ANCHOR place="after_copyright"}
 		</div>
+		{ANCHOR place="after_footer_elements"}
 	</div>
 </footer>
 

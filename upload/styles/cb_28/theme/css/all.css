@@ -7410,6 +7410,26 @@ textarea#comment_box {
   width: 100%;
 }
 
+/* Social links */
+.social_links{
+  list-style: none;
+  font-size: 16px;
+  line-height: 20px;
+  padding: 0;
+}
+.social_links a:hover{
+  text-decoration: none;
+}
+.social_links.horizontal{
+  text-align: center;
+}
+.social_links.horizontal li{
+  display: inline-block;
+}
+.social_links.horizontal li:not(:first-child) {
+  padding-left: 20px;
+}
+
 /* Homepage options */
 @media only screen and (min-width: 1200px) {
   #main.fullwidth #sidebar{

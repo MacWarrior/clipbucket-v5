@@ -1206,3 +1206,28 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}users_storage_histo`
     ADD CONSTRAINT `id_user_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE `{tbl_prefix}fontawesome_icons` (
+    `id_fontawesome_icon` int(11) NOT NULL,
+    `icon` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    ADD PRIMARY KEY (`id_fontawesome_icon`),
+    ADD UNIQUE KEY `icon` (`icon`);
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    MODIFY `id_fontawesome_icon` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `{tbl_prefix}social_networks_links` (
+    `id_social_networks_link` int(11) NOT NULL,
+    `id_fontawesome_icon` int(11) NOT NULL,
+    `title` varchar(64) NOT NULL,
+    `url` varchar(256) NOT NULL,
+    `social_network_link_order` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    ADD PRIMARY KEY (`id_social_networks_link`),
+    ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;

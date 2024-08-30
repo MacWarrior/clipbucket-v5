@@ -1227,17 +1227,19 @@ function lang($var, $params = [])
             $translation = $var;
 
             if( Language::getInstance()->isTranslationSystemInstalled() ){
-                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+                $msg = '[LANG] Missing translation for "' . $var . '"' . PHP_EOL;
+                error_log($msg);
 
                 if (in_dev()) {
+                    DiscordLog::sendDump($msg);
 
                     /** Splitting the log message into 100-character chunks to avoid saturating the error_log buffer */
                     $string = debug_backtrace_string();
                     $chunks = str_split($string, 100);
                     foreach ($chunks as $chunk) {
                         error_log($chunk);
+                        DiscordLog::sendDump($chunk);
                     }
-
                 }
             }
         }
@@ -2841,6 +2843,9 @@ function include_js($params)
             case 'player':
                 $url = DirPath::getUrl('player');
                 break;
+            case 'vendor':
+                $url = DirPath::getUrl('vendor');
+                break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
                 break;
@@ -2881,6 +2886,9 @@ function include_css($params)
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
+                break;
+            case 'vendor':
+                $url = DirPath::getUrl('vendor');
                 break;
             case 'custom':
                 $url = DirPath::getUrl('files');
