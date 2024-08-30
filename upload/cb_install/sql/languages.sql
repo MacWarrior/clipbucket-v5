@@ -1235,4 +1235,6 @@ VALUES ('admin_setting'),
        ('validate'),
        ('title_cannot_be_empty'),
        ('url_cannot_be_empty'),
-       ('icon_is_required');
+       ('icon_is_required'),
+       ('confirm_delete_social_network'),
+       ('missing_params');

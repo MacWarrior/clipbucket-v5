@@ -60,6 +60,14 @@ class MWIP extends \Migration
             'fr' => 'L\'icône est requise',
             'en' => 'Icon is required'
         ]);
+        self::generateTranslation('confirm_delete_social_network', [
+            'fr' => 'Êtes-vous sûr de vouloir supprimer ce lien de réseau social ?',
+            'en' => 'Are you sure you want to delete this social network link ?'
+        ]);
+        self::generateTranslation('missing_params', [
+            'fr' => 'Il manque des paramètres',
+            'en' => 'Some parameters are missing'
+        ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}fontawesome_icons` (
                 `id_fontawesome_icon` int(11) NOT NULL,
@@ -801,16 +809,6 @@ class MWIP extends \Migration
                 ('youtube-play'),
                 ('youtube-square');";
         self::query($sql);
-
-        self::generateTranslation('confirm_delete_social_network', [
-            'fr' => 'Êtes-vous sûr de vouloir supprimer ce lien de réseau social ?',
-            'en'=> 'Are you sure you want to delete this social network link ?'
-        ]);
-        self::generateTranslation('missing_params', [
-            'fr' => 'Il manque des paramètres',
-            'en'=> 'Some parameters are missing '
-        ]);
     }
-
 
 }
