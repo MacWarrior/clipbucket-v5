@@ -1237,4 +1237,5 @@ VALUES ('admin_setting'),
        ('url_cannot_be_empty'),
        ('icon_is_required'),
        ('confirm_delete_social_network'),
-       ('missing_params');
+       ('missing_params'),
+       ('manage_social_networks_links');
