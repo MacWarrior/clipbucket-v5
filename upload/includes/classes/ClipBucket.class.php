@@ -312,7 +312,7 @@ class ClipBucket
 
         $menu_dashboard = [
             'title'   => 'Dashboard'
-            , 'class' => 'icon-dashboard'
+            , 'class' => 'glyphicon glyphicon-dashboard'
             , 'url'   => DirPath::getUrl('admin_area') . 'index.php'
         ];
         $this->addMenuAdmin($menu_dashboard, 1);
@@ -366,6 +366,11 @@ class ClipBucket
             $menu_general['sub'][] = [
                 'title' => lang('manage_x', strtolower(lang('tags')))
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
+            ];
+
+            $menu_general['sub'][] = [
+                'title' => lang('manage_social_networks_links')
+                , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
             ];
 
             $this->addMenuAdmin($menu_general, 10);

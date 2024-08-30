@@ -721,6 +721,10 @@ ul.mainTabs{
 	border-radius: 5px;
 }
 
+.nav-list>li a>.arrow{
+    font-size: 12px !important;
+}
+
 .row-size {
 	height: 34px;
 }
@@ -1182,4 +1186,19 @@ a[role='menuitem'] {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
+}
+
+#edit_social_media .select2-container{
+    display: block;
+}
+#edit_social_media .select2-container .select2-selection{
+    height: 34px;
+}
+.select2-search:after{
+    position: absolute !important;
+    top: 7px !important;
+    left: 8px !important;
+}
+.select2-search__field{
+    padding-left: 20px !important;
 }
