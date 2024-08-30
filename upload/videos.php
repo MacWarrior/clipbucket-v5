@@ -12,7 +12,7 @@ if( !isSectionEnabled('videos') ){
 
 $child_ids = false;
 if ($_GET['cat'] && is_numeric($_GET['cat'])) {
-    $child_ids = Category::getInstance()->getChildren($_GET['cat'], false, true);
+    $child_ids = Category::getInstance()->getChildren($_GET['cat'], true);
     $child_ids[] = mysql_clean($_GET['cat']);
 }
 
@@ -40,7 +40,7 @@ if( empty($videos) ){
     $params['count'] = true;
     $count = Video::getInstance()->getAll($params);
 }
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $total_pages = count_pages($count, config('videos_list_per_page'));
 //Pagination
 $extra_params = null;

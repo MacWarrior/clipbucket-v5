@@ -1,4 +1,20 @@
 <?php
+class Image{
+    public static function getMemoryNeededForImage( $filename )
+    {
+        if( !file_exists($filename) ){
+            return false;
+        }
+
+        $imageInfo = getimagesize($filename);
+        $current_memory_usage = memory_get_usage();
+        return round( ( $imageInfo[0] * $imageInfo[1]
+                * $imageInfo['bits']
+                * ($imageInfo['channels'] / 8)
+            ) * 1.5 + $current_memory_usage
+        );
+    }
+}
 
 class ResizeImage
 {
@@ -51,6 +67,9 @@ class ResizeImage
             // Output format is always jpeg
             imagecopyresampled($image_p, $image, 0, 0, 0, 0, $width, $height, $width_orig, $height_orig);
             imagejpeg($image_p, $des, 90);
+
+            imagedestroy($image_p);
+            imagedestroy($image);
         } else {
             if (!file_exists($des)) {
                 copy($file, $des);

@@ -69,30 +69,21 @@ if (!$cbcollection->is_viewable($cid)) {
         //link edit
         assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_photo.php?photo=' . $photo['photo_id']);
         assign('link_edit_fo',  '/edit_photo.php?photo=' . $photo['photo_id']);
+
+        // Top collections
+        $params = [
+            'limit'         => 5
+            ,'type'         => 'photos'
+            ,'parents_only' => true
+        ];
+        $top_collectios = Collection::getInstance()->getAll($params);
+        assign('top_collections', $top_collectios);
+
     } else {
         e(lang('item_not_exist'));
         ClipBucket::getInstance()->show_page = false;
     }
 }
-
-$eeb = config('enable_edit_button');
-$haa =  has_access('admin_access', true);
-$ui = user_id();
-$photo_user_id =  $photo['userid'];
-//Getting Collection Lists
-$page = $_GET['page'];
-$get_limit = create_query_limit($page, COLLPP);
-$clist['active'] = 'yes';
-$clist['limit'] = $get_limit;
-$collections = $cbcollection->get_collections($clist);
-
-Assign('collections', $collections);
-
-//Getting Photo List
-$get_limit = create_query_limit($page, MAINPLIST);
-$photos = get_photos(['pid' => $photo['photo_id']]);
-
-Assign('photos', $photos);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
@@ -110,6 +101,6 @@ ClipBucket::getInstance()->addCSS([
     ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
     ,'readonly_tag'.$min_suffixe.'.css' => 'admin'
 ]);
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 template_files('view_photo.html');
 display_it();

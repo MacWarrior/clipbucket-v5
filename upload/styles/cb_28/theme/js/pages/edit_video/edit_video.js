@@ -40,13 +40,58 @@ $(function () {
             }
         )
     });
+
+    $('#upload_thumbs_poster').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs_poster')[0].files, function(i, file) {
+            fd.append('vid_thumb_poster[]', file);
+        });
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd
+                , success: function () {
+                    location.reload();
+                }
+            }
+        )
+    });
+
+    $('#upload_thumbs_backdrop').on('click', function (e) {
+        e.preventDefault();
+        debugger;
+        var fd = new FormData();
+
+        $.each($('#new_thumbs_backdrop')[0].files, function(i, file) {
+            fd.append('vid_thumb_backdrop[]', file);
+        });
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd
+                , success: function (data) {
+                    location.reload();
+                }
+            }
+        )
+    });
 });
-function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
+function getInfoTmdb(video_id, video_title, page,sort, sort_order,selected_year) {
     showSpinner();
     $.ajax({
         url: "/actions/info_tmdb.php",
         type: "POST",
-        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
+        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order,selected_year },
         dataType: 'json',
         success: function (result) {
             hideSpinner();
@@ -88,7 +133,7 @@ function pageInfoTmdb(page) {
         sort = 'DESC';
     }
 
-    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
+    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort,$('#selected_year').val());
 }
 
 function showSpinner() {

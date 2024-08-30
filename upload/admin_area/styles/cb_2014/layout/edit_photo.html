@@ -25,9 +25,15 @@
         <a class="btn btn-primary btn-xs" href="recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
             Re-create Photo
         </a>
-        <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
-            {lang code='activate'}
-        </a>
+        {if $data.active == 'yes'}
+            <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
+                {lang code='deactivate'}
+            </a>
+        {else}
+            <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
+                {lang code='activate'}
+            </a>
+        {/if}
         <a class="btn btn-primary btn-xs" href="javascript:void(0);" onClick="javascript:_cb.Confirm_Delete('photo_manager.php?delete_photo={$data.photo_id}')">
             Delete This Photo
         </a>
@@ -43,6 +49,11 @@
                 </div>
             </div>
             <div class="photoPreview">
+                {if empty($data.collection_id)}
+                <div class="thumb_banner label-warning">
+                    {lang("photo_is", strtolower(lang("orphan")))}
+                </div>
+                {/if}
                 {get_photo details=$data size='l' output='html' class='img-thumbnail'}
             </div>
         </div>

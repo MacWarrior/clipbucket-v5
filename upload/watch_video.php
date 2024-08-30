@@ -9,8 +9,18 @@ if (!userquery::getInstance()->perm_check('view_video', true) || config('videosS
 }
 
 $vkey = $_GET['v'] ?? false;
-$vdo = $cbvid->get_video($vkey);
 
+if( empty($vkey) ){
+    redirect_to(BASEURL);
+}
+
+if(is_numeric($vkey)){
+    $search = 'videoid';
+} else {
+    $search = 'videokey';
+}
+
+$vdo = Video::getInstance()->getOne([$search => $vkey]);
 if( !video_playable($vdo) ) {
     redirect_to(BASEURL);
 }
@@ -50,22 +60,10 @@ if( !$is_playlist ){
 call_watch_video_function($vdo);
 subtitle(ucfirst($vdo['title']));
 
-//Return category id without '#'
-$v_cat = $vdo['category'];
-if ($v_cat[2] == '#') {
-    $video_cat = $v_cat[1];
-} else {
-    $video_cat = $v_cat[1] . $v_cat[2];
-}
-$vid_cat = str_replace('%#%', '', $video_cat);
-$assign_arry['vid_cat'] = $vid_cat;
-
-
-
 # assigning all variables
 array_val_assign($assign_arry);
-
-
+$anonymous_id = userquery::getInstance()->get_anonymous_user();
+assign('anonymous_id', $anonymous_id);
 //link edit
 assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_video.php?video=' . $vdo['videoid']);
 assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);

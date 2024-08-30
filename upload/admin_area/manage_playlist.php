@@ -3,9 +3,9 @@ define('THIS_PAGE', 'manage_playlists');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $cbvid, $eh, $Cbucket;
+global $pages, $cbvid, $eh, $Cbucket;
 
-$userquery->admin_login_check();
+userquery::getInstance()->admin_login_check();
 $pages->page_redir();
 
 /* Generating breadcrumb */
@@ -166,7 +166,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('playlist');
 assign('available_tags',$available_tags);
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 //- manage play front end
 template_files('manage_playlist.html');
 display_it();

@@ -115,15 +115,15 @@ class cbactions
                     ];
                     insert_log($this->name . '_favorite', $log_array);
 
-                    e('<div class="alert alert-success">' . sprintf(lang('add_fav_message'), lang($this->name)) . '</div>', 'm');
+                    e('<div class="alert alert-success">' . lang('add_fav_message', lang($this->name)) . '</div>', 'm');
                 } else {
-                    e(sprintf(lang('already_fav_message'), lang($this->name)));
+                    e(lang('already_fav_message', lang($this->name)));
                 }
             } else {
                 e(lang('you_not_logged_in'));
             }
         } else {
-            e(sprintf(lang('obj_not_exists'), $this->name));
+            e(lang('obj_not_exists', $this->name));
         }
     }
 
@@ -187,15 +187,15 @@ class cbactions
                         ['type', 'id', 'userid', 'flag_type', 'date_added'],
                         [$this->type, $id, user_id(), post('flag_type'), NOW()]
                     );
-                    e(sprintf(lang('obj_report_msg'), lang($this->name)), 'm');
+                    e(lang('obj_report_msg', lang($this->name)), 'm');
                 } else {
-                    e(sprintf(lang('obj_report_err'), lang($this->name)));
+                    e(lang('obj_report_err', lang($this->name)));
                 }
             } else {
                 e(lang('you_not_logged_in'));
             }
         } else {
-            e(sprintf(lang('obj_not_exists'), lang($this->name)));
+            e(lang('obj_not_exists', lang($this->name)));
         }
     }
 
@@ -210,7 +210,7 @@ class cbactions
         global $db;
         $id = mysql_clean($id);
         $db->delete(tbl($this->flag_tbl), ['id', 'type'], [$id, $this->type]);
-        e(sprintf(lang('type_flags_removed'), lang($this->name)), 'm');
+        e(lang('type_flags_removed', lang($this->name)), 'm');
     }
 
     /**
@@ -241,7 +241,6 @@ class cbactions
      */
     function share_content($id)
     {
-        global $userquery;
         $ok = true;
         $tpl = $this->share_template_name;
         $var = $this->val_array;
@@ -253,15 +252,15 @@ class cbactions
                 $users = explode(',', $post_users);
                 if (is_array($users) && !empty($post_users)) {
                     foreach ($users as $user) {
-                        if (!$userquery->user_exists($user) && !isValidEmail($user)) {
-                            e(sprintf(lang('user_no_exist_wid_username'), $user));
+                        if (!userquery::getInstance()->user_exists($user) && !isValidEmail($user)) {
+                            e(lang('user_no_exist_wid_username', $user));
                             $ok = false;
                             break;
                         }
 
                         $email = $user;
                         if (!isValidEmail($user)) {
-                            $email = $userquery->get_user_field_only($user, 'email');
+                            $email = userquery::getInstance()->get_user_field_only($user, 'email');
                         }
                         $emails_array[] = $email;
                     }
@@ -275,19 +274,19 @@ class cbactions
                         $msg = $cbemail->replace($tpl['email_template'], $var);
 
                         //Now Finally Sending Email
-                        $from = $userquery->get_user_field_only(user_name(), 'email');
+                        $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
 
                         cbmail(['to' => $emails_array, 'from' => $from, 'from_name' => user_name(), 'subject' => $subj, 'content' => $msg, 'use_boundary' => true]);
-                        e(sprintf(lang('thnx_sharing_msg'), $this->name), 'm');
+                        e(lang('thnx_sharing_msg'), $this->name, 'm');
                     }
                 } else {
-                    e(sprintf(lang('share_video_no_user_err'), $this->name));
+                    e(lang('share_video_no_user_err', $this->name));
                 }
             } else {
                 e(lang('you_not_logged_in'));
             }
         } else {
-            e(sprintf(lang('obj_not_exists'), $this->name));
+            e(lang('obj_not_exists', $this->name));
         }
     }
 
@@ -357,9 +356,9 @@ class cbactions
         }
         if ($this->fav_check($fav_id, $uid)) {
             $db->delete(tbl($this->fav_tbl), ['userid', 'type', 'id'], [$uid, $this->type, $fav_id]);
-            e(sprintf(lang('fav_remove_msg'), lang($this->name)), 'm');
+            e(lang('fav_remove_msg', ucfirst(lang($this->name))), 'm');
         } else {
-            e(sprintf(lang('unknown_favorite'), lang($this->name)));
+            e(lang('unknown_favorite', lang($this->name)));
         }
     }
 
@@ -552,7 +551,7 @@ class cbactions
             } elseif (empty($name)) {
                 e(lang('please_enter_playlist_name'));
             } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
-                e(sprintf(lang('play_list_with_this_name_arlready_exists'), $name));
+                e(lang('play_list_with_this_name_arlready_exists', $name));
             } else {
                 $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
                 $values = [$name, user_id(), now(), $this->type, '', ''];
@@ -672,13 +671,13 @@ class cbactions
         $playlist = $this->get_playlist($pid);
 
         if (!$this->exists($id)) {
-            e(sprintf(lang('obj_not_exists'), $this->name));
+            e(lang('obj_not_exists', $this->name));
         } elseif (!$playlist) {
             e(lang('playlist_not_exist'));
         } elseif (!user_id()) {
             e(lang('you_not_logged_in'));
         } elseif ($this->playlist_item_with_obj($id, $pid)) {
-            e(sprintf(lang('this_already_exist_in_pl'), $this->name));
+            e(lang('this_already_exist_in_pl', $this->name));
         } else {
             $video = get_video_basic_details($id, true);
 
@@ -877,7 +876,7 @@ class cbactions
         } elseif (!user_id()) {
             e(lang('you_not_logged_in'));
         } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
-            e(sprintf(lang('play_list_with_this_name_arlready_exists'), $name));
+            e(lang('play_list_with_this_name_arlready_exists', $name));
         } else {
             $upload_fields = $this->load_playlist_fields($array);
             $fields = [];

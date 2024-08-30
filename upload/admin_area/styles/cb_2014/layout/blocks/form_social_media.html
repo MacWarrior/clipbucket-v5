@@ -1,0 +1,28 @@
+<form method="post" enctype="multipart/form-data" name="edit_social_media" id="edit_social_media">
+    <div class="row">
+        <div class="col-md-2">
+            <label for="id_fontawesome_icon">{lang('icon')}*</label>
+            <select id="id_fontawesome_icon" name="id_fontawesome_icon" class="icon_select">
+                {section name=icon loop=$list_icons}
+                <option value="{display_clean($list_icons[icon].id_fontawesome_icon)}">{display_clean($list_icons[icon].icon)}</option>
+                {/section}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label for="title">{lang('title')}*</label>
+            <input id="title" name="title" class="form-control" type="text"/>
+        </div>
+        <div class="col-md-4">
+            <label for="url">{lang('url')}*</label>
+            <input id="url" name="url" class="form-control" type="text"/>
+        </div>
+        <div class="col-md-1">
+            <label for="social_network_link_order">{lang('order')}</label>
+            <input id="social_network_link_order" name="social_network_link_order" class="form-control" type="number" min="0"/>
+        </div>
+    </div>
+    <div class="row marginTop alignCenter">
+        <input type="submit" class="btn btn-primary button" id="button" value="{lang('validate')}"/>
+        <button class="btn btn-default button" id="cancel">{lang code='cancel'}</button>
+    </div>
+</form>

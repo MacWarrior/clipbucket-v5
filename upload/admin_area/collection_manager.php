@@ -1,11 +1,11 @@
 <?php
 define('THIS_PAGE', 'collection_manager');
-global $userquery, $pages, $cbcollection, $eh;
-
+global $cbcollection, $eh;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+$userquery = userquery::getInstance();
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -14,9 +14,13 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
+
+if (!empty($_GET['missing_collection'])) {
+    e(lang('collection_not_exist'));
+}
 
 if (isset($_GET['make_feature'])) {
     $id = mysql_clean($_GET['make_feature']);
@@ -120,17 +124,21 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
 $carray['limit'] = $get_limit;
+$carray['allow_children'] = true;
+$carray['hide_empty_collection'] = 'no';
 if (!empty($carray['order'])) {
     $carray['order'] = $carray['order'] . ' DESC';
 } else {
     $carray['order'] = ' collection_id DESC';
 }
 
-$collections = $cbcollection->get_collections($carray);
+$collections = Collection::getInstance()->getAll($carray);
 assign('collections', $collections);
 
-$total_pages = count_pages(count($collections), config('admin_pages'));
-$pages->paginate($total_pages, $page);
+$carray['count'] = true;
+$count_collection =  Collection::getInstance()->getAll($carray);
+$total_pages = count_pages($count_collection, config('collection_per_page'));
+pages::getInstance()->paginate($total_pages, $page);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
@@ -146,6 +154,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
+assign('anonymous_id', $userquery->get_anonymous_user());
 
 subtitle(lang('manage_collections'));
 template_files('collection_manager.html');

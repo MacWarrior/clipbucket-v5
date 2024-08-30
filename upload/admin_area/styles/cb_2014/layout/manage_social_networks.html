@@ -1,0 +1,65 @@
+<div class="heading paddingBottomSmall">
+    <div class="form-group">
+        <h2>
+            {lang code='manage_social_networks_links'}
+            <div class="dropdown pull-right">
+                <button id="hideshow" class="btn btn-primary pull-right " >
+                    {lang code='add_new_social_network_link'}
+                </button>
+            </div>
+        </h2>
+    </div>
+</div>
+
+<div style="display:none;" id="form_add_social_network">
+    {include file="$style_dir/blocks/form_social_media.html"}
+    <hr/>
+</div>
+
+<table class="table table-bordered table-striped manageUsersTable">
+    <tr>
+        <th class="col-md-2">{lang('icon')}</th>
+        <th class="col-md-2">{lang('title')}</th>
+        <th class="col-md-5">{lang('url')}</th>
+        <th class="col-md-2">{lang('order')}</th>
+        <th class="col-md-1">Action</th>
+    </tr>
+    {section name=i loop=$social_network_links}
+    <tr id="tr_{$social_network_links[i].id_social_networks_link}">
+        <td class="col-md-2">
+            <div class="edit-{$social_network_links[i].id_social_networks_link}" id="icon_{$social_network_links[i].id_social_networks_link}">
+                <span class="fa fa-{$social_network_links[i].icon} "></span>&nbsp;<span class="text-icon">{$social_network_links[i].icon}</span>
+            </div>
+            <div  class="input-{$social_network_links[i].id_social_networks_link}"  style="display: none;">
+                <select id="input_id_fontawesome_icon-{$social_network_links[i].id_social_networks_link}" name="id_fontawesome_icon" class="icon_select ">
+                    {section name=icon loop=$list_icons}
+                        <option value="{display_clean($list_icons[icon].id_fontawesome_icon)}" {if $social_network_links[i].id_fontawesome_icon == $list_icons[icon].id_fontawesome_icon} selected="selected"{/if}>{display_clean($list_icons[icon].icon)}</option>
+                    {/section}
+                </select>
+            </div>
+        </td>
+        <td class="col-md-2">
+            <span class="edit-{$social_network_links[i].id_social_networks_link}" id="title_{$social_network_links[i].id_social_networks_link}">{display_clean($social_network_links[i].title)}</span>
+            <input type="text" class="form-control input-{$social_network_links[i].id_social_networks_link}" id="input_title-{$social_network_links[i].id_social_networks_link}" name="title" value="{display_clean($social_network_links[i].title)}" style="display:none;">
+        </td>
+        <td class="col-md-5">
+            <span class="edit-{$social_network_links[i].id_social_networks_link}" id="url_{$social_network_links[i].id_social_networks_link}">{display_clean($social_network_links[i].url)}</span>
+            <input type="text" class="form-control input-{$social_network_links[i].id_social_networks_link}" id="input_url-{$social_network_links[i].id_social_networks_link}" name="url" value="{display_clean($social_network_links[i].url)}" style="display:none;">
+        </td>
+        <td class="col-md-2">
+            <span class="edit-{$social_network_links[i].id_social_networks_link}" id="order_{$social_network_links[i].id_social_networks_link}">{display_clean($social_network_links[i].social_network_link_order)}</span>
+            <input type="text" class="form-control input-{$social_network_links[i].id_social_networks_link}" id="input_order-{$social_network_links[i].id_social_networks_link}" name="order" value="{display_clean($social_network_links[i].social_network_link_order)}" style="display:none;">
+        </td>
+        <td class="col-md-1" style="text-align: center; vertical-align: middle;">
+            <span class="btn btn-success btn-xs edit_social_network" title="{lang code='edit'}" id="edit-{$social_network_links[i].id_social_networks_link}" data-id="{$social_network_links[i].id_social_networks_link}"><i class="glyphicon glyphicon-edit"></i></span>
+            <span class="btn btn-danger btn-xs delete_social_network" title="{lang code='delete'}" id="delete-{$social_network_links[i].id_social_networks_link}" data-id="{$social_network_links[i].id_social_networks_link}"><i class="glyphicon glyphicon-trash"></i></span>
+            <span class="glyphicon glyphicon-ok-circle confirm_update_social_network" title="{lang code='confirm'}" id="ok-{$social_network_links[i].id_social_networks_link}" data-id="{$social_network_links[i].id_social_networks_link}" style="display:none;color:#87b87f;font-size:1.5em;cursor:pointer;"></span>
+            <span class="glyphicon glyphicon-remove-circle cancel_social_network" title="{lang code='cancel'}" id="remove-{$social_network_links[i].id_social_networks_link}" data-id="{$social_network_links[i].id_social_networks_link}" style="display:none;color:#d15b47;font-size:1.5em;cursor:pointer; margin-left: 15px;"></span>
+        </td>
+    </tr>
+    {/section}
+</table>
+{include file="$style_dir/blocks/pagination.html"}
+<script>
+    var lang_confirm_delete = '{lang("confirm_delete_social_network")}';
+</script>

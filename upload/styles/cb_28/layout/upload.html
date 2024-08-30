@@ -64,8 +64,8 @@
 </div>
 <script type="text/javascript">
 	var uploadScriptPath ='{$uploaderDetails.uploadScriptPath}';
-	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb";
-	var max_file_size ="{config('max_upload_size')*1000}kb";
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+	var max_file_size ="{config('max_upload_size')}Mb";
 	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
 	var back_extensions = '{$extensions}';
 	var theme = '{$theme}';

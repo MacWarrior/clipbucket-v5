@@ -217,16 +217,19 @@ function execute_migration_SQL_file($path): bool
 }
 
 /**
+ * @param $path
+ * @param bool $upgrade_version
+ * @return mixed
  * @throws Exception
  */
-function execute_migration_file($path)
+function execute_migration_file($path, bool $upgrade_version = true)
 {
     include_once $path;
     $class = pathinfo($path)['filename'];
     $namespace = 'V'.str_replace('.','_',basename(dirname($path)));
     $classname = $namespace . '\\'.$class;
     $instance = new $classname();
-    if (!$instance->launch()) {
+    if (!$instance->launch($upgrade_version)) {
         throw new Exception("error_during_update");
     }
 

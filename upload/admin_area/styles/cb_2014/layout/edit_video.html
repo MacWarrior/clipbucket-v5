@@ -42,7 +42,14 @@
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                             {/if}
                         {/if}
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}">Manage thumbnails</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x', lang('thumbs')|lower)}</a></li>
+                        {if config('enable_video_poster') == 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=poster">{lang('manage_x', lang('posters')|lower)}</a></li>
+                        {/if}
+                        {if config('enable_video_backdrop') == 'yes'}
+                            <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=backdrop">{lang('manage_x', lang('backdrops')|lower)}</a></li>
+                        {/if}
+
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}
@@ -52,7 +59,7 @@
 			</h2>
 			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
 				<span class="btn btn-app btn-sm btn-light no-hover">
-				<span class="line-height-1 smaller-90 blue">{$data.views|format_number}</span>
+				<span class="line-height-1 smaller-90 blue">{$data.views|prettyNum}</span>
 				<br/>
 				<span class="line-height-1 smaller-90"> Views </span>
 				</span>
@@ -127,15 +134,6 @@
                                 <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
                             </a>
                         </li>
-                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
-                            || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        }
-                        <li>
-                            <a data-toggle="tab" href="#movie_infos">
-                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
-                            </a>
-                        </li>
-                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videodetail" class="tab-pane active">
@@ -206,48 +204,52 @@
                                 <div class="col-md-10">
                                     <table class="myTable" style="width:100%;">
                                         <tr>
-                                            <td class="first"><label>User Id</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.userid}</span></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
                                             <td class="first"><label>{lang code='username'}</label></td>
                                             <td class="last">
-                                                <p><span>{display_clean($data.userid|get_username)}</span></p>
+                                                <p><span>
+                                                    {if $data.userid != $anonymous_id}
+                                                        <a href="{$link_user}">{display_clean($data.user_username)}</a>
+                                                    {else}
+                                                        {display_clean(lang($data.user_username))}
+                                                    {/if}
+                                                </span></p>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="first"><label>DOB</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.dob}</span></p>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="first"><label>Email</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.email}</span></p>
-                                            </td>
-                                        </tr>
-                                        {if config('enable_gender') == 'yes'}
-                                        <tr>
-                                            <td class="first"><label>{lang code='gender'}</label></td>
-                                            <td class="last">
-                                                <p><span>{lang code="{$data.sex}"}</span></p>
-                                            </td>
-                                        </tr>
+                                        {if $data.userid != $anonymous_id}
+                                            <tr>
+                                                <td class="first"><label>DOB</label></td>
+                                                <td class="last">
+                                                    <p><span>{$uploader_info.dob}</span></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="first"><label>Email</label></td>
+                                                <td class="last">
+                                                    <p><span>{$uploader_info.email}</span></p>
+                                                </td>
+                                            </tr>
+                                            {if config('enable_gender') == 'yes'}
+                                            <tr>
+                                                <td class="first"><label>{lang code='gender'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{lang code="{$uploader_info.sex}"}</span></p>
+                                                </td>
+                                            </tr>
+                                            {/if}
+                                            <tr>
+                                                <td class="first"><label>{lang code='rating'}</label></td>
+                                                <td class="last">
+                                                    <p><span>{$data.rating}</span></p>
+                                                </td>
+                                            </tr>
                                         {/if}
-                                        <tr>
-                                            <td class="first"><label>{lang code='rating'}</label></td>
-                                            <td class="last">
-                                                <p><span>{$data.rating}</span></p>
-                                            </td>
-                                        </tr>
                                     </table>
                                 </div>
-                                <div class="col-md-2">
-                                    <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
-                                </div>
+                                {if $data.userid != $anonymous_id}
+                                    <div class="col-md-2">
+                                        <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                    </div>
+                                {/if}
                             </div>
                         </div>
                         <div id="privacyoption" class="tab-pane">
@@ -299,34 +301,6 @@
                             </div>
                             {/foreach}
                         </div>
-
-                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
-                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
-                        }
-                        <div id="movie_infos" class="tab-pane">
-                            {foreach from=$video_fields item=field}
-                                {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
-                                    {continue}
-                                {/if}
-
-                            <div class="table">
-                                {$field.class='form-control'}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
-                                {if $field.hint_1}
-                                {$field.hint_1}<br/>
-                                {/if}
-                                {$formObj->createField($field)}
-                                {if $field.id|strstr:'tags'}
-                                <ul id="list_{$field.id}"></ul>
-                                {/if}
-                                {if $field.hint_2}<br/>
-                                {$field.hint_2}
-                                {/if}
-                            </div>
-                            {/foreach}
-                        </div>
-                        {/if}
-
                     </div>
                 </div>
                 <div class="tabbable paddingTop">
@@ -341,6 +315,15 @@
                                 <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
                             </a>
                         </li>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <li>
+                            <a data-toggle="tab" href="#movie_infos">
+                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                            </a>
+                        </li>
+                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane active">
@@ -395,9 +378,10 @@
                             <div class="row">
                                 <label for="status"><strong>{lang code='vdo_status'}</strong></label>
                                 <select class="form-control" name="status" id="status">
-                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>Successfull</option>
-                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>Processing</option>
-                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>Failed</option>
+                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>{lang('successful')}</option>
+                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>{lang('processing')}</option>
+                                    <option class="form-control" value="waiting" {if $data.status=='Waiting'}selected{/if}>{lang('waiting')}</option>
+                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>{lang('failed')}</option>
                                 </select>
                             </div>
                             <hr/>
@@ -459,6 +443,32 @@
                             </div>
                             {/if}
                         </div>
+                        {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
+                        || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
+                        }
+                        <div id="movie_infos" class="tab-pane">
+                            {foreach from=$video_fields item=field}
+                            {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                            {continue}
+                            {/if}
+
+                            <div class="table">
+                                {$field.class='form-control'}
+                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                {if $field.hint_1}
+                                {$field.hint_1}<br/>
+                                {/if}
+                                {$formObj->createField($field)}
+                                {if $field.id|strstr:'tags'}
+                                <ul id="list_{$field.id}"></ul>
+                                {/if}
+                                {if $field.hint_2}<br/>
+                                {$field.hint_2}
+                                {/if}
+                            </div>
+                            {/foreach}
+                        </div>
+                        {/if}
                     </div>
                     <div class="form-group alignCenter">
                         <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
@@ -476,20 +486,20 @@
                         </li>
                         <li>
                             <a data-toggle="tab" href="#thumbnails">
-                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('thumbnail'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('thumbnail'))|ucfirst}
                             </a>
                         </li>
                         {if config('enable_video_poster') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#posters">
-                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('poster'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('poster'))|ucfirst}
                             </a>
                         </li>
                         {/if}
                         {if config('enable_video_backdrop') == 'yes'}
                         <li>
                             <a data-toggle="tab" href="#backdrops">
-                                <i class="glyphicon glyphicon-picture"></i> {sprintf(lang('default_x'),lang('backdrop'))|ucfirst}
+                                <i class="glyphicon glyphicon-picture"></i> {lang('default_x',lang('backdrop'))|ucfirst}
                             </a>
                         </li>
                         {/if}

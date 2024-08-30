@@ -178,8 +178,15 @@ class Photo
         $param_photo_key = $params['photo_key'] ?? false;
         $param_filename = $params['filename'] ?? false;
         $param_userid = $params['userid'] ?? false;
+
+        $param_title = $params['title'] ?? false;
+        $param_tags = $params['tags'] ?? false;
+        $param_extension = $params['extension'] ?? false;
+        $param_active = $params['active'] ?? false;
+
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
+        $param_exclude_orphan = $params['exclude_orphan'] ?? false;
         $param_featured = $params['featured'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
@@ -198,15 +205,28 @@ class Photo
         if( $param_photo_key ){
             $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_photo_key).'\'';
         }
+        if( $param_title ){
+            $conditions[] = 'LOWER(' . $this->getTableName() . '.photo_title) LIKE LOWER(\'%'.mysql_clean($param_title).'%\')';
+        }
+        if( $param_extension ){
+            $conditions[] = 'LOWER(' . $this->getTableName() . '.extension) = LOWER(\''.mysql_clean($param_extension).'\')';
+        }
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = \''.mysql_clean($param_userid).'\'';
         }
         if( $param_filename ){
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_filename).'\'';
         }
+        if( $param_active ){
+            $conditions[] = $this->getTableName() . '.active = LOWER(\''.mysql_clean($param_active).'\')';
+        }
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
+        if( $param_tags ){
+            $conditions[] = 'tags.name LIKE \'%'.mysql_clean($param_tags).'%\'';
+        }
+
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
@@ -230,11 +250,13 @@ class Photo
             $conditions[] = $cond;
         }
 
+        $collection_items_table = Collection::getInstance()->getTableNameItems();
         if( $param_count ){
             $select = ['COUNT(DISTINCT photos.photo_id) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username';
+            $select[] = $collection_items_table . '.collection_id AS join_collection_id';
         }
 
         $join = [];
@@ -260,8 +282,11 @@ class Photo
         }
 
         if( $param_collection_id ){
-            $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
+        } else if( $param_exclude_orphan ){
+            $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+        } else {
+            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
         }
 
         if( $param_group ){
@@ -359,7 +384,7 @@ class Photo
     public static function display_restricted($photo)
     {
         if( !empty($photo['age_restriction']) ){
-            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $photo['age_restriction']) . '">' . sprintf(lang('access_forbidden_under_age_display'), $photo['age_restriction']) . '</span>';
+            echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $photo['age_restriction']) . '">' . lang('access_forbidden_under_age_display', $photo['age_restriction']) . '</span>';
         }
     }
 
@@ -419,6 +444,35 @@ class Photo
         CBPhotos::getInstance()->generate_photos($id);
     }
 
+    /**
+     * @param string|int $id
+     * @param string $file_name
+     * @param string $file_directory
+     * @param string $extension
+     * @return int
+     * @throws Exception
+     */
+    public function getUsage($id, string $file_name, string $file_directory, string $extension, string $photo_key): int
+    {
+        $total = 0;
+        $details = [
+            'photo_id' => $id,
+            'photo_key' => $photo_key,
+            'file_directory'=>$file_directory,
+            'filename'=>$file_name,
+            'ext'=>$extension
+        ];
+        $files = get_image_file(['details' => $details, 'size' => 't', 'multi' => true, 'with_orig' => true, 'with_path' => false]);
+        if (!empty($files)) {
+            foreach ($files as $file) {
+                $file_dir = DirPath::get('photos') . $file;
+                if (file_exists($file_dir)) {
+                    $total += filesize($file_dir);
+                }
+            }
+        }
+        return $total;
+    }
 }
 
 class CBPhotos
@@ -477,14 +531,15 @@ class CBPhotos
      */
     public static function display_banner($vdo = [])
     {
-        $text = '';
-        $class = '';
         if ($vdo['active'] == 'no') {
-            $text = sprintf(lang('photo_is'), strtolower(lang('inactive')) );
+            $text = lang('photo_is', strtolower(lang('inactive')) );
             $class = 'label-danger';
+            echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
 
-        if( !empty($text) ){
+        if (empty($vdo['collection_id'])) {
+            $text = lang('photo_is', strtolower(lang('orphan')) );
+            $class = 'label-warning';
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
     }
@@ -644,11 +699,11 @@ class CBPhotos
 
     /**
      * Create Admin Area menu for photos
+     * @throws Exception
      */
     function photos_admin_menu()
     {
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
+        $per = userquery::getInstance()->get_user_level(user_id());
 
         if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
@@ -656,7 +711,7 @@ class CBPhotos
                 , 'class' => 'glyphicon glyphicon-picture'
                 , 'sub'   => [
                     [
-                        'title' => 'Photo Manager'
+                        'title' => lang('manage_x', strtolower(lang('photos')))
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php'
                     ]
                     , [
@@ -676,7 +731,7 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
                     ]
                     , [
-                        'title' => lang('manage_categories')
+                        'title' => lang('manage_x', strtolower(lang('categories')))
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
                 ]
@@ -691,7 +746,6 @@ class CBPhotos
      */
     function setting_other_things()
     {
-        global $userquery;
         // Search type
         if (isSectionEnabled('photos')) {
             ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
@@ -703,7 +757,7 @@ class CBPhotos
             lang('manage_favorite_photos') => "manage_photos.php?mode=favorite",
         ];
         if (isSectionEnabled('photos')) {
-            $userquery->user_account[lang('photos')] = $accountLinks;
+            userquery::getInstance()->user_account[lang('photos')] = $accountLinks;
         }
 
         //Setting Cbucket links
@@ -1248,7 +1302,7 @@ class CBPhotos
                 }
             }
 
-            e(sprintf(lang('success_delete_file'), display_clean($photo['photo_title'])), 'm');
+            e(lang('success_delete_file', display_clean($photo['photo_title'])), 'm');
         }
     }
 
@@ -1361,6 +1415,7 @@ class CBPhotos
             default:
                 return false;
         }
+        imagedestroy($image);
         imagedestroy($canvas);
     }
 
@@ -1387,14 +1442,17 @@ class CBPhotos
 
         $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_o.' . $extension, $extension);
         $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_t.' . $extension, $extension, $this->thumb_width, $this->thumb_height);
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_m.' . $extension, $extension, $this->mid_width, $this->mid_height);
-        $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_l.' . $extension, $extension, $this->lar_width);
 
-        $should_watermark = config('watermark_photo');
+        if (empty(errorhandler::getInstance()->get_error())) {
+            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_m.' . $extension, $extension, $this->mid_width, $this->mid_height);
+            $this->createThumb($path . $filename . '.' . $extension, $path . $filename . '_l.' . $extension, $extension, $this->lar_width);
 
-        if (!empty($should_watermark) && $should_watermark == 1) {
-            $this->watermark_image($path . $filename . '_l.' . $extension, $path . $filename . '_l.' . $extension);
-            $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
+            $should_watermark = config('watermark_photo');
+
+            if (!empty($should_watermark) && $should_watermark == 1) {
+                $this->watermark_image($path . $filename . '_l.' . $extension, $path . $filename . '_l.' . $extension);
+                $this->watermark_image($path . $filename . '_o.' . $extension, $path . $filename . '_o.' . $extension);
+            }
         }
 
         /* GETTING DETAILS OF IMAGES AND STORING THEM IN DB */
@@ -1458,6 +1516,7 @@ class CBPhotos
      * @param null $d_width
      * @param null $d_height
      * @param bool $force_copy
+     * @throws Exception
      */
     function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false)
     {
@@ -1467,12 +1526,30 @@ class CBPhotos
         $org_height = $info[1];
 
         if ($org_width > $d_width && !empty($d_width)) {
+
+            if( stristr(PHP_OS, 'WIN') ) {
+                // On Windows hosts, imagecreatefromX functions consumes lots of RAM
+                $memory_needed = Image::getMemoryNeededForImage($from);
+                $memory_limit = ini_get('memory_limit');
+                if ($memory_needed > getBytesFromFileSize($memory_limit)) {
+                    $msg = 'Photo generation would requiere ~' . System::get_readable_filesize($memory_needed, 0) . ' of memory, but it\'s currently limited to ' . $memory_limit;
+                    if (in_dev()) {
+                        e($msg);
+                    } else {
+                        e(lang('technical_error'));
+                    }
+                    DiscordLog::sendDump($msg);
+                    return;
+                }
+            }
+
             $ratio = $org_width / $d_width; // We will resize it according to Width
 
             $width = $org_width / $ratio;
             $height = $org_height / $ratio;
 
             $image_r = imagecreatetruecolor($width, $height);
+
             if (!empty($d_height) && $height > $d_height && $this->cropping == 1) {
                 $crop_image = true;
             }
@@ -1511,6 +1588,7 @@ class CBPhotos
                     break;
             }
             imagedestroy($image_r);
+            imagedestroy($image);
         } else {
             if (!file_exists($to) || $force_copy === true) {
                 if (!is_dir($from)) {
@@ -1662,8 +1740,7 @@ class CBPhotos
             $p['user'] = user_id();
         }
 
-        $p['type'] = 'photos';
-        $collections = $this->collection->get_collections($p);
+        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id());
         $cl_array = $this->parse_array($collections);
         $collection = $array['collection_id'];
         $this->unique = rand(0, 9999);
@@ -1820,8 +1897,10 @@ class CBPhotos
                 $this->generate_photos($photo);
             }
 
-            $eh->flush();
-            e(sprintf(lang('photo_is_saved_now'), display_clean($photo['photo_title'])), 'm');
+            if (empty(errorhandler::getInstance()->get_error())) {
+                e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
+            }
+
             $db->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
 
             //Adding Photo Feed
@@ -1878,10 +1957,6 @@ class CBPhotos
             $array = $_POST;
         }
 
-        $comments = config('enable_comments_photo') == 'yes' ? $array['allow_comments'] : 'no';
-        $embedding = $array['allow_embedding'];
-        $rating = $array['allow_rating'];
-
         $return = [];
 
         if( config('enable_comments_photo') == 'yes' ){
@@ -1892,7 +1967,7 @@ class CBPhotos
                 'type'              => 'radiobutton',
                 'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
                 'required'          => 'no',
-                'checked'           => $comments,
+                'checked'           => config('enable_comments_photo') == 'yes' ? $array['allow_comments'] : 'no',
                 'validate_function' => 'yes_or_no',
                 'display_function'  => 'display_sharing_opt',
                 'default_value'     => 'yes',
@@ -1906,7 +1981,7 @@ class CBPhotos
             'name'              => 'allow_embedding',
             'db_field'          => 'allow_embedding',
             'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
-            'checked'           => $embedding,
+            'checked'           => $array['allow_embedding'],
             'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'yes'
@@ -1918,7 +1993,7 @@ class CBPhotos
             'type'              => 'radiobutton',
             'db_field'          => 'allow_rating',
             'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
-            'checked'           => $rating,
+            'checked'           => $array['allow_rating'],
             'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'yes'
@@ -2024,7 +2099,7 @@ class CBPhotos
     {
         if (is_array($array)) {
             foreach ($array as $key => $v) {
-                $cl_arr[$v['collection_id']] = $v['collection_name'];
+                $cl_arr[$key] = $v['name'];
             }
             return $cl_arr;
         }
@@ -2174,8 +2249,9 @@ class CBPhotos
                             $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
-
-                            e(lang("photo_updated_successfully"), "m");
+                            if (empty(errorhandler::getInstance()->get_error)) {
+                                e(lang("photo_updated_successfully"), "m");
+                            }
                         }
                     }
                 }
@@ -2691,10 +2767,8 @@ class CBPhotos
      */
     function photo_voters($id, $return_array = false, $show_all = false)
     {
-        global $json;
         $p = $this->get_photo($id);
         if ((!empty($p) && $p['userid'] == user_id()) || $show_all === true) {
-            global $userquery;
             $voters = $p['voters'];
             $voters = json_decode($voters, true);
 
@@ -2706,7 +2780,7 @@ class CBPhotos
                 foreach ($voters as $id => $details) {
                     $username = get_username($id);
                     $output = '<li id=\'user' . $id . $p['photo_id'] . '\' class=\'PhotoRatingStats\'>';
-                    $output .= '<a href=\'' . $userquery->profile_link($id) . '\'>' . display_clean($username) . '</a>';
+                    $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . display_clean($username) . '</a>';
                     $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
                     $output .= niceTime($details['time']) . ')</small>';
                     $output .= '</li>';
@@ -2778,11 +2852,11 @@ class CBPhotos
 
         if (!user_id()) {
             e(lang('please_login_to_rate'));
-        } elseif (user_id() == $c_rating['userid'] && !config('own_photo_rating')) {
+        } elseif (user_id() == $c_rating['userid'] && config('own_photo_rating') != 'yes') {
             e(lang('you_cannot_rate_own_photo'));
         } elseif (!empty($already_voted)) {
             e(lang('you_hv_already_rated_photo'));
-        } elseif ($c_rating['allow_rating'] == 'no' || !config('photo_rating')) {
+        } elseif ($c_rating['allow_rating'] == 'no' || config('photo_rating') != 'yes') {
             e(lang('photo_rate_disabled'));
         } else {
             $voters[user_id()] = [

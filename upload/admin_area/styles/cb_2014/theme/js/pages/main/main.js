@@ -1,7 +1,7 @@
 function display_tab(divId) {
-    $('ul.nav-tabs:not(.resolutions) li').removeClass('active');
-    $('ul.nav-tabs:not(.resolutions) li > a[href=\'' + divId + '\'').parent().addClass('active');
-    $('div.tab-content div:not(.resolutions)').removeClass('active');
+    $('ul.nav-tabs:not(.resolutions,.interfaces) li').removeClass('active');
+    $('ul.nav-tabs:not(.resolutions,.interfaces) li > a[href=\'' + divId + '\'').parent().addClass('active');
+    $('div.tab-content div:not(.resolutions,.interfaces)').removeClass('active');
     $(divId).addClass('active');
     setHash(divId);
 }
@@ -26,16 +26,21 @@ $(document).ready(function () {
     $('ul.nav-tabs.resolutions a').click(function () {
         if (!$(this).parent().hasClass('active')) {
             let href = $(this).attr('href');
-            $('#' + href).siblings().removeClass('active');
-            $('#' + href).addClass('active');
+            $('#' + href).addClass('active').siblings().removeClass('active');
+        }
+    });
+    $('ul.nav-pills.interfaces a').click(function () {
+        if (!$(this).parent().hasClass('active')) {
+            let href = $(this).attr('href');
+            $('#' + href).addClass('active').siblings().removeClass('active');
         }
     });
 
     $("#mail_type").change(function () {
-        if ($(this).val() == 'mail') {
+        if ($(this).val() === 'mail') {
             $('.config_smtp').hide();
         } else {
-            if ($("#smtp_auth:checked").length == 0) {
+            if ($("#smtp_auth:checked").length === 0) {
                 $('.config_smtp:not(.config_smtp_auth)').show();
             } else {
                 $('.config_smtp').show();
@@ -62,7 +67,7 @@ $(document).ready(function () {
     });
 
     $("#smtp_auth").change(function () {
-        if ($("#smtp_auth:checked").length == 1) {
+        if ($("#smtp_auth:checked").length === 1) {
             $('.config_smtp_auth').show();
         } else {
             $('.config_smtp_auth').hide();
@@ -71,7 +76,7 @@ $(document).ready(function () {
 
     $("input[name='conversion_type']").change(function () {
         let inputs_mp4 = ['stay_mp4', 'keep_audio_tracks', 'keep_subtitles'];
-        if (this.value == 'mp4') {
+        if (this.value === 'mp4') {
             inputs_mp4.forEach(function (input) {
                 $('#' + input).prop('disabled', false);
                 $('#' + input + '_hidden').prop('disabled', true);
@@ -154,4 +159,77 @@ $(document).ready(function () {
             }
         })
     });
+
+    function copyTextToClipboard(text) {
+        var textArea = document.createElement("textarea");
+
+        // Place in the top-left corner of screen regardless of scroll position.
+        textArea.style.position = 'fixed';
+        textArea.style.top = 0;
+        textArea.style.left = 0;
+
+        // Ensure it has a small width and height. Setting to 1px / 1em
+        // doesn't work as this gives a negative w/h on some browsers.
+        textArea.style.width = '2em';
+        textArea.style.height = '2em';
+
+        // We don't need padding, reducing the size if it does flash render.
+        textArea.style.padding = 0;
+
+        // Clean up any borders.
+        textArea.style.border = 'none';
+        textArea.style.outline = 'none';
+        textArea.style.boxShadow = 'none';
+
+        // Avoid flash of the white box if rendered for any reason.
+        textArea.style.background = 'transparent';
+
+        textArea.value = text;
+
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+            var successful = document.execCommand('copy');
+            var msg = successful ? 'successful' : 'unsuccessful';
+            console.log('Copying text command was ' + msg);
+        } catch (err) {
+            console.log('Oops, unable to copy');
+        }
+
+        document.body.removeChild(textArea);
+    }
+
+    $('#automate_launch_mode').change(function(){
+        if($(this).val() === 'crontab') {
+            $('#crontab_details_block').show();
+        } else {
+            $('#crontab_details_block').hide();
+        }
+    });
+    $('#automate_launch_mode').change();
+
+    $('.btn_copy_clipboard').click(function(event){
+       let value = $(this).closest('.input-group').find('input').val();
+        copyTextToClipboard(value);
+
+        const messageDiv = document.getElementById('floatingMessage');
+        let timeout;
+
+        // Positionner le div à côté de la souris
+        messageDiv.style.left = event.pageX + 10 + 'px';
+        messageDiv.style.top = event.pageY + 10 + 'px';
+
+        // Afficher le message
+        messageDiv.style.display = 'block';
+
+        // Réinitialiser le timeout à chaque mouvement
+        clearTimeout(timeout);
+        timeout = setTimeout(function() {
+            messageDiv.style.display = 'none';
+        }, 300);
+
+    });
+
 });

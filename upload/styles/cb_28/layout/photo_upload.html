@@ -31,7 +31,7 @@
                 <div class="tab-pane fade in active clearfix" id="file-upload">
                     <div class="form_header">
                         <div class="instructions alert alert-block alert-info">
-                            {sprintf(lang(upload_right_guide_photo),$cbpage->get_page_link(3))}
+                            {lang(upload_right_guide_photo,$cbpage->get_page_link(3))}
                         </div>
                         <div class="clearfix" id="uploaderContainer">
                         {if $selected_collection}
@@ -44,7 +44,7 @@
                             {if !$collections}
                                     <p class="alert alert-danger">{lang code="no_collection_found_alert"}</p>
                             {/if}
-                                    <div class="form-group clearfix" {if !$collections}style='display:none;'{/if} >
+                                    <div class="form-group clearfix" {if !$collections}style='display:none;'{/if}>
                                         <label for="collectionSelection">{lang code="select_collection_upload"}</label>
                                         <select class="form-control" id="collectionSelection" name="collectionSelection">
                                         {foreach from=$collections key=key item=item}
@@ -55,7 +55,7 @@
 
                                 </div>
                             {if (has_access('allow_create_collection',false,false))}
-                                <div class="col-md-3 text-center">
+                                <div class="col-md-3 text-center" {if $collections}style='margin-top: 14px;'{/if}>
                                     <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
                                 </div>
                             {else}
@@ -80,15 +80,15 @@
                                             {if $field.id != 'type'}
                                                 <div class="form-group">
                                                     <label for="{$field.id}">{$field.title}</label>
-                                                {$field.class = 'form-control'}
-                                                {if $field.type == 'checkbox'}
-                                                    {$field.label_class = 'checkbox'}
-                                                    {$field.notShowSeprator = true}
-                                                {/if}
-                                                {$formObj->createField($field)}
-                                                {if $field.id == 'collection_tags'}
-                                                    <ul id="list_tags"></ul>
-                                                {/if}
+                                                    {$field.class = 'form-control'}
+                                                    {if $field.type == 'checkbox'}
+                                                        {$field.label_class = 'checkbox'}
+                                                        {$field.notShowSeprator = true}
+                                                    {/if}
+                                                    {$formObj->createField($field)}
+                                                    {if $field.id == 'collection_tags'}
+                                                        <ul id="list_tags"></ul>
+                                                    {/if}
                                                 </div>
                                             {/if}
                                         {/foreach}
@@ -110,7 +110,7 @@
                                 <span class="upload-logo"></span>
                                 <strong class="block-title">{lang code="drag_drop"}</strong>
                                 <p>
-                                    {sprintf(lang(page_upload_photo_limits),$Cbucket->configs['max_photo_size'])}
+                                    {lang(page_upload_photo_limits,$Cbucket->configs['max_photo_size'])}
                                 </p>
                             </div>
                             <div class="selectButtonContainer">
@@ -158,8 +158,8 @@
 <script type="text/javascript">
     var photo_extensions = '{","|implode:$cbphoto->exts}';
     var theme = '{$theme}';
-    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb";
-    var max_file_size ="{config('max_upload_size')*1000}kb";
+    var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+    var max_file_size ="{config('max_upload_size')}Mb";
     var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
     var collection_id = '{$selected_collection.collection_id}';
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');

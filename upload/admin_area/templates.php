@@ -2,10 +2,10 @@
 define('THIS_PAGE', 'templates');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $myquery, $cbtpl;
-$userquery->admin_login_check();
+global $pages, $myquery, $cbtpl;
+userquery::getInstance()->admin_login_check();
 $pages->page_redir();
-$userquery->perm_check('manage_template_access', true);
+userquery::getInstance()->perm_check('manage_template_access', true);
 
 if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
     redirect_to(BASEURL . DirPath::getUrl('admin_area'));
@@ -14,7 +14,7 @@ if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Templates Manager', 'url' => DirPath::getUrl('admin_area') . 'templates.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('templates'))), 'url' => DirPath::getUrl('admin_area') . 'templates.php'];
 
 if ($_GET['change']) {
     $myquery->set_template($_GET['change']);

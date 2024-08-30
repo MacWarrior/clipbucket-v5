@@ -246,7 +246,7 @@ function GetName($file)
         return $server_thumb_name;
     }
     /*server thumb files END */
-    $path = explode('/', $file);
+    $path = explode(DIRECTORY_SEPARATOR, $file);
     if (is_array($path)) {
         $file = $path[count($path) - 1];
     }
@@ -376,7 +376,7 @@ function get_directory_size(string $path, array $excluded = []): array
 }
 
 /**
- * Format file size in readable format
+ * TODO delete func => call instead System::get_readable_filesize
  *
  * @param : { integer } { $data } { size in bytes }
  *
@@ -384,20 +384,7 @@ function get_directory_size(string $path, array $excluded = []): array
  */
 function formatfilesize($data): string
 {
-    // bytes
-    if ($data < 1024) {
-        return $data . ' bytes';
-    }
-    // kilobytes
-    if ($data < 1024000) {
-        return round(($data / 1024), 1) . 'KB';
-    }
-    // megabytes
-    if ($data < 1024000000) {
-        return round(($data / 1024000), 1) . ' MB';
-    }
-
-    return round(($data / 1024000000), 1) . ' GB';
+    return System::get_readable_filesize($data, 2);
 }
 
 function getCommentAdminLink($type, $id): string
@@ -627,9 +614,8 @@ function pr($text, $pretty = false)
  */
 function user_id()
 {
-    global $userquery;
-    if ($userquery->userid != '' && $userquery->is_login) {
-        return $userquery->userid;
+    if (userquery::getInstance()->userid != '' && userquery::getInstance()->is_login) {
+        return userquery::getInstance()->userid;
     }
     return false;
 }
@@ -641,26 +627,23 @@ function user_id()
  */
 function user_name()
 {
-    global $userquery;
-    if ($userquery->user_name) {
-        return $userquery->user_name;
+    if (userquery::getInstance()->user_name) {
+        return userquery::getInstance()->user_name;
     }
-    return $userquery->get_logged_username();
+    return userquery::getInstance()->get_logged_username();
 }
 
 function user_email()
 {
-    global $userquery;
-    if ($userquery->email) {
-        return $userquery->email;
+    if (userquery::getInstance()->email) {
+        return userquery::getInstance()->email;
     }
     return false;
 }
 function user_dob()
 {
-    global $userquery;
-    if ($userquery->udetails['dob']) {
-        return $userquery->udetails['dob'];
+    if (userquery::getInstance()->udetails['dob']) {
+        return userquery::getInstance()->udetails['dob'];
     }
     return false;
 }
@@ -677,8 +660,7 @@ function user_dob()
  */
 function has_access($access, $check_only = true, $verify_logged_user = true): bool
 {
-    global $userquery;
-    return $userquery->login_check($access, $check_only, $verify_logged_user);
+    return userquery::getInstance()->login_check($access, $check_only, $verify_logged_user);
 }
 
 /**
@@ -808,11 +790,10 @@ function validate_collection_category($array = null)
  */
 function avatar($param)
 {
-    global $userquery;
     $udetails = $param['details'];
     $size = $param['size'];
     $uid = $param['uid'];
-    return $userquery->getUserThumb($udetails, $size, $uid);
+    return userquery::getInstance()->getUserThumb($udetails, $size, $uid);
 }
 
 /**
@@ -970,8 +951,7 @@ function display_sharing_opt($input)
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
 {
-    global $userquery;
-    return $userquery->get_user_vids($uid, $cond, $count_only);
+    return userquery::getInstance()->get_user_vids($uid, $cond, $count_only);
 }
 
 function error_list(): array
@@ -1071,8 +1051,7 @@ function username_check($username): bool
  */
 function user_exists($user): bool
 {
-    global $userquery;
-    return $userquery->username_exists($user);
+    return userquery::getInstance()->username_exists($user);
 }
 
 /**
@@ -1085,14 +1064,12 @@ function user_exists($user): bool
  */
 function email_exists($user): bool
 {
-    global $userquery;
-    return $userquery->duplicate_email($user);
+    return userquery::getInstance()->duplicate_email($user);
 }
 
 function check_email_domain($email): bool
 {
-    global $userquery;
-    return $userquery->check_email_domain($email);
+    return userquery::getInstance()->check_email_domain($email);
 }
 
 /**
@@ -1232,16 +1209,17 @@ function post_form_val($val, $filter = false)
  * Function used to return LANG variable
  *
  * @param      $var
+ * @param $params
  * @return array|string|string[]
  * @throws Exception
  */
-function lang($var)
+function lang($var, $params = [])
 {
     if ($var == '') {
         return '';
     }
-    if (empty(Language::getInstance()->arrayTranslation[$var])) {
 
+    if (empty(Language::getInstance()->arrayTranslation[$var])) {
         //check default value in db
         $translation = Language::getInstance()->getTranslationByKey($var, Language::$english_id)['translation'];
 
@@ -1249,10 +1227,14 @@ function lang($var)
             $translation = $var;
 
             if( Language::getInstance()->isTranslationSystemInstalled() ){
-                error_log('[LANG] Missing translation for "' . $var . '"' . PHP_EOL);
+                $msg = '[LANG] Missing translation for "' . $var . '"' . PHP_EOL;
+                error_log($msg);
 
                 if (in_dev()) {
-                    error_log(debug_backtrace_string());
+                    DiscordLog::sendDump($msg);
+                    $backtrace = debug_backtrace_string();
+                    error_log($backtrace);
+                    DiscordLog::sendDump($backtrace);
                 }
             }
         }
@@ -1262,7 +1244,16 @@ function lang($var)
 
     $array_str = ['{title}'];
     $array_replace = ['Title'];
-    return str_replace($array_str, $array_replace, $translation);
+    $lang = str_replace($array_str, $array_replace, $translation);
+    if( empty($params) ){
+        return $lang;
+    }
+
+    if( !is_array($params) ){
+        $params = [$params];
+    }
+
+    return vsprintf($lang, $params);
 }
 
 /**
@@ -1748,8 +1739,7 @@ function show_share_form($array)
 {
     assign('params', $array);
 
-    global $userquery;
-    $contacts = $userquery->get_contacts(user_id());
+    $contacts = userquery::getInstance()->get_contacts(user_id());
     assign('contacts', $contacts);
     Template('blocks/common/share.html');
 }
@@ -1874,8 +1864,7 @@ function count_pages($total, $count)
  */
 function get_user_level($id)
 {
-    global $userquery;
-    return $userquery->usr_levels[$id];
+    return userquery::getInstance()->usr_levels[$id];
 }
 
 /**
@@ -1973,7 +1962,7 @@ function validate_cb_form($input, $array)
                 }
                 if (isset($max_len)) {
                     if ($length > $max_len || $length < $min_len) {
-                        e(sprintf(lang('please_enter_val_bw_min_max'), $title, $min_len, $field['max_length']));
+                        e(lang('please_enter_val_bw_min_max', [$title, $min_len, $field['max_length']]));
                     }
                 }
                 if (function_exists($field['db_value_check_func'])) {
@@ -2065,7 +2054,7 @@ function nicetime($date, $istime = false): string
         $period = $period_sing[$j];
     }
 
-    return sprintf(lang($tense), $difference, $period);
+    return lang($tense, [$difference, $period]);
 }
 
 /**
@@ -2132,8 +2121,7 @@ function get_collections($param)
  */
 function get_users($param)
 {
-    global $userquery;
-    return $userquery->get_users($param);
+    return userquery::getInstance()->get_users($param);
 }
 
 /**
@@ -2498,8 +2486,7 @@ function subtitle($title)
  */
 function get_username($uid)
 {
-    global $userquery;
-    return $userquery->get_username($uid);
+    return userquery::getInstance()->get_username($uid);
 }
 
 /**
@@ -2851,6 +2838,9 @@ function include_js($params)
             case 'player':
                 $url = DirPath::getUrl('player');
                 break;
+            case 'vendor':
+                $url = DirPath::getUrl('vendor');
+                break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/js/';
                 break;
@@ -2891,6 +2881,12 @@ function include_css($params)
                 break;
             case 'admin':
                 $url = TEMPLATEURL . '/theme/css/';
+                break;
+            case 'vendor':
+                $url = DirPath::getUrl('vendor');
+                break;
+            case 'custom':
+                $url = DirPath::getUrl('files');
                 break;
         }
         return '<link rel="stylesheet" href="' . $url . $file . '">';
@@ -3556,8 +3552,7 @@ function get_browser_details($in = null, $assign = false)
  */
 function update_user_voted($array, $userid = null)
 {
-    global $userquery;
-    $userquery->update_user_voted($array, $userid);
+    userquery::getInstance()->update_user_voted($array, $userid);
 }
 
 /**

@@ -10,12 +10,12 @@
 			<h4>Select image to upload:</h4>
 			<input type="file" accept='image/*' name="fileToUpload"/>
 			<br/>
-			<input class="btn btn-primary" type="submit" value="Upload Image" name="submit_logo"/>
+			<input class="btn btn-primary" type="submit" value="{lang code='upload'}" name="submit_logo"/>
 		</form>
-		<h6>Recommended dimensions: 400 * 80px</h6>
+		<h6>Recommended dimensions: 200 * 40px</h6>
 	</div>
 	<div class="col-md-6">
-		<img src="{get_website_logo_path()}" class="img-thumbnail" alt="Logo" width="304" height="236"/>
+		<img src="{get_website_logo_path()}" class="img-thumbnail" alt="Logo" style="max-width:200px;max-height:100px;"/>
 	</div>
 </div>
 
@@ -26,11 +26,11 @@
 			<h4>Select image to upload:</h4>
 			<input type="file" accept='image/*' name="fileToUpload"/>
 			<br/>
-			<input class="btn btn-primary" type="submit" value="Upload Image" name="submit_favicon"/>
+			<input class="btn btn-primary" type="submit" value="{lang code='upload'}" name="submit_favicon"/>
 		</form>
-		<h6>Recommended dimensions: 192 * 192px</h6>
+		<h6>Recommended dimensions: 256 * 256px</h6>
 	</div>
 	<div class="col-md-6">
-		<img src="{get_website_favicon_path()}" class="img-thumbnail" alt="Logo" width="192" height="192"/>
+		<img src="{get_website_favicon_path()}" class="img-thumbnail" alt="Favicon" style="max-width:256px;max-height:256px;"/>
 	</div>
 </div>

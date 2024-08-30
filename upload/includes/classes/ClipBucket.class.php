@@ -101,6 +101,11 @@ class ClipBucket
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
             $_GET['page'] = 1;
         }
+
+        $filepath_custom_css = DirPath::get('files') . 'custom.css';
+        if( file_exists($filepath_custom_css) ){
+            $this->addCSS(['custom.css' => 'custom']);
+        }
     }
 
     /**
@@ -303,12 +308,11 @@ class ClipBucket
      */
     function initAdminMenu()
     {
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
+        $per = userquery::getInstance()->get_user_level(user_id());
 
         $menu_dashboard = [
             'title'   => 'Dashboard'
-            , 'class' => 'icon-dashboard'
+            , 'class' => 'glyphicon glyphicon-dashboard'
             , 'url'   => DirPath::getUrl('admin_area') . 'index.php'
         ];
         $this->addMenuAdmin($menu_dashboard, 1);
@@ -344,13 +348,13 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
             ];
             $menu_general['sub'][] = [
-                'title' => 'Manage Pages'
+                'title' => lang('manage_x', strtolower(lang('pages')))
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'
             ];
 
             if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' || config('enable_comments_collection') == 'yes') {
                 $menu_general['sub'][] = [
-                    'title' => 'Manage Comments'
+                    'title' => lang('manage_x', strtolower(lang('comments')))
                     , 'url' => DirPath::getUrl('admin_area') . 'comments.php'
                 ];
             }
@@ -360,8 +364,13 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'
             ];
             $menu_general['sub'][] = [
-                'title' => lang('manage_tags')
+                'title' => lang('manage_x', strtolower(lang('tags')))
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
+            ];
+
+            $menu_general['sub'][] = [
+                'title' => lang('manage_social_networks_links')
+                , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
             ];
 
             $this->addMenuAdmin($menu_general, 10);
@@ -373,7 +382,7 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-user'
                 , 'sub'   => [
                     [
-                        'title' => lang('grp_manage_members_title')
+                        'title' => lang('manage_x', strtolower(lang('users')))
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php'
                     ]
                     , [
@@ -381,7 +390,7 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'add_member.php'
                     ]
                     , [
-                        'title' => lang('manage_categories')
+                        'title' => lang('manage_x', strtolower(lang('categories')))
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
                     ]
                     , [
@@ -399,7 +408,7 @@ class ClipBucket
                 ]
             ];
 
-            if ($per['allow_manage_user_level'] == 'yes' || $userquery->level == 1) {
+            if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
                 $menu_users['sub'][] = [
                     'title' => 'User Levels'
                     , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'
@@ -433,7 +442,7 @@ class ClipBucket
             global $cbtpl, $cbplayer;
             if( count($cbtpl->get_templates()) > 1 || in_dev() ){
                 $sub[] = [
-                    'title' => 'Templates Manager'
+                    'title' => lang('manage_x', strtolower(lang('templates')))
                     , 'url' => DirPath::getUrl('admin_area') . 'templates.php'
                 ];
             }
@@ -445,7 +454,7 @@ class ClipBucket
 
             if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
                 $sub[] = [
-                    'title' => 'Players Manager'
+                    'title' => lang('manage_x', strtolower(lang('players')))
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
                 ];
             }
@@ -470,11 +479,11 @@ class ClipBucket
         $plugins_count = $plugins_available + $plugins_installed;
         if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
             $menu_plugin = [
-                'title'   => 'Plugin Manager'
+                'title'   => lang('manage_x', strtolower(lang('plugins')))
                 , 'class' => 'glyphicon glyphicon-tasks'
                 , 'sub'   => [
                     [
-                        'title' => 'Plugin Manager'
+                        'title' => lang('manage_x', strtolower(lang('plugins')))
                         , 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'
                     ]
                 ]
@@ -869,20 +878,20 @@ class ClipBucket
         $list_upload_limits = [];
 
         $post_max_size = ini_get('post_max_size');
-        $list_upload_limits[] = (int)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
+        $list_upload_limits[] = (float)$post_max_size * pow(1024, stripos('KMGT', strtoupper(substr($post_max_size, -1)))) / 1024;
 
         $upload_max_filesize = ini_get('upload_max_filesize');
-        $list_upload_limits[] = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
+        $list_upload_limits[] = (float)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
         if( config('enable_chunk_upload') == 'yes' ){
-            $list_upload_limits[] = (int)config('chunk_upload_size');
+            $list_upload_limits[] = (float)config('chunk_upload_size');
         }
 
         if( Network::is_cloudflare() ){
-            $list_upload_limits[] = (int)config('cloudflare_upload_limit');
+            $list_upload_limits[] = (float)config('cloudflare_upload_limit');
         }
 
-        return min($list_upload_limits).$suffix;
+        return (min($list_upload_limits)-0.01).$suffix;
     }
 
 }

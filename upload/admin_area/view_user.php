@@ -10,12 +10,17 @@ pages::getInstance()->page_redir();
 $userquery->login_check('member_moderation');
 
 $uid = $_GET['uid'];
-$udetails = $userquery->get_user_details($uid);
-
+unset($_REQUEST['uid']);
+if ($uid != $userquery->get_anonymous_user()) {
+    $udetails = $userquery->get_user_details($uid);
+}
+if (empty($udetails)) {
+    redirect_to('/members.php?user_not_found=1');
+}
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('users'))), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => DirPath::getUrl('admin_area') . 'view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
@@ -137,6 +142,15 @@ foreach($channel_profile_fields AS $field){
     }
 }
 assign('channel_settings', $channel_settings);
+$storage_use = 0;
+$storage_history = [];
+if (config('enable_storage_history') == 'yes') {
+    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser($uid),2);
+    $storage_history = User::getInstance()->getStorageHistoryByUser($uid);
+}
+assign('storage_use',$storage_use);
+assign('storage_history',$storage_history);
+
 $version = Update::getInstance()->getDBVersion();
 assign('show_categ', ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)));
 subtitle('View User');

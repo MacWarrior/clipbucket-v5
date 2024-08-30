@@ -13,7 +13,7 @@
 				<div class="main-content">
 					<div id="breadcrumbs" class="breadcrumbs">
 						<ul class="breadcrumb">
-							<li><a href="/admin_area/" class="icon-home home-icon"></a></li>
+							<li><a href="/admin_area/" class="glyphicon glyphicon-home"></a></li>
 							{foreach from=$breadcrumb item=page}
 								<li>{if !empty($page['url'])}<a href="{$page['url']}">{/if}{$page['title']}{if !empty($page['url'])}</a>{/if}</li>
 							{/foreach}
@@ -28,11 +28,11 @@
 	                        {/foreach}
 						{/if}
 
-						{if in_dev()}
-							{showDevWitch()}
-						{/if}
 					</div>
 				</div>
+				{if in_dev()}
+					{showDevWitch()}
+				{/if}
 			</div>
 			{include file="$layout_dir/blocks/spinner.html" }
 			{include file="$layout_dir/footer.html" }

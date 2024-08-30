@@ -3,15 +3,12 @@ define('BACK_END', true);
 define('FRONT_END', false);
 define('SLOGAN', 'Administration Panel');
 
-//Admin Area
-$admin_area = true;
-
-include('common.php');
+require_once 'common.php';
 ClipBucket::getInstance()->initAdminMenu();
 
 //Including Massuploader Class,
-require_once('classes/mass_upload.class.php');
-require_once('classes/ads.class.php');
+require_once DirPath::get('classes') . 'mass_upload.class.php';
+require_once DirPath::get('classes') . 'ads.class.php';
 
 global $db, $Smarty, $myquery;
 
@@ -37,17 +34,15 @@ define('TEMPLATEURLFO', DirPath::getUrl('styles') . ClipBucket::getInstance()->t
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', config('template_dir'));
 
-
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
 if( THIS_PAGE != 'system_info'){
-    if( !System::check_php_configs() ){
-        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
+    if( !System::check_global_configs() ){
+        e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
     }
 }
 
 Assign('baseurl', BASEURL);
-Assign('admindir', DirPath::getUrl('admin_area'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');

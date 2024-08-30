@@ -7,7 +7,6 @@
 }
 .breadcrumb>li>a {
 	padding: 0 4px;
-	color: #4c8fbd;
 	font-size: 13px;
 }
 .breadcrumb:first-child{
@@ -21,4 +20,7 @@
 	font-size: 10px;
 	text-align: center;
 	z-index: 3;
+}
+.thumb_banner + .thumb_banner {
+	top: 18px;
 }

@@ -6,7 +6,8 @@ define('THIS_PAGE', 'index');
 require 'includes/config.inc.php';
 global $pages, $userquery;
 $pages->page_redir();
-
+$anonymous_id = $userquery->get_anonymous_user();
+assign('anonymous_id', $anonymous_id);
 if (!$userquery->perm_check('view_videos', false, false, true) && !user_id()) {
     template_files('signup_or_login.html');
 } else {

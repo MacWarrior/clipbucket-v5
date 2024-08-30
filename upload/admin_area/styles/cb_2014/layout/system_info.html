@@ -72,7 +72,7 @@
                             {if !$phpVersionWeb}
                                 {lang code='not_found'}
                             {elseif !$phpVersionWebOK}
-                                {sprintf(lang("not_required_version"), 'PHP WEB',$phpVersionWeb, $phpVersionReq)}
+                                {lang("not_required_version", ['PHP WEB',$phpVersionWeb, $phpVersionReq])}
                             {/if}
                         </div>
                         {else}
@@ -107,7 +107,7 @@
                                  {if !$phpVersionCli}
                                     {lang code='php_cli_not_found'}
                                  {elseif !$phpVersionCliOK}
-                                    {sprintf(lang("not_required_version"), 'PHP CLI',$phpVersionCli, $phpVersionReq)}
+                                    {lang('not_required_version', ['PHP CLI',$phpVersionCli, $phpVersionReq])}
                                 {/if}
                             </span>
                         {else}
@@ -141,7 +141,7 @@
                                 {if !$ffmpegVersion}
                                     {lang code='not_found'}
                                 {elseif !$ffmpegVersionOK}
-                                    {sprintf(lang("not_required_version"), 'FFMPEG',$ffmpegVersion, $ffReq)}
+                                    {lang('not_required_version', ['FFMPEG',$ffmpegVersion, $ffReq])}
                                 {/if}
                             </div>
                         {else}
@@ -159,7 +159,7 @@
                                 {if !$ffprobe_path}
                                     {lang code='not_found'}
                                 {elseif !$ffprobe_path_OK}
-                                    {sprintf(lang("not_required_version"), 'FFProbe',$ffprobe_path, $ffReq)}
+                                    {lang('not_required_version', ['FFProbe',$ffprobe_path, $ffReq])}
                                 {/if}
                             </p>
                             {if is_array($ffprobe_path) && $ffprobe_path.error}
@@ -192,7 +192,7 @@
                                 {if !$serverMySqlVersion}
                                     {lang code='not_found'}
                                 {elseif !$serverMySqlVersionOk}
-                                    {sprintf(lang("not_required_version"), lang('mysql_client'),$serverMySqlVersion, $mysqlReq)}
+                                    {lang('not_required_version', [lang('mysql_client'),$serverMySqlVersion, $mysqlReq])}
                                 {/if}
                             </p>
                         {else}
@@ -288,6 +288,28 @@
                             <br/>{lang code='sse_error_please_use_php_fpm'}
                             {/if}
                         </div>
+                        <div class="row">
+                            {if $check_time}
+                            <label><img src="{$imageurl}/tick.png"/> Datetime :
+                                <strong>
+                                    {lang('datetime_synchro')}
+                                </strong>
+                            </label>
+                            {else}
+                            <label>PHP datetime :
+                                <strong>
+                                    {$datetime_datas['php']}
+                                </strong>
+                            </label>
+                            <label>DB datetime :
+                                <strong>
+                                    {$datetime_datas['bdd']}
+                                </strong>
+                            </label>
+                            <br/><img src="{$imageurl}/alert.png"/>
+                            {lang code='datetime_synchro_error'}
+                            {/if}
+                        </div>
 
                         {$show_warning = false}
 
@@ -374,6 +396,28 @@
                                     {if $phpCliShellExec}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
                                 </strong>
                             </label>
+                        </div>
+                        <div class="row">
+                            {if $check_time_cli}
+                            <label><img src="{$imageurl}/tick.png"/> Datetime :
+                                <strong>
+                                    {lang('datetime_synchro')}
+                                </strong>
+                            </label>
+                            {else}
+                            <label>PHP datetime :
+                                <strong>
+                                    {$datetime_datas_cli['php']}
+                                </strong>
+                            </label>
+                            <label>DB datetime :
+                                <strong>
+                                    {$datetime_datas_cli['bdd']}
+                                </strong>
+                            </label>
+                            <br/><img src="{$imageurl}/alert.png"/>
+                            {lang code='datetime_synchro_error'}
+                            {/if}
                         </div>
                     </div>
                     {/if}

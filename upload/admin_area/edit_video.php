@@ -1,36 +1,36 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $userquery, $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
+global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
-$video = $_GET['video'];
+$video_id = $_GET['video'];
 
 //Updating Video Details
 if (isset($_POST['update'])) {
     $Upload->validate_video_upload_form();
     if (empty($eh->get_error())) {
         $myquery->update_video();
-        Video::getInstance()->setDefaultPicture($video, $_POST['default_thumb']);
+        Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
         if( config('enable_video_poster') == 'yes' ){
-            Video::getInstance()->setDefaultPicture($video, $_POST['default_poster'] ?? '', 'poster');
+            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'] ?? '', 'poster');
         }
 
         if( config('enable_video_backdrop') == 'yes' ) {
-            Video::getInstance()->setDefaultPicture($video, $_POST['default_backdrop'] ?? '', 'backdrop');
+            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'] ?? '', 'backdrop');
         }
     }
 }
-$data = Video::getInstance()->getOne(['videoid'=>$video]);
+$data = Video::getInstance()->getOne(['videoid'=>$video_id]);
 
 /* Generating breadcrumb */
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
-$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video)];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
+$breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
 
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);
@@ -38,19 +38,19 @@ if (@$_GET['msg']) {
 
 //Performing Video Actions
 if ($_GET['mode'] != '') {
-    $modedata = $cbvid->action($_GET['mode'], $video);
+    $modedata = $cbvid->action($_GET['mode'], $video_id);
     assign('modedata', $modedata);
 }
 
 //Check Video Exists or Not
-if ($myquery->video_exists($video)) {
+if ($myquery->video_exists($video_id)) {
     //Deleting Comment
     $cid = $_GET['delete_comment'];
     if (!empty($cid)) {
         Comments::delete(['comment_id' => $cid]);
     }
 
-    assign('udata', $userquery->get_user_details($data['userid']));
+    assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
     $data['date_added'] = $date_added->format(DATE_FORMAT);
@@ -90,20 +90,14 @@ if (isset($_POST['del_cmt'])) {
     Comments::delete(['comment_id' => $_POST['cmt_id']]);
 }
 
+assign('uploader_info', User::getInstance()->getOne(['userid'=>$data['userid']]));
+
 $params = [];
 $params['type'] = 'v';
-$params['type_id'] = $video;
+$params['type_id'] = $video_id;
 $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
-
-function format_number($number)
-{
-    if ($number >= 1000) {
-        return $number / 1000 . 'k'; // NB: you will want to round this
-    }
-    return $number;
-}
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
@@ -116,12 +110,14 @@ ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
 
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
+
+assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $data['userid']);
 
 subtitle('Edit Video');
 template_files('edit_video.html');

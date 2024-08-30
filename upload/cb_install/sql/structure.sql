@@ -55,7 +55,7 @@ CREATE TABLE `{tbl_prefix}collections` (
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
-  `allow_comments` varchar(4) NOT NULL,
+  `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
   `total_comments` bigint(20) NOT NULL DEFAULT 0,
   `last_commented` datetime DEFAULT NULL,
@@ -543,13 +543,6 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_backdrop` int(3) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}video_favourites` (
-  `fav_id` int(11) NOT NULL,
-  `videoid` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE `{tbl_prefix}video_files` (
   `id` int(10) UNSIGNED NOT NULL,
   `status` int(2) NOT NULL,
@@ -747,9 +740,6 @@ ALTER TABLE `{tbl_prefix}video`
 ALTER TABLE `{tbl_prefix}video`
   ADD FULLTEXT KEY `title` (`title`);
 
-ALTER TABLE `{tbl_prefix}video_favourites`
-  ADD PRIMARY KEY (`fav_id`);
-
 ALTER TABLE `{tbl_prefix}video_files`
   ADD PRIMARY KEY (`id`),
   ADD FULLTEXT KEY `src_bitrate` (`src_bitrate`);
@@ -865,9 +855,6 @@ ALTER TABLE `{tbl_prefix}user_profile`
 ALTER TABLE `{tbl_prefix}video`
   MODIFY `videoid` bigint(20) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `{tbl_prefix}video_favourites`
-  MODIFY `fav_id` int(11) NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `{tbl_prefix}video_files`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
@@ -949,7 +936,14 @@ CREATE TABLE `{tbl_prefix}tools`(
     `language_key_description` VARCHAR(128) NOT NULL,
     `function_name`            VARCHAR(128) NOT NULL,
     `code`                     VARCHAR(32)  NOT NULL UNIQUE,
-    PRIMARY KEY (`id_tool`)
+    `frequency`                VARCHAR(30),
+    `previous_calculated_datetime` datetime,
+    `is_automatable`            BOOL DEFAULT TRUE,
+    `is_disabled`               BOOL DEFAULT FALSE,
+    PRIMARY KEY (`id_tool`),
+    CONSTRAINT chk_frequency_previous_calculated_datetime_required CHECK (
+        `frequency` IS NULL OR TRIM(`frequency`) = '' OR `previous_calculated_datetime` IS NOT NULL
+    )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}tools_histo_status`(
@@ -1172,7 +1166,8 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
     `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `search_key`      VARCHAR(128) NOT NULL UNIQUE,
     `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `total_results`   INT          NOT NULL
+    `total_results`   INT          NOT NULL,
+    `list_years`      TEXT         NULL
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
@@ -1192,3 +1187,47 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}tmdb_search_result`
     ADD CONSTRAINT `search_result` FOREIGN KEY (`id_tmdb_search`) REFERENCES `{tbl_prefix}tmdb_search` (`id_tmdb_search`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}timezones` (
+   `id` INT AUTO_INCREMENT PRIMARY KEY,
+   `timezone` VARCHAR(255) NOT NULL UNIQUE
+) ENGINE = InnoDB
+DEFAULT CHARSET = utf8mb4
+COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
+(
+    `id_user`       BIGINT   NOT NULL,
+    `datetime`      DATETIME NOT NULL DEFAULT NOW(),
+    `storage_used`  BIGINT   NOT NULL,
+    PRIMARY KEY (`id_user`, `datetime`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}users_storage_histo`
+    ADD CONSTRAINT `id_user_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE `{tbl_prefix}fontawesome_icons` (
+    `id_fontawesome_icon` int(11) NOT NULL,
+    `icon` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    ADD PRIMARY KEY (`id_fontawesome_icon`),
+    ADD UNIQUE KEY `icon` (`icon`);
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    MODIFY `id_fontawesome_icon` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `{tbl_prefix}social_networks_links` (
+    `id_social_networks_link` int(11) NOT NULL,
+    `id_fontawesome_icon` int(11) NOT NULL,
+    `title` varchar(64) NOT NULL,
+    `url` varchar(256) NOT NULL,
+    `social_network_link_order` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    ADD PRIMARY KEY (`id_social_networks_link`),
+    ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;

@@ -2,9 +2,9 @@
 define('THIS_PAGE', 'upload_thumb');
 require 'includes/config.inc.php';
 
-global $userquery, $myquery, $db, $Upload;
+global $myquery, $db, $Upload;
 
-$userquery->logincheck();
+userquery::getInstance()->logincheck();
 
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);
@@ -25,9 +25,25 @@ if ($myquery->video_exists($video)) {
     $data = get_video_details($video);
     $vid_file = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
 
+    $is_file_to_upload= false;
     # Uploading Thumbs
     if (!empty($_FILES['vid_thumb'])) {
-        $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory']);
+        $is_file_to_upload= true;
+        $files = $_FILES['vid_thumb'];
+        $type='c';
+    }
+    if (!empty($_FILES['vid_thumb_poster'])) {
+        $is_file_to_upload= true;
+        $files = $_FILES['vid_thumb_poster'];
+        $type='p';
+    }
+    if (!empty($_FILES['vid_thumb_backdrop'])) {
+        $is_file_to_upload= true;
+        $files = $_FILES['vid_thumb_backdrop'];
+        $type='b';
+    }
+    if ($is_file_to_upload) {
+        $Upload->upload_thumbs($data['file_name'], $files, $data['file_directory'], $type);
     }
 } else {
     $msg[] = lang('class_vdo_del_err');

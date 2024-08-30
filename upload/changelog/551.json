@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"64",
+  "revision":"120",
   "status":"dev",
   "detail":[
     {
@@ -12,19 +12,36 @@
         ,"Implement comments censor"
         ,"Implement video description censor"
         ,"Implement user profile censor"
+        ,"Implement video thumbs regeneration through SSE"
+        ,"Implement WIP migration"
+        ,"Implement missing video categorie fix tool"
+        ,"Implement video resolutions files deletion tool"
+        ,"Implement automated tasks"
+        ,"Implement users storage usage & history"
+        ,"Implement video posters & backdrops management"
+        ,"Implement TMDB search year filter"
+        ,"Implement Custom CSS"
+        ,"Implement per page configurations"
+        ,"Implement social networks links management"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
+        ,"Refactor collection items management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
+        ,"Add link from video edition page to uploader edition page"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
+        ,"Update self-update interface"
+        ,"Update activate photo button on photo edition page"
+        ,"Update video edition page display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Move sub-collections option to collection config tab"
+        ,"Use video poster in video manager if available"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
@@ -40,6 +57,22 @@
         ,"Fix user search by category"
         ,"Fix collection's tags saving"
         ,"Fix dashboard display"
+        ,"Fix discord config"
+        ,"Fix PHP CLI infos"
+        ,"Fix video file deletion <i>(#390)</i>"
+        ,"Fix video mass upload tags"
+        ,"Fix admin tools stuck on error"
+        ,"Fix admin tools SSE"
+        ,"Fix TMDB posters grabbing"
+        ,"Fix Nginx path not saving"
+        ,"Fix photo manager search"
+        ,"Fix conversion queue log url"
+        ,"Fix video manager search"
+        ,"Fix debug popin on website configurations page"
+        ,"Fix video last thumb deletion SQL error"
+        ,"Fix video edition status list"
+        ,"Fix default thumbnail after thumbnails regeneration"
+        ,"Fix collection manager pagination"
       ]
     },
     {
@@ -48,12 +81,20 @@
         "Implement TMDB search on front office"
         ,"Implement chunk upload for videos, photos & backgrounds <i>(#314)</i>"
         ,"Implement collection & channel most items sort"
+        ,"Implement video posters & backdrops management"
+        ,"Implement dark & light themes"
+        ,"Implement social networks links in footer & homepage sidebar"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
-        ,"Add edit button on video & photo pages <i>(#319)</i>"
+        ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
+        ,"Add management menus"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
+        ,"Update collection creation on photo upload"
+        ,"Update orphan photos management"
+        ,"Hide collection comments option when collection comments are disabled"
+        ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -75,15 +116,33 @@
         ,"Fix collection & channel most commented sort"
         ,"Fix profile tags"
         ,"Fix myaccount page display"
+        ,"Fix large file chunked upload"
+        ,"Fix video page display <i>(#387)</i>"
+        ,"Fix user avatar on video page <i>(#389)</i>"
+        ,"Fix collection creation when comments are fully disabled"
+        ,"Fix photo report"
+        ,"Fix collection item management page"
+        ,"Fix photo display on Windows hosts"
+        ,"Fix popular users avatar"
+        ,"Fix video watching with SEO URL"
+        ,"Fix favorite videos deletion"
+        ,"Fix sub-categories filter display"
+        ,"Fix collection default thumb when using sub-collections"
+        ,"Fix infinite loop when using sub-collections"
+        ,"Fix recursives categories"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
-        "Update Readme"
+        "Refactor anonymous user"
+        ,"Update Readme"
+        ,"Update composer.json"
         ,"Cleanup code"
+        ,"Use jQuery lib from composer"
         ,"Remove unused functions"
         ,"Remove unused files"
+        ,"Remove temp files on failed upload"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -97,12 +156,13 @@
         "Refactor log system"
         ,"Add option to only keep maximum resolution"
         ,"Reduce converted video filesize"
+        ,"Fix video conversion on Windows hosts"
       ]
     },
     {
       "title": "Installation & Update",
       "description": [
-        "Implement Windows installion script"
+        "Implement Windows installation script"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -118,6 +178,10 @@
         ,"Fix categories creation in update 5.5.0 - 331"
         ,"Fix dependancies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
+        ,"Fix SQL typo <i>(#417, #419)</i>"
+        ,"Fix SSE DB update"
+        ,"Fix migration on windows hosts"
+        ,"Fix PHP Cli detection"
       ]
     },
     {
@@ -139,13 +203,20 @@
       "description": [
         "Update Player to version 2.0.3"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
+        ,"Update Global Announcement to version 2.0.4"
+        ,"Update Editor's Pick to version 2.0.6"
+        ,"Remove Social Beast"
       ]
     },
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.14.1"
+        "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
+        ,"Update Windows installation script PHP to 8.3.10"
+        ,"Update Windows installation script FFMpeg to 7.0.2"
+        ,"Update Windows installation script MediaInfo to 24.06"
+        ,"Update FontAwesome to 4.7.0"
       ]
     }
   ]

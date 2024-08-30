@@ -104,7 +104,7 @@ function add_custom_field($array)
     foreach ($array as $key => $attr) {
         if ($key == 'name' || $key == 'title') {
             if (empty($attr)) {
-                e(sprintf(lang('cust_field_err'), $key));
+                e(lang('cust_field_err', $key));
             }
         }
 

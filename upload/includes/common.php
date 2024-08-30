@@ -4,8 +4,9 @@ ob_start();
 require_once 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
+require_once DirPath::get('classes') . 'WhoopsManager.php';
 
-$whoops = new \Whoops\Run;
+$whoops = \WhoopsManager::getInstance();
 if (file_exists(DirPath::get('temp') . 'development.dev')) {
     if( !defined('DEVELOPMENT_MODE') ){
         define('DEVELOPMENT_MODE', true);
@@ -46,9 +47,16 @@ $whoops->pushHandler(function($e){
 });
 $whoops->register();
 
+// Keep errors in php errors log file
+$whoops->pushHandler(function($e){
+    error_log($e->getMessage().PHP_EOL.$e->getTraceAsString());
+});
+
+$whoops->register();
+
 if (!@$in_bg_cron) {
     //Setting Session Max Life
-    ini_set('session.gc_maxlifetime', GARBAGE_TIMEOUT);
+    ini_set('session.gc_maxlifetime', COOKIE_TIMEOUT);
     session_set_cookie_params(COOKIE_TIMEOUT, '/');
     session_start();
 }
@@ -56,9 +64,6 @@ if (!@$in_bg_cron) {
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
-require_once DirPath::get('classes') . 'update.class.php';
-require_once DirPath::get('classes') . 'plugin.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 
 check_install('before');
 if (file_exists(DirPath::get('includes') . 'config.php')) {
@@ -67,6 +72,10 @@ if (file_exists(DirPath::get('includes') . 'config.php')) {
     require_once DirPath::get('includes') . 'dbconnect.php'; // Old config file
 }
 
+require_once DirPath::get('classes') . 'update.class.php';
+require_once DirPath::get('classes') . 'plugin.class.php';
+require_once DirPath::get('includes') . 'clipbucket.php';
+require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
@@ -81,6 +90,7 @@ require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
+require_once DirPath::get('classes') . 'social_networks.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -203,6 +213,11 @@ $cbphoto = new CBPhotos();
 $cbfeeds = new cbfeeds();
 
 check_install('after');
+
+$timezone = config('timezone');
+if(!empty($timezone) && $timezone !== false) {
+    date_default_timezone_set($timezone);
+}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];
@@ -383,5 +398,18 @@ register_action_remove_video('remove_video_files');
 cb_register_function('plupload_photo_uploader', 'uploaderDetails');
 
 cb_register_action('increment_playlist_played', 'view_playlist');
+
+/** Load automatic tools from user_activity */
+if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity') {
+    require_once DirPath::get('classes') .'admin_tool.class.php';
+    $tool = new AdminTool();
+
+    $dateTime = new DateTime();
+    $dateTime->modify('-1 minutes');
+
+    if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
+        AdminTool::launchCli($tool->getId());
+    }
+}
 
 include('admin.functions.php');

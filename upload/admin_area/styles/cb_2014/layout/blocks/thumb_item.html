@@ -1,0 +1,20 @@
+<div class="cbthumbs" id="thumb_{$vid_thumb|get_thumb_num}">
+    <div class="row-fluid">
+        <ul class="ace-thumbnails">
+            <li>
+                {if $type != 'poster'}
+                <img src="{$vid_thumb}" height="94" width="150"/>
+                {else}
+                <img src="{$vid_thumb}" height="150" width="100"/>
+                {/if}
+                <div class="tools tools-bottom">
+                    {if $vid_thumb|getname!='processing'}
+                    <a href="javascript:void(0);" title="{lang code='delete'}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}', '{$type}');">
+                        <i class="icon-remove red"></i>
+                    </a>
+                    {/if}
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

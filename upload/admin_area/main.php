@@ -121,6 +121,12 @@ if (isset($_POST['update'])) {
         , 'enable_comments_photo'
         , 'enable_comments_collection'
         , 'enable_comments_channel'
+        , 'photo_rating'
+        , 'own_photo_rating'
+        , 'enable_storage_history'
+        , 'enable_storage_history_fo'
+        , 'enable_social_networks_links_footer'
+        , 'enable_social_networks_links_home_sidebar'
         , 'enable_visual_editor_comments'
     ];
 
@@ -129,7 +135,6 @@ if (isset($_POST['update'])) {
         , 'enable_update_checker'
         , 'allow_language_change'
         , 'allow_registeration'
-        , 'allow_template_change'
         , 'pick_geo_country'
         , 'email_verification'
         , 'show_collapsed_checkboxes'
@@ -143,8 +148,6 @@ if (isset($_POST['update'])) {
         , 'bits_color_warning'
         , 'video_rating'
         , 'own_video_rating'
-        , 'photo_rating'
-        , 'own_photo_rating'
         , 'comment_rating'
         , 'collection_rating'
         , 'own_collection_rating'
@@ -163,7 +166,6 @@ if (isset($_POST['update'])) {
         'allow_unicode_usernames',
         'allow_username_spaces',
         'allow_registeration',
-        'allow_template_change',
         'enable_advertisement',
         'allow_upload',
         'anonym_comments',
@@ -287,7 +289,6 @@ if (isset($_POST['update'])) {
 
         'resize',
         'remoteUpload',
-        'recently_viewed_limit',
 
         'send_comment_notification',
         'site_title',
@@ -427,7 +428,15 @@ if (isset($_POST['update'])) {
 
         'hide_empty_collection',
         'only_keep_max_resolution',
-        'playlistsSection'
+        'playlistsSection',
+        'nginx_path',
+        'automate_launch_mode',
+        'timezone',
+        'enable_storage_history',
+        'enable_storage_history_fo',
+        'default_theme',
+        'enable_social_networks_links_footer',
+        'enable_social_networks_links_home_sidebar'
     ];
 
     foreach ($opt_list as $optl) {
@@ -445,8 +454,6 @@ if (isset($_POST['update'])) {
         'min_video_title',
         'min_video_tags',
         'min_video_desc',
-
-        'recently_viewed_limit',
 
         'search_list_per_page',
 
@@ -530,6 +537,9 @@ Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle('Website Configurations');
 
+$filepath_custom_css = DirPath::get('files') . 'custom.css';
+assign('custom_css', $_POST['custom_css'] ?? file_get_contents($filepath_custom_css));
+
 if (!empty($_POST)) {
     $filepath_dev_file = DirPath::get('temp') . 'development.dev';
     if (!empty($_POST['enable_dev_mode'])) {
@@ -547,11 +557,7 @@ if (!empty($_POST)) {
             assign('DEVELOPMENT_MODE', false);
         }
     }
-} else {
-    assign('DEVELOPMENT_MODE', in_dev());
-}
 
-if( !empty($_POST['discord_error_log']) ){
     if (!empty($_POST['discord_webhook_url']) && $_POST['discord_error_log'] == 'yes') {
         if (!filter_var($_POST['discord_webhook_url'], FILTER_VALIDATE_URL) || strpos($_POST['discord_webhook_url'], 'https://discord.com/') !== 0) {
             e(lang('discord_webhook_url_invalid'));
@@ -561,10 +567,42 @@ if( !empty($_POST['discord_error_log']) ){
     } else {
         DiscordLog::getInstance()->disable();
     }
+
+    if( !empty($_POST['custom_css']) ){
+        if (is_writable(DirPath::get('files'))) {
+            file_put_contents($filepath_custom_css, $_POST['custom_css']);
+        } else {
+            e('"files" directory is not writeable');
+        }
+    } else {
+        unlink($filepath_custom_css);
+    }
+
+} else {
+    assign('DEVELOPMENT_MODE', in_dev());
 }
 
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
+
+$tool = AdminTool::getToolByCode('automate');
+if(!empty($tool)) {
+    $id_tool_automate = $tool['id_tool'];
+    $cron_line = '* * * * * '.System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.(int) $id_tool_automate;
+}
+assign('cron_copy_paste', $cron_line ?? '');
+
+$allTimezone = [];
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
+    $query = /** @lang MySQL */'SELECT timezones.timezone
+                            FROM '.cb_sql_table('timezones').'
+                            ORDER BY timezones.timezone';
+    $rs = Clipbucket_db::getInstance()->_select($query);
+    foreach ($rs as $timezone) {
+        $allTimezone[] = $timezone['timezone'];
+    }
+}
+assign('allTimezone', $allTimezone);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

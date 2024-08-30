@@ -4,9 +4,9 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
+global $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-$userquery->perm_check('view_video', true);
+userquery::getInstance()->perm_check('view_video', true);
 $pages->page_redir();
 
 $c = (int)$_GET['cid'];
@@ -86,6 +86,10 @@ if ($cbcollection->is_viewable($c)) {
     $Cbucket->show_page = false;
 }
 
+assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_collection.php?collection=' .$c);
+assign('link_edit_fo',  '/manage_collections.php?mode=edit_collection&cid=' . $c);
+
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it'.$min_suffixe.'.js'                                 => 'admin'

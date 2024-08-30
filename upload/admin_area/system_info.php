@@ -109,6 +109,17 @@ assign('php_extensions_list', System::get_php_extensions_list());
 
 assign('disks_usage', System::get_disks_usage());
 
+$datetime_datas = [];
+$check_time = System::isDateTimeSynchro($datetime_datas);
+assign('check_time', $check_time);
+assign('datetime_datas', $datetime_datas);
+
+$current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+$datetime_datas_cli = [];
+$check_time_cli = System::isDateTimeSynchro($datetime_datas_cli, $current_datetime_cli);
+assign('check_time_cli', $check_time_cli);
+assign('datetime_datas_cli', $datetime_datas_cli);
+
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();

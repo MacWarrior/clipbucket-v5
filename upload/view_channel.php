@@ -18,10 +18,9 @@ $u = $u ?: $_GET['u'];
 $u = mysql_clean($u);
 
 $udetails = userquery::getInstance()->get_user_details($u);
-if (!$udetails) {
-    if ($_GET['seo_diret'] != 'yes') {
-        e(lang('usr_exist_err'));
-        ClipBucket::getInstance()->show_page = false;
+if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous_user()) {
+    if ($_GET['seo_diret'] != 'yes' ) {
+        redirect_to('/channels.php?no_user=1');
     } else {
         header('HTTP/1.0 404 Not Found');
         if (file_exists(LAYOUT . '/404.html')) {
@@ -29,7 +28,7 @@ if (!$udetails) {
         } else {
             $data = '404_error';
             if (has_access('admin_access')) {
-                e(sprintf(lang('err_warning'), '404', "http://docs.clip-bucket.com/?p=154"), 'w');
+                e(lang('err_warning', ['404', 'http://docs.clip-bucket.com/?p=154']), 'w');
             }
             e(lang($data));
         }
@@ -79,7 +78,7 @@ if (user_id() != $udetails['userid']) {
         e(lang('you_cant_view_profile'));
         ClipBucket::getInstance()->show_page = false;
     } elseif ($perms == 'friends' && !userquery::getInstance()->is_confirmed_friend($udetails['userid'], user_id())) {
-        e(sprintf(lang('only_friends_view_channel'), $udetails['username']));
+        e(lang('only_friends_view_channel', $udetails['username']));
 
         if (!has_access('admin_access', true)) {
             ClipBucket::getInstance()->show_page = false;
@@ -88,7 +87,7 @@ if (user_id() != $udetails['userid']) {
     //Checking if user is not banned by admin
     if (user_id()) {
         if (userquery::getInstance()->is_user_banned(user_name(), $udetails['userid'], $udetails['banned_users'])) {
-            e(sprintf(lang('you_are_not_allowed_to_view_user_channel'), $udetails['username']));
+            e(lang('you_are_not_allowed_to_view_user_channel', $udetails['username']));
             assign('isBlocked', 'yes');
             if (!has_access('admin_access', true)) {
                 ClipBucket::getInstance()->show_page = false;
@@ -97,7 +96,7 @@ if (user_id() != $udetails['userid']) {
     }
 }
 
-subtitle(sprintf(lang('user_s_channel'), $udetails['username']));
+subtitle(lang('user_s_channel', $udetails['username']));
 
 if( ClipBucket::getInstance()->show_page ){
     $channel_profile_fields = userquery::getInstance()->load_user_fields($p,'profile');
@@ -143,6 +142,12 @@ if( ClipBucket::getInstance()->show_page ){
     $videos = Video::getInstance()->getAll($params);
 
     assign('uservideos', $videos);
+    $popular_users = User::getInstance()->getAll([
+        'order'=>'users.profile_hits DESC',
+        'limit'=>'5',
+        'condition'=>'usr_status = \'ok\' AND users.userid != \''. mysql_clean($udetails['userid']).'\''
+    ]);
+    assign('popular_users',$popular_users);
 }
 
 display_it();

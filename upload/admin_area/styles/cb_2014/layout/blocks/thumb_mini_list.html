@@ -2,7 +2,7 @@
   <h5>{lang code="extracted_thumbs"}</h5>
   <ul class="ace-thumbnails thumb">
     {foreach from=$vidthumbs item=vid_thumb}
-    <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_thumb}class="selected"{/if} title="{sprintf(lang('select_as_default_x'),lang('thumbnail'))}">
+    <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_thumb}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
       <label for="poster_{$vid_thumb|get_thumb_num}">
         <span class="content_bottom">
           <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
@@ -11,20 +11,21 @@
     </li>
     {/foreach}
   </ul>
-
-  {if !empty($vidthumbs_custom)}
-  <hr/>
-  <h5>{lang code="custom_thumbs"}</h5>
-  <ul class="ace-thumbnails thumb">
-    {foreach from=$vidthumbs_custom item=vid_thumb}
-    <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_thumb}class="selected"{/if} title="{sprintf(lang('select_as_default_x'),lang('thumbnail'))}">
-      <label for="poster_{$vid_thumb|get_thumb_num}">
-        <span class="content_bottom">
-          <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
-        </span>
-      </label>
-    </li>
-    {/foreach}
-  </ul>
-  {/if}
 </div>
+  {if !empty($vidthumbs_custom)}
+  <div class="row">
+    <hr/>
+    <h5>{lang code="custom_thumbs"}</h5>
+    <ul class="ace-thumbnails thumb">
+      {foreach from=$vidthumbs_custom item=vid_thumb}
+      <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_thumb}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
+        <label for="poster_{$vid_thumb|get_thumb_num}">
+          <span class="content_bottom">
+            <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
+          </span>
+        </label>
+      </li>
+      {/foreach}
+    </ul>
+  </div>
+{/if}

@@ -76,7 +76,7 @@ class Tmdb
 
     public function moviePosterBackdrops($movie_id)
     {
-        return $this->requestAPI('movie/' . $movie_id . '/images', ['include_image_language' => $this->language . ',null']);
+        return $this->requestAPI('movie/' . $movie_id . '/images',['language'=>'']);
     }
 
     public function setLanguage($language)
@@ -86,7 +86,7 @@ class Tmdb
 
     public function requestAPI($url, $param = [])
     {
-        if (empty($param['language'])) {
+        if (!isset($param['language'])) {
             $param['language'] = $this->language;
         }
         $param['include_adult'] = config('enable_tmdb_mature_content') == 'yes' ? 'true' : 'false';
@@ -99,10 +99,11 @@ class Tmdb
      * @param string $sort_order
      * @param string $limit
      * @param bool $count
+     * @param string $year
      * @return array|int
      * @throws Exception
      */
-    public function getCacheFromQuery(string $query, string $sort = 'release_date', string $sort_order = 'DESC', string $limit = '1', bool $count = false)
+    public function getCacheFromQuery(string $query, string $sort = 'release_date', string $sort_order = 'DESC', string $limit = '1', bool $count = false, string $year='0000')
     {
         $search_adult = '';
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(Tmdb::MIN_VERSION_IS_ADULT, Tmdb::MIN_REVISION_IS_ADULT)) {
@@ -115,10 +116,15 @@ class Tmdb
             $sql_limit = 'LIMIT ' . create_query_limit($limit, config('tmdb_search'));
         }
 
+        $sql_year = '';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') && ($year != '0000' && !empty($year))) {
+                $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
+        }
         $sql = 'SELECT TSR.* 
                 FROM ' . tbl('tmdb_search') . ' TS
                 INNER JOIN ' . tbl('tmdb_search_result') . ' TSR ON TS.id_tmdb_search = TSR.id_tmdb_search
-                WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' '. $search_adult . '
+                WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' '. $search_adult . ' 
+                ' . $sql_year . '
                 ORDER BY ' . mysql_clean($sort) . ' ' . mysql_clean($sort_order) . '
                 '.$sql_limit
                 ;
@@ -157,12 +163,20 @@ class Tmdb
      * @param string $query
      * @param array $results
      * @param int $total_results
+     * @param array $years
      * @return bool|mysqli_result
      * @throws Exception
      */
-    public function setQueryInCache(string $query, array $results, int $total_results)
+    public function setQueryInCache(string $query, array $results, int $total_results, array $years)
     {
-        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), ['search_key', 'total_results'], [strtolower($query), $total_results]);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106')) {
+            $fields = ['search_key', 'total_results', 'list_years'];
+            $values = [strtolower($query), $total_results, json_encode($years)];
+        } else {
+            $fields = ['search_key', 'total_results'];
+            $values = [strtolower($query), $total_results];
+        }
+        Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), $fields, $values);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
         $can_is_adult = false;
@@ -227,7 +241,15 @@ class Tmdb
         if( config('tmdb_get_poster') == 'yes'  && config('enable_video_poster') == 'yes' ){
             Video::getInstance()->deletePictures($video_info, 'poster');
             $movie_posters = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['posters'];
-            foreach ($movie_posters as $movie_poster) {
+            $language_movie_posters = array_filter($movie_posters, function ($elem){
+                return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
+            });
+            if (count($language_movie_posters) > 0) {
+                $poster_iterate = $language_movie_posters;
+            } else {
+                $poster_iterate = $movie_posters;
+            }
+            foreach ($poster_iterate as $movie_poster) {
                 $path_without_slash = str_replace('/','', $movie_poster['file_path']);
                 $url = Tmdb::IMAGE_URL . $movie_poster['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
@@ -246,7 +268,15 @@ class Tmdb
         if( config('tmdb_get_backdrop') == 'yes'  && config('enable_video_backdrop') == 'yes' ){
             Video::getInstance()->deletePictures($video_info, 'backdrop');
             $movie_backdrops = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['backdrops'];
-            foreach ($movie_backdrops as $movie_backdrop) {
+            $language_movie_backdrops = array_filter($movie_backdrops, function ($elem){
+                return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
+            });
+            if (count($language_movie_backdrops) > 0) {
+                $backdrop_iterate = $language_movie_backdrops;
+            } else {
+                $backdrop_iterate = $movie_backdrops;
+            }
+            foreach ($backdrop_iterate as $movie_backdrop) {
                 $path_without_slash = str_replace('/','', $movie_backdrop['file_path']);
                 $url = Tmdb::IMAGE_URL . $movie_backdrop['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
@@ -345,36 +375,47 @@ class Tmdb
         $cache_results = Tmdb::getInstance()->getSearchInfo($title);
         if (!empty($cache_results)) {
             $total_rows = $cache_results[0]['total_results'];
+            $years = json_decode($cache_results[0]['list_years']);
         } else {
             $tmdb_results = [];
             $page_tmdb = 1;
+            $years = [];
             do {
                 $results = Tmdb::getInstance()->searchMovie($title, $page_tmdb)['response'];
                 $total_rows = $results['total_results'];
                 $tmdb_results = array_merge($tmdb_results, $results['results']);
+
+                foreach ( $results['results'] as $result) {
+                    $year = substr($result['release_date'], 0,4);
+                    if (!in_array($year, $years) && !empty($year)) {
+                        $years[]=$year;
+                    }
+                }
                 $page_tmdb++;
                 if (!empty($results['error'])) {
                     e(lang($results['error']));
                     break;
                 }
             } while (!empty($results['results']));
-
             if (!empty($tmdb_results)) {
+            rsort($years);
                 try {
-                    Tmdb::getInstance()->setQueryInCache($title, $tmdb_results, $total_rows);
+                    Tmdb::getInstance()->setQueryInCache($title, $tmdb_results, $total_rows, $years);
                 } catch (Exception $e) {
                     e($e->getMessage());
                 }
             }
         }
-        $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, $_POST['page']);
+        $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, $_POST['page'], false, $params['year']);
+
         //use different sql to get numbers of rows
-        $total_rows = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, 0, true);
+        $total_rows = Tmdb::getInstance()->getCacheFromQuery($title, $sort, $sort_order, 0, true, $params['year']);
         $total_pages = count_pages($total_rows, config('tmdb_search'));
         return [
             'final_results' => $final_results,
             'total_pages'   => $total_pages,
             'title'         => $title,
+            'years'         => $years,
             'sort_order'    => $sort_order,
             'videoid'       => $video_info['videoid']
         ];

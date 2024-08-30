@@ -1,46 +1,28 @@
 <fieldset class="fieldset">
-  <h4>{lang code="extracted_thumbs"}</h4>
-  {foreach from=$vidthumbs item=vid_thumb}
-  <div class="cbthumbs" id="thumb_{$vid_thumb|get_thumb_num}">
-    <div class="row-fluid">
-      <ul class="ace-thumbnails">
-        <li>
-          <img src="{$vid_thumb}" height="94" width="150"/>
-          <div class="tools tools-bottom">
-            {if $vid_thumb|getname!='processing'}
-            <a href="javascript:void(0);" title="{lang code='delete'}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}');">
-              <i class="icon-remove red"></i>
-            </a>
-            {/if}
-          </div>
-        </li>
-      </ul>
-    </div>
+  <h4>
+    {if $type == 'thumbs'}
+      {lang code="extracted_thumbs"}
+    {elseif $type == 'poster'}
+      {lang code="poster_list"}
+    {else}
+      {lang code="backdrop_list"}
+    {/if}
+  </h4>
+  <div id="auto_thumbs">
+    {foreach from=$vidthumbs item=vid_thumb}
+      {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}
+    {/foreach}
   </div>
-  {/foreach}
   <div style="clear:both;"></div>
 
   {if !empty($vidthumbs_custom)}
   <hr/>
   <h4>{lang code="custom_thumbs"}</h4>
-  {foreach from=$vidthumbs_custom item=vid_thumb}
-  <div class="cbthumbs" id="thumb_{$vid_thumb|get_thumb_num}">
-    <div class="row-fluid">
-      <ul class="ace-thumbnails">
-        <li>
-          <img src="{$vid_thumb}" height="94" width="150"/>
-          <div class="tools tools-bottom">
-            {if $vid_thumb|getname!='processing'}
-            <a href="javascript:void(0);" title="{lang code='delete'}" onclick="delete_thumb({$data.videoid}, '{$vid_thumb|get_thumb_num}');">
-              <i class="icon-remove red"></i>
-            </a>
-            {/if}
-          </div>
-        </li>
-      </ul>
-    </div>
+  <div id="custom_thumbs">
+    {foreach from=$vidthumbs_custom item=vid_thumb}
+      {include file="$style_dir/blocks/thumb_item.html" data=$data vid_thumb=$vid_thumb}
+    {/foreach}
   </div>
-  {/foreach}
   <div style="clear:both;"></div>
   {/if}
 </fieldset>

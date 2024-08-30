@@ -92,7 +92,7 @@ class Language
 
         $select = tbl('languages_translations') . ' AS LT
         INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = Clipbucket_db::getInstance()->select($select, '*', ' language_key = \'' . mysql_clean($language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
+        $results = Clipbucket_db::getInstance()->select($select, '*', ' LK.language_key = \'' . mysql_clean($language_key) . '\' AND LT.language_id = \'' . mysql_clean($language_id) . '\'');
         if (!empty($results)) {
             return $results[0];
         }
@@ -116,7 +116,7 @@ class Language
 
         $select = tbl('languages_translations') . ' AS LT
         INNER JOIN ' . tbl('languages_keys') . ' AS LK ON LK.id_language_key = LT.id_language_key';
-        $results = Clipbucket_db::getInstance()->select($select, '*', ' id_language_key = \'' . mysql_clean($id_language_key) . '\' AND language_id = \'' . mysql_clean($language_id) . '\'');
+        $results = Clipbucket_db::getInstance()->select($select, '*', ' LK.id_language_key = \'' . mysql_clean($id_language_key) . '\' AND LT.language_id = \'' . mysql_clean($language_id) . '\'');
         if (!empty($results)) {
             return $results[0];
         }

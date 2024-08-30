@@ -16,6 +16,9 @@ $get_limit = create_query_limit($page, config('photo_main_list'));
 $params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
 $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
+if (!has_access('admin_access', true)) {
+    $params['exclude_orphan'] = true;
+}
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
@@ -34,9 +37,11 @@ if( empty($photos) ){
 }
 
 $total_pages = count_pages($count, config('photo_main_list'));
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);
+assign('url_edit', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=');
+assign('is_admin', userquery::getInstance()->admin_login_check(true));
 
 subtitle(lang('photos'));
 //Displaying The Template

@@ -22,7 +22,7 @@ $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 if ($_GET['active'] == 'no') {
     $breadcrumb[1] = ['title' => 'List Inactive Videos', 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 } else {
-    $breadcrumb[1] = ['title' => lang('videos_manager'), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
+    $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 }
 
 if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
@@ -143,27 +143,31 @@ if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version
         $all_category_ids[] = $cats['category_id'];
     }
 }
-
-if (isset($_GET['search'])) {
+if (!empty($_GET['active'])) {
+    $params = ['active' => $_GET['active']];
+    assign('url_active', $_GET['active']);
+}
+if (isset($_POST['search'])) {
     $params = [
-        'videoid'  => $_GET['videoid'] ?? false,
-        'videokey' => $_GET['videokey'] ?? false,
-        'title'    => $_GET['title'] ?? false,
-        'tags'     => $_GET['tags'] ?? false,
-        'userid'   => $_GET['userid'] ?? false,
-        'category' => $_GET['category'] ?? false,
-        'featured' => $_GET['featured'] ?? false,
-        'active'   => $_GET['active'] ?? false,
-        'status'   => $_GET['status'] ?? false
+        'videoid'  => $_POST['videoid'] ?? false,
+        'videokey' => $_POST['videokey'] ?? false,
+        'title'    => $_POST['title'] ?? false,
+        'tags'     => $_POST['tags'] ?? false,
+        'userid'   => $_POST['userid'] ?? false,
+        'category' => $_POST['category'] ?? false,
+        'featured' => $_POST['featured'] ?? false,
+        'active'   => $_POST['active'] ?? false,
+        'status'   => $_POST['status'] ?? false
     ];
 }
-
+assign('param_search', $params);
 //Getting Video List
 $params['limit'] = $get_limit;
 if (!$params['order']) {
     $params['order'] = ' videoid DESC ';
 }
 
+assign('anonymous_id', $userquery->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
 Assign('videos', $videos);
 
@@ -180,6 +184,6 @@ if( empty($videos) ){
 $total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
-subtitle(lang('videos_manager'));
+subtitle(lang('manage_x', strtolower(lang('videos'))));
 template_files('video_manager.html');
 display_it();

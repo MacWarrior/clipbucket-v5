@@ -1,18 +1,11 @@
 <?php
-/* 
- ****************************************************************************************************
- | Copyright (c) 2007-2008 Clip-Bucket.com. All rights reserved.											|
- | @ Author : ArslanHassan																			|
- | @ Software : ClipBucket , © PHPBucket.com														|
- ****************************************************************************************************
-*/
-
+define('THIS_PAGE', 'logo_change');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-$userquery->admin_login_check();
-$pages->page_redir();
 
+userquery::getInstance()->admin_login_check();
+pages::getInstance()->page_redir();
 
-subtitle("Logo Changer");
+subtitle('Logo Changer');
 
 template_files('under_development.html');
 display_it();

@@ -41,7 +41,7 @@ function video_playable($id): bool
         return true;
     }
     if ($vdo['broadcast'] == 'private'
-        && !$userquery->is_confirmed_friend($vdo['userid'], user_id())
+        && !userquery::getInstance()->is_confirmed_friend($vdo['userid'], user_id())
         && !is_video_user($vdo)
         && !has_access('video_moderation', true)
         && $vdo['userid'] != $uid) {
@@ -109,7 +109,7 @@ function video_playable($id): bool
  * @return array|string
  * @throws Exception
  */
-function get_thumb($vdetails, $multi = false, $size = false, $type = false)
+function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max_id = null)
 {
     if (is_array($vdetails)) {
         if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
@@ -125,6 +125,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
     } else {
         if (is_numeric($vdetails)) {
             $vid = $vdetails;
+            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
         } else {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
@@ -174,6 +175,10 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false)
 
     if ($type) {
         $where[] = ' type = \'' . $type . '\'';
+    }
+
+    if (!empty($max_id)) {
+        $where[] = ' id > ' . mysql_clean($max_id);
     }
 
     $resThumb = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', implode(' AND ', $where));
@@ -253,10 +258,6 @@ function create_thumb($video_db, $multi, $size)
                 $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], VERSION]);
             }
         }
-    } else {
-        //insert default
-        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_db['videoid'], '', '', '', VERSION, 'auto']);
-        error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
     return get_thumb($video_db['videoid'], $multi, $size);
 }
@@ -786,17 +787,25 @@ function get_thumb_num($name): string
  * @param $num
  * @throws Exception
  */
-function delete_video_thumb($videoDetails, $num)
+function delete_video_thumb($videoDetails, $num, $type)
 {
-    global $db;
-    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .'[-.]*');
+    $db = Clipbucket_db::getInstance();
+    $type_file = array_search($type,Upload::getInstance()->types_thumb);
+    if (!empty($type_file) && in_array($type_file,['p','b']) ) {
+        $type_search = '-' . $type_file . '.*';
+        $lang_key = $type;
+    } else {
+        $type_search = '[-.]*';
+        $lang_key = 'thumbs';
+    }
+    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .$type_search);
     if ($files) {
         foreach ($files as $file) {
             if (file_exists($file)) {
                 unlink($file);
             }
         }
-        e(lang('video_thumb_delete_msg'), 'm');
+        e(lang($lang_key . '_delete_successfully'), 'm');
     } else {
         e(lang('video_thumb_delete_err'));
     }
@@ -808,8 +817,22 @@ function delete_video_thumb($videoDetails, $num)
     if (count($thumbs) == 0) {
         create_thumb($videoDetails, '', '');
     }
-    if ($videoDetails['default_thumb'] == $num) {
-        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+    switch ($type_file) {
+        case 'p':
+            if ($videoDetails['default_poster'] == $num) {
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
+        case 'b':
+            if ($videoDetails['default_backdrop'] == $num) {
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
+        default:
+            if ($videoDetails['default_thumb'] == $num) {
+                $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE cast(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) , 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
     }
 }
 
@@ -870,7 +893,6 @@ function remove_video_subtitles($vdetails)
  */
 function call_watch_video_function($vdo)
 {
-    global $userquery;
     $funcs = get_functions('watch_video_functions');
 
     if (is_array($funcs) && count($funcs) > 0) {
@@ -885,7 +907,7 @@ function call_watch_video_function($vdo)
 
     $userid = user_id();
     if ($userid) {
-        $userquery->increment_watched_videos($userid);
+        userquery::getInstance()->increment_watched_videos($userid);
     }
 }
 
@@ -962,13 +984,12 @@ function get_videos($param)
  */
 function video_users($users)
 {
-    global $userquery;
     if (!empty($users)) {
         $users_array = explode(',', $users);
     }
     $new_users = [];
     foreach ($users_array as $user) {
-        if ($user != user_name() && !is_numeric($user) && $userquery->user_exists($user)) {
+        if ($user != user_name() && !is_numeric($user) && userquery::getInstance()->user_exists($user)) {
             $new_users[] = $user;
         }
     }
@@ -1334,10 +1355,10 @@ function update_castable_status($vdetails)
 
     if ($data <= 2 && $vdetails['is_castable'] == 0) {
         $db->update(tbl('video'), ['is_castable'], [true], 'videoid=' . $vdetails['videoid']);
-        e(sprintf(lang('castable_status_fixed'), $vdetails['title']), 'm');
+        e(lang('castable_status_fixed', $vdetails['title']), 'm');
     } else {
         if ($data > 2) {
-            e(sprintf(lang('castable_status_failed'), $vdetails['title'], $data), 'w');
+            e(lang('castable_status_failed', $vdetails['title'], $data), 'w');
         }
     }
 }

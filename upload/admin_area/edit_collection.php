@@ -3,15 +3,13 @@ define('THIS_PAGE', 'edit_collection');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
+global $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
 
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+userquery::getInstance()->admin_login_check();
+userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
-if (!isset($_GET['collection'])) {
-    redirect_to('/collection_manager.php');
-}
+
 
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
@@ -22,17 +20,19 @@ if (isset($_POST['delete_preview'])) {
     $cbcollection->delete_thumbs($id);
 }
 
-//Performing Actions
+$id = $_GET['collection'];
+//Performing Actionsf
 if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
 
-$id = $_GET['collection'];
-$c = Collection::getInstance()->getAll([
+$c = Collection::getInstance()->getOne([
     'collection_id'         => $id,
-    'first_only'            => true,
     'hide_empty_collection' => 'no'
 ]);
+if (empty($c)) {
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -61,9 +61,6 @@ switch ($c['type']) {
         break;
 }
 
-if (!empty($items)) {
-    assign('objects', $items);
-}
 assign('data', $c);
 
 $FlaggedPhotos = $cbvid->action->get_flagged_objects();
@@ -84,7 +81,7 @@ ClipBucket::getInstance()->addAdminCSS([
 ]);
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
-
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 assign('randon_number', rand(-5000, 5000));
 subtitle('Edit Collection');
 template_files('edit_collection.html');

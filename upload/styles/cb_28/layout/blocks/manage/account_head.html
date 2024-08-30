@@ -11,6 +11,11 @@
 							<h4 class="media-heading headcolor">{display_clean(User::getInstance()->get('username'))}</h4>
 							<b>{lang code='since'} : </b>({User::getInstance()->get('doj')|date_format})
 							<b>{lang code='last_Login'} : </b>({User::getInstance()->get('last_logged')|nicetime})
+
+							{if $storage_use !== null}
+							<br/>
+							<b>{lang code='user_current_storage'}</b> : {$storage_use}
+							{/if}
 						</div>
 					</div>
 				</div>
@@ -136,7 +141,7 @@
 			</td>
 			<td>
 				<div class="dropdown">
-					<button id="dropdownMenu1" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+					<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
 						Actions <i class="caret"></i></button>
 					<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 						<li>

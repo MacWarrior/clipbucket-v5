@@ -4,13 +4,13 @@ define('PARENT_PAGE', 'photos');
 
 require 'includes/config.inc.php';
 
-global $userquery, $cbphoto;
+global $cbphoto;
 
-$userquery->login_check('edit_video');
+userquery::getInstance()->login_check('edit_video');
 
-$udetails = $userquery->get_user_details(user_id());
+$udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
-assign('p', $userquery->get_user_profile($udetails['userid']));
+assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $pid = mysql_clean($_GET['photo']);
 $photo = $cbphoto->get_photo($pid);
@@ -22,6 +22,9 @@ if (empty($photo)) {
     ClipBucket::getInstance()->show_page = false;
 } else {
     if (isset($_POST['update_photo'])) {
+        if (empty($_POST['collection_id'])) {
+            e(lang('collection_not_found'));
+        }
         $cbphoto->update_photo();
         $photo = $cbphoto->get_photo($pid);
     }

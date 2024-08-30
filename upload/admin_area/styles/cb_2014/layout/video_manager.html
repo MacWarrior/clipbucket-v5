@@ -1,9 +1,8 @@
 <div class="heading clearfix">
-    <h2 class="pull-left">{lang code='videos_manager'}</h2>
+    <h2 class="pull-left">{lang('manage_x', lang(videos)|lower)}</h2>
     {include file="$layout_dir/blocks/advanced_search.html"}
 </div>
 
-<!-- Displaying Videos -->
 <form name="video_manage marginBottomLarge" method="post">
 {if $videos}
     <div class="btn-group">
@@ -37,71 +36,77 @@
             <td>{$video.videoid}</td>
             <td>
                 <div class="row">
-                    <div class="col-md-10">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <img src="{getThumb vdetails=$video size=168x105}" width="130" height="80" id="thumbs_{$video.videoid}"/>
-                            </div>
-                            <div class="col-md-9">
-                                <a href="edit_video.php?video={$video.videoid}">
-                                    {display_clean($video.title|truncate:80)}
-                                </a> ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br/>
-                                <span class="labels1">
-                                    <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
-                                </span>
-                                <div class="labels mtl">
-                                    <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
-                                        {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
-                                    </span>
-                                    <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-                                        {lang(strtolower($video.status))}
-                                    </span>
-                                    {if $video.featured=='yes'}
-                                    <span class="label label-info">{lang code='featured'}</span>
-                                    {/if}
+                    {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
+                        {$img_url = get_thumb($video, false, 'original', 'poster')}
+                    {else}
+                        {$img_url = get_thumb($video, false, '168x105')}
+                    {/if}
+                    <div class="col-md-2" style="text-align:center;">
+                        <img src="{$img_url}" id="thumbs_{$video.videoid}" style="max-height:80px; max-width:100%;"/>
+                    </div>
+                    <div class="col-md-8">
+                        <a href="edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
+                            {display_clean($video.title|truncate:80)}
+                        </a>
+                        ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br/>
+                        <span class="labels1">
+                            <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
+                        </span>
+                        <div class="labels mtl">
+                            <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
+                                {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
+                            </span>
+                            <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
+                                {lang(strtolower($video.status))}
+                            </span>
+                            {if $video.featured=='yes'}
+                            <span class="label label-info">{lang code='featured'}</span>
+                            {/if}
 
-                                    {foreach from=$cbvid->video_manager_link_new item=links}
-                                        {$cbvid->video_manager_link_new($links,$video)}
-                                    {/foreach}
+                            {foreach from=$cbvid->video_manager_link_new item=links}
+                                {$cbvid->video_manager_link_new($links,$video)}
+                            {/foreach}
 
-                                    {if config('chromecast')=='yes'}
-                                        {if $video.is_castable}
-                                    <span class="label label-success">{lang code='castable'}</span>
-                                        {else}
-                                    <span class="label label-warning">{lang code='non_castable'}</span>
-                                        {/if}
-                                    {/if}
+                            {if config('chromecast')=='yes'}
+                                {if $video.is_castable}
+                            <span class="label label-success">{lang code='castable'}</span>
+                                {else}
+                            <span class="label label-warning">{lang code='non_castable'}</span>
+                                {/if}
+                            {/if}
 
-                                    {if $video.bits_color}
-                                        {if $video.bits_color > 8}
-                                    <span class="label label-warning">{$video.bits_color} {lang code='bits_color'}</span>
-                                        {else}
-                                    <span class="label label-success" title="This video might not be playable on other browsers than chrome-like">{$video.bits_color} {lang code='bits_color'}</span>
-                                        {/if}
-                                    {/if}
+                            {if $video.bits_color}
+                                {if $video.bits_color > 8}
+                            <span class="label label-warning">{$video.bits_color} {lang code='bits_color'}</span>
+                                {else}
+                            <span class="label label-success" title="This video might not be playable on other browsers than chrome-like">{$video.bits_color} {lang code='bits_color'}</span>
+                                {/if}
+                            {/if}
 
-                                    <span class="label label-info">{strtoupper($video.file_type)}</span>
+                            <span class="label label-info">{strtoupper($video.file_type)}</span>
 
-                                    <div class="clearfix"></div>
-                                    {$catString = {$video.category_names}}
-                                    {$catString = strip_tags($catString)}
-                                    {$toArray = explode(', ',$catString)}
-                                    {if count($toArray) > 4}
-                                        {$moreText = ' + '|cat:{lang code='more'}}
-                                    {else}
-                                        {$moreText = ''}
-                                    {/if}
-                                    {$finalItems = array_slice($toArray, 0, 4)}
-                                    {$vcategories = implode(', ',$finalItems)}
-                                    <span>
-                                        <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
-                                    </span>
-                                </div>
-                            </div>
+                            <div class="clearfix"></div>
+                            {$catString = {$video.category_names}}
+                            {$catString = strip_tags($catString)}
+                            {$toArray = explode(', ',$catString)}
+                            {if count($toArray) > 4}
+                                {$moreText = ' + '|cat:{lang code='more'}}
+                            {else}
+                                {$moreText = ''}
+                            {/if}
+                            {$finalItems = array_slice($toArray, 0, 4)}
+                            {$vcategories = implode(', ',$finalItems)}
+                            <span>
+                                <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
+                            </span>
                         </div>
                     </div>
                     <div class="col-md-2">
-                        <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
+                        {if $video.userid != $anonymous_id}
+                            <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
+                        {else}
+                            {display_clean(lang($video.user_username))}
+                        {/if}
                     </div>
                 </div>
             </td>
@@ -126,7 +131,7 @@
                         <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a></li>
                         {/if}
                         <li><a role="menuitem" tabindex="-1" href="view_conversion_log.php?file_name={$video.file_name}">File conversion details</a></li>
-                        {if $video.status=='Successful' }
+                        {if $video.status=='Successful'}
                             {if isReconvertAble($video)}
                             <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Reconvert</a></li>
                             {/if}
@@ -165,6 +170,5 @@
     {/if}
 </form>
 
-<!-- DIsplaying Videos Ends-->
-{include file="$style_dir/blocks/pagination.html" }
+{include file="$style_dir/blocks/pagination.html"}
 <div class="marginBottomLarge"></div>

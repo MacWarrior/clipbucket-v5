@@ -2,10 +2,10 @@
 define('THIS_PAGE', 'photo_upload');
 define('PARENT_PAGE', 'upload');
 
-global $userquery, $cbphoto, $Cbucket;
+global $cbphoto, $Cbucket;
 
 require 'includes/config.inc.php';
-$userquery->logincheck();
+userquery::getInstance()->logincheck();
 subtitle(lang('photos_upload'));
 if (isset($_GET['collection'])) {
     $selected_collection = $cbphoto->decode_key($_GET['collection']);

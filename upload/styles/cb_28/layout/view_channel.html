@@ -219,7 +219,7 @@
 								</div>
 							</div>
 							{else}
-							<span class="well well-info btn-block">{sprintf(lang('comment_disabled_for'),strtolower(lang('channel')))}</span>
+							<span class="well well-info btn-block">{lang('comment_disabled_for',strtolower(lang('channel')))}</span>
 							{/if}
 						</div>
 					{/if}
@@ -237,7 +237,6 @@
 			</div>
 			{/if}
 
-			{$popular_users = get_users(['cond' => 'users.username != \''|cat:$smarty.get.user|cat:'\'', 'order'=>'users.profile_hits DESC limit 5'])}
 			{if $popular_users}
 			<h2>{lang code="popular_users"}</h2>
 			<div class="clearfix sidebar-channels">
@@ -274,7 +273,7 @@
 	var loadMoreLang = "{$loadMoreLang}";
 	var libelle_type_channel = "{Comments::$libelle_type_channel}";
 	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()*1000}kb";
-	var max_file_size ="{config('max_bg_size')}kb";
+	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+	var max_file_size ="{config('max_upload_size')}Mb";
 	var photo_extensions = "{config('allowed_photo_types')}";
 </script>
