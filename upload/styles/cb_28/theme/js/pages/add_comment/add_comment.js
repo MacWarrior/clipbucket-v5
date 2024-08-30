@@ -11,8 +11,9 @@ $(document).ready(function(){
                 ['ul', 'ol', 'task', 'indent', 'outdent'],
                 ['table','link']
             ],
-            language: 'ko',
-            placeholder: visual_editor_comments_placeholder
+            language: lang,
+            placeholder: visual_editor_comments_placeholder,
+            theme: default_theme
         });
     }
 
