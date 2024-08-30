@@ -392,13 +392,12 @@ class Category
     }
 
     /**
-     * @param $category_id
-     * @param $multi_level bool if returned array contain children which contain their children in 'children' case, false if all result in 1 level array
+     * @param int $category_id
      * @param $only_id bool
      * @return array|false|int|mixed
      * @throws Exception
      */
-    public function getChildren($category_id, $multi_level = true,$only_id = false)
+    public function getChildren(int $category_id, bool $only_id = false): array
     {
         if (empty($category_id)) {
             return [];
@@ -408,22 +407,24 @@ class Category
         ]);
         if (empty($children)) {
             return [];
-        } else {
-            foreach ($children as &$child) {
-                $children_of_child = $this->getChildren($child['category_id'], $multi_level, $only_id);
-                if ($multi_level) {
-                    $child['children'] = $children_of_child;
-                } else {
-                    $children = array_merge($children, $children_of_child);
+        }
+        $children_to_add=[];
+        foreach ($children as &$child) {
+            if ($only_id && is_array($child)) {
+                $child = $child['category_id'];
+            }
+            $children_of_child = $this->getChildren((is_array($child) ? $child['category_id'] : $child), $only_id);
+            if ($only_id) {
+                foreach ($children_of_child as $child_of_child) {
+                    $children_to_add[]= $child_of_child;
                 }
+            } else {
+                $child['children'] = $children_of_child;
             }
         }
-        if ($only_id) {
-            $children = array_map(function ($elem){
-                return $elem['category_id'];
-            }, $children);
-        }
-        return $children;
+
+
+        return array_merge($children, $children_to_add);
     }
 
     /**

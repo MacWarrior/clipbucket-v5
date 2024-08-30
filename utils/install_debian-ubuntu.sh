@@ -292,6 +292,19 @@ server {
 
     client_max_body_size 2M;
 
+    proxy_connect_timeout 7200s;
+    proxy_send_timeout 7200s;
+    proxy_read_timeout 7200s;
+    fastcgi_send_timeout 7200s;
+    fastcgi_read_timeout 7200s;
+
+    fastcgi_buffers 16 32k;
+    fastcgi_buffer_size 64k;
+    fastcgi_busy_buffers_size 64k;
+    proxy_buffer_size 128k;
+    proxy_buffers 4 256k;
+    proxy_busy_buffers_size 256k;
+
     # set expiration of assets to MAX for caching
     location ~* \.(ico|css|js)(\?[0-9]+)?$ {
         expires max;

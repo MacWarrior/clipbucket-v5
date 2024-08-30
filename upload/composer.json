@@ -1,14 +1,26 @@
 {
   "require": {
-    "filp/whoops": "2.15.4",
-    "predis/predis": "^v1.1.10",
-    "psr/log": "1.1.4",
-    "phpmailer/phpmailer": "^6.9.1",
-    "smarty/smarty": "3.1.48",
-    "oxygenzsas/composer_lib_discord": "dev-php7",
-    "psr/http-server-middleware": "1.0.2",
-    "ext-json": "*",
-    "ext-mysqli": "*"
+    "ext-json": "*"
+    ,"ext-mysqli": "*"
+    ,"ext-gd": "*"
+    ,"ext-fileinfo": "*"
+    ,"ext-curl": "*"
+    ,"ext-xml": "*"
+    ,"ext-mbstring": "*"
+    ,"ext-openssl": "*"
+
+    ,"filp/whoops": "2.15.4"
+    ,"predis/predis": "^v1.1.10"
+    ,"psr/log": "1.1.4"
+    ,"phpmailer/phpmailer": "^6.9.1"
+    ,"smarty/smarty": "3.1.48"
+    ,"oxygenzsas/composer_lib_discord": "dev-php7"
+    ,"psr/http-server-middleware": "1.0.2"
+
+    ,"fortawesome/font-awesome": "4.7.0"
+
+    ,"components/jquery": "*"
+    ,"select2/select2": "*"
   },
   "config": {
     "platform": {
