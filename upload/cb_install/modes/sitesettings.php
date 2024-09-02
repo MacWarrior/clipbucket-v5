@@ -9,8 +9,7 @@ Clipbucket_db::getInstance()->update(
     , 'userid=1'
 );
 
-require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
-if (file_exists(DirPath::get('temp') . 'development.dev')) {
+if (in_dev()) {
     require_once DirPath::get('vendor') . 'autoload.php';
     require_once DirPath::get('classes') . 'DiscordLog.php';
     require_once DirPath::get('classes') . 'update.class.php';
