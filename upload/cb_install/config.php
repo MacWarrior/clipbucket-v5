@@ -13,9 +13,10 @@ $DBPORT = '_DB_PORT_';
 //Setting Table Prefix
 define('TABLE_PREFIX', '_TABLE_PREFIX_');
 
-$db = new Clipbucket_db();
-
-$db->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT);
+if (class_exists('Clipbucket_db')) {
+    $db = new Clipbucket_db();
+    $db->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT);
+}
 
 /*
  * Enable this array to overwrite configurations over DB values
