@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"120",
+  "revision":"121",
   "status":"dev",
   "detail":[
     {
@@ -73,6 +73,8 @@
         ,"Fix video edition status list"
         ,"Fix default thumbnail after thumbnails regeneration"
         ,"Fix collection manager pagination"
+        ,"Fix icons not displaying"
+        ,"Fix current user level display in header"
       ]
     },
     {
