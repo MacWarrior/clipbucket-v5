@@ -10,7 +10,7 @@
     <div id="dbresult" style="display:none;"></div>
     <div id="resultsDiv" style="margin-top:20px;">
         <img src="./images/loading.gif" alt="loading" id="loading"/>
-        <span id="current"><?php echo $_POST['reset_db'] ? 'Dropping previous tables & datas...':'Creating database structure...'; ?></span>
+        <span id="current"><?php echo !empty($_POST['reset_db']) ? 'Dropping previous tables & datas...':'Creating database structure...'; ?></span>
     </div>
 
     <form method="post" id="installation">
