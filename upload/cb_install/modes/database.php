@@ -1,10 +1,10 @@
 <?php
-if (file_exists(dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'config.php') && DEVELOPMENT_MODE) {
+if (file_exists(DirPath::get('includes') . 'config.php') && DEVELOPMENT_MODE) {
     if (!class_exists('Clipbucket_db')) {
-        require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'db.class.php';
-        require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'functions.php';
+        require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'db.class.php';
+        require_once DirPath::get('includes') . 'functions.php';
     }
-    require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'config.php';
+    require_once DirPath::get('includes') . 'config.php';
 }
 $db_host = $DBHOST ?? 'localhost';
 $db_name = $DBNAME ?? '';
