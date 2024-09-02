@@ -4,6 +4,7 @@ class User
     private static $user;
     private $tablename = '';
     private $tablename_profile = '';
+    private $tablename_level = '';
     private $fields = [];
     private $fields_profile = [];
     private $display_block = '';
@@ -113,6 +114,9 @@ class User
             ,'show_my_subscribers'
             ,'show_my_friends'
         ];
+
+        $this->tablename_level = 'user_levels';
+
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
@@ -149,14 +153,19 @@ class User
         return $this->tablename_profile;
     }
 
+    public function getTableNameLevel(): string
+    {
+        return $this->tablename_level;
+    }
+
     private function getAllFields(): array
     {
         $fields_user = array_map(function($field) {
-            return $this->tablename . '.' . $field;
+            return $this->getTableName() . '.' . $field;
         }, $this->fields);
 
         $fields_profile = array_map(function($field) {
-            return $this->tablename_profile . '.' . $field;
+            return $this->getTableNameProfile() . '.' . $field;
         }, $this->fields_profile);
 
         return array_merge($fields_user, $fields_profile);
@@ -298,6 +307,7 @@ class User
             $select = ['COUNT(DISTINCT users.userid) AS count'];
         } else {
             $select = $this->getAllFields();
+            $select[] = $this->getTableNameLevel() . '.user_level_name';
         }
 
         $join = [];
@@ -339,17 +349,14 @@ class User
 
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
-                INNER JOIN ' . cb_sql_table('user_profile') . ' ON users.userid = user_profile.userid '
+                INNER JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
+                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
             . $having
             . $order
             . $limit;
-
-        $sql2 = "SELECT users.userid, users.featured_video, users.username, users.user_session_key, users.user_session_code, users.password, users.email, users.usr_status, users.msg_notify, users.avatar, users.avatar_url, users.sex, users.dob, users.country, users.level, users.avcode, users.doj, users.last_logged, users.num_visits, users.session, users.ip, users.signup_ip, users.time_zone, users.featured, users.featured_date, users.profile_hits, users.total_watched, users.total_videos, users.total_comments, users.total_photos, users.total_collections, users.comments_count, users.last_commented, users.voted, users.ban_status, users.upload, users.subscribers, users.total_subscriptions, users.background, users.background_color, users.background_url, users.background_repeat, users.last_active, users.banned_users, users.welcome_email_sent, users.total_downloads, users.album_privacy, users.likes, users.is_live, user_profile.show_my_collections, user_profile.profile_title, user_profile.profile_desc, user_profile.featured_video, user_profile.first_name, user_profile.last_name, user_profile.show_dob, user_profile.postal_code, user_profile.time_zone, user_profile.web_url, user_profile.fb_url, user_profile.twitter_url, user_profile.insta_url, user_profile.hometown, user_profile.city, user_profile.online_status, user_profile.show_profile, user_profile.allow_comments, user_profile.allow_ratings, user_profile.allow_subscription, user_profile.content_filter, user_profile.icon_id, user_profile.browse_criteria, user_profile.about_me, user_profile.education, user_profile.schools, user_profile.occupation, user_profile.companies, user_profile.relation_status, user_profile.hobbies, user_profile.fav_movies, user_profile.fav_music, user_profile.fav_books, user_profile.background, user_profile.rating, user_profile.voters, user_profile.rated_by, user_profile.show_my_videos, user_profile.show_my_photos, user_profile.show_my_subscriptions, user_profile.show_my_subscribers, user_profile.show_my_friends, GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR ',') AS tags
-            FROM cb_users AS users
-            INNER JOIN cb_user_profile AS user_profile ON users.userid = user_profile.userid LEFT JOIN cb_user_tags AS user_tags ON users.userid = user_tags.id_user LEFT JOIN cb_tags AS tags ON user_tags.id_tag = tags.id_tag LEFT JOIN cb_users_categories AS users_categories ON users.userid = users_categories.id_user LEFT JOIN cb_categories AS categories ON users_categories.id_category = categories.category_id WHERE ( users.userid != 5 AND usr_status like 'ok') GROUP BY users.userid";
         $result = Clipbucket_db::getInstance()->_select($sql);
 
         if( $param_count ){
