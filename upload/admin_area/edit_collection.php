@@ -67,6 +67,14 @@ $FlaggedPhotos = $cbvid->action->get_flagged_objects();
 Assign('flaggedPhoto', $FlaggedPhotos);
 $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
+assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $c['userid']);
+
+$params = [];
+$params['type'] = 'cl';
+$params['type_id'] = $c['collection_id'];
+$params['order'] = ' comment_id DESC';
+$comments = Comments::getAll($params);
+assign('comments', $comments);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
