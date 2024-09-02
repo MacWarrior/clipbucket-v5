@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"121",
+  "revision":"122",
   "status":"dev",
   "detail":[
     {
@@ -165,6 +165,7 @@
       "title": "Installation & Update",
       "description": [
         "Implement Windows installation script"
+        ,"Implement dev mode options"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -173,6 +174,7 @@
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
         ,"Update config creations"
+        ,"Update database creation descriptions"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"

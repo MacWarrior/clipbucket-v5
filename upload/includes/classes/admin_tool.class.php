@@ -158,7 +158,10 @@ class AdminTool
         Clipbucket_db::getInstance()->update(tbl('tools'), ['frequency', 'previous_calculated_datetime'], [$frequency, date('Y-m-d H:i:s')], 'id_tool = ' . mysql_clean($this->id_tool));
     }
 
-    public function toolErrorHandler($e)
+    /**
+     * @throws Exception
+     */
+    public function toolErrorHandler($e): bool
     {
         $this->addLog('Error : ' . $e->getMessage());
         $this->setToolError($this->id_tool);

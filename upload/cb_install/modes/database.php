@@ -32,7 +32,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
         <form method="post" id="installation">
             <div class="field">
                 <label class="grey-text" for="host">Host</label>
-                <input name="dbhost" type="text" id="host" class="form-control" value="<?php echo $db_host ?>">
+                <input name="dbhost" type="text" id="host" class="form-control" value="<?php echo $db_host; ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
                     You should be able to get this info from your web host
                 </p>
@@ -40,7 +40,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
 
             <div class="field">
                 <label class="grey-text" for="dbname">Database Name</label>
-                <input type="text" name="dbname" id="dbname" value="<?php echo $db_name ?>" class="form-control">
+                <input type="text" name="dbname" id="dbname" value="<?php echo $db_name; ?>" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
                     The name of the database you want to run ClipbucketV5 in
                 </p>
@@ -48,7 +48,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
 
             <div class="field">
                 <label class="grey-text" for="dbuser">Database User</label>
-                <input type="text" name="dbuser" id="dbuser" value="<?php echo $db_user ?>" class="form-control">
+                <input type="text" name="dbuser" id="dbuser" value="<?php echo $db_user; ?>" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
                     Your MySQL username
                 </p>
@@ -56,7 +56,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
 
             <div class="field">
                 <label class="grey-text" for="dbpass">Database Password</label>
-                <input type="text" name="dbpass" id="dbpass" value="<?php echo $db_pass ?>" class="form-control">
+                <input type="text" name="dbpass" id="dbpass" value="<?php echo $db_pass; ?>" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
                     Your MySQL password
                 </p>
@@ -64,7 +64,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
 
             <div class="field">
                 <label class="grey-text" for="dbport">Database Port</label>
-                <input type="text" name="dbport" id="dbport" value="<?php echo $db_port ?>" class="form-control">
+                <input type="text" name="dbport" id="dbport" value="<?php echo $db_port; ?>" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
                     Your MySQL port
                 </p>
@@ -72,7 +72,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
 
             <div class="field">
                 <label class="grey-text" for="dbprefix">Database Prefix</label>
-                <input type="text" name="dbprefix" id="dbprefix" value="<?php echo $prefix ?>" class="form-control">
+                <input type="text" name="dbprefix" id="dbprefix" value="<?php echo $prefix; ?>" class="form-control">
                 <p class="grey-text font-size" style="margin-top:0;">
                     If you want to run multiple ClipbucketV5 installations in a single database,<br/>
                     change this
@@ -82,7 +82,7 @@ $prefix = defined('TABLE_PREFIX') ? TABLE_PREFIX : 'cb_';
             <?php if (DEVELOPMENT_MODE) {?>
                 <div >
                     <label class="grey-text" for="reset_db">Reset DataBase</label>
-                    <input type="checkbox" name="reset_db" id="reset_db" value="1" class="">
+                    <input type="checkbox" name="reset_db" id="reset_db" value="1">
                     <p class="grey-text font-size" style="margin-top:0;">
                         Delete all tables & datas
                     </p>
