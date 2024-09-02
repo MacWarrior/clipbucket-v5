@@ -961,7 +961,7 @@ INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES
     ('WET'),
     ('Zulu');
 
-INSERT INTO `cb_fontawesome_icons` (`icon`) VALUES
+INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('500px'),
     ('address-book'),
     ('address-book-o'),
