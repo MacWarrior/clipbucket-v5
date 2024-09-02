@@ -9,6 +9,17 @@ require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('cb_install') . 'functions_install.php';
 
+if (file_exists(DirPath::get('temp') . 'development.dev')) {
+    define('DEVELOPMENT_MODE', true);
+
+} else {
+    define('DEVELOPMENT_MODE', false);
+}
+
+if (!file_exists(DirPath::get('temp') . 'install.me') || !file_exists(DirPath::get('temp') . 'install.me.not')) {
+    return false;
+}
+
 $mode = $_POST['mode'];
 
 $result = [];
@@ -18,6 +29,7 @@ $dbuser = $_POST['dbuser'];
 $dbname = $_POST['dbname'];
 $dbprefix = $_POST['dbprefix'];
 $dbport = $_POST['dbport'];
+$reset_db = $_POST['reset_db'];
 
 try{
     $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass, null, $dbport);
@@ -60,22 +72,25 @@ if ($mode == 'adminsettings') {
 
     $step = $_POST['step'];
     $files = [
-        'structure'       => 'structure.sql',
-        'version'         => 'table_version.sql',
-        'configs'         => 'configs.sql',
-        'languages'       => 'languages.sql',
-        'language_ENG'    => 'language_ENG.sql',
-        'language_FRA'    => 'language_FRA.sql',
-        'language_DEU'    => 'language_DEU.sql',
-        'language_POR'    => 'language_POR.sql',
-        'language_ESP'    => 'language_ESP.sql',
-        'ads_placements'  => 'ads_placements.sql',
-        'countries'       => 'countries.sql',
-        'email_templates' => 'email_templates.sql',
-        'pages'           => 'pages.sql',
-        'user_levels'     => 'user_levels.sql'
+        'structure'       => ['file'=>'structure.sql', 'msg'=>'Creating database structure...'],
+        'version'         => ['file'=>'table_version.sql', 'msg'=>'Creating versionning...'],
+        'configs'         => ['file'=>'configs.sql', 'msg'=>'Importing configs...'],
+        'languages'       => ['file'=>'languages.sql', 'msg'=>'Importing languages...'],
+        'language_ENG'    => ['file'=>'language_ENG.sql', 'msg'=>'Importing english translations...'],
+        'language_FRA'    => ['file'=>'language_FRA.sql', 'msg'=>'Importing french translations...'],
+        'language_DEU'    => ['file'=>'language_DEU.sql', 'msg'=>'Importing deutsch translations...'],
+        'language_POR'    => ['file'=>'language_POR.sql', 'msg'=>'Importing portuguese translations...'],
+        'language_ESP'    => ['file'=>'language_ESP.sql', 'msg'=>'Importing spanish translations...'],
+        'ads_placements'  => ['file'=>'ads_placements.sql', 'msg'=>'Importing ads configurations...'],
+        'countries'       => ['file'=>'countries.sql', 'msg'=>'Importing countries list...'],
+        'email_templates' => ['file'=>'email_templates.sql', 'msg'=>'Importing email templates...'],
+        'pages'           => ['file'=>'pages.sql', 'msg'=>'Importing default pages...'],
+        'user_levels'     => ['file'=>'user_levels.sql', 'msg'=>'Importing user levels configurations...']
     ];
 
+    if ($reset_db == 1) {
+        $files = ['reset_db'=> ['file'=>'reset_db.sql', 'msg'=>'Dropping previous tables & datas...']] + $files;
+    }
     $next = false;
     if (array_key_exists($step, $files) && $step) {
         $total = count($files);
@@ -100,14 +115,18 @@ if ($mode == 'adminsettings') {
         }
 
         if ($current) {
-            install_execute_sql_file($cnnct, DirPath::get('sql') . $files[$current], $dbprefix, $dbname);
+            $res = false;
+            if ($current != 'reset_db' || DEVELOPMENT_MODE) {
+                $res = install_execute_sql_file($cnnct, DirPath::get('sql') . $files[$current]['file'], $dbprefix, $dbname);
+            }
         }
 
         $return = [];
-        $return['msg'] = '<div class="ok green">' . $files[$current] . ' has been imported successfully</div>';
-
+        if ($res) {
+            $return['msg'] = '<div class="ok green">' . $files[$current]['file'] . ' has been imported successfully</div>';
+        }
         if (@$files[$next]) {
-            $return['status'] = 'importing ' . $files[$next];
+            $return['status'] = $files[$next]['msg'];
         } else {
             $return['status'] = $next_msg;
         }
