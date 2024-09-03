@@ -18,7 +18,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'flagged_collections.php'
 ];
 $breadcrumb[2] = [

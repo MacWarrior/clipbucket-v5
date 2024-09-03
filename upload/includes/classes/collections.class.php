@@ -629,7 +629,7 @@ class Collections extends CBCategory
                     , 'class' => 'glyphicon glyphicon-folder-close'
                     , 'sub'   => [
                         [
-                            'title' => lang('manage_collections')
+                            'title' => lang('manage_x', strtolower(lang('collections')))
                             , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                         , [

@@ -10,7 +10,7 @@
 
 				<form method="post" class="upload_form" name="form1" enctype="multipart/form-data">
 				{if $mode == "manage" || $mode == ""}
-					<h2>{lang code='manage_collections'}</h2>
+					<h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
 					<div>
 						<img src="{$imageurl}/dot.gif" class="arrow_pointing" />
 						<input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-sm" />

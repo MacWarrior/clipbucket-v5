@@ -9,8 +9,6 @@ userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
-
-
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
 }
@@ -41,7 +39,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 $breadcrumb[2] = [
