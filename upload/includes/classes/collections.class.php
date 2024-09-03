@@ -689,8 +689,7 @@ class Collections extends CBCategory
      */
     function collection_exists($id): bool
     {
-        global $db;
-        $result = $db->count(tbl($this->section_tbl), 'collection_id', ' collection_id = ' . $id);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->section_tbl), 'collection_id', ' collection_id = ' . $id);
         if ($result) {
             return true;
         }

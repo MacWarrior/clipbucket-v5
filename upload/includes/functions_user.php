@@ -68,15 +68,14 @@ function profile_fileds_check($array): bool
  */
 function resend_verification($userid)
 {
-    global $db;
-    $raw_data = $db->select(tbl("users"), "usr_status,username,email", "userid = '$userid'");
+    $raw_data = Clipbucket_db::getInstance()->select(tbl("users"), "usr_status,username,email", "userid = '$userid'");
     $usr_status = $raw_data[0]['usr_status'];
     $uname = $raw_data[0]['username'];
     $email = $raw_data[0]['email'];
     if (trim($usr_status) == "ToActivate") {
         global $cbemail;
         $avcode = RandomString(10);
-        $db->update(tbl("users"), ["avcode"], [$avcode], "userid = '$userid'");
+        Clipbucket_db::getInstance()->update(tbl("users"), ["avcode"], [$avcode], "userid = '$userid'");
         $tpl = $cbemail->get_template('email_verify_template');
         $more_var = ['{username}' => $uname,
                      '{email}'    => $email,
@@ -91,9 +90,9 @@ function resend_verification($userid)
         //Now Finally Sending Email
         cbmail(['to' => $email, 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
         return $uname;
-    } else {
-        return false;
     }
+
+    return false;
 }
 
 /**

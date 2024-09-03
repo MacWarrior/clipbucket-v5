@@ -13,8 +13,7 @@ $breadcrumb[1] = ['title' => 'Action Logs', 'url' => DirPath::getUrl('admin_area
 
 //Getting User List
 if (isset($_GET['clean'])) {
-    global $db;
-    $db->execute('TRUNCATE TABLE ' . tbl('action_log'));
+    Clipbucket_db::getInstance()->execute('TRUNCATE TABLE ' . tbl('action_log'));
 }
 
 if (isset($_GET['type'])) {

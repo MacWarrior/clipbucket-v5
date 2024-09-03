@@ -950,12 +950,11 @@ if (!empty($mode)) {
             break;
 
         case 'user_suggest':
-            global $db;
             $typed = mysql_clean($_POST['typed']);
             if (empty($typed)) {
                 return 'none';
             }
-            $raw_users = $db->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
+            $raw_users = Clipbucket_db::getInstance()->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
             $matching_users['matching_users'] = [];
             foreach ($raw_users as $key => $userdata) {
                 $matching_users['matching_users'][] = $userdata['username'];

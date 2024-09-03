@@ -140,7 +140,7 @@
 									</a>
 									<ul class="dropdown-menu">
 										{if has_access('admin_access')}
-										<li><a href="{$admin_baseurl}">{lang code="admin_area"}</a></li>
+										<li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
 										{/if}
 										<li><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
 										{if isSectionEnabled('videos')}

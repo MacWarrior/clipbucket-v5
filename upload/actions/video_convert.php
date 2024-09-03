@@ -7,7 +7,7 @@ define('THIS_PAGE', 'video_convert');
 include(dirname(__FILE__) . '/../includes/config.inc.php');
 require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
 
-global $db, $cbvideo;
+global $cbvideo;
 
 /*
     getting the arguments
@@ -120,12 +120,12 @@ if (!empty($_filename)) {
         $ffmpeg->audio_track = $audio_track;
     }
 
-    $db->update(tbl('video'), ['file_type', 'status'], [$ffmpeg->conversion_type, 'Waiting'], ' file_name = \''.display_clean($_filename).'\'');
+    Clipbucket_db::getInstance()->update(tbl('video'), ['file_type', 'status'], [$ffmpeg->conversion_type, 'Waiting'], ' file_name = \''.display_clean($_filename).'\'');
 
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);
-    $db->update(tbl('video'), ['video_files', 'duration'], [$video_files, $ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
+    Clipbucket_db::getInstance()->update(tbl('video'), ['video_files', 'duration'], [$video_files, $ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
 

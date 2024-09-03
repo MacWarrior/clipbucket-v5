@@ -3,7 +3,7 @@ define('THIS_PAGE', 'maintenance');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $db, $cbindex;
+global $cbindex;
 
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('web_config_access');
@@ -18,14 +18,14 @@ $breadcrumb[1] = ['title' => 'Maintenance', 'url' => DirPath::getUrl('admin_area
  * Removing Inactive Sessions
  */
 if (@$_GET['mode'] == 'remove_sessions') {
-    $db->execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
+    Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
         TIMESTAMPDIFF(MINUTE,last_active,now()) 
             > 5 AND session_string=\'guest\'');
-    $guest_sess = $db->Affected_Rows();
-    $db->execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
+    $guest_sess = Clipbucket_db::getInstance()->Affected_Rows();
+    Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('sessions') . ' WHERE 
         TIMESTAMPDIFF(MINUTE,last_active,now()) 
             > ' . COOKIE_TIMEOUT / 60 . ' AND session_string=\'smart_sess\'');
-    $smart_sess = $db->Affected_Rows();
+    $smart_sess = Clipbucket_db::getInstance()->Affected_Rows();
 
     if ($guest_sess) {
         e('Removed \'' . $guest_sess . '\' inactive guest sessions', 'm');
@@ -52,9 +52,9 @@ if (@$_GET['mode'] == 'remove_access_log') {
     $query = 'DELETE FROM ' . tbl('action_log') . ' WHERE 
         DATEDIFF(now(),date_added) > ' . $days;
 
-    $db->execute($query);
+    Clipbucket_db::getInstance()->execute($query);
 
-    $rows = $db->Affected_Rows();
+    $rows = Clipbucket_db::getInstance()->Affected_Rows();
 
     $days++;
     if ($rows) {

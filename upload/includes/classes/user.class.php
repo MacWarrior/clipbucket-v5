@@ -866,7 +866,7 @@ class userquery extends CBCategory
      */
     function login_user($username, $password, $remember = false): bool
     {
-        global $sess, $db;
+        global $sess;
 
         //First we will check weather user is already logged in or not
         if ($this->login_check(null, true)) {
@@ -890,7 +890,7 @@ class userquery extends CBCategory
                     if ($udetails){
                         $version = Update::getInstance()->getDBVersion();
                         if ($version['version'] > '5.0.0' || ($version['version'] == '5.0.0' && $version['revision'] >= 1)) {
-                            $db->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
                         }
                     }
                 }
@@ -913,7 +913,7 @@ class userquery extends CBCategory
 
                     $smart_sess = md5($udetails['user_session_key'] . $session_salt);
 
-                    $db->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
+                    Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
                     $sess->add_session($udetails['userid'], 'smart_sess', $smart_sess);
 
                     //Setting Vars
@@ -922,7 +922,7 @@ class userquery extends CBCategory
                     $this->level = $udetails['level'];
 
                     //Updating User last login , num of visits and ip
-                    $db->update(tbl('users'),
+                    Clipbucket_db::getInstance()->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],
                         ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
                         'userid=\'' . $udetails['userid'] . '\''
@@ -1060,8 +1060,7 @@ class userquery extends CBCategory
      */
     function get_user_with_pass($username, $pass)
     {
-        global $db;
-        $results = $db->select(tbl('users'),
+        $results = Clipbucket_db::getInstance()->select(tbl('users'),
             'userid,email,level,usr_status,user_session_key,user_session_code,ban_status',
             "(username='$username' OR userid='$username') AND password='$pass'");
         if (count($results) > 0) {
@@ -1075,8 +1074,7 @@ class userquery extends CBCategory
      */
     function get_user_id($username)
     {
-        global $db;
-        $results = $db->select(tbl('users'), 'userid', "(username='$username' OR BINARY userid='$username')");
+        $results = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', "(username='$username' OR BINARY userid='$username')");
         if (count($results) > 0) {
             return $results[0];
         }
@@ -1221,13 +1219,12 @@ class userquery extends CBCategory
      */
     function remove_user_subscriptions($uid)
     {
-        global $db;
         if (!$this->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
         } elseif (!has_access('admin_access')) {
             e(lang('you_dont_hv_perms'));
         } else {
-            $db->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . ' WHERE userid=\'' . $uid . '\'');
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . ' WHERE userid=\'' . $uid . '\'');
             e(lang('user_subs_hv_been_removed'), 'm');
         }
     }
@@ -1240,13 +1237,12 @@ class userquery extends CBCategory
      */
     function remove_user_subscribers($uid)
     {
-        global $db;
         if (!$this->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
         } elseif (!has_access('admin_access')) {
             e(lang('you_dont_hv_perms'));
         } else {
-            $db->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . ' WHERE subscribed_to=\'' . $uid . '\'');
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . ' WHERE subscribed_to=\'' . $uid . '\'');
             e(lang('user_subsers_hv_removed'), 'm');
         }
     }
@@ -1256,14 +1252,12 @@ class userquery extends CBCategory
      */
     function user_exists($id, $global = false): bool
     {
-        global $db;
-
         if (is_numeric($id)) {
             $field = 'userid';
         } else {
             $field = 'username';
         }
-        $result = $db->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', '',60);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'userid', $field.'=\'' . $id . '\'', '',60);
 
         if ($result > 0) {
             return true;
@@ -1398,7 +1392,7 @@ class userquery extends CBCategory
      */
     function send_welcome_email($user, $update_email_status = false)
     {
-        global $db, $cbemail;
+        global $cbemail;
 
         if (!is_array($user)) {
             $udetails = $this->get_user_details($user);
@@ -1421,7 +1415,7 @@ class userquery extends CBCategory
             cbmail(['to' => $udetails['email'], 'from' => WELCOME_EMAIL, 'subject' => $subj, 'content' => $msg]);
 
             if ($update_email_status) {
-                $db->update(tbl($this->dbtbl['users']), ['welcome_email_sent'], ['yes'], ' userid=\'' . $udetails['userid'] . '\' ');
+                Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['welcome_email_sent'], ['yes'], ' userid=\'' . $udetails['userid'] . '\' ');
             }
         }
     }
@@ -1431,8 +1425,6 @@ class userquery extends CBCategory
      */
     function change_password($array)
     {
-        global $db;
-
         $old_pass = $array['old_pass'];
         $new_pass = $array['new_pass'];
         $c_new_pass = $array['c_new_pass'];
@@ -1446,7 +1438,7 @@ class userquery extends CBCategory
         } elseif ($new_pass != $c_new_pass) {
             e(lang('usr_cpass_err1'));
         } else {
-            $db->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['new_pass'], $uid)], ' userid=\'' . $uid . '\'');
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['new_pass'], $uid)], ' userid=\'' . $uid . '\'');
             e(lang('usr_pass_email_msg'), 'm');
         }
 
@@ -1463,7 +1455,7 @@ class userquery extends CBCategory
      */
     function add_contact($uid, $fid)
     {
-        global $cbemail, $db;
+        global $cbemail;
 
         $friend = $this->get_user_details($fid);
         $sender = $this->get_user_details($uid);
@@ -1478,9 +1470,9 @@ class userquery extends CBCategory
         } elseif ($uid == $fid) {
             e(lang('friend_add_himself_error'));
         } else {
-            $db->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type'],
+            Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type'],
                 [$uid, $fid, now(), 'out']);
-            $insert_id = $db->insert_id();
+            $insert_id = Clipbucket_db::getInstance()->insert_id();
 
             e(lang('friend_request_sent'), 'm');
 
@@ -1514,8 +1506,7 @@ class userquery extends CBCategory
      */
     function is_confirmed_friend($uid, $fid): bool
     {
-        global $db;
-        $count = $db->count(tbl($this->dbtbl['contacts']), 'contact_id',
+        $count = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['contacts']), 'contact_id',
             " (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid') AND confirmed='yes'");
         if ($count[0] > 0) {
             return true;
@@ -1534,8 +1525,7 @@ class userquery extends CBCategory
      */
     function is_friend($uid, $fid): bool
     {
-        global $db;
-        $count = $db->count(tbl($this->dbtbl['contacts']), 'contact_id',
+        $count = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['contacts']), 'contact_id',
             " (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')");
         if ($count[0] > 0) {
             return true;
@@ -1556,17 +1546,15 @@ class userquery extends CBCategory
      */
     function is_requested_friend($uid, $fid, $type = 'out', $confirm = null): bool
     {
-        global $db;
-
         $query = '';
         if ($confirm) {
             $query = " AND confirmed='$confirm' ";
         }
 
         if ($type == 'out') {
-            $count = $db->count(tbl($this->dbtbl['contacts']), 'contact_id', " userid='$uid' AND contact_userid='$fid' $query");
+            $count = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['contacts']), 'contact_id', " userid='$uid' AND contact_userid='$fid' $query");
         } else {
-            $count = $db->count(tbl($this->dbtbl['contacts']), 'contact_id', " userid='$fid' AND contact_userid='$uid' $query");
+            $count = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['contacts']), 'contact_id', " userid='$fid' AND contact_userid='$uid' $query");
         }
 
         if ($count[0] > 0) {
@@ -1586,7 +1574,7 @@ class userquery extends CBCategory
      */
     function confirm_friend($uid, $rid, $msg = true)
     {
-        global $cbemail, $db;
+        global $cbemail;
         if (!$this->is_requested_friend($rid, $uid, 'out', 'no')) {
             if ($msg) {
                 e(lang('friend_confirm_error'));
@@ -1595,9 +1583,9 @@ class userquery extends CBCategory
             addFeed(['action' => 'add_friend', 'object_id' => $rid, 'object' => 'friend', 'uid' => $uid]);
             addFeed(['action' => 'add_friend', 'object_id' => $uid, 'object' => 'friend', 'uid' => $rid]);
 
-            $db->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type', 'confirmed'],
+            Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type', 'confirmed'],
                 [$uid, $rid, now(), 'in', 'yes']);
-            $db->update(tbl($this->dbtbl['contacts']), ['confirmed'], ['yes'], ' userid=\'' . $rid . '\' AND contact_userid=\'' . $uid . '\' ');
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['contacts']), ['confirmed'], ['yes'], ' userid=\'' . $rid . '\' AND contact_userid=\'' . $uid . '\' ');
             if ($msg) {
                 e(lang('friend_confirmed'), 'm');
             }
@@ -1657,13 +1645,11 @@ class userquery extends CBCategory
      */
     function confirm_request($rid, $uid = null)
     {
-        global $db;
-
         if (!$uid) {
             $uid = user_id();
         }
 
-        $result = $db->select(tbl($this->dbtbl['contacts']), '*', " userid='$rid' AND contact_userid='$uid' ");
+        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['contacts']), '*', " userid='$rid' AND contact_userid='$uid' ");
 
         if (count($result) == 0) {
             e(lang("friend_request_not_found"));
@@ -1690,8 +1676,6 @@ class userquery extends CBCategory
      */
     function get_contacts($uid, $group = 0, $confirmed = null, $count_only = false, $type = null)
     {
-        global $db;
-
         $query = '';
         if ($confirmed) {
             $query .= ' AND ' . tbl('contacts') . ".confirmed='$confirmed' ";
@@ -1702,7 +1686,7 @@ class userquery extends CBCategory
         }
 
         if (!$count_only) {
-            $result = $db->select(tbl('contacts,users'),
+            $result = Clipbucket_db::getInstance()->select(tbl('contacts,users'),
                 tbl('contacts.contact_userid,contacts.confirmed,contacts.request_type ,users.*'),
                 tbl('contacts.userid') . "='$uid' AND " . tbl('users.userid') . '=' . tbl('contacts.contact_userid') . $query . '
              AND ' . tbl('contacts') . ".contact_group_id='$group' ");
@@ -1713,7 +1697,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        return $db->count(tbl('contacts'),
+        return Clipbucket_db::getInstance()->count(tbl('contacts'),
             tbl('contacts.contact_userid'),
             tbl('contacts.userid') . "='$uid' 
         $query AND " . tbl('contacts') . ".contact_group_id='$group' ");
@@ -1731,10 +1715,8 @@ class userquery extends CBCategory
      */
     function get_pending_contacts($uid, $group = 0, $count_only = false)
     {
-        global $db;
-
         if (!$count_only) {
-            $result = $db->select(tbl('contacts,users'),
+            $result = Clipbucket_db::getInstance()->select(tbl('contacts,users'),
                 tbl('contacts.userid,contacts.confirmed,contacts.request_type ,users.*'),
                 tbl('contacts.contact_userid') . "='$uid' AND " . tbl('users.userid') . '=' . tbl('contacts.userid') . "
             AND " . tbl('contacts.confirmed') . "='no' AND " . tbl('contacts') . ".contact_group_id='$group' ");
@@ -1744,7 +1726,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        return $db->count(tbl('contacts'),
+        return Clipbucket_db::getInstance()->count(tbl('contacts'),
             tbl('contacts.contact_userid'),
             tbl('contacts.contact_userid') . "='$uid' AND " . tbl('contacts.confirmed') . "='no' AND " . tbl('contacts') . ".contact_group_id='$group' ");
     }
@@ -1757,7 +1739,6 @@ class userquery extends CBCategory
      */
     function remove_contact($fid, $uid = null)
     {
-        global $db;
         if (!$uid) {
             $uid = user_id();
         }
@@ -1765,7 +1746,7 @@ class userquery extends CBCategory
         if (!$this->is_friend($fid, $uid)) {
             e(lang('user_no_in_contact_list'));
         } else {
-            $db->execute('DELETE FROM ' . tbl($this->dbtbl['contacts']) . " WHERE 
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['contacts']) . " WHERE 
                         (userid='$uid' AND contact_userid='$fid') OR (userid='$fid' AND contact_userid='$uid')");
             e(lang('user_removed_from_contact_list'), 'm');
         }
@@ -1779,8 +1760,7 @@ class userquery extends CBCategory
      */
     function increment_watched_videos($userid)
     {
-        global $db;
-        $db->update(tbl($this->dbtbl['users']), ['total_watched'], ['|f|total_watched+1'], ' userid=\'' . $userid . '\'');
+        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_watched'], ['|f|total_watched+1'], ' userid=\'' . $userid . '\'');
     }
 
     /**
@@ -1795,7 +1775,6 @@ class userquery extends CBCategory
         if (!$user) {
             $user = user_id();
         }
-        global $db;
 
         $to_user = $this->get_user_details($to);
 
@@ -1810,18 +1789,18 @@ class userquery extends CBCategory
         } elseif ($to_user['userid'] == $user) {
             e(lang('you_cant_sub_yourself'));
         } else {
-            $db->insert(tbl($this->dbtbl['subtbl']), ['userid', 'subscribed_to', 'date_added'],
+            Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['subtbl']), ['userid', 'subscribed_to', 'date_added'],
                 [$user, $to, NOW()]);
-            $db->update(tbl($this->dbtbl['users']), ['subscribers'],
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['subscribers'],
                 [$this->get_user_subscribers($to, true)], " userid='$to' ");
-            $db->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
                 [$this->get_user_subscriptions($user, 'count')], " userid='$user' ");
             //Logging Comment
             $log_array = [
                 'success'        => 'yes',
                 'details'        => 'subsribed to ' . $to_user['username'],
                 'action_obj_id'  => $to_user['userid'],
-                'action_done_id' => $db->insert_id()
+                'action_done_id' => Clipbucket_db::getInstance()->insert_id()
             ];
             insert_log('subscribe', $log_array);
 
@@ -1843,13 +1822,12 @@ class userquery extends CBCategory
         if (!$user) {
             $user = user_id();
         }
-        global $db;
 
         if (!$user) {
             return false;
         }
 
-        $result = $db->select(tbl($this->dbtbl['subtbl']), '*', " subscribed_to='$to' AND userid='$user'");
+        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['subtbl']), '*', " subscribed_to='$to' AND userid='$user'");
         if (count($result) > 0) {
             return $result;
         }
@@ -1867,7 +1845,6 @@ class userquery extends CBCategory
      */
     function remove_subscription($subid, $uid = null): bool
     {
-        global $db;
         if (!$uid) {
             $uid = user_id();
         }
@@ -1877,12 +1854,12 @@ class userquery extends CBCategory
             return false;
         }
         if ($this->is_subscribed($subid, $uid)) {
-            $db->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . " WHERE userid='$uid' AND subscribed_to='$subid'");
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . " WHERE userid='$uid' AND subscribed_to='$subid'");
             e(lang('class_unsub_msg'), 'm');
 
-            $db->update(tbl($this->dbtbl['users']), ['subscribers'],
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['subscribers'],
                 [$this->get_user_subscribers($subid, true)], " userid='$subid' ");
-            $db->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_subscriptions'],
                 [$this->get_user_subscriptions($uid, 'count')], " userid='$uid' ");
             return true;
         }
@@ -1910,16 +1887,15 @@ class userquery extends CBCategory
      */
     function get_user_subscribers($id, $count = false)
     {
-        global $db;
         if (!$count) {
-            $result = $db->select(tbl('subscriptions'), '*',
+            $result = Clipbucket_db::getInstance()->select(tbl('subscriptions'), '*',
                 " subscribed_to='$id' ");
             if (count($result) > 0) {
                 return $result;
             }
             return false;
         }
-        return $db->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " subscribed_to='$id' ");
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " subscribed_to='$id' ");
     }
 
     /**
@@ -1933,8 +1909,7 @@ class userquery extends CBCategory
      */
     function get_user_subscribers_detail($id, $limit = null)
     {
-        global $db;
-        $result = $db->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.subscribed_to') . " = '$id' AND " . tbl('subscriptions.userid') . '=' . tbl('users.userid'), $limit);
+        $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.subscribed_to') . " = '$id' AND " . tbl('subscriptions.userid') . '=' . tbl('users.userid'), $limit);
         if (count($result) > 0) {
             return $result;
         }
@@ -1952,9 +1927,8 @@ class userquery extends CBCategory
      */
     function get_user_subscriptions($id, $limit = null)
     {
-        global $db;
         if ($limit != 'count') {
-            $result = $db->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.userid') . " = '$id' AND " . tbl('subscriptions.subscribed_to') . '=' . tbl('users.userid'), $limit);
+            $result = Clipbucket_db::getInstance()->select(tbl('users,' . $this->dbtbl['subtbl']), '*', ' ' . tbl('subscriptions.userid') . " = '$id' AND " . tbl('subscriptions.subscribed_to') . '=' . tbl('users.userid'), $limit);
 
             if (count($result) > 0) {
                 return $result;
@@ -1962,7 +1936,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        return $db->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " userid = '$id'");
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['subtbl']), 'subscription_id', " userid = '$id'");
     }
 
     /**
@@ -1981,7 +1955,7 @@ class userquery extends CBCategory
      */
     function reset_password($step, $input, $code = null)
     {
-        global $cbemail, $db;
+        global $cbemail;
         switch ($step) {
             case 1:
                 $udetails = $this->get_user_details($input);
@@ -1995,7 +1969,7 @@ class userquery extends CBCategory
                     $avcode = $udetails['avcode'];
                     if (!$udetails['avcode']) {
                         $avcode = RandomString(10);
-                        $db->update(tbl($this->dbtbl['users']), ['avcode'], [$avcode], " userid='" . $udetails['userid'] . "'");
+                        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['avcode'], [$avcode], " userid='" . $udetails['userid'] . "'");
                     }
 
                     $more_var = [
@@ -2029,7 +2003,7 @@ class userquery extends CBCategory
                     $newpass = RandomString(6);
                     $pass = pass_code($newpass, $udetails['userid']);
                     $avcode = RandomString(10);
-                    $db->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
+                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
                     //sending new password email...
                     //Sending confirmation email
                     $tpl = $cbemail->get_template('password_reset_details');
@@ -2094,10 +2068,8 @@ class userquery extends CBCategory
      */
     function UpdateLastActive($username)
     {
-        global $db;
-
         $sql = 'UPDATE ' . tbl("users") . " SET last_active = '" . NOW() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
-        $db->execute($sql);
+        Clipbucket_db::getInstance()->execute($sql);
     }
 
     /**
@@ -2214,12 +2186,10 @@ class userquery extends CBCategory
      */
     function get_user_field($uid, $field)
     {
-        global $db;
-
         if (is_numeric($uid)) {
-            $results = $db->select(tbl('users'), $field, "userid='$uid'");
+            $results = Clipbucket_db::getInstance()->select(tbl('users'), $field, "userid='$uid'");
         } else {
-            $results = $db->select(tbl('users'), $field, "username='$uid'");
+            $results = Clipbucket_db::getInstance()->select(tbl('users'), $field, "username='$uid'");
         }
 
         if (count($results) > 0) {
@@ -2254,8 +2224,6 @@ class userquery extends CBCategory
      */
     function get_user_level($uid, $is_level = false)
     {
-        global $db;
-
         if ($is_level) {
             $level = $uid;
         } else {
@@ -2268,7 +2236,7 @@ class userquery extends CBCategory
             }
         }
 
-        $result = $db->select(tbl('user_levels,user_levels_permissions'), '*',
+        $result = Clipbucket_db::getInstance()->select(tbl('user_levels,user_levels_permissions'), '*',
             tbl('user_levels_permissions.user_level_id') . "='" . $level . "' 
                               AND " . tbl('user_levels_permissions.user_level_id') . ' = ' . tbl('user_levels.user_level_id'), false, false, false, 600);
 
@@ -2286,9 +2254,8 @@ class userquery extends CBCategory
      */
     function get_levels($filter = null)
     {
-        global $db;
         if( !empty($filter)) $filter = ' AND ' . $filter;
-        $results = $db->select(tbl('user_levels'), '*', 'user_level_active = \'yes\'  ' . $filter, null, ' user_level_id ASC');
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', 'user_level_active = \'yes\'  ' . $filter, null, ' user_level_id ASC');
 
         if (count($results) > 0) {
             return $results;
@@ -2306,8 +2273,7 @@ class userquery extends CBCategory
      */
     function get_level_details($lid)
     {
-        global $db;
-        $results = $db->select(tbl('user_levels'), '*', " user_level_id='$lid' AND user_level_id NOT IN (SELECT user_level_id FROM ".tbl('user_levels')." WHERE user_level_name LIKE 'Anonymous')");
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels'), '*', " user_level_id='$lid' AND user_level_id NOT IN (SELECT user_level_id FROM ".tbl('user_levels')." WHERE user_level_name LIKE 'Anonymous')");
         if (count($results) > 0) {
             return $results[0];
         }
@@ -2328,12 +2294,11 @@ class userquery extends CBCategory
      */
     function get_level_users($id, $count = false, $fields = 'level')
     {
-        global $db;
         if ($fields == 'all') {
             $fields = '*';
         }
 
-        $results = $db->select(tbl('users'), $fields, " level='$id'");
+        $results = Clipbucket_db::getInstance()->select(tbl('users'), $fields, " level='$id'");
         if (count($results) > 0) {
             if ($count) {
                 return count($results);
@@ -2350,7 +2315,6 @@ class userquery extends CBCategory
      */
     function add_user_level($array)
     {
-        global $db;
         if (!is_array($array)) {
             $array = $_POST;
         }
@@ -2358,8 +2322,8 @@ class userquery extends CBCategory
         if (empty($level_name)) {
             e(lang('please_enter_level_name'));
         } else {
-            $db->insert(tbl('user_levels'), ['user_level_name'], [$level_name]);
-            $iid = $db->insert_id();
+            Clipbucket_db::getInstance()->insert(tbl('user_levels'), ['user_level_name'], [$level_name]);
+            $iid = Clipbucket_db::getInstance()->insert_id();
 
             $fields_array[] = 'user_level_id';
             $value_array[] = $iid;
@@ -2367,7 +2331,7 @@ class userquery extends CBCategory
                 $fields_array[] = $access;
                 $value_array[] = $array[$access] ? $array[$access] : 'no';
             }
-            $db->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
+            Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
             return true;
         }
     }
@@ -2382,8 +2346,7 @@ class userquery extends CBCategory
      */
     function get_level_permissions($id)
     {
-        global $db;
-        $results = $db->select(tbl('user_levels_permissions'), '*', " user_level_id = '$id'");
+        $results = Clipbucket_db::getInstance()->select(tbl('user_levels_permissions'), '*', " user_level_id = '$id'");
         if (count($results) > 0) {
             return $results[0];
         }
@@ -2423,7 +2386,6 @@ class userquery extends CBCategory
      */
     function update_user_level($id, $array): bool
     {
-        global $db;
         if (!is_array($array)) {
             $array = $_POST;
         }
@@ -2441,7 +2403,7 @@ class userquery extends CBCategory
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);
                 //Updating Now
-                $db->update(tbl('user_levels'), ['user_level_name'], [$level_name], " user_level_id = '$id'");
+                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name'], [$level_name], " user_level_id = '$id'");
             }
 
             if (isset($_POST['plugin_perm'])) {
@@ -2450,7 +2412,7 @@ class userquery extends CBCategory
             }
 
             //Updating Permissions
-            $db->update(tbl('user_levels_permissions'), $fields_array, $value_array, " user_level_id = '$id'");
+            Clipbucket_db::getInstance()->update(tbl('user_levels_permissions'), $fields_array, $value_array, " user_level_id = '$id'");
 
             e(lang('level_updated'), 'm');
             return true;
@@ -2466,17 +2428,16 @@ class userquery extends CBCategory
      */
     function delete_user_level($id): bool
     {
-        global $db;
         $level_details = $this->get_level_details($id);
         $de_level = $this->get_level_details(3);
         if ($level_details) {
             //CHeck if leve is deleteable or not
             if ($level_details['user_level_is_default'] == 'no') {
-                $db->delete(tbl('user_levels'), ['user_level_id'], [$id]);
-                $db->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
+                Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
+                Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
                 e(lang('level_del_sucess', $de_level['user_level_name']));
 
-                $db->update(tbl('users'), ['level'], [3], " level='$id'");
+                Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], " level='$id'");
                 return true;
             }
 
@@ -2498,7 +2459,6 @@ class userquery extends CBCategory
      */
     function get_user_vids($uid, $cond = null, $count_only = false, $myacc = false)
     {
-        global $db;
         if ($cond != null) {
             $cond = " AND $cond ";
         }
@@ -2510,7 +2470,7 @@ class userquery extends CBCategory
             $order = ' videoid DESC';
         }
 
-        $results = $db->select(tbl('video'), '*', " userid = '$uid' $cond", "$limit", "$order");
+        $results = Clipbucket_db::getInstance()->select(tbl('video'), '*', " userid = '$uid' $cond", "$limit", "$order");
         if (count($results) > 0) {
             if ($myacc) {
                 return $results;
@@ -2568,8 +2528,7 @@ class userquery extends CBCategory
      */
     function get_level_types(): array
     {
-        global $db;
-        return $db->select(tbl($this->dbtbl['user_permission_type']), '*');
+        return Clipbucket_db::getInstance()->select(tbl($this->dbtbl['user_permission_type']), '*');
     }
     /**
      * Function used to get permissions
@@ -2581,12 +2540,11 @@ class userquery extends CBCategory
      */
     function get_permissions($type = null)
     {
-        global $db;
         $cond = '';
         if ($type) {
             $cond = " permission_type ='$type'";
         }
-        $result = $db->select(tbl($this->dbtbl['user_permissions']), '*', $cond);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['user_permissions']), '*', $cond);
         if (count($result) > 0) {
             return $result;
         }
@@ -2715,7 +2673,7 @@ class userquery extends CBCategory
      */
     function update_user($array)
     {
-        global $db, $Upload;
+        global $Upload;
         if (is_null($array)) {
             $array = $_POST;
         }
@@ -2966,7 +2924,7 @@ class userquery extends CBCategory
         }
 
         if (!error() && is_array($uquery_field)) {
-            $db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, " userid='" . mysql_clean($array['userid']) . "'");
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, " userid='" . mysql_clean($array['userid']) . "'");
             e(lang('usr_upd_succ_msg'), 'm');
         }
 
@@ -2979,7 +2937,7 @@ class userquery extends CBCategory
             //Login Upload
             insert_log('profile_update', $log_array);
 
-            $db->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
             Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
             e(lang('usr_pof_upd_msg'), 'm');
@@ -2994,7 +2952,7 @@ class userquery extends CBCategory
      */
     function update_user_avatar_bg($array)
     {
-        global $db, $Upload;
+        global $Upload;
 
         //Deleting User Avatar
         if ($array['delete_avatar'] == 'yes') {
@@ -3061,7 +3019,7 @@ class userquery extends CBCategory
         //Login Upload
         insert_log('profile_update', $log_array);
 
-        $db->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, ' userid=\'' . user_id() . '\'');
+        Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), $uquery_field, $uquery_val, ' userid=\'' . user_id() . '\'');
         e(lang('usr_avatar_bg_update'), 'm');
     }
 
@@ -3147,14 +3105,11 @@ class userquery extends CBCategory
      * Function used to check weather username exists or not
      *
      * @param $i
-     *
-     * @return bool
-     * @throws Exception
+     * @return mixed
      */
     function username_exists($i)
     {
-        global $db;
-        return $db->count(tbl($this->dbtbl['users']), 'username', " username='$i'");
+        return Clipbucket_db::getInstance()->count(tbl($this->dbtbl['users']), 'username', " username='$i'");
     }
 
     /**
@@ -3167,8 +3122,7 @@ class userquery extends CBCategory
      */
     function email_exists($i): bool
     {
-        global $db;
-        $result = $db->select(tbl($this->dbtbl['users']), 'email', " email='$i'");
+        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'email', " email='$i'");
         if (count($result) > 0) {
             return true;
         }
@@ -3201,8 +3155,7 @@ class userquery extends CBCategory
      */
     function get_user_action_log($uid, $limit = null)
     {
-        global $db;
-        $result = $db->select(tbl($this->dbtbl['action_log']), '*', " action_userid='$uid'", $limit, ' date_added DESC');
+        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['action_log']), '*', " action_userid='$uid'", $limit, ' date_added DESC');
         if (count($result) > 0) {
             return $result;
         }
@@ -3317,17 +3270,14 @@ class userquery extends CBCategory
         return cblink(['name' => 'user_videos']) . $u['username'];
     }
 
-    /*
-    * Get number of all unread messages of a user using his userid
-    */
     /**
+     * Get number of all unread messages of a user using his userid
      * @throws Exception
      */
-    function get_unread_msgs($userid, $label = false)
+    function get_unread_msgs($userid, $label = false): int
     {
-        global $db;
         $userid = '#' . $userid . '#';
-        $results = $db->select(tbl('messages'), '*', "message_to='$userid' AND message_status='unread'");
+        $results = Clipbucket_db::getInstance()->select(tbl('messages'), '*', "message_to='$userid' AND message_status='unread'");
         $count = count($results);
 
         if ($label) {
@@ -3409,7 +3359,6 @@ class userquery extends CBCategory
      */
     function change_email($array)
     {
-        global $db;
         //function used to change user email
         if (!isValidEmail($array['new_email']) || $array['new_email'] == '') {
             e(lang("usr_email_err2"));
@@ -3420,7 +3369,7 @@ class userquery extends CBCategory
         } elseif ($this->email_exists($array['new_email'])) {
             e(lang('usr_email_err3'));
         } else {
-            $db->update(tbl($this->dbtbl['users']), ['email'], [$array['new_email']], " userid='" . $array['userid'] . "'");
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['email'], [$array['new_email']], " userid='" . $array['userid'] . "'");
             e(lang('email_change_msg'), 'm');
         }
     }
@@ -3444,7 +3393,6 @@ class userquery extends CBCategory
      */
     function ban_users($users, $uid = null)
     {
-        global $db;
         if (!$uid) {
             $uid = user_id();
         }
@@ -3458,11 +3406,11 @@ class userquery extends CBCategory
         if (count($new_users) > 0) {
             $new_users = array_unique($new_users);
             $banned_users = implode(',', $new_users);
-            $db->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
             e(lang('user_ban_msg'), 'm');
         } else {
             if (!$users) {
-                $db->update(tbl($this->dbtbl['users']), ['banned_users'], [$users], " userid='$uid'");
+                Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$users], " userid='$uid'");
                 e(lang('no_user_ban_msg'), 'm');
             }
         }
@@ -3476,7 +3424,6 @@ class userquery extends CBCategory
      */
     function ban_user($user)
     {
-        global $db;
         $uid = user_id();
 
         if (!$uid) {
@@ -3491,7 +3438,7 @@ class userquery extends CBCategory
                 }
 
                 if (!$this->is_user_banned($user)) {
-                    $db->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
+                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
                     e(lang('user_blocked'), 'm');
                 } else {
                     e(lang('user_already_blocked'));
@@ -3514,16 +3461,15 @@ class userquery extends CBCategory
      */
     function is_user_banned($ban, $user = null, $banned_users = null): bool
     {
-        global $db;
         if (!$user) {
             $user = user_id();
         }
 
         if (!$banned_users) {
             if (is_numeric($user)) {
-                $result = $db->select(tbl($this->dbtbl['users']), 'banned_users', " userid='$user' ");
+                $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'banned_users', " userid='$user' ");
             } else {
-                $result = $db->select(tbl($this->dbtbl['users']), 'banned_users', " username='$user' ");
+                $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users']), 'banned_users', " username='$user' ");
             }
             $banned_users = $result[0]['banned_users'];
         }
@@ -3545,11 +3491,10 @@ class userquery extends CBCategory
      */
     function get_user_details_with_profile($uid = null): array
     {
-        global $db;
         if (!$uid) {
             $uid = user_id();
         }
-        $result = $db->select(tbl($this->dbtbl['users'] . ',' . $this->dbtbl['user_profile']), '*', tbl($this->dbtbl['users']) . ".userid ='$uid' AND " . tbl($this->dbtbl['users']) . '.userid = ' . tbl($this->dbtbl['user_profile']) . '.userid');
+        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users'] . ',' . $this->dbtbl['user_profile']), '*', tbl($this->dbtbl['users']) . ".userid ='$uid' AND " . tbl($this->dbtbl['users']) . '.userid = ' . tbl($this->dbtbl['user_profile']) . '.userid');
         return $result[0];
     }
 
@@ -3793,7 +3738,7 @@ class userquery extends CBCategory
      */
     function signup_user($array = null, $send_signup_email = true)
     {
-        global $db, $userquery;
+        global $userquery;
 
         $isSocial = false;
         if (isset($array['social_account_id'])) {
@@ -3959,10 +3904,10 @@ class userquery extends CBCategory
 
             //Finalizing Query
             $query .= ')';
-            $db->execute($query);
-            $insert_id = $db->insert_id();
+            Clipbucket_db::getInstance()->execute($query);
+            $insert_id = Clipbucket_db::getInstance()->insert_id();
 
-            $db->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['password'], $insert_id)], ' userid=\'' . $insert_id . '\'');
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['password'], $insert_id)], ' userid=\'' . $insert_id . '\'');
 
             if( config('enable_user_category') == 'yes' ){
                 //Changing category
@@ -4003,7 +3948,7 @@ class userquery extends CBCategory
             $fields_list[] = 'voters';
             $fields_data[] = '';
 
-            $db->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
+            Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
 
             if (!has_access('admin_access', true) && EMAIL_VERIFICATION && $send_signup_email) {
                 global $cbemail;
@@ -4066,8 +4011,6 @@ class userquery extends CBCategory
      */
     function get_users($params = null, $force_admin = false)
     {
-        global $db;
-
         $limit = $params['limit'];
         $order = $params['order'];
 
@@ -4225,7 +4168,7 @@ class userquery extends CBCategory
 
             $result = select($query);
         } else {
-            $result = $db->count(tbl('users') . ' AS users ', 'userid', $cond);
+            $result = Clipbucket_db::getInstance()->count(tbl('users') . ' AS users ', 'userid', $cond);
         }
 
         if (isset($params['assign']) && $params['assign'] != '') {
@@ -4241,7 +4184,6 @@ class userquery extends CBCategory
      */
     function action($case, $uid)
     {
-        global $db;
         $udetails = $this->get_user_details(user_id());
         $logged_user_level = $udetails['level'];
         if ($logged_user_level > 1) {
@@ -4263,7 +4205,7 @@ class userquery extends CBCategory
             case 'av':
             case 'a':
                 $avcode = RandomString(10);
-                $db->update($tbl, ['usr_status', 'avcode'], ['Ok', $avcode], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['usr_status', 'avcode'], ['Ok', $avcode], " userid='$uid' ");
                 e(lang('usr_ac_msg'), 'm');
                 break;
 
@@ -4272,7 +4214,7 @@ class userquery extends CBCategory
             case 'dav':
             case 'd':
                 $avcode = RandomString(10);
-                $db->update($tbl, ['usr_status', 'avcode'], ['ToActivate', $avcode], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['usr_status', 'avcode'], ['ToActivate', $avcode], " userid='$uid' ");
                 e(lang('usr_dac_msg'), 'm');
                 break;
 
@@ -4280,7 +4222,7 @@ class userquery extends CBCategory
             case 'feature':
             case 'featured':
             case 'f':
-                $db->update($tbl, ['featured', 'featured_date'], ['yes', now()], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['featured', 'featured_date'], ['yes', now()], " userid='$uid' ");
                 e(lang('User has been set as featured'), 'm');
                 break;
 
@@ -4288,21 +4230,21 @@ class userquery extends CBCategory
             case 'unfeature':
             case 'unfeatured':
             case 'uf':
-                $db->update($tbl, ['featured'], ['no'], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['featured'], ['no'], " userid='$uid' ");
                 e(lang('User has been removed from featured users'), 'm');
                 break;
 
             //Ban User
             case 'ban':
             case 'banned':
-                $db->update($tbl, ['ban_status'], ['yes'], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['ban_status'], ['yes'], " userid='$uid' ");
                 e(lang('usr_uban_msg'), 'm');
                 break;
 
             //Ban User
             case 'unban':
             case 'unbanned':
-                $db->update($tbl, ['ban_status'], ['no'], " userid='$uid' ");
+                Clipbucket_db::getInstance()->update($tbl, ['ban_status'], ['no'], " userid='$uid' ");
                 e(lang('usr_uuban_msg'), 'm');
                 break;
         }
@@ -4319,21 +4261,19 @@ class userquery extends CBCategory
      */
     function get_online_users($group = true, $count = false)
     {
-        global $db;
-
         if ($group) {
-            $results = $db->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ") ON 
+            $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ") ON 
              (" . tbl('sessions.session_user=') . tbl('users') . '.userid)',
                 tbl('sessions.*,users.username,users.userid,users.email') . ',count(' . tbl('sessions.session_user') . ') AS logins'
                 , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 GROUP BY " . tbl('users.userid'));
         } else {
             if ($count) {
-                $results = $db->count(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
+                $results = Clipbucket_db::getInstance()->count(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
                  (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
                     tbl('sessions.session_id')
                     , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 ");
             } else {
-                $results = $db->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
+                $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
                  (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
                     tbl('sessions.*,users.username,users.userid,users.email')
                     , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 ");
@@ -4354,7 +4294,7 @@ class userquery extends CBCategory
      */
     function login_as_user($id, $realtime = false): bool
     {
-        global $sess, $db;
+        global $sess;
         $udetails = $this->get_user_details($id);
         if ($udetails) {
             if (!$realtime) {
@@ -4370,7 +4310,7 @@ class userquery extends CBCategory
 
                 $smart_sess = md5($udetails['user_session_key'] . $session_salt);
 
-                $db->delete(tbl('sessions'), ['session'], [$sess->id]);
+                Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session'], [$sess->id]);
                 $sess->add_session($userid, 'smart_sess', $smart_sess);
             } else {
                 if ($this->login_check(null, true)) {
@@ -4395,7 +4335,7 @@ class userquery extends CBCategory
 
                     $smart_sess = md5($udetails['user_session_key'] . $session_salt);
 
-                    $db->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
+                    Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
                     $sess->add_session($userid, 'smart_sess', $smart_sess);
 
                     //Setting Vars
@@ -4404,7 +4344,7 @@ class userquery extends CBCategory
                     $this->level = $udetails['level'];
 
                     //Updating User last login , num of visits and ip
-                    $db->update(tbl('users'),
+                    Clipbucket_db::getInstance()->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],
                         ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
                         'userid=\'' . $userid . '\''
@@ -4438,7 +4378,7 @@ class userquery extends CBCategory
      */
     function revert_from_user()
     {
-        global $sess, $db;
+        global $sess;
         if ($this->is_admin_logged_as_user()) {
             $userid = $sess->get('dummy_userid');
             $session_salt = $sess->get('dummy_sess_salt');
@@ -4448,7 +4388,7 @@ class userquery extends CBCategory
             $sess->set('sess_salt', $session_salt);
             $sess->set('PHPSESSID', $sess->get('dummy_PHPSESSID'));
 
-            $db->delete(tbl('sessions'), ['session'], [$sess->get('dummy_PHPSESSID')]);
+            Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session'], [$sess->get('dummy_PHPSESSID')]);
             $sess->add_session($userid, 'smart_sess', $smart_sess);
 
             $sess->set('dummy_sess_salt', '');
@@ -5182,8 +5122,6 @@ class userquery extends CBCategory
      */
     function rate_user($id, $rating): array
     {
-        global $db;
-
         if (!is_numeric($rating) || $rating <= 9) {
             $rating = 0;
         }
@@ -5222,7 +5160,7 @@ class userquery extends CBCategory
             $t = $c_rating['rated_by'] * $c_rating['rating'];
             $rated_by = $c_rating['rated_by'] + 1;
             $new_rate = ($t + $rating) / $rated_by;
-            $db->update(tbl('user_profile'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' userid = ' . $id . '');
+            Clipbucket_db::getInstance()->update(tbl('user_profile'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' userid = ' . $id . '');
             $userDetails = [
                 'object_id' => $id,
                 'type'      => 'user',
@@ -5249,8 +5187,7 @@ class userquery extends CBCategory
      */
     function current_rating($id)
     {
-        global $db;
-        $result = $db->select(tbl('user_profile'), 'userid,allow_ratings,rating,rated_by,voters', ' userid = ' . mysql_clean($id) );
+        $result = Clipbucket_db::getInstance()->select(tbl('user_profile'), 'userid,allow_ratings,rating,rated_by,voters', ' userid = ' . mysql_clean($id) );
         if ($result) {
             return $result[0];
         }
@@ -5287,7 +5224,7 @@ class userquery extends CBCategory
      */
     function sendSubscriptionEmail($vidDetails, bool $updateStatus = true): bool
     {
-        global $cbemail, $db;
+        global $cbemail;
         if (!$vidDetails['videoid']) {
             e(lang('invalid_videoid'));
             return false;
@@ -5338,7 +5275,7 @@ class userquery extends CBCategory
 
         //Updating video subscription email status to sent
         if ($updateStatus) {
-            $db->update(tbl('video'), ['subscription_email'], ['sent'], " videoid='" . $vidDetails['videoid'] . "'");
+            Clipbucket_db::getInstance()->update(tbl('video'), ['subscription_email'], ['sent'], " videoid='" . $vidDetails['videoid'] . "'");
         }
 
         return true;
@@ -5369,14 +5306,13 @@ class userquery extends CBCategory
      */
     function update_user_voted($array, $userid = null)
     {
-        global $db;
         if (!$userid) {
             $userid = user_id();
         }
 
         if (is_array($array)) {
             $voted = '';
-            $votedDetails = $db->select(tbl('users'), 'voted', " userid = '$userid'");
+            $votedDetails = Clipbucket_db::getInstance()->select(tbl('users'), 'voted', " userid = '$userid'");
             if (!empty($votedDetails)) {
                 if (!empty($js)) {
                     $voted = $js->json_decode($votedDetails[0]['voted'], true);
@@ -5392,7 +5328,7 @@ class userquery extends CBCategory
             }
 
             if (!empty($votedEncode)) {
-                $db->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");
+                Clipbucket_db::getInstance()->update(tbl('users'), ['voted'], ["|no_mc|$votedEncode"], " userid='$userid'");
             }
         }
     }
@@ -5428,8 +5364,7 @@ class userquery extends CBCategory
      */
     function sent_contact_requests($user): array
     {
-        global $db;
-        return $db->select(tbl('contacts'), '*', "userid = $user AND confirmed = 'no'");
+        return Clipbucket_db::getInstance()->select(tbl('contacts'), '*', "userid = $user AND confirmed = 'no'");
     }
 
     /**
@@ -5444,8 +5379,7 @@ class userquery extends CBCategory
      */
     function recieved_contact_requests($user): array
     {
-        global $db;
-        return $db->select(tbl('contacts'), '*', "contact_userid = $user AND confirmed = 'no'");
+        return Clipbucket_db::getInstance()->select(tbl('contacts'), '*', "contact_userid = $user AND confirmed = 'no'");
     }
 
     /**
@@ -5460,8 +5394,7 @@ class userquery extends CBCategory
      */
     function added_contacts($user): array
     {
-        global $db;
-        return $db->select(tbl('contacts'), '*', "(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
+        return Clipbucket_db::getInstance()->select(tbl('contacts'), '*', "(contact_userid = $user OR userid = $user) AND confirmed = 'yes'");
     }
 
     /**

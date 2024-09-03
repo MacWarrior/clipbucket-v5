@@ -9,7 +9,7 @@ if( !has_access('allow_video_upload') ){
     die();
 }
 
-global $cbvid, $Upload, $db, $eh;
+global $cbvid, $Upload, $eh;
 
 $mode = '';
 if ($_FILES['Filedata']) {
@@ -149,7 +149,7 @@ switch ($mode) {
 
         // inserting into video views as well
         $query = 'INSERT INTO ' . tbl('video_views') . ' (video_id, video_views, last_updated) VALUES(' . $vid . ',0,' . time() . ')';
-        $db->execute($query);
+        Clipbucket_db::getInstance()->execute($query);
 
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         die();

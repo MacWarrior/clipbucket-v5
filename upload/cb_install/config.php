@@ -1,5 +1,4 @@
 <?php
-$BDTYPE = 'mysql';
 //Database Host
 $DBHOST = '_DB_HOST_';
 //Database Name
@@ -12,11 +11,6 @@ $DBPASS = '_DB_PASS_';
 $DBPORT = '_DB_PORT_';
 //Setting Table Prefix
 define('TABLE_PREFIX', '_TABLE_PREFIX_');
-
-if (class_exists('Clipbucket_db')) {
-    $db = new Clipbucket_db();
-    $db->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT);
-}
 
 /*
  * Enable this array to overwrite configurations over DB values

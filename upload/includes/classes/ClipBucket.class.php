@@ -569,8 +569,7 @@ class ClipBucket
      */
     function get_countries($type = 'iso2'): array
     {
-        global $db;
-        $results = $db->select(tbl('countries'), '*');
+        $results = Clipbucket_db::getInstance()->select(tbl('countries'), '*');
         $carray = [];
         switch ($type) {
             case 'iso2':

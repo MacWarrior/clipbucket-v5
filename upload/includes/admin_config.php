@@ -10,7 +10,7 @@ ClipBucket::getInstance()->initAdminMenu();
 require_once DirPath::get('classes') . 'mass_upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
 
-global $db, $Smarty, $myquery;
+global $Smarty, $myquery;
 
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
