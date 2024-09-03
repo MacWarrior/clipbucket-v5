@@ -19,7 +19,6 @@ class Photo
             ,'photo_title'
             ,'photo_description'
             ,'userid'
-            ,'collection_id'
             ,'date_added'
             ,'last_viewed'
             ,'views'
@@ -204,7 +203,7 @@ class Photo
             $conditions[] = $this->getTableName() . '.photo_id = \''.mysql_clean($param_photo_id).'\'';
         }
         if( $param_photo_key ){
-            $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_photo_key).'\'';
+            $conditions[] = $this->getTableName() . '.photo_key = \''.mysql_clean($param_photo_key).'\'';
         }
         if( $param_title ){
             $conditions[] = 'LOWER(' . $this->getTableName() . '.photo_title) LIKE LOWER(\'%'.mysql_clean($param_title).'%\')';
@@ -257,7 +256,7 @@ class Photo
         } else {
             $select = $this->getAllFields();
             $select[] = 'users.username';
-            $select[] = $collection_items_table . '.collection_id AS join_collection_id';
+            $select[] = $collection_items_table . '.collection_id ';
         }
 
         $join = [];
@@ -569,7 +568,7 @@ class CBPhotos
     {
         # Set basic photo fields
         $basic_fields = [
-            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description', 'collection_id',
+            'photo_id', 'photo_key', 'userid', 'photo_title', 'photo_description',
             'photo_details', 'date_added', 'filename', 'ext', 'active', 'broadcast', 'file_directory', 'views',
             'last_commented', 'total_comments'
         ];
@@ -992,20 +991,18 @@ class CBPhotos
             $p['collection'] = '0';
         }
 
-        if ($cond != '') {
-            $cond .= ' AND ';
-        }
 
-        if (isset($p['collection']) || $p['get_orphans']) {
-            $cond .= $this->constructMultipleQuery(['ids' => $p['collection'], 'sign' => '=', 'operator' => 'OR', 'column' => 'collection_id']);
-        } else {
-            $cond .= 'photos.collection_id <> \'0\'';
+        if (!isset($p['collection']) && !$p['get_orphans']) {
+            if ($cond != '') {
+                $cond .= ' AND ';
+            }
+            $cond .= 'collections.collection_id IS NOT NULL';
         }
 
         $fields = [
             'photos'      => get_photo_fields(),
             'users'       => get_user_fields(),
-            'collections' => ['collection_name', 'type', 'views', 'date_added']
+            'collections' => ['collection_name','collection_id', 'type', 'views', 'date_added']
         ];
 
         $select_complement = '';
@@ -1025,9 +1022,13 @@ class CBPhotos
 
         $main_query = 'SELECT ' . $select . ' ' . $select_complement;
         $main_query .= ' FROM '.cb_sql_table('photos');
-        $main_query .= ' LEFT JOIN ' . cb_sql_table('collections') . ' ON photos.collection_id = collections.collection_id';
-        $main_query .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid';
+
+        $join_collection = ' LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collection_items.object_id = photos.photo_id AND collection_items.type = \'p\'
+         LEFT JOIN ' . cb_sql_table('collections') . ' ON collection_items.collection_id = collections.collection_id';
+
+        $join_collection .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON photos.userid = users.userid';
         $main_query .= $join_tag;
+        $main_query .= $join_collection;
         $order = $order ? ' ORDER BY ' . $order : false;
         $limit = $limit ? ' LIMIT ' . $limit : false;
 
@@ -1069,6 +1070,7 @@ class CBPhotos
                     $cond .= ' AND ';
                 }
                 $cond .= $this->constructMultipleQuery(['ids' => $p['collection'], 'sign' => '<>', 'column' => 'collection_id']);
+                $cond .= '( collections.collection_id IN ('. is_array($p['collection']) ? implode(',', $p['collection']) : $p['collection'].'))';
             }
 
             if ($p['extra_cond']) {
@@ -1142,7 +1144,11 @@ class CBPhotos
             }
 
             //don't remove alias T at the end, request will crash
-            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photos.photo_id FROM ' . cb_sql_table('photos') . $join_tag . ' WHERE ' . $cond . ' ' . $group_tag . ') T';
+            $query_count = 'SELECT COUNT(*) AS total FROM (SELECT photos.photo_id FROM ' . cb_sql_table('photos') . $join_tag . $join_collection  ;
+            if ($cond) {
+                $query_count .= ' WHERE ' . $cond;
+            }
+            $query_count .= $group_tag . ') T';
             $count = $db->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
@@ -1786,7 +1792,6 @@ class CBPhotos
                 'name'        => 'collection_id',
                 'type'        => 'dropdown',
                 'value'       => $cl_array,
-                'db_field'    => 'collection_id',
                 'required'    => 'yes',
                 'checked'     => $collection,
                 'invalid_err' => lang('collection_not_found')
@@ -1899,7 +1904,7 @@ class CBPhotos
             $insert_id = $db->insert(tbl($this->p_tbl), $query_field, $query_val);
 
             $photo = $this->get_photo($insert_id);
-            $this->collection->add_collection_item($insert_id, $photo['collection_id']);
+            $this->collection->add_collection_item($insert_id, $array['collection_id']);
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
                 $this->generate_photos($photo);
@@ -2174,7 +2179,7 @@ class CBPhotos
         }
         $this->validate_form_fields($array);
         $pid = $array['photo_id'];
-        $cid = $this->get_photo_field($pid, 'collection_id');
+        $cid = Photo::getInstance()->getOne(['photo_id'=>$pid])['collection_id'];
 
         if (!error()) {
             $reqFields = $this->load_required_forms($array);

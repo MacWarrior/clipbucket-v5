@@ -15,5 +15,10 @@ class MWIP extends \Migration
             'en'=>'A collection is requiered to complete photo configuration'
         ]);
 
+        self::alterTable('ALTER TABLE ' . tbl('photos') . ' DROP COLUMN collection_id', [
+            'table'=>'photos',
+            'column'=>'collection_id'
+        ]);
+
     }
 }

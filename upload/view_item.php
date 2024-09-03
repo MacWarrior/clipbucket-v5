@@ -22,7 +22,7 @@ $param = [
 $cdetails = $cbcollection->get_collections($param);
 $collect = $cdetails[0];
 
-$photo = $cbphoto->get_photo($item);
+$photo = Photo::getInstance()->getOne(['photo_key'=>$item]);
 if ($photo) {
     //if photo is orphan and isn't own by current user or user isn't an admin then redirect
     if (empty($photo)
@@ -96,14 +96,24 @@ if ($photo) {
 
     // Top collections
     $params = [
-        'limit'        => 5
-        ,
-        'type'         => 'photos'
-        ,
+        'limit'        => 5,
+        'type'         => 'photos',
         'parents_only' => true
     ];
-    $top_collectios = Collection::getInstance()->getAll($params);
-    assign('top_collections', $top_collectios);
+    $top_collections = Collection::getInstance()->getAll($params);
+    assign('top_collections', $top_collections);
+
+    // Top collections
+    $params = [
+        'title'        => $photo['photo_title'],
+        'tags'         => $photo['photo_tags'],
+        'exclude'      => $photo['photo_id'],
+        'show_related' => 'yes',
+        'limit'        => 6,
+        'order'        => 'photos.date_added DESC'
+    ];
+    $related_related_photos = Photo::getInstance()->getAll($params);
+    assign('related_related_photos', $related_related_photos);
 
 } else {
     e(lang('item_not_exist'));
