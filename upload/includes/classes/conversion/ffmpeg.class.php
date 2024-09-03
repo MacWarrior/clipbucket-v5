@@ -315,7 +315,7 @@ class FFMpeg
      */
     public function extract_subtitles()
     {
-        global $cbvideo, $db;
+        global $cbvideo;
 
         $this->log->newSection('Subtitle extraction');
 
@@ -341,7 +341,7 @@ class FFMpeg
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
                 $command = config('ffmpegpath') . ' -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
                 $output = shell_exec($command);
-                $db->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
+                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
                 if (in_dev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);

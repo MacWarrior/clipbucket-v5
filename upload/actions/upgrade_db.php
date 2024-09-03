@@ -115,7 +115,7 @@ try {
         execute_sql_file($table_version_path);
 
         $sql = 'INSERT IGNORE INTO ' . tbl('version') . ' (id, version, revision) VALUES (1, \'' . mysql_clean($version) . '\' , ' . mysql_clean((int)$revision) . ')';
-        Clipbucket_db::getInstance()->mysqli->query($sql);
+        Clipbucket_db::getInstance()->execute($sql);
     }
 
     $files = Update::getInstance()->getUpdateFiles(false, $version, $revision);

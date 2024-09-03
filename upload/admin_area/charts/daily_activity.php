@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 require_once('../../includes/admin_config.php');
-global $db, $cbvid, $userquery;
+global $cbvid, $userquery;
 
 $days = 10;
 $last_week = time() - 86400 * $days + 86400;
@@ -17,7 +17,7 @@ for ($i = 0; $i < $days; $i++) {
     if ($i < $days) {
         $date_pattern = date("Y-m-d", $last_week + ($i * 86400));
 
-        $data = $db->select(tbl("stats"), "*", " date_added LIKE '%$date_pattern%' ", 1);
+        $data = Clipbucket_db::getInstance()->select(tbl("stats"), "*", " date_added LIKE '%$date_pattern%' ", 1);
         $data = $data[0];
 
         $datas[] = $data;
@@ -41,10 +41,10 @@ $users['signups'] = $userquery->get_users(["count_only" => true, "date_added" =>
 $users['inactive'] = $userquery->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'", "status" => 'ToActivate']);
 $users['active'] = $userquery->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'", "status" => 'Ok']);
 //Views
-$user_views = $db->select(tbl("users"), "SUM(profile_hits) as total_views", " doj LIKE '%$date_pattern%'");
+$user_views = Clipbucket_db::getInstance()->select(tbl("users"), "SUM(profile_hits) as total_views", " doj LIKE '%$date_pattern%'");
 $users['views'] = $user_views[0]['total_views'];
 //Total Comments
-$user_comments = $db->select(tbl("users"), "SUM(comments_count) as total_comments", " doj LIKE '%$date_pattern%'");
+$user_comments = Clipbucket_db::getInstance()->select(tbl("users"), "SUM(comments_count) as total_comments", " doj LIKE '%$date_pattern%'");
 $users['comments'] = $user_comments[0]['total_comments'];
 
 $U = [['signups', $users['signups']], ['inactive', $users['inactive']], ['Active User', $users['active']], ['views User', $users['views']], ['comments User', $users['comments']]];

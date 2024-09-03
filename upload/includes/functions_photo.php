@@ -66,7 +66,7 @@ function plupload_photo_uploader()
  */
 function get_photo_date_folder($photo_id)
 {
-    global $cbphoto, $db;
+    global $cbphoto;
 
     if (is_array($photo_id)) {
         $photo = $photo_id;
@@ -104,7 +104,7 @@ function get_photo_date_folder($photo_id)
             /**
              * Photo exists, update file_directory index
              */
-            $db->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . mysql_clean($photo['photo_id']) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . mysql_clean($photo['photo_id']) . '\'');
         } else {
             $directory = false;
         }

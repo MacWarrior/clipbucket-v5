@@ -308,7 +308,7 @@ class AdminTool
             $revision = $update->getCurrentCoreRevision();
             //update to current revision
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
-            Clipbucket_db::getInstance()->mysqli->query($sql);
+            Clipbucket_db::getInstance()->execute($sql);
             CacheRedis::flushAll();
             Update::getInstance()->flush();
         }

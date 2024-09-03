@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery, $cbvid, $eh, $db;
+global $myquery, $cbvid, $eh;
 userquery::getInstance()->admin_login_check();
 
 $mode = $_POST['mode'];
@@ -11,7 +11,7 @@ switch ($mode) {
         $value = $_POST['note'];
         $myquery->insert_note($value);
         $array['note'] = nl2br($value);
-        $array['id'] = $db->insert_id();
+        $array['id'] = Clipbucket_db::getInstance()->insert_id();
 
         echo json_encode($array);
         break;

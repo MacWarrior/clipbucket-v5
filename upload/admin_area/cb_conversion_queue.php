@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'cb_conversion_queue');
 
-global $myquery, $db;
+global $myquery;
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
@@ -56,7 +56,7 @@ $get_limit = create_query_limit($page, config('admin_pages'));
 $queue_list = $myquery->get_conversion_queue(null, $get_limit);
 assign('queues', $queue_list);
 $total_rows = get_videos($vcount);
-$total_pages = count_pages($db->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));
+$total_pages = count_pages(Clipbucket_db::getInstance()->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 assign('admin_url', DirPath::getUrl('admin_area'));
 subtitle('Conversion Queue Manager');

@@ -21,9 +21,9 @@ if (isset($_POST['update_field'])) {
     $page_type = $_POST['page_type'];
     edit_field($field_name, $field_title, $field_type, $db_field, $default_value, $edit_id);
     if ($page_type == 'signup') {
-        $db->execute("ALTER TABLE " . tbl('users') . " CHANGE $olddbfield_name $db_field TEXT NOT NULL");
+        Clipbucket_db::getInstance()->execute("ALTER TABLE " . tbl('users') . " CHANGE $olddbfield_name $db_field TEXT NOT NULL");
     } else {
-        $db->execute("ALTER TABLE " . tbl('video') . " CHANGE $olddbfield_name $db_field TEXT NOT NULL");
+        Clipbucket_db::getInstance()->execute("ALTER TABLE " . tbl('video') . " CHANGE $olddbfield_name $db_field TEXT NOT NULL");
     }
     //ALTER TABLE cb_video CHANGE Addr myaddress TEXT NOT NULL
     e(lang("Custom field Update successfully"), "m");

@@ -61,6 +61,7 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
+require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
@@ -76,7 +77,7 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
-require_once DirPath::get('classes') . 'ClipBucket.class.php';
+
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';

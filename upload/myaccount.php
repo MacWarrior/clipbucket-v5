@@ -3,7 +3,7 @@ define('THIS_PAGE', 'myaccount');
 define('PARENT_PAGE', 'home');
 
 require 'includes/config.inc.php';
-global $db, $cbvid, $userquery, $cbphoto, $cbvideo;
+global $cbvid, $userquery, $cbphoto, $cbvideo;
 $userquery->logincheck();
 
 assign('user', $userquery->get_user_details(user_id()));
