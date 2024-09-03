@@ -260,7 +260,7 @@ class Collection
             $select = ['COUNT(' . $this->getTableName() . '.collection_id) AS count, ' . $this->getTableName() . '.userid'];
         } else {
             $select = $this->getAllFields();
-            $select[] = 'users.username AS user_username';
+            $select[] = 'users.username AS user_username, users.email, users.dob';
 
 
             if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
@@ -629,7 +629,7 @@ class Collections extends CBCategory
                     , 'class' => 'glyphicon glyphicon-folder-close'
                     , 'sub'   => [
                         [
-                            'title' => lang('manage_collections')
+                            'title' => lang('manage_x', strtolower(lang('collections')))
                             , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                         , [
@@ -1737,7 +1737,7 @@ class Collections extends CBCategory
         $params = [];
         $params['type'] = 'cl';
         $params['type_id'] = $cid;
-        Comments::delete($params);
+        Comments::delete($params, false);
 
         //Removing video From Favorites
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);

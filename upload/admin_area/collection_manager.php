@@ -156,6 +156,6 @@ $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
 assign('anonymous_id', $userquery->get_anonymous_user());
 
-subtitle(lang('manage_collections'));
+subtitle(lang('manage_x', strtolower(lang('collections'))));
 template_files('collection_manager.html');
 display_it();

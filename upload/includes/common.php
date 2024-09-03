@@ -120,8 +120,14 @@ switch (DEBUG_LEVEL) {
         ini_set('display_errors', 'on');
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
+require_once DirPath::get('classes') . 'session_message_handler.class.php';
 $pages = new pages();
 $eh = new errorhandler();
+
+foreach (sessionMessageHandler::get_messages() as $message) {
+    $eh->e($message['message'], $message['type']);
+}
+
 $param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
 
 if ($row['cache_auth'] == 'yes') {

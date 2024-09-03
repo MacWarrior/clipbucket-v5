@@ -76,7 +76,10 @@ if ($myquery->video_exists($video_id)) {
     assign('has_log', file_exists($file));
 } else {
     //add parameter to display message after redirect
-    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php?missing_video=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
+    if ($_GET['mode'] == 'delete') {
+        sessionMessageHandler::add_message(lang('video_deleted'), 'm',  BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php');
+    }
+    sessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  BASEURL . DirPath::getUrl('admin_area') . 'video_manager.php');
 }
 
 $resolution_list = getResolution_list($data);

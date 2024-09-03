@@ -593,4 +593,9 @@ class Clipbucket_db
         $this->mysqli->begin_transaction();
     }
 
+    public function getTableName(): string
+    {
+        return $this->db_name;
+    }
+
 }

@@ -1238,4 +1238,5 @@ VALUES ('admin_setting'),
        ('icon_is_required'),
        ('confirm_delete_social_network'),
        ('missing_params'),
-       ('manage_social_networks_links');
+       ('manage_social_networks_links'),
+       ('text_confirm_comment');

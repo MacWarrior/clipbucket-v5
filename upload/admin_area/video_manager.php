@@ -8,14 +8,6 @@ $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
 $pages->page_redir();
 
-if (!empty($_GET['missing_video'])) {
-    if ($_GET['missing_video'] == '2') {
-        e(lang('video_deleted'), 'message');
-    } else {
-        e(lang('class_vdo_del_err'));
-    }
-}
-
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
