@@ -15,7 +15,7 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('no_comments', [
-            'fr'=>'Aucun commentaire'
+            'fr'=>'Aucun commentaire pour cette %s'
         ]);
     }
 
