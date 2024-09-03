@@ -104,16 +104,8 @@ if ($photo) {
     assign('top_collections', $top_collections);
 
     // Top collections
-    $params = [
-        'title'        => $photo['photo_title'],
-        'tags'         => $photo['photo_tags'],
-        'exclude'      => $photo['photo_id'],
-        'show_related' => 'yes',
-        'limit'        => 6,
-        'order'        => 'photos.date_added DESC'
-    ];
-    $related_related_photos = Photo::getInstance()->getAll($params);
-    assign('related_related_photos', $related_related_photos);
+    $related_photos = Photo::getInstance()->getPhotoRelated($photo['photo_id'], 6);
+    assign('related_photos', $related_photos);
 
 } else {
     e(lang('item_not_exist'));
@@ -122,15 +114,12 @@ if ($photo) {
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
-    'tag-it' . $min_suffixe . '.js'                              => 'admin'
-    ,
+    'tag-it' . $min_suffixe . '.js'                              => 'admin',
     'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
-    'jquery.tagit' . $min_suffixe . '.css'     => 'admin'
-    ,
-    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
-    ,
+    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
+    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',
     'readonly_tag' . $min_suffixe . '.css'     => 'admin'
 ]);
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());

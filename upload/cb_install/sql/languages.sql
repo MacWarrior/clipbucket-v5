@@ -1239,5 +1239,4 @@ VALUES ('admin_setting'),
        ('confirm_delete_social_network'),
        ('missing_params'),
        ('manage_social_networks_links'),
-       ('view_channel_comments'),
        ('collection_not_found');

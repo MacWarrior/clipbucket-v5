@@ -174,6 +174,7 @@ class Photo
     public function getAll(array $params = [])
     {
         $param_photo_id = $params['photo_id'] ?? false;
+        $param_photo_ids = $params['photo_ids'] ?? false;
         $param_photo_key = $params['photo_key'] ?? false;
         $param_filename = $params['filename'] ?? false;
         $param_userid = $params['userid'] ?? false;
@@ -201,6 +202,8 @@ class Photo
         $conditions = [];
         if( $param_photo_id ){
             $conditions[] = $this->getTableName() . '.photo_id = \''.mysql_clean($param_photo_id).'\'';
+        } elseif ( $param_photo_ids ) {
+            $conditions[] = $this->getTableName() . '.photo_id IN ('.mysql_clean($param_photo_ids).')';
         }
         if( $param_photo_key ){
             $conditions[] = $this->getTableName() . '.photo_key = \''.mysql_clean($param_photo_key).'\'';
@@ -476,6 +479,40 @@ class Photo
             }
         }
         return $total;
+    }
+
+    public function getPhotoRelated($photo_id, $limit, $order = 'date_added DESC')
+    {
+        $photo = $this->getOne(['photo_id'=>$photo_id]);
+        $version = Update::getInstance()->getDBVersion();
+
+        $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($photo['title']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $cond_title .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($photo['title']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        }
+        $cond_title .= ')';
+        $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($photo['tags']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($photo['tags']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        }
+        $cond_tag .= ')';
+
+        $sql = 'SELECT GROUP_CONCAT(DISTINCT (photo_id)) as ids FROM (
+                    SELECT photo_id, 2 as score, photos.date_added FROM ' . cb_sql_table('photos') . '
+                    LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo
+                    LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag 
+                    WHERE photo_id != ' . mysql_clean($photo_id) . ' 
+                    AND '.$cond_title.' 
+                UNION 
+                    SELECT photo_id, 1 as score, photos.date_added FROM ' . cb_sql_table('photos') . '
+                    LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo
+                    LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag 
+                    WHERE photo_id != ' . mysql_clean($photo_id) . ' 
+                    AND '.$cond_tag.' 
+                ) AS R
+                ORDER BY score DESC,' . $order ;
+        $result = Clipbucket_db::getInstance()->_select($sql);
+        return $this->getAll(['photo_ids'=>$result[0]['ids']]);
     }
 }
 
@@ -1080,7 +1117,7 @@ class CBPhotos
                 $cond .= mysql_clean($p['extra_cond']);
             }
 
-            $where = ' WHERE ' . $cond . ' AND photos.collection_id <> 0';
+            $where = ' WHERE ' . $cond . ' AND collections.collection_id IS NOT NULL';
 
             $query .= $where;
             $query .= $group_tag;
@@ -1116,6 +1153,7 @@ class CBPhotos
                         $cond .= ' AND ';
                     }
                     $cond .= $this->constructMultipleQuery(['ids' => $p['collection'], 'sign' => '<>', 'column' => 'collection_id']);
+                    $cond .= '( collections.collection_id IN ('. is_array($p['collection']) ? implode(',', $p['collection']) : $p['collection'].'))';
                 }
 
                 if ($p['extra_cond']) {
