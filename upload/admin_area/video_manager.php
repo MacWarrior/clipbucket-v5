@@ -2,7 +2,6 @@
 define('THIS_PAGE', 'video_manager');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-require_once '../api/push.php';
 global $cbvid, $userquery, $pages, $myquery, $eh, $cbvideo;
 $userquery->admin_login_check();
 $userquery->login_check('video_moderation');
