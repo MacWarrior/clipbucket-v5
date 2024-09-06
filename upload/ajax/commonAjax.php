@@ -4,11 +4,10 @@ require '../includes/config.inc.php';
 
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
-    global $db;
     switch ($mode) {
         case 'check_email':
             $email = mysql_clean($_POST['email']);
-            $check = $db->select(tbl('users'), "email", " email='$email'");
+            $check = Clipbucket_db::getInstance()->select(tbl('users'), "email", " email='$email'");
             if ($check) {
                 echo 'emailExists';
                 break;
@@ -24,9 +23,9 @@ if (isset($_POST['mode'])) {
 
         case 'userExists':
             $username = mysql_clean($_POST['username']);
-            $check = $db->select(tbl('users'), "username", " username='$username'");
+            $check = Clipbucket_db::getInstance()->select(tbl('users'), "username", " username='$username'");
             if (!$check) {
-                echo "NO";
+                echo 'NO';
             }
             break;
 

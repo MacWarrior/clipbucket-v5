@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'upload_thumb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery, $db, $Upload, $pages;
+global $myquery, $Upload, $pages;
 
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');

@@ -152,17 +152,13 @@ function view_playlist($playlist_id)
  */
 function playlist_upload_cover($args)
 {
-    global $db;
-
     $filename = $args['playlist_id'];
     $extension = getExt($args['name']);
     $folder = create_dated_folder(DirPath::get('playlist_covers'));
     $uploaded_file = DirPath::get('playlist_covers') . $folder . '/' . $filename . '.' . $extension;
 
     if (!empty($filename)) {
-
         if (move_uploaded_file($args['tmp_name'], $uploaded_file)) {
-
             $cover_name = $filename . '.' . $extension;
 
             $resizer = new CB_Resizer($uploaded_file);
@@ -171,11 +167,9 @@ function playlist_upload_cover($args)
             $resizer->save();
 
 
-            $db->update(tbl('playlists'), ['cover'], [$folder . '/' . $cover_name], " playlist_id = '" . $filename . "' ");
-
+            Clipbucket_db::getInstance()->update(tbl('playlists'), ['cover'], [$folder . '/' . $cover_name], " playlist_id = '" . $filename . "' ");
             return true;
         }
-
     }
 
     return false;
@@ -183,19 +177,12 @@ function playlist_upload_cover($args)
 
 function increment_playlist_played($args = [])
 {
-    global $db;
-
     if (isset($args['playlist'])) {
-
         $cookie = 'playlist_played_' . $args['playlist']['playlist_id'];
-
         if (!isset($_COOKIE[$cookie])) {
-
-            $db->update(tbl('playlists'), ['played'], ['|f|played+1'], " playlist_id = '" . $args['playlist']['playlist_id'] . "' ");
+            Clipbucket_db::getInstance()->update(tbl('playlists'), ['played'], ['|f|played+1'], " playlist_id = '" . $args['playlist']['playlist_id'] . "' ");
             set_cookie_secure($cookie, true);
-
         }
-
     }
 }
 

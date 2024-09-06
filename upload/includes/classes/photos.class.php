@@ -834,11 +834,10 @@ class CBPhotos
      */
     function photo_exists($id): bool
     {
-        global $db;
         if (is_numeric($id)) {
-            $result = $db->select(tbl($this->p_tbl), 'photo_id', ' photo_id = \'' . $id . '\'');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_id = \'' . $id . '\'');
         } else {
-            $result = $db->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . $id . '\'');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), 'photo_id', ' photo_key = \'' . $id . '\'');
         }
 
         if ($result) {
@@ -857,8 +856,6 @@ class CBPhotos
      */
     function get_photo($pid)
     {
-        global $db;
-
         if (is_numeric($pid)) {
             $field = 'photo_id';
         } else {
@@ -880,7 +877,7 @@ class CBPhotos
                     WHERE P.' . $field . ' = \'' . mysql_clean($pid) . '\'
                     GROUP BY P.photo_id';
 
-        $result = $db->_select($query);
+        $result = Clipbucket_db::getInstance()->_select($query);
         if (count($result) > 0) {
             return $result[0];
         }
@@ -897,8 +894,6 @@ class CBPhotos
      */
     function get_photos($p)
     {
-        global $db;
-
         $order = $p['order'];
         $limit = $p['limit'];
         $cond = '';
@@ -1175,7 +1170,7 @@ class CBPhotos
                 $query_count .= ' WHERE ' . $cond;
             }
             $query_count .= $group_tag . ') T';
-            $count = $db->_select($query_count);
+            $count = Clipbucket_db::getInstance()->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
             } else {
@@ -1255,10 +1250,9 @@ class CBPhotos
      * @return bool
      * @throws Exception
      */
-    function pkey_exists($key)
+    function pkey_exists($key): bool
     {
-        global $db;
-        $result = $db->select(tbl('photos'), 'photo_key', " photo_key = '$key'");
+        $result = Clipbucket_db::getInstance()->select(tbl('photos'), 'photo_key', " photo_key = '$key'");
         if (count($result) > 0) {
             return true;
         }
@@ -1274,7 +1268,6 @@ class CBPhotos
      */
     function delete_photo($id, $orphan = false)
     {
-        global $db;
         if ($this->photo_exists($id)) {
             $photo = $this->get_photo($id);
 
@@ -1299,7 +1292,7 @@ class CBPhotos
 
 
             //Decrementing User Photos
-            $db->update(tbl('users'), ['total_photos'], ['|f|total_photos-1'], " userid='" . $photo['userid'] . "'");
+            Clipbucket_db::getInstance()->update(tbl('users'), ['total_photos'], ['|f|total_photos-1'], " userid='" . $photo['userid'] . "'");
 
             //Removing Photo Comments
             $params = [];
@@ -1308,7 +1301,7 @@ class CBPhotos
             Comments::delete($params);
 
             //Removing Photo From Favorites
-            $db->delete(tbl('favorites'), ['type', 'id'], ['p', $photo['photo_id']]);
+            Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['p', $photo['photo_id']]);
             errorhandler::getInstance()->flush_msg();
             //finally removing from Database
             $this->delete_from_db($photo);
@@ -1352,14 +1345,13 @@ class CBPhotos
      */
     function delete_from_db($id)
     {
-        global $db;
         if (is_array($id)) {
             $delete_id = $id['photo_id'];
         } else {
             $delete_id = $id;
         }
 
-        $db->execute('DELETE FROM ' . tbl('photos') . " WHERE photo_id = $delete_id");
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('photos') . " WHERE photo_id = $delete_id");
         e(lang("photo_success_deleted"), "m");
     }
 
@@ -1387,15 +1379,14 @@ class CBPhotos
      */
     function get_photo_field($id, $field)
     {
-        global $db;
         if (!$field) {
             return false;
         }
 
         if (!is_numeric($id)) {
-            $result = $db->select(tbl($this->p_tbl), $field, ' photo_key = ' . $id . '');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_key = ' . $id . '');
         } else {
-            $result = $db->select(tbl($this->p_tbl), $field, ' photo_id = ' . $id . '');
+            $result = Clipbucket_db::getInstance()->select(tbl($this->p_tbl), $field, ' photo_id = ' . $id . '');
         }
 
         if ($result) {
@@ -1538,8 +1529,7 @@ class CBPhotos
 
                 if (is_array($data) && !empty($data)) {
                     $encodedData = stripslashes(json_encode($data));
-                    global $db;
-                    $db->update(tbl('photos'), ['photo_details'], ["|no_mc|$encodedData"], " photo_id = '" . $p['photo_id'] . "' ");
+                    Clipbucket_db::getInstance()->update(tbl('photos'), ['photo_details'], ["|no_mc|$encodedData"], " photo_id = '" . $p['photo_id'] . "' ");
                 }
             }
         }
@@ -1831,7 +1821,6 @@ class CBPhotos
      */
     function insert_photo($array = null)
     {
-        global $db, $eh;
         if ($array == null) {
             $array = $_POST;
         }
@@ -1927,7 +1916,7 @@ class CBPhotos
             }
             $query_val['0'] = $array['title'];
 
-            $insert_id = $db->insert(tbl($this->p_tbl), $query_field, $query_val);
+            $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->p_tbl), $query_field, $query_val);
 
             $photo = $this->get_photo($insert_id);
             $this->collection->add_collection_item($insert_id, $array['collection_id']);
@@ -1940,7 +1929,7 @@ class CBPhotos
                 e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
             }
 
-            $db->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
+            Clipbucket_db::getInstance()->update(tbl('users'), ['total_photos'], ['|f|total_photos+1'], " userid='" . $userid . "'");
 
             //Adding Photo Feed
             addFeed(['action' => 'upload_photo', 'object_id' => $insert_id, 'object' => 'photo']);
@@ -2104,7 +2093,7 @@ class CBPhotos
      */
     function update_multiple_photos($arr)
     {
-        global $db, $cbcollection, $eh;
+        global $cbcollection, $eh;
 
         foreach ($arr as $id => $details) {
             if (is_array($details)) {
@@ -2120,7 +2109,7 @@ class CBPhotos
 
                 $query .= " WHERE " . tbl('photos.photo_id') . " = '$id'";
 
-                $db->execute($query);
+                Clipbucket_db::getInstance()->execute($query);
                 $cbcollection->add_collection_item($id, $details['collection_id']);
             }
         }
@@ -2198,8 +2187,6 @@ class CBPhotos
      */
     function update_photo($array = null)
     {
-        global $db;
-
         if ($array == null) {
             $array = $_POST;
         }
@@ -2287,7 +2274,7 @@ class CBPhotos
                                 $this->collection->change_collection($array['collection_id'], $pid, $cid);
                             }
 
-                            $db->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
+                            Clipbucket_db::getInstance()->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
                             if (empty(errorhandler::getInstance()->get_error)) {
@@ -2553,7 +2540,6 @@ class CBPhotos
      */
     function make_photo_orphan($details, $pid = null)
     {
-        global $db;
         if (is_numeric($details)) {
             $c = $this->collection->get_collection($details);
             $cid = $c['collection_id'];
@@ -2566,7 +2552,7 @@ class CBPhotos
             $cond = ' AND object_id = ' . mysql_clean($pid);
         }
 
-        $db->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'p\' AND collection_id = ' . mysql_clean($cid) . $cond);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'p\' AND collection_id = ' . mysql_clean($cid) . $cond);
     }
 
     /**
@@ -2843,15 +2829,13 @@ class CBPhotos
      */
     function current_rating($id)
     {
-        global $db;
-
         if (!is_numeric($id)) {
             $cond = ' photo_key=' . $id;
         } else {
             $cond = ' photo_id=' . $id;
         }
 
-        $result = $db->select(tbl('photos'), 'userid,allow_rating,rating,rated_by,voters', $cond);
+        $result = Clipbucket_db::getInstance()->select(tbl('photos'), 'userid,allow_rating,rating,rated_by,voters', $cond);
 
         if ($result) {
             return $result[0];
@@ -2870,8 +2854,6 @@ class CBPhotos
      */
     function rate_photo($id, $rating): array
     {
-        global $db;
-
         if (!is_numeric($rating) || $rating <= 9) {
             $rating = 0;
         }
@@ -2911,7 +2893,7 @@ class CBPhotos
             $t = $c_rating['rated_by'] * $c_rating['rating'];
             $rated_by = $c_rating['rated_by'] + 1;
             $new_rate = ($t + $rating) / $rated_by;
-            $db->update(tbl('photos'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' photo_id = ' . $id);
+            Clipbucket_db::getInstance()->update(tbl('photos'), ['rating', 'rated_by', 'voters'], ["$new_rate", "$rated_by", "|no_mc|$voters"], ' photo_id = ' . $id);
             $userDetails = [
                 "object_id" => $id,
                 "type"      => 'photo',
@@ -3067,35 +3049,34 @@ class CBPhotos
      */
     function photo_actions($action, $id)
     {
-        global $db;
-        $id = (int)mysql_clean($id);
+        $id = (int)$id;
 
         switch ($action) {
             case 'activate':
             case 'activation':
             case 'ap':
-                $db->update(tbl($this->p_tbl), ['active'], ['yes'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['yes'], ' photo_id = ' . $id);
                 e(lang('photo_activated'), 'm');
                 break;
 
             case 'deactivate':
             case 'deactivation':
             case 'dap':
-                $db->update(tbl($this->p_tbl), ['active'], ['no'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['active'], ['no'], ' photo_id = ' . $id);
                 e(lang('photo_deactivated'), 'm');
                 break;
 
             case 'make_featured':
             case 'feature_photo':
             case 'fp':
-                $db->update(tbl($this->p_tbl), ['featured'], ['yes'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['yes'], ' photo_id = ' . $id);
                 e(lang('photo_featured'), 'm');
                 break;
 
             case 'make_unfeatured':
             case 'unfeature_photo':
             case 'ufp':
-                $db->update(tbl($this->p_tbl), ['featured'], ['no'], ' photo_id = ' . $id);
+                Clipbucket_db::getInstance()->update(tbl($this->p_tbl), ['featured'], ['no'], ' photo_id = ' . $id);
                 e(lang('photo_unfeatured'), 'm');
                 break;
         }

@@ -9,7 +9,7 @@ class CBLogs
      */
     function insert($type, $details_array)
     {
-        global $db, $userquery;
+        global $userquery;
         $ip = Network::get_remote_ip();
 
         $userid = getArrayValue($details_array, 'userid');
@@ -51,7 +51,7 @@ class CBLogs
         $success = getArrayValue($details_array, 'success');
         $details = getArrayValue($details_array, 'details');
 
-        $db->insert(tbl('action_log'),
+        Clipbucket_db::getInstance()->insert(tbl('action_log'),
             [
                 'action_type',
                 'action_username',

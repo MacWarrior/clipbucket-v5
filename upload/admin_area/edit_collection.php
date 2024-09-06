@@ -9,8 +9,6 @@ userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
-
-
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
 }
@@ -41,7 +39,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 $breadcrumb[2] = [
@@ -67,6 +65,14 @@ $FlaggedPhotos = $cbvid->action->get_flagged_objects();
 Assign('flaggedPhoto', $FlaggedPhotos);
 $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
+assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $c['userid']);
+
+$params = [];
+$params['type'] = 'cl';
+$params['type_id'] = $c['collection_id'];
+$params['order'] = ' comment_id DESC';
+$comments = Comments::getAll($params);
+assign('comments', $comments);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([

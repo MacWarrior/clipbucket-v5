@@ -567,7 +567,6 @@ abstract class CBCategory
      */
     function getCbCategories($params): array
     {
-        global $db;
         $params['use_sub_cats'] = $params['use_sub_cats'] ?: 'yes';
         if ($this->use_sub_cats && config('use_subs') == 1 && $params['use_sub_cats'] == 'yes' &&
             ($params['type'] == 'videos' || $params['type'] == 'video' || $params['type'] == 'v')) {
@@ -580,7 +579,7 @@ abstract class CBCategory
         $order = $params['order'] = $params['order'] ?: 'ASC';
         $limit = $params['limit'] = $params['limit'] ? (is_numeric($params['limit']) ? $params['limit'] : null) : null;
 
-        $categories = $db->select(tbl($this->cat_tbl), '*', $cond, $limit, " $orderby $order");
+        $categories = Clipbucket_db::getInstance()->select(tbl($this->cat_tbl), '*', $cond, $limit, " $orderby $order");
 
         $finalArray = [];
         if ($params['with_all']) {
@@ -602,7 +601,6 @@ abstract class CBCategory
      */
     function getCbSubCategories($category_id, $params)
     {
-        global $db;
         if (empty($category_id)) {
             return false;
         }
@@ -624,7 +622,7 @@ abstract class CBCategory
             $finalOrder = $params['sub_order'];
         }
 
-        $subCats = $db->select(tbl($this->cat_tbl), '*', ' parent_id = \'' . $category_id . '\'', $limit, $finalOrder);
+        $subCats = Clipbucket_db::getInstance()->select(tbl($this->cat_tbl), '*', ' parent_id = \'' . $category_id . '\'', $limit, $finalOrder);
         if ($subCats) {
             $subArray = [];
             foreach ($subCats as $subCat) {
@@ -746,8 +744,7 @@ abstract class CBCategory
      */
     function is_parent($cid): bool
     {
-        global $db;
-        $result = $db->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . mysql_clean($cid));
+        $result = Clipbucket_db::getInstance()->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . mysql_clean($cid));
 
         if ($result > 0) {
             return true;

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"122",
+  "revision":"125",
   "status":"dev",
   "detail":[
     {
@@ -23,6 +23,7 @@
         ,"Implement Custom CSS"
         ,"Implement per page configurations"
         ,"Implement social networks links management"
+        ,"Implement collection comments management"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -75,6 +76,7 @@
         ,"Fix collection manager pagination"
         ,"Fix icons not displaying"
         ,"Fix current user level display in header"
+        ,"Fix collection uploader informations display"
       ]
     },
     {

@@ -150,9 +150,12 @@ class Comments
     }
 
     /**
+     * @param array $params
+     * @param bool $display_message
+     * @return int
      * @throws Exception
      */
-    public static function delete($params): int
+    public static function delete(array $params, bool $display_message = true): int
     {
         $param_type = $params['type'] ?? false;
         $param_type_id = $params['type_id'] ?? false;
@@ -204,12 +207,14 @@ class Comments
 
         $sql = 'DELETE FROM ' . tbl('comments') . $where;
         Clipbucket_db::getInstance()->execute($sql);
-        $nb_delete = Clipbucket_db::getInstance()->mysqli->affected_rows;
+        $nb_delete = Clipbucket_db::getInstance()->Affected_Rows();
         if( !$param_type && !$param_type_id){
             self::updateCommentsCount($comment['type'], $comment['type_id']);
         }
 
-        e(lang('usr_cmt_del_msg'), 'm');
+        if ($display_message) {
+            e(lang('usr_cmt_del_msg'), 'm');
+        }
         return $nb_delete;
     }
 

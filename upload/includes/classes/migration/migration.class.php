@@ -155,7 +155,7 @@ class Migration
             $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
 
-            $sql = ' INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@id_language_key, \'' . mysql_clean($translation) . '\', ' . $language_id_sql . ');';
+            $sql = 'INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@id_language_key, \'' . mysql_clean($translation) . '\', ' . $language_id_sql . ');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
         }
     }
@@ -316,7 +316,7 @@ class Migration
     public static function query($sql)
     {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
-        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->db_name, $sql);
+        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getTableName(), $sql);
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 

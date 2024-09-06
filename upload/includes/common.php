@@ -61,6 +61,7 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
+require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
@@ -76,7 +77,7 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
-require_once DirPath::get('classes') . 'ClipBucket.class.php';
+
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
@@ -119,8 +120,14 @@ switch (DEBUG_LEVEL) {
         ini_set('display_errors', 'on');
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
+require_once DirPath::get('classes') . 'session_message_handler.class.php';
 $pages = new pages();
 $eh = new errorhandler();
+
+foreach (sessionMessageHandler::get_messages() as $message) {
+    $eh->e($message['message'], $message['type']);
+}
+
 $param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
 
 if ($row['cache_auth'] == 'yes') {

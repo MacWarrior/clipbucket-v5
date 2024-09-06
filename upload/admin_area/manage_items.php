@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'manage_items');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $cbcollection, $cbphoto, $eh, $cbvideo, $db;
+global $pages, $cbcollection, $cbphoto, $eh, $cbvideo;
 
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
@@ -18,7 +18,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'flagged_collections.php'
 ];
 $breadcrumb[2] = [
@@ -49,7 +49,7 @@ switch ($type) {
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
                 $cbphoto->collection->change_collection($new, $_POST['check_obj'][$i], $id);
-                $db->update(tbl('photos'), ['collection_id'], [$new], ' collection_id = ' . $id . ' AND photo_id = ' . $_POST['check_obj'][$i]);
+                Clipbucket_db::getInstance()->update(tbl('photos'), ['collection_id'], [$new], ' collection_id = ' . $id . ' AND photo_id = ' . $_POST['check_obj'][$i]);
             }
             $eh->flush();
             e($total . ' photo(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
