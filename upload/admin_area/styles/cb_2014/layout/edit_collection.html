@@ -179,7 +179,6 @@
                             Total Comments : {$data.total_comments}
                         </div>
                     </div>
-                    <input type="submit" class="btn btn-primary" value="Update Collection Details" style="margin:15px 0 0 15px;" name="update_collection"/>
                 </div>
             </div>
         </div>
@@ -197,11 +196,13 @@
                             Collection Preview
                         </a>
                     </li>
-                    <li>
-                        <a data-toggle="tab" href="#clcomments">
-                            {lang('comments')}
-                        </a>
-                    </li>
+                    {if config('enable_comments_collection') == 'yes' }
+                        <li>
+                            <a data-toggle="tab" href="#clcomments">
+                                {lang('comments')}
+                            </a>
+                        </li>
+                    {/if}
                 </ul>
                 <div class="tab-content">
                     <div id="fields" class="tab-pane in active">
@@ -221,47 +222,52 @@
                             <img style="padding:2px; border:1px solid #ccc;" src="{$cbcollection->coll_first_thumb($data,'l')}"/>
                         </div>
                     </div>
-                    <div id="clcomments" class="tab-pane">
-                        <legend>{lang('comments')}</legend>
-                        <div class="form-group">
-                            {foreach from=$comments item=comment}
-                                <div class="itemdiv dialogdiv comment_line" id="comment_{$comment.comment_id}">
-                                    {if $comment != ''}
-                                        {if !empty($comment.userid)}
-                                            {$userdetails = $userquery->get_user_details($comment.userid)}
-                                            {$username = $userdetails.username}
-                                            {$avatar = $userquery->getUserThumb($userdetails,'small')}
+                    {if config('enable_comments_collection') == 'yes' }
+                        <div id="clcomments" class="tab-pane">
+                            <legend>{lang('comments')}</legend>
+                            <div class="form-group">
+                                {foreach from=$comments item=comment}
+                                    <div class="itemdiv dialogdiv comment_line" id="comment_{$comment.comment_id}">
+                                        {if $comment != ''}
+                                            {if !empty($comment.userid)}
+                                                {$userdetails = $userquery->get_user_details($comment.userid)}
+                                                {$username = $userdetails.username}
+                                                {$avatar = $userquery->getUserThumb($userdetails,'small')}
+                                            {else}
+                                                {$username = $comment.anonym_name}
+                                                {$avatar = $userquery->get_default_thumb('small')}
+                                            {/if}
+                                            <div class="user">
+                                                <img alt="{display_clean($username)}" title="{display_clean($username)}" src="{$avatar}">
+                                            </div>
+                                            <div class="body clearfix">
+                                                <div class="col-md-7">
+                                                    {Comments::getClean($comment.comment)}
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <i class="icon-time"></i>
+                                                    <span class="green">{$comment.date_added|date_format}</span>
+                                                </div>
+                                                <div class="col-md-2">
+                                                    <span class="btn btn-primary del_cmt" data-id="{$comment.comment_id}">{lang code='delete'}</span>
+                                                </div>
+                                            </div>
                                         {else}
-                                            {$username = $comment.anonym_name}
-                                            {$avatar = $userquery->get_default_thumb('small')}
+                                            <div class="body">
+                                                <p>{lang('no_comments',strtolower(lang('collection')))}</p>
+                                            </div>
                                         {/if}
-                                        <div class="user">
-                                            <img alt="{display_clean($username)}" title="{display_clean($username)}" src="{$avatar}">
-                                        </div>
-                                        <div class="body clearfix">
-                                            <div class="col-md-7">
-                                                {Comments::getClean($comment.comment)}
-                                            </div>
-                                            <div class="col-md-3">
-                                                <i class="icon-time"></i>
-                                                <span class="green">{$comment.date_added|date_format}</span>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <span class="btn btn-primary del_cmt" data-id="{$comment.comment_id}">{lang code='delete'}</span>
-                                            </div>
-                                        </div>
-                                    {else}
-                                        <div class="body">
-                                            <p>{lang('no_comments',strtolower(lang('collection')))}</p>
-                                        </div>
-                                    {/if}
-                                </div>
-                            {/foreach}
+                                    </div>
+                                {/foreach}
+                            </div>
                         </div>
-                    </div>
+                    {/if}
                 </div>
             </div>
         </div>
+    </div>
+    <div class="row center">
+        <input type="submit" class="btn btn-primary" value="{lang('update')}" style="margin:15px 0 0 15px;" name="update_collection"/>
     </div>
 </form>
 <script>
