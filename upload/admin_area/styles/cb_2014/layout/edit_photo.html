@@ -41,10 +41,10 @@
                             {lang('delete_this_img')}
                         </a>
                     </li>
-                    {if $data.collection_id != 0}
+                    {if $data.collection_id != null}
                     <li>
-                        <a class="btn btn-primary btn-xs" href="edit_collection.php?collection={$data.collection_id}">
-                            Edit Collection ({$data.collection_id|get_collection_field})
+                        <a href="edit_collection.php?collection={$data.collection_id}">
+                            {lang('edit_collection')} ({$data.collection_id|get_collection_field})
                         </a>
                     </li>
                     {/if}

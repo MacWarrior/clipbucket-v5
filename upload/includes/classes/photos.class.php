@@ -735,7 +735,6 @@ class CBPhotos
         $this->collection->objName = "Photo";
         $this->collection->objFunction = "photo_exists";
         $this->collection->objFieldID = "photo_id";
-        $this->photo_register_function('delete_collection_photos');
     }
 
     /**
@@ -846,17 +845,6 @@ class CBPhotos
             return true;
         }
         return false;
-    }
-
-    /**
-     * Register function
-     *
-     * @param $func
-     */
-    function photo_register_function($func)
-    {
-        global $cbcollection;
-        $cbcollection->collection_delete_functions[] = 'delete_collection_photos';
     }
 
     /**
@@ -1299,7 +1287,7 @@ class CBPhotos
                 }
             }
 
-            if (!$orphan) {//removing from collection
+            if (!$orphan && !empty($photo['collection_id'])) {//removing from collection
                 $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
             }
 
@@ -1309,8 +1297,6 @@ class CBPhotos
             //now removing photo files
             $this->delete_photo_files($photo);
 
-            //finally removing from Database
-            $this->delete_from_db($photo);
 
             //Decrementing User Photos
             $db->update(tbl('users'), ['total_photos'], ['|f|total_photos-1'], " userid='" . $photo['userid'] . "'");
@@ -1323,6 +1309,9 @@ class CBPhotos
 
             //Removing Photo From Favorites
             $db->delete(tbl('favorites'), ['type', 'id'], ['p', $photo['photo_id']]);
+            errorhandler::getInstance()->flush_msg();
+            //finally removing from Database
+            $this->delete_from_db($photo);
         } else {
             e(lang('photo_not_exist'));
         }
@@ -1789,10 +1778,10 @@ class CBPhotos
             $p['user'] = user_id();
         }
 
-        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id());
+        $collections = $this->collection->get_collections_list(0,null,null, 'photos',user_id()) ?? [];
         $cl_array = $this->parse_array($collections);
         $collection = $array['collection_id'];
-        if ($collection === '0') {
+        if ($collection == null && !empty($cl_array)) {
             $cl_array = [0=>''] + $cl_array;
         }
         $this->unique = rand(0, 9999);
@@ -1830,7 +1819,6 @@ class CBPhotos
                 'name'        => 'collection_id',
                 'type'        => 'dropdown',
                 'value'       => $cl_array,
-                'required'    => 'yes',
                 'checked'     => $collection,
                 'invalid_err' => lang('collection_not_found')
             ]
@@ -2144,17 +2132,17 @@ class CBPhotos
      *
      * @param $array
      *
-     * @return bool|array
+     * @return array
      */
-    function parse_array($array)
+    function parse_array($array):array
     {
+        $cl_arr= [];
         if (is_array($array)) {
             foreach ($array as $key => $v) {
                 $cl_arr[$key] = $v['name'];
             }
-            return $cl_arr;
         }
-        return false;
+        return $cl_arr;
     }
 
     /**
@@ -2293,7 +2281,9 @@ class CBPhotos
                         if ($this->get_photo_owner($pid) != user_id() && !has_access('admin_access', true)) {
                             e(lang("cant_edit_photo"));
                         } else {
-                            if ($cid != $array['collection_id']) {
+                            if (empty($array['collection_id'])) {
+                                e(lang('collection_not_found'), 'w');
+                            } elseif ($cid != $array['collection_id']) {
                                 $this->collection->change_collection($array['collection_id'], $pid, $cid);
                             }
 
@@ -2573,10 +2563,10 @@ class CBPhotos
 
         $cond = '';
         if (!empty($pid)) {
-            $cond = ' AND photo_id = ' . $pid;
+            $cond = ' AND object_id = ' . mysql_clean($pid);
         }
 
-        $db->update(tbl('photos'), ['collection_id'], ['0'], ' collection_id = ' . $cid . $cond);
+        $db->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'p\' AND collection_id = ' . mysql_clean($cid) . $cond);
     }
 
     /**

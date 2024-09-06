@@ -2498,30 +2498,6 @@ function get_collection_field($cid, $field = 'collection_name')
 }
 
 /**
- * Deletes all photos found inside of given collection
- * function is used when whole collection is being deleted
- *
- * @param : { array } { $details } { an array with collection's details }
- *
- * @throws Exception
- * @action: makes photos orphan
- */
-function delete_collection_photos($details)
-{
-    global $cbphoto;
-    $type = $details['type'];
-    if ($type == 'photos') {
-        $ps = $cbphoto->get_photos(["collection" => $details['collection_id']]);
-        if (!empty($ps)) {
-            foreach ($ps as $p) {
-                $cbphoto->make_photo_orphan($details, $p['photo_id']);
-            }
-            unset($ps); // Empty $ps. Avoiding the duplication prob
-        }
-    }
-}
-
-/**
  * Get ClipBucket's footer menu
  * @param null $params
  *

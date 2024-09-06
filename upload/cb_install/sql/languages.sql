@@ -1239,4 +1239,5 @@ VALUES ('admin_setting'),
        ('confirm_delete_social_network'),
        ('missing_params'),
        ('manage_social_networks_links'),
-       ('collection_not_found');
+       ('collection_not_found'),
+       ('edit_photo');

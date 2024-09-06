@@ -20,5 +20,25 @@ class MWIP extends \Migration
             'column'=>'collection_id'
         ]);
 
+        self::generateTranslation('edit_collection', [
+            'fr'=>'Editer la collection'
+        ]);
+
+        self::generateTranslation('edit_photo', [
+            'fr'=>'Editer la photo',
+            'en'=>'Edit photo'
+        ]);
+
+        self::generateTranslation('photo_title', [
+            'fr'=>'Titre de la photo'
+        ]);
+
+        self::generateTranslation('photo_caption', [
+            'fr'=>'Description de la photo'
+        ]);
+
+        self::generateTranslation('photo_success_deleted', [
+            'fr'=>'La photo a été supprimée avec succès'
+        ]);
     }
 }

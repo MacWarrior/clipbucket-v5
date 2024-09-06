@@ -1822,7 +1822,7 @@ class Collections extends CBCategory
         Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
         //Decrementing users total collection
         Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
-
+        errorhandler::getInstance()->flush_msg();
         e(lang('collection_deleted'), 'm');
     }
 
