@@ -16,7 +16,7 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
     define('DEVELOPMENT_MODE', false);
 }
 
-if (!file_exists(DirPath::get('temp') . 'install.me') || !file_exists(DirPath::get('temp') . 'install.me.not')) {
+if (!file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::get('temp') . 'install.me.not')) {
     return false;
 }
 

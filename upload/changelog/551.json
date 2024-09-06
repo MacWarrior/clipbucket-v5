@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"125",
+  "revision":"126",
   "status":"dev",
   "detail":[
     {
@@ -97,6 +97,7 @@
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
         ,"Update orphan photos management"
+        ,"Update dark & light themes"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -177,6 +178,7 @@
         ,"Update Debian 10 installation script"
         ,"Update config creations"
         ,"Update database creation descriptions"
+        ,"Update installation script to Ubuntu 24.04"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -188,6 +190,8 @@
         ,"Fix SSE DB update"
         ,"Fix migration on windows hosts"
         ,"Fix PHP Cli detection"
+        ,"Fix database configuration <i>(#426)</i>"
+        ,"Fix Ubuntu&Debian git error in installation script"
       ]
     },
     {
