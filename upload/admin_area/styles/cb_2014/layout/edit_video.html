@@ -58,10 +58,10 @@
 				</div>
 			</h2>
 			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
-				<span class="btn btn-app btn-sm btn-light no-hover">
-				<span class="line-height-1 smaller-90 blue">{$data.views|prettyNum}</span>
-				<br/>
-				<span class="line-height-1 smaller-90"> Views </span>
+				<span class="btn btn-app btn-sm btn-light no-hover" title="{$data.views}">
+				    <span class="line-height-1 smaller-90 blue" >{$data.views|prettyNum}</span>
+                    <br/>
+                    <span class="line-height-1 smaller-90"> {lang('views')} </span>
 				</span>
 				<span class="btn btn-app btn-sm btn-pink no-hover">
 					<span class="line-height-1">
@@ -389,12 +389,6 @@
                                 <label><strong>Video Stats</strong></label>
                             </div>
                             <div class="row">
-                                <div class="col-md-2">
-                                    <label for="views">{lang code='views'} :</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="views" type="text" id="views" value="{$data.views|number_format}" size="45"/>
-                                </div>
                                 <div class="col-md-2">
                                     <label for="rating">{lang code='rating'} :</label>
                                 </div>

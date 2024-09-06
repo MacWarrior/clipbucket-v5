@@ -1662,12 +1662,12 @@ function increment_views_new($id, $type = null)
         case 'v':
         case 'video':
         default:
-            if (!isset($_COOKIE['video_' . $id])) {
-                $vdetails = get_video_details($id);
-                // Cookie life time at least 1 hour else if video duration is bigger set at video time.
-                $cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
+            $vdetails = get_video_details($id);
+            $sessionTime =  ($vdetails['duration'] ?? 3600);
+            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) ) {
                 Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
-                set_cookie_secure('video_' . $id, 'watched', $cookieTime);
+                Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$vdetails['videoid'], user_id(), '|f|NOW()']);
+                $_SESSION['video_' . $id] = time();
 
                 $userid = user_id();
                 if ($userid) {
