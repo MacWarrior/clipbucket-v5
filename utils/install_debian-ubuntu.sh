@@ -13,7 +13,7 @@ echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
 echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
 echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
 echo "          |_|            Installation script for"
-echo "                    Debian 9-12 & Ubuntu 16.04-23.10"
+echo "                    Debian 9-12 & Ubuntu 16.04-24.04"
 echo ""
 echo "Disclaimer : This easy installation script is only"
 echo "             made to configure local / dev environments."
@@ -53,6 +53,9 @@ case ${OS_NAME} in
     "Ubuntu 23.10")
         OS="UBUNTU2310"
         ;;
+    "Ubuntu 24.04.1 LTS"|"Ubuntu 24.04 LTS"|"Ubuntu 24.04")
+        OS="UBUNTU2404"
+        ;;
     *)
         echo ""
         echo ""
@@ -68,6 +71,7 @@ case ${OS_NAME} in
         echo " - Ubuntu 22.04"
         echo " - Ubuntu 23.04"
         echo " - Ubuntu 23.10"
+        echo " - Ubuntu 24.04"
         read -p "Which operating system do you use ? " READ_OS
         case ${READ_OS} in
             "Debian 9"|"debian 9")
@@ -97,8 +101,11 @@ case ${OS_NAME} in
             "Ubuntu 23.04"|"ubuntu 23.04")
                 OS="UBUNTU2204"
                 ;;
-            "Ubuntu"|"ubuntu"|"Ubuntu 23.10"|"ubuntu 23.10")
+            "Ubuntu 23.10"|"ubuntu 23.10")
                 OS="UBUNTU2310"
+                ;;
+            "Ubuntu"|"ubuntu"|"Ubuntu 24.04"|"ubuntu 24.04")
+                OS="UBUNTU2404"
                 ;;
             *)
                 echo "Unknown system, please select Debian or Ubuntu"
@@ -235,6 +242,9 @@ case ${OS} in
     "UBUNTU2310")
         PHP_VERSION="8.2"
         ;;
+    "UBUNTU2404")
+        PHP_VERSION="8.3"
+        ;;
 esac
 
 echo ""
@@ -255,7 +265,7 @@ SERVER_ROOT="/srv/http/"
 INSTALL_PATH="${SERVER_ROOT}clipbucket/"
 mkdir -p ${INSTALL_PATH}
 git clone https://github.com/MacWarrior/clipbucket-v5.git ${INSTALL_PATH} > /dev/null 2>&1
-git config core.fileMode false
+git config --global core.fileMode false
 git config --global --add safe.directory ${INSTALL_PATH}
 echo -ne " OK"
 
