@@ -1,10 +1,10 @@
-INSERT INTO `{tbl_prefix}user_levels` (`user_level_id`, `user_level_active`, `user_level_name`, `user_level_is_default`) VALUES
-(1, 'yes', 'Administrator', 'yes'),
-(2, 'yes', 'Registered User', 'yes'),
-(3, 'yes', 'Inactive User', 'yes'),
-(4, 'yes', 'Guest', 'yes'),
-(5, 'yes', 'Global Moderator', 'yes'),
-(6, 'no', 'Anonymous', 'no');
+INSERT INTO `{tbl_prefix}user_levels` (`user_level_id`, `user_level_active`, `user_level_name`, `user_level_is_default`, `enable_channel_page`) VALUES
+(1, 'yes', 'Administrator', 'yes','yes'),
+(2, 'yes', 'Registered User', 'yes','yes'),
+(3, 'yes', 'Inactive User', 'yes','yes'),
+(4, 'yes', 'Guest', 'yes','yes'),
+(5, 'yes', 'Global Moderator', 'yes','yes'),
+(6, 'no', 'Anonymous', 'no','yes');
 
 INSERT INTO `{tbl_prefix}user_levels_permissions` (`user_level_permission_id`, `user_level_id`, `admin_access`, `allow_video_upload`, `view_video`, `view_photos`, `view_collections`, `view_channel`, `view_videos`, `avatar_upload`, `video_moderation`, `member_moderation`, `ad_manager_access`, `manage_template_access`, `group_moderation`, `web_config_access`, `view_channels`, `playlist_access`, `allow_channel_bg`, `private_msg_access`, `edit_video`, `download_video`, `admin_del_access`, `photos_moderation`, `collection_moderation`, `plugins_moderation`, `tool_box`, `plugins_perms`, `allow_manage_user_level`, `allow_create_collection`, `allow_create_playlist`) VALUES
 (1, 1, 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', 'yes', '', 'yes', 'yes', 'yes'),

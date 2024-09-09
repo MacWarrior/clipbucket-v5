@@ -199,20 +199,20 @@
 
                         <div id="channel_settings" class="tab-pane">
                             <table class="myTable table">
-                            {foreach from=$channel_settings.fields item=field}
-                                {$field.class='form-control'}
-                                <tr>
-                                    <td class="first" width="">
-                                        <label for="{$field.id}">{$field.title}</label></td>
-                                    <td class="last">
-                                        <div>
-                                        {$field.class = "form-control"}
-                                        {ANCHOR place=$field.anchor_before}{$formObj->createField($field)}
-                                        {$field.hint_2}
-                                        </div>
-                                    </td>
-                                </tr>
-                            {/foreach}
+                                {foreach from=$channel_settings.fields item=field}
+                                    {$field.class='form-control'}
+                                    <tr>
+                                        <td class="first" width="">
+                                            <label for="{$field.id}">{$field.title}</label></td>
+                                        <td class="last">
+                                            <div>
+                                                {$field.class = "form-control"}
+                                                {ANCHOR place=$field.anchor_before}{$formObj->createField($field)}
+                                                {$field.hint_2}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {/foreach}
                             </table>
                         </div>
 
@@ -296,9 +296,9 @@
                             <div class="changeBackground row">
                                 <div class="showBackground col-md-3">
                                     {if $userquery->getUserBg($u)}
-                                    <img src="{$userquery->getUserBg($u)}" style="max-width:95px;"/>
+                                        <img src="{$userquery->getUserBg($u)}" style="max-width:95px;"/>
                                     {else}
-                                    No Bg
+                                        No Bg
                                     {/if}
                                 </div>
                                 <div class="uploadNewBackground col-md-9">
@@ -512,22 +512,22 @@
                                     </tr>
                                     {assign var="logs" value=$userquery->get_user_action_log($u.userid,10)}
                                     {section loop=$logs name=log}
-                                    <tr>
-                                        <td>{$logs[log].action_userid}</td>
-                                        <td width="100">{$logs[log].action_username}</td>
-                                        <td width="100">{cbdatetime(NULL, $logs[log].date_added)}</td>
-                                        <td>{$logs[log].action_ip}</td>
-                                        <td>
-                                            {$logs[log].action_type}
-                                            {if $logs[log].action_details!=''}
-                                            - {$logs[log].action_details}
-                                            {/if}
-                                            {if $logs[log].action_success!=null}
-                                            - Success : {$logs[log].action_success}
-                                            {/if}
-                                        </td>
-                                    </tr>
-                                    {/section}
+                                        <tr>
+                                            <td>{$logs[log].action_userid}</td>
+                                            <td width="100">{$logs[log].action_username}</td>
+                                            <td width="100">{cbdatetime(NULL, $logs[log].date_added)}</td>
+                                            <td>{$logs[log].action_ip}</td>
+                                            <td>
+                                                {$logs[log].action_type}
+                                                {if $logs[log].action_details!=''}
+                                                    - {$logs[log].action_details}
+                                                {/if}
+                                                {if $logs[log].action_success!=null}
+                                                    - Success : {$logs[log].action_success}
+                                                {/if}
+                                            </td>
+                                        </tr>
+                                    {/section}w
                                 </table>
                             </div>
                         </div>

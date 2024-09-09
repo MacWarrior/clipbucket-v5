@@ -391,7 +391,8 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_id` int(20) NOT NULL,
   `user_level_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `user_level_name` varchar(100) NOT NULL,
-  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
+  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no',
+  `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels_permissions` (
@@ -487,7 +488,8 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_my_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscriptions` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscribers` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `disabled_channel` ENUM('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video` (

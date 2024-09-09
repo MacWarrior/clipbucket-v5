@@ -1239,4 +1239,6 @@ VALUES ('admin_setting'),
        ('confirm_delete_social_network'),
        ('missing_params'),
        ('manage_social_networks_links'),
-       ('text_confirm_comment');
+       ('text_confirm_comment'),
+       ('enable_channel_page'),
+       ('disable_channel');
