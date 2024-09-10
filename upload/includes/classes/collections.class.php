@@ -199,7 +199,7 @@ class Collection
         $version = Update::getInstance()->getDBVersion();
 
         $conditions = [];
-        if( $param_collection_id ){
+        if( $param_collection_id !== false ){
             $conditions[] = $this->getTableName() . '.collection_id = '.(int)$param_collection_id;
         }
 

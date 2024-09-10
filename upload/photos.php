@@ -16,10 +16,7 @@ $get_limit = create_query_limit($page, config('photo_main_list'));
 $params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
 $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
-if (!has_access('admin_access', true)) {
-    $params['exclude_orphan'] = true;
-    $params['see_own'] = true;
-}
+
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
@@ -36,6 +33,19 @@ if( empty($photos) ){
     $params['count'] = true;
     $count = Photo::getInstance()->getAll($params);
 }
+
+if (config('collectionsSection') == 'yes') {
+    $collections = Collection::getInstance()->getAll([
+        'limit'                 => config('collection_photos_top_collections'),
+        'active'                => 'yes',
+        'type'                  => 'photos',
+        'parents_only'          => true,
+        'hide_empty_collection' => true
+    ]);
+} else {
+    $collections = [];
+}
+assign('collections', $collections);
 
 $total_pages = count_pages($count, config('photo_main_list'));
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());

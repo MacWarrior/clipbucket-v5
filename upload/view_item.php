@@ -16,11 +16,10 @@ if (empty($item) || !isSectionEnabled('photos')) {
 
 
 $param = [
-    'type' => 'photos',
-    'cid'  => $cid
+    'type'          => 'photos',
+    'collection_id' => $cid
 ];
-$cdetails = $cbcollection->get_collections($param);
-$collect = $cdetails[0];
+$collect =  Collection::getInstance()->getOne($param);
 
 $photo = Photo::getInstance()->getOne(['photo_key'=>$item]);
 if ($photo) {

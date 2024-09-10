@@ -186,11 +186,9 @@ class Photo
 
         $param_search = $params['search'] ?? false;
         $param_collection_id = $params['collection_id'] ?? false;
-        $param_exclude_orphan = $params['exclude_orphan'] ?? false;
-        $param_see_own = $params['see_own'] ?? false;
         $param_featured = $params['featured'] ?? false;
-
         $param_condition = $params['condition'] ?? false;
+        
         $param_limit = $params['limit'] ?? false;
         $param_order = $params['order'] ?? false;
         $param_group = $params['group'] ?? false;
@@ -286,12 +284,6 @@ class Photo
 
         if( $param_collection_id ){
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
-        } else if( $param_exclude_orphan ){
-            $join_orphan = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
-            if ($param_see_own && user_id()) {
-                $join_orphan = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND photos.userid = ' . user_id();
-            }
-            $join[] = $join_orphan;
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
         }
@@ -357,7 +349,7 @@ class Photo
 
         $show_unlisted = $params['show_unlisted'] ?? false;
 
-        $cond = '((photos.active = \'yes\'';
+        $cond = '(((photos.active = \'yes\'';
 
         $sql_age_restrict = '';
         if( config('enable_age_restriction') == 'yes' && config('enable_blur_restricted_content') != 'yes' ){
@@ -370,18 +362,22 @@ class Photo
         if( $show_unlisted ){
             $cond .= ' OR (photos.broadcast = \'unlisted\')';
         }
+        $cond_orphan = ' AND ' . Collection::getInstance()->getTableNameItems() .'.collection_id IS NOT NULL ' ;
         $cond .= ')';
 
         $current_user_id = user_id();
         if ($current_user_id) {
+            $cond_orphan .= ' OR photos.userid = ' . $current_user_id ;
+            $cond.=')';
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
-            $cond .= ' OR photos.userid = ' . $current_user_id . ')';
             $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
+            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
             $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
         }
         $cond .= ')';
+        $cond .= $cond_orphan . ')';
         return $cond;
     }
 
@@ -1915,6 +1911,10 @@ class CBPhotos
                 $query_val[] = $array['folder'];
             }
             $query_val['0'] = $array['title'];
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 128)) {
+                $query_field[] = 'collection_id';
+                $query_val[] = 0;
+            }
 
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->p_tbl), $query_field, $query_val);
 
