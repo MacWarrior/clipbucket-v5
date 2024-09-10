@@ -30,5 +30,12 @@ class MWIP extends \Migration
         self::alterTable('ALTER TABLE `'.tbl('video_views').'`
             ADD CONSTRAINT `video_view_user` FOREIGN KEY (`id_user`) REFERENCES `'.tbl('users').'` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
         ');
+
+        self::generateConfig('enable_video_view_history', 'no');
+
+        self::generateTranslation('enable_video_view_history', [
+            'fr'=>'Activer l\'historique de vue des vidéos',
+            'en'=>'Enable video view history'
+        ]);
     }
 }
