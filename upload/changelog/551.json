@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"126",
+  "revision":"127",
   "status":"dev",
   "detail":[
     {
@@ -41,6 +41,7 @@
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
         ,"Fix TMDB import error display"
