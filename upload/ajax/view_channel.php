@@ -40,7 +40,7 @@ if (isset($_POST['mode'])) {
             $start = $load_limit * $load_hit - $load_limit;
             $sql_limit = "$start, $load_limit";
             $total_items = $_POST['totalPhotos'];
-            $items = get_photos(['user' => $user, 'order' => 'date_added DESC', 'limit' => $sql_limit]);
+            $items = Photo::getInstance()->getAll(['userid' => $user, 'order' => 'date_added DESC', 'limit' => $sql_limit]);
             if ($start >= $total_items) {
                 return false;
             }

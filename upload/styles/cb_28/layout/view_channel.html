@@ -166,23 +166,22 @@
 
 					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
 					<div class="tab-pane photos fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes'} active{/if}" id="user-photos">
-						{$photos=get_photos(["user"=>$user.userid,"limit" =>9])}
-							{if $photos}
-						<div id="usr-photos" class="clearfix row user_photos">
-							{foreach from=$photos item=p_list}
-							<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-								{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
+						{if $photos}
+							<div id="usr-photos" class="clearfix row user_photos">
+								{foreach from=$photos item=p_list}
+									<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
+										{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
+									</div>
+								{/foreach}
+								{if $user.total_photos > 9 && count($photos) == 9}
+									<div class="clearfix text-center">
+										<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
+									</div>
+								{/if}
 							</div>
-							{/foreach}
-							{if $user.total_photos > 9 && count($photos) == 9}
-							<div class="clearfix text-center">
-								<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
-							</div>
-							{/if}
-						</div>
-							{else}
-						<div class="well well-info">{lang code='no_results_found'}</div>
-							{/if}
+						{else}
+							<div class="well well-info">{lang code='no_results_found'}</div>
+						{/if}
 					</div>
 					{/if}
 

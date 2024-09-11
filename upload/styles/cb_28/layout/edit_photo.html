@@ -1,5 +1,5 @@
 {$myAccountLinks = $userquery->my_account_links()}
-<div class="container manage-page marginBottom">
+<div class="container manage-page marginBottom" xmlns="http://www.w3.org/1999/html">
 	{include file="$style_dir/blocks/manage/account_menu.html"}
     <div class="row cb-box">
         <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
@@ -8,10 +8,11 @@
         <div class="col-md-9">
             <div class="marginBottom">
                 {*include file="$style_dir/blocks/manage/account_head.html" user=$user*}
-                <h2>Edit Photo</h2>
+                <h2>{lang('edit_photo')}</h2>
                 <div>
-                    <a href="{$cbphoto->photo_links($p,'view_item')}" target="_blank" class="btn btn-primary">View Photo</a>
+                    <a href="{$cbphoto->photo_links($p,'view_item')}" target="_blank" class="btn btn-primary">{lang('watch')}</a>
                     <button class="btn btn-primary" type="button" onClick="viewRatings(this,'{$p.photo_id}');">View Ratings</button>
+                    <button class="btn btn-primary" type="button" href="javascript:void(0);" onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','manage_photos.php?mode=uploaded&amp;delete_photo={$p.photo_id}')"  id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</button>
                 </div>
                 {assign var='requiredFields' value=$cbphoto->load_required_forms($p)}
                 {assign var='optionFields' value=$cbphoto->load_other_forms($p)}
@@ -38,6 +39,11 @@
                                 <div class="form-group">
                                     <label>Preview</label>
                                     <div class="account_field_block clearfix">
+                                        {if empty($p.collection_id)}
+                                            <div class="thumb_banner label-warning">
+                                                {lang("photo_is", strtolower(lang("orphan")))}
+                                            </div>
+                                        {/if}
                                         {get_photo details=$p output='html' size='m' class='photoThumbBox moveL'}
                                     </div>
                                 </div>
