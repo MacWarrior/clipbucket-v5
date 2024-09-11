@@ -1240,4 +1240,7 @@ VALUES ('admin_setting'),
        ('missing_params'),
        ('manage_social_networks_links'),
        ('text_confirm_comment'),
-       ('enable_video_view_history');
+       ('enable_video_view_history'),
+       ('enable_access_view_video_history'),
+       ('video_list_view_video_history'),
+       ('history');

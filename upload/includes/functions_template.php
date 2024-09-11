@@ -275,6 +275,18 @@ function display_tmdb_result($data, $videoid)
     echo templateWithMsgJson('blocks/tmdb_result.html');
 }
 
+/**
+ * @param array $data
+ * @param int $videoid
+ * @return void
+ */
+function display_video_view_history(array $data, int $videoid)
+{
+    assign('results', $data['results']);
+    assign('videoid', $videoid);
+    echo templateWithMsgJson('blocks/video_view_history.html');
+}
+
 //todO séparer en 2 fonctions
 /**
  * @throws Exception

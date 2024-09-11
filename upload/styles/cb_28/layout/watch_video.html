@@ -55,6 +55,9 @@
 									{lang code="view"}
 								{/if}
 							</span>
+							{if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes' && $vdo.views > 0}
+								<button class="btn btn-success view_history" >{lang('view_history')}</button>
+							{/if}
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">
@@ -362,7 +365,7 @@
 		</aside>
 	</div>
 </div>
-
+<div class="modal fade" id="myModal" role="dialog">
 <script>
 	/*Cookie based comments backup start*/
 	var current_video = "{$video.videoid}";

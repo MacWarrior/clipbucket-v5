@@ -128,6 +128,7 @@ if (isset($_POST['update'])) {
         , 'enable_social_networks_links_footer'
         , 'enable_social_networks_links_home_sidebar'
         , 'enable_video_view_history'
+        , 'enable_access_view_video_history'
     ];
 
     $config_booleans_to_refactor = [
@@ -436,7 +437,9 @@ if (isset($_POST['update'])) {
         'default_theme',
         'enable_social_networks_links_footer',
         'enable_social_networks_links_home_sidebar',
-        'enable_video_view_history'
+        'enable_video_view_history',
+        'enable_access_view_video_history',
+        'video_list_view_video_history'
     ];
 
     foreach ($opt_list as $optl) {
@@ -493,7 +496,8 @@ if (isset($_POST['update'])) {
         'photo_med_height',
 
         'chunk_upload_size',
-        'cloudflare_upload_limit'
+        'cloudflare_upload_limit',
+        'video_list_view_video_history'
     ];
 
     foreach ($rows as $field) {
