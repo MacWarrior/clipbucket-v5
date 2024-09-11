@@ -222,7 +222,6 @@ CREATE TABLE `{tbl_prefix}photos` (
   `photo_title` mediumtext NOT NULL,
   `photo_description` mediumtext NOT NULL,
   `userid` int(255) NOT NULL,
-  `collection_id` int(255) NOT NULL,
   `date_added` datetime NOT NULL,
   `last_viewed` datetime NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `views` bigint(255) NOT NULL DEFAULT 0,
@@ -669,7 +668,6 @@ ALTER TABLE `{tbl_prefix}pages`
 ALTER TABLE `{tbl_prefix}photos`
   ADD PRIMARY KEY (`photo_id`),
   ADD KEY `userid` (`userid`),
-  ADD KEY `collection_id` (`collection_id`),
   ADD KEY `featured` (`featured`),
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
