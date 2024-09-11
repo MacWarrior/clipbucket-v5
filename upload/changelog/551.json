@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"129",
+  "revision":"130",
   "status":"dev",
   "detail":[
     {
@@ -79,6 +79,7 @@
         ,"Fix icons not displaying"
         ,"Fix current user level display in header"
         ,"Fix collection uploader informations display"
+        ,"Fix user storage running even when disabled"
       ]
     },
     {
