@@ -388,21 +388,22 @@
                                         <hr/>
 
                                     </div>
-								</div>
-							</div>
-							<div class="tab-pane interfaces" id="interfaces_home">
-								<div class="row">
-									<div class="col-md-4">
-										<div class="row">
-											<div class="col-md-10">
-												<label class="nowrap" for="popup_video" title="{lang code='option_homepage_enable_popin_video'}">{lang code='option_homepage_enable_popin_video'}</label>
-											</div>
-											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="popup_video" id="popup_video" {if $row.popup_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl"></span>
-											</div>
-										</div>
-										<hr/>
+
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_home">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="popup_video" title="{lang code='option_homepage_enable_popin_video'}">{lang code='option_homepage_enable_popin_video'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="popup_video" id="popup_video" {if $row.popup_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
                                         <div class="row">
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="enable_social_networks_links_home_sidebar" title="{lang code='option_enable_social_networks_links_sidebar'}">{lang code='option_enable_social_networks_links_sidebar'}</label>
@@ -413,38 +414,28 @@
                                             </div>
                                         </div>
                                         <hr/>
-										<div class="row">
-											<div class="col-md-10">
-												<label class="nowrap" for="enable_social_networks_links_home_sidebar" title="{lang code='option_enable_social_networks_links_sidebar'}">{lang code='option_enable_social_networks_links_sidebar'}</label>
-											</div>
-											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="enable_social_networks_links_home_sidebar" id="enable_social_networks_links_home_sidebar" {if $row.enable_social_networks_links_home_sidebar=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl"></span>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-10">
-												<label class="nowrap" for="home_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
-											</div>
-											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="home_enable_fullwidth" id="home_enable_fullwidth" {if $row.home_enable_fullwidth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl"></span>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-10">
-												<label class="nowrap" for="home_disable_sidebar" title="{lang code='option_disable_sidebar'}">{lang code='option_disable_sidebar'}</label>
-											</div>
-											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="home_disable_sidebar" id="home_disable_sidebar" {if $row.home_disable_sidebar=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl"></span>
-											</div>
-										</div>
-										<hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="home_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="home_enable_fullwidth" id="home_enable_fullwidth" {if $row.home_enable_fullwidth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="home_disable_sidebar" title="{lang code='option_disable_sidebar'}">{lang code='option_disable_sidebar'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="home_disable_sidebar" id="home_disable_sidebar" {if $row.home_disable_sidebar=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
 
-										<!-- Not available yet
+                                        <!-- Not available yet
 										<div class="row">
 											<div class="col-md-6">
 												<label class="nowrap" for="homepage_featured_video_display" title="{lang code='option_homepage_featured_video_display'}">{lang code='option_homepage_featured_video_display'}</label>
@@ -452,9 +443,9 @@
 											<div class="col-md-6">
 												<select class="form-control" name="homepage_featured_video_display" id="homepage_featured_video_display">
 													{assign var=array_modes value=[
-													'paginate' => 'option_paginate'
-													,'slider' => 'option_slider'
-													]}
+                                                        'paginate' => 'option_paginate'
+                                                        ,'slider' => 'option_slider'
+                                                    ]}
 													{foreach from=$array_modes item=trad key=code}
 													<option {if $code==$row.homepage_featured_video_display}selected{/if} value="{$code}">
 														{lang code=$trad}
@@ -475,147 +466,147 @@
 										<hr/>
 										-->
 
-									</div>
+                                    </div>
 
-									<div class="col-md-4">
-										<div class="row">
-											<div class="col-md-10">
-												<label class="nowrap" for="home_display_recent_videos" title="{lang code='option_home_display_recent_videos'}">{lang code='option_home_display_recent_videos'}</label>
-											</div>
-											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="home_display_recent_videos" id="home_display_recent_videos" {if $row.home_display_recent_videos=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl"></span>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="homepage_recent_videos_display" title="{lang code='option_homepage_recent_videos_display'}">{lang code='option_homepage_recent_videos_display'}</label>
-											</div>
-											<div class="col-md-6">
-												<select class="form-control" name="homepage_recent_videos_display" id="homepage_recent_videos_display">
-													{assign var=array_modes value=[
-													'paginate' => 'option_paginate'
-													,'slider' => 'option_slider'
-													]}
-													{foreach from=$array_modes item=trad key=code}
-													<option {if $code==$row.homepage_recent_videos_display}selected{/if} value="{$code}">
-														{lang code=$trad}
-													</option>
-													{/foreach}
-												</select>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="homepage_recent_video_style" title="{lang code='option_homepage_recent_video_style'}">{lang code='option_homepage_recent_video_style'}</label>
-											</div>
-											<div class="col-md-6">
-												<select class="form-control" name="homepage_recent_video_style" id="homepage_recent_video_style">
-													{assign var=array_styles value=[
-														'modern' => 'option_modern'
-														,'classic' => 'option_classic'
-													]}
-													{foreach from=$array_styles item=trad key=code}
-													<option {if $code==$row.homepage_recent_video_style}selected{/if} value="{$code}">
-														{lang code=$trad}
-													</option>
-													{/foreach}
-												</select>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="homepage_recent_video_ratio" title="{lang code='option_homepage_recent_video_ratio'}">{lang code='option_homepage_recent_video_ratio'}</label>
-											</div>
-											<div class="col-md-6">
-												<select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
-													{assign var=array_styles value=[
-														'1.3333' => '4/3'
-														,'1.7777' => '16/9'
-														,'1.6' => '16/10'
-													]}
-													{foreach from=$array_styles item=value key=code}
-													<option {if $code==$row.homepage_recent_video_ratio}selected{/if} value="{$code}">
-														{$value}
-													</option>
-													{/foreach}
-												</select>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_only_with_slider_option'}"> {lang code='option_list_recent_videos'}</label>
-											</div>
-											<div class="col-md-6">
-												<input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
-											</div>
-										</div>
-										<hr/>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="home_display_recent_videos" title="{lang code='option_home_display_recent_videos'}">{lang code='option_home_display_recent_videos'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="home_display_recent_videos" id="home_display_recent_videos" {if $row.home_display_recent_videos=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="homepage_recent_videos_display" title="{lang code='option_homepage_recent_videos_display'}">{lang code='option_homepage_recent_videos_display'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" name="homepage_recent_videos_display" id="homepage_recent_videos_display">
+                                                    {assign var=array_modes value=[
+                                                        'paginate' => 'option_paginate'
+                                                        ,'slider' => 'option_slider'
+                                                    ]}
+                                                    {foreach from=$array_modes item=trad key=code}
+                                                        <option {if $code==$row.homepage_recent_videos_display}selected{/if} value="{$code}">
+                                                            {lang code=$trad}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="homepage_recent_video_style" title="{lang code='option_homepage_recent_video_style'}">{lang code='option_homepage_recent_video_style'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" name="homepage_recent_video_style" id="homepage_recent_video_style">
+                                                    {assign var=array_styles value=[
+                                                        'modern' => 'option_modern'
+                                                        ,'classic' => 'option_classic'
+                                                    ]}
+                                                    {foreach from=$array_styles item=trad key=code}
+                                                        <option {if $code==$row.homepage_recent_video_style}selected{/if} value="{$code}">
+                                                            {lang code=$trad}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="homepage_recent_video_ratio" title="{lang code='option_homepage_recent_video_ratio'}">{lang code='option_homepage_recent_video_ratio'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
+                                                    {assign var=array_styles value=[
+                                                        '1.3333' => '4/3'
+                                                        ,'1.7777' => '16/9'
+                                                        ,'1.6' => '16/10'
+                                                    ]}
+                                                    {foreach from=$array_styles item=value key=code}
+                                                        <option {if $code==$row.homepage_recent_video_ratio}selected{/if} value="{$code}">
+                                                            {$value}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_only_with_slider_option'}"> {lang code='option_list_recent_videos'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
+                                            </div>
+                                        </div>
+                                        <hr/>
 
-									</div>
-									<div class="col-md-4">
-										<div class="row">
-											<div class="col-md-10">
-												<label class="nowrap" for="home_display_featured_collections" title="{lang code='option_home_display_featured_collections'}">{lang code='option_home_display_featured_collections'}</label>
-											</div>
-											<div class="col-md-2 row-size no_padding">
-												<input value="yes" name="home_display_featured_collections" id="home_display_featured_collections" {if $row.home_display_featured_collections=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-												<span class="lbl"></span>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="homepage_collection_video_style" title="{lang code='option_homepage_collection_video_style'}">{lang code='option_homepage_collection_video_style'}</label>
-											</div>
-											<div class="col-md-6">
-												<select class="form-control" name="homepage_collection_video_style" id="homepage_collection_video_style">
-													{assign var=array_styles value=[
-														'modern' => 'option_modern'
-														,'classic' => 'option_classic'
-													]}
-													{foreach from=$array_styles item=trad key=code}
-													<option {if $code==$row.homepage_collection_video_style}selected{/if} value="{$code}">
-														{lang code=$trad}
-													</option>
-													{/foreach}
-												</select>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="homepage_collection_video_ratio" title="{lang code='option_homepage_collection_video_ratio'}">{lang code='option_homepage_collection_video_ratio'}</label>
-											</div>
-											<div class="col-md-6">
-												<select class="form-control" name="homepage_collection_video_ratio" id="homepage_collection_video_ratio">
-													{assign var=array_styles value=[
-														'1.3333' => '4/3'
-														,'1.7777' => '16/9'
-														,'1.6' => '16/10'
-													]}
-													{foreach from=$array_styles item=value key=code}
-													<option {if $code==$row.homepage_collection_video_ratio}selected{/if} value="{$code}">
-														{$value}
-													</option>
-													{/foreach}
-												</select>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="list_home_collection_videos" title="{lang code='option_list_home_collection_videos'}">{lang code='option_list_home_collection_videos'}</label>
-											</div>
-											<div class="col-md-6">
-												<input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{$row.list_home_collection_videos}" type="number" min="0"/>
-											</div>
-										</div>
-										<hr/>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="home_display_featured_collections" title="{lang code='option_home_display_featured_collections'}">{lang code='option_home_display_featured_collections'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="home_display_featured_collections" id="home_display_featured_collections" {if $row.home_display_featured_collections=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="homepage_collection_video_style" title="{lang code='option_homepage_collection_video_style'}">{lang code='option_homepage_collection_video_style'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" name="homepage_collection_video_style" id="homepage_collection_video_style">
+                                                    {assign var=array_styles value=[
+                                                        'modern' => 'option_modern'
+                                                        ,'classic' => 'option_classic'
+                                                    ]}
+                                                    {foreach from=$array_styles item=trad key=code}
+                                                        <option {if $code==$row.homepage_collection_video_style}selected{/if} value="{$code}">
+                                                            {lang code=$trad}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="homepage_collection_video_ratio" title="{lang code='option_homepage_collection_video_ratio'}">{lang code='option_homepage_collection_video_ratio'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <select class="form-control" name="homepage_collection_video_ratio" id="homepage_collection_video_ratio">
+                                                    {assign var=array_styles value=[
+                                                        '1.3333' => '4/3'
+                                                        ,'1.7777' => '16/9'
+                                                        ,'1.6' => '16/10'
+                                                    ]}
+                                                    {foreach from=$array_styles item=value key=code}
+                                                        <option {if $code==$row.homepage_collection_video_ratio}selected{/if} value="{$code}">
+                                                            {$value}
+                                                        </option>
+                                                    {/foreach}
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="list_home_collection_videos" title="{lang code='option_list_home_collection_videos'}">{lang code='option_list_home_collection_videos'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{$row.list_home_collection_videos}" type="number" min="0"/>
+                                            </div>
+                                        </div>
+                                        <hr/>
 
                                     </div>
                                 </div>
@@ -2905,785 +2896,33 @@
                                 <input class="form-control" value="{$cron_copy_paste}" size="45" disabled />
                                 <span class="input-group-addon btn_copy_clipboard btn-info input-group-addon glyphicon glyphicon-copy btn_save_frequency" title="{lang('copy_clipboard')}"></span>
                             </div>
-                            <hr/>
-						</div>
-					</div>
-				</div>
-                <div id="config_collections" class="tab-pane">
-					<div class="row">
-						<div class="col-md-4">
-							<label class="nowrap" for="hide_empty_collection" title="{lang code='option_hide_empty_collection'}">{lang code='option_hide_empty_collection'}</label>
-						</div>
-						<div class="col-md-2 row-size">
-							<input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-						<div class="col-md-4">
-							<label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
-						</div>
-						<div class="col-md-2 row-size no_padding">
-							<input value="yes" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-							<span class="lbl"></span>
-						</div>
-					</div>
-				</div>
-				<div id="config_comments" class="tab-pane">
-					<div class="row">
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="enable_comments_video" title="{lang code='option_enable_comments_video'}">{lang code='option_enable_comments_video'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_comments_video" id="enable_comments_video" {if $row.enable_comments_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="enable_comments_photo" title="{lang code='option_enable_comments_photo'}">{lang code='option_enable_comments_photo'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_comments_photo" id="enable_comments_photo" {if $row.enable_comments_photo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="enable_comments_collection" title="{lang code='option_enable_comments_collection'}">{lang code='option_enable_comments_collection'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_comments_collection" id="enable_comments_collection" {if $row.enable_comments_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="enable_comments_channel" title="{lang code='option_enable_comments_channel'}">{lang code='option_enable_comments_channel'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_comments_channel" id="enable_comments_channel" {if $row.enable_comments_channel=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="comments_captcha" title="Comments captcha">Comments captcha</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<select class="form-control" name="comments_captcha" id="comments_captcha">
-										<option value="all" {if $row.comments_captcha=='all'}selected{/if}>For Everyone</option>
-										<option value="guests" {if $row.comments_captcha=='guests'}selected{/if}>For Guests Only</option>
-										<option value="none" {if $row.comments_captcha=='none'}selected{/if}>Disabled</option>
-									</select>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_comment_chr" title="Maximum Comment Characters">Maximum Comment Characters</label>
-								</div>
-								<div class="col-md-6 row-size">
-									<input class="form-control" name="max_comment_chr" id="max_comment_chr" value="{$row.max_comment_chr}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="anonym_comments" title="Allow guests to comment">Allow guests to comment</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="anonym_comments" id="anonym_comments" {if $row.anonym_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-10">
-									<label class="nowrap" for="enable_comments_censor" title="{lang code='option_comments_censor'}">{lang code='option_comments_censor'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_comments_censor" id="enable_comments_censor" {if $row.enable_comments_censor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-					</div>
-				</div>
-				<div id="config_ratings" class="tab-pane">
-					<div class="row">
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="video_rating" title="Video rating">Video rating</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="video_rating" id="video_rating" {if $row.video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="photo_rating" title="Video rating">Photo rating</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="photo_rating" id="photo_rating" {if $row.photo_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-                            <div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="own_video_rating" title="Rate own video">Rate own video</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="own_video_rating" id="own_video_rating" {if $row.own_video_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="own_photo_rating" title="Rate own photo">Rate own photo</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="own_photo_rating" id="own_photo_rating" {if $row.own_photo_rating=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="collection_rating" title="Collection rating">Collection rating</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="collection_rating" id="collection_rating" {if $row.collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="channel_rating" title="Channel rating">Channel rating</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="channel_rating" id="channel_rating" {if $row.channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-
-							</div>
-							<hr/>
-                            <div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="own_collection_rating" title="Rate own collection">Rate own collection</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="own_collection_rating" id="own_collection_rating" {if $row.own_collection_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-								<div class="col-md-4">
-									<label class="nowrap" for="own_channel_rating" title="Rate own channel">Rate own channel</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="own_channel_rating" id="own_channel_rating" {if $row.own_channel_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-
-                            </div>
-                            <hr/>
-
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="comment_rating" title="Comments rating">Comments rating</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="1" name="comment_rating" id="comment_rating" {if $row.comment_rating=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-
-							</div>
-							<hr/>
-
-						</div>
-					</div>
-				</div>
-				<div id="config_listings" class="tab-pane">
-					<div class="row">
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-12">
-									<h3>Videos</h3>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="videos_list_per_page" title="Per page">Per page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="videos_list_per_page" id="videos_list_per_page" value="{$row.videos_list_per_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="videos_items_ufav_page" title="Favorites">Favorites</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="videos_items_ufav_page" id="videos_items_ufav_page" value="{$row.videos_items_ufav_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="videos_items_hme_page" title="Home Tabs">Home Tabs</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="videos_items_hme_page" id="videos_items_hme_page" value="{$row.videos_items_hme_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="videos_item_channel_page" title="Channel page">Channel page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="videos_item_channel_page" id="videos_item_channel_page" value="{$row.videos_item_channel_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="videos_items_search_page" title="Search page">Search page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="videos_items_search_page" id="videos_items_search_page" value="{$row.videos_items_search_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="videos_items_uvid_page" title="User Videos">User Videos</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="videos_items_uvid_page" id="videos_items_uvid_page" value="{$row.videos_items_uvid_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="tmdb_search" title="User Videos">{lang code='tmdb_search'}</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="tmdb_search" id="tmdb_search" value="{$row.tmdb_search}"/>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-12">
-									<h3>Photos</h3>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_main_list" title="Main Limit"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"> Main Limit</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_main_list" id="photo_main_list" value="{$row.photo_main_list}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_home_tabs" title="Home Tabs"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on Homepage"> Home Tabs</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_home_tabs" id="photo_home_tabs" value="{$row.photo_home_tabs}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_search_result" title="Search Result"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on Search page"> Search Result</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_search_result" id="photo_search_result" value="{$row.photo_search_result}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_channel_page" title="Channel Page"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on User's page"> Channel Page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_channel_page" id="photo_channel_page" value="{$row.photo_channel_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_user_photos" title="User Photos"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on User's photos page"> User Photos</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_user_photos" id="photo_user_photos" value="{$row.photo_user_photos}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_user_favorites" title="User favorites"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on User's favorites page"> User favorites</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_user_favorites" id="photo_user_favorites" value="{$row.photo_user_favorites}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="photo_other_limit" title="Other Limit"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Use anywhere you want"> Other Limit</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="photo_other_limit" id="photo_other_limit" value="{$row.photo_other_limit}"/>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-12">
-									<h3>Collections</h3>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="collection_per_page" title="Collections Page"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on Collections page"> Collection Page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="collection_per_page" id="collection_per_page" value="{$row.collection_per_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="collection_items_page" title="Items Page"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of items to display in a Collection"> Items Page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="collection_items_page" id="collection_items_page" value="{$row.collection_items_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="collection_search_result" title="Search Result"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display in search results"> Search Result</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="collection_search_result" id="collection_search_result" value="{$row.collection_search_result}"/>
-								</div>
-							</div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="collection_home_top_collections" title="Homepage Top Collections"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on homepage top collections"> Homepage Top Collections</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" value="{$row.collection_home_top_collections}"/>
-                                </div>
-                            </div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="collection_collection_top_collections" title="Collections page Top Collections"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on collection page top collections"> Collections page Top Collections</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" value="{$row.collection_collection_top_collections}"/>
-                                </div>
-                            </div>
-							<hr/>
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label class="nowrap" for="collection_photos_top_collections" title="Photos page Top Collections"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on photos page top collections"> Photos page Top Collections</label>
-                                </div>
-                                <div class="col-md-4 row-size">
-                                    <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" value="{$row.collection_photos_top_collections}"/>
-                                </div>
-                            </div>
-							<hr/>
-
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-12">
-									<h3>Users</h3>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="channels_list_per_page" title="Per page">Per page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="channels_list_per_page" id="channels_list_per_page" value="{$row.channels_list_per_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="users_items_subscriptions" title="Subscriptions in channel view">Subscriptions in channel view</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="users_items_subscriptions" id="users_items_subscriptions" value="{$row.users_items_subscriptions}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="users_items_search_page" title="Search Page">Search Page</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="users_items_search_page" id="users_items_search_page" value="{$row.users_items_search_page}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="users_items_contacts_channel" title="Users contacts in channel view">Users contacts in channel view</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input class="form-control" name="users_items_contacts_channel" id="users_items_contacts_channel" value="{$row.users_items_contacts_channel}"/>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-
-					</div>
-				</div>
-				<div id="config_proxy" class="tab-pane">
-					<div class="row">
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="proxy_enable" title="Enable proxy">Enable proxy</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input value="yes" name="proxy_enable" id="proxy_enable" {if $row.proxy_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="proxy_auth" title="Enable proxy authentification">Enable proxy authentification</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input value="yes" name="proxy_auth" id="proxy_auth" {if $row.proxy_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="proxy_url" title="URL">URL</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="proxy_url" id="proxy_url" value="{$row.proxy_url}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="proxy_username" title="Username">Username</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="proxy_username" id="proxy_username" value="{$row.proxy_username}"/>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="proxy_port" title="Port">Port</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="proxy_port" id="proxy_port" value="{$row.proxy_port}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="proxy_password" title="Password">Password</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="proxy_password" id="proxy_password" value="{$row.proxy_password}"/>
-								</div>
-							</div>
-							<hr/>
-						</div>
-					</div>
-				</div>
-				<div id="config_cache" class="tab-pane">
-					<div class="row">
-						<div class="col-md-12">
-							<h3>Redis</h3>
-						</div>
-					</div>
-					<hr/>
-					<div class="row">
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="cache_enable" title="{lang code='enable_cache'}">{lang code='enable_cache'}</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input value="yes" name="cache_enable" id="cache_enable" {if $row.cache_enable=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-8">
-									<label class="nowrap" for="cache_auth" title="{lang code='enable_cache_authentification'}">{lang code='enable_cache_authentification'}</label>
-								</div>
-								<div class="col-md-4 row-size">
-									<input value="yes" name="cache_auth" id="cache_auth" {if $row.cache_auth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="cache_host" title="{lang code='host'}">{lang code='host'}</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="cache_host" id="cache_host" value="{$row.cache_host}"/>
-								</div>
-							</div>
-							<hr/>
-						</div>
-						<div class="col-md-3">
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="cache_port" title="{lang code='port'}">{lang code='port'}</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="cache_port" id="cache_port" value="{$row.cache_port}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="cache_password" title="{lang code='password'}">{lang code='password'}</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="cache_password" id="cache_password" value="{$row.cache_password}"/>
-								</div>
-							</div>
-							<hr/>
-						</div>
-					</div>
-				</div>
-
-				<div id="config_dev" class="tab-pane">
-					<div class="row">
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-5">
-									<label class="nowrap" for="enable_dev_mode" title="{lang code='dev_mode'}">{lang code='dev_mode'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="enable_dev_mode" id="enable_dev_mode" {if $DEVELOPMENT_MODE}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-5">
-									<label class="nowrap" for="discord_error_log" title="{lang code='discord_error_log'}">{lang code='discord_error_log'}</label>
-								</div>
-								<div class="col-md-2 row-size">
-									<input value="yes" name="discord_error_log" id="discord_error_log" {if $discord_error_log}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-									<span class="lbl"></span>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-4">
-									<label class="nowrap" for="discord_webhook_url" title="{lang code='discord_webhook_url'}">{lang code='discord_webhook_url'}</label>
-								</div>
-								<div class="col-md-8 row-size">
-									<input class="form-control" name="discord_webhook_url" id="discord_webhook_url" value="{$discord_webhook_url}" {if !$discord_error_log}disabled="disabled"{/if}/>
-								</div>
-							</div>
-							<hr/>
-						</div>
-					</div>
-				</div>
-
-				<div id="config_hosting" class="tab-pane">
-					<div class="row">
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="php_path" title="PHP Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="PHP Binary Path"> PHP Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="media_info" title="Mediainfo Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Mediainfo Binary Path"> Mediainfo Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFmpeg Binary Path"> FFmpeg Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="ffprobe_path" title="FFprobe Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFprobe Binary Path"> FFprobe Path</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="max_conversion" title="Max videos to convert at once">
-										<img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video conversion use lot of ressources, be aware of what's you're doing !">
-										Max videos to convert at once
-									</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="max_conversion" id="max_conversion" value="{$row.max_conversion}"/>
-								</div>
-							</div>
-							<hr/>
-
-						</div>
-						<div class="col-md-4">
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="git_path" title="{lang code='option_git_path'}">{lang code='option_git_path'}</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="git_path" id="git_path" value="{$row.git_path}"/>
-								</div>
-							</div>
-							<hr/>
-							{if System::is_nginx()}
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="nginx_path" title="{lang code='option_nginx_path'}">{lang code='option_nginx_path'}</label>
-								</div>
-								<div class="col-md-6">
-									<input class="form-control" name="nginx_path" id="nginx_path" value="{$row.nginx_path}"/>
-								</div>
-							</div>
-							<hr/>
-							{/if}
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="cloudflare_upload_limit" title="{lang code='cloudflare_upload_limit'}">
-										<a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank" style="text-decoration: none;">
-											<img alt="help" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
-										</a> {lang code='cloudflare_upload_limit'}
-									</label>
-								</div>
-								<div class="col-md-6">
-									<div class="input-group">
-										<input class="form-control" name="cloudflare_upload_limit" id="cloudflare_upload_limit" value="{$row.cloudflare_upload_limit}" size="45"/>
-										<span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
-									</div>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="automate_launch_mode" title="{lang code='option_automate_launch_mode'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_automate_launch_mode'}"> {lang code='option_automate_launch_mode'}</label>
-								</div>
-								<div class="col-md-6">
-									<select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
-										{assign var=array_automate value=[
-											'crontab' => 'option_automate_launch_mode_crontab'
-											,'user_activity' => 'option_automate_launch_mode_user_activity'
-											,'disabled' => 'option_automate_launch_mode_disabled'
-										]}
-										{foreach from=$array_automate item=trad key=code}
-										<option {if $code==$row.automate_launch_mode}selected{/if} value="{$code}">
-											{lang code=$trad}
-										</option>
-										{/foreach}
-									</select>
-								</div>
-							</div>
-							<div class="row" id="crontab_details_block">
-								<div class="col-md-12">
-									{lang('crontab_link_label')}
-									<div class="input-group">
-										<input class="form-control" value="{$cron_copy_paste}" size="45" disabled />
-										<span class="input-group-addon btn_copy_clipboard btn-info input-group-addon glyphicon glyphicon-copy btn_save_frequency" title="{lang('copy_clipboard')}"></span>
-									</div>
-								</div>
-							</div>
-							<hr/>
-							<div class="row">
-								<div class="col-md-6">
-									<label class="nowrap" for="timezone" title="{lang code='option_timezone'}">{lang code='option_timezone'}</label>
-								</div>
-								<div class="col-md-6">
-									<select class="form-control" name="timezone" id="timezone">
-										<option {if ''==$row.timezone}selected{/if} value=""></option>
-										{foreach from=$allTimezone item=label key=code}
-										<option {if $label==$row.timezone}selected{/if} value="{$label}">
-											{$label}
-										</option>
-										{/foreach}
-									</select>
-								</div>
-							</div>
-							<hr/>
-						</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<br/>
-	<div style="text-align:center;">
-		<input type="submit" name="update" class="btn btn-primary btn-sm" value="Update Settings" id="udpate"/>
-	</div>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="nowrap" for="timezone" title="{lang code='option_timezone'}">{lang code='option_timezone'}</label>
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" name="timezone" id="timezone">
+                                <option {if ''==$row.timezone}selected{/if} value=""></option>
+                                {foreach from=$allTimezone item=label key=code}
+                                    <option {if $label==$row.timezone}selected{/if} value="{$label}">
+                                        {$label}
+                                    </option>
+                                {/foreach}
+                            </select>
+                        </div>
+                    </div>
+                    <hr/>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    <br/>
+    <div style="text-align:center;">
+        <input type="submit" name="update" class="btn btn-primary btn-sm" value="Update Settings" id="udpate"/>
+    </div>
 </form>
 <span id="floatingMessage" class="glyphicon glyphicon-ok"></span>
