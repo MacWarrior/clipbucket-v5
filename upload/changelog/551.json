@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"128",
+  "revision":"130",
   "status":"dev",
   "detail":[
     {
@@ -79,6 +79,7 @@
         ,"Fix icons not displaying"
         ,"Fix current user level display in header"
         ,"Fix collection uploader informations display"
+        ,"Fix user storage running even when disabled"
       ]
     },
     {
@@ -212,9 +213,15 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Fix play/pause through space bar"
+      ]
+    },
+    {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.3"
+        "Update Player to version 2.0.4"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"
