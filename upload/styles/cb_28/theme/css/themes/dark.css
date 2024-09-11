@@ -17,7 +17,7 @@ html.dark {
     --color-gradient-start : #30323E;
     --color-gradient-end : #1E1F2A;
     --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
-    --generic-box-shadow : rgba(0, 0, 0, 0.80) 0px 25px 20px -20px;
+    --generic-box-shadow : 0 20px 24px 0 rgba(0, 0, 0, 0.80);
     --slim-box-shadow : 0 10px 24px 0 rgba(0, 0, 0, 0.80);
     --border-radius : 5px;
 }
@@ -203,6 +203,7 @@ body {
 }
 .sidebar-items,
 .sidebar-channels,
+.sidebar-playlists .playlist,
 .signin-block .side-box,
 .signin-block .user-form,
 .forgot-block .user-form,
@@ -235,6 +236,6 @@ body {
 
 /* shadow on video inside slider */
 .slider-video-container .thumb-video-padding .thumb-video {
-    box-shadow: var(--generic-box-shadow);
-    z-index: -1;
+    box-shadow: rgba(0, 0, 0, 0.80) 0px 25px 20px -20px;
+    z-index:-1;
 }
