@@ -232,7 +232,8 @@ body {
 .slider-video-container .thumb-video-padding a.thumb-video{
     background: var(--background-gradient);
 }
+
 /* shadow on video inside slider */
 .slider-video-container .thumb-video-padding .thumb-video {
-    box-shadow: rgba(255, 255, 255, 0.55) 0px 25px 20px -20px;
+    box-shadow: var(--generic-box-shadow);
 }
