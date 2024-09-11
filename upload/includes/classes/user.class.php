@@ -290,11 +290,6 @@ class User
 
         $version = Update::getInstance()->getDBVersion();
 
-        //TODO changer par le numéro de revision
-        if ($param_channels && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '124') === true) {
-            $conditions[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
-        }
-
         if( $param_search ){
             /* Search is done on username, profile tags and profile categories */
             $cond = '(MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
@@ -314,6 +309,14 @@ class User
         } else {
             $select = $this->getAllFields();
             $select[] = $this->getTableNameLevel() . '.user_level_name';
+        }
+
+        //TODO changer par le numéro de revision
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') === true) {
+            if ($param_channels ) {
+                $conditions[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+            }
+            $select[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\') AS is_channel_enable ';
         }
 
         $join = [];
