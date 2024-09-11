@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"130",
+  "revision":"131",
   "status":"dev",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Implement per page configurations"
         ,"Implement social networks links management"
         ,"Implement collection comments management"
+        ,"Implement video view history"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"

@@ -127,6 +127,7 @@ if (isset($_POST['update'])) {
         , 'enable_storage_history_fo'
         , 'enable_social_networks_links_footer'
         , 'enable_social_networks_links_home_sidebar'
+        , 'enable_video_view_history'
     ];
 
     $config_booleans_to_refactor = [
@@ -434,7 +435,8 @@ if (isset($_POST['update'])) {
         'enable_storage_history_fo',
         'default_theme',
         'enable_social_networks_links_footer',
-        'enable_social_networks_links_home_sidebar'
+        'enable_social_networks_links_home_sidebar',
+        'enable_video_view_history'
     ];
 
     foreach ($opt_list as $optl) {

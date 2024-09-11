@@ -1241,4 +1241,5 @@ VALUES ('admin_setting'),
        ('text_confirm_comment'),
        ('manage_social_networks_links'),
        ('collection_not_found'),
-       ('edit_photo');
+       ('edit_photo'),
+       ('enable_video_view_history');

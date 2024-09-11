@@ -587,12 +587,12 @@ CREATE TABLE `{tbl_prefix}video_files` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
-  `id` int(11) NOT NULL,
-  `video_id` varchar(255) NOT NULL,
-  `video_views` int(11) NOT NULL,
-  `last_updated` int(11) NOT NULL
+    `id_video_view` INT(11)  NOT NULL,
+    `id_video`      BIGINT   NOT NULL,
+    `id_user`       BIGINT   NOT NULL,
+    `view_date`     DATETIME NOT NULL,
+    PRIMARY KEY (`id_video_view`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 
 ALTER TABLE `{tbl_prefix}action_log`
   ADD PRIMARY KEY (`action_id`);
@@ -742,9 +742,6 @@ ALTER TABLE `{tbl_prefix}video_files`
   ADD PRIMARY KEY (`id`),
   ADD FULLTEXT KEY `src_bitrate` (`src_bitrate`);
 
-ALTER TABLE `{tbl_prefix}video_views`
-  ADD PRIMARY KEY (`id`);
-
 ALTER TABLE `{tbl_prefix}action_log`
   MODIFY `action_id` int(255) NOT NULL AUTO_INCREMENT;
 
@@ -857,7 +854,12 @@ ALTER TABLE `{tbl_prefix}video_files`
   MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}video_views`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_video_view` INT(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `{tbl_prefix}video_views`
+    ADD CONSTRAINT `video_view_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}video_views`
+    ADD CONSTRAINT `video_view_user` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE `{tbl_prefix}video_resolution` (
 	`id_video_resolution` int(11) NOT NULL,
