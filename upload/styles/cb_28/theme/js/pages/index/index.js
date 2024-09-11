@@ -27,6 +27,10 @@ $(function () {
             let number_of_block_brut = (conteneurRect.width / fake_width) - 0.5;
             let number_of_block = Math.floor(number_of_block_brut);
 
+            if(number_of_block <= 0) {
+                number_of_block = 1;
+            }
+
             let new_width = Math.floor( ( conteneurRect.width / ( number_of_block + 0.5 ) ) - (marginSum) - (marginSum)/number_of_block ) ;
 
             let new_height = new_width / ratio

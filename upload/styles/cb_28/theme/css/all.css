@@ -7590,7 +7590,7 @@ textarea#comment_box {
   transition: color 200ms;
   color:var(--color-02);
   opacity: 0.6;
-  z-index:5;
+  z-index:2;
 }
 
 .slider-video-container.disabled .thumb-video:before,
@@ -7607,7 +7607,7 @@ textarea#comment_box {
   cursor: default !important;
   pointer-events: none;
   transition: color 200ms;
-  z-index:5;
+  z-index:2;
 }
 
 .default-slider .slider-container .slider-video-container.disabled.disabled-next .thumb-video:after,
@@ -7834,6 +7834,7 @@ textarea#comment_box {
 
 .slider-video-container .thumb-video-padding .thumb-video + .restricted {
   color:white;
+  z-index: 2;
 }
 
 .slider-video-container .thumb-video-padding a.thumb-video{

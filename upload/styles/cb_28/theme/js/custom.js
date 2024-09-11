@@ -182,7 +182,7 @@ let listenerModernThumbVideo = function(event) {
 
 let AddingListenerModernThumbVideo = function(){
     /** catch clic on new thumb video */
-    document.querySelectorAll('.thumb-video').forEach(function(elem){
+    document.querySelectorAll('.thumb-video:not(.cd-popup-trigger)').forEach(function(elem){
         elem.removeEventListener('click', listenerModernThumbVideo);
         elem.addEventListener('click', listenerModernThumbVideo);
     })
