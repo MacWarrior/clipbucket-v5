@@ -99,6 +99,12 @@ if (user_id() != $udetails['userid']) {
 subtitle(lang('user_s_channel', $udetails['username']));
 
 if( ClipBucket::getInstance()->show_page ){
+
+    assign('photos', Photo::getInstance()->getAll([
+        'userid'=>$udetails['userid'],
+        'limit'=>9
+    ]));
+
     $channel_profile_fields = userquery::getInstance()->load_user_fields($p,'profile');
 
     $location_fields = [];
