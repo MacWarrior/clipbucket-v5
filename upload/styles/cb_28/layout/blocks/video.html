@@ -124,8 +124,8 @@
 
 {if $display_type=='user-videos'}
 <div class="clearfix thumb-holder userAppending">
-	<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-		<img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" loading="lazy"/>
+	<a class="video-link {if config('popup_video') == 'yes' && $home == true} cd-popup-trigger{/if} video-link"  onclick="_cb.getModalVideo({$video.videoid})" href="{video_link($video)}" title="{display_clean($video.title)|title}">
+		<img class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if} " src="{getThumb vdetails=$video size=416x260}" loading="lazy"/>
 	</a>
 
 	{ANCHOR place='in_video_thumb' data=$video}
