@@ -33,7 +33,7 @@ class MWIP extends \Migration
 
         self::generateTranslation('disable_channel', [
             'fr'=>'Désactiver la chaîne',
-            'en'=>'Disabled channel'
+            'en'=>'Disable channel'
         ]);
     }
 }
