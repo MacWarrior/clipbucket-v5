@@ -283,6 +283,7 @@ function display_tmdb_result($data, $videoid)
 function display_video_view_history(array $data, int $videoid)
 {
     assign('results', $data['results']);
+    assign('modal', $data['modal']);
     assign('videoid', $videoid);
     echo templateWithMsgJson('blocks/video_view_history.html');
 }

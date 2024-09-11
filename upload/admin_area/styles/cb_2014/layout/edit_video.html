@@ -19,27 +19,27 @@
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						Actions <span class="caret caret_margin"></span>
 					</button>
-					<ul class="dropdown-menu pull-right" role="menu">
-						<li><a href="{videoLink vdetails=$data}">{lang code='watch'}</a></li>
-						{if $data.active!='yes'}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
-						{else}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
-						{/if}
+                    <ul class="dropdown-menu pull-right" role="menu">
+                        <li><a href="{videoLink vdetails=$data}">{lang code='watch'}</a></li>
+                        {if $data.active!='yes'}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=activate">{lang code='activate'}</a></li>
+                        {else}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=deactivate">{lang code='deactivate'}</a></li>
+                        {/if}
 
-						{if $modedata!='featured'}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>
-						{else}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
-						{/if}
+                        {if $modedata!='featured'}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=featured">Make Featured</a></li>
+                        {else}
+                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=unfeature">Make Unfeatured</a></li>
+                        {/if}
                         {if $video.status=='Successful' }
                             {if config('chromecast')=='yes' && !$data.is_castable}
-                            <li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
+                                <li><a href="edit_video.php?video={$data.videoid}&amp;mode=check_castable">{lang code='castable_status_check'}</a></li>
                             {/if}
                             <li><a href="edit_video.php?video={$data.videoid}&amp;mode=update_bits_color">{lang code='update_bits_color'}</a></li>
                             <li><a href="javascript:void(0);" onClick="javascript:Confirm_Delete('video_manager.php?delete_video={$data.videoid}')">{lang code='delete'}</a></li>
                             {if $data.embeded != 'yes'}
-                            <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
                             {/if}
                         {/if}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="upload_thumbs.php?video={$data.videoid}&type=thumbs">{lang('manage_x', lang('thumbs')|lower)}</a></li>
@@ -53,8 +53,8 @@
                         {if config('enable_tmdb') == 'yes' && config('tmdb_token') != ''}
                             <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" data-id="{$data.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</a></li>
                         {/if}
-						<li><a href="edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
-					</ul>
+                        <li><a href="edit_video.php?video={$data.videoid}&amp;mode=delete" onclick="return _cb.confirm_it('{lang code='confirm_delete_video'}')">{lang code='delete'}</a></li>
+                    </ul>
 				</div>
 			</h2>
 			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
@@ -318,12 +318,27 @@
                         {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
                         || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
                         }
-                        <li>
-                            <a data-toggle="tab" href="#movie_infos">
-                                <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
-                            </a>
-                        </li>
+                            <li>
+                                <a data-toggle="tab" href="#movie_infos">
+                                    <i class="glyphicon glyphicon-info-sign"></i> {lang code='movie_infos'}
+                                </a>
+                            </li>
                         {/if}
+                        {if config('enable_comments_video') == 'yes'}
+                            <li>
+                                <a data-toggle="tab" href="#comments">
+                                    <i class="fa fa-comments"></i> {lang('comments')}
+                                </a>
+                            </li>
+                        {/if}
+                        {if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes'}
+                            <li>
+                                <a data-toggle="tab" href="#view_history">
+                                    <i class="fa fa-history"></i> {lang('video_list_view_video_history')}
+                                </a>
+                            </li>
+                        {/if}
+
                     </ul>
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane active">
@@ -440,28 +455,77 @@
                         {if config('enable_video_genre') == 'yes' || config('enable_video_actor') == 'yes' || config('enable_video_producer') == 'yes'
                         || config('enable_video_executive_producer') == 'yes' || config('enable_video_director') == 'yes' || config('enable_video_crew') == 'yes'
                         }
-                        <div id="movie_infos" class="tab-pane">
-                            {foreach from=$video_fields item=field}
-                            {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
-                            {continue}
-                            {/if}
-
-                            <div class="table">
-                                {$field.class='form-control'}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
-                                {if $field.hint_1}
-                                {$field.hint_1}<br/>
-                                {/if}
-                                {$formObj->createField($field)}
-                                {if $field.id|strstr:'tags'}
-                                <ul id="list_{$field.id}"></ul>
-                                {/if}
-                                {if $field.hint_2}<br/>
-                                {$field.hint_2}
-                                {/if}
+                            <div id="movie_infos" class="tab-pane">
+                                {foreach from=$video_fields item=field}
+                                    {if !in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                        {continue}
+                                    {/if}
+                                    <div class="table">
+                                        {$field.class='form-control'}
+                                        <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                        {if $field.hint_1}
+                                            {$field.hint_1}
+                                            <br/>
+                                        {/if}
+                                        {$formObj->createField($field)}
+                                        {if $field.id|strstr:'tags'}
+                                            <ul id="list_{$field.id}"></ul>
+                                        {/if}
+                                        {if $field.hint_2}
+                                            <br/>
+                                            {$field.hint_2}
+                                        {/if}
+                                    </div>
+                                {/foreach}
                             </div>
-                            {/foreach}
-                        </div>
+                        {/if}
+                        {if config('enable_comments_video') == 'yes'}
+                            <div id="comments" class="tab-pane">
+                                <legend>{lang('comments')}</legend>
+                                <div class="form-group">
+                                    {foreach from=$comments item=comment}
+                                        <div class="itemdiv dialogdiv comment_line" id="comment_{$comment.comment_id}">
+                                            {if $comment != ''}
+                                                {if !empty($comment.userid)}
+                                                    {$userdetails = $userquery->get_user_details($comment.userid)}
+                                                    {$username = $userdetails.username}
+                                                    {$avatar = $userquery->getUserThumb($userdetails,'small')}
+                                                {else}
+                                                    {$username = $comment.anonym_name}
+                                                    {$avatar = $userquery->get_default_thumb('small')}
+                                                {/if}
+                                                <div class="user">
+                                                    <img alt="{display_clean($username)}" title="{display_clean($username)}" src="{$avatar}">
+                                                </div>
+                                                <div class="body clearfix">
+                                                    <div class="col-md-7">
+                                                        {Comments::getClean($comment.comment)}
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <i class="icon-time"></i>
+                                                        <span class="green">{$comment.date_added|date_format}</span>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <span class="btn btn-primary del_cmt" data-id="{$comment.comment_id}">{lang code='delete'}</span>
+                                                    </div>
+                                                </div>
+                                            {else}
+                                                <div class="body">
+                                                    <p>{lang('no_comments',strtolower(lang('video')))}</p>
+                                                </div>
+                                            {/if}
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            </div>
+                        {/if}
+                        {if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes'}
+                            <div id="view_history" class="tab-pane">
+                                <legend>{lang('video_list_view_video_history')}</legend>
+                                <div class="form-group" id="view_history_div">
+                                    {include file="$style_dir/blocks/video_view_history.html"}
+                                </div>
+                            </div>
                         {/if}
                     </div>
                     <div class="form-group alignCenter">
@@ -545,72 +609,6 @@
                     </div>
                 </div>
             </div>
-
-
-            <div class="col-md-6">
-
-
-                {if config('enable_comments_video') == 'yes'}
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="widget-box" style="margin-top:30px;">
-                            <div class="widget-header header-color-blue2">
-                                <h5>Comments</h5>
-                                <div class="widget-toolbar">
-                                    <a href="#" data-action="collapse">
-                                        <i class="icon-chevron-up"></i>
-                                    </a>
-                                </div>
-                            </div>
-                            {ANCHOR place="after_video_edit" data=$data.videoid}
-                            <div class="widget-body">
-                                <div class="widget-main">
-                                    <div class="slimScrollDiv">
-                                        {foreach from=$comments item=comment}
-                                        <form method="post" name="delete_Comment" id="edit_video">
-                                            {if $comment != ''}
-                                            <div class="itemdiv dialogdiv">
-                                                {if !empty($comment.userid)}
-                                                    {$userdetails = $userquery->get_user_details($comment.userid)}
-                                                    {$username = $userdetails.username}
-                                                    {$avatar = $userquery->getUserThumb($userdetails,'small')}
-                                                {else}
-                                                    {$username = $comment.anonym_name}
-                                                    {$avatar = $userquery->get_default_thumb('small')}
-                                                {/if}
-                                                <div class="user">
-                                                    <img alt="{display_clean($username)}" title="{display_clean($username)}" src="{$avatar}">
-                                                </div>
-                                                <div class="body clearfix">
-                                                    <div class="col-md-7">
-                                                        {Comments::getClean($comment.comment)}
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <i class="icon-time"></i>
-                                                        <span class="green">{$comment.date_added|date_format}</span>
-                                                    </div>
-                                                    <div class="col-md-2">
-                                                        <input type="hidden" name="cmt_id" value="{$comment.comment_id}" />
-                                                        <input class="btn btn-primary" type="submit" name="del_cmt" value="{lang code='delete'}" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            {else}
-                                            <div class="body">
-                                                <p>No comments found !</p>
-                                            </div>
-                                            {/if}
-                                        </form>
-                                        {/foreach}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {/if}
-
-            </div>
         </form>
     </div>
 <div class="modal fade" id="myModal" role="dialog">
@@ -620,5 +618,7 @@
     var text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
     var videoid = '{$data.videoid}';
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    var text_confirm_comment = '{lang('text_confirm_comment')}';
+    var text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
 </script>
 {/if}

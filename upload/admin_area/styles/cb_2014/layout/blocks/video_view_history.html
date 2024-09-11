@@ -1,11 +1,12 @@
+{if $modal === true}
 <div class="modal-dialog" style="width:80%">
     <div class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal">&times;</button>
             <h4 class="modal-title">{lang code='history'}</h4>
         </div>
-        <div class="modal-body tmdb">
-
+        <div class="modal-body ">
+{/if}
             <table class="table table-bordered table-striped">
                 <tr>
                     <th class="col-md-1" style="cursor:pointer;" title="{lang('sort_by',lang('username'))}">{lang code='username'} </th>
@@ -23,6 +24,7 @@
                 {/section}
             </table>
             {include file="$style_dir/blocks/pagination.html"}
+{if $modal === true}
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
@@ -36,3 +38,4 @@
         videoid = $('#modal_videoid').val();
     });
 </script>
+{/if}

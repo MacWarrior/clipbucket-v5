@@ -12,4 +12,5 @@ pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascr
 
 display_video_view_history([
     'results'    => $results['final_results'],
+    'modal' => ($_POST['modal'] ?? true)
 ], $_POST['videoid']);
