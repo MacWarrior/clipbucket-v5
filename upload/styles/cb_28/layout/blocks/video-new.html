@@ -9,7 +9,7 @@
 			<div class="time">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</div>
 		</div>
 		{ANCHOR place='in_video_thumb' data=$video}
-	</div>
+	</div><div class="shadow"></div>
 	<div class="details">
 		<div class="titre">
 			<a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>

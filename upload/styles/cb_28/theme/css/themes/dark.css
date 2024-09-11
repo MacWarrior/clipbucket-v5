@@ -235,7 +235,13 @@ body {
 }
 
 /* shadow on video inside slider */
-.slider-video-container .thumb-video-padding .thumb-video {
+.slider-video-container .thumb-video-padding + .shadow {
     box-shadow: rgba(0, 0, 0, 0.80) 0px 25px 20px -20px;
+    width: 100%;
+    height: calc(var(--height) - 5px);
+    display: block;
     z-index:-1;
+    position: absolute;
+    top:0;
+    left: 0;
 }
