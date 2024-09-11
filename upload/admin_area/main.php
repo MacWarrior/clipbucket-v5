@@ -127,6 +127,7 @@ if (isset($_POST['update'])) {
         , 'enable_storage_history_fo'
         , 'enable_social_networks_links_footer'
         , 'enable_social_networks_links_home_sidebar'
+        , 'enable_video_view_history'
         , 'home_enable_fullwidth'
         , 'home_disable_sidebar'
         , 'home_display_featured_collections'
@@ -439,6 +440,7 @@ if (isset($_POST['update'])) {
         'default_theme',
         'enable_social_networks_links_footer',
         'enable_social_networks_links_home_sidebar',
+        'enable_video_view_history',
         'homepage_featured_video_display',
         'homepage_recent_videos_display',
         'homepage_recent_video_style',

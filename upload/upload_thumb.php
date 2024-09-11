@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'upload_thumb');
 require 'includes/config.inc.php';
 
-global $myquery, $db, $Upload;
+global $myquery, $Upload;
 
 userquery::getInstance()->logincheck();
 

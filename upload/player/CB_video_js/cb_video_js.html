@@ -120,6 +120,25 @@
     //Initializing
     $(document).ready(function() {
         var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+
+        $('body').keydown(function(e)
+        {
+            if( $(document.activeElement).is('body') ||
+                $(document.activeElement).is('button.vjs-fullscreen-control') ||
+                $(document.activeElement).is('div.vjs-volume-menu-button') ||
+                $(document.activeElement).is('video') )
+            {
+                if( e.keyCode === 0 || e.keyCode === 32 )
+                {
+                    e.preventDefault();
+                    if( cb_player.paused() ){
+                        cb_player.play();
+                    } else {
+                        cb_player.pause();
+                    }
+                }
+            }
+        });
     });
 </script>
 

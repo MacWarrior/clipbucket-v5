@@ -6,7 +6,7 @@ if (isset($_POST['mode'])) {
 
     switch ($mode) {
         case 'playlistMore':
-            global $db, $cbvid, $Smarty;
+            global $cbvid, $Smarty;
             $load_hit = $_POST['loadHit'];
             $load_limit = $_POST['loadLimit'];
             $playlist = $_POST['playlist'];

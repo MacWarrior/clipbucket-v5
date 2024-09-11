@@ -289,6 +289,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'custom_css', ''),
     (NULL, 'enable_social_networks_links_footer', 'no'),
     (NULL, 'enable_social_networks_links_home_sidebar', 'no'),
+    (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'homepage_recent_videos_display', 'slider'),
     (NULL, 'homepage_featured_video_display', 'paginate'),
     (NULL, 'homepage_recent_video_style', 'modern'),
@@ -974,7 +975,7 @@ INSERT IGNORE INTO `{tbl_prefix}timezones` (`timezone`) VALUES
     ('WET'),
     ('Zulu');
 
-INSERT INTO `cb_fontawesome_icons` (`icon`) VALUES
+INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('500px'),
     ('address-book'),
     ('address-book-o'),

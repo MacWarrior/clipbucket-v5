@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'file_downloader');
 
-global $cbvid, $Upload, $db;
+global $cbvid, $Upload;
 
 include('../includes/config.inc.php');
 include('../includes/classes/curl/class.curl.php');

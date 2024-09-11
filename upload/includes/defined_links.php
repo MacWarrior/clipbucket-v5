@@ -30,6 +30,6 @@ $cbLinks = [
     'edit_account'       => ['edit_account.php', 'edit_account.php']
 ];
 
-if (is_array($Cbucket->links)) {
-    $Cbucket->links = array_merge($Cbucket->links, $cbLinks);
+if (is_array(ClipBucket::getInstance()->links)) {
+    ClipBucket::getInstance()->links = array_merge(ClipBucket::getInstance()->links, $cbLinks);
 }

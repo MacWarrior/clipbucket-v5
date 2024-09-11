@@ -4,8 +4,8 @@
 	Description: Official CBV5 player
 	Author: Oxygenz
     Author Website: https://clipbucket.oxygenz.fr/
-	Version: 2.0.3
-    Released: 2024-03-01
+	Version: 2.0.4
+    Released: 2024-09-11
     Website: https://github.com/MacWarrior/clipbucket-v5
  */
 

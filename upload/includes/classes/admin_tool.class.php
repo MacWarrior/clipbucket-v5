@@ -158,7 +158,10 @@ class AdminTool
         Clipbucket_db::getInstance()->update(tbl('tools'), ['frequency', 'previous_calculated_datetime'], [$frequency, date('Y-m-d H:i:s')], 'id_tool = ' . mysql_clean($this->id_tool));
     }
 
-    public function toolErrorHandler($e)
+    /**
+     * @throws Exception
+     */
+    public function toolErrorHandler($e): bool
     {
         $this->addLog('Error : ' . $e->getMessage());
         $this->setToolError($this->id_tool);
@@ -305,7 +308,7 @@ class AdminTool
             $revision = $update->getCurrentCoreRevision();
             //update to current revision
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
-            Clipbucket_db::getInstance()->mysqli->query($sql);
+            Clipbucket_db::getInstance()->execute($sql);
             CacheRedis::flushAll();
             Update::getInstance()->flush();
         }
@@ -740,11 +743,13 @@ class AdminTool
 
     public function calcUserStorage()
     {
-        $users = User::getInstance()->getAll([
-            'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
-        ]) ?: [];
-        $this->array_loop = array_column($users, 'userid') ;
-        $this->executeTool('User::calcUserStorage');
+        if (config('enable_storage_history') == 'yes') {
+            $users = User::getInstance()->getAll([
+                'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
+            ]) ?: [];
+            $this->array_loop = array_column($users, 'userid') ;
+            $this->executeTool('User::calcUserStorage');
+        }
     }
 
     /**

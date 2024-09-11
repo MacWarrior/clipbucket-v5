@@ -3,9 +3,8 @@ $baseurl = dirname(GetServerURL());
 if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
     $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
 }
-global $db;
-$db->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
-$db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
 ?>
 
 <div class="nav_des clearfix">

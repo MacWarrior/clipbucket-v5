@@ -54,7 +54,7 @@ switch ($mode) {
 
         //Pagination
         $pages->paginate($total_pages, $page);
-        subtitle(lang('manage_collections'));
+        subtitle(lang('manage_x', strtolower(lang('collections'))));
         break;
 
     case 'add_new':

@@ -58,10 +58,10 @@
 				</div>
 			</h2>
 			<div class="pull-right marginBottomLarge paddingBottomLarge" style="margin-right:50px;">
-				<span class="btn btn-app btn-sm btn-light no-hover">
-				<span class="line-height-1 smaller-90 blue">{$data.views|prettyNum}</span>
-				<br/>
-				<span class="line-height-1 smaller-90"> Views </span>
+				<span class="btn btn-app btn-sm btn-light no-hover" title="{$data.views}">
+				    <span class="line-height-1 smaller-90 blue" >{$data.views|prettyNum}</span>
+                    <br/>
+                    <span class="line-height-1 smaller-90"> {lang('views')} </span>
 				</span>
 				<span class="btn btn-app btn-sm btn-pink no-hover">
 					<span class="line-height-1">
@@ -390,12 +390,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-2">
-                                    <label for="views">{lang code='views'} :</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="views" type="text" id="views" value="{$data.views|number_format}" size="45"/>
-                                </div>
-                                <div class="col-md-2">
                                     <label for="rating">{lang code='rating'} :</label>
                                 </div>
                                 <div class="col-md-2">
@@ -560,7 +554,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="widget-box" style="margin-top:30px;">
-                            <div class="widget-header header-color-blue2 fontawesome-icons">
+                            <div class="widget-header header-color-blue2">
                                 <h5>Comments</h5>
                                 <div class="widget-toolbar">
                                     <a href="#" data-action="collapse">
@@ -571,7 +565,7 @@
                             {ANCHOR place="after_video_edit" data=$data.videoid}
                             <div class="widget-body">
                                 <div class="widget-main">
-                                    <div class="slimScrollDiv fontawesome-icons">
+                                    <div class="slimScrollDiv">
                                         {foreach from=$comments item=comment}
                                         <form method="post" name="delete_Comment" id="edit_video">
                                             {if $comment != ''}

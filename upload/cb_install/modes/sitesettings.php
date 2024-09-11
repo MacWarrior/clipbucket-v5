@@ -1,17 +1,38 @@
 <?php
 //Lets just save admin settings so we can move forward
 $pass = pass_code(post('password'), 1);
-global $db, $userquery;
 
-$db->update(
+Clipbucket_db::getInstance()->update(
     tbl('users'),
     ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip'],
     [post('username'), $pass, post('email'), now(), 1, Network::get_remote_ip(), Network::get_remote_ip()]
     , 'userid=1'
 );
 
+if (in_dev()) {
+    require_once DirPath::get('vendor') . 'autoload.php';
+    require_once DirPath::get('classes') . 'DiscordLog.php';
+    require_once DirPath::get('classes') . 'update.class.php';
+    require_once DirPath::get('includes') . 'clipbucket.php';
+    require_once DirPath::get('classes') . 'system.class.php';
+
+    //clean lock
+    if (conv_lock_exists()) {
+        for ($i = 0; $i < config('max_conversion'); $i++) {
+            if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
+                unlink(DirPath::get('temp') . 'conv_lock' . $i . '.loc');
+            }
+        }
+    }
+    //launch tool clean
+    $tool = AdminTool::getToolByCode('clean_orphan_files');
+    if (!empty($tool)) {
+        AdminTool::launchCli($tool['id_tool']);
+    }
+}
+
 //Login user
-$userquery->login_user(post('username'), post('password'))
+userquery::getInstance()->login_user(post('username'), post('password'))
 ?>
 
 <div class="nav_des clearfix">

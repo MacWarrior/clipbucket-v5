@@ -557,45 +557,6 @@ if (!empty($mode)) {
             echo json_encode($ajax);
             break;
 
-        case "add_new_item":
-            $type = $_POST['type'];
-            $cid = $_POST['cid'];
-            $id = $_POST['obj_id'];
-
-            switch ($type) {
-                case "videos":
-                case "video":
-                case "v":
-                    $cbvideo->collection->add_collection_item($id, $cid);
-                    break;
-
-                case "photos":
-                case "photo":
-                case "p":
-                    $cbphoto->collection->add_collection_item($id, $cid);
-                    break;
-            }
-
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
-
-            if ($error) {
-                $err = '<div class="error">' . $error[0]['val'] . '</div>';
-            } else {
-                if ($warning) {
-                    $err = '<div class="warning">' . $warning[0]['val'] . '</div>';
-                }
-            }
-            if ($message) {
-                $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
-            }
-            $ajax['msg'] = $msg;
-            $ajax['err'] = $err;
-
-            echo json_encode($ajax);
-            break;
-
         case "remove_collection_item":
             $type = $_POST['type'];
             $obj_id = $_POST['obj_id'];
@@ -950,12 +911,11 @@ if (!empty($mode)) {
             break;
 
         case 'user_suggest':
-            global $db;
             $typed = mysql_clean($_POST['typed']);
             if (empty($typed)) {
                 return 'none';
             }
-            $raw_users = $db->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
+            $raw_users = Clipbucket_db::getInstance()->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
             $matching_users['matching_users'] = [];
             foreach ($raw_users as $key => $userdata) {
                 $matching_users['matching_users'][] = $userdata['username'];

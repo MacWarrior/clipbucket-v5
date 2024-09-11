@@ -3170,11 +3170,7 @@ textarea#comment_box {
   margin: 0 0 40px;
 }
 
-.signup-block .side-box,
-.forgot-block .side-box,
 .signin-block .side-box {
-  background: #0080b4;
-  color: #fff;
   font-size: 15px;
   line-height: 24px;
 }

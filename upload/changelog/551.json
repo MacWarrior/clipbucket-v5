@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"120",
+  "revision":"131",
   "status":"dev",
   "detail":[
     {
@@ -23,10 +23,13 @@
         ,"Implement Custom CSS"
         ,"Implement per page configurations"
         ,"Implement social networks links management"
+        ,"Implement collection comments management"
+        ,"Implement video view history"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
         ,"Refactor collection items management"
+        ,"Refactor orphan photos management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -40,6 +43,7 @@
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
         ,"Fix TMDB import error display"
@@ -73,6 +77,10 @@
         ,"Fix video edition status list"
         ,"Fix default thumbnail after thumbnails regeneration"
         ,"Fix collection manager pagination"
+        ,"Fix icons not displaying"
+        ,"Fix current user level display in header"
+        ,"Fix collection uploader informations display"
+        ,"Fix user storage running even when disabled"
       ]
     },
     {
@@ -87,12 +95,14 @@
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
+        ,"Refactor orphan photos management"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
         ,"Update orphan photos management"
+        ,"Update dark & light themes"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -163,6 +173,7 @@
       "title": "Installation & Update",
       "description": [
         "Implement Windows installation script"
+        ,"Implement dev mode options"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -171,6 +182,8 @@
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
         ,"Update config creations"
+        ,"Update database creation descriptions"
+        ,"Update installation script to Ubuntu 24.04"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -182,6 +195,8 @@
         ,"Fix SSE DB update"
         ,"Fix migration on windows hosts"
         ,"Fix PHP Cli detection"
+        ,"Fix database configuration <i>(#426)</i>"
+        ,"Fix Ubuntu&Debian git error in installation script"
       ]
     },
     {
@@ -199,9 +214,15 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Fix play/pause through space bar"
+      ]
+    },
+    {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.3"
+        "Update Player to version 2.0.4"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"

@@ -21,7 +21,6 @@ class cbpage
      */
     function create_page(array $param): bool
     {
-        global $db;
         $name = mysql_clean($param['page_name']);
         $title = mysql_clean($param['page_title']);
         $content = mysql_clean($param['page_content']);
@@ -37,7 +36,7 @@ class cbpage
         }
 
         if (!error()) {
-            $db->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
+            Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
                 [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
             e(lang('new_page_added_successfully'), 'm');
             return false;
@@ -50,8 +49,7 @@ class cbpage
      */
     private function getMaxPageOrder(): int
     {
-        global $db;
-        $result = $db->select(tbl($this->page_tbl), 'MAX(page_order)+1 AS max_page_order');
+        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), 'MAX(page_order)+1 AS max_page_order');
         if (count($result) > 0) {
             return (int)$result[0]['max_page_order'];
         }
@@ -68,8 +66,7 @@ class cbpage
      */
     function get_page($id)
     {
-        global $db;
-        $result = $db->select(tbl($this->page_tbl), '*', ' page_id ='.mysql_clean($id));
+        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', ' page_id ='.mysql_clean($id));
         if (count($result) > 0) {
             return $result[0];
         }
@@ -86,7 +83,6 @@ class cbpage
      */
     function get_pages($params = false)
     {
-        global $db;
         $order = null;
         $limit = null;
         $conds = [];
@@ -116,7 +112,7 @@ class cbpage
             }
         }
 
-        $result = $db->select(tbl($this->page_tbl), '*', $cond, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->page_tbl), '*', $cond, $limit, $order);
         if (count($result) > 0) {
             return $result;
         }
@@ -131,7 +127,6 @@ class cbpage
      */
     function edit_page($param)
     {
-        global $db;
         $id = $param['page_id'];
         $name = mysql_clean($param['page_name']);
         $title = mysql_clean($param['page_title']);
@@ -154,7 +149,7 @@ class cbpage
         }
 
         if (!error()) {
-            $db->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
+            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
                 [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
             e(lang('page_updated'), 'm');
         }
@@ -168,14 +163,12 @@ class cbpage
      */
     function delete_page($id)
     {
-        global $db;
-
         $page = $this->get_page($id);
         if (!$page) {
             e(lang('page_doesnt_exist'));
         }
         if (!error()) {
-            $db->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
+            Clipbucket_db::getInstance()->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
             e(lang('page_deleted'), 'm');
         }
     }
@@ -219,7 +212,6 @@ class cbpage
      */
     function page_actions($type, $id)
     {
-        global $db;
         $page = $this->get_page($id);
         if (!$page) {
             e(lang('page_doent_exist'));
@@ -228,18 +220,18 @@ class cbpage
 
         switch ($type) {
             case 'activate';
-                $db->update(tbl($this->page_tbl), ['active'], ['yes'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['yes'], ' page_id='.mysql_clean($id));
                 e(lang('page_activated'), 'm');
                 break;
 
             case 'deactivate';
-                $db->update(tbl($this->page_tbl), ['active'], ['no'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['active'], ['no'], ' page_id='.mysql_clean($id));
                 e(lang('page_deactivated'), 'm');
                 break;
 
             case 'delete';
                 if ($page['delete_able'] == 'yes') {
-                    $db->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
+                    Clipbucket_db::getInstance()->delete(tbl($this->page_tbl), ['page_id'], [mysql_clean($id)]);
                     e(lang('page_deleted'), 'm');
                 } else {
                     e(lang('you_cant_delete_this_page'), 'w');
@@ -247,12 +239,12 @@ class cbpage
                 break;
 
             case 'display':
-                $db->update(tbl($this->page_tbl), ['display'], ['yes'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['yes'], ' page_id='.mysql_clean($id));
                 e(lang('Page display mode has been changed'), 'm');
                 break;
 
             case 'hide':
-                $db->update(tbl($this->page_tbl), ['display'], ['no'], ' page_id='.mysql_clean($id));
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['no'], ' page_id='.mysql_clean($id));
                 e(lang('Page display mode has been changed'), 'm');
                 break;
         }
@@ -268,10 +260,7 @@ class cbpage
      */
     function is_active($id): bool
     {
-        $id = mysql_clean($id);
-
-        global $db;
-        $result = $db->count(tbl($this->page_tbl), 'page_id', 'page_id='.mysql_clean($id).' AND active=\'yes\'');
+        $result = Clipbucket_db::getInstance()->count(tbl($this->page_tbl), 'page_id', 'page_id=' . mysql_clean($id) . ' AND active=\'yes\'');
         if ($result > 0) {
             return true;
         }
@@ -284,10 +273,9 @@ class cbpage
      */
     function update_order()
     {
-        global $db;
         $pages = $this->get_pages();
         foreach ($pages as $page) {
-            $db->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id=' . mysql_clean($page['page_id']));
+            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_order'], [$_POST['page_ord_' . $page['page_id']]], ' page_id=' . mysql_clean($page['page_id']));
         }
     }
 }

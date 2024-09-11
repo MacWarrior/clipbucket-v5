@@ -333,6 +333,11 @@ a:hover{
     color: var(--color-main-01);
 }
 
+/* Home */
+#featured_vid_sec .item-video .video-link .title{
+    color: #f6f6f6;
+}
+
 /* Login */
 .signin-block h2,
 .forgot-block h2,
@@ -348,6 +353,10 @@ a:hover{
 .forgot-block .form-control{
     background-color: var(--color-01);
     color: var(--color-02);
+}
+.signin-block .side-box{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
 }
 
 /* Signup */
