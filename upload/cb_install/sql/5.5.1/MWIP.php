@@ -10,19 +10,23 @@ class MWIP extends \Migration
     public function start()
     {
         self::generateTranslation('enable_channel_page', [
-            'fr'=>'Actvier la page de chaîne',
+            'fr'=>'Activer la page de chaîne',
             'en'=>'Enable channel page'
         ]);
 
         self::alterTable('ALTER TABLE ' . tbl('user_levels') . '  ADD COLUMN `enable_channel_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'yes\'',
-            [], [
+            [
+                'table'  => 'user_levels'
+            ], [
                 'table'  => 'user_levels',
                 'column' => 'enable_channel_page'
             ]
         );
         self::alterTable('ALTER TABLE ' . tbl('user_profile') . '  ADD COLUMN `disabled_channel` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'no\'',
-            [], [
-                'table'  => 'users',
+            [
+                'table'  => 'user_profile'
+            ], [
+                'table'  => 'user_profile',
                 'column' => 'disabled_channel'
             ]
         );

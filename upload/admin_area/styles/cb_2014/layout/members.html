@@ -52,29 +52,15 @@
                             <span class="label {if $u.usr_status == Ok}label-success{else}label-warning{/if}"><span>{if $u.usr_status=='Ok'}{lang code='active'}{else}{lang code='inactive'}{/if}</span></span>
                             <span class="label label-info"><span>Userlevel: {$u.level}</span></span>
                             <span class="label"><span>Active</span> : <span>{$u.last_active|nicetime}</span></span>
-                            {*if $smarty.get.private=='private'}
-                            Private Channels
-                            {else}
-                            {lang code='grp_manage_members_title'}
-                            {/if*}
-
-                            {if function_exists('channels_control')}
-                                {if $u.private == private}
-                                <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
-                                {/if}
-                                {if $u.private == public || $u.private == '' }
-                                <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
-                                {/if}
-                            {/if}
             
                             {if $u.ban_status == "yes"}
                                 <span class="label label-danger"><span>Banned</span></span>
                             {/if}
-                    </div>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
     </td>
 
     <td>
@@ -111,24 +97,10 @@
                     {/if}
                     {if $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
-                    {/if}
-                    {if function_exists('channels_control') || $u.userid != user_id()}
                         <li class="divider"></li>
-                        {if function_exists('channels_control')}
-                            {if $u.private == private}
-                                <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
-                            {/if}
-                            {if $u.private == public || $u.private == '' }
-                                <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
-                            {/if}
-                        {/if}
-                        {if $u.userid != user_id()}
-                            <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
-                        {/if}
+                        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
                     {/if}
-
                 </ul>
-
             </div>
       {/if}
     </td>

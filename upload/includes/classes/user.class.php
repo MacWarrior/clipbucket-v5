@@ -265,6 +265,12 @@ class User
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
         $param_channels = $params['channels'] ?? false;
+        $param_email = $params['email'] ?? false;
+        $param_username = $params['username'] ?? false;
+        $param_status = $params['status'] ?? false;
+        $param_ban_status = $params['ban_status'] ?? false;
+        $param_featured = $params['featured'] ?? false;
+        $param_level = $params['level'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -278,14 +284,38 @@ class User
 
         $conditions = [];
         if( $param_userid ){
-            $conditions[] = 'users.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = 'users.userid = \'' . mysql_clean($param_userid) . '\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
 
         if( $param_category ){
-            $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+            $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+        }
+
+        if( $param_email ){
+            $conditions[] = 'users.email LIKE \'%' . mysql_clean($param_email) . '%\'';
+        }
+
+        if( $param_username ){
+            $conditions[] = 'users.username LIKE \'%' . mysql_clean($param_username) . '%\'';
+        }
+
+        if( $param_status ){
+            $conditions[] = 'users.status = \'' . mysql_clean($param_status) . '\'';
+        }
+
+        if( $param_ban_status ){
+            $conditions[] = 'users.ban_status = \'' . mysql_clean($param_ban_status) . '\'';
+        }
+
+        if( $param_featured ){
+            $conditions[] = 'users.featured = \'' . mysql_clean($param_featured) . '\'';
+        }
+
+        if( $param_level ){
+            $conditions[] = 'users.level = ' . (int)$param_featured;
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -311,14 +341,6 @@ class User
             $select[] = $this->getTableNameLevel() . '.user_level_name';
         }
 
-        //TODO changer par le numéro de revision
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') === true) {
-            if ($param_channels ) {
-                $conditions[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
-            }
-            $select[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\') AS is_channel_enable ';
-        }
-
         $join = [];
         $group = [];
         $version = Update::getInstance()->getDBVersion();
@@ -335,6 +357,13 @@ class User
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '132')) {
+            if ($param_channels ) {
+                $conditions[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+            }
+            $select[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
         }
 
         if( $param_group ){
@@ -2626,7 +2655,11 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid', 'disabled_channel','show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = ['userid','show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '132')) {
+            $user_profile_fields[] = 'disabled_channel';
+        }
 
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
@@ -4926,19 +4959,21 @@ class userquery extends CBCategory
 
         $return = [];
 
-        $return['disable_channel'] = [
-            'title'    => lang('disable_channel'),
-            'type'     => 'radiobutton',
-            'name'     => 'disabled_channel',
-            'id'       => 'disabled_channel',
-            'value'    => [
-                'yes' => lang('yes'),
-                'no'  => lang('no')
-            ],
-            'checked'  => strtolower($default['disabled_channel']),
-            'db_field' => 'disabled_channel',
-            'sep'      => '&nbsp;'
-        ];
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '132')) {
+            $return['disable_channel'] = [
+                'title'    => lang('disable_channel'),
+                'type'     => 'radiobutton',
+                'name'     => 'disabled_channel',
+                'id'       => 'disabled_channel',
+                'value'    => [
+                    'yes' => lang('yes'),
+                    'no'  => lang('no')
+                ],
+                'checked'  => strtolower($default['disabled_channel']),
+                'db_field' => 'disabled_channel',
+                'sep'      => '&nbsp;'
+            ];
+        }
 
         $return['profile_title'] = [
             'title'     => lang('channel_title'),
