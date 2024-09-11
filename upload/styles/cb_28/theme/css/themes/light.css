@@ -17,7 +17,7 @@ html.light {
     --color-gradient-start : #ffffff;
     --color-gradient-end : #e8e8e8;
     --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
-    --generic-box-shadow : 0 10px 24px 0 rgba(0, 0, 0, 0.30);
+    --generic-box-shadow : rgba(0, 0, 0, 0.30) 0px 25px 20px -20px;
     --slim-box-shadow : 0 10px 24px 0 rgba(0, 0, 0, 0.30);
     --border-radius : 5px;
 }
@@ -236,4 +236,5 @@ body {
 /* shadow on video inside slider */
 .slider-video-container .thumb-video-padding .thumb-video {
     box-shadow: var(--generic-box-shadow);
+    z-index: -1;
 }
