@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"127",
+  "revision":"128",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Refactor system infos"
         ,"Refactor comments options"
         ,"Refactor collection items management"
+        ,"Refactor orphan photos management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -92,6 +93,7 @@
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
+        ,"Refactor orphan photos management"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
         ,"Update translations"

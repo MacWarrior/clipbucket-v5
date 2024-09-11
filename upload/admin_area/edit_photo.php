@@ -33,7 +33,7 @@ if ($_GET['mode'] != '') {
     $cbphoto->photo_actions($_GET['mode'], $id);
 }
 
-$p = $cbphoto->get_photo($id);
+$p = Photo::getInstance()->getOne(['photo_id'=>$id]);
 if (empty($p)) {
     redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'photo_manager.php?missing_photo=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
 }

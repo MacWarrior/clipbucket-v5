@@ -21,9 +21,6 @@
 			{if $photo.userid != $anonymous_id}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 			{/if}
-			{if empty($photo.collection_id) && $is_admin}
-				{lang code="by"}&nbsp;<a href="{$url_edit}{$photo.photo_id}">{lang('edit')} {strtolower(lang('edit_from_BO'))}</a>
-			{/if}
 		</span>
 	</div>
 </div>
@@ -47,9 +44,6 @@
 					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
 				{/if}
 				<br>
-				{if empty($photo.collection_id) && $is_admin}
-					<a href="{$url_edit}{$photo.photo_id}">{lang('edit')} {strtolower(lang('edit_from_BO'))}</a>
-				{/if}
 			</span>
 		</div>
 	</div>

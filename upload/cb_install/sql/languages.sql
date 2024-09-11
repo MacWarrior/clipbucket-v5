@@ -1240,4 +1240,7 @@ VALUES ('admin_setting'),
        ('missing_params'),
        ('manage_social_networks_links'),
        ('text_confirm_comment'),
+       ('manage_social_networks_links'),
+       ('collection_not_found'),
+       ('edit_photo'),
        ('enable_video_view_history');
