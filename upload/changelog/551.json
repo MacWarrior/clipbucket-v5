@@ -25,6 +25,7 @@
         ,"Implement social networks links management"
         ,"Implement collection comments management"
         ,"Implement video view history"
+        ,"Implement video views history display"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
