@@ -1242,4 +1242,7 @@ VALUES ('admin_setting'),
        ('manage_social_networks_links'),
        ('collection_not_found'),
        ('edit_photo'),
-       ('enable_video_view_history');
+       ('enable_video_view_history'),
+       ('viewed_recently'),
+       ('shorter_video'),
+       ('longer_video');

@@ -157,13 +157,17 @@ class Photo
         $sorts = [
             'most_recent'  => lang('most_recent')
             ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
         ];
 
         if( config('enable_comments_photo') == 'yes' ){
             $sorts['most_commented'] = lang('most_comments');
         }
+
+        if( config('photo_rating') == 'yes' ){
+            $sorts['top_rated'] = lang('top_rated');
+        }
+
+        $sorts['featured'] = lang('featured');
 
         return $sorts;
     }
