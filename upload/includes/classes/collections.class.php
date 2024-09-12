@@ -154,14 +154,18 @@ class Collection
         $sorts = [
             'most_recent'  => lang('most_recent')
             ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
             ,'most_items'  => lang('sort_most_items')
-            ,'featured'    => lang('featured')
         ];
 
         if( config('enable_comments_collection') == 'yes' ){
             $sorts['most_commented'] = lang('most_comments');
         }
+
+        if( config('collection_rating') == '1' ){
+            $sorts['top_rated'] = lang('top_rated');
+        }
+
+        $sorts['featured'] = lang('featured');
 
         return $sorts;
     }

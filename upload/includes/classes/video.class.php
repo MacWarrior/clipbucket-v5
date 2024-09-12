@@ -199,6 +199,18 @@ class Video
                 $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
                 break;
 
+            case 'longer':
+                $params['order'] = $this->getTableName() . '.duration DESC';
+                break;
+
+            case 'shorter':
+                $params['order'] = $this->getTableName() . '.duration ASC';
+                break;
+
+            case 'viewed_recently':
+                $params['order'] = $this->getTableName() . '.last_viewed DESC';
+                break;
+
             case 'most_commented':
                 if( config('enable_comments_video') == 'yes' ) {
                     $params['order'] = $this->getTableName() . '.comments_count DESC';
@@ -233,13 +245,20 @@ class Video
         $sorts = [
             'most_recent'  => lang('most_recent')
             ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
         ];
 
         if( config('enable_comments_video') == 'yes' ){
             $sorts['most_commented'] = lang('most_comments');
         }
+
+        if( config('video_rating') == '1' ){
+            $sorts['top_rated'] = lang('top_rated');
+        }
+
+        $sorts['featured'] = lang('featured');
+        $sorts['viewed_recently'] = lang('viewed_recently');
+        $sorts['longer'] = lang('longer_video');
+        $sorts['shorter'] = lang('shorter_video');
 
         return $sorts;
     }
