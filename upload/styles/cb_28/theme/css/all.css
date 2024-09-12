@@ -7752,7 +7752,7 @@ textarea#comment_box {
 }
 
 .slider-video-container .details:hover > div:not(.titre)
-,.slider-video-container .thumb-video-padding:hover + .details > div:not(.titre) {
+,.slider-video-container .thumb-video-padding:hover + .shadow + .details > div:not(.titre) {
   opacity: 0.7;
 }
 
