@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"134",
+  "revision":"135",
   "status":"dev",
   "detail":[
     {
@@ -97,6 +97,7 @@
         ,"Implement recent videos slider"
         ,"Implement homepage fullpage width"
         ,"Implement option to disable homepage sidebar"
+        ,"Implement video views history display"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
