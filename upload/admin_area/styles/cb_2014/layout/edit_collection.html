@@ -273,5 +273,5 @@
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
     var text_confirm_comment = '{lang('text_confirm_comment')}';
-    var text_no_comment = '{lang('no_comments')}';
+    var text_no_comment = '{lang('no_comments',strtolower(lang('collection')))}';
 </script>

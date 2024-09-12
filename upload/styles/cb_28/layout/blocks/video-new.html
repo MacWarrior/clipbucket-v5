@@ -1,0 +1,28 @@
+<div class="slider-video-container" {if empty($width) === false}style="--width:{$width}px;"{/if}>
+	<div class="thumb-video-padding">
+		<div class="thumb-video {if config('popup_video') == 'yes'}cd-popup-trigger{/if} video-link" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
+			<img src="{getThumb vdetails=$video size=416x260}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
+			<div class="status"></div>
+			{if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+				<div class="add-playlist cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" data-quick="quick-{$video.videoid}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260 }" vduration="{$video.duration|SetTime}" vauthor="{lang code='by'} {display_clean($video.user_username)}" title="Add {display_clean($video.title)} to Quicklist"></div>
+			{/if}
+			<div class="time">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</div>
+		</div>
+		{ANCHOR place='in_video_thumb' data=$video}
+	</div><div class="shadow"></div>
+	<div class="details">
+		<div class="titre">
+			<a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>
+		</div>
+		<div class="auteur">
+			{lang code="by"}
+			{if isSectionEnabled('channels')}
+			<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+			{else}
+				{display_clean($video.user_username)}
+			{/if}
+		</div>
+		<div class="view">{$video.views}&nbsp;views</div>
+		<div class="date">{$video.date_added|niceTime}</div>
+	</div>
+</div>

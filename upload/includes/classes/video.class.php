@@ -199,6 +199,18 @@ class Video
                 $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
                 break;
 
+            case 'longer':
+                $params['order'] = $this->getTableName() . '.duration DESC';
+                break;
+
+            case 'shorter':
+                $params['order'] = $this->getTableName() . '.duration ASC';
+                break;
+
+            case 'viewed_recently':
+                $params['order'] = $this->getTableName() . '.last_viewed DESC';
+                break;
+
             case 'most_commented':
                 if( config('enable_comments_video') == 'yes' ) {
                     $params['order'] = $this->getTableName() . '.comments_count DESC';
@@ -233,13 +245,20 @@ class Video
         $sorts = [
             'most_recent'  => lang('most_recent')
             ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
         ];
 
         if( config('enable_comments_video') == 'yes' ){
             $sorts['most_commented'] = lang('most_comments');
         }
+
+        if( config('video_rating') == '1' ){
+            $sorts['top_rated'] = lang('top_rated');
+        }
+
+        $sorts['featured'] = lang('featured');
+        $sorts['viewed_recently'] = lang('viewed_recently');
+        $sorts['longer'] = lang('longer_video');
+        $sorts['shorter'] = lang('shorter_video');
 
         return $sorts;
     }
@@ -382,7 +401,7 @@ class Video
         }
 
         $order = '';
-        if( $param_order ){
+        if( $param_order && !$param_count ){
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
@@ -776,6 +795,32 @@ class Video
             $type_db = 'thumb';
         }
         Clipbucket_db::getInstance()->update(tbl($this->tablename), ['default_' . $type_db], [(int)$num], ' videoid = ' . mysql_clean($videoid));
+    }
+
+    /**
+     * @param int $videoid
+     * @param int $page
+     * @return array
+     * @throws Exception
+     */
+    public function getVideoViewHistory(int $videoid, int $page): array
+    {
+        $sql = 'SELECT COUNT(`id_video_view`) as total FROM ' . cb_sql_table('video_views') . ' WHERE `id_video` = ' . mysql_clean($videoid);
+        $total = Clipbucket_db::getInstance()->_select($sql)[0]['total'] ?? 0;
+
+        $sql_limit = '';
+        if (!empty($page)) {
+            $sql_limit = ' LIMIT ' . create_query_limit($page, config('video_list_view_video_history'));
+        }
+        $sql = 'SELECT video_views.*, users.username FROM ' . cb_sql_table('video_views') . '
+         LEFT JOIN ' . cb_sql_table('users') . ' ON video_views.id_user = users.userid
+        WHERE id_video = ' . mysql_clean($videoid) . ' ORDER BY view_date DESC' . $sql_limit;
+        $results = Clipbucket_db::getInstance()->_select($sql);
+
+        return [
+            'total_pages'   => count_pages($total, config('video_list_view_video_history')),
+            'final_results' => $results
+        ];
     }
 }
 

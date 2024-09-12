@@ -107,4 +107,36 @@ $(document).ready(function () {
     $("[id^=tags]").each(function(elem){
         init_readonly_tags(this.id, '#list_'+this.id);
     });
+
+    $('.view_history').on('click', function (e) {
+        var video_title = $('#title').val();
+        getViewHistory(videoid, 1);
+    });
 });
+
+function getViewHistory(video_id, page) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/video_view_history.php",
+        type: "POST",
+        data: {videoid: video_id, page: page },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            var modal = $('#myModal');
+            modal.html(result['template']);
+            modal.modal();
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
+function pageViewHistory(page) {
+    getViewHistory(videoid, page);
+}
+function showSpinner() {
+    $('.taskHandler').show();
+}
+function hideSpinner() {
+    $('.taskHandler').hide();
+}

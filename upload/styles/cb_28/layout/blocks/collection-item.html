@@ -1,9 +1,3 @@
-{if config('seo') != 'yes'}
-	{$main_url = "/view_collection.php?cid={$collection.collection_id}"}
-{else}
-	{$main_url = "/collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
-{/if}
-
 {$first_elem = Collection::getInstance()->getFirstItem(['collection_id' => $collection.collection_id])}
 {if $collection.type == 'videos'}
 	{$blur = Video::getInstance()->isToBlur($first_elem.videoid)}
@@ -13,7 +7,7 @@
 
 <div class="collection-holder">
 	<div class="photo-block no_select no_overflow">
-		<a href="{$main_url}" title="{display_clean($collection.collection_name)}">
+		<a href="{$cbcollection->collection_links($collection,'view')}" title="{display_clean($collection.collection_name)}">
 			<img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive {if $blur}blur{/if}" id="collection_{$collection.collection_id}" src="{$cbcollection->coll_first_thumb($collection,'l')}"/>
 			{ANCHOR place='in_collection_thumb' data=$collection}
 			<div class="collection-info">
