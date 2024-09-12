@@ -7430,3 +7430,7 @@ textarea#comment_box {
 .social_links.horizontal li:not(:first-child) {
   padding-left: 20px;
 }
+
+.pointer {
+  cursor: pointer;
+}

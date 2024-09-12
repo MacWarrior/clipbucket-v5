@@ -331,14 +331,6 @@
                                 </a>
                             </li>
                         {/if}
-                        {if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes'}
-                            <li>
-                                <a data-toggle="tab" href="#view_history">
-                                    <i class="fa fa-history"></i> {lang('video_list_view_video_history')}
-                                </a>
-                            </li>
-                        {/if}
-
                     </ul>
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane active">
@@ -519,14 +511,6 @@
                                 </div>
                             </div>
                         {/if}
-                        {if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes'}
-                            <div id="view_history" class="tab-pane">
-                                <legend>{lang('video_list_view_video_history')}</legend>
-                                <div class="form-group" id="view_history_div">
-                                    {include file="$style_dir/blocks/video_view_history.html"}
-                                </div>
-                            </div>
-                        {/if}
                     </div>
                     <div class="form-group alignCenter">
                         <input type="submit" class="btn btn-primary btn-sm" value="Update video details" style="margin:5px 0 15px 0;" name="update">
@@ -575,7 +559,13 @@
                             </a>
                         </li>
                         {/if}
-
+                        {if config('enable_video_view_history')=='yes'}
+                            <li>
+                                <a data-toggle="tab" href="#view_history">
+                                    <i class="fa fa-history"></i> {lang('video_list_view_video_history')}
+                                </a>
+                            </li>
+                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videoplayer" class="tab-pane active">
@@ -605,6 +595,14 @@
                         <div id="subtitiles" class="tab-pane">
                             {include file="$style_dir/blocks/subtitle_list.html"}
                         </div>
+                        {/if}
+                        {if config('enable_video_view_history')=='yes'}
+                            <div id="view_history" class="tab-pane">
+                                <legend>{lang('video_list_view_video_history')}</legend>
+                                <div class="form-group" id="view_history_div">
+                                    {include file="$style_dir/blocks/video_view_history.html"}
+                                </div>
+                            </div>
                         {/if}
                     </div>
                 </div>
