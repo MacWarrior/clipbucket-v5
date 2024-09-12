@@ -154,7 +154,7 @@
 										{if isSectionEnabled('playlists')}
 										<li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
 										{/if}
-										{if isSectionEnabled('channels') && User::getInstance()->get('is_channel_enable')}
+										{if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
 										<li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
 										{/if}
 										{ANCHOR place="inside_user_menu"}
@@ -163,8 +163,7 @@
 									</ul>
 								</li>
 								{else}
-								
-								<!-- Shown to small devices only Start  @todo : Add condition for logged in user -->
+
 								{if config('allow_registeration')}
 								<li class="navbar-sm-login-links">
 									<a class="btn btn-default btn-newacc" href="{link name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
