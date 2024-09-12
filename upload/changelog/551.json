@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"131",
+  "revision":"133",
   "status":"dev",
   "detail":[
     {
@@ -92,6 +92,11 @@
         ,"Implement video posters & backdrops management"
         ,"Implement dark & light themes"
         ,"Implement social networks links in footer & homepage sidebar"
+        ,"Implement video orders : recently viewed, longer & shorter"
+        ,"Implement featured categories"
+        ,"Implement recent videos slider"
+        ,"Implement homepage fullpage width"
+        ,"Implement option to disable homepage sidebar"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -140,6 +145,7 @@
         ,"Fix collection default thumb when using sub-collections"
         ,"Fix infinite loop when using sub-collections"
         ,"Fix recursives categories"
+        ,"Fix video, collection & photo order display"
       ]
     },
     {
