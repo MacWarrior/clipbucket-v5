@@ -1231,9 +1231,15 @@ function lang($var, $params = [])
 
                 if (in_dev()) {
                     DiscordLog::sendDump($msg);
-                    $backtrace = debug_backtrace_string();
-                    error_log($backtrace);
-                    DiscordLog::sendDump($backtrace);
+
+                    $string = debug_backtrace_string();
+                    DiscordLog::sendDump($string);
+
+                    /** Splitting the log message into 100-character chunks to avoid saturating the error_log buffer */
+                    $chunks = str_split($string, 1000);
+                    foreach ($chunks as $chunk) {
+                        error_log($chunk);
+                    }
                 }
             }
         }

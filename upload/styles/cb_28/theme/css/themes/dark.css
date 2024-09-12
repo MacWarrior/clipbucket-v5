@@ -203,6 +203,7 @@ body {
 }
 .sidebar-items,
 .sidebar-channels,
+.sidebar-playlists .playlist,
 .signin-block .side-box,
 .signin-block .user-form,
 .forgot-block .user-form,
@@ -219,4 +220,28 @@ body {
     .filter-dropdowns .dropdown{
         border-radius: var(--border-radius);
     }
+}
+
+/* Default slider */
+.default-slider .slider-container .item-video{
+    border-radius: var(--border-radius);
+    background-color: transparent;
+}
+.slider-container-action .item-video:after{
+    content: none;
+}
+.slider-video-container .thumb-video-padding a.thumb-video{
+    background: var(--background-gradient);
+}
+
+/* shadow on video inside slider */
+.slider-video-container .thumb-video-padding + .shadow {
+    box-shadow: rgba(0, 0, 0, 0.80) 0px 25px 20px -20px;
+    width: 100%;
+    height: calc(var(--height) - 5px);
+    display: block;
+    z-index:-1;
+    position: absolute;
+    top:0;
+    left: 0;
 }

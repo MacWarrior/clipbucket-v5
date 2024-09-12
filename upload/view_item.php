@@ -4,8 +4,6 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $cbcollection, $userquery, $cbphoto;
-
 $item = (string)($_GET['item']);
 $cid = (int)($_GET['collection']);
 $order = tbl('collection_items') . '.ci_id DESC';
@@ -13,7 +11,6 @@ $order = tbl('collection_items') . '.ci_id DESC';
 if (empty($item) || !isSectionEnabled('photos')) {
     redirect_to(BASEURL);
 }
-
 
 $param = [
     'type'          => 'photos',
@@ -32,12 +29,12 @@ if ($photo) {
     ) {
         redirect_to(BASEURL);
     }
-    if (!empty($photo['collection_id']) && !$cbcollection->is_viewable($cid)) {
+    if (!empty($photo['collection_id']) && !Collections::getInstance()->is_viewable($cid)) {
         ClipBucket::getInstance()->show_page = false;
     } else {
 
         if (!Photo::getInstance()->isCurrentUserRestricted($photo['photo_id'])) {
-            $info = $cbphoto->collection->get_collection_item_fields($cid, $photo['photo_id'], 'ci_id');
+            $info = CBPhotos::getInstance()->collection->get_collection_item_fields($cid, $photo['photo_id'], 'ci_id');
             if ($info) {
                 $photo = array_merge($photo, $info[0]);
             }
@@ -49,19 +46,14 @@ if ($photo) {
             if (!empty($collect)) {
                 $collection_parent = $collect;
                 do {
-                    if (config('seo') == 'yes') {
-                        $url = '/collection/' . $collection_parent['collection_id'] . '/' . $collection_parent['type'] . '/' . display_clean($collection_parent['collection_name']);
-                    } else {
-                        $url = '/view_collection.php?cid=' . $collection_parent['collection_id'];
-                    }
                     $breadcrum[] = [
-                        'title' => $collection_parent['collection_name'],
-                        'url'   => $url
+                        'title' => $collection_parent['collection_name']
+                        , 'url' => Collections::getInstance()->collection_links($collection_parent,'view')
                     ];
-                    $collection_parent = $cbcollection->get_parent_collection($collection_parent);
+                    $collection_parent = Collections::getInstance()->get_parent_collection($collection_parent);
                 } while ($collection_parent);
                 assign('breadcrum', array_reverse($breadcrum));
-                assign('collection_baseurl', $cbcollection->get_base_url());
+                assign('collection_baseurl', Collections::getInstance()->get_base_url());
                 subtitle($collect['collection_name'] . ' > ' . $photo['photo_title']);
             } else {
                 assign('breadcrum', $breadcrum);
@@ -81,7 +73,7 @@ if ($photo) {
             increment_views($photo['photo_id'], 'photo');
 
             assign('photo', $photo);
-            assign('user', $userquery->get_user_details($photo['userid']));
+            assign('user', userquery::getInstance()->get_user_details($photo['userid']));
 
             Assign('c', $collect);
         } else {

@@ -63,14 +63,9 @@ if ($cbcollection->is_viewable($c)) {
             $breadcrum = [];
             $collection_parent = $cdetails;
             do {
-                if (config('seo') == 'yes') {
-                    $url = '/collection/' . $collection_parent['collection_id'] . '/' . $collection_parent['type'] . '/' . display_clean($collection_parent['collection_name']);
-                } else {
-                    $url = '/view_collection.php?cid=' . $collection_parent['collection_id'];
-                }
                 $breadcrum[] = [
                     'title' => $collection_parent['collection_name']
-                    , 'url' => $url
+                    , 'url' => Collections::getInstance()->collection_links($collection_parent,'view')
                 ];
                 $collection_parent = $cbcollection->get_parent_collection($collection_parent);
             } while ($collection_parent);
