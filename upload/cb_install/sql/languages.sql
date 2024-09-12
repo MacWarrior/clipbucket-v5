@@ -1269,4 +1269,6 @@ VALUES ('admin_setting'),
        ('enable_access_view_video_history'),
        ('video_list_view_video_history'),
        ('view_history'),
-       ('history');
+       ('history'),
+       ('enable_channel_page'),
+       ('disable_channel');

@@ -5,6 +5,7 @@ class User
     private $tablename = '';
     private $tablename_profile = '';
     private $tablename_level = '';
+    private $tablename_level_permission = '';
     private $fields = [];
     private $fields_profile = [];
     private $display_block = '';
@@ -116,6 +117,7 @@ class User
         ];
 
         $this->tablename_level = 'user_levels';
+        $this->tablename_level_permission = 'user_levels_permissions';
 
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
@@ -156,6 +158,10 @@ class User
     public function getTableNameLevel(): string
     {
         return $this->tablename_level;
+    }
+    public function getTableNameLevelPermission(): string
+    {
+        return $this->tablename_level_permission;
     }
 
     private function getAllFields(): array
@@ -264,6 +270,13 @@ class User
     {
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_channel_enable = $params['channel_enable'] ?? false;
+        $param_email = $params['email'] ?? false;
+        $param_username = $params['username'] ?? false;
+        $param_status = $params['status'] ?? false;
+        $param_ban_status = $params['ban_status'] ?? false;
+        $param_featured = $params['featured'] ?? false;
+        $param_level = $params['level'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -277,14 +290,38 @@ class User
 
         $conditions = [];
         if( $param_userid ){
-            $conditions[] = 'users.userid = \''.mysql_clean($param_userid).'\'';
+            $conditions[] = 'users.userid = \'' . mysql_clean($param_userid) . '\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
         }
 
         if( $param_category ){
-            $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
+            $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+        }
+
+        if( $param_email ){
+            $conditions[] = 'users.email LIKE \'%' . mysql_clean($param_email) . '%\'';
+        }
+
+        if( $param_username ){
+            $conditions[] = 'users.username LIKE \'%' . mysql_clean($param_username) . '%\'';
+        }
+
+        if( $param_status ){
+            $conditions[] = 'users.status = \'' . mysql_clean($param_status) . '\'';
+        }
+
+        if( $param_ban_status ){
+            $conditions[] = 'users.ban_status = \'' . mysql_clean($param_ban_status) . '\'';
+        }
+
+        if( $param_featured ){
+            $conditions[] = 'users.featured = \'' . mysql_clean($param_featured) . '\'';
+        }
+
+        if( $param_level ){
+            $conditions[] = 'users.level = ' . (int)$param_featured;
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -328,6 +365,13 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+            if ($param_channel_enable ) {
+                $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+            }
+            $select[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
+        }
+
         if( $param_group ){
             $group[] = $param_group;
         }
@@ -350,7 +394,8 @@ class User
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
                 INNER JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
-                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id '
+                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id 
+                INNER JOIN ' . cb_sql_table($this->getTableNameLevelPermission()) . ' ON '.$this->getTableNameLevelPermission().'.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -639,7 +684,6 @@ class userquery extends CBCategory
     var $delete_user_functions = [];
     var $logout_functions = [];
     var $user_account = [];
-    var $profileItem = '';
     var $sessions = '';
     var $is_login = false;
     var $custom_subscription_email_vars = [];
@@ -2399,6 +2443,8 @@ class userquery extends CBCategory
                 $value_array[] = $array[$access];
             }
 
+            $fields_array[] = 'enable_channel_page';
+            $value_array[] = mysql_clean($array['enable_channel_page']);
             //Checking level Name
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);
@@ -2616,7 +2662,11 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid', 'show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = ['userid','show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+            $user_profile_fields[] = 'disabled_channel';
+        }
 
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
@@ -2706,6 +2756,9 @@ class userquery extends CBCategory
 
         foreach ($userfields as $field) {
             $name = formObj::rmBrackets($field['name']);
+            if (!isset($array[$name])) {
+                continue;
+            }
             $val = $array[$name];
 
             if ($field['use_func_val']) {
@@ -2764,9 +2817,11 @@ class userquery extends CBCategory
                 $uquery_val[] = $pass;
             }
 
-            //Changing User Level
-            $uquery_field[] = 'level';
-            $uquery_val[] = $array['level'];
+            if (isset($array['level'])) {
+                //Changing User Level
+                $uquery_field[] = 'level';
+                $uquery_val[] = $array['level'];
+            }
 
             //Checking for user stats
             $uquery_field[] = 'profile_hits';
@@ -4818,22 +4873,31 @@ class userquery extends CBCategory
             'type'     => 'dropdown',
             'name'     => 'show_profile',
             'id'       => 'show_profile',
-            'value'    => ['all' => lang('all'), 'members' => lang('members'), 'friends' => lang('friends')],
+            'value'    => [
+                'all'     => lang('all'),
+                'members' => lang('members'),
+                'friends' => lang('friends')
+            ],
             'checked'  => $default['show_profile'],
             'db_field' => 'show_profile',
-            'sep'      => '&nbsp;'
+            'sep'      => '&nbsp;',
+            'disabled' => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
-        if( config('enable_comments_channel') == 'yes' ){
+        if (config('enable_comments_channel') == 'yes') {
             $return['allow_comments'] = [
                 'title'    => lang('vdo_allow_comm'),
                 'type'     => 'radiobutton',
                 'name'     => 'allow_comments',
                 'id'       => 'allow_comments',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'    => [
+                    'yes' => lang('yes'),
+                    'no'  => lang('no')
+                ],
                 'checked'  => strtolower($default['allow_comments']),
                 'db_field' => 'allow_comments',
-                'sep'      => '&nbsp;'
+                'sep'      => '&nbsp;',
+                'disabled' => (strtolower($default['disabled_channel']) == 'yes')
             ];
         }
 
@@ -4842,10 +4906,14 @@ class userquery extends CBCategory
             'type'     => 'radiobutton',
             'name'     => 'allow_ratings',
             'id'       => 'allow_ratings',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'value'    => [
+                'yes' => lang('yes'),
+                'no'  => lang('no')
+            ],
             'checked'  => strtolower($default['allow_ratings']),
             'db_field' => 'allow_ratings',
-            'sep'      => '&nbsp;'
+            'sep'      => '&nbsp;',
+            'disabled' => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
         $return['allow_subscription'] = [
@@ -4854,19 +4922,27 @@ class userquery extends CBCategory
             'name'     => 'allow_subscription',
             'id'       => 'allow_subscription',
             'hint_1'   => lang('allow_subscription_hint'),
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'value'    => [
+                'yes' => lang('yes'),
+                'no'  => lang('no')
+            ],
             'checked'  => strtolower($default['allow_subscription']),
             'db_field' => 'allow_subscription',
-            'sep'      => '&nbsp;'
+            'sep'      => '&nbsp;',
+            'disabled' => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
-        if( config('enable_user_status') == 'yes' ){
+        if (config('enable_user_status') == 'yes') {
             $return['online_status'] = [
                 'title'    => lang('online_status'),
                 'type'     => 'dropdown',
                 'name'     => 'privacy',
                 'id'       => 'privacy',
-                'value'    => ['online' => lang('online'), 'offline' => lang('offline'), 'custom' => lang('custom')],
+                'value'    => [
+                    'online'  => lang('online'),
+                    'offline' => lang('offline'),
+                    'custom'  => lang('custom')
+                ],
                 'checked'  => $default['online_status'],
                 'db_field' => 'online_status'
             ];
@@ -4890,6 +4966,22 @@ class userquery extends CBCategory
 
         $return = [];
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+            $return['disable_channel'] = [
+                'title'    => lang('disable_channel'),
+                'type'     => 'radiobutton',
+                'name'     => 'disabled_channel',
+                'id'       => 'disabled_channel',
+                'value'    => [
+                    'yes' => lang('yes'),
+                    'no'  => lang('no')
+                ],
+                'checked'  => strtolower($default['disabled_channel']),
+                'db_field' => 'disabled_channel',
+                'sep'      => '&nbsp;'
+            ];
+        }
+
         $return['profile_title'] = [
             'title'     => lang('channel_title'),
             'type'      => 'textfield',
@@ -4897,17 +4989,19 @@ class userquery extends CBCategory
             'id'        => 'profile_title',
             'value'     => $default['profile_title'],
             'db_field'  => 'profile_title',
-            'auto_view' => 'no'
+            'auto_view' => 'no',
+            'disabled'  => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
         $return['profile_desc'] = [
-            'title'      => lang('channel_desc'),
-            'type'       => 'textarea',
-            'name'       => 'profile_desc',
-            'id'         => 'profile_desc',
-            'value'      => $default['profile_desc'],
-            'db_field'   => 'profile_desc',
-            'auto_view'  => 'yes'
+            'title'     => lang('channel_desc'),
+            'type'      => 'textarea',
+            'name'      => 'profile_desc',
+            'id'        => 'profile_desc',
+            'value'     => $default['profile_desc'],
+            'db_field'  => 'profile_desc',
+            'auto_view' => 'yes',
+            'disabled'  => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
         $return['show_my_friends'] = [
@@ -4915,35 +5009,47 @@ class userquery extends CBCategory
             'type'     => 'radiobutton',
             'name'     => 'show_my_friends',
             'id'       => 'show_my_friends',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'value'    => [
+                'yes' => lang('yes'),
+                'no'  => lang('no')
+            ],
             'checked'  => strtolower($default['show_my_friends']),
             'db_field' => 'show_my_friends',
-            'sep'      => '&nbsp;'
+            'sep'      => '&nbsp;',
+            'disabled' => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
-        if( isSectionEnabled('videos') ){
+        if (isSectionEnabled('videos')) {
             $return['show_my_videos'] = [
                 'title'    => lang('show_my_videos'),
                 'type'     => 'radiobutton',
                 'name'     => 'show_my_videos',
                 'id'       => 'show_my_videos',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'    => [
+                    'yes' => lang('yes'),
+                    'no'  => lang('no')
+                ],
                 'checked'  => strtolower($default['show_my_videos']),
                 'db_field' => 'show_my_videos',
-                'sep'      => '&nbsp;'
+                'sep'      => '&nbsp;',
+                'disabled' => (strtolower($default['disabled_channel']) == 'yes')
             ];
         }
 
-        if( isSectionEnabled('photos') ) {
+        if (isSectionEnabled('photos')) {
             $return['show_my_photos'] = [
                 'title'    => lang('show_my_photos'),
                 'type'     => 'radiobutton',
                 'name'     => 'show_my_photos',
                 'id'       => 'show_my_photos',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'    => [
+                    'yes' => lang('yes'),
+                    'no'  => lang('no')
+                ],
                 'checked'  => strtolower($default['show_my_photos']),
                 'db_field' => 'show_my_photos',
-                'sep'      => '&nbsp;'
+                'sep'      => '&nbsp;',
+                'disabled' => (strtolower($default['disabled_channel']) == 'yes')
             ];
         }
 
@@ -4952,10 +5058,14 @@ class userquery extends CBCategory
             'type'     => 'radiobutton',
             'name'     => 'show_my_subscriptions',
             'id'       => 'show_my_subscriptions',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'value'    => [
+                'yes' => lang('yes'),
+                'no'  => lang('no')
+            ],
             'checked'  => strtolower($default['show_my_subscriptions']),
             'db_field' => 'show_my_subscriptions',
-            'sep'      => '&nbsp;'
+            'sep'      => '&nbsp;',
+            'disabled' => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
         $return['show_my_subscribers'] = [
@@ -4963,22 +5073,30 @@ class userquery extends CBCategory
             'type'     => 'radiobutton',
             'name'     => 'show_my_subscribers',
             'id'       => 'show_my_subscribers',
-            'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+            'value'    => [
+                'yes' => lang('yes'),
+                'no'  => lang('no')
+            ],
             'checked'  => strtolower($default['show_my_subscribers']),
             'db_field' => 'show_my_subscribers',
-            'sep'      => '&nbsp;'
+            'sep'      => '&nbsp;',
+            'disabled' => (strtolower($default['disabled_channel']) == 'yes')
         ];
 
-        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ){
+        if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes')) {
             $return['show_my_collections'] = [
                 'title'    => lang('show_my_collections'),
                 'type'     => 'radiobutton',
                 'name'     => 'show_my_collections',
                 'id'       => 'show_my_collections',
-                'value'    => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'    => [
+                    'yes' => lang('yes'),
+                    'no'  => lang('no')
+                ],
                 'checked'  => strtolower($default['show_my_collections']),
                 'db_field' => 'show_my_collections',
-                'sep'      => '&nbsp;'
+                'sep'      => '&nbsp;',
+                'disabled' => (strtolower($default['disabled_channel']) == 'yes')
             ];
         }
 

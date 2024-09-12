@@ -12,7 +12,7 @@ $userquery->login_check('member_moderation');
 $uid = $_GET['uid'];
 unset($_REQUEST['uid']);
 if ($uid != $userquery->get_anonymous_user()) {
-    $udetails = $userquery->get_user_details($uid);
+    $udetails = User::getInstance()->getOne(['userid'=>$uid]);
 }
 if (empty($udetails)) {
     redirect_to('/members.php?user_not_found=1');
@@ -27,25 +27,25 @@ if ($udetails) {
     //Deactivating User
     if (isset($_GET['deactivate'])) {
         $userquery->action('deactivate', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Activating User
     if (isset($_GET['activate'])) {
         $userquery->action('activate', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Banning User
     if (isset($_GET['ban'])) {
         $userquery->action('ban', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Unbanning User
     if (isset($_GET['unban'])) {
         $userquery->action('unban', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Deleting User
@@ -71,7 +71,7 @@ if ($udetails) {
     if (isset($_POST['update_user'])) {
         $userquery->update_user($_POST);
         if (!error()) {
-            $udetails = $userquery->get_user_details($uid);
+            $udetails = User::getInstance()->getOne(['userid'=>$uid]);
         }
     }
 

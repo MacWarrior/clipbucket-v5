@@ -45,4 +45,9 @@ $(document).ready(function(){
     if( typeof user_books !== 'undefined' ){
         $('#fav_boooks').value = atob(user_books);
     }
+
+    $('[name="disabled_channel"]').on('change', function () {
+        var inputs = $(this).parents('.field_group').find('input, textarea').not('#disabled_channel');
+        inputs.each( (i,e)=> $(e).prop('disabled', ($(this).val() === 'yes')))
+    });
 });

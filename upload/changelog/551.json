@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"135",
+  "revision":"136",
   "status":"dev",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Implement collection comments management"
         ,"Implement video view history"
         ,"Implement video views history display"
+        ,"Implement user level permission to disable channels"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -99,6 +100,7 @@
         ,"Implement homepage fullpage width"
         ,"Implement option to disable homepage sidebar"
         ,"Implement video views history display"
+        ,"Implement option to disable user channel"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

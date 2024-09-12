@@ -17,8 +17,15 @@ $u = $u ?: $_GET['uid'];
 $u = $u ?: $_GET['u'];
 $u = mysql_clean($u);
 
-$udetails = userquery::getInstance()->get_user_details($u);
-if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous_user()) {
+$params_user = ['channel_enable' => true];
+if (is_int($u)) {
+    $params_user['userid']=$u;
+} else {
+    $params_user['username']=$u;
+
+}
+$udetails = User::getInstance()->getOne($params_user);
+if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous_user() ) {
     if ($_GET['seo_diret'] != 'yes' ) {
         redirect_to('/channels.php?no_user=1');
     } else {
