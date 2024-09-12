@@ -188,6 +188,25 @@ let AddingListenerModernThumbVideo = function(){
     })
 }
 
+let listenerModernThumbVideoPopinView = function(event) {
+
+    if(event.target.tagName !== 'IMG' ) {
+        return ;
+    }
+
+    $('.cd-popup').addClass('is-visible');
+    let videoid = this.getAttribute('data-videoid');
+    _cb.getModalVideo(videoid)
+}
+
+let AddingListenerModernThumbVideoPopinView = function(){
+    /** catch clic on new thumb video */
+    document.querySelectorAll('.thumb-video.cd-popup-trigger').forEach(function(elem){
+        elem.removeEventListener('click', listenerModernThumbVideoPopinView);
+        elem.addEventListener('click', listenerModernThumbVideoPopinView);
+    })
+}
+
 $(document).ready(function()
 {
     //footer at bottom
@@ -218,6 +237,7 @@ $(document).ready(function()
     loginHeight();
 
     AddingListenerModernThumbVideo();
+    AddingListenerModernThumbVideoPopinView();
 });
 
 
@@ -385,6 +405,7 @@ function homePageVideos(qlist_items)
                     $('#container').find('.total_videos_featured').hide();
                 }
                 AddingListenerModernThumbVideo();
+                AddingListenerModernThumbVideoPopinView();
             }
         });
     });

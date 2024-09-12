@@ -162,7 +162,7 @@
     {if config('popup_video') == 'yes'}
     $(document).ready(function($){
         //open popup
-        $(document).on('click','.cd-popup-trigger', function(event){
+        $(document).on('click','.cd-popup-trigger:not(.thumb-video)', function(event){
             event.preventDefault();
             $('.cd-popup').addClass('is-visible');
         });

@@ -1,6 +1,6 @@
 <div class="slider-video-container" {if empty($width) === false}style="--width:{$width}px;"{/if}>
 	<div class="thumb-video-padding">
-		<div class="thumb-video {if config('popup_video') == 'yes'}cd-popup-trigger{/if} video-link"  onclick="_cb.getModalVideo({$video.videoid})" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
+		<div class="thumb-video {if config('popup_video') == 'yes'}cd-popup-trigger{/if} video-link" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
 			<img src="{getThumb vdetails=$video size=416x260}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
 			<div class="status"></div>
 			{if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
