@@ -14,11 +14,11 @@ class MWIP extends \Migration
             'en'=>'Enable channel page'
         ]);
 
-        self::alterTable('ALTER TABLE ' . tbl('user_levels') . '  ADD COLUMN `enable_channel_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'yes\'',
+        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . '  ADD COLUMN `enable_channel_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'yes\'',
             [
-                'table'  => 'user_levels'
+                'table'  => 'user_levels_permissions'
             ], [
-                'table'  => 'user_levels',
+                'table'  => 'user_levels_permissions',
                 'column' => 'enable_channel_page'
             ]
         );

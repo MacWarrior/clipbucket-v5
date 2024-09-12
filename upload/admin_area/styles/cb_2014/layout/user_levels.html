@@ -178,8 +178,8 @@
                     {/section}
                     <div class="well">
                         <strong>{lang('enable_channel_page')}</strong><br />
-                        <label class="radio"><input type="radio" name="enable_channel_page" value="yes" id="enable_channel_page_yes" {if $level_details['enable_channel_page']==yes}checked{/if}/>{lang code='yes'}</label>
-                        <label class="radio"><input type="radio" name="enable_channel_page" value="no" id="enable_channel_page_no" {if $level_details['enable_channel_page']==no}checked{/if} />{lang code='no'}</label>
+                        <label class="radio"><input type="radio" name="enable_channel_page" value="yes" id="enable_channel_page_yes" {if $level_perms['enable_channel_page']==yes}checked{/if}/>{lang code='yes'}</label>
+                        <label class="radio"><input type="radio" name="enable_channel_page" value="no" id="enable_channel_page_no" {if $level_perms['enable_channel_page']==no}checked{/if} />{lang code='no'}</label>
                     </div>
                 </div>
             </div>

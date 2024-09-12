@@ -390,8 +390,7 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_id` int(20) NOT NULL,
   `user_level_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `user_level_name` varchar(100) NOT NULL,
-  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no',
-  `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels_permissions` (
@@ -425,7 +424,8 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `plugins_perms` text NOT NULL,
   `allow_manage_user_level` enum('yes','no') NOT NULL DEFAULT 'no',
   `allow_create_collection` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_permissions` (

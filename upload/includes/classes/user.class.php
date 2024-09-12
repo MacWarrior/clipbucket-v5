@@ -5,6 +5,7 @@ class User
     private $tablename = '';
     private $tablename_profile = '';
     private $tablename_level = '';
+    private $tablename_level_permission = '';
     private $fields = [];
     private $fields_profile = [];
     private $display_block = '';
@@ -116,6 +117,7 @@ class User
         ];
 
         $this->tablename_level = 'user_levels';
+        $this->tablename_level_permission = 'user_levels_permissions';
 
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
@@ -156,6 +158,10 @@ class User
     public function getTableNameLevel(): string
     {
         return $this->tablename_level;
+    }
+    public function getTableNameLevelPermission(): string
+    {
+        return $this->tablename_level_permission;
     }
 
     private function getAllFields(): array
@@ -264,7 +270,7 @@ class User
     {
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
-        $param_channels = $params['channels'] ?? false;
+        $param_channel_enable = $params['channel_enable'] ?? false;
         $param_email = $params['email'] ?? false;
         $param_username = $params['username'] ?? false;
         $param_status = $params['status'] ?? false;
@@ -359,11 +365,11 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '132')) {
-            if ($param_channels ) {
-                $conditions[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            if ($param_channel_enable ) {
+                $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
             }
-            $select[] = '(' .$this->getTableNameLevel().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
+            $select[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
         }
 
         if( $param_group ){
@@ -388,7 +394,8 @@ class User
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
                 INNER JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
-                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id '
+                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id 
+                INNER JOIN ' . cb_sql_table($this->getTableNameLevelPermission()) . ' ON '.$this->getTableNameLevelPermission().'.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id '
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -2437,12 +2444,13 @@ class userquery extends CBCategory
                 $value_array[] = $array[$access];
             }
 
+            $fields_array[] = 'enable_channel_page';
+            $value_array[] = mysql_clean($array['enable_channel_page']);
             //Checking level Name
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);
-                $enable_channel_page = mysql_clean($array['enable_channel_page']);
                 //Updating Now
-                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name', 'enable_channel_page'], [$level_name, $enable_channel_page], " user_level_id = '$id'");
+                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name'], [$level_name], " user_level_id = '$id'");
             }
 
             if (isset($_POST['plugin_perm'])) {
@@ -2657,7 +2665,7 @@ class userquery extends CBCategory
         $group = [];
         $user_profile_fields = ['userid','show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '132')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $user_profile_fields[] = 'disabled_channel';
         }
 
@@ -4959,7 +4967,7 @@ class userquery extends CBCategory
 
         $return = [];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '132')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $return['disable_channel'] = [
                 'title'    => lang('disable_channel'),
                 'type'     => 'radiobutton',

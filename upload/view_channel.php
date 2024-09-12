@@ -17,7 +17,7 @@ $u = $u ?: $_GET['uid'];
 $u = $u ?: $_GET['u'];
 $u = mysql_clean($u);
 
-$params_user = ['channels' => true];
+$params_user = ['channel_enable' => true];
 if (is_int($u)) {
     $params_user['userid']=$u;
 } else {
