@@ -11,8 +11,8 @@ class MWIP extends \Migration
     public function start()
     {
         self::generateTranslation('enable_access_view_video_history', [
-            'fr'=>'Autoriser l\'accès à l\'historique des vues',
-            'en'=>'Enable access view history'
+            'fr'=>'Activer l\'accès à l\'historique des vues',
+            'en'=>'Enable access to views history'
         ]);
         self::generateTranslation('video_list_view_video_history', [
             'fr'=>'Historique des vues',
