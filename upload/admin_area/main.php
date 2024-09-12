@@ -438,6 +438,7 @@ if (isset($_POST['update'])) {
         'enable_social_networks_links_footer',
         'enable_social_networks_links_home_sidebar',
         'enable_video_view_history',
+        'enable_video_view_history',
         'enable_access_view_video_history',
         'video_list_view_video_history'
     ];
