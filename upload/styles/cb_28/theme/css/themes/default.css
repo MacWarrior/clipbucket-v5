@@ -561,7 +561,8 @@ a:hover{
 .pl_details a:hover{
     color: var(--color-main-01);
 }
-.item-video .thumb-holder .cb_quickie.icon-tick{
+.item-video .thumb-holder .cb_quickie.icon-tick,
+.slider-video-container .thumb-video-padding .thumb-video > div.add-playlist.cb_quickie.icon-tick {
     background-color: var(--color-main-01);
     border-color: var(--color-main-01);
     color: var(--color-main-02);
@@ -655,4 +656,9 @@ a:hover{
     #header .logo img{
         max-height: 45px;
     }
+}
+
+/* Default slider */
+.slider-video-container .thumb-video-padding a.thumb-video{
+    background-color: var(--color-01);
 }

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"132",
+  "revision":"134",
   "status":"dev",
   "detail":[
     {
@@ -93,6 +93,10 @@
         ,"Implement dark & light themes"
         ,"Implement social networks links in footer & homepage sidebar"
         ,"Implement video orders : recently viewed, longer & shorter"
+        ,"Implement featured categories"
+        ,"Implement recent videos slider"
+        ,"Implement homepage fullpage width"
+        ,"Implement option to disable homepage sidebar"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

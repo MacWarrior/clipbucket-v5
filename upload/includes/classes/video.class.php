@@ -401,7 +401,7 @@ class Video
         }
 
         $order = '';
-        if( $param_order ){
+        if( $param_order && !$param_count ){
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
