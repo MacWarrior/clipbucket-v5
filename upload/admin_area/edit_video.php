@@ -44,11 +44,6 @@ if ($_GET['mode'] != '') {
 
 //Check Video Exists or Not
 if ($myquery->video_exists($video_id)) {
-    //Deleting Comment
-    $cid = $_GET['delete_comment'];
-    if (!empty($cid)) {
-        Comments::delete(['comment_id' => $cid]);
-    }
 
     assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
@@ -74,6 +69,12 @@ if ($myquery->video_exists($video_id)) {
         $file = DirPath::get('logs') . $str . $data['file_name'] . '.log';
     }
     assign('has_log', file_exists($file));
+
+    $results = Video::getInstance()->getVideoViewHistory($video_id, 1);
+    pages::getInstance()->paginate($results['total_pages'], 1, 'javascript:pageViewHistory(#page#, ' . $video_id . ');');
+    assign('results', $results['final_results']);
+    assign('modal', false);
+
 } else {
     //add parameter to display message after redirect
     if ($_GET['mode'] == 'delete') {

@@ -52,6 +52,27 @@ function deleteSubtitle(number) {
     }
 }
 
+function deleteComment(comment_id) {
+    if (confirm_it(text_confirm_comment)) {
+        $.ajax({
+            url: "/actions/admin_comment_delete.php",
+            type: "POST",
+            data: {comment_id: comment_id},
+            dataType: 'json',
+            success: function (result) {
+                $('.page-content').prepend(result['msg']);
+                if (result['success']) {
+                    $('#comment_' + comment_id).remove();
+                }
+                var lines = $('.comment_line');
+                if (lines.length === 0 ) {
+                    $('#comments .form-group').html(text_no_comment);
+                }
+            }
+        });
+    }
+}
+
 function editTitle(number) {
     $('#buttons-' + number).css('display', 'inline');
     $('#edit_sub_' + number).css('display', 'inline');
@@ -126,6 +147,25 @@ function pageInfoTmdb(page) {
     getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort,$('#selected_year').val());
 }
 
+
+function getViewHistory(video_id, page) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/video_view_history.php",
+        type: "POST",
+        data: {videoid: video_id, page: page, modal: false },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            $('#view_history_div').html(result['template']);
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
+function pageViewHistory(page) {
+    getViewHistory(videoid, page);
+}
 $(function () {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags, '#list_'+this.id);
@@ -135,7 +175,13 @@ $(function () {
         var video_title = $('#title').val();
         getInfoTmdb(videoid, video_title, 1);
     });
-}); 
+
+    $('.del_cmt').on('click', function () {
+        var id = $(this).data('id');
+        deleteComment(id);
+    });
+
+});
 
 $( document ).ready(function() {
     $('.poster li').click(function(){

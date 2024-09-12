@@ -796,6 +796,32 @@ class Video
         }
         Clipbucket_db::getInstance()->update(tbl($this->tablename), ['default_' . $type_db], [(int)$num], ' videoid = ' . mysql_clean($videoid));
     }
+
+    /**
+     * @param int $videoid
+     * @param int $page
+     * @return array
+     * @throws Exception
+     */
+    public function getVideoViewHistory(int $videoid, int $page): array
+    {
+        $sql = 'SELECT COUNT(`id_video_view`) as total FROM ' . cb_sql_table('video_views') . ' WHERE `id_video` = ' . mysql_clean($videoid);
+        $total = Clipbucket_db::getInstance()->_select($sql)[0]['total'] ?? 0;
+
+        $sql_limit = '';
+        if (!empty($page)) {
+            $sql_limit = ' LIMIT ' . create_query_limit($page, config('video_list_view_video_history'));
+        }
+        $sql = 'SELECT video_views.*, users.username FROM ' . cb_sql_table('video_views') . '
+         LEFT JOIN ' . cb_sql_table('users') . ' ON video_views.id_user = users.userid
+        WHERE id_video = ' . mysql_clean($videoid) . ' ORDER BY view_date DESC' . $sql_limit;
+        $results = Clipbucket_db::getInstance()->_select($sql);
+
+        return [
+            'total_pages'   => count_pages($total, config('video_list_view_video_history')),
+            'final_results' => $results
+        ];
+    }
 }
 
 class CBvideo extends CBCategory

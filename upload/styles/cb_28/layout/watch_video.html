@@ -30,7 +30,7 @@
 							<a href="{$userquery->profile_link($video)}" class="avatar">
 								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
 							</a>
-						{else if $anonymous_id != $video.userid}
+						{elseif $anonymous_id != $video.userid}
 							<span class="avatar">
 								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
 							</span>
@@ -54,7 +54,11 @@
 								{else}
 									{lang code="view"}
 								{/if}
+								{if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes' && $vdo.views > 0}
+									<i class="view_history fa fa-history pointer" title="{lang('view_history')}"></i>
+								{/if}
 							</span>
+
 						</div>
 					</div>
 					<div class="user-likes-sub clearfix">
@@ -362,7 +366,7 @@
 		</aside>
 	</div>
 </div>
-
+<div class="modal fade" id="myModal" role="dialog">
 <script>
 	/*Cookie based comments backup start*/
 	var current_video = "{$video.videoid}";

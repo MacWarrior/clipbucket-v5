@@ -7847,3 +7847,7 @@ textarea#comment_box {
 .default-slider h1 a{
   text-decoration: none;
 }
+
+.pointer {
+  cursor: pointer;
+}

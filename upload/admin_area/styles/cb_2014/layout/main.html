@@ -314,6 +314,7 @@
                             <ul class="nav nav-pills nav-stacked interfaces" style="margin:0;">
                                 <li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -610,9 +611,23 @@
 
                                     </div>
                                 </div>
-
                             </div>
-
+                            <div class="tab-pane interfaces" id="interfaces_video">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="enable_access_view_video_history" title="{lang code='enable_access_view_video_history'}">{lang code='enable_access_view_video_history'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="enable_access_view_video_history" id="enable_access_view_video_history" {if $row.enable_access_view_video_history=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -770,7 +785,6 @@
                                 </div>
                             </div>
                             <hr/>
-
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="nowrap" for="max_profile_pic_width" title="Max profile pic width"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In Pixels"> Max profile pic width</label>
@@ -2421,6 +2435,15 @@
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="tmdb_search" id="tmdb_search" value="{$row.tmdb_search}"/>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <label class="nowrap" for="video_list_view_video_history" title="User Videos">{lang code='video_list_view_video_history'}</label>
+                        </div>
+                        <div class="col-md-4 row-size">
+                            <input class="form-control" name="video_list_view_video_history" id="video_list_view_video_history" value="{$row.video_list_view_video_history}"/>
                         </div>
                     </div>
                     <hr/>
