@@ -27,7 +27,7 @@ class MWIP extends \Migration
             'en'=>'History'
         ]);
 
-        self::generateConfig('enable_video_view_video_history', 'no');
+        self::generateConfig('enable_access_view_video_history', 'no');
         self::generateConfig('video_list_view_video_history', '30');
 
         self::generateTranslation('usr_cmt_del_msg', [
