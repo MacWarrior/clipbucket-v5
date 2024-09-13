@@ -1271,4 +1271,10 @@ VALUES ('admin_setting'),
        ('view_history'),
        ('history'),
        ('enable_channel_page'),
-       ('disable_channel');
+       ('disable_channel'),
+       ('configurations'),
+       ('template_editor'),
+       ('update_logos'),
+       ('languages_settings'),
+       ('email_template'),
+       ('watermark_settings');

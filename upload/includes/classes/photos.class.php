@@ -767,10 +767,6 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
                     ]
                     , [
-                        'title' => 'Watermark Settings'
-                        , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
-                    ]
-                    , [
                         'title' => lang('manage_x', strtolower(lang('categories')))
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
