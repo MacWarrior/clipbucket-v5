@@ -4110,9 +4110,10 @@ function generic_curl($input_arr = [])
 
 /**
  * @param string $format
+ * @param string $timeout
  * @return resource
  */
-function get_proxy_settings(string $format = '')
+function get_proxy_settings(string $format = '', string $timeout = '')
 {
     switch ($format) {
         default:
@@ -4130,6 +4131,10 @@ function get_proxy_settings(string $format = '')
                     $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
                 }
             }
+            if( !empty($timeout)) {
+                $context['http']['timeout'] = (int)$timeout;
+            }
+
             return stream_context_create($context);
     }
 }

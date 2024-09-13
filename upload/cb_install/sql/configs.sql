@@ -289,7 +289,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'custom_css', ''),
     (NULL, 'enable_social_networks_links_footer', 'no'),
     (NULL, 'enable_social_networks_links_home_sidebar', 'no'),
-    (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'homepage_recent_videos_display', 'slider'),
     (NULL, 'homepage_featured_video_display', 'paginate'),
     (NULL, 'homepage_recent_video_style', 'modern'),
@@ -302,7 +301,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'homepage_collection_video_style', 'modern'),
     (NULL, 'homepage_collection_video_ratio', '1.7777'),
     (NULL, 'list_home_collection_videos', '20'),
-    (NULL, 'home_display_recent_videos', 'yes');
+    (NULL, 'home_display_recent_videos', 'yes'),
+    (NULL, 'enable_video_view_history', 'no'),
+    (NULL, 'enable_access_view_video_history', 'no'),
+    (NULL, 'video_list_view_video_history', 30);
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

@@ -80,7 +80,13 @@ if (isset($_POST['block_users'])) {
 
 $mode = $_GET['mode'];
 
-
+$udetails = userquery::getInstance()->get_user_details(user_id());
+$profile = userquery::getInstance()->get_user_profile($udetails['userid']);
+$current_enable_channel_page = userquery::getInstance()->get_user_level(user_id())['enable_channel_page'] !== 'yes';
+assign('current_enable_channel_page', $current_enable_channel_page);
+if ($mode === 'profile' && $current_enable_channel_page) {
+    $mode = 'account';
+}
 assign('mode', $mode);
 
 switch ($mode) {
@@ -122,8 +128,7 @@ switch ($mode) {
         break;
 }
 
-$udetails = userquery::getInstance()->get_user_details(user_id());
-$profile = userquery::getInstance()->get_user_profile($udetails['userid']);
+
 if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);
 }

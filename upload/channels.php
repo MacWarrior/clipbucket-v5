@@ -21,6 +21,7 @@ if (isset($_GET['no_user']) && $_GET['no_user'] == 1) {
     e(lang('usr_exist_err'));
 }
 
+$params['channel_enable'] = true;
 $params['count'] = true;
 $count = User::getInstance()->getAll($params);
 

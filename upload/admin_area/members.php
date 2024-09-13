@@ -7,8 +7,6 @@ global $pages, $eh;
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('member_moderation');
 $pages->page_redir();
-$udetails = userquery::getInstance()->get_user_details(user_id());
-$userLevel = $udetails['level'];
 
 if (!empty($_GET['user_not_found'])) {
     e(lang('user_doesnt_exist'));
@@ -218,36 +216,24 @@ call_functions(userquery::getInstance()->user_manager_func);
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
-if (isset($_GET['category'])) {
-    if ($_GET['category'][0] == 'all') {
-        $cat_field = '';
-    } else {
-        $cat_field = $_GET['category'];
-    }
-}
-
+$params = [];
 if (isset($_GET['search'])) {
-    $array = [
-        'userid'   => $_GET['userid'],
-        'username' => $_GET['username'],
-        'category' => $cat_field,
-        'featured' => $_GET['featured'],
-        'ban'      => $_GET['ban'],
-        'status'   => $_GET['status'],
-        'email'    => $_GET['email'],
-        'gender'   => $_GET['gender'],
-        'level'    => $_GET['level']
-    ];
+    $params['userid']   = $_GET['userid'] ?? false;
+    $params['username'] = $_GET['username'] ?? false;
+    $params['email']    = $_GET['email'] ?? false;
+    $params['status']   = $_GET['status'] ?? false;
+    $params['ban']      = $_GET['ban'] ?? false;
+    $params['featured'] = $_GET['featured'] ?? false;
+    $params['level']    = $_GET['level'] ?? false;
+    $params['category'] = $_GET['category'] ?? false;
 }
+$params['limit'] = $get_limit;
+$params['order'] = 'doj DESC';
 
-$result_array = $array;
-//Getting Video List
-$result_array['limit'] = $get_limit;
-if (!$array['order']) {
-    $result_array['order'] = ' doj DESC ';
-}
-$users = get_users($result_array);
-if ($userLevel > 1) {
+$users = User::getInstance()->getAll($params);
+
+// TODO : Implement super-admin flag on user_levels
+if (User::getInstance()->get('level') > 1) {
     foreach ($users as $key => $currentUser) {
         if ($currentUser['level'] == 1) {
             unset($users[$key]);
@@ -255,12 +241,18 @@ if ($userLevel > 1) {
     }
 }
 Assign('users', $users);
-Assign('userLevel', (int)$userLevel);
 
-//Collecting Data for Pagination
-$mcount = $array;
-$mcount['count_only'] = true;
-$total_rows = get_users($mcount);
+if( empty($users) ){
+    $total_rows = 0;
+} else if( count($users) < config('admin_pages') && ($page == 1 || empty($page)) ){
+    $total_rows = count($users);
+} else {
+    $params['count'] = true;
+    unset($params['limit']);
+    unset($params['order']);
+    $total_rows = User::getInstance()->getAll($params);
+}
+
 $total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
 
