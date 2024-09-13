@@ -454,49 +454,6 @@ class cbactions
         ];
     }
 
-    /**
-     * @throws Exception
-     */
-    function load_other_options($array = null): array
-    {
-        if (is_null($array)) {
-            $array = $_POST;
-        }
-
-        $allow_comments = $array['allow_comments'];
-        $allow_rating = $array['allow_rating'];
-        $return = [
-            'allow_comments' => [
-                'title'         => lang('playlist_allow_comments'),
-                'id'            => 'allow_comments',
-                'type'          => 'radiobutton',
-                'name'          => 'allow_comments',
-                'db_field'      => 'allow_comments',
-                'value'         => [
-                    'no'  => lang('no'),
-                    'yes' => lang('yes')
-                ],
-                'default_value' => 'yes',
-                'checked'       => $allow_comments
-            ],
-            'allow_rating'   => [
-                'title'         => lang('playlist_allow_rating'),
-                'id'            => 'allow_rating',
-                'type'          => 'radiobutton',
-                'name'          => 'allow_rating',
-                'db_field'      => 'allow_rating',
-                'value'         => [
-                    'no'  => lang('no'),
-                    'yes' => lang('yes')
-                ],
-                'default_value' => 'yes',
-                'checked'       => $allow_rating
-            ]
-
-        ];
-
-        return $return;
-    }
 
     /**
      * @throws Exception
@@ -508,18 +465,12 @@ class cbactions
         }
 
         $basic = $this->load_basic_fields($array);
-        $other = $this->load_other_options($array);
 
         return [
             'basic' => [
                 'group_id'   => 'basic_fields',
                 'group_name' => 'Basic Details',
                 'fields'     => $basic
-            ],
-            'other' => [
-                'group_id'   => 'other_fields',
-                'group_name' => 'Other Options',
-                'fields'     => $other
             ]
         ];
     }
@@ -844,7 +795,7 @@ class cbactions
         }
 
         $name = mysql_clean($array['name']);
-        $pdetails = $this->get_playlist($array['pid'] ? $array['pid'] : $array['list_id']);
+        $pdetails = Playlist::getInstance()->getOne($array['playlist_id']);
 
         if (!$pdetails) {
             e(lang('playlist_not_exist'));
@@ -901,10 +852,8 @@ class cbactions
 
                 Tags::saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
 
-                $array['playlist_id'] = $array['pid'] ? $array['pid'] : $array['list_id'];
-
                 cb_do_action('update_playlist', [
-                    'object_id' => $array['pid'] ? $array['pid'] : $array['list_id'],
+                    'object_id' => $array['playlist_id'],
                     'results'   => $array
                 ]);
             }

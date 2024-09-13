@@ -257,13 +257,7 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `description` mediumtext NOT NULL,
   `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
-  `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `total_comments` int(255) NOT NULL DEFAULT 0,
   `total_items` int(255) NOT NULL DEFAULT 0,
-  `rating` int(3) NOT NULL DEFAULT 0,
-  `rated_by` int(255) NOT NULL DEFAULT 0,
-  `voters` text NULL DEFAULT NULL,
   `last_update` text NULL DEFAULT NULL,
   `runtime` int(200) NOT NULL DEFAULT 0,
   `first_item` text NULL DEFAULT NULL,
@@ -675,7 +669,8 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD FULLTEXT KEY `photo_title` (`photo_title`);
 
 ALTER TABLE `{tbl_prefix}playlists`
-  ADD PRIMARY KEY (`playlist_id`);
+  ADD PRIMARY KEY (`playlist_id`),
+  ADD FULLTEXT KEY `playlist_name` (`playlist_name`);
 
 ALTER TABLE `{tbl_prefix}playlist_items`
   ADD PRIMARY KEY (`playlist_item_id`);

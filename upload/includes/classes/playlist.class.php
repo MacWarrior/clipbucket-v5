@@ -19,13 +19,7 @@ class Playlist
             'playlist_type',
             'description',
             'privacy',
-            'allow_comments',
-            'allow_rating',
-            'total_comments',
             'total_items',
-            'rating',
-            'rated_by',
-            'voters',
             'last_update',
             'runtime',
             'first_item',
@@ -54,6 +48,11 @@ class Playlist
             }
             return $field_name;
         }, $fields);
+    }
+
+    public function getFields()
+    {
+        return $this->fields;
     }
 
     /**
@@ -89,6 +88,7 @@ class Playlist
         $param_playlist_type = $params['playlist_type'] ?? false;
         $param_category = $params['category'] ?? false;
         $param_search = $params['search'] ?? false;
+        $param_tags = $params['tags'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -100,19 +100,19 @@ class Playlist
         $param_exist = $params['exist'] ?? false;
 
         $conditions = [];
-        if( $param_playlist_id ){
-            $conditions[] = 'playlists.playlist_id = \''.mysql_clean($param_playlist_id).'\'';
+        if ($param_playlist_id) {
+            $conditions[] = $this->getTablename() . '.playlist_id = \'' . mysql_clean($param_playlist_id) . '\'';
         }
-        if( $param_playlist_name ){
-            $conditions[] = 'playlists.playlist_name = \''.mysql_clean($param_playlist_name).'\'';
+        if ($param_playlist_name) {
+            $conditions[] = $this->getTablename() . '.playlist_name LIKE \'%' . mysql_clean($param_playlist_name) . '%\'';
         }
-        if( $param_userid ){
-            $conditions[] = 'playlists.userid = \''.mysql_clean($param_userid).'\'';
+        if ($param_userid) {
+            $conditions[] = $this->getTablename() . '.userid = \'' . mysql_clean($param_userid) . '\'';
         }
-        if( $param_playlist_type ){
-            $conditions[] = 'playlists.playlist_type = \''.mysql_clean($param_playlist_type).'\'';
+        if ($param_tags) {
+            $conditions[] = 'tags.name LIKE \'%' . mysql_clean($param_tags) . '%\'';
         }
-        if( $param_condition ){
+        if ($param_condition) {
             $conditions[] = '(' . $param_condition . ')';
         }
 
@@ -120,7 +120,7 @@ class Playlist
 
         if( $param_search ){
             /* Search is done on playlist name, playlist tags */
-            $cond = '(MATCH(playlist.playlist_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(playlist.playlist_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond = '(MATCH('.$this->getTablename() .'.playlist_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER('.$this->getTablename() .'.playlist_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             }
@@ -134,7 +134,7 @@ class Playlist
         }
 
         if( $param_count ){
-            $select = ['COUNT(DISTINCT playlist.playlist_id) AS count'];
+            $select = ['COUNT(DISTINCT '.$this->getTablename() .'.playlist_id) AS count'];
         } else {
             $select = $this->getSQLFields();
             $select[] = 'users.username AS user_username';
@@ -168,7 +168,7 @@ class Playlist
         }
 
         if( !$param_count ){
-            $group[] = 'playlists.playlist_id';
+            $group[] = $this->getTablename() .'.playlist_id';
         }
 
         if( $param_group ){
@@ -213,15 +213,19 @@ class Playlist
             return $result[0]['count'];
         }
 
+        if( $param_first_only ){
+            return $result[0] ?? [];
+        }
         if( !$result ){
             return false;
         }
 
-        if( $param_first_only ){
-            return $result[0];
-        }
-
         return $result;
+    }
+
+    public function getOne(int $playlist_id):array
+    {
+        return $this->getAll(['playlist_id'=>$playlist_id, 'first_only'=>true]);
     }
 
 }

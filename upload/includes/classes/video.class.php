@@ -2379,7 +2379,7 @@ class CBvideo extends CBCategory
 
         $fields = [
             'playlist_items' => $cb_columns->object('playlist_items')->temp_change('date_added', 'item_added')->get_columns(),
-            'playlists'      => $cb_columns->object('playlists')->temp_remove('first_item,cover')->temp_change('date_added,description,tags,category', 'playlist_added,playlist_description,playlist_tags,playlist_category')->get_columns(),
+            'playlists'      => Playlist::getInstance()->getFields(),
             'video'          => $cb_columns->object('videos')->get_columns()
         ];
 
