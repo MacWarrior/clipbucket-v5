@@ -45,12 +45,14 @@ if( config('playlistsSection') == 'yes' ){
 }
 
 if( config('collectionsSection') == 'yes' ){
-    if (has_access('admin_access')) {
-        $param = ['type'=>'videos'];
-    } else {
-        $param = ['userid' => user_id(),'type'=>'videos'];
+    $params = [];
+    $params['type'] = 'videos';
+    $params['allow_children'] = true;
+
+    if (!has_access('admin_access')) {
+        $params['userid'] = user_id();
     }
-    $collections = Collection::getInstance()->getAll($param) ? : [];
+    $collections = Collection::getInstance()->getAll($params) ? : [];
     assign('collections', $collections);
     assign('item_id', $vdo['videoid']);
 }

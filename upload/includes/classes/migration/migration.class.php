@@ -323,7 +323,7 @@ class Migration
     /**
      * @param string $code
      * @param string $tool_function ex AdminTool::function
-     * @param string $schedule * * * *
+     * @param string|null $frequency
      * @param bool $is_automatable
      * @return void
      * @throws Exception
