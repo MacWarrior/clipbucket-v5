@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"137",
+  "revision":"138",
   "status":"dev",
   "detail":[
     {
@@ -150,6 +150,7 @@
         ,"Fix infinite loop when using sub-collections"
         ,"Fix recursives categories"
         ,"Fix video, collection & photo order display"
+        ,"Fix collection selection on video page"
       ]
     },
     {
