@@ -328,18 +328,33 @@ class Migration
      * @return void
      * @throws Exception
      */
-    public static function insertTool(string $code, string $tool_function, string $schedule = null, bool $is_automatable = false)
+    public static function insertTool(string $code, string $tool_function, string $frequency = null, bool $is_automatable = false)
     {
         $label = mysql_clean($code);
-        $previous_calculated_datetime = '';
-        $previous_calculated_datetime_value= '';
-        if (!empty($schedule)) {
-            $previous_calculated_datetime = ', previous_calculated_datetime ';
-            $previous_calculated_datetime_value = ', CURRENT_TIMESTAMP' ;
+
+        $fields = ['language_key_label', 'language_key_description', 'function_name', 'code'];
+        $values = [
+            '\'' . $label . '_label\''
+            ,'\'' . $label . '_description\''
+            ,'\'' . mysql_clean($tool_function) . '\''
+            ,'\'' . $label . '\''
+        ];
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
+            $fields[] = 'frequency';
+            $values[] = '\'' . mysql_clean($frequency) . '\'';
+
+            $fields[] = 'is_automatable';
+            $values[] = $is_automatable ? '1' : '0';
+
+            $fields[] = 'previous_calculated_datetime';
+            $values[] = 'CURRENT_TIMESTAMP';
         }
 
-        $sql = 'INSERT IGNORE INTO ' . tbl('tools') . ' (language_key_label, language_key_description, function_name, code, frequency, is_automatable '.$previous_calculated_datetime.') 
-            VALUES (\'' . $label . '_label\', \'' . $label . '_description\', \'' . mysql_clean($tool_function) . '\', \'' . $label . '\' , \''. mysql_clean($schedule).'\', '.mysql_clean($is_automatable).' '.$previous_calculated_datetime_value.')';
+        $fields_txt = implode(', ', $fields);
+        $values_txt = implode(', ', $values);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('tools') . ' (' . $fields_txt . ') VALUES (' . $values_txt . ');';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"136",
+  "revision":"137",
   "status":"dev",
   "detail":[
     {
@@ -163,6 +163,7 @@
         ,"Remove unused functions"
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
+        ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -207,6 +208,7 @@
         ,"Fix PHP Cli detection"
         ,"Fix database configuration <i>(#426)</i>"
         ,"Fix Ubuntu&Debian git error in installation script"
+        ,"Fix migrating from old revision"
       ]
     },
     {

@@ -24,7 +24,7 @@ if (php_sapi_name() === 'cli') {
 
     if( ($param['automatic'] ?? '') == 'true' ) {
 
-        if(config('automate_launch_mode') == 'disabled') {
+        if(config('automate_launch_mode') == 'disabled' || empty(config('automate_launch_mode')) ){
             echo'config automate_launch_mode disabled';
             die();
         }
@@ -40,8 +40,7 @@ if (php_sapi_name() === 'cli') {
     }
 
     $tool->setToolInProgress();
-}
-else {
+} else {
     userquery::getInstance()->admin_login_check();
 
     if($tool->initById($_POST['id_tool']) === false) {
