@@ -1771,13 +1771,15 @@ function show_playlist_form($array)
     assign('type', $array['type']);
     // decides to show all or user only playlists
     // depending on the parameters passed to it
+    $params = [
+        'type'=>$array['type']
+    ];
     if (!empty($array['user'])) {
-        $playlists = $cbvid->action->get_playlists($array);
-    } else {
-        if (user_id()) {
-            $playlists = $cbvid->action->get_playlists();
-        }
+        $params['userid'] = $array['user'];
+    } elseif (user_id()) {
+        $params['userid'] = user_id();
     }
+    $playlists = Playlist::getInstance()->getAll($params);
     assign('playlists', $playlists);
     Template('blocks/common/playlist.html');
 }

@@ -8,7 +8,7 @@ $pages->page_redir();
 
 $list_id = mysql_clean($_GET['list_id']);
 
-$playlist = get_playlist($list_id);
+$playlist = Playlist::getInstance()->getOne($list_id);
 
 if (is_playlist_viewable($playlist) and isset($playlist)) {
 

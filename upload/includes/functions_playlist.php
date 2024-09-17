@@ -1,9 +1,4 @@
 <?php
-function get_playlist($list_id, $user = null)
-{
-    global $cbvid;
-    return $cbvid->action->get_playlist($list_id, $user);
-}
 
 /**
  * @throws Exception
@@ -13,7 +8,7 @@ function is_playlist_viewable($list_id)
     if (is_array($list_id)) {
         $playlist = $list_id;
     } else {
-        $playlist = get_playlist($list_id);
+        $playlist = Playlist::getInstance()->getOne($list_id);
     }
 
     if (isset($playlist['playlist_id'])) {
@@ -31,12 +26,6 @@ function is_playlist_viewable($list_id)
     }
 
     return true;
-}
-
-function get_playlists($args = [])
-{
-    global $cbvid;
-    return $cbvid->action->get_playlists($args);
 }
 
 /**
@@ -115,7 +104,7 @@ function view_playlist($playlist_id)
     if (is_array($playlist_id) and isset($playlist_id['playlist_id'])) {
         $playlist = $playlist_id;
     } else {
-        $playlist = get_playlist($playlist_id);
+        $playlist = Playlist::getInstance()->getOne($playlist_id);
     }
 
     if (empty($playlist)) {

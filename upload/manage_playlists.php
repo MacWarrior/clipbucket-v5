@@ -56,8 +56,8 @@ switch ($mode) {
 
         assign('mode', 'manage_playlist');
         //Getting List of available playlists
-        $playlists = $cbvid->action->get_playlists([
-            'user'  => user_id(),
+        $playlists = Playlist::getInstance()->getAll([
+            'userid'  => user_id(),
             'order' => 'playlists.date_added DESC'
         ]);
         assign('playlists', $playlists);
@@ -88,7 +88,7 @@ switch ($mode) {
         $pid = $_GET['pid'];
 
         if (isset($_POST['edit_playlist'])) {
-            $_POST['list_id'] = $pid;
+            $_POST['playlist_id'] = $pid;
             $cbvid->action->edit_playlist();
         }
 
@@ -111,7 +111,11 @@ switch ($mode) {
             $cbvid->action->delete_playlist_item($delid);
         }
 
-        $playlist = $cbvid->action->get_playlist($pid, user_id());
+        $playlist = Playlist::getInstance()->getAll([
+            'userid'      => user_id(),
+            'playlist_id' => $pid,
+            'first_only'  => true
+        ]);
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item

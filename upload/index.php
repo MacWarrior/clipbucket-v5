@@ -35,7 +35,7 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
                 'limit'  => 4
                 ,'order' => 'playlists.total_items DESC'
             ];
-            $playlists = get_playlists([]);
+            $playlists = Playlist::getInstance()->getAll($params);
             assign('playlists', activePlaylists($playlists));
         }
     }
