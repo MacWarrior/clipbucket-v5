@@ -253,3 +253,24 @@ dt.white{
 .glyphicon.glyphicon-remove:hover{
 	background-color: #f3d3d3;
 }
+
+.has-error.form-control {
+	border-color: #a94442 !important;
+	-webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+
+.animate-spin {
+	-webkit-animation: spin 2s infinite linear;
+	animation: spin 2s infinite linear;
+	display: inline-block;
+}
+.animate-spin {
+	display: inline-block;
+	vertical-align: top;
+	-webkit-animation: rotate 0.5s infinite linear;
+	-moz-animation: rotate 0.5s infinite linear;
+	-ms-animation: rotate 0.5s infinite linear;
+	-o-animation: rotate 0.5s infinite linear;
+	animation: rotate 0.5s infinite linear;
+}
