@@ -59,7 +59,7 @@ if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
                 $allTimezone = array_column($rs, 'timezone');?>
                 <div class="field">
                     <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
-                    <select class="form-control check_timezone has-error" name="timezone" id="timezone">
+                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>
                             <option value="<?php echo $timezone ?>">
@@ -68,7 +68,7 @@ if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
                       <?php  } ?>
                     </select>
                     <div class="spinner-content" id="spinner-content" style="display: none;">
-                        <p class="fa-spinner fa animate-spin"></p>
+                        <p class="fa-spinner fa fa-spin animate-spin"></p>
                     </div>
                 </div>
             <?php } ?>
