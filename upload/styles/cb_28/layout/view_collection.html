@@ -1,190 +1,188 @@
 <div id="main" class="container clearfix">
-	<div class="clearfix">
-		<section id="content" class="clearfix">
-			{if config("enable_advertisement") == "yes"}
-			<div class="clearfix leaderboard-ad ad">{AD place='ad_728x90'}</div>
-			{/if}
+    <div class="clearfix">
+        <section id="content" class="clearfix">
+            {if config("enable_advertisement") == "yes"}
+                <div class="clearfix leaderboard-ad ad">{AD place='ad_728x90'}</div>
+            {/if}
 
             {if $breadcrum}
-            <div id="breadcrumbs" class="breadcrumbs">
-                <ul class="breadcrumb">
-                    <li><a href="{$collection_baseurl}" class="glyphicon glyphicon-folder-open" title="{lang code='collections'}"></a></li>
-                {foreach $breadcrum as $parent}
-                    <li><a href="{$parent['url']}">{display_clean($parent['title'])}</a></li>
-                {/foreach}
-                </ul>
-            </div>
+                <div id="breadcrumbs" class="breadcrumbs">
+                    <ul class="breadcrumb">
+                        <li><a href="{$collection_baseurl}" class="glyphicon glyphicon-folder-open" title="{lang code='collections'}"></a></li>
+                        {foreach $breadcrum as $parent}
+                            <li><a href="{$parent['url']}">{display_clean($parent['title'])}</a></li>
+                        {/foreach}
+                    </ul>
+                </div>
             {/if}
 
-			<h1>
-				{display_clean($c.collection_name)}&nbsp;
-				({$c.total_objects}&nbsp;{lang code="{$c.type}"})
-				{lang code='collection' assign='object_type'}
-				{uploadButton details=$c output='link' class='btn btn-success pull-right'}
-			</h1>
+            <h1>
+                {display_clean($c.collection_name)}&nbsp;
+                ({$c.total_objects}&nbsp;{lang code="{$c.type}"})
+                {lang code='collection' assign='object_type'}
+                <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
+            </h1>
 
             {if $collections}
-            <div class="collections clearfix">
-                <div class="row clearfix">
-                    {foreach $collections as $collection}
-                    <div class="clearfix collection-item col-lg-4 col-md-4 col-sm-4 col-xs-6">
-                        {include file="$style_dir/blocks/collection-item.html"}
+                <div class="collections clearfix">
+                    <div class="row clearfix">
+                        {foreach $collections as $collection}
+                            <div class="clearfix collection-item col-lg-4 col-md-4 col-sm-4 col-xs-6">
+                                {include file="$style_dir/blocks/collection-item.html"}
+                            </div>
+                        {/foreach}
                     </div>
-                    {/foreach}
                 </div>
-            </div>
             {/if}
 
-			{if $c.type == 'photos'}
-			<div class="photos clearfix">
-				{section name=list loop=$objects}
-				<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-				{include file="$style_dir/blocks/photo.html" photo=$objects[list] display_type=collection_item}
-				</div>
-				{sectionelse}
-				<div class="well well-info">{lang code='no_photos_found'}</div>
-				{/section}
-			</div>
-			{else}
-			<div class="videos clearfix">
-				{if $objects}
-					{foreach $objects as $video}
-						<div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12">
-						{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
-						</div>
-					{/foreach}
-				{else}
-					<div class="well well-info">{lang code='no_videos_found'}</div>
-				{/if}
-			</div>
-			{/if}
+            {if $c.type == 'photos'}
+                <div class="photos clearfix">
+                    {section name=list loop=$objects}
+                        <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                            {include file="$style_dir/blocks/photo.html" photo=$objects[list] display_type=collection_item}
+                        </div>
+                        {sectionelse}
+                        <div class="well well-info">{lang code='no_photos_found'}</div>
+                    {/section}
+                </div>
+            {else}
+                <div class="videos clearfix">
+                    {if $objects}
+                        {foreach $objects as $video}
+                            <div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                {include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
+                            </div>
+                        {/foreach}
+                    {else}
+                        <div class="well well-info">{lang code='no_videos_found'}</div>
+                    {/if}
+                </div>
+            {/if}
 
             {include file="$style_dir/blocks/pagination.html"}
 
-			<div class="clearfix fav-repo">
-				<div class="show clearfix photoStats">
-					<a href="javascript:void(0);" class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
-					<a href="javascript:void(0);" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#flag_item').toggle();">{lang code='report_this'}</a>
-					{if config('enable_edit_button') == 'yes'}
-						{if has_access('admin_access', true)}
-							{if user_id() && $c.userid == user_id()}
-								<div class="dropdown" style="float: right">
-									<button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
-										{lang code='edit'}
-										<span class="caret"></span>
-									</button>
-									<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
-										<li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
-										<li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
-									</ul>
-								</div>
-							{else}
-								<a class="btn btn-success" style="float: right" href="{$link_edit_bo}">{lang code='edit'}</a>
-							{/if}
-						{elseif user_id() && $c.userid == user_id()}
-							<a class="btn btn-success" style="float: right" href="{$link_edit_fo}">{lang code='edit'}</a>
-						{/if}
-					{/if}
-				</div>
-				
-				<div class="video_action_result_boxes clearfix">
-					{show_flag_form id=$c.collection_id type=Collection}
-					<div class="action_box" style="display:none;" id="video_action_result_cont"></div>
-				</div>
+            <div class="clearfix fav-repo">
+                <div class="show clearfix photoStats">
+                    <a href="javascript:void(0);" class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
+                    <a href="javascript:void(0);" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#flag_item').toggle();">{lang code='report_this'}</a>
+                    {if config('enable_edit_button') == 'yes'}
+                        {if has_access('admin_access', true)}
+                            {if user_id() && $c.userid == user_id()}
+                                <div class="dropdown" style="float: right">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+                                        {lang code='edit'}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
+                                        <li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
+                                        <li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
+                                    </ul>
+                                </div>
+                            {else}
+                                <a class="btn btn-success" style="float: right" href="{$link_edit_bo}">{lang code='edit'}</a>
+                            {/if}
+                        {elseif user_id() && $c.userid == user_id()}
+                            <a class="btn btn-success" style="float: right" href="{$link_edit_fo}">{lang code='edit'}</a>
+                        {/if}
+                    {/if}
+                </div>
 
-				<ul class="clearfix desc-list">
-					<li>
-						<strong>{lang code="uploaded"}:</strong>&nbsp;{$c.date_added|niceTime}
-					</li>
-					<li>
-						<strong>{lang code="views"}:</strong>&nbsp;{$c.views|number_format}
-					</li>
-					<li>
-						<strong>{lang code="category"}:</strong>&nbsp;{$c.category_names}
-					</li>
-					<li>	
-						<strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
-						<input type="hidden" id="tags" value="{$c.tags}">
-						<ul id="list_tags" style="border:0;"></ul>
-					</li>
-				</ul>
-			</div>
-			{if config('enable_comments_collection') == 'yes'}
-				<div class="clearfix comments-block">
-					{if $myquery->is_commentable($c,'collection')}
+                <div class="video_action_result_boxes clearfix">
+                    {show_flag_form id=$c.collection_id type=Collection}
+                    <div class="action_box" style="display:none;" id="video_action_result_cont"></div>
+                </div>
 
-					<div class="collectionComments addComment">
-						<h2>
-							{if $c.total_comments <= 1 }
-								{lang code='comment'}
-							{else}
-								{{lang code='comments'} }
-							{/if}
-							(<span id="comment_count">{$c.total_comments}</span>)
-						</h2>
-						<a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
-							<span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
-						</a>
-						<div id="bloc-comment" class="collapse">
-							{include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
+                <ul class="clearfix desc-list">
+                    <li>
+                        <strong>{lang code="uploaded"}:</strong>&nbsp;{$c.date_added|niceTime}
+                    </li>
+                    <li>
+                        <strong>{lang code="views"}:</strong>&nbsp;{$c.views|number_format}
+                    </li>
+                    <li>
+                        <strong>{lang code="category"}:</strong>&nbsp;{$c.category_names}
+                    </li>
+                    <li>
+                        <strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
+                        <input type="hidden" id="tags" value="{$c.tags}">
+                        <ul id="list_tags" style="border:0;"></ul>
+                    </li>
+                </ul>
+            </div>
+            {if config('enable_comments_collection') == 'yes'}
+                <div class="clearfix comments-block">
+                    {if $myquery->is_commentable($c,'collection')}
+                        <div class="collectionComments addComment">
+                            <h2>
+                                {if $c.total_comments <= 1 }
+                                    {lang code='comment'}
+                                {else}
+                                    {{lang code='comments'} }
+                                {/if}
+                                (<span id="comment_count">{$c.total_comments}</span>)
+                            </h2>
+                            <a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
+                                <span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
+                            </a>
+                            <div id="bloc-comment" class="collapse">
+                                {include file="$style_dir/blocks/comments/add_comment.html" id=$c.collection_id type='cl'}
 
-							<div class="userComments">
-								<ul id="userCommentsList" style="margin-left:-40px;">
-								</ul>
-							</div>
-						</div>
-					</div>
-
-					{else}
-					<div align="center" class="moveL no_comments">
-						{lang('comment_disabled_for',strtolower(lang('collection')))}
-					</div>
-					{/if}
-				</div>
-			{/if}
-		</section>
-		<aside id="sidebar">
-			{if config("enable_advertisement") == "yes"}
-			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			{/if}
-			{$featured=get_photos(["featured"=>"yes","limit"=>6])}
-			{if $featured}
-			<h2>{lang code='featured_photos'}</h2>
-			<div class="clearfix sidebar-items">
-				<div class="row">
-					{foreach $featured as $photo}
-						<div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
-							{include file="$style_dir/blocks/photo.html" display_type='featuredPhoto_sidebar'}
-						</div>
-					{/foreach}
-				</div>
-			</div>
-			{/if}
-			{if config('collectionsSection') == 'yes'}
+                                <div class="userComments">
+                                    <ul id="userCommentsList" style="margin-left:-40px;">
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    {else}
+                        <div align="center" class="moveL no_comments">
+                            {lang('comment_disabled_for',strtolower(lang('collection')))}
+                        </div>
+                    {/if}
+                </div>
+            {/if}
+        </section>
+        <aside id="sidebar">
+            {if config("enable_advertisement") == "yes"}
+                <div class="box-ad ad">{AD place='ad_300x250'}</div>
+            {/if}
+            {$featured=get_photos(["featured"=>"yes","limit"=>6])}
+            {if $featured}
+                <h2>{lang code='featured_photos'}</h2>
+                <div class="clearfix sidebar-items">
+                    <div class="row">
+                        {foreach $featured as $photo}
+                            <div class="item-photo col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                {include file="$style_dir/blocks/photo.html" display_type='featuredPhoto_sidebar'}
+                            </div>
+                        {/foreach}
+                    </div>
+                </div>
+            {/if}
+            {if config('collectionsSection') == 'yes'}
                 {$cond = ['limit'=>5, 'active'=>'yes', 'has_items'=>true]}
                 {if config('enable_sub_collection')}
                     {$cond['parent_id'] = $c.collection_id}
                 {/if}
-				{$collections = $cbcollection->get_collections($cond)}
+                {$collections = $cbcollection->get_collections($cond)}
                 {if $collections}
-				<h2>{lang code="top_collections"}</h2>
-				<div class="clearfix sidebar-items collections-grid">
-					<div class="clearfix row">
-						{foreach from=$collections item=collection}
-							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-								{include file="$style_dir/blocks/collection-item.html"}
-							</div>
-						{/foreach}
-					</div>
-				</div>
+                    <h2>{lang code="top_collections"}</h2>
+                    <div class="clearfix sidebar-items collections-grid">
+                        <div class="clearfix row">
+                            {foreach from=$collections item=collection}
+                                <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    {include file="$style_dir/blocks/collection-item.html"}
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
                 {/if}
-			{/if}
-		</aside>
-	</div>
+            {/if}
+        </aside>
+    </div>
 </div>
 <script>
-	var collection_id = "{$c.collection_id}";
-	var last_commented = "{$c.last_commented}";
-	var total_comments = "{$c.total_comments}";
-	var object_type = "{$object_type}";
+    var collection_id = "{$c.collection_id}";
+    var last_commented = "{$c.last_commented}";
+    var total_comments = "{$c.total_comments}";
+    var object_type = "{$object_type}";
 </script>

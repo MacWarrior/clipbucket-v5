@@ -1271,4 +1271,5 @@ VALUES ('admin_setting'),
        ('view_history'),
        ('history'),
        ('enable_channel_page'),
-       ('disable_channel');
+       ('disable_channel'),
+       ('will_be_upload_into_collection');

@@ -36,7 +36,7 @@
                         <div class="clearfix" id="uploaderContainer">
                         {if $selected_collection}
                             <div class="alert alert-info" role="alert">
-                                Photo will be uploaded into <strong><i>{display_clean($selected_collection.collection_name)}</i></strong> Collection
+                                {ucfirst(lang('will_be_upload_into_collection', [ strtolower(lang('photos')), display_clean($selected_collection.collection_name)]))}
                             </div>
                         {else}
                             <div class="row">
