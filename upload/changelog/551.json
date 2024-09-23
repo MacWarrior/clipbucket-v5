@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"139",
+  "revision":"140",
   "status":"dev",
   "detail":[
     {
@@ -187,6 +187,7 @@
       "description": [
         "Implement Windows installation script"
         ,"Implement dev mode options"
+        ,"Implement DB timezone selection"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
