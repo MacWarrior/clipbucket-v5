@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"138",
+  "revision":"139",
   "status":"dev",
   "detail":[
     {
@@ -83,6 +83,7 @@
         ,"Fix current user level display in header"
         ,"Fix collection uploader informations display"
         ,"Fix user storage running even when disabled"
+        ,"Fix playlists management"
       ]
     },
     {
