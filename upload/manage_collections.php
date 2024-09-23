@@ -42,7 +42,8 @@ switch ($mode) {
         }
         $collectArray = [
             'user'  => user_id(),
-            'limit' => $get_limit
+            'limit' => $get_limit,
+            'allow_children'=>true
         ];
         $usr_collections = Collection::getInstance()->getAll($collectArray);
 

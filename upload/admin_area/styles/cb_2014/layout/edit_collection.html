@@ -85,10 +85,10 @@
                         <a data-toggle="tab" href="#cldetails">Collection Details</a>
                     </li>
                     <li>
-                        <a data-toggle="tab" href="#uinformation">
-                            <i class="glyphicon glyphicon-user"></i>
-                            Uploader Information
-                        </a>
+                        <a data-toggle="tab" href="#uinformation"><i class="glyphicon glyphicon-user"></i>Uploader Information</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#default_thumb"><i class="glyphicon glyphicon-picture"></i>{lang('default_thumb')}</a>
                     </li>
                 </ul>
                 <div class="tab-content">
@@ -169,11 +169,27 @@
                             {/if}
                         </div>
                     </div>
+                    <div id="default_thumb" class="tab-pane">
+                        <div class="row">
+                            <h5>{lang code="default_thumb"}</h5>
+                            <ul class="ace-thumbnails thumb">
+                                {foreach from=$vidthumbs item=vid_thumb}
+                                    <li style="background-image:url({$vid_thumb});" {if $vid_thumb|get_thumb_num==$data.default_thumb}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
+                                        <label for="poster_{$vid_thumb|get_thumb_num}">
+                                            <span class="content_bottom">
+                                              <input type="radio" id="poster_{$vid_thumb|get_thumb_num}" value="{GetName($vid_thumb)}.{getExt($vid_thumb)}" name="default_thumb" {if $data.default_thumb==$vid_thumb|get_thumb_num}checked{/if}/>
+                                            </span>
+                                        </label>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    </div>
                     <br>
                     <div class="row">
                         <legend>Collection Stats</legend>
                         <div class="col-md-3">
-                            Total Objects : {$data.total_objects}
+                            Total Objects : {$data.total_objects}d
                         </div>
                         <div class="col-md-3">
                             Total Comments : {$data.total_comments}

@@ -21,7 +21,6 @@ class Collection
             ,'collection_name'
             ,'collection_description'
             ,'userid'
-            ,'views'
             ,'date_added'
             ,'featured'
             ,'broadcast'
@@ -108,10 +107,6 @@ class Collection
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
 
-            case 'most_viewed':
-                $params['order'] = $this->getTableName() . '.views DESC';
-                break;
-
             case 'featured':
                 $params['featured'] = true;
                 break;
@@ -153,7 +148,6 @@ class Collection
     {
         $sorts = [
             'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
             ,'most_items'  => lang('sort_most_items')
         ];
 
@@ -185,6 +179,7 @@ class Collection
         $param_type = $params['type'] ?? false;
         $param_parents_only = $params['parents_only'] ?? false;
         $param_allow_children = !empty($params['allow_children']);
+        $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -221,6 +216,12 @@ class Collection
         }
         if( $param_parents_only ){
             $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
+        }
+        if( $param_parents_only ){
+            $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
+        }
+        if( $param_empty_thumb_objectid ){
+            $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
 
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
@@ -598,6 +599,37 @@ class Collection
         }
         return $found;
     }
+
+    public static function assignDefaultThumb($collection_id)
+    {
+        $tested_collection = $collection_id;
+        do {
+            $sql = '
+            SELECT collections.collection_id,
+               CASE
+                   WHEN items.type = \'p\' THEN photos.photo_id
+                   WHEN items.type = \'video\' THEN videos.videoid
+                   END              AS default_thumb,
+               childs.collection_id AS child_id
+            FROM ' . tbl('collections') . ' AS collections
+                 LEFT JOIN ' . tbl('collection_items') . ' AS items ON collections.collection_id = items.collection_id
+                 LEFT JOIN ' . tbl('collections') . ' AS childs ON collections.collection_id = childs.collection_id_parent
+                 LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'p\'
+                 LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'video\'
+            WHERE collections.collection_id = '.mysql_clean($tested_collection).'
+            ORDER BY items.ci_id
+            LIMIT 1 ';
+            $res = Clipbucket_db::getInstance()->_select($sql);
+            $thumb_num = $res[0]['default_thumb'] ?? false;
+            $tested_collection = $res[0]['child_id'] ?? false;
+        } while (empty($thumb_num) && !empty($tested_collection));
+
+        if ($thumb_num) {
+            $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . mysql_clean($thumb_num) . ' where collection_id = ' . mysql_clean($collection_id);
+            Clipbucket_db::getInstance()->execute($sql);
+        }
+        return is_numeric($thumb_num) ? $thumb_num: false;
+    }
 }
 
 
@@ -659,7 +691,7 @@ class Collections extends CBCategory
         $this->init_actions();
 
         $fields = ['collection_id', 'collection_name', 'collection_description',
-            'tags', 'userid', 'type', 'views', 'date_added',
+            'tags', 'userid', 'type', 'date_added',
             'active', 'rating', 'rated_by', 'voters'];
 
         $cb_columns->object('collections')->register_columns($fields);
@@ -2446,22 +2478,10 @@ class Collections extends CBCategory
             return false;
         }
 
-        $params = [];
-        $params['collection_id'] = $col_data['collection_id'];
-
-        $first_item = Collection::getInstance()->getFirstItem($params);
-
-        if( empty($first_item) ){
-            $child_collection = Collection::getInstance()->getChildCollection($col_data['collection_id']);
-            if (!empty($child_collection)) {
-                return $this->coll_first_thumb($child_collection[0],$size);
-            } else {
-                if( $col_data['type'] == 'videos' ){
-                    return default_thumb();
-                } else {
-                    return get_photo_default_thumb();
-                }
-            }
+        if (!empty($col_data['thumb_objectid'])) {
+            $object_id = $col_data['thumb_objectid'];
+        } else {
+            $object_id = Collection::assignDefaultThumb($col_data['collection_id']);
         }
 
         if( $col_data['type'] == 'videos' ){
@@ -2474,9 +2494,9 @@ class Collections extends CBCategory
                     $size = '416x260';
                 }
             }
-            return get_thumb($first_item, false, $size);
+            return get_thumb($object_id, false, $size);
         } else {
-            $param['details'] = $first_item;
+            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
             if (!$size) {
                 $param['size'] = 's';
             } else {

@@ -1271,4 +1271,7 @@ VALUES ('admin_setting'),
        ('view_history'),
        ('history'),
        ('enable_channel_page'),
-       ('disable_channel');
+       ('disable_channel'),
+       ('assign_default_thumb_label'),
+       ('assign_default_thumb_description'),
+       ('default_thumb');

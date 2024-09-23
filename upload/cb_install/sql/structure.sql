@@ -51,7 +51,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `collection_name` varchar(225) NOT NULL,
   `collection_description` text NOT NULL,
   `userid` int(10) NOT NULL,
-  `views` bigint(20) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
@@ -64,7 +63,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `voters` longtext DEFAULT NULL,
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
-  `type` varchar(10) NOT NULL
+  `type` varchar(10) NOT NULL,
+  `thumb_objectid` BIGINT(20) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (

@@ -334,7 +334,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('correct_video_categorie_label', 'correct_video_categorie_description', 'AdminTool::correctVideoCategorie', 'correct_video_categorie', '0 4 * * 7', CURRENT_TIMESTAMP, '1', '0'),
     ('delete_unused_resolution_files_label', 'delete_unused_resolution_files_description', 'AdminTool::deleteUnusedResolutionFile', 'delete_unused_resolution_files', NULL, NULL, '1', '1'),
     ('automate_label', 'automate_description', 'AdminTool::checkAndStartToolsByFrequency', 'automate', NULL, NULL, '0', '0'),
-    ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0');
+    ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0'),
+    ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
