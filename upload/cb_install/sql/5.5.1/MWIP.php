@@ -38,5 +38,10 @@ class MWIP extends \Migration
             'fr'=>'Configuration des filigranes',
             'en'=>'Watermark settings'
         ]);
+
+        self::generateTranslation('user_levels', [
+            'fr'=>'Niveaux d\'utilisateur',
+            'en'=>'User levels'
+        ]);
     }
 }

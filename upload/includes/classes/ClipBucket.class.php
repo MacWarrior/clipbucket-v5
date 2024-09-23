@@ -364,6 +364,18 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
         ];
 
+        $menu_configuration['sub'][] = [
+            'title' => lang('manage_social_networks_links')
+            , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
+        ];
+
+        if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
+            $menu_configuration['sub'][] = [
+                'title' =>  lang('manage_x',strtolower(lang('user_levels')))
+                , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'
+            ];
+        }
+
         $this->addMenuAdmin($menu_configuration, 2);
 
         if (NEED_UPDATE) {
@@ -395,10 +407,6 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
-            $menu_general['sub'][] = [
-                'title' => lang('manage_social_networks_links')
-                , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
-            ];
 
             $this->addMenuAdmin($menu_general, 10);
         }
@@ -434,13 +442,6 @@ class ClipBucket
                     ]
                 ]
             ];
-
-            if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
-                $menu_users['sub'][] = [
-                    'title' => 'User Levels'
-                    , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'
-                ];
-            }
 
             $this->addMenuAdmin($menu_users, 20);
         }
