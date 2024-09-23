@@ -9,8 +9,10 @@ userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
 $pages->page_redir();
 
+$id = $_GET['collection'];
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
+    Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $id);
 }
 
 if (isset($_POST['delete_preview'])) {
@@ -18,17 +20,17 @@ if (isset($_POST['delete_preview'])) {
     $cbcollection->delete_thumbs($id);
 }
 
-$id = $_GET['collection'];
 //Performing Actionsf
 if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
 
-$c = Collection::getInstance()->getOne([
+$collection = Collection::getInstance()->getOne([
     'collection_id'         => $id,
-    'hide_empty_collection' => 'no'
+    'hide_empty_collection' => 'no',
+    'with_items'            => true
 ]);
-if (empty($c)) {
+if (empty($collection)) {
     redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
 }
 
@@ -43,33 +45,32 @@ $breadcrumb[1] = [
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 $breadcrumb[2] = [
-    'title' => 'Editing : ' . display_clean($c['collection_name']),
+    'title' => 'Editing : ' . display_clean($collection['collection_name']),
     'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)
 ];
 
-switch ($c['type']) {
-    case 'videos':
-    case 'v':
-        $items = $cbvideo->collection->get_collection_items_with_details($c['collection_id'], null, 4);
-        break;
-
-    case 'photos':
-    case 'p':
-        $items = $cbphoto->collection->get_collection_items_with_details($c['collection_id'], null, 4);
-        break;
+$items = Collection::getInstance()->getItemRecursivly(['collection_id'=> $collection['collection_id']]);
+if ($collection['type'] == 'videos') {
+    foreach ($items as &$item) {
+        $item['id'] = $item['videoid'];
+    }
+} else {
+    foreach ($items as &$item) {
+        $item['id'] = $item['photo_id'];
+    }
 }
-
-assign('data', $c);
+assign('items', $items);
+assign('data', $collection);
 
 $FlaggedPhotos = $cbvid->action->get_flagged_objects();
 Assign('flaggedPhoto', $FlaggedPhotos);
 $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
-assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $c['userid']);
+assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
 
 $params = [];
 $params['type'] = 'cl';
-$params['type_id'] = $c['collection_id'];
+$params['type_id'] = $collection['collection_id'];
 $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);

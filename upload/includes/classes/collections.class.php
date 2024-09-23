@@ -34,6 +34,7 @@ class Collection
             ,'active'
             ,'public_upload'
             ,'type'
+            ,'thumb_objectid'
         ];
 
         $version = Update::getInstance()->getDBVersion();
@@ -429,6 +430,25 @@ class Collection
     }
 
     /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getItemRecursivly(array $params = []): array
+    {
+        if( empty($params['collection_id']) ){
+            e(lang('technical_error'));
+            return [];
+        }
+        $items = $this->getItems(['collection_id'=>$params['collection_id']]) ?: [];
+        $children = $this->getChildCollection($params['collection_id']);
+        foreach ($children as $child) {
+            $items = array_merge($items, $this->getItemRecursivly(['collection_id'=>$child['collection_id']]));
+        }
+        return $items;
+    }
+
+    /**
      * @throws Exception
      */
     public function getFirstItem(array $params = [])
@@ -629,6 +649,17 @@ class Collection
             Clipbucket_db::getInstance()->execute($sql);
         }
         return is_numeric($thumb_num) ? $thumb_num: false;
+    }
+
+    /**
+     * @param int $default_thumb
+     * @param int $id
+     * @return void
+     * @throws Exception
+     */
+    public function setDefautThumb(int $default_thumb, int $id)
+    {
+        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['thumb_objectid'], [mysql_clean($default_thumb)], ' collection_id = ' . mysql_clean($id));
     }
 }
 

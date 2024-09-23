@@ -604,6 +604,17 @@ a:hover{
 #updateVideoInfo .formSection h4{
     background-color: var(--color-05);
 }
+/* Video manager */
+#updateCollection .formSection h4{
+    background-color: var(--color-05);
+    margin: 0;
+    padding: 10px;
+
+}
+
+#updateCollection .formSection {
+    margin-bottom: 10px;
+}
 
 /* Mobile */
 @media only screen and (max-width: 767px) {

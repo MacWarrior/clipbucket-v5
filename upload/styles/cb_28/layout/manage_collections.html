@@ -6,7 +6,7 @@
 		  <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 hidden-xs">
 			{include file="$style_dir/blocks/manage/userMenuLeft.html"}
 		</div>
-			<div class="mainContent col-md-9 col-sm-9 col-xs-12">
+			<div class="mainContent col-md-9 col-sm-9 col-xs-12 " id="updateCollection">
 
 				<form method="post" class="upload_form" name="form1" enctype="multipart/form-data">
 				{if $mode == "manage" || $mode == ""}
@@ -77,6 +77,23 @@
 									{/if}
 								</div>
 							{/foreach}
+						</div>
+						<div class="formSection clear">
+							<h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+							<div class="sectionContent hidden">
+								<div class="row">
+									<h5>{lang code="default_thumb"}</h5>
+									{foreach from=$items item=item}
+										<div class="col-md-3">
+											<div class="form-group text-center">
+												<label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{get_thumb($item)}" width="100" height="100" />
+													<input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
+												</label>
+											</div>
+										</div>
+									{/foreach}
+								</div>
+							</div>
 						</div>
 						<div class="text-right">
 							<input type="submit" name="update_collection" class="btn btn-primary btn-lg" value="{lang code='update_collection'}">

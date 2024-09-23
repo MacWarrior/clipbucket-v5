@@ -11,7 +11,7 @@ assign('user', $udetails);
 $order = 'collection_items.date_added DESC';
 
 $mode = $_GET['mode'];
-$cid = mysql_clean($_GET['cid']);
+$collection_id = mysql_clean($_GET['cid']);
 
 assign('mode', $mode);
 $page = mysql_clean($_GET['page']);
@@ -28,8 +28,8 @@ switch ($mode) {
         }
 
         if (isset($_GET['delete_collection'])) {
-            $cid = $_GET['delete_collection'];
-            $cbcollection->delete_collection($cid);
+            $collection_id = $_GET['delete_collection'];
+            $cbcollection->delete_collection($collection_id);
         }
 
         if ($_POST['delete_selected'] && is_array($_POST['check_col'])) {
@@ -79,14 +79,26 @@ switch ($mode) {
     case 'edit_collect':
         if (isset($_POST['update_collection'])) {
             $cbcollection->update_collection($_POST);
+            Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $collection_id);
         }
 
-        $collection = Collection::getInstance()->getOne(['collection_id' => $cid]);
+        $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
             redirect_to(BASEURL . '/manage_collections.php?missing_collection=1');
         }
+        $items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
+        if ($collection['type'] == 'videos') {
+            foreach ($items as &$item) {
+                $item['id'] = $item['videoid'];
+            }
+        } else {
+            foreach ($items as &$item) {
+                $item['id'] = $item['photo_id'];
+            }
+        }
+        assign('items', $items);
 
-    $reqFields = $cbcollection->load_required_fields($collection);
+        $reqFields = $cbcollection->load_required_fields($collection);
         $otherFields = $cbcollection->load_other_fields($collection);
 
         assign('fields', $reqFields);
@@ -104,7 +116,7 @@ switch ($mode) {
         $get_limit = create_query_limit($page, config('collection_items_page'));
 
         $params = [
-            'collection_id' => $cid
+            'collection_id' => $collection_id
             ,'with_items'   => true
             ,'limit' => $get_limit
         ];
@@ -124,7 +136,7 @@ switch ($mode) {
                 if (isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
                     for ($i = 0; $i < $count; $i++) {
-                        $cbvideo->collection->remove_item($_POST['check_item'][$i], $cid);
+                        $cbvideo->collection->remove_item($_POST['check_item'][$i], $collection_id);
                     }
                     $eh->flush();
                     e(lang('selected_items_removed', 'videos'), 'm');
@@ -135,8 +147,8 @@ switch ($mode) {
                 if (isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
                     for ($i = 0; $i < $count; $i++) {
-                        $cbphoto->collection->remove_item($_POST['check_item'][$i], $cid);
-                        $cbphoto->make_photo_orphan($cid, $_POST['check_item'][$i]);
+                        $cbphoto->collection->remove_item($_POST['check_item'][$i], $collection_id);
+                        $cbphoto->make_photo_orphan($collection_id, $_POST['check_item'][$i]);
                     }
                     $eh->flush();
                     e(lang('selected_items_removed', 'photos'), 'm');
@@ -147,7 +159,7 @@ switch ($mode) {
         //Pagination
         $total_pages = count_pages($total_rows, COLLIP);
         $pages->paginate($total_pages, $page);
-        $collection = $cbcollection->get_collection($cid);
+        $collection = $cbcollection->get_collection($collection_id);
 
         assign('c', $collection);
         assign('objs', $objs);
@@ -159,8 +171,8 @@ switch ($mode) {
     case 'favorites':
     case 'fav':
         if (isset($_GET['remove_fav_collection'])) {
-            $cid = mysql_clean($_GET['remove_fav_collection']);
-            $cbcollection->action->remove_favorite($cid);
+            $collection_id = mysql_clean($_GET['remove_fav_collection']);
+            $cbcollection->action->remove_favorite($collection_id);
         }
 
         if (isset($_POST['remove_selected_favs']) && is_array($_POST['check_col'])) {

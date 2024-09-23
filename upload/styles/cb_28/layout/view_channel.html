@@ -7,272 +7,271 @@
 {$total_photos = $user.total_photos}
 
 {if $uservideos}
-	{$mainVideo = userMainVideo($uservideos)}
-	{$first_video = $cbvid->get_video($mainVideo)}
+    {$mainVideo = userMainVideo($uservideos)}
+    {$first_video = $cbvid->get_video($mainVideo)}
 {/if}
 
 <div id="main" class="container clearfix">
-	<div class="clearfix">
-		{include file="$style_dir/blocks/view_channel/channel_header.html"}
-	</div>
-	{if user_id() && $user.userid != user_id()}
-	<div class="clearfix report-block" id="report-user-form" style="display:none;">
-		{show_flag_form id=$user.userid type=user}	
-	</div>
-	{/if}
-	<div class="clearfix">
-		<section id="content" class="clearfix">
-			{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes' && $uservideos}
-			<div class="clearfix player-holder">
-				<div id="cb_player" class="clearfix cb_player">
-					{show_player vdetails=$first_video}
-				</div>
-			</div>
-			{/if}
-			<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
-			<div class="channel-tabs flat-tabs clearfix">
-				<ul class="clearfix nav nav-tabs">
-					<li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} class="active"{/if}>
-						<a href="#user-info" data-toggle="tab">{lang code='info'}</a>
-					</li>
-					{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
-					<li class="active">
-						<a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
-					</li>
-					{/if}
-					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
-					<li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' || !isSectionEnabled('videos')} class="active"{/if}>
-						<a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
-					</li>
-					<li>
-					{/if}
-					{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
-					<li>
-						<a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
-					</li>
-					{/if}
-					{if config('enable_comments_channel') == 'yes'}
-					<li>
-						<a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
-					</li>
-					{/if}
-				</ul>
-				<div class="tab-content clearfix">
-					<div class="tab-pane fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} active{/if}" id="user-info">
-						<div class="clearfix watch-vid-details">
-							<h2>{lang code='user_activity'}</h2>
-							<ul class="clearfix desc-list">
-								{if $p.profile_title}
-								<li>
-									<strong>{lang code='title'}</strong> : {User::getClean($p.profile_title)}
-								</li>
-								{/if}
-								{if $p.profile_desc}
-								<li>
-									<strong>{lang code='description'}</strong> : {User::getClean($p.profile_desc)}
-								</li>
-								{/if}
-								<li>
-									<strong>{lang code='joined'}</strong> : {$user.doj|niceTime}
-								</li>
-								<li>
-									<strong>{lang code='user_last_login'}</strong> : {$user.last_logged|niceTime}
-								</li>
-								{if config('enable_user_status') == 'yes'}
-								<li>
-									<strong>{lang code='online_status'}</strong> :
-									{if $userquery->isOnline($user.last_active,$p.online_status)}
-										<span style="color:#060;">{lang code='online'}</span>
-									{else}
-										<span style="color:#ed0000;">{lang code='offline'}</span>
-									{/if}
-								</li>
-								{/if}
-							</ul>
+    <div class="clearfix">
+        {include file="$style_dir/blocks/view_channel/channel_header.html"}
+    </div>
+    {if user_id() && $user.userid != user_id()}
+        <div class="clearfix report-block" id="report-user-form" style="display:none;">
+            {show_flag_form id=$user.userid type=user}
+        </div>
+    {/if}
+    <div class="clearfix">
+        <section id="content" class="clearfix">
+            {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes' && $uservideos}
+                <div class="clearfix player-holder">
+                    <div id="cb_player" class="clearfix cb_player">
+                        {show_player vdetails=$first_video}
+                    </div>
+                </div>
+            {/if}
+            <div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
+            <div class="channel-tabs flat-tabs clearfix">
+                <ul class="clearfix nav nav-tabs">
+                    <li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} class="active"{/if}>
+                        <a href="#user-info" data-toggle="tab">{lang code='info'}</a>
+                    </li>
+                    {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+                        <li class="active">
+                            <a href="#user-videos" data-toggle="tab">{lang code='videos'}</a>
+                        </li>
+                    {/if}
+                    {if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+                    <li{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' || !isSectionEnabled('videos')} class="active"{/if}>
+                        <a href="#user-photos" data-toggle="tab">{lang code='photos'}</a>
+                    </li>
+                    <li>
+                        {/if}
+                        {if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
+                    <li>
+                        <a href="#user-playlist" data-toggle="tab">{lang code='playlists'}</a>
+                    </li>
+                    {/if}
+                    {if config('enable_comments_channel') == 'yes'}
+                        <li>
+                            <a href="#user-comments" data-toggle="tab">{lang code='comments'} (<span id="comment_count">{$user.comments_count}</span>)</a>
+                        </li>
+                    {/if}
+                </ul>
+                <div class="tab-content clearfix">
+                    <div class="tab-pane fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes' && User::getInstance($user.userid)->get('show_my_photos') != 'yes'} active{/if}" id="user-info">
+                        <div class="clearfix watch-vid-details">
+                            <h2>{lang code='user_activity'}</h2>
+                            <ul class="clearfix desc-list">
+                                {if $p.profile_title}
+                                    <li>
+                                        <strong>{lang code='title'}</strong> : {User::getClean($p.profile_title)}
+                                    </li>
+                                {/if}
+                                {if $p.profile_desc}
+                                    <li>
+                                        <strong>{lang code='description'}</strong> : {User::getClean($p.profile_desc)}
+                                    </li>
+                                {/if}
+                                <li>
+                                    <strong>{lang code='joined'}</strong> : {$user.doj|niceTime}
+                                </li>
+                                <li>
+                                    <strong>{lang code='user_last_login'}</strong> : {$user.last_logged|niceTime}
+                                </li>
+                                {if config('enable_user_status') == 'yes'}
+                                    <li>
+                                        <strong>{lang code='online_status'}</strong> :
+                                        {if $userquery->isOnline($user.last_active,$p.online_status)}
+                                            <span style="color:#060;">{lang code='online'}</span>
+                                        {else}
+                                            <span style="color:#ed0000;">{lang code='offline'}</span>
+                                        {/if}
+                                    </li>
+                                {/if}
+                            </ul>
 
-							{if $field_group.channel_view != 'no'}
-								{foreach from=$channel_profile_fields item=field_group name=profile_groups}
-									{if count($field_group.fields) > 0 || ($field_group.group_id=='profile_location' && config('enable_country')=='yes') || ($field_group.group_id=='profile_basic_info' && ($p.show_dob!='no' || config('enable_user_category')=='yes') ) }
-									<div class="clearfix">
-										<h2>{display_clean($field_group.group_name)}</h2>
-										<ul class="clearfix desc-list">
-											{if $field_group.group_id=='profile_location' && config('enable_country')=='yes'}
-											<li>
-												<strong>{lang code='country'}</strong> : {$user.country|country}
-											</li>
-											{/if}
+                            {if $field_group.channel_view != 'no'}
+                                {foreach from=$channel_profile_fields item=field_group name=profile_groups}
+                                    {if count($field_group.fields) > 0 || ($field_group.group_id=='profile_location' && config('enable_country')=='yes') || ($field_group.group_id=='profile_basic_info' && ($p.show_dob!='no' || config('enable_user_category')=='yes') ) }
+                                        <div class="clearfix">
+                                            <h2>{display_clean($field_group.group_name)}</h2>
+                                            <ul class="clearfix desc-list">
+                                                {if $field_group.group_id=='profile_location' && config('enable_country')=='yes'}
+                                                    <li>
+                                                        <strong>{lang code='country'}</strong> : {$user.country|country}
+                                                    </li>
+                                                {/if}
 
-											{foreach from=$field_group.fields item=field}
-												{if is_string($field.value) && empty(trim($field.value))}
-													{continue}
-												{/if}
-												{if $field.auto_view=='yes' && $field.value}
-												<li>
-													{if !in_array($field.type, ['textarea', 'text', 'textfield', 'hidden'])}
-														<strong>{$field.title}</strong> : {input_value input=$field}
-													{else}
-														{if $field.id == 'profile_tags'}
-														<strong class="pull-left">{$field.title} : </strong>
-														<input type="hidden" id="profile_tags" value="{User::getClean($field.value)}">
-														<ul id="list_tags_profile" style="border: 0;"></ul>
-														{else}
-														<strong>{$field.title}</strong> : {User::getClean($field.value)}
-														{/if}
-													{/if}
-												</li>
-												{/if}
-											{/foreach}
+                                                {foreach from=$field_group.fields item=field}
+                                                    {if is_string($field.value) && empty(trim($field.value))}
+                                                        {continue}
+                                                    {/if}
+                                                    {if $field.auto_view=='yes' && $field.value}
+                                                        <li>
+                                                            {if !in_array($field.type, ['textarea', 'text', 'textfield', 'hidden'])}
+                                                                <strong>{$field.title}</strong>
+                                                                : {input_value input=$field}
+                                                            {else}
+                                                                {if $field.id == 'profile_tags'}
+                                                                    <strong class="pull-left">{$field.title} : </strong>
+                                                                    <input type="hidden" id="profile_tags" value="{User::getClean($field.value)}">
+                                                                    <ul id="list_tags_profile" style="border: 0;"></ul>
+                                                                {else}
+                                                                    <strong>{$field.title}</strong>
+                                                                    : {User::getClean($field.value)}
+                                                                {/if}
+                                                            {/if}
+                                                        </li>
+                                                    {/if}
+                                                {/foreach}
 
-											{if $field_group.group_id=='profile_basic_info'}
-												{if $p.show_dob!='no'}
-												<li>
-													<strong>{lang code='user_date_of_birth'}</strong> : {cbdate(NULL, $user.dob)}
-												</li>
-												{/if}
-												{if config('enable_user_category')=='yes'}
-													<li><strong>Category : </strong>{$user_category}</li>
-												{/if}
-											{/if}
-										</ul>
-									</div>
-									{/if}
-								{/foreach}
-							{/if}
-						</div>
-					</div>
+                                                {if $field_group.group_id=='profile_basic_info'}
+                                                    {if $p.show_dob!='no'}
+                                                        <li>
+                                                            <strong>{lang code='user_date_of_birth'}</strong> : {cbdate(NULL, $user.dob)}
+                                                        </li>
+                                                    {/if}
+                                                    {if config('enable_user_category')=='yes'}
+                                                        <li><strong>Category : </strong>{$user_category}</li>
+                                                    {/if}
+                                                {/if}
+                                            </ul>
+                                        </div>
+                                    {/if}
+                                {/foreach}
+                            {/if}
+                        </div>
+                    </div>
 
-					{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
-					<div class="tab-pane videos fade in clearfix active" id="user-videos">
-							{if $uservideos}
-						<div class="clearfix row user_vids">
-							<div id="usr-vids" class="clearfix">
-								{foreach $uservideos as $video}
-								<div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
-									{include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
-								</div>
-								{/foreach}
-							</div>
-								{if $total_videos > 9 && count($uservideos) == 9 }
-							<div class="clearfix text-center">
-								<button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
-							</div>
-								{/if}
-						</div>
-							{else}
-						<div class="well well-info">{lang code='no_results_found'}</div>
-							{/if}
-					</div>
-					{/if}
+                    {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+                        <div class="tab-pane videos fade in clearfix active" id="user-videos">
+                            {if $uservideos}
+                                <div class="clearfix row user_vids">
+                                    <div id="usr-vids" class="clearfix">
+                                        {foreach $uservideos as $video}
+                                            <div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                                {include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
+                                            </div>
+                                        {/foreach}
+                                    </div>
+                                    {if $total_videos > 9 && count($uservideos) == 9 }
+                                        <div class="clearfix text-center">
+                                            <button id="more-view-channel" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
+                                        </div>
+                                    {/if}
+                                </div>
+                            {else}
+                                <div class="well well-info">{lang code='no_results_found'}</div>
+                            {/if}
+                        </div>
+                    {/if}
 
-					{if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
-					<div class="tab-pane photos fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes'} active{/if}" id="user-photos">
-						{if $photos}
-							<div id="usr-photos" class="clearfix row user_photos">
-								{foreach from=$photos item=p_list}
-									<div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
-										{include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
-									</div>
-								{/foreach}
-								{if $user.total_photos > 9 && count($photos) == 9}
-									<div class="clearfix text-center">
-										<button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
-									</div>
-								{/if}
-							</div>
-						{else}
-							<div class="well well-info">{lang code='no_results_found'}</div>
-						{/if}
-					</div>
-					{/if}
+                    {if isSectionEnabled('photos') && User::getInstance($user.userid)->get('show_my_photos') == 'yes'}
+                        <div class="tab-pane photos fade in clearfix{if User::getInstance($user.userid)->get('show_my_videos') != 'yes'} active{/if}" id="user-photos">
+                            {if $photos}
+                                <div id="usr-photos" class="clearfix row user_photos">
+                                    {foreach from=$photos item=p_list}
+                                        <div class="item-photo col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                            {include file="$style_dir/blocks/photo.html" photo=$p_list display_type = "default_photo"}
+                                        </div>
+                                    {/foreach}
+                                    {if $user.total_photos > 9 && count($photos) == 9}
+                                        <div class="clearfix text-center">
+                                            <button id="more-channel-photos" class="btn btn-loadmore" dataLimit="9" dataHit="2">{lang code='load_more'}</button>
+                                        </div>
+                                    {/if}
+                                </div>
+                            {else}
+                                <div class="well well-info">{lang code='no_results_found'}</div>
+                            {/if}
+                        </div>
+                    {/if}
 
-					{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
-					<div class="tab-pane playlist fade in clearfix" id="user-playlist">
-						{$playlists = $cbvid->action->get_playlists(["user"=>$user.userid,"order"=>"date_added DESC","limit"=>""])}
-						
-						{if $playlists}
-						<div class="clearfix row ch-playlists">
-						
-						{foreach $playlists as $playlist}
-							<div class="playlist-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
-							{include file="$style_dir/blocks/playlist/playlist-block.html"}
-							</div>
-						{/foreach}
-						
-						</div>
-						{else}
-							<div class="well well-info">{lang code='no_playlists'}</div>
-						{/if}
-					</div>
-					{/if}
+                    {if config('videosSection') == 'yes' && config('playlistsSection') == 'yes'}
+                        <div class="tab-pane playlist fade in clearfix" id="user-playlist">
+                            {$playlists = Playlist::getInstance()->getAll(["userid"=>$user.userid,"order"=>"date_added DESC"])}
+                            {if $playlists}
+                                <div class="clearfix row ch-playlists">
+                                    {foreach $playlists as $playlist}
+                                        <div class="playlist-item col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                            {include file="$style_dir/blocks/playlist/playlist-block.html"}
+                                        </div>
+                                    {/foreach}
+                                </div>
+                            {else}
+                                <div class="well well-info">{lang code='no_playlists'}</div>
+                            {/if}
+                        </div>
+                    {/if}
 
-					{if config('enable_comments_channel') == 'yes'}
-						<div class="tab-pane comment fade in clearfix" id="user-comments">
-							{if User::getInstance($user.userid)->get('allow_comments') == 'yes'}
-							<div class="collectionComments addComment">
-								<div id="bloc-comment">
-									{include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
+                    {if config('enable_comments_channel') == 'yes'}
+                        <div class="tab-pane comment fade in clearfix" id="user-comments">
+                            {if User::getInstance($user.userid)->get('allow_comments') == 'yes'}
+                                <div class="collectionComments addComment">
+                                    <div id="bloc-comment">
+                                        {include file="$style_dir/blocks/comments/add_comment.html" id=$user.userid type=Comments::$libelle_type_channel}
 
-									<div class="userComments">
-										<ul id="userCommentsList" style="margin-left:-40px;"></ul>
-									</div>
-								</div>
-							</div>
-							{else}
-							<span class="well well-info btn-block">{lang('comment_disabled_for',strtolower(lang('channel')))}</span>
-							{/if}
-						</div>
-					{/if}
-				</div>
-			</div>
-		</section>
-		<aside id="sidebar">
-			{assign var=userFeeds value=$cbfeeds->getUserFeeds($user)}
-			{if $userFeeds && user_id()}
-			<h2>{lang code="user_activity"}</h2>
-			<div id="userFeeds" class="user-activities clearfix sidebar-items">
-				{foreach from=$userFeeds item=userFeed}
-					{include file="$style_dir/blocks/feed.html" feed=$userFeed}
-				{/foreach}
-			</div>
-			{/if}
+                                        <div class="userComments">
+                                            <ul id="userCommentsList" style="margin-left:-40px;"></ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            {else}
+                                <span class="well well-info btn-block">{lang('comment_disabled_for',strtolower(lang('channel')))}</span>
+                            {/if}
+                        </div>
+                    {/if}
+                </div>
+            </div>
+        </section>
+        <aside id="sidebar">
+            {assign var=userFeeds value=$cbfeeds->getUserFeeds($user)}
+            {if $userFeeds && user_id()}
+                <h2>{lang code="user_activity"}</h2>
+                <div id="userFeeds" class="user-activities clearfix sidebar-items">
+                    {foreach from=$userFeeds item=userFeed}
+                        {include file="$style_dir/blocks/feed.html" feed=$userFeed}
+                    {/foreach}
+                </div>
+            {/if}
 
-			{if $popular_users}
-			<h2>{lang code="popular_users"}</h2>
-			<div class="clearfix sidebar-channels">
-				{foreach $popular_users as $popular}
-				{if $popular.username == $smarty.get.user} 
-					{continue}
-				{/if}
-				<div class="clearfix channel-item">
-					<a href="{User::getInstance($popular.userid)->getLink('channel')}" class="avatar">
-						<img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle"/>
-					</a>
-					<div class="channel-info">
-						<h3><a href="{User::getInstance($popular.userid)->getLink('channel')}">{display_clean(User::getInstance($popular.userid)->get('username'))}</a></h3>
-						<div class="clearfix views-videos">
-							<span>{User::getInstance($popular.userid)->get('profile_hits')|number_format} {lang code='views'}</span>
-							{if isSectionEnabled('videos') && User::getInstance($popular.userid)->get('show_my_videos') == 'yes'}
-							<span>{User::getInstance($popular.userid)->get('total_videos')|number_format} {lang code='videos'}</span>
-							{/if}
-						</div>
-					</div>
-				</div>
-				{/foreach}
-			</div>
-			{/if}
-		</aside>
-	</div>
-	
-		
+            {if $popular_users}
+                <h2>{lang code="popular_users"}</h2>
+                <div class="clearfix sidebar-channels">
+                    {foreach $popular_users as $popular}
+                        {if $popular.username == $smarty.get.user}
+                            {continue}
+                        {/if}
+                        <div class="clearfix channel-item">
+                            <a href="{User::getInstance($popular.userid)->getLink('channel')}" class="avatar">
+                                <img src="{$userquery->getuserthumb($popular,'small')}" width="50" height="50" class="img-circle"/>
+                            </a>
+                            <div class="channel-info">
+                                <h3><a href="{User::getInstance($popular.userid)->getLink('channel')}">{display_clean(User::getInstance($popular.userid)->get('username'))}</a></h3>
+                                <div class="clearfix views-videos">
+                                    <span>{User::getInstance($popular.userid)->get('profile_hits')|number_format} {lang code='views'}</span>
+                                    {if isSectionEnabled('videos') && User::getInstance($popular.userid)->get('show_my_videos') == 'yes'}
+                                        <span>{User::getInstance($popular.userid)->get('total_videos')|number_format} {lang code='videos'}</span>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    {/foreach}
+                </div>
+            {/if}
+        </aside>
+    </div>
+
+
 </div>
 <script>
-	var channelId = "{$user['userid']}";
-	var totalVids = "{$total_videos}";
-	var totalPhotos = "{$total_photos}";
-	var loadMoreLang = "{$loadMoreLang}";
-	var libelle_type_channel = "{Comments::$libelle_type_channel}";
-	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
-	var max_file_size ="{config('max_upload_size')}Mb";
-	var photo_extensions = "{config('allowed_photo_types')}";
+    var channelId = "{$user['userid']}";
+    var totalVids = "{$total_videos}";
+    var totalPhotos = "{$total_photos}";
+    var loadMoreLang = "{$loadMoreLang}";
+    var libelle_type_channel = "{Comments::$libelle_type_channel}";
+    var chunk_upload = "{config('enable_chunk_upload') == 'yes'}";
+    var max_upload_size = "{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
+    var max_file_size = "{config('max_upload_size')}Mb";
+    var photo_extensions = "{config('allowed_photo_types')}";
 </script>
