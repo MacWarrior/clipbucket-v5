@@ -376,6 +376,35 @@ class ClipBucket
             ];
         }
 
+        global $cbplugin;
+        $plugins_available = count($cbplugin->getNewPlugins());
+        $plugins_installed = count($cbplugin->getInstalledPlugins());
+        $plugins_count = $plugins_available + $plugins_installed;
+        if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
+            $menu_configuration['sub'][] = [
+                'title' => lang('manage_x', strtolower(lang('plugins'))),
+                'url'   => DirPath::getUrl('admin_area') . 'plugin_manager.php'
+            ];
+        }
+
+        if ($per['manage_template_access'] == 'yes') {
+            global $cbtpl, $cbplayer;
+            if (count($cbtpl->get_templates()) > 1 || in_dev()) {
+                $menu_configuration['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('templates'))),
+                    'url'   => DirPath::getUrl('admin_area') . 'templates.php'
+                ];
+            }
+
+
+            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
+                $menu_configuration['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('players')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
+                ];
+            }
+        }
+
         $this->addMenuAdmin($menu_configuration, 2);
 
         if (NEED_UPDATE) {
@@ -387,13 +416,6 @@ class ClipBucket
                 , 'class' => 'glyphicon glyphicon-stats'
                 , 'sub'   => []
             ];
-
-            $menu_general['sub'][] = [
-                'title' => 'Reports &amp; Stats'
-                , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
-            ];
-
-
 
             if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' || config('enable_comments_collection') == 'yes') {
                 $menu_general['sub'][] = [
@@ -465,54 +487,6 @@ class ClipBucket
             $this->addMenuAdmin($menu_ad, 30);
         }
 
-        if ($per['manage_template_access'] == 'yes') {
-            $sub = [];
-            global $cbtpl, $cbplayer;
-            if( count($cbtpl->get_templates()) > 1 || in_dev() ){
-                $sub[] = [
-                    'title' => lang('manage_x', strtolower(lang('templates')))
-                    , 'url' => DirPath::getUrl('admin_area') . 'templates.php'
-                ];
-            }
-
-
-            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
-                $sub[] = [
-                    'title' => lang('manage_x', strtolower(lang('players')))
-                    , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
-                ];
-            }
-
-            $menu_template = [
-                'title'   => 'Templates And Players'
-                , 'class' => 'glyphicon glyphicon-play-circle'
-                , 'sub'   => $sub
-            ];
-
-            $this->addMenuAdmin($menu_template, 40);
-        }
-
-        global $cbplugin;
-        $plugins_available = count($cbplugin->getNewPlugins());
-        $plugins_installed = count($cbplugin->getInstalledPlugins());
-        $plugins_count = $plugins_available + $plugins_installed;
-        if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
-            $menu_plugin = [
-                'title'   => lang('manage_x', strtolower(lang('plugins')))
-                , 'class' => 'glyphicon glyphicon-tasks'
-                , 'sub'   => [
-                    [
-                        'title' => lang('manage_x', strtolower(lang('plugins')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'
-                    ]
-                ]
-            ];
-
-            $this->addMenuAdmin($menu_plugin, 50);
-        }
-
-
-
         if ($per['tool_box'] == 'yes') {
             $menu_tool = [
                 'title'   => lang('tool_box')
@@ -563,6 +537,11 @@ class ClipBucket
                     , 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'
                 ];
             }
+
+            $menu_tool['sub'][] = [
+                'title' => 'Reports &amp; Stats'
+                , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
+            ];
 
             $this->addMenuAdmin($menu_tool, 60);
         }
