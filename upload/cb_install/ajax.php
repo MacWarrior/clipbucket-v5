@@ -68,7 +68,7 @@ if ($mode == 'dataimport' || !empty($result['err'])) {
     die(json_encode($result));
 }
 
-if ($mode == 'adminsettings') {
+if ($mode == 'sitesettings') {
 
     $step = $_POST['step'];
     $files = [

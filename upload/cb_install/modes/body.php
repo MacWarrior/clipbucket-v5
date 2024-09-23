@@ -8,6 +8,7 @@
     <script type="text/javascript" src="./functions.js"></script>
     <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
     <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/vendor/fortawesome/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="top clearfix">
@@ -29,8 +30,8 @@
                 <li <?php echo selected('permission'); ?>> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?><span></span></li>
                 <li <?php echo selected('database'); ?>> <?php echo($has_translation ? lang('database') : 'Database'); ?><span></span></li>
                 <li <?php echo selected('dataimport'); ?>> <?php echo($has_translation ? lang('data_import') : 'Data import'); ?><span></span></li>
-                <li <?php echo selected('adminsettings'); ?>> <?php echo($has_translation ? lang('admin_setting') : 'Admin Settings'); ?><span></span></li>
                 <li <?php echo selected('sitesettings'); ?>> <?php echo($has_translation ? lang('site_setting') : 'Site Settings'); ?><span></span></li>
+                <li <?php echo selected('adminsettings'); ?>> <?php echo($has_translation ? lang('admin_account') : 'Admin account'); ?><span></span></li>
                 <li <?php echo selected('finish'); ?>> <?php echo($has_translation ? lang('finish') : 'Finish'); ?><span></span></li>
             </ul>
         </div>
