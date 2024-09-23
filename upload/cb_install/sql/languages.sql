@@ -1273,4 +1273,5 @@ VALUES ('admin_setting'),
        ('enable_channel_page'),
        ('disable_channel'),
        ('admin_account'),
-       ('timezone_not_corresponding');
+       ('timezone_not_corresponding'),
+       ('will_be_upload_into_collection');
