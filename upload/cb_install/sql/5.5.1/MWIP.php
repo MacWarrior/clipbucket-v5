@@ -27,8 +27,7 @@ class MWIP extends \Migration
             'en'=>'Allow photo upload'
         ]);
 
-        self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = \'no\' ');
-        self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = \'yes\' WHERE user_level_id = 2 ');
+        self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = \'no\' WHERE user_level_id = 6 ');
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}user_permissions` (`permission_type`, `permission_name`, `permission_code`, `permission_desc`, `permission_default`) 
             VALUES ( 2, \'Allow Photo Upload\', \'allow_photo_upload\', \'Allow user to upload photos\', \'yes\')';
