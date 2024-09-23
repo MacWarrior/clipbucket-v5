@@ -163,7 +163,6 @@
                 {if config('enable_sub_collection')}
                     {$cond['parent_id'] = $c.collection_id}
                 {/if}
-                {$collections = $cbcollection->get_collections($cond)}
                 {if $collections}
                     <h2>{lang code="top_collections"}</h2>
                     <div class="clearfix sidebar-items collections-grid">
