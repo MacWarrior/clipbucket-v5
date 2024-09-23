@@ -6,6 +6,13 @@
 
 <div class="uploaderContainer clearfix" id="uploaderContainer">
     <div class="upload-area col-md-12">
+
+        {if $selected_collection}
+            <div class="alert alert-info" role="alert">
+                {ucfirst(lang('will_be_upload_into_collection', [ strtolower(lang('videos')), display_clean($selected_collection.collection_name)]))}
+            </div>
+        {/if}
+
         <div class="fileUploaderForm">
             <div class="dragDropContainer" id="dragDrop">
                 <span class="upload-logo"></span>
@@ -112,7 +119,7 @@
                                     {$formObj->createField($field)}
                                 {/if}
                                 </div>
-                            {/foreach}    
+                            {/foreach}
                         </div>
                     </div>
                     {ANCHOR place="after_upload_form_custom_fields"}
@@ -140,7 +147,7 @@
                                 {$formObj->createField($field)}
                             {/if}
                             </div>
-                        {/foreach}    
+                        {/foreach}
                     </div>
                 </div>
                 {ANCHOR place="after_upload_form_location_fields"}

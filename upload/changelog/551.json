@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"140",
+  "revision":"141",
   "status":"dev",
   "detail":[
     {
@@ -102,6 +102,7 @@
         ,"Implement option to disable homepage sidebar"
         ,"Implement video views history display"
         ,"Implement option to disable user channel"
+        ,"Implement add more to video collections"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
