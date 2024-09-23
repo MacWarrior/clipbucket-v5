@@ -77,4 +77,7 @@
 	var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
 	var pourcent_completed = '{$pourcent_completed}';
 	var cancel_uploading = '{$cancel_uploading}';
+	{if $selected_collection}
+		var collection_id = '{$selected_collection.collection_id}';
+	{/if}
 </script>

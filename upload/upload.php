@@ -8,6 +8,11 @@ userquery::getInstance()->logincheck('allow_video_upload', true);
 
 subtitle('upload');
 
+if (isset($_GET['collection'])) {
+    $selected_collection = unserialize(base64_decode($_GET['collection']));
+    assign('selected_collection', Collection::getInstance()->getOne(['collection_id'=>$selected_collection]));
+}
+
 if (empty(Upload::getInstance()->get_upload_options())) {
     e(lang('video_upload_disabled'));
     ClipBucket::getInstance()->show_page = false;
