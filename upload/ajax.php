@@ -35,11 +35,11 @@ if (!empty($mode)) {
             switch ($inner_mode) {
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
-                    $play_arr = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
-                    $results = $cbvid->action->get_playlists($play_arr);
+                    $play_arr = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
+                    $results = Playlist::getInstance()->getAll($play_arr);
                     $next_limit = $limit + $limit;
-                    $play_arr_next = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
-                    $playlist_next = $cbvid->action->get_playlists($play_arr_next);
+                    $play_arr_next = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
+                    $playlist_next = Playlist::getInstance()->getAll($play_arr_next);
                     if ($total == $next_limit || $total < $next_limit) {
                         $count_next = 0;
                     } else {

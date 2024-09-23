@@ -621,9 +621,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
                             FROM '.cb_sql_table('timezones').'
                             ORDER BY timezones.timezone';
     $rs = Clipbucket_db::getInstance()->_select($query);
-    foreach ($rs as $timezone) {
-        $allTimezone[] = $timezone['timezone'];
-    }
+    $allTimezone = array_column($rs, 'timezone');
 }
 assign('allTimezone', $allTimezone);
 
