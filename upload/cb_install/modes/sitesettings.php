@@ -1,38 +1,11 @@
 <?php
-//Lets just save admin settings so we can move forward
-$pass = pass_code(post('password'), 1);
 
-Clipbucket_db::getInstance()->update(
-    tbl('users'),
-    ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip'],
-    [post('username'), $pass, post('email'), now(), 1, Network::get_remote_ip(), Network::get_remote_ip()]
-    , 'userid=1'
-);
-
-if (in_dev()) {
-    require_once DirPath::get('vendor') . 'autoload.php';
-    require_once DirPath::get('classes') . 'DiscordLog.php';
-    require_once DirPath::get('classes') . 'update.class.php';
-    require_once DirPath::get('includes') . 'clipbucket.php';
-    require_once DirPath::get('classes') . 'system.class.php';
-
-    //clean lock
-    if (conv_lock_exists()) {
-        for ($i = 0; $i < config('max_conversion'); $i++) {
-            if (file_exists(DirPath::get('temp') . 'conv_lock' . $i . '.loc')) {
-                unlink(DirPath::get('temp') . 'conv_lock' . $i . '.loc');
-            }
-        }
-    }
-    //launch tool clean
-    $tool = AdminTool::getToolByCode('clean_orphan_files');
-    if (!empty($tool)) {
-        AdminTool::launchCli($tool['id_tool']);
-    }
+$baseurl = dirname(GetServerURL());
+if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
+    $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
 }
+//Lets just save admin settings so we can move forward
 
-//Login user
-userquery::getInstance()->login_user(post('username'), post('password'))
 ?>
 
 <div class="nav_des clearfix">
@@ -71,10 +44,37 @@ userquery::getInstance()->login_user(post('username'), post('password'))
                     <?php echo lang('website_url_hint'); ?>
                 </p>
             </div>
-
+            <div class="field">
+                <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
+                <select name="language" id="language" class="form-control">
+                    <?php foreach (Language::getInstance()->get_langs() as $lang) {
+                        echo '<option value="'.$lang['language_id'].'">'.$lang['language_name'].'</option>';
+                    } ?>
+                </select>
+            </div>
+            <?php $arr = [];
+            if (!System::isDateTimeSynchro($arr)) {
+                $query = /** @lang MySQL */'SELECT timezones.timezone FROM '.cb_sql_table('timezones').' ORDER BY timezones.timezone';
+                $rs = Clipbucket_db::getInstance()->_select($query);
+                $allTimezone = array_column($rs, 'timezone');?>
+                <div class="field">
+                    <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
+                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
+                        <option value=""></option>
+                        <?php foreach ($allTimezone as $timezone) { ?>
+                            <option value="<?php echo $timezone ?>">
+                                <?php echo $timezone ?>
+                            </option>
+                      <?php  } ?>
+                    </select>
+                    <div class="spinner-content" id="spinner-content" style="display: none;">
+                        <p class="fa-spinner fa fa-spin animate-spin"></p>
+                    </div>
+                </div>
+            <?php } ?>
             <br/>
-            <input type="hidden" name="mode" value="finish"/>
-            <?php button(lang('save_continue'), ' onclick="$(\'#installation\').submit()" '); ?>
+            <input type="hidden" name="mode" value="adminsettings"/>
+            <button class="btn btn-primary" onclick="$('#installation').submit()"><?php echo lang('save_continue'); ?></button>
         </form>
     </div>
 </div>

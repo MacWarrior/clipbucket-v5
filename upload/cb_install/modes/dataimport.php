@@ -24,7 +24,7 @@
 
         <?php show_hidden_inputs(); ?>
 
-        <input type="hidden" name="mode" value="adminsettings"/>
+        <input type="hidden" name="mode" value="sitesettings"/>
     </form>
 </div>
 
