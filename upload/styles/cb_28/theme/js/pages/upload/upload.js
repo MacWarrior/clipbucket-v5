@@ -284,11 +284,10 @@ $(document).ready(function(){
         $('.progress-container').removeClass('hidden');
 
         //give params for $_POST
-        var params = { unique_id : file.data.unique_id }
-        if (typeof collection_id != 'undefined') {
-            params.collection_id = file.data.collection_id;
-        }
-        $.extend(uploader.settings.params, params);
+        $.extend(uploader.settings.params, {
+            unique_id : file.data.unique_id
+            ,collection_id : file.data.collection_id
+        });
     });
 
     uploader.bind('FileUploaded', function(up, fileDetails, response) {
