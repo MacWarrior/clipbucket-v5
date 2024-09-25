@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"141",
+  "revision":"143",
   "status":"dev",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Implement video view history"
         ,"Implement video views history display"
         ,"Implement user level permission to disable channels"
+        ,"Implement photo upload permission"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -84,6 +85,7 @@
         ,"Fix collection uploader informations display"
         ,"Fix user storage running even when disabled"
         ,"Fix playlists management"
+        ,"Fix guest users permissions"
       ]
     },
     {
@@ -153,6 +155,7 @@
         ,"Fix recursives categories"
         ,"Fix video, collection & photo order display"
         ,"Fix collection selection on video page"
+        ,"Fix JS error on video upload"
       ]
     },
     {
@@ -213,6 +216,7 @@
         ,"Fix database configuration <i>(#426)</i>"
         ,"Fix Ubuntu&Debian git error in installation script"
         ,"Fix migrating from old revision"
+        ,"Fix guest users permissions"
       ]
     },
     {

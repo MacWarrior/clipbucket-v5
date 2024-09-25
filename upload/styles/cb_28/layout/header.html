@@ -2,33 +2,33 @@
 {$searchPage = $smarty.get.query}
 
 {if $currentPage == 'view_channel' || $currentPage == 'channels'}
-	{$currentPage = lang('channels')|lower}
-	{$pageType = lang('channels')}
-	{$toSearch = 'channels'}
+    {$currentPage = lang('channels')|lower}
+    {$pageType = lang('channels')}
+    {$toSearch = 'channels'}
 {elseif $currentPage == 'view_item' || $currentPage == 'photos'}
-	{$currentPage = lang('photos')|lower}
-	{$pageType = lang('photos')}
-	{$toSearch = 'photos'}
+    {$currentPage = lang('photos')|lower}
+    {$pageType = lang('photos')}
+    {$toSearch = 'photos'}
 {elseif $currentPage == 'collections' || $currentPage == 'view_collection'}
-	{$currentPage = lang('collections')|lower}
-	{$pageType = lang('collections')}
-	{$toSearch = 'collections'}
+    {$currentPage = lang('collections')|lower}
+    {$pageType = lang('collections')}
+    {$toSearch = 'collections'}
 {elseif $currentPage == 'watch_video' || $currentPage == 'videos'}
-	{$currentPage = lang('videos')|lower}
-	{$pageType = lang('videos')}
-	{$toSearch = 'videos'}
+    {$currentPage = lang('videos')|lower}
+    {$pageType = lang('videos')}
+    {$toSearch = 'videos'}
 {elseif $currentPage == 'list'}
-	{$currentPage = 'audios'}
-	{$pageType = lang('audios')}
-	{$toSearch = 'audios'}
+    {$currentPage = 'audios'}
+    {$pageType = lang('audios')}
+    {$toSearch = 'audios'}
 {else}
-	{if in_array($smarty.get.type|lower, array('videos','photos','collections','channels'))}
-		{$pageType = lang($smarty.get.type)}
-		{$toSearch = $smarty.get.type}
-	{else}
-		{$pageType = lang('videos')}
-		{$toSearch = 'videos'}
-	{/if}
+    {if in_array($smarty.get.type|lower, array('videos','photos','collections','channels'))}
+        {$pageType = lang($smarty.get.type)}
+        {$toSearch = $smarty.get.type}
+    {else}
+        {$pageType = lang('videos')}
+        {$toSearch = 'videos'}
+    {/if}
 {/if}
 
 {$vidMode = lang('videos')|lower}
@@ -36,204 +36,204 @@
 {$channelsMode = lang('channels')|lower}
 
 <header id="header" class="clearfix">
-	<nav class="navbar navbar-default">
-		<div class="container-fluid">
-			<div class="header-holder">
-				<div class="navbar-header clearfix">
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="header-holder">
+                <div class="navbar-header clearfix">
 
-					<button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">Menu<span class="icon-down-arrow"></span></button>
+                    <button class="navbar-toggle" data-toggle="collapse" data-target="#bs-collapse">Menu<span class="icon-down-arrow"></span></button>
 
-					{ANCHOR place="before_logo"}
-					<h1 class="logo no_select">
-						<a href="/">
-							<img alt="logo" src="{get_website_logo_path()}" class="img-responsive"/>
-						</a>
-					</h1>
-					{ANCHOR place="after_logo"}
+                    {ANCHOR place="before_logo"}
+                    <h1 class="logo no_select">
+                        <a href="/">
+                            <img alt="logo" src="{get_website_logo_path()}" class="img-responsive"/>
+                        </a>
+                    </h1>
+                    {ANCHOR place="after_logo"}
 
-					<a href="javascript:void(0);" class="btn-search-toggle btn visible-xs">
-						<i class="icon-search"></i>
-					</a>
-				</div>
+                    <a href="javascript:void(0);" class="btn-search-toggle btn visible-xs">
+                        <i class="icon-search"></i>
+                    </a>
+                </div>
 
-				<div class="collapse navbar-collapse" id="bs-collapse">
-					<div class="menu-holder">
-						<div class="col">
-							<nav class="main-links">
-								{$head_menu=cb_menu()}
-								<ul>
-									{ANCHOR place="before_menu_top"}
+                <div class="collapse navbar-collapse" id="bs-collapse">
+                    <div class="menu-holder">
+                        <div class="col">
+                            <nav class="main-links">
+                                {$head_menu=cb_menu()}
+                                <ul>
+                                    {ANCHOR place="before_menu_top"}
 
-									{foreach $head_menu as $menu}
-										{if $menu@iteration < 6}
-											{if $menu.this|lower == 'home'}
-												{continue}
-											{/if}
-											{if $menu.this == "home"}
-												{continue}
-											{/if}
-											{if $userquery->perm_check('view_'|cat:$menu.this, false, false, true)}
-									<li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
-											{/if}
-										{/if}
-									{/foreach}
+                                    {foreach $head_menu as $menu}
+                                        {if $menu@iteration < 6}
+                                            {if $menu.this|lower == 'home'}
+                                                {continue}
+                                            {/if}
+                                            {if $menu.this == "home"}
+                                                {continue}
+                                            {/if}
+                                            {if $userquery->perm_check('view_'|cat:$menu.this, false, false, true)}
+                                                <li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
+                                            {/if}
+                                        {/if}
+                                    {/foreach}
 
-									{ANCHOR place="after_menu_top"}
-								</ul>
-							</nav>
-						</div>
-						{$types_list = array()}
-						{foreach from=$Cbucket->search_types item=t key=stypes}
-							{if !$userquery->perm_check('view_'|cat:$stypes|lower, false, false, true)}
-								{continue}
-							{/if}
-							{$types_list[] = $stypes|lower}
-						{/foreach}
-						<div class="col btn-holder user_menu text-right">
-							{if count($types_list) > 0}
-							<div class="search">
-								<form class="search-form" action="{link name='search_result'}">
-									<div class="cbsearchtype">
-										<div class="search-drop">
-											<button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
-												<span class="search-type">{$pageType}</span>
-												<span class="icon-down-arrow"></span>
-											</button>
-											<ul class="dropdown-menu">
-												{foreach $types_list item=stype}
-													<li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype}class="active"{/if}>
-														<a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
-													</li>
-												{/foreach}
-												{ANCHOR place="inside_search"}
-											</ul>
-										</div>
-										<input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query"/>
-										<input type="hidden" name="type" class="type" value="{$toSearch}" id="type"/>
-										<button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
-									</div>
-								</form>
-							</div>
-							{/if}
-							<ul class="nav navbar-nav navbar-right right-menu">
-								{if user_id()}
-								{if (isSectionEnabled('videos') && !empty($Upload->get_upload_options())) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
-								<li class="dropdown upload_link">
-									<a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
-									<ul role="menu" class="dropdown-menu">
-										{if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
-										<li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
-										{/if}
-										{if isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
-										<li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
-										{/if}
-										{ANCHOR place="inside_upload"}
-									</ul>
-								</li>
-								{/if}
+                                    {ANCHOR place="after_menu_top"}
+                                </ul>
+                            </nav>
+                        </div>
+                        {$types_list = array()}
+                        {foreach from=$Cbucket->search_types item=t key=stypes}
+                            {if !$userquery->perm_check('view_'|cat:$stypes|lower, false, false, true)}
+                                {continue}
+                            {/if}
+                            {$types_list[] = $stypes|lower}
+                        {/foreach}
+                        <div class="col btn-holder user_menu text-right">
+                            {if count($types_list) > 0}
+                                <div class="search">
+                                    <form class="search-form" action="{link name='search_result'}">
+                                        <div class="cbsearchtype">
+                                            <div class="search-drop">
+                                                <button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
+                                                    <span class="search-type">{$pageType}</span>
+                                                    <span class="icon-down-arrow"></span>
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    {foreach $types_list item=stype}
+                                                        <li value="{$stypes}" {if $pageType == $stype || $currentPage == $stype}class="active"{/if}>
+                                                            <a class="s-types" href="#" valNow="{$stype}">{lang code ="{$stype}"}</a>
+                                                        </li>
+                                                    {/foreach}
+                                                    {ANCHOR place="inside_search"}
+                                                </ul>
+                                            </div>
+                                            <input type="text" class="form-control" name="query" placeholder="{lang code='search_keyword_feed'}" value="{'query'|get_form_val:true}" id="query"/>
+                                            <input type="hidden" name="type" class="type" value="{$toSearch}" id="type"/>
+                                            <button tabindex="-1" type="submit" name="cbsearch" id="cbsearch" class="btn btn-default btn-search icon-search"></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            {/if}
+                            <ul class="nav navbar-nav navbar-right right-menu">
+                                {if user_id()}
+                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options())) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
+                                        <li class="dropdown upload_link">
+                                            <a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
+                                            <ul role="menu" class="dropdown-menu">
+                                                {if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
+                                                    <li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
+                                                {/if}
+                                                {if has_access('allow_photo_upload',true,true) && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
+                                                    <li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
+                                                {/if}
+                                                {ANCHOR place="inside_upload"}
+                                            </ul>
+                                        </li>
+                                    {/if}
 
-								<li class="dropdown myaccount-dd">
-									<a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
-										<img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
-										<span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
-									</a>
-									<ul class="dropdown-menu">
-										{if has_access('admin_access')}
-										<li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
-										{/if}
-										<li><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
-										{if isSectionEnabled('videos')}
-										<li><a href="{link name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
-										{/if}
-										{if isSectionEnabled('photos')}
-										<li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
-										{/if}
-										{if isSectionEnabled('collections')}
-										<li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
-										{/if}
-										{if isSectionEnabled('playlists')}
-										<li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
-										{/if}
-										{if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
-										<li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
-										{/if}
-										{ANCHOR place="inside_user_menu"}
-										<li class="divider"></li>
-										<li><a href="{link name='logout'}">{lang code="logout"}</a></li>
-									</ul>
-								</li>
-								{else}
+                                    <li class="dropdown myaccount-dd">
+                                        <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
+                                            <img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
+                                            <span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            {if has_access('admin_access')}
+                                                <li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
+                                            {/if}
+                                            <li><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
+                                            {if isSectionEnabled('videos')}
+                                                <li><a href="{link name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
+                                            {/if}
+                                            {if isSectionEnabled('photos')}
+                                                <li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
+                                            {/if}
+                                            {if isSectionEnabled('collections')}
+                                                <li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
+                                            {/if}
+                                            {if isSectionEnabled('playlists')}
+                                                <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
+                                            {/if}
+                                            {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
+                                                <li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
+                                            {/if}
+                                            {ANCHOR place="inside_user_menu"}
+                                            <li class="divider"></li>
+                                            <li><a href="{link name='logout'}">{lang code="logout"}</a></li>
+                                        </ul>
+                                    </li>
+                                {else}
 
-								{if config('allow_registeration')}
-								<li class="navbar-sm-login-links">
-									<a class="btn btn-default btn-newacc" href="{link name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
-								</li>
-								{/if}
-								<li class="navbar-sm-login-links">
-									<a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
-								</li>
+                                    {if config('allow_registeration')}
+                                        <li class="navbar-sm-login-links">
+                                            <a class="btn btn-default btn-newacc" href="{link name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
+                                        </li>
+                                    {/if}
+                                    <li class="navbar-sm-login-links">
+                                        <a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
+                                    </li>
 
-								{/if}
-							</ul>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</nav>
+                                {/if}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
 </header>
 {include file="$style_dir/blocks/spinner.html" }
 <script>
-	$(document).ready(function(){
-		$(".cbsearchtype a").on({
-			click: function(e){
-				e.preventDefault();
-				let prent_li = $(this).parents();
-				let theNewVal = $(this).attr('valNow');
-				$('.type').val(theNewVal);
-				$('.cbsearchtype li').removeClass('active');
-				prent_li.addClass('active');
-			}
-		});
+    $(document).ready(function(){
+        $(".cbsearchtype a").on({
+            click: function(e){
+                e.preventDefault();
+                let prent_li = $(this).parents();
+                let theNewVal = $(this).attr('valNow');
+                $('.type').val(theNewVal);
+                $('.cbsearchtype li').removeClass('active');
+                prent_li.addClass('active');
+            }
+        });
 
-		$('.s-types').on("click", function(){
-			let text = $(this).html();
-			$('.search-type').html(text);
-		});
+        $('.s-types').on("click", function(){
+            let text = $(this).html();
+            $('.search-type').html(text);
+        });
 
-		$('#cbsearch').on("click", function(e){
-			e.preventDefault();
-			let searchQuery = $('#query').val();
-			let queryLen = searchQuery.length;
-			if (queryLen <= 2) {
-				let msg = '{lang code="search_too_short"}';
-				msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
-				_cb.throwHeadMsg('warning', msg, 3000, true);
-			} else {
-				$('.search-form').submit();
-			}
-		});
+        $('#cbsearch').on("click", function(e){
+            e.preventDefault();
+            let searchQuery = $('#query').val();
+            let queryLen = searchQuery.length;
+            if (queryLen <= 2) {
+                let msg = '{lang code="search_too_short"}';
+                msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
+                _cb.throwHeadMsg('warning', msg, 3000, true);
+            } else {
+                $('.search-form').submit();
+            }
+        });
 
-		window.addEventListener('resize', adaptRatioPlayer);
-	});
-	function adaptRatioPlayer(){
-		var div = document.querySelector('.player-holder');
+        window.addEventListener('resize', adaptRatioPlayer);
+    });
+    function adaptRatioPlayer(){
+        var div = document.querySelector('.player-holder');
 
-		if(div === null){
-			return;
-		}
+        if(div === null){
+            return;
+        }
 
-		const clean_class = div.className.replace(" fix_ratio ", "");
+        const clean_class = div.className.replace(" fix_ratio ", "");
 
-		const ratio_window = window.innerWidth / window.innerHeight;
-		const ratio_div = document.querySelector('.player-holder video').videoWidth / document.querySelector('.player-holder video').videoHeight;
+        const ratio_window = window.innerWidth / window.innerHeight;
+        const ratio_div = document.querySelector('.player-holder video').videoWidth / document.querySelector('.player-holder video').videoHeight;
 
-		div.style.aspectRatio = ratio_div;
+        div.style.aspectRatio = ratio_div;
 
-		if ( ratio_window > ratio_div) {
-			div.className = clean_class+' fix_ratio '
-		} else {
-			div.className = clean_class
-		}
-	}
+        if ( ratio_window > ratio_div) {
+            div.className = clean_class+' fix_ratio '
+        } else {
+            div.className = clean_class
+        }
+    }
 </script>

@@ -195,7 +195,9 @@ $(document).ready(function(){
             uploadedFiles[i].data.comment_voting = 'yes';
             uploadedFiles[i].data.allow_rating = 'yes';
             uploadedFiles[i].data.allow_embedding = 'yes';
-            uploadedFiles[i].data.collection_id = collection_id;
+            if (typeof collection_id != 'undefined') {
+                uploadedFiles[i].data.collection_id = collection_id;
+            }
             uploadedFiles[i].data['category[]'] = [get_default_cid];
             uploadedFiles[i].data.unique_id = (Math.random() + 1).toString(36).substring(7);
         }
@@ -282,7 +284,10 @@ $(document).ready(function(){
         $('.progress-container').removeClass('hidden');
 
         //give params for $_POST
-        $.extend(uploader.settings.params, { unique_id : file.data.unique_id, collection_id : file.data.collection_id });
+        $.extend(uploader.settings.params, {
+            unique_id : file.data.unique_id
+            ,collection_id : file.data.collection_id
+        });
     });
 
     uploader.bind('FileUploaded', function(up, fileDetails, response) {
