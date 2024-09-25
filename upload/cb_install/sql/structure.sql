@@ -392,6 +392,7 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `user_level_id` int(22) NOT NULL,
   `admin_access` enum('yes','no') NOT NULL DEFAULT 'no',
   `allow_video_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `allow_photo_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
   `view_video` enum('yes','no') NOT NULL DEFAULT 'yes',
   `view_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `view_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
