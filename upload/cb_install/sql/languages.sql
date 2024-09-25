@@ -1274,4 +1274,10 @@ VALUES ('admin_setting'),
        ('disable_channel'),
        ('admin_account'),
        ('timezone_not_corresponding'),
-       ('will_be_upload_into_collection');
+       ('will_be_upload_into_collection'),
+       ('configurations'),
+       ('template_editor'),
+       ('update_logos'),
+       ('languages_settings'),
+       ('email_template'),
+       ('watermark_settings');

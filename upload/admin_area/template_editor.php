@@ -8,8 +8,8 @@ userquery::getInstance()->perm_check('manage_template_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Templates Editor', 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('template_editor'), 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'];
 
 /**
  * Getting List Of Templates

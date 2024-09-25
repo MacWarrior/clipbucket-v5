@@ -14,7 +14,7 @@ if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_s
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
+$breadcrumb[0] = ['title'=> lang('configurations'), 'url'=>''];
 if ($_GET['mode'] == 'show_settings') {
     $breadcrumb[1] = ['title' => lang('player_settings'), 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'];
 } else {
