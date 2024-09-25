@@ -9,16 +9,13 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
-        self::alterTable('ALTER TABLE ' . tbl('collections') . '  DROP COLUMN `views`',
+        self::alterTable('ALTER TABLE ' . tbl('collections') . ' DROP COLUMN `views`',
             [
                 'table'  => 'collections',
                 'column' => 'views'
-            ], [
-                'table'  => 'collections'
             ]
         );
-        self::alterTable('ALTER TABLE ' . tbl('collections') . '  ADD COLUMN `thumb_objectid` BIGINT(20) NULL DEFAULT NULL',
+        self::alterTable('ALTER TABLE ' . tbl('collections') . ' ADD COLUMN `thumb_objectid` BIGINT(20) NULL DEFAULT NULL',
             [
                 'table'  => 'collections',
             ], [
@@ -41,7 +38,6 @@ class MWIP extends \Migration
             'fr'=>'Assigne aux collection la vignette par défaut du premier élément de la collection',
             'en'=>'Assign first element as default thumb for collections'
         ]);
-
         self::generateTranslation('default_thumb', [
             'fr'=>'Vignette par défaut',
             'en'=>'Default thumb'
