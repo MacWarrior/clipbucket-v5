@@ -64,5 +64,10 @@ class MWIP extends \Migration
             'fr'=>'Vignette par défaut',
             'en'=>'Default thumb'
         ]);
+
+        self::generateTranslation('user_levels', [
+            'fr'=>'Niveaux d\'utilisateur',
+            'en'=>'User levels'
+        ]);
     }
 }

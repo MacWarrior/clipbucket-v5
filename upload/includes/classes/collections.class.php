@@ -643,6 +643,9 @@ class Collection
         return $found;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function assignDefaultThumb($collection_id)
     {
         $tested_collection = $collection_id;
@@ -659,7 +662,7 @@ class Collection
                  LEFT JOIN ' . tbl('collections') . ' AS childs ON collections.collection_id = childs.collection_id_parent
                  LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'photos\'
                  LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'videos\'
-            WHERE collections.collection_id = '.mysql_clean($tested_collection).'
+            WHERE collections.collection_id = ' . (int)$tested_collection . '
             ORDER BY items.ci_id
             LIMIT 1 ';
             $res = Clipbucket_db::getInstance()->_select($sql);
@@ -667,8 +670,10 @@ class Collection
             $tested_collection = $res[0]['child_id'] ?? false;
         } while (empty($thumb_num) && !empty($tested_collection));
 
-        if ($thumb_num) {
-            $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . mysql_clean($thumb_num) . ' where collection_id = ' . mysql_clean($collection_id);
+        $version = Update::getInstance()->getDBVersion();
+        //TODO check revision number
+        if( $thumb_num && ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 999)) ){
+            $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
             Clipbucket_db::getInstance()->execute($sql);
         }
         return is_numeric($thumb_num) ? $thumb_num: false;
@@ -682,7 +687,7 @@ class Collection
      */
     public function setDefautThumb(int $default_thumb, int $id)
     {
-        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['thumb_objectid'], [mysql_clean($default_thumb)], ' collection_id = ' . mysql_clean($id));
+        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['thumb_objectid'], [$default_thumb], ' collection_id = ' . $id);
     }
 
     /**
