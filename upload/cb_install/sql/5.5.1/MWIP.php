@@ -24,9 +24,7 @@ class MWIP extends \Migration
             ]
         );
 
-        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = \'photos\' WHERE type LIKE \'p%\' ';
-        self::query($sql_update_item);
-        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = \'videos\' WHERE type LIKE \'v%\' ';
+        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = CASE WHEN type LIKE \'p%\' THEN \'photos\' ELSE \'videos\'';
         self::query($sql_update_item);
 
         self::alterTable('ALTER TABLE ' . tbl('collection_items') . ' MODIFY COLUMN `type` ENUM(\'photos\', \'videos\') NOT NULL',
@@ -35,9 +33,7 @@ class MWIP extends \Migration
                 'column' => 'type'
             ]
         );
-        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = \'photos\' WHERE type LIKE \'p%\'';
-        self::query($sql_update);
-        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = \'videos\' WHERE type LIKE \'v%\'';
+        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = CASE WHEN type LIKE \'p%\' THEN \'photos\' ELSE \'videos\'';
         self::query($sql_update);
         self::alterTable('ALTER TABLE ' . tbl('collections') . ' MODIFY COLUMN `type` ENUM(\'photos\', \'videos\') NOT NULL',
             [
