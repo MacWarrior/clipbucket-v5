@@ -174,7 +174,7 @@
                             <h5>{lang code="default_thumb"}</h5>
                             <ul class="ace-thumbnails thumb">
                                 {foreach from=$items item=item}
-                                    <li style="background-image:url({get_thumb($item)});" {if $item['id']==$data.thumb_objectid}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
+                                    <li style="background-image:url({Collection::getInstance()->getItemThumb($item, $data.type)});" {if $item['id']==$data.thumb_objectid}class="selected"{/if} title="{lang('select_as_default_x',lang('thumbnail'))}">
                                         <label for="thumb_{$item['id']}">
                                             <span class="content_bottom">
                                               <input type="radio" id="thumb_{$item['id']}" value="{$item['id']}" name="default_thumb" {if $item['id']==$data.thumb_objectid}checked{/if}/>
@@ -189,7 +189,7 @@
                     <div class="row">
                         <legend>Collection Stats</legend>
                         <div class="col-md-3">
-                            Total Objects : {$data.total_objects}d
+                            Total Objects : {$data.total_objects}
                         </div>
                         <div class="col-md-3">
                             Total Comments : {$data.total_comments}

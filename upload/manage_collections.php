@@ -159,7 +159,7 @@ switch ($mode) {
         //Pagination
         $total_pages = count_pages($total_rows, COLLIP);
         $pages->paginate($total_pages, $page);
-        $collection = $cbcollection->get_collection($collection_id);
+        $collection = Collection::getInstance()->getOne(['collection_id'=>$collection_id]);
 
         assign('c', $collection);
         assign('objs', $objs);

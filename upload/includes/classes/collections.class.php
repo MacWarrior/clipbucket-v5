@@ -11,6 +11,8 @@ class Collection
     private $search_limit = 0;
     private $display_var_name = '';
 
+    private $type_list= [];
+
     public function __construct(){
         $this->tablename = 'collections';
         $this->tablename_items = 'collection_items';
@@ -34,12 +36,15 @@ class Collection
             ,'active'
             ,'public_upload'
             ,'type'
-            ,'thumb_objectid'
         ];
 
         $version = Update::getInstance()->getDBVersion();
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
             $this->fields[] = 'collection_id_parent';
+        }
+        //TODO check revision number
+        if( ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 999)) ){
+            $this->fields[] = 'thumb_objectid';
         }
 
         $this->fields_items = [
@@ -54,6 +59,20 @@ class Collection
         $this->display_block = LAYOUT . '/blocks/collection.html';
         $this->display_var_name = 'collection';
         $this->search_limit = (int)config('collection_search_result');
+
+        $this->type_list=[
+            'videos',
+            'photos'
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public function isValidType(string $type): bool
+    {
+        return in_array($type, $this->type_list);
     }
 
     public static function getInstance(): self
@@ -561,6 +580,10 @@ class Collection
             e(lang('you_not_logged_in'));
             return false;
         }
+        if (!$this->isValidType($type)) {
+            e(lang('unknown_type'));
+            return false;
+        }
         $collection = $this->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
             e(lang('collect_not_exist'));
@@ -627,15 +650,15 @@ class Collection
             $sql = '
             SELECT collections.collection_id,
                CASE
-                   WHEN items.type = \'p\' THEN photos.photo_id
-                   WHEN items.type = \'video\' THEN videos.videoid
+                   WHEN items.type = \'photos\' THEN photos.photo_id
+                   WHEN items.type = \'videos\' THEN videos.videoid
                    END              AS default_thumb,
                childs.collection_id AS child_id
             FROM ' . tbl('collections') . ' AS collections
                  LEFT JOIN ' . tbl('collection_items') . ' AS items ON collections.collection_id = items.collection_id
                  LEFT JOIN ' . tbl('collections') . ' AS childs ON collections.collection_id = childs.collection_id_parent
-                 LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'p\'
-                 LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'video\'
+                 LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'photos\'
+                 LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'videos\'
             WHERE collections.collection_id = '.mysql_clean($tested_collection).'
             ORDER BY items.ci_id
             LIMIT 1 ';
@@ -660,6 +683,31 @@ class Collection
     public function setDefautThumb(int $default_thumb, int $id)
     {
         Clipbucket_db::getInstance()->update(tbl($this->tablename), ['thumb_objectid'], [mysql_clean($default_thumb)], ' collection_id = ' . mysql_clean($id));
+    }
+
+    /**
+     * @param array $item
+     * @param string $type
+     * @return string
+     * @throws Exception
+     */
+    public function getItemThumb(array $item, string $type): string
+    {
+        if (!$this->isValidType($type)) {
+            return '';
+        }
+        switch ($type) {
+            case 'videos':
+                global $cbvideo;
+                $thumb = get_thumb($item);
+                break;
+
+            case 'photos':
+                global $cbphoto;
+                $thumb = $cbphoto->get_image_file($item);
+                break;
+        }
+        return $thumb;
     }
 }
 
@@ -686,7 +734,7 @@ class Collections extends CBCategory
      * help makes this class reusble for very object
      */
     var $objTable = 'photos';
-    var $objType = 'p';
+    var $objType = 'photos';
     var $objName = 'Photo';
     var $objClass = 'cbphoto';
     var $objFunction = 'photo_exists';
@@ -887,7 +935,7 @@ class Collections extends CBCategory
 
         $left_join_cond = '';
         if( !has_access('admin_access', true) ) {
-            if( $this->objTable == 'video' ){
+            if( $this->objTable == 'videos' ){
                 $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
                 $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
@@ -1495,7 +1543,7 @@ class Collections extends CBCategory
             $cond .= ' AND C.collection_id != ' . mysql_clean($exclude_id);
         }
 
-        if (!is_null($type)) {
+        if (!is_null($type) && Collection::getInstance()->isValidType($type)) {
             $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
         }
 
@@ -2140,12 +2188,12 @@ class Collections extends CBCategory
             $item = $this->get_collection_items($cid, 'ci_id DESC', 1);
             $type = $item[0]['type'];
             switch ($type) {
-                case 'v':
+                case 'videos':
                     global $cbvideo;
                     $thumb = get_thumb($cbvideo->get_video($item[0]['object_id']));
                     break;
 
-                case 'p':
+                case 'photos':
                     global $cbphoto;
                     $thumb = $cbphoto->get_image_file($cbphoto->get_photo($item[0]['object_id']));
                     break;
@@ -2166,45 +2214,6 @@ class Collections extends CBCategory
         }
 
         return $this->get_default_thumb($size);
-    }
-
-
-    /**
-     * Used to display collection voterts details.
-     * User who rated, how many stars and when user rated
-     *
-     * @param      $id
-     * @param bool $return_array
-     * @param bool $show_all
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function collection_voters($id, $return_array = false, $show_all = false)
-    {
-        $c = $this->get_collection($id);
-        if ((!empty($c) && $c['userid'] == user_id()) || $show_all === true) {
-            $voters = $c['voters'];
-            $voters = json_decode($voters, true);
-
-            if (!empty($voters)) {
-                if ($return_array) {
-                    return $voters;
-                }
-
-                foreach ($voters as $id => $details) {
-                    $username = get_username($id);
-                    $output = '<li id=\'user' . $id . $c['collection_id'] . '\' class=\'PhotoRatingStats\'>';
-                    $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . $username . '</a>';
-                    $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
-                    $output .= niceTime($details['time']) . ')</small>';
-                    $output .= '</li>';
-                    echo $output;
-                }
-            }
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -2313,13 +2322,11 @@ class Collections extends CBCategory
     {
         switch ($type) {
             case 'videos':
-            case 'v':
                 global $cbvideo;
                 $items = $cbvideo->collection->get_collection_items_with_details($cid);
                 break;
 
             case 'photos':
-            case 'p':
                 global $cbphoto;
                 $items = $cbphoto->collection->get_collection_items_with_details($cid);
                 break;

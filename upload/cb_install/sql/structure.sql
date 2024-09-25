@@ -63,7 +63,7 @@ CREATE TABLE `{tbl_prefix}collections` (
   `voters` longtext DEFAULT NULL,
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
-  `type` varchar(10) NOT NULL,
+  `type` ENUM('photos', 'videos') NOT NULL,
   `thumb_objectid` BIGINT(20) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -72,7 +72,7 @@ CREATE TABLE `{tbl_prefix}collection_items` (
   `collection_id` bigint(20) NOT NULL,
   `object_id` bigint(20) NOT NULL,
   `userid` bigint(20) NOT NULL,
-  `type` varchar(10) NOT NULL,
+  `type` ENUM('photos', 'videos') NOT NULL,
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 

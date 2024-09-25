@@ -86,7 +86,7 @@
 									{foreach from=$items item=item}
 										<div class="col-md-3">
 											<div class="form-group text-center">
-												<label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{get_thumb($item)}" width="100" height="100" />
+												<label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100" />
 													<input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
 												</label>
 											</div>
@@ -160,7 +160,6 @@
 							</td>
 							<td width="50%">{lang code='title'}</td>
 							<td width="15%" align="center">{lang code='date_added'}</td>
-							<td width="25%" align="center">{lang code='views'}</td>
 							<td width="7%" class="last_td" align="center">{lang code='remove'}</td>
 							</tr>
 						</table>
@@ -176,36 +175,34 @@
 					{/if}
 				{/if}
 
-				{if $mode == "favorite"}
-					<h2>{lang code="manage_favorite_collections"}</h2>
-					<div>
-						<img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;" />
-						<input type="submit" name="remove_selected_favs" id="remove_selected_favs" value="{lang code='remove'}" class="btn btn-primary btn-sm" />
-					</div>
-					<br>
-					<div class="marginTop">
-						<table class="table table-bordered table-striped" style="margin-bottom:0;">
-							<tr>
-							<td width="3%">
-								<input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-							</td>
-							<td width="50%">{lang code='title'}</td>
-							<td width="15%">{lang code='date_added'}</td>
-							<td width="100" class="last_td">{lang code='type'}</td>
-							<td width="100" class="last_td">{lang code='views'}</td>
-							</tr>
-							{section loop=$collections name=list}
-							{include file="$style_dir/blocks/manage/account_collections.html" display_type="favorite" collection=$collections[list]}
-						{sectionelse}
-							<div align="center" style="font:bold 11px Tahoma;margin:5px 0;">
-								{lang code="you_dont_have_fav_collections"}
-							</div>
-						{/section}
-						</table>
-					</div>
-
-					{include file="$style_dir/blocks/pagination.html"}
-				{/if}
+					{if $mode == "favorite"}
+						<h2>{lang code="manage_favorite_collections"}</h2>
+						<div>
+							<img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;"/>
+							<input type="submit" name="remove_selected_favs" id="remove_selected_favs" value="{lang code='remove'}" class="btn btn-primary btn-sm"/>
+						</div>
+						<br>
+						<div class="marginTop">
+							<table class="table table-bordered table-striped" style="margin-bottom:0;">
+								<tr>
+									<td width="3%">
+										<input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+									</td>
+									<td width="50%">{lang code='title'}</td>
+									<td width="15%">{lang code='date_added'}</td>
+									<td width="100" class="last_td">{lang code='type'}</td>
+								</tr>
+								{section loop=$collections name=list}
+									{include file="$style_dir/blocks/manage/account_collections.html" display_type="favorite" collection=$collections[list]}
+									{sectionelse}
+									<div align="center" style="font:bold 11px Tahoma;margin:5px 0;">
+										{lang code="you_dont_have_fav_collections"}
+									</div>
+								{/section}
+							</table>
+						</div>
+						{include file="$style_dir/blocks/pagination.html"}
+					{/if}
 				</form>
 			   
 			</div>

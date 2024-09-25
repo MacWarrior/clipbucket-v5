@@ -24,6 +24,28 @@ class MWIP extends \Migration
             ]
         );
 
+        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = \'photos\' WHERE type LIKE \'p%\' ';
+        self::query($sql_update_item);
+        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = \'videos\' WHERE type LIKE \'v%\' ';
+        self::query($sql_update_item);
+
+        self::alterTable('ALTER TABLE ' . tbl('collection_items') . ' MODIFY COLUMN `type` ENUM(\'photos\', \'videos\') NOT NULL',
+            [
+                'table'  => 'collection_items',
+                'column' => 'type'
+            ]
+        );
+        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = \'photos\' WHERE type LIKE \'p%\'';
+        self::query($sql_update);
+        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = \'videos\' WHERE type LIKE \'v%\'';
+        self::query($sql_update);
+        self::alterTable('ALTER TABLE ' . tbl('collections') . ' MODIFY COLUMN `type` ENUM(\'photos\', \'videos\') NOT NULL',
+            [
+                'table'  => 'collections',
+                'column' => 'type'
+            ]
+        );
+
         $collections = \Collection::getInstance()->getAll(['allow_children'=>true]);
         foreach ($collections as $collection) {
             \Collection::assignDefaultThumb($collection['collection_id']);

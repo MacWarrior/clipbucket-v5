@@ -1283,4 +1283,5 @@ VALUES ('admin_setting'),
        ('watermark_settings'),
        ('assign_default_thumb_label'),
        ('assign_default_thumb_description'),
-       ('default_thumb');
+       ('default_thumb'),
+       ('user_levels')
