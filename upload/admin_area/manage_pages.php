@@ -11,7 +11,7 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('pages'))), 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'];
 
 //Activating Page

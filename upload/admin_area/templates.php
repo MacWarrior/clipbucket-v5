@@ -13,7 +13,7 @@ if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('templates'))), 'url' => DirPath::getUrl('admin_area') . 'templates.php'];
 
 if ($_GET['change']) {

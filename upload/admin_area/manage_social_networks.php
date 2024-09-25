@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url'   => ''];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url'   => ''];
 $breadcrumb[1] = ['title' => lang('manage_social_networks_links'), 'url'   => DirPath::getUrl('admin_area') . 'manage_social_networks.php'];
 
 $limit = config('admin_pages');

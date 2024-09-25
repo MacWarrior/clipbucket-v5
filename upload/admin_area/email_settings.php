@@ -11,8 +11,8 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Templates', 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('email_template'), 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'];
 
 //Updating email templates
 if (isset($_POST['update'])) {

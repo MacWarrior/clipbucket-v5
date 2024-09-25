@@ -8,8 +8,8 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'User Levels', 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_x',strtolower(lang('user_levels'))), 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'];
 
 if (!has_access('allow_manage_user_level') && userquery::getInstance()->udetails['level'] != 1) {
     $Cbucket->show_page = false;

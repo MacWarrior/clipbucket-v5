@@ -12,6 +12,8 @@ if (isset($_GET['collection'])) {
     assign('selected_collection', $cbphoto->collection->get_collection($selected_collection));
 }
 
+userquery::getInstance()->logincheck('allow_photo_upload', true);
+
 $collections = $cbphoto->collection->get_collections_list(0, null, null, 'photos', user_id());
 
 assign('collections', $collections);
