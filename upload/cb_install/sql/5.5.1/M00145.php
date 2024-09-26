@@ -2,7 +2,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00145 extends \Migration
 {
     /**
      * @throws \Exception
@@ -24,7 +24,7 @@ class MWIP extends \Migration
             ]
         );
 
-        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = CASE WHEN type LIKE \'p%\' THEN \'photos\' ELSE \'videos\'';
+        $sql_update_item = 'UPDATE ' . tbl('collection_items') . ' SET type = CASE WHEN type LIKE \'p%\' THEN \'photos\' ELSE \'videos\' END';
         self::query($sql_update_item);
 
         self::alterTable('ALTER TABLE ' . tbl('collection_items') . ' MODIFY COLUMN `type` ENUM(\'photos\', \'videos\') NOT NULL',
@@ -33,7 +33,7 @@ class MWIP extends \Migration
                 'column' => 'type'
             ]
         );
-        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = CASE WHEN type LIKE \'p%\' THEN \'photos\' ELSE \'videos\'';
+        $sql_update = 'UPDATE ' . tbl('collections') . ' SET type = CASE WHEN type LIKE \'p%\' THEN \'photos\' ELSE \'videos\' END';
         self::query($sql_update);
         self::alterTable('ALTER TABLE ' . tbl('collections') . ' MODIFY COLUMN `type` ENUM(\'photos\', \'videos\') NOT NULL',
             [

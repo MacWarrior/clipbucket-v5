@@ -1284,4 +1284,4 @@ VALUES ('admin_setting'),
        ('assign_default_thumb_label'),
        ('assign_default_thumb_description'),
        ('default_thumb'),
-       ('user_levels')
+       ('user_levels');

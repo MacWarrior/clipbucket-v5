@@ -42,8 +42,8 @@ class Collection
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
             $this->fields[] = 'collection_id_parent';
         }
-        //TODO check revision number
-        if( ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 999)) ){
+
+        if( ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
             $this->fields[] = 'thumb_objectid';
         }
 
@@ -279,7 +279,6 @@ class Collection
             $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
             $need_collection_enfant = true;
         }
-
 
         if( !$param_with_items && $param_count ){
             $select = ['COUNT(' . $this->getTableName() . '.collection_id) AS count, ' . $this->getTableName() . '.userid'];
@@ -671,8 +670,7 @@ class Collection
         } while (empty($thumb_num) && !empty($tested_collection));
 
         $version = Update::getInstance()->getDBVersion();
-        //TODO check revision number
-        if( $thumb_num && ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 999)) ){
+        if( $thumb_num && ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
             $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
             Clipbucket_db::getInstance()->execute($sql);
         }
