@@ -10,7 +10,7 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('manage_x', strtolower(lang('plugins'))), 'url' => ''];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('plugins'))), 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
 
 //uninstalling Plugin

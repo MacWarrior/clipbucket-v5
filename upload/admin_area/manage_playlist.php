@@ -56,14 +56,14 @@ switch ($mode) {
 
         //if search is activated
         if (isset($_GET['search'])) {
-            if (!empty($_GET['playlist_name']) && isset($_GET['playlist_name'])) {
+            if (!empty($_GET['playlist_name'])) {
                 $array['playlist_name'] = $_GET['playlist_name'];
             }
-            if (!empty($_GET['tags']) && isset($_GET['tags'])) {
+            if (!empty($_GET['tags'])) {
                 $array['tags'] = $_GET['tags'];
             }
-            if (!empty($_GET['userid']) && isset($_GET['userid'])) {
-                $array['user'] = $_GET['userid'];
+            if (!empty($_GET['userid'])) {
+                $array['userid'] = $_GET['userid'];
             }
         }
 
@@ -79,12 +79,12 @@ switch ($mode) {
         if (!$array['order']) {
             $result_array['order'] = ' playlists.date_added DESC ';
         }
-        $playlists = $cbvid->action->get_playlists($result_array);
+        $playlists = Playlist::getInstance()->getAll($result_array);
 
         //Collecting Data for Pagination
         $pcount = $array;
-        $pcount['count_only'] = true;
-        $total_rows = get_playlists($pcount);
+        $pcount['count'] = true;
+        $total_rows = Playlist::getInstance()->getAll($pcount);
         $total_pages = count_pages($total_rows, config('admin_pages'));
         $pages->paginate($total_pages, $page);
 
@@ -95,7 +95,7 @@ switch ($mode) {
         if (isset($_POST['delete_playlist_item'])) {
             $items = post('check_playlist_items');
 
-            if (count($items) > 0) {
+            if (!empty($items)) {
                 foreach ($items as $item) {
                     $item = mysql_clean($item);
                     $cbvid->action->delete_playlist_item($item);
@@ -117,9 +117,10 @@ switch ($mode) {
         $pid = $_GET['pid'];
 
         if (isset($_POST['edit_playlist'])) {
-            $_POST['list_id'] = $pid;
+            $_POST['playlist_id'] = $pid;
             $cbvid->action->edit_playlist();
         }
+
 
         if (isset($_POST['upload_playlist_cover'])) {
             $cover = $_FILES['playlist_cover'];
@@ -140,14 +141,18 @@ switch ($mode) {
             $cbvid->action->delete_playlist_item($delid);
         }
 
-        $playlist = $cbvid->action->get_playlist($pid);
+        $playlist = Playlist::getInstance()->getOne($pid);
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item
             $items = $cbvid->get_playlist_items($pid, 'playlist_items.date_added DESC', 0);
             assign('items', $items);
+            $breadcrumb[2] = [
+                'title' => lang('edit_playlist') . ' ' . display_clean($playlist['playlist_name']) ,
+                'url'   => DirPath::getUrl('admin_area') . 'manage_playlist.php?mode=edit_playlist&pid=' . display_clean($pid)
+            ];
         } else {
-            e(lang('playlist_not_exist'));
+            sessionMessageHandler::add_message(lang('playlist_not_exist'), 'e',  BASEURL . DirPath::getUrl('admin_area') . 'manage_playlist.php');
         }
         break;
 }

@@ -1626,7 +1626,7 @@ function update_duration($vdetails)
     $data = FFMpeg::get_video_basic_infos($filepath);
 
     if (isset($data['duration'])) {
-        Clipbucket_db::getInstance()->update(tbl('video'), ['duration'], [$data['duration']], 'videoid=' . $vdetails['videoid']);
+        Clipbucket_db::getInstance()->update(tbl('video'), ['duration'], [(int)$data['duration']], 'videoid=' . $vdetails['videoid']);
     }
 }
 

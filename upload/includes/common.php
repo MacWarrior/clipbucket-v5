@@ -379,7 +379,6 @@ $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
 $Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
-$Smarty->register_function('uploadButton', 'upload_photo_button');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
 

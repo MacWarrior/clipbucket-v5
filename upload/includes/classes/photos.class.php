@@ -767,10 +767,6 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
                     ]
                     , [
-                        'title' => 'Watermark Settings'
-                        , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
-                    ]
-                    , [
                         'title' => lang('manage_x', strtolower(lang('categories')))
                         , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
                     ]
@@ -1022,7 +1018,7 @@ class CBPhotos
         $fields = [
             'photos'      => get_photo_fields(),
             'users'       => get_user_fields(),
-            'collections' => ['collection_name','collection_id', 'type', 'views', 'date_added']
+            'collections' => ['collection_name','collection_id', 'type', 'date_added']
         ];
 
         $select_complement = '';
@@ -1043,7 +1039,7 @@ class CBPhotos
         $main_query = 'SELECT ' . $select . ' ' . $select_complement;
         $main_query .= ' FROM '.cb_sql_table('photos');
 
-        $join_collection = ' LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collection_items.object_id = photos.photo_id AND collection_items.type = \'p\'
+        $join_collection = ' LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collection_items.object_id = photos.photo_id AND collection_items.type = \'photos\'
          LEFT JOIN ' . cb_sql_table('collections') . ' ON collection_items.collection_id = collections.collection_id';
 
         $join_collection .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON photos.userid = users.userid';
@@ -1923,7 +1919,7 @@ class CBPhotos
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->p_tbl), $query_field, $query_val);
 
             $photo = $this->get_photo($insert_id);
-            $this->collection->add_collection_item($insert_id, $array['collection_id']);
+            Collection::getInstance()->addCollectionItem($insert_id, $array['collection_id'], 'photos');
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
                 $this->generate_photos($photo);
@@ -2085,39 +2081,6 @@ class CBPhotos
         }
 
         return $PhotosArray;
-    }
-
-    /**
-     * This will be used to multiple photos
-     * at once.
-     * Single update will be different.
-     *
-     * @param $arr
-     * @throws Exception
-     */
-    function update_multiple_photos($arr)
-    {
-        global $cbcollection, $eh;
-
-        foreach ($arr as $id => $details) {
-            if (is_array($details)) {
-                $i = 0;
-                $query = "UPDATE " . tbl('photos') . " SET ";
-                foreach ($details as $key => $value) {
-                    $i++;
-                    $query .= "$key = '$value'";
-                    if ($i < count($details)) {
-                        $query .= " , ";
-                    }
-                }
-
-                $query .= " WHERE " . tbl('photos.photo_id') . " = '$id'";
-
-                Clipbucket_db::getInstance()->execute($query);
-                $cbcollection->add_collection_item($id, $details['collection_id']);
-            }
-        }
-        $eh->flush();
     }
 
     /**
@@ -2556,141 +2519,7 @@ class CBPhotos
             $cond = ' AND object_id = ' . mysql_clean($pid);
         }
 
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'p\' AND collection_id = ' . mysql_clean($cid) . $cond);
-    }
-
-    /**
-     * Used to load upload more photos
-     * This button will only appear if collection type is photos
-     * and user logged-in is Collection Owner
-     *
-     * @param $arr
-     *
-     * @return bool|mixed|null|string|string[]|void
-     * @throws Exception
-     */
-    function upload_photo_button($arr)
-    {
-        $cid = $arr['details'];
-        $text = lang('add_more');
-        $result = '';
-        if (!is_array($cid)) {
-            $details = $this->collection->get_collection($cid);
-        } else {
-            $details = $cid;
-        }
-
-        if ($details['type'] == 'photos' && $details['userid'] == user_id()) {
-            $output = $arr['output'];
-            if ($arr['return_url']) {
-                $result = $this->photo_links($details, 'upload_more');
-                if ($arr['assign']) {
-                    assign($arr['assign'], $result);
-                    return;
-                }
-                return $result;
-            }
-
-            if (empty($output) || $output == 'button') {
-                $result .= '<button type="button"';
-                $link = '\'' . $this->photo_links($details, 'upload_more') . '\'';
-                if ($arr['new_window'] || $arr['target'] == "_blank") {
-                    $new_window = "'new'";
-                } else {
-                    $new_window = "'same'";
-                }
-
-                $result .= 'onClick = "openURL(' . $link . ',' . $new_window . ')"';
-                if ($arr['id']) {
-                    $result .= ' id="' . $arr['id'] . '"';
-                }
-                if ($arr['class']) {
-                    $result .= ' class="' . $arr['class'] . '"';
-                }
-                if ($arr['title']) {
-                    $result .= ' title="' . $arr['title'] . '"';
-                }
-                if ($arr['style']) {
-                    $result .= ' style="' . $arr['style'] . '"';
-                }
-                if ($arr['extra']) {
-                    $result .= $arr['extra'];
-                }
-
-                $result .= '>' . $text . '</button>';
-            }
-
-            if ($output == 'div') {
-                $result .= '<div ';
-                $link = '\'' . $this->photo_links($details, 'upload_more') . '\'';
-                if ($arr['new_window'] || $arr['target'] == '_blank') {
-                    $new_window = "'new'";
-                } else {
-                    $new_window = "'same'";
-                }
-                $result .= 'onClick = "openURL(' . $link . ',' . $new_window . ')"';
-                if ($arr['id']) {
-                    $result .= ' id="' . $arr['id'] . '"';
-                }
-                if ($arr['align']) {
-                    $result .= ' align="' . $arr['align'] . '"';
-                }
-                if ($arr['class']) {
-                    $result .= ' class="' . $arr['class'] . '"';
-                }
-                if ($arr['title']) {
-                    $result .= ' title="' . $arr['title'] . '"';
-                }
-                if ($arr['style']) {
-                    $result .= ' style="' . $arr['style'] . '"';
-                }
-                if ($arr['extra']) {
-                    $result .= $arr['extra'];
-                }
-
-                $result .= '>' . $text . '</div>';
-            }
-
-            if ($output == 'link') {
-                $result .= '<a href="' . $this->photo_links($details, 'upload_more') . '"';
-
-                if ($arr['new_window']) {
-                    $result .= ' target = "_blank"';
-                } else {
-                    if ($arr['target']) {
-                        $result .= ' target = "' . $arr['target'] . '"';
-                    }
-                }
-
-                if ($arr['id']) {
-                    $result .= ' id="' . $arr['id'] . '"';
-                }
-                if ($arr['align']) {
-                    $result .= ' align="' . $arr['align'] . '"';
-                }
-                if ($arr['class']) {
-                    $result .= ' class="' . $arr['class'] . '"';
-                }
-                if ($arr['title']) {
-                    $result .= ' title="' . $arr['title'] . '"';
-                }
-                if ($arr['style']) {
-                    $result .= ' style="' . $arr['style'] . '"';
-                }
-                if ($arr['extra']) {
-                    $result .= $arr['extra'];
-                }
-
-                $result .= '>' . $text . '</a>';
-            }
-
-            if ($arr['assign']) {
-                assign($arr['assign'], $result);
-            } else {
-                return $result;
-            }
-        }
-        return false;
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'photos\' AND collection_id = ' . mysql_clean($cid) . $cond);
     }
 
     /**

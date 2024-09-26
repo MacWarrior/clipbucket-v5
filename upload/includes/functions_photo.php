@@ -24,15 +24,6 @@ function get_photo($params)
     return get_image_file($params);
 }
 
-//Photo Upload Button
-/**
- * @throws Exception
- */
-function upload_photo_button($params)
-{
-    global $cbphoto;
-    return $cbphoto->upload_photo_button($params);
-}
 
 //Photo Embed Cides
 /**
@@ -206,7 +197,7 @@ function get_image_file($params)
             if (isset($params['assign']) && isset($params['multi'])) {
                 assign($params['assign'], $thumbs);
             } else {
-                if ((isset($params['multi']))) {
+                if (!(empty($params['multi']))) {
                     return $thumbs;
                 } else {
                     $search_name = sprintf($filename, '_' . $size);

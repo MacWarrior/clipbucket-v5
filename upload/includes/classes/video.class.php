@@ -281,7 +281,6 @@ class Video
         $param_tags = $params['tags'] ?? false;
         $param_active = $params['active'] ?? false;
         $param_status = $params['status'] ?? false;
-
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
         $param_order = $params['order'] ?? false;
@@ -1007,7 +1006,7 @@ class CBvideo extends CBCategory
     function init_collections()
     {
         $this->collection = new Collections();
-        $this->collection->objType = 'v';
+        $this->collection->objType = 'videos';
         $this->collection->objClass = 'cbvideo';
         $this->collection->objTable = 'video';
         $this->collection->objName = 'Video';
@@ -2405,7 +2404,7 @@ class CBvideo extends CBCategory
 
         $fields = [
             'playlist_items' => $cb_columns->object('playlist_items')->temp_change('date_added', 'item_added')->get_columns(),
-            'playlists'      => $cb_columns->object('playlists')->temp_remove('first_item,cover')->temp_change('date_added,description,tags,category', 'playlist_added,playlist_description,playlist_tags,playlist_category')->get_columns(),
+            'playlists'      => Playlist::getInstance()->getFields(),
             'video'          => $cb_columns->object('videos')->get_columns()
         ];
 

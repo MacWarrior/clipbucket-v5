@@ -1018,4 +1018,17 @@ class AdminTool
         return $this->id_tool;
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function assignDefaultThumbForCollections()
+    {
+        $collections = Collection::getInstance()->getAll(['thumb_objectid' => true, 'allow_children'=>true]);
+        if (!empty($videos)) {
+            $this->array_loop = array_column($collections, 'collection_id');
+        }
+        $this->executeTool('Collection::assignDefaultThumb');
+    }
+
 }

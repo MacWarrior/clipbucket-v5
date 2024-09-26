@@ -22,7 +22,6 @@
             </div>
         </td>
  	    <td width="15%">{$collection.date_added|date_format}</td>
- 	    <td width="9%">{$collection.views|number_format}</td>
         <td width="12%">{$collection.total_objects|number_format}</td>
         <td width="6%">{lang code="{$collection.type}"}</td>
  	    <td width="5%" class="last_td">{lang code="{$collection.active}"}</td>
@@ -47,7 +46,6 @@
 					</span>
 				</td>
 				<td width="15%">{$collection.date_added|date_format}</td>
-				<td width="25%">{$collection.views|number_format}</td>
 				<td width="7%">
 					<a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.videoid}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.videoid}" href="javascript:void(0);">
 						<img src="{$imageurl}/cancel.png" width="16" height="16"/>
@@ -76,7 +74,6 @@
 					</span>
 				</td>
 				<td width="15%">{$collection.date_added|date_format}</td>
-				<td width="25%">{$collection.views|number_format}</td>
 				<td width="7%">
 					<a onclick="collection_actions('collectionItem','remove_collection_item','{$collection.photo_id}','#removeItemContainer','{$type}','{$c.collection_id}')" id="collectionItem{$collection.photo_id}" href="javascript:void(0);">
 						<img src="{$imageurl}/cancel.png" width="16" height="16">
@@ -108,6 +105,5 @@
 		</td>
 		<td width="15%">{$collection.date_added|date_format}</td>
 		<td width="25%">{lang code="{$collection.type}"}</td>
-		<td width="7%" class="last_td">{$collection.views|number_format}</td>
 	</tr>
 {/if}

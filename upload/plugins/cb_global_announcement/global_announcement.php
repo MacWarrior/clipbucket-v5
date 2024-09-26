@@ -40,7 +40,7 @@ class cb_global_announcement
      * @throws Exception
      */
     private function addAdminMenu(){
-        add_admin_menu(lang('manage_x', strtolower(lang('plugins'))), lang($this::$lang_prefix.'menu'), $this->pages_url.'edit_announcement.php');
+        add_admin_menu(lang('configurations'), lang($this::$lang_prefix.'menu'), $this->pages_url.'edit_announcement.php');
     }
 
     private function register_anchor_function(){

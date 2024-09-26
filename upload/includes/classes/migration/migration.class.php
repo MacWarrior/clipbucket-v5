@@ -163,18 +163,33 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function deleteTranslation(string $translatioon_key)
+    public static function deleteTranslation(string $translation_key)
     {
         $sql = 'DELETE FROM `' . tbl('languages_translations') . '`
             WHERE `id_language_key` = (
                 SELECT id_language_key FROM `' . tbl('languages_keys') . '`
-                WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\'
+                WHERE `language_key` = \''.mysql_clean($translation_key) . '\'
                 );';
         Clipbucket_db::getInstance()->executeThrowException($sql);
 
         $sql = 'DELETE FROM `' . tbl('languages_keys') . '`
-            WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\';';
+            WHERE `language_key` = \''.mysql_clean($translation_key) . '\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    public static function updateTranslation(string $translation_key, array $translations)
+    {
+        $sql = 'SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = \'' . mysql_clean(strtolower($translation_key)) . '\' );';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+
+        foreach ($translations as $language_code => $translation) {
+            $language_id_sql = '@' . preg_replace('/\W/', '_', 'language_id_' . mysql_clean(strtolower($language_code)));
+            $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
+            Clipbucket_db::getInstance()->executeThrowException($sql);
+
+            $sql = 'UPDATE `' . tbl('languages_translations') . '` SET `translation` = \'' . mysql_clean($translation) . '\' WHERE id_language_key = @id_language_key AND language_id = ' . $language_id_sql . ');';
+            Clipbucket_db::getInstance()->executeThrowException($sql);
+        }
     }
 
     /**

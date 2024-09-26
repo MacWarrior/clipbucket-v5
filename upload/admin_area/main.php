@@ -8,8 +8,8 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => DirPath::getUrl('admin_area') . 'main.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('website_configuration'), 'url' => DirPath::getUrl('admin_area') . 'main.php'];
 
 if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
@@ -621,9 +621,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
                             FROM '.cb_sql_table('timezones').'
                             ORDER BY timezones.timezone';
     $rs = Clipbucket_db::getInstance()->_select($query);
-    foreach ($rs as $timezone) {
-        $allTimezone[] = $timezone['timezone'];
-    }
+    $allTimezone = array_column($rs, 'timezone');
 }
 assign('allTimezone', $allTimezone);
 

@@ -1591,7 +1591,6 @@ function call_view_collection_functions($cdetails)
             }
         }
     }
-    increment_views($cdetails['collection_id'], 'collection');
 }
 
 /**
@@ -1627,15 +1626,6 @@ function increment_views($id, $type = null)
             if (!isset($_COOKIE['user_' . $id])) {
                 Clipbucket_db::getInstance()->update(tbl("users"), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
                 set_cookie_secure('user_' . $id, 'watched');
-            }
-            break;
-
-        case 'c':
-        case 'collect':
-        case 'collection':
-            if (!isset($_COOKIE['collection_' . $id])) {
-                Clipbucket_db::getInstance()->update(tbl('collections'), ['views'], ['|f|views+1'], " collection_id = '$id'");
-                set_cookie_secure('collection_' . $id, 'viewed');
             }
             break;
 
@@ -1696,15 +1686,6 @@ function increment_views_new($id, $type = null)
             if (!isset($_COOKIE['user_' . $id])) {
                 Clipbucket_db::getInstance()->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
                 set_cookie_secure('user_' . $id, 'watched');
-            }
-            break;
-
-        case 'c':
-        case 'collect':
-        case 'collection':
-            if (!isset($_COOKIE['collection_' . $id])) {
-                Clipbucket_db::getInstance()->update(tbl('collections'), ['views'], ['|f|views+1'], " collection_id = '$id'");
-                set_cookie_secure('collection_' . $id, 'viewed');
             }
             break;
 
@@ -1771,13 +1752,15 @@ function show_playlist_form($array)
     assign('type', $array['type']);
     // decides to show all or user only playlists
     // depending on the parameters passed to it
+    $params = [
+        'type'=>$array['type']
+    ];
     if (!empty($array['user'])) {
-        $playlists = $cbvid->action->get_playlists($array);
-    } else {
-        if (user_id()) {
-            $playlists = $cbvid->action->get_playlists();
-        }
+        $params['userid'] = $array['user'];
+    } elseif (user_id()) {
+        $params['userid'] = user_id();
     }
+    $playlists = Playlist::getInstance()->getAll($params);
     assign('playlists', $playlists);
     Template('blocks/common/playlist.html');
 }

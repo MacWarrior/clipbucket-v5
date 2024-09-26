@@ -132,6 +132,9 @@ switch ($mode) {
             die();
         }
 
+        if (!empty($_POST['collection_id'])) {
+            Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
+        }
         $Upload->add_conversion_queue($file_name . '.' . $extension);
 
         $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
