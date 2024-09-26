@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"144",
+  "revision":"145",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Implement video views history display"
         ,"Implement user level permission to disable channels"
         ,"Implement photo upload permission"
+        ,"Implement collection thumbnail selection"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -106,6 +107,7 @@
         ,"Implement video views history display"
         ,"Implement option to disable user channel"
         ,"Implement add more to video collections"
+        ,"Implement collection thumbnail selection"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

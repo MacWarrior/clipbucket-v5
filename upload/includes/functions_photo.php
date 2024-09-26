@@ -197,7 +197,7 @@ function get_image_file($params)
             if (isset($params['assign']) && isset($params['multi'])) {
                 assign($params['assign'], $thumbs);
             } else {
-                if ((isset($params['multi']))) {
+                if (!(empty($params['multi']))) {
                     return $thumbs;
                 } else {
                     $search_name = sprintf($filename, '_' . $size);

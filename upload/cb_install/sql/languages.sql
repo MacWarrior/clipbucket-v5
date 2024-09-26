@@ -1280,4 +1280,8 @@ VALUES ('admin_setting'),
        ('update_logos'),
        ('languages_settings'),
        ('email_template'),
-       ('watermark_settings');
+       ('watermark_settings'),
+       ('assign_default_thumb_label'),
+       ('assign_default_thumb_description'),
+       ('default_thumb'),
+       ('user_levels');
