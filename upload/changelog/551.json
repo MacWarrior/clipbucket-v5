@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"146",
+  "revision":"147",
   "status":"dev",
   "detail":[
     {
@@ -160,6 +160,7 @@
         ,"Fix video, collection & photo order display"
         ,"Fix collection selection on video page"
         ,"Fix JS error on video upload"
+        ,"Fix video's shorter & longer filters"
       ]
     },
     {
