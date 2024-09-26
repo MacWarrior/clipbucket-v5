@@ -384,39 +384,16 @@ $(document).ready(function(){
                 type: "post",
                 url: "/ajax.php",
                 data: formData,
-                success: function(msg){
-                    msg = $.parseJSON(msg);
-                    if(msg.err === null || msg.err === undefined){
-                        var newCollectionElement = document.createElement('option');
-                        newCollectionElement.value = parseInt(msg.id);
-                        newCollectionElement.innerHTML = collectionName;
-                        newCollectionElement.selected = true;
-                        $("select[name='collection_id']").get(0).appendChild(newCollectionElement);
-                        $("#collectionSelection").get(0).appendChild( newCollectionElement.cloneNode(true));
-                        $("#collectionSelection option").last().attr('selected','selected');
-
-                        $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success container").removeClass("hidden");
-
-                        $("#CollectionDIV").toggle("fast");
-                        $('.form_header').show();
-                        $(".upload-area").show();
-                        $('#collectionSelection').parent().show()
-                        $('#SelectionDIV').find('.alert-danger').hide();
-
-                        setTimeout(function(){
-                            $("#uploadMessage").addClass("hidden");
-                        }, 5000);
-                    }else if (msg.err == 'missing_table') {
-                        $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
-                        setTimeout(function(){
-                            $("#uploadMessage").addClass("hidden");
-                        }, 5000);
-                    }else{
-                        $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
-                        setTimeout(function(){
-                            $("#uploadMessage").addClass("hidden");
-                        }, 5000);
-                    }
+                success: function(response){
+                    debugger;
+                    response = $.parseJSON(response);
+                    $('.close').click();
+                    $("#uploadMessage").prepend(response['msg']);
+                    $("#CollectionDIV").toggle("fast");
+                    $("#SelectionDIV").html(response.template);
+                    $('.form_header').show();
+                    $(".upload-area").show();
+                    $('#collectionSelection').parent().show();
                 }
             });
         }

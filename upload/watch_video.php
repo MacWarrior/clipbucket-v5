@@ -47,12 +47,11 @@ if( config('playlistsSection') == 'yes' ){
 if( config('collectionsSection') == 'yes' ){
     $params = [];
     $params['type'] = 'videos';
-    $params['allow_children'] = true;
 
     if (!has_access('admin_access')) {
         $params['userid'] = user_id();
     }
-    $collections = Collection::getInstance()->getAll($params) ? : [];
+    $collections = Collection::getInstance()->getAllIndent($params) ? : [];
     assign('collections', $collections);
     assign('item_id', $vdo['videoid']);
 }

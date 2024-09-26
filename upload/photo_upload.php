@@ -14,7 +14,10 @@ if (isset($_GET['collection'])) {
 
 userquery::getInstance()->logincheck('allow_photo_upload', true);
 
-$collections = $cbphoto->collection->get_collections_list(0, null, null, 'photos', user_id());
+$collections = Collection::getInstance()->getAllIndent([
+    'type'   => 'photos',
+    'userid' => user_id()
+]);
 
 assign('collections', $collections);
 subtitle(lang('photos_upload'));

@@ -680,20 +680,13 @@ if (!empty($mode)) {
             }
             $insert_id = $cbcollection->create_collection($CollectParams);
 
-            if (msg()) {
-                $msg = msg_list();
-                $msg = $msg[0]['val'];
-                $ajax['msg'] = $msg;
-            }
-            if (error()) {
-                $err = error_list();
-                $err = $err[0]['val'];
-                $ajax['err'] = $err;
-            }
-
             $ajax['id'] = $insert_id;
-
-            echo json_encode($ajax);
+            $collections = Collection::getInstance()->getAllIndent([
+                'type'   => 'photos',
+                'userid' => user_id()
+            ]);
+            assign('collections', $collections);
+            echo templateWithMsgJson('blocks/collection_select_upload.html');
             break;
 
         case "ajaxPhotos":
