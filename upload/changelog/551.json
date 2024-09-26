@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"144",
+  "revision":"147",
   "status":"dev",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Implement video views history display"
         ,"Implement user level permission to disable channels"
         ,"Implement photo upload permission"
+        ,"Implement collection thumbnail selection"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -87,6 +88,7 @@
         ,"Fix user storage running even when disabled"
         ,"Fix playlists management"
         ,"Fix guest users permissions"
+        ,"Fix collection pagination"
       ]
     },
     {
@@ -106,6 +108,7 @@
         ,"Implement video views history display"
         ,"Implement option to disable user channel"
         ,"Implement add more to video collections"
+        ,"Implement collection thumbnail selection"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -157,6 +160,7 @@
         ,"Fix video, collection & photo order display"
         ,"Fix collection selection on video page"
         ,"Fix JS error on video upload"
+        ,"Fix video's shorter & longer filters"
       ]
     },
     {

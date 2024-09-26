@@ -1018,7 +1018,7 @@ class CBPhotos
         $fields = [
             'photos'      => get_photo_fields(),
             'users'       => get_user_fields(),
-            'collections' => ['collection_name','collection_id', 'type', 'views', 'date_added']
+            'collections' => ['collection_name','collection_id', 'type', 'date_added']
         ];
 
         $select_complement = '';
@@ -1039,7 +1039,7 @@ class CBPhotos
         $main_query = 'SELECT ' . $select . ' ' . $select_complement;
         $main_query .= ' FROM '.cb_sql_table('photos');
 
-        $join_collection = ' LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collection_items.object_id = photos.photo_id AND collection_items.type = \'p\'
+        $join_collection = ' LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collection_items.object_id = photos.photo_id AND collection_items.type = \'photos\'
          LEFT JOIN ' . cb_sql_table('collections') . ' ON collection_items.collection_id = collections.collection_id';
 
         $join_collection .= ' LEFT JOIN ' . cb_sql_table('users') . ' ON photos.userid = users.userid';
@@ -1919,7 +1919,7 @@ class CBPhotos
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->p_tbl), $query_field, $query_val);
 
             $photo = $this->get_photo($insert_id);
-            $this->collection->add_collection_item($insert_id, $array['collection_id']);
+            Collection::getInstance()->addCollectionItem($insert_id, $array['collection_id'], 'photos');
 
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
                 $this->generate_photos($photo);
@@ -2081,39 +2081,6 @@ class CBPhotos
         }
 
         return $PhotosArray;
-    }
-
-    /**
-     * This will be used to multiple photos
-     * at once.
-     * Single update will be different.
-     *
-     * @param $arr
-     * @throws Exception
-     */
-    function update_multiple_photos($arr)
-    {
-        global $cbcollection, $eh;
-
-        foreach ($arr as $id => $details) {
-            if (is_array($details)) {
-                $i = 0;
-                $query = "UPDATE " . tbl('photos') . " SET ";
-                foreach ($details as $key => $value) {
-                    $i++;
-                    $query .= "$key = '$value'";
-                    if ($i < count($details)) {
-                        $query .= " , ";
-                    }
-                }
-
-                $query .= " WHERE " . tbl('photos.photo_id') . " = '$id'";
-
-                Clipbucket_db::getInstance()->execute($query);
-                $cbcollection->add_collection_item($id, $details['collection_id']);
-            }
-        }
-        $eh->flush();
     }
 
     /**
@@ -2552,7 +2519,7 @@ class CBPhotos
             $cond = ' AND object_id = ' . mysql_clean($pid);
         }
 
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'p\' AND collection_id = ' . mysql_clean($cid) . $cond);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('collection_items') . ' WHERE type = \'photos\' AND collection_id = ' . mysql_clean($cid) . $cond);
     }
 
     /**

@@ -135,9 +135,18 @@ if (!empty($carray['order'])) {
 $collections = Collection::getInstance()->getAll($carray);
 assign('collections', $collections);
 
-$carray['count'] = true;
-$count_collection =  Collection::getInstance()->getAll($carray);
-$total_pages = count_pages($count_collection, config('collection_per_page'));
+if( empty($collections) ){
+    $total_rows = 0;
+} else if( count($collections) < config('admin_pages') && ($page == 1 || empty($page)) ){
+    $total_rows = count($collections);
+} else {
+    $carray['count'] = true;
+    unset($carray['limit']);
+    unset($carray['order']);
+    $total_rows = Collection::getInstance()->getAll($carray);
+}
+
+$total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
 $min_suffixe = in_dev() ? '' : '.min';

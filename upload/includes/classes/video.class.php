@@ -281,7 +281,6 @@ class Video
         $param_tags = $params['tags'] ?? false;
         $param_active = $params['active'] ?? false;
         $param_status = $params['status'] ?? false;
-
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
         $param_order = $params['order'] ?? false;
@@ -1007,7 +1006,7 @@ class CBvideo extends CBCategory
     function init_collections()
     {
         $this->collection = new Collections();
-        $this->collection->objType = 'v';
+        $this->collection->objType = 'videos';
         $this->collection->objClass = 'cbvideo';
         $this->collection->objTable = 'video';
         $this->collection->objName = 'Video';

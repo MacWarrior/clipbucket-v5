@@ -47,6 +47,11 @@ if (config('collectionsSection') == 'yes') {
 }
 assign('collections', $collections);
 
+assign('featured', Photo::getInstance()->getAll([
+    'limit'    => '0,6',
+    'featured' => true
+]));
+
 $total_pages = count_pages($count, config('photo_main_list'));
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 //Pagination

@@ -125,7 +125,7 @@ if (!empty($_filename)) {
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);
-    Clipbucket_db::getInstance()->update(tbl('video'), ['video_files', 'duration'], [$video_files, $ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
+    Clipbucket_db::getInstance()->update(tbl('video'), ['video_files', 'duration'], [$video_files, (int)$ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
 

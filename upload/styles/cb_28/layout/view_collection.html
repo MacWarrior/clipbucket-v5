@@ -97,9 +97,6 @@
                         <strong>{lang code="uploaded"}:</strong>&nbsp;{$c.date_added|niceTime}
                     </li>
                     <li>
-                        <strong>{lang code="views"}:</strong>&nbsp;{$c.views|number_format}
-                    </li>
-                    <li>
                         <strong>{lang code="category"}:</strong>&nbsp;{$c.category_names}
                     </li>
                     <li>
@@ -145,7 +142,6 @@
             {if config("enable_advertisement") == "yes"}
                 <div class="box-ad ad">{AD place='ad_300x250'}</div>
             {/if}
-            {$featured=get_photos(["featured"=>"yes","limit"=>6])}
             {if $featured}
                 <h2>{lang code='featured_photos'}</h2>
                 <div class="clearfix sidebar-items">
