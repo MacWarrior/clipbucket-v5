@@ -1,16 +1,22 @@
 <?php
-$baseurl = dirname(GetServerURL());
-if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
-    $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
-}
-global $db;
-$db->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
-$db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
+
+$title = mysql_clean(post('title'));
+$slogan = mysql_clean(post('slogan'));
+$baseurl = mysql_clean(post('baseurl'));
+$timezone = mysql_clean(post('timezone'));
+
+//First update website settings
+
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$title], " name='site_title'");
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$slogan], " name='site_slogan'");
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$timezone], " name='timezone'");
+Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
 ?>
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-        <h4 style="color:#fff;"><?php echo lang('admin_setting'); ?></h4>
+        <h4 style="color:#fff;"><?php echo lang('admin_account'); ?></h4>
         <p style="color:#fff;font-size:13px;">
             <?php echo lang('admin_install_info'); ?>
         </p>
@@ -41,16 +47,8 @@ $db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'")
             </p>
         </div>
         <br/>
-        <div class="field">
-            <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
-            <select name="language" id="language" class="form-control">
-                <?php foreach (Language::getInstance()->get_langs() as $lang) {
-                    echo '<option value="'.$lang['language_id'].'">'.$lang['language_name'].'</option>';
-                } ?>
-            </select>
-        </div>
 
-        <input type="hidden" name="mode" value="sitesettings"/>
+        <input type="hidden" name="mode" value="finish"/>
         <?php button(lang('save_continue'), ' onclick="$(\'#installation\').submit()" '); ?>
     </form>
 </div>

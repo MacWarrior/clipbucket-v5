@@ -18,6 +18,7 @@ html.light {
     --color-gradient-end : #e8e8e8;
     --background-gradient : linear-gradient(var(--color-gradient-start), var(--color-gradient-end));
     --generic-box-shadow : 0 10px 24px 0 rgba(0, 0, 0, 0.30);
+    --slim-box-shadow : 0 10px 24px 0 rgba(0, 0, 0, 0.30);
     --border-radius : 5px;
 }
 
@@ -30,7 +31,7 @@ body {
 
 /* Menu Top */
 #header{
-    box-shadow: var(--generic-box-shadow);
+    box-shadow: var(--slim-box-shadow);
 }
 #header .search input[type="text"]{
     background-color: var(--color-gradient-end);
@@ -45,6 +46,9 @@ body {
 .well{
     border-radius: var(--border-radius);
     background: var(--background-gradient);
+}
+.cb-box{
+    border-radius: var(--border-radius);
 }
 
 /* Sidebar */
@@ -81,9 +85,13 @@ body {
 }
 
 /* Login */
-.signin-block .user-form{
+.signin-block .user-form,
+.forgot-block .user-form{
     border-radius: var(--border-radius);
     background: var(--background-gradient);
+}
+.signin-block .side-box{
+    border-radius: var(--border-radius);
 }
 
 /* Signup */
@@ -194,7 +202,12 @@ body {
     z-index: -1;
 }
 .sidebar-items,
-.sidebar-channels{
+.sidebar-channels,
+.sidebar-playlists .playlist,
+.signin-block .side-box,
+.signin-block .user-form,
+.forgot-block .user-form,
+.cb-box{
     box-shadow: var(--generic-box-shadow);
 }
 
@@ -207,4 +220,28 @@ body {
     .filter-dropdowns .dropdown{
         border-radius: var(--border-radius);
     }
+}
+
+/* Default slider */
+.default-slider .slider-container .item-video{
+    border-radius: var(--border-radius);
+    background-color: transparent;
+}
+.slider-container-action .item-video:after{
+    content: none;
+}
+.slider-video-container .thumb-video-padding a.thumb-video{
+    background: var(--background-gradient);
+}
+
+/* shadow on video inside slider */
+.slider-video-container .thumb-video-padding + .shadow {
+    box-shadow: rgba(0, 0, 0, 0.30) 0px 25px 20px -20px;
+    width: 100%;
+    height: calc(var(--height) - 5px);
+    display: block;
+    z-index:-1;
+    position: absolute;
+    top:0;
+    left: 0;
 }

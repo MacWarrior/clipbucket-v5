@@ -2,7 +2,7 @@
 <div class="item-video col-lg-3 col-md-3 col-sm-4 col-xs-6">
 	<div class="clearfix thumb-holder">
 		<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260}"/>
+			<img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" loading="lazy"/>
 		</a>
 		<div class="item-footer">
 			{ANCHOR place='in_video_thumb' data=$video}
@@ -35,7 +35,7 @@
 {if $display_type=='user_videos'}
 <div class="col-md-3 col-sm-4 col-xs-6">
     <a href="{video_link($video)}" title="{display_clean($video.title)|title}">
-        <img alt="{display_clean($video.title)|title}" src="{getThumb vdetails=$video size='171x120'}" id="thumbs_{$video.videoid}" title="{display_clean($video.title)|title}"/>
+        <img alt="{display_clean($video.title)|title}" src="{getThumb vdetails=$video size='171x120'}" id="thumbs_{$video.videoid}" title="{display_clean($video.title)|title}" loading="lazy"/>
     </a>
     <p class="cbHomeVidDuration duration_view">
         {if $video.duration>1}
@@ -64,11 +64,11 @@
 					{/if}
 				</span>
 				<i class="icon-playweb play-icon"></i>
-				<img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1"/>
+				<img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
 			</a>
 			{ANCHOR place='in_video_thumb' data=$video}
 
-			{if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+			{if config('enable_quicklist')=='yes' && !Video::getInstance()->isToBlur($video['videoid'])}
 			<img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}" class="add_icon cb_quickie cb-btn-quick-{$video.videoid}" title="Add {display_clean($video.title)} to Quicklist" alt="Quicklist"/>
 			{/if}
 		</div>
@@ -105,7 +105,7 @@
 					{/if}
 				</span>
 				<i class="icon-playweb play-icon"></i>
-				<img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1"/>
+				<img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
 			</a>
 			{ANCHOR place='in_video_thumb' data=$video}
 
@@ -124,8 +124,8 @@
 
 {if $display_type=='user-videos'}
 <div class="clearfix thumb-holder userAppending">
-	<a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-		<img class="img-responsive" src="{getThumb vdetails=$video size=416x260}"/>
+	<a class="video-link {if config('popup_video')=='yes' && $home == true}cd-popup-trigger{/if} video-link" onclick="_cb.getModalVideo({$video.videoid})" href="{video_link($video)}" title="{display_clean($video.title)|title}">
+		<img class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if} " src="{getThumb vdetails=$video size=416x260}" loading="lazy"/>
 	</a>
 
 	{ANCHOR place='in_video_thumb' data=$video}

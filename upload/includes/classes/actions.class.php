@@ -97,13 +97,12 @@ class cbactions
      */
     function add_to_fav($id)
     {
-        global $db;
         $id = mysql_clean($id);
         //First checking weather object exists or not
         if ($this->exists($id)) {
             if (user_id()) {
                 if (!$this->fav_check($id)) {
-                    $db->insert(tbl($this->fav_tbl), ['type', 'id', 'userid', 'date_added'], [$this->type, $id, user_id(), NOW()]);
+                    Clipbucket_db::getInstance()->insert(tbl($this->fav_tbl), ['type', 'id', 'userid', 'date_added'], [$this->type, $id, user_id(), NOW()]);
                     addFeed(['action' => 'add_favorite', 'object_id' => $id, 'object' => 'video']);
 
                     //Logging Favorite
@@ -111,7 +110,7 @@ class cbactions
                         'success'        => 'yes',
                         'details'        => 'added ' . $this->name . ' to favorites',
                         'action_obj_id'  => $id,
-                        'action_done_id' => $db->insert_id()
+                        'action_done_id' => Clipbucket_db::getInstance()->insert_id()
                     ];
                     insert_log($this->name . '_favorite', $log_array);
 
@@ -138,14 +137,12 @@ class cbactions
      */
     function fav_check($id, $uid = null): bool
     {
-        global $db;
-
         $id = mysql_clean($id);
 
         if (!$uid) {
             $uid = user_id();
         }
-        $results = $db->select(tbl($this->fav_tbl), 'favorite_id', ' id=\'' . mysql_clean($id) . '\' AND userid=\'' . mysql_clean($uid) . '\' AND type=\'' . $this->type . '\'');
+        $results = Clipbucket_db::getInstance()->select(tbl($this->fav_tbl), 'favorite_id', ' id=\'' . mysql_clean($id) . '\' AND userid=\'' . mysql_clean($uid) . '\' AND type=\'' . $this->type . '\'');
         if (count($results) > 0) {
             return true;
         }
@@ -177,12 +174,11 @@ class cbactions
      */
     function report_it($id)
     {
-        global $db;
         //First checking weather object exists or not
         if ($this->exists($id)) {
             if (user_id()) {
                 if (!$this->report_check($id)) {
-                    $db->insert(
+                    Clipbucket_db::getInstance()->insert(
                         tbl($this->flag_tbl),
                         ['type', 'id', 'userid', 'flag_type', 'date_added'],
                         [$this->type, $id, user_id(), post('flag_type'), NOW()]
@@ -207,9 +203,8 @@ class cbactions
      */
     function delete_flags($id)
     {
-        global $db;
         $id = mysql_clean($id);
-        $db->delete(tbl($this->flag_tbl), ['id', 'type'], [$id, $this->type]);
+        Clipbucket_db::getInstance()->delete(tbl($this->flag_tbl), ['id', 'type'], [$id, $this->type]);
         e(lang('type_flags_removed', lang($this->name)), 'm');
     }
 
@@ -223,9 +218,8 @@ class cbactions
      */
     function report_check($id): bool
     {
-        global $db;
         $id = mysql_clean($id);
-        $results = $db->select(tbl($this->flag_tbl), 'flag_id', ' id=\'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\' AND userid=\'' . user_id() . '\'');
+        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl), 'flag_id', ' id=\'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\' AND userid=\'' . user_id() . '\'');
         if (count($results) > 0) {
             return true;
         }
@@ -300,8 +294,6 @@ class cbactions
      */
     function get_favorites($params)
     {
-        global $db;
-
         $uid = $params['userid'];
         $limit = $params['limit'];
         $cond = $params['cond'];
@@ -316,12 +308,12 @@ class cbactions
         }
 
         if ($params['count_only']) {
-            return $db->count(tbl($this->fav_tbl . ',' . $this->type_tbl), '*', ' ' . tbl($this->fav_tbl) . '.type=\'' . $this->type . '\' 
+            return Clipbucket_db::getInstance()->count(tbl($this->fav_tbl . ',' . $this->type_tbl), '*', ' ' . tbl($this->fav_tbl) . '.type=\'' . $this->type . '\' 
                 AND ' . tbl($this->fav_tbl) . '.userid=\'' . $uid . '\' 
                 AND ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' = ' . tbl($this->fav_tbl) . '.id' . $cond);
         }
 
-        $results = $db->select(tbl($this->fav_tbl . ',' . $this->type_tbl), '*', ' ' . tbl($this->fav_tbl) . '.type=\'' . $this->type . '\' 
+        $results = Clipbucket_db::getInstance()->select(tbl($this->fav_tbl . ',' . $this->type_tbl), '*', ' ' . tbl($this->fav_tbl) . '.type=\'' . $this->type . '\' 
             AND ' . tbl($this->fav_tbl) . '.userid=\'' . $uid . '\' 
             AND ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' = ' . tbl($this->fav_tbl) . '.id' . $cond, $limit, $order);
 
@@ -337,8 +329,7 @@ class cbactions
      */
     function total_favorites()
     {
-        global $db;
-        return $db->count(tbl($this->fav_tbl), 'favorite_id', ' type=\'' . $this->type . '\'');
+        return Clipbucket_db::getInstance()->count(tbl($this->fav_tbl), 'favorite_id', ' type=\'' . $this->type . '\'');
     }
 
     /**
@@ -350,12 +341,11 @@ class cbactions
      */
     function remove_favorite($fav_id, $uid = null)
     {
-        global $db;
         if (!$uid) {
             $uid = user_id();
         }
         if ($this->fav_check($fav_id, $uid)) {
-            $db->delete(tbl($this->fav_tbl), ['userid', 'type', 'id'], [$uid, $this->type, $fav_id]);
+            Clipbucket_db::getInstance()->delete(tbl($this->fav_tbl), ['userid', 'type', 'id'], [$uid, $this->type, $fav_id]);
             e(lang('fav_remove_msg', ucfirst(lang($this->name))), 'm');
         } else {
             e(lang('unknown_favorite', lang($this->name)));
@@ -372,9 +362,7 @@ class cbactions
      */
     function get_flagged_objects($limit = null)
     {
-        global $db;
-
-        $results = $db->select(tbl($this->flag_tbl . ',' . $this->type_tbl), '*', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
+        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), '*', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
             AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\'', $limit);
         if (count($results) > 0) {
             return $results;
@@ -392,8 +380,7 @@ class cbactions
      */
     function get_flags($id)
     {
-        global $db;
-        $results = $db->select(tbl($this->flag_tbl), '*', 'id = \'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\'');
+        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl), '*', 'id = \'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\'');
         if (count($results) > 0) {
             return $results;
         }
@@ -406,8 +393,7 @@ class cbactions
      */
     function count_flagged_objects(): int
     {
-        global $db;
-        $results = $db->select(tbl($this->flag_tbl . ',' . $this->type_tbl), 'id', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
+        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), 'id', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
             AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\' GROUP BY ' . tbl($this->flag_tbl) . '.id ,' . tbl($this->flag_tbl) . '.type');
         return count($results);
     }
@@ -468,49 +454,6 @@ class cbactions
         ];
     }
 
-    /**
-     * @throws Exception
-     */
-    function load_other_options($array = null): array
-    {
-        if (is_null($array)) {
-            $array = $_POST;
-        }
-
-        $allow_comments = $array['allow_comments'];
-        $allow_rating = $array['allow_rating'];
-        $return = [
-            'allow_comments' => [
-                'title'         => lang('playlist_allow_comments'),
-                'id'            => 'allow_comments',
-                'type'          => 'radiobutton',
-                'name'          => 'allow_comments',
-                'db_field'      => 'allow_comments',
-                'value'         => [
-                    'no'  => lang('no'),
-                    'yes' => lang('yes')
-                ],
-                'default_value' => 'yes',
-                'checked'       => $allow_comments
-            ],
-            'allow_rating'   => [
-                'title'         => lang('playlist_allow_rating'),
-                'id'            => 'allow_rating',
-                'type'          => 'radiobutton',
-                'name'          => 'allow_rating',
-                'db_field'      => 'allow_rating',
-                'value'         => [
-                    'no'  => lang('no'),
-                    'yes' => lang('yes')
-                ],
-                'default_value' => 'yes',
-                'checked'       => $allow_rating
-            ]
-
-        ];
-
-        return $return;
-    }
 
     /**
      * @throws Exception
@@ -522,18 +465,12 @@ class cbactions
         }
 
         $basic = $this->load_basic_fields($array);
-        $other = $this->load_other_options($array);
 
         return [
             'basic' => [
                 'group_id'   => 'basic_fields',
                 'group_name' => 'Basic Details',
                 'fields'     => $basic
-            ],
-            'other' => [
-                'group_id'   => 'other_fields',
-                'group_name' => 'Other Options',
-                'fields'     => $other
             ]
         ];
     }
@@ -544,7 +481,6 @@ class cbactions
     function create_playlist($params)
     {
         if (has_access('allow_create_playlist', false)) {
-            global $db;
             $name = mysql_clean($params['name']);
             if (!user_id()) {
                 e(lang('please_login_create_playlist'));
@@ -556,9 +492,9 @@ class cbactions
                 $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
                 $values = [$name, user_id(), now(), $this->type, '', ''];
 
-                $db->insert(tbl($this->playlist_tbl), $fields, $values);
+                Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
 
-                $pid = $db->insert_id();
+                $pid = Clipbucket_db::getInstance()->insert_id();
                 e(lang('new_playlist_created'), 'm');
 
                 return $pid;
@@ -573,11 +509,10 @@ class cbactions
      */
     function playlist_exists($name, $user, $type = null): bool
     {
-        global $db;
         if ($type) {
             $type = $this->type;
         }
-        $count = $db->count(tbl($this->playlist_tbl), 'playlist_id', ' userid=\'' . mysql_clean($user) . '\' AND playlist_name=\'' . mysql_clean($name) . '\' AND playlist_type=\'' . mysql_clean($type) . '\'');
+        $count = Clipbucket_db::getInstance()->count(tbl($this->playlist_tbl), 'playlist_id', ' userid=\'' . mysql_clean($user) . '\' AND playlist_name=\'' . mysql_clean($name) . '\' AND playlist_type=\'' . mysql_clean($type) . '\'');
 
         if ($count) {
             return true;
@@ -585,80 +520,7 @@ class cbactions
         return false;
     }
 
-    /**
-     * Function used to get playlist
-     * @throws Exception
-     */
-    function get_playlist($id, $user = null)
-    {
-        global $cb_columns;
 
-        $fields = [
-            'playlists' => $cb_columns->object('playlists')->temp_add('rated_by,voters,rating,allow_rating,allow_comments')->get_columns()
-        ];
-
-        $fields['users'] = $cb_columns->object('users')->temp_remove('usr_status,user_session_key')->get_columns();
-
-        $select_tag = '';
-        $join_tag = '';
-        $group_tag = '';
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS tags';
-            $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
-            $group_tag = ' GROUP BY playlists.playlist_id';
-        }
-        
-        $query = 'SELECT ' . table_fields($fields) . ' '.$select_tag.' FROM ' . cb_sql_table('playlists').'
-                LEFT JOIN ' . cb_sql_table('users') . ' ON playlists.userid = users.userid
-                '.$join_tag.'
-                WHERE playlists.playlist_id = \'' . mysql_clean($id) . '\'';
-
-        if (!is_null($user) and is_numeric($user)) {
-            $query .= ' AND playlists.userid = \'' . mysql_clean($user) . '\'';
-        }
-
-        $query .= $group_tag . ' LIMIT 1';
-
-        $query_id = cb_query_id($query);
-
-        $data = cb_do_action('select_playlist', ['query_id' => $query_id, 'object_id' => $id]);
-
-        if ($data) {
-            return $data;
-        }
-
-        $data = select($query);
-
-        if (isset($data[0]) and !empty($data[0])) {
-            $data = $data[0];
-
-            if (!empty($data['first_item'])) {
-                $first_item = json_decode($data['first_item'], true);
-                if ($first_item) {
-                    $data['first_item'] = $first_item;
-                }
-            }
-
-            if (!empty($data['cover'])) {
-                $cover = json_decode($data['cover'], true);
-                if ($cover) {
-                    $data['cover'] = $cover;
-                }
-            }
-
-            cb_do_action('return_playlist', [
-                'query_id'  => $query_id,
-                'results'   => $data,
-                'object_id' => $id
-            ]);
-
-            return $data;
-        }
-
-        return false;
-    }
 
     /**
      * Function used to add new item in playlist
@@ -666,9 +528,7 @@ class cbactions
      */
     function add_playlist_item($pid, $id)
     {
-        global $db;
-
-        $playlist = $this->get_playlist($pid);
+        $playlist = Playlist::getInstance()->getOne($pid);
 
         if (!$this->exists($id)) {
             e(lang('obj_not_exists', $this->name));
@@ -693,7 +553,7 @@ class cbactions
                 ];
 
                 /* insert item */
-                $db->insert(tbl($this->playlist_items_tbl), array_keys($fields), array_values($fields));
+                Clipbucket_db::getInstance()->insert(tbl($this->playlist_items_tbl), array_keys($fields), array_values($fields));
 
                 /* update playlist */
                 $fields = [
@@ -703,7 +563,7 @@ class cbactions
                     'total_items' => '|f|total_items+1'
                 ];
 
-                $db->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($pid) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($pid) . '\'');
 
                 e('<div class="alert alert-success">' . lang('video_added_to_playlist') . '</div>', 'm');
                 return $video;
@@ -717,9 +577,7 @@ class cbactions
      */
     function delete_playlist_item($id)
     {
-        global $db;
-
-        $item = $this->playlist_item($id, true);
+        $item = $this->playlist_item($id);
 
         if (!$item) {
             e(lang('playlist_item_not_exist'));
@@ -733,11 +591,8 @@ class cbactions
                 return false;
             }
 
-            cb_do_action('delete_playlist_item', ['playlist' => $item, 'object' => $video]);
-
             /* Remove item */
-            $db->delete(tbl($this->playlist_items_tbl), ['playlist_item_id'], [$id]);
-
+            Clipbucket_db::getInstance()->delete(tbl($this->playlist_items_tbl), ['playlist_item_id'], [$id]);
 
             /* Update playlist */
             $fields = [
@@ -758,8 +613,7 @@ class cbactions
                 $fields['first_item'] = '|no_mc|' . json_encode([]);
             }
 
-
-            $db->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($item['playlist_id']) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($fields), array_values($fields), ' playlist_id = \'' . mysql_clean($item['playlist_id']) . '\'');
 
             e(lang('playlist_item_delete'), 'm');
 
@@ -842,12 +696,11 @@ class cbactions
      */
     function playlist_item_with_obj($id, $pid = null)
     {
-        global $db;
         $pid_cond = '';
         if ($pid) {
             $pid_cond = ' AND playlist_id=\'' . mysql_clean($pid) . '\'';
         }
-        $result = $db->select(tbl($this->playlist_items_tbl), '*', ' object_id=\'' . mysql_clean($id) . '\' ' . $pid_cond);
+        $result = Clipbucket_db::getInstance()->select(tbl($this->playlist_items_tbl), '*', ' object_id=\'' . mysql_clean($id) . '\' ' . $pid_cond);
         if (count($result) > 0) {
             return $result[0];
         }
@@ -862,14 +715,12 @@ class cbactions
      */
     function edit_playlist($array = null)
     {
-        global $db;
-
         if (is_null($array)) {
             $array = $_POST;
         }
 
         $name = mysql_clean($array['name']);
-        $pdetails = $this->get_playlist($array['pid'] ? $array['pid'] : $array['list_id']);
+        $pdetails = Playlist::getInstance()->getOne($array['playlist_id']);
 
         if (!$pdetails) {
             e(lang('playlist_not_exist'));
@@ -922,16 +773,10 @@ class cbactions
 
                 $query_values['last_update'] = NOW();
 
-                $db->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
 
                 Tags::saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
 
-                $array['playlist_id'] = $array['pid'] ? $array['pid'] : $array['list_id'];
-
-                cb_do_action('update_playlist', [
-                    'object_id' => $array['pid'] ? $array['pid'] : $array['list_id'],
-                    'results'   => $array
-                ]);
             }
             e(lang('play_list_updated'), 'm');
         }
@@ -943,172 +788,19 @@ class cbactions
      */
     function delete_playlist($id)
     {
-        global $db;
-        $playlist = $this->get_playlist($id);
+        $playlist = Playlist::getInstance()->getOne($id);
         if (!$playlist) {
             e(lang('playlist_not_exist'));
         } elseif ($playlist['userid'] != user_id() && !has_access('admin_access', true)) {
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $id = mysql_clean($id);
-            $db->delete(tbl($this->playlist_tbl), ['playlist_id'], [mysql_clean($id)]);
-            $db->delete(tbl($this->playlist_items_tbl), ['playlist_id'], [$id]);
+            Clipbucket_db::getInstance()->delete(tbl($this->playlist_tbl), ['playlist_id'], [mysql_clean($id)]);
+            Clipbucket_db::getInstance()->delete(tbl($this->playlist_items_tbl), ['playlist_id'], [$id]);
             e(lang('playlist_delete_msg'), 'm');
         }
     }
 
-    /**
-     * Function used to get playlists
-     * @throws Exception
-     */
-    function get_playlists($params = [])
-    {
-        global $cb_columns, $db;
-
-        $fields = [
-            'playlists' => $cb_columns->object('playlists')->get_columns()
-        ];
-
-        $order = $params['order'];
-        $limit = $params['limit'];
-
-        //changes made
-        $playlist_name = $params['playlist_name'];
-        $tags = $params['tags'];
-        $userid = $params['userid'];
-
-        $select_tag = '';
-        $join_tag = '';
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS profile_tags';
-            $join_tag = ' LEFT JOIN ' . tbl('playlist_tags') . ' AS PT ON playlists.playlist_id = PT.id_playlist 
-                    LEFT JOIN ' . tbl('tags') .' AS T ON PT.id_tag = T.id_tag' ;
-        }
-
-        $left_join_video_cond = '';
-        if( !has_access('admin_access', true) ){
-            $left_join_video_cond = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
-        }
-
-        $select = ', COUNT(video.videoid) AS total_items';
-        $group_by = ' GROUP BY playlists.playlist_id';
-
-        $query = 'SELECT ' . table_fields($fields) . $select . $select_tag . ' FROM ';
-        $from = cb_sql_table('playlists')
-                . ' LEFT JOIN '.cb_sql_table('playlist_items').' ON playlists.playlist_id = playlist_items.playlist_id'
-                . ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid ' . $left_join_video_cond
-                . $join_tag;
-        $query .= $from;
-        $condition = '';
-
-        if (!has_access('admin_access')) {
-            $condition .= Playlist::getGenericConstraints();
-        } else {
-            if (isset($params['privacy'])) {
-                $condition .= ' playlists.privacy = \'' . mysql_clean($params['privacy']) . '\'';
-            }
-        }
-
-        if (isset($params['category'])) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= ' playlists.category = \'' . mysql_clean($params['category']) . '\'';
-        }
-
-        if (isset($params['include'])) {
-            $ids = is_array($params['include']) ? $params['include'] : explode(',', $params['include']);
-
-            if (is_array($ids) and !empty($ids)) {
-                $condition .= $condition ? ' AND ' : '';
-                $ids = implode(',', array_map('trim', $ids));
-                $condition .= ' playlists.playlist_id IN (' . mysql_clean($ids) . ')';
-            }
-        }
-
-        if (isset($params['exclude'])) {
-            $ids = is_array($params['exclude']) ? $params['exclude'] : explode(',', $params['exclude']);
-
-            if (is_array($ids) and !empty($ids)) {
-                $condition .= $condition ? ' AND ' : '';
-                $ids = implode(',', array_map('trim', $ids));
-                $condition .= ' playlists.playlist_id NOT IN (' . mysql_clean($ids) . ')';
-            }
-        }
-
-        if (isset($params['date_span'])) {
-            $condition .= $condition ? ' AND ' : '';
-            $column = $params['date_span_column'] ? trim($params['date_span_column']) : 'playlists.date_added';
-
-            $condition .= Search::date_margin($column, $params['date_span']);
-        }
-
-        if (isset($params['last_update'])) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= Search::date_margin('playlists.last_update', $params['last_update']);
-        }
-
-        if (isset($params['user'])) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= ' playlists.userid = \'' . $params['user'] . '\'';
-        }
-        ////////////CHANGES/////////////
-
-        if (isset($userid)) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= ' playlists.userid = \'' . mysql_clean($userid) . '\'';
-        }
-
-        if (isset($tags)) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= ' T.name LIKE \'%' . mysql_clean($tags) . '%\' ';
-        }
-
-        if (isset($playlist_name)) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= ' playlists.playlist_name LIKE \'%' . mysql_clean($playlist_name) . '%\' ';
-        }
-
-        ////////////CHANGES/////////////
-
-        if (isset($params['has_items'])) {
-            $condition .= $condition ? ' AND ' : '';
-            $condition .= ' playlists.total_items > \'0\' ';
-        }
-
-        if (isset($params['count_only'])) {
-            return $db->count($from, 'playlists.playlist_id', $condition);
-        }
-
-        if ($condition) {
-            $query .= ' WHERE ' . $condition;
-        }
-
-        $order = ' ORDER BY ' . ($order ? trim($order) : 'playlists.date_added DESC');
-        $limit = ($limit) ? ' LIMIT ' . $limit : '';
-
-        $query .= $group_by . $order . $limit;
-
-        $query_id = cb_query_id($query);
-
-        $action_array = ['query_id' => $query_id];
-
-        $data = cb_do_action('select_playlists', array_merge($action_array, $params));
-
-        if ($data) {
-            return $data;
-        }
-
-        $results = select($query);
-
-        if (!empty($results)) {
-            cb_do_action('return_playlists', [
-                'query_id' => $query_id,
-                'results'  => $results
-            ]);
-            return $results;
-        }
-        return false;
-    }
 
     /**
      * Function used to count playlist item
@@ -1120,8 +812,6 @@ class cbactions
      */
     function count_playlist_items($id)
     {
-        global $db;
-
         $left_join_video = '';
         $where_video = '';
         if( !has_access('admin_access', true) ){
@@ -1129,7 +819,7 @@ class cbactions
             $where_video = 'AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
-        return $db->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);
+        return Clipbucket_db::getInstance()->count(cb_sql_table($this->playlist_items_tbl) . $left_join_video, 'playlist_items.object_id', 'playlist_id=\'' . mysql_clean($id) . '\'' . $where_video);
     }
 
     /**
@@ -1142,11 +832,10 @@ class cbactions
      */
     function count_total_playlist($item = false)
     {
-        global $db;
         if (!$item) {
-            return $db->count(tbl($this->playlist_tbl), '*', ' playlist_type=\'' . $this->type . '\'');
+            return Clipbucket_db::getInstance()->count(tbl($this->playlist_tbl), '*', ' playlist_type=\'' . $this->type . '\'');
         }
-        return $db->count(tbl($this->playlist_items_tbl), 'playlist_item_id', ' playlist_item_type=\'' . $this->type . '\'');
+        return Clipbucket_db::getInstance()->count(tbl($this->playlist_items_tbl), 'playlist_item_id', ' playlist_item_type=\'' . $this->type . '\'');
     }
 
 }

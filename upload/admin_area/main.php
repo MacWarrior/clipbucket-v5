@@ -8,8 +8,8 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Website Configurations', 'url' => DirPath::getUrl('admin_area') . 'main.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('website_configuration'), 'url' => DirPath::getUrl('admin_area') . 'main.php'];
 
 if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
@@ -127,6 +127,12 @@ if (isset($_POST['update'])) {
         , 'enable_storage_history_fo'
         , 'enable_social_networks_links_footer'
         , 'enable_social_networks_links_home_sidebar'
+        , 'enable_video_view_history'
+        , 'home_enable_fullwidth'
+        , 'home_disable_sidebar'
+        , 'home_display_featured_collections'
+        , 'home_display_recent_videos'
+        , 'enable_access_view_video_history'
         , 'enable_visual_editor_comments'
     ];
 
@@ -436,7 +442,25 @@ if (isset($_POST['update'])) {
         'enable_storage_history_fo',
         'default_theme',
         'enable_social_networks_links_footer',
-        'enable_social_networks_links_home_sidebar'
+        'enable_social_networks_links_home_sidebar',
+        'enable_video_view_history',
+        'homepage_featured_video_display',
+        'homepage_recent_videos_display',
+        'homepage_recent_video_style',
+        'homepage_recent_video_ratio',
+        'list_recent_videos',
+        'list_featured_videos',
+        'home_enable_fullwidth',
+        'home_disable_sidebar',
+        'home_display_featured_collections',
+        'homepage_collection_video_style',
+        'homepage_collection_video_ratio',
+        'list_home_collection_videos',
+        'home_display_recent_videos',
+        'enable_video_view_history',
+        'enable_video_view_history',
+        'enable_access_view_video_history',
+        'video_list_view_video_history'
     ];
 
     foreach ($opt_list as $optl) {
@@ -493,7 +517,8 @@ if (isset($_POST['update'])) {
         'photo_med_height',
 
         'chunk_upload_size',
-        'cloudflare_upload_limit'
+        'cloudflare_upload_limit',
+        'video_list_view_video_history'
     ];
 
     foreach ($rows as $field) {
@@ -598,9 +623,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
                             FROM '.cb_sql_table('timezones').'
                             ORDER BY timezones.timezone';
     $rs = Clipbucket_db::getInstance()->_select($query);
-    foreach ($rs as $timezone) {
-        $allTimezone[] = $timezone['timezone'];
-    }
+    $allTimezone = array_column($rs, 'timezone');
 }
 assign('allTimezone', $allTimezone);
 

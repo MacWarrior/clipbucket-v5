@@ -374,61 +374,50 @@ $(document).ready(function(){
         }, 8000);
     });
 
-    $("#addNewCollection").on({
-        click: function(e){
-            e.preventDefault();
-            var formData = $(this).parents("form").serialize();
-            formData += "&mode=add_collection";
-            var collectionName = $(this).parents("form").find("#collection_name").val();
-            $.ajax({
-                type: "post",
-                url: "/ajax.php",
-                data: formData,
-                success: function(msg){
-                    msg = $.parseJSON(msg);
-                    if(msg.err === null || msg.err === undefined){
-                        var newCollectionElement = document.createElement('option');
-                        newCollectionElement.value = parseInt(msg.id);
-                        newCollectionElement.innerHTML = collectionName;
-                        newCollectionElement.selected = true;
-                        $("select[name='collection_id']").get(0).appendChild(newCollectionElement);
-                        $("#collectionSelection").get(0).appendChild( newCollectionElement.cloneNode(true));
-                        $("#collectionSelection option").last().attr('selected','selected');
-
-                        $("#uploadMessage").html(msg.msg).attr("class", "alert alert-success container").removeClass("hidden");
-
-                        $("#CollectionDIV").toggle("fast");
-                        $('.form_header').show();
-                        $(".upload-area").show();
-                        $('#collectionSelection').parent().show()
-                        $('#SelectionDIV').find('.alert-danger').hide();
-
-                        setTimeout(function(){
-                            $("#uploadMessage").addClass("hidden");
-                        }, 5000);
-                    }else if (msg.err == 'missing_table') {
-                        $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
-                        setTimeout(function(){
-                            $("#uploadMessage").addClass("hidden");
-                        }, 5000);
-                    }else{
-                        $("#uploadMessage").html(msg.err).attr("class", "alert alert-danger container").removeClass("hidden");
-                        setTimeout(function(){
-                            $("#uploadMessage").addClass("hidden");
-                        }, 5000);
-                    }
-                }
-            });
-        }
-    });
 
     $("#createNewCollection").on({
         click: function(e){
             e.preventDefault();
-            $('#CollectionDIV').toggle("fast").find('form')[0].reset();
-            $('.tagit li:not(.tagit-new)').remove();
-            $('.form_header').hide();
-            $(".upload-area").hide();
+            $.ajax({
+                type: "post",
+                url: "/actions/display_new_collection_form.php",
+                dataType: 'json',
+                success: function(response){
+                    $('.close').click();
+                    $("#uploadMessage").prepend(response['msg']);
+                    $("#CollectionDIV").html(response['template']);
+                    init_tags('collection_tags', available_collection_tags);
+                    $('#CollectionDIV').toggle("fast");
+                    $('.form_header').hide();
+                    $(".upload-area").hide();
+
+                    //listener submit
+                    $("#addNewCollection").on({
+                        click: function(e){
+                            e.preventDefault();
+                            var formData = $(this).parents("form").serialize();
+                            formData += "&mode=add_collection";
+                            var collectionName = $(this).parents("form").find("#collection_name").val();
+                            $.ajax({
+                                type: "post",
+                                url: "/ajax.php",
+                                data: formData,
+                                success: function(response){
+                                    response = $.parseJSON(response);
+                                    $('.close').click();
+                                    $("#uploadMessage").prepend(response['msg']);
+                                    $("#CollectionDIV").toggle("fast");
+
+                                    $("#SelectionDIV").html(response.template);
+                                    $('.form_header').show();
+                                    $(".upload-area").show();
+                                    $('#collectionSelection').parent().show();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
 

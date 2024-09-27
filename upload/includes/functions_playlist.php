@@ -1,28 +1,23 @@
 <?php
-function get_playlist($list_id, $user = null)
-{
-    global $cbvid;
-    return $cbvid->action->get_playlist($list_id, $user);
-}
 
+/**
+ * @throws Exception
+ */
 function is_playlist_viewable($list_id)
 {
-
     if (is_array($list_id)) {
         $playlist = $list_id;
     } else {
-        $playlist = get_playlist($list_id);
+        $playlist = Playlist::getInstance()->getOne($list_id);
     }
 
     if (isset($playlist['playlist_id'])) {
-
         if ($playlist['privacy'] == 'private' and $playlist['userid'] != user_id()) {
             e(lang('User has made this playlist private.'));
             return false;
         }
 
         $data = cb_do_action('is_playlist_viewable', ['playlist' => $playlist]);
-
         if ($data) {
             return $data;
         }
@@ -31,12 +26,6 @@ function is_playlist_viewable($list_id)
     }
 
     return true;
-}
-
-function get_playlists($args = [])
-{
-    global $cbvid;
-    return $cbvid->action->get_playlists($args);
 }
 
 /**
@@ -93,7 +82,7 @@ function get_playlist_thumb($playlist, $size = false)
     return ($thumb ? $thumb : get_playlist_default_thumb());
 }
 
-function get_playlist_default_thumb()
+function get_playlist_default_thumb(): string
 {
     $name = 'playlist_thumb.png';
     $template = TEMPLATEDIR;
@@ -115,7 +104,7 @@ function view_playlist($playlist_id)
     if (is_array($playlist_id) and isset($playlist_id['playlist_id'])) {
         $playlist = $playlist_id;
     } else {
-        $playlist = get_playlist($playlist_id);
+        $playlist = Playlist::getInstance()->getOne($playlist_id);
     }
 
     if (empty($playlist)) {
@@ -150,19 +139,15 @@ function view_playlist($playlist_id)
 /**
  * @throws Exception
  */
-function playlist_upload_cover($args)
+function playlist_upload_cover($args): bool
 {
-    global $db;
-
     $filename = $args['playlist_id'];
     $extension = getExt($args['name']);
     $folder = create_dated_folder(DirPath::get('playlist_covers'));
     $uploaded_file = DirPath::get('playlist_covers') . $folder . '/' . $filename . '.' . $extension;
 
     if (!empty($filename)) {
-
         if (move_uploaded_file($args['tmp_name'], $uploaded_file)) {
-
             $cover_name = $filename . '.' . $extension;
 
             $resizer = new CB_Resizer($uploaded_file);
@@ -170,32 +155,25 @@ function playlist_upload_cover($args)
             $resizer->resize(1280, 800);
             $resizer->save();
 
-
-            $db->update(tbl('playlists'), ['cover'], [$folder . '/' . $cover_name], " playlist_id = '" . $filename . "' ");
-
+            Clipbucket_db::getInstance()->update(tbl('playlists'), ['cover'], [$folder . '/' . $cover_name], " playlist_id = '" . $filename . "' ");
             return true;
         }
-
     }
 
     return false;
 }
 
+/**
+ * @throws Exception
+ */
 function increment_playlist_played($args = [])
 {
-    global $db;
-
     if (isset($args['playlist'])) {
-
         $cookie = 'playlist_played_' . $args['playlist']['playlist_id'];
-
         if (!isset($_COOKIE[$cookie])) {
-
-            $db->update(tbl('playlists'), ['played'], ['|f|played+1'], " playlist_id = '" . $args['playlist']['playlist_id'] . "' ");
+            Clipbucket_db::getInstance()->update(tbl('playlists'), ['played'], ['|f|played+1'], " playlist_id = '" . $args['playlist']['playlist_id'] . "' ");
             set_cookie_secure($cookie, true);
-
         }
-
     }
 }
 

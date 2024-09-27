@@ -3,7 +3,7 @@ define('THIS_PAGE', 'manage_photos');
 define('PARENT_PAGE', 'photos');
 require 'includes/config.inc.php';
 
-global $cbphoto, $eh, $pages, $db;
+global $cbphoto, $eh, $pages;
 
 userquery::getInstance()->logincheck();
 $udetails = userquery::getInstance()->get_user_details(user_id());
@@ -101,7 +101,7 @@ switch ($mode) {
 
         if (isset($_GET['album_privacy'])) {
             if (in_array(get('album_privacy'), ['private', 'public', 'friends'])) {
-                $db->update(tbl('users'), ['album_privacy'], [mysql_clean(get('album_privacy'))], ' userid=\'' . user_id() . '\'');
+                Clipbucket_db::getInstance()->update(tbl('users'), ['album_privacy'], [mysql_clean(get('album_privacy'))], ' userid=\'' . user_id() . '\'');
                 e(lang('album_privacy_updated'), 'm');
                 $udetails ['album_privacy'] = get('album_privacy');
                 assign('user', $udetails);
@@ -129,7 +129,7 @@ switch ($mode) {
             $photo_arr['tags'] = mysql_clean(get('query'));
         }
         $photos = get_photos($photo_arr);
-        //echo $db->db_query;
+
         assign('photos', $photos);
         assign('c', $collection[0]);
 

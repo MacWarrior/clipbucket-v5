@@ -9,8 +9,8 @@ pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Language Settings', 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('languages_settings'), 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'];
 
 $ll = Language::getInstance()->get_langs(false, true);
 foreach ($ll as &$language) {
@@ -57,6 +57,6 @@ ClipBucket::getInstance()->addAdminJS(['pages/language_settings/language_setting
 
 assign('client_id', Clipbucket::getInstance()->configs['clientid']);
 assign('secret_Id', Clipbucket::getInstance()->configs['secretId']);
-subtitle('Language Settings');
+subtitle(lang('languages_settings'));
 template_files('language_settings.html');
 display_it();

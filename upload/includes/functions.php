@@ -563,8 +563,7 @@ function getSmartyCategoryList($params)
  */
 function dbInsert($tbl, $flds, $vls, $ep = null)
 {
-    global $db;
-    $db->insert($tbl, $flds, $vls, $ep);
+    Clipbucket_db::getInstance()->insert($tbl, $flds, $vls, $ep);
 }
 
 /**
@@ -1232,9 +1231,15 @@ function lang($var, $params = [])
 
                 if (in_dev()) {
                     DiscordLog::sendDump($msg);
-                    $backtrace = debug_backtrace_string();
-                    error_log($backtrace);
-                    DiscordLog::sendDump($backtrace);
+
+                    $string = debug_backtrace_string();
+                    DiscordLog::sendDump($string);
+
+                    /** Splitting the log message into 100-character chunks to avoid saturating the error_log buffer */
+                    $chunks = str_split($string, 1000);
+                    foreach ($chunks as $chunk) {
+                        error_log($chunk);
+                    }
                 }
             }
         }
@@ -1586,7 +1591,6 @@ function call_view_collection_functions($cdetails)
             }
         }
     }
-    increment_views($cdetails['collection_id'], 'collection');
 }
 
 /**
@@ -1602,7 +1606,6 @@ function call_view_collection_functions($cdetails)
  */
 function increment_views($id, $type = null)
 {
-    global $db;
     switch ($type) {
         case 'v':
         case 'video':
@@ -1610,9 +1613,9 @@ function increment_views($id, $type = null)
             if (!isset($_COOKIE['video_' . $id])) {
                 $currentTime = time();
                 $views = (int)$videoViewsRecord['video_views'] + 1;
-                $db->update(tbl('video_views'), ['video_views', 'last_updated'], [$views, $currentTime], " video_id='$id' OR videokey='$id'");
+                Clipbucket_db::getInstance()->update(tbl('video_views'), ['video_views', 'last_updated'], [$views, $currentTime], " video_id='$id' OR videokey='$id'");
                 $query = "UPDATE " . tbl("video_views") . " SET video_views = video_views + 1 WHERE video_id = {$id}";
-                $db->execute($query);
+                Clipbucket_db::getInstance()->execute($query);
                 set_cookie_secure('video_' . $id, 'watched');
             }
             break;
@@ -1621,17 +1624,8 @@ function increment_views($id, $type = null)
         case 'user':
         case 'channel':
             if (!isset($_COOKIE['user_' . $id])) {
-                $db->update(tbl("users"), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
+                Clipbucket_db::getInstance()->update(tbl("users"), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
                 set_cookie_secure('user_' . $id, 'watched');
-            }
-            break;
-
-        case 'c':
-        case 'collect':
-        case 'collection':
-            if (!isset($_COOKIE['collection_' . $id])) {
-                $db->update(tbl('collections'), ['views'], ['|f|views+1'], " collection_id = '$id'");
-                set_cookie_secure('collection_' . $id, 'viewed');
             }
             break;
 
@@ -1639,7 +1633,7 @@ function increment_views($id, $type = null)
         case 'photo':
         case 'p':
             if (!isset($_COOKIE['photo_' . $id])) {
-                $db->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], " photo_id = '$id'");
+                Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], " photo_id = '$id'");
                 set_cookie_secure('photo_' . $id, 'viewed');
             }
             break;
@@ -1660,17 +1654,18 @@ function increment_views($id, $type = null)
  */
 function increment_views_new($id, $type = null)
 {
-    global $db;
     switch ($type) {
         case 'v':
         case 'video':
         default:
-            if (!isset($_COOKIE['video_' . $id])) {
-                $vdetails = get_video_details($id);
-                // Cookie life time at least 1 hour else if video duration is bigger set at video time.
-                $cookieTime = ($vdetails['duration'] > 3600) ? $vdetails['duration'] : $cookieTime = 3600;
-                $db->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
-                set_cookie_secure('video_' . $id, 'watched', $cookieTime);
+            $vdetails = get_video_details($id);
+            $sessionTime =  ($vdetails['duration'] ?? 3600);
+            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) ) {
+                Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
+                if (config('enable_video_view_history') == 'yes') {
+                    Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$vdetails['videoid'], (user_id() ?: 0), '|f|NOW()']);
+                }
+                $_SESSION['video_' . $id] = time();
 
                 $userid = user_id();
                 if ($userid) {
@@ -1689,17 +1684,8 @@ function increment_views_new($id, $type = null)
         case 'user':
         case 'channel':
             if (!isset($_COOKIE['user_' . $id])) {
-                $db->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
+                Clipbucket_db::getInstance()->update(tbl('users'), ['profile_hits'], ['|f|profile_hits+1'], " userid='$id'");
                 set_cookie_secure('user_' . $id, 'watched');
-            }
-            break;
-
-        case 'c':
-        case 'collect':
-        case 'collection':
-            if (!isset($_COOKIE['collection_' . $id])) {
-                $db->update(tbl('collections'), ['views'], ['|f|views+1'], " collection_id = '$id'");
-                set_cookie_secure('collection_' . $id, 'viewed');
             }
             break;
 
@@ -1707,7 +1693,7 @@ function increment_views_new($id, $type = null)
         case 'photo':
         case 'p':
             if (!isset($_COOKIE['photo_' . $id])) {
-                $db->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], " photo_id = '$id'");
+                Clipbucket_db::getInstance()->update(tbl('photos'), ['views', 'last_viewed'], ['|f|views+1', NOW()], " photo_id = '$id'");
                 set_cookie_secure('photo_' . $id, 'viewed');
             }
             break;
@@ -1766,13 +1752,15 @@ function show_playlist_form($array)
     assign('type', $array['type']);
     // decides to show all or user only playlists
     // depending on the parameters passed to it
+    $params = [
+        'type'=>$array['type']
+    ];
     if (!empty($array['user'])) {
-        $playlists = $cbvid->action->get_playlists($array);
-    } else {
-        if (user_id()) {
-            $playlists = $cbvid->action->get_playlists();
-        }
+        $params['userid'] = $array['user'];
+    } elseif (user_id()) {
+        $params['userid'] = user_id();
     }
+    $playlists = Playlist::getInstance()->getAll($params);
     assign('playlists', $playlists);
     Template('blocks/common/playlist.html');
 }
@@ -1782,15 +1770,6 @@ function show_playlist_form($array)
  * @throws Exception
  * @internal param $ : { array } { $params } { array with parameters }
  */
-function show_collection_form()
-{
-    global $cbcollection;
-    if (user_id()) {
-        $collections = $cbcollection->get_collections_list(0, null, null, 'videos', user_id());
-        assign('collections', $collections);
-    }
-    Template('blocks/collection_form.html');
-}
 
 /**
  * Convert timestamp to date
@@ -2507,30 +2486,6 @@ function get_collection_field($cid, $field = 'collection_name')
 }
 
 /**
- * Deletes all photos found inside of given collection
- * function is used when whole collection is being deleted
- *
- * @param : { array } { $details } { an array with collection's details }
- *
- * @throws Exception
- * @action: makes photos orphan
- */
-function delete_collection_photos($details)
-{
-    global $cbphoto;
-    $type = $details['type'];
-    if ($type == 'photos') {
-        $ps = $cbphoto->get_photos(["collection" => $details['collection_id']]);
-        if (!empty($ps)) {
-            foreach ($ps as $p) {
-                $cbphoto->make_photo_orphan($details, $p['photo_id']);
-            }
-            unset($ps); // Empty $ps. Avoiding the duplication prob
-        }
-    }
-}
-
-/**
  * Get ClipBucket's footer menu
  * @param null $params
  *
@@ -3001,8 +2956,7 @@ function insert_log($type, $details)
  */
 function get_db_size(): int
 {
-    global $db;
-    $results = $db->_select('SHOW TABLE STATUS');
+    $results = Clipbucket_db::getInstance()->_select('SHOW TABLE STATUS');
     $dbsize = 0;
     foreach ($results as $row) {
         $dbsize += $row['Data_length'] + $row['Index_length'];
@@ -3193,7 +3147,6 @@ function is_ssl(): bool
  */
 function updateObjectStats($type, $object, $id, $op = '+')
 {
-    global $db;
     switch ($type) {
         case "favorite":
         case "favourite":
@@ -3204,13 +3157,13 @@ function updateObjectStats($type, $object, $id, $op = '+')
                 case "video":
                 case "videos":
                 case "v":
-                    $db->update(tbl('video'), ['favourite_count'], ["|f|favourite_count" . $op . "1"], " videoid = '" . $id . "'");
+                    Clipbucket_db::getInstance()->update(tbl('video'), ['favourite_count'], ["|f|favourite_count" . $op . "1"], " videoid = '" . $id . "'");
                     break;
 
                 case "photo":
                 case "photos":
                 case "p":
-                    $db->update(tbl('photos'), ['total_favorites'], ["|f|total_favorites" . $op . "1"], " photo_id = '" . $id . "'");
+                    Clipbucket_db::getInstance()->update(tbl('photos'), ['total_favorites'], ["|f|total_favorites" . $op . "1"], " photo_id = '" . $id . "'");
                     break;
             }
             break;
@@ -3222,7 +3175,7 @@ function updateObjectStats($type, $object, $id, $op = '+')
                 case "video":
                 case "videos":
                 case "v":
-                    $db->update(tbl('video'), ['playlist_count'], ["|f|playlist_count" . $op . "1"], " videoid = '" . $id . "'");
+                    Clipbucket_db::getInstance()->update(tbl('video'), ['playlist_count'], ["|f|playlist_count" . $op . "1"], " videoid = '" . $id . "'");
                     break;
             }
             break;
@@ -3339,7 +3292,6 @@ function isSectionEnabled($input)
  */
 function update_last_commented($type, $id)
 {
-    global $db;
     if ($type && $id) {
         switch ($type) {
             case "v":
@@ -3347,7 +3299,7 @@ function update_last_commented($type, $id)
             case "vdo":
             case "vid":
             case "videos":
-                $db->update(tbl("video"), ['last_commented'], [now()], "videoid='$id'");
+                Clipbucket_db::getInstance()->update(tbl("video"), ['last_commented'], [now()], "videoid='$id'");
                 break;
 
             case "c":
@@ -3356,7 +3308,7 @@ function update_last_commented($type, $id)
             case "u":
             case "users":
             case "channels":
-                $db->update(tbl("users"), ['last_commented'], [now()], "userid='$id'");
+                Clipbucket_db::getInstance()->update(tbl("users"), ['last_commented'], [now()], "userid='$id'");
                 break;
 
             case "cl":
@@ -3364,7 +3316,7 @@ function update_last_commented($type, $id)
             case "collect":
             case "collections":
             case "collects":
-                $db->update(tbl("collections"), ['last_commented'], [now()], "collection_id='$id'");
+                Clipbucket_db::getInstance()->update(tbl("collections"), ['last_commented'], [now()], "collection_id='$id'");
                 break;
 
             case "p":
@@ -3372,7 +3324,7 @@ function update_last_commented($type, $id)
             case "photos":
             case "picture":
             case "pictures":
-                $db->update(tbl("photos"), ['last_commented'], [now()], "photo_id='$id'");
+                Clipbucket_db::getInstance()->update(tbl("photos"), ['last_commented'], [now()], "photo_id='$id'");
                 break;
         }
     }
@@ -3797,7 +3749,6 @@ function find_string($needle_start, $needle_end, $results)
  */
 function fetch_action_logs($params)
 {
-    global $db;
     $cond = [];
     if ($params['type']) {
         $type = $params['type'];
@@ -3848,10 +3799,10 @@ function fetch_action_logs($params)
     }
     if (!empty($cond)) {
         $final_query .= " ORDER BY `action_id` DESC LIMIT $start,$limit";
-        $logs = $db->select(tbl("action_log"), "*", "$final_query");
+        $logs = Clipbucket_db::getInstance()->select(tbl("action_log"), "*", "$final_query");
     } else {
         $final_query = " `action_id` != '' ORDER BY `action_id` DESC LIMIT $start,$limit";
-        $logs = $db->select(tbl("action_log"), "*", "$final_query");
+        $logs = Clipbucket_db::getInstance()->select(tbl("action_log"), "*", "$final_query");
     }
     if (is_array($logs)) {
         return $logs;
@@ -3878,7 +3829,6 @@ function fetch_action_logs($params)
  */
 function has_rated($userid, $itemid, $type = false)
 {
-    global $db;
     switch ($type) {
         case 'video':
             $toselect = 'videoid';
@@ -3904,7 +3854,7 @@ function has_rated($userid, $itemid, $type = false)
             $field = 'voter_ids';
             break;
     }
-    $raw_rating = $db->select(tbl($type), $field, "$toselect = $itemid");
+    $raw_rating = Clipbucket_db::getInstance()->select(tbl($type), $field, "$toselect = $itemid");
     $ratedby_json = $raw_rating[0][$field];
     $ratedby_cleaned = json_decode($ratedby_json, true);
     foreach ($ratedby_cleaned as $rating_data) {
@@ -4143,9 +4093,10 @@ function generic_curl($input_arr = [])
 
 /**
  * @param string $format
+ * @param string $timeout
  * @return resource
  */
-function get_proxy_settings(string $format = '')
+function get_proxy_settings(string $format = '', string $timeout = '')
 {
     switch ($format) {
         default:
@@ -4163,6 +4114,10 @@ function get_proxy_settings(string $format = '')
                     $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
                 }
             }
+            if( !empty($timeout)) {
+                $context['http']['timeout'] = (int)$timeout;
+            }
+
             return stream_context_create($context);
     }
 }

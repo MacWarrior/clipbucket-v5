@@ -589,10 +589,9 @@ function collection_actions(form,mode,objID,result_con,type,cid)
 {
     $(result_con).css('display','block');
     $(result_con).html(loading);
-
     switch(mode) {
         case 'add_new_item':
-            $.post(page, {
+            $.post('actions/add_to_collection.php', {
                 mode: mode,
                 cid: $('#'+form+' #collection').val(),
                 obj_id: objID,
@@ -604,9 +603,9 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                 } else {
                     if(data.msg){
                         $(result_con).html(data.msg);
-                    }
-                    if(data.err){
-                        $(result_con).html(data.err);
+                        $(result_con).find('.container').css({
+                            'maxWidth' : '100%'
+                        });
                     }
                 }
             },'json');

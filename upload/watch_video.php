@@ -44,6 +44,18 @@ if( config('playlistsSection') == 'yes' ){
     }
 }
 
+if( config('collectionsSection') == 'yes' ){
+    $params = [];
+    $params['type'] = 'videos';
+
+    if (!has_access('admin_access')) {
+        $params['userid'] = user_id();
+    }
+    $collections = Collection::getInstance()->getAllIndent($params) ? : [];
+    assign('collections', $collections);
+    assign('item_id', $vdo['videoid']);
+}
+
 if( !$is_playlist ){
     $videoid = $vdo['videoid'];
     $related_videos = get_videos(['title' => $vdo['title'], 'tags' => $vdo['tags'], 'exclude' => $videoid, 'show_related' => 'yes', 'limit' => 12, 'order' => 'RAND()']);

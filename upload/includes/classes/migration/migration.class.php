@@ -155,7 +155,7 @@ class Migration
             $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
 
-            $sql = ' INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@id_language_key, \'' . mysql_clean($translation) . '\', ' . $language_id_sql . ');';
+            $sql = 'INSERT IGNORE INTO `' . tbl('languages_translations') . '` (`id_language_key`, `translation`, `language_id`) VALUES (@id_language_key, \'' . mysql_clean($translation) . '\', ' . $language_id_sql . ');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
         }
     }
@@ -163,18 +163,33 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function deleteTranslation(string $translatioon_key)
+    public static function deleteTranslation(string $translation_key)
     {
         $sql = 'DELETE FROM `' . tbl('languages_translations') . '`
             WHERE `id_language_key` = (
                 SELECT id_language_key FROM `' . tbl('languages_keys') . '`
-                WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\'
+                WHERE `language_key` = \''.mysql_clean($translation_key) . '\'
                 );';
         Clipbucket_db::getInstance()->executeThrowException($sql);
 
         $sql = 'DELETE FROM `' . tbl('languages_keys') . '`
-            WHERE `language_key` = \''.mysql_clean($translatioon_key) . '\';';
+            WHERE `language_key` = \''.mysql_clean($translation_key) . '\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    public static function updateTranslation(string $translation_key, array $translations)
+    {
+        $sql = 'SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = \'' . mysql_clean(strtolower($translation_key)) . '\' );';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+
+        foreach ($translations as $language_code => $translation) {
+            $language_id_sql = '@' . preg_replace('/\W/', '_', 'language_id_' . mysql_clean(strtolower($language_code)));
+            $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
+            Clipbucket_db::getInstance()->executeThrowException($sql);
+
+            $sql = 'UPDATE `' . tbl('languages_translations') . '` SET `translation` = \'' . mysql_clean($translation) . '\' WHERE id_language_key = @id_language_key AND language_id = ' . $language_id_sql . ');';
+            Clipbucket_db::getInstance()->executeThrowException($sql);
+        }
     }
 
     /**
@@ -316,30 +331,45 @@ class Migration
     public static function query($sql)
     {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
-        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->db_name, $sql);
+        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getTableName(), $sql);
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 
     /**
      * @param string $code
      * @param string $tool_function ex AdminTool::function
-     * @param string $schedule * * * *
+     * @param string|null $frequency
      * @param bool $is_automatable
      * @return void
      * @throws Exception
      */
-    public static function insertTool(string $code, string $tool_function, string $schedule = null, bool $is_automatable = false)
+    public static function insertTool(string $code, string $tool_function, string $frequency = null, bool $is_automatable = false)
     {
         $label = mysql_clean($code);
-        $previous_calculated_datetime = '';
-        $previous_calculated_datetime_value= '';
-        if (!empty($schedule)) {
-            $previous_calculated_datetime = ', previous_calculated_datetime ';
-            $previous_calculated_datetime_value = ', CURRENT_TIMESTAMP' ;
+
+        $fields = ['language_key_label', 'language_key_description', 'function_name', 'code'];
+        $values = [
+            '\'' . $label . '_label\''
+            ,'\'' . $label . '_description\''
+            ,'\'' . mysql_clean($tool_function) . '\''
+            ,'\'' . $label . '\''
+        ];
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
+            $fields[] = 'frequency';
+            $values[] = '\'' . mysql_clean($frequency) . '\'';
+
+            $fields[] = 'is_automatable';
+            $values[] = $is_automatable ? '1' : '0';
+
+            $fields[] = 'previous_calculated_datetime';
+            $values[] = 'CURRENT_TIMESTAMP';
         }
 
-        $sql = 'INSERT IGNORE INTO ' . tbl('tools') . ' (language_key_label, language_key_description, function_name, code, frequency, is_automatable '.$previous_calculated_datetime.') 
-            VALUES (\'' . $label . '_label\', \'' . $label . '_description\', \'' . mysql_clean($tool_function) . '\', \'' . $label . '\' , \''. mysql_clean($schedule).'\', '.mysql_clean($is_automatable).' '.$previous_calculated_datetime_value.')';
+        $fields_txt = implode(', ', $fields);
+        $values_txt = implode(', ', $values);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('tools') . ' (' . $fields_txt . ') VALUES (' . $values_txt . ');';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 

@@ -2,14 +2,14 @@
 	<div class="navbar-container container">
 		<div class="navbar-header pull-left">
             <div class="logoContainer clearfix">
-                <a href="{$admin_baseurl}">
+                <a href="{DirPath::getUrl('admin_area')}">
                     <img class="pull-left" src="{get_website_logo_path()}" height="45px">
                 </a>
             </div>
         </div>
         {$nbnotif={math equation="a + b + c + d" a={get_videos active='no' count_only=true} b={get_users status='ToActivate' count_only=true} c={get_photos active='no' count_only=true} d=$cbvid->action->count_flagged_objects()}}
         <div class="navbar-header pull-right" role="navigation">
-            <ul class="nav ace-nav fontawesome-icons">
+            <ul class="nav ace-nav">
                 {if !$NEED_UPDATE}
                 <li class="purple">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -22,10 +22,10 @@
                             {$nbnotif} Notifications
                         </li>
                         <li>
-                            <a href="video_manager.php?search=search&active=no">
+                            <a href="{DirPath::getUrl('admin_area')}video_manager.php?search=search&active=no">
                                 <div class="clearfix">
                                     <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-pink icon-facetime-video"></i>
+                                        <i class="btn btn-xs no-hover btn-pink glyphicon glyphicon-facetime-video"></i>
                                         Approve Videos
                                     </span>
                                     <span class="badge badge-info pull-right">{get_videos active='no' count_only=true}</span>
@@ -34,10 +34,10 @@
                         </li>
 
                         <li>
-                            <a href="members.php?search=yes&amp;status=ToActivate">
+                            <a href="{DirPath::getUrl('admin_area')}members.php?search=yes&amp;status=ToActivate">
                                 <div class="clearfix">
                                     <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-success icon-user"></i>
+                                        <i class="btn btn-xs no-hover btn-success glyphicon glyphicon-user"></i>
                                         Approve Members
                                     </span>
                                     <span class="badge badge-success pull-right">{get_users status='ToActivate' count_only=true}</span>
@@ -46,10 +46,10 @@
                         </li>
 
                         <li>
-                            <a href="photo_manager.php?active=no&amp;search=yes">
+                            <a href={DirPath::getUrl('admin_area')}"photo_manager.php?active=no&amp;search=yes">
                                 <div class="clearfix">
                                     <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-info icon-group"></i>
+                                        <i class="btn btn-xs no-hover btn-info 	glyphicon glyphicon-picture"></i>
                                         Approve Photos
                                     </span>
                                     <span class="badge badge-info pull-right">{get_photos active='no' count_only=true}</span>
@@ -57,10 +57,10 @@
                             </a>
                         </li>
                         <li>
-                            <a href="flagged_videos.php">
+                            <a href="{DirPath::getUrl('admin_area')}flagged_videos.php">
                                 <div class="clearfix">
                                     <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-error icon-flag"></i>
+                                        <i class="btn btn-xs no-hover btn-error glyphicon glyphicon-flag"></i>
                                         Flagged
                                     </span>
                                     <span class="badge badge-info pull-right">{$cbvid->action->count_flagged_objects()} </span>
@@ -69,9 +69,9 @@
                         </li>
 
                         <li>
-                            <a href="/admin_area/notification_settings.php">
+                            <a href="{DirPath::getUrl('admin_area')}notification_settings.php">
                                 See all notifications
-                                <i class="icon-arrow-right"></i>
+                                <i class="glyphicon glyphicon-chevron-right"></i>
                             </a>
                         </li>
                     </ul>
@@ -104,13 +104,10 @@
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
                         <img src="{$userquery->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
-                         {display_clean($userquery->username)}<br>
-                         {assign var=levels value=$userquery->get_levels()}
-                         {section name=l loop=$levels}
-                            {$levels[l].user_level_name}
-                         {/section}
+                         {display_clean(User::getInstance()->get('username'))|ucfirst}<br/>
+                         {display_clean(User::getInstance()->get('user_level_name'))}
                         </span>
-                        <i class="icon-caret-down"></i>
+                        <i class="glyphicon glyphicon-chevron-down"></i>
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         {if !$NEED_UPDATE}
@@ -122,7 +119,7 @@
 
                         <li>
                             <a href="/admin_area/view_user.php?uid={user_id()}">
-                                <i class="	glyphicon glyphicon-user"></i> Profile
+                                <i class="glyphicon glyphicon-user"></i> Profile
                             </a>
                         </li>
 
@@ -130,7 +127,7 @@
                         {/if}
                         <li>
                             <a href="logout.php">
-                                <i class="	glyphicon glyphicon-off"></i> Logout
+                                <i class="glyphicon glyphicon-off"></i> {lang code='logout'}
                             </a>
                         </li>
                     </ul>

@@ -333,6 +333,11 @@ a:hover{
     color: var(--color-main-01);
 }
 
+/* Home */
+#featured_vid_sec .item-video .video-link .title{
+    color: #f6f6f6;
+}
+
 /* Login */
 .signin-block h2,
 .forgot-block h2,
@@ -348,6 +353,10 @@ a:hover{
 .forgot-block .form-control{
     background-color: var(--color-01);
     color: var(--color-02);
+}
+.signin-block .side-box{
+    background-color: var(--color-main-01);
+    color: var(--color-main-02);
 }
 
 /* Signup */
@@ -552,7 +561,8 @@ a:hover{
 .pl_details a:hover{
     color: var(--color-main-01);
 }
-.item-video .thumb-holder .cb_quickie.icon-tick{
+.item-video .thumb-holder .cb_quickie.icon-tick,
+.slider-video-container .thumb-video-padding .thumb-video > div.add-playlist.cb_quickie.icon-tick {
     background-color: var(--color-main-01);
     border-color: var(--color-main-01);
     color: var(--color-main-02);
@@ -593,6 +603,17 @@ a:hover{
 /* Video manager */
 #updateVideoInfo .formSection h4{
     background-color: var(--color-05);
+}
+/* Video manager */
+#updateCollection .formSection h4{
+    background-color: var(--color-05);
+    margin: 0;
+    padding: 10px;
+
+}
+
+#updateCollection .formSection {
+    margin-bottom: 10px;
 }
 
 /* Mobile */
@@ -646,4 +667,9 @@ a:hover{
     #header .logo img{
         max-height: 45px;
     }
+}
+
+/* Default slider */
+.slider-video-container .thumb-video-padding a.thumb-video{
+    background-color: var(--color-01);
 }

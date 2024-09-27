@@ -14,7 +14,7 @@ function config($input)
     }
 
     if (in_dev()) {
-        error_log('Missing config : ' . $input);
+        error_log('[CONFIG] Missing config : ' . $input . PHP_EOL);
     }
     return false;
 }

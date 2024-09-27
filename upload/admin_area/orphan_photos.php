@@ -3,7 +3,7 @@ define('THIS_PAGE', 'orphan_photos');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $cbphoto, $eh, $db;
+global $pages, $cbphoto, $eh;
 
 userquery::getInstance()->admin_login_check();
 userquery::getInstance()->login_check('video_moderation');
@@ -54,7 +54,7 @@ if (isset($_POST['move_selected']) && is_array($_POST['check_photo'])) {
     $new = mysql_clean($_POST['collection_id']);
     for ($i = 0; $i < $total; $i++) {
         $cbphoto->collection->change_collection($new, $_POST['check_photo'][$i]);
-        $db->update(tbl('photos'), ['collection_id'], [$new], ' photo_id = ' . $_POST['check_photo'][$i]);
+        Clipbucket_db::getInstance()->update(tbl('photos'), ['collection_id'], [$new], ' photo_id = ' . $_POST['check_photo'][$i]);
     }
     $eh->flush();
     e($total . ' photo(s) have been moved to \'<strong>' . get_collection_field($new, 'collection_name') . '</strong>\'', 'm');

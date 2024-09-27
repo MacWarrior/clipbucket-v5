@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"120",
+  "revision":"148",
   "status":"dev",
   "detail":[
     {
@@ -23,10 +23,17 @@
         ,"Implement Custom CSS"
         ,"Implement per page configurations"
         ,"Implement social networks links management"
+        ,"Implement collection comments management"
+        ,"Implement video view history"
+        ,"Implement video views history display"
+        ,"Implement user level permission to disable channels"
+        ,"Implement photo upload permission"
+        ,"Implement collection thumbnail selection"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
         ,"Refactor collection items management"
+        ,"Refactor orphan photos management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -40,8 +47,10 @@
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
+        ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
+        ,"Reorder main menu"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
@@ -73,6 +82,13 @@
         ,"Fix video edition status list"
         ,"Fix default thumbnail after thumbnails regeneration"
         ,"Fix collection manager pagination"
+        ,"Fix icons not displaying"
+        ,"Fix current user level display in header"
+        ,"Fix collection uploader informations display"
+        ,"Fix user storage running even when disabled"
+        ,"Fix playlists management"
+        ,"Fix guest users permissions"
+        ,"Fix collection pagination"
       ]
     },
     {
@@ -84,15 +100,26 @@
         ,"Implement video posters & backdrops management"
         ,"Implement dark & light themes"
         ,"Implement social networks links in footer & homepage sidebar"
+        ,"Implement video orders : recently viewed, longer & shorter"
+        ,"Implement featured categories"
+        ,"Implement recent videos slider"
+        ,"Implement homepage fullpage width"
+        ,"Implement option to disable homepage sidebar"
+        ,"Implement video views history display"
+        ,"Implement option to disable user channel"
+        ,"Implement add more to video collections"
+        ,"Implement collection thumbnail selection"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
+        ,"Refactor orphan photos management"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
         ,"Update orphan photos management"
+        ,"Update dark & light themes"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -130,6 +157,11 @@
         ,"Fix collection default thumb when using sub-collections"
         ,"Fix infinite loop when using sub-collections"
         ,"Fix recursives categories"
+        ,"Fix video, collection & photo order display"
+        ,"Fix collection selection on video page"
+        ,"Fix JS error on video upload"
+        ,"Fix video's shorter & longer filters"
+        ,"Fix recursive collection display"
       ]
     },
     {
@@ -143,6 +175,7 @@
         ,"Remove unused functions"
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
+        ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -163,6 +196,8 @@
       "title": "Installation & Update",
       "description": [
         "Implement Windows installation script"
+        ,"Implement dev mode options"
+        ,"Implement DB timezone selection"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -171,6 +206,8 @@
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
         ,"Update config creations"
+        ,"Update database creation descriptions"
+        ,"Update installation script to Ubuntu 24.04"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -182,6 +219,10 @@
         ,"Fix SSE DB update"
         ,"Fix migration on windows hosts"
         ,"Fix PHP Cli detection"
+        ,"Fix database configuration <i>(#426)</i>"
+        ,"Fix Ubuntu&Debian git error in installation script"
+        ,"Fix migrating from old revision"
+        ,"Fix guest users permissions"
       ]
     },
     {
@@ -199,9 +240,15 @@
       ]
     },
     {
+      "title": "Player",
+      "description": [
+        "Fix play/pause through space bar"
+      ]
+    },
+    {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.3"
+        "Update Player to version 2.0.4"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"

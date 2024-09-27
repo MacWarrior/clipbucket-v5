@@ -12,7 +12,6 @@ class AdsManager
      */
     function AddAd($array = null)
     {
-        global $db;
         if (!$array) {
             $array = $_POST;
         }
@@ -26,12 +25,12 @@ class AdsManager
             return e(lang('ad_name_error'));
         }
 
-        $count = $db->count(tbl("ads_data"), "ad_id", " ad_name='$name'");
+        $count = Clipbucket_db::getInstance()->count(tbl('ads_data'), 'ad_id', ' ad_name=\'$name\'');
 
         if ($count > 0) {
             return e(lang('ad_exists_error2'));
         }
-        $db->insert(tbl("ads_data"), ["ad_name", "ad_placement", "ad_code", "ad_status", "date_added"], [$name, $placement,/*"|no_mc|".*/ $code, $status, now()]);
+        Clipbucket_db::getInstance()->insert(tbl('ads_data'), ['ad_name', 'ad_placement', 'ad_code', 'ad_status', 'date_added'], [$name, $placement, $code, $status, now()]);
         return e(lang('ad_add_msg'), 'm');
     }
 
@@ -46,8 +45,6 @@ class AdsManager
      */
     function ChangeAdStatus($status, $id)
     {
-        global $db;
-
         if ($status > 1) {
             $status = 1;
         }
@@ -56,7 +53,7 @@ class AdsManager
         }
 
         if ($this->ad_exists($id)) {
-            $db->update(tbl("ads_data"), ["ad_status"], [$status], " ad_id='" . mysql_clean($id) . "'");
+            Clipbucket_db::getInstance()->update(tbl("ads_data"), ["ad_status"], [$status], " ad_id='" . mysql_clean($id) . "'");
             if ($status == '0') {
                 $show_status = lang('ad_deactive');
             } else {
@@ -77,7 +74,6 @@ class AdsManager
      */
     function EditAd($array = null)
     {
-        global $db;
         if (!$array) {
             $array = $_POST;
         }
@@ -93,7 +89,7 @@ class AdsManager
         } elseif (empty($name)) {
             e(lang('ad_name_error'));
         } else {
-            $db->update(tbl("ads_data"), ["ad_placement", "ad_name", "ad_code", "ad_status"], [$placement, $name, "|no_mc|" . $code, $status, $id], " ad_id='$id' ");
+            Clipbucket_db::getInstance()->update(tbl("ads_data"), ["ad_placement", "ad_name", "ad_code", "ad_status"], [$placement, $name, "|no_mc|" . $code, $status, $id], " ad_id='$id' ");
             e(lang('ad_update_msg'), "m");
         }
     }
@@ -105,12 +101,11 @@ class AdsManager
      */
     function DeleteAd($id)
     {
-        global $db;
         if (!$this->ad_exists($id)) {
-            e(lang("ad_exists_error1"));
+            e(lang('ad_exists_error1'));
         } else {
-            $db->execute("DELETE FROM " . tbl("ads_data") . " WHERE ad_id='" . $id . "'");
-            $msg = e(lang('ad_del_msg'), "m");
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('ads_data') . ' WHERE ad_id=\'' . $id . '\'');
+            $msg = e(lang('ad_del_msg'), 'm');
         }
     }
 
@@ -122,13 +117,12 @@ class AdsManager
      */
     function RemovePlacement($placement)
     {
-        global $db;
         if (!$this->get_placement($placement)) {
             e(lang("ad_placement_err4"));
         } else {
-            $db->execute("Delete from " . tbl("ads_data") . " WHERE ad_placement='" . $placement . "'");
-            $db->execute("Delete from " . tbl("ads_placements") . " WHERE placement='" . $placement . "'");
-            e(lang('ad_placment_delete_msg'), "m");
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('ads_data') . ' WHERE ad_placement=\'' . $placement . '\'');
+            Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('ads_placements') . ' WHERE placement=\'' . $placement . '\'');
+            e(lang('ad_placment_delete_msg'), 'm');
         }
     }
 
@@ -141,7 +135,6 @@ class AdsManager
      */
     function AddPlacement($array)
     {
-        global $db;
         if (empty($array[0])) {
             $msg = e(lang('ad_placement_err2'));
         } elseif (empty($array[1])) {
@@ -152,7 +145,7 @@ class AdsManager
             if ($this->get_placement($array[1])) {
                 e(lang('ad_placement_err1'));
             } else {
-                $db->insert(tbl("ads_placements"), ["placement_name", "placement"], [$array[0], $array[1]]);
+                Clipbucket_db::getInstance()->insert(tbl("ads_placements"), ["placement_name", "placement"], [$array[0], $array[1]]);
                 e(lang('ad_placement_msg'), "m");
             }
         }
@@ -169,7 +162,7 @@ class AdsManager
      */
     function getAd($placement_code, $limit = 1)
     {
-        global $db, $ads_array;
+        global $ads_array;
         if ($limit == 1) {
             //Creating Query, Not to select duplicate Ads
             foreach ($ads_array as $ad_id) {
@@ -184,11 +177,11 @@ class AdsManager
 			WHERE ad_placement = '" . $placement_code . "'
 			AND ad_status='1'";
 
-            $code_array = $db->GetRow($query . $query_param . $order . $limit_query);
+            $code_array = Clipbucket_db::getInstance()->GetRow($query . $query_param . $order . $limit_query);
 
             //Checking If there is no code, then try to get duplicate ad
             if (empty($code_array['ad_id'])) {
-                $code_array = $db->GetRow($query . $order . $limit_query);
+                $code_array = Clipbucket_db::getInstance()->GetRow($query . $order . $limit_query);
             }
 
             $ads_array[] = $code_array['ad_id'];
@@ -206,9 +199,8 @@ class AdsManager
      */
     function incrementImpression($ad_id)
     {
-        global $db;
         $query = "UPDATE " . tbl("ads_data") . " SET ad_impressions = ad_impressions+1 WHERE ad_id='" . $ad_id . "'";
-        $db->execute($query);
+        Clipbucket_db::getInstance()->execute($query);
     }
 
     /**
@@ -217,9 +209,7 @@ class AdsManager
      */
     function get_placements()
     {
-        global $db;
-
-        $result = $db->select(tbl("ads_placements"));
+        $result = Clipbucket_db::getInstance()->select(tbl("ads_placements"));
         if (count($result) > 0) {
             return $result;
         }
@@ -232,9 +222,7 @@ class AdsManager
      */
     function get_advertisements()
     {
-        global $db;
-
-        $result = $db->select(tbl("ads_data"));
+        $result = Clipbucket_db::getInstance()->select(tbl("ads_data"));
         if (count($result) > 0) {
             return $result;
         }
@@ -251,8 +239,7 @@ class AdsManager
      */
     function get_placement($place)
     {
-        global $db;
-        $result = $db->select(tbl("ads_placements"), "*", " placement='$place' OR placement_id='$place' ");
+        $result = Clipbucket_db::getInstance()->select(tbl("ads_placements"), "*", " placement='$place' OR placement_id='$place' ");
         if (count($result) > 0) {
             return $result[0];
         }
@@ -286,8 +273,7 @@ class AdsManager
      */
     function get_ad_details($id)
     {
-        global $db;
-        $result = $db->select(tbl("ads_data"), "*", " 	ad_placement='$id' OR ad_id='$id'");
+        $result = Clipbucket_db::getInstance()->select(tbl("ads_data"), "*", " 	ad_placement='$id' OR ad_id='$id'");
         if (count($result) > 0) {
             $result = $result[0];
             $result['ad_code'] = stripslashes($result['ad_code']);
@@ -304,10 +290,9 @@ class AdsManager
      * @return bool
      * @throws Exception
      */
-    function ad_exists($id)
+    function ad_exists($id): bool
     {
-        global $db;
-        $count = $db->count(tbl("ads_data"), "ad_id", " ad_id='$id' ");
+        $count = Clipbucket_db::getInstance()->count(tbl("ads_data"), "ad_id", " ad_id='$id' ");
         if ($count > 0) {
             return true;
         }
@@ -324,8 +309,7 @@ class AdsManager
      */
     function count_ads_in_placement($place)
     {
-        global $db;
-        return $db->count(tbl("ads_data"), "ad_id", " ad_placement='$place'");
+        return Clipbucket_db::getInstance()->count(tbl("ads_data"), "ad_id", " ad_placement='$place'");
     }
 
     /**

@@ -34,71 +34,35 @@
                             {lang(upload_right_guide_photo,$cbpage->get_page_link(3))}
                         </div>
                         <div class="clearfix" id="uploaderContainer">
-                        {if $selected_collection}
-                            <div class="alert alert-info" role="alert">
-                                Photo will be uploaded into <strong><i>{display_clean($selected_collection.collection_name)}</i></strong> Collection
-                            </div>
-                        {else}
-                            <div class="row">
-                                <div id="SelectionDIV" class="col-md-9">
-                            {if !$collections}
-                                    <p class="alert alert-danger">{lang code="no_collection_found_alert"}</p>
-                            {/if}
-                                    <div class="form-group clearfix" {if !$collections}style='display:none;'{/if}>
-                                        <label for="collectionSelection">{lang code="select_collection_upload"}</label>
-                                        <select class="form-control" id="collectionSelection" name="collectionSelection">
-                                        {foreach from=$collections key=key item=item}
-                                            <option value="{$key}">{$item.name}</option>
-                                        {/foreach}
-                                        </select>
-                                    </div>
-
-                                </div>
-                            {if (has_access('allow_create_collection',false,false))}
-                                <div class="col-md-3 text-center" {if $collections}style='margin-top: 14px;'{/if}>
-                                    <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
+                            {if $selected_collection}
+                                <div class="alert alert-info" role="alert">
+                                    {ucfirst(lang('will_be_upload_into_collection', [ strtolower(lang('photos')), display_clean($selected_collection.collection_name)]))}
                                 </div>
                             {else}
-                                <div class="col-md-3 text-center">
-                                    <div class="alert alert-danger">
-                                        <strong>{lang code="creating_collection_is_disabled"}</strong>
+                                <div class="row">
+                                    <div id="SelectionDIV" class="col-md-9">
+                                        {include file="$style_dir/blocks/collection_select_upload.html" }
                                     </div>
+                                    {if (has_access('allow_create_collection',false,false))}
+                                        <div class="col-md-3 text-center" {if $collections}style='margin-top: 14px;'{/if}>
+                                            <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
+                                        </div>
+                                    {else}
+                                        <div class="col-md-3 text-center">
+                                            <div class="alert alert-danger">
+                                                <strong>{lang code="creating_collection_is_disabled"}</strong>
+                                            </div>
+                                        </div>
+                                    {/if}
                                 </div>
                             {/if}
-                            </div>
-                        {/if}
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <div class="manageCollection">
                                 <div id="CollectionDIV" style="display:none;">
-                                    <form action="#" type="post">
-                                        <h3>{lang code='create_new_collection_btn'}</h3>
-                                        {assign var='reqFields' value=$cbcollection->load_required_fields()}
-                                        {foreach from=$reqFields item=field}
-                                            {if $field.id != 'type'}
-                                                <div class="form-group">
-                                                    <label for="{$field.id}">{$field.title}</label>
-                                                    {$field.class = 'form-control'}
-                                                    {if $field.type == 'checkbox'}
-                                                        {$field.label_class = 'checkbox'}
-                                                        {$field.notShowSeprator = true}
-                                                    {/if}
-                                                    {$formObj->createField($field)}
-                                                    {if $field.id == 'collection_tags'}
-                                                        <ul id="list_tags"></ul>
-                                                    {/if}
-                                                </div>
-                                            {/if}
-                                        {/foreach}
-                                        <div class="moveR" style="float:left;margin:0 5px 0 5px;">
-                                            <button type="button" id="addNewCollection" class="btn btn-success">Add Collection</button>
-                                        </div>
-                                        <div style="float:left;margin:0 5px 0 5px;">
-                                            <button type="button" id="cancelAddCollection" class="btn btn-success">{lang code='cancel'}</button>
-                                        </div>
-                                    </form>
+
                                 </div>
                             </div>
                         </div>

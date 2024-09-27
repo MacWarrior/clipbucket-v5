@@ -770,11 +770,6 @@ h1 {
   cursor: pointer;
 }
 
-.item-video .thumb-holder .cb_quickie.icon-tick {
-  background: #0080b4;
-  border-color: #0080b4;
-}
-
 .item-video .thumb-holder .vid-type {
   position: absolute;
   top: 10px;
@@ -3172,11 +3167,7 @@ textarea#comment_box {
   margin: 0 0 40px;
 }
 
-.signup-block .side-box,
-.forgot-block .side-box,
 .signin-block .side-box {
-  background: #0080b4;
-  color: #fff;
   font-size: 15px;
   line-height: 24px;
 }
@@ -7430,4 +7421,430 @@ textarea#comment_box {
 }
 .social_links.horizontal li:not(:first-child) {
   padding-left: 20px;
+}
+
+/* Homepage options */
+@media only screen and (min-width: 1200px) {
+  #main.fullwidth #sidebar{
+    max-width: 300px;
+  }
+  #main.fullwidth:not(.nosidebar) #content{
+    width: calc(100% - 320px);
+  }
+  #main.fullwidth.nosidebar #content{
+    width: 100%;
+  }
+}
+#main.fullwidth{
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+#main.nosidebar #content{
+  float: none;
+  width: 100%;
+}
+/* Homepage options */
+
+
+
+/*  Debut CSS caroucel */
+
+/** @todo hack full width  */
+#main , #content {
+  /*
+  min-width: 100%;
+  /* */
+}
+
+.default-slider {
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+
+  /** definir les dimension de chaque bloc di slider */
+  --height :250px;
+  --width : 274px;
+}
+
+.default-slider h1 {
+  margin-right:2rem;
+  box-sizing: border-box;
+  margin-bottom:0;
+}
+
+.default-slider .slider-container-action  {
+  position: relative;
+}
+
+.default-slider .prev, .default-slider .next {
+  width: 1px;
+  position: absolute;
+  top:0; left: 0;
+  height: 100%;
+  display: none;
+}
+
+.default-slider .slider-container-overflow {
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+}
+
+/* desactiver tout les clic des block pendant les deplacements */
+.default-slider .slider-container-overflow.scrolling > *{
+  pointer-events: none;
+  cursor: default !important;
+}
+
+.default-slider .slider-container-overflow:has(.disabled-prev),
+.default-slider .slider-container-overflow.scrolling{
+  border-left:1px solid rgba(0,0,0,0.2);
+}
+
+.default-slider .slider-container-overflow:has(.disabled-next),
+.default-slider .slider-container-overflow.scrolling {
+  border-right:1px solid rgba(0,0,0,0.2);
+}
+
+.default-slider .slider-container {
+/*
+  height: var(--height);
+ */
+  width: max-content;
+  box-sizing: border-box;
+  display: block;
+  position: relative;
+}
+
+.slider-video-container {
+  position: relative;
+  margin-right: 8px;
+  margin-left: 8px;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  transition: opacity 200ms ease;
+  width: var(--width);
+/*
+  height: var(--height);
+ */
+}
+
+.slider-video-container.disabled {
+  cursor: pointer;
+}
+
+.slider-video-container.disabled > * {
+  position: relative;
+  pointer-events: none;
+  cursor: default !important;
+}
+
+.slider-video-container.disabled .details .titre {
+  opacity: 0;
+}
+
+.slider-video-container.disabled:after {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  margin-top:calc(50% - 10px); left:0;
+  color: white;
+  transition: font-size 200ms;
+  z-index:100;
+}
+
+.slider-video-container.disabled .thumb-video,
+.item-video.disabled .thumb-holder{
+  position: relative;
+  pointer-events: none;
+  cursor: default !important;
+}
+.slider-video-container.disabled .thumb-video:after,
+.item-video.disabled .thumb-holder:after{
+  content: "\e080";
+  font-family: "Glyphicons Halflings";
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: default !important;
+  pointer-events: none;
+  font-size: 3rem;
+  flex-direction: column;
+  justify-content: center;
+  transition: color 200ms;
+  color:var(--color-02);
+  opacity: 0.6;
+  z-index:2;
+}
+
+.slider-video-container.disabled .thumb-video:before,
+.item-video.disabled .thumb-holder:before{
+  content: "";
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--color-background);
+  opacity: 0.6;
+  cursor: default !important;
+  pointer-events: none;
+  transition: color 200ms;
+  z-index:2;
+}
+
+.default-slider .slider-container .slider-video-container.disabled.disabled-next .thumb-video:after,
+.default-slider .slider-container .item-video.disabled.disabled-next .thumb-holder:after{
+  padding-left: 1.5rem;
+}
+
+.default-slider .slider-container .slider-video-container.disabled.disabled-prev .thumb-video:after,
+.default-slider .slider-container .item-video.disabled.disabled-prev .thumb-holder:after {
+  padding-right: 1rem;
+  text-align: right;
+  content: "\e079";
+}
+
+.default-slider .slider-container .item-video.disabled.disabled-next .thumb-holder:after {
+  padding-left: 0.25rem;
+}
+
+.default-slider .slider-container .slider-video-container.disabled:hover .thumb-video:after,
+.default-slider .slider-container .item-video.disabled:hover .thumb-holder:after {
+  opacity:1;
+}
+
+.slider-video-container .thumb_banner {
+    position: absolute;
+    top: 5px;
+    font-size: 10px;
+    text-align: center;
+    z-index: 3;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    color:white;
+}
+
+.slider-video-container .thumb-video-padding {
+  padding: 5px;
+  width: 100%;
+  transition: transform .3s; /* Animation */
+  height:var(--height);
+}
+
+.slider-video-container .thumb-video-padding:before {
+  content: '';
+  border: 2px solid var(--color-main-01);
+  height: 100%;
+  width: 100%;
+  border-radius: 5px;
+  transition: opacity 400ms ease;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+ .slider-video-container:not(.disabled) .thumb-video-padding:hover:before {
+  opacity: 1;
+}
+
+ .slider-video-container:not(.disabled) .thumb-video-padding:hover {
+  transform: scale(1.05);
+}
+
+ .slider-video-container .thumb-video-padding .thumb-video {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border-radius:5px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+ .slider-video-container .thumb-video-padding .thumb-video > img {
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+
+ .slider-video-container .thumb-video-padding .thumb-video > .time {
+  background: black;
+  color:white;
+  padding:0.2rem 0.5rem;
+  position: absolute;
+  bottom:10px;
+  right: 10px;
+}
+
+ .slider-video-container .thumb-video-padding .thumb-video > .add-playlist {
+  font-size: 20px;
+  width: 24px;
+  height: 21px;
+  font-weight: bolder;
+  color: white;
+  padding: 0.2rem 0.5rem;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  border: 2px solid white;
+  background: rgba(0, 0, 0, 0.3);
+  text-align: center;
+  transition: transform .3s; /* Animation */
+  cursor: pointer;
+}
+ .slider-video-container .thumb-video-padding .thumb-video > .add-playlist:after {
+  content:'+';
+}
+
+ .slider-video-container .thumb-video-padding .thumb-video > div:not(img) {
+  opacity: 0.5;
+}
+
+ .slider-video-container .thumb-video-padding .thumb-video:hover > div {
+  opacity: 1;
+}
+ .slider-video-container .thumb-video-padding .thumb-video:hover > div.add-playlist {
+  opacity: 0.8;
+}
+ .slider-video-container .thumb-video-padding .thumb-video > div.add-playlist:hover {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+ .slider-video-container .details {
+  margin:0 0.5rem;
+  padding-top: 1rem;
+  position:relative;
+  padding-bottom:3.5rem;
+}
+
+ .slider-video-container .details > div:not(.titre) {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.slider-video-container .details:hover > div:not(.titre)
+,.slider-video-container .thumb-video-padding:hover + .shadow + .details > div:not(.titre) {
+  opacity: 0.7;
+}
+
+.slider-video-container .details .auteur {
+  position: absolute;
+  top: 3rem;
+  left:0;
+}
+
+.slider-video-container .details .view {
+  position:absolute;
+  top: 3rem;
+  right:0;
+}
+
+.slider-video-container .details .date {
+  position:absolute;
+  top: 4.5rem;
+  right:0;
+}
+
+.slider-video-container .details .titre {
+  opacity:1;
+  font-weight:bolder;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.default-slider .slider-container .item-video {
+  margin-right: 8px;
+  margin-left: 8px;
+  width: var(--width);
+/*
+  height: var(--height);
+*/
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: white;
+  padding:0;
+  vertical-align: top;
+}
+
+.default-slider .slider-container .item-video .thumb-holder {
+  flex:1;
+  overflow: hidden;
+}
+
+.default-slider .slider-container .item-video:first-of-type {
+  margin-left: 0;
+}
+
+.default-slider .slider-container .item-video a:has(img) {
+  height:var(--height);
+}
+
+.default-slider .slider-container .item-video a img {
+  min-width: 100%;
+  min-height: 100%;
+  object-fit: cover;
+}
+
+.slider-video-container .thumb-video-padding .thumb-video > .add-playlist {
+  border-radius: 2px;
+}
+
+.slider-video-container .thumb-video-padding .thumb-video > .add-playlist.cb_quickie.icon-tick {
+  background: #0080b4;
+  border-color: #0080b4;
+  font-size: 1.3rem;
+  padding-left: 4px;
+  opacity: 0.8;
+}
+
+.slider-video-container .thumb-video-padding .thumb-video > .add-playlist.cb_quickie.icon-tick:after {
+  content:'';
+}
+
+.slider-video-container .thumb-video-padding .thumb-video + .restricted {
+  color:white;
+  z-index: 2;
+}
+
+.slider-video-container .thumb-video-padding a.thumb-video{
+  font-size: 20px;
+  font-weight: 550;
+}
+.slider-video-container .thumb-video-padding a.thumb-video span{
+  position:absolute;
+}
+.default-slider h1 a{
+  text-decoration: none;
+}
+
+.pointer {
+  cursor: pointer;
 }

@@ -3,7 +3,7 @@ define('THIS_PAGE', 'system_info');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $db, $myquery;
+global $myquery;
 userquery::getInstance()->admin_login_check();
 
 /* Generating breadcrumb */

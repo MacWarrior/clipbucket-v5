@@ -48,11 +48,11 @@ if ($udetails) {
         case 'playlists':
             $get_limit = create_query_limit($page, 10);
             $params = ['userid' => $udetails['userid'], 'limit' => $get_limit];
-            $playlists = get_playlists($params);
+            $playlists = Playlist::getInstance()->getAll($params);
             assign('playlist_mode', 'on');
             assign('playlists', $playlists);
             $params['count_only'] = true;
-            $total_rows = get_playlists($params);
+            $total_rows = Playlist::getInstance()->getAll($params);
             $total_pages = count_pages($total_rows, config('videos_items_ufav_page'));
             break;
     }

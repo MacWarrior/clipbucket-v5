@@ -72,7 +72,7 @@ if (isset($_POST['make_featured_selected']) && is_array($_POST['check_collection
         $cbcollection->collection_actions('mcf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm');
+    e($total . ' collections has been marked as <strong>' . lang('featured') . '</strong>', 'm',false);
 }
 
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
@@ -81,7 +81,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collecti
         $cbcollection->collection_actions('mcuf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm');
+    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
 }
 
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collection'])) {
@@ -90,7 +90,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_collecti
         $cbcollection->collection_actions('mcuf', $_POST['check_collection'][$i]);
     }
     $eh->flush();
-    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm');
+    e($total . ' collections has been marked as <strong>Unfeatured</strong>', 'm', false);
 }
 
 if (isset($_POST['delete_selected']) && is_array($_POST['check_collection'])) {
@@ -135,9 +135,18 @@ if (!empty($carray['order'])) {
 $collections = Collection::getInstance()->getAll($carray);
 assign('collections', $collections);
 
-$carray['count'] = true;
-$count_collection =  Collection::getInstance()->getAll($carray);
-$total_pages = count_pages($count_collection, config('collection_per_page'));
+if( empty($collections) ){
+    $total_rows = 0;
+} else if( count($collections) < config('admin_pages') && ($page == 1 || empty($page)) ){
+    $total_rows = count($collections);
+} else {
+    $carray['count'] = true;
+    unset($carray['limit']);
+    unset($carray['order']);
+    $total_rows = Collection::getInstance()->getAll($carray);
+}
+
+$total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
 
 $min_suffixe = in_dev() ? '' : '.min';
@@ -156,6 +165,6 @@ $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
 assign('anonymous_id', $userquery->get_anonymous_user());
 
-subtitle(lang('manage_collections'));
+subtitle(lang('manage_x', strtolower(lang('collections'))));
 template_files('collection_manager.html');
 display_it();

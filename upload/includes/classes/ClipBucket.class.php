@@ -317,6 +317,96 @@ class ClipBucket
         ];
         $this->addMenuAdmin($menu_dashboard, 1);
 
+        $menu_configuration = [
+            'title'   => lang('configurations')
+            , 'class' => 'icon- fa fa-cog'
+            , 'sub'   => []
+        ];
+        $menu_configuration['sub'][] = [
+            'title' => lang('website_configuration')
+            , 'url' => DirPath::getUrl('admin_area') . 'main.php'
+        ];
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('player_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'
+        ];
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('template_editor')
+            , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
+        ];
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('update_logos')
+            , 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'
+        ];
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('manage_x', strtolower(lang('pages')))
+            , 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'
+        ];
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('languages_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
+        ];
+
+        if( config('disable_email') != 'yes' ){
+            $menu_configuration['sub'][] = [
+                'title' => lang('email_template')
+                , 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'
+            ];
+        }
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('watermark_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
+        ];
+
+        $menu_configuration['sub'][] = [
+            'title' => lang('manage_social_networks_links')
+            , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
+        ];
+
+        if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
+            $menu_configuration['sub'][] = [
+                'title' =>  lang('manage_x',strtolower(lang('user_levels')))
+                , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'
+            ];
+        }
+
+        global $cbplugin;
+        $plugins_available = count($cbplugin->getNewPlugins());
+        $plugins_installed = count($cbplugin->getInstalledPlugins());
+        $plugins_count = $plugins_available + $plugins_installed;
+        if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
+            $menu_configuration['sub'][] = [
+                'title' => lang('manage_x', strtolower(lang('plugins'))),
+                'url'   => DirPath::getUrl('admin_area') . 'plugin_manager.php'
+            ];
+        }
+
+        if ($per['manage_template_access'] == 'yes') {
+            global $cbtpl, $cbplayer;
+            if (count($cbtpl->get_templates()) > 1 || in_dev()) {
+                $menu_configuration['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('templates'))),
+                    'url'   => DirPath::getUrl('admin_area') . 'templates.php'
+                ];
+            }
+
+
+            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
+                $menu_configuration['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('players')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
+                ];
+            }
+        }
+
+        $this->addMenuAdmin($menu_configuration, 2);
+
         if (NEED_UPDATE) {
             return;
         }
@@ -327,31 +417,6 @@ class ClipBucket
                 , 'sub'   => []
             ];
 
-            $menu_general['sub'][] = [
-                'title' => 'Reports &amp; Stats'
-                , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
-            ];
-            $menu_general['sub'][] = [
-                'title' => 'Website Configurations'
-                , 'url' => DirPath::getUrl('admin_area') . 'main.php'
-            ];
-
-            if( config('disable_email') != 'yes' ){
-                $menu_general['sub'][] = [
-                    'title' => 'Email Templates'
-                    , 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'
-                ];
-            }
-
-            $menu_general['sub'][] = [
-                'title' => 'Language Settings'
-                , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
-            ];
-            $menu_general['sub'][] = [
-                'title' => lang('manage_x', strtolower(lang('pages')))
-                , 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'
-            ];
-
             if (config('enable_comments_video') == 'yes' || config('enable_comments_photo') == 'yes' || config('enable_comments_channel') == 'yes' || config('enable_comments_collection') == 'yes') {
                 $menu_general['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('comments')))
@@ -360,18 +425,10 @@ class ClipBucket
             }
 
             $menu_general['sub'][] = [
-                'title' => 'Update Logos'
-                , 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'
-            ];
-            $menu_general['sub'][] = [
                 'title' => lang('manage_x', strtolower(lang('tags')))
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
-            $menu_general['sub'][] = [
-                'title' => lang('manage_social_networks_links')
-                , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
-            ];
 
             $this->addMenuAdmin($menu_general, 10);
         }
@@ -408,13 +465,6 @@ class ClipBucket
                 ]
             ];
 
-            if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
-                $menu_users['sub'][] = [
-                    'title' => 'User Levels'
-                    , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'
-                ];
-            }
-
             $this->addMenuAdmin($menu_users, 20);
         }
 
@@ -436,63 +486,6 @@ class ClipBucket
 
             $this->addMenuAdmin($menu_ad, 30);
         }
-
-        if ($per['manage_template_access'] == 'yes') {
-            $sub = [];
-            global $cbtpl, $cbplayer;
-            if( count($cbtpl->get_templates()) > 1 || in_dev() ){
-                $sub[] = [
-                    'title' => lang('manage_x', strtolower(lang('templates')))
-                    , 'url' => DirPath::getUrl('admin_area') . 'templates.php'
-                ];
-            }
-            $sub[] = [
-                'title' => 'Templates Editor'
-                , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
-            ];
-
-
-            if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
-                $sub[] = [
-                    'title' => lang('manage_x', strtolower(lang('players')))
-                    , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
-                ];
-            }
-            $sub[] = [
-                'title' => lang('player_settings')
-                , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'
-            ];
-
-
-            $menu_template = [
-                'title'   => 'Templates And Players'
-                , 'class' => 'glyphicon glyphicon-play-circle'
-                , 'sub'   => $sub
-            ];
-
-            $this->addMenuAdmin($menu_template, 40);
-        }
-
-        global $cbplugin;
-        $plugins_available = count($cbplugin->getNewPlugins());
-        $plugins_installed = count($cbplugin->getInstalledPlugins());
-        $plugins_count = $plugins_available + $plugins_installed;
-        if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
-            $menu_plugin = [
-                'title'   => lang('manage_x', strtolower(lang('plugins')))
-                , 'class' => 'glyphicon glyphicon-tasks'
-                , 'sub'   => [
-                    [
-                        'title' => lang('manage_x', strtolower(lang('plugins')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'
-                    ]
-                ]
-            ];
-
-            $this->addMenuAdmin($menu_plugin, 50);
-        }
-
-
 
         if ($per['tool_box'] == 'yes') {
             $menu_tool = [
@@ -545,6 +538,11 @@ class ClipBucket
                 ];
             }
 
+            $menu_tool['sub'][] = [
+                'title' => 'Reports &amp; Stats'
+                , 'url' => DirPath::getUrl('admin_area') . 'reports.php'
+            ];
+
             $this->addMenuAdmin($menu_tool, 60);
         }
     }
@@ -569,8 +567,7 @@ class ClipBucket
      */
     function get_countries($type = 'iso2'): array
     {
-        global $db;
-        $results = $db->select(tbl('countries'), '*');
+        $results = Clipbucket_db::getInstance()->select(tbl('countries'), '*');
         $carray = [];
         switch ($type) {
             case 'iso2':

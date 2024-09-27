@@ -7,15 +7,15 @@
         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
             <div class="tabbable">
                 <ul class="nav nav-tabs" id="myTab">
-                    {if config('channelsSection') == 'yes'}
-                    <li class="{if $mode=='profile_settings'}active{/if}">
-                        <a  href="/edit_account.php?mode=profile">
-                            <h5>{lang code='channel_profile_settings'}</h5>
-                        </a>
-                    </li>
+                    {if config('channelsSection') == 'yes' && !$current_enable_channel_page}
+                        <li class="{if $mode=='profile_settings'}active{/if}">
+                            <a href="/edit_account.php?mode=profile">
+                                <h5>{lang code='channel_profile_settings'}</h5>
+                            </a>
+                        </li>
                     {/if}
                     <li class="{if $mode=='account_settings'}active{/if}">
-                        <a  href="/edit_account.php?mode=account">
+                        <a href="/edit_account.php?mode=account">
                             <h5>{lang code='account_settings'}</h5>
                         </a>
                     </li>
@@ -23,83 +23,85 @@
                 <br>
                 <form method="post" class="accountForm">
                     <div class="tab-content clearfix">
-                        {if config('channelsSection') == 'yes'}
-                        <div id="cpsetting" class="tab-pane{if $mode=='profile_settings'} active{/if}">
-                            <div class="channelSettings col-md-10">
-                                {$channel_profile_fields = $userquery->load_user_fields($user)}
-                                {foreach from=$channel_profile_fields item=field_group}
-                                    {if count($field_group.fields) > 1}
-                                <h2>{display_clean($field_group.group_name)}</h2>
-                                        {foreach from=$field_group.fields item=field}
-                                <div class="form-group">
-                                            {if $field.type == 'radiobutton'}
-                                                {$field.label_class = 'radio-inline'}
-                                                {$field.class = ''}
-                                            {else}
-                                                {$field.class = 'form-control'}
-                                            {/if}
+                        {if config('channelsSection') == 'yes' && !$current_enable_channel_page}
+                            <div id="cpsetting" class="tab-pane{if $mode=='profile_settings'} active{/if}">
+                                <div class="channelSettings col-md-10">
+                                    {$channel_profile_fields = $userquery->load_user_fields($user)}
+                                    {foreach from=$channel_profile_fields item=field_group}
+                                        {if count($field_group.fields) > 1}
+                                            <div class="field_group">
+                                                <h2>{display_clean($field_group.group_name)}</h2>
+                                                {foreach from=$field_group.fields item=field}
+                                                    <div class="form-group">
+                                                        {if $field.type == 'radiobutton'}
+                                                            {$field.label_class = 'radio-inline'}
+                                                            {$field.class = ''}
+                                                        {else}
+                                                            {$field.class = 'form-control'}
+                                                        {/if}
 
-                                    <label for="{$field.id}" class="show">{$field.title}</label>
-                                            {if $field.hint_1}
-                                                {$field.hint_1}
-                                            {/if}
+                                                        <label for="{$field.id}" class="show">{$field.title}</label>
+                                                        {if $field.hint_1}
+                                                            {$field.hint_1}
+                                                        {/if}
 
-                                            {ANCHOR place=$field.anchor_before}
-                                    {if $field.id == 'profile_tags'}
-                                    <ul id="list_tags"></ul>
-                                    {/if}
-                                            {$formObj->createField($field)}
-                                            {ANCHOR place=$field.anchor_after}
-                                            {$field.hint_2}
-                                </div>
-                                        {/foreach}
-                                    {/if}
-                                {/foreach}
+                                                        {ANCHOR place=$field.anchor_before}
+                                                        {if $field.id == 'profile_tags'}
+                                                            <ul id="list_tags"></ul>
+                                                        {/if}
+                                                        {$formObj->createField($field)}
+                                                        {ANCHOR place=$field.anchor_after}
+                                                        {$field.hint_2}
+                                                    </div>
+                                                {/foreach}
+                                            </div>
+                                        {/if}
+                                    {/foreach}
 
-                                <div class="form-group">
-                                    <button name="update_profile" id="button" value="submit" class="btn btn-primary">
-                                        {lang code='update'}
-                                    </button>
+                                    <div class="form-group">
+                                        <button name="update_profile" id="button" value="submit" class="btn btn-primary">
+                                            {lang code='update'}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
                         {/if}
 
                         <div id="asettings" class="tab-pane {if $mode=='account_settings'}active{/if}">
                             <div class="accountSettings col-md-6">
                                 <h2>{lang code='account_details'}</h2>
                                 {if config('enable_country')=='yes'}
-                                <div class="form-group">
-                                    <label for="country">{lang code='country'}</label>
-                                    <select class="form-control" name="country" id="country">
-                                        {assign var='countries' value=$Cbucket->get_countries(iso2)}
-                                        {foreach from=$countries item=country key=code}
-                                        <option value="{$code}" {if $user.country==$code}selected{/if}>{$country}</option>
-                                        {/foreach}
-                                    </select>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="country">{lang code='country'}</label>
+                                        <select class="form-control" name="country" id="country">
+                                            {assign var='countries' value=$Cbucket->get_countries(iso2)}
+                                            {foreach from=$countries item=country key=code}
+                                                <option value="{$code}" {if $user.country==$code}selected{/if}>{$country}</option>
+                                            {/foreach}
+                                        </select>
+                                    </div>
                                 {/if}
                                 {if config('enable_gender')=='yes'}
-                                <div class="form-group">
-                                    <label for="country" class="show">{lang code='gender'}</label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="sex" value="male" id="sex_0" {if $user.sex==male}checked{/if}/>
-                                        {lang code='male'}
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="sex" value="female" id="sex_1" {if $user.sex==female}checked{/if}/>
-                                        {lang code='female'}
-                                    </label>
-                                </div>
+                                    <div class="form-group">
+                                        <label for="country" class="show">{lang code='gender'}</label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="sex" value="male" id="sex_0" {if $user.sex==male}checked{/if}/>
+                                            {lang code='male'}
+                                        </label>
+                                        <label class="radio-inline">
+                                            <input type="radio" name="sex" value="female" id="sex_1" {if $user.sex==female}checked{/if}/>
+                                            {lang code='female'}
+                                        </label>
+                                    </div>
                                 {/if}
                                 {if config('enable_user_category')=='yes'}
-                                <div class="form-group">
-                                    <label for="category">{lang code='category'}</label>
-                                    {ANCHOR place=$signup_fields.cat.anchor_before}
-                                    {$signup_fields.cat.class='form-control'}
-                                    {$formObj->createField($signup_fields.cat)}
-                                    {ANCHOR place=$signup_fields.cat.anchor_after}
-                                </div>
+                                    <div class="form-group">
+                                        <label for="category">{lang code='category'}</label>
+                                        {ANCHOR place=$signup_fields.cat.anchor_before}
+                                        {$signup_fields.cat.class='form-control'}
+                                        {$formObj->createField($signup_fields.cat)}
+                                        {ANCHOR place=$signup_fields.cat.anchor_after}
+                                    </div>
                                 {/if}
                                 <div class="form-group">
                                     <label for="dob">{lang code='user_date_of_birth'}</label>
@@ -113,16 +115,16 @@
                                 </div>
                                 {if $cust_signup_fields}
                                     {foreach from=$cust_signup_fields item=field}
-                                <div class="form-group">
-                                    <label for="{$field.id}">{$field.title}</label>
-                                    {if $field.hint_1}
-                                        {$field.hint_1}
-                                    {/if}
-                                    {ANCHOR place=$field.anchor_before}
-                                    {$formObj->createField($field)}
-                                    {ANCHOR place=$field.anchor_after}
-                                    {$field.hint_2}
-                                </div>
+                                        <div class="form-group">
+                                            <label for="{$field.id}">{$field.title}</label>
+                                            {if $field.hint_1}
+                                                {$field.hint_1}
+                                            {/if}
+                                            {ANCHOR place=$field.anchor_before}
+                                            {$formObj->createField($field)}
+                                            {ANCHOR place=$field.anchor_after}
+                                            {$field.hint_2}
+                                        </div>
                                     {/foreach}
                                 {/if}
 

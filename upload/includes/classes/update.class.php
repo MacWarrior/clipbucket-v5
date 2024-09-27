@@ -99,7 +99,7 @@ class Update
 
         $file_url = self::$urlGit . '/' . $filename;
 
-        $context = get_proxy_settings('file_get_contents');
+        $context = get_proxy_settings('file_get_contents', 2);
         $file_content = json_decode(file_get_contents($file_url, false, $context), true);
 
         if( empty($file_content) ){

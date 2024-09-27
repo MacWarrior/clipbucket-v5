@@ -52,41 +52,27 @@
                             <span class="label {if $u.usr_status == Ok}label-success{else}label-warning{/if}"><span>{if $u.usr_status=='Ok'}{lang code='active'}{else}{lang code='inactive'}{/if}</span></span>
                             <span class="label label-info"><span>Userlevel: {$u.level}</span></span>
                             <span class="label"><span>Active</span> : <span>{$u.last_active|nicetime}</span></span>
-                            {*if $smarty.get.private=='private'}
-                            Private Channels
-                            {else}
-                            {lang code='grp_manage_members_title'}
-                            {/if*}
-
-                            {if function_exists('channels_control')}
-                                {if $u.private == private}
-                                <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
-                                {/if}
-                                {if $u.private == public || $u.private == '' }
-                                <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
-                                {/if}
-                            {/if}
             
                             {if $u.ban_status == "yes"}
                                 <span class="label label-danger"><span>Banned</span></span>
                             {/if}
-                    </div>
-                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
     </td>
 
     <td>
         {if $u.userid != $anonymous_id}
             <div id="usr_opt-{$u.userid}" class="dropdown pull-right">
                 <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                    Actions<i class="icon-angle-down icon-on-right"></i>
+                    Actions<i class="glyphicon glyphicon-chevron-down icon-on-right"></i>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                     <li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='edit'}</a></li>
 
-                    {if isSectionEnabled('channels')}
+                    {if isSectionEnabled('channels') && $u.is_channel_enable}
                         <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
                     {/if}
                     <li><a role="menuitem" tabindex="-1" href="manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
@@ -111,24 +97,10 @@
                     {/if}
                     {if $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
-                    {/if}
-                    {if function_exists('channels_control') || $u.userid != user_id()}
                         <li class="divider"></li>
-                        {if function_exists('channels_control')}
-                            {if $u.private == private}
-                                <li><a role="menuitem" tabindex="-1" href="?public={$u.userid}">Make Public</a></li>
-                            {/if}
-                            {if $u.private == public || $u.private == '' }
-                                <li><a role="menuitem" tabindex="-1" href="?private={$u.userid}">Make Private</a></li>
-                            {/if}
-                        {/if}
-                        {if $u.userid != user_id()}
-                            <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
-                        {/if}
+                        <li><a role="menuitem" tabindex="-1" href="?deleteuser={$u.userid}">{lang code='delete'}</a></li>
                     {/if}
-
                 </ul>
-
             </div>
       {/if}
     </td>

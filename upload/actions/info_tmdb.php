@@ -16,7 +16,7 @@ $results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'], [
 pages::getInstance()->paginate($results['total_pages'], $_POST['page'], 'javascript:pageInfoTmdb(#page#, ' . $results['videoid'] . ');');
 
 assign('user_age', User::getInstance()->getCurrentUserAge());
-assign('can_search_year',  Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') );
+assign('can_search_year', Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '106') );
 display_tmdb_result([
     'results'    => $results['final_results'],
     'title'      => $results['title'],
