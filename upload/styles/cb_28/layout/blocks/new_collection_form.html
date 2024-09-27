@@ -1,0 +1,25 @@
+<form action="#" type="post">
+    <h3>{lang code='create_new_collection_btn'}</h3>
+    {foreach from=$reqFields item=field}
+        {if $field.id != 'type'}
+            <div class="form-group">
+                <label for="{$field.id}">{$field.title}</label>
+                {$field.class = 'form-control'}
+                {if $field.type == 'checkbox'}
+                    {$field.label_class = 'checkbox'}
+                    {$field.notShowSeprator = true}
+                {/if}
+                {$formObj->createField($field)}
+                {if $field.id == 'collection_tags'}
+                    <ul id="list_tags"></ul>
+                {/if}
+            </div>
+        {/if}
+    {/foreach}
+    <div class="moveR" style="float:left;margin:0 5px 0 5px;">
+        <button type="button" id="addNewCollection" class="btn btn-success">{lang('add_collection')}</button>
+    </div>
+    <div style="float:left;margin:0 5px 0 5px;">
+        <button type="button" id="cancelAddCollection" class="btn btn-success">{lang code='cancel'}</button>
+    </div>
+</form>

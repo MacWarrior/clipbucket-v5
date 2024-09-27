@@ -65,7 +65,6 @@ $(function () {
 
     $('#upload_thumbs_backdrop').on('click', function (e) {
         e.preventDefault();
-        debugger;
         var fd = new FormData();
 
         $.each($('#new_thumbs_backdrop')[0].files, function(i, file) {
