@@ -766,10 +766,16 @@ class System{
             'cache',
             'cache/comments',
             'cache/userfeeds',
+            'cache/views',
+            'cb_install',
+            'cb_install/sql',
+            'changelog',
             'files',
+            'files/avatars',
             'files/backgrounds',
-            'files/conversion_queue',
             'files/category_thumbs',
+            'files/conversion_queue',
+            'files/logos',
             'files/logs',
             'files/mass_uploads',
             'files/original',
@@ -779,8 +785,6 @@ class System{
             'files/thumbs',
             'files/videos',
             'images',
-            'images/avatars',
-            'images/collection_thumbs',
             'includes'
         ];
 
