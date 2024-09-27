@@ -2575,17 +2575,17 @@ class Collections extends CBCategory
                 }
             }
             return get_thumb($object_id, false, $size);
-        } else {
-            if ($object_id) {
-                $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
-            }
-            if (!$size) {
-                $param['size'] = 's';
-            } else {
-                $param['size'] = $size;
-            }
-            return get_photo($param);
         }
+
+        if ($object_id) {
+            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+        }
+        if (!$size) {
+            $param['size'] = 's';
+        } else {
+            $param['size'] = $size;
+        }
+        return get_photo($param);
     }
 
 }
