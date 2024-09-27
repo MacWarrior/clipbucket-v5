@@ -514,61 +514,6 @@ function hide_menu()
     }
 }
 
-function to_reply(cid)
-{
-    $('#reply_to').val(cid);
-    window.location = "#reply";
-    $('#reply_to_img').fadeIn(1500);
-
-    setTimeout(function(){
-        $('#reply_to_img').fadeOut(500);
-    }, 7000);
-}
-
-function spam_comment(cid)
-{
-    $.post(page, {
-        mode : 'spam_comment',
-        cid : cid,
-    },
-    function(data) {
-        if(!data){
-            alert('No data');
-        }else {
-            if(data.msg) {
-                $('#comment_'+cid).hide();
-                $('#spam_comment_'+cid).fadeIn('slow');
-            }
-            if(data.err) {
-                $('#comment_err_output').fadeIn('slow')
-                $('#comment_err_output').html(data.err);
-            }
-        }
-    },'json');
-}
-
-function reply_box(cid)
-{
-    $.ajax({
-        url : page,
-        type : 'POST',
-        dataType : 'json',
-        data : ({ mode : 'get_reply_box', cid : cid}),
-        success : function(data){
-            $('.reply-box-' + cid).html(data.form).slideDown('slow');
-            $('#reply_box_' + cid).focus();
-        }
-    });
-}
-
-function remove_reply_box(cid){
-    $('.reply-box-' + cid).slideUp('slow');
-}
-
-function show_replies(id){
-    $('.more-comments-' + id).show();
-}
-
 /**
  * Function autplay playlist
  */
@@ -1008,38 +953,10 @@ function callURLParser()
     }
 }
 
-function reply_box(cid,type,type_id)
-{
-    var replying_to_user = $(document).find('#says_'+cid).attr('speaker');
-    var html = '<form name="reply_form" method="post" id="reply_form_'+cid+'" onsubmit="return false;">';
-    html += '<input type="hidden" name="reply_to" id="reply_to" value="'+cid+'">';
-    html += '<input type="hidden" name="obj_id" id="obj_id" value="'+type_id+'">';
-    html += '<input type="hidden" name="type" value="'+type+'" />';
-    html += '<div class="textarea-comment clearfix">';
-    html += '<textarea name="comment" id="reply_box_'+cid+'" class="form-control" placeholder="'+ lang_reply_to + ' ' + replying_to_user + '..."></textarea>';
-    html += '<i class="remove-'+cid+' remove-icon" onclick="remove_reply_box('+cid+')">';
-    html += '<span style="color:#006dcc;cursor:pointer">';
-    html += '<strong class="icon-close" ></strong>';
-    html += '</span>';
-    html += '</i>';
-    html += '</div>';
-    html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\')" value="'+lang_reply+'">';
-    html += '</form>';
-    $('.reply-box-' + cid).html(html).slideDown("slow");
-    $('#reply_box_' + cid).focus();
-}
-
 function comment_transition(div_id,id)
 {
     $(div_id + id).addClass('border-transition');
     setTimeout(function(){$(div_id + id).removeClass('border-transition'); }, 3000);
-}
-
-function clear_comment_form()
-{
-    $('#add_comment_button').val(lang_add_comment);
-    $('#add_comment_button').attr('disabled',false);
-    $('.add-reply').attr('disabled',false);
 }
 
 function isValidEmail(email) {
