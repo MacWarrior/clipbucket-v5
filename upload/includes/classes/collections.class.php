@@ -2576,7 +2576,9 @@ class Collections extends CBCategory
             }
             return get_thumb($object_id, false, $size);
         } else {
-            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+            if ($object_id) {
+                $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+            }
             if (!$size) {
                 $param['size'] = 's';
             } else {

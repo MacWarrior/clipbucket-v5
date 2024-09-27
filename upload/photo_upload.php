@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'photo_upload');
 define('PARENT_PAGE', 'upload');
 
-global $cbphoto, $Cbucket;
+global $cbphoto, $Cbucket, $cbcollection;
 
 require 'includes/config.inc.php';
 userquery::getInstance()->logincheck();
@@ -20,6 +20,7 @@ $collections = Collection::getInstance()->getAllIndent([
 ]);
 
 assign('collections', $collections);
+assign('reqFields', $cbcollection->load_required_fields(['type'=>'photos']));
 subtitle(lang('photos_upload'));
 
 //Displaying The Template

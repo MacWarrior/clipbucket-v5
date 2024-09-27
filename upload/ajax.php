@@ -686,6 +686,7 @@ if (!empty($mode)) {
                 'userid' => user_id()
             ]);
             assign('collections', $collections);
+            assign('selected', $insert_id);
             echo templateWithMsgJson('blocks/collection_select_upload.html');
             break;
 
