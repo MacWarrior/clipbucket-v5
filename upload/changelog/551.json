@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"147",
+  "revision":"148",
   "status":"dev",
   "detail":[
     {
@@ -161,6 +161,7 @@
         ,"Fix collection selection on video page"
         ,"Fix JS error on video upload"
         ,"Fix video's shorter & longer filters"
+        ,"Fix recursive collection display"
       ]
     },
     {

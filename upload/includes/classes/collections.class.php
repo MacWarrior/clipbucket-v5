@@ -244,6 +244,10 @@ class Collection
             $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
 
+        if( $param_empty_thumb_objectid ){
+            $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
+        }
+
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
             if( $param_collection_id_parent ){
                 $conditions[] = $this->getTableName() . '.collection_id_parent = '.(int)$param_collection_id_parent;
@@ -583,6 +587,10 @@ class Collection
             e(lang('unknown_type'));
             return false;
         }
+        if (!$this->isValidType($type)) {
+            e(lang('unknown_type'));
+            return false;
+        }
         $collection = $this->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
             e(lang('collect_not_exist'));
@@ -712,6 +720,33 @@ class Collection
         }
         return $thumb;
     }
+
+    /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getAllIndent(array $params = []): array
+    {
+        $indentList = [];
+        if (empty($params['collection_id_parent'])) {
+            $params['collection_id_parent'] = 0;
+        }
+        $parents = $this->getAll($params);
+
+        foreach ($parents as $parent) {
+            $indentList[] = $parent;
+            $params['collection_id_parent'] = $parent['collection_id'];
+            $children = $this->getAllIndent($params);
+            foreach ($children as &$child) {
+                $child['collection_name'] = '&nbsp&nbsp&nbsp' . $child['collection_name'];
+                $indentList[] = $child;
+            }
+        }
+        return $indentList;
+    }
+
+
 }
 
 
@@ -1491,17 +1526,21 @@ class Collections extends CBCategory
 
         if (config('enable_sub_collection') == 'yes') {
             $list_parent_categories = ['null' => lang('collection_no_parent')];
-            $type = $default['type'] ?? null;
-            foreach ($this->get_collections_list(0, null, $collection_id, $type, user_id()) as $col_id => $col_data) {
-                $list_parent_categories[$col_id] = $col_data['name'];
+            $type = $default['type'] ?? 'videos';
+
+            $params = [
+                'type'      => $type,
+                'userid'    => user_id()
+            ];
+
+            if (!empty($collection_id)) {
+                $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
             }
-            //getting direct parent collection
-            if (array_key_exists('null', $list_parent_categories) && !empty($collection_id_parent)) {
-                $parent = $this->get_collection($collection_id_parent);
-                if ($parent) {
-                    $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
-                }
-            }
+            $collection_list = Collection::getInstance()->getAllIndent($params);
+            $list_parent_categories += array_combine(
+                    array_column($collection_list, 'collection_id') ,
+                    array_column($collection_list,'collection_name')
+            );
 
             if ($collection_id_parent && config('enable_sub_collection') == 'yes') {
                 $data['type']['disabled'] = true;
@@ -2536,15 +2575,17 @@ class Collections extends CBCategory
                 }
             }
             return get_thumb($object_id, false, $size);
-        } else {
-            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
-            if (!$size) {
-                $param['size'] = 's';
-            } else {
-                $param['size'] = $size;
-            }
-            return get_photo($param);
         }
+
+        if ($object_id) {
+            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+        }
+        if (!$size) {
+            $param['size'] = 's';
+        } else {
+            $param['size'] = $size;
+        }
+        return get_photo($param);
     }
 
 }

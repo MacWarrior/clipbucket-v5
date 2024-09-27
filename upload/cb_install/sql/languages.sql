@@ -1285,6 +1285,8 @@ VALUES ('admin_setting'),
        ('assign_default_thumb_description'),
        ('default_thumb'),
        ('user_levels'),
+       ('add_collection'),
+       ('user_levels'),
        ('permissions'),
        ('writeable'),
        ('chmod_file');
