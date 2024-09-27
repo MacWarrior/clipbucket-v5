@@ -161,6 +161,7 @@
         ,"Fix collection selection on video page"
         ,"Fix JS error on video upload"
         ,"Fix video's shorter & longer filters"
+        ,"Fix recursive collection display"
       ]
     },
     {
