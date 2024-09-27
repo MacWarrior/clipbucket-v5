@@ -575,7 +575,14 @@ class System{
      */
     public static function check_global_configs(): bool
     {
+        if (config('cache_enable') == 'yes') {
+            return CacheRedis::getInstance()->get('check_global_configs');
+        } elseif( time() < $_SESSION['check_global_configs']['time']) {
+            return $_SESSION['check_global_configs']['val'];
+        }
+        
         if( ini_get('max_execution_time') < 7200 ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
@@ -589,54 +596,60 @@ class System{
         $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
         if( !$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb) ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         $chunk_upload_size = config('chunk_upload_size');
 
         if( $chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb) ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         $cloudflare_upload_limit = config('cloudflare_upload_limit');
         if( Network::is_cloudflare() ){
             if( !$chunk_upload && $target_upload_size > $cloudflare_upload_limit ){
+                self::setGlobalConfigCache(0);
                 return false;
             }
             if( $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit ){
+                self::setGlobalConfigCache(0);
                 return false;
             }
         }
 
         if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         if( !self::isDateTimeSynchro() ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
         $tmp = [];
         if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
-        if (config('cache_enable') == 'yes') {
-            $permissions = (int)CacheRedis::getInstance()->get('folder_access');
-        } elseif( time() < $_SESSION['folder_access']['time']) {
-            $permissions = $_SESSION['folder_access']['val'];
-        }
-        if (empty($permissions) && $permissions !== 0) {
-            $permissions = self::checkPermissions(self::getPermissions());
-            if (config('cache_enable') == 'yes') {
-                CacheRedis::getInstance()->set('folder_access', $permissions, 60);
-            } else {
-                $_SESSION['folder_access']['val'] = $permissions;
-                $_SESSION['folder_access']['time'] = time() + 60;
-            }
-        }
+        
+        $permissions = self::checkPermissions(self::getPermissions(false));
+        self::setGlobalConfigCache($permissions);
         return $permissions;
+    }
+
+    public static function setGlobalConfigCache($val)
+    {
+        if (config('cache_enable') == 'yes') {
+            CacheRedis::getInstance()->set('check_global_configs', $val, 60);
+        } else {
+            $_SESSION['check_global_configs']['val'] = $val;
+            $_SESSION['check_global_configs']['time'] = time() + 60;
+        }
     }
 
     public static function is_nginx(): bool
@@ -757,7 +770,11 @@ class System{
         return $details['diff_in_minute'] <= 1;
     }
 
-    public static function getPermissions(): array
+    /**
+     * @param bool $install
+     * @return array
+     */
+    public static function getPermissions(bool $install = true): array
     {
         /**
          * Function used to check folder permissions
@@ -781,12 +798,14 @@ class System{
             'files/original',
             'files/photos',
             'files/temp',
-            'files/temp/install.me',
             'files/thumbs',
             'files/videos',
             'images',
             'includes'
         ];
+        if ($install) {
+            $files[] = 'files/temp/install.me';
+        }
 
         $permsArray = [];
         foreach ($files as $file) {
