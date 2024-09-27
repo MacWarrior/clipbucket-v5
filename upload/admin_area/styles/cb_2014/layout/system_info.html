@@ -42,6 +42,11 @@
                     <h6>{lang code='services'}</h6>
                 </a>
             </li>
+            <li>
+                <a data-toggle="tab" href="#permissions">
+                    <h6>{lang code='permissions'}</h6>
+                </a>
+            </li>
         </ul>
         <div class="tab-content">
             <div id="php_info" class="tab-pane">
@@ -503,6 +508,20 @@
                         {/foreach}
                     </div>
                 </div>
+            </div>
+            <div id="permissions" class="tab-pane">
+                {foreach from=$permissions item=permission}
+                    <div class="row ml-2">
+                        <div class="col-lg-2">
+                            <label><b>{$permission.path}</b></label>
+                        </div>
+                        <div class="col-lg-4">
+                            <img src="{$imageurl}/{if $permission.msg }tick{else}alert{/if}.png"/>
+                            <label>{if $permission.msg}{lang('writeable')}{else}{lang('chmod_file')}{/if}</label>
+                        </div>
+
+                    </div>
+                {/foreach}
             </div>
         </div>
     </div>

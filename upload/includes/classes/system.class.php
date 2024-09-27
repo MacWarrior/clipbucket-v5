@@ -622,7 +622,21 @@ class System{
             return false;
         }
 
-        return true;
+        if (config('cache_enable') == 'yes') {
+            $permissions = (int)CacheRedis::getInstance()->get('folder_access');
+        } elseif( time() < $_SESSION['folder_access']['time']) {
+            $permissions = $_SESSION['folder_access']['val'];
+        }
+        if (empty($permissions) && $permissions !== 0) {
+            $permissions = self::checkPermissions(self::getPermissions());
+            if (config('cache_enable') == 'yes') {
+                CacheRedis::getInstance()->set('folder_access', $permissions, 60);
+            } else {
+                $_SESSION['folder_access']['val'] = $permissions;
+                $_SESSION['folder_access']['time'] = time() + 60;
+            }
+        }
+        return $permissions;
     }
 
     public static function is_nginx(): bool
@@ -741,6 +755,64 @@ class System{
         $details['diff_in_minute'] = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
 
         return $details['diff_in_minute'] <= 1;
+    }
+
+    public static function getPermissions(): array
+    {
+        /**
+         * Function used to check folder permissions
+         */
+        $files = [
+            'cache',
+            'cache/comments',
+            'cache/userfeeds',
+            'files',
+            'files/backgrounds',
+            'files/conversion_queue',
+            'files/category_thumbs',
+            'files/logs',
+            'files/mass_uploads',
+            'files/original',
+            'files/photos',
+            'files/temp',
+            'files/temp/install.me',
+            'files/thumbs',
+            'files/videos',
+            'images',
+            'images/avatars',
+            'images/collection_thumbs',
+            'includes'
+        ];
+
+        $permsArray = [];
+        foreach ($files as $file) {
+            if (is_writeable(DirPath::get('root') . $file)) {
+                $permsArray[] = [
+                    'path' => $file,
+                    'msg'  => 'writeable'
+                ];
+            } else {
+                $permsArray[] = [
+                    'path' => $file,
+                    'err'  => 'please chmod this file/directory to 755'
+                ];
+            }
+        }
+        return $permsArray;
+    }
+
+    /**
+     * @param array $permissions
+     * @return int
+     */
+    public static function checkPermissions(array $permissions): int
+    {
+        foreach ($permissions as $permission) {
+            if ( isset($permission['err'])) {
+                return 0;
+            }
+        }
+        return 1;
     }
 
 }

@@ -120,6 +120,8 @@ $check_time_cli = System::isDateTimeSynchro($datetime_datas_cli, $current_dateti
 assign('check_time_cli', $check_time_cli);
 assign('datetime_datas_cli', $datetime_datas_cli);
 
+assign('permissions', System::getPermissions());
+
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();
