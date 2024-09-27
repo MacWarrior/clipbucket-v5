@@ -444,9 +444,9 @@
 											<div class="col-md-6">
 												<select class="form-control" name="homepage_featured_video_display" id="homepage_featured_video_display">
 													{assign var=array_modes value=[
-                                        'paginate' => 'option_paginate'
-                                        ,'slider' => 'option_slider'
-                                        ]}
+                                                        'paginate' => 'option_paginate'
+                                                        ,'slider' => 'option_slider'
+                                                    ]}
 													{foreach from=$array_modes item=trad key=code}
 													<option {if $code==$row.homepage_featured_video_display}selected{/if} value="{$code}">
 														{lang code=$trad}
@@ -487,8 +487,8 @@
                                             <div class="col-md-6">
                                                 <select class="form-control" name="homepage_recent_videos_display" id="homepage_recent_videos_display">
                                                     {assign var=array_modes value=[
-                                                    'paginate' => 'option_paginate'
-                                                    ,'slider' => 'option_slider'
+                                                        'paginate' => 'option_paginate'
+                                                        ,'slider' => 'option_slider'
                                                     ]}
                                                     {foreach from=$array_modes item=trad key=code}
                                                         <option {if $code==$row.homepage_recent_videos_display}selected{/if} value="{$code}">
@@ -506,8 +506,8 @@
                                             <div class="col-md-6">
                                                 <select class="form-control" name="homepage_recent_video_style" id="homepage_recent_video_style">
                                                     {assign var=array_styles value=[
-                                                    'modern' => 'option_modern'
-                                                    ,'classic' => 'option_classic'
+                                                        'modern' => 'option_modern'
+                                                        ,'classic' => 'option_classic'
                                                     ]}
                                                     {foreach from=$array_styles item=trad key=code}
                                                         <option {if $code==$row.homepage_recent_video_style}selected{/if} value="{$code}">
@@ -525,9 +525,9 @@
                                             <div class="col-md-6">
                                                 <select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
                                                     {assign var=array_styles value=[
-                                                    '1.3333' => '4/3'
-                                                    ,'1.7777' => '16/9'
-                                                    ,'1.6' => '16/10'
+                                                        '1.3333' => '4/3'
+                                                        ,'1.7777' => '16/9'
+                                                        ,'1.6' => '16/10'
                                                     ]}
                                                     {foreach from=$array_styles item=value key=code}
                                                         <option {if $code==$row.homepage_recent_video_ratio}selected{/if} value="{$code}">
@@ -567,8 +567,8 @@
                                             <div class="col-md-6">
                                                 <select class="form-control" name="homepage_collection_video_style" id="homepage_collection_video_style">
                                                     {assign var=array_styles value=[
-                                                    'modern' => 'option_modern'
-                                                    ,'classic' => 'option_classic'
+                                                        'modern' => 'option_modern'
+                                                        ,'classic' => 'option_classic'
                                                     ]}
                                                     {foreach from=$array_styles item=trad key=code}
                                                         <option {if $code==$row.homepage_collection_video_style}selected{/if} value="{$code}">
@@ -586,9 +586,9 @@
                                             <div class="col-md-6">
                                                 <select class="form-control" name="homepage_collection_video_ratio" id="homepage_collection_video_ratio">
                                                     {assign var=array_styles value=[
-                                                    '1.3333' => '4/3'
-                                                    ,'1.7777' => '16/9'
-                                                    ,'1.6' => '16/10'
+                                                        '1.3333' => '4/3'
+                                                        ,'1.7777' => '16/9'
+                                                        ,'1.6' => '16/10'
                                                     ]}
                                                     {foreach from=$array_styles item=value key=code}
                                                         <option {if $code==$row.homepage_collection_video_ratio}selected{/if} value="{$code}">
@@ -2914,9 +2914,9 @@
                         <div class="col-md-6">
                             <select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
                                 {assign var=array_automate value=[
-                                'crontab' => 'option_automate_launch_mode_crontab'
-                                ,'user_activity' => 'option_automate_launch_mode_user_activity'
-                                ,'disabled' => 'option_automate_launch_mode_disabled'
+                                    'crontab' => 'option_automate_launch_mode_crontab'
+                                    ,'user_activity' => 'option_automate_launch_mode_user_activity'
+                                    ,'disabled' => 'option_automate_launch_mode_disabled'
                                 ]}
                                 {foreach from=$array_automate item=trad key=code}
                                     <option {if $code==$row.automate_launch_mode}selected{/if} value="{$code}">
