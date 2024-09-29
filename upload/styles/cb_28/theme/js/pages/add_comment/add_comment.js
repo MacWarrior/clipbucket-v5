@@ -13,6 +13,18 @@ function get_the_comment(id,type_id,div) {
                 if (data.parent_id) {
                     $('.reply-box-' + data.parent_id).hide();
                     $('.comments-reply-' + data.parent_id).append(data.li_data).slideDown();
+
+                    if( visual_editor_comments_enabled ){
+                        let elements = document.querySelectorAll('.comments-reply-' + data.parent_id + ' .commented-txt p');
+                        let last_reply = elements[elements.length - 1];
+                        new toastui.Editor.factory({
+                            el: last_reply,
+                            viewer: true,
+                            usageStatistics: false,
+                            initialValue: last_reply.innerHTML
+                        });
+                    }
+
                     $('html, body').animate({
                         scrollTop: $('#reply-' + id).offset().top
                     }, 1000);
@@ -112,30 +124,46 @@ function reply_box(cid,type,type_id) {
     let replying_to_user = $(document).find('#says_'+cid).attr('speaker');
     let lang_reply_to_user = lang_reply_to + ' ' + replying_to_user + '...';
 
+    let html = '<form name="reply_form" method="post" id="reply_form_' + cid + '" onsubmit="return false;">';
+    html += '<input type="hidden" name="reply_to" id="reply_to" value="' + cid +'">';
+    html += '<input type="hidden" name="obj_id" id="obj_id" value="' + type_id + '"> ';
+    html += '<input type="hidden" name="type" value="' + type + '" />';
+
     if( visual_editor_comments_enabled ){
-        let html = '<div class="form-group clearfix"><div id="reply_box_' + cid + '"></div></div>';
-        html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\')" value="'+lang_reply+'">';
-        html += '<input type="button" class="btn btn-primary pull-right" onclick="remove_reply_box(\''+cid+'\')" value="' + lang['cancel'] + '">';
-        $('.reply-box-' + cid).html(html);
-        visual_editors['reply_form_' + cid] = init_visual_editor('#reply_box_' + cid, lang_reply_to_user);
+        html += '<input type="hidden" name="comment" id="reply_comment_' + cid + '"/>';
+        html += '<div class="form-group clearfix"><div id="reply_box_' + cid + '"></div></div>';
     } else {
-        let html = '<form name="reply_form" method="post" id="reply_form_'+cid+'" onsubmit="return false;">';
-        html += '<input type="hidden" name="reply_to" id="reply_to" value="'+cid+'">';
-        html += '<input type="hidden" name="obj_id" id="obj_id" value="'+type_id+'">';
-        html += '<input type="hidden" name="type" value="'+type+'" />';
         html += '<div class="textarea-comment clearfix">';
-        html += '<textarea name="comment" id="reply_box_'+cid+'" class="form-control" placeholder="'+ lang_reply_to_user + '"></textarea>';
-        html += '<i class="remove-'+cid+' remove-icon" onclick="remove_reply_box('+cid+')">';
+        html += '<textarea name="comment" id="reply_box_' + cid + '" class="form-control" placeholder="' + lang_reply_to_user + '"></textarea>';
+        html += '<i class="remove-' + cid + ' remove-icon" onclick="remove_reply_box(' + cid + ')">';
         html += '<span style="color:#006dcc;cursor:pointer">';
         html += '<strong class="icon-close"></strong>';
         html += '</span>';
         html += '</i>';
         html += '</div>';
-        html += '<input type="button" name="add_reply" id="add_reply_button_'+cid+'" class="btn btn-primary pull-right add-reply" onclick="add_comment_js(\'reply_form_'+cid+'\')" value="'+lang_reply+'">';
-        html += '</form>';
-        $('.reply-box-' + cid).html(html);
+    }
+
+    html += '<input type="button" name="add_reply" id="add_reply_button_' + cid + '" class="btn btn-primary pull-right add-reply" value="' + lang_reply + '">';
+
+    if( visual_editor_comments_enabled ) {
+        html += '<input type="button" class="btn btn-primary pull-right" onclick="remove_reply_box(\'' + cid + '\')" value="' + lang['cancel'] + '">';
+    }
+
+    $('.reply-box-' + cid).html(html);
+
+    if( visual_editor_comments_enabled ) {
+        visual_editors['reply_form_' + cid] = init_visual_editor('#reply_box_' + cid, lang_reply_to_user);
+    } else {
         $('#reply_box_' + cid).focus();
     }
+
+    $('#add_reply_button_' + cid).on('click',function(){
+        if( visual_editor_comments_enabled ){
+            $('#reply_comment_' + cid).val(visual_editors['reply_form_' + cid].getMarkdown())
+        }
+        add_comment_js('reply_form_' + cid);
+    });
+
     $('.reply-box-' + cid).slideDown("slow");
 }
 
@@ -190,10 +218,12 @@ $(document).ready(function(){
         add_comment_js('comment_form');
     });
 
-    $('#comment_box').keypress(function(e){
-        if(e.keyCode == 13 && !e.shiftKey) {
-            e.preventDefault();
-            add_comment_js('comment_form');
-        }
-    });
+    if( !visual_editor_comments_enabled ) {
+        $('#comment_box').keypress(function (e) {
+            if (e.keyCode === 13 && !e.shiftKey) {
+                e.preventDefault();
+                add_comment_js('comment_form');
+            }
+        });
+    }
 });
