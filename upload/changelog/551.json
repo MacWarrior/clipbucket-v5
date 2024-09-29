@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"149",
+  "revision":"150",
   "status":"dev",
   "detail":[
     {
@@ -29,6 +29,7 @@
         ,"Implement user level permission to disable channels"
         ,"Implement photo upload permission"
         ,"Implement collection thumbnail selection"
+        ,"Implement directory permission checkup"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"

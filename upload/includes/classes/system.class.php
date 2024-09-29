@@ -575,7 +575,14 @@ class System{
      */
     public static function check_global_configs(): bool
     {
+        if (config('cache_enable') == 'yes') {
+            return CacheRedis::getInstance()->get('check_global_configs');
+        } elseif( time() < $_SESSION['check_global_configs']['time']) {
+            return $_SESSION['check_global_configs']['val'];
+        }
+        
         if( ini_get('max_execution_time') < 7200 ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
@@ -589,40 +596,60 @@ class System{
         $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
         if( !$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb) ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         $chunk_upload_size = config('chunk_upload_size');
 
         if( $chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb) ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         $cloudflare_upload_limit = config('cloudflare_upload_limit');
         if( Network::is_cloudflare() ){
             if( !$chunk_upload && $target_upload_size > $cloudflare_upload_limit ){
+                self::setGlobalConfigCache(0);
                 return false;
             }
             if( $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit ){
+                self::setGlobalConfigCache(0);
                 return false;
             }
         }
 
         if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         if( !self::isDateTimeSynchro() ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
         $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
         $tmp = [];
         if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
+            self::setGlobalConfigCache(0);
             return false;
         }
 
-        return true;
+        
+        $permissions = self::checkPermissions(self::getPermissions(false));
+        self::setGlobalConfigCache($permissions);
+        return $permissions;
+    }
+
+    public static function setGlobalConfigCache($val)
+    {
+        if (config('cache_enable') == 'yes') {
+            CacheRedis::getInstance()->set('check_global_configs', $val, 60);
+        } else {
+            $_SESSION['check_global_configs']['val'] = $val;
+            $_SESSION['check_global_configs']['time'] = time() + 60;
+        }
     }
 
     public static function is_nginx(): bool
@@ -741,6 +768,74 @@ class System{
         $details['diff_in_minute'] = ($interval->days * 24 * 60) + ($interval->h * 60) + $interval->i;
 
         return $details['diff_in_minute'] <= 1;
+    }
+
+    /**
+     * @param bool $install
+     * @return array
+     */
+    public static function getPermissions(bool $install = true): array
+    {
+        /**
+         * Function used to check folder permissions
+         */
+        $files = [
+            'cache',
+            'cache/comments',
+            'cache/userfeeds',
+            'cache/views',
+            'cb_install',
+            'cb_install/sql',
+            'changelog',
+            'files',
+            'files/avatars',
+            'files/backgrounds',
+            'files/category_thumbs',
+            'files/conversion_queue',
+            'files/logos',
+            'files/logs',
+            'files/mass_uploads',
+            'files/original',
+            'files/photos',
+            'files/temp',
+            'files/thumbs',
+            'files/videos',
+            'images',
+            'includes'
+        ];
+        if ($install) {
+            $files[] = 'files/temp/install.me';
+        }
+
+        $permsArray = [];
+        foreach ($files as $file) {
+            if (is_writeable(DirPath::get('root') . $file)) {
+                $permsArray[] = [
+                    'path' => $file,
+                    'msg'  => 'writeable'
+                ];
+            } else {
+                $permsArray[] = [
+                    'path' => $file,
+                    'err'  => 'please chmod this file/directory to 755'
+                ];
+            }
+        }
+        return $permsArray;
+    }
+
+    /**
+     * @param array $permissions
+     * @return int
+     */
+    public static function checkPermissions(array $permissions): int
+    {
+        foreach ($permissions as $permission) {
+            if ( isset($permission['err'])) {
+                return 0;
+            }
+        }
+        return 1;
     }
 
 }
