@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"148",
+  "revision":"149",
   "status":"dev",
   "detail":[
     {
@@ -89,6 +89,7 @@
         ,"Fix playlists management"
         ,"Fix guest users permissions"
         ,"Fix collection pagination"
+        ,"Fix video deletion <i>(#443)</i>"
       ]
     },
     {
