@@ -43,7 +43,7 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
 $whoops->pushHandler(function($e){
     $message = 'URL : **' . $_SERVER['REQUEST_URI'] . '**' .PHP_EOL. $e->getMessage().PHP_EOL.$e->getTraceAsString();
     error_log($message);
-    DiscordLog::getInstance()->error($message, ['exception'=>$e]);
+    DiscordLog::getInstance()->error('URL : ' . $_SERVER['REQUEST_URI'], ['exception'=>$e]);
 });
 $whoops->register();
 
