@@ -125,21 +125,23 @@ class Video
 
     private function getSQLFields($type = '', $prefix = false): array
     {
-        switch($type){
+        switch ($type) {
             case 'video':
             default:
                 $fields = $this->getFields();
+                $tablename = $this->getTableName();
                 break;
 
             case 'categories':
                 $fields = $this->getFieldsCategories();
+                $tablename = $this->getTableNameCategories();
                 break;
         }
 
-        return array_map(function($field) use ($prefix) {
-            $field_name = $this->getTableName() . '.' . $field;
-            if( $prefix ){
-                $field_name .= ' AS `'.$this->getTableName() . '.' . $field.'`';
+        return array_map(function ($field) use ($prefix, $tablename) {
+            $field_name = $tablename . '.' . $field;
+            if ($prefix) {
+                $field_name .= ' AS `' . $tablename . '.' . $field . '`';
             }
             return $field_name;
         }, $fields);

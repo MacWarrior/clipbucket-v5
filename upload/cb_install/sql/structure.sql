@@ -1181,3 +1181,34 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
 
 ALTER TABLE `{tbl_prefix}sessions`
     ADD INDEX(`session_date`);
+
+CREATE TABLE `{tbl_prefix}memberships`
+(
+    `id_membership`        INT    NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+    `user_level_id`          INT(20) NOT NULL,
+    `frequency`              ENUM ('daily', 'weekly', 'monthly', 'yearly'),
+    `base_price`             DECIMAL,
+    `description`            VARCHAR(512),
+    `storage_quota_included` INT     DEFAULT NULL,
+    `storage_price_per_go`   DECIMAL,
+    `disabled`               BOOLEAN DEFAULT FALSE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}memberships`
+    ADD UNIQUE KEY `user_frequency` (`frequency`, `user_level_id`);
+ALTER TABLE `{tbl_prefix}memberships`
+    ADD CONSTRAINT `user_level_membership` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+CREATE TABLE  `{tbl_prefix}user_memberships`
+(
+    `id_user_membership` INT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userid`               BIGINT   NOT NULL,
+    `id_membership`      INT      NOT NULL,
+    `date_start`           DATETIME NOT NULL,
+    `date_end`             DATETIME NULL,
+    `price`                DECIMAL  NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_memberships`
+    ADD CONSTRAINT `user_membership_user` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_memberships`
+    ADD CONSTRAINT `user_membership_membership` FOREIGN KEY (`id_membership`) REFERENCES `{tbl_prefix}memberships` (`id_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;

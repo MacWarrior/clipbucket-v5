@@ -407,6 +407,19 @@ class ClipBucket
 
         $this->addMenuAdmin($menu_configuration, 2);
 
+        if (config('enable_membership') == 'yes') {
+            $menu_subscriptions = [
+                'title' => lang('memberships'),
+                'class' => 'icon- fa fa-credit-card-alt',
+                'sub'   => [
+                    [
+                        'title'=>lang('user_levels'),
+                        'url' =>DirPath::getUrl('admin_area') . 'memberships.php'
+                    ]
+                ]
+            ];
+            $this->addMenuAdmin($menu_subscriptions, 3);
+        }
         if (NEED_UPDATE) {
             return;
         }

@@ -1,0 +1,50 @@
+<div class="heading clearfix">
+    <h2 class="pull-left">{lang('user_levels')}</h2>
+    <a class="pull-right btn btn-primary" href="{DirPath::getUrl('admin_area')}edit_membership.php">{lang('add')}</a>
+</div>
+
+<form name="video_manage marginBottomLarge" method="post">
+    <table class="table table-bordered table-striped manageUsersTable marginTop">
+        <tr>
+            {*<td>
+                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+            </td>*}
+            <td>{lang('user_levels')}</td>
+            <td>{lang('frequency')}</td>
+            <td>{lang('base_price')}</td>
+            <td>{lang('storage_quota')}</td>
+            <td>{lang('storage_price')}</td>
+            <td>&nbsp;</td>
+        </tr>
+        {foreach from=$memberships item=membership}
+            <tr>
+                {*<td>
+                    <input name="check_video[]" type="checkbox" id="check_video" value="{$membership.id_membership}"/>
+                </td>*}
+                <td>{$membership.user_level_name}</td>
+                <td>{lang('frequency_'|cat:$membership.frequency)}</td>
+                <td>{$membership.base_price}</td>
+                <td>{$membership.storage_quota_included}</td>
+                <td>{$membership.storage_price_per_go}</td>
+                <td>
+                    <div class="dropdown">
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" tabindex="-1" href="edit_membership.php?id_membership={$membership.id_membership}">{lang code='edit'}</a></li>
+                            <li><a role="menuitem" class="activate {if !$membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>
+                            <li><a role="menuitem" class="deactivate {if $membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>
+                            {if empty($membership.id_user_membership)}
+                                <li><a role="menuitem" class="delete" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='delete'}</a></li>
+                            {/if}
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+</form>
+
+{include file="$style_dir/blocks/pagination.html"}
+<div class="marginBottomLarge"></div>

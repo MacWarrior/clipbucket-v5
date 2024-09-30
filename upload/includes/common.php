@@ -92,6 +92,7 @@ require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
+require_once DirPath::get('classes') . 'membership.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -124,7 +125,7 @@ require_once DirPath::get('classes') . 'session_message_handler.class.php';
 $pages = new pages();
 $eh = new errorhandler();
 
-foreach (sessionMessageHandler::get_messages() as $message) {
+foreach (SessionMessageHandler::get_messages() as $message) {
     $eh->e($message['message'], $message['type']);
 }
 
