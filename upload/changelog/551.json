@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"151",
+  "revision":"152",
   "status":"dev",
   "detail":[
     {
@@ -91,6 +91,7 @@
         ,"Fix guest users permissions"
         ,"Fix collection pagination"
         ,"Fix video deletion <i>(#443)</i>"
+        ,"Fix config checkup cache usage"
       ]
     },
     {

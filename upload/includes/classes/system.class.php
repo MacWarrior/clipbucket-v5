@@ -576,7 +576,10 @@ class System{
     public static function check_global_configs(): bool
     {
         if (config('cache_enable') == 'yes') {
-            return CacheRedis::getInstance()->get('check_global_configs');
+            $cache = CacheRedis::getInstance()->get('check_global_configs');
+            if( $cache != '' ) {
+                return $cache;
+            }
         } elseif( time() < $_SESSION['check_global_configs']['time']) {
             return $_SESSION['check_global_configs']['val'];
         }
