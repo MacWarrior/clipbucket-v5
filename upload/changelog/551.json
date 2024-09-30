@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"150",
+  "revision":"151",
   "status":"dev",
   "detail":[
     {
@@ -178,6 +178,7 @@
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
+        ,"Add index to sessions table"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
