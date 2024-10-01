@@ -139,5 +139,10 @@ class MWIP extends \Migration
             'fr'=>'Création',
             'en'=>'Creation'
         ]);
+
+        self::generateTranslation('must_activate_storage_history', [
+            'fr'=>'Vous devez activer l\'option "Activer l\'historique de stockage" pour éditer ce champs',
+            'en'=>'You must activate option "Activate storage history" to edit this field'
+        ]);
     }
 }

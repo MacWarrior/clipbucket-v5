@@ -19,8 +19,8 @@
             </div>
         </h2>
         {else}
-            <h2 class="pull-left paddingLeftLarge">{lang('creation')}
-        {/if}
+        <h2 class="pull-left paddingLeftLarge">{lang('creation')}
+            {/if}
     </div>
     <form method="post" name="edit_video" enctype="multipart/form-data">
         <input class="form-control" class="form-control" name="id_membership" type="hidden" id="id_membership" value="{$membership.id_membership}"/>
@@ -33,49 +33,74 @@
                                 <tr>
                                     <td class="first"><label for="user_level_id">{lang('user_levels')}</label></td>
                                     <td>
-                                        <select class="form-control" name="user_level_id" id="user_level_id" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
-                                            {foreach from=$user_levels item=user_level}
-                                                <option value="{$user_level.user_level_id}" {if $membership.user_level_id == $user_level.user_level_id}selected{/if} >
-                                                    {$user_level.user_level_name}
-                                                </option>
-                                            {/foreach}
-                                        </select>
+                                        <div class="col-md-11">
+                                            <select class="form-control" name="user_level_id" id="user_level_id" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
+                                                {foreach from=$user_levels item=user_level}
+                                                    <option value="{$user_level.user_level_id}" {if $membership.user_level_id == $user_level.user_level_id}selected{/if} >
+                                                        {$user_level.user_level_name}
+                                                    </option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="first"><label for="frequency">{lang('frequency')}</label></td>
                                     <td>
-                                        <select class="form-control" name="frequency" id="frequency" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
-                                            {foreach from=$frequencies item=frequency}
-                                                <option value="{$frequency}" {if $membership.frequency == $frequency}selected{/if} >
-                                                    {lang('frequency_'|cat:$frequency)}
-                                                </option>
-                                            {/foreach}
-                                        </select>
+                                        <div class="col-md-11">
+                                            <select class="form-control" name="frequency" id="frequency" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
+                                                {foreach from=$frequencies item=frequency}
+                                                    <option value="{$frequency}" {if $membership.frequency == $frequency}selected{/if} >
+                                                        {lang('frequency_'|cat:$frequency)}
+                                                    </option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="first"><label for="base_price">{lang('base_price')}</label></td>
                                     <td>
-                                        <input class="form-control" type="text" name="base_price" id="base_price" value="{$membership.base_price}">
+                                        <div class="col-md-11">
+                                            <input class="form-control" type="text" name="base_price" id="base_price" value="{$membership.base_price}"></div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="first"><label for="description">{lang('description')}</label></td>
                                     <td>
-                                        <textarea class="form-control" name="description" id="description">{$membership.description}</textarea>
+                                        <div class="col-md-11">
+                                            <textarea class="form-control" name="description" id="description">{$membership.description}</textarea></div>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="first"><label for="storage_quota_included">{lang('storage_quota_included')}</label></td>
                                     <td>
-                                        <input class="form-control" type="text" name="storage_quota_included" id="storage_quota_included" value="{$membership.storage_quota_included}">
+                                        <div class="col-md-11">
+                                            <input class="form-control" type="text" name="storage_quota_included" id="storage_quota_included"
+                                                   value="{$membership.storage_quota_included}"
+                                                    {if config('enable_storage_history')=='no'} disabled="disabled" {/if}
+                                            >
+                                        </div>
+
+                                        {if config('enable_storage_history')=='no'}
+                                            <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{htmlspecialchars(lang('must_activate_storage_history'))}">
+                                        {/if}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="first"><label for="storage_price_per_go">{lang('storage_price')}</label></td>
                                     <td>
-                                        <input class="form-control" type="text" name="storage_price_per_go" id="storage_price_per_go" value="{$membership.storage_price_per_go}">
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <input class="form-control" type="text" name="storage_price_per_go" id="storage_price_per_go"
+                                                       value="{$membership.storage_price_per_go}"
+                                                        {if config('enable_storage_history')=='no'} disabled="disabled" {/if}
+                                                >
+                                            </div>
+                                            {if config('enable_storage_history')=='no'}
+                                                <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{htmlspecialchars(lang('must_activate_storage_history'))}">
+                                            {/if}
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
