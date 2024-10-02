@@ -7,6 +7,9 @@ $(function () {
                 url: '/actions/admin_delete_membership.php',
                 data: {id_membership: id, redirect: true},
                 dataType: "json",
+                success: response => {
+                    document.location = response.url;
+                }
             });
         }
     });
