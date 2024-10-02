@@ -7,11 +7,8 @@
                     Actions <span class="caret caret_margin"></span>
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
-                    {if $membership.disabled}
-                        <li><a class="activate" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>
-                    {else}
-                        <li><a class="deactivate" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>
-                    {/if}
+                        <li><a class="activate {if !$membership.disabled}hidden{/if}"  data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>
+                        <li><a class="deactivate {if !$membership.disabled}hidden{/if}"  data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>
                     {if empty($membership.id_user_membership)}
                         <li><a class="delete" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='delete'}</a></li>
                     {/if}

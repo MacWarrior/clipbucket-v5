@@ -591,7 +591,24 @@ class User
      */
     public function getLastStorageUseByUser($userid): int
     {
-        $sql = 'select storage_used from ' . tbl('users_storage_histo') . ' where id_user = ' . mysql_clean($userid) . ' group by id_user having max(datetime)';
+        $sql = 'SELECT storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . mysql_clean($userid) . ' GROUP BY id_user HAVING MAX(datetime)';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            return 0;
+        }
+        return $results[0]['storage_used'];
+    }
+
+    /**
+     * @param int|string $userid
+     * @param string $date_start
+     * @param string $date_end
+     * @return int
+     * @throws Exception
+     */
+    public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
+    {
+        $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . mysql_clean($userid) . ' AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' GROUP BY id_user ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return 0;

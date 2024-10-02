@@ -1,0 +1,38 @@
+<div class="advanceSearchButton clearfix">
+    <a href="#" class="btn btn-primary btn-sm pull-right current after" onclick="$('#searchdiv').toggle();return false;" style="top: 15px;">
+        {lang code="com_advance_results"}
+        <i class="glyphicon glyphicon-chevron-down down"></i>
+        <i class="glyphicon glyphicon-chevron-up up" style="display:none;"></i>
+    </a>
+</div>
+
+<div class="search_box well" id="searchdiv" {if !$username && !$user_level_id} style="display:none;"{/if}>
+    <form id="users_memberships_search" name="users_memberships_search" method="post" action="users_memberships.php" >
+        <input type="hidden" name="sort" id="sort" value="{$sort}">
+        <input type="hidden" name="sort_order" id="sort_order" value="{$sort_order}">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="username">{lang('username')}</label>
+                    <input class="form-control" name="username" type="text" id="username" value="{$username}" />
+                </div>
+            </div>
+            <div class="col-md-4">
+              <div class="form-group">
+                    <label for="user_level_id">{lang('user_levels')}</label>
+                  <select class="form-control" name="user_level_id" id="user_level_id">
+                      <option value=""></option>
+                      {foreach from=$user_levels item=user_level}
+                          <option value="{$user_level.user_level_id}" {if $user_level_id == $user_level.user_level_id}selected{/if} >
+                              {$user_level.user_level_name}
+                          </option>
+                      {/foreach}
+                  </select>
+                </div>  
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" name="search" id="search" value='{lang code="search"}' class="btn btn-success btn-sm"/>
+        </div>
+    </form>
+</div>

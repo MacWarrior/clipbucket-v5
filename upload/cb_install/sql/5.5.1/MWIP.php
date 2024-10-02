@@ -144,5 +144,47 @@ class MWIP extends \Migration
             'fr'=>'Vous devez activer l\'option "Activer l\'historique de stockage" pour éditer ce champs',
             'en'=>'You must activate option "Activate storage history" to edit this field'
         ]);
+
+        self::generateTranslation('subscribers', [
+            'fr'=>'Abonnés',
+            'en'=>'Subscribers'
+        ]);
+
+        self::generateTranslation('first_start', [
+            'fr'=>'Date de début du premier abonnement',
+            'en'=>'First membership start date'
+        ]);
+        self::generateTranslation('last_end', [
+            'fr'=>'Date de fin du dernier abonnement',
+            'en'=>'Last membership end date'
+        ]);
+        self::generateTranslation('nb_membership', [
+            'fr'=>'Nombre d\'abonnement',
+            'en'=>'Total memberships'
+        ]);
+        self::generateTranslation('sum_price', [
+            'fr'=>'Somme des abonnements',
+            'en'=>'Memberships sum'
+        ]);
+
+        self::generateTranslation('max_period_storage', [
+            'fr'=>'Stockage maximum utilisé durant la période',
+            'en'=>'Maximum storage during period'
+        ]);
+
+        self::generateTranslation('date_start', [
+            'fr'=>'Date de début',
+            'en'=>'Date start'
+        ]);
+
+        self::generateTranslation('date_end', [
+            'fr'=>'Date de fin',
+            'en'=>'Date end'
+        ]);
+
+        self::generateTranslation('price', [
+            'fr'=>'Prix',
+            'en'=>'Price'
+        ]);
     }
 }

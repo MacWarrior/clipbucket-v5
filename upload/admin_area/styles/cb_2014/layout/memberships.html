@@ -33,8 +33,8 @@
                         </button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                             <li><a role="menuitem" tabindex="-1" href="edit_membership.php?id_membership={$membership.id_membership}">{lang code='edit'}</a></li>
-                            <li><a role="menuitem" class="activate {if !$membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>
-                            <li><a role="menuitem" class="deactivate {if $membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>
+{*                            <li><a role="menuitem" class="activate {if !$membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>*}
+{*                            <li><a role="menuitem" class="deactivate {if $membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>*}
                             {if empty($membership.id_user_membership)}
                                 <li><a role="menuitem" class="delete" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='delete'}</a></li>
                             {/if}

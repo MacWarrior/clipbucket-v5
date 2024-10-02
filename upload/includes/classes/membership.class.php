@@ -54,9 +54,15 @@ class Membership
     {
         return $this->frequencies;
     }
+
     public function getTablename(): string
     {
         return $this->tablename;
+    }
+
+    public function getTablenameUserMembership(): string
+    {
+        return $this->tablename_user_membership;
     }
 
     /**
@@ -83,8 +89,14 @@ class Membership
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_id_membership = $params['id_membership'] ?? false;
         $param_userid = $params['userid'] ?? false;
+        $param_username = $params['username'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
+        $param_get_subscribers = $params['get_subscribers'] ?? false;
+        $param_join_users = $params['join_users'] ?? false;
+        $param_type_join_user_membership = $params['type_join_user_membership'] ?? false;
+        $param_get_user_membership = $params['get_user_membership'] ?? false;
 
+        //CONDITIONS
         $conditions = [];
         if ($param_id_membership !== false) {
             $conditions[] = $this->tablename . '.id_membership = \'' . mysql_clean($param_id_membership) . '\'';
@@ -94,6 +106,9 @@ class Membership
         }
         if ($param_userid !== false) {
             $conditions[] = $this->tablename_user_membership . '.userid = \'' . mysql_clean($param_userid) . '\'';
+        }
+        if ($param_username !== false && $param_join_users) {
+            $conditions[] = ' users.username like \'%' . mysql_clean($param_username) . '%\'';
         }
 
         if ($param_group) {
@@ -107,10 +122,6 @@ class Membership
 
         $order = '';
         if ($param_order && !$param_count) {
-            $group[] = str_replace([
-                'asc',
-                'desc'
-            ], '', strtolower($param_order));
             $order = ' ORDER BY ' . $param_order;
         }
 
@@ -119,25 +130,52 @@ class Membership
             $limit = ' LIMIT ' . $param_limit;
         }
 
-        if ($param_count) {
-            $select = ['COUNT(DISTINCT ' . $this->tablename . '.id_membership) AS count'];
+        //JOIN
+        if ($param_type_join_user_membership == 'INNER' || $param_type_join_user_membership == 'LEFT') {
+            $type_join = $param_type_join_user_membership;
         } else {
-            $select = $this->getSQLFields('membership');
-            $select[] = 'user_levels.user_level_name';
-            $select[] = $this->tablename_user_membership.'.id_user_membership';
+            $type_join = ' LEFT ';
         }
 
         $join = [];
-
+        $join[] = ' ' . $type_join . ' JOIN ' . cb_sql_table($this->tablename_user_membership) . ' ON ' . $this->tablename_user_membership . '.id_membership = ' . $this->tablename . '.id_membership';
         $join[] = ' LEFT JOIN ' . cb_sql_table('user_levels') . ' ON user_levels.user_level_id = ' . $this->tablename . '.user_level_id';
-        $join[] = ' LEFT JOIN ' . cb_sql_table($this->tablename_user_membership) . ' ON '.$this->tablename_user_membership.'.id_membership = ' . $this->tablename . '.id_membership';
 
-        $sql = 'SELECT ' . implode(', ', $select) . '
+        if ($param_join_users) {
+            $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.userid = ' . $this->tablename_user_membership . '.userid';
+            $select[] = 'users.username';
+        }
+
+        //SELECT
+        if ($param_count) {
+            if ($param_get_user_membership) {
+                $select = ['COUNT(DISTINCT ' . $this->tablename_user_membership . '.id_user_membership) AS count'];
+            } else {
+                $select = ['COUNT(DISTINCT ' . $this->tablename . '.id_membership) AS count'];
+            }
+        } else {
+            $select[] = $this->tablename_user_membership . '.id_user_membership';
+            if ($param_get_subscribers) {
+                $select[] = $this->tablename_user_membership . '.userid';
+                $select[] = 'MIN(' . $this->tablename_user_membership . '.date_start) as first_start';
+                $select[] = 'CASE WHEN COUNT(' . $this->tablename_user_membership . '.date_end) < COUNT(*) THEN \'2999-99-99\' ELSE MAX(' . $this->tablename_user_membership . '.date_end) END AS last_end';
+                $select[] = 'COUNT(' . $this->tablename_user_membership . '.id_user_membership) as nb_membership';
+                $select[] = 'SUM(' . $this->tablename_user_membership . '.price) as sum_price';
+            } elseif ($param_get_user_membership) {
+                $select = $this->getSQLFields('user_membership');
+            } else {
+                $select = $this->getSQLFields('membership');
+            }
+            $select[] = 'user_levels.user_level_name';
+        }
+
+
+        $sql = 'SELECT * FROM (SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table($this->tablename)
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
-            . $having
+            . $having . ') AS R'
             . $order
             . $limit;
 
@@ -160,6 +198,26 @@ class Membership
 
         return $result;
 
+    }
+
+    public function getAllSubscribers(array $params)
+    {
+        $params['group'] = $this->tablename_user_membership . '.userid';
+        $params['join_users'] = true;
+        $params['get_subscribers'] = true;
+        $params['type_join_user_membership'] = 'INNER';
+        return $this->getAll($params);
+    }
+
+    public function getAllHistoMembershipForUser(array $params)
+    {
+        if (empty($params['userid'])) {
+            return false;
+        }
+        $params['join_users'] = true;
+        $params['get_user_membership'] = true;
+        $params['type_join_user_membership'] = 'INNER';
+        return $this->getAll($params);
     }
 
     private function getSQLFields($type = '', $prefix = false): array
@@ -250,7 +308,6 @@ class Membership
     }
 
 
-
     public function delete(int $id_membership): bool
     {
         if (empty($id_membership)) {
@@ -259,5 +316,6 @@ class Membership
         }
         return Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE id_membership = ' . mysql_clean($id_membership));
     }
+
 
 }
