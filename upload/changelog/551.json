@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"152",
+  "revision":"153",
   "status":"dev",
   "detail":[
     {
@@ -185,6 +185,7 @@
         ,"Fix old videos without quality specified"
         ,"Fix video files detection"
         ,"Fix PHP8.X compatibility"
+        ,"Fix internal logs with IPv6"
       ]
     },
     {

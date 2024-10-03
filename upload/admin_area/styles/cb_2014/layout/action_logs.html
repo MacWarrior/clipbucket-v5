@@ -62,8 +62,10 @@
           {/if}
       </td>
       <td>
-          {if $log.action_ip}
-            {$log.action_ip}
+          {if $log.action_ipv4}
+            {$log.action_ipv4}
+          {elseif $log.action_ipv6}
+              {$log.action_ipv6}
           {else}
             No ip
           {/if}
