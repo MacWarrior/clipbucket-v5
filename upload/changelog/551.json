@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"153",
+  "revision":"154",
   "status":"dev",
   "detail":[
     {
@@ -265,7 +265,7 @@
       "description": [
         "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
-        ,"Update Windows installation script PHP to 8.3.10"
+        ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"
