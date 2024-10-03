@@ -7,8 +7,8 @@
                     Actions <span class="caret caret_margin"></span>
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
-                        <li><a class="activate {if !$membership.disabled}hidden{/if}"  data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>
-                        <li><a class="deactivate {if !$membership.disabled}hidden{/if}"  data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>
+                    <li><a class="activate {if !$membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>
+                    <li><a class="deactivate {if !$membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>
                     {if empty($membership.id_user_membership)}
                         <li><a class="delete" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='delete'}</a></li>
                     {/if}
@@ -59,7 +59,7 @@
                                     <td class="first"><label for="base_price">{lang('base_price')}</label></td>
                                     <td>
                                         <div class="col-md-11">
-                                            <input class="form-control" type="text" name="base_price" id="base_price" value="{$membership.base_price}"></div>
+                                            <input class="form-control" type="number" name="base_price" id="base_price" value="{$membership.base_price}"></div>
                                     </td>
                                 </tr>
                                 <tr>
@@ -73,10 +73,13 @@
                                     <td class="first"><label for="storage_quota_included">{lang('storage_quota_included')}</label></td>
                                     <td>
                                         <div class="col-md-11">
-                                            <input class="form-control" type="text" name="storage_quota_included" id="storage_quota_included"
-                                                   value="{$membership.storage_quota_included}"
-                                                    {if config('enable_storage_history')=='no'} disabled="disabled" {/if}
-                                            >
+                                            <div class="input-group">
+                                                <input class="form-control" type="number" name="storage_quota_included" id="storage_quota_included"
+                                                       value="{$membership.storage_quota_included}"
+                                                        {if config('enable_storage_history')=='no'} disabled="disabled" {/if}
+                                                >
+                                                <span class="input-group-addon" title="{lang('in_x',lang('gb'))}">{lang code='gb'}</span>
+                                            </div>
                                         </div>
 
                                         {if config('enable_storage_history')=='no'}
@@ -89,10 +92,13 @@
                                     <td>
                                         <div class="row">
                                             <div class="col-md-11">
-                                                <input class="form-control" type="text" name="storage_price_per_go" id="storage_price_per_go"
-                                                       value="{$membership.storage_price_per_go}"
-                                                        {if config('enable_storage_history')=='no'} disabled="disabled" {/if}
-                                                >
+                                                <div class="input-group">
+                                                    <input class="form-control" type="text" name="storage_price_per_go" id="storage_price_per_go"
+                                                           value="{$membership.storage_price_per_go}"
+                                                            {if config('enable_storage_history')=='no'} disabled="disabled" {/if}
+                                                    >
+                                                    <span class="input-group-addon">{lang code='per_gb'}</span>
+                                                </div>
                                             </div>
                                             {if config('enable_storage_history')=='no'}
                                                 <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{htmlspecialchars(lang('must_activate_storage_history'))}">

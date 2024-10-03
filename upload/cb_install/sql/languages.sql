@@ -1315,4 +1315,9 @@ VALUES ('admin_setting'),
        ('max_period_storage'),
        ('date_start'),
        ('date_end'),
-       ('price');
+       ('price'),
+       ('gb'),
+       ('per_gb'),
+       ('user_level_successfully_saved'),
+       ('confirm_delete_user_level'),
+       ('user_level');

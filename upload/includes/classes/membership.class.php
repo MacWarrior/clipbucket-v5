@@ -261,6 +261,10 @@ class Membership
     {
         $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ';
         $updated_fields = [];
+        $membership = $this->formatAndValidateFields($membership);
+        if ($membership === false) {
+            return false;
+        }
         foreach ($this->fields as $field) {
             if ($field == 'id_membership') {
                 continue;
@@ -288,6 +292,10 @@ class Membership
         $sql = 'INSERT INTO ' . tbl($this->tablename) . ' ';
         $fields = [];
         $values = [];
+        $membership = $this->formatAndValidateFields($membership);
+        if ($membership === false) {
+            return false;
+        }
         foreach ($this->fields as $field) {
             if ($field == 'id_membership') {
                 continue;
@@ -305,6 +313,28 @@ class Membership
         $sql .= ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ') ';
         Clipbucket_db::getInstance()->execute($sql);
         return Clipbucket_db::getInstance()->insert_id();
+    }
+
+    public function formatAndValidateFields(array $fields)
+    {
+        foreach ($fields as $field => &$value) {
+            switch ($field) {
+                case 'base_price':
+                case 'storage_price_per_go':
+                case 'storage_quota_included':
+                    if (empty($value)) {
+                        $value = 0;
+                    } elseif ((int)$value != $value) {
+                        e(lang('error_type'));
+                        return false;
+                    }
+                    break;
+                default:
+                    break;
+
+            }
+        }
+        return $fields;
     }
 
 

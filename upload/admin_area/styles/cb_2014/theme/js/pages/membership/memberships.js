@@ -1,6 +1,6 @@
 $(function () {
     $('.delete').on('click', function () {
-        if (_cb.confirm_it('Are you sure you want to delete)')) {
+        if (_cb.confirm_it(text_confirm_delete)) {
             var id = $(this).data('id');
             var tr = $(this).parents('tr');
             $.post({

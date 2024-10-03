@@ -11,10 +11,14 @@ $pages->page_redir();
 
 //TODO check inputs required etc.
 if (!empty($_POST['id_membership'])) {
-    Membership::getInstance()->update($_POST);
+    if (Membership::getInstance()->update($_POST)) {
+        e(lang('user_level_successfully_saved'),'m');
+    }
 } elseif (!empty($_POST)) {
-    $inserted_id = Membership::getInstance()->insert($_POST);
-    $_REQUEST['id_membership'] = $inserted_id;
+    if (Membership::getInstance()->insert($_POST)) {
+        e(lang('user_level_successfully_saved'),'m');
+    }
+    SessionMessageHandler::add_message('user_level_successfully_saved', 'm', BASEURL . DirPath::getUrl('admin_area') . '/memberships.php');
 }
 
 $membership = Membership::getInstance()->getOne(['id_membership' => $_REQUEST['id_membership'] ?? 0]);

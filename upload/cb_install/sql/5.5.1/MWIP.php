@@ -15,10 +15,10 @@ class MWIP extends \Migration
             `id_membership` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `user_level_id` INT(20) NOT NULL,
             `frequency` ENUM (\'daily\', \'weekly\', \'monthly\', \'yearly\'),
-            `base_price` DECIMAL,
+            `base_price` DECIMAL DEFAULT 0,
             `description` VARCHAR (512),
-            `storage_quota_included` INT DEFAULT NULL,
-            `storage_price_per_go` DECIMAL,
+            `storage_quota_included` INT DEFAULT 0,
+            `storage_price_per_go` DECIMAL DEFAULT 0,
             `disabled` BOOLEAN DEFAULT FALSE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
@@ -185,6 +185,31 @@ class MWIP extends \Migration
         self::generateTranslation('price', [
             'fr'=>'Prix',
             'en'=>'Price'
+        ]);
+
+        self::generateTranslation('gb', [
+            'fr'=>'Go',
+            'en'=>'GB'
+        ]);
+
+        self::generateTranslation('per_gb', [
+            'fr'=>'par Go',
+            'en'=>'per GB'
+        ]);
+
+        self::generateTranslation('user_level_successfully_saved', [
+            'fr'=>'Le niveau d\'utilisateur a été correctement enregistré',
+            'en'=>'User level has been successfully saved'
+        ]);
+
+        self::generateTranslation('confirm_delete_user_level', [
+            'fr'=>'Voulez-vous vraiment supprimer ce niveau d\'utilisateur ?',
+            'en'=>'Are you sure you want to delete this user level ?'
+        ]);
+
+        self::generateTranslation('user_level', [
+            'fr'=>'Niveau d\'utilisateur',
+            'en'=>'User level'
         ]);
     }
 }
