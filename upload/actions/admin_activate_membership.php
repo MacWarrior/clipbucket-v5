@@ -6,18 +6,10 @@ userquery::getInstance()->admin_login_check();
 
 $id_membership = $_POST['id_membership'];
 $membership = Membership::getInstance()->getOne(['id_membership'=>$id_membership]);
-if (!empty($membership['id_user_membership'])) {
+if (empty($membership)) {
     e(lang('cant_delete_membership_at_least_one_user'));
     $success = false;
 } else {
-    $success =  Membership::getInstance()->delete($id_membership);
+    $success =  Membership::getInstance()->update(['id_membership'=>$id_membership, 'disabled'=>$_POST['disabled']]);
 }
-if ($success) {
-    e(lang('membership_deleted'), 'm');
-}
-$url='';
-if (!empty($_POST['redirect'])) {
-    SessionMessageHandler::add_message(lang('membership_deleted'));
-    $url = BASEURL . DirPath::getUrl('admin_area') .'memberships.php';
-}
-echo json_encode(['msg'=>getTemplateMsg(), 'success'=>$success, 'url'=>$url]);
+echo json_encode(['msg'=>getTemplateMsg(), 'success'=>$success]);

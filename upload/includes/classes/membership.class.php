@@ -28,6 +28,7 @@ class Membership
             'storage_quota_included',
             'storage_price_per_go',
             'disabled',
+            'id_currency'
         ];
 
         $this->fields_user_membership = [
@@ -140,6 +141,7 @@ class Membership
         $join = [];
         $join[] = ' ' . $type_join . ' JOIN ' . cb_sql_table($this->tablename_user_membership) . ' ON ' . $this->tablename_user_membership . '.id_membership = ' . $this->tablename . '.id_membership';
         $join[] = ' LEFT JOIN ' . cb_sql_table('user_levels') . ' ON user_levels.user_level_id = ' . $this->tablename . '.user_level_id';
+        $join[] = ' LEFT JOIN ' . cb_sql_table('currency') . ' ON currency.id_currency = ' . $this->tablename . '.id_currency';
 
         if ($param_join_users) {
             $join[] = ' LEFT JOIN ' . cb_sql_table('users') . ' ON users.userid = ' . $this->tablename_user_membership . '.userid';
@@ -167,6 +169,7 @@ class Membership
                 $select = $this->getSQLFields('membership');
             }
             $select[] = 'user_levels.user_level_name';
+            $select[] = 'currency.symbol';
         }
 
 
@@ -270,12 +273,7 @@ class Membership
                 continue;
             }
             if (isset($membership[$field])) {
-                if ((int)$membership[$field] == $membership[$field]) {
-                    $value = mysql_clean($membership[$field]);
-                } else {
-                    $value = '\'' . mysql_clean($membership[$field]) . '\'';
-                }
-                $updated_fields[] = $field . ' = ' . $value;
+                $updated_fields[] = $field . ' = ' . $membership[$field];
             }
         }
         $sql .= implode(', ', $updated_fields) . ' WHERE id_membership = ' . mysql_clean($membership['id_membership']);
@@ -302,12 +300,7 @@ class Membership
             }
             if (isset($membership[$field])) {
                 $fields[] = $field;
-                if ((int)$membership[$field] == $membership[$field]) {
-                    $value = mysql_clean($membership[$field]);
-                } else {
-                    $value = '\'' . mysql_clean($membership[$field]) . '\'';
-                }
-                $values[] = $value;
+                $values[] = $membership[$field];
             }
         }
         $sql .= ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ') ';
@@ -318,6 +311,7 @@ class Membership
     public function formatAndValidateFields(array $fields)
     {
         foreach ($fields as $field => &$value) {
+            $value = mysql_clean($value);
             switch ($field) {
                 case 'base_price':
                 case 'storage_price_per_go':
@@ -329,14 +323,30 @@ class Membership
                         return false;
                     }
                     break;
+                case 'id_currency':
+                    if (empty($value)) {
+                        e(lang('missing_currency'));
+                        return false;
+                    }
+                    break;
+                case 'description':
+                case 'frequency':
+                    $value = '\'' . $value . '\'';
+                    break;
+                /*case 'disabled':
+                    if ($value == 'true' || $value === true) {
+                        $value = true;
+                    }*/
                 default:
                     break;
 
             }
         }
+        if (!isset($fields['disabled'])) {
+            $fields['disabled'] = 1;
+        }
         return $fields;
     }
-
 
     public function delete(int $id_membership): bool
     {
@@ -347,5 +357,18 @@ class Membership
         return Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE id_membership = ' . mysql_clean($id_membership));
     }
 
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getAllCurrency(): array
+    {
+        $sql = 'SELECT * FROM ' . tbl('currency') ;
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            return [];
+        }
+        return $results;
+    }
 
 }

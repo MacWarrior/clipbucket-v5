@@ -15,15 +15,14 @@ if (!empty($_POST['id_membership'])) {
         e(lang('user_level_successfully_saved'),'m');
     }
 } elseif (!empty($_POST)) {
-    if (Membership::getInstance()->insert($_POST)) {
-        e(lang('user_level_successfully_saved'),'m');
-    }
-    SessionMessageHandler::add_message('user_level_successfully_saved', 'm', BASEURL . DirPath::getUrl('admin_area') . '/memberships.php');
+    (Membership::getInstance()->insert($_POST));
+    SessionMessageHandler::add_message(lang('user_level_successfully_saved'), 'm', BASEURL . DirPath::getUrl('admin_area') . '/memberships.php');
 }
 
 $membership = Membership::getInstance()->getOne(['id_membership' => $_REQUEST['id_membership'] ?? 0]);
 assign('membership', $membership);
 assign('frequencies', Membership::getInstance()->getFrequencies());
+assign('currencies', Membership::getInstance()->getAllCurrency());
 assign('user_levels', userquery::getInstance()->get_levels() ?: []);
 
 global $breadcrumb;

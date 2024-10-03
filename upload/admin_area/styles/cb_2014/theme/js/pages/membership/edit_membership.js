@@ -13,26 +13,7 @@ $(function () {
             });
         }
     });
-    $('.activate').on('click', function () {
-        var id = $(this).data('id');
-        $.post({
-            url: 'actions/admin_membership_activate.php',
-            data: {id_membership: id, disabled: false},
-            dataType: "json",
-            success: response => {
 
-            }
-        })
-    });
-    $('.deactivate').on('click', function () {
-        var id = $(this).data('id');
-        $.post({
-            url: 'actions/admin_membership_activate.php',
-            data: {id_membership: id, disabled: true},
-            dataType: "json",
-            success: response => {
-
-            }
-        })
+    $('#currency').select2({
     });
 });

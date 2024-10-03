@@ -106,6 +106,37 @@
                                         </div>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td class="first"><label for="storage_price_per_go">{lang('currency')}</label></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <div class="input-group">
+                                                    <select class="form-control" name="id_currency" id="currency" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
+                                                        {foreach from=$currencies item=currency}
+                                                            <option value="{$currency.id_currency}" {if $membership.id_currency == $currency.id_currency}selected{/if} >
+                                                                {$currency.country} : {$currency.symbol}
+                                                            </option>
+                                                        {/foreach}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="first"><label for="storage_price_per_go">{lang('active')}</label></td>
+                                    <td>
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <div class="input-group">
+                                                    <input value="0" name="disabled" id="disabled" data-id="{$membership.id_membership}" {if !$membership.disabled}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 disabled_membership"/>
+                                                    <span class="lbl"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                             </table>
                         </div>
                     </div>

@@ -14,6 +14,7 @@
             <th>{lang('base_price')}</th>
             <th>{lang('storage_quota')}</th>
             <th>{lang('storage_price')}</th>
+            <th>{lang('active')}</th>
             <th>&nbsp;</th>
         </tr>
         {foreach from=$memberships item=membership}
@@ -23,9 +24,31 @@
                 </td>*}
                 <td>{$membership.user_level_name}</td>
                 <td>{lang('frequency_'|cat:$membership.frequency)}</td>
-                <td>{$membership.base_price}</td>
-                <td>{$membership.storage_quota_included} {lang('gb')}</td>
-                <td>{$membership.storage_price_per_go} {lang('per_gb')}</td>
+                <td>
+                    {if $membership.base_price != 0}
+                        {$membership.base_price} {$membership.symbol}
+                    {else}
+                        {lang('free')}
+                    {/if}
+                </td>
+                <td>
+                    {if $membership.storage_quota_included != 0}
+                        {$membership.storage_quota_included} {lang('gb')}
+                    {else}
+                        {lang('none')}
+                    {/if}
+                </td>
+                <td>
+                    {if $membership.storage_price_per_go != 0}
+                        {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
+                    {else}
+                        {lang('free')}
+                    {/if}
+                </td>
+                <td>
+                    <input name="disabled" id="disabled" data-id="{$membership.id_membership}" {if !$membership.disabled}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 disabled_membership"/>
+                    <span class="lbl"></span>
+                </td>
                 <td>
                     <div class="dropdown">
                         <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
@@ -33,8 +56,6 @@
                         </button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                             <li><a role="menuitem" tabindex="-1" href="edit_membership.php?id_membership={$membership.id_membership}">{lang code='edit'}</a></li>
-{*                            <li><a role="menuitem" class="activate {if !$membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='activate'}</a></li>*}
-{*                            <li><a role="menuitem" class="deactivate {if $membership.disabled}hidden{/if}" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='deactivate'}</a></li>*}
                             {if empty($membership.id_user_membership)}
                                 <li><a role="menuitem" class="delete" data-id="{$membership.id_membership}" style="cursor:pointer;">{lang code='delete'}</a></li>
                             {/if}

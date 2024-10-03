@@ -16,22 +16,12 @@ $(function () {
             });
         }
     });
-    $('.activate').on('click', function () {
+    $('.disabled_membership').on('change', function () {
         var id = $(this).data('id');
+        var checked = $(this).prop('checked');
         $.post({
-            url: 'actions/admin_membership_activate.php',
-            data: {id_membership: id, disabled: false},
-            dataType: "json",
-            success: response => {
-
-            }
-        })
-    });
-    $('.deactivate').on('click', function () {
-        var id = $(this).data('id');
-        $.post({
-            url: 'actions/admin_membership_activate.php',
-            data: {id_membership: id, disabled: true},
+            url: '/actions/admin_activate_membership.php',
+            data: {id_membership: id, disabled: !checked},
             dataType: "json",
             success: response => {
 

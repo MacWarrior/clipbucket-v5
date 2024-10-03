@@ -1182,6 +1182,14 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
 ALTER TABLE `{tbl_prefix}sessions`
     ADD INDEX(`session_date`);
 
+CREATE TABLE `{tbl_prefix}currency`
+(
+    `id_currency` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `country` VARCHAR(64) NOT NULL,
+    `code` VARCHAR(2) NOT NULL UNIQUE,
+    `symbol` VARCHAR(5) NOT NULL
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 CREATE TABLE `{tbl_prefix}memberships`
 (
     `id_membership`          INT     NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -1198,6 +1206,8 @@ ALTER TABLE `{tbl_prefix}memberships`
     ADD UNIQUE KEY `user_frequency` (`frequency`, `user_level_id`);
 ALTER TABLE `{tbl_prefix}memberships`
     ADD CONSTRAINT `user_level_membership` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}memberships`
+    ADD CONSTRAINT `user_level_currency` FOREIGN KEY (`id_currency`) REFERENCES `{tbl_prefix}currency` (`id_currency`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE `{tbl_prefix}user_memberships`
 (
