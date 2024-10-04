@@ -11,7 +11,7 @@ class MWIP extends \Migration
     public function start()
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('currency') . '` (
-            `id_currency` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `id_currency` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `country` VARCHAR(64) NOT NULL,
             `code` VARCHAR(3) NOT NULL UNIQUE,
             `symbol` VARCHAR(5) NOT NULL
@@ -134,13 +134,13 @@ class MWIP extends \Migration
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('memberships') . '` (
             `id_membership` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `user_level_id` INT(20) NOT NULL,
+            `id_currency` INT(20) NOT NULL
             `frequency` ENUM (\'daily\', \'weekly\', \'monthly\', \'yearly\'),
             `base_price` DECIMAL DEFAULT 0,
             `description` VARCHAR (512),
             `storage_quota_included` INT DEFAULT 0,
             `storage_price_per_go` DECIMAL DEFAULT 0,
-            `disabled` BOOLEAN DEFAULT FALSE,
-            `id_currency` INT NOT NULL
+            `disabled` BOOLEAN DEFAULT FALSE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
         self::alterTable('ALTER TABLE `' . tbl('memberships') . '`
@@ -340,23 +340,23 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('currency', [
-            'fr'=>'Monnaie',
-            'en'=>'Currency'
+            'fr' => 'Monnaie',
+            'en' => 'Currency'
         ]);
 
         self::generateTranslation('missing_currency', [
-            'fr'=>'Veuillez sélectionner une monnaie',
-            'en'=>'Please select a currency'
+            'fr' => 'Veuillez sélectionner une monnaie',
+            'en' => 'Please select a currency'
         ]);
 
         self::generateTranslation('free', [
-            'fr'=>'Gratuit',
-            'en'=>'Free'
+            'fr' => 'Gratuit',
+            'en' => 'Free'
         ]);
 
         self::generateTranslation('none', [
-            'fr'=>'Aucun',
-            'en'=>'None'
+            'fr' => 'Aucun',
+            'en' => 'None'
         ]);
     }
 }

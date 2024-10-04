@@ -1765,4 +1765,4 @@ VALUES ('Albania Lek', 'ALL', 'Lek'),
        ('Venezuela Bolívar', 'VEF', 'Bs'),
        ('Viet Nam Dong', 'VND', '?'),
        ('Yemen Rial', 'YER', '?'),
-       ('Zimbabwe Dollar', 'ZWD', 'Z$')
+       ('Zimbabwe Dollar', 'ZWD', 'Z$');

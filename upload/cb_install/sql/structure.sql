@@ -1184,9 +1184,9 @@ ALTER TABLE `{tbl_prefix}sessions`
 
 CREATE TABLE `{tbl_prefix}currency`
 (
-    `id_currency` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `id_currency` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `country` VARCHAR(64) NOT NULL,
-    `code` VARCHAR(2) NOT NULL UNIQUE,
+    `code` VARCHAR(3) NOT NULL UNIQUE,
     `symbol` VARCHAR(5) NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -1194,6 +1194,7 @@ CREATE TABLE `{tbl_prefix}memberships`
 (
     `id_membership`          INT     NOT NULL AUTO_INCREMENT PRIMARY KEY,
     `user_level_id`          INT(20) NOT NULL,
+    `id_currency`            INT(20) NOT NULL,
     `frequency`              ENUM ('daily', 'weekly', 'monthly', 'yearly'),
     `base_price`             DECIMAL DEFAULT 0,
     `description`            VARCHAR(512),
