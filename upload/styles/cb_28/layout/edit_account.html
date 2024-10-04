@@ -223,6 +223,13 @@
                         </a>
                     </li>
                     {/if}
+                    {if config('enable_membership') == 'yes'}
+                    <li class="{if $mode =='membership'}active{/if}">
+                        <a href="/edit_account.php?mode=membership">
+                            <h5>{lang code='memberships'}</h5>
+                        </a>
+                    </li>
+                    {/if}
                 </ul>
                 <br/>
                 <div class="tab-content clearfix">
@@ -327,7 +334,34 @@
                         {/if}
                     </div>
                     {/if}
-
+                    {if config('enable_membership') == 'yes'}
+                        <div id="menu_membership" class="tab-pane {if $mode =='membership'}active{/if}">
+                            <h2>{lang code='memberships'}</h2>
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
+                                    <th class="col-md-2" style="cursor:pointer;">{lang('date_end')}</th>
+                                    <th class="col-md-2" style="cursor:pointer;">{lang('user_levels')}</th>
+                                    <th class="col-md-1" style="cursor:pointer;">{lang('price')}</th>
+                                    {if config('enable_storage_history' == 'yes')}
+                                        <th class="col-md-2" style="cursor:pointer;">{lang('max_period_storage')}</th>
+                                    {/if}
+                                </tr>
+                                {section name=sub loop=$memberships}
+                                    <tr>
+                                        <td><span>{display_clean($memberships[sub].date_start)}</span></td>
+                                        <td><span>{display_clean($memberships[sub].date_end)}</span></td>
+                                        <td><span>{display_clean($memberships[sub].user_level_name)}</span></td>
+                                        <td><span>{display_clean($memberships[sub].price)} {display_clean($memberships[sub].symbol)}</span></td>
+                                        {if config('enable_storage_history' == 'yes')}
+                                            {if $memberships[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$memberships[sub].date_end}{/if}
+                                            <td><span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($memberships[sub].userid, $memberships[sub].date_start, $date_end),2)}</span></td>
+                                        {/if}
+                                    </tr>
+                                {/section}
+                            </table>
+                        </div>
+                    {/if}
                 </div>
             </div>
         </div>

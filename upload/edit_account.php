@@ -121,7 +121,22 @@ switch ($mode) {
         assign('mode', 'subs');
         assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
         break;
-
+    case 'membership':
+        assign('mode', 'membership');
+        if (!empty($_POST['page'])) {
+            $sql_limit = create_query_limit($_POST['page'], config('video_list_view_video_history'));
+        }
+        $params = [
+            'userid' => user_id(),
+            'limit'   => $sql_limit ?? '',
+            'order'  => ' date_start DESC '
+        ];
+        $results = Membership::getInstance()->getAllHistoMembershipForUser($params);
+        $params['count'] = true;
+        unset($params['limit']);
+        $totals_pages = count_pages(Membership::getInstance()->getAllHistoMembershipForUser($params), config('video_list_view_video_history')) ;
+        assign('memberships', $results);
+        break;
     default:
         assign('on', 'account');
         assign('mode', 'profile_settings');
