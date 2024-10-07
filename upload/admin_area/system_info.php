@@ -57,23 +57,23 @@ assign('phpCliShellExec', System::check_php_function('shell_exec', 'cli', false)
 
 $phpVersionReq = '7.0.0';
 assign('phpVersionReq',$phpVersionReq);
-$php_web_version = System::get_software_version('php_web',false);
+$php_web_version = System::get_software_version('php_web',true, null, true);
 assign('phpVersionWeb', $php_web_version);
 assign('phpVersionWebOK', $php_web_version >= $phpVersionReq);
 
 $ffReq = '3';
-$ffmpeg_version = System::get_software_version('ffmpeg', false);
+$ffmpeg_version = System::get_software_version('ffmpeg', true, null, true);
 assign('ffmpegVersion', $ffmpeg_version);
 assign('ffmpegVersionOK', $ffmpeg_version >= $ffReq);
 
-$ffprobe_version = System::get_software_version('ffprobe', false);
+$ffprobe_version = System::get_software_version('ffprobe', true, null, true);
 assign('ffprobe_path', $ffprobe_version);
 assign('ffprobe_path_OK', $ffprobe_version >= $ffReq);
 
-$media_info = System::get_software_version('media_info', false);
+$media_info = System::get_software_version('media_info', true, null, true);
 assign('media_info', $media_info);
 
-$git_version = System::get_software_version('git', false);
+$git_version = System::get_software_version('git', true, null, true);
 assign('git_version', $git_version);
 
 /** php info web */

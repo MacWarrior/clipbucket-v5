@@ -141,10 +141,12 @@
                     <img src="{$imageurl}/{if $ffmpegVersion && $ffmpegVersionOK}tick{else}alert{/if}.png"/>
                     <label>
                         FFMPEG -
-                            {if !$ffmpegVersion || !$ffmpegVersionOK}
+                        {if !$ffmpegVersion || !empty($ffmpegVersion['err']) || !$ffmpegVersionOK}
                             <div class="alert alert-danger">
                                 {if !$ffmpegVersion}
                                     {lang code='not_found'}
+                                {elseif !empty($ffmpegVersion['err'])}
+                                    {$ffmpegVersion['err']}
                                 {elseif !$ffmpegVersionOK}
                                     {lang('not_required_version', ['FFMPEG',$ffmpegVersion, $ffReq])}
                                 {/if}
@@ -159,10 +161,12 @@
                     <img src="{$imageurl}/{if $ffprobe_path && $ffprobe_path_OK}tick{else}alert{/if}.png"/>
                     <label>
                         FFProbe -
-                        {if !$ffprobe_path || !$ffprobe_path_OK}
+                        {if !$ffprobe_path || !empty($ffprobe_path['err']) || !$ffprobe_path_OK}
                             <p class="alert alert-danger">
                                 {if !$ffprobe_path}
                                     {lang code='not_found'}
+                                {elseif !empty($ffprobe_path['err'])}
+                                    {$ffprobe_path['err']}
                                 {elseif !$ffprobe_path_OK}
                                     {lang('not_required_version', ['FFProbe',$ffprobe_path, $ffReq])}
                                 {/if}
@@ -180,8 +184,14 @@
                     <img src="{$imageurl}/{if $media_info}tick{else}alert{/if}.png"/>
                     <label>
                         Media Info -
-                        {if !$media_info}
-                            <div class="alert alert-danger">{lang code='not_found'}</div>
+                        {if !$media_info || !empty($media_info['err'])}
+                            <div class="alert alert-danger">
+                                {if !$media_info}
+                                    {lang code='not_found'}
+                                {elseif !empty($media_info['err'])}
+                                    {$media_info['err']}
+                                {/if}
+                            </div>
                         {else}
                             Version <strong>{$media_info}</strong>
                              - {lang code='info_media_info'}
@@ -209,9 +219,13 @@
                     <img src="{$imageurl}/{if $git_version}tick{else}error{/if}.png"/>
                     <label>
                         [{lang|strtoupper code='optional'}] Git -
-                        {if !$git_version}
+                        {if !$git_version || !empty($git_version['err'])}
                         <p class="alert alert-danger">
-                            {lang code='not_found'}
+                            {if !$git_version}
+                                {lang code='not_found'}
+                            {elseif !empty($git_version['err'])}
+                                {$git_version['err']}
+                            {/if}
                         </p>
                         {else}
                         Version <strong>{$git_version}</strong>
