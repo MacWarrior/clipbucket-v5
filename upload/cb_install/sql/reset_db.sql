@@ -5,6 +5,7 @@ SELECT GROUP_CONCAT('`', table_schema, '`.`', table_name, '`') INTO @tables
 FROM information_schema.TABLES
 WHERE table_schema = '{dbname}';
 
-CREATE PROCEDURE IF NOT EXISTS reset_db() BEGIN IF @tables IS NOT NULL THEN SET @tables = CONCAT('DROP TABLE IF EXISTS ', @tables); PREPARE stmt FROM @tables; EXECUTE stmt; DEALLOCATE PREPARE stmt; END IF; END;
+DROP PROCEDURE IF EXISTS reset_db;
+CREATE PROCEDURE reset_db() BEGIN IF @tables IS NOT NULL THEN SET @tables = CONCAT('DROP TABLE IF EXISTS ', @tables); PREPARE stmt FROM @tables; EXECUTE stmt; DEALLOCATE PREPARE stmt; END IF; END;
 CALL reset_db();
 SET FOREIGN_KEY_CHECKS = 1;
