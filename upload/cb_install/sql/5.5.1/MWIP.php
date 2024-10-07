@@ -134,7 +134,7 @@ class MWIP extends \Migration
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('memberships') . '` (
             `id_membership` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `user_level_id` INT(20) NOT NULL,
-            `id_currency` INT(20) NOT NULL
+            `id_currency` INT(20) NOT NULL,
             `frequency` ENUM (\'daily\', \'weekly\', \'monthly\', \'yearly\'),
             `base_price` DECIMAL DEFAULT 0,
             `description` VARCHAR (512),
