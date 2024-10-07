@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"152",
+  "revision":"156",
   "status":"dev",
   "detail":[
     {
@@ -92,6 +92,7 @@
         ,"Fix collection pagination"
         ,"Fix video deletion <i>(#443)</i>"
         ,"Fix config checkup cache usage"
+        ,"Fix users current storage used"
       ]
     },
     {
@@ -185,6 +186,7 @@
         ,"Fix old videos without quality specified"
         ,"Fix video files detection"
         ,"Fix PHP8.X compatibility"
+        ,"Fix internal logs with IPv6"
       ]
     },
     {
@@ -264,7 +266,7 @@
       "description": [
         "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
-        ,"Update Windows installation script PHP to 8.3.10"
+        ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"

@@ -354,6 +354,7 @@ class User
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
+                $group[] = 'user_levels_permissions.user_level_permission_id ';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
@@ -608,7 +609,13 @@ class User
      */
     public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
     {
-        $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . mysql_clean($userid) . ' AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' GROUP BY id_user ';
+        $sql = 'SELECT storage_used
+                FROM ' . tbl('users_storage_histo') . '
+                WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
+                    SELECT MAX(datetime)
+                    FROM ' . tbl('users_storage_histo') . '
+                    WHERE id_user = ' . mysql_clean($userid) . '
+                )';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return 0;

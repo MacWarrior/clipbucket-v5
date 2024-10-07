@@ -516,7 +516,13 @@
                                             <td>{$logs[log].action_userid}</td>
                                             <td width="100">{$logs[log].action_username}</td>
                                             <td width="100">{cbdatetime(NULL, $logs[log].date_added)}</td>
-                                            <td>{$logs[log].action_ip}</td>
+                                            <td>
+                                                {if $logs[log].action_ipv4}
+                                                    {$logs[log].action_ipv4}
+                                                {elseif $logs[log].action_ipv6}
+                                                    {$logs[log].action_ipv6}
+                                                {/if}
+                                            </td>
                                             <td>
                                                 {$logs[log].action_type}
                                                 {if $logs[log].action_details!=''}
