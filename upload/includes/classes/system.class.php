@@ -665,8 +665,9 @@ class System{
         } elseif( time() < $_SESSION['check_global_configs']['time']) {
             return $_SESSION['check_global_configs']['val'];
         }
-        
-        if( ini_get('max_execution_time') < 7200 ){
+
+        $max_execution_time = ini_get('max_execution_time');
+        if( $max_execution_time > 0 && $max_execution_time < 7200 ){
             if (in_dev()) {
                 ob_start();
                 debug_print_backtrace();
@@ -739,7 +740,8 @@ class System{
             }
         }
 
-        if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+        $memory_limit = ini_get('memory_limit');
+        if( $memory_limit > 0 && getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') ){
             if (in_dev()) {
                 ob_start();
                 debug_print_backtrace();
@@ -777,12 +779,15 @@ class System{
             return false;
         }
 
-        
         $permissions = self::checkPermissions(self::getPermissions(false));
         self::setGlobalConfigCache($permissions);
         return $permissions;
     }
 
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     public static function setGlobalConfigCache($val)
     {
         if (config('cache_enable') == 'yes') {
