@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"156",
+  "revision":"157",
   "status":"dev",
   "detail":[
     {
@@ -229,6 +229,7 @@
         ,"Fix Ubuntu&Debian git error in installation script"
         ,"Fix migrating from old revision"
         ,"Fix guest users permissions"
+        ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
       ]
     },
     {
