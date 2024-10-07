@@ -29,7 +29,7 @@ $dbuser = $_POST['dbuser'];
 $dbname = $_POST['dbname'];
 $dbprefix = $_POST['dbprefix'];
 $dbport = $_POST['dbport'];
-$reset_db = $_POST['reset_db'];
+$reset_db = $_POST['reset_db'] ?? false;
 
 try{
     $cnnct = mysqli_connect($dbhost, $dbuser, $dbpass, null, $dbport);
