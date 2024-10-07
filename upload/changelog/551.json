@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"157",
+  "revision":"158",
   "status":"dev",
   "detail":[
     {
@@ -171,7 +171,8 @@
     {
       "title": "Miscellaneous",
       "description": [
-        "Refactor anonymous user"
+        "Implement error 500 / maintenance page"
+        ,"Refactor anonymous user"
         ,"Update Readme"
         ,"Update composer.json"
         ,"Cleanup code"
