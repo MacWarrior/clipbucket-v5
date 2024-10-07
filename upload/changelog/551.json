@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"155",
+  "revision":"156",
   "status":"dev",
   "detail":[
     {
@@ -92,6 +92,7 @@
         ,"Fix collection pagination"
         ,"Fix video deletion <i>(#443)</i>"
         ,"Fix config checkup cache usage"
+        ,"Fix users current storage used"
       ]
     },
     {
