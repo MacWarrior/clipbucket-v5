@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"160",
+  "revision":"161",
   "status":"dev",
   "detail":[
     {
@@ -232,6 +232,7 @@
         ,"Fix migrating from old revision"
         ,"Fix guest users permissions"
         ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
+        ,"Fix timeout after Windows installation script"
       ]
     },
     {
