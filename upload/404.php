@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE', '404');
-global $cbvid;
 require 'includes/config.inc.php';
 
 if (file_exists(LAYOUT . '/404.html')) {
