@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"154",
+  "revision":"159",
   "status":"dev",
   "detail":[
     {
@@ -92,6 +92,7 @@
         ,"Fix collection pagination"
         ,"Fix video deletion <i>(#443)</i>"
         ,"Fix config checkup cache usage"
+        ,"Fix users current storage used"
       ]
     },
     {
@@ -170,7 +171,8 @@
     {
       "title": "Miscellaneous",
       "description": [
-        "Refactor anonymous user"
+        "Implement error 500 / maintenance page"
+        ,"Refactor anonymous user"
         ,"Update Readme"
         ,"Update composer.json"
         ,"Cleanup code"
@@ -218,7 +220,7 @@
         ,"Fix update status when working on new version"
         ,"Fix hardcoded prefix in update 5.5.0 - 349"
         ,"Fix categories creation in update 5.5.0 - 331"
-        ,"Fix dependancies check during installation process"
+        ,"Fix dependencies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
         ,"Fix SQL typo <i>(#417, #419)</i>"
         ,"Fix SSE DB update"
@@ -228,6 +230,7 @@
         ,"Fix Ubuntu&Debian git error in installation script"
         ,"Fix migrating from old revision"
         ,"Fix guest users permissions"
+        ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
       ]
     },
     {
