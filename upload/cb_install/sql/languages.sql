@@ -1288,4 +1288,6 @@ VALUES ('admin_setting'),
        ('add_collection'),
        ('permissions'),
        ('writeable'),
-       ('chmod_file');
+       ('chmod_file'),
+       ('force_to_error'),
+       ('tool_forced_to_error');

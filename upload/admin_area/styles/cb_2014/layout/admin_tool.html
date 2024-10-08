@@ -67,6 +67,11 @@
                                 {lang code='stop'}
                             </a>
                         </li>
+                        <li role="presentation" {if $admin_tool_list[tool_list].language_key_title=='ready' || $admin_tool_list[tool_list].language_key_title== 'on_error'} class="disabled"{/if}>
+                            <a role="menuitem" class="force_to_error" data-id="{$admin_tool_list[tool_list].id_tool}" >
+                                {lang code='force_to_error'}
+                            </a>
+                        </li>
                         {if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}
                         <li role="presentation">
                             <a role="menuitem" class="show_log" data-id="{$admin_tool_list[tool_list].id_tool}" >
