@@ -173,7 +173,7 @@ class System{
         return self::$configsCli[$config_name] ?? false;
     }
 
-    public static function get_software_version($software, $verbose = false, $custom_filepath = null)
+    public static function get_software_version($software, $verbose = false, $custom_filepath = null, $version_only = false)
     {
         switch($software){
             case 'php_web':
@@ -212,14 +212,29 @@ class System{
                 if (self::$versionCli < $req) {
                     return $verbose ? ['err' => sprintf('Found PHP CLI %s but required is PHP CLI %s : %s', self::$versionCli, $req, $binary_path)] : false;
                 }
-                return $verbose ? ['msg' => sprintf('Found PHP CLI %s : %s', self::$versionCli, $binary_path)] : self::$versionCli;
+
+                if( $version_only || !$verbose ){
+                    return self::$versionCli;
+                }
+                return ['msg' => sprintf('Found PHP CLI %s : %s', self::$versionCli, $binary_path)];
 
             case 'mysql_client':
                 if (!System::check_php_function('exec', 'web', false)) {
                     return $verbose ? ['err' => 'Can\'t be tested because exec() function is not enabled'] : false;
                 }
                 $binary_path = $custom_filepath ?? System::get_binaries('mysql', false);
-                if (empty($binary_path) || !file_exists($binary_path)) {
+                if( empty($binary_path) ){
+                    return $verbose ? ['err' => 'Unable to find Mysql Client'] : false;
+                }
+                try{
+                    if( !file_exists($binary_path) ){
+                        return $verbose ? ['err' => 'Unable to find Mysql Client'] : false;
+                    }
+                }
+                catch(Exception $e){
+                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                        return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Mysql Client (' . $binary_path . ')'] : false;
+                    }
                     return $verbose ? ['err' => 'Unable to find Mysql Client'] : false;
                 }
 
@@ -241,7 +256,11 @@ class System{
                 if ((version_compare($version, $mysqlReq) < 0)) {
                     return $verbose ? ['err' => sprintf('Current version is %s, minimal version %s is required. Please update', $version, $mysqlReq)] : false;
                 }
-                return $verbose ? ['msg' => sprintf('Found MySQL Client %s : %s', $version, $binary_path)] : $version;
+
+                if( $version_only || !$verbose ){
+                    return $version;
+                }
+                return ['msg' => sprintf('Found MySQL Client %s : %s', $version, $binary_path)];
 
             case 'ffmpeg':
             case 'ffprobe':
@@ -252,12 +271,24 @@ class System{
                     }
                 }
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
-                if (empty($binary_path) || !file_exists($binary_path)) {
-                    return $verbose ? ['err' => 'Unable to find ' . strtoupper($software)] : false;
+                if( empty($binary_path) ){
+                    return $verbose ? ['err' => 'Unable to find ' . ucfirst($software)] : false;
                 }
+                try{
+                    if( !file_exists($binary_path) ){
+                        return $verbose ? ['err' => 'Unable to find ' . ucfirst($software)] : false;
+                    }
+                }
+                catch(Exception $e){
+                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                        return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to ' . ucfirst($software) . ' (' . $binary_path . ')'] : false;
+                    }
+                    return $verbose ? ['err' => 'Unable to find ' . ucfirst($software)] : false;
+                }
+
                 $ffmpeg_version = System::shell_output($binary_path . ' -version');
                 if( empty($ffmpeg_version) ){
-                    return $verbose ? ['err' => strtoupper($software) . ' is not correctly configured'] : false;
+                    return $verbose ? ['err' => ucfirst($software) . ' is not correctly configured'] : false;
                 }
 
                 $version = false;
@@ -271,14 +302,18 @@ class System{
                 }
 
                 if (!$version) {
-                    return $verbose ? ['err' => 'Unable to find ' . strtoupper($software)] : false;
+                    return $verbose ? ['err' => 'Unable to find ' . ucfirst($software)] : false;
                 }
 
                 $req = '3.0';
                 if ($version < $req) {
                     return $verbose ? ['err' => printf('Current version is %s, minimal version %s is required. Please update', $version, $req)] : false;
                 }
-                return $verbose ? ['msg' => sprintf('Found ' . strtoupper($software) . ' %s : %s', $version, $binary_path)] : $version;
+
+                if( $version_only || !$verbose ){
+                    return $version;
+                }
+                return ['msg' => sprintf('Found ' . strtoupper($software) . ' %s : %s', $version, $binary_path)];
 
             case 'media_info':
                 $functions = ['exec', 'shell_exec'];
@@ -288,9 +323,21 @@ class System{
                     }
                 }
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
-                if (empty($binary_path) || !file_exists($binary_path)) {
+                if( empty($binary_path) ){
                     return $verbose ? ['err' => 'Unable to find Media Info'] : false;
                 }
+                try{
+                    if( !file_exists($binary_path) ){
+                        return $verbose ? ['err' => 'Unable to find Media Info'] : false;
+                    }
+                }
+                catch(Exception $e){
+                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                        return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Media Info (' . $binary_path . ')'] : false;
+                    }
+                    return $verbose ? ['err' => 'Unable to find Media Info'] : false;
+                }
+
                 $mediainfo_result = System::shell_output($binary_path . ' --version');
                 if( empty($mediainfo_result) ){
                     return $verbose ? ['err' => 'Media Info is not correctly configured'] : false;
@@ -305,7 +352,11 @@ class System{
                 if (!$version) {
                     return $verbose ? ['err' => 'Unable to find Media Info'] : false;
                 }
-                return $verbose ? ['msg' => sprintf('Found Media Info %s : %s', $version, $binary_path)] : $version;
+
+                if( $version_only || !$verbose ){
+                    return $version;
+                }
+                return ['msg' => sprintf('Found Media Info %s : %s', $version, $binary_path)];
 
             case 'git':
                 $functions = ['exec', 'shell_exec'];
@@ -315,7 +366,18 @@ class System{
                     }
                 }
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
-                if (empty($binary_path) || !file_exists($binary_path)) {
+                if( empty($binary_path) ){
+                    return $verbose ? ['err' => 'Unable to find Git'] : false;
+                }
+                try{
+                    if( !file_exists($binary_path) ){
+                        return $verbose ? ['err' => 'Unable to find Git'] : false;
+                    }
+                }
+                catch(Exception $e){
+                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                        return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Git (' . $binary_path . ')'] : false;
+                    }
                     return $verbose ? ['err' => 'Unable to find Git'] : false;
                 }
 
@@ -331,7 +393,11 @@ class System{
                 }
 
                 $version = array_pop($matches);
-                return $verbose ? ['msg' => sprintf('Found Git %s : %s', $version, $binary_path)] : $version;
+
+                if( $version_only || !$verbose ){
+                    return $version;
+                }
+                return ['msg' => sprintf('Found Git %s : %s', $version, $binary_path)];
 
             case 'nginx':
                 $functions = ['exec', 'shell_exec'];
@@ -341,7 +407,19 @@ class System{
                     }
                 }
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
-                if (empty($binary_path) || !file_exists($binary_path)) {
+                if( empty($binary_path) ){
+                    return $verbose ? ['err' => 'Unable to find Nginx'] : false;
+                }
+                try{
+                    $file_exists = file_exists($binary_path);
+                    if( !$file_exists ){
+                        return $verbose ? ['err' => 'Unable to find Nginx'] : false;
+                    }
+                }
+                catch(Exception $e){
+                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                        return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Nginx (' . $binary_path . ')'] : false;
+                    }
                     return $verbose ? ['err' => 'Unable to find Nginx'] : false;
                 }
 
@@ -357,7 +435,11 @@ class System{
                 }
 
                 $version = array_pop($matches);
-                return $verbose ? ['msg' => sprintf('Found Nginx %s : %s', $version, $binary_path)] : $version;
+
+                if( $version_only || !$verbose ){
+                    return $version;
+                }
+                return ['msg' => sprintf('Found Nginx %s : %s', $version, $binary_path)];
 
             default:
                 e('Wrong System::get_software_version software : ' . $software);
@@ -583,8 +665,16 @@ class System{
         } elseif( time() < $_SESSION['check_global_configs']['time']) {
             return $_SESSION['check_global_configs']['val'];
         }
-        
-        if( ini_get('max_execution_time') < 7200 ){
+
+        $max_execution_time = ini_get('max_execution_time');
+        if( $max_execution_time > 0 && $max_execution_time < 7200 ){
+            if (in_dev()) {
+                ob_start();
+                debug_print_backtrace();
+                print_r($_SERVER);
+                $call_stack = ob_get_clean();
+                DiscordLog::sendDump('error config : max_execution_time ' . $call_stack);
+            }
             self::setGlobalConfigCache(0);
             return false;
         }
@@ -599,6 +689,13 @@ class System{
         $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
         if( !$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb) ){
+            if (in_dev()) {
+                ob_start();
+                debug_print_backtrace();
+                print_r($_SERVER);
+                $call_stack = ob_get_clean();
+                DiscordLog::sendDump('error config : post_size' . $call_stack);
+            }
             self::setGlobalConfigCache(0);
             return false;
         }
@@ -606,6 +703,13 @@ class System{
         $chunk_upload_size = config('chunk_upload_size');
 
         if( $chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb) ){
+            if (in_dev()) {
+                ob_start();
+                debug_print_backtrace();
+                print_r($_SERVER);
+                $call_stack = ob_get_clean();
+                DiscordLog::sendDump('error config : chunk_upload_size ' . $call_stack);
+            }
             self::setGlobalConfigCache(0);
             return false;
         }
@@ -613,21 +717,50 @@ class System{
         $cloudflare_upload_limit = config('cloudflare_upload_limit');
         if( Network::is_cloudflare() ){
             if( !$chunk_upload && $target_upload_size > $cloudflare_upload_limit ){
+                if (in_dev()) {
+                    ob_start();
+                    debug_print_backtrace();
+                    print_r($_SERVER);
+                    $call_stack = ob_get_clean();
+                    DiscordLog::sendDump('error config : cloudflare_upload_limit' . $call_stack);
+                }
                 self::setGlobalConfigCache(0);
                 return false;
             }
             if( $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit ){
+                if (in_dev()) {
+                    ob_start();
+                    debug_print_backtrace();
+                    print_r($_SERVER);
+                    $call_stack = ob_get_clean();
+                    DiscordLog::sendDump('error config : cloudflare_upload_limit' . $call_stack);
+                }
                 self::setGlobalConfigCache(0);
                 return false;
             }
         }
 
-        if( getBytesFromFileSize(ini_get('memory_limit')) < getBytesFromFileSize('128M') ){
+        $memory_limit = ini_get('memory_limit');
+        if( $memory_limit > 0 && getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') ){
+            if (in_dev()) {
+                ob_start();
+                debug_print_backtrace();
+                print_r($_SERVER);
+                $call_stack = ob_get_clean();
+                DiscordLog::sendDump('error config : memory_limit' . $call_stack);
+            }
             self::setGlobalConfigCache(0);
             return false;
         }
 
         if( !self::isDateTimeSynchro() ){
+            if (in_dev()) {
+                ob_start();
+                debug_print_backtrace();
+                print_r($_SERVER);
+                $call_stack = ob_get_clean();
+                DiscordLog::sendDump('error config : isDateTimeSynchro' . $call_stack);
+            }
             self::setGlobalConfigCache(0);
             return false;
         }
@@ -635,16 +768,26 @@ class System{
         $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
         $tmp = [];
         if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
+            if (in_dev()) {
+                ob_start();
+                debug_print_backtrace();
+                print_r($_SERVER);
+                $call_stack = ob_get_clean();
+                DiscordLog::sendDump('error config : isDateTimeSynchro cli ' . $call_stack);
+            }
             self::setGlobalConfigCache(0);
             return false;
         }
 
-        
         $permissions = self::checkPermissions(self::getPermissions(false));
         self::setGlobalConfigCache($permissions);
         return $permissions;
     }
 
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
     public static function setGlobalConfigCache($val)
     {
         if (config('cache_enable') == 'yes') {
@@ -835,6 +978,13 @@ class System{
     {
         foreach ($permissions as $permission) {
             if ( isset($permission['err'])) {
+                if(in_dev()) {
+                    ob_start();
+                    debug_print_backtrace();
+                    print_r($_SERVER);
+                    $call_stack = ob_get_clean();
+                    DiscordLog::sendDump('error reading folder : ' . $permission['path'] . ' ' . $call_stack);
+                }
                 return 0;
             }
         }
