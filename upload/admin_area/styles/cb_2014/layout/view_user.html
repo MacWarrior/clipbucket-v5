@@ -53,7 +53,7 @@
     </div>
 
     <form method="post" enctype="multipart/form-data" name="form1" id="form1" class="cbform">
-        <div class="row">
+            <div class="row">
             <div class="col-md-8">
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="myTab">
@@ -86,16 +86,6 @@
                         <li>
                             <a data-toggle="tab" href="#education">{display_clean($education_interests_fields.group_name)}</a>
                         </li>
-                        {/if}
-                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
-                            <li>
-                                <a data-toggle="tab" href="#storage_history">{lang code='storage_history'}</a>
-                            </li>
-                        {/if}
-                        {if config('enable_membership') == 'yes'}
-                            <li>
-                                <a data-toggle="tab" href="#membership_history">{lang code='membership_history'}</a>
-                            </li>
                         {/if}
                     </ul>
                     <div class="tab-content">
@@ -147,7 +137,7 @@
                                                 </div>
                                             </td>
                                         </tr>
-                                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
+                                        {if config('enable_storage_history') == 'yes' && $storage_history}
                                             <tr>
                                                 <td class="first"><label>{lang code='user_current_storage'}</label></td>
                                                 <td class="last">
@@ -415,22 +405,39 @@
                             </div>
                         </div>
                         {/if}
-                        {if config('enable_storage_history') == 'yes' && $storage_use != 0}
-                            <div id="storage_history" class="tab-pane">
-                                <div id="history" style="height:400px;"></div>
-                            </div>
-                        {/if}
-                        {if config('enable_membership') == 'yes' }
-                            <div id="membership_history" class="tab-pane">
-                                <div id="membership" style="height:400px;">
-                                    {include file="$style_dir/blocks/membership_view_history.html"}
-                                </div>
-                            </div>
-                        {/if}
 
                     </div>
                 </div>
-
+                {if (config('enable_storage_history') == 'yes' && $storage_history) || config('enable_membership') == 'yes'}
+                    <div class="tabbable mt-2">
+                        <ul class="nav nav-tabs" id="myTab">
+                            {if config('enable_storage_history') == 'yes' && $storage_history}
+                                <li class="active">{$storage_use}
+                                    <a  data-toggle="tab" href="#storage_history">{lang code='storage_history'}</a>
+                                </li>
+                            {/if}
+                            {if config('enable_membership') == 'yes'}
+                                <li  {if config('enable_storage_history') != 'yes' || !$storage_history} class="active"{/if}>
+                                    <a data-toggle="tab" href="#membership_history">{lang code='membership_history'}</a>
+                                </li>
+                            {/if}
+                        </ul>
+                        <div class="tab-content">
+                            {if config('enable_storage_history') == 'yes' && $storage_history}
+                                <div id="storage_history" class="tab-pane active">
+                                    <div id="history" style="height:400px ;"></div>
+                                </div>
+                            {/if}
+                            {if config('enable_membership') == 'yes' }
+                                <div id="membership_history" class="tab-pane {if config('enable_storage_history') != 'yes' || !$storage_history}active{/if}">
+                                    <div id="membership" style="height:400px;">
+                                        {include file="$style_dir/blocks/membership_view_history.html"}
+                                    </div>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+                {/if}
             </div>
 
             <div class="col-md-4">
@@ -568,13 +575,14 @@
                 </div>
             </div>
         </div>
+
         {if $u.userid != $anonymous_id}
-            <div style="text-align:center;margin-top:10px;">
+            <div class="row" style="text-align:center;margin-top:10px;">
                 <input class="btn btn-primary btn-lg" type="submit" name="update_user" id="update_user" value="{lang code='update'}"/>
             </div>
         {/if}
     </form>
-    </div>
+</div>
 
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');

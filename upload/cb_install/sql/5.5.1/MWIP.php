@@ -396,5 +396,10 @@ class MWIP extends \Migration
             'fr'=>'Historique des abonnements',
             'en'=>'Membership history'
         ]);
+
+        self::generateTranslation('never', [
+            'fr'=>'Jamais',
+            'en'=>'Never'
+        ]);
     }
 }
