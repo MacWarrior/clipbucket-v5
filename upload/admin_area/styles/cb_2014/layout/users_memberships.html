@@ -1,5 +1,5 @@
 <div class="heading clearfix">
-    <h2 class="pull-left">{lang('subscribers')}</h2>}
+    <h2 class="pull-left">{lang('subscribers')}</h2>
     {include file="$layout_dir/blocks/membership_search.html" }
 </div>
 
@@ -28,7 +28,7 @@
                 <td>{$user_membership.username}</td>
                 <td>{$user_membership.first_start}</td>
                 <td>{if $user_membership.last_end != '2999-99-99'}{$user_membership.last_end}{/if}</td>
-                <td>{$user_membership.user_level_name}</td>
+                <td>{lang($user_membership.user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$user_membership.frequency)}</td>
                 <td>{$user_membership.nb_membership}</td>
                 <td>{$user_membership.sum_price}</td>
                 {if config('enable_storage_history') == 'yes'}

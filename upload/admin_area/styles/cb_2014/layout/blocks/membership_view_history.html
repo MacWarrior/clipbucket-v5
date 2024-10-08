@@ -21,7 +21,7 @@
                     <tr>
                         <td><span>{display_clean($results[sub].date_start)}</span></td>
                         <td><span>{display_clean($results[sub].date_end)}</span></td>
-                        <td><span>{display_clean($results[sub].user_level_name)}</span></td>
+                        <td><span>{lang($results[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$results[sub].frequency)}</span></td>
                         <td><span>{display_clean($results[sub].price)} {display_clean($results[sub].symbol)}</span></td>
                         {if config('enable_storage_history' == 'yes')}
                             {if $results[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$results[sub].date_end}{/if}

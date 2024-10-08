@@ -37,7 +37,7 @@ if (!empty($_POST['user_level_id'])) {
 
 $users_memberships = Membership::getInstance()->getAllSubscribers($params);
 assign('users_memberships', $users_memberships);
-assign('user_levels', userquery::getInstance()->get_levels() ?: []);
+assign('user_levels', Membership::getInstance()->getAll(['order'=>' user_level_name, frequency']) ?: []);
 if (empty($users_memberships)) {
     $total_rows = 0;
 } else {

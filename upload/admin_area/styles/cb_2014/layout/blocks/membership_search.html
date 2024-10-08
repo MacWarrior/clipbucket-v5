@@ -23,8 +23,8 @@
                   <select class="form-control" name="user_level_id" id="user_level_id">
                       <option value=""></option>
                       {foreach from=$user_levels item=user_level}
-                          <option value="{$user_level.user_level_id}" {if $user_level_id == $user_level.user_level_id}selected{/if} >
-                              {$user_level.user_level_name}
+                          <option value="{$user_level.id_membership}" {if $user_level_id == $user_level.id_membership}selected{/if} >
+                              {lang($user_level.user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$user_level.frequency)}
                           </option>
                       {/foreach}
                   </select>

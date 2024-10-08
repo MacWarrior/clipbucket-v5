@@ -89,8 +89,10 @@ class Membership
         $param_limit = $params['limit'] ?? false;
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_id_membership = $params['id_membership'] ?? false;
+        $param_not_id_membership = $params['not_id_membership'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_username = $params['username'] ?? false;
+        $param_frequency = $params['frequency'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_get_subscribers = $params['get_subscribers'] ?? false;
         $param_join_users = $params['join_users'] ?? false;
@@ -102,8 +104,14 @@ class Membership
         if ($param_id_membership !== false) {
             $conditions[] = $this->tablename . '.id_membership = \'' . mysql_clean($param_id_membership) . '\'';
         }
+        if ($param_not_id_membership !== false) {
+            $conditions[] = $this->tablename . '.id_membership != \'' . mysql_clean($param_not_id_membership) . '\'';
+        }
         if ($param_user_level_id !== false) {
             $conditions[] = $this->tablename . '.user_level_id = \'' . mysql_clean($param_user_level_id) . '\'';
+        }
+        if ($param_frequency !== false) {
+            $conditions[] = $this->tablename . '.frequency = \'' . mysql_clean($param_frequency) . '\'';
         }
         if ($param_userid !== false) {
             $conditions[] = $this->tablename_user_membership . '.userid = \'' . mysql_clean($param_userid) . '\'';
@@ -163,8 +171,10 @@ class Membership
                 $select[] = 'CASE WHEN COUNT(' . $this->tablename_user_membership . '.date_end) < COUNT(*) THEN \'2999-99-99\' ELSE MAX(' . $this->tablename_user_membership . '.date_end) END AS last_end';
                 $select[] = 'COUNT(' . $this->tablename_user_membership . '.id_user_membership) as nb_membership';
                 $select[] = 'SUM(' . $this->tablename_user_membership . '.price) as sum_price';
+                $select[] = $this->tablename.'.frequency';
             } elseif ($param_get_user_membership) {
                 $select = $this->getSQLFields('user_membership');
+                $select[] = $this->tablename.'.frequency';
             } else {
                 $select = $this->getSQLFields('membership');
             }
@@ -310,6 +320,22 @@ class Membership
 
     public function formatAndValidateFields(array $fields)
     {
+        //check user_level/frequency
+
+        if (!empty($fields['frequency']) && !empty($fields['user_level_id'])) {
+            $existing_user_level_frequency = $this->getOne([
+                'frequency'         => $fields['frequency'],
+                'user_level_id'     => $fields['user_level_id'],
+                'not_id_membership' => $fields['id_membership'] ?? false
+            ]);
+        }
+        if (!empty($existing_user_level_frequency)) {
+            e(lang('user_level_frequency_already_exist', [
+                lang(str_replace(' ', '_', strtolower($existing_user_level_frequency['user_level_name']))),
+                lang('frequency_' . $existing_user_level_frequency['frequency'])
+            ]));
+            return false;
+        }
         foreach ($fields as $field => &$value) {
             $value = mysql_clean($value);
             switch ($field) {
@@ -331,12 +357,12 @@ class Membership
                     break;
                 case 'description':
                 case 'frequency':
+                    if (empty($value)) {
+                        e(lang('missing_param'));
+                        return false;
+                    }
                     $value = '\'' . $value . '\'';
                     break;
-                /*case 'disabled':
-                    if ($value == 'true' || $value === true) {
-                        $value = true;
-                    }*/
                 default:
                     break;
 

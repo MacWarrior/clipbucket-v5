@@ -358,5 +358,43 @@ class MWIP extends \Migration
             'fr' => 'Aucun',
             'en' => 'None'
         ]);
+
+        self::generateTranslation('administrator', [
+            'fr'=>'Administrateur',
+            'en'=>'Administrator'
+        ]);
+        self::generateTranslation('registered_user', [
+            'fr'=>'Utilisateur enregistré',
+            'en'=>'Registered user'
+        ]);
+
+        self::generateTranslation('inactive_user', [
+            'fr'=>'Utilisateur inactif',
+            'en'=>'Inactive user'
+        ]);
+
+        self::generateTranslation('guest', [
+            'fr'=>'Invité',
+            'en'=>'Guest'
+        ]);
+
+        self::generateTranslation('global_moderator', [
+            'fr'=>'Modérateur global',
+            'en'=>'Global moderator'
+        ]);
+        self::generateTranslation('user_level_frequency_already_exist', [
+            'fr'=>'La combinaison %s / %s existe déjà',
+            'en'=>'Combinaison %s / %s already exist'
+        ]);
+
+        self::generateTranslation('current_membership', [
+            'fr'=>'Abonnement actuel',
+            'en'=>'Current membership'
+        ]);
+
+        self::generateTranslation('membership_history', [
+            'fr'=>'Historique des abonnements',
+            'en'=>'Membership history'
+        ]);
     }
 }
