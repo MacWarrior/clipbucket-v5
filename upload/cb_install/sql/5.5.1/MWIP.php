@@ -334,11 +334,6 @@ class MWIP extends \Migration
             'en' => 'Are you sure you want to delete this user level ?'
         ]);
 
-        self::generateTranslation('user_level', [
-            'fr' => 'Niveau d\'utilisateur',
-            'en' => 'User level'
-        ]);
-
         self::generateTranslation('currency', [
             'fr' => 'Monnaie',
             'en' => 'Currency'
@@ -359,24 +354,6 @@ class MWIP extends \Migration
             'en' => 'None'
         ]);
 
-        self::generateTranslation('administrator', [
-            'fr'=>'Administrateur',
-            'en'=>'Administrator'
-        ]);
-        self::generateTranslation('registered_user', [
-            'fr'=>'Utilisateur enregistré',
-            'en'=>'Registered user'
-        ]);
-
-        self::generateTranslation('inactive_user', [
-            'fr'=>'Utilisateur inactif',
-            'en'=>'Inactive user'
-        ]);
-
-        self::generateTranslation('global_moderator', [
-            'fr'=>'Modérateur global',
-            'en'=>'Global moderator'
-        ]);
         self::generateTranslation('user_level_frequency_already_exist', [
             'fr'=>'La combinaison %s / %s existe déjà',
             'en'=>'Combinaison %s / %s already exist'
