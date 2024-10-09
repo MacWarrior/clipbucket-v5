@@ -401,5 +401,10 @@ class MWIP extends \Migration
             'fr'=>'Jamais',
             'en'=>'Never'
         ]);
+
+        self::updateTranslation('com_manage_subs', [
+            'fr'=>'Gestion des abonnements de chaine',
+            'en'=>'Manage channels subscriptions'
+        ]);
     }
 }

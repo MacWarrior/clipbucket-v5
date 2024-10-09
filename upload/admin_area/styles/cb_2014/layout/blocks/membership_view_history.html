@@ -20,7 +20,7 @@
                 {section name=sub loop=$results}
                     <tr>
                         <td><span>{display_clean($results[sub].date_start)}</span></td>
-                        <td><span>{display_clean($results[sub].date_end)}</span></td>
+                        <td><span>{if $results[sub].date_end}{display_clean($results[sub].date_end)}{else}{lang('never')}{/if}</span></td>
                         <td><span>{lang($results[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$results[sub].frequency)}</span></td>
                         <td><span>{display_clean($results[sub].price)} {display_clean($results[sub].symbol)}</span></td>
                         {if config('enable_storage_history' == 'yes')}

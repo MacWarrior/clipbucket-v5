@@ -3389,6 +3389,9 @@ class userquery extends CBCategory
         if( config('channelsSection') == 'yes' ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
+        if( config('enable_membership') == 'yes' ){
+            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
+        }
 
         $array[lang('messages')] = [
             lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',

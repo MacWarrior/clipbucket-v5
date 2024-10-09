@@ -171,10 +171,10 @@ class Membership
                 $select[] = 'CASE WHEN COUNT(' . $this->tablename_user_membership . '.date_end) < COUNT(*) THEN \'2999-99-99\' ELSE MAX(' . $this->tablename_user_membership . '.date_end) END AS last_end';
                 $select[] = 'COUNT(' . $this->tablename_user_membership . '.id_user_membership) as nb_membership';
                 $select[] = 'SUM(' . $this->tablename_user_membership . '.price) as sum_price';
-                $select[] = $this->tablename.'.frequency';
+                $select[] = $this->tablename . '.frequency';
             } elseif ($param_get_user_membership) {
                 $select = $this->getSQLFields('user_membership');
-                $select[] = $this->tablename.'.frequency';
+                $select[] = $this->tablename . '.frequency';
             } else {
                 $select = $this->getSQLFields('membership');
             }
@@ -230,6 +230,9 @@ class Membership
         $params['join_users'] = true;
         $params['get_user_membership'] = true;
         $params['type_join_user_membership'] = 'INNER';
+        if (empty($params['order'])) {
+            $params['order'] = 'date_start DESC';
+        }
         return $this->getAll($params);
     }
 
@@ -389,7 +392,7 @@ class Membership
      */
     public function getAllCurrency(): array
     {
-        $sql = 'SELECT * FROM ' . tbl('currency') ;
+        $sql = 'SELECT * FROM ' . tbl('currency');
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return [];
