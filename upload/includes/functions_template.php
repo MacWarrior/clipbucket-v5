@@ -109,6 +109,10 @@ function display_it()
             }
         }
 
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '165') && empty(config('license_validation')) ){
+            assign('license_notification', true);
+        }
+
         assign('template_files', $new_list);
         assign('breadcrumb', $breadcrumb);
 

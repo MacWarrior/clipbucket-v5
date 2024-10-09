@@ -1,9 +1,9 @@
 <!doctype html>
 <html lang="en">
 	<head>
-		{include file="$layout_dir/global_header.html" }
+		{include file="$layout_dir/global_header.html"}
 	</head>
-	<body>	
+	<body>
 		{include file="$layout_dir/header.html"}
 		<div class="main-container container" id="main-container">
 	        <div class="main-container-inner">
@@ -36,6 +36,9 @@
 			</div>
 			{include file="$layout_dir/blocks/spinner.html"}
 			{include file="$layout_dir/footer.html"}
+			{if $license_notification}
+				{include file="$layout_dir/popin-license.html"}
+			{/if}
 		</div>
 	</body>
 </html>

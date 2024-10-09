@@ -21,10 +21,10 @@
     <p></p>
 </div>
 
-<div class="top_nav clearfix" style="height:35px;">
+<div class="top_nav" style="height:35px;">
     <div class="cb_container">
         <div class="cb_navbar">
-            <ul class="headstatus">
+            <ul>
                 <li <?php echo selected('agreement'); ?>><?php echo($has_translation ? lang('agreement') : 'Agreement'); ?></li>
                 <li <?php echo selected('precheck'); ?>> <?php echo($has_translation ? lang('pre_check') : 'Pre Check'); ?><span></span></li>
                 <li <?php echo selected('permission'); ?>> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?><span></span></li>

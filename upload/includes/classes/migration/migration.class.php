@@ -328,6 +328,15 @@ class Migration
     /**
      * @throws Exception
      */
+    public static function updateConfig(string $config_name, string $config_value)
+    {
+        $sql = 'UPDATE `' . tbl('config') . '` SET value = \''.mysql_clean($config_value).'\' WHERE name = \''.mysql_clean($config_name).'\';';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    /**
+     * @throws Exception
+     */
     public static function query($sql)
     {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);

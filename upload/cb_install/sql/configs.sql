@@ -3,7 +3,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'secretId', ''),
 	(NULL, 'site_title', ''),
 	(NULL, 'site_slogan', ''),
-	(NULL, 'baseurl', ''),
 	(NULL, 'basedir', ''),
 	(NULL, 'template_dir', 'cb_28'),
 	(NULL, 'player_file', 'cb_video_js.php'),
@@ -304,7 +303,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'home_display_recent_videos', 'yes'),
     (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'enable_access_view_video_history', 'no'),
-    (NULL, 'video_list_view_video_history', 30);
+    (NULL, 'video_list_view_video_history', 30),
+    (NULL, 'license_validation', CURRENT_TIMESTAMP);
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
