@@ -41,9 +41,9 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
     }
 }
 $whoops->pushHandler(function($e){
-    $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
+    $message = 'URL : **' . $_SERVER['REQUEST_URI'] . '**' .PHP_EOL. $e->getMessage().PHP_EOL.$e->getTraceAsString();
     error_log($message);
-    DiscordLog::sendDump($message);
+    DiscordLog::getInstance()->error('URL : ' . $_SERVER['REQUEST_URI'], ['exception'=>$e]);
 });
 $whoops->register();
 
