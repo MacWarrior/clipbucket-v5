@@ -1295,5 +1295,4 @@ VALUES ('admin_setting'),
        ('administrator'),
        ('registered_user'),
        ('inactive_user'),
-       ('guest'),
        ('global_moderator');

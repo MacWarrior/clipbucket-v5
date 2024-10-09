@@ -2,7 +2,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00166 extends \Migration
 {
     /**
      * @throws \Exception
@@ -26,11 +26,6 @@ class MWIP extends \Migration
         self::generateTranslation('inactive_user', [
             'fr'=>'Utilisateur inactif',
             'en'=>'Inactive user'
-        ]);
-
-        self::generateTranslation('guest', [
-            'fr'=>'Invité',
-            'en'=>'Guest'
         ]);
 
         self::generateTranslation('global_moderator', [
