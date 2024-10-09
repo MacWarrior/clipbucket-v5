@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"162",
+  "revision":"163",
   "status":"dev",
   "detail":[
     {
@@ -175,6 +175,7 @@
         ,"Refactor anonymous user"
         ,"Update Readme"
         ,"Update composer.json"
+        ,"Update discord errors"
         ,"Cleanup code"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
