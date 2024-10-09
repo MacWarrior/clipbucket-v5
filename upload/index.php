@@ -46,6 +46,7 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
     if( config('home_display_recent_videos') == 'yes' && config('homepage_recent_videos_display') == 'slider' ){
         $params = Video::getInstance()->getFilterParams('most_recent', []);
         $params['limit'] = config('list_recent_videos');
+        $params['join_user_profile'] = true;
         $recent_videos = Video::getInstance()->getAll($params);
         assign('recent_videos', $recent_videos);
         if( empty($recent_videos) || count($recent_videos) < config('list_recent_videos') ) {
