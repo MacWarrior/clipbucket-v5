@@ -34,7 +34,10 @@ $(function () {
                 data: {id_tool: id_tool},
                 dataType: 'json',
                 success: function (result) {
-                    $('#progress-bar-' + id_tool).removeClass('progress-bar-success').attr('aria-valuenow', 0).width(0 + '%');
+                    if (ids_error.includes(parseInt(id_tool))) {
+                        ids_error.splice(ids_error.indexOf(parseInt(id_tool)),1);
+                    }
+                    $('#progress-bar-' + id_tool).removeClass('progress-bar-success').removeClass('progress-bar-danger').attr('aria-valuenow', 0).width(0 + '%');
                     $('#span-' + id_tool).html(result['libelle_status']);
                     $('#pourcent-' + id_tool).html(0);
                     $('#done-' + id_tool).html(0);
@@ -42,6 +45,7 @@ $(function () {
                     $('.page-content').prepend(result['msg']);
                     elem.parent().addClass('disabled');
                     $('.stop[data-id="' + id_tool + '"]').parent().removeClass('disabled');
+                    $('.force_to_error[data-id="' + id_tool + '"]').parent().removeClass('disabled');
                     $('#progress-' + id_tool).show();
                 }
             });
@@ -61,6 +65,26 @@ $(function () {
                     elem.parent().addClass('disabled');
                     $('.page-content').prepend(result['msg']);
                     ids_stopped.push(id_tool);
+                }
+            });
+        }
+    });
+    $('.force_to_error').on('click', function () {
+        var elem = $(this);
+        if (!$(this).parent().hasClass('disabled')) {
+            var id_tool = elem.data('id');
+            $.ajax({
+                url: "/actions/force_tool_to_error.php",
+                type: "POST",
+                data: {id_tool: id_tool},
+                dataType: 'json',
+                success: function (result) {
+                    $('#span-' + id_tool).html(result['libelle_status']);
+                    // elem.parent().addClass('disabled');
+                    $('.page-content').prepend(result['msg']);
+                    // ids_stopped.push(id_tool);
+                    ids_error.push(id_tool);
+
                 }
             });
         }

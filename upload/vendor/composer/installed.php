@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '4e60756afa96dcfa3e6a8a5ae278a8ec74d9b8cb',
+        'reference' => 'b6674ffb7702ea9086aa604ddd71c2b3c6c4cc53',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4e60756afa96dcfa3e6a8a5ae278a8ec74d9b8cb',
+            'reference' => 'b6674ffb7702ea9086aa604ddd71c2b3c6c4cc53',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -49,7 +49,7 @@
         'oxygenzsas/composer_lib_discord' => array(
             'pretty_version' => 'dev-php7',
             'version' => 'dev-php7',
-            'reference' => '5eeb32cabbdf3ce0f30d9dd3a7d7bd63ade77fe6',
+            'reference' => 'ed652117bff3705c81d07866f2259dd2d333b05e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../oxygenzsas/composer_lib_discord',
             'aliases' => array(),
