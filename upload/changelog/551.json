@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"164",
+  "revision":"165",
   "status":"dev",
   "detail":[
     {
@@ -94,6 +94,7 @@
         ,"Fix video deletion <i>(#443)</i>"
         ,"Fix config checkup cache usage"
         ,"Fix users current storage used"
+        ,"Fix action logs user's link"
       ]
     },
     {
