@@ -731,11 +731,15 @@ class AdminTool
     /**
      * @throws Exception
      */
-    public function setToolError($id_tool)
+    public function setToolError($id_tool, $force = false)
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
-            $this->addLog(lang('tool_ended'));
+            if ( $force) {
+                $this->addLog(lang('tool_forced_to_error'));
+            } else {
+                $this->addLog(lang('tool_ended'));
+            }
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
         }

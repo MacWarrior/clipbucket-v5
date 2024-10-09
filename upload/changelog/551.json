@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"163",
+  "revision":"164",
   "status":"dev",
   "detail":[
     {
@@ -30,6 +30,7 @@
         ,"Implement photo upload permission"
         ,"Implement collection thumbnail selection"
         ,"Implement directory permission checkup"
+        ,"Implement force to error admin tool"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
