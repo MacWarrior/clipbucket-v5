@@ -1290,4 +1290,5 @@ VALUES ('admin_setting'),
        ('writeable'),
        ('chmod_file'),
        ('force_to_error'),
-       ('tool_forced_to_error');
+       ('tool_forced_to_error'),
+       ('channel_doesnt_exists');
