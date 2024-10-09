@@ -373,11 +373,6 @@ class MWIP extends \Migration
             'en'=>'Inactive user'
         ]);
 
-        self::generateTranslation('guest', [
-            'fr'=>'Invité',
-            'en'=>'Guest'
-        ]);
-
         self::generateTranslation('global_moderator', [
             'fr'=>'Modérateur global',
             'en'=>'Global moderator'
