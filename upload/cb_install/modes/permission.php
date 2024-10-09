@@ -9,7 +9,7 @@
 <div id="sub_container">
     <dl>
         <?php
-        $permissions = checkPermissions();
+        $permissions = System::getPermissions();
         foreach ($permissions as $permission) {
             ?>
             <dt style="width:300px;" class="grey-text"><?php echo $permission['path']; ?></dt>

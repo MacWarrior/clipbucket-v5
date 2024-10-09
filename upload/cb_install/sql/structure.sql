@@ -5,7 +5,8 @@ CREATE TABLE `{tbl_prefix}action_log` (
   `action_userid` int(30) NOT NULL,
   `action_useremail` varchar(200) NOT NULL,
   `action_userlevel` int(11) NOT NULL,
-  `action_ip` varchar(15) NOT NULL,
+  `action_ipv4` varchar(15) NULL DEFAULT NULL,
+  `action_ipv6` varchar(45) NULL DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `action_success` enum('yes','no') DEFAULT NULL,
   `action_details` text NOT NULL,
@@ -1178,3 +1179,6 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
     MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `{tbl_prefix}social_networks_links`
     ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `{tbl_prefix}sessions`
+    ADD INDEX(`session_date`);

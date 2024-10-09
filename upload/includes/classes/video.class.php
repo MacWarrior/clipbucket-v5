@@ -1479,8 +1479,6 @@ class CBvideo extends CBCategory
      */
     function remove_log($vdetails)
     {
-        $src = $vdetails['videoid'];
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video_files') . ' WHERE src_name = \'' . mysql_clean($src) . '\'');
         $str = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
         $file1 = DirPath::get('logs') . $str . $vdetails['file_name'] . '.log';
         if (file_exists($file1) && is_file($file1)) {

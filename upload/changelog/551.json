@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"147",
+  "revision":"162",
   "status":"dev",
   "detail":[
     {
@@ -29,6 +29,7 @@
         ,"Implement user level permission to disable channels"
         ,"Implement photo upload permission"
         ,"Implement collection thumbnail selection"
+        ,"Implement directory permission checkup"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -89,6 +90,9 @@
         ,"Fix playlists management"
         ,"Fix guest users permissions"
         ,"Fix collection pagination"
+        ,"Fix video deletion <i>(#443)</i>"
+        ,"Fix config checkup cache usage"
+        ,"Fix users current storage used"
       ]
     },
     {
@@ -161,12 +165,14 @@
         ,"Fix collection selection on video page"
         ,"Fix JS error on video upload"
         ,"Fix video's shorter & longer filters"
+        ,"Fix recursive collection display"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
-        "Refactor anonymous user"
+        "Implement error 500 / maintenance page"
+        ,"Refactor anonymous user"
         ,"Update Readme"
         ,"Update composer.json"
         ,"Cleanup code"
@@ -175,11 +181,14 @@
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
+        ,"Add index to sessions table"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Fix video files detection"
         ,"Fix PHP8.X compatibility"
+        ,"Fix internal logs with IPv6"
+        ,"Fix server info checkup"
       ]
     },
     {
@@ -212,7 +221,7 @@
         ,"Fix update status when working on new version"
         ,"Fix hardcoded prefix in update 5.5.0 - 349"
         ,"Fix categories creation in update 5.5.0 - 331"
-        ,"Fix dependancies check during installation process"
+        ,"Fix dependencies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
         ,"Fix SQL typo <i>(#417, #419)</i>"
         ,"Fix SSE DB update"
@@ -222,6 +231,8 @@
         ,"Fix Ubuntu&Debian git error in installation script"
         ,"Fix migrating from old revision"
         ,"Fix guest users permissions"
+        ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
+        ,"Fix timeout after Windows installation script"
       ]
     },
     {
@@ -259,7 +270,7 @@
       "description": [
         "Update VideoJS to version 8.17.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
-        ,"Update Windows installation script PHP to 8.3.10"
+        ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"
