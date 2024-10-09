@@ -1290,4 +1290,7 @@ VALUES ('admin_setting'),
        ('writeable'),
        ('chmod_file'),
        ('force_to_error'),
-       ('tool_forced_to_error');
+       ('tool_forced_to_error'),
+       ('licence_modal_title'),
+       ('licence_modal_legend'),
+       ('accept_license');

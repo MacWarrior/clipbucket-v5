@@ -17,5 +17,20 @@ class MWIP extends \Migration
         ]);
 
         self::generateConfig('license_validation', '');
+
+        self::generateTranslation('licence_modal_title', [
+            'fr'=>'Clipbucket V5 est un logiciel libre sous %s.',
+            'en'=>'ClipBucketV5 is an open-source software under %s.'
+        ]);
+
+        self::generateTranslation('licence_modal_legend', [
+            'fr'=>'La license ClipBucketV5 a été mise jour à la version %s, révision %s',
+            'en'=>'ClipBucketV5 license has been updated on version %s, revision %s :'
+        ]);
+
+        self::generateTranslation('accept_license', [
+            'fr'=>'J\'accepte la nouvelle licence',
+            'en'=>'I agree with new license'
+        ]);
     }
 }
