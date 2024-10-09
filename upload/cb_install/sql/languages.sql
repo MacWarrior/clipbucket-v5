@@ -1290,4 +1290,10 @@ VALUES ('admin_setting'),
        ('writeable'),
        ('chmod_file'),
        ('force_to_error'),
-       ('tool_forced_to_error');
+       ('tool_forced_to_error'),
+       ('user_level'),
+       ('administrator'),
+       ('registered_user'),
+       ('inactive_user'),
+       ('guest'),
+       ('global_moderator');
