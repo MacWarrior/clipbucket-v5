@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"164",
+  "revision":"166",
   "status":"dev",
   "detail":[
     {
@@ -48,6 +48,7 @@
         ,"Update self-update interface"
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
+        ,"Update user tags order & display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -94,6 +95,7 @@
         ,"Fix video deletion <i>(#443)</i>"
         ,"Fix config checkup cache usage"
         ,"Fix users current storage used"
+        ,"Fix action logs user's link"
       ]
     },
     {
