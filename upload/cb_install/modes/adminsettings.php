@@ -1,17 +1,8 @@
 <?php
-
-$title = mysql_clean(post('title'));
-$slogan = mysql_clean(post('slogan'));
-$baseurl = mysql_clean(post('baseurl'));
-$timezone = mysql_clean(post('timezone'));
-
-//First update website settings
-
-Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$title], " name='site_title'");
-Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$slogan], " name='site_slogan'");
-Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
-Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$timezone], " name='timezone'");
-Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
+Migration::updateConfig('site_title', post('title'));
+Migration::updateConfig('site_slogan', post('slogan'));
+Migration::updateConfig('timezone', post('timezone'));
+Migration::updateConfig('basedir', DirPath::get('root'));
 ?>
 
 <div class="nav_des clearfix">

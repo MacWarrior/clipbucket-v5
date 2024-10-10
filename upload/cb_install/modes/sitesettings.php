@@ -1,13 +1,3 @@
-<?php
-
-$baseurl = dirname(GetServerURL());
-if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
-    $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
-}
-//Lets just save admin settings so we can move forward
-
-?>
-
 <div class="nav_des clearfix">
     <div class="cb_container">
         <h4 style="color:#fff;"><?php echo lang('website_configuration'); ?></h4>

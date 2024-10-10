@@ -991,4 +991,10 @@ class System{
         return 1;
     }
 
+    public static function get_license($filename)
+    {
+        $license = file_get_contents(DirPath::get('root') . $filename);
+        return str_replace("\n", '<BR>', $license);
+    }
+
 }

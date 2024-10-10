@@ -38,10 +38,8 @@ if (file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::ge
 }
 ?>
 
-<div class="nav_des clearfix">
-    <div class="cb_container">
-        <h4 style="color:#fff;">ClipBucketV5 - v<?php echo VERSION; ?> <?php echo lang('successful_install'); ?></h4>
-    </div>
+<div class="nav_des">
+    <h4 style="color:#fff;">ClipBucketV5 - v<?php echo VERSION; ?> <?php echo lang('successful_install'); ?></h4>
 </div>
 
 <div id="sub_container">
