@@ -3,7 +3,6 @@ Migration::updateConfig('site_title', post('title'));
 Migration::updateConfig('site_slogan', post('slogan'));
 Migration::updateConfig('timezone', post('timezone'));
 Migration::updateConfig('basedir', DirPath::get('root'));
-Migration::updateConfig('license_validation', date('Y-m-d H:i:s'));
 ?>
 
 <div class="nav_des clearfix">

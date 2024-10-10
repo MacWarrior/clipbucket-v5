@@ -1206,26 +1206,3 @@ a[role='menuitem'] {
 .pointer {
     cursor: pointer;
 }
-
-/* Popin license */
-#popin-license .modal-header{
-    font-size: 17px;
-    font-weight: bold;
-}
-
-#popin-license .holder {
-    padding: 5px;
-    background-color: #F5F5F5;
-    border: 1px solid #ADADAD;
-    border-radius: 3px;
-    box-shadow: inset 0px 0px 6px rgba(0, 0, 0, 0.2);
-}
-
-#popin-license .holder .content {
-    padding: 3px 15px;
-    height: 300px;
-    color: #555;
-    font-size: 14px;
-    text-align: left;
-    overflow: auto;
-}

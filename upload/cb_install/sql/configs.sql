@@ -303,8 +303,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'home_display_recent_videos', 'yes'),
     (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'enable_access_view_video_history', 'no'),
-    (NULL, 'video_list_view_video_history', 30),
-    (NULL, 'license_validation', CURRENT_TIMESTAMP);
+    (NULL, 'video_list_view_video_history', 30);
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

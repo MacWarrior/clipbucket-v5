@@ -3,9 +3,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ClipBucket v<?php echo VERSION . ' ' . STATE; ?> Installer</title>
-    <link href="./style<?php if(DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
+    <link href="./style<?php if(!DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="/vendor/components/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="./functions.js"></script>
+    <script type="text/javascript" src="./functions<?php if(!DEVELOPMENT_MODE) echo '.min'?>.js"></script>
     <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
     <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="/vendor/fortawesome/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
