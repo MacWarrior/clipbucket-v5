@@ -190,7 +190,7 @@ class Migration
             $sql = 'SET ' . $language_id_sql . ' = (SELECT `language_id` FROM `' . tbl('languages') . '` WHERE language_code = \'' . mysql_clean(strtolower($language_code)) . '\');';
             Clipbucket_db::getInstance()->executeThrowException($sql);
 
-            $sql = 'UPDATE `' . tbl('languages_translations') . '` SET `translation` = \'' . mysql_clean($translation) . '\' WHERE id_language_key = @id_language_key AND language_id = ' . $language_id_sql . ');';
+            $sql = 'UPDATE `' . tbl('languages_translations') . '` SET `translation` = \'' . mysql_clean($translation) . '\' WHERE id_language_key = @id_language_key AND language_id = ' . $language_id_sql . ';';
             Clipbucket_db::getInstance()->executeThrowException($sql);
         }
     }
@@ -325,6 +325,15 @@ class Migration
     public static function deleteConfig(string $config_name)
     {
         $sql = 'DELETE FROM `' . tbl('config') . '` WHERE name = \''.mysql_clean($config_name).'\';';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function updateConfig(string $config_name, string $config_value)
+    {
+        $sql = 'UPDATE `' . tbl('config') . '` SET value = \''.mysql_clean($config_value).'\' WHERE name = \''.mysql_clean($config_name).'\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 

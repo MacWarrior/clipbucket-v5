@@ -3,7 +3,7 @@
 	Plugin Name: Oxygenz - Plugin example
 	Description: An example plugin showing all anchors
 	Author: Oxygenz
-    Author Website: https://oxygenz.fr
+    Author Website: https://clipbucket.oxygenz.fr
     Version: 1.0.1
 	ClipBucket Version: 5.5.1
 	Website: https://github.com/MacWarrior/clipbucket-v5/
