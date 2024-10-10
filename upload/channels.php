@@ -8,6 +8,12 @@ userquery::getInstance()->perm_check('view_channels', true);
 if( !isSectionEnabled('channels') ){
     redirect_to(BASEURL);
 }
+$params = [
+    'featured'       => 'yes',
+    'channel_enable' => 'yes',
+    'limit'          => 5
+];
+assign('featured_users', User::getInstance()->getAll($params));
 
 $params = User::getInstance()->getFilterParams($_GET['sort'], []);
 $params = User::getInstance()->getFilterParams($_GET['time'], $params);

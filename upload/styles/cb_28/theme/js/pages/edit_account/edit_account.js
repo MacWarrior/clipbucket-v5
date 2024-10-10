@@ -1,5 +1,8 @@
 $(document).ready(function(){
     init_tags('profile_tags', available_tags);
+    if ($('#profile_tags').prop('disabled')) {
+        $('#list_tags').find('input').prop('disabled',true);
+    }
 
     if( typeof format_date_js !== 'undefined' ){
         $('#dob').datepicker({

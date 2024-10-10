@@ -1296,4 +1296,7 @@ VALUES ('admin_setting'),
        ('registered_user'),
        ('inactive_user'),
        ('global_moderator'),
-       ('channel_doesnt_exists');
+       ('channel_doesnt_exists'),
+       ('user_has_been_set_as_featured'),
+       ('user_has_been_removed_from_featured_users'),
+       ('cant_featured_deactivate_user');

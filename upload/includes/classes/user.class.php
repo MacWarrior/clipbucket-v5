@@ -3001,7 +3001,9 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
-            Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
+            if ($array['profile_tags'] !== null) {
+                Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
+            }
             e(lang('usr_pof_upd_msg'), 'm');
         }
     }
@@ -4285,7 +4287,7 @@ class userquery extends CBCategory
             case 'featured':
             case 'f':
                 Clipbucket_db::getInstance()->update($tbl, ['featured', 'featured_date'], ['yes', now()], " userid='$uid' ");
-                e(lang('User has been set as featured'), 'm');
+                e(lang('user_has_been_set_as_featured'), 'm');
                 break;
 
             //Unfeatured user
@@ -4293,7 +4295,7 @@ class userquery extends CBCategory
             case 'unfeatured':
             case 'uf':
                 Clipbucket_db::getInstance()->update($tbl, ['featured'], ['no'], " userid='$uid' ");
-                e(lang('User has been removed from featured users'), 'm');
+                e(lang('user_has_been_removed_from_featured_users'), 'm');
                 break;
 
             //Ban User
@@ -4580,17 +4582,18 @@ class userquery extends CBCategory
         }
 
         $return = [
-            'show_dob' => [
+            'show_dob'     => [
                 'title'       => lang('show_dob'),
                 'type'        => 'radiobutton',
                 'name'        => 'show_dob',
                 'id'          => 'show_dob',
-                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'       => ['yes' => lang('yes'), 'no'  => lang('no')],
                 'checked'     => $default['show_dob'],
                 'db_field'    => 'show_dob',
                 'syntax_type' => 'name',
                 'auto_view'   => 'no',
-                'sep'         => '&nbsp;'
+                'sep'         => '&nbsp;',
+                'disabled'    => (strtolower($default['disabled_channel']) == 'yes')
             ],
             'profile_tags' => [
                 'title'             => lang('profile_tags'),
@@ -4600,7 +4603,8 @@ class userquery extends CBCategory
                 'value'             => genTags($default['profile_tags']),
                 'required'          => 'no',
                 'validate_function' => 'genTags',
-                'auto_view'         => 'yes'
+                'auto_view'         => 'yes',
+                'disabled'          => (strtolower($default['disabled_channel']) == 'yes')
             ]
         ];
 
