@@ -169,6 +169,7 @@
         ,"Fix JS error on video upload"
         ,"Fix video's shorter & longer filters"
         ,"Fix recursive collection display"
+        ,"Fix footer copyright"
       ]
     },
     {
@@ -220,6 +221,7 @@
         ,"Update config creations"
         ,"Update database creation descriptions"
         ,"Update installation script to Ubuntu 24.04"
+        ,"Update licence agreement"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
