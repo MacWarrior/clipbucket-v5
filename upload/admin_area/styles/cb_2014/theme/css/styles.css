@@ -1203,6 +1203,10 @@ a[role='menuitem'] {
     padding-left: 20px !important;
 }
 
+.pointer {
+    cursor: pointer;
+}
+
 /* Popin license */
 #popin-license .modal-header{
     font-size: 17px;
