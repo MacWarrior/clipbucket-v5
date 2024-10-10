@@ -3,7 +3,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'secretId', ''),
 	(NULL, 'site_title', ''),
 	(NULL, 'site_slogan', ''),
-	(NULL, 'baseurl', ''),
 	(NULL, 'basedir', ''),
 	(NULL, 'template_dir', 'cb_28'),
 	(NULL, 'player_file', 'cb_video_js.php'),

@@ -10,12 +10,6 @@ if (!file_exists(DirPath::get('temp') . 'install.me')) {
     }
 }
 
-function get_cbla()
-{
-    $license = file_get_contents(DirPath::get('root') . 'LICENSE');
-    return str_replace("\n", '<BR>', $license);
-}
-
 function button($text, $params, $class = 'btn-primary')
 {
     echo '<span>&nbsp;</span>';
