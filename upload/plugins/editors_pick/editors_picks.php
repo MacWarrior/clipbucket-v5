@@ -149,7 +149,7 @@ $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS(['editors_pick/assets/js/editors_pick' . $min_suffixe . '.js' => 'plugin']);
 ClipBucket::getInstance()->addCSS(['editors_pick/assets/css/themes/default' . $min_suffixe . '.css' => 'plugin']);
 
-$filepath = DirPath::get('plugins') . 'editors_pick/assets/css/themes/' . config('default_theme') . $min_suffixe . '.css';
+$filepath = DirPath::get('plugins') . 'editors_pick' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . config('default_theme') . $min_suffixe . '.css';
 if( config('default_theme') != '' && file_exists($filepath) ){
     ClipBucket::getInstance()->addCSS([
         'editors_pick/assets/css/themes/' . config('default_theme') . $min_suffixe . '.css' => 'plugin'

@@ -108,6 +108,12 @@ ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                              => 'admin',
     'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
 ]);
+if( config('enable_comments_photo') == 'yes' ){
+    ClipBucket::getInstance()->addJS([
+        'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
+    ]);
+}
+
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',

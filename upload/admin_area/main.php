@@ -133,6 +133,7 @@ if (isset($_POST['update'])) {
         , 'home_display_featured_collections'
         , 'home_display_recent_videos'
         , 'enable_access_view_video_history'
+        , 'enable_visual_editor_comments'
     ];
 
     $config_booleans_to_refactor = [
@@ -262,6 +263,7 @@ if (isset($_POST['update'])) {
         'enable_comments_photo',
         'enable_comments_collection',
         'enable_comments_channel',
+        'enable_visual_editor_comments',
 
         'num_thumbs',
 
@@ -635,5 +637,6 @@ ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
 ]);
+
 template_files('main.html');
 display_it();
