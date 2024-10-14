@@ -175,8 +175,10 @@ class MWIP extends \Migration
         WHERE NOT EXISTS (SELECT * FROM `' . tbl('user_memberships_status') . '`)';
         self::query($sql);
 
+        self::query('SET FOREIGN_KEY_CHECKS = 0;');
         $sql = 'DROP TABLE IF EXISTS `' . tbl('user_memberships') . '`';
         self::query($sql);
+        self::query('SET FOREIGN_KEY_CHECKS = 1;');
 
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships') . '` (
             `id_user_membership` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -210,7 +212,7 @@ class MWIP extends \Migration
 
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships_transactions') . '` (
             `id_user_membership` INT NOT NULL,
-            id_paypal_transaction
+            id_paypal_transaction INT NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
         self::alterTable('ALTER TABLE `' . tbl('user_memberships_transactions') . '` ADD CONSTRAINT `pkey_user_memberships_transactions` PRIMARY KEY (`id_user_membership`, `id_paypal_transaction`);', [
@@ -220,8 +222,7 @@ class MWIP extends \Migration
                 'id_paypal_transaction',
             ]
         ], [
-            'table'           => 'user_memberships_transactions',
-            'constraint_name' => 'pkey_user_memberships_transactions'
+            'constraint_type' => 'PRIMARY KEY'
         ]);
 
         self::alterTable('ALTER TABLE `' . tbl('user_memberships_transactions') . '` ADD CONSTRAINT `user_memberships_transactions_user_membership` FOREIGN KEY (`id_user_membership`) REFERENCES `' . tbl('user_memberships') . '` (`id_user_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [

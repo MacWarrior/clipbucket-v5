@@ -1234,12 +1234,12 @@ ALTER TABLE `{tbl_prefix}user_memberships`
 ALTER TABLE `{tbl_prefix}user_memberships`
     ADD CONSTRAINT `user_membership_membership_status` FOREIGN KEY (`id_user_memberships_status`) REFERENCES `{tbl_prefix}user_memberships_status` (`id_user_memberships_status`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_memberships_status`
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_memberships_transactions`
 (
-    `id_user_memberships_status` INT NOT NULL,
+    `id_user_membership` INT NOT NULL,
     `id_paypal_transaction`        INT NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-ALTER TABLE `{tbl_prefix}user_memberships_status`
-    ADD CONSTRAINT `pkey_user_memberships_transactions` PRIMARY KEY (`id_user_memberships_status`, `id_paypal_transaction`);
-ALTER TABLE `{tbl_prefix}user_memberships`
+ALTER TABLE `{tbl_prefix}user_memberships_transactions`
+    ADD CONSTRAINT `pkey_user_memberships_transactions` PRIMARY KEY (`id_user_membership`, `id_paypal_transaction`);
+ALTER TABLE `{tbl_prefix}user_memberships_transactions`
     ADD CONSTRAINT `user_memberships_transactions_user_membership` FOREIGN KEY (`id_user_membership`) REFERENCES `{tbl_prefix}user_memberships` (`id_user_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;
