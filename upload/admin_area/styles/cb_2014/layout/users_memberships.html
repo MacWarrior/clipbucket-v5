@@ -6,9 +6,6 @@
 <form name="video_manage marginBottomLarge" method="post">
     <table class="table table-bordered table-striped manageUsersTable marginTop">
         <tr>
-            {*<td>
-                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-            </td>*}
             <th>{lang('username')}</th>
             <th title="{lang('sort_by',lang('first_start'))}">{lang code='first_start'} <span class="pointer fa fa-sort{if $sort=='first_start'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="first_start"></span></th>
             <th title="{lang('sort_by',lang('last_end'))}">{lang code='last_end'} <span class="pointer fa fa-sort{if $sort=='last_end'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="last_end"></span></th>
@@ -22,12 +19,11 @@
         </tr>
         {foreach from=$users_memberships item=user_membership}
             <tr>
-                {*<td>
-                    <input name="check_video[]" type="checkbox" id="check_video" value="{$user_membership.id_membership}"/>
-                </td>*}
-                <td>{$user_membership.username}</td>
+                <td>{if $user_membership.userid != $anonymous_id}
+                    <a href="view_user.php?uid={$user_membership.userid}">{display_clean($user_membership.username)}</a>
+                    {else}{$user_membership.username}{/if}</td>
                 <td>{$user_membership.first_start}</td>
-                <td>{if $user_membership.last_end != '2999-99-99'}{$user_membership.last_end}{else}{lang('never')}{/if}</td>
+                <td>{if $user_membership.last_end != '2999-12-12'}{$user_membership.last_end}{else}{lang('never')}{/if}</td>
                 <td>{lang($user_membership.user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$user_membership.frequency)}</td>
                 <td>{$user_membership.nb_membership}</td>
                 <td>{$user_membership.sum_price}</td>

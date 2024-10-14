@@ -33,7 +33,18 @@ if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_
 //Configuring Uploader
 uploaderDetails();
 isSectionEnabled(PARENT_PAGE, true);
+$need_to_active_membership = false;
+if (config('enable_membership') == 'yes') {
 
+    $resutls = Membership::getInstance()->getAll([
+        'first_only'          => true,
+        'date_between'        => date('Y-m-d H:i:s'),
+        'user_level_id'       => User::getInstance()->getCurrentUserUserLevelID(),
+        'get_user_membership' => true
+    ]);
+    $need_to_active_membership = true;
+}
+assign('need_to_active_membership', $need_to_active_membership);
 //setting quicklist
 
 cb_call_functions('clipbucket_init_completed');

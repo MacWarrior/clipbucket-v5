@@ -551,7 +551,7 @@ class Video
     public function setDefaultPicture($video_id, string $poster, string $type = 'auto')
     {
         if (empty($poster)) {
-            e(lang('missing_param'));
+            e(lang('missing_params'));
             return;
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {

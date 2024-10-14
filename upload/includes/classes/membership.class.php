@@ -89,23 +89,31 @@ class Membership
         $param_limit = $params['limit'] ?? false;
         $param_user_level_id = $params['user_level_id'] ?? false;
         $param_id_membership = $params['id_membership'] ?? false;
+        $param_ids_membership = $params['ids_membership'] ?? false;
         $param_not_id_membership = $params['not_id_membership'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_username = $params['username'] ?? false;
         $param_frequency = $params['frequency'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
-        $param_get_subscribers = $params['get_subscribers'] ?? false;
         $param_join_users = $params['join_users'] ?? false;
         $param_type_join_user_membership = $params['type_join_user_membership'] ?? false;
         $param_get_user_membership = $params['get_user_membership'] ?? false;
+        $param_date_between = $params['date_between'] ?? false;
+        $param_is_disabled = $params['is_disabled'] ?? false;
 
         //CONDITIONS
         $conditions = [];
+        if ($param_is_disabled !== false) {
+            $conditions[] = $this->tablename . '.disabled = ' . mysql_clean($param_is_disabled);
+        }
         if ($param_id_membership !== false) {
-            $conditions[] = $this->tablename . '.id_membership = \'' . mysql_clean($param_id_membership) . '\'';
+            $conditions[] = $this->tablename . '.id_membership = ' . mysql_clean($param_id_membership);
+        }
+        if ($param_ids_membership !== false) {
+            $conditions[] = $this->tablename . '.id_membership IN (' . mysql_clean($param_ids_membership) . ')';
         }
         if ($param_not_id_membership !== false) {
-            $conditions[] = $this->tablename . '.id_membership != \'' . mysql_clean($param_not_id_membership) . '\'';
+            $conditions[] = $this->tablename . '.id_membership != ' . mysql_clean($param_not_id_membership);
         }
         if ($param_user_level_id !== false) {
             $conditions[] = $this->tablename . '.user_level_id = \'' . mysql_clean($param_user_level_id) . '\'';
@@ -118,6 +126,9 @@ class Membership
         }
         if ($param_username !== false && $param_join_users) {
             $conditions[] = ' users.username like \'%' . mysql_clean($param_username) . '%\'';
+        }
+        if ($param_date_between !== false ) {
+            $conditions[] = ' \''.mysql_clean($param_date_between) . '\'  BETWEEN ' . $this->tablename_user_membership . '.date_start AND (CASE WHEN ' . $this->tablename_user_membership . '.date_end IS NULL THEN \'2999-12-12\' ELSE ' . $this->tablename_user_membership . '.date_end END)';
         }
 
         if ($param_group) {
@@ -164,22 +175,13 @@ class Membership
                 $select = ['COUNT(DISTINCT ' . $this->tablename . '.id_membership) AS count'];
             }
         } else {
-            $select[] = $this->tablename_user_membership . '.id_user_membership';
-            if ($param_get_subscribers) {
-                $select[] = $this->tablename_user_membership . '.userid';
-                $select[] = 'MIN(' . $this->tablename_user_membership . '.date_start) as first_start';
-                $select[] = 'CASE WHEN COUNT(' . $this->tablename_user_membership . '.date_end) < COUNT(*) THEN \'2999-99-99\' ELSE MAX(' . $this->tablename_user_membership . '.date_end) END AS last_end';
-                $select[] = 'COUNT(' . $this->tablename_user_membership . '.id_user_membership) as nb_membership';
-                $select[] = 'SUM(' . $this->tablename_user_membership . '.price) as sum_price';
-                $select[] = $this->tablename . '.frequency';
-            } elseif ($param_get_user_membership) {
+            if ($param_get_user_membership) {
                 $select = $this->getSQLFields('user_membership');
                 $select[] = $this->tablename . '.frequency';
             } else {
                 $select = $this->getSQLFields('membership');
             }
             $select[] = 'user_levels.user_level_name';
-            $select[] = 'currency.symbol';
         }
 
 
@@ -215,11 +217,88 @@ class Membership
 
     public function getAllSubscribers(array $params)
     {
-        $params['group'] = $this->tablename_user_membership . '.userid';
-        $params['join_users'] = true;
-        $params['get_subscribers'] = true;
-        $params['type_join_user_membership'] = 'INNER';
-        return $this->getAll($params);
+        $param_order = $params['order'] ?? false;
+        $param_count = $params['count'] ?? false;
+        $param_limit = $params['limit'] ?? false;
+        $param_user_level_id = $params['user_level_id'] ?? false;
+        $param_id_membership = $params['id_membership'] ?? false;
+        $param_not_id_membership = $params['not_id_membership'] ?? false;
+        $param_userid = $params['userid'] ?? false;
+        $param_username = $params['username'] ?? false;
+        $param_frequency = $params['frequency'] ?? false;
+        $param_first_only = $params['first_only'] ?? false;
+
+        if ($param_id_membership !== false) {
+            $conditions[] = $this->tablename . '.id_membership = \'' . mysql_clean($param_id_membership) . '\'';
+        }
+        if ($param_not_id_membership !== false) {
+            $conditions[] = $this->tablename . '.id_membership != \'' . mysql_clean($param_not_id_membership) . '\'';
+        }
+        if ($param_user_level_id !== false) {
+            $conditions[] = $this->tablename . '.user_level_id = \'' . mysql_clean($param_user_level_id) . '\'';
+        }
+        if ($param_frequency !== false) {
+            $conditions[] = $this->tablename . '.frequency = \'' . mysql_clean($param_frequency) . '\'';
+        }
+        if ($param_userid !== false) {
+            $conditions[] = $this->tablename_user_membership . '.userid = \'' . mysql_clean($param_userid) . '\'';
+        }
+        if ($param_username !== false) {
+            $conditions[] = ' users.username like \'%' . mysql_clean($param_username) . '%\'';
+        }
+
+        $order = '';
+        if ($param_order && !$param_count) {
+            $order = ' ORDER BY ' . $param_order;
+        }
+
+        $limit = '';
+        if ($param_limit) {
+            $limit = ' LIMIT ' . $param_limit;
+        }
+
+        $sql = /** @lang MySQL */
+            'WITH R AS (SELECT users.username, user_memberships.userid, user_memberships.date_start
+                , user_memberships.date_end, user_memberships.id_user_membership
+                , SUM(user_memberships.price)                                                  AS sum_price
+                , symbol, user_level_name, frequency
+                , MAX(user_memberships.date_start) OVER (PARTITION BY user_memberships.userid) AS max_date_start
+                , MIN(date_start) OVER (PARTITION BY user_memberships.userid)                  AS min_date_start
+           FROM '.cb_sql_table($this->tablename).' 
+                    INNER JOIN '.cb_sql_table($this->tablename_user_membership).' ON user_memberships.id_membership = memberships.id_membership
+                    LEFT JOIN '.cb_sql_table('user_levels').' ON user_levels.user_level_id = memberships.user_level_id
+                    LEFT JOIN '.cb_sql_table('currency').' ON currency.id_currency = memberships.id_currency
+                    LEFT JOIN '.cb_sql_table('users').' ON users.userid = user_memberships.userid
+           '. (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions)). '
+           GROUP BY user_memberships.userid, memberships.id_currency, date_start, date_end, id_user_membership)
+            SELECT R_first.username, R_first.userid,
+                   GROUP_CONCAT(R.sum_price, \' \', R.symbol)                                                           AS sum_price,
+                   R_first.date_start                                                                                   AS first_start,
+                   CASE WHEN COUNT(R_last.date_end) < COUNT(R_last.userid) THEN \'2999-12-12\' ELSE R_last.date_end END AS last_end,
+                   COUNT(R.id_user_membership)                                                                          AS nb_membership,
+                   R_last.user_level_name,
+                   R_last.frequency
+            FROM R
+             INNER JOIN R AS R_first ON R_first.userid = R.userid AND R_first.date_start = R_first.min_date_start
+             INNER JOIN R AS R_last ON R_last.userid = R.userid AND R_last.date_start = R_last.max_date_start
+            GROUP BY R.username, R.userid, R_last.user_level_name, R_last.frequency, first_start, R_last.date_end'
+            . $order . $limit;
+        $result = Clipbucket_db::getInstance()->_select($sql);
+
+        if ($param_count) {
+            if (empty($result)) {
+                return 0;
+            }
+            return $result[0]['count'];
+        }
+
+        if (!$result) {
+            return [];
+        }
+        if ($param_first_only) {
+            return $result[0];
+        }
+        return $result;
     }
 
     public function getAllHistoMembershipForUser(array $params)
@@ -361,7 +440,7 @@ class Membership
                 case 'description':
                 case 'frequency':
                     if (empty($value)) {
-                        e(lang('missing_param'));
+                        e(lang('missing_params'));
                         return false;
                     }
                     $value = '\'' . $value . '\'';
@@ -380,7 +459,7 @@ class Membership
     public function delete(int $id_membership): bool
     {
         if (empty($id_membership)) {
-            e(lang('missing_param'));
+            e(lang('missing_params'));
             return false;
         }
         return Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE id_membership = ' . mysql_clean($id_membership));

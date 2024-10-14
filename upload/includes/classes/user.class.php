@@ -456,6 +456,10 @@ class User
     {
         return $this->user_data['userid'] ?? false;
     }
+    public function getCurrentUserUserLevelID()
+    {
+        return $this->user_data['level'] ?? false;
+    }
 
     /**
      * @throws Exception

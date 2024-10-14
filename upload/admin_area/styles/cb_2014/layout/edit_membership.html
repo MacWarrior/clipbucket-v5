@@ -113,6 +113,7 @@
                                             <div class="col-md-11">
                                                 <div class="input-group">
                                                     <select class="form-control" name="id_currency" id="currency" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
+                                                        <option>&nbsp;</option>
                                                         {foreach from=$currencies item=currency}
                                                             <option value="{$currency.id_currency}" {if $membership.id_currency == $currency.id_currency}selected{/if} >
                                                                 {$currency.country} : {$currency.symbol}
