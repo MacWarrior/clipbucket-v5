@@ -42,7 +42,7 @@ if (config('enable_membership') == 'yes') {
         'user_level_id'       => User::getInstance()->getCurrentUserUserLevelID(),
         'get_user_membership' => true
     ]);
-    $need_to_active_membership = true;
+    $need_to_active_membership = empty($resutls);
 }
 assign('need_to_active_membership', $need_to_active_membership);
 //setting quicklist

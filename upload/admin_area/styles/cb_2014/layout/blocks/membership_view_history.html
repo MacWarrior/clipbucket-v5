@@ -11,6 +11,7 @@
                 <tr>
                     <th class="col-md-1" style="cursor:pointer;" >{lang('date_start')} </th>
                     <th class="col-md-2" style="cursor:pointer;" >{lang('date_end')}</th>
+                    <th class="col-md-2" style="cursor:pointer;" >{lang('status')}</th>
                     <th class="col-md-2" style="cursor:pointer;" >{lang('user_levels')}</th>
                     <th class="col-md-2" style="cursor:pointer;" >{lang('price')}</th>
                     {if config('enable_storage_history' == 'yes')}
@@ -21,6 +22,7 @@
                     <tr>
                         <td><span>{display_clean($results[sub].date_start)}</span></td>
                         <td><span>{if $results[sub].date_end}{display_clean($results[sub].date_end)}{else}{lang('never')}{/if}</span></td>
+                        <td><span>{lang($results[sub].language_key_title)}</span></td>
                         <td><span>{lang($results[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$results[sub].frequency)}</span></td>
                         <td><span>{display_clean($results[sub].price)} {display_clean($results[sub].symbol)}</span></td>
                         {if config('enable_storage_history' == 'yes')}

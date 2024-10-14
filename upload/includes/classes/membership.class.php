@@ -35,6 +35,7 @@ class Membership
             'id_user_membership',
             'userid',
             'id_membership',
+            'id_user_memberships_status',
             'date_start',
             'date_end',
             'price'
@@ -178,6 +179,9 @@ class Membership
             if ($param_get_user_membership) {
                 $select = $this->getSQLFields('user_membership');
                 $select[] = $this->tablename . '.frequency';
+                $join[] = ' LEFT JOIN ' . cb_sql_table('user_memberships_status') . ' ON user_memberships_status.id_user_memberships_status = ' . $this->tablename_user_membership . '.id_user_memberships_status ';
+                $select[] = 'user_memberships_status.language_key_title';
+
             } else {
                 $select = $this->getSQLFields('membership');
             }

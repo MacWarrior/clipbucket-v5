@@ -1211,16 +1211,25 @@ ALTER TABLE `{tbl_prefix}memberships`
 ALTER TABLE `{tbl_prefix}memberships`
     ADD CONSTRAINT `user_level_currency` FOREIGN KEY (`id_currency`) REFERENCES `{tbl_prefix}currency` (`id_currency`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_memberships_status`
+(
+    `id_user_memberships_status` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `language_key_title`         VARCHAR(256)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
 CREATE TABLE `{tbl_prefix}user_memberships`
 (
-    `id_user_membership` INT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `userid`             BIGINT   NOT NULL,
-    `id_membership`      INT      NOT NULL,
-    `date_start`         DATETIME NOT NULL,
-    `date_end`           DATETIME NULL,
-    `price`              DECIMAL  NOT NULL
+    `id_user_membership`         INT      NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `userid`                     BIGINT   NOT NULL,
+    `id_membership`              INT      NOT NULL,
+    `id_user_memberships_status` INT      NOT NULL,
+    `date_start`                 DATETIME NOT NULL,
+    `date_end`                   DATETIME NULL,
+    `price`                      DECIMAL  NOT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}user_memberships`
     ADD CONSTRAINT `user_membership_user` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 ALTER TABLE `{tbl_prefix}user_memberships`
     ADD CONSTRAINT `user_membership_membership` FOREIGN KEY (`id_membership`) REFERENCES `{tbl_prefix}memberships` (`id_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}user_memberships`
+    ADD CONSTRAINT `user_membership_membership_status` FOREIGN KEY (`id_user_memberships_status`) REFERENCES `{tbl_prefix}user_memberships_status` (`id_user_memberships_status`) ON DELETE RESTRICT ON UPDATE RESTRICT;

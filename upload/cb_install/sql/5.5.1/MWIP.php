@@ -162,10 +162,27 @@ class MWIP extends \Migration
             'table'           => 'memberships',
             'constraint_name' => 'user_level_currency'
         ]);
+
+
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships_status') . '` (
+            `id_user_memberships_status` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `language_key_title` VARCHAR(256)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
+        self::query($sql);
+
+        $sql = 'INSERT INTO `' . tbl('user_memberships_status') . '` (`language_key_title`) 
+        SELECT * FROM ( VALUES ROW(\'in_progress\'), ROW(\'completed\'), ROW(\'canceled\'), ROW(\'refunded\')) source_data
+        WHERE NOT EXISTS (SELECT * FROM `' . tbl('user_memberships_status') . '`)';
+        self::query($sql);
+
+        $sql = 'DROP TABLE IF EXISTS `' . tbl('user_memberships') . '`';
+        self::query($sql);
+
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships') . '` (
             `id_user_membership` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `userid` BIGINT NOT NULL,
             `id_membership` INT NOT NULL,
+            `id_user_memberships_status` INT NOT NULL,
             `date_start` datetime NOT NULL,
             `date_end` datetime NULL,
             `price` DECIMAL NOT NULL
@@ -182,6 +199,13 @@ class MWIP extends \Migration
         ], [
             'table'           => 'user_memberships',
             'constraint_name' => 'user_membership_membership'
+        ]);
+
+        self::alterTable('ALTER TABLE `' . tbl('user_memberships') . '` ADD CONSTRAINT `user_membership_membership_status` FOREIGN KEY (`id_user_memberships_status`) REFERENCES `' . tbl('user_memberships_status') . '` (`id_user_memberships_status`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
+            'table' => 'user_memberships'
+        ], [
+            'table'           => 'user_memberships',
+            'constraint_name' => 'user_membership_membership_status'
         ]);
 
         self::generateConfig('enable_membership', 'no');
@@ -377,6 +401,11 @@ class MWIP extends \Migration
         self::updateTranslation('com_manage_subs', [
             'fr'=>'Gestion des abonnements de chaine',
             'en'=>'Manage channels subscriptions'
+        ]);
+
+        self::generateTranslation('status', [
+            'fr'=>'Statut',
+            'en'=>'Status'
         ]);
     }
 }

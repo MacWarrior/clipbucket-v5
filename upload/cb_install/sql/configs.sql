@@ -1765,3 +1765,6 @@ VALUES ('Albania Lek', 'ALL', 'Lek'),
        ('Viet Nam Dong', 'VND', '?'),
        ('Yemen Rial', 'YER', '?'),
        ('Zimbabwe Dollar', 'ZWD', 'Z$');
+
+INSERT INTO `{tbl_prefix}user_memberships_status` (`language_key_title`)
+VALUES ('in_progress'), ('completed'), ('canceled'), ('refunded');

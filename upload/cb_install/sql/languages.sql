@@ -1333,4 +1333,5 @@ VALUES ('admin_setting'),
        ('user_level_frequency_already_exist'),
        ('current_membership'),
        ('membership_history'),
-       ('never');
+       ('never'),
+       ('status');
