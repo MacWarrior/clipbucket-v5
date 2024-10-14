@@ -208,6 +208,30 @@ class MWIP extends \Migration
             'constraint_name' => 'user_membership_membership_status'
         ]);
 
+        $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships_transactions') . '` (
+            `id_user_membership` INT NOT NULL,
+            id_paypal_transaction
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
+        self::query($sql);
+        self::alterTable('ALTER TABLE `' . tbl('user_memberships_transactions') . '` ADD CONSTRAINT `pkey_user_memberships_transactions` PRIMARY KEY (`id_user_membership`, `id_paypal_transaction`);', [
+            'table' => 'user_memberships_transactions',
+            'columns'=>[
+                'id_user_membership',
+                'id_paypal_transaction',
+            ]
+        ], [
+            'table'           => 'user_memberships_transactions',
+            'constraint_name' => 'pkey_user_memberships_transactions'
+        ]);
+
+        self::alterTable('ALTER TABLE `' . tbl('user_memberships_transactions') . '` ADD CONSTRAINT `user_memberships_transactions_user_membership` FOREIGN KEY (`id_user_membership`) REFERENCES `' . tbl('user_memberships') . '` (`id_user_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
+            'table' => 'user_memberships_transactions'
+        ], [
+            'table'           => 'user_memberships_transactions',
+            'constraint_name' => 'user_memberships_transactions_user_membership'
+        ]);
+
+
         self::generateConfig('enable_membership', 'no');
         self::generateTranslation('enable_membership', [
             'fr' => 'Activer les abonnements',

@@ -36,13 +36,19 @@ isSectionEnabled(PARENT_PAGE, true);
 $need_to_active_membership = false;
 if (config('enable_membership') == 'yes') {
 
-    $resutls = Membership::getInstance()->getAll([
-        'first_only'          => true,
-        'date_between'        => date('Y-m-d H:i:s'),
-        'user_level_id'       => User::getInstance()->getCurrentUserUserLevelID(),
-        'get_user_membership' => true
+    $memberships = Membership::getInstance()->getAll([
+        'user_level_id' => User::getInstance()->getCurrentUserUserLevelID(),
+        'is_disabled'   => false
     ]);
-    $need_to_active_membership = empty($resutls);
+    if (!empty($memberships)) {
+        $resutls = Membership::getInstance()->getAll([
+            'first_only'          => true,
+            'date_between'        => date('Y-m-d H:i:s'),
+            'user_level_id'       => User::getInstance()->getCurrentUserUserLevelID(),
+            'get_user_membership' => true
+        ]);
+        $need_to_active_membership = empty($resutls);
+    }
 }
 assign('need_to_active_membership', $need_to_active_membership);
 //setting quicklist
