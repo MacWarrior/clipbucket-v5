@@ -80,13 +80,13 @@
                         <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
                         <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a></li>
                     {/if}
-                    {if $u.ban_status == yes && $u.userid != user_id()}
+                    {if $u.ban_status == yes && $u.userid != user_id() }
                         <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
                     {/if}
                     {if $u.ban_status == no && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
                     {/if}
-                    {if $u.featured == no}
+                    {if $u.featured == no && $u.is_channel_enable && $u.enable_channel_page == 'yes'}
                         <li><a role="menuitem" tabindex="-1" href="?featured={$u.userid}">Feature Member</a></li>
                     {/if}
                     {if $u.featured == yes}

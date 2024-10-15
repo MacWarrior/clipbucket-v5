@@ -85,6 +85,7 @@ $profile = userquery::getInstance()->get_user_profile($udetails['userid']);
 $current_enable_channel_page = userquery::getInstance()->get_user_level(user_id())['enable_channel_page'] !== 'yes';
 assign('current_enable_channel_page', $current_enable_channel_page);
 if ($mode === 'profile' && $current_enable_channel_page) {
+    e(lang('cannot_access_page'));
     $mode = 'account';
 }
 assign('mode', $mode);

@@ -28,5 +28,10 @@ class MWIP extends \Migration
            'fr'=>'Vous ne pouvez pas marquer une chaîne désactivée en vedette',
            'en'=>'You cannot tag a deactivated channel as featured'
        ]);
+
+       self::generateTranslation('cannot_access_page', [
+           'fr'=>'Vous ne pouvez pas accéder à cette page',
+           'en'=>'You cannot access this page'
+       ]);
     }
 }

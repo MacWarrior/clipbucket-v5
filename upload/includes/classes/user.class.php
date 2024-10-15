@@ -3365,7 +3365,8 @@ class userquery extends CBCategory
             lang('account_settings')  => 'edit_account.php?mode=account'
         ];
 
-        $udetails = $this->get_user_details(user_id());
+        $udetails = User::getInstance()->getOne(['userid'=>user_id()]);
+        $user_permissions = userquery::getInstance()->get_user_level(user_id());
         if (config('picture_upload') == 'yes' || config('picture_url') == 'yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar'])) {
             $array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
         }
@@ -3381,7 +3382,7 @@ class userquery extends CBCategory
             lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
         ];
 
-        if (isSectionEnabled('channels')) {
+        if (isSectionEnabled('channels') && $user_permissions['enable_channel_page'] == 'yes') {
             $array[lang('user_channel_profiles')] = [
                 lang('user_profile_settings') => 'edit_account.php?mode=profile',
                 lang('contacts_manager')      => 'manage_contacts.php'
@@ -3390,9 +3391,11 @@ class userquery extends CBCategory
 
         if (isSectionEnabled('videos')) {
             $array[lang('videos')] = [
-                lang('uploaded_videos') => 'manage_videos.php',
                 lang('user_fav_videos') => 'manage_videos.php?mode=favorites'
             ];
+            if ($user_permissions['allow_video_upload'] == 'yes') {
+                $array[lang('videos')][lang('uploaded_videos')] = 'manage_videos.php';
+            }
         }
 
         if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
