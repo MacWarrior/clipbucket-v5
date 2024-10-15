@@ -412,7 +412,7 @@ class Membership
             $existing_user_level_frequency = $this->getOne([
                 'frequency'         => $fields['frequency'],
                 'user_level_id'     => $fields['user_level_id'],
-                'not_id_membership' => $fields['id_membership'] ?? false
+                'not_id_membership' => $fields['id_membership'] ?: false
             ]);
         }
         if (!empty($existing_user_level_frequency)) {
@@ -436,7 +436,7 @@ class Membership
                     }
                     break;
                 case 'id_currency':
-                    if (empty($value)) {
+                    if (empty(trim($value,'^\r\n\t\f\v  '))) {
                         e(lang('missing_currency'));
                         return false;
                     }

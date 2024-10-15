@@ -20,7 +20,7 @@ if (!empty($_POST['id_membership'])) {
     }
 }
 
-$membership = Membership::getInstance()->getOne(['id_membership' => $_REQUEST['id_membership'] ?? 0]);
+$membership = Membership::getInstance()->getOne(['id_membership' => $_REQUEST['id_membership'] ?: 0]);
 assign('membership', $membership);
 assign('frequencies', Membership::getInstance()->getFrequencies());
 assign('currencies', Membership::getInstance()->getAllCurrency());
