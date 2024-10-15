@@ -186,7 +186,7 @@
 <script>
     var need_membership = '{if $need_to_active_membership }yes{/if}';
     $(function () {
-        if (need_membership == 'yes' && document.location.href.replace(document.location.origin, '') != '/edit_account.php?mode=subscriptions') {
+        if (need_membership == 'yes' && document.location.href.replace(document.location.origin, '') != '/edit_account.php?mode=membership') {
             document.location = document.location.origin + '/edit_account.php?mode=membership'
         }
         $(".cbsearchtype a").on({

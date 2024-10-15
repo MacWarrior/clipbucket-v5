@@ -62,6 +62,7 @@ switch ($mode) {
     case 'add':
         if (isset($_POST['add_new_level'])) {
             $array = $_POST;
+
             if (userquery::getInstance()->add_user_level($array)) {
                 redirect_to('user_levels.php?added=true');
             }

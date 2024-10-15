@@ -432,5 +432,6 @@ class MWIP extends \Migration
             'fr'=>'Statut',
             'en'=>'Status'
         ]);
+
     }
 }

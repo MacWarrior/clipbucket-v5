@@ -34,7 +34,7 @@ if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_
 uploaderDetails();
 isSectionEnabled(PARENT_PAGE, true);
 $need_to_active_membership = false;
-if (config('enable_membership') == 'yes') {
+if (config('enable_membership') == 'yes' && !empty(user_id())) {
 
     $memberships = Membership::getInstance()->getAll([
         'user_level_id' => User::getInstance()->getCurrentUserUserLevelID(),
