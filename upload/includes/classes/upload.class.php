@@ -563,7 +563,7 @@ class Upload
             $default = $_POST;
         }
 
-        $broadcast = $default['broadcast'] ?? 'public';
+        $broadcast = $default['broadcast'] ?? (config('enable_public_video_page') == 'yes' ? 'logged':'public');
 
         //Checking weather to enabled or disable password field
         $video_pass_disable = 'disabled="disabled" ';

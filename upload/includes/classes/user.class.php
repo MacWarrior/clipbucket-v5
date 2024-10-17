@@ -456,6 +456,10 @@ class User
     {
         return $this->user_data['userid'] ?? false;
     }
+    public function getCurrentUserUserLevelID()
+    {
+        return $this->user_data['level'] ?? false;
+    }
 
     /**
      * @throws Exception
@@ -592,13 +596,31 @@ class User
      */
     public function getLastStorageUseByUser($userid): int
     {
-        $sql = 'SELECT storage_used
-                FROM ' . tbl('users_storage_histo') . '
-                WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
+        $sql = 'SELECT storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
                     SELECT MAX(datetime)
                     FROM ' . tbl('users_storage_histo') . '
                     WHERE id_user = ' . mysql_clean($userid) . '
-                )';
+                ) ';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            return 0;
+        }
+        return $results[0]['storage_used'];
+    }
+
+    /**
+     * @param int|string $userid
+     * @param string $date_start
+     * @param string $date_end
+     * @return int
+     * @throws Exception
+     */
+    public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
+    {
+        $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' 
+        WHERE id_user = ' . mysql_clean($userid) . ' 
+        AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' 
+        GROUP BY id_user ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return 0;
@@ -2380,7 +2402,11 @@ class userquery extends CBCategory
             $value_array[] = $iid;
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access] ? $array[$access] : 'no';
+                $value_array[] = $array[$access] ?: 'no';
+            }
+            if (!array_key_exists('plugins_perms', $fields_array)) {
+                $fields_array[] = 'plugins_perms';
+                $value_array[] = '';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
             return true;
@@ -3369,6 +3395,9 @@ class userquery extends CBCategory
         }
 
         if( config('channelsSection') == 'yes' ){
+            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
+        }
+        if( config('enable_membership') == 'yes' ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 

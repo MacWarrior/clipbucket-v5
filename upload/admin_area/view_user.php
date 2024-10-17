@@ -17,6 +17,10 @@ if ($uid != $userquery->get_anonymous_user()) {
 if (empty($udetails)) {
     redirect_to('/members.php?user_not_found=1');
 }
+assign('results', Membership::getInstance()->getAllHistoMembershipForUser([
+    'userid'     => $udetails['userid'],
+    'order'      => 'date_start DESC'
+]));
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
