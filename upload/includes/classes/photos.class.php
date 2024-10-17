@@ -200,6 +200,7 @@ class Photo
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_show_unlisted = $params['show_unlisted'] ?? false;
+        $param_orphan = $params['orphan'] ?? false;
 
         $conditions = [];
         if( $param_photo_id ){
@@ -289,7 +290,11 @@ class Photo
         if( $param_collection_id ){
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
-            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
+        }
+
+        if( $param_orphan ){
+            $conditions[] = $collection_items_table . '.ci_id IS NULL';
         }
 
         if( $param_group ){

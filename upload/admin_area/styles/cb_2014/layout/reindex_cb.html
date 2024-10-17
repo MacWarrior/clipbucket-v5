@@ -5,7 +5,7 @@
 </h2>
 </div>
 <p class="alert alert-info">
-    Here you can re-index your videos, users or groups statistics. From below select which thing you want to re-index.
+    Here you can re-index your videos and users statistics. From below select which thing you want to re-index.
 </p>
 
 <div class="form-group">
@@ -27,11 +27,6 @@
         <li>
             <a data-toggle="tab" href="#rusers">
                 Reindex Users
-            </a>
-        </li>
-        <li>
-            <a data-toggle="tab" href="#rgroups">
-                Reindex Groups
             </a>
         </li>
         <li>
@@ -94,21 +89,6 @@
                     <input type="hidden" name="loop_size" value="" id="loop_start_user" />
                     <input type="submit" name="index_usrs" id="index_usrs" value="Reindex" class="btn btn-primary btn-xs btn-danger"
                            onclick="$('#loop_start_user').val($('#the_loop_size').val())"/>
-                </form>
-            </div>
-        </div>
-        <div id="rgroups" class="tab-pane">
-            <div class="form-group">
-                <label for="index_gps">
-                    Reindex Groups<br>
-                    <small>
-                        This will reindex all groups , update total members, total videos , total topics
-                    </small>
-                </label>
-                <form name="reindex_groups" method="get">
-                    <input type="hidden" name="loop_size" value="" id="loop_start_gp" />
-                    <input type="submit" name="index_gps" id="index_gps" value="Reindex" class="btn btn-primary btn-xs btn-danger"
-                           onclick="$('#loop_start_gp').val($('#the_loop_size').val())"/>
                 </form>
             </div>
         </div>
