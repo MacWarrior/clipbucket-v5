@@ -47,9 +47,17 @@ RewriteRule ^videos/(.*)/(.*)/(.*)/(.*)/(.*) videos.php?cat=$1&sort=$3&time=$4&p
 RewriteRule ^videos/([0-9]+) videos.php?page=$1 [L]
 RewriteRule ^videos/?$ videos.php?%{QUERY_STRING} [L]
 RewriteRule ^video/(.*)/(.*) watch_video.php?v=$1&%{QUERY_STRING} [L]
+
+RewriteRule ^videos_public/(.*)/(.*)/(.*)/(.*)/(.*) videos_public.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
+RewriteRule ^videos_public/([0-9]+) videos_public.php?page=$1 [L]
+RewriteRule ^videos_public/?$ videos_public.php?%{QUERY_STRING} [L]
+RewriteRule ^video_public/(.*)/(.*) watch_video.php?v=$1&%{QUERY_STRING} [L]
 #Alternate watch video links
 RewriteRule ^(.*)\_v([0-9]+) watch_video.php?v=$2&%{QUERY_STRING} [L]
 RewriteRule ^video/([0-9]+)_(.*) watch_video.php?v=$1&%{QUERY_STRING} [L]
+
+RewriteRule ^video_public\-(.*)\_v([0-9]+) watch_public_video.php?v=$2&%{QUERY_STRING} [L]
+RewriteRule ^video_public/([0-9]+)_(.*) watch_public_video.php?v=$1&%{QUERY_STRING} [L]
 
 
 #

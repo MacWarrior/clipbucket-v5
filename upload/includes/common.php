@@ -359,7 +359,7 @@ $Smarty->register_function('get_all_video_files', 'get_all_video_files_smarty');
 $Smarty->register_function('input_value', 'input_value');
 $Smarty->register_function('userid', 'user_id');
 $Smarty->register_function('show_player', 'show_player');
-$Smarty->register_function('link', 'cblink');
+$Smarty->register_function('cblink', 'cblink');
 $Smarty->register_function('show_share_form', 'show_share_form');
 $Smarty->register_function('show_flag_form', 'show_flag_form');
 $Smarty->register_function('show_playlist_form', 'show_playlist_form');

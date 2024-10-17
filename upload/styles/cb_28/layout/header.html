@@ -89,7 +89,7 @@
                         <div class="col btn-holder user_menu text-right">
                             {if count($types_list) > 0}
                                 <div class="search">
-                                    <form class="search-form" action="{link name='search_result'}">
+                                    <form class="search-form" action="{cblink name='search_result'}">
                                         <div class="cbsearchtype">
                                             <div class="search-drop">
                                                 <button id="searchTypes" tabindex="-1" data-toggle="dropdown" class="btn btn-default dropdown-toggle search-drop-btn" type="button">
@@ -116,13 +116,13 @@
                                 {if user_id()}
                                     {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options())) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
                                         <li class="dropdown upload_link">
-                                            <a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
+                                            <a href="{cblink name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
                                                 {if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
-                                                    <li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
+                                                    <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
                                                 {/if}
                                                 {if has_access('allow_photo_upload',true,true) && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
-                                                    <li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
+                                                    <li class="up_img"><a href="{cblink name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
                                                 {/if}
                                                 {ANCHOR place="inside_upload"}
                                             </ul>
@@ -138,15 +138,15 @@
                                             {if has_access('admin_access')}
                                                 <li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
                                             {/if}
-                                            <li><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
+                                            <li><a href="{cblink name='my_account'}">{lang code="my_account"}</a></li>
                                             {if isSectionEnabled('videos')}
-                                                <li><a href="{link name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
+                                                <li><a href="{cblink name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('photos')}
-                                                <li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
+                                                <li class="hidden-xs"><a href="{cblink name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('collections')}
-                                                <li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
+                                                <li class="hidden-xs"><a href="{cblink name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('playlists')}
                                                 <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
@@ -156,18 +156,18 @@
                                             {/if}
                                             {ANCHOR place="inside_user_menu"}
                                             <li class="divider"></li>
-                                            <li><a href="{link name='logout'}">{lang code="logout"}</a></li>
+                                            <li><a href="{cblink name='logout'}">{lang code="logout"}</a></li>
                                         </ul>
                                     </li>
                                 {else}
 
                                     {if config('allow_registeration')}
                                         <li class="navbar-sm-login-links">
-                                            <a class="btn btn-default btn-newacc" href="{link name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
+                                            <a class="btn btn-default btn-newacc" href="{cblink name='signup'}"><span class="big">{lang code='create_new_account'}</span><span class="little" style="display:none;">{lang code='signup'}</span></a>
                                         </li>
                                     {/if}
                                     <li class="navbar-sm-login-links">
-                                        <a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
+                                        <a class="btn btn-default btn-login" href="{cblink name='signup'}?mode=login">{lang code='login'}</a>
                                     </li>
 
                                 {/if}

@@ -34,6 +34,7 @@ if (config('enable_public_video_page') == 'yes') {
     }
 }
 assign('is_public_page', $params['public'] ?? false);
+assign('type_link', 'videos' . (!empty($params['public']) ? '_public' : ''));
 
 $videos = Video::getInstance()->getAll($params);
 assign('videos', $videos);

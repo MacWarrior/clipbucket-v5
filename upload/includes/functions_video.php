@@ -398,23 +398,23 @@ function video_link($vdetails, $type = null, $is_public = false): string
 
         switch (config('seo_vido_url')) {
             default:
-                $link = BASEURL . '/video/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video' . ($is_public ? '_public' : '') . '/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 1:
-                $link = BASEURL . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
+                $link = BASEURL . '/' . ($is_public ? 'video_public-' : '') .  SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
                 break;
             case 2:
-                $link = BASEURL . '/video/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video' . ($is_public ? '_public' : '') . '/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 3:
-                $link = BASEURL . '/video/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video' . ($is_public ? '_public' : '') . '/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
         }
     } else {
         if ($vdetails['playlist_id']) {
             $plist = '&play_list=' . $vdetails['playlist_id'];
         }
-        $link = BASEURL . '/watch'.($is_public ? '_public':'').'_video.php?v=' . $vdetails['videokey'] . $plist;
+        $link = BASEURL . '/watch' . ($is_public ? '_public' : '') . '_video.php?v=' . $vdetails['videokey'] . $plist;
     }
     if (!$type || $type == 'link') {
         return $link;

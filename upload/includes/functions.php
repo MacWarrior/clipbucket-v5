@@ -2230,6 +2230,7 @@ function sort_link($sort, $mode, $type): string
     switch ($type) {
         case 'video':
         case 'videos':
+        case 'videos_public':
         case 'v':
             if (!isset($_GET['cat'])) {
                 $_GET['cat'] = 'all';
@@ -2259,10 +2260,10 @@ function sort_link($sort, $mode, $type): string
                 $time = $_GET['time'];
             }
 
-            if (SEO == 'yes') {
-                return '/videos/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page'];
-            }
-            return '/videos.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
+        if (SEO == 'yes') {
+            return ('/videos' . (stripos($type, 'public') !== false ? '_public' : '') . '/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page']);
+        }
+        return ('/videos' . (stripos($type, 'public') !== false ? '_public' : '') . '.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name']);
 
         case 'channels':
         case 'channel':

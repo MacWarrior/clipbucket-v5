@@ -26,7 +26,7 @@ $cbLinks = [
     'user_videos'        => ['user_videos.php?user=', 'user_videos.php?user='],
     'user_playlists'     => ['user_videos.php?mode=playlists&user='],
     'videos'             => ['videos.php', 'videos/'],
-    'public_videos'      => ['public_videos.php', 'public_videos/'],
+    'videos_public'      => ['videos_public.php', 'videos_public/'],
     'messages'           => ['private_message.php', 'private_message.php'],
     'edit_account'       => ['edit_account.php', 'edit_account.php']
 ];
