@@ -359,10 +359,21 @@ server {
         rewrite ^/video/([0-9]+)_(.*) /watch_video.php?v=$1&$query_string last;
     }
 
+    location /video_public/ {
+        rewrite ^/video_public/(.*)/(.*) /watch_public_video.php?v=$1&$query_string last;
+        rewrite ^/video_public/([0-9]+)_(.*) /watch_public_video.php?v=$1&$query_string last;
+    }
+
     location /videos/ {
         rewrite ^/videos/(.*)/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
         rewrite ^/videos/([0-9]+) /videos.php?page=$1 last;
         rewrite ^/videos/?$ /videos.php?$query_string last;
+    }
+
+    location /videos_public/ {
+        rewrite ^/videos_public/(.*)/(.*)/(.*)/(.*)/(.*) /videos_public.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
+        rewrite ^/videos_public/([0-9]+) /videos_public.php?page=$1 last;
+        rewrite ^/videos_public/?$ /videos_public.php?$query_string last;
     }
 
     location /channels/ {

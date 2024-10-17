@@ -332,10 +332,21 @@ echo 			rewrite ^^/video/(.*)/(.*) /watch_video.php?v=$1^&$query_string last;>> 
 echo 			rewrite ^^/video/([0-9]+)_(.*) /watch_video.php?v=$1^&$query_string last;>> %NGINX_CONF%
 echo 		}>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
+echo 		location /video_public/ {>> %NGINX_CONF%
+echo 			rewrite ^^/video_public/(.*)/(.*) /watch_public_video.php?v=$1^&$query_string last;>> %NGINX_CONF%
+echo 			rewrite ^^/video_public/([0-9]+)_(.*) /watch_public_video.php?v=$1^&$query_string last;>> %NGINX_CONF%
+echo 		}>> %NGINX_CONF%
+echo. >> %NGINX_CONF%
 echo 		location /videos/ {>> %NGINX_CONF%
 echo 			rewrite ^^/videos/(.*)/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1^&sort=$3^&time=$4^&page=$5^&seo_cat_name=$2 last;>> %NGINX_CONF%
 echo 			rewrite ^^/videos/([0-9]+) /videos.php?page=$1 last;>> %NGINX_CONF%
 echo 			rewrite ^^/videos/?$ /videos.php?$query_string last;>> %NGINX_CONF%
+echo 		}>> %NGINX_CONF%
+echo. >> %NGINX_CONF%
+echo 		location /videos_public/ {>> %NGINX_CONF%
+echo 			rewrite ^^/videos_public/(.*)/(.*)/(.*)/(.*)/(.*) /videos_public.php?cat=$1^&sort=$3^&time=$4^&page=$5^&seo_cat_name=$2 last;>> %NGINX_CONF%
+echo 			rewrite ^^/videos_public/([0-9]+) /videos_public.php?page=$1 last;>> %NGINX_CONF%
+echo 			rewrite ^^/videos_public/?$ /videos_public.php?$query_string last;>> %NGINX_CONF%
 echo 		}>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		location /channels/ {>> %NGINX_CONF%
