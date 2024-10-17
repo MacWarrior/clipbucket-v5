@@ -1500,6 +1500,10 @@ body.vjs-pip-window .video-js {
   line-height: 3em;
 }
 
+.vjs-normalise-time-controls:not(.vjs-live) .vjs-time-control {
+  display: flex;
+}
+
 .video-js .vjs-play-control {
   cursor: pointer;
 }
@@ -1558,6 +1562,14 @@ video::-webkit-media-text-track-display {
   width: 80% !important;
 }
 
+@supports not (inset: 10px) {
+  .video-js .vjs-text-track-display > div {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
 .video-js .vjs-picture-in-picture-control {
   cursor: pointer;
   flex: none;

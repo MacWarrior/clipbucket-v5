@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.17.2 <http://videojs.com/>
+ * Video.js 8.19.1 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 })(this, (function () { 'use strict';
 
-  var version$5 = "8.17.2";
+  var version$5 = "8.19.1";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array
@@ -1169,7 +1169,7 @@
   /**
    * The callback definition for toggleClass.
    *
-   * @callback module:dom~PredicateCallback
+   * @callback PredicateCallback
    * @param    {Element} element
    *           The DOM element of the Component.
    *
@@ -1178,8 +1178,9 @@
    *
    * @return   {boolean|undefined}
    *           If `true` is returned, the `classToToggle` will be added to the
-   *           `element`. If `false`, the `classToToggle` will be removed from
-   *           the `element`. If `undefined`, the callback will be ignored.
+   *           `element`, but not removed. If `false`, the `classToToggle` will be removed from
+   *           the `element`, but not added. If `undefined`, the callback will be ignored.
+   *
    */
 
   /**
@@ -1192,7 +1193,7 @@
    * @param  {string} classToToggle
    *         The class that should be toggled.
    *
-   * @param  {boolean|module:dom~PredicateCallback} [predicate]
+   * @param  {boolean|PredicateCallback} [predicate]
    *         See the return value for {@link module:dom~PredicateCallback}
    *
    * @return {Element}
@@ -2984,7 +2985,12 @@
       }
       [type, listener] = args;
     } else {
-      [target, type, listener] = args;
+      // This was `[target, type, listener] = args;` but this block needs more than
+      // one statement to produce minified output compatible with Chrome 53.
+      // See https://github.com/videojs/video.js/pull/8810
+      target = args[0];
+      type = args[1];
+      listener = args[2];
     }
     validateTarget(target, self, fnName);
     validateEventType(type, self, fnName);
@@ -3613,7 +3619,6 @@
      * @param {Function} fn
      *        The function to call with `EventTarget`s
      */
-    on(type, fn) {}
 
     /**
      * Removes an `event listener` for a specific event from an instance of `EventTarget`.
@@ -3626,7 +3631,6 @@
      * @param {Function} [fn]
      *        The function to remove. If not specified, all listeners managed by Video.js will be removed.
      */
-    off(type, fn) {}
 
     /**
      * This function will add an `event listener` that gets triggered only once. After the
@@ -3639,7 +3643,6 @@
      * @param {Function} fn
      *        The function to be called once for each event name.
      */
-    one(type, fn) {}
 
     /**
      * This function will add an `event listener` that gets triggered only once and is
@@ -3653,7 +3656,6 @@
      * @param {Function} fn
      *        The function to be called once for each event name.
      */
-    any(type, fn) {}
 
     /**
      * This function causes an event to happen. This will then cause any `event listeners`
@@ -3674,7 +3676,6 @@
      * @param {Object} [hash]
      *        Optionally extra argument to pass through to an event listener
      */
-    trigger(event, hash) {}
 
     /**
      * Dispose of the `Component` and all child components.
@@ -4386,10 +4387,10 @@
      * - `classToToggle` gets removed when {@link Component#hasClass} would return true.
      *
      * @param  {string} classToToggle
-     *         The class to add or remove based on (@link Component#hasClass}
+     *         The class to add or remove. Passed to DOMTokenList's toggle()
      *
-     * @param  {boolean|Dom~predicate} [predicate]
-     *         An {@link Dom~predicate} function or a boolean
+     * @param  {boolean|Dom.PredicateCallback} [predicate]
+     *         A boolean or function that returns a boolean. Passed to DOMTokenList's toggle().
      */
     toggleClass(classToToggle, predicate) {
       toggleClass(this.el_, classToToggle, predicate);
@@ -5096,7 +5097,7 @@
      */
     requestNamedAnimationFrame(name, fn) {
       if (this.namedRafs_.has(name)) {
-        return;
+        this.cancelNamedAnimationFrame(name);
       }
       this.clearTimersOnDispose_();
       fn = bind_(this, fn);
@@ -5900,18 +5901,6 @@
    */
   MediaError.prototype.MEDIA_ERR_ENCRYPTED = 5;
 
-  var tuple = SafeParseTuple;
-  function SafeParseTuple(obj, reviver) {
-    var json;
-    var error = null;
-    try {
-      json = JSON.parse(obj, reviver);
-    } catch (err) {
-      error = err;
-    }
-    return [error, json];
-  }
-
   /**
    * Returns whether an object is `Promise`-like (i.e. has a `then` method).
    *
@@ -6388,6 +6377,14 @@
       if (closeButton) {
         parentEl.appendChild(closeButton.el_);
       }
+
+      /**
+       * Fired after `ModalDialog` is re-filled with content & close button is appended.
+       *
+       * @event ModalDialog#aftermodalfill
+       * @type {Event}
+       */
+      this.trigger('aftermodalfill');
     }
 
     /**
@@ -12398,6 +12395,26 @@
       this.player_.on('focusin', this.handlePlayerFocus_.bind(this));
       this.player_.on('focusout', this.handlePlayerBlur_.bind(this));
       this.isListening_ = true;
+      if (this.player_.errorDisplay) {
+        this.player_.errorDisplay.on('aftermodalfill', () => {
+          this.updateFocusableComponents();
+          if (this.focusableComponents.length) {
+            // The modal has focusable components:
+
+            if (this.focusableComponents.length > 1) {
+              // The modal has close button + some additional buttons.
+              // Focusing first additional button:
+
+              this.focusableComponents[1].focus();
+            } else {
+              // The modal has only close button,
+              // Focusing it:
+
+              this.focusableComponents[0].focus();
+            }
+          }
+        });
+      }
     }
 
     /**
@@ -12434,7 +12451,7 @@
         actualEvent.preventDefault();
         const action = SpatialNavKeyCodes.getEventName(actualEvent);
         this.performMediaAction_(action);
-      } else if (SpatialNavKeyCodes.isEventKey(actualEvent, 'Back') && event.target && event.target.closeable()) {
+      } else if (SpatialNavKeyCodes.isEventKey(actualEvent, 'Back') && event.target && typeof event.target.closeable === 'function' && event.target.closeable()) {
         actualEvent.preventDefault();
         event.target.close();
       }
@@ -12526,7 +12543,7 @@
         }
       }
       if (!event.currentTarget.contains(event.relatedTarget) && !isChildrenOfPlayer || !nextFocusedElement) {
-        if (currentComponent.name() === 'CloseButton') {
+        if (currentComponent && currentComponent.name() === 'CloseButton') {
           this.refocusComponent();
         } else {
           this.pause();
@@ -12596,6 +12613,58 @@
             focusableComponents.push(value);
           }
         }
+
+        // TODO - Refactor the following logic after refactor of videojs-errors elements to be components is done.
+        if (value.name_ === 'ErrorDisplay' && value.opened_) {
+          const buttonContainer = value.el_.querySelector('.vjs-errors-ok-button-container');
+          if (buttonContainer) {
+            const modalButtons = buttonContainer.querySelectorAll('button');
+            modalButtons.forEach((element, index) => {
+              // Add elements as objects to be handled by the spatial navigation
+              focusableComponents.push({
+                name: () => {
+                  return 'ModalButton' + (index + 1);
+                },
+                el: () => element,
+                getPositions: () => {
+                  const rect = element.getBoundingClientRect();
+
+                  // Creating objects that mirror DOMRectReadOnly for boundingClientRect and center
+                  const boundingClientRect = {
+                    x: rect.x,
+                    y: rect.y,
+                    width: rect.width,
+                    height: rect.height,
+                    top: rect.top,
+                    right: rect.right,
+                    bottom: rect.bottom,
+                    left: rect.left
+                  };
+
+                  // Calculating the center position
+                  const center = {
+                    x: rect.left + rect.width / 2,
+                    y: rect.top + rect.height / 2,
+                    width: 0,
+                    height: 0,
+                    top: rect.top + rect.height / 2,
+                    right: rect.left + rect.width / 2,
+                    bottom: rect.top + rect.height / 2,
+                    left: rect.left + rect.width / 2
+                  };
+                  return {
+                    boundingClientRect,
+                    center
+                  };
+                },
+                // Asume that the following are always focusable
+                getIsAvailableToBeFocused: () => true,
+                getIsFocusable: el => true,
+                focus: () => element.focus()
+              });
+            });
+          }
+        }
       });
       this.focusableComponents = focusableComponents;
       return this.focusableComponents;
@@ -12631,7 +12700,10 @@
         }
         return null;
       }
-      return searchForSuitableChild(component.el());
+      if (component.el()) {
+        return searchForSuitableChild(component.el());
+      }
+      return null;
     }
 
     /**
@@ -12790,7 +12862,7 @@
      */
     refocusComponent() {
       if (this.lastFocusedComponent_) {
-        // If use is not active, set it to active.
+        // If user is not active, set it to active.
         if (!this.player_.userActive()) {
           this.player_.userActive(true);
         }
@@ -12817,6 +12889,9 @@
      * @param {Component} component - The component to be focused.
      */
     focus(component) {
+      if (typeof component !== 'object') {
+        return;
+      }
       if (component.getIsAvailableToBeFocused(component.el())) {
         component.focus();
       } else if (this.findSuitableDOMChild(component)) {
@@ -13642,6 +13717,45 @@
           this.setAttribute('aria-live', 'assertive');
         }
         this.updateForTrack(descriptionsTrack);
+      }
+      if (!window.CSS.supports('inset', '10px')) {
+        const textTrackDisplay = this.el_;
+        const vjsTextTrackCues = textTrackDisplay.querySelectorAll('.vjs-text-track-cue');
+        const controlBarHeight = this.player_.controlBar.el_.getBoundingClientRect().height;
+        const playerHeight = this.player_.el_.getBoundingClientRect().height;
+
+        // Clear inline style before getting actual height of textTrackDisplay
+        textTrackDisplay.style = '';
+
+        // textrack style updates, this styles are required to be inline
+        tryUpdateStyle(textTrackDisplay, 'position', 'relative');
+        tryUpdateStyle(textTrackDisplay, 'height', playerHeight - controlBarHeight + 'px');
+        tryUpdateStyle(textTrackDisplay, 'top', 'unset');
+        if (IS_SMART_TV) {
+          tryUpdateStyle(textTrackDisplay, 'bottom', playerHeight + 'px');
+        } else {
+          tryUpdateStyle(textTrackDisplay, 'bottom', '0px');
+        }
+
+        // vjsTextTrackCue style updates
+        if (vjsTextTrackCues.length > 0) {
+          vjsTextTrackCues.forEach(vjsTextTrackCue => {
+            // verify if inset styles are inline
+            if (vjsTextTrackCue.style.inset) {
+              const insetStyles = vjsTextTrackCue.style.inset.split(' ');
+
+              // expected value is always 3
+              if (insetStyles.length === 3) {
+                Object.assign(vjsTextTrackCue.style, {
+                  top: insetStyles[0],
+                  right: insetStyles[1],
+                  bottom: insetStyles[2],
+                  left: 'unset'
+                });
+              }
+            }
+          });
+        }
       }
     }
 
@@ -20672,11 +20786,11 @@
       this.addChild(trackSettingsControls);
     }
     bindFunctionsToSelectsAndButtons() {
-      this.on(this.$('.vjs-done-button'), 'click', () => {
+      this.on(this.$('.vjs-done-button'), ['click', 'tap'], () => {
         this.saveSettings();
         this.close();
       });
-      this.on(this.$('.vjs-default-button'), 'click', () => {
+      this.on(this.$('.vjs-default-button'), ['click', 'tap'], () => {
         this.setDefaults();
         this.updateDisplay();
       });
@@ -22486,6 +22600,59 @@
 
       // Setting src through `src` instead of `setSrc` will be deprecated
       this.setSrc(src);
+    }
+
+    /**
+     * Add a <source> element to the <video> element.
+     *
+     * @param {string} srcUrl
+     *        The URL of the video source.
+     *
+     * @param {string} [mimeType]
+     *        The MIME type of the video source. Optional but recommended.
+     *
+     * @return {boolean}
+     *         Returns true if the source element was successfully added, false otherwise.
+     */
+    addSourceElement(srcUrl, mimeType) {
+      if (!srcUrl) {
+        log$1.error('Invalid source URL.');
+        return false;
+      }
+      const sourceAttributes = {
+        src: srcUrl
+      };
+      if (mimeType) {
+        sourceAttributes.type = mimeType;
+      }
+      const sourceElement = createEl('source', {}, sourceAttributes);
+      this.el_.appendChild(sourceElement);
+      return true;
+    }
+
+    /**
+     * Remove a <source> element from the <video> element by its URL.
+     *
+     * @param {string} srcUrl
+     *        The URL of the source to remove.
+     *
+     * @return {boolean}
+     *         Returns true if the source element was successfully removed, false otherwise.
+     */
+    removeSourceElement(srcUrl) {
+      if (!srcUrl) {
+        log$1.error('Source URL is required to remove the source element.');
+        return false;
+      }
+      const sourceElements = this.el_.querySelectorAll('source');
+      for (const sourceElement of sourceElements) {
+        if (sourceElement.src === srcUrl) {
+          this.el_.removeChild(sourceElement);
+          return true;
+        }
+      }
+      log$1.warn(`No matching source element found with src: ${srcUrl}`);
+      return false;
     }
 
     /**
@@ -25512,7 +25679,8 @@
     }
 
     /**
-     * Handle a double-click on the media element to enter/exit fullscreen
+     * Handle a double-click on the media element to enter/exit fullscreen,
+     * or exit documentPictureInPicture mode
      *
      * @param {Event} event
      *        the event that caused this function to trigger
@@ -25539,6 +25707,12 @@
         if (this.options_ === undefined || this.options_.userActions === undefined || this.options_.userActions.doubleClick === undefined || this.options_.userActions.doubleClick !== false) {
           if (this.options_ !== undefined && this.options_.userActions !== undefined && typeof this.options_.userActions.doubleClick === 'function') {
             this.options_.userActions.doubleClick.call(this, event);
+          } else if (this.isInPictureInPicture() && !document.pictureInPictureElement) {
+            // Checking the presence of `window.documentPictureInPicture.window` complicates
+            // tests, checking `document.pictureInPictureElement` also works. It wouldn't
+            // be null in regular picture in picture.
+            // Exit picture in picture mode. This gesture can't trigger pip on the main window.
+            this.exitPictureInPicture();
           } else if (this.isFullscreen()) {
             this.exitFullscreen();
           } else {
@@ -27112,6 +27286,41 @@
     }
 
     /**
+     * Add a <source> element to the <video> element.
+     *
+     * @param {string} srcUrl
+     *        The URL of the video source.
+     *
+     * @param {string} [mimeType]
+     *        The MIME type of the video source. Optional but recommended.
+     *
+     * @return {boolean}
+     *         Returns true if the source element was successfully added, false otherwise.
+     */
+    addSourceElement(srcUrl, mimeType) {
+      if (!this.tech_) {
+        return false;
+      }
+      return this.tech_.addSourceElement(srcUrl, mimeType);
+    }
+
+    /**
+     * Remove a <source> element from the <video> element by its URL.
+     *
+     * @param {string} srcUrl
+     *        The URL of the source to remove.
+     *
+     * @return {boolean}
+     *         Returns true if the source element was successfully removed, false otherwise.
+     */
+    removeSourceElement(srcUrl) {
+      if (!this.tech_) {
+        return false;
+      }
+      return this.tech_.removeSourceElement(srcUrl);
+    }
+
+    /**
      * Begin loading the src data.
      */
     load() {
@@ -28533,12 +28742,12 @@
       // Check if data-setup attr exists.
       if (dataSetup !== null) {
         // Parse options JSON
-        // If empty string, make it a parsable json object.
-        const [err, data] = tuple(dataSetup || '{}');
-        if (err) {
-          log$1.error(err);
+        try {
+          // If empty string, make it a parsable json object.
+          Object.assign(tagOptions, JSON.parse(dataSetup || '{}'));
+        } catch (e) {
+          log$1.error('data-setup', e);
         }
-        Object.assign(tagOptions, data);
       }
       Object.assign(baseOptions, tagOptions);
 
@@ -28620,6 +28829,34 @@
       */
       this.trigger('playbackrateschange');
     }
+
+    /**
+     * Reports whether or not a player has a plugin available.
+     *
+     * This does not report whether or not the plugin has ever been initialized
+     * on this player. For that, [usingPlugin]{@link Player#usingPlugin}.
+     *
+     * @method hasPlugin
+     * @param  {string}  name
+     *         The name of a plugin.
+     *
+     * @return {boolean}
+     *         Whether or not this player has the requested plugin available.
+     */
+
+    /**
+     * Reports whether or not a player is using a plugin by name.
+     *
+     * For basic plugins, this only reports whether the plugin has _ever_ been
+     * initialized on this player.
+     *
+     * @method Player#usingPlugin
+     * @param  {string} name
+     *         The name of a plugin.
+     *
+     * @return {boolean}
+     *         Whether or not this player is using the requested plugin.
+     */
   }
 
   /**
@@ -28794,34 +29031,6 @@
    *
    * @event Player#volumechange
    * @type {Event}
-   */
-
-  /**
-   * Reports whether or not a player has a plugin available.
-   *
-   * This does not report whether or not the plugin has ever been initialized
-   * on this player. For that, [usingPlugin]{@link Player#usingPlugin}.
-   *
-   * @method Player#hasPlugin
-   * @param  {string}  name
-   *         The name of a plugin.
-   *
-   * @return {boolean}
-   *         Whether or not this player has the requested plugin available.
-   */
-
-  /**
-   * Reports whether or not a player is using a plugin by name.
-   *
-   * For basic plugins, this only reports whether the plugin has _ever_ been
-   * initialized on this player.
-   *
-   * @method Player#usingPlugin
-   * @param  {string} name
-   *         The name of a plugin.
-   *
-   * @return {boolean}
-   *         Whether or not this player is using the requested plugin.
    */
 
   Component$1.registerComponent('Player', Player);
@@ -30218,159 +30427,7 @@
     });
   });
 
-  var urlToolkit = createCommonjsModule(function (module, exports) {
-    // see https://tools.ietf.org/html/rfc1808
-
-    (function (root) {
-      var URL_REGEX = /^(?=((?:[a-zA-Z0-9+\-.]+:)?))\1(?=((?:\/\/[^\/?#]*)?))\2(?=((?:(?:[^?#\/]*\/)*[^;?#\/]*)?))\3((?:;[^?#]*)?)(\?[^#]*)?(#[^]*)?$/;
-      var FIRST_SEGMENT_REGEX = /^(?=([^\/?#]*))\1([^]*)$/;
-      var SLASH_DOT_REGEX = /(?:\/|^)\.(?=\/)/g;
-      var SLASH_DOT_DOT_REGEX = /(?:\/|^)\.\.\/(?!\.\.\/)[^\/]*(?=\/)/g;
-      var URLToolkit = {
-        // If opts.alwaysNormalize is true then the path will always be normalized even when it starts with / or //
-        // E.g
-        // With opts.alwaysNormalize = false (default, spec compliant)
-        // http://a.com/b/cd + /e/f/../g => http://a.com/e/f/../g
-        // With opts.alwaysNormalize = true (not spec compliant)
-        // http://a.com/b/cd + /e/f/../g => http://a.com/e/g
-        buildAbsoluteURL: function (baseURL, relativeURL, opts) {
-          opts = opts || {};
-          // remove any remaining space and CRLF
-          baseURL = baseURL.trim();
-          relativeURL = relativeURL.trim();
-          if (!relativeURL) {
-            // 2a) If the embedded URL is entirely empty, it inherits the
-            // entire base URL (i.e., is set equal to the base URL)
-            // and we are done.
-            if (!opts.alwaysNormalize) {
-              return baseURL;
-            }
-            var basePartsForNormalise = URLToolkit.parseURL(baseURL);
-            if (!basePartsForNormalise) {
-              throw new Error('Error trying to parse base URL.');
-            }
-            basePartsForNormalise.path = URLToolkit.normalizePath(basePartsForNormalise.path);
-            return URLToolkit.buildURLFromParts(basePartsForNormalise);
-          }
-          var relativeParts = URLToolkit.parseURL(relativeURL);
-          if (!relativeParts) {
-            throw new Error('Error trying to parse relative URL.');
-          }
-          if (relativeParts.scheme) {
-            // 2b) If the embedded URL starts with a scheme name, it is
-            // interpreted as an absolute URL and we are done.
-            if (!opts.alwaysNormalize) {
-              return relativeURL;
-            }
-            relativeParts.path = URLToolkit.normalizePath(relativeParts.path);
-            return URLToolkit.buildURLFromParts(relativeParts);
-          }
-          var baseParts = URLToolkit.parseURL(baseURL);
-          if (!baseParts) {
-            throw new Error('Error trying to parse base URL.');
-          }
-          if (!baseParts.netLoc && baseParts.path && baseParts.path[0] !== '/') {
-            // If netLoc missing and path doesn't start with '/', assume everthing before the first '/' is the netLoc
-            // This causes 'example.com/a' to be handled as '//example.com/a' instead of '/example.com/a'
-            var pathParts = FIRST_SEGMENT_REGEX.exec(baseParts.path);
-            baseParts.netLoc = pathParts[1];
-            baseParts.path = pathParts[2];
-          }
-          if (baseParts.netLoc && !baseParts.path) {
-            baseParts.path = '/';
-          }
-          var builtParts = {
-            // 2c) Otherwise, the embedded URL inherits the scheme of
-            // the base URL.
-            scheme: baseParts.scheme,
-            netLoc: relativeParts.netLoc,
-            path: null,
-            params: relativeParts.params,
-            query: relativeParts.query,
-            fragment: relativeParts.fragment
-          };
-          if (!relativeParts.netLoc) {
-            // 3) If the embedded URL's <net_loc> is non-empty, we skip to
-            // Step 7.  Otherwise, the embedded URL inherits the <net_loc>
-            // (if any) of the base URL.
-            builtParts.netLoc = baseParts.netLoc;
-            // 4) If the embedded URL path is preceded by a slash "/", the
-            // path is not relative and we skip to Step 7.
-            if (relativeParts.path[0] !== '/') {
-              if (!relativeParts.path) {
-                // 5) If the embedded URL path is empty (and not preceded by a
-                // slash), then the embedded URL inherits the base URL path
-                builtParts.path = baseParts.path;
-                // 5a) if the embedded URL's <params> is non-empty, we skip to
-                // step 7; otherwise, it inherits the <params> of the base
-                // URL (if any) and
-                if (!relativeParts.params) {
-                  builtParts.params = baseParts.params;
-                  // 5b) if the embedded URL's <query> is non-empty, we skip to
-                  // step 7; otherwise, it inherits the <query> of the base
-                  // URL (if any) and we skip to step 7.
-                  if (!relativeParts.query) {
-                    builtParts.query = baseParts.query;
-                  }
-                }
-              } else {
-                // 6) The last segment of the base URL's path (anything
-                // following the rightmost slash "/", or the entire path if no
-                // slash is present) is removed and the embedded URL's path is
-                // appended in its place.
-                var baseURLPath = baseParts.path;
-                var newPath = baseURLPath.substring(0, baseURLPath.lastIndexOf('/') + 1) + relativeParts.path;
-                builtParts.path = URLToolkit.normalizePath(newPath);
-              }
-            }
-          }
-          if (builtParts.path === null) {
-            builtParts.path = opts.alwaysNormalize ? URLToolkit.normalizePath(relativeParts.path) : relativeParts.path;
-          }
-          return URLToolkit.buildURLFromParts(builtParts);
-        },
-        parseURL: function (url) {
-          var parts = URL_REGEX.exec(url);
-          if (!parts) {
-            return null;
-          }
-          return {
-            scheme: parts[1] || '',
-            netLoc: parts[2] || '',
-            path: parts[3] || '',
-            params: parts[4] || '',
-            query: parts[5] || '',
-            fragment: parts[6] || ''
-          };
-        },
-        normalizePath: function (path) {
-          // The following operations are
-          // then applied, in order, to the new path:
-          // 6a) All occurrences of "./", where "." is a complete path
-          // segment, are removed.
-          // 6b) If the path ends with "." as a complete path segment,
-          // that "." is removed.
-          path = path.split('').reverse().join('').replace(SLASH_DOT_REGEX, '');
-          // 6c) All occurrences of "<segment>/../", where <segment> is a
-          // complete path segment not equal to "..", are removed.
-          // Removal of these path segments is performed iteratively,
-          // removing the leftmost matching pattern on each iteration,
-          // until no matching pattern remains.
-          // 6d) If the path ends with "<segment>/..", where <segment> is a
-          // complete path segment not equal to "..", that
-          // "<segment>/.." is removed.
-          while (path.length !== (path = path.replace(SLASH_DOT_DOT_REGEX, '')).length) {}
-          return path.split('').reverse().join('');
-        },
-        buildURLFromParts: function (parts) {
-          return parts.scheme + parts.netLoc + parts.path + parts.params + parts.query + parts.fragment;
-        }
-      };
-      module.exports = URLToolkit;
-    })();
-  });
-
-  var DEFAULT_LOCATION = 'http://example.com';
+  var DEFAULT_LOCATION = 'https://example.com';
   var resolveUrl$1 = function resolveUrl(baseUrl, relativeUrl) {
     // return early if we don't need to resolve
     if (/^[a-z]+:/i.test(relativeUrl)) {
@@ -30379,33 +30436,23 @@
 
     if (/^data:/.test(baseUrl)) {
       baseUrl = window.location && window.location.href || '';
-    } // IE11 supports URL but not the URL constructor
-    // feature detect the behavior we want
-
-    var nativeURL = typeof window.URL === 'function';
+    }
     var protocolLess = /^\/\//.test(baseUrl); // remove location if window.location isn't available (i.e. we're in node)
     // and if baseUrl isn't an absolute url
 
     var removeLocation = !window.location && !/\/\//i.test(baseUrl); // if the base URL is relative then combine with the current location
 
-    if (nativeURL) {
-      baseUrl = new window.URL(baseUrl, window.location || DEFAULT_LOCATION);
-    } else if (!/\/\//i.test(baseUrl)) {
-      baseUrl = urlToolkit.buildAbsoluteURL(window.location && window.location.href || '', baseUrl);
-    }
-    if (nativeURL) {
-      var newUrl = new URL(relativeUrl, baseUrl); // if we're a protocol-less url, remove the protocol
-      // and if we're location-less, remove the location
-      // otherwise, return the url unmodified
+    baseUrl = new window.URL(baseUrl, window.location || DEFAULT_LOCATION);
+    var newUrl = new URL(relativeUrl, baseUrl); // if we're a protocol-less url, remove the protocol
+    // and if we're location-less, remove the location
+    // otherwise, return the url unmodified
 
-      if (removeLocation) {
-        return newUrl.href.slice(DEFAULT_LOCATION.length);
-      } else if (protocolLess) {
-        return newUrl.href.slice(newUrl.protocol.length);
-      }
-      return newUrl.href;
+    if (removeLocation) {
+      return newUrl.href.slice(DEFAULT_LOCATION.length);
+    } else if (protocolLess) {
+      return newUrl.href.slice(newUrl.protocol.length);
     }
-    return urlToolkit.buildAbsoluteURL(baseUrl, relativeUrl);
+    return newUrl.href;
   };
 
   /**
@@ -30511,11 +30558,11 @@
     return Stream;
   }();
 
-  var atob$1 = function atob(s) {
+  var atob = function atob(s) {
     return window.atob ? window.atob(s) : Buffer.from(s, 'base64').toString('binary');
   };
-  function decodeB64ToUint8Array$1(b64Text) {
-    var decodedString = atob$1(b64Text);
+  function decodeB64ToUint8Array(b64Text) {
+    var decodedString = atob(b64Text);
     var array = new Uint8Array(decodedString.length);
     for (var i = 0; i < decodedString.length; i++) {
       array[i] = decodedString.charCodeAt(i);
@@ -30523,7 +30570,7 @@
     return array;
   }
 
-  /*! @name m3u8-parser @version 7.1.0 @license Apache-2.0 */
+  /*! @name m3u8-parser @version 7.2.0 @license Apache-2.0 */
 
   /**
    * @file m3u8/line-stream.js
@@ -30612,6 +30659,26 @@
       attr[1] = attr[1].replace(/^\s+|\s+$/g, '');
       attr[1] = attr[1].replace(/^['"](.*)['"]$/g, '$1');
       result[attr[0]] = attr[1];
+    }
+    return result;
+  };
+  /**
+   * Converts a string into a resolution object
+   *
+   * @param {string} resolution a string such as 3840x2160
+   *
+   * @return {Object} An object representing the resolution
+   *
+   */
+
+  const parseResolution = resolution => {
+    const split = resolution.split('x');
+    const result = {};
+    if (split[0]) {
+      result.width = parseInt(split[0], 10);
+    }
+    if (split[1]) {
+      result.height = parseInt(split[1], 10);
     }
     return result;
   };
@@ -30827,15 +30894,7 @@
           if (match[1]) {
             event.attributes = parseAttributes$1(match[1]);
             if (event.attributes.RESOLUTION) {
-              const split = event.attributes.RESOLUTION.split('x');
-              const resolution = {};
-              if (split[0]) {
-                resolution.width = parseInt(split[0], 10);
-              }
-              if (split[1]) {
-                resolution.height = parseInt(split[1], 10);
-              }
-              event.attributes.RESOLUTION = resolution;
+              event.attributes.RESOLUTION = parseResolution(event.attributes.RESOLUTION);
             }
             if (event.attributes.BANDWIDTH) {
               event.attributes.BANDWIDTH = parseInt(event.attributes.BANDWIDTH, 10);
@@ -30957,7 +31016,7 @@
           this.trigger('data', event);
           return;
         }
-        match = /^#EXT-X-CUE-IN:(.*)?$/.exec(newLine);
+        match = /^#EXT-X-CUE-IN:?(.*)?$/.exec(newLine);
         if (match) {
           event = {
             type: 'tag',
@@ -31132,11 +31191,54 @@
           });
           return;
         }
+        match = /^#EXT-X-I-FRAMES-ONLY/.exec(newLine);
+        if (match) {
+          this.trigger('data', {
+            type: 'tag',
+            tagType: 'i-frames-only'
+          });
+          return;
+        }
         match = /^#EXT-X-CONTENT-STEERING:(.*)$/.exec(newLine);
         if (match) {
           event = {
             type: 'tag',
             tagType: 'content-steering'
+          };
+          event.attributes = parseAttributes$1(match[1]);
+          this.trigger('data', event);
+          return;
+        }
+        match = /^#EXT-X-I-FRAME-STREAM-INF:(.*)$/.exec(newLine);
+        if (match) {
+          event = {
+            type: 'tag',
+            tagType: 'i-frame-playlist'
+          };
+          event.attributes = parseAttributes$1(match[1]);
+          if (event.attributes.URI) {
+            event.uri = event.attributes.URI;
+          }
+          if (event.attributes.BANDWIDTH) {
+            event.attributes.BANDWIDTH = parseInt(event.attributes.BANDWIDTH, 10);
+          }
+          if (event.attributes.RESOLUTION) {
+            event.attributes.RESOLUTION = parseResolution(event.attributes.RESOLUTION);
+          }
+          if (event.attributes['AVERAGE-BANDWIDTH']) {
+            event.attributes['AVERAGE-BANDWIDTH'] = parseInt(event.attributes['AVERAGE-BANDWIDTH'], 10);
+          }
+          if (event.attributes['FRAME-RATE']) {
+            event.attributes['FRAME-RATE'] = parseFloat(event.attributes['FRAME-RATE']);
+          }
+          this.trigger('data', event);
+          return;
+        }
+        match = /^#EXT-X-DEFINE:(.*)$/.exec(newLine);
+        if (match) {
+          event = {
+            type: 'tag',
+            tagType: 'define'
           };
           event.attributes = parseAttributes$1(match[1]);
           this.trigger('data', event);
@@ -31274,15 +31376,20 @@
    * requires some property of the manifest object to be defaulted.
    *
    * @class Parser
+   * @param {Object} [opts] Options for the constructor, needed for substitutions
+   * @param {string} [opts.uri] URL to check for query params
+   * @param {Object} [opts.mainDefinitions] Definitions on main playlist that can be imported
    * @extends Stream
    */
 
   class Parser extends Stream {
-    constructor() {
+    constructor(opts = {}) {
       super();
       this.lineStream = new LineStream();
       this.parseStream = new ParseStream();
       this.lineStream.pipe(this.parseStream);
+      this.mainDefinitions = opts.mainDefinitions || {};
+      this.params = new URL(opts.uri, 'https://a.com').searchParams;
       this.lastProgramDateTime = null;
       /* eslint-disable consistent-this */
 
@@ -31313,6 +31420,7 @@
         allowCache: true,
         discontinuityStarts: [],
         dateRanges: [],
+        iFramePlaylists: [],
         segments: []
       }; // keep track of the last seen segment's byte range end, as segments are not required
       // to provide the offset, in which case it defaults to the next byte after the
@@ -31342,7 +31450,22 @@
 
       this.parseStream.on('data', function (entry) {
         let mediaGroup;
-        let rendition;
+        let rendition; // Replace variables in uris and attributes as defined in #EXT-X-DEFINE tags
+
+        if (self.manifest.definitions) {
+          for (const def in self.manifest.definitions) {
+            if (entry.uri) {
+              entry.uri = entry.uri.replace(`{$${def}}`, self.manifest.definitions[def]);
+            }
+            if (entry.attributes) {
+              for (const attr in entry.attributes) {
+                if (typeof entry.attributes[attr] === 'string') {
+                  entry.attributes[attr] = entry.attributes[attr].replace(`{$${def}}`, self.manifest.definitions[def]);
+                }
+              }
+            }
+          }
+        }
         ({
           tag() {
             // switch based on the tag type
@@ -31487,7 +31610,7 @@
                       keyId: entry.attributes.KEYID.substring(2)
                     },
                     // decode the base64-encoded PSSH box
-                    pssh: decodeB64ToUint8Array$1(entry.attributes.URI.split(',')[1])
+                    pssh: decodeB64ToUint8Array(entry.attributes.URI.split(',')[1])
                   };
                   return;
                 }
@@ -31817,9 +31940,106 @@
               'independent-segments'() {
                 this.manifest.independentSegments = true;
               },
+              'i-frames-only'() {
+                this.manifest.iFramesOnly = true;
+                this.requiredCompatibilityversion(this.manifest.version, 4);
+              },
               'content-steering'() {
                 this.manifest.contentSteering = camelCaseKeys(entry.attributes);
                 this.warnOnMissingAttributes_('#EXT-X-CONTENT-STEERING', entry.attributes, ['SERVER-URI']);
+              },
+              /** @this {Parser} */
+              define() {
+                this.manifest.definitions = this.manifest.definitions || {};
+                const addDef = (n, v) => {
+                  if (n in this.manifest.definitions) {
+                    // An EXT-X-DEFINE tag MUST NOT specify the same Variable Name as any other
+                    // EXT-X-DEFINE tag in the same Playlist.  Parsers that encounter duplicate
+                    // Variable Name declarations MUST fail to parse the Playlist.
+                    this.trigger('error', {
+                      message: `EXT-X-DEFINE: Duplicate name ${n}`
+                    });
+                    return;
+                  }
+                  this.manifest.definitions[n] = v;
+                };
+                if ('QUERYPARAM' in entry.attributes) {
+                  if ('NAME' in entry.attributes || 'IMPORT' in entry.attributes) {
+                    // An EXT-X-DEFINE tag MUST contain either a NAME, an IMPORT, or a
+                    // QUERYPARAM attribute, but only one of the three.  Otherwise, the
+                    // client MUST fail to parse the Playlist.
+                    this.trigger('error', {
+                      message: 'EXT-X-DEFINE: Invalid attributes'
+                    });
+                    return;
+                  }
+                  const val = this.params.get(entry.attributes.QUERYPARAM);
+                  if (!val) {
+                    // If the QUERYPARAM attribute value does not match any query parameter in
+                    // the URI or the matching parameter has no associated value, the parser
+                    // MUST fail to parse the Playlist.  If more than one parameter matches,
+                    // any of the associated values MAY be used.
+                    this.trigger('error', {
+                      message: `EXT-X-DEFINE: No query param ${entry.attributes.QUERYPARAM}`
+                    });
+                    return;
+                  }
+                  addDef(entry.attributes.QUERYPARAM, decodeURIComponent(val));
+                  return;
+                }
+                if ('NAME' in entry.attributes) {
+                  if ('IMPORT' in entry.attributes) {
+                    // An EXT-X-DEFINE tag MUST contain either a NAME, an IMPORT, or a
+                    // QUERYPARAM attribute, but only one of the three.  Otherwise, the
+                    // client MUST fail to parse the Playlist.
+                    this.trigger('error', {
+                      message: 'EXT-X-DEFINE: Invalid attributes'
+                    });
+                    return;
+                  }
+                  if (!('VALUE' in entry.attributes) || typeof entry.attributes.VALUE !== 'string') {
+                    // This attribute is REQUIRED if the EXT-X-DEFINE tag has a NAME attribute.
+                    // The quoted-string MAY be empty.
+                    this.trigger('error', {
+                      message: `EXT-X-DEFINE: No value for ${entry.attributes.NAME}`
+                    });
+                    return;
+                  }
+                  addDef(entry.attributes.NAME, entry.attributes.VALUE);
+                  return;
+                }
+                if ('IMPORT' in entry.attributes) {
+                  if (!this.mainDefinitions[entry.attributes.IMPORT]) {
+                    // Covers two conditions, as mainDefinitions will always be empty on main
+                    //
+                    // EXT-X-DEFINE tags containing the IMPORT attribute MUST NOT occur in
+                    // Multivariant Playlists; they are only allowed in Media Playlists.
+                    //
+                    // If the IMPORT attribute value does not match any Variable Name in the
+                    // Multivariant Playlist, or if the Media Playlist loaded from a
+                    // Multivariant Playlist, the parser MUST fail the Playlist.
+                    this.trigger('error', {
+                      message: `EXT-X-DEFINE: No value ${entry.attributes.IMPORT} to import, or IMPORT used on main playlist`
+                    });
+                    return;
+                  }
+                  addDef(entry.attributes.IMPORT, this.mainDefinitions[entry.attributes.IMPORT]);
+                  return;
+                } // An EXT-X-DEFINE tag MUST contain either a NAME, an IMPORT, or a QUERYPARAM
+                // attribute, but only one of the three.  Otherwise, the client MUST fail to
+                // parse the Playlist.
+
+                this.trigger('error', {
+                  message: 'EXT-X-DEFINE: No attribute'
+                });
+              },
+              'i-frame-playlist'() {
+                this.manifest.iFramePlaylists.push({
+                  attributes: entry.attributes,
+                  uri: entry.uri,
+                  timeline: currentTimeline
+                });
+                this.warnOnMissingAttributes_('#EXT-X-I-FRAME-STREAM-INF', entry.attributes, ['BANDWIDTH', 'URI']);
               }
             })[entry.tagType] || noop).call(self);
           },
@@ -31866,6 +32086,13 @@
           }
         })[entry.type].call(self);
       });
+    }
+    requiredCompatibilityversion(currentVersion, targetVersion) {
+      if (currentVersion < targetVersion || !currentVersion) {
+        this.trigger('warn', {
+          message: `manifest must be at least version ${targetVersion}`
+        });
+      }
     }
     warnOnMissingAttributes_(identifier, attributes, required) {
       const missing = [];
@@ -32104,11 +32331,25 @@
     }
     return type + "/" + container + ";codecs=\"" + codecString + "\"";
   };
-  var browserSupportsCodec = function browserSupportsCodec(codecString) {
+  /**
+   * Tests whether the codec is supported by MediaSource. Optionally also tests ManagedMediaSource.
+   *
+   * @param {string} codecString
+   *        Codec to test
+   * @param {boolean} [withMMS]
+   *        Whether to check if ManagedMediaSource supports it
+   * @return {boolean}
+   *          Codec is supported
+   */
+
+  var browserSupportsCodec = function browserSupportsCodec(codecString, withMMS) {
     if (codecString === void 0) {
       codecString = '';
     }
-    return window.MediaSource && window.MediaSource.isTypeSupported && window.MediaSource.isTypeSupported(getMimeForCodec(codecString)) || false;
+    if (withMMS === void 0) {
+      withMMS = false;
+    }
+    return window.MediaSource && window.MediaSource.isTypeSupported && window.MediaSource.isTypeSupported(getMimeForCodec(codecString)) || withMMS && window.ManagedMediaSource && window.ManagedMediaSource.isTypeSupported && window.ManagedMediaSource.isTypeSupported(getMimeForCodec(codecString)) || false;
   };
   var muxerSupportsCodec = function muxerSupportsCodec(codecString) {
     if (codecString === void 0) {
@@ -32362,18 +32603,6 @@
       }
     });
   };
-
-  var atob = function atob(s) {
-    return window.atob ? window.atob(s) : Buffer.from(s, 'base64').toString('binary');
-  };
-  function decodeB64ToUint8Array(b64Text) {
-    var decodedString = atob(b64Text);
-    var array = new Uint8Array(decodedString.length);
-    for (var i = 0; i < decodedString.length; i++) {
-      array[i] = decodedString.charCodeAt(i);
-    }
-    return array;
-  }
 
   /**
    * Ponyfill for `Array.prototype.find` which is only available in ES6 runtimes.
@@ -37498,7 +37727,7 @@
 
   var DOMParser = domParser.DOMParser;
 
-  /*! @name mpd-parser @version 1.3.0 @license Apache-2.0 */
+  /*! @name mpd-parser @version 1.3.1 @license Apache-2.0 */
   const isObject = obj => {
     return !!obj && typeof obj === 'object';
   };
@@ -38379,9 +38608,10 @@
   const organizeVttPlaylists = (playlists, sidxMapping = {}) => {
     return playlists.reduce((a, playlist) => {
       const label = playlist.attributes.label || playlist.attributes.lang || 'text';
+      const language = playlist.attributes.lang || 'und';
       if (!a[label]) {
         a[label] = {
-          language: label,
+          language,
           default: false,
           autoselect: false,
           playlists: [],
@@ -40665,7 +40895,7 @@
   };
   var clock_1 = clock.ONE_SECOND_IN_TS;
 
-  /*! @name @videojs/http-streaming @version 3.13.2 @license Apache-2.0 */
+  /*! @name @videojs/http-streaming @version 3.15.0 @license Apache-2.0 */
 
   /**
    * @file resolve-url.js - Handling how URLs are resolved and manipulated
@@ -44100,7 +44330,7 @@
 
   const removeOldMediaGroupLabels = (update, newMain) => {
     forEachMediaGroup(update, (properties, type, group, label) => {
-      if (!(label in newMain.mediaGroups[type][group])) {
+      if (!newMain.mediaGroups[type][group] || !(label in newMain.mediaGroups[type][group])) {
         delete update.mediaGroups[type][group][label];
       }
     });
@@ -56277,6 +56507,12 @@
     }
     return false;
   };
+  /**
+   * Fixes certain bad timeline scenarios by resetting the loader.
+   *
+   * @param {SegmentLoader} segmentLoader
+   */
+
   const fixBadTimelineChange = segmentLoader => {
     if (!segmentLoader) {
       return;
@@ -56284,6 +56520,51 @@
     segmentLoader.pause();
     segmentLoader.resetEverything();
     segmentLoader.load();
+  };
+  /**
+   * Check if the pending audio timeline change is behind the
+   * pending main timeline change.
+   *
+   * @param {SegmentLoader} segmentLoader
+   * @return {boolean}
+   */
+
+  const isAudioTimelineBehind = segmentLoader => {
+    const pendingAudioTimelineChange = segmentLoader.timelineChangeController_.pendingTimelineChange({
+      type: 'audio'
+    });
+    const pendingMainTimelineChange = segmentLoader.timelineChangeController_.pendingTimelineChange({
+      type: 'main'
+    });
+    const hasPendingTimelineChanges = pendingAudioTimelineChange && pendingMainTimelineChange;
+    return hasPendingTimelineChanges && pendingAudioTimelineChange.to < pendingMainTimelineChange.to;
+  };
+  /**
+   * A method to check if the player is waiting for a timeline change, and fixes
+   * certain scenarios where the timelines need to be updated.
+   *
+   * @param {SegmentLoader} segmentLoader
+   */
+
+  const checkAndFixTimelines = segmentLoader => {
+    const segmentInfo = segmentLoader.pendingSegment_;
+    if (!segmentInfo) {
+      return;
+    }
+    const waitingForTimelineChange = shouldWaitForTimelineChange({
+      timelineChangeController: segmentLoader.timelineChangeController_,
+      currentTimeline: segmentLoader.currentTimeline_,
+      segmentTimeline: segmentInfo.timeline,
+      loaderType: segmentLoader.loaderType_,
+      audioDisabled: segmentLoader.audioDisabled_
+    });
+    if (waitingForTimelineChange && shouldFixBadTimelineChanges(segmentLoader.timelineChangeController_)) {
+      if (isAudioTimelineBehind(segmentLoader)) {
+        segmentLoader.timelineChangeController_.trigger('audioTimelineBehind');
+        return;
+      }
+      fixBadTimelineChange(segmentLoader);
+    }
   };
   const mediaDuration = timingInfos => {
     let maxDuration = 0;
@@ -56526,6 +56807,8 @@
       this.sourceUpdater_.on('ready', () => {
         if (this.hasEnoughInfoToAppend_()) {
           this.processCallQueue_();
+        } else {
+          checkAndFixTimelines(this);
         }
       });
       this.sourceUpdater_.on('codecschange', metadata => {
@@ -56541,6 +56824,8 @@
         this.timelineChangeController_.on('pendingtimelinechange', () => {
           if (this.hasEnoughInfoToAppend_()) {
             this.processCallQueue_();
+          } else {
+            checkAndFixTimelines(this);
           }
         });
       } // The main loader only listens on pending timeline changes, but the audio loader,
@@ -56554,9 +56839,13 @@
           }, metadata));
           if (this.hasEnoughInfoToLoad_()) {
             this.processLoadQueue_();
+          } else {
+            checkAndFixTimelines(this);
           }
           if (this.hasEnoughInfoToAppend_()) {
             this.processCallQueue_();
+          } else {
+            checkAndFixTimelines(this);
           }
         });
       }
@@ -57629,6 +57918,8 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
 
       if (this.hasEnoughInfoToAppend_()) {
         this.processCallQueue_();
+      } else {
+        checkAndFixTimelines(this);
       }
     }
     handleTimingInfo_(simpleSegment, mediaType, timeType, time) {
@@ -57644,6 +57935,8 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
 
       if (this.hasEnoughInfoToAppend_()) {
         this.processCallQueue_();
+      } else {
+        checkAndFixTimelines(this);
       }
     }
     handleCaptions_(simpleSegment, captionData) {
@@ -57794,9 +58087,6 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
         loaderType: this.loaderType_,
         audioDisabled: this.audioDisabled_
       })) {
-        if (shouldFixBadTimelineChanges(this.timelineChangeController_)) {
-          fixBadTimelineChange(this);
-        }
         return false;
       }
       return true;
@@ -57847,9 +58137,6 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
         loaderType: this.loaderType_,
         audioDisabled: this.audioDisabled_
       })) {
-        if (shouldFixBadTimelineChanges(this.timelineChangeController_)) {
-          fixBadTimelineChange(this);
-        }
         return false;
       }
       return true;
@@ -57862,6 +58149,7 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
       // executed after the calls currently queued.
 
       if (this.callQueue_.length || !this.hasEnoughInfoToAppend_()) {
+        checkAndFixTimelines(this);
         this.callQueue_.push(this.handleData_.bind(this, simpleSegment, result));
         return;
       }
@@ -58219,6 +58507,7 @@ Fetch At Buffer: ${this.fetchAtBuffer_}
         }
       }
       if (!this.hasEnoughInfoToLoad_()) {
+        checkAndFixTimelines(this);
         this.loadQueue_.push(() => {
           // regenerate the audioAppendStart, timestampOffset, etc as they
           // may have changed since this function was added to the queue.
@@ -60168,7 +60457,7 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       const diff = mpegTsInSeconds - LOCAL + mappingObj.mapping;
       segmentInfo.cues.forEach(cue => {
         const duration = cue.endTime - cue.startTime;
-        const startTime = MPEGTS === 0 ? cue.startTime + diff : this.handleRollover_(cue.startTime + diff, mappingObj.time);
+        const startTime = this.handleRollover_(cue.startTime + diff, mappingObj.time);
         cue.startTime = Math.max(startTime, 0);
         cue.endTime = Math.max(startTime + duration, 0);
       });
@@ -61310,7 +61599,7 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
     function unpad(padded) {
       return padded.subarray(0, padded.byteLength - padded[padded.byteLength - 1]);
     }
-    /*! @name aes-decrypter @version 4.0.1 @license Apache-2.0 */
+    /*! @name aes-decrypter @version 4.0.2 @license Apache-2.0 */
 
     /**
      * @file aes.js
@@ -63193,7 +63482,8 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
         cacheEncryptionKeys,
         bufferBasedABR,
         leastPixelDiffSelector,
-        captionServices
+        captionServices,
+        experimentalUseMMS
       } = options;
       if (!src) {
         throw new Error('A non-empty playlist URL or JSON manifest string is required');
@@ -63227,14 +63517,25 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       };
       this.on('error', this.pauseLoading);
       this.mediaTypes_ = createMediaTypes();
-      this.mediaSource = new window.MediaSource();
+      if (experimentalUseMMS && window.ManagedMediaSource) {
+        // Airplay source not yet implemented. Remote playback must be disabled.
+        this.tech_.el_.disableRemotePlayback = true;
+        this.mediaSource = new window.ManagedMediaSource();
+        videojs.log('Using ManagedMediaSource');
+      } else if (window.MediaSource) {
+        this.mediaSource = new window.MediaSource();
+      }
       this.handleDurationChange_ = this.handleDurationChange_.bind(this);
       this.handleSourceOpen_ = this.handleSourceOpen_.bind(this);
       this.handleSourceEnded_ = this.handleSourceEnded_.bind(this);
+      this.load = this.load.bind(this);
+      this.pause = this.pause.bind(this);
       this.mediaSource.addEventListener('durationchange', this.handleDurationChange_); // load the media source into the player
 
       this.mediaSource.addEventListener('sourceopen', this.handleSourceOpen_);
-      this.mediaSource.addEventListener('sourceended', this.handleSourceEnded_); // we don't have to handle sourceclose since dispose will handle termination of
+      this.mediaSource.addEventListener('sourceended', this.handleSourceEnded_);
+      this.mediaSource.addEventListener('startstreaming', this.load);
+      this.mediaSource.addEventListener('endstreaming', this.pause); // we don't have to handle sourceclose since dispose will handle termination of
       // everything, and the MediaSource should not be detached without a proper disposal
 
       this.seekable_ = createTimeRanges();
@@ -63864,6 +64165,22 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       this.mainSegmentLoader_.on('ended', () => {
         this.logger_('main segment loader ended');
         this.onEndOfStream();
+      }); // There is the possibility of the video segment and the audio segment
+      // at a current time to be on different timelines. When this occurs, the player
+      // forwards playback to a point where these two segment types are back on the same
+      // timeline. This time will be just after the end of the audio segment that is on
+      // a previous timeline.
+
+      this.timelineChangeController_.on('audioTimelineBehind', () => {
+        const segmentInfo = this.audioSegmentLoader_.pendingSegment_;
+        if (!segmentInfo || !segmentInfo.segment || !segmentInfo.segment.syncInfo) {
+          return;
+        } // Update the current time to just after the faulty audio segment.
+        // This moves playback to a spot where both audio and video segments
+        // are on the same timeline.
+
+        const newTime = segmentInfo.segment.syncInfo.end + 0.01;
+        this.tech_.setCurrentTime(newTime);
       });
       this.mainSegmentLoader_.on('earlyabort', event => {
         // never try to early abort with the new ABR algorithm
@@ -63940,6 +64257,19 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       }
       if (this.mediaTypes_.SUBTITLES.activePlaylistLoader) {
         this.subtitleSegmentLoader_.load();
+      }
+    }
+    /**
+     * Call pause on our SegmentLoaders
+     */
+
+    pause() {
+      this.mainSegmentLoader_.pause();
+      if (this.mediaTypes_.AUDIO.activePlaylistLoader) {
+        this.audioSegmentLoader_.pause();
+      }
+      if (this.mediaTypes_.SUBTITLES.activePlaylistLoader) {
+        this.subtitleSegmentLoader_.pause();
       }
     }
     /**
@@ -66004,11 +66334,11 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
   const reloadSourceOnError = function (options) {
     initPlugin(this, options);
   };
-  var version$4 = "3.13.2";
+  var version$4 = "3.15.0";
   var version$3 = "7.0.3";
-  var version$2 = "1.3.0";
-  var version$1 = "7.1.0";
-  var version = "4.0.1";
+  var version$2 = "1.3.1";
+  var version$1 = "7.2.0";
+  var version = "4.0.2";
   const Vhs = {
     PlaylistLoader,
     Playlist,
@@ -66886,8 +67216,15 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
       if (!this.tech_.el()) {
         return;
       }
-      this.mediaSourceUrl_ = window.URL.createObjectURL(this.playlistController_.mediaSource);
-      this.tech_.src(this.mediaSourceUrl_);
+      this.mediaSourceUrl_ = window.URL.createObjectURL(this.playlistController_.mediaSource); // If we are playing HLS with MSE in Safari, add source elements for both the blob and manifest URLs.
+      // The latter will enable Airplay playback on receiver devices.
+
+      if ((videojs.browser.IS_ANY_SAFARI || videojs.browser.IS_IOS) && this.options_.overrideNative && this.options_.sourceType === 'hls' && typeof this.tech_.addSourceElement === 'function') {
+        this.tech_.addSourceElement(this.mediaSourceUrl_);
+        this.tech_.addSourceElement(this.source_.src);
+      } else {
+        this.tech_.src(this.mediaSourceUrl_);
+      }
     }
     createKeySessions_() {
       const audioPlaylistLoader = this.playlistController_.mediaTypes_.AUDIO.activePlaylistLoader;
@@ -67140,7 +67477,11 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
     name: 'videojs-http-streaming',
     VERSION: version$4,
     canHandleSource(srcObj, options = {}) {
-      const localOptions = merge(videojs.options, options);
+      const localOptions = merge(videojs.options, options); // If not opting to experimentalUseMMS, and playback is only supported with MediaSource, cannot handle source
+
+      if (!localOptions.vhs.experimentalUseMMS && !browserSupportsCodec('avc1.4d400d,mp4a.40.2', false)) {
+        return false;
+      }
       return VhsSourceHandler.canPlayType(srcObj.type, localOptions);
     },
     handleSource(source, tech, options = {}) {
@@ -67173,14 +67514,15 @@ ${segmentInfoString(segmentInfo)}`); // If there's an init segment associated wi
     }
   };
   /**
-   * Check to see if the native MediaSource object exists and supports
-   * an MP4 container with both H.264 video and AAC-LC audio.
+   * Check to see if either the native MediaSource or ManagedMediaSource
+   * objectx exist and support an MP4 container with both H.264 video
+   * and AAC-LC audio.
    *
    * @return {boolean} if  native media sources are supported
    */
 
   const supportsNativeMediaSources = () => {
-    return browserSupportsCodec('avc1.4d400d,mp4a.40.2');
+    return browserSupportsCodec('avc1.4d400d,mp4a.40.2', true);
   }; // register source handlers with the appropriate techs
 
   if (supportsNativeMediaSources()) {
