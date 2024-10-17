@@ -293,6 +293,7 @@ class Video
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
+        $param_public = $params['public'];
 
         $conditions = [];
         if( $param_videoid ){
@@ -315,6 +316,9 @@ class Video
         }
         if( $param_status ){
             $conditions[] = $this->getTableName() . '.status = \'' . mysql_clean($param_status) . '\'';
+        }
+        if ($param_public !== null) {
+            $conditions[] = $this->getTableName() . '.broadcast ' . ($param_public ? '=' : '!=') . ' \'public\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';

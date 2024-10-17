@@ -1334,4 +1334,7 @@ VALUES ('admin_setting'),
        ('current_membership'),
        ('membership_history'),
        ('never'),
-       ('status');
+       ('status'),
+       ('search_results_per_page'),
+       ('enable_public_video_page'),
+       ('enable_public_video_page_tips');

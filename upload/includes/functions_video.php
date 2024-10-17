@@ -338,7 +338,7 @@ function default_thumb(): string
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null): string
+function video_link($vdetails, $type = null, $is_public = false): string
 {
     #checking what kind of input we have
     if (is_array($vdetails)) {
@@ -373,7 +373,7 @@ function video_link($vdetails, $type = null): string
     if (!empty($vid)) {
         $vdetails = get_video_details($vid);
     }
-
+    $is_public = config('enable_public_video_page')=='yes' && has_access('allow_public_video_page', true,false) && $vdetails['broadcast'] == 'public';
     //calling for custom video link functions
     $functions = cb_get_functions('video_link');
     if ($functions) {
@@ -414,7 +414,7 @@ function video_link($vdetails, $type = null): string
         if ($vdetails['playlist_id']) {
             $plist = '&play_list=' . $vdetails['playlist_id'];
         }
-        $link = BASEURL . '/watch_video.php?v=' . $vdetails['videokey'] . $plist;
+        $link = BASEURL . '/watch'.($is_public ? '_public':'').'_video.php?v=' . $vdetails['videokey'] . $plist;
     }
     if (!$type || $type == 'link') {
         return $link;

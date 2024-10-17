@@ -69,11 +69,8 @@
                                             {if $menu.this|lower == 'home'}
                                                 {continue}
                                             {/if}
-                                            {if $menu.this == "home"}
-                                                {continue}
-                                            {/if}
-                                            {if $userquery->perm_check('view_'|cat:$menu.this, false, false, true)}
-                                                <li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
+                                            {if $userquery->perm_check($menu.permission, false, false, true)}
+                                                <li {if $menu.active}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
                                             {/if}
                                         {/if}
                                     {/foreach}

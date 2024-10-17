@@ -88,6 +88,11 @@
                         <h8>{lang|ucfirst code='hosting'}</h8>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#config_search">
+                        <h8>{lang|ucfirst code='search'}</h8>
+                    </a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="config_general" class="tab-pane active">
@@ -289,12 +294,6 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="search_list_per_page" title="Search results per page">Search results per page</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input class="form-control" name="search_list_per_page" id="search_list_per_page" value="{$row.search_list_per_page}" size="5"/>
-                                </div>
-                                <div class="col-md-4">
                                     <label class="nowrap" for="cached_pagin_time" title="Pagination caching time">Pagination caching time</label>
                                 </div>
                                 <div class="col-md-2 row-size no_padding">
@@ -385,7 +384,16 @@
                                             </div>
                                         </div>
                                         <hr/>
-
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="enable_public_video_page" title="{lang code='enable_public_video_page'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='enable_public_video_page_tips'}"/> {lang code='enable_public_video_page'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" id="enable_public_video_page" {if $row.enable_public_video_page=='yes'}checked{/if} name="enable_public_video_page" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="row">
@@ -2949,7 +2957,16 @@
                 </div>
             </div>
         </div>
-    </div>
+        <div id="config_search" class="tab-pane">
+            <div class="row">
+                <div class="col-md-4">
+                    <label class="nowrap" for="search_list_per_page" title="Search results per page">{lang('search_results_per_page')}</label>
+                </div>
+                <div class="col-md-2 row-size no_padding">
+                    <input class="form-control" name="search_list_per_page" id="search_list_per_page" value="{$row.search_list_per_page}" size="5"/>
+                </div>
+            </div>
+        </div>
     </div>
     <br/>
     <div style="text-align:center;">

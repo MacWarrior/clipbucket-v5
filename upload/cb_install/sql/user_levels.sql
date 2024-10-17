@@ -49,6 +49,5 @@ INSERT INTO `{tbl_prefix}user_permissions` (`permission_id`, `permission_type`, 
 (27, 3, 'Plugins moderation', 'plugins_moderation', 'Allow user to moderate plugins', 'yes'),
 (28, 3, 'Tool Box', 'tool_box', 'Allow users to access tool box', 'yes'),
 (29, 2, 'Allow create collection', 'allow_create_collection', 'Allow users to create collection', 'yes'),
-(30, 2, 'Allow create playlist', 'allow_create_playlist', 'Allow users to create playlist', 'yes');
-
-
+(30, 2, 'Allow create playlist', 'allow_create_playlist', 'Allow users to create playlist', 'yes'),
+(32, 1, 'Enable public video', 'allow_public_video_page', 'Allow user to view public videos', 'yes');

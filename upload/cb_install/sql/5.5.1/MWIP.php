@@ -169,11 +169,12 @@ class MWIP extends \Migration
             `language_key_title` VARCHAR(256)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
-
-        $sql = 'INSERT INTO `' . tbl('user_memberships_status') . '` (`language_key_title`) 
-        SELECT * FROM ( VALUES ROW(\'in_progress\'), ROW(\'completed\'), ROW(\'canceled\'), ROW(\'refunded\')) source_data
-        WHERE NOT EXISTS (SELECT * FROM `' . tbl('user_memberships_status') . '`)';
-        self::query($sql);
+        $sql = 'SELECT * FROM `' . tbl('user_memberships_status') . '`';
+        $results = \Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            $sql = 'INSERT INTO `' . tbl('user_memberships_status') . '` (`language_key_title`)  VALUES (\'in_progress\'), (\'completed\'), (\'canceled\'), (\'refunded\')';
+            self::query($sql);
+        }
 
         self::query('SET FOREIGN_KEY_CHECKS = 0;');
         $sql = 'DROP TABLE IF EXISTS `' . tbl('user_memberships') . '`';
@@ -433,5 +434,39 @@ class MWIP extends \Migration
             'en'=>'Status'
         ]);
 
+        self::generateTranslation('search_results_per_page', [
+            'fr'=>'Résultats de recherche par page',
+            'en'=>'Search results per page'
+        ]);
+
+        self::generateTranslation('enable_public_video_page', [
+            'fr'=>'Activer la page de vidéos publiques',
+            'en'=>'Enable public video page'
+        ]);
+        self::generateTranslation('enable_public_video_page_tips', [
+            'fr'=>'Sépare les vidéos publiques dans une page dédiée',
+            'en'=>'Separate public video to a dedicated page'
+        ]);
+
+        self::generateConfig('enable_public_video_page', 'no');
+        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . '  ADD COLUMN `allow_public_video_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'yes\'',
+            [
+                'table'  => 'user_levels_permissions'
+            ], [
+                'table'  => 'user_levels_permissions',
+                'column' => 'allow_public_video_page'
+            ]
+        );
+
+        $sql = 'INSERT INTO ' . tbl('user_permissions') . ' (permission_type, permission_name, permission_code, permission_desc, permission_default) 
+        SELECT 1, \'Enable public video\', \'allow_public_video_page\', \'Allow user to view public videos\', \'yes\' 
+        FROM dual 
+        WHERE NOT exists (SELECT * FROM '.tbl('user_permissions').' WHERE permission_code = \'allow_public_video_page\') ';
+        self::query($sql);
+
+        self::generateTranslation('public_videos', [
+            'fr'=>'Vidéos publiques',
+            'en'=>'Public videos'
+        ]);
     }
 }

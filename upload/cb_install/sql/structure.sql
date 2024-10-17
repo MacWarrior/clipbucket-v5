@@ -421,7 +421,8 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `allow_manage_user_level` enum('yes','no') NOT NULL DEFAULT 'no',
   `allow_create_collection` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `allow_public_video_page` enum('yes','no') NOT NULL DEFAULT 'yes'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_permissions` (
