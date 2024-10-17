@@ -124,6 +124,9 @@ switch ($mode) {
             , 'allow_embedding' => 'yes'
             , 'broadcast'       => 'public'
         ];
+        if (config('enable_public_video_page') == 'yes') {
+            $vidDetails['broadcast'] = 'logged';
+        }
 
         $vid = $Upload->submit_upload($vidDetails);
 
