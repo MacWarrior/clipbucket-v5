@@ -24,8 +24,7 @@ class CBreindex
         $arr = [];
 
         switch ($type) {
-            case 'user':
-            case 'u':
+            case 'users':
                 if ($params['video_count']) {
                     $video_count = Clipbucket_db::getInstance()->count(tbl($this->vtbl),
                         tbl($this->vtbl) . '.videoid',
@@ -59,9 +58,8 @@ class CBreindex
                 }
 
                 if ($params['collections_count']) {
-                    global $cbcollection;
-                    $details = ['user' => $params['user'], 'active' => 'yes', 'count_only' => true];
-                    $collection_count = $cbcollection->get_collections($details);
+                    $details = ['userid' => $params['user'], 'active' => 'yes', 'count' => true];
+                    $collection_count = Collection::getInstance()->getAll($details);
                     $arr[] = $collection_count;
                 }
 
@@ -76,8 +74,6 @@ class CBreindex
 
             default:
             case 'videos':
-            case 'vid':
-            case 'v':
                 if ($params['video_comments']) {
                     $comment_params = [];
                     $comment_params['count'] = true;
@@ -105,8 +101,6 @@ class CBreindex
                 return $arr;
 
             case 'photos':
-            case 'p':
-            case 'photo':
                 if ($params['favorite_count']) {
                     $fav_count = Clipbucket_db::getInstance()->count(tbl('favorites'), 'favorite_id', tbl('favorites.id') . ' = ' . $params['photo_id'] . ' AND ' . tbl('favorites.type') . ' = \'p\' ');
                     $arr[] = $fav_count;
@@ -123,8 +117,6 @@ class CBreindex
                 return $arr;
 
             case 'collections':
-            case 'collection':
-            case 'cl':
                 if ($params['favorite_count']) {
                     $fav_count = Clipbucket_db::getInstance()->count(tbl('favorites'), 'favorite_id', tbl('favorites.id') . ' = ' . $params['collection_id'] . ' AND ' . tbl('favorites.type') . ' = \'cl\' ');
                     $arr[] = $fav_count;
@@ -136,11 +128,6 @@ class CBreindex
                     $comment_params['type'] = 'cl';
                     $comment_params['type_id'] = $params['collection_id'];
                     $arr[] = Comments::getAll($comment_params);
-                }
-
-                if ($params['total_items']) {
-                    $item_count = Clipbucket_db::getInstance()->count(tbl('collection_items'), 'ci_id', tbl('collection_items.collection_id') . ' = ' . $params['collection_id']);
-                    $arr[] = $item_count;
                 }
 
                 return $arr;
@@ -155,27 +142,19 @@ class CBreindex
     function update_index($type, $params = null)
     {
         switch ($type) {
-            case 'user':
-            case 'u':
+            case 'users':
                 Clipbucket_db::getInstance()->update(tbl($this->utbl), $params['fields'], $params['values'], tbl($this->utbl) . '.userid = ' . $params['user']);
                 break;
 
             case 'videos':
-            case 'vid':
-            case 'v':
                 Clipbucket_db::getInstance()->update(tbl($this->vtbl), $params['fields'], $params['values'], tbl($this->vtbl) . '.videoid = ' . $params['video_id']);
                 break;
 
             case 'photos':
-            case 'photo':
-            case 'p':
-            case 'foto':
-            case 'piture':
                 Clipbucket_db::getInstance()->update(tbl('photos'), $params['fields'], $params['values'], tbl('photos.photo_id') . ' = ' . $params['photo_id']);
                 break;
 
-            case 'collection':
-            case 'cl':
+            case 'collections':
                 Clipbucket_db::getInstance()->update(tbl('collections'), $params['fields'], $params['values'], tbl('collections.collection_id') . ' = ' . $params['collection_id']);
                 break;
         }
@@ -249,7 +228,6 @@ class CBreindex
             case 'photos':
             case 'photo':
             case 'p':
-            case 'piture':
                 if (is_array($arr)) {
                     if (array_key_exists('favorite_count', $arr)) {
                         $fields[] = 'total_favorites';

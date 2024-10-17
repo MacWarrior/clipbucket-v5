@@ -590,7 +590,7 @@ function collection_actions(form,mode,objID,result_con,type,cid)
     $(result_con).html(loading);
     switch(mode) {
         case 'add_new_item':
-            $.post('actions/add_to_collection.php', {
+            $.post('/actions/add_to_collection.php', {
                 mode: mode,
                 cid: $('#'+form+' #collection').val(),
                 obj_id: objID,

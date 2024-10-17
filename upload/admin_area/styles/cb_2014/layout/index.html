@@ -263,19 +263,19 @@
 		"dataProvider": [
 			{
 				"category": "Users",
-				"column-1": '{get_users count_only=yes}'
+				"column-1": '{User::getInstance()->getAll(['count'=>'yes'])}'
 			},
 			{
 				"category": "Photos",
-				"column-1": '{get_photos count_only=yes}'
+				"column-1": '{Photo::getInstance()->getAll(['count'=>'yes'])}'
 			},
 			{
 				"category": "Videos",
-				"column-1": '{get_videos count_only=yes}'
+				"column-1": '{Video::getInstance()->getAll(['count'=>'yes'])}'
 			},
 			{
 				"category": "Collections",
-				"column-1": '{get_collections count_only=yes}'
+				"column-1": '{Collection::getInstance()->getAll(['count'=>'yes'])}'
 			},
 
 		]

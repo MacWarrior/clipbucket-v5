@@ -2077,20 +2077,6 @@ function get_country($code)
 }
 
 /**
- * function used to get collections
- * @param $param
- *
- * @return array|bool
- * @throws Exception
- * @uses : { class : $cbcollection } { function : get_collections }
- */
-function get_collections($param)
-{
-    global $cbcollection;
-    return $cbcollection->get_collections($param);
-}
-
-/**
  * function used to get users
  * @param $param
  *

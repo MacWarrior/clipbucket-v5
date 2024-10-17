@@ -196,6 +196,7 @@ class Collection
         $param_search = $params['search'] ?? false;
         $param_hide_empty_collection = $params['hide_empty_collection'];
         $param_featured = $params['featured'] ?? false;
+        $param_active = $params['active'] ?? false;
         $param_type = $params['type'] ?? false;
         $param_parents_only = $params['parents_only'] ?? false;
         $param_allow_children = !empty($params['allow_children']);
@@ -230,6 +231,9 @@ class Collection
         }
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
+        }
+        if( $param_active ){
+            $conditions[] = $this->getTableName() . '.active = \'yes\'';
         }
         if( $param_type ){
             $conditions[] = $this->getTableName() . '.type = \'' . mysql_clean($param_type) . '\'';
@@ -1076,230 +1080,6 @@ class Collections extends CBCategory
             return false;
         }
         return $this->get_collection($collection['collection_id_parent']);
-    }
-
-    /**
-     * Function used to get collections
-     *
-     * @param null $p
-     * @param bool $brace
-     *
-     * @return array|bool|void
-     * @throws Exception
-     */
-    function get_collections($p = null, $brace = false)
-    {
-        $limit = $p['limit'];
-        $order = $p['order'];
-        $cond = '';
-
-        if (!empty($p['category'])) {
-            $get_all = false;
-            if (!is_array($p['category'])) {
-                if (strtolower($p['category']) == 'all') {
-                    $get_all = true;
-                }
-            }
-
-            if (!$get_all) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-
-                $cond .= '(';
-                if (!is_array($p['category'])) {
-                    $cats = explode(',', $p['category']);
-                } else {
-                    $cats = $p['category'];
-                }
-                $count = 0;
-
-                foreach ($cats as $cat) {
-                    $count++;
-                    if ($count > 1) {
-                        $cond .= ' OR ';
-                    }
-                    $cond .= 'collections.category LIKE \'%#' . $cat . '#%\'';
-                }
-                $cond .= ')';
-            }
-        }
-
-        if ($p['date_span']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= Search::date_margin('collections.date_added', $p['date_span']);
-        }
-
-        if ($p['type']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.type = \'' . $p['type'] . '\'';
-        }
-
-        if ($p['user']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            if ($brace) {
-                $cond .= '(';
-            }
-            $cond .= 'collections.userid = \'' . $p['user'] . '\'';
-        }
-
-        if ($p['featured']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.featured = \'' . $p['featured'] . '\'';
-        }
-
-        if ($p['public_upload']) {
-            if ($cond != '') {
-                $cond .= ' OR ';
-            }
-
-            $cond .= 'collections.public_upload = \'' . $p['public_upload'] . '\'';
-            if ($brace) {
-                $cond .= ')';
-            }
-        }
-
-        if ($p['exclude']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.collection_id <> \'' . $p['exclude'] . '\'';
-        }
-
-        if (isset($p['cid'])) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.collection_id = \'' . $p['cid'] . '\'';
-        }
-
-        $count = 'COUNT( DISTINCT
-                CASE WHEN collections.type = \'photos\' THEN photos.photo_id ELSE video.videoid END
-            )';
-
-        $having = '';
-        if ($p['has_items']) {
-            $having = $count.' >= 1';
-            if ( isset($p['show_own']) && !empty(User::getInstance()->getCurrentUserID())) {
-                $having .= ' OR ( collections.userid = '.User::getInstance()->getCurrentUserID().')';
-            }
-        }
-
-        $title_tag = '';
-        if ($p['name']) {
-            $title_tag .= 'collections.collection_name LIKE \'%' . $p['name'] . '%\'';
-        }
-
-        if ($p['tags']) {
-            if (!empty($title_tag)) {
-                $title_tag .= ' OR ';
-            }
-            $title_tag .= 'T.name IN (\'' . $p['tags'] . '\') ' ;
-        }
-
-        $version = Update::getInstance()->getDBVersion();
-
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
-            if ($p['parents_only']) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-                $cond .= 'collections.collection_id_parent IS NULL';
-            }
-
-            if ($p['parent_id']) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-                $cond .= 'collections.collection_id_parent = ' . mysql_clean($p['parent_id']);
-            }
-        }
-
-        if ($title_tag != '') {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= '(' . $title_tag . ')';
-        }
-
-        $left_join_video_cond = '';
-        $left_join_photos_cond = '';
-        if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
-
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= Collection::getInstance()->getGenericConstraints();
-        }
-
-        $select_tag = '';
-        $join_tag = '';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS collection_tags';
-            $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON collections.collection_id = CT.id_collection 
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
-        }
-
-        $select_collection_parent = '';
-        $join_collection_parent = '';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
-            $select_collection_parent = ', CPARENT.collection_name AS collection_name_parent';
-            $join_collection_parent = ' LEFT JOIN ' . tbl('collections') . ' CPARENT ON collections.collection_id_parent = CPARENT.collection_id';
-        }
-
-        $from = cb_sql_table('collections') .
-            ' INNER JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
-            LEFT JOIN ' . tbl($this->items) . ' citem ON collections.collection_id = citem.collection_id
-            LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND citem.object_id = video.videoid' . $left_join_video_cond . '
-            LEFT JOIN ' . cb_sql_table('photos') . ' ON collections.type = \'photos\' AND citem.object_id = photos.photo_id' . $left_join_photos_cond
-            . $join_tag . $join_collection_parent;
-
-        if (!empty ($cond)) {
-            $cond .= ' GROUP BY collections.collection_id';
-        } else {
-            $cond = ' 1 GROUP BY collections.collection_id';
-        }
-
-        if (!empty($having)){
-            $cond .= ' HAVING '.$having;
-        }
-
-        if ($p['count_only']) {
-            return Clipbucket_db::getInstance()->count($from, 'collections.collection_id', $cond);
-        }
-
-        if (isset($p['count_only'])) {
-            $select = 'COUNT(collections.collection_id) AS total_collections';
-        } else {
-            $select = 'collections.*, users.username, '.$count.' AS total_objects' . $select_tag . $select_collection_parent;
-        }
-
-        $result = Clipbucket_db::getInstance()->select($from, $select, $cond, $limit, $order);
-
-        if (config('enable_sub_collection') == 'yes') {
-            foreach ($result as &$line) {
-                $line['total_objects'] = $this->get_total_object_sub_collection($line);
-            }
-        }
-
-        if ($p['assign']) {
-            assign($p['assign'], $result);
-        } else {
-            if (isset($p['count_only'])) {
-                return $result[0]['total_collections'];
-            }
-            return $result;
-        }
     }
 
     /**
