@@ -358,6 +358,13 @@ a:hover{
     background-color: var(--color-main-01);
     color: var(--color-main-02);
 }
+.forgot-block .side-box .btn-default,
+.signin-block .side-box .btn-default {
+    border-width: 2px;
+    border-style: solid;
+    background-color: var(--color-main-01);
+    color: var(--color-main-02)
+}
 
 /* Signup */
 .signup-block .user-form{
@@ -369,6 +376,12 @@ a:hover{
 .signup-block .form-control{
     background-color: var(--color-03);
     color: var(--color-02);
+}
+.signup-block .side-box .btn-default{
+    border-width: 2px;
+    border-style: solid;
+    background-color: var(--color-main-01);
+    color: var(--color-main-02)
 }
 
 /* Video Bloc */
