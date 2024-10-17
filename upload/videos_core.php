@@ -2,8 +2,11 @@
 require 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('view_videos', true);
-
+if (PARENT_PAGE == 'videos_public') {
+    userquery::getInstance()->perm_check('allow_public_video_page');
+} else {
+    userquery::getInstance()->perm_check('view_videos');
+}
 
 if( !isSectionEnabled('videos') ){
     redirect_to(BASEURL);
@@ -27,12 +30,15 @@ if( $child_ids ){
     $params['category'] = $child_ids;
 }
 if (config('enable_public_video_page') == 'yes') {
-    $params['public'] = false;
+    if (has_access('view_videos', true, false) && has_access('allow_public_video_page', true, false)) {
+        $params['public'] = false;
+    }
     //hide public videos, they are listed ind public video menu
     if (!empty($public)) {
         $params['public'] = true;
     }
 }
+
 assign('is_public_page', $params['public'] ?? false);
 assign('type_link', 'videos' . (!empty($params['public']) ? '_public' : ''));
 

@@ -2505,24 +2505,30 @@ class userquery extends CBCategory
      * @param INT $id level_id
      * @throws Exception
      */
-    function delete_user_level($id): bool
+    function delete_user_level(int $id): bool
     {
         $level_details = $this->get_level_details($id);
-        $de_level = $this->get_level_details(3);
+        // id 3 = Inactive User
+        $inactive_user_level = $this->get_level_details(3);
         if ($level_details) {
             //CHeck if leve is deleteable or not
             if ($level_details['user_level_is_default'] == 'no') {
                 Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
                 Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
-                e(lang('level_del_sucess', $de_level['user_level_name']));
 
-                Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], " level='$id'");
+                $users = Clipbucket_db::getInstance()->select(tbl('users'), '*', ' level=' . mysql_clean($id), '1');
+                if (!empty($users)) {
+                    e(lang('level_del_sucess', lang(strtolower(str_replace(' ', '_', $inactive_user_level['user_level_name'])))), 'm');
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($id));
+                } else {
+                    e(lang('level_del_sucess_no_user'), 'm');
+                }
                 return true;
             }
-
             e(lang('level_not_deleteable'));
             return false;
         }
+        return false;
     }
 
     /**

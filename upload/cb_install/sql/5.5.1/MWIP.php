@@ -449,7 +449,7 @@ class MWIP extends \Migration
         ]);
 
         self::generateConfig('enable_public_video_page', 'no');
-        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . '  ADD COLUMN `allow_public_video_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'yes\'',
+        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . '  ADD COLUMN `allow_public_video_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'no\'',
             [
                 'table'  => 'user_levels_permissions'
             ], [
@@ -459,7 +459,7 @@ class MWIP extends \Migration
         );
 
         $sql = 'INSERT INTO ' . tbl('user_permissions') . ' (permission_type, permission_name, permission_code, permission_desc, permission_default) 
-        SELECT 1, \'Enable public video\', \'allow_public_video_page\', \'Allow user to view public videos\', \'yes\' 
+        SELECT 1, \'Enable public video\', \'allow_public_video_page\', \'Allow user to view public videos\', \'no\' 
         FROM dual 
         WHERE NOT exists (SELECT * FROM '.tbl('user_permissions').' WHERE permission_code = \'allow_public_video_page\') ';
         self::query($sql);
@@ -467,6 +467,15 @@ class MWIP extends \Migration
         self::generateTranslation('public_videos', [
             'fr'=>'Vidéos publiques',
             'en'=>'Public videos'
+        ]);
+
+        self::generateTranslation('level_del_sucess_no_user', [
+            'fr'=>'Le niveau d\'utilisateur a été supprimé',
+            'en'=>'User level has been deleted'
+        ]);
+
+        self::generateTranslation('level_del_sucess', [
+            'fr'=>'Le niveau d\'utilisateur a bien été supprimé, tous les utilisateurs de ce niveau ont été transféré vers %s'
         ]);
     }
 }

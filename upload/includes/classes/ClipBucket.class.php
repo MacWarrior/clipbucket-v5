@@ -720,7 +720,7 @@ class ClipBucket
         $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => BASEURL, 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
 
         if( config('videosSection') == 'yes' ){
-            $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home', 'permission'=>'view_video'];
+            $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home', 'permission'=>'view_videos'];
             if (config('enable_public_video_page') == 'yes' && has_access('allow_public_video_page', true, false)) {
                 $this->head_menu[] = ['name' => lang('public_videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos_public']), 'this' => 'videos_public', 'section' => 'videos_public', 'permission'=>'allow_public_video_page'];
             }
