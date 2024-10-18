@@ -177,6 +177,9 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function updateTranslation(string $translation_key, array $translations)
     {
         $sql = 'SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = \'' . mysql_clean(strtolower($translation_key)) . '\' );';

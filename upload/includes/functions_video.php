@@ -338,7 +338,7 @@ function default_thumb(): string
  * @throws Exception
  * @internal param video $ARRAY details
  */
-function video_link($vdetails, $type = null): string
+function video_link($vdetails, $type = null, $is_public = false): string
 {
     #checking what kind of input we have
     if (is_array($vdetails)) {
@@ -373,7 +373,7 @@ function video_link($vdetails, $type = null): string
     if (!empty($vid)) {
         $vdetails = get_video_details($vid);
     }
-
+    $is_public = config('enable_public_video_page')=='yes' && has_access('allow_public_video_page', true,false) && $vdetails['broadcast'] == 'public';
     //calling for custom video link functions
     $functions = cb_get_functions('video_link');
     if ($functions) {
@@ -398,23 +398,23 @@ function video_link($vdetails, $type = null): string
 
         switch (config('seo_vido_url')) {
             default:
-                $link = BASEURL . '/video/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video' . ($is_public ? '_public' : '') . '/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 1:
-                $link = BASEURL . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
+                $link = BASEURL . '/' . ($is_public ? 'video_public-' : '') .  SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
                 break;
             case 2:
-                $link = BASEURL . '/video/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video' . ($is_public ? '_public' : '') . '/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 3:
-                $link = BASEURL . '/video/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = BASEURL . '/video' . ($is_public ? '_public' : '') . '/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
         }
     } else {
         if ($vdetails['playlist_id']) {
             $plist = '&play_list=' . $vdetails['playlist_id'];
         }
-        $link = BASEURL . '/watch_video.php?v=' . $vdetails['videokey'] . $plist;
+        $link = BASEURL . '/watch' . ($is_public ? '_public' : '') . '_video.php?v=' . $vdetails['videokey'] . $plist;
     }
     if (!$type || $type == 'link') {
         return $link;

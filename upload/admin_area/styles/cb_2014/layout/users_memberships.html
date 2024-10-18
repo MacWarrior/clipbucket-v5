@@ -1,0 +1,52 @@
+<div class="heading clearfix">
+    <h2 class="pull-left">{lang('subscribers')}</h2>
+    {include file="$layout_dir/blocks/membership_search.html" }
+</div>
+
+<form name="video_manage marginBottomLarge" method="post">
+    <table class="table table-bordered table-striped manageUsersTable marginTop">
+        <tr>
+            <th>{lang('username')}</th>
+            <th title="{lang('sort_by',lang('first_start'))}">{lang code='first_start'} <span class="pointer fa fa-sort{if $sort=='first_start'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="first_start"></span></th>
+            <th title="{lang('sort_by',lang('last_end'))}">{lang code='last_end'} <span class="pointer fa fa-sort{if $sort=='last_end'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="last_end"></span></th>
+            <th>{lang('user_levels')}</th>
+            <th title="{lang('sort_by',lang('nb_membership'))}">{lang code='nb_membership'} <span class="pointer fa fa-sort{if $sort=='nb_membership'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="nb_membership"></span></th>
+            <th title="{lang('sort_by',lang('sum_price'))}">{lang code='sum_price'} <span class="pointer fa fa-sort{if $sort=='sum_price'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="sum_price"></span></th>
+            {if config('enable_storage_history') == 'yes'}
+                <th>{lang('user_current_storage')}</th>
+            {/if}
+            <th>&nbsp;</th>
+        </tr>
+        {foreach from=$users_memberships item=user_membership}
+            <tr>
+                <td>{if $user_membership.userid != $anonymous_id}
+                    <a href="view_user.php?uid={$user_membership.userid}">{display_clean($user_membership.username)}</a>
+                    {else}{$user_membership.username}{/if}</td>
+                <td>{$user_membership.first_start}</td>
+                <td>{if $user_membership.last_end != '2999-12-12'}{$user_membership.last_end}{else}{lang('never')}{/if}</td>
+                <td>{lang($user_membership.user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$user_membership.frequency)}</td>
+                <td>{$user_membership.nb_membership}</td>
+                <td>{$user_membership.sum_price}</td>
+                {if config('enable_storage_history') == 'yes'}
+                    <td>{System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser($user_membership.userid),2)}</td>
+                {/if}
+                <td>
+                    <div class="dropdown">
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            Actions <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" class="show_log" data-id="{$user_membership.userid}" style="cursor:pointer;">{lang('view_history')}</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
+</form>
+<div class="modal fade" id="myModal" role="dialog"></div>
+{include file="$style_dir/blocks/pagination.html"}
+<div class="marginBottomLarge"></div>
+<script>
+    var userid = '{$user_membership.userid}';
+</script>

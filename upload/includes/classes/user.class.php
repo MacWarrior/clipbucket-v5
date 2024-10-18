@@ -457,6 +457,10 @@ class User
     {
         return $this->user_data['userid'] ?? false;
     }
+    public function getCurrentUserUserLevelID()
+    {
+        return $this->user_data['level'] ?? false;
+    }
 
     /**
      * @throws Exception
@@ -593,13 +597,31 @@ class User
      */
     public function getLastStorageUseByUser($userid): int
     {
-        $sql = 'SELECT storage_used
-                FROM ' . tbl('users_storage_histo') . '
-                WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
+        $sql = 'SELECT storage_used FROM ' . tbl('users_storage_histo') . ' WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
                     SELECT MAX(datetime)
                     FROM ' . tbl('users_storage_histo') . '
                     WHERE id_user = ' . mysql_clean($userid) . '
-                )';
+                ) ';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if (empty($results)) {
+            return 0;
+        }
+        return $results[0]['storage_used'];
+    }
+
+    /**
+     * @param int|string $userid
+     * @param string $date_start
+     * @param string $date_end
+     * @return int
+     * @throws Exception
+     */
+    public function getPeriodMaxStorageUseByUser(int $userid, string $date_start, string $date_end): int
+    {
+        $sql = 'SELECT MAX(storage_used) AS storage_used FROM ' . tbl('users_storage_histo') . ' 
+        WHERE id_user = ' . mysql_clean($userid) . ' 
+        AND datetime BETWEEN \'' . mysql_clean($date_start) . '\' AND \'' . mysql_clean($date_end) . '\' 
+        GROUP BY id_user ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return 0;
@@ -673,6 +695,18 @@ class User
             return [];
         }
         return array_column($results, 'videoid');
+    }
+
+    public function getUserLevels()
+    {
+        $sql = ' SELECT user_levels.*, IF(users.userid IS NULL, FALSE, TRUE) AS has_users FROM ' . cb_sql_table('user_levels') . ' 
+            LEFT JOIN '.cb_sql_table('users').' ON users.level = user_level_id 
+                WHERE user_level_active = \'yes\' ORDER BY  user_level_id ';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if ( empty($results)) {
+            return [];
+        }
+        return $results;
     }
 
 }
@@ -2381,9 +2415,18 @@ class userquery extends CBCategory
             $value_array[] = $iid;
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access] ? $array[$access] : 'no';
+                $value_array[] = $array[$access] ?: 'no';
+            }
+            if (!array_key_exists('plugins_perms', $fields_array)) {
+                $fields_array[] = 'plugins_perms';
+                $value_array[] = '';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
+            $trad_key = string_to_snake_case($array['level_name']);
+            Migration::generateTranslation($trad_key, [
+                 Language::getInstance()->getLang() => $array['level_name']
+            ]);
+
             return true;
         }
     }
@@ -2480,24 +2523,30 @@ class userquery extends CBCategory
      * @param INT $id level_id
      * @throws Exception
      */
-    function delete_user_level($id): bool
+    function delete_user_level(int $id): bool
     {
         $level_details = $this->get_level_details($id);
-        $de_level = $this->get_level_details(3);
+        // id 3 = Inactive User
+        $inactive_user_level = $this->get_level_details(3);
         if ($level_details) {
             //CHeck if leve is deleteable or not
             if ($level_details['user_level_is_default'] == 'no') {
                 Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
                 Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
-                e(lang('level_del_sucess', $de_level['user_level_name']));
 
-                Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], " level='$id'");
+                $users = Clipbucket_db::getInstance()->select(tbl('users'), '*', ' level=' . mysql_clean($id), '1');
+                if (!empty($users)) {
+                    e(lang('level_del_sucess', lang(strtolower(str_replace(' ', '_', $inactive_user_level['user_level_name'])))), 'm');
+                    Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($id));
+                } else {
+                    e(lang('level_del_sucess_no_user'), 'm');
+                }
                 return true;
             }
-
             e(lang('level_not_deleteable'));
             return false;
         }
+        return false;
     }
 
     /**
@@ -3370,6 +3419,9 @@ class userquery extends CBCategory
         }
 
         if( config('channelsSection') == 'yes' && has_access('view_channel') ){
+            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
+        }
+        if( config('enable_membership') == 'yes' ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 
