@@ -17,7 +17,7 @@
 		<h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
 
 		<span class="author">{lang code="by"}
-		{if isSectionEnabled('channels')}
+		{if isSectionEnabled('channels') && !$video.disabled_channel}
 			<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
 		{else}
 			{display_clean($video.user_username)}

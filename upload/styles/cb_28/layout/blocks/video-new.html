@@ -16,7 +16,7 @@
 		</div>
 		<div class="auteur">
 			{lang code="by"}
-			{if isSectionEnabled('channels')}
+			{if isSectionEnabled('channels') && $video.disabled_channel !='yes'}
 			<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
 			{else}
 				{display_clean($video.user_username)}

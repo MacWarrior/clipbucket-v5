@@ -849,14 +849,17 @@ class Collections extends CBCategory
         $per = userquery::getInstance()->get_user_level(user_id());
         // Adding My Account Links    
         if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !NEED_UPDATE) {
-            userquery::getInstance()->user_account[lang('collections')] = [
-                lang('add_new_collection')          => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']),
-                lang('manage_collections')          => cblink(['name' => 'manage_collections']),
-                lang('manage_favorite_collections') => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=favorite'])
-            ];
+
+            if( has_access('allow_create_collection') ){
+                userquery::getInstance()->user_account[lang('collections')][lang('add_new_collection')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']);
+                userquery::getInstance()->user_account[lang('collections')][lang('manage_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=manage']);
+            }
+            if( has_access('view_collections') ){
+                userquery::getInstance()->user_account[lang('collections')][lang('manage_favorite_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=favorite']);
+            }
 
             // Adding Collection links in Admin Area
-            if ($per['collection_moderation'] == 'yes') {
+            if (has_access('collection_moderation')) {
                 $menu_collection = [
                     'title'   => lang('collections')
                     , 'class' => 'glyphicon glyphicon-folder-close'
@@ -1021,21 +1024,6 @@ class Collections extends CBCategory
             return $result;
         }
         return false;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function get_total_object_sub_collection($collection)
-    {
-        $childrens = $this->get_collection_childs($collection['collection_id']);
-        $total = $collection['total_objects'];
-        if ($childrens) {
-            foreach ($childrens as $child) {
-                $total += $this->get_total_object_sub_collection($child);
-            }
-        }
-        return $total;
     }
 
     /**
