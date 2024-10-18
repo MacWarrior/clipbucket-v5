@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"169",
+  "revision":"171",
   "status":"dev",
   "detail":[
     {
@@ -96,6 +96,8 @@
         ,"Fix config checkup cache usage"
         ,"Fix users current storage used"
         ,"Fix action logs user's link"
+        ,"Fix collection reindex"
+        ,"Fix orphan photos display"
       ]
     },
     {
@@ -170,6 +172,7 @@
         ,"Fix video's shorter & longer filters"
         ,"Fix recursive collection display"
         ,"Fix footer copyright"
+        ,"Fix add to collection button with SEO URLs"
       ]
     },
     {
