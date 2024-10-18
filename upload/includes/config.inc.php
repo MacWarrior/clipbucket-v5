@@ -34,17 +34,19 @@ if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_
 uploaderDetails();
 isSectionEnabled(PARENT_PAGE, true);
 $need_to_active_membership = false;
-if (config('enable_membership') == 'yes' && !empty(user_id())) {
+if (config('enable_membership') == 'yes' && !empty(user_id()) && !has_access('admin_access')) {
 
+    //gettings memberships for current userLevel
     $memberships = Membership::getInstance()->getAll([
         'user_level_id' => User::getInstance()->getCurrentUserUserLevelID(),
         'is_disabled'   => false
     ]);
     if (!empty($memberships)) {
+//      getting current membership for user
         $resutls = Membership::getInstance()->getAll([
             'first_only'          => true,
             'date_between'        => date('Y-m-d H:i:s'),
-            'user_level_id'       => User::getInstance()->getCurrentUserUserLevelID(),
+            'userid'              => user_id(),
             'get_user_membership' => true
         ]);
         $need_to_active_membership = empty($resutls);

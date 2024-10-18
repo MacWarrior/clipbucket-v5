@@ -1337,4 +1337,7 @@ VALUES ('admin_setting'),
        ('status'),
        ('search_results_per_page'),
        ('enable_public_video_page'),
-       ('enable_public_video_page_tips');
+       ('enable_public_video_page_tips'),
+       ('available_memberships'),
+       ('renew_membership'),
+       ('renew');

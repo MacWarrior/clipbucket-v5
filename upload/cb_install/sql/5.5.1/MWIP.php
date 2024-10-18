@@ -477,5 +477,20 @@ class MWIP extends \Migration
         self::generateTranslation('level_del_sucess', [
             'fr'=>'Le niveau d\'utilisateur a bien été supprimé, tous les utilisateurs de ce niveau ont été transféré vers %s'
         ]);
+
+        self::generateTranslation('available_memberships', [
+            'fr'=>'Abonnement disponibles',
+            'en'=>'Available memberships'
+        ]);
+
+        self::generateTranslation('renew_membership', [
+            'fr'=>'Renouvellement mon abonnement',
+            'en'=>'Renew my membership'
+        ]);
+
+        self::generateTranslation('renew', [
+            'fr'=>'Renouveler',
+            'en'=>'Renew'
+        ]);
     }
 }

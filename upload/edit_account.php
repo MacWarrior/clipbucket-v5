@@ -89,6 +89,13 @@ if ($mode === 'profile' && $current_enable_channel_page) {
 }
 assign('mode', $mode);
 
+$params = [
+    'userid' => user_id(),
+    'limit'   => $sql_limit ?? '',
+    'order'  => ' date_start DESC '
+];
+$memberships = Membership::getInstance()->getAllHistoMembershipForUser($params);
+assign('memberships', $memberships);
 switch ($mode) {
     case 'account':
         assign('on', 'account');
@@ -126,16 +133,22 @@ switch ($mode) {
         if (!empty($_POST['page'])) {
             $sql_limit = create_query_limit($_POST['page'], config('video_list_view_video_history'));
         }
-        $params = [
-            'userid' => user_id(),
-            'limit'   => $sql_limit ?? '',
-            'order'  => ' date_start DESC '
-        ];
-        $results = Membership::getInstance()->getAllHistoMembershipForUser($params);
         $params['count'] = true;
         unset($params['limit']);
         $totals_pages = count_pages(Membership::getInstance()->getAllHistoMembershipForUser($params), config('video_list_view_video_history')) ;
-        assign('memberships', $results);
+
+        $available_memberships = Membership::getInstance()->getAll([
+            'is_disabled'   => false
+        ]);
+        $can_renew_membership = false;
+        foreach ($available_memberships as $available_membership) {
+            if ($available_membership['user_level_id'] == User::getInstance()->getCurrentUserUserLevelID()) {
+                $can_renew_membership = true;
+                break;
+            }
+        }
+        assign('available_memberships', $available_memberships);
+        assign('can_renew_membership', $can_renew_membership);
         break;
     default:
         assign('on', 'account');

@@ -19,7 +19,7 @@
                             <h5>{lang code='account_settings'}</h5>
                         </a>
                     </li>
-                    {if config('enable_membership') == 'yes'}
+                    {if config('enable_membership') == 'yes' && !empty($memberships)}
                         <li class="{if $mode =='membership'}active{/if}">
                             <a href="/edit_account.php?mode=membership">
                                 <h5>{lang code='memberships'}</h5>
@@ -140,9 +140,52 @@
                                 </div>
                             </div>
                         </div>
-                        {if config('enable_membership') == 'yes'}
+                        {if config('enable_membership') == 'yes' && !empty($memberships)}
                             <div id="menu_membership" class="tab-pane {if $mode =='membership'}active{/if}">
-                                <h2>{lang code='memberships'}</h2>
+                                {if $need_to_active_membership && $can_renew_membership}
+                                    <h2>{lang code='renew_membership'}</h2>
+                                    <button class="btn-primary btn mb-2">{lang('renew')}</button>
+                                {/if}
+                                {if $need_to_active_membership}
+                                    <h2>{lang code='available_memberships'}</h2>
+                                    <table class="table table-bordered table-striped">
+                                        <tr>
+                                            <th class="col-md-2">{lang('user_level')}</th>
+                                            <th class="col-md-2">{lang('frequency')}</th>
+                                            <th class="col-md-2">{lang('base_price')}</th>
+                                            <th class="col-md-2">{lang('storage_quota')}</th>
+                                            <th class="col-md-2">{lang('storage_price')}</th>
+                                        </tr>
+                                        {foreach from=$available_memberships item=membership}
+                                            <tr>
+                                                <td>{$membership.user_level_name}</td>
+                                                <td>{lang('frequency_'|cat:$membership.frequency)}</td>
+                                                <td>
+                                                    {if $membership.base_price != 0}
+                                                        {$membership.base_price} {$membership.symbol}
+                                                    {else}
+                                                        {lang('free')}
+                                                    {/if}
+                                                </td>
+                                                <td>
+                                                    {if $membership.storage_quota_included != 0}
+                                                        {$membership.storage_quota_included} {lang('gb')}
+                                                    {else}
+                                                        {lang('none')}
+                                                    {/if}
+                                                </td>
+                                                <td>
+                                                    {if $membership.storage_price_per_go != 0}
+                                                        {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
+                                                    {else}
+                                                        {lang('free')}
+                                                    {/if}
+                                                </td>
+                                            </tr>
+                                        {/foreach}
+                                    </table>
+                                {/if}
+                                <h2>{lang code='membership_history'}</h2>
                                 <table class="table table-bordered table-striped">
                                     <tr>
                                         <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
