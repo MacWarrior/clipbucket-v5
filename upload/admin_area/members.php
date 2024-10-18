@@ -115,8 +115,14 @@ if (isset($_GET['resend_verif'])) {
 //Make User Featured
 if (isset($_GET['featured'])) {
     $user = mysql_clean($_GET['featured']);
+    $params = [
+        'channel_enable' => 'yes',
+        'userid'         => $user
+    ];
     if ($anonymous_id == $user) {
         e(lang('anonymous_locked'));
+    } elseif (!User::getInstance()->getOne($params)) {
+        e(lang('cant_featured_deactivate_user'));
     } else {
         userquery::getInstance()->action('featured', $user);
     }

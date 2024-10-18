@@ -215,6 +215,10 @@ class Network{
                 }
         }
 
+    }
 
+    public static function is_current_url($needed): bool
+    {
+        return strpos($_SERVER['REQUEST_URI'], $needed) !== false;
     }
 }

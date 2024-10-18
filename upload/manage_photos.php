@@ -3,6 +3,10 @@ define('THIS_PAGE', 'manage_photos');
 define('PARENT_PAGE', 'photos');
 require 'includes/config.inc.php';
 
+if( !isSectionEnabled('photos') ){
+    redirect_to(cblink(['name' => 'my_account']));
+}
+
 userquery::getInstance()->logincheck();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
@@ -24,6 +28,10 @@ assign(
 switch ($mode) {
     case 'uploaded':
     default:
+        if( !has_access('allow_photo_upload') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('mode', 'uploaded');
         if (isset($_GET['delete_photo'])) {
             $id = mysql_clean($_GET['delete_photo']);
@@ -59,6 +67,10 @@ switch ($mode) {
         break;
 
     case 'favorite':
+        if( !has_access('view_photos') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('mode', 'favorite');
         if ($_GET['remove_fav_photo']) {
             $photo = mysql_clean($_GET['remove_fav_photo']);

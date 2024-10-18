@@ -717,6 +717,7 @@ class ClipBucket
      */
     function head_menu()
     {
+        $user_permissions = userquery::getInstance()->get_user_level(user_id());
         $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => BASEURL, 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
 
         if( config('videosSection') == 'yes' ){

@@ -294,6 +294,7 @@ class Video
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
         $param_public = $params['public'];
+        $param_join_user_profile = $params['join_user_profile'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -394,6 +395,11 @@ class Video
         if( $param_collection_id ){
             $collection_items_table = Collection::getInstance()->getTableNameItems();
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
+        }
+
+        if ($param_join_user_profile) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
+            $select[] = 'user_profile.disabled_channel';
         }
 
         if( $param_group ){

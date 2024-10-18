@@ -114,14 +114,14 @@
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
                                 {if user_id()}
-                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options())) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes')}
+                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && has_access('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && has_access('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
                                             <a href="{cblink name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
-                                                {if has_access('allow_video_upload',true,true) && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
+                                                {if has_access('allow_video_upload') && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
                                                     <li class="up_vid"><a href="{cblink name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
                                                 {/if}
-                                                {if has_access('allow_photo_upload',true,true) && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
+                                                {if has_access('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
                                                     <li class="up_img"><a href="{cblink name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
                                                 {/if}
                                                 {ANCHOR place="inside_upload"}
@@ -139,16 +139,16 @@
                                                 <li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
                                             {/if}
                                             <li><a href="{cblink name='my_account'}">{lang code="my_account"}</a></li>
-                                            {if isSectionEnabled('videos')}
+                                            {if isSectionEnabled('videos') && has_access('allow_video_upload')}
                                                 <li><a href="{cblink name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
                                             {/if}
-                                            {if isSectionEnabled('photos')}
-                                                <li class="hidden-xs"><a href="{cblink name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
+                                            {if isSectionEnabled('photos') && has_access('allow_photo_upload')}
+                                                <li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
                                             {/if}
-                                            {if isSectionEnabled('collections')}
+                                            {if isSectionEnabled('collections') && (isSectionEnabled('videos') || isSectionEnabled('photos')) && has_access('allow_create_collection')}
                                                 <li class="hidden-xs"><a href="{cblink name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
                                             {/if}
-                                            {if isSectionEnabled('playlists')}
+                                            {if isSectionEnabled('playlists') && has_access('allow_create_playlist')}
                                                 <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}

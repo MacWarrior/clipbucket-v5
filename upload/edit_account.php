@@ -80,11 +80,10 @@ if (isset($_POST['block_users'])) {
 
 $mode = $_GET['mode'];
 
-$udetails = userquery::getInstance()->get_user_details(user_id());
-$profile = userquery::getInstance()->get_user_profile($udetails['userid']);
 $current_enable_channel_page = userquery::getInstance()->get_user_level(user_id())['enable_channel_page'] !== 'yes';
 assign('current_enable_channel_page', $current_enable_channel_page);
 if ($mode === 'profile' && $current_enable_channel_page) {
+    e(lang('cannot_access_page'));
     $mode = 'account';
 }
 assign('mode', $mode);
@@ -97,6 +96,9 @@ $params = [
 $memberships = Membership::getInstance()->getAllHistoMembershipForUser($params);
 assign('memberships', $memberships);
 switch ($mode) {
+    default:
+        redirect_to(cblink(['name' => 'my_account']));
+
     case 'account':
         assign('on', 'account');
         assign('mode', 'account_settings');
@@ -108,7 +110,10 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-    case 'channel_bg':
+        if( (config('picture_upload') != 'yes' || !has_access('avatar_upload')) && config('picture_url') != 'yes' && empty(User::getInstance()->get('avatar_url')) && empty(User::getInstance()->get('avatar'))) {
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('backgroundPhoto', userquery::getInstance()->getBackground(user_id()));
         assign('mode', $mode);
         break;
@@ -120,6 +125,10 @@ switch ($mode) {
         break;
 
     case 'subscriptions':
+        if( config('channelsSection') != 'yes' || !has_access('view_channels') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         //Removing subscription
         if (isset($_GET['delete_subs'])) {
             $sid = mysql_clean($_GET['delete_subs']);
@@ -150,13 +159,10 @@ switch ($mode) {
         assign('available_memberships', $available_memberships);
         assign('can_renew_membership', $can_renew_membership);
         break;
-    default:
-        assign('on', 'account');
-        assign('mode', 'profile_settings');
-        break;
 }
 
-
+$udetails = userquery::getInstance()->get_user_details(user_id());
+$profile = userquery::getInstance()->get_user_profile($udetails['userid']);
 if (is_array($profile)) {
     $udetails = array_merge($profile, $udetails);
 }
