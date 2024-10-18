@@ -85,9 +85,11 @@ if (!$is_playlist) {
         ];
         $param = array_merge($param_public, $param);
         $related_videos = Video::getInstance()->getAll($param);
-        $related_videos = array_filter($related_videos, function ($video) use ($videoid) {
-            return $video['videoid'] != $videoid;
-        });
+        if ($related_videos) {
+            $related_videos = array_filter($related_videos, function ($video) use ($videoid) {
+                return $video['videoid'] != $videoid;
+            });
+        }
     }
     $assign_arry['videos'] = $related_videos;
     $assign_arry['relMode'] = $relMode;
