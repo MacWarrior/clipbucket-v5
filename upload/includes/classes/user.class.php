@@ -696,6 +696,18 @@ class User
         return array_column($results, 'videoid');
     }
 
+    public function getUserLevels()
+    {
+        $sql = ' SELECT user_levels.*, IF(users.userid IS NULL, FALSE, TRUE) AS has_users FROM ' . cb_sql_table('user_levels') . ' 
+            LEFT JOIN '.cb_sql_table('users').' ON users.level = user_level_id 
+                WHERE user_level_active = \'yes\' ORDER BY  user_level_id ';
+        $results = Clipbucket_db::getInstance()->_select($sql);
+        if ( empty($results)) {
+            return [];
+        }
+        return $results;
+    }
+
 }
 
 
@@ -2409,6 +2421,11 @@ class userquery extends CBCategory
                 $value_array[] = '';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
+            $trad_key = string_to_snake_case($array['level_name']);
+            Migration::generateTranslation($trad_key, [
+                 Language::getInstance()->getLang() => $array['level_name']
+            ]);
+
             return true;
         }
     }

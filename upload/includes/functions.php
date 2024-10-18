@@ -4188,6 +4188,18 @@ function ageRestriction($var) {
     return $var;
 }
 
+/**
+ * @param string $string
+ * @return array|string|string[]|null
+ */
+function string_to_snake_case(string $string):string {
+//    $string = preg_replace('/[\p{L}\p{N}\s]/u', '', strtolower($string));
+    $string =  iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+    $string = preg_replace('/[^\p{L}\p{N}\s]/u', '', strtolower($string));
+    $string = preg_replace('/\s/','_', trim($string));
+    return $string;
+}
+
 include('functions_db.php');
 include('functions_filter.php');
 include('functions_player.php');

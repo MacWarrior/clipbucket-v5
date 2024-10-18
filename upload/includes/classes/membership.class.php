@@ -186,6 +186,7 @@ class Membership
                 $select = $this->getSQLFields('membership');
             }
             $select[] = 'user_levels.user_level_name';
+            $select[] = 'currency.symbol';
         }
 
 
