@@ -3422,7 +3422,7 @@ class userquery extends CBCategory
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
         if( config('enable_membership') == 'yes' ){
-            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
+            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=membership';
         }
 
         if( isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes') ) ){

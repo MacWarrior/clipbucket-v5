@@ -425,7 +425,7 @@ class MWIP extends \Migration
         ]);
 
         self::updateTranslation('com_manage_subs', [
-            'fr'=>'Gestion des abonnements de chaine',
+            'fr'=>'Gestion des abonnements de chaîne',
             'en'=>'Manage channels subscriptions'
         ]);
 

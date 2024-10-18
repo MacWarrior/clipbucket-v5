@@ -143,7 +143,7 @@
                                                 <li><a href="{cblink name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('photos') && has_access('allow_photo_upload')}
-                                                <li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
+                                                <li class="hidden-xs"><a href="{cblink name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('collections') && (isSectionEnabled('videos') || isSectionEnabled('photos')) && has_access('allow_create_collection')}
                                                 <li class="hidden-xs"><a href="{cblink name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
