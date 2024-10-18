@@ -5,10 +5,10 @@ define('PARENT_PAGE', "videos");
 require 'includes/config.inc.php';
 
 if( config('videosSection') != 'yes' ){
-    redirect_to(BASEURL);
+    redirect_to(cblink(['name' => 'my_account']));
 }
 
-global $cbvideo, $eh, $pages, $cbvid;
+global $cbvideo, $pages, $cbvid;
 
 userquery::getInstance()->logincheck();
 $udetails = userquery::getInstance()->get_user_details(user_id());
@@ -19,13 +19,19 @@ $mode = $_GET['mode'];
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
+
 $favorites = User::getInstance()->getFavoritesVideos(user_id());
 assign('favorites', $favorites);
+
 assign('queryString', queryString(null, ['type',
     'vid_delete']));
 switch ($mode) {
     case 'uploaded':
     default:
+        if( !has_access('allow_video_upload') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('mode', 'uploaded');
 
         //Deleting Video
@@ -43,7 +49,7 @@ switch ($mode) {
                     $cbvideo->delete_video($_POST['check_vid'][$id]);
                 }
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e(lang('vdo_multi_del_erro'), 'm');
         }
 
@@ -72,7 +78,12 @@ switch ($mode) {
 
 
     case 'favorites':
+        if( !has_access('view_video') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('mode', 'favorites');
+
         //Removing video from favorites
         if (!empty($_GET['remove_fav_videoid']) && in_array($_GET['remove_fav_videoid'], $favorites) ) {
             $videoid = mysql_clean($_GET['remove_fav_videoid']);
