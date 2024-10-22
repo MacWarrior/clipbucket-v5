@@ -1,0 +1,13 @@
+<h2>{lang code='block_users'}</h2>
+<form method="post" name="ban_users">
+    <div class="form-group">
+        <label for="users">{lang code='block_users'}</label>
+        <textarea class="form-control" name="users" id="users">{$user.banned_users}</textarea>
+        {lang code='spe_users_by_comma'}
+    </div>
+    <div class="form-group">
+        <button name="block_users" id="button5" value="submit" class="btn btn-primary">
+            {lang code='update_blocked_user_list'}
+        </button>
+    </div>
+</form>

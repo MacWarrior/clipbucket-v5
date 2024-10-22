@@ -3,7 +3,11 @@ define('THIS_PAGE', 'private_message');
 
 require 'includes/config.inc.php';
 
-global $cbpm, $eh;
+if( !has_access('private_msg_access') ){
+    redirect_to(cblink(['name' => 'my_account']));
+}
+
+global $cbpm;
 
 //Adding JS Scroll
 add_js('jquery_plugs/compressed/jquery.scrollTo-min.js');
@@ -30,7 +34,7 @@ if (isset($_POST['delete_pm']) && is_array($_POST['msg_id'])) {
             $cbpm->delete_msg($_POST['msg_id'][$pms], user_id(), $box);
         }
 
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e(lang('private_messags_deleted'), 'm');
     }
 }

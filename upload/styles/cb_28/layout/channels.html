@@ -78,7 +78,6 @@
 			{if config("enable_advertisement") == "yes"}
 			<div class="box-ad ad">{AD place='ad_300x250'}</div>
 			{/if}
-			{$feature_users=get_users(['featured'=>'yes','limit'=>6])}
 			{if $feature_users}
 			<h2>{lang code="featured_users"}</h2>
 			<div class="clearfix sidebar-channels">

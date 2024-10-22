@@ -4,11 +4,11 @@ define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
-if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' ){
-    redirect_to(BASEURL);
+if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' || !has_access('allow_create_playlist') ){
+    redirect_to(cblink(['name' => 'my_account']));
 }
 
-global $cbvid, $eh;
+global $cbvid;
 
 userquery::getInstance()->logincheck();
 $udetails = userquery::getInstance()->get_user_details(user_id());
@@ -37,7 +37,7 @@ switch ($mode) {
                     $cbvid->action->delete_playlist($playlist);
                 }
 
-                $eh->flush();
+                errorhandler::getInstance()->flush();
                 if (!error()) {
                     e(lang('playlists_have_been_removed'), 'm');
                 } else {
@@ -73,11 +73,11 @@ switch ($mode) {
                 }
 
                 if (!error()) {
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('playlist_items_have_been_removed'), "m");
                 } else {
-                    $eh->flush();
-                    e(lang("playlist_item_doesnt_exist"));
+                    errorhandler::getInstance()->flush();
+                    e(lang('playlist_item_doesnt_exist'));
                 }
             } else {
                 e(lang('no_item_was_selected_to_delete'));

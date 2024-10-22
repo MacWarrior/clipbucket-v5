@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"171",
+  "revision":"172",
   "status":"dev",
   "detail":[
     {
@@ -122,6 +122,7 @@
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
         ,"Refactor orphan photos management"
+        ,"Refactor my account"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
         ,"Update translations"

@@ -1,5 +1,8 @@
 $(document).ready(function(){
     init_tags('profile_tags', available_tags);
+    if ($('#profile_tags').prop('disabled')) {
+        $('#list_tags').find('input').prop('disabled',true);
+    }
 
     if( typeof format_date_js !== 'undefined' ){
         $('#dob').datepicker({
@@ -47,7 +50,7 @@ $(document).ready(function(){
     }
 
     $('[name="disabled_channel"]').on('change', function () {
-        var inputs = $(this).parents('.field_group').find('input, textarea').not('#disabled_channel');
+        var inputs = $('.accountForm').find('input, textarea, select').not('#disabled_channel');
         inputs.each( (i,e)=> $(e).prop('disabled', ($(this).val() === 'yes')))
     });
 });

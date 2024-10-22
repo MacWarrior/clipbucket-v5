@@ -58,11 +58,17 @@ if( config('collectionsSection') == 'yes' ){
 
 if( !$is_playlist ){
     $videoid = $vdo['videoid'];
-    $related_videos = get_videos(['title' => $vdo['title'], 'tags' => $vdo['tags'], 'exclude' => $videoid, 'show_related' => 'yes', 'limit' => 12, 'order' => 'RAND()']);
+    $related_videos = Video::getInstance()->getAll(['title' => $vdo['title'], 'tags' => $vdo['tags'], 'limit' => 12, 'order' => 'RAND()', 'join_user_profile'=>true]);
+    $related_videos = array_filter($related_videos, function ($video) use ($videoid){
+        return $video['videoid'] != $videoid;
+    });
     $relMode = '';
     if (!$related_videos) {
         $relMode = 'ono';
-        $related_videos = get_videos(['exclude' => $videoid, 'limit' => 12, 'order' => 'date_added DESC']);
+        $related_videos = Video::getInstance()->getAll(['limit' => 12, 'order' => 'date_added DESC', 'join_user_profile'=>true]);
+        $related_videos = array_filter($related_videos, function ($video) use ($videoid){
+            return $video['videoid'] != $videoid;
+        });
     }
     $assign_arry['videos'] = $related_videos;
     $assign_arry['relMode'] = $relMode;

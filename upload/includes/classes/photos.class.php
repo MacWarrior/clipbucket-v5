@@ -789,16 +789,17 @@ class CBPhotos
     {
         // Search type
         if (isSectionEnabled('photos')) {
-            ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
+            ClipBucket::getInstance()->search_types['photos'] = 'cbphoto';
         }
 
         // My account links
-        $accountLinks = [
-            lang('manage_photos')          => "manage_photos.php",
-            lang('manage_favorite_photos') => "manage_photos.php?mode=favorite",
-        ];
         if (isSectionEnabled('photos')) {
-            userquery::getInstance()->user_account[lang('photos')] = $accountLinks;
+            if( has_access('allow_photo_upload') ){
+                userquery::getInstance()->user_account[lang('photos')][lang('manage_photos')] = 'manage_photos.php?mode=uploaded';
+            }
+            if( has_access('view_photos') ){
+                userquery::getInstance()->user_account[lang('photos')][lang('manage_favorite_photos')] = 'manage_photos.php?mode=favorite';
+            }
         }
 
         //Setting Cbucket links

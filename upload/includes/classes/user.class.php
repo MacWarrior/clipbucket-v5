@@ -114,6 +114,7 @@ class User
             ,'show_my_subscriptions'
             ,'show_my_subscribers'
             ,'show_my_friends'
+            ,'disabled_channel'
         ];
 
         $this->tablename_level = 'user_levels';
@@ -1035,7 +1036,7 @@ class userquery extends CBCategory
 
         //Now user have passed all the stages, now checking if user has level access or not
         if ($access) {
-            if ($userid == user_id()) {
+            if ($userid == user_id() && !empty($this->permission)) {
                 $access_details = $this->permission;
             } else {
                 $access_details = $this->get_user_level($userid);
@@ -3005,7 +3006,9 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
-            Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
+            if ($array['profile_tags'] !== null) {
+                Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
+            }
             e(lang('usr_pof_upd_msg'), 'm');
         }
     }
@@ -3361,22 +3364,24 @@ class userquery extends CBCategory
     {
         $array[lang('account')] = [
             lang('my_account')        => 'myaccount.php',
-            lang('block_users')       => 'edit_account.php?mode=block_users',
+            lang('account_settings')  => 'edit_account.php?mode=account',
             lang('user_change_pass')  => 'edit_account.php?mode=change_password',
-            lang('user_change_email') => 'edit_account.php?mode=change_email',
-            lang('account_settings')  => 'edit_account.php?mode=account'
+            lang('user_change_email') => 'edit_account.php?mode=change_email'
         ];
 
-        $udetails = $this->get_user_details(user_id());
-        if (config('picture_upload') == 'yes' || config('picture_url') == 'yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar'])) {
+        if( (config('picture_upload') == 'yes' && has_access('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))) {
             $array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
         }
 
-        if( config('channelsSection') == 'yes' ){
+        if( config('channelsSection') == 'yes' && has_access('view_channel') ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 
-        if (has_access('private_msg_access' )) {
+        if (isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'))) {
+            $array[lang('account')][lang('contacts_manager')] = 'manage_contacts.php';
+        }
+
+        if (has_access('private_msg_access')) {
             $array[lang('messages')] = [
                 lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
                 lang('notifications')                                             => 'private_message.php?mode=notification',
@@ -3384,25 +3389,25 @@ class userquery extends CBCategory
                 lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
             ];
         }
-
-        if (isSectionEnabled('channels')) {
+        if (isSectionEnabled('channels') && has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes') {
             $array[lang('user_channel_profiles')] = [
                 lang('user_profile_settings') => 'edit_account.php?mode=profile',
-                lang('contacts_manager')      => 'manage_contacts.php'
+                lang('block_users')           => 'edit_account.php?mode=block_users'
             ];
         }
 
         if (isSectionEnabled('videos')) {
-            $array[lang('videos')] = [
-                lang('uploaded_videos') => 'manage_videos.php',
-                lang('user_fav_videos') => 'manage_videos.php?mode=favorites'
-            ];
+            if (has_access('view_video')) {
+                $array[lang('videos')][lang('user_fav_videos')] = 'manage_videos.php?mode=favorites';
+            }
+
+            if (has_access('allow_video_upload')) {
+                $array[lang('videos')][lang('uploaded_videos')] = 'manage_videos.php?mode=uploaded';
+            }
         }
 
-        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
-            $array[lang('playlists')] = [
-                lang('manage_x', strtolower(lang('playlists'))) => 'manage_playlists.php'
-            ];
+        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && has_access('allow_create_playlist')){
+            $array[lang('playlists')][lang('manage_x', strtolower(lang('playlists')))] = 'manage_playlists.php';
         }
 
         if (count($this->user_account) > 0) {
@@ -4291,7 +4296,7 @@ class userquery extends CBCategory
             case 'featured':
             case 'f':
                 Clipbucket_db::getInstance()->update($tbl, ['featured', 'featured_date'], ['yes', now()], " userid='$uid' ");
-                e(lang('User has been set as featured'), 'm');
+                e(lang('user_has_been_set_as_featured'), 'm');
                 break;
 
             //Unfeatured user
@@ -4299,7 +4304,7 @@ class userquery extends CBCategory
             case 'unfeatured':
             case 'uf':
                 Clipbucket_db::getInstance()->update($tbl, ['featured'], ['no'], " userid='$uid' ");
-                e(lang('User has been removed from featured users'), 'm');
+                e(lang('user_has_been_removed_from_featured_users'), 'm');
                 break;
 
             //Ban User
@@ -4586,17 +4591,18 @@ class userquery extends CBCategory
         }
 
         $return = [
-            'show_dob' => [
+            'show_dob'     => [
                 'title'       => lang('show_dob'),
                 'type'        => 'radiobutton',
                 'name'        => 'show_dob',
                 'id'          => 'show_dob',
-                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'       => ['yes' => lang('yes'), 'no'  => lang('no')],
                 'checked'     => $default['show_dob'],
                 'db_field'    => 'show_dob',
                 'syntax_type' => 'name',
                 'auto_view'   => 'no',
-                'sep'         => '&nbsp;'
+                'sep'         => '&nbsp;',
+                'disabled'    => (strtolower($default['disabled_channel']) == 'yes')
             ],
             'profile_tags' => [
                 'title'             => lang('profile_tags'),
@@ -4606,7 +4612,8 @@ class userquery extends CBCategory
                 'value'             => genTags($default['profile_tags']),
                 'required'          => 'no',
                 'validate_function' => 'genTags',
-                'auto_view'         => 'yes'
+                'auto_view'         => 'yes',
+                'disabled'          => (strtolower($default['disabled_channel']) == 'yes')
             ]
         ];
 
