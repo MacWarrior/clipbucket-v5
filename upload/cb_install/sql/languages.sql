@@ -1295,4 +1295,5 @@ VALUES ('admin_setting'),
        ('registered_user'),
        ('inactive_user'),
        ('global_moderator'),
-       ('maintained_by');
+       ('maintained_by'),
+       ('user_cant_receive_pm');
