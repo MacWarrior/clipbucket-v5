@@ -492,5 +492,20 @@ class MWIP extends \Migration
             'fr'=>'Renouveler',
             'en'=>'Renew'
         ]);
+
+        self::generateTranslation('manage_membership', [
+            'fr'=>'Gestion de l\'abonnement',
+            'en'=>'Manage membership'
+        ]);
+
+        self::generateTranslation('cant_delete_level_because_membership', [
+            'fr'=>'Vous ne pouvez pas supprimer ce niveau d\'utilisateur car il est lié à des abonnements actifs',
+            'en'=>'You cannot delete this user level because it is link to active memberships'
+        ]);
+
+        self::generateTranslation('user_level_memberships_deleted', [
+            'fr'=>'Les abonnements liés au niveau d\'utilisateur ont été supprimés',
+            'en'=>'User level\'s memberships have been deleted'
+        ]);
     }
 }

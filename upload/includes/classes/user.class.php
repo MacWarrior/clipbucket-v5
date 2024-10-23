@@ -701,12 +701,57 @@ class User
     {
         $sql = ' SELECT user_levels.*, IF(users.userid IS NULL, FALSE, TRUE) AS has_users FROM ' . cb_sql_table('user_levels') . ' 
             LEFT JOIN '.cb_sql_table('users').' ON users.level = user_level_id 
-                WHERE user_level_active = \'yes\' ORDER BY  user_level_id ';
+                WHERE user_level_name != \'anonymous\' 
+                GROUP BY user_level_id
+                ORDER BY  user_level_id ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if ( empty($results)) {
             return [];
         }
         return $results;
+    }
+
+    /**
+     * @return bool
+     * @throws Exception
+     */
+    public function isUserMustRenewMembership(): bool
+    {
+        if (empty($this->user_data['need_to_active_membership'])) {
+            $need_to_active_membership = false;
+            if (config('enable_membership') == 'yes' && !empty(user_id()) && !has_access('admin_access')) {
+                //gettings memberships for current userLevel
+                $memberships = Membership::getInstance()->getAll([
+                    'is_disabled'   => 0
+                ]);
+                if (!empty($memberships)) {
+                    $resutls = Membership::getInstance()->getAll([
+                        'first_only'          => true,
+                        'date_between'        => date('Y-m-d H:i:s'),
+                        'userid'              => user_id(),
+                        'get_user_membership' => true
+                    ]);
+                    $need_to_active_membership = empty($resutls);
+                }
+            }
+            $this->user_data['need_to_active_membership'] = $need_to_active_membership;
+        }
+        return $this->user_data['need_to_active_membership'];
+    }
+
+    /**
+     * @param int $user_level_id
+     * @param bool $activate
+     * @return bool
+     * @throws Exception
+     */
+    public function toggleUserLevelActivation(int $user_level_id,bool $activate): bool
+    {
+        if(empty($user_level_id)) {
+            return false;
+        }
+        $sql = 'UPDATE ' . cb_sql_table('user_levels') . ' SET user_level_active = ' . ($activate ? '\'yes\'' : '\'no\'' ) . ' WHERE user_level_id = ' . mysql_clean($user_level_id) ;
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
     }
 
 }
@@ -2531,17 +2576,41 @@ class userquery extends CBCategory
         if ($level_details) {
             //CHeck if leve is deleteable or not
             if ($level_details['user_level_is_default'] == 'no') {
-                Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
-                Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
 
-                $users = Clipbucket_db::getInstance()->select(tbl('users'), '*', ' level=' . mysql_clean($id), '1');
-                if (!empty($users)) {
-                    e(lang('level_del_sucess', lang(strtolower(str_replace(' ', '_', $inactive_user_level['user_level_name'])))), 'm');
-                    Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($id));
-                } else {
-                    e(lang('level_del_sucess_no_user'), 'm');
+                $can_delete = true;
+                //check user_level_membership
+                if (config('enable_membership') == 'yes') {
+                    $user_memberships = Membership::getInstance()->getAll(['user_level_id'=>$id, 'get_user_membership'=>true]);
+                    foreach ($user_memberships as $user_membership) {
+                        if (!empty($user_membership['id_user_membership'])) {
+                            $can_delete = false;
+                            break;
+                        }
+                    }
+                    if ($can_delete) {
+                        foreach ($user_memberships as $user_membership) {
+                            Membership::getInstance()->delete($user_membership['id_membership_from_join']);
+                        }
+                        e(lang('user_level_memberships_deleted'), 'm');
+                    }
                 }
-                return true;
+
+                if ($can_delete) {
+                    Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
+                    Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
+
+                    $users = Clipbucket_db::getInstance()->select(tbl('users'), '*', ' level=' . mysql_clean($id), '1');
+                    if (!empty($users)) {
+                        e(lang('level_del_sucess', lang(strtolower(str_replace(' ', '_', $inactive_user_level['user_level_name'])))), 'm');
+                        Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($id));
+                    } else {
+                        e(lang('level_del_sucess_no_user'), 'm');
+                    }
+                    return true;
+                } else {
+                    e(lang('cant_delete_level_because_membership'));
+                    return false;
+                }
             }
             e(lang('level_not_deleteable'));
             return false;
@@ -3422,7 +3491,7 @@ class userquery extends CBCategory
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
         if( config('enable_membership') == 'yes' ){
-            $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=membership';
+            $array[lang('account')][lang('manage_membership')] = 'edit_account.php?mode=membership';
         }
 
         if( isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes') ) ){

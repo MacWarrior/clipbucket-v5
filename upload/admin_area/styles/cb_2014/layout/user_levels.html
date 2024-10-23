@@ -7,21 +7,33 @@
     <br><br>
     <table class="table table-bordered table-striped">
         <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Active</td>
-            <td>Users</td>
-            <td>Actions</td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>{lang('active')}</th>
+            <th>Users</th>
+            <th>Actions</th>
         </tr>
         {section name=l loop=$levels}
             <tr>
                 <td>{$levels[l].user_level_id}</td>
                 <td>{$levels[l].user_level_name}</td>
-                <td>{$levels[l].user_level_active}</td>
+                <td>
+                    <input name="user_level_active" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_active == 'yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
+                    <span class="lbl"></span>
+                </td>
                 <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
-                <td><a href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a>
-                    {if $levels[l].user_level_is_default !=yes} | <a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}"
-                                                                     >{lang code='remove'}</a>{/if}
+                <td>
+                    <div class="dropdown align-center" >
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            {lang('action')} <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" tabindex="-1" href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a></li>
+                            {if  $levels[l].user_level_is_default !=yes}
+                                <li><a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}">{lang code='delete'}</a></li>
+                            {/if}
+                        </ul>
+                    </div>
                 </td>
             </tr>
             {sectionelse}
@@ -290,6 +302,21 @@
             } else {
                 document.location="?action=delete&lid=" + $(this).data('id');
             }
-        })
+        });
+
+        $('.user_level_active').on('change', function () {
+            var id = $(this).data('id');
+            var checked = $(this).prop('checked');
+            $.post({
+                url: '/actions/admin_activate_user_level.php',
+                data: {
+                    user_level_id: id, active: checked
+                },
+                dataType: "json",
+                success: response => {
+
+                }
+            })
+        });
     });
 </script>

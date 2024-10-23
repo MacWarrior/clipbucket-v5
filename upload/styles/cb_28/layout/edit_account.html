@@ -32,9 +32,6 @@
                         {include file="$style_dir/blocks/my_account/channel_block_users.html"}
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
     {else}
                     <li class="{if $mode=='account_settings'}active{/if}">
                         <a href="/edit_account.php?mode=account">
@@ -68,7 +65,7 @@
                     {if config('enable_membership') == 'yes'}
                         <li class="{if $mode =='membership'}active{/if}">
                             <a href="/edit_account.php?mode=membership">
-                                <h5>{lang code='memberships'}</h5>
+                                <h5>{lang code='manage_membership'}</h5>
                             </a>
                         </li>
                     {/if}
@@ -103,10 +100,10 @@
                         </div>
                     {/if}
                 </div>
+    {/if}
             </div>
         </div>
     </div>
-    {/if}
 </div>
 
 <script>

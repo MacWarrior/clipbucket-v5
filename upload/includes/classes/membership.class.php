@@ -181,6 +181,7 @@ class Membership
                 $select[] = $this->tablename . '.frequency';
                 $join[] = ' LEFT JOIN ' . cb_sql_table('user_memberships_status') . ' ON user_memberships_status.id_user_memberships_status = ' . $this->tablename_user_membership . '.id_user_memberships_status ';
                 $select[] = 'user_memberships_status.language_key_title';
+                $select[] = $this->tablename.'.id_membership AS id_membership_from_join';
 
             } else {
                 $select = $this->getSQLFields('membership');

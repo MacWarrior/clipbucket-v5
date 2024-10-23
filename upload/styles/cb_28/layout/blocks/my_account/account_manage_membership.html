@@ -1,14 +1,15 @@
 <div id="menu_membership" class="tab-pane {if $mode =='membership'}active{/if}">
-    {if $need_to_active_membership && $can_renew_membership}
+    {if User::getInstance()->isUserMustRenewMembership() && $can_renew_membership}
         <h2>{lang code='renew_membership'}</h2>
         <button class="btn-primary btn mb-2">{lang('renew')}</button>
     {/if}
-    {if $need_to_active_membership}
+    {if User::getInstance()->isUserMustRenewMembership()}
         <h2>{lang code='available_memberships'}</h2>
         <table class="table table-bordered table-striped">
             <tr>
                 <th class="col-md-2">{lang('user_level')}</th>
                 <th class="col-md-2">{lang('frequency')}</th>
+                <th class="col-md-2">{lang('description')}</th>
                 <th class="col-md-2">{lang('base_price')}</th>
                 <th class="col-md-2">{lang('storage_quota')}</th>
                 <th class="col-md-2">{lang('storage_price')}</th>
@@ -17,6 +18,7 @@
                 <tr>
                     <td>{$membership.user_level_name}</td>
                     <td>{lang('frequency_'|cat:$membership.frequency)}</td>
+                    <td>{$membership.description}</td>
                     <td>
                         {if $membership.base_price != 0}
                             {$membership.base_price} {$membership.symbol}
@@ -42,30 +44,32 @@
             {/foreach}
         </table>
     {/if}
-    <h2>{lang code='membership_history'}</h2>
-    <table class="table table-bordered table-striped">
-        <tr>
-            <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
-            <th class="col-md-2" style="cursor:pointer;">{lang('date_end')}</th>
-            <th class="col-md-2" style="cursor:pointer;">{lang('status')}</th>
-            <th class="col-md-2" style="cursor:pointer;">{lang('user_levels')}</th>
-            <th class="col-md-1" style="cursor:pointer;">{lang('price')}</th>
-            {if config('enable_storage_history' == 'yes')}
-                <th class="col-md-2" style="cursor:pointer;">{lang('max_period_storage')}</th>
-            {/if}
-        </tr>
-        {section name=sub loop=$memberships}
+    {if !empty($memberships)}
+        <h2>{lang code='membership_history'}</h2>
+        <table class="table table-bordered table-striped">
             <tr>
-                <td><span>{display_clean($memberships[sub].date_start)}</span></td>
-                <td><span>{if $memberships[sub].date_end}{display_clean($memberships[sub].date_end)}{else}{lang('never')}{/if}</span></td>
-                <td><span>{lang($memberships[sub].language_key_title)}</span></td>
-                <td><span>{lang($memberships[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$memberships[sub].frequency)}</span></td>
-                <td><span>{display_clean($memberships[sub].price)} {display_clean($memberships[sub].symbol)}</span></td>
+                <th class="col-md-2" style="cursor:pointer;">{lang('date_start')} </th>
+                <th class="col-md-2" style="cursor:pointer;">{lang('date_end')}</th>
+                <th class="col-md-2" style="cursor:pointer;">{lang('status')}</th>
+                <th class="col-md-2" style="cursor:pointer;">{lang('user_levels')}</th>
+                <th class="col-md-1" style="cursor:pointer;">{lang('price')}</th>
                 {if config('enable_storage_history' == 'yes')}
-                    {if $memberships[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$memberships[sub].date_end}{/if}
-                    <td><span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($memberships[sub].userid, $memberships[sub].date_start, $date_end),2)}</span></td>
+                    <th class="col-md-2" style="cursor:pointer;">{lang('max_period_storage')}</th>
                 {/if}
             </tr>
-        {/section}
-    </table>
+            {section name=sub loop=$memberships}
+                <tr>
+                    <td><span>{display_clean($memberships[sub].date_start)}</span></td>
+                    <td><span>{if $memberships[sub].date_end}{display_clean($memberships[sub].date_end)}{else}{lang('never')}{/if}</span></td>
+                    <td><span>{lang($memberships[sub].language_key_title)}</span></td>
+                    <td><span>{lang($memberships[sub].user_level_name|strtolower|replace:' ':'_')} - {lang('frequency_'|cat:$memberships[sub].frequency)}</span></td>
+                    <td><span>{display_clean($memberships[sub].price)} {display_clean($memberships[sub].symbol)}</span></td>
+                    {if config('enable_storage_history' == 'yes')}
+                        {if $memberships[sub].date_end  == null}{assign var=date_end value='2999-01-01 00:00:00'}{else}{assign var=date_end value=$memberships[sub].date_end}{/if}
+                        <td><span>{System::get_readable_filesize(User::getInstance()->getPeriodMaxStorageUseByUser($memberships[sub].userid, $memberships[sub].date_start, $date_end),2)}</span></td>
+                    {/if}
+                </tr>
+            {/section}
+        </table>
+    {/if}
 </div>

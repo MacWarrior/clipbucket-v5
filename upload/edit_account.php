@@ -138,6 +138,9 @@ switch ($mode) {
         assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
         break;
     case 'membership':
+        if( config('enable_membership') != 'yes' ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
         assign('mode', 'membership');
         if (!empty($_POST['page'])) {
             $sql_limit = create_query_limit($_POST['page'], config('video_list_view_video_history'));
