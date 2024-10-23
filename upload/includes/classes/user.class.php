@@ -2381,7 +2381,15 @@ class userquery extends CBCategory
             $value_array[] = $iid;
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access] ? $array[$access] : 'no';
+                $value_array[] = $array[$access] ?: 'no';
+            }
+            if (!array_key_exists('plugins_perms', $fields_array)) {
+                $fields_array[] = 'plugins_perms';
+                $value_array[] = '';
+            }
+            if (!array_key_exists('enable_channel_page', $fields_array)) {
+                $fields_array[] = 'enable_channel_page';
+                $value_array[] = 'no';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
             return true;
@@ -2448,7 +2456,7 @@ class userquery extends CBCategory
         if ($level) {
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access];
+                $value_array[] = $array[$access] ?? 'no';
             }
 
             $fields_array[] = 'enable_channel_page';
