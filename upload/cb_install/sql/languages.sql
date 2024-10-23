@@ -1345,4 +1345,7 @@ VALUES ('admin_setting'),
        ('enable_public_video_page_tips'),
        ('available_memberships'),
        ('renew_membership'),
-       ('renew');
+       ('renew'),
+       ('manage_membership'),
+       ('cant_delete_level_because_membership'),
+       ('user_level_memberships_deleted');
