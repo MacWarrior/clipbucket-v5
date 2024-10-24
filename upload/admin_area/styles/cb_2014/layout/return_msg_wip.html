@@ -1,0 +1,13 @@
+{if $success}
+    <div class="alert alert-success alert-dismissable" style="display:inline-block;width:100%;">
+        <ul class="list-unstyled">
+            <li>
+                <img alt='msg' src="{$imageurl}/ok.png"/>
+                {lang('wip_done')}
+                <a style="cursor :pointer;" class="launch_wip">{lang code='relaunch'}</a>
+            </li>
+        </ul>
+    </div>
+{else}
+    {include './msg_wip.html'}
+{/if}
