@@ -153,7 +153,11 @@ $(document).ready(function(){
     if (can_sse === 'true' && is_update_processing === 'true') {
         connectSSE();
     }
+    updateListeners();
 
+});
+
+function updateListeners () {
     $('.update_core').on('click', function () {
         update('core')
     });
@@ -172,10 +176,15 @@ $(document).ready(function(){
                 if (data.success == false) {
                     $(".page-content").prepend(data.msg)
                 }
+                var wip_div = $('.launch_wip').parents('.alert');
+                var parent = wip_div.parent();
+                wip_div.remove();
+                parent.append(data.template)
+                updateListeners();
             }
         });
-    })
-});
+    });
+}
 
 let showMsg = function(msg, type, autoDismiss){
 
@@ -238,6 +247,7 @@ function connectSSE() {
             eventSource.close();
         }
         $('#update_div').html(data.html);
+        updateListeners();
 
     });
     eventSource.addEventListener('open', function (e) {
