@@ -292,6 +292,7 @@ class Photo
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
         }
+        $group[] = $collection_items_table.'.collection_id';
 
         if( $param_orphan ){
             $conditions[] = $collection_items_table . '.ci_id IS NULL';
