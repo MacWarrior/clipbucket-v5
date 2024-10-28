@@ -27,6 +27,7 @@ $whoops->register();
 $modes = [
     'agreement',
     'precheck',
+    'update',
     'permission',
     'database',
     'dataimport',

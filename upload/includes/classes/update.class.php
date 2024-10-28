@@ -630,6 +630,15 @@ class Update
         return $diff;
     }
 
+    /**
+     * @return array|false
+     * @throws Exception
+     */
+    public function getChangeLogDiffCurrent()
+    {
+        return $this->getChangelogDiff($this->getChangelog($this->getCurrentCoreVersionCode()), $this->getWebChangelog());
+    }
+
     public function getUpdateVersions(): array
     {
         $versions = [

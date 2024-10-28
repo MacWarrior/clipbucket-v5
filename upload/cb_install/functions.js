@@ -100,4 +100,25 @@ $( document ).ready(function() {
             }, 'JSON');
         });
     }
+
+    $('.udpdate_core').on('click', function () {
+        var button = $(this);
+        $.post({
+            url: 'update_core.php',
+            dataType: "json",
+            success: (data) => {
+                if (data.msg) {
+                    $('#resultDiv').show().html(data.msg);
+                    $('.errorDiv').hide().html('');
+                    $('.changelog').hide();
+                    button.parent().html('<span class="msg ok"></span>');
+                }
+                if (data.err) {
+                    $('.errorDiv').show().html(data.err);
+                    $('#resultDiv').hide().html('');
+                    $('#loading').attr('src', 'images/cross_arrow.png');
+                }
+            }
+        })
+    });
 });
