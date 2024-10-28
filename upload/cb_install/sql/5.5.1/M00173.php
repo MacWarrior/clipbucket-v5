@@ -2,7 +2,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00173 extends \Migration
 {
     /**
      * @throws \Exception
@@ -13,6 +13,5 @@ class MWIP extends \Migration
            'fr'=>'L\'utilisateur %s ne peut pas recevoir de message privés',
            'en'=>'User %s cannot receive private messages'
        ]);
-
     }
 }
