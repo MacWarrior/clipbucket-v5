@@ -94,7 +94,7 @@ $check_time_cli = System::isDateTimeSynchro($datetime_datas_cli, $current_dateti
 assign('check_time_cli', $check_time_cli);
 assign('datetime_datas_cli', $datetime_datas_cli);
 
-assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec));
+assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec && $check_time_cli));
 
 //SERVICES
 $phpVersionReq = '7.0.0';
