@@ -1300,4 +1300,5 @@ VALUES ('admin_setting'),
        ('user_has_been_set_as_featured'),
        ('user_has_been_removed_from_featured_users'),
        ('cant_featured_deactivate_user'),
-       ('cannot_access_page');
+       ('cannot_access_page'),
+       ('enable_channel_page_desc');
