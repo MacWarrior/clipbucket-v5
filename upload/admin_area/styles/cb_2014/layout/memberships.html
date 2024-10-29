@@ -14,6 +14,7 @@
             <th>{lang('base_price')}</th>
             <th>{lang('storage_quota')}</th>
             <th>{lang('storage_price')}</th>
+            <th>{lang('nb_users')}</th>
             <th>{lang('active')}</th>
             <th>&nbsp;</th>
         </tr>
@@ -44,6 +45,9 @@
                     {else}
                         {lang('free')}
                     {/if}
+                </td>
+                <td>
+                    {$membership.nb_user_membership}
                 </td>
                 <td>
                     <input name="disabled" id="disabled" data-id="{$membership.id_membership}" {if !$membership.disabled}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 disabled_membership"/>

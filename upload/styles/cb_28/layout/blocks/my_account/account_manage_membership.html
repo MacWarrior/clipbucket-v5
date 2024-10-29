@@ -18,7 +18,7 @@
                 <tr>
                     <td>{$membership.user_level_name}</td>
                     <td>{lang('frequency_'|cat:$membership.frequency)}</td>
-                    <td>{$membership.description}</td>
+                    <td>{nl2br($membership.description)}</td>
                     <td>
                         {if $membership.base_price != 0}
                             {$membership.base_price} {$membership.symbol}

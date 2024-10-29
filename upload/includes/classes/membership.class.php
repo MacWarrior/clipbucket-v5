@@ -101,6 +101,7 @@ class Membership
         $param_get_user_membership = $params['get_user_membership'] ?? false;
         $param_date_between = $params['date_between'] ?? false;
         $param_is_disabled = $params['is_disabled'] ?? false;
+        $param_get_nb_users = $params['get_nb_users'] ?? false;
 
         //CONDITIONS
         $conditions = [];
@@ -185,6 +186,9 @@ class Membership
 
             } else {
                 $select = $this->getSQLFields('membership');
+                if ($param_get_nb_users) {
+                    $select[] = ' COUNT(DISTINCT '.$this->tablename_user_membership . '.id_user_membership) AS nb_user_membership ';
+                }
             }
             $select[] = 'user_levels.user_level_name';
             $select[] = 'currency.symbol';

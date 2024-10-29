@@ -20,6 +20,7 @@ $breadcrumb[1] = [
 $page = mysql_clean($_GET['page']);
 $params['limit'] = create_query_limit($page, config('admin_pages'));
 $params['group'] = Membership::getInstance()->getTablename() .'.id_membership';
+$params['get_nb_users'] = true;
 $memberships = Membership::getInstance()->getAll($params);
 assign('memberships', $memberships);
 if (empty($memberships)) {
@@ -31,6 +32,7 @@ if (empty($memberships)) {
         $params['count'] = true;
         unset($params['limit']);
         unset($params['order']);
+        unset($params['get_nb_users']);
         $total_rows = Membership::getInstance()->getAll($params);
     }
 }

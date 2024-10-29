@@ -715,11 +715,14 @@ class User
      * @return bool
      * @throws Exception
      */
-    public function isUserMustRenewMembership(): bool
+    public function isUserMustRenewMembership(int $user_id = null): bool
     {
-        if (empty($this->user_data['need_to_active_membership'])) {
+        if (empty($user_id)) {
+            $user_id = user_id();
+        }
+        if (!isset($this->user_data['need_to_active_membership'])) {
             $need_to_active_membership = false;
-            if (config('enable_membership') == 'yes' && !empty(user_id()) && !has_access('admin_access')) {
+            if (config('enable_membership') == 'yes' && !empty($user_id) && !has_access('admin_access')) {
                 //gettings memberships for current userLevel
                 $memberships = Membership::getInstance()->getAll([
                     'is_disabled'   => 0
@@ -728,7 +731,7 @@ class User
                     $resutls = Membership::getInstance()->getAll([
                         'first_only'          => true,
                         'date_between'        => date('Y-m-d H:i:s'),
-                        'userid'              => user_id(),
+                        'userid'              => $user_id,
                         'get_user_membership' => true
                     ]);
                     $need_to_active_membership = empty($resutls);
@@ -836,12 +839,13 @@ class userquery extends CBCategory
 
         if ($this->sessions['smart_sess']) {
             $this->userid = $this->sessions['smart_sess']['session_user'];
+            $this->is_login = !empty($this->userid);
         }
 
         $udetails = '';
 
         if ($this->userid) {
-            $udetails = $this->get_user_details($this->userid, true);
+            $udetails = $this->get_user_details($this->userid );
             $user_profile = $this->get_user_profile($this->userid);
             if ($udetails && $user_profile) {
                 $udetails['profile'] = $user_profile;
@@ -1051,7 +1055,9 @@ class userquery extends CBCategory
                     $this->userid = $udetails['userid'];
                     $this->username = $udetails['username'];
                     $this->level = $udetails['level'];
-
+                    $this->is_login = true;
+                    //reset permission
+                    $this->permission = null;
                     //Updating User last login , num of visits and ip
                     Clipbucket_db::getInstance()->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],

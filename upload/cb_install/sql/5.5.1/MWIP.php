@@ -507,5 +507,11 @@ class MWIP extends \Migration
             'fr'=>'Les abonnements liés au niveau d\'utilisateur ont été supprimés',
             'en'=>'User level\'s memberships have been deleted'
         ]);
+
+        self::generateTranslation('nb_users', [
+            'fr'=>'Nombres d\'utilisateurs',
+            'en'=>'Number of users'
+        ]);
+
     }
 }

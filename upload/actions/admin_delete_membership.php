@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 userquery::getInstance()->admin_login_check();
 
 $id_membership = $_POST['id_membership'];
-$membership = Membership::getInstance()->getOne(['id_membership'=>$id_membership]);
+$membership = Membership::getInstance()->getOne(['id_membership'=>$id_membership, 'get_user_membership'=>true]);
 if (!empty($membership['id_user_membership'])) {
     e(lang('cant_delete_membership_at_least_one_user'));
     $success = false;
