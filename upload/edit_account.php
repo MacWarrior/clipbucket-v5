@@ -93,8 +93,7 @@ $params = [
     'limit'   => $sql_limit ?? '',
     'order'  => ' date_start DESC '
 ];
-$memberships = Membership::getInstance()->getAllHistoMembershipForUser($params);
-assign('memberships', $memberships);
+
 switch ($mode) {
     default:
         redirect_to(cblink(['name' => 'my_account']));
@@ -136,31 +135,6 @@ switch ($mode) {
         }
         assign('mode', 'subs');
         assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
-        break;
-    case 'membership':
-        if( config('enable_membership') != 'yes' ){
-            redirect_to(cblink(['name' => 'my_account']));
-        }
-        assign('mode', 'membership');
-        if (!empty($_POST['page'])) {
-            $sql_limit = create_query_limit($_POST['page'], config('video_list_view_video_history'));
-        }
-        $params['count'] = true;
-        unset($params['limit']);
-        $totals_pages = count_pages(Membership::getInstance()->getAllHistoMembershipForUser($params), config('video_list_view_video_history')) ;
-
-        $available_memberships = Membership::getInstance()->getAll([
-            'is_disabled'   => false
-        ]);
-        $can_renew_membership = false;
-        foreach ($available_memberships as $available_membership) {
-            if ($available_membership['user_level_id'] == User::getInstance()->getCurrentUserUserLevelID()) {
-                $can_renew_membership = true;
-                break;
-            }
-        }
-        assign('available_memberships', $available_memberships);
-        assign('can_renew_membership', $can_renew_membership);
         break;
 }
 

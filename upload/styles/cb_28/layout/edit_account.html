@@ -62,13 +62,6 @@
                         </a>
                     </li>
                     {/if}
-                    {if config('enable_membership') == 'yes'}
-                        <li class="{if $mode =='membership'}active{/if}">
-                            <a href="/edit_account.php?mode=membership">
-                                <h5>{lang code='manage_membership'}</h5>
-                            </a>
-                        </li>
-                    {/if}
                 </ul>
                 <br/>
                 <div class="tab-content clearfix">
@@ -92,12 +85,6 @@
                     <div id="msubscription" class="tab-pane {if $mode =='subs'}active{/if}">
                         {include file="$style_dir/blocks/my_account/account_manage_subscriptions.html"}
                     </div>
-                    {/if}
-
-                    {if config('enable_membership') == 'yes'}
-                        <div id="menu_membership" class="tab-pane {if $mode =='membership'}active{/if}">
-                            {include file="$style_dir/blocks/my_account/account_manage_membership.html"}
-                        </div>
                     {/if}
                 </div>
     {/if}

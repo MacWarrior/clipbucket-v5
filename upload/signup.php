@@ -61,13 +61,7 @@ if (isset($_POST['login'])) {
     }
 
     if (userquery::getInstance()->login_user($username, $password, $remember)) {
-        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !has_access('admin_access')) {
-            redirect_to(BASEURL . DIRECTORY_SEPARATOR . 'edit_account.php?mode=membership');
-        } elseif ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
-        } else {
-            redirect_to(cblink(['name' => 'my_account']));
-        }
+       User::redirectAfterLogin();
     }
 }
 

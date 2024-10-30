@@ -11,10 +11,6 @@ if (!userquery::getInstance()->is_admin_logged_as_user()) {
 }
 $pages->page_redir();
 
-if ($_GET['revert']) {
-    userquery::getInstance()->revert_from_user();
-    redirect_to('/admin_area');
-}
 $uid = $_GET['uid'];
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
@@ -28,6 +24,6 @@ if ($userLevel > 1 && $userToLoginAsLevel == 1) {
 }
 
 if (userquery::getInstance()->login_as_user($uid)) {
-    redirect_to(BASEURL);
+    User::redirectAfterLogin();
 }
 display_it();
