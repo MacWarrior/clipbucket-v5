@@ -1301,5 +1301,6 @@ VALUES ('admin_setting'),
        ('user_has_been_removed_from_featured_users'),
        ('cant_featured_deactivate_user'),
        ('cannot_access_page'),
-       ('maintained_by'),
-       ('user_cant_receive_pm');
+       ('user_cant_receive_pm'),
+       ('enable_channel_page_desc'),
+       ('missing_timezone');
