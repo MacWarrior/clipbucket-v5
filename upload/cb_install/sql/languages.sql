@@ -1303,4 +1303,6 @@ VALUES ('admin_setting'),
        ('cannot_access_page'),
        ('maintained_by'),
        ('user_cant_receive_pm'),
+       ('cannot_access_page'),
+       ('enable_channel_page_desc'),
        ('missing_timezone');

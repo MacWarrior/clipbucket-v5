@@ -33,9 +33,8 @@ switch ($mode) {
 
     case 'edit':
         //Updating Level permissions
-        if (isset($_POST['update_level_perms'])) {
-            $perm_array = $_POST;
-            userquery::getInstance()->update_user_level($lid, $perm_array);
+        if (!empty($_POST)) {
+            userquery::getInstance()->update_user_level($lid, $_POST);
         }
 
         //Getting Details of $level
@@ -60,9 +59,8 @@ switch ($mode) {
         break;
 
     case 'add':
-        if (isset($_POST['add_new_level'])) {
-            $array = $_POST;
-            if (userquery::getInstance()->add_user_level($array)) {
+        if (!empty($_POST)) {
+            if (userquery::getInstance()->add_user_level($_POST)) {
                 redirect_to('user_levels.php?added=true');
             }
         }
