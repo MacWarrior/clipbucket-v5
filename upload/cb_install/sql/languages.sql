@@ -1302,4 +1302,5 @@ VALUES ('admin_setting'),
        ('cant_featured_deactivate_user'),
        ('cannot_access_page'),
        ('maintained_by'),
-       ('user_cant_receive_pm');
+       ('user_cant_receive_pm'),
+       ('missing_timezone');
