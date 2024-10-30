@@ -101,7 +101,8 @@ $( document ).ready(function() {
         });
     }
 
-    $('#submit_update').on('click', function (){
+    $('#submit_update').on('click', function (e){
+        e.preventDefault();
         checkBeforeSubmit(need_update);
     });
     $('.update_core').on('click', function () {
@@ -119,7 +120,6 @@ $( document ).ready(function() {
                 if (data.msg) {
                     $('#resultDiv').show().html(data.msg);
                     $('.errorDiv').hide().html('');
-                    $('.changelog').hide();
                     button.parent().parent().remove();
                     need_update = false;
                 }
@@ -143,6 +143,8 @@ function checkBeforeSubmit(check) {
         go_submit = true;
     }
     if (go_submit) {
-        $('#installation').trigger("submit")();
+        $('#installation').trigger("submit");
+    } else {
+        return false;
     }
 }

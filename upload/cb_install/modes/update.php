@@ -26,11 +26,11 @@
                         </button></span><br></div>';
                 $diff_log = Update::getInstance()->getChangeLogDiffCurrent();?>
                 <div id="changelog">
-                <?php if ($diff_log) {
-                    echo Update::getInstance()->getChangelogHTML($diff_log);
-                } else {
-                    echo '<span>The new revision has the same changelog</span>';
-                } ?>
+                    <?php if ($diff_log) {
+                        echo Update::getInstance()->getChangelogHTML($diff_log);
+                    } else {
+                        echo '<span>The new revision has the same changelog</span>';
+                    } ?>
                 </div>
         </dd>
     </dl>
@@ -48,5 +48,5 @@
     </form>
 </div>
 <script>
-    var need_update = <?php echo $need_update;?>;
+    var need_update = <?php echo $need_update ?: 0;?>;
 </script>
