@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"173",
+  "revision":"174",
   "status":"dev",
   "detail":[
     {
@@ -36,6 +36,7 @@
         ,"Refactor comments options"
         ,"Refactor collection items management"
         ,"Refactor orphan photos management"
+        ,"Refactor user levels management interface"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
