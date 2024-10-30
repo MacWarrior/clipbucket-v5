@@ -7,6 +7,7 @@ require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
+require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 $whoops = new \Whoops\Run;
@@ -41,6 +42,8 @@ $mode = $_POST['mode'] ?? false;
 if (!$mode || !in_array($mode, $modes)) {
     $mode = 'agreement';
 }
+
+$need_update = !Update::getInstance()->isCoreUpToDate();
 
 /**
  * Clipbucket modes

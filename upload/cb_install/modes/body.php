@@ -25,14 +25,15 @@
     <div class="cb_container">
         <div class="cb_navbar">
             <ul>
-                <li <?php echo selected('agreement'); ?>><span><?php echo($has_translation ? lang('agreement') : 'Agreement'); ?></span></li>
-                <li <?php echo selected('precheck'); ?>><span> <?php echo($has_translation ? lang('pre_check') : 'Pre Check'); ?></span></li>
-                <li <?php echo selected('permission'); ?>><span> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?></span></li>
-                <li <?php echo selected('database'); ?>><span> <?php echo($has_translation ? lang('database') : 'Database'); ?></span></li>
-                <li <?php echo selected('dataimport'); ?>><span> <?php echo($has_translation ? lang('data_import') : 'Data import'); ?></span></li>
-                <li <?php echo selected('sitesettings'); ?>><span> <?php echo($has_translation ? lang('site_setting') : 'Site Settings'); ?></span></li>
-                <li <?php echo selected('adminsettings'); ?>><span> <?php echo($has_translation ? lang('admin_account') : 'Admin account'); ?></span></li>
-                <li <?php echo selected('finish'); ?>><span> <?php echo($has_translation ? lang('finish') : 'Finish'); ?></span></li>
+                <li <?php echo selected('agreement'); ?>><?php echo($has_translation ? lang('agreement') : 'Agreement'); ?></li>
+                <li <?php echo selected('precheck'); ?>> <?php echo($has_translation ? lang('pre_check') : 'Pre Check'); ?><span></span></li>
+                <?php if ($need_update) { ?><li <?php echo selected('update'); ?>> <?php echo($has_translation ? lang('update') : 'Update'); ?><span></span></li><?php } ?>
+                <li <?php echo selected('permission'); ?>> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?><span></span></li>
+                <li <?php echo selected('database'); ?>> <?php echo($has_translation ? lang('database') : 'Database'); ?><span></span></li>
+                <li <?php echo selected('dataimport'); ?>> <?php echo($has_translation ? lang('data_import') : 'Data import'); ?><span></span></li>
+                <li <?php echo selected('sitesettings'); ?>> <?php echo($has_translation ? lang('site_setting') : 'Site Settings'); ?><span></span></li>
+                <li <?php echo selected('adminsettings'); ?>> <?php echo($has_translation ? lang('admin_account') : 'Admin account'); ?><span></span></li>
+                <li <?php echo selected('finish'); ?>> <?php echo($has_translation ? lang('finish') : 'Finish'); ?><span></span></li>
             </ul>
         </div>
     </div>

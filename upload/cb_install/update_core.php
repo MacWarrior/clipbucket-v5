@@ -23,9 +23,10 @@ if (!file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::g
 }
 
 $result = Update::updateGitSources();
+
 $return = ['success'=>$result];
 if ($result) {
-    $return['msg']='Sources has been update successfully';
+    $return['msg']='ClipbucketV5 has been successfully updated !';
 } else {
     $return['err']='An error occurred during update. Please try again';
 }

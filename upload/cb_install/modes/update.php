@@ -1,80 +1,52 @@
 <div class="nav_des clearfix">
     <div class="cb_container">
         <h4 style="color:#fff;">Update</h4>
-        <p style="color:#fff; font-size:13px;">Check if your ClipbucketV5 version is up to date.
+        <p style="color:#fff; font-size:13px;">Your ClipBucketV5 installation seems outdated, please update for the best experience !
     </div>
 </div>
 
 <?php
 
-/**
- * Copy of function from includes/functions.php without config()
- * Cannot be declared in both functions_install and functions because some step have them both
- * @TODO find a better way to get git version
- * @param string $format
- * @param string $timeout
- * @return resource
- */
-function get_proxy_settings(string $format = '', string $timeout = '')
-{
-    switch ($format) {
-        default:
-        case 'file_get_contents':
-            $context = null;
-            if( !empty($timeout)) {
-                $context['http']['timeout'] = (int)$timeout;
-            }
 
-            return stream_context_create($context);
-    }
-}
-$isGitInstalled = Update::getInstance()->isGitInstalled();
-$isGitManaged = Update::getInstance()->isManagedWithGit();
-$isCoreUpToDate = Update::getInstance()->isCoreUpToDate();
 ?>
-<div id="sub_container" class="grey-text">
+<div id="sub_container" class="grey-text"">
+<div style="text-align: center;">
     <div class="errorDiv" style="display:none;"></div>
-    <div id="resultDiv" style="display:none;"></div>
-    <dl>
-        <dt>
-            Client Git
-        </dt>
+    <div id="resultDiv" class="alert alert-success" style="display:none; "></div>
+</div>
+    <dl style="margin-top: 10px;">
         <dd>
-        <span>
-            <span class="msg <?php echo $isGitInstalled ? 'ok' : 'alert_cross'; ?>"></span>
-        </span>
-        </dd>
-        <dt class="white">
-            Git Check
-        </dt>
-        <dd class="white">
-        <span>
-            <span class="msg <?php echo $isGitManaged ? 'ok' : 'alert_cross'; ?>"></span>
-        </span>
-        </dd>
-        <dt>
-            Up to date
-        </dt>
-        <dd>
-        <span>
             <?php
-                if ($isCoreUpToDate) {
-                    echo '<span class="msg ok"></span>';
+
+                echo '<div id="update_button"><span>A new version is available ! Click here to update <button class="btn btn-success update_core " style="min-width: 6em;">
+                        <div class="text">Update</div>
+                        <div class="spinner-content" id="spinner-content" style="display: none;">
+                            <p class="fa-spinner fa fa-spin animate-spin"></p>
+                        </div>
+                        </button></span><br></div>';
+                $diff_log = Update::getInstance()->getChangeLogDiffCurrent();?>
+                <div id="changelog">
+                <?php if ($diff_log) {
+                    echo Update::getInstance()->getChangelogHTML($diff_log);
                 } else {
-                    echo 'A new version is available ! Click here to update <button class="btn btn-success udpdate_core" >Update</button>';
-                    echo Update::getInstance()->getChangelogHTML(Update::getInstance()->getChangeLogDiffCurrent());
-                }
-            ?>
-        </span>
+                    echo '<span>The new revision has the same changelog</span>';
+                } ?>
+                </div>
         </dd>
     </dl>
 </div>
 <div id="sub_container" class="grey-text">
     <form method="post" id="installation">
-
         <input type="hidden" name="mode" value="permission" id="mode"/>
         <div style="text-align:right;">
-            <?php button('Continue to next step', 'onclick="$(\'#installation\').submit()"'); ?>
+            <button id="submit_update" class="btn-success btn" style="min-width: 10em;">
+                <div class="text">Continue to next step</div>
+                <div class="spinner-content" id="spinner-content" style="display: none;">
+                    <p class="fa-spinner fa fa-spin animate-spin"></p>
+                </div></button>
         </div>
     </form>
 </div>
+<script>
+    var need_update = <?php echo $need_update;?>;
+</script>

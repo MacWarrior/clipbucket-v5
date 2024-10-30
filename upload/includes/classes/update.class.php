@@ -99,7 +99,7 @@ class Update
 
         $file_url = self::$urlGit . '/' . $filename;
 
-        $context = get_proxy_settings('file_get_contents', 2);
+        $context = Network::get_proxy_settings('file_get_contents', 2);
         $file_content = json_decode(file_get_contents($file_url, false, $context), true);
 
         if( empty($file_content) ){
@@ -729,7 +729,7 @@ class Update
     {
         chdir($root_directory);
 
-        $output = shell_exec(System::get_binaries('git') . ' reset --hard');
+        $output = shell_exec(System::get_binaries('git') . ' resettt --hard');
         if( !$output ){
             return false;
         }
@@ -749,6 +749,9 @@ class Update
         return shell_exec(System::get_binaries('git') . ' pull');
     }
 
+    /**
+     * @return bool
+     */
     public static function updateGitSources(): bool
     {
         $update = Update::getInstance();
