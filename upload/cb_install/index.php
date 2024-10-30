@@ -43,6 +43,12 @@ if (!$mode || !in_array($mode, $modes)) {
     $mode = 'agreement';
 }
 
+if ($mode == 'agreement') {
+    if (isset($_SESSION['needed_update'])) {
+        unset($_SESSION['needed_update']);
+    }
+}
+
 $need_update = !Update::getInstance()->isCoreUpToDate();
 
 /**
