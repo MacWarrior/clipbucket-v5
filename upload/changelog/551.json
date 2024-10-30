@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"174",
+  "revision":"175",
   "status":"dev",
   "detail":[
     {
@@ -50,6 +50,7 @@
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
         ,"Update user tags order & display"
+        ,"Update System Info interface"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
