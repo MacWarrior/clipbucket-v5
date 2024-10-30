@@ -27,7 +27,7 @@
             <ul>
                 <li <?php echo selected('agreement'); ?>><?php echo($has_translation ? lang('agreement') : 'Agreement'); ?></li>
                 <li <?php echo selected('precheck'); ?>> <?php echo($has_translation ? lang('pre_check') : 'Pre Check'); ?><span></span></li>
-                <?php if ($need_update) { ?><li <?php echo selected('update'); ?>> <?php echo($has_translation ? lang('update') : 'Update'); ?><span></span></li><?php } ?>
+                <?php if ($need_update || ($_SESSION['needed_update']??false)) { ?><li <?php echo selected('update'); ?>> <?php echo($has_translation ? lang('update') : 'Update'); ?><span></span></li><?php } ?>
                 <li <?php echo selected('permission'); ?>> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?><span></span></li>
                 <li <?php echo selected('database'); ?>> <?php echo($has_translation ? lang('database') : 'Database'); ?><span></span></li>
                 <li <?php echo selected('dataimport'); ?>> <?php echo($has_translation ? lang('data_import') : 'Data import'); ?><span></span></li>

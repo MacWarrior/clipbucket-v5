@@ -759,7 +759,7 @@ class Update
             return false;
         }
 
-        $root_directory = $update->getGitRootDirectory();
+        $root_directory = trim($update->getGitRootDirectory());
         if( !$root_directory ){
             return false;
         }
