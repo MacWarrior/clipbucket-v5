@@ -2464,7 +2464,7 @@ class userquery extends CBCategory
             }
 
             $fields_array[] = 'enable_channel_page';
-            $value_array[] = mysql_clean($array['enable_channel_page']);
+            $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
             //Checking level Name
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);
