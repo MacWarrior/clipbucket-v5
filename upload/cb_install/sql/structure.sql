@@ -385,7 +385,16 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_id` int(20) NOT NULL,
   `user_level_active` enum('yes','no') NOT NULL DEFAULT 'yes',
   `user_level_name` varchar(100) NOT NULL,
-  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
+  `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no',
+  `default_homepage` ENUM (
+      'homepage'
+      ,'videos'
+      ,'public_videos'
+      ,'photos'
+      ,'collections'
+      ,'channels'
+      ,'my_account'
+  )
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels_permissions` (

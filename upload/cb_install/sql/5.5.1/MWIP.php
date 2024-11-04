@@ -457,7 +457,7 @@ class MWIP extends \Migration
                 'column' => 'allow_public_video_page'
             ]
         );
-        self::alterTable('ALTER TABLE ' . tbl('user_levels') . '  ADD COLUMN `default_homepage` ENUM(
+        self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' ADD COLUMN `default_homepage` ENUM(
             \'homepage\'
             ,\'videos\'
             ,\'public_videos\'
