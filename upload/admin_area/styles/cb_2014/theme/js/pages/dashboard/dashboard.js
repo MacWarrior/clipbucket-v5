@@ -248,7 +248,7 @@ function connectSSE() {
         updateListeners();
         if (data.is_updating === 'false') {
             eventSource.close();
-
+            checkStatus();
         } else {
             $('.launch_wip').off('click');
         }
