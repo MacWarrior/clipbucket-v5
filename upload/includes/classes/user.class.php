@@ -13,6 +13,8 @@ class User
     private $display_var_name = '';
     private $user_data = [];
 
+    private $default_homepage_list = [];
+
     /**
      * @throws Exception
      */
@@ -123,6 +125,16 @@ class User
         $this->display_block = LAYOUT . '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
+
+        $this->default_homepage_list = [
+            'homepage'
+            ,'videos'
+            ,'public_videos'
+            ,'photos'
+            ,'collections'
+            ,'channels'
+            ,'my_account'
+        ];
 
         if( $user_id ){
             $params = [];
@@ -705,7 +717,7 @@ class User
         $sql = ' SELECT user_levels.*, IF(users.userid IS NULL, FALSE, TRUE) AS has_users FROM ' . cb_sql_table('user_levels') . ' 
             LEFT JOIN '.cb_sql_table('users').' ON users.level = user_level_id 
                 WHERE user_level_name != \'anonymous\' 
-                GROUP BY user_level_id
+                GROUP BY user_level_id, has_users
                 ORDER BY  user_level_id ';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if ( empty($results)) {
@@ -767,8 +779,27 @@ class User
         } elseif ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
-            redirect_to(cblink(['name' => 'my_account']));
+            $default_hompepage = userquery::getInstance()->get_user_level(user_id())['default_homepage'];
+            switch ($default_hompepage) {
+                case 'homepage':
+                    $link = '';
+                    break;
+                case 'public_videos':
+                    $link = 'videos_public';
+                    break;
+                case 'my_account':
+                    $link = 'myaccount';
+                    break;
+                default:
+                    $link = $default_hompepage;
+            }
+            redirect_to(BASEURL . DIRECTORY_SEPARATOR . $link . '.php');
         }
+    }
+
+    public function getDefaultHomepageList()
+    {
+        return $this->default_homepage_list;
     }
 }
 
@@ -2585,10 +2616,9 @@ class userquery extends CBCategory
             $fields_array[] = 'enable_channel_page';
             $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
             //Checking level Name
-            if (!empty($array['level_name'])) {
-                $level_name = mysql_clean($array['level_name']);
+            if (!empty($array['level_name']) && !empty($array['default_homepage'])) {
                 //Updating Now
-                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name'], [$level_name], " user_level_id = '$id'");
+                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name', 'default_homepage'], [mysql_clean($array['level_name']), mysql_clean($array['default_homepage'])], " user_level_id = '$id'");
             }
 
             if (isset($_POST['plugin_perm'])) {

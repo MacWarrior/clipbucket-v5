@@ -457,6 +457,22 @@ class MWIP extends \Migration
                 'column' => 'allow_public_video_page'
             ]
         );
+        self::alterTable('ALTER TABLE ' . tbl('user_levels') . '  ADD COLUMN `default_homepage` ENUM(
+            \'homepage\'
+            ,\'videos\'
+            ,\'public_videos\'
+            ,\'photos\'
+            ,\'collections\'
+            ,\'channels\'
+            ,\'my_account\'
+        ) NOT NULL DEFAULT \'homepage\'',
+            [
+                'table'  => 'user_levels'
+            ], [
+                'table'  => 'user_levels',
+                'column' => 'default_homepage'
+            ]
+        );
 
         $sql = 'INSERT INTO ' . tbl('user_permissions') . ' (permission_type, permission_name, permission_code, permission_desc, permission_default) 
         SELECT 1, \'Enable public video\', \'allow_public_video_page\', \'Allow user to view public videos\', \'no\' 
@@ -511,6 +527,16 @@ class MWIP extends \Migration
         self::generateTranslation('nb_users', [
             'fr'=>'Nombres d\'utilisateurs',
             'en'=>'Number of users'
+        ]);
+
+        self::generateTranslation('default_homepage', [
+            'fr'=>'Page d\'accueil par défaut',
+            'en'=>'Default homepage'
+        ]);
+
+        self::generateTranslation('homepage', [
+            'fr'=>'Page d\'accueil',
+            'en'=>'Homepage'
         ]);
 
     }
