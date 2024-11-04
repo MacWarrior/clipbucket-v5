@@ -236,6 +236,7 @@ class User
             case 'last_year':
                 $column = $this->getTableName() . '.doj';
                 $params['condition'] = Search::date_margin($column, $value);
+                $params['group'] = $column;
                 break;
         }
         return $params;
@@ -367,15 +368,17 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             if ($param_channel_enable ) {
                 $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
             }
-            $select[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
-        }
-
-        if( $param_group ){
-            $group[] = $param_group;
+            $is_channel_enable = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+            $select[] = $is_channel_enable . ' AS is_channel_enable';
+            $group[] = $is_channel_enable;
         }
 
         $having = '';
@@ -2502,6 +2505,10 @@ class userquery extends CBCategory
                 $fields_array[] = 'plugins_perms';
                 $value_array[] = '';
             }
+            if (!array_key_exists('enable_channel_page', $fields_array)) {
+                $fields_array[] = 'enable_channel_page';
+                $value_array[] = 'no';
+            }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
             $trad_key = string_to_snake_case($array['level_name']);
             Migration::generateTranslation($trad_key, [
@@ -2572,11 +2579,11 @@ class userquery extends CBCategory
         if ($level) {
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access];
+                $value_array[] = $array[$access] ?? 'no';
             }
 
             $fields_array[] = 'enable_channel_page';
-            $value_array[] = mysql_clean($array['enable_channel_page']);
+            $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
             //Checking level Name
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);

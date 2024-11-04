@@ -232,4 +232,23 @@ $(document).ready(function () {
 
     });
 
+    var select_timezone = $('.check_timezone');
+    if (select_timezone.length > 0) {
+        select_timezone.on('change', function (event) {
+            $('.btn-primary').prop('disabled', true);
+            $('.alert-dismissable').remove();
+            $(select_timezone).removeClass('has-error');
+            $('#spinner-content').show();
+            $.post('/actions/admin_check_timezone.php',{timezone: $(this).val()} ,function(data) {
+                if (data.success) {
+                    $('.btn-primary').prop('disabled', false);
+                } else {
+                    $(select_timezone).addClass('has-error');
+                    $(".page-content").prepend(data.msg);
+                    $('.btn-primary').prop('disabled', true);
+                }
+                $('#spinner-content').hide();
+            }, 'JSON');
+        });
+    }
 });

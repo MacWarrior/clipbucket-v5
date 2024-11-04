@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"173",
+  "revision":"176",
   "status":"dev",
   "detail":[
     {
@@ -36,6 +36,7 @@
         ,"Refactor comments options"
         ,"Refactor collection items management"
         ,"Refactor orphan photos management"
+        ,"Refactor user levels management interface"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -49,6 +50,7 @@
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
         ,"Update user tags order & display"
+        ,"Update System Info interface"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
