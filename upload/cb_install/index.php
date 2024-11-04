@@ -59,7 +59,13 @@ $need_update = !Update::getInstance()->isCoreUpToDate();
 $cbarray = ['adminsettings', 'sitesettings', 'finish'];
 
 if (in_array($mode, $cbarray)) {
+    $needed_update = $_SESSION['needed_update'] ?? null;
+    if (isset($_SESSION['needed_update'])) {
+        unset($_SESSION['needed_update']);
+    }
+    session_destroy();
     require_once DirPath::get('includes') . 'config.inc.php';
+    $_SESSION['needed_update'] = $needed_update;
 }
 
 $has_translation = class_exists('Language');
