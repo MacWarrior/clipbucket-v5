@@ -236,6 +236,7 @@ class User
             case 'last_year':
                 $column = $this->getTableName() . '.doj';
                 $params['condition'] = Search::date_margin($column, $value);
+                $params['group'] = $column;
                 break;
         }
         return $params;
@@ -367,15 +368,17 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             if ($param_channel_enable ) {
                 $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
             }
-            $select[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
-        }
-
-        if( $param_group ){
-            $group[] = $param_group;
+            $is_channel_enable = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+            $select[] = $is_channel_enable . ' AS is_channel_enable';
+            $group[] = $is_channel_enable;
         }
 
         $having = '';
