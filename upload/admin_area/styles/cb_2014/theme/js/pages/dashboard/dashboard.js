@@ -204,6 +204,7 @@ let showMsg = function(msg, type, autoDismiss){
 }
 
 function update(type){
+    $('.launch_wip').off('click').prop('disabled', 'disabled');
     $.ajax({
         url: "/actions/admin_launch_update.php",
         type: "post",
@@ -243,11 +244,14 @@ function connectSSE() {
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);
-        if (data.is_updating === 'false') {
-            eventSource.close();
-        }
         $('#update_div').html(data.html);
         updateListeners();
+        if (data.is_updating === 'false') {
+            eventSource.close();
+
+        } else {
+            $('.launch_wip').off('click');
+        }
 
     });
     eventSource.addEventListener('open', function (e) {
@@ -260,4 +264,17 @@ function connectSSE() {
     eventSource.addEventListener('error', function (e) {
         eventSource.close();
     }, false);
+}
+
+function checkStatus() {
+    $.ajax({
+        url: "/actions/admin_check_update.php",
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+            $('#status_icon').find('span').removeClass();
+            $('#status_icon').find('span').addClass('status-'+ data.status);
+            $('#status_html').html(data.html);
+        }
+    });
 }

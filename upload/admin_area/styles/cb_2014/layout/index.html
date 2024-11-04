@@ -138,7 +138,7 @@
 			</li>
 			{if config('enable_update_checker')=='1'}
 			<li class="right">
-				<a data-toggle="tab" href="#update">
+				<a data-toggle="tab" href="#update" id="status_icon">
 					<h5>{lang code='dashboard_update_status'} <span class="status-{$update_checker_status}"></span></h5>
 				</a>
 			</li>
@@ -177,7 +177,7 @@
 			</div>
 			{if config('enable_update_checker')=='1'}
 			<div id="update" class="tab-pane">
-				<div class="widgetBox">
+				<div class="widgetBox" id="status_html">
 					{$update_checker_content}
 				</div>
 			</div>
