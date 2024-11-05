@@ -242,14 +242,20 @@ class Photo
         }
 
         $version = Update::getInstance()->getDBVersion();
-        if( $param_search ){
+        if ($param_search) {
             /* Search is done on photo title, photo tags */
-            $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $match_title = 'MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+            $order_search = ' ORDER BY ' . $match_title .' DESC ';
+            $cond = '( ' . $match_title . 'OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $cond .= ' OR ' . $match_tag . ' OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $order_search .= ', ' . $match_tag . ' DESC ';
             }
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $cond .= ' OR ' . $match_categ . ' OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $order_search .= ', ' . $match_categ . ' DESC ';
             }
             $cond .= ')';
 
@@ -310,9 +316,11 @@ class Photo
         }
 
         $order = '';
-        if( $param_order ){
+        if (!empty($order_search)) {
+            $order = $order_search;
+        } elseif ($param_order) {
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
-            $order = ' ORDER BY '.$param_order;
+            $order = ' ORDER BY ' . $param_order;
         }
 
         $limit = '';
