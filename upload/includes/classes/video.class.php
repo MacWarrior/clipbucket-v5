@@ -417,7 +417,10 @@ class Video
         if (!empty($order_search)) {
             $order = $order_search;
         } elseif( $param_order && !$param_count ){
-            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
+            $replace_to_group = str_replace(['asc', 'desc', 'rand()'], '', strtolower($param_order));
+            if (!empty($replace_to_group)) {
+                $group[] = $replace_to_group;
+            }
             $order = ' ORDER BY '.$param_order;
         }
 
