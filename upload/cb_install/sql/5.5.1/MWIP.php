@@ -457,7 +457,7 @@ class MWIP extends \Migration
                 'column' => 'allow_public_video_page'
             ]
         );
-        self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' ADD COLUMN `default_homepage` ENUM(
+        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . ' ADD COLUMN `default_homepage` ENUM(
             \'homepage\'
             ,\'videos\'
             ,\'public_videos\'
@@ -465,11 +465,12 @@ class MWIP extends \Migration
             ,\'collections\'
             ,\'channels\'
             ,\'my_account\'
+            ,\'login\'
         ) NOT NULL DEFAULT \'homepage\'',
             [
-                'table'  => 'user_levels'
+                'table'  => 'user_levels_permissions'
             ], [
-                'table'  => 'user_levels',
+                'table'  => 'user_levels_permissions',
                 'column' => 'default_homepage'
             ]
         );
@@ -532,6 +533,10 @@ class MWIP extends \Migration
         self::generateTranslation('default_homepage', [
             'fr'=>'Page d\'accueil par défaut',
             'en'=>'Default homepage'
+        ]);
+        self::generateTranslation('default_homepage_desc', [
+            'fr'=>'Défini la page sur laquelle est redirigé l\'utilisateur à la connexion et au clique sur le logo',
+            'en'=>'Set the page where user is redirect on login and click on logo'
         ]);
 
         self::generateTranslation('homepage', [

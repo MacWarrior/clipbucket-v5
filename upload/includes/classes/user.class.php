@@ -772,6 +772,10 @@ class User
         return (bool)Clipbucket_db::getInstance()->execute($sql);
     }
 
+    /**
+     * @return void
+     * @throws Exception
+     */
     public static function redirectAfterLogin()
     {
         if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !has_access('admin_access')) {
@@ -779,22 +783,31 @@ class User
         } elseif ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
-            $default_hompepage = userquery::getInstance()->get_user_level(user_id())['default_homepage'];
-            switch ($default_hompepage) {
-                case 'homepage':
-                    $link = '';
-                    break;
-                case 'public_videos':
-                    $link = 'videos_public';
-                    break;
-                case 'my_account':
-                    $link = 'myaccount';
-                    break;
-                default:
-                    $link = $default_hompepage;
-            }
-            redirect_to(BASEURL . DIRECTORY_SEPARATOR . $link . '.php');
+            redirect_to(BASEURL . DIRECTORY_SEPARATOR . self::getDefaultHomepageFromUserLevel());
         }
+    }
+
+    /**
+     * @return string
+     * @throws Exception
+     */
+    public static function getDefaultHomepageFromUserLevel(): string
+    {
+        $default_hompepage = userquery::getInstance()->get_user_level(user_id())['default_homepage'];
+        switch ($default_hompepage) {
+            case 'homepage':
+                $link = '';
+                break;
+            case 'public_videos':
+                $link = 'videos_public.php';
+                break;
+            case 'my_account':
+                $link = 'myaccount.php';
+                break;
+            default:
+                $link = $default_hompepage . '.php';
+        }
+        return $link;
     }
 
     public function getDefaultHomepageList()
@@ -2615,10 +2628,12 @@ class userquery extends CBCategory
 
             $fields_array[] = 'enable_channel_page';
             $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
+            $fields_array[] = 'default_homepage';
+            $value_array[] = !empty($array['default_homepage']) ? mysql_clean($array['default_homepage']) : 'homepage';
             //Checking level Name
-            if (!empty($array['level_name']) && !empty($array['default_homepage'])) {
+            if (!empty($array['level_name'])) {
                 //Updating Now
-                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name', 'default_homepage'], [mysql_clean($array['level_name']), mysql_clean($array['default_homepage'])], " user_level_id = '$id'");
+                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name'], [mysql_clean($array['level_name'])], " user_level_id = '$id'");
             }
 
             if (isset($_POST['plugin_perm'])) {

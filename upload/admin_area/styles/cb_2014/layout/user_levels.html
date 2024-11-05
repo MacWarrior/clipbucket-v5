@@ -48,12 +48,6 @@
         <div class="form-group">
             <label for="level_name2">Level name</label>
             <input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name}"/>
-            <label for="default_homepage">{lang('default_homepage')}</label><br/>
-            <select name="default_homepage" id="default_homepage">
-                {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
-                    <option value="{$page}" {if $page== $level_details.default_homepage}selected="selected"{/if}>{lang($page)}</option>
-                {/foreach}
-            </select>
         </div>
         <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         {assign var='types' value=$userquery->get_level_types()}
@@ -102,6 +96,23 @@
                                 <div class="col-md-4 mb-2">
                                     <input type="checkbox" name="enable_channel_page" value="yes" id="enable_channel_page_yes" {if $level_perms['enable_channel_page']==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
                                     <span class="lbl"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1 myWell">
+                                <div class="col-md-7 paddingTop">
+                                    <strong>{lang('default_homepage')}</strong><br/>
+                                    <small><em>{lang('default_homepage_desc')}</em></small>
+                                </div>
+                                <div class="col-md-5 paddingTop">
+                                    <select name="default_homepage" id="default_homepage">
+                                        {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
+                                            <option value="{$page}" {if $page== $level_perms.default_homepage}selected="selected"{/if}>{lang($page)}</option>
+                                        {/foreach}
+                                    </select>
                                 </div>
                             </div>
                         </div>

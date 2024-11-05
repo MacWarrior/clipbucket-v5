@@ -431,7 +431,15 @@ CREATE TABLE `{tbl_prefix}user_levels_permissions` (
   `allow_create_collection` enum('yes','no') NOT NULL DEFAULT 'yes',
   `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes',
   `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_public_video_page` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `allow_public_video_page` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `default_homepage` enum( 'homepage'
+      ,'videos'
+      ,'public_videos'
+      ,'photos'
+      ,'collections'
+      ,'channels'
+      ,'my_account'
+      ,'login') NOT NULL DEFAULT 'homepage'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_permissions` (
