@@ -236,6 +236,7 @@ class User
             case 'last_year':
                 $column = $this->getTableName() . '.doj';
                 $params['condition'] = Search::date_margin($column, $value);
+                $params['group'] = $column;
                 break;
         }
         return $params;
@@ -322,7 +323,7 @@ class User
         }
 
         if( $param_level ){
-            $conditions[] = 'users.level = ' . (int)$param_featured;
+            $conditions[] = 'users.level = ' . (int)$param_level;
         }
 
         $version = Update::getInstance()->getDBVersion();
@@ -367,15 +368,17 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             if ($param_channel_enable ) {
                 $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
             }
-            $select[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
-        }
-
-        if( $param_group ){
-            $group[] = $param_group;
+            $is_channel_enable = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+            $select[] = $is_channel_enable . ' AS is_channel_enable';
+            $group[] = $is_channel_enable;
         }
 
         $having = '';
@@ -1007,23 +1010,10 @@ class userquery extends CBCategory
         return false;
     }
 
-    /**
-     * Function used to check weather user is login or not
-     * it will also check weather user has access or not
-     *
-     * @param $access string access type it can be admin_access, upload_acess etc
-     * you can either set it as level id
-     * @param bool $check_only
-     * @param bool $verify_logged_user
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function login_check($access = null, $check_only = false, $verify_logged_user = true)
-    {
+    function login_check_by_user(int $userid, $access = null, $check_only = false, $verify_logged_user = true) {
         if ($verify_logged_user) {
             //First check weather userid is here or not
-            if (!user_id()) {
+            if (!$userid) {
                 if (!$check_only) {
                     e(lang('you_not_logged_in'));
                 }
@@ -1031,7 +1021,7 @@ class userquery extends CBCategory
             }
 
             //Now Check if logged in user exists or not
-            if (!$this->user_exists(user_id(), true)) {
+            if (!$this->user_exists($userid, true)) {
                 if (!$check_only) {
                     e(lang('invalid_user'));
                 }
@@ -1039,7 +1029,7 @@ class userquery extends CBCategory
             }
 
             //Now Check logged in user is banned or not
-            if ($this->is_banned(user_id()) == 'yes') {
+            if ($this->is_banned($userid) == 'yes') {
                 if (!$check_only) {
                     e(lang('usr_ban_err'));
                 }
@@ -1049,7 +1039,11 @@ class userquery extends CBCategory
 
         //Now user have passed all the stages, now checking if user has level access or not
         if ($access) {
-            $access_details = $this->permission;
+            if ($userid == user_id() && !empty($this->permission)) {
+                $access_details = $this->permission;
+            } else {
+                $access_details = $this->get_user_level($userid);
+            }
 
             if (is_numeric($access)) {
                 if ($access_details['level_id'] == $access) {
@@ -1074,6 +1068,23 @@ class userquery extends CBCategory
             return false;
         }
         return true;
+    }
+
+    /**
+     * Function used to check weather user is login or not
+     * it will also check weather user has access or not
+     *
+     * @param $access string access type it can be admin_access, upload_acess etc
+     * you can either set it as level id
+     * @param bool $check_only
+     * @param bool $verify_logged_user
+     *
+     * @return bool
+     * @throws Exception
+     */
+    function login_check($access = null, $check_only = false, $verify_logged_user = true)
+    {
+        return $this->login_check_by_user(user_id(), $access, $check_only, $verify_logged_user);
     }
 
     /**
@@ -2276,17 +2287,13 @@ class userquery extends CBCategory
      */
     function get_user_level($uid, $is_level = false)
     {
-        if ($is_level) {
-            $level = $uid;
-        } else {
-            $level = $this->udetails['level'] ?? false;
+        if (
+            (($this->udetails['level'] == $uid && $is_level) || (!$is_level && $uid == user_id()))
+            && !empty($this->permission)
+        ) {
+            return $this->permission;
         }
-
-        if ($level == user_id() or $level == $this->udetails['level']) {
-            if (isset($this->permission)) {
-                return $this->permission;
-            }
-        }
+        $level = ($is_level ? $uid : $this->get_user_details($uid)['level'] );
 
         $result = Clipbucket_db::getInstance()->select(tbl('user_levels,user_levels_permissions'), '*',
             tbl('user_levels_permissions.user_level_id') . "='" . $level . "' 
@@ -2381,7 +2388,15 @@ class userquery extends CBCategory
             $value_array[] = $iid;
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access] ? $array[$access] : 'no';
+                $value_array[] = $array[$access] ?: 'no';
+            }
+            if (!array_key_exists('plugins_perms', $fields_array)) {
+                $fields_array[] = 'plugins_perms';
+                $value_array[] = '';
+            }
+            if (!array_key_exists('enable_channel_page', $fields_array)) {
+                $fields_array[] = 'enable_channel_page';
+                $value_array[] = 'no';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
             return true;
@@ -2448,11 +2463,11 @@ class userquery extends CBCategory
         if ($level) {
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access];
+                $value_array[] = $array[$access] ?? 'no';
             }
 
             $fields_array[] = 'enable_channel_page';
-            $value_array[] = mysql_clean($array['enable_channel_page']);
+            $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
             //Checking level Name
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);
@@ -3373,11 +3388,11 @@ class userquery extends CBCategory
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 
-        if( isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes') ) ){
+        if (isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'))) {
             $array[lang('account')][lang('contacts_manager')] = 'manage_contacts.php';
         }
 
-        if( has_access('private_msg_access') ){
+        if (has_access('private_msg_access')) {
             $array[lang('messages')] = [
                 lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
                 lang('notifications')                                             => 'private_message.php?mode=notification',
@@ -3385,7 +3400,6 @@ class userquery extends CBCategory
                 lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
             ];
         }
-
         if (isSectionEnabled('channels') && has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes') {
             $array[lang('user_channel_profiles')] = [
                 lang('user_profile_settings') => 'edit_account.php?mode=profile',

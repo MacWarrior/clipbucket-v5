@@ -256,6 +256,9 @@ class Photo
             $conditions[] = $cond;
         }
 
+        $join = [];
+        $group = [];
+
         $collection_items_table = Collection::getInstance()->getTableNameItems();
         if( $param_count ){
             $select = ['COUNT(DISTINCT photos.photo_id) AS count'];
@@ -263,10 +266,9 @@ class Photo
             $select = $this->getAllFields();
             $select[] = 'users.username';
             $select[] = $collection_items_table . '.collection_id ';
+            $group[] = $collection_items_table . '.collection_id ';
         }
 
-        $join = [];
-        $group = [];
         $version = Update::getInstance()->getDBVersion();
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){

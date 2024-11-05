@@ -13,6 +13,7 @@ global $cbpm;
 add_js('jquery_plugs/compressed/jquery.scrollTo-min.js');
 
 userquery::getInstance()->logincheck();
+has_access('private_msg_access', false);
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
