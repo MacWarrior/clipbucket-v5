@@ -730,6 +730,7 @@ class Update
         chdir($root_directory);
 
         $output = shell_exec(System::get_binaries('git') . ' reset --hard');
+        DiscordLog::sendDump($output);
         if( !$output ){
             // TODO : Delete
             DiscordLog::sendDump('No output');
@@ -758,23 +759,19 @@ class Update
     {
         $update = Update::getInstance();
         if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
-            DiscordLog::sendDump('1');
             return false;
         }
 
         $root_directory = trim($update->getGitRootDirectory());
         if( !$root_directory ){
-            DiscordLog::sendDump('2');
             return false;
         }
 
         if( !$update->resetGitRepository($root_directory) ){
-            DiscordLog::sendDump('3');
             return false;
         }
 
         if( !$update->updateGitRepository($root_directory) ){
-            DiscordLog::sendDump('4');
             return false;
         }
 
