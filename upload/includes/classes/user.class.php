@@ -3538,7 +3538,7 @@ class userquery extends CBCategory
      */
     function get_user_videos_link($u)
     {
-        return cblink(['name' => 'user_videos']) . $u['username'];
+        return BASEURL . '/search_result.php?query='.$u['username'].'&type=videos';
     }
 
     /**

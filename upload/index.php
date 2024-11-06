@@ -9,10 +9,6 @@ pages::getInstance()->page_redir();
 $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 
-$default_homepage = User::getDefaultHomepageFromUserLevel();
-if ($default_homepage != '') {
-    redirect_to(BASEURL . DIRECTORY_SEPARATOR . $default_homepage);
-}
 if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && !user_id()) {
     template_files('signup_or_login.html');
 } else {
