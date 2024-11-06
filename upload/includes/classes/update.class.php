@@ -730,10 +730,7 @@ class Update
         chdir($root_directory);
 
         $output = shell_exec(System::get_binaries('git') . ' reset --hard');
-        DiscordLog::sendDump($output);
-        if( !$output ){
-            // TODO : Delete
-            DiscordLog::sendDump('No output');
+        if( $output === false ){
             return false;
         }
 
