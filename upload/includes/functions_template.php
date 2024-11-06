@@ -317,3 +317,12 @@ function display_categ_form()
 {
     echo templateWithMsgJson('blocks/edit_category.html');
 }
+function template_wip_relaunch(bool $success)
+{
+    assign('success', $success);
+    ob_start();
+    Template('return_msg_wip.html');
+    $msg = ob_get_contents();
+    ob_clean();
+    return $msg;
+}

@@ -1,12 +1,13 @@
 <?php
 define('THIS_PAGE', 'cb_install');
-
+session_start();
 require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEPARATOR . 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
+require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 $whoops = new \Whoops\Run;
@@ -27,6 +28,7 @@ $whoops->register();
 $modes = [
     'agreement',
     'precheck',
+    'update',
     'permission',
     'database',
     'dataimport',
@@ -41,6 +43,14 @@ if (!$mode || !in_array($mode, $modes)) {
     $mode = 'agreement';
 }
 
+if ($mode == 'agreement') {
+    if (isset($_SESSION['needed_update'])) {
+        unset($_SESSION['needed_update']);
+    }
+}
+
+$need_update = !Update::getInstance()->isCoreUpToDate();
+
 /**
  * Clipbucket modes
  * modes which requires clipbucket core files so installer
@@ -49,7 +59,13 @@ if (!$mode || !in_array($mode, $modes)) {
 $cbarray = ['adminsettings', 'sitesettings', 'finish'];
 
 if (in_array($mode, $cbarray)) {
+    $needed_update = $_SESSION['needed_update'] ?? null;
+    if (isset($_SESSION['needed_update'])) {
+        unset($_SESSION['needed_update']);
+    }
+    session_destroy();
     require_once DirPath::get('includes') . 'config.inc.php';
+    $_SESSION['needed_update'] = $needed_update;
 }
 
 $has_translation = class_exists('Language');

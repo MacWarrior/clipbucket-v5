@@ -451,3 +451,7 @@ dt.white {
 .spinner-content {
 	display: inline-block;
 }
+.spinner-content .fa{
+	font-size: 18px;
+	margin: 0;
+}

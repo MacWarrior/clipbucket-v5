@@ -100,4 +100,51 @@ $( document ).ready(function() {
             }, 'JSON');
         });
     }
+
+    $('#submit_update').on('click', function (e){
+        e.preventDefault();
+        checkBeforeSubmit(need_update);
+    });
+    $('.update_core').on('click', function () {
+        var button = $(this);
+        $('.btn').prop('disabled', 'disabled');
+        $('.text').hide();
+        $('.spinner-content').show();
+        $.post({
+            url: 'update_core.php',
+            dataType: "json",
+            success: (data) => {
+                $('.btn').prop('disabled', '');
+                $('.text').show();
+                $('.spinner-content').hide();
+                if (data.msg) {
+                    $('#resultDiv').show().html(data.msg);
+                    $('.errorDiv').hide().html('');
+                    button.parent().parent().remove();
+                    need_update = false;
+                }
+                if (data.err) {
+                    $('.errorDiv').show().html(data.err);
+                    $('#resultDiv').hide().html('');
+                    $('#loading').attr('src', 'images/cross_arrow.png');
+                }
+            }
+        })
+    });
 });
+
+function checkBeforeSubmit(check) {
+    var go_submit = false;
+    if (check) {
+        if (confirm('Do you really want do go further without updating ?')) {
+            go_submit = true;
+        }
+    } else {
+        go_submit = true;
+    }
+    if (go_submit) {
+        $('#installation').trigger("submit");
+    } else {
+        return false;
+    }
+}
