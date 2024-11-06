@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"176",
+  "revision":"178",
   "status":"dev",
   "detail":[
     {
@@ -51,6 +51,7 @@
         ,"Update video edition page display"
         ,"Update user tags order & display"
         ,"Update System Info interface"
+        ,"Update WIP update process"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -218,6 +219,7 @@
         "Implement Windows installation script"
         ,"Implement dev mode options"
         ,"Implement DB timezone selection"
+        ,"Implement core update during installation"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"

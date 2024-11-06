@@ -4092,37 +4092,6 @@ function generic_curl($input_arr = [])
 
 }
 
-/**
- * @param string $format
- * @param string $timeout
- * @return resource
- */
-function get_proxy_settings(string $format = '', string $timeout = '')
-{
-    switch ($format) {
-        default:
-        case 'file_get_contents':
-            $context = null;
-            if (config('proxy_enable') == 'yes') {
-                $context = [
-                    'http' => [
-                        'proxy'           => 'tcp://' . config('proxy_url') . ':' . config('proxy_port'),
-                        'request_fulluri' => true
-                    ]
-                ];
-
-                if (config('proxy_auth') == 'yes') {
-                    $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
-                }
-            }
-            if( !empty($timeout)) {
-                $context['http']['timeout'] = (int)$timeout;
-            }
-
-            return stream_context_create($context);
-    }
-}
-
 function error_lang_cli($msg)
 {
     if (php_sapi_name() == 'cli') {
