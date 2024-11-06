@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"176",
+  "revision":"177",
   "status":"dev",
   "detail":[
     {
@@ -51,6 +51,7 @@
         ,"Update video edition page display"
         ,"Update user tags order & display"
         ,"Update System Info interface"
+        ,"Update WIP update process"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
