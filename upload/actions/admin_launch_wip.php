@@ -8,6 +8,9 @@ $success = true;
 if( Update::getInstance()->isWIPFile() ){
     try {
         execute_migration_file(DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php', false);
+        CacheRedis::flushAll();
+        Update::getInstance()->flush();
+        Language::getInstance()->init();
     } catch (Exception $e) {
         $success = false;
     }
@@ -18,6 +21,7 @@ if( Update::getInstance()->isWIPFile() ){
 }
 
 echo json_encode([
-    'success' => $success,
-    'msg'     => getTemplateMsg()
+    'success'  => $success,
+    'msg'      => getTemplateMsg(),
+    'template' => template_wip_relaunch($success)
 ]);
