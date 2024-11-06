@@ -7848,3 +7848,7 @@ textarea#comment_box {
 .pointer {
   cursor: pointer;
 }
+
+.newuser-links>li>a {
+  color:var(--color-02);
+}

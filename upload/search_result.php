@@ -6,20 +6,24 @@ pages::getInstance()->page_redir();
 
 $page = $_GET['page'];
 $type = strtolower($_GET['type']);
-
+if (!in_array($type, ['videos', 'photos', 'collections', 'channels'])) {
+    $type = 'videos';
+}
 switch($type){
-    default:
-        $type = 'videos';
-        break;
     case 'videos':
+        $access_public_video = (has_access('allow_public_video_page', true, false) && config('enable_public_video_page') == 'yes');
+        $access_video = (has_access('view_' . $type, true, false) && isSectionEnabled($type));
+        if (!$access_video && !$access_public_video) {
+            redirect_to(BASEURL);
+        }
+        break;
     case 'photos':
     case 'collections':
     case 'channels':
-        break;
-}
-
-if (!userquery::getInstance()->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
-    redirect_to(BASEURL);
+    if (!userquery::getInstance()->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
+        redirect_to(BASEURL);
+    }
+    break;
 }
 
 switch($type) {
@@ -41,6 +45,9 @@ switch($type) {
 }
 
 $params = [];
+if ($access_public_video && !$access_video) {
+    $params['public'] = true;
+}
 $params['search'] = $_GET['query'];
 $params['limit'] = create_query_limit($page, $obj->getSearchLimit());
 $results = $obj->getAll($params);
