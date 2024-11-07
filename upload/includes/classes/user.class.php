@@ -2904,7 +2904,7 @@ class userquery extends CBCategory
             }
         }
 
-        if( config('enable_user_category') == 'yes' ){
+        if( config('enable_user_category') == 'yes' && !empty($array['category']) ){
             //Changing category
             Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
         }
