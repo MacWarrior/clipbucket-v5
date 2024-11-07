@@ -245,17 +245,20 @@ class Photo
         if ($param_search) {
             /* Search is done on photo title, photo tags */
             $match_title = 'MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
-            $order_search = ' ORDER BY ' . $match_title .' DESC ';
-            $cond = '( ' . $match_title . 'OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $like_title = 'LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $order_search = ' ORDER BY CASE WHEN '. $like_title .' THEN 100 ELSE ' . $match_title .' DESC ';
+            $cond = '( ' . $match_title . 'OR ' . $like_title;
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
-                $cond .= ' OR ' . $match_tag . ' OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-                $order_search .= ', ' . $match_tag . ' DESC ';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
+                $order_search .= ', CASE WHEN '.$like_tag .' THEN 100 ELSE ' . $match_tag . ' END DESC ';
             }
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
-                $cond .= ' OR ' . $match_categ . ' OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-                $order_search .= ', ' . $match_categ . ' DESC ';
+                $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', CASE WHEN '.$like_categ . ' THEN 100 ELSE ' . $match_categ . ' END DESC ';
             }
             $cond .= ')';
 

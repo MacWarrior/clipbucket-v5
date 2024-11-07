@@ -325,18 +325,21 @@ class Video
             /* Search is done on video title, video tags */
             $match_title = 'MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
             $match_description = 'MATCH(video.description, video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
-            $order_search = ' ORDER BY ' . $match_title . ' DESC ';
-            $cond = '(' . $match_title . ' OR ' . $match_description . '  OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $like_title = 'LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $order_search = ' ORDER BY CASE WHEN ' . $like_title . ' THEN 100 ELSE ' . $match_title . ' END DESC';
+            $cond = '(' . $match_title . ' OR ' . $match_description . '  OR ' . $like_title;
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
-                $cond .= ' OR ' . $match_tag . ' OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-                $order_search .= ', ' . $match_tag . ' DESC ';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
+                $order_search .= ', CASE WHEN '.$like_tag.' THEN 100 ELSE ' . $match_tag . ' END DESC ';
             }
             $order_search .= ', ' . $match_description . ' DESC ';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
-                $cond .= ' OR ' . $match_categ . ' OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-                $order_search .= ', ' . $match_categ . ' DESC ';
+                $like_categ = ' LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\' ';
+                $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', CASE WHEN '.$like_title .' THEN 100 ELSE ' . $match_categ . ' END DESC ';
             }
             $cond .= ')';
 
