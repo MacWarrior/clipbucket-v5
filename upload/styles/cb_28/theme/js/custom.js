@@ -136,7 +136,7 @@ function responsiveFixes()
         if(length3==0)
         {
             var rightLinkHtml = $('.navbar-right').html();
-            $('.menu-holder').prepend("<ul class='newuser-links'>"+rightLinkHtml+"</ul>");
+            $('.menu-holder').prepend("<div class='col'><nav class='main-links'><ul class='newuser-links'>"+rightLinkHtml+"</ul></nav></div>");
             $('.navbar-right').remove();
         }
     }
