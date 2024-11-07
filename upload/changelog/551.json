@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"178",
+  "revision":"179",
   "status":"dev",
   "detail":[
     {
@@ -178,6 +178,7 @@
         ,"Fix footer copyright"
         ,"Fix add to collection button with SEO URLs"
         ,"Fix private messages to users with disabled private messages"
+        ,"Fix photos upload forms"
       ]
     },
     {
