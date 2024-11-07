@@ -291,7 +291,7 @@ class Video
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
-        $param_join_user_profile = $params['join_user_profile'] ?? false;
+        $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -391,7 +391,7 @@ class Video
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
-        if ($param_join_user_profile) {
+        if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
             $select[] = 'user_profile.disabled_channel';
         }
