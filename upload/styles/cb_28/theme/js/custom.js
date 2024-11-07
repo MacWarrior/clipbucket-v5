@@ -149,6 +149,12 @@ function responsiveFixes()
             $('.newuser-links').remove();
         }
     }
+    if ($('.menu-holder').find('.main-links>ul:not(.newuser-links)>li').length == 0) {
+        $('i.icon-search').parent().removeClass('visible-xs').hide();
+    } else {
+        $('i.icon-search').parent().addClass('visible-xs').show();
+    }
+
 }
 
 // automatically scrolls to new loaded videos
