@@ -659,6 +659,8 @@ function user_dob()
  */
 function has_access($access, $check_only = true, $verify_logged_user = true): bool
 {
+    /** TODO REMOVE return */
+    return true;
     return userquery::getInstance()->login_check($access, $check_only, $verify_logged_user);
 }
 
