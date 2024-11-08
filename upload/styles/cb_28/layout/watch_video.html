@@ -144,13 +144,15 @@
                                 <a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
                             </li>
                         {/if}
-                        {if user_id() && $video.userid != user_id()}
+                        {if user_id()}
                             <li>
                                 <a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang code='add_to'}</a>
                             </li>
-                            <li>
-                                <a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
-                            </li>
+                            {if $video.userid != user_id()}
+                                <li>
+                                    <a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
+                                </li>
+                            {/if}
                         {/if}
                     </ul>
                     <div class="tab-content clearfix">

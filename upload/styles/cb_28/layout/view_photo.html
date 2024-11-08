@@ -68,7 +68,7 @@
                         <h1>{display_clean($photo.photo_title)}</h1>
                         <h1 id="img-title"></h1>
                         <div class="user-video-info clearfix">
-                            {if $photo.userid != $anonymous_id}
+                            {if $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
                                 <a href="{$userquery->profile_link($user)}" class="avatar">
                                     <img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
                                 </a>
