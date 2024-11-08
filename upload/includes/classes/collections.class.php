@@ -262,17 +262,34 @@ class Collection
         }
 
         if ($param_search) {
-            /* Search is done on collection title, collection tags */
+            /* Search is done on collection title, collection tags, uploader username, categories */
+
+            /** ORDER BY match score (100 pts if like match search query)
+            - title
+            - tag
+            - username
+            - categories
+             */
+
             $match_name = 'MATCH(collections.collection_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
             $like_name = 'LOWER(' . $this->getTableName() . '.collection_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
             $cond = '(' . $match_name . ' OR ' . $like_name;
             $order_search = ' ORDER BY CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . 'END DESC ';
+
+            /** TAG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) ';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_tag . 'OR ' . $like_tag;
                 $order_search .= ', CASE WHEN '.$like_tag . ' THEN 100 ELSE ' . $match_tag . ' END DESC ';
             }
+
+            /** USER */
+            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $cond .= ' OR ' . $like_user;
+            $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
+
+            /** CATEG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
