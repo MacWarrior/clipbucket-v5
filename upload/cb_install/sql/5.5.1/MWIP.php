@@ -85,5 +85,13 @@ class MWIP extends \Migration
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
+
+        $sql = 'SELECT column_name from INFORMATION_SCHEMA.COLUMNS 
+                   WHERE TABLE_NAME = \'{tbl_prefix}user_levels_permissions\' AND TABLE_SCHEMA = \'{dbname}\' AND COLUMN_NAME NOT IN (\'user_level_id\', \'user_level_permission_id\')';
+        $columns = self::query($sql);
+        //insert user_levels_permissions
+        $sql = '';
+        //insert user_levels_permission_values
+        $sql = 'SELECT * FROM `{tbl_prefix}user_levels_permission` ';
     }
 }
