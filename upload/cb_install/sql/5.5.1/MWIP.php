@@ -1,4 +1,5 @@
 <?php
+
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
@@ -17,19 +18,19 @@ class MWIP extends \Migration
          * récupérer user_permission.code et renommer en permission_name et générer les clés de trads correspondantes
          * remplacer permission_desc par uen clé de trad et générer les clés de trads correspondantes
          * supprimer tables temporaires
-        */
+         */
 
 
         self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . ' RENAME ' . tbl('temp_user_levels_permissions'), [
-            'table'=>'user_levels_permissions'
+            'table' => 'user_levels_permissions'
         ], [
-            'table'=>'temp_user_levels_permissions'
+            'table' => 'temp_user_levels_permissions'
         ]);
 
         self::alterTable('ALTER TABLE ' . tbl('user_permissions') . ' RENAME ' . tbl('temp_user_permissions'), [
-            'table'=>'user_permissions'
+            'table' => 'user_permissions'
         ], [
-            'table'=>'temp_user_permissions'
+            'table' => 'temp_user_permissions'
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_levels_permissions`
@@ -48,7 +49,7 @@ class MWIP extends \Migration
             'table'  => 'user_levels_permissions',
             'column' => 'id_user_permission_types'
         ], [
-            'constraint_name'    => 'fk_id_user_permission_types',
+            'constraint_name'   => 'fk_id_user_permission_types',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
@@ -62,17 +63,20 @@ class MWIP extends \Migration
 
         $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions_values` ADD PRIMARY KEY(`user_level_id`, `id_user_levels_permission`);';
         self::alterTable($sql, [
-            'table'  => 'user_levels_permissions_values',
-            'columns' => ['user_level_id','id_user_levels_permission']
+            'table'   => 'user_levels_permissions_values',
+            'columns' => [
+                'user_level_id',
+                'id_user_levels_permission'
+            ]
         ], [
-            'constraint_type'=>'PRIMARY KEY'
+            'constraint_type' => 'PRIMARY KEY'
         ]);
         $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions_values` ADD CONSTRAINT `fk_user_level_id` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'user_levels_permissions_values',
             'column' => 'user_level_id'
         ], [
-            'constraint_name'    => 'fk_user_level_id',
+            'constraint_name'   => 'fk_user_level_id',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
@@ -81,16 +85,35 @@ class MWIP extends \Migration
             'table'  => 'user_levels_permissions_values',
             'column' => 'id_user_levels_permission'
         ], [
-            'constraint_name'    => 'fk_id_user_levels_permission',
+            'constraint_name'   => 'fk_id_user_levels_permission',
             'constraint_type'   => 'FOREIGN KEY',
             'constraint_schema' => '{dbname}'
         ]);
 
-        $sql = 'SELECT column_name from INFORMATION_SCHEMA.COLUMNS 
-                   WHERE TABLE_NAME = \'{tbl_prefix}user_levels_permissions\' AND TABLE_SCHEMA = \'{dbname}\' AND COLUMN_NAME NOT IN (\'user_level_id\', \'user_level_permission_id\')';
-        $columns = self::query($sql);
+        $sql = 'SELECT column_name, IFNULL(permission_type, 4) AS permission_type, permission_desc, permission_name FROM INFORMATION_SCHEMA.COLUMNS AS C 
+                   LEFT JOIN `{tbl_prefix}temp_user_permissions` AS TUP ON C.column_name = TUP.permission_code  
+                   WHERE TABLE_NAME = \'{tbl_prefix}temp_user_levels_permissions\' AND TABLE_SCHEMA = \'{dbname}\' AND COLUMN_NAME NOT IN (\'user_level_id\', \'user_level_permission_id\')';
+        $columns = self::req($sql);
         //insert user_levels_permissions
-        $sql = '';
+        $sql = 'INSERT INTO `{tbl_prefix}user_levels_permissions` (id_user_permission_types, permission_name, permission_description) VALUES ';
+        $permissions = [];
+        foreach ($columns as $column) {
+            $permissions[] = '(' . $column['permission_type'] . ', \'' . $column['column_name'] . '\', \'' . $column['column_name'] . '_desc\')';
+            if (!empty($column['permission_desc'])) {
+                self::generateTranslation($column['column_name'] . '_desc', [
+                    'en' => $column['permission_desc']
+                ]);
+            }
+            if (!empty($column['permission_name'])) {
+                self::generateTranslation($column['column_name'], [
+                    'en' => $column['permission_name']
+                ]);
+            }
+        }
+        $sql .= implode(',', $permissions) . ';';
+
+        self::query($sql);
+
         //insert user_levels_permission_values
         $sql = 'SELECT * FROM `{tbl_prefix}user_levels_permission` ';
     }

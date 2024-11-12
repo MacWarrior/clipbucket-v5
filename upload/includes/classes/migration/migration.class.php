@@ -339,9 +339,27 @@ class Migration
      */
     public static function query($sql)
     {
+        $sql = self::prepare($sql);
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+    /**
+     * @throws Exception
+     */
+    public static function req($sql): array
+    {
+        $sql = self::prepare($sql);
+        return Clipbucket_db::getInstance()->_select($sql);
+    }
+
+    /**
+     * @param $sql
+     * @return string
+     */
+    public static function prepare($sql): string
+    {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
         $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getTableName(), $sql);
-        Clipbucket_db::getInstance()->executeThrowException($sql);
+        return $sql;
     }
 
     /**
