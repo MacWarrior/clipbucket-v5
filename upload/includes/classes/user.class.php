@@ -3868,6 +3868,9 @@ class userquery extends CBCategory
                     $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $val);
                     if ($dob_datetime) {
                         $val = $dob_datetime->format('Y-m-d');
+                    } else {
+                        e(lang('error_format_date'));
+                        return false;
                     }
                 }
 
@@ -3991,9 +3994,13 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->execute($query);
             $insert_id = Clipbucket_db::getInstance()->insert_id();
 
+            if (empty($insert_id)) {
+                e(lang('technical_error'));
+                return false;
+            }
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['password'], $insert_id)], ' userid=\'' . $insert_id . '\'');
 
-            if( config('enable_user_category') == 'yes' ){
+            if (config('enable_user_category') == 'yes') {
                 //Changing category
                 Category::getInstance()->saveLinks('user', $insert_id, [$array['category']]);
             }
