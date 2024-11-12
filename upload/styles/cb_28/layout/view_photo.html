@@ -68,13 +68,22 @@
                         <h1>{display_clean($photo.photo_title)}</h1>
                         <h1 id="img-title"></h1>
                         <div class="user-video-info clearfix">
-                            {if $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
-                                <a href="{$userquery->profile_link($user)}" class="avatar">
-                                    <img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
-                                </a>
-                                <h2 class="user-title">
-                                    <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
-                                </h2>
+                            {if $photo.userid != $anonymous_id }
+                                {if $photo.disabled_channel =='yes'}
+                                    <div class="avatar">
+                                        <img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+                                    </div>
+                                    <h2 class="user-title">
+                                        <span >{display_clean($user.username)}</span>
+                                    </h2>
+                                {else}
+                                    <a href="{$userquery->profile_link($user)}" class="avatar">
+                                        <img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+                                    </a>
+                                    <h2 class="user-title">
+                                        <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
+                                    </h2>
+                                {/if}
                             {/if}
                             <div class="views-counter" style="float: right;">
                                 <span>{lang code="views"} {prettyNum($photo.views)}</span>
