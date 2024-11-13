@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"179",
+  "revision":"180",
   "status":"dev",
   "detail":[
     {
@@ -179,6 +179,7 @@
         ,"Fix add to collection button with SEO URLs"
         ,"Fix private messages to users with disabled private messages"
         ,"Fix photos upload forms"
+        ,"Fix disabled channel links"
       ]
     },
     {
@@ -189,6 +190,7 @@
         ,"Update Readme"
         ,"Update composer.json"
         ,"Update discord errors"
+        ,"Update FFMpeg version check"
         ,"Cleanup code"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"

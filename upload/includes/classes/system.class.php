@@ -296,9 +296,19 @@ class System{
                 if (@$matches[1]) {
                     $version = 'r' . $matches[1];
                 }
-                preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
-                if (@$matches[1]) {
-                    $version = $matches[1];
+
+                if( !$version ){
+                    preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
+                    if (@$matches[1]) {
+                        $version = $matches[1];
+                    }
+                }
+
+                if( !$version ) {
+                    preg_match('/version\s+(.*?)\s+Copyright/', $ffmpeg_version, $matches);
+                    if (@$matches[1]) {
+                        $version = $matches[1];
+                    }
                 }
 
                 if (!$version) {
