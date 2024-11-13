@@ -1,0 +1,242 @@
+<style>
+    /* Slider Container */
+    .slider-container {
+        display: block;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        height: 300px;
+        background: rgba(0,0,0,0.7);
+    }
+
+    /* Animation pour la nouvelle diapositive qui s'ajoute */
+    @keyframes slideInWidth {
+        from {
+            width: 0;
+        }
+        to {
+            width: 50px; /* Largeur cible de la diapositive active */
+        }
+    }
+    .animate-slide-in {
+        animation: slideInWidth 0.3s forwards; /* Durée et direction de l'animation */
+        width: 50px;
+    }
+
+    .slides {
+        display: flex;
+        transition: transform 0.3s linear;
+        width: max-content;
+        height: 100%;
+    }
+
+    .slide {
+        height: 100%;
+        min-height: 100%;
+        margin: 0;
+        flex-shrink: 0;
+        position: relative;
+        cursor: pointer;
+        transition: width 0.3s linear; /* Animation pour la largeur */
+        width: 50px; /* Largeur réduite pour les diapositives non actives */
+        overflow: hidden;
+        opacity: 0.7;
+    }
+
+    .removeAnimation{
+        width: 0;
+    }
+
+    /* Diapositive active (focus actuel) */
+    .slide.active {
+        width: 500px; /* Largeur complète pour la diapositive active */
+        opacity: 1;
+    }
+
+    .slide:hover {
+        opacity: 1;
+    }
+
+    .slide img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Détails du film */
+    .movie-details {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px;
+        text-align: left;
+        font-size: 12px;
+        display: none;
+        color: white;
+    }
+
+    .slide.active .movie-details {
+        display: block;
+    }
+
+    .movie-title {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .movie-description {
+        font-size: 12px;
+        margin: 5px 0;
+        white-space: nowrap;        /* Forcer le texte à rester sur une seule ligne */
+        overflow: hidden;           /* Masquer le texte qui dépasse */
+        text-overflow: ellipsis;    /* Ajouter des points de suspension pour le texte tronqué */
+        width: 100%;                /* S'assurer que la largeur s'ajuste */
+        display: block;
+    }
+
+    .movie-rating {
+        color: gold;
+    }
+
+</style>
+
+<div class="slider-container"  data-animation-time="300" data-nb_left="2">
+
+    <!-- Conteneur des diapositives -->
+    <div class="slides" id="slides">
+        <!-- Structure d'exemple de diapositive, clonez les diapositives si nécessaire -->
+        <div class="slide"><img src="https://picsum.photos/500/300?random=joker">
+            <div class="movie-details">
+                <div class="movie-title">Joker (2019)</div>
+                <div class="movie-description">The rise of the machines begins.</div>
+                <div class="movie-rating">★★★★☆</div>
+            </div>
+        </div>
+        <div class="slide active"><img src="https://picsum.photos/500/300?random=terminator" alt="Terminator"><div class="movie-details"><div class="movie-title">Terminator</div>                <div class="movie-description">The rise of the machines begins.</div><div class="movie-rating">★★★☆☆</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=nobody" alt="Nobody">
+            <div class="movie-details">
+                <div class="movie-title">Nobody</div>
+                <div class="movie-description">The rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines begins.</div>
+                <div class="movie-rating">★★★★☆</div>
+            </div>
+        </div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=oppenheimer" alt="Oppenheimer"><div class="movie-details"><div class="movie-title">Oppenheimer</div><div class="movie-rating">★★★★☆</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i1" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i12" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i11" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i16" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i14" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i1564" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i187" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i19875" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+        <div class="slide"><img src="https://picsum.photos/500/300?random=i1654" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+    </div>
+
+</div>
+
+<script>
+    class Slider {
+        constructor(containerSelector, animationTime = 300, visibleSlides = 2) {
+            this.slidesContainerMain = document.querySelector(containerSelector);
+            this.slidesContainer = this.slidesContainerMain.querySelector('.slides');
+            this.animationTime = animationTime;
+            this.visibleSlides = visibleSlides;
+            this.initialize();
+        }
+
+        initialize() {
+            this.updateSlideListeners();
+            const slideCount = this.slidesContainer.children.length;
+            if (slideCount === 0) {
+                this.slidesContainerMain.style.display = 'none';
+            } else if (slideCount === 1) {
+                this.scrollToSlide(0);
+            } else {
+                const initialIndex = slideCount >= this.visibleSlides ? this.visibleSlides : 1;
+                this.scrollToSlide(initialIndex);
+            }
+        }
+
+        moveXSlideToEnd(slides, targetIndex, currentIndex) {
+            if (currentIndex === 0) {
+                this.clearActiveSlide();
+                slides[targetIndex].classList.add('active');
+            }
+            if (targetIndex === currentIndex + this.visibleSlides) return;
+
+            const elem = slides[currentIndex];
+            elem.classList.remove('active');
+            this.slidesContainer.appendChild(elem.cloneNode(true));
+            elem.classList.add('removeAnimation');
+            const t = this.animationTime / this.visibleSlides;
+            elem.style.transition = `width `+t+`ms linear`;
+            setTimeout(() => {
+                elem.remove();
+                elem.style.transition = '';
+                this.updateSlideListeners();
+                this.moveXSlideToEnd(slides, targetIndex, currentIndex + 1);
+            }, t);
+        }
+
+        moveXSlideToStart(slides, targetIndex, currentIndex) {
+            if (currentIndex === this.slidesContainer.children.length - 1) {
+                this.clearActiveSlide();
+                slides[targetIndex].classList.add('active');
+            }
+            if (currentIndex === this.slidesContainer.children.length - 1 - (this.visibleSlides - targetIndex)) return;
+
+            const elem = slides[currentIndex];
+            this.slidesContainer.insertBefore(elem, this.slidesContainer.firstElementChild);
+            const t = this.animationTime / this.visibleSlides;
+            elem.style.transition = `width `+t+`ms linear`;
+            elem.classList.add('animate-slide-in');
+            setTimeout(() => {
+                elem.classList.remove('animate-slide-in');
+                elem.style.transition = '';
+                this.updateSlideListeners();
+                this.moveXSlideToStart(slides, targetIndex, currentIndex - 1);
+            }, t);
+        }
+
+        scrollToSlide(targetIndex) {
+            const slides = Array.from(this.slidesContainer.children);
+            const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
+            const rect = this.slidesContainerMain.getBoundingClientRect();
+            const rect2 = this.slidesContainer.getBoundingClientRect();
+
+            if (rect2.width <= rect.width) {
+                this.clearActiveSlide();
+                slides[targetIndex].classList.add('active');
+                const widthCollapsed = (rect.width - 500) / (this.slidesContainer.children.length - 1);
+                for (let i = 0; i < this.slidesContainer.children.length; i++) {
+                    slides[i].style.width = i === targetIndex ? '' : widthCollapsed+`px`;
+                }
+                return;
+            }
+
+            if (targetIndex > currentIndex) {
+                this.moveXSlideToEnd(slides, targetIndex, 0);
+            } else if (targetIndex < currentIndex) {
+                this.moveXSlideToStart(slides, targetIndex, this.slidesContainer.children.length - 1);
+            }
+        }
+
+        clearActiveSlide() {
+            this.slidesContainer.querySelectorAll('.slide.active').forEach(slide => slide.classList.remove('active'));
+        }
+
+        updateSlideListeners() {
+            const slides = Array.from(this.slidesContainer.children);
+            slides.forEach((slide, index) => {
+                slide.onclick = () => this.scrollToSlide(index);
+            });
+        }
+    }
+
+    // Utilisation
+    document.addEventListener("DOMContentLoaded", () => {
+        const slider = new Slider('.slider-container', 300, 2);
+    });
+</script>
