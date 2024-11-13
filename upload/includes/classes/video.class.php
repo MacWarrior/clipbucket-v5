@@ -322,14 +322,43 @@ class Video
         $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
-            /* Search is done on video title, video tags */
-            $cond = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $param_search = mysql_clean($param_search);
+            /* Search is done on video title, video tags, uploader username, video categories, video description */
+
+            /** ORDER BY match score (100 pts if like match search query)
+                - title
+                - tag
+                - username
+                - categories
+                - description
+             */
+            $match_title = 'MATCH(video.title) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+            $match_description = 'MATCH(video.description, video.title) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+            $like_title = 'LOWER(' . $this->getTableName() . '.title) LIKE \'%' . $param_search . '%\'';
+            $order_search = ' ORDER BY CASE WHEN ' . $like_title . ' THEN 100 ELSE ' . $match_title . ' END DESC';
+            $cond = '(' . $match_title . ' OR ' . $match_description . '  OR ' . $like_title;
+
+            /** TAG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . $param_search . '%\'';
+                $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
+                $order_search .= ', CASE WHEN '.$like_tag.' THEN 100 ELSE ' . $match_tag . ' END DESC ';
             }
+
+            /** USER */
+            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $cond .= ' OR ' . $like_user;
+            $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
+
+            /** CATEG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+                $like_categ = ' LOWER(categories.category_name) LIKE \'%' . $param_search . '%\' ';
+                $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', CASE WHEN '.$like_title .' THEN 100 ELSE ' . $match_categ . ' END DESC ';
             }
+            $order_search .= ', ' . $match_description . ' DESC ';
             $cond .= ')';
 
             $conditions[] = $cond;
@@ -406,8 +435,13 @@ class Video
         }
 
         $order = '';
-        if( $param_order && !$param_count ){
-            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
+        if (!empty($order_search)) {
+            $order = $order_search;
+        } elseif( $param_order && !$param_count ){
+            $replace_to_group = str_replace(['asc', 'desc', 'rand()'], '', strtolower($param_order));
+            if (!empty($replace_to_group)) {
+                $group[] = $replace_to_group;
+            }
             $order = ' ORDER BY '.$param_order;
         }
 
