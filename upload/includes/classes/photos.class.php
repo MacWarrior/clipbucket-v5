@@ -201,6 +201,7 @@ class Photo
         $param_first_only = $params['first_only'] ?? false;
         $param_show_unlisted = $params['show_unlisted'] ?? false;
         $param_orphan = $params['orphan'] ?? false;
+        $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
 
         $conditions = [];
         if( $param_photo_id ){
@@ -313,7 +314,10 @@ class Photo
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY '.$param_order;
         }
-
+        if (!$param_not_join_user_profile) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
+            $select[] = 'user_profile.disabled_channel';
+        }
         $limit = '';
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;

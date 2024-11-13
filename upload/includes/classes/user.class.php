@@ -2904,7 +2904,7 @@ class userquery extends CBCategory
             }
         }
 
-        if( config('enable_user_category') == 'yes' ){
+        if( config('enable_user_category') == 'yes' && !empty($array['category']) ){
             //Changing category
             Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
         }
@@ -3400,7 +3400,7 @@ class userquery extends CBCategory
                 lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
             ];
         }
-        if (isSectionEnabled('channels') && has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes') {
+        if (isSectionEnabled('channels') && has_access('enable_channel_page') ) {
             $array[lang('user_channel_profiles')] = [
                 lang('user_profile_settings') => 'edit_account.php?mode=profile',
                 lang('block_users')           => 'edit_account.php?mode=block_users'
