@@ -2,7 +2,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00182 extends \Migration
 {
     /**
      * @throws \Exception
@@ -10,8 +10,8 @@ class MWIP extends \Migration
     public function start()
     {
         self::generateTranslation('error_format_date', [
-            'fr'=>'Erreur de format de date',
-            'en'=>'Error date format'
+            'fr'=>'Format de date incorrect',
+            'en'=>'Incorrect date format'
         ]);
     }
 }
