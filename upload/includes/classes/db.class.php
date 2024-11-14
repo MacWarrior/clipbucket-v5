@@ -22,7 +22,7 @@ class Clipbucket_db
 
     public function __construct(){
         global $DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT;
-        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT);
+        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, ($DBPORT ?? '3306'));
     }
 
     /**
