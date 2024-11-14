@@ -181,6 +181,7 @@
         ,"Fix private messages to users with disabled private messages"
         ,"Fix photos upload forms"
         ,"Fix disabled channel links"
+        ,"Fix signup wrong date format"
       ]
     },
     {
