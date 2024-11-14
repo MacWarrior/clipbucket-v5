@@ -137,6 +137,7 @@ if( ClipBucket::getInstance()->show_page ){
     $popular_users = User::getInstance()->getAll([
         'order'=>'users.profile_hits DESC',
         'limit'=>'5',
+        'channel_enable'=>true,
         'condition'=>'usr_status = \'ok\' AND users.userid != \''. mysql_clean($udetails['userid']).'\''
     ]);
     assign('popular_users',$popular_users);
