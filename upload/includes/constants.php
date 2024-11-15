@@ -21,6 +21,7 @@ class DirPath
             case 'images':
             case 'includes':
             case 'js':
+            case 'libs':
             case 'player':
             case 'plugins':
             case 'styles':

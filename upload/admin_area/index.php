@@ -118,6 +118,8 @@ switch ($mode) {
         break;
 }
 
+$min_suffixe = in_dev() ? '' : '.min';
+
 $params = [];
 $params['limit'] = 10;
 $params['order'] = 'date_added DESC';
@@ -127,6 +129,18 @@ if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') 
     $comments = Comments::getAll($params);
     if( empty($comments) ){
         $comments = [];
+    }
+
+    if( config('enable_visual_editor_comments') == 'yes' ){
+        ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+        ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+        $filepath = DirPath::get('theme_css') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+        if( config('default_theme') != '' && file_exists($filepath) ){
+            ClipBucket::getInstance()->addAdminCSS([
+                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+            ]);
+        }
     }
 }
 
@@ -148,7 +162,6 @@ if( config('enable_update_checker') == '1' ){
     Assign('update_checker_content', $update->getUpdateHTML());
 }
 
-$min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
 template_files('index.html');

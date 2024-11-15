@@ -107,13 +107,13 @@ if( config('enable_comments_video') == 'yes' ){
     ClipBucket::getInstance()->addJS(['pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin']);
 
     if( config('enable_visual_editor_comments') == 'yes' ){
-        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'admin']);
-        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'admin']);
+        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
 
         $filepath = DirPath::get('theme_css') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
         if( config('default_theme') != '' && file_exists($filepath) ){
             ClipBucket::getInstance()->addCSS([
-                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'admin'
+                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
             ]);
         }
 

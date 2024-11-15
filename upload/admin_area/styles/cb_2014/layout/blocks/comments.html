@@ -1,49 +1,33 @@
-{assign var=bgcolor value =F2F2F2}
-{if $comments}
-    <div class="cb-box">
-        <table class="table table-striped table-bordered table-hover">
-            <thead>
-            <tr>
-                <th><input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></th>
-                <th>CID</th>
-                <th>UID</th>
-                <th>Email</th>
-                <th>Comment</th>
-                <th>Date</th>
-                <th>Votes</th>
-                <th>Actions</th>
-            </tr>
-            </thead>
-            <tbody class="reports">
-            {foreach from=$comments item=comment}
-            <tr>
-                <td class="center">
-                        <input type="checkbox" class="ace" />
-                        <span class="lbl"></span>
-                </td>
-                <td>{$comment.comment_id}</td>
-                <td>{$comment.userid}</td>
-                <td>{if $comment.anonym_email}{display_clean($comment.anonym_email)}{else}{display_clean($comment.email)}{/if}</td>
-                <td>{if $comment.comment}{display_clean($comment.comment)}{else}{display_clean($comment.username)}{/if}</td>
-                <td>{$comment.date_added|date_format}</td>
-                <td>{$comment.vote}</td>
-                <td><a href="?{$link}&amp;delete_comment={$comment.comment_id}">{lang code='delete'}</a></td>
-            </tr>
-            {/foreach}
-            </tbody>
-            </table>
-        </div>
-{else}
-<div align="center"><em>No User Comments</em></div>
-{/if}
-
-{literal}
-<script type="text/javascript">
-    $(document).ready(function() {
-		$('.edit_comment').editable('/actions/edit_comment.php', {
-			indicator: '<img src="' + '/images/icons/progIndicator.gif">',
-			tooltip: 'Click to edit...',
-		});
-	});
-</script>
-{/literal}
+{foreach from=$comments item=comment}
+    <div class="itemdiv dialogdiv comment_line" id="comment_{$comment.comment_id}">
+        {if $comment != ''}
+            {if !empty($comment.userid)}
+                {$userdetails = $userquery->get_user_details($comment.userid)}
+                {$username = $userdetails.username}
+                {$avatar = $userquery->getUserThumb($userdetails,'small')}
+            {else}
+                {$username = $comment.anonym_name}
+                {$avatar = $userquery->get_default_thumb('small')}
+            {/if}
+            <div class="user">
+                <img alt="{display_clean($username)}" title="{display_clean($username)}" src="{$avatar}">
+            </div>
+            <div class="body clearfix">
+                <div class="col-md-7">
+                    <span>{Comments::getClean($comment.comment)}</span>
+                </div>
+                <div class="col-md-3">
+                    <i class="icon-time"></i>
+                    <span class="green">{$comment.date_added|date_format}</span>
+                </div>
+                <div class="col-md-2">
+                    <span class="btn btn-primary del_cmt" data-id="{$comment.comment_id}">{lang code='delete'}</span>
+                </div>
+            </div>
+        {else}
+            <div class="body">
+                <p>{lang('no_comments',strtolower(lang('video')))}</p>
+            </div>
+        {/if}
+    </div>
+{/foreach}
