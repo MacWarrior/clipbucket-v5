@@ -107,12 +107,11 @@ function init_visual_editor(selector, placeholder){
         el: document.querySelector(selector),
         initialEditType: 'wysiwyg',
         previewStyle: 'vertical',
-        height: '200px',
         usageStatistics: false,
         toolbarItems: [
             ['bold', 'italic', 'strike'],
-            ['ul', 'ol', 'task', 'indent', 'outdent'],
-            ['table','link']
+            ['ul', 'ol', 'indent', 'outdent'],
+            ['link']
         ],
         language: current_language,
         placeholder: placeholder,
