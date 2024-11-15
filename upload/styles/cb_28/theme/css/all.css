@@ -4809,8 +4809,6 @@ textarea#comment_box {
 }
 
 .navbar-default .navbar-toggle {
-  padding: 0;
-  margin: 0 0 0 16px;
   width: 70px;
   height: 34px;
   font-size: 16px;
