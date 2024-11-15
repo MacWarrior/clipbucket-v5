@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"179",
+  "revision":"182",
   "status":"dev",
   "detail":[
     {
@@ -133,6 +133,7 @@
         ,"Update collection creation on photo upload"
         ,"Update orphan photos management"
         ,"Update dark & light themes"
+        ,"Update search engine"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -179,6 +180,8 @@
         ,"Fix add to collection button with SEO URLs"
         ,"Fix private messages to users with disabled private messages"
         ,"Fix photos upload forms"
+        ,"Fix disabled channel links"
+        ,"Fix signup wrong date format"
       ]
     },
     {
@@ -189,6 +192,7 @@
         ,"Update Readme"
         ,"Update composer.json"
         ,"Update discord errors"
+        ,"Update FFMpeg version check"
         ,"Cleanup code"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"

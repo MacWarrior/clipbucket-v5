@@ -18,8 +18,10 @@
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
 		<span>
-			{if $photo.userid != $anonymous_id}
+			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{elseif $anonymous_id != $photo.userid}
+				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
 	</div>
@@ -40,8 +42,10 @@
 				<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
 			{/if}
 			<span>
-				{if $photo.userid != $anonymous_id}
+				{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+				{elseif $anonymous_id != $photo.userid}
+					{lang code="by"} {display_clean($photo.username)}
 				{/if}
 				<br>
 			</span>
@@ -63,8 +67,10 @@
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
 		<span>
-			{if $photo.userid != $anonymous_id}
+			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{elseif $anonymous_id != $photo.userid}
+				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
 	</div>
@@ -84,8 +90,10 @@
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
 		<span>
-			{if $photo.userid != $anonymous_id}
+			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{elseif $anonymous_id != $photo.userid}
+				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
 	</div>
@@ -114,8 +122,10 @@
 			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
 		{/if}
 		<span>
-			{if $photo.userid != $anonymous_id}
+			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{elseif $anonymous_id != $photo.userid}
+				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
 	</div>
@@ -192,8 +202,10 @@
         <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
         {/if}
         <span>
-			{if $photo.userid != $anonymous_id}
+			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
+			{elseif $anonymous_id != $photo.userid}
+				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
     </div>

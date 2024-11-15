@@ -212,7 +212,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     }
     $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] != 'auto' ? '-'. array_search($resThumb[0]['type'], Upload::getInstance()->types_thumb) : '') .'.' . $resThumb[0]['extension'];
     if (!file_exists(DirPath::get('thumbs') . $filepath)) {
-        error_log('get_thumb - missing file : ' . $filepath);
+//        error_log('get_thumb - missing file : ' . $filepath . PHP_EOL);
         return default_thumb();
     }
     return DirPath::getUrl('thumbs') . $filepath;
