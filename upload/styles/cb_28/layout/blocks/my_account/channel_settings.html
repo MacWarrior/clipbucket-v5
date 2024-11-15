@@ -1,0 +1,39 @@
+<div class="channelSettings col-md-10">
+    {$channel_profile_fields = $userquery->load_user_fields($user)}
+    {foreach from=$channel_profile_fields item=field_group}
+        {if count($field_group.fields) > 1}
+            <div class="field_group">
+                <h2>{display_clean($field_group.group_name)}</h2>
+                {foreach from=$field_group.fields item=field}
+                    <div class="form-group">
+                        {if $field.type == 'radiobutton'}
+                            {$field.label_class = 'radio-inline'}
+                            {$field.class = ''}
+                        {else}
+                            {$field.class = 'form-control'}
+                        {/if}
+
+                        <label for="{$field.id}" class="show">{$field.title}</label>
+                        {if $field.hint_1}
+                            {$field.hint_1}
+                        {/if}
+
+                        {ANCHOR place=$field.anchor_before}
+                        {if $field.id == 'profile_tags'}
+                            <ul id="list_tags"></ul>
+                        {/if}
+                        {$formObj->createField($field)}
+                        {ANCHOR place=$field.anchor_after}
+                        {$field.hint_2}
+                    </div>
+                {/foreach}
+            </div>
+        {/if}
+    {/foreach}
+
+    <div class="form-group">
+        <button name="update_profile" id="button" value="submit" class="btn btn-primary">
+            {lang code='update'}
+        </button>
+    </div>
+</div>

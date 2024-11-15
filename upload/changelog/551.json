@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"148",
+  "revision":"182",
   "status":"dev",
   "detail":[
     {
@@ -29,11 +29,14 @@
         ,"Implement user level permission to disable channels"
         ,"Implement photo upload permission"
         ,"Implement collection thumbnail selection"
+        ,"Implement directory permission checkup"
+        ,"Implement force to error admin tool"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
         ,"Refactor collection items management"
         ,"Refactor orphan photos management"
+        ,"Refactor user levels management interface"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -46,6 +49,9 @@
         ,"Update self-update interface"
         ,"Update activate photo button on photo edition page"
         ,"Update video edition page display"
+        ,"Update user tags order & display"
+        ,"Update System Info interface"
+        ,"Update WIP update process"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -89,6 +95,12 @@
         ,"Fix playlists management"
         ,"Fix guest users permissions"
         ,"Fix collection pagination"
+        ,"Fix video deletion <i>(#443)</i>"
+        ,"Fix config checkup cache usage"
+        ,"Fix users current storage used"
+        ,"Fix action logs user's link"
+        ,"Fix collection reindex"
+        ,"Fix orphan photos display"
       ]
     },
     {
@@ -113,6 +125,7 @@
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
         ,"Refactor orphan photos management"
+        ,"Refactor my account"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
         ,"Update translations"
@@ -120,6 +133,7 @@
         ,"Update collection creation on photo upload"
         ,"Update orphan photos management"
         ,"Update dark & light themes"
+        ,"Update search engine"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -162,25 +176,37 @@
         ,"Fix JS error on video upload"
         ,"Fix video's shorter & longer filters"
         ,"Fix recursive collection display"
+        ,"Fix footer copyright"
+        ,"Fix add to collection button with SEO URLs"
+        ,"Fix private messages to users with disabled private messages"
+        ,"Fix photos upload forms"
+        ,"Fix disabled channel links"
+        ,"Fix signup wrong date format"
       ]
     },
     {
       "title": "Miscellaneous",
       "description": [
-        "Refactor anonymous user"
+        "Implement error 500 / maintenance page"
+        ,"Refactor anonymous user"
         ,"Update Readme"
         ,"Update composer.json"
+        ,"Update discord errors"
+        ,"Update FFMpeg version check"
         ,"Cleanup code"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
+        ,"Add index to sessions table"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
         ,"Fix video files detection"
         ,"Fix PHP8.X compatibility"
+        ,"Fix internal logs with IPv6"
+        ,"Fix server info checkup"
       ]
     },
     {
@@ -198,6 +224,7 @@
         "Implement Windows installation script"
         ,"Implement dev mode options"
         ,"Implement DB timezone selection"
+        ,"Implement core update during installation"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -208,12 +235,13 @@
         ,"Update config creations"
         ,"Update database creation descriptions"
         ,"Update installation script to Ubuntu 24.04"
+        ,"Update licence agreement"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
         ,"Fix hardcoded prefix in update 5.5.0 - 349"
         ,"Fix categories creation in update 5.5.0 - 331"
-        ,"Fix dependancies check during installation process"
+        ,"Fix dependencies check during installation process"
         ,"Fix upgrade from 4.2 RC1"
         ,"Fix SQL typo <i>(#417, #419)</i>"
         ,"Fix SSE DB update"
@@ -223,6 +251,8 @@
         ,"Fix Ubuntu&Debian git error in installation script"
         ,"Fix migrating from old revision"
         ,"Fix guest users permissions"
+        ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
+        ,"Fix timeout after Windows installation script"
       ]
     },
     {
@@ -248,7 +278,7 @@
     {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.4"
+        "Update Player to version 2.0.5"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"
@@ -258,9 +288,9 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.17.2"
+        "Update VideoJS to version 8.19.1"
         ,"Update Windows installation script MariaDB to 11.6.0"
-        ,"Update Windows installation script PHP to 8.3.10"
+        ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"

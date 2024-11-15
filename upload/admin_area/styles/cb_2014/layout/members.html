@@ -48,14 +48,11 @@
                         <a href="view_user.php?uid={$u.userid}" class="oneUserName">{display_clean($u.username)} </a>
                         <span>{$u.email}</span>
                         <div class="labels">
-                            {if $u.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                             <span class="label {if $u.usr_status == Ok}label-success{else}label-warning{/if}"><span>{if $u.usr_status=='Ok'}{lang code='active'}{else}{lang code='inactive'}{/if}</span></span>
-                            <span class="label label-info"><span>Userlevel: {$u.level}</span></span>
+                            <span class="label label-info"><span>{lang('user_levels')}: {lang($u.user_level_name|strtolower|replace:' ':'_')}</span></span>
                             <span class="label"><span>Active</span> : <span>{$u.last_active|nicetime}</span></span>
-            
-                            {if $u.ban_status == "yes"}
-                                <span class="label label-danger"><span>Banned</span></span>
-                            {/if}
+                            {if $u.featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
+                            {if $u.ban_status == "yes"}<span class="label label-danger"><span>Banned</span></span>{/if}
                         </div>
                     </div>
                 </div>
@@ -83,13 +80,13 @@
                         <li><a role="menuitem" tabindex="-1" href="?resend_verif={$u.userid}">Resend Verification</a></li>
                         <li><a role="menuitem" tabindex="-1" href="?activate={$u.userid}">{lang code='activate'}</a></li>
                     {/if}
-                    {if $u.ban_status == yes && $u.userid != user_id()}
+                    {if $u.ban_status == yes && $u.userid != user_id() }
                         <li><a role="menuitem" tabindex="-1" href="?unban={$u.userid}">Unban Member</a></li>
                     {/if}
                     {if $u.ban_status == no && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
                     {/if}
-                    {if $u.featured == no}
+                    {if $u.featured == no && $u.is_channel_enable && $u.enable_channel_page == 'yes'}
                         <li><a role="menuitem" tabindex="-1" href="?featured={$u.userid}">Feature Member</a></li>
                     {/if}
                     {if $u.featured == yes}

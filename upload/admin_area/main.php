@@ -549,6 +549,11 @@ if (isset($_POST['update'])) {
 
     myquery::getInstance()->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');
+
+    //reset permissions check cache
+    if (isset($_SESSION['folder_access'])) {
+        unset($_SESSION['folder_access']);
+    }
 }
 
 $row = myquery::getInstance()->Get_Website_Details();

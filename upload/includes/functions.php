@@ -663,6 +663,21 @@ function has_access($access, $check_only = true, $verify_logged_user = true): bo
 }
 
 /**
+ * Function used to check weather user access or not
+ * @param int $userid
+ * @param      $access
+ * @param bool $check_only
+ * @param bool $verify_logged_user
+ *
+ * @return bool
+ * @uses : { class : $userquery } { function : login_check }
+ */
+function has_access_by_user(int $userid, $access, bool $check_only = true, bool $verify_logged_user = true): bool
+{
+    return userquery::getInstance()->login_check_by_user($userid, $access, $check_only, $verify_logged_user);
+}
+
+/**
  * Function used to return mysql time
  * @return false|string : { current time }
  * @author : Fwhite
@@ -2074,20 +2089,6 @@ function get_country($code)
         return $flag . $result['name_en'];
     }
     return false;
-}
-
-/**
- * function used to get collections
- * @param $param
- *
- * @return array|bool
- * @throws Exception
- * @uses : { class : $cbcollection } { function : get_collections }
- */
-function get_collections($param)
-{
-    global $cbcollection;
-    return $cbcollection->get_collections($param);
 }
 
 /**
@@ -4089,37 +4090,6 @@ function generic_curl($input_arr = [])
 
     return $return_arr;
 
-}
-
-/**
- * @param string $format
- * @param string $timeout
- * @return resource
- */
-function get_proxy_settings(string $format = '', string $timeout = '')
-{
-    switch ($format) {
-        default:
-        case 'file_get_contents':
-            $context = null;
-            if (config('proxy_enable') == 'yes') {
-                $context = [
-                    'http' => [
-                        'proxy'           => 'tcp://' . config('proxy_url') . ':' . config('proxy_port'),
-                        'request_fulluri' => true
-                    ]
-                ];
-
-                if (config('proxy_auth') == 'yes') {
-                    $context['http']['header'] = 'Proxy-Authorization: Basic ' . base64_encode(config('proxy_username') . ':' . config('proxy_password'));
-                }
-            }
-            if( !empty($timeout)) {
-                $context['http']['timeout'] = (int)$timeout;
-            }
-
-            return stream_context_create($context);
-    }
 }
 
 function error_lang_cli($msg)

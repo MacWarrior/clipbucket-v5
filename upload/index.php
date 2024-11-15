@@ -24,10 +24,11 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
 
         if( config('channelsSection') == 'yes' ){
             $params = [
-                'featured' => 'yes'
-                ,'limit'   => 5
+                'featured'       => 'yes',
+                'channel_enable' => 'yes',
+                'limit'          => 5
             ];
-            assign('featured_users', userquery::getInstance()->get_users($params));
+            assign('featured_users', User::getInstance()->getAll($params));
         }
 
         if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){

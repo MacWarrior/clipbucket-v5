@@ -10,12 +10,6 @@ if (!file_exists(DirPath::get('temp') . 'install.me')) {
     }
 }
 
-function get_cbla()
-{
-    $license = file_get_contents(DirPath::get('root') . 'LICENSE');
-    return str_replace("\n", '<BR>', $license);
-}
-
 function button($text, $params, $class = 'btn-primary')
 {
     echo '<span>&nbsp;</span>';
@@ -51,49 +45,7 @@ function msg_arr($arr): string
     return '<span class="msg ' . $type . '">' . $text . '</span>';
 }
 
-/**
- * Function used to check folder permissions
- */
-function checkPermissions(): array
-{
-    $files = [
-        'cache',
-        'cache/comments',
-        'cache/userfeeds',
-        'files',
-        'files/backgrounds',
-        'files/conversion_queue',
-        'files/category_thumbs',
-        'files/logs',
-        'files/mass_uploads',
-        'files/original',
-        'files/photos',
-        'files/temp',
-        'files/temp/install.me',
-        'files/thumbs',
-        'files/videos',
-        'images',
-        'images/avatars',
-        'images/collection_thumbs',
-        'includes'
-    ];
 
-    $permsArray = [];
-    foreach ($files as $file) {
-        if (is_writeable(DirPath::get('root') . $file)) {
-            $permsArray[] = [
-                'path' => $file,
-                'msg'  => 'writeable'
-            ];
-        } else {
-            $permsArray[] = [
-                'path' => $file,
-                'err'  => 'please chmod this file/directory to 755'
-            ];
-        }
-    }
-    return $permsArray;
-}
 
 function selected($selected): string
 {

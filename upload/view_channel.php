@@ -26,22 +26,7 @@ if (is_int($u)) {
 }
 $udetails = User::getInstance()->getOne($params_user);
 if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous_user() ) {
-    if ($_GET['seo_diret'] != 'yes' ) {
-        redirect_to('/channels.php?no_user=1');
-    } else {
-        header('HTTP/1.0 404 Not Found');
-        if (file_exists(LAYOUT . '/404.html')) {
-            template_files('404.html');
-        } else {
-            $data = '404_error';
-            if (has_access('admin_access')) {
-                e(lang('err_warning', ['404', 'http://docs.clip-bucket.com/?p=154']), 'w');
-            }
-            e(lang($data));
-        }
-    }
-    display_it();
-    exit();
+    sessionMessageHandler::add_message(lang('channel_doesnt_exists'), 'e', BASEURL . '/channels.php');
 }
 if ($udetails['ban_status'] == 'yes') {
     e(lang('usr_uban_msg'));
@@ -158,6 +143,7 @@ if( ClipBucket::getInstance()->show_page ){
     $popular_users = User::getInstance()->getAll([
         'order'=>'users.profile_hits DESC',
         'limit'=>'5',
+        'channel_enable'=>true,
         'condition'=>'usr_status = \'ok\' AND users.userid != \''. mysql_clean($udetails['userid']).'\''
     ]);
     assign('popular_users',$popular_users);

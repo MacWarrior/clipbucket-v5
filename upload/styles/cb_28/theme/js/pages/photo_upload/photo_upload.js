@@ -187,8 +187,8 @@ $(document).ready(function(){
         for(let i = 0; i < uploadedFiles.length; i++){
             files.push(uploadedFiles[i]);
             uploadedFiles[i].data = [];
-            uploadedFiles[i].data.photo_title = uploadedFiles[0].name;
-            uploadedFiles[i].data.photo_description = uploadedFiles[0].name;
+            uploadedFiles[i].data.photo_title = uploadedFiles[i].name;
+            uploadedFiles[i].data.photo_description = uploadedFiles[i].name;
             uploadedFiles[i].data.photo_tags = '';
             uploadedFiles[i].data.collection_id = $('#collectionSelection').val();
             uploadedFiles[i].data.allow_comments = 'yes';

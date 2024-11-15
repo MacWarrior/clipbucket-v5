@@ -200,6 +200,8 @@ class Photo
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_show_unlisted = $params['show_unlisted'] ?? false;
+        $param_orphan = $params['orphan'] ?? false;
+        $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
 
         $conditions = [];
         if( $param_photo_id ){
@@ -241,19 +243,47 @@ class Photo
         }
 
         $version = Update::getInstance()->getDBVersion();
-        if( $param_search ){
-            /* Search is done on photo title, photo tags */
-            $cond = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        if ($param_search) {
+            /* Search is done on photo title, photo tags, uploader username, photo categories */
+
+            /** ORDER BY match score (100 pts if like match search query)
+            - title
+            - tag
+            - username
+            - categories
+             */
+            $match_title = 'MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+            $like_title = 'LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $order_search = ' ORDER BY CASE WHEN '. $like_title .' THEN 100 ELSE ' . $match_title .' END DESC ';
+            $cond = '( ' . $match_title . 'OR ' . $like_title;
+
+            /** TAG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
+                $order_search .= ', CASE WHEN '.$like_tag .' THEN 100 ELSE ' . $match_tag . ' END DESC ';
             }
+
+            /** USER */
+            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $cond .= ' OR ' . $like_user;
+            $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
+
+            /** CATEGORIES */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', CASE WHEN '.$like_categ . ' THEN 100 ELSE ' . $match_categ . ' END DESC ';
             }
             $cond .= ')';
 
             $conditions[] = $cond;
         }
+
+        $join = [];
+        $group = [];
 
         $collection_items_table = Collection::getInstance()->getTableNameItems();
         if( $param_count ){
@@ -262,14 +292,13 @@ class Photo
             $select = $this->getAllFields();
             $select[] = 'users.username';
             $select[] = $collection_items_table . '.collection_id ';
+            $group[] = $collection_items_table . '.collection_id ';
         }
 
-        $join = [];
-        $group = [];
         $version = Update::getInstance()->getDBVersion();
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
+                $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS photo_tags';
                 $group[] = 'photos.photo_id';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
@@ -289,7 +318,12 @@ class Photo
         if( $param_collection_id ){
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND photos.photo_id = ' . $collection_items_table . '.object_id';
         } else {
-            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id';
+            $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
+        }
+        $group[] = $collection_items_table.'.collection_id';
+
+        if( $param_orphan ){
+            $conditions[] = $collection_items_table . '.ci_id IS NULL';
         }
 
         if( $param_group ){
@@ -302,11 +336,16 @@ class Photo
         }
 
         $order = '';
-        if( $param_order ){
+        if (!empty($order_search)) {
+            $order = $order_search;
+        } elseif ($param_order) {
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
-            $order = ' ORDER BY '.$param_order;
+            $order = ' ORDER BY ' . $param_order;
         }
-
+        if (!$param_not_join_user_profile) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
+            $select[] = 'user_profile.disabled_channel';
+        }
         $limit = '';
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;
@@ -784,16 +823,17 @@ class CBPhotos
     {
         // Search type
         if (isSectionEnabled('photos')) {
-            ClipBucket::getInstance()->search_types['photos'] = "cbphoto";
+            ClipBucket::getInstance()->search_types['photos'] = 'cbphoto';
         }
 
         // My account links
-        $accountLinks = [
-            lang('manage_photos')          => "manage_photos.php",
-            lang('manage_favorite_photos') => "manage_photos.php?mode=favorite",
-        ];
         if (isSectionEnabled('photos')) {
-            userquery::getInstance()->user_account[lang('photos')] = $accountLinks;
+            if( has_access('allow_photo_upload') ){
+                userquery::getInstance()->user_account[lang('photos')][lang('manage_photos')] = 'manage_photos.php?mode=uploaded';
+            }
+            if( has_access('view_photos') ){
+                userquery::getInstance()->user_account[lang('photos')][lang('manage_favorite_photos')] = 'manage_photos.php?mode=favorite';
+            }
         }
 
         //Setting Cbucket links

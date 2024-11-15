@@ -277,7 +277,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
              */
             if(isset($context['exception'])){
                 list($date, $title, $description_exception, $level_exception) = $this->getMessageFromException($context['exception']);
-                $embeds_exception = $this->getEmbed($title, $description_exception, $level_exception, $date);
+                $embeds_exception = $this->getEmbed($title, $description_exception, $level_exception, $date, ($message ?? ''));
                 unset($context['exception']);
             }
 
@@ -291,16 +291,15 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
 
         }
 
-        /** si presence d'un message */
-        if(!empty($message)){
-            $embeds[] = $this->getEmbed('', $message, $level);
-        }
-
         /** si presence d'une exception */
         if(isset($embeds_exception)){
             $embeds[] = $embeds_exception;
         }
-
+        /** si presence d'un message sans exception */
+        else if(!empty($message)){
+            $embeds[] = $this->getEmbed('', $message, $level);
+        }
+        
         if(empty($embeds)){
             return ;
         }
@@ -348,7 +347,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
         $this->sendCurl($hookObject);
     }
 
-    private function getEmbed($title, $message, $level, $date = '')
+    private function getEmbed($title, $message, $level, $date = '', $complement = '')
     {
 
         switch($level){
@@ -405,6 +404,12 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
         $title = mb_convert_encoding($title, 'UTF-8', 'UTF-8');
         $message = mb_convert_encoding($message, 'UTF-8', 'UTF-8');
 
+        $footer = [ "text" => $date];
+
+        if(!empty($complement)){
+            $footer["text"] .= PHP_EOL.$complement;
+        }
+
         return [
             "title" => preg_replace('/[^[:print:]\r\nÀ-ÿ]/', '', $title ?? null) ?? null,
 
@@ -420,7 +425,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
             "author" => ["name" => $error_name],
             "content" => "",
 //            "timestamp": "2015-12-31T12:00:00.000Z",
-            "footer" => [ "text" => $date ]
+            "footer" => $footer
         ];
     }
 }

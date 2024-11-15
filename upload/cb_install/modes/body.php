@@ -3,9 +3,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>ClipBucket v<?php echo VERSION . ' ' . STATE; ?> Installer</title>
-    <link href="./style.css" rel="stylesheet" type="text/css"/>
+    <link href="./style<?php if(!DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="/vendor/components/jquery/jquery.min.js"></script>
-    <script type="text/javascript" src="./functions.js"></script>
+    <script type="text/javascript" src="./functions<?php if(!DEVELOPMENT_MODE) echo '.min'?>.js"></script>
     <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
     <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="/vendor/fortawesome/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
@@ -21,12 +21,13 @@
     <p></p>
 </div>
 
-<div class="top_nav clearfix" style="height:35px;">
+<div class="top_nav" style="height:35px;">
     <div class="cb_container">
         <div class="cb_navbar">
-            <ul class="headstatus">
+            <ul>
                 <li <?php echo selected('agreement'); ?>><?php echo($has_translation ? lang('agreement') : 'Agreement'); ?></li>
                 <li <?php echo selected('precheck'); ?>> <?php echo($has_translation ? lang('pre_check') : 'Pre Check'); ?><span></span></li>
+                <?php if ($need_update || ($_SESSION['needed_update']??false)) { ?><li <?php echo selected('update'); ?>> <?php echo($has_translation ? lang('update') : 'Update'); ?><span></span></li><?php } ?>
                 <li <?php echo selected('permission'); ?>> <?php echo($has_translation ? lang('permission') : 'Permissions'); ?><span></span></li>
                 <li <?php echo selected('database'); ?>> <?php echo($has_translation ? lang('database') : 'Database'); ?><span></span></li>
                 <li <?php echo selected('dataimport'); ?>> <?php echo($has_translation ? lang('data_import') : 'Data import'); ?><span></span></li>
@@ -42,6 +43,7 @@
 switch ($mode) {
     case 'agreement':
     case 'precheck':
+    case 'update':
     case 'permission':
     case 'database':
     case 'dataimport':

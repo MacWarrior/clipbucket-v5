@@ -5,7 +5,8 @@ CREATE TABLE `{tbl_prefix}action_log` (
   `action_userid` int(30) NOT NULL,
   `action_useremail` varchar(200) NOT NULL,
   `action_userlevel` int(11) NOT NULL,
-  `action_ip` varchar(15) NOT NULL,
+  `action_ipv4` varchar(15) NULL DEFAULT NULL,
+  `action_ipv6` varchar(45) NULL DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `action_success` enum('yes','no') DEFAULT NULL,
   `action_details` text NOT NULL,
@@ -349,8 +350,8 @@ CREATE TABLE `{tbl_prefix}users` (
   `last_logged` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `num_visits` bigint(20) NOT NULL DEFAULT 0,
   `session` varchar(32) NOT NULL DEFAULT '',
-  `ip` varchar(15) NOT NULL DEFAULT '',
-  `signup_ip` varchar(15) NOT NULL DEFAULT '',
+  `ip` varchar(45) NOT NULL DEFAULT '',
+  `signup_ip` varchar(45) NOT NULL DEFAULT '',
   `time_zone` tinyint(4) NOT NULL DEFAULT 0,
   `featured` enum('no','yes') NOT NULL DEFAULT 'no',
   `featured_date` datetime DEFAULT NULL,
@@ -1178,3 +1179,6 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
     MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `{tbl_prefix}social_networks_links`
     ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `{tbl_prefix}sessions`
+    ADD INDEX(`session_date`);

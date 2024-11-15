@@ -3,7 +3,12 @@ define('THIS_PAGE', 'manage_collections');
 define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
-global $cbcollection, $eh, $pages, $cbvideo, $cbphoto, $Cbucket;
+
+if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectionEnabled('photos')) ){
+    redirect_to(cblink(['name' => 'my_account']));
+}
+
+global $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
 userquery::getInstance()->logincheck();
 $udetails = userquery::getInstance()->get_user_details(user_id());
@@ -20,6 +25,10 @@ $get_limit = create_query_limit($page, config('collection_per_page'));
 switch ($mode) {
     case 'manage':
     default:
+        if( !has_access('allow_create_collection') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         if (!empty($_GET['missing_collection'])) {
             e(lang('collection_not_exist'));
         }
@@ -37,7 +46,7 @@ switch ($mode) {
             for ($i = 0; $i < $count; $i++) {
                 $cbcollection->delete_collection($_POST['check_col'][$i]);
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e('selected_collects_del', 'm');
         }
         $collectArray = [
@@ -54,11 +63,15 @@ switch ($mode) {
         $total_pages = count_pages($total_rows, config('collection_per_page'));
 
         //Pagination
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
         subtitle(lang('manage_x', strtolower(lang('collections'))));
         break;
 
     case 'add_new':
+        if( !has_access('allow_create_collection') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         $reqFields = $cbcollection->load_required_fields();
         $otherFields = $cbcollection->load_other_fields();
 
@@ -77,6 +90,10 @@ switch ($mode) {
     case 'edit':
     case 'edit_collection':
     case 'edit_collect':
+        if( !has_access('allow_create_collection') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         if (isset($_POST['update_collection'])) {
             $cbcollection->update_collection($_POST);
             Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $collection_id);
@@ -111,6 +128,10 @@ switch ($mode) {
     case 'collection_items':
     case 'items':
     case 'manage_items':
+        if( !has_access('allow_create_collection') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         $type = $_GET['type'];
         assign('type', $type);
         $get_limit = create_query_limit($page, config('collection_items_page'));
@@ -138,7 +159,7 @@ switch ($mode) {
                     for ($i = 0; $i < $count; $i++) {
                         $cbvideo->collection->remove_item($_POST['check_item'][$i], $collection_id);
                     }
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('selected_items_removed', 'videos'), 'm');
                 }
                 break;
@@ -150,7 +171,7 @@ switch ($mode) {
                         $cbphoto->collection->remove_item($_POST['check_item'][$i], $collection_id);
                         $cbphoto->make_photo_orphan($collection_id, $_POST['check_item'][$i]);
                     }
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('selected_items_removed', 'photos'), 'm');
                 }
                 break;
@@ -158,7 +179,7 @@ switch ($mode) {
 
         //Pagination
         $total_pages = count_pages($total_rows, COLLIP);
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
         $collection = Collection::getInstance()->getOne(['collection_id'=>$collection_id]);
 
         assign('c', $collection);
@@ -170,6 +191,10 @@ switch ($mode) {
     case 'favorite':
     case 'favorites':
     case 'fav':
+        if( !has_access('view_collections') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         if (isset($_GET['remove_fav_collection'])) {
             $collection_id = mysql_clean($_GET['remove_fav_collection']);
             $cbcollection->action->remove_favorite($collection_id);
@@ -180,7 +205,7 @@ switch ($mode) {
             for ($i = 0; $i < $total; $i++) {
                 $cbcollection->action->remove_favorite($_POST['check_col'][$i]);
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e(lang('total_fav_collection_removed', $total), 'm');
         }
 
@@ -203,7 +228,7 @@ switch ($mode) {
         $total_pages = count_pages($total_rows, COLLPP);
 
         //Pagination
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
         subtitle(lang('manage_favorite_collections'));
 }
 

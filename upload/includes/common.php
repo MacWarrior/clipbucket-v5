@@ -41,9 +41,9 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
     }
 }
 $whoops->pushHandler(function($e){
-    $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
+    $message = 'URL : **' . $_SERVER['REQUEST_URI'] . '**' .PHP_EOL. $e->getMessage().PHP_EOL.$e->getTraceAsString();
     error_log($message);
-    DiscordLog::sendDump($message);
+    DiscordLog::getInstance()->error('URL : ' . $_SERVER['REQUEST_URI'], ['exception'=>$e]);
 });
 $whoops->register();
 
@@ -366,7 +366,6 @@ $Smarty->register_function('lang', 'smarty_lang');
 $Smarty->register_function('get_videos', 'get_videos');
 $Smarty->register_function('get_users', 'get_users');
 $Smarty->register_function('get_photos', 'get_photos');
-$Smarty->register_function('get_collections', 'get_collections');
 $Smarty->register_function('private_message', 'private_message');
 $Smarty->register_function('show_video_rating', 'show_video_rating');
 $Smarty->register_function('load_captcha', 'load_captcha');

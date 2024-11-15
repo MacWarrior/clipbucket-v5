@@ -114,6 +114,7 @@ class User
             ,'show_my_subscriptions'
             ,'show_my_subscribers'
             ,'show_my_friends'
+            ,'disabled_channel'
         ];
 
         $this->tablename_level = 'user_levels';
@@ -235,6 +236,7 @@ class User
             case 'last_year':
                 $column = $this->getTableName() . '.doj';
                 $params['condition'] = Search::date_margin($column, $value);
+                $params['group'] = $column;
                 break;
         }
         return $params;
@@ -321,19 +323,28 @@ class User
         }
 
         if( $param_level ){
-            $conditions[] = 'users.level = ' . (int)$param_featured;
+            $conditions[] = 'users.level = ' . (int)$param_level;
         }
 
         $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
             /* Search is done on username, profile tags and profile categories */
-            $cond = '(MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $match_name = 'MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+            $like_name = ' LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond = '( ' . $match_name . ' OR ' . $like_name;
+            $order_search = ' ORDER BY CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . ' END DESC ';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= 'OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= 'OR ' . $match_tag . ' OR ' . $like_tag;
+                $order_search .= ', CASE WHEN '. $like_tag . ' THEN 100 ELSE ' . $match_tag . ' END DESC ';
             }
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-                $cond .= 'OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= 'OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', CASE WHEN ' . $like_categ . ' THEN 100 ELSE ' . $match_categ . ' END DESC ';
             }
             $cond .= ')';
 
@@ -354,6 +365,7 @@ class User
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
+                $group[] = 'user_levels_permissions.user_level_permission_id ';
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
@@ -365,15 +377,17 @@ class User
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
         }
 
+        if( $param_group ){
+            $group[] = $param_group;
+        }
+
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             if ($param_channel_enable ) {
                 $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
             }
-            $select[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\') AS is_channel_enable';
-        }
-
-        if( $param_group ){
-            $group[] = $param_group;
+            $is_channel_enable = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+            $select[] = $is_channel_enable . ' AS is_channel_enable';
+            $group[] = $is_channel_enable;
         }
 
         $having = '';
@@ -382,10 +396,11 @@ class User
         }
 
         $order = '';
-        if( $param_order ){
-            $order = ' ORDER BY '.$param_order;
+        if (!empty($order_search)) {
+            $order = $order_search;
+        } elseif ($param_order) {
+            $order = ' ORDER BY ' . $param_order;
         }
-
         $limit = '';
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;
@@ -591,7 +606,13 @@ class User
      */
     public function getLastStorageUseByUser($userid): int
     {
-        $sql = 'select storage_used from ' . tbl('users_storage_histo') . ' where id_user = ' . mysql_clean($userid) . ' group by id_user having max(datetime)';
+        $sql = 'SELECT storage_used
+                FROM ' . tbl('users_storage_histo') . '
+                WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
+                    SELECT MAX(datetime)
+                    FROM ' . tbl('users_storage_histo') . '
+                    WHERE id_user = ' . mysql_clean($userid) . '
+                )';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return 0;
@@ -999,23 +1020,10 @@ class userquery extends CBCategory
         return false;
     }
 
-    /**
-     * Function used to check weather user is login or not
-     * it will also check weather user has access or not
-     *
-     * @param $access string access type it can be admin_access, upload_acess etc
-     * you can either set it as level id
-     * @param bool $check_only
-     * @param bool $verify_logged_user
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function login_check($access = null, $check_only = false, $verify_logged_user = true)
-    {
+    function login_check_by_user(int $userid, $access = null, $check_only = false, $verify_logged_user = true) {
         if ($verify_logged_user) {
             //First check weather userid is here or not
-            if (!user_id()) {
+            if (!$userid) {
                 if (!$check_only) {
                     e(lang('you_not_logged_in'));
                 }
@@ -1023,7 +1031,7 @@ class userquery extends CBCategory
             }
 
             //Now Check if logged in user exists or not
-            if (!$this->user_exists(user_id(), true)) {
+            if (!$this->user_exists($userid, true)) {
                 if (!$check_only) {
                     e(lang('invalid_user'));
                 }
@@ -1031,7 +1039,7 @@ class userquery extends CBCategory
             }
 
             //Now Check logged in user is banned or not
-            if ($this->is_banned(user_id()) == 'yes') {
+            if ($this->is_banned($userid) == 'yes') {
                 if (!$check_only) {
                     e(lang('usr_ban_err'));
                 }
@@ -1041,7 +1049,11 @@ class userquery extends CBCategory
 
         //Now user have passed all the stages, now checking if user has level access or not
         if ($access) {
-            $access_details = $this->permission;
+            if ($userid == user_id() && !empty($this->permission)) {
+                $access_details = $this->permission;
+            } else {
+                $access_details = $this->get_user_level($userid);
+            }
 
             if (is_numeric($access)) {
                 if ($access_details['level_id'] == $access) {
@@ -1066,6 +1078,23 @@ class userquery extends CBCategory
             return false;
         }
         return true;
+    }
+
+    /**
+     * Function used to check weather user is login or not
+     * it will also check weather user has access or not
+     *
+     * @param $access string access type it can be admin_access, upload_acess etc
+     * you can either set it as level id
+     * @param bool $check_only
+     * @param bool $verify_logged_user
+     *
+     * @return bool
+     * @throws Exception
+     */
+    function login_check($access = null, $check_only = false, $verify_logged_user = true)
+    {
+        return $this->login_check_by_user(user_id(), $access, $check_only, $verify_logged_user);
     }
 
     /**
@@ -2268,17 +2297,13 @@ class userquery extends CBCategory
      */
     function get_user_level($uid, $is_level = false)
     {
-        if ($is_level) {
-            $level = $uid;
-        } else {
-            $level = $this->udetails['level'] ?? false;
+        if (
+            (($this->udetails['level'] == $uid && $is_level) || (!$is_level && $uid == user_id()))
+            && !empty($this->permission)
+        ) {
+            return $this->permission;
         }
-
-        if ($level == user_id() or $level == $this->udetails['level']) {
-            if (isset($this->permission)) {
-                return $this->permission;
-            }
-        }
+        $level = ($is_level ? $uid : $this->get_user_details($uid)['level'] );
 
         $result = Clipbucket_db::getInstance()->select(tbl('user_levels,user_levels_permissions'), '*',
             tbl('user_levels_permissions.user_level_id') . "='" . $level . "' 
@@ -2373,7 +2398,15 @@ class userquery extends CBCategory
             $value_array[] = $iid;
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access] ? $array[$access] : 'no';
+                $value_array[] = $array[$access] ?: 'no';
+            }
+            if (!array_key_exists('plugins_perms', $fields_array)) {
+                $fields_array[] = 'plugins_perms';
+                $value_array[] = '';
+            }
+            if (!array_key_exists('enable_channel_page', $fields_array)) {
+                $fields_array[] = 'enable_channel_page';
+                $value_array[] = 'no';
             }
             Clipbucket_db::getInstance()->insert(tbl('user_levels_permissions'), $fields_array, $value_array);
             return true;
@@ -2440,11 +2473,11 @@ class userquery extends CBCategory
         if ($level) {
             foreach ($this->get_access_type_list() as $access => $name) {
                 $fields_array[] = $access;
-                $value_array[] = $array[$access];
+                $value_array[] = $array[$access] ?? 'no';
             }
 
             $fields_array[] = 'enable_channel_page';
-            $value_array[] = mysql_clean($array['enable_channel_page']);
+            $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
             //Checking level Name
             if (!empty($array['level_name'])) {
                 $level_name = mysql_clean($array['level_name']);
@@ -2881,7 +2914,7 @@ class userquery extends CBCategory
             }
         }
 
-        if( config('enable_user_category') == 'yes' ){
+        if( config('enable_user_category') == 'yes' && !empty($array['category']) ){
             //Changing category
             Category::getInstance()->saveLinks('user', $array['userid'], [$array['category']]);
         }
@@ -2994,7 +3027,9 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['user_profile']), $query_field, $query_val, " userid='" . mysql_clean($array['userid']) . "'");
 
-            Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
+            if ($array['profile_tags'] !== null) {
+                Tags::saveTags($array['profile_tags'], 'profile', $array['userid']);
+            }
             e(lang('usr_pof_upd_msg'), 'm');
         }
     }
@@ -3350,46 +3385,50 @@ class userquery extends CBCategory
     {
         $array[lang('account')] = [
             lang('my_account')        => 'myaccount.php',
-            lang('block_users')       => 'edit_account.php?mode=block_users',
+            lang('account_settings')  => 'edit_account.php?mode=account',
             lang('user_change_pass')  => 'edit_account.php?mode=change_password',
-            lang('user_change_email') => 'edit_account.php?mode=change_email',
-            lang('account_settings')  => 'edit_account.php?mode=account'
+            lang('user_change_email') => 'edit_account.php?mode=change_email'
         ];
 
-        $udetails = $this->get_user_details(user_id());
-        if (config('picture_upload') == 'yes' || config('picture_url') == 'yes' || !empty($udetails['avatar_url']) || !empty($udetails['avatar'])) {
+        if( (config('picture_upload') == 'yes' && has_access('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))) {
             $array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
         }
 
-        if( config('channelsSection') == 'yes' ){
+        if( config('channelsSection') == 'yes' && has_access('view_channel') ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 
-        $array[lang('messages')] = [
-            lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
-            lang('notifications')                                             => 'private_message.php?mode=notification',
-            lang('sent')                                                      => 'private_message.php?mode=sent',
-            lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
-        ];
+        if (isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'))) {
+            $array[lang('account')][lang('contacts_manager')] = 'manage_contacts.php';
+        }
 
-        if (isSectionEnabled('channels')) {
+        if (has_access('private_msg_access')) {
+            $array[lang('messages')] = [
+                lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
+                lang('notifications')                                             => 'private_message.php?mode=notification',
+                lang('sent')                                                      => 'private_message.php?mode=sent',
+                lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
+            ];
+        }
+        if (isSectionEnabled('channels') && has_access('enable_channel_page') ) {
             $array[lang('user_channel_profiles')] = [
                 lang('user_profile_settings') => 'edit_account.php?mode=profile',
-                lang('contacts_manager')      => 'manage_contacts.php'
+                lang('block_users')           => 'edit_account.php?mode=block_users'
             ];
         }
 
         if (isSectionEnabled('videos')) {
-            $array[lang('videos')] = [
-                lang('uploaded_videos') => 'manage_videos.php',
-                lang('user_fav_videos') => 'manage_videos.php?mode=favorites'
-            ];
+            if (has_access('view_video')) {
+                $array[lang('videos')][lang('user_fav_videos')] = 'manage_videos.php?mode=favorites';
+            }
+
+            if (has_access('allow_video_upload')) {
+                $array[lang('videos')][lang('uploaded_videos')] = 'manage_videos.php?mode=uploaded';
+            }
         }
 
-        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' ){
-            $array[lang('playlists')] = [
-                lang('manage_x', strtolower(lang('playlists'))) => 'manage_playlists.php'
-            ];
+        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && has_access('allow_create_playlist')){
+            $array[lang('playlists')][lang('manage_x', strtolower(lang('playlists')))] = 'manage_playlists.php';
         }
 
         if (count($this->user_account) > 0) {
@@ -3839,6 +3878,9 @@ class userquery extends CBCategory
                     $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $val);
                     if ($dob_datetime) {
                         $val = $dob_datetime->format('Y-m-d');
+                    } else {
+                        e(lang('error_format_date'));
+                        return false;
                     }
                 }
 
@@ -3962,9 +4004,13 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->execute($query);
             $insert_id = Clipbucket_db::getInstance()->insert_id();
 
+            if (empty($insert_id)) {
+                e(lang('technical_error'));
+                return false;
+            }
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['password'], $insert_id)], ' userid=\'' . $insert_id . '\'');
 
-            if( config('enable_user_category') == 'yes' ){
+            if (config('enable_user_category') == 'yes') {
                 //Changing category
                 Category::getInstance()->saveLinks('user', $insert_id, [$array['category']]);
             }
@@ -4278,7 +4324,7 @@ class userquery extends CBCategory
             case 'featured':
             case 'f':
                 Clipbucket_db::getInstance()->update($tbl, ['featured', 'featured_date'], ['yes', now()], " userid='$uid' ");
-                e(lang('User has been set as featured'), 'm');
+                e(lang('user_has_been_set_as_featured'), 'm');
                 break;
 
             //Unfeatured user
@@ -4286,7 +4332,7 @@ class userquery extends CBCategory
             case 'unfeatured':
             case 'uf':
                 Clipbucket_db::getInstance()->update($tbl, ['featured'], ['no'], " userid='$uid' ");
-                e(lang('User has been removed from featured users'), 'm');
+                e(lang('user_has_been_removed_from_featured_users'), 'm');
                 break;
 
             //Ban User
@@ -4573,17 +4619,18 @@ class userquery extends CBCategory
         }
 
         $return = [
-            'show_dob' => [
+            'show_dob'     => [
                 'title'       => lang('show_dob'),
                 'type'        => 'radiobutton',
                 'name'        => 'show_dob',
                 'id'          => 'show_dob',
-                'value'       => ['yes' => lang('yes'), 'no' => lang('no')],
+                'value'       => ['yes' => lang('yes'), 'no'  => lang('no')],
                 'checked'     => $default['show_dob'],
                 'db_field'    => 'show_dob',
                 'syntax_type' => 'name',
                 'auto_view'   => 'no',
-                'sep'         => '&nbsp;'
+                'sep'         => '&nbsp;',
+                'disabled'    => (strtolower($default['disabled_channel']) == 'yes')
             ],
             'profile_tags' => [
                 'title'             => lang('profile_tags'),
@@ -4593,7 +4640,8 @@ class userquery extends CBCategory
                 'value'             => genTags($default['profile_tags']),
                 'required'          => 'no',
                 'validate_function' => 'genTags',
-                'auto_view'         => 'yes'
+                'auto_view'         => 'yes',
+                'disabled'          => (strtolower($default['disabled_channel']) == 'yes')
             ]
         ];
 

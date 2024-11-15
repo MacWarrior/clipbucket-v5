@@ -22,7 +22,7 @@ class Clipbucket_db
 
     public function __construct(){
         global $DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT;
-        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT);
+        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, ($DBPORT ?? '3306'));
     }
 
     /**
@@ -35,6 +35,7 @@ class Clipbucket_db
      * @param string $port
      * @return bool|void
      *
+     * @throws Exception
      */
     function connect(string $host = '', string $name = '', string $uname = '', string $pwd = '', string $port = '3306')
     {
@@ -79,7 +80,10 @@ class Clipbucket_db
             $error = $e->getMessage();
             error_log($error);
             if (in_dev()) {
-                die($error);
+                DiscordLog::sendDump($error);
+                throw new Exception($e);
+            } else {
+                redirect_to('maintenance.php');
             }
         }
     }
