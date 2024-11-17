@@ -3,7 +3,7 @@
     <div class="show-image">
         <img src="{$userquery->getUserThumb($user)}?{uniqid()}" class="edit-img-thumbnail img-responsive"/>
     </div>
-    {if config('picture_upload')=='yes' && has_access('avatar_upload')}
+    {if config('picture_upload')=='yes' && User::getInstance()->hasPermission('avatar_upload')}
         <div class="form-group">
             <label for="avatar_file">
                 <h4>{lang code='user_user_avatar'}</h4>
@@ -13,7 +13,7 @@
         </div>
     {/if}
 
-    {if config('picture_upload') == 'yes' && has_access('avatar_upload') && config('picture_url') == 'yes'}
+    {if config('picture_upload') == 'yes' && User::getInstance()->hasPermission('avatar_upload') && config('picture_url') == 'yes'}
         <h3>{lang code='or'}</h3>
     {/if}
 

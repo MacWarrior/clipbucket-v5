@@ -10,7 +10,7 @@ if( config('videosSection') != 'yes' ){
 
 global $pages, $cbvid, $Upload, $eh;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $pages->page_redir();
 
 $userid = user_id();

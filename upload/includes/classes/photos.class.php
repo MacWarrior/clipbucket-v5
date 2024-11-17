@@ -238,7 +238,7 @@ class Photo
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
@@ -386,7 +386,7 @@ class Photo
      */
     public function getGenericConstraints(array $params = []): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -439,7 +439,7 @@ class Photo
      */
     public function isCurrentUserRestricted($photo_id): string
     {
-        if (has_access('video_moderation', true)) {
+        if (User::getInstance()->hasPermission('video_moderation')) {
             return false;
         }
 
@@ -782,9 +782,7 @@ class CBPhotos
      */
     function photos_admin_menu()
     {
-        $per = userquery::getInstance()->get_user_level(user_id());
-
-        if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
+        if (User::getInstance()->hasPermission('photos_moderation') && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
                 'title'   => 'Photos'
                 , 'class' => 'glyphicon glyphicon-picture'
@@ -828,10 +826,10 @@ class CBPhotos
 
         // My account links
         if (isSectionEnabled('photos')) {
-            if( has_access('allow_photo_upload') ){
+            if( User::getInstance()->hasPermission('allow_photo_upload') ){
                 userquery::getInstance()->user_account[lang('photos')][lang('manage_photos')] = 'manage_photos.php?mode=uploaded';
             }
-            if( has_access('view_photos') ){
+            if( User::getInstance()->hasPermission('view_photos') ){
                 userquery::getInstance()->user_account[lang('photos')][lang('manage_favorite_photos')] = 'manage_photos.php?mode=favorite';
             }
         }
@@ -934,7 +932,7 @@ class CBPhotos
         $limit = $p['limit'];
         $cond = '';
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $cond .= Photo::getInstance()->getGenericConstraints();
         } else {
             if ($p['active']) {
@@ -1043,7 +1041,7 @@ class CBPhotos
             $cond .= $p['extra_cond'];
         }
 
-        if ($p['get_orphans'] || has_access('admin_access', true) || user_id() == ($p['user'] ?? 0)) {
+        if ($p['get_orphans'] || User::getInstance()->hasAdminAccess() || user_id() == ($p['user'] ?? 0)) {
             $p['collection'] = '0';
         }
 
@@ -2238,7 +2236,7 @@ class CBPhotos
                 }
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if (isset($array['views'])) {
                     $query_field[] = 'views';
                     $query_val[] = $array['views'];
@@ -2272,7 +2270,7 @@ class CBPhotos
                     if (!$this->photo_exists($pid)) {
                         e(lang("photo_not_exist"));
                     } else {
-                        if ($this->get_photo_owner($pid) != user_id() && !has_access('admin_access', true)) {
+                        if ($this->get_photo_owner($pid) != user_id() && !User::getInstance()->hasAdminAccess()) {
                             e(lang("cant_edit_photo"));
                         } else {
                             if (empty($array['collection_id'])) {

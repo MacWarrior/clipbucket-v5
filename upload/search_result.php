@@ -18,7 +18,7 @@ switch($type){
         break;
 }
 
-if (!userquery::getInstance()->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
+if (!User::getInstance()->hasPermission('view_' . $type) || !isSectionEnabled($type)) {
     redirect_to(BASEURL);
 }
 

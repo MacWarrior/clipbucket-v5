@@ -3,8 +3,8 @@ define('THIS_PAGE', 'videos');
 define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
 
+User::getInstance()->hasPermissionOrRedirect('view_videos');
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('view_videos', true);
 
 if( !isSectionEnabled('videos') ){
     redirect_to(BASEURL);

@@ -6,7 +6,7 @@ require 'includes/config.inc.php';
 
 global $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-userquery::getInstance()->perm_check('view_video', true);
+User::getInstance()->hasPermissionOrRedirect('view_video');
 $pages->page_redir();
 
 $collection_id = (int)$_GET['cid'];
@@ -20,7 +20,7 @@ if ($cbcollection->is_viewable($collection_id)) {
     $params['collection_id'] = $collection_id;
     $cdetails = Collection::getInstance()->getOne($params);
 
-    if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !has_access('admin_access', true)) ){
+    if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()->hasAdminAccess()) ){
         $Cbucket->show_page = false;
     }
 

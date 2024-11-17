@@ -5,7 +5,7 @@ define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
 global $pages, $cbvid;
 
-userquery::getInstance()->perm_check('download_video', true);
+User::getInstance()->hasPermissionOrRedirect('download_video');
 $pages->page_redir();
 
 //Getting Video Key

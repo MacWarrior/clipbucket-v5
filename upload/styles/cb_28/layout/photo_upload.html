@@ -43,7 +43,7 @@
                                     <div id="SelectionDIV" class="col-md-9">
                                         {include file="$style_dir/blocks/collection_select_upload.html" }
                                     </div>
-                                    {if (has_access('allow_create_collection',false,false))}
+                                    {if User::getInstance()->hasPermission('allow_create_collection')}
                                         <div class="col-md-3 text-center" {if $collections}style='margin-top: 14px;'{/if}>
                                             <a href="#" class="btn btn-ghost btn-lg" id="createNewCollection">{lang code="create_new_collection_btn"}</a>
                                         </div>

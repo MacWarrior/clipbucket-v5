@@ -5,8 +5,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $eh;
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

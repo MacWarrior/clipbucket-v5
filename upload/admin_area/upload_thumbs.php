@@ -4,8 +4,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $myquery, $Upload, $pages;
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 $pages->page_redir();
 
 $video = mysql_clean($_GET['video']);

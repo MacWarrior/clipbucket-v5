@@ -72,7 +72,7 @@
                                             {if $menu.this == "home"}
                                                 {continue}
                                             {/if}
-                                            {if $userquery->perm_check('view_'|cat:$menu.this, false, false, true)}
+                                            {if User::getInstance()->hasPermission('view_'|cat:$menu.this)}
                                                 <li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
                                             {/if}
                                         {/if}
@@ -84,7 +84,7 @@
                         </div>
                         {$types_list = array()}
                         {foreach from=$Cbucket->search_types item=t key=stypes}
-                            {if !$userquery->perm_check('view_'|cat:$stypes|lower, false, false, true)}
+                            {if !User::getInstance()->hasPermission('view_'|cat:$menu.this)}
                                 {continue}
                             {/if}
                             {$types_list[] = $stypes|lower}
@@ -117,14 +117,14 @@
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
                                 {if user_id()}
-                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && has_access('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && has_access('allow_photo_upload'))}
+                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
                                             <a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
-                                                {if has_access('allow_video_upload') && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
+                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
                                                     <li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
                                                 {/if}
-                                                {if has_access('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
+                                                {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}
                                                     <li class="up_img"><a href="{link name='photo_upload'}">{lang code="upload_photo"}<i class="icon-photo visible-xs"></i></a></li>
                                                 {/if}
                                                 {ANCHOR place="inside_upload"}
@@ -138,20 +138,20 @@
                                             <span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
                                         </a>
                                         <ul class="dropdown-menu">
-                                            {if has_access('admin_access')}
+                                            {if User::getInstance()->hasAdminAccess()}
                                                 <li><a href="{DirPath::getUrl('admin_area')}">{lang code="admin_area"}</a></li>
                                             {/if}
                                             <li><a href="{link name='my_account'}">{lang code="my_account"}</a></li>
-                                            {if isSectionEnabled('videos') && has_access('allow_video_upload')}
+                                            {if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
                                                 <li><a href="{link name='my_videos'}">{lang('manage_x', lang('videos')|lower)}</a></li>
                                             {/if}
-                                            {if isSectionEnabled('photos') && has_access('allow_photo_upload')}
+                                            {if isSectionEnabled('photos') && User::getInstance()->hasPermission('allow_photo_upload')}
                                                 <li class="hidden-xs"><a href="{link name='my_photos'}">{lang('manage_x', lang('photos')|lower)}</a></li>
                                             {/if}
-                                            {if isSectionEnabled('collections') && (isSectionEnabled('videos') || isSectionEnabled('photos')) && has_access('allow_create_collection')}
+                                            {if isSectionEnabled('collections') && (isSectionEnabled('videos') || isSectionEnabled('photos')) && User::getInstance()->hasPermission('allow_create_collection')}
                                                 <li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
                                             {/if}
-                                            {if isSectionEnabled('playlists') && has_access('allow_create_playlist')}
+                                            {if isSectionEnabled('playlists') && User::getInstance()->hasPermission('allow_create_playlist')}
                                                 <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}

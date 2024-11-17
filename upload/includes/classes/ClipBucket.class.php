@@ -308,7 +308,6 @@ class ClipBucket
      */
     function initAdminMenu()
     {
-        $per = userquery::getInstance()->get_user_level(user_id());
 
         $menu_dashboard = [
             'title'   => 'Dashboard'
@@ -369,7 +368,7 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'manage_social_networks.php'
         ];
 
-        if ($per['allow_manage_user_level'] == 'yes' || userquery::getInstance()->level == 1) {
+        if (User::getInstance()->hasPermission('allow_manage_user_level') || userquery::getInstance()->level == 1) {
             $menu_configuration['sub'][] = [
                 'title' =>  lang('manage_x',strtolower(lang('user_levels')))
                 , 'url' => DirPath::getUrl('admin_area') . 'user_levels.php'
@@ -380,14 +379,14 @@ class ClipBucket
         $plugins_available = count($cbplugin->getNewPlugins());
         $plugins_installed = count($cbplugin->getInstalledPlugins());
         $plugins_count = $plugins_available + $plugins_installed;
-        if ($per['plugins_moderation'] == 'yes' && ($plugins_count >= 1 || in_dev())) {
+        if (User::getInstance()->hasPermission('plugins_moderation') && ($plugins_count >= 1 || in_dev())) {
             $menu_configuration['sub'][] = [
                 'title' => lang('manage_x', strtolower(lang('plugins'))),
                 'url'   => DirPath::getUrl('admin_area') . 'plugin_manager.php'
             ];
         }
 
-        if ($per['manage_template_access'] == 'yes') {
+        if (User::getInstance()->hasPermission('manage_template_access')) {
             global $cbtpl, $cbplayer;
             if (count($cbtpl->get_templates()) > 1 || in_dev()) {
                 $menu_configuration['sub'][] = [
@@ -410,7 +409,7 @@ class ClipBucket
         if (NEED_UPDATE) {
             return;
         }
-        if ($per['web_config_access'] == 'yes') {
+        if (User::getInstance()->hasPermission('web_config_access')) {
             $menu_general = [
                 'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
@@ -433,7 +432,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_general, 10);
         }
 
-        if ($per['member_moderation'] == 'yes') {
+        if (User::getInstance()->hasPermission('member_moderation')) {
             $menu_users = [
                 'title'   => lang('users')
                 , 'class' => 'glyphicon glyphicon-user'
@@ -468,7 +467,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_users, 20);
         }
 
-        if ($per['ad_manager_access'] == 'yes' && config('enable_advertisement') == 'yes' ) {
+        if (User::getInstance()->hasPermission('ad_manager_access') && config('enable_advertisement') == 'yes' ) {
             $menu_ad = [
                 'title'   => 'Advertisement'
                 , 'class' => 'glyphicon glyphicon-bullhorn'
@@ -487,7 +486,7 @@ class ClipBucket
             $this->addMenuAdmin($menu_ad, 30);
         }
 
-        if ($per['tool_box'] == 'yes') {
+        if (User::getInstance()->hasPermission('tool_box')) {
             $menu_tool = [
                 'title'   => lang('tool_box')
                 , 'class' => 'glyphicon glyphicon-wrench'
@@ -531,7 +530,7 @@ class ClipBucket
             }
 
 
-            if ($per['web_config_access'] == 'yes') {
+            if (User::getInstance()->hasPermission('web_config_access')) {
                 $menu_tool['sub'][] = [
                     'title' => 'Maintenance'
                     , 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'
@@ -700,7 +699,6 @@ class ClipBucket
      */
     function head_menu()
     {
-        $user_permissions = userquery::getInstance()->get_user_level(user_id());
         $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => BASEURL, 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
 
         if( config('videosSection') == 'yes' ){

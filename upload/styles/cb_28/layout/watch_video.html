@@ -81,7 +81,7 @@
                             {/if}
 
                             {if config('enable_edit_button') == 'yes'}
-                                {if has_access('admin_access', true)}
+                                {if UserLevel::hasPermissionOrRedirect('admin_access', true)}
                                     {if user_id() && $video.userid == user_id()}
                                         <div class="dropdown">
                                             <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">

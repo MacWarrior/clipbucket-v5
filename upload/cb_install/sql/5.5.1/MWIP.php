@@ -111,10 +111,28 @@ class MWIP extends \Migration
             }
         }
         $sql .= implode(',', $permissions) . ';';
-
         self::query($sql);
 
         //insert user_levels_permission_values
-        $sql = 'SELECT * FROM `{tbl_prefix}user_levels_permission` ';
+        $sql = 'SELECT * FROM `{tbl_prefix}temp_user_levels_permissions` ';
+        $user_levels_permissions = self::req($sql);
+        foreach ($user_levels_permissions as $user_levels_permission) {
+            $user_level_id = $user_levels_permission['user_level_id'];
+            foreach ($user_levels_permission as $permission => $value) {
+                if ($permission == 'user_level_permission_id' || $permission == 'user_level_id') {
+                    continue;
+                }
+                $sql = 'INSERT INTO `{tbl_prefix}user_levels_permissions_values` (user_level_id, id_user_levels_permission, permission_value)  
+                            (SELECT ' . $user_level_id . ',
+                              id_user_levels_permission ,
+                              \'' . $value . '\'  FROM `{tbl_prefix}user_levels_permissions` WHERE permission_name = \'' . $permission . '\') ';
+                self::query($sql);
+            }
+        }
+
+        $sql = 'DROP TABLE IF EXISTS ' . tbl('temp_user_levels_permissions');
+        self::query($sql);
+        $sql = 'DROP TABLE IF EXISTS ' . tbl('temp_user_permissions');
+        self::query($sql);
     }
 }

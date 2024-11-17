@@ -301,7 +301,7 @@ class Collection
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true) ){
+        if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
         }
 
@@ -392,7 +392,7 @@ class Collection
 
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
-        if( !has_access('admin_access', true) ) {
+        if( !User::getInstance()->hasAdminAccess() ) {
             $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
@@ -521,7 +521,7 @@ class Collection
      */
     public function getGenericConstraints(array $params = []): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -874,20 +874,20 @@ class Collections extends CBCategory
      */
     function setting_up_collections()
     {
-        $per = userquery::getInstance()->get_user_level(user_id());
+        $per =  UserLevel::getPermissions(user_id());
         // Adding My Account Links    
         if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !NEED_UPDATE) {
 
-            if( has_access('allow_create_collection') ){
+            if( User::getInstance()->hasPermission('allow_create_collection') ){
                 userquery::getInstance()->user_account[lang('collections')][lang('add_new_collection')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']);
                 userquery::getInstance()->user_account[lang('collections')][lang('manage_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=manage']);
             }
-            if( has_access('view_collections') ){
+            if( User::getInstance()->hasPermission('view_collections') ){
                 userquery::getInstance()->user_account[lang('collections')][lang('manage_favorite_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=favorite']);
             }
 
             // Adding Collection links in Admin Area
-            if (has_access('collection_moderation')) {
+            if (User::getInstance()->hasPermission('collection_moderation')) {
                 $menu_collection = [
                     'title'   => lang('collections')
                     , 'class' => 'glyphicon glyphicon-folder-close'
@@ -1007,7 +1007,7 @@ class Collections extends CBCategory
         }
 
         $left_join_cond = '';
-        if( !has_access('admin_access', true) ) {
+        if( !User::getInstance()->hasAdminAccess() ) {
             if( $this->objTable == 'videos' ){
                 $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
@@ -1069,7 +1069,7 @@ class Collections extends CBCategory
             return false;
         }
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             return true;
         }
 
@@ -1193,7 +1193,7 @@ class Collections extends CBCategory
         $condition[] = $this->items . '.object_id = ' . $this->objTable . '.' . $this->objFieldID;
         $condition[] = $this->objTable . '.userid = ' .'users.userid';
 
-        if (!has_access('admin_access', true) ) {
+        if (!User::getInstance()->hasAdminAccess() ) {
             if( $this->objTable == 'video' ){
                 $condition[] = Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
@@ -1385,7 +1385,7 @@ class Collections extends CBCategory
             $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
         }
 
-        if (!is_null($userid) && !userquery::getInstance()->admin_login_check(true)) {
+        if (!is_null($userid) && !User::getInstance()->hasAdminAccess()) {
             $cond .= ' AND (C.userid = ' . mysql_clean($userid) . ' OR (broadcast = \'public\' AND public_upload = \'yes\') )';
         }
         if (!empty ($cond)) {
@@ -1535,7 +1535,8 @@ class Collections extends CBCategory
      */
     function create_collection($array = null)
     {
-        if (!has_access('allow_create_collection', false)) {
+        if (!User::getInstance()->hasPermission('allow_create_collection')) {
+            e(lang('insufficient_privileges'));
             return false;
         }
 
@@ -1734,7 +1735,7 @@ class Collections extends CBCategory
             return;
         }
 
-        if ($collection['userid'] != user_id() && !has_access('admin_access', true)) {
+        if ($collection['userid'] != user_id() && !User::getInstance()->hasAdminAccess()) {
             e(lang('cant_perform_action_collect'));
             return;
         }
@@ -1801,7 +1802,7 @@ class Collections extends CBCategory
             e(lang('you_not_logged_in'));
         } elseif (!$this->object_in_collection($id, $cid)) {
             e(lang('object_not_in_collect', $this->objName));
-        } elseif (!$this->is_collection_owner($cid) && !has_access('admin_access', true)) {
+        } elseif (!$this->is_collection_owner($cid) && !User::getInstance()->hasAdminAccess()) {
             e(lang('cant_perform_action_collect'));
         } else {
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->items) . ' WHERE object_id = ' . $id . ' AND collection_id = ' . $cid);
@@ -1941,7 +1942,7 @@ class Collections extends CBCategory
 
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if (!empty($array['total_comments'])) {
                     $total_comments = $array['total_comments'];
                     if (!is_numeric($total_comments) || $total_comments < 0) {
@@ -1958,7 +1959,7 @@ class Collections extends CBCategory
                 e(lang('you_not_logged_in'));
             } elseif (!$this->collection_exists($cid)) {
                 e(lang('collect_not_exist'));
-            } elseif (!$this->is_collection_owner($cid, user_id()) && !has_access('admin_access', true)) {
+            } elseif (!$this->is_collection_owner($cid, user_id()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('cant_edit_collection'));
             } else {
                 $cid = mysql_clean($cid);

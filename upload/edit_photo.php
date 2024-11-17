@@ -6,7 +6,7 @@ require 'includes/config.inc.php';
 
 global $cbphoto;
 
-userquery::getInstance()->login_check('edit_video');
+User::getInstance()->hasPermissionOrRedirect('edit_video');
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);

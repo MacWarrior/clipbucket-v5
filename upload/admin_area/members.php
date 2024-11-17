@@ -4,8 +4,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $pages, $eh;
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('member_moderation');
+User::getInstance()->hasPermissionOrRedirect('member_moderation', true);
 $pages->page_redir();
 
 if (!empty($_GET['user_not_found'])) {

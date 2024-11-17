@@ -3,8 +3,7 @@ define('THIS_PAGE', 'template_editor');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->perm_check('manage_template_access', true);
+User::getInstance()->hasPermissionOrRedirect('manage_template_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

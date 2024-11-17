@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'edit_account');
 
 require 'includes/config.inc.php';
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 
 //Updating Profile
 if (isset($_POST['update_profile'])) {
@@ -80,7 +80,8 @@ if (isset($_POST['block_users'])) {
 
 $mode = $_GET['mode'];
 
-$current_enable_channel_page = userquery::getInstance()->get_user_level(user_id())['enable_channel_page'] !== 'yes';
+$current_enable_channel_page =  UserLevel::hasPermission(user_id(),'enable_channel_page');
+
 assign('current_enable_channel_page', $current_enable_channel_page);
 if ($mode === 'profile' && $current_enable_channel_page) {
     e(lang('cannot_access_page'));
@@ -103,7 +104,7 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        if( (config('picture_upload') != 'yes' || !has_access('avatar_upload')) && config('picture_url') != 'yes' && empty(User::getInstance()->get('avatar_url')) && empty(User::getInstance()->get('avatar'))) {
+        if( (config('picture_upload') != 'yes' || !User::getInstance()->hasPermission('avatar_upload')) && config('picture_url') != 'yes' && empty(User::getInstance()->get('avatar_url')) && empty(User::getInstance()->get('avatar'))) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -118,7 +119,7 @@ switch ($mode) {
         break;
 
     case 'subscriptions':
-        if( config('channelsSection') != 'yes' || !has_access('view_channels') ){
+        if( config('channelsSection') != 'yes' || !User::getInstance()->hasPermission('view_channels') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 

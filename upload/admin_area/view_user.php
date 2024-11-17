@@ -5,9 +5,9 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $userquery = userquery::getInstance();
 
-$userquery->admin_login_check();
+
+User::getInstance()->hasPermissionOrRedirect('member_moderation', true);
 pages::getInstance()->page_redir();
-$userquery->login_check('member_moderation');
 
 $uid = $_GET['uid'];
 unset($_REQUEST['uid']);

@@ -181,7 +181,7 @@ class Comments
         $params['first_only'] = true;
         $comment = self::getAll($params);
 
-        if( !has_access('admin_del_access', false)
+        if( !User::getInstance()->hasPermission('admin_del_access')
             && $comment['userid'] != $user_id
             && $comment['type_owner_id'] != $user_id
         ){
