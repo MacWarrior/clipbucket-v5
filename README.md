@@ -22,20 +22,17 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/en/" target="_blank">Oxygenz</a>'s projects since 2023
 
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-- PHP 7.0 - 8.3+ compatibility
-- SQL strict mode compatibility
-- MySQL 8+ compatibility
-- UHD video resolutions support
-- Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>
-- Chromecast support
-- Subtitles support
-- Recursive collections
-- HLS conversion
-- Easy installation scripts
-- New configuration options
-- Integrated DB update system
-- Security, performance, stability and codestyle improvements
-<br/><br/>And even more !
+| PHP 7.0 - 8.3+ compatibility                                      | MySQL 8+ & strict mode compatibility                      |
+|-------------------------------------------------------------------|-----------------------------------------------------------|
+| UHD video resolutions support                                     | TMDB integration                                          |
+| Dark & Light theme                                                | Age restriction                                           |
+| Chromecast support                                                | Recursive collections                                     |
+| Subtitles support                                                 | HLS conversion                                            |
+| Visual comments editor                                            | New configuration & personalisation options               |
+| Easy installation scripts                                         | Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i> |
+| Integrated DB update system                                       | Integrated translations <i>(ENG, FRA, DEU, POR, ESP)</i>  |
+| <b>Security, performance, stability and codestyle improvements<b> |                                                           |
+And even more !
 
 # Installation
 ### Beginners
@@ -45,7 +42,7 @@ All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree
 ### Advanced users
 <i>“Your path you must decide.”</i><br/>
 Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
-Recommended : MariaDB 10.3+ ; PHP 8.2+ ; FFmpeg 4.3+
+Recommended : MariaDB 10.3+ ; PHP 8.2+ ; FFmpeg 4.3+<br/>
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
 
@@ -64,6 +61,4 @@ Take a step back, breath slowly, and create an <a href="https://github.com/MacWa
 Be the more precise you can, add screenshots, give examples... I'm sure we will find a solution !
 
 # More
-| <a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/discord.png "Join us on Discord")</a> |
-|---------------------------------------------------------------------------------------------------------| 
-| You speak french or you're simply not <br/>affraid by my english ? Welcome !                            |
+<a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/discord.png "Join us on Discord")</a>
