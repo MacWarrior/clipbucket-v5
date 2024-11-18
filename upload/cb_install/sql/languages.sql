@@ -1304,4 +1304,5 @@ VALUES ('admin_setting'),
        ('user_cant_receive_pm'),
        ('enable_channel_page_desc'),
        ('missing_timezone'),
-       ('error_format_date');
+       ('error_format_date'),
+       ('option_enable_visual_editor);

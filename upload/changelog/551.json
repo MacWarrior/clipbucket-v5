@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"182",
+  "revision":"183",
   "status":"dev",
   "detail":[
     {
@@ -121,6 +121,7 @@
         ,"Implement option to disable user channel"
         ,"Implement add more to video collections"
         ,"Implement collection thumbnail selection"
+        ,"Implement comment visual editor"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

@@ -166,7 +166,8 @@ function getViewHistory(video_id, page) {
 function pageViewHistory(page) {
     getViewHistory(videoid, page);
 }
-$(function () {
+
+$( document ).ready(function() {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags, '#list_'+this.id);
     });
@@ -181,9 +182,6 @@ $(function () {
         deleteComment(id);
     });
 
-});
-
-$( document ).ready(function() {
     $('.poster li').click(function(){
             $('.poster li.selected').removeClass('selected');
             $(this).addClass('selected');
@@ -199,4 +197,15 @@ $( document ).ready(function() {
             $(this).addClass('selected');
         }
     );
+
+    if( visual_editor_comments_enabled ){
+        Array.from(document.querySelectorAll('#comments .itemdiv .body .col-md-7 span')).forEach((comment,index) => {
+            new toastui.Editor.factory({
+                el: comment,
+                viewer: true,
+                usageStatistics: false,
+                initialValue: comment.innerHTML
+            });
+        });
+    }
 });

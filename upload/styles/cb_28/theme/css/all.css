@@ -2452,10 +2452,6 @@ h1 {
   border-bottom-width: 1px;
 }
 
-.addComment .com-txtarea {
-  margin: 0 0 16px;
-}
-
 .addComment .block-label {
   display: block;
   margin: 0 0 10px;
@@ -2469,7 +2465,8 @@ h1 {
 
 textarea#comment_box {
   height: 58px;
-  resize: none;
+  min-height: 58px;
+  resize: vertical !important;
   width: 100%;
 }
 
