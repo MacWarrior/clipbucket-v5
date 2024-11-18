@@ -28,7 +28,7 @@ $action = mysql_clean($_GET['action']);
 
 //Deleting Level
 if ($action == 'delete') {
-    userquery::getInstance()->delete_user_level($user_level_id);
+   UserLevel::deleteUserLevel($user_level_id);
 }
 
 switch ($mode) {
@@ -52,37 +52,33 @@ switch ($mode) {
         Assign('level_details', $levelDetails);
 
         //Getting Level Permission
-        $level_perms = UserLevel::getAll(['user_level_id' => $user_level_id]);
+        $level_perms = UserLevel::getAllPermissions(['user_level_id' => $user_level_id]);
 
-        $plugin_perms = $level_perms['plugins_perms'];
-        $plugin_perms = json_decode($plugin_perms, true);
 
         $breadcrumb[] = [
             'title' => 'Editing : ' . display_clean(display_clean($levelDetails['user_level_name'])),
             'url'   => DirPath::getUrl('admin_area') . 'user_levels.php?mode=edit&lid=' . display_clean($user_level_id)
         ];
 
-        assign('plugin_perms', $plugin_perms);
         Assign('level_perms', $level_perms);
         Assign('view', 'edit');
         break;
 
     case 'add':
-        $level_perms = UserLevel::getAll(['user_level_id' => $user_level_id]);
+        $level_perms = UserLevel::getAllPermissions(['no_values' => true]);
 
-        $plugin_perms = $level_perms['plugins_perms'];
-        $plugin_perms = json_decode($plugin_perms, true);
         if (!empty($_POST)) {
             $level_name = mysql_clean($_POST['level_name']);
             if (empty($level_name)) {
                 e(lang('please_enter_level_name'));
             } else {
-                UserLevel::addUserLevel($level_name, $_POST['permissions']);
+                UserLevel::addUserLevel($level_name, $_POST['permission_value']);
                 redirect_to('user_levels.php?added=true');
             }
-            Assign('view', 'add');
-            break;
         }
+        Assign('level_perms', $level_perms);
+        Assign('view', 'add');
+        break;
 }
 
 subtitle('User levels');

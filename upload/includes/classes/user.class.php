@@ -2393,75 +2393,7 @@ class userquery extends CBCategory
         }
     }
 
-    /**
-     * Function used to update user level
-     * @param INT level_id
-     * @param ARRAY perm_level
-     * @throws Exception
-     */
-    function update_user_level($id, $array): bool
-    {
-        if (!is_array($array)) {
-            $array = $_POST;
-        }
 
-        //First Checking Level
-        $level = $this->get_level_details($id);
-
-        if ($level) {
-            foreach ($this->get_access_type_list() as $access => $name) {
-                $fields_array[] = $access;
-                $value_array[] = $array[$access] ?? 'no';
-            }
-
-            $fields_array[] = 'enable_channel_page';
-            $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
-            //Checking level Name
-            if (!empty($array['level_name'])) {
-                $level_name = mysql_clean($array['level_name']);
-                //Updating Now
-                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name'], [$level_name], " user_level_id = '$id'");
-            }
-
-            if (isset($_POST['plugin_perm'])) {
-                $fields_array[] = 'plugins_perms';
-                $value_array[] = '|no_mc|' . json_encode($_POST['plugin_perm']);
-            }
-
-            //Updating Permissions
-            Clipbucket_db::getInstance()->update(tbl('user_levels_permissions'), $fields_array, $value_array, " user_level_id = '$id'");
-
-            e(lang('level_updated'), 'm');
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Function used to delete user levels
-     * @param INT $id level_id
-     * @throws Exception
-     */
-    function delete_user_level($id): bool
-    {
-        $level_details = $this->get_level_details($id);
-        $de_level = $this->get_level_details(3);
-        if ($level_details) {
-            //CHeck if leve is deleteable or not
-            if ($level_details['user_level_is_default'] == 'no') {
-                Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
-                Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
-                e(lang('level_del_sucess', $de_level['user_level_name']));
-
-                Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], " level='$id'");
-                return true;
-            }
-
-            e(lang('level_not_deleteable'));
-            return false;
-        }
-    }
 
     /**
      * Function used to get number of videos uploaded by user

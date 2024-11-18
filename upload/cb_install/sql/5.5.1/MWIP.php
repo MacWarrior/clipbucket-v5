@@ -10,16 +10,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        /**
-         * renommer tables user_levels_permissions et user_permissions en temp_
-         * créer tables user_levels_permissions et user_levels_permissions_values
-         * get user_levels_permissions value (colonnes)
-         * faire correspondre avec les lignes de user_permissions
-         * récupérer user_permission.code et renommer en permission_name et générer les clés de trads correspondantes
-         * remplacer permission_desc par uen clé de trad et générer les clés de trads correspondantes
-         * supprimer tables temporaires
-         */
-
 
         self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . ' RENAME ' . tbl('temp_user_levels_permissions'), [
             'table' => 'user_levels_permissions'
@@ -35,10 +25,10 @@ class MWIP extends \Migration
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_levels_permissions`
         (
-            id_user_levels_permission INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
-            id_user_permission_types  INT                NOT NULL,
-            permission_name           VARCHAR(32) UNIQUE NOT NULL,
-            permission_description    VARCHAR(32)
+            `id_user_levels_permission` INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            `id_user_permission_types`  INT                NOT NULL,
+            `permission_name`           VARCHAR(32) UNIQUE NOT NULL,
+            `permission_description`    VARCHAR(32)
         ) ENGINE = InnoDB
           DEFAULT CHARSET = utf8mb4
           COLLATE utf8mb4_unicode_520_ci; ';
@@ -55,9 +45,9 @@ class MWIP extends \Migration
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_levels_permissions_values` (
-            user_level_id INT NOT NULL,
-            id_user_levels_permission INT NOT NULL,
-            permission_value VARCHAR(32) NOT NULL
+            `user_level_id` INT NOT NULL,
+            `id_user_levels_permission` INT NOT NULL,
+            `permission_value` VARCHAR(32) NOT NULL
         )ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci; ';
         self::query($sql);
 
@@ -134,5 +124,6 @@ class MWIP extends \Migration
         self::query($sql);
         $sql = 'DROP TABLE IF EXISTS ' . tbl('temp_user_permissions');
         self::query($sql);
+
     }
 }
