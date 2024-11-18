@@ -1305,4 +1305,4 @@ VALUES ('admin_setting'),
        ('enable_channel_page_desc'),
        ('missing_timezone'),
        ('error_format_date'),
-       ('option_enable_visual_editor);
+       ('option_enable_visual_editor');
