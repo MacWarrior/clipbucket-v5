@@ -304,7 +304,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'enable_access_view_video_history', 'no'),
     (NULL, 'video_list_view_video_history', 30),
-    (NULL, 'enable_visual_editor_comments', 'yes');
+    (NULL, 'enable_visual_editor_comments', 'yes'),
+    (NULL, 'hide_uploader_name', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

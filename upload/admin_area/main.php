@@ -81,6 +81,7 @@ if (isset($_POST['update'])) {
         , 'enable_age_restriction'
         , 'enable_user_dob_edition'
         , 'enable_blur_restricted_content'
+        , 'enable_hide_uploader_name'
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
         , 'hide_empty_collection'
@@ -333,6 +334,7 @@ if (isset($_POST['update'])) {
         'enable_age_restriction',
         'enable_user_dob_edition',
         'enable_blur_restricted_content',
+        'enable_hide_uploader_name',
         'enable_global_age_restriction',
         'enable_sitemap',
         'enable_chunk_upload',

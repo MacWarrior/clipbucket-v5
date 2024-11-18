@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"184",
+  "revision":"185",
   "status":"dev",
   "detail":[
     {
@@ -122,6 +122,7 @@
         ,"Implement add more to video collections"
         ,"Implement collection thumbnail selection"
         ,"Implement comment visual editor"
+        ,"Implement option to disable uploader name display"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
