@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"185",
+  "revision":"186",
   "status":"dev",
   "detail":[
     {
@@ -184,6 +184,7 @@
         ,"Fix photos upload forms"
         ,"Fix disabled channel links"
         ,"Fix signup wrong date format"
+        ,"Fix featured video filter"
       ]
     },
     {
