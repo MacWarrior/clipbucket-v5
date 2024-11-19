@@ -22,10 +22,16 @@ $available_memberships = Membership::getInstance()->getAll([
     'is_disabled'   => false
 ]);
 $can_renew_membership = false;
-foreach ($available_memberships as $available_membership) {
+foreach ($available_memberships as $key => $available_membership) {
     if ($available_membership['user_level_id'] == User::getInstance()->getCurrentUserUserLevelID()) {
         $can_renew_membership = true;
         break;
+    }
+    if (!empty($available_membership['allowed_emails']) && $available_membership['only_visible_eligible']) {
+        $allowed_emails = explode(',', strtolower($available_membership['allowed_emails']));
+        if (!in_array(strtolower(User::getInstance()->get('email')), $allowed_emails)) {
+            unset($available_memberships[$key]);
+        }
     }
 }
 
