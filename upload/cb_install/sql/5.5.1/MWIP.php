@@ -140,7 +140,9 @@ class MWIP extends \Migration
             `description` VARCHAR (512),
             `storage_quota_included` INT DEFAULT 0,
             `storage_price_per_go` DECIMAL DEFAULT 0,
-            `disabled` BOOLEAN DEFAULT FALSE
+            `disabled` BOOLEAN DEFAULT FALSE,
+            `allowed_emails` TEXT,
+            `only_visible_eligible` BOOLEAN DEFAULT FALSE
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
         self::alterTable('ALTER TABLE `' . tbl('memberships') . '`
@@ -542,6 +544,21 @@ class MWIP extends \Migration
         self::generateTranslation('homepage', [
             'fr'=>'Page d\'accueil',
             'en'=>'Homepage'
+        ]);
+
+        self::generateTranslation('allowed_emails', [
+            'fr'=>'Emails autorisés',
+            'en'=>'Allowed emails'
+        ]);
+
+        self::generateTranslation('allowed_emails_tips', [
+            'fr'=>'Emails séparés par des virgules',
+            'en'=>'Emails separated by commas'
+        ]);
+
+        self::generateTranslation('only_visible_eligible', [
+            'fr'=>'Seulement visible si éligible',
+            'en'=>'Only visible if eligible'
         ]);
 
     }

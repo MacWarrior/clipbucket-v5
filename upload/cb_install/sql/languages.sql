@@ -1363,4 +1363,7 @@ VALUES ('admin_setting'),
        ('public_videos'),
        ('default_homepage_desc'),
        ('default_homepage'),
-       ('homepage');
+       ('homepage'),
+       ('allowed_emails'),
+       ('allowed_emails_tips'),
+       ('only_visible_eligible');

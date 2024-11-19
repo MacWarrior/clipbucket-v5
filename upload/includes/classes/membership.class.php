@@ -28,7 +28,9 @@ class Membership
             'storage_quota_included',
             'storage_price_per_go',
             'disabled',
-            'id_currency'
+            'id_currency',
+            'allowed_emails',
+            'only_visible_eligible',
         ];
 
         $this->fields_user_membership = [
@@ -455,6 +457,9 @@ class Membership
                     }
                     $value = '\'' . $value . '\'';
                     break;
+                case 'allowed_emails':
+                    $value = '\'' . $value . '\'';
+                    break;
                 default:
                     break;
 
@@ -462,6 +467,9 @@ class Membership
         }
         if (!isset($fields['disabled'])) {
             $fields['disabled'] = 1;
+        }
+        if (!isset($fields['only_visible_eligible'])) {
+            $fields['only_visible_eligible'] = 0;
         }
         return $fields;
     }
