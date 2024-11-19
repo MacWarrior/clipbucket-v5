@@ -87,21 +87,44 @@ array_val_assign($assign_arry);
 $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //link edit
-assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_video.php?video=' . $vdo['videoid']);
+assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $vdo['videoid']);
 assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);
 
 $min_suffixe = in_dev() ? '' : '.min';
 
 ClipBucket::getInstance()->addJS([
-    'tag-it' . $min_suffixe . '.js'                              => 'admin',
-    'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin',
-    'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
+    'tag-it' . $min_suffixe . '.js'                               => 'admin'
+    ,'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin'
+    ,'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 ClipBucket::getInstance()->addCSS([
-    'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
-    'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',
-    'readonly_tag' . $min_suffixe . '.css'     => 'admin'
+    'jquery.tagit' . $min_suffixe . '.css'      => 'admin'
+    ,'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
+    ,'readonly_tag' . $min_suffixe . '.css'     => 'admin'
 ]);
+
+if( config('enable_comments_video') == 'yes' ){
+    ClipBucket::getInstance()->addJS(['pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin']);
+
+    if( config('enable_visual_editor_comments') == 'yes' ){
+        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+        if( config('default_theme') != '' && file_exists($filepath) ){
+            ClipBucket::getInstance()->addCSS([
+                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+            ]);
+        }
+
+        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
+        if( file_exists($filepath) ){
+            ClipBucket::getInstance()->addJS([
+                'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
+            ]);
+        }
+    }
+}
 
 template_files('watch_video.html');
 display_it();

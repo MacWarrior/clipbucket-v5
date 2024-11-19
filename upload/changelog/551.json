@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"182",
+  "revision":"186",
   "status":"dev",
   "detail":[
     {
@@ -121,6 +121,8 @@
         ,"Implement option to disable user channel"
         ,"Implement add more to video collections"
         ,"Implement collection thumbnail selection"
+        ,"Implement comment visual editor"
+        ,"Implement option to disable uploader name display"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -182,6 +184,7 @@
         ,"Fix photos upload forms"
         ,"Fix disabled channel links"
         ,"Fix signup wrong date format"
+        ,"Fix featured video filter"
       ]
     },
     {
@@ -278,7 +281,7 @@
     {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.5"
+        "Update Player to version 2.0.6"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"
@@ -288,7 +291,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.19.1"
+        "Update VideoJS to version 8.19.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
         ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"

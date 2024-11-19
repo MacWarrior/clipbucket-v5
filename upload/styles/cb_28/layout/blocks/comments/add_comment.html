@@ -1,5 +1,5 @@
 <div class="add-comments clearfix" id="add_comment">
-	{if User::getInstance()->isUserConnected() || $Cbucket->configs.anonym_comments == 'yes' }
+	{if User::getInstance()->isUserConnected() || config('anonym_comments') == 'yes'}
 	<form name="comment_form" method="post" id="comment_form" onsubmit="return false;">
 		<div class="clearfix com-txtarea">
 			<span id="comment_err_output" class="alert alert-danger comment_err_output pull-left" style="display:none;width:100%;"></span>
@@ -7,7 +7,7 @@
 			<input type="hidden" name="reply_to" id="reply_to" value="0"/>
 			<input type="hidden" name="obj_id" id="obj_id" value="{$id}"/>
 			<input type="hidden" name="type" value="{$type}"/>
-			{if User::getInstance()->isUserConnected() && $Cbucket->configs.anonym_comments == 'yes'}
+			{if User::getInstance()->isUserConnected() && config('anonym_comments') == 'yes'}
 				<div class="form-group">
 					<label for="name" class="block-label">{lang code='name'}</label>
 					<input type="text" name="name" id="name" class="form-control" placeholder="{lang code='your_name'}"/>
@@ -17,10 +17,10 @@
 					<input type="text" name="email" id="email" class="form-control" placeholder="{lang code='your_email'}"/>
 				</div>
 			{else}
-				<div class="clearfix ">
-					<label>{lang code="comment_as"}&nbsp;</label>
+				<div class="clearfix">
+					<label for="comment_box">{lang code="comment_as"}&nbsp;</label>
 					<span>
-						{display_clean($userquery->username)}
+						{display_clean(User::getInstance()->get('username'))}
 					</span>
 				</div>
 			{/if}
@@ -44,7 +44,13 @@
 					<img alt="avatar" src="{$userquery->getUserThumb(false,'m',user_id())}" class="img-circle no_select"/>
 				</div>
 				<div class="comment_txt_area">
-					<textarea style="resize: vertical;" name="comment" id="comment_box" cols="30" rows="1" class="form-control" placeholder="{lang code='type_comment_box'}"></textarea>
+
+					{if config('enable_visual_editor_comments') == 'yes'}
+					<div id="comment_box_visual_editor"></div>
+					<input type="hidden" name="comment" id="comment_box"/>
+					{else}
+					<textarea name="comment" id="comment_box" cols="30" rows="1" class="form-control" placeholder="{lang code='type_comment_box'}"></textarea>
+					{/if}
 				</div>
 			</div>
 			<div class="clearfix text-right">
@@ -61,17 +67,9 @@
 </div>
 
 <script type="text/javascript">
-	$(document).ready(function(){
-		var form_selector = 'comment_form';
-		var type = '{$type}';
-		$('#add_comment_button').on("click",function(){
-			add_comment_js(form_selector);
-		});
-		$('#comment_box').keypress(function(e){
-			if(e.keyCode == 13 && !e.shiftKey) {
-				e.preventDefault();
-				add_comment_js(form_selector);
-			}
-		});
-	});
+	let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
+	let visual_editor_comments_placeholder = "{lang code='type_comment_box'}";
+	let template_dir = "{$theme}";
+	let default_theme = "{config('default_theme')}";
+	let current_language = '{$lang_obj->getLang()}';
 </script>

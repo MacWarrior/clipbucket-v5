@@ -909,6 +909,10 @@ h1 {
   position: relative;
 }
 
+.videos .video-info.nouploader{
+  height: 80px;
+}
+
 .videos .video-info .title {
   max-height: 40px;
   overflow: hidden;
@@ -2080,6 +2084,10 @@ h1 {
   height: 82px;
 }
 
+.item-photo .photo-info.nouploader{
+  height: 40px;
+}
+
 .item-photo .photo-info strong,
 .item-photo .photo-info span {
   display: block;
@@ -2452,10 +2460,6 @@ h1 {
   border-bottom-width: 1px;
 }
 
-.addComment .com-txtarea {
-  margin: 0 0 16px;
-}
-
 .addComment .block-label {
   display: block;
   margin: 0 0 10px;
@@ -2469,7 +2473,8 @@ h1 {
 
 textarea#comment_box {
   height: 58px;
-  resize: none;
+  min-height: 58px;
+  resize: vertical !important;
   width: 100%;
 }
 

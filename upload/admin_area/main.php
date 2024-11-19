@@ -80,6 +80,7 @@ if (isset($_POST['update'])) {
         , 'enable_age_restriction'
         , 'enable_user_dob_edition'
         , 'enable_blur_restricted_content'
+        , 'enable_hide_uploader_name'
         , 'enable_global_age_restriction'
         , 'enable_quicklist'
         , 'hide_empty_collection'
@@ -132,6 +133,7 @@ if (isset($_POST['update'])) {
         , 'home_display_featured_collections'
         , 'home_display_recent_videos'
         , 'enable_access_view_video_history'
+        , 'enable_visual_editor_comments'
     ];
 
     $config_booleans_to_refactor = [
@@ -261,6 +263,7 @@ if (isset($_POST['update'])) {
         'enable_comments_photo',
         'enable_comments_collection',
         'enable_comments_channel',
+        'enable_visual_editor_comments',
 
         'num_thumbs',
 
@@ -330,6 +333,7 @@ if (isset($_POST['update'])) {
         'enable_age_restriction',
         'enable_user_dob_edition',
         'enable_blur_restricted_content',
+        'enable_hide_uploader_name',
         'enable_global_age_restriction',
         'enable_sitemap',
         'enable_chunk_upload',
@@ -634,5 +638,6 @@ ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
 ]);
+
 template_files('main.html');
 display_it();

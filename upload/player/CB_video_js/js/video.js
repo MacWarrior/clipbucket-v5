@@ -1,6 +1,6 @@
 /**
  * @license
- * Video.js 8.19.1 <http://videojs.com/>
+ * Video.js 8.19.2 <http://videojs.com/>
  * Copyright Brightcove, Inc. <https://www.brightcove.com/>
  * Available under Apache License Version 2.0
  * <https://github.com/videojs/video.js/blob/main/LICENSE>
@@ -16,7 +16,7 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.videojs = factory());
 })(this, (function () { 'use strict';
 
-  var version$5 = "8.19.1";
+  var version$5 = "8.19.2";
 
   /**
    * An Object that contains lifecycle hooks as keys which point to an array
@@ -18268,7 +18268,7 @@
      */
     handleKeyDown(event) {
       // Escape or Tab unpress the 'button'
-      if (event.key === 'Esc' || event.key === 'Tab') {
+      if (event.key === 'Escape' || event.key === 'Tab') {
         if (this.buttonPressed_) {
           this.unpressButton();
         }
@@ -18299,7 +18299,7 @@
      */
     handleMenuKeyUp(event) {
       // Escape hides popup menu
-      if (event.key === 'Esc' || event.key === 'Tab') {
+      if (event.key === 'Escape' || event.key === 'Tab') {
         this.removeClass('vjs-hover');
       }
     }
@@ -18327,7 +18327,7 @@
      */
     handleSubmenuKeyDown(event) {
       // Escape or Tab unpress the 'button'
-      if (event.key === 'Esc' || event.key === 'Tab') {
+      if (event.key === 'Escape' || event.key === 'Tab') {
         if (this.buttonPressed_) {
           this.unpressButton();
         }
@@ -20215,7 +20215,7 @@
         const option = createEl('option', {
           id: optionId,
           value: this.localize(optionText[0]),
-          textContent: optionText[1]
+          textContent: this.localize(optionText[1])
         });
         option.setAttribute('aria-labelledby', `${this.selectLabelledbyIds} ${optionId}`);
         return option;
@@ -20305,7 +20305,7 @@
           const label = createEl('label', {
             id,
             className: 'vjs-label',
-            textContent: selectConfig.label
+            textContent: this.localize(selectConfig.label)
           });
           label.setAttribute('for', guid);
           span.appendChild(label);
