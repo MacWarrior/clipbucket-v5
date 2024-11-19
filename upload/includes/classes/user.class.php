@@ -363,15 +363,18 @@ class User
             $conditions[] = $cond;
         }
 
+        $join = [];
+        $group = [];
         if( $param_count ){
             $select = ['COUNT(DISTINCT users.userid) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = $this->getTableNameLevel() . '.user_level_name';
+            foreach ($this->fields_profile as $field) {
+                $group[] = $this->tablename_profile . '.' . $field;
+            }
         }
 
-        $join = [];
-        $group = [];
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             if( !$param_count ){
