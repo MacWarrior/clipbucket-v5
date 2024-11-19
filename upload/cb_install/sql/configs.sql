@@ -304,6 +304,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'enable_access_view_video_history', 'no'),
     (NULL, 'video_list_view_video_history', 30),
+    (NULL, 'enable_visual_editor_comments', 'yes'),
+    (NULL, 'hide_uploader_name', 'no'),
+    (NULL, 'video_list_view_video_history', 30),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 

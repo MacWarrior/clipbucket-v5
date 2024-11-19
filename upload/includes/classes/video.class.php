@@ -311,7 +311,7 @@ class Video
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_file_name).'\'';
         }
         if( $param_featured ){
-            $conditions[] = $this->getTableName() . '.featured = \'' . mysql_clean($param_featured) . '\'';
+            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
         if( $param_active ){
             $conditions[] = $this->getTableName() . '.active = \'' . mysql_clean($param_active) . '\'';

@@ -26,20 +26,24 @@
                     <h1>{display_clean($video.title)}</h1>
                     <div class="user-video-info clearfix">
 
-                        {if isSectionEnabled('channels')  && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                            <a href="{$userquery->profile_link($video)}" class="avatar">
-                                <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
-                            </a>
-                        {elseif $anonymous_id != $video.userid}
-                            <span class="avatar">
-								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
-							</span>
+                        {if config('enable_hide_uploader_name') != 'yes'}
+                            {if isSectionEnabled('channels')  && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                                <a href="{$userquery->profile_link($video)}" class="avatar">
+                                    <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
+                                </a>
+                            {elseif $anonymous_id != $video.userid}
+                                <span class="avatar">
+                                    <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
+                                </span>
+                            {/if}
                         {/if}
                         <h2 class="user-title">
-                            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                                <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-                            {elseif $anonymous_id != $video.userid}
-                                {display_clean($video.user_username)}
+                            {if config('enable_hide_uploader_name') != 'yes'}
+                                {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                                    <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                                {elseif $anonymous_id != $video.userid}
+                                    {display_clean($video.user_username)}
+                                {/if}
                             {/if}
                         </h2>
                         <div class="views-counter">

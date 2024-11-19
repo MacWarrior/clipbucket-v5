@@ -386,6 +386,17 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-10">
+                                                <label class="nowrap" for="enable_hide_uploader_name" title="{lang code='option_enable_hide_uploader_name'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_hide_uploader_name'}"/> {lang code='option_enable_hide_uploader_name'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" id="enable_hide_uploader_name" {if $row.enable_hide_uploader_name=='yes'}checked{/if} name="enable_hide_uploader_name" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+
+                                        <div class="row">
+                                            <div class="col-md-10">
                                                 <label class="nowrap" for="enable_public_video_page" title="{lang code='enable_public_video_page'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='enable_public_video_page_tips'}"/> {lang code='enable_public_video_page'}</label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
@@ -2280,6 +2291,20 @@
                         </div>
                         <div class="col-md-2 row-size">
                             <input value="yes" name="enable_comments_censor" id="enable_comments_censor" {if $row.enable_comments_censor=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                            <span class="lbl"></span>
+                        </div>
+                    </div>
+                    <hr/>
+
+                </div>
+
+                <div class="col-md-4">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label class="nowrap" for="enable_visual_editor_comments" title="{lang code='option_enable_visual_editor'}">{lang code='option_enable_visual_editor'}</label>
+                        </div>
+                        <div class="col-md-2 row-size">
+                            <input value="yes" name="enable_visual_editor_comments" id="enable_visual_editor_comments" {if $row.enable_visual_editor_comments=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                             <span class="lbl"></span>
                         </div>
                     </div>

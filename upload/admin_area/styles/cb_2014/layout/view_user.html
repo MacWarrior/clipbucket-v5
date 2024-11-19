@@ -53,8 +53,8 @@
     </div>
 
     <form method="post" enctype="multipart/form-data" name="form1" id="form1" class="cbform">
-            <div class="row">
-            <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-6">
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active">
@@ -440,7 +440,7 @@
                 {/if}
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-6">
                 <div class="tabbable">
                     <ul class="nav nav-tabs" id="myTab">
                         <li class="active">
@@ -568,7 +568,10 @@
                         </div>
                         {if config('enable_comments_channel') == 'yes'}
                         <div id="comments" class="tab-pane">
-                            {assign var=id value=$u.userid}{include file="$style_dir/blocks/comments.html" type=u id=$u.userid link="user=$id"}
+                            <div class="form-group">
+                            {include file="$style_dir/blocks/comments.html"}
+                            </div>
+                        </div>
                         </div>
                         {/if}
                     </div>
@@ -586,6 +589,7 @@
 
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
 
     AmCharts.makeChart("history", {
         "type": "serial",
@@ -642,6 +646,5 @@
             }
         ],
         "dataProvider": {json_encode($storage_history)}
-
     });
 </script>

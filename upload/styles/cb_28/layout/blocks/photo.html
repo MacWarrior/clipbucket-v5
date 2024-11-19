@@ -11,12 +11,9 @@
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
-	<div class="photo-info">
-		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
-		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
-		{/if}
+	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
+		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
@@ -24,6 +21,7 @@
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
+		{/if}
 	</div>
 </div>
 {/if}
@@ -35,12 +33,9 @@
 			{get_photo details=$photo size='l' class=$photo_class output='html'}
 			<i class="icon-zoom"></i>
 		</a>
-		<div class="photo-info">
-			{if $photo.photo_title=='no-tag'}
-				<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
-			{else}
-				<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
-			{/if}
+		<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
+			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
+			{if config('enable_hide_uploader_name') != 'yes'}
 			<span>
 				{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 					{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
@@ -49,6 +44,7 @@
 				{/if}
 				<br>
 			</span>
+			{/if}
 		</div>
 	</div>
 {/if}
@@ -60,12 +56,9 @@
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
-	<div class="photo-info">
-		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
-		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
-		{/if}
+	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
+		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
@@ -73,6 +66,7 @@
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
+		{/if}
 	</div>
 </div>
 {/if}
@@ -83,12 +77,9 @@
 		{get_photo details=$photo size='l' class=$photo_class output='html'}
 		<i class="icon-zoom"></i>
 	</a>
-	<div class="photo-info">
-		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
-		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
-		{/if}
+	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
+		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
@@ -96,6 +87,7 @@
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
+		{/if}
 	</div>
 {/if}
 
@@ -115,12 +107,9 @@
 			<i class="icon-zoom"></i>
 		</div>
 	</a>
-	<div class="photo-info">
-		{if $photo.photo_title=='no-tag'}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
-		{else}
-			<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
-		{/if}
+	<div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
+		<strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:50}</a></strong>
+		{if config('enable_hide_uploader_name') != 'yes'}
 		<span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
@@ -128,6 +117,7 @@
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
+		{/if}
 	</div>
 {/if}
 
@@ -195,12 +185,9 @@
         {get_photo details=$photo size='l' class=$photo_class output='html'}
         <i class="icon-zoom"></i>
     </a>
-    <div class="photo-info">
-        {if $photo.photo_title=='no-tag'}
-        <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">no-title</a></strong>
-        {else}
+    <div class="photo-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
         <strong><a href="{$cbphoto->photo_links($photo,'view_item')}" title="{display_clean($photo.photo_title)}">{display_clean($photo.photo_title)|truncate:30}</a></strong>
-        {/if}
+		{if config('enable_hide_uploader_name') != 'yes'}
         <span>
 			{if isSectionEnabled('channels') && $photo.userid != $anonymous_id && $photo.disabled_channel !='yes'}
 				{lang code="by"}&nbsp;<a href="{$userquery->profile_link($photo.userid)}">{display_clean($photo.username)}</a>
@@ -208,6 +195,7 @@
 				{lang code="by"} {display_clean($photo.username)}
 			{/if}
 		</span>
+		{/if}
     </div>
 </div>
 {/if}
