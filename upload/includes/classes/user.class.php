@@ -311,7 +311,7 @@ class User
         }
 
         if( $param_status ){
-            $conditions[] = 'users.status = \'' . mysql_clean($param_status) . '\'';
+            $conditions[] = 'users.usr_status = \'' . mysql_clean($param_status) . '\'';
         }
 
         if( $param_ban_status ){
