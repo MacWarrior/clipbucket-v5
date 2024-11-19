@@ -345,10 +345,11 @@ class Photo
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
             $select[] = 'user_profile.disabled_channel';
+            $group[] = 'user_profile.disabled_channel';
         }
         $limit = '';
-        if( $param_limit ){
-            $limit = ' LIMIT '.$param_limit;
+        if ($param_limit) {
+            $limit = ' LIMIT ' . $param_limit;
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '

@@ -80,7 +80,7 @@ class MWIP extends \Migration
             'constraint_schema' => '{dbname}'
         ]);
 
-        $sql = 'SELECT column_name, IFNULL(permission_type, 4) AS permission_type, permission_desc, permission_name FROM INFORMATION_SCHEMA.COLUMNS AS C 
+        $sql = 'SELECT column_name AS column_name, IFNULL(permission_type, 4) AS permission_type, permission_desc, permission_name FROM INFORMATION_SCHEMA.COLUMNS AS C 
                    LEFT JOIN `{tbl_prefix}temp_user_permissions` AS TUP ON C.column_name = TUP.permission_code  
                    WHERE TABLE_NAME = \'{tbl_prefix}temp_user_levels_permissions\' AND TABLE_SCHEMA = \'{dbname}\' AND COLUMN_NAME NOT IN (\'user_level_id\', \'user_level_permission_id\')';
         $columns = self::req($sql);

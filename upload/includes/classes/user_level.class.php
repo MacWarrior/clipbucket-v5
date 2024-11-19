@@ -35,8 +35,15 @@ class UserLevel
     {
         $user_level_id = empty($user_level_id) ? 4 : $user_level_id;
         if (empty(self::$user_permissions[$user_level_id])) {
-            $permissions = self::getAllPermissions(['user_level_id' => $user_level_id]);
-            self::$user_permissions[$user_level_id] = array_combine(array_column($permissions, 'permission_name'), $permissions);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+                $permissions = self::getAllPermissions(['user_level_id' => $user_level_id]);
+                self::$user_permissions[$user_level_id] = array_combine(array_column($permissions, 'permission_name'), $permissions);
+            } else {
+                $result = Clipbucket_db::getInstance()->select(tbl('user_levels,user_levels_permissions'), '*',
+                    tbl('user_levels_permissions.user_level_id') . "='" . $user_level_id . "' 
+                              AND " . tbl('user_levels_permissions.user_level_id') . ' = ' . tbl('user_levels.user_level_id'), false, false, false, 600);
+                self::$user_permissions[$user_level_id] = $result[0];
+            }
         }
         return self::$user_permissions[$user_level_id];
     }
@@ -59,7 +66,11 @@ class UserLevel
      */
     public static function getPermission($permission, $user_level_id)
     {
-        return (self::getPermissions($user_level_id)[$permission]['permission_value'] ?? false);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+            return (self::getPermissions($user_level_id)[$permission]['permission_value'] ?? false);
+        } else {
+            return (self::getPermissions($user_level_id)[$permission] ?? false);
+        }
     }
 
 

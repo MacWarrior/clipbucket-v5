@@ -345,21 +345,26 @@ class User
             $conditions[] = $cond;
         }
 
+        $join = [];
+        $group = [];
         if( $param_count ){
             $select = ['COUNT(DISTINCT users.userid) AS count'];
         } else {
             $select = $this->getAllFields();
             $select[] = $this->getTableNameLevel() . '.user_level_name';
+            foreach ($this->fields_profile as $field) {
+                $group[] = $this->tablename_profile . '.' . $field;
+            }
         }
 
-        $join = [];
-        $group = [];
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
-                $group[] = 'user_levels_permissions.id_user_levels_permission ';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+                    $group[] = 'user_levels_permissions.id_user_levels_permission ';
+                }
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
@@ -376,17 +381,27 @@ class User
         }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
-            if ($param_channel_enable ) {
-                $conditions[] = '(' .UserLevel::getTableNameLevelPermissionValue().'.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+            if ($param_channel_enable) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+                    $conditions[] = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+                } else {
+                    $conditions[] = '(' . UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+                }
             }
-            $is_channel_enable = '(' .UserLevel::getTableNameLevelPermissionValue().'.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
-            if( !$param_count ) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+                $is_channel_enable = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+                $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
+                $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
+                AND ' . UserLevel::getTableNameLevelPermission() . '.permission_name = \'enable_channel_page\' ';
+            } else {
+                $is_channel_enable = '(' .   UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+
+            }
+            if (!$param_count) {
                 $select[] = $is_channel_enable . ' AS is_channel_enable';
                 $group[] = $is_channel_enable;
             }
-            $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON '.UserLevel::getTableNameLevelPermissionValue().'.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
-            $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON '.UserLevel::getTableNameLevelPermissionValue().'.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
-            AND ' . UserLevel::getTableNameLevelPermission() . '.permission_name = \'enable_channel_page\' ';
+
         }
 
         $having = '';
@@ -404,7 +419,9 @@ class User
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;
         }
-
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+            $join[] = ' INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermission() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
+        }
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
                 INNER JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
