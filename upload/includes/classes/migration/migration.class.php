@@ -294,12 +294,14 @@ class Migration
 
             if (!empty($params_not_exists['constraint_index'])) {
                 $conditions_not_exists[] = 'INDEX_TYPE = \'' . $params_not_exists['constraint_index']['type'] . '\'';
+
                 if (method_exists(Clipbucket_db::getInstance(), 'getTableName')) {
                     // Temp fix : Case when you just updated to revision 187 with core update function ; previous function name is still loaded
                     $conditions_not_exists[] = 'TABLE_SCHEMA = \'' . Clipbucket_db::getInstance()->getTableName() . '\'';
                 } else {
                     $conditions_not_exists[] = 'TABLE_SCHEMA = \'' . Clipbucket_db::getInstance()->getDBName() . '\'';
                 }
+
                 $conditions_not_exists[] = 'INDEX_NAME = \'' . $params_not_exists['constraint_index']['name'] . '\'';
                 $conditions_not_exists[] = 'TABLE_NAME = \'' . tbl($params_not_exists['constraint_index']['table']) . '\'';
                 $table_not_exists = 'STATISTICS';
