@@ -291,6 +291,15 @@ class Migration
                 $conditions_not_exists[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params_not_exists['constraint_schema']) . '\'';
                 $table_not_exists = 'TABLE_CONSTRAINTS';
             }
+
+            if (!empty($params_not_exists['constraint_index'])) {
+                $conditions_not_exists[] = 'INDEX_TYPE = \'' . $params_not_exists['constraint_index']['type'] . '\'';
+                $conditions_not_exists[] = 'TABLE_SCHEMA = \'' . Clipbucket_db::getInstance()->getDBName() . '\'';
+                $conditions_not_exists[] = 'INDEX_NAME = \'' . $params_not_exists['constraint_index']['name'] . '\'';
+                $conditions_not_exists[] = 'TABLE_NAME = \'' . tbl($params_not_exists['constraint_index']['table']) . '\'';
+                $table_not_exists = 'STATISTICS';
+            }
+
             $conditions[] = '(
                 SELECT COUNT(*) FROM information_schema.' . $table_not_exists . ' WHERE
                 ' . implode(' AND ', $conditions_not_exists) . ' LIMIT 1
@@ -340,7 +349,7 @@ class Migration
     public static function query($sql)
     {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
-        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getTableName(), $sql);
+        $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getDBName(), $sql);
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 

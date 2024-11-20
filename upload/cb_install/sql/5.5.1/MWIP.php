@@ -10,17 +10,30 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        $sql = 'SELECT * FROM information_schema.STATISTICS WHERE `INDEX_TYPE` LIKE \'%FULLTEXT%\' AND TABLE_SCHEMA = \''.\Clipbucket_db::getInstance()->getTableName().'\' AND TABLE_NAME = \''.tbl('video').'\'';
-        $results = \Clipbucket_db::getInstance()->_select($sql);
-        if (empty($results)) {
-            self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);', [
-                'table'  => 'video',
-                'columns' => ['description','title']
-            ]);
-            self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`);', [
-                'table'  => 'video',
-                'column' => 'title'
-            ]);
-        }
+        self::alterTable('ALTER TABLE ' . tbl('photos') . ' MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\' ON UPDATE CURRENT_TIMESTAMP;', [
+            'table'  => 'photos',
+            'column' => 'last_viewed'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);', [
+            'table'   => 'video',
+            'columns' => ['description','title']
+        ],[
+            'constraint_index' => [
+                'table' => 'video',
+                'type'  => 'FULLTEXT',
+                'name'  => 'description'
+            ]
+        ]);
+        self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`);', [
+            'table'  => 'video',
+            'column' => 'title'
+        ],[
+            'constraint_index' => [
+                'table' => 'video',
+                'type'  => 'FULLTEXT',
+                'name'  => 'title'
+            ]
+        ]);
     }
 }
