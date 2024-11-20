@@ -14,12 +14,12 @@ class MWIP extends \Migration
         $results = \Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `description` (`description`,`title`);', [
-                'table'  => 'users',
-                'column' => 'username'
+                'table'  => 'video',
+                'columns' => ['description','title']
             ]);
             self::alterTable('ALTER TABLE `{tbl_prefix}video` ADD FULLTEXT KEY `title` (`title`);', [
-                'table'  => 'users',
-                'column' => 'username'
+                'table'  => 'video',
+                'column' => 'title'
             ]);
         }
     }
