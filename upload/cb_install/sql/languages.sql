@@ -1303,4 +1303,8 @@ VALUES ('admin_setting'),
        ('cannot_access_page'),
        ('user_cant_receive_pm'),
        ('enable_channel_page_desc'),
-       ('missing_timezone');
+       ('missing_timezone'),
+       ('display_featured_video'),
+       ('featured_video_style'),
+       ('classic'),
+       ('modern');

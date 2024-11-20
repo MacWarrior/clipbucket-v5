@@ -133,6 +133,7 @@ if (isset($_POST['update'])) {
         , 'home_display_featured_collections'
         , 'home_display_recent_videos'
         , 'enable_access_view_video_history'
+        , 'display_featured_video'
     ];
 
     $config_booleans_to_refactor = [
@@ -458,7 +459,10 @@ if (isset($_POST['update'])) {
         'enable_video_view_history',
         'enable_video_view_history',
         'enable_access_view_video_history',
-        'video_list_view_video_history'
+        'video_list_view_video_history',
+        'display_featured_video',
+        'featured_video_style',
+        'number_featured_video'
     ];
 
     foreach ($opt_list as $optl) {
@@ -516,7 +520,8 @@ if (isset($_POST['update'])) {
 
         'chunk_upload_size',
         'cloudflare_upload_limit',
-        'video_list_view_video_history'
+        'video_list_view_video_history',
+        'number_featured_video'
     ];
 
     foreach ($rows as $field) {

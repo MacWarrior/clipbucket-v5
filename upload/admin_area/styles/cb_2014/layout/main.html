@@ -435,38 +435,37 @@
                                             </div>
                                         </div>
                                         <hr/>
-
-                                        <!-- Not available yet
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="homepage_featured_video_display" title="{lang code='option_homepage_featured_video_display'}">{lang code='option_homepage_featured_video_display'}</label>
-											</div>
-											<div class="col-md-6">
-												<select class="form-control" name="homepage_featured_video_display" id="homepage_featured_video_display">
-													{assign var=array_modes value=[
-                                                        'paginate' => 'option_paginate'
-                                                        ,'slider' => 'option_slider'
-                                                    ]}
-													{foreach from=$array_modes item=trad key=code}
-													<option {if $code==$row.homepage_featured_video_display}selected{/if} value="{$code}">
-														{lang code=$trad}
-													</option>
-													{/foreach}
-												</select>
-											</div>
-										</div>
-										<hr/>
-										<div class="row">
-											<div class="col-md-6">
-												<label class="nowrap" for="list_featured_videos" title="{lang code='option_list_featured_videos'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_only_with_slider_option'}"> {lang code='option_list_featured_videos'}</label>
-											</div>
-											<div class="col-md-6">
-												<input class="form-control" name="list_featured_videos" id="list_featured_videos" value="{$row.list_featured_videos}" type="number" min="0"/>
-											</div>
-										</div>
-										<hr/>
-										-->
-
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="display_featured_video" title="{lang code='display_featured_video'}">{lang code='display_featured_video'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="display_featured_video" id="display_featured_video" {if $row.display_featured_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="featured_video_style" title="{lang code='featured_video_style'}">{lang code='featured_video_style'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <select  name="featured_video_style" id="featured_video_style">
+                                                    <option value="classic" {if $row.featured_video_style=='classic'}selected{/if}>{lang('classic')}</option>
+                                                    <option value="modern" {if $row.featured_video_style=='modern'}selected{/if}>{lang('modern')}</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="list_featured_videos" title="{lang code='option_list_featured_videos'}"> {lang code='option_list_featured_videos'}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" name="number_featured_video" id="number_featured_video" value="{$row.number_featured_video}" type="number" min="0"/>
+                                            </div>
+                                        </div>
+                                        <hr/>
                                     </div>
 
                                     <div class="col-md-4">
