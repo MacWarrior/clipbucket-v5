@@ -49,7 +49,7 @@
                 $allTimezone = array_column($rs, 'timezone');?>
                 <div class="field">
                     <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
-                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
+                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;" >
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>
                             <option value="<?php echo $timezone ?>">
@@ -68,3 +68,6 @@
         </form>
     </div>
 </div>
+<script>
+    $('#timezone').select2()
+</script>

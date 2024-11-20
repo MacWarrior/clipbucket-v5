@@ -5,10 +5,12 @@
     <title>ClipBucket v<?php echo VERSION . ' ' . STATE; ?> Installer</title>
     <link href="./style<?php if(!DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
     <script type="text/javascript" src="/vendor/components/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/vendor/select2/select2/dist/js/select2.min.js"></script>
     <script type="text/javascript" src="./functions<?php if(!DEVELOPMENT_MODE) echo '.min'?>.js"></script>
     <link href="./bootstrap/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css"/>
     <link href="./bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
     <link href="/vendor/fortawesome/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+    <link href="/vendor/select2/select2/dist/css/select2.min.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div class="top clearfix">
