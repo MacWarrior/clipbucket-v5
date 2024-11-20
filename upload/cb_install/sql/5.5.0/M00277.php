@@ -15,11 +15,23 @@ class M00277 extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` ADD FULLTEXT KEY `collection_name` (`collection_name`);', [
             'table' => 'collections',
             'column' => 'collection_name'
+        ],[
+            'constraint_index' => [
+                'table' => 'collections',
+                'type'  => 'FULLTEXT',
+                'name'  => 'collection_name'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}users` ADD FULLTEXT KEY `username_fulltext` (`username`);', [
             'table' => 'users',
             'column' => 'username'
+        ],[
+            'constraint_index' => [
+                'table' => 'users',
+                'type'  => 'FULLTEXT',
+                'name'  => 'username_fulltext'
+            ]
         ]);
     }
 }
