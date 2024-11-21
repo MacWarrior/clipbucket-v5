@@ -131,6 +131,8 @@ $( document ).ready(function() {
             }
         })
     });
+
+    $('#timezone').select2();
 });
 
 function checkBeforeSubmit(check) {

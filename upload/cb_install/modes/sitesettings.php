@@ -43,17 +43,19 @@
                 </select>
             </div>
             <?php $arr = [];
-            if (!System::isDateTimeSynchro($arr)) {
+            $arr_cli=[];
+            $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+            if (!System::isDateTimeSynchro($arr) || !System::isDateTimeSynchro($arr,$current_datetime_cli)) {
                 $query = /** @lang MySQL */'SELECT timezones.timezone FROM '.cb_sql_table('timezones').' ORDER BY timezones.timezone';
                 $rs = Clipbucket_db::getInstance()->_select($query);
                 $allTimezone = array_column($rs, 'timezone');?>
                 <div class="field">
                     <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
-                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
+                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;" >
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>
-                            <option value="<?php echo $timezone ?>">
-                                <?php echo $timezone ?>
+                            <option value="<?php echo $timezone; ?>">
+                                <?php echo $timezone; ?>
                             </option>
                       <?php  } ?>
                     </select>
