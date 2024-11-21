@@ -43,7 +43,9 @@
                 </select>
             </div>
             <?php $arr = [];
-            if (!System::isDateTimeSynchro($arr)) {
+            $arr_cli=[];
+            $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+            if (!System::isDateTimeSynchro($arr) || !System::isDateTimeSynchro($arr,$current_datetime_cli)) {
                 $query = /** @lang MySQL */'SELECT timezones.timezone FROM '.cb_sql_table('timezones').' ORDER BY timezones.timezone';
                 $rs = Clipbucket_db::getInstance()->_select($query);
                 $allTimezone = array_column($rs, 'timezone');?>
