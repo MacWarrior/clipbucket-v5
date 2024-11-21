@@ -30,8 +30,3 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
-
-$(function () {
-    $('#timezone').select2({
-    });
-});
