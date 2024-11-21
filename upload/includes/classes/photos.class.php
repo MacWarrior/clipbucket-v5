@@ -254,7 +254,7 @@ class Photo
              */
             $match_title = 'MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
             $like_title = 'LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
-            $order_search = ' ORDER BY CASE WHEN '. $like_title .' THEN 100 ELSE ' . $match_title .' END DESC ';
+            $order_search = ' ORDER BY MAX(CASE WHEN '. $like_title .' THEN 100 ELSE ' . $match_title .' END ) DESC ';
             $cond = '( ' . $match_title . 'OR ' . $like_title;
 
             /** TAG */
@@ -262,20 +262,20 @@ class Photo
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
-                $order_search .= ', CASE WHEN '.$like_tag .' THEN 100 ELSE ' . $match_tag . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN '.$like_tag .' THEN 100 ELSE ' . $match_tag . ' END ) DESC ';
             }
 
             /** USER */
             $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
             $cond .= ' OR ' . $like_user;
-            $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
+            $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END ) DESC ';
 
             /** CATEGORIES */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
-                $order_search .= ', CASE WHEN '.$like_categ . ' THEN 100 ELSE ' . $match_categ . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN '.$like_categ . ' THEN 100 ELSE ' . $match_categ . ' END ) DESC ';
             }
             $cond .= ')';
 
@@ -293,13 +293,14 @@ class Photo
             $select[] = 'users.username';
             $select[] = $collection_items_table . '.collection_id ';
             $group[] = $collection_items_table . '.collection_id ';
+            $group[] = 'photos.photo_id';
         }
 
         $version = Update::getInstance()->getDBVersion();
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS photo_tags';
-                $group[] = 'photos.photo_id';
+
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('photo_tags') . ' ON photos.photo_id = photo_tags.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
@@ -345,6 +346,7 @@ class Photo
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
             $select[] = 'user_profile.disabled_channel';
+            $group[] = 'user_profile.disabled_channel';
         }
         $limit = '';
         if( $param_limit ){
