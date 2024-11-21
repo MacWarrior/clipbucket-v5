@@ -37,6 +37,12 @@ class M00139 extends \Migration
         self::alterTable('ALTER TABLE ' . tbl('playlists') . ' ADD FULLTEXT KEY `playlist_name` (`playlist_name`)' , [
             'table'  => 'playlists',
             'column' => 'playlist_name'
+        ],[
+            'constraint_index' => [
+                'table' => 'playlists',
+                'type'  => 'FULLTEXT',
+                'name'  => 'playlist_name'
+            ]
         ]);
 
     }

@@ -395,29 +395,35 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video` DROP COLUMN `tags`;', [
-            'table' => 'video',
+            'table'  => 'video',
             'column' => 'tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}photos` DROP COLUMN `photo_tags`;', [
-            'table' => 'photos',
+            'table'  => 'photos',
             'column' => 'photo_tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}collections` DROP COLUMN `collection_tags`;', [
-            'table' => 'collections',
+            'table'  => 'collections',
             'column' => 'collection_tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}user_profile` DROP COLUMN `profile_tags`;', [
-            'table' => 'user_profile',
+            'table'  => 'user_profile',
             'column' => 'profile_tags',
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}playlists` DROP COLUMN `tags`;', [
-            'table' => 'playlists',
+            'table'  => 'playlists',
             'column' => 'tags',
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}tags` ADD FULLTEXT KEY `tag` (`name`);', [
-            'table' => 'tags',
+            'table'  => 'tags',
             'column' => 'name',
+        ],[
+            'constraint_index' => [
+                'table' => 'tags',
+                'type'  => 'FULLTEXT',
+                'name'  => 'tag'
+            ]
         ]);
 
         $sql = 'INSERT IGNORE INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `id_tools_status`, `elements_total`, `elements_done`) 

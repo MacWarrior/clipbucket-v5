@@ -343,20 +343,20 @@ class Video
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . $param_search . '%\'';
                 $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
-                $order_search .= ', CASE WHEN '.$like_tag.' THEN 100 ELSE ' . $match_tag . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN '.$like_tag.' THEN 100 ELSE ' . $match_tag . ' END) DESC ';
             }
 
             /** USER */
             $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
             $cond .= ' OR ' . $like_user;
-            $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
+            $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END) DESC ';
 
             /** CATEG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = ' LOWER(categories.category_name) LIKE \'%' . $param_search . '%\' ';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
-                $order_search .= ', CASE WHEN '.$like_title .' THEN 100 ELSE ' . $match_categ . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN '.$like_title .' THEN 100 ELSE ' . $match_categ . ' END) DESC ';
             }
             $order_search .= ', ' . $match_description . ' DESC ';
             $cond .= ')';
@@ -423,6 +423,7 @@ class Video
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
             $select[] = 'user_profile.disabled_channel';
+            $group[] = 'user_profile.disabled_channel';
         }
 
         if( $param_group ){
@@ -437,6 +438,8 @@ class Video
         $order = '';
         if (!empty($order_search)) {
             $order = $order_search;
+            $group[]='video.title';
+            $group[]='video.description';
         } elseif( $param_order && !$param_count ){
             $replace_to_group = str_replace(['asc', 'desc', 'rand()'], '', strtolower($param_order));
             if (!empty($replace_to_group)) {
