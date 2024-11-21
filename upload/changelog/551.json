@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"190",
+  "revision":"191",
   "status":"dev",
   "detail":[
     {
@@ -187,6 +187,7 @@
         ,"Fix disabled channel links"
         ,"Fix signup wrong date format"
         ,"Fix featured video filter"
+        ,"Fix search results pagination"
       ]
     },
     {
