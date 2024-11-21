@@ -422,8 +422,10 @@ class Video
 
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
-            $select[] = 'user_profile.disabled_channel';
-            $group[] = 'user_profile.disabled_channel';
+            if( !$param_count ) {
+                $select[] = 'user_profile.disabled_channel';
+                $group[] = 'user_profile.disabled_channel';
+            }
         }
 
         if( $param_group ){
@@ -438,8 +440,10 @@ class Video
         $order = '';
         if (!empty($order_search)) {
             $order = $order_search;
-            $group[]='video.title';
-            $group[]='video.description';
+            if (!$param_count) {
+                $group[]='video.title';
+                $group[]='video.description';
+            }
         } elseif( $param_order && !$param_count ){
             $replace_to_group = str_replace(['asc', 'desc', 'rand()'], '', strtolower($param_order));
             if (!empty($replace_to_group)) {
