@@ -547,7 +547,10 @@ if (isset($_POST['update'])) {
 
         myquery::getInstance()->Set_Website_Details($field, $value);
     }
+
+    //clear cache
     CacheRedis::flushAll();
+    unset($_SESSION['check_global_configs']);
 
     myquery::getInstance()->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');
