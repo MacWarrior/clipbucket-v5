@@ -305,7 +305,7 @@ class User
         }
 
         if( $param_status ){
-            $conditions[] = 'users.status = \'' . mysql_clean($param_status) . '\'';
+            $conditions[] = 'users.usr_status = \'' . mysql_clean($param_status) . '\'';
         }
 
         if( $param_ban_status ){
@@ -327,18 +327,18 @@ class User
             $match_name = 'MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
             $like_name = ' LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
             $cond = '( ' . $match_name . ' OR ' . $like_name;
-            $order_search = ' ORDER BY CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . ' END DESC ';
+            $order_search = ' ORDER BY MAX(CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . ' END ) DESC ';
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= 'OR ' . $match_tag . ' OR ' . $like_tag;
-                $order_search .= ', CASE WHEN '. $like_tag . ' THEN 100 ELSE ' . $match_tag . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN '. $like_tag . ' THEN 100 ELSE ' . $match_tag . ' END ) DESC ';
             }
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= 'OR ' . $match_categ . ' OR ' . $like_categ;
-                $order_search .= ', CASE WHEN ' . $like_categ . ' THEN 100 ELSE ' . $match_categ . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN ' . $like_categ . ' THEN 100 ELSE ' . $match_categ . ' END ) DESC ';
             }
             $cond .= ')';
 
@@ -352,6 +352,7 @@ class User
         } else {
             $select = $this->getAllFields();
             $select[] = $this->getTableNameLevel() . '.user_level_name';
+
             foreach ($this->fields_profile as $field) {
                 $group[] = $this->tablename_profile . '.' . $field;
             }

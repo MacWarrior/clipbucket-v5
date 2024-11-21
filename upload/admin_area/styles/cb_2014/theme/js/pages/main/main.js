@@ -251,4 +251,6 @@ $(document).ready(function () {
             }, 'JSON');
         });
     }
+
+    $('#timezone').select2();
 });

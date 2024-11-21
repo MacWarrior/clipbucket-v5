@@ -32,6 +32,8 @@ if ($_POST['type'] == 'core' && $core_tool->isAlreadyLaunch() === false) {
     $core_tool->setToolInProgress();
     $core_tool->launch();
 }
+
+// TODO : Here, instead of continuing, we should start a new PHP process to avoid core modifications issue while already loaded by this current script
 Update::getInstance()->flush();
 if (($_POST['type'] == 'core' || $_POST['type'] == 'db') && $db_tool->isAlreadyLaunch() === false ) {
     $db_tool->setToolInProgress();

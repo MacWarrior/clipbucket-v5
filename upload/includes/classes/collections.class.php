@@ -281,7 +281,7 @@ class Collection
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) ';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_tag . 'OR ' . $like_tag;
-                $order_search .= ', CASE WHEN '.$like_tag . ' THEN 100 ELSE ' . $match_tag . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN '.$like_tag . ' THEN 100 ELSE ' . $match_tag . ' END) DESC ';
             }
 
             /** USER */
@@ -294,7 +294,7 @@ class Collection
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
-                $order_search .= ', CASE WHEN ' . $like_categ . 'THEN 100 ELSE ' . $match_categ . ' END DESC ';
+                $order_search .= ', MAX(CASE WHEN ' . $like_categ . 'THEN 100 ELSE ' . $match_categ . ' END) DESC ';
             }
             $cond .= ')';
 
