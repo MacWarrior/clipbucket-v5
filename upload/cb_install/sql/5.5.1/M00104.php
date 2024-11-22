@@ -32,8 +32,10 @@ class M00104 extends \Migration
             'table'  => 'users_storage_histo',
             'column' => 'id_user'
         ], [
-            'constraint_name' => 'id_user_ibfk_1',
-            'contraint_type'  => 'FOREIGN KEY'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'id_user_ibfk_1'
+            ]
         ]);
 
         self::generateTranslation('calc_user_storage_label', [

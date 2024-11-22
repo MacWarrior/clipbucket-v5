@@ -347,8 +347,10 @@ class Photo
         }
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
-            $select[] = 'user_profile.disabled_channel';
-            $group[] = 'user_profile.disabled_channel';
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+                $select[] = 'user_profile.disabled_channel';
+                $group[] = 'user_profile.disabled_channel';
+            }
         }
         $limit = '';
         if ($param_limit) {

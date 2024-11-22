@@ -3,14 +3,13 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00192 extends \Migration
 {
     /**
      * @throws \Exception
      */
     public function start()
     {
-
         self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . ' RENAME ' . tbl('temp_user_levels_permissions'), [
             'table' => 'user_levels_permissions'
         ], [
@@ -34,14 +33,16 @@ class MWIP extends \Migration
           COLLATE utf8mb4_unicode_520_ci; ';
         self::query($sql);
 
-        $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions` ADD CONSTRAINT `fk_id_user_permission_types` FOREIGN KEY (`id_user_permission_types`) REFERENCES `{tbl_prefix}user_permission_types` (`user_permission_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION';
+        $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions` 
+                    ADD CONSTRAINT `fk_id_user_permission_types` FOREIGN KEY (`id_user_permission_types`) REFERENCES `{tbl_prefix}user_permission_types` (`user_permission_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'user_levels_permissions',
             'column' => 'id_user_permission_types'
         ], [
-            'constraint_name'   => 'fk_id_user_permission_types',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'fk_id_user_permission_types'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_levels_permissions_values` (
@@ -59,25 +60,30 @@ class MWIP extends \Migration
                 'id_user_levels_permission'
             ]
         ], [
-            'constraint_type' => 'PRIMARY KEY'
+            'constraint' => [
+                'type'  => 'PRIMARY KEY',
+                'table' => 'user_levels_permissions_values'
+            ]
         ]);
         $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions_values` ADD CONSTRAINT `fk_user_level_id` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'user_levels_permissions_values',
             'column' => 'user_level_id'
         ], [
-            'constraint_name'   => 'fk_user_level_id',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'fk_user_level_id'
+            ]
         ]);
         $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions_values` ADD CONSTRAINT `fk_id_user_levels_permission` FOREIGN KEY (`id_user_levels_permission`) REFERENCES `{tbl_prefix}user_levels_permissions` (`id_user_levels_permission`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'user_levels_permissions_values',
             'column' => 'id_user_levels_permission'
         ], [
-            'constraint_name'   => 'fk_id_user_levels_permission',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'fk_id_user_levels_permission'
+            ]
         ]);
 
         $sql = 'SELECT column_name AS column_name, IFNULL(permission_type, 4) AS permission_type, permission_desc, permission_name FROM INFORMATION_SCHEMA.COLUMNS AS C 

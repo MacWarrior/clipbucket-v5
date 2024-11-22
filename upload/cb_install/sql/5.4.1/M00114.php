@@ -25,15 +25,20 @@ class M00114 extends \Migration
             'table'  => 'video_resolution',
             'column' => 'id_video_resolution'
         ], [
-            'constraint_type' => 'PRIMARY KEY',
-            'constraint_name' => 'id_video_resolution'
+            'constraint' => [
+                'type' => 'PRIMARY KEY',
+                'table' => 'video_resolution'
+            ]
         ]);
         self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` ADD UNIQUE KEY `title` (`title`);', [
             'table'  => 'video_resolution',
             'column' => 'title'
         ], [
-            'constraint_name' => 'title',
-            'constraint_type' => 'UNIQUE'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'video_resolution',
+                'name'  => 'title'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_resolution` MODIFY `id_video_resolution` INT(11) NOT NULL AUTO_INCREMENT;', [

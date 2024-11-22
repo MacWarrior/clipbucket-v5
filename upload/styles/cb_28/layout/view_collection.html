@@ -68,7 +68,7 @@
                         <a href="javascript:void(0);" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
                     {/if}
                     {if config('enable_edit_button') == 'yes'}
-                        {if UserLevel::hasPermission('admin_access', true)}
+                        {if User::getInstance()->hasPermission('admin_access')}
                             {if user_id() && $c.userid == user_id()}
                                 <div class="dropdown" style="float: right">
                                     <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">

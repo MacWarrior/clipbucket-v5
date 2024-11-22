@@ -596,7 +596,7 @@ class ElasticSearch
             "bool" => $bool_must
         ];
 
-        if (!UserLevel::hasPermission("admin_access")) {
+        if (!User::getInstance()->hasPermission('admin_access')) {
             $bool["filter"][] = [
                 "match" => [
                     "status" => 'Successful'

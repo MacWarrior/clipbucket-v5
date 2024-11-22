@@ -113,8 +113,11 @@ class User
             ,'show_my_subscriptions'
             ,'show_my_subscribers'
             ,'show_my_friends'
-            ,'disabled_channel'
         ];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+            $this->fields_profile[] = 'disabled_channel';
+        }
 
         $this->tablename_level = 'user_levels';
 
@@ -363,7 +366,7 @@ class User
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '192')) {
                     $group[] = 'user_levels_permissions.id_user_levels_permission ';
                 }
             }
@@ -383,26 +386,25 @@ class User
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             if ($param_channel_enable) {
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '192')) {
                     $conditions[] = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
                 } else {
                     $conditions[] = '(' . UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
                 }
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '192')) {
                 $is_channel_enable = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
                 AND ' . UserLevel::getTableNameLevelPermission() . '.permission_name = \'enable_channel_page\' ';
             } else {
                 $is_channel_enable = '(' .   UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
-
             }
+
             if (!$param_count) {
                 $select[] = $is_channel_enable . ' AS is_channel_enable';
                 $group[] = $is_channel_enable;
             }
-
         }
 
         $having = '';
@@ -420,12 +422,12 @@ class User
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;
         }
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '182')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '192')) {
             $join[] = ' INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermission() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
         }
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
-                INNER JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
+                LEFT JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
                 INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id '
 
             . implode(' ', $join)
@@ -516,7 +518,10 @@ class User
         redirect_to(BASEURL . '/signup.php?mode=login');
     }
 
-    public function hasAdminAccess()
+    /**
+     * @throws Exception
+     */
+    public function hasAdminAccess(): bool
     {
         return $this->hasPermission('admin_access');
     }
@@ -592,8 +597,9 @@ class User
     public function get(string $value)
     {
         if( !isset($this->user_data[$value]) ){
+            DiscordLog::sendDump($this->user_data);
             if( in_dev() ){
-                $msg = 'User->get() - Unknown value : ' . $value;
+                $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
                 error_log($msg);
                 DiscordLog::sendDump($msg);
             }
@@ -1139,26 +1145,6 @@ class userquery extends CBCategory
         }
         return false;
     }
-
-
-    /**
-     * Function used to check weather user is banned or not
-     *
-     * @param $uid
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    function is_banned($uid)
-    {
-        if (empty($this->udetails['ban_status']) && user_id()) {
-            $this->udetails['ban_status'] = $this->get_user_field($uid, 'ban_status');
-        }
-        return $this->udetails['ban_status'];
-    }
-
-
-    //This Function Is Used to Logout
 
     /**
      * @throws Exception
@@ -3235,7 +3221,9 @@ class userquery extends CBCategory
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
 
-        if (isSectionEnabled('channels') && (User::getInstance()->hasPermission('view_channel') || (User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'))) {
+        $check_before_551_136 = (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && User::getInstance()->hasPermission('view_channel'));
+        $check_after_551_136 = (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && (User::getInstance()->hasPermission('view_channel') || (User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes')));
+        if( $check_before_551_136 || $check_after_551_136 ){
             $array[lang('account')][lang('contacts_manager')] = 'manage_contacts.php';
         }
 
@@ -3410,23 +3398,6 @@ class userquery extends CBCategory
             return true;
         }
         return false;
-    }
-
-    /**
-     * function used to get user details with profile
-     *
-     * @param null $uid
-     *
-     * @return array
-     * @throws Exception
-     */
-    function get_user_details_with_profile($uid = null): array
-    {
-        if (!$uid) {
-            $uid = user_id();
-        }
-        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users'] . ',' . $this->dbtbl['user_profile']), '*', tbl($this->dbtbl['users']) . ".userid ='$uid' AND " . tbl($this->dbtbl['users']) . '.userid = ' . tbl($this->dbtbl['user_profile']) . '.userid');
-        return $result[0];
     }
 
     /**
@@ -4362,7 +4333,7 @@ class userquery extends CBCategory
 
         execute_sql_file(\DirPath::get('cb_install') . DIRECTORY_SEPARATOR . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
-        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous%' AND email='anonymous%'", '1');
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
         return $result[0]['userid'];
     }
 

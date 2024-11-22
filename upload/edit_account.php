@@ -34,19 +34,19 @@ if (isset($_FILES['Filedata'])) {
     $destinationFilePath = DirPath::get('temp') . 'background-' . $user_id . '-'. $timeStamp;
 
     $params = [
-        'fileData' => 'Filedata',
-        'mimeType' => 'image',
+        'fileData'            => 'Filedata',
+        'mimeType'            => 'image',
         'destinationFilePath' => $destinationFilePath,
-        'keepExtension' => true,
-        'maxFileSize' => config('max_bg_size') / 1024,
-        'allowedExtensions' => config('allowed_photo_types')
+        'keepExtension'       => true,
+        'maxFileSize'         => config('max_bg_size') / 1024,
+        'allowedExtensions'   => config('allowed_photo_types')
     ];
 
     FileUpload::getInstance($params)->processUpload();
     $data = [
         'extension' => FileUpload::getInstance()->getExtension(),
-        'filepath' => FileUpload::getInstance()->getDestinationFilePath(),
-        'user_id' => $user_id
+        'filepath'  => FileUpload::getInstance()->getDestinationFilePath(),
+        'user_id'   => $user_id
     ];
 
     $coverUpload = userquery::getInstance()->updateBackground($data);
@@ -79,11 +79,7 @@ if (isset($_POST['block_users'])) {
 }
 
 $mode = $_GET['mode'];
-
-$current_enable_channel_page =  UserLevel::hasPermission(user_id(),'enable_channel_page');
-
-assign('current_enable_channel_page', $current_enable_channel_page);
-if ($mode === 'profile' && $current_enable_channel_page) {
+if ($mode === 'profile' && !User::getInstance()->hasPermission('enable_channel_page')) {
     e(lang('cannot_access_page'));
     $mode = 'account';
 }

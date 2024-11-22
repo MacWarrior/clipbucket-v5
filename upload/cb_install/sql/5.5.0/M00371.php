@@ -203,9 +203,10 @@ class M00371 extends \Migration
             'table'  => 'tmdb_search_result',
             'column' => 'id_tmdb_search'
         ], [
-            'constraint_name'   => 'search_result',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'search_result'
+            ]
         ]);
 
         self::generateTranslation('backdrop', [

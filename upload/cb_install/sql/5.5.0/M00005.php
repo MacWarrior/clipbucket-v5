@@ -25,16 +25,21 @@ class M00005 extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}video_audio_tracks` ADD UNIQUE KEY `videoid` (`videoid`,`number`);', [
             'table' => 'video_audio_tracks'
         ], [
-            'constraint_name' => 'videoid',
-            'constraint_type' => 'UNIQUE'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'video_audio_tracks',
+                'name'  => 'videoid'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_audio_tracks` ADD CONSTRAINT `video_audio_tracks_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;', [
             'table'  => 'video_audio_tracks',
             'column' => 'videoid'
         ], [
-            'constraint_name' => 'video_audio_tracks_ibfk_1',
-            'contraint_type'  => 'FOREIGN KEY'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_audio_tracks_ibfk_1'
+            ]
         ]);
     }
 }
