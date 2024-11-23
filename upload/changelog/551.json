@@ -206,6 +206,7 @@
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Update compatibility to PHP 8.4.X"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"

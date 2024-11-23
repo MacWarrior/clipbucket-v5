@@ -829,11 +829,14 @@ function unhtmlentities($string): string
  * @internal param $ : { string / int } { $needle } { element to find } { $needle } { element to find }
  * @internal param $ : { array / string }  { $haystack } { element to do search in }  { $haystack } { element to do search in }
  */
-function array_find($needle, $haystack)
-{
-    foreach ($haystack as $item) {
-        if (strpos($item, $needle) !== false) {
-            return $item;
+// array_find already exists on PHP 8.4.X
+if( !function_exists('array_find') ){
+    function array_find($needle, $haystack)
+    {
+        foreach ($haystack as $item) {
+            if (strpos($item, $needle) !== false) {
+                return $item;
+            }
         }
     }
 }
