@@ -1309,4 +1309,6 @@ VALUES ('admin_setting'),
        ('option_enable_hide_uploader_name'),
        ('tips_enable_hide_uploader_name'),
        ('wip_done'),
-       ('relaunch');
+       ('relaunch'),
+       ('movie'),
+       ('series');
