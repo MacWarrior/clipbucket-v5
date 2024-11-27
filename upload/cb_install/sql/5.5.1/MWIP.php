@@ -37,7 +37,7 @@ class MWIP extends \Migration
             'constraint_index' => [
                 'table' => 'tmdb_search',
                 'type'  => 'UNIQUE',
-                'name'  => 'search_key'
+                'name'  => 'unique_search_key'
             ]
         ]);
 
