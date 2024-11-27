@@ -453,7 +453,7 @@ class Tmdb
         $cache_results = Tmdb::getInstance()->getSearchInfo($title, $type);
         if (!empty($cache_results)) {
             $total_rows = $cache_results[0]['total_results'];
-            $years = json_decode($cache_results[0]['list_years']);
+            $years = json_decode($cache_results[0]['list_years'], true);
         } else {
             $tmdb_results = [];
             $page_tmdb = 1;
@@ -473,8 +473,13 @@ class Tmdb
 
                 foreach ($results['results'] as $result) {
                     $year = substr($result[$date_field], 0, 4);
-                    if (!in_array($year, $years) && !empty($year)) {
-                        $years[] = $year;
+                    if (!empty($year)) {
+                        if (!array_key_exists($year, $years) ) {
+                            $years[$year]['year'] = $year;
+                            $years[$year]['count'] = 1;
+                        } else {
+                            $years[$year]['count']++;
+                        }
                     }
                 }
                 $page_tmdb++;

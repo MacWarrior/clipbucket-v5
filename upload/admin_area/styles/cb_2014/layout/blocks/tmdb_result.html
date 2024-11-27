@@ -7,22 +7,23 @@
         <div class="modal-body tmdb">
             <div class="input-group">
                 <input name="title" type="text" class="form-control" id="search_title" value="{$search}"/>
-                {if $can_search_year}
-                <select name="selected_year" class="form-control" id="selected_year">
-                    <option></option>
-                    {section name=year loop=$years}
-                        <option value="{$years[year]}"
-                                {if $years[year] == $selected_year}
-                                selected="selected"
-                                {/if}
-                                >{$years[year]}</option>
-                    {/section}
-                </select>
-                {/if}
                 <select name="type" class="form-control" id="type_tmdb">
                         <option value="movie" {if $type=='movie'}selected="selected"{/if}>{lang('movie')}</option>
                         <option value="series" {if $type=='series'}selected="selected"{/if}>{lang('series')}</option>
                 </select>
+                {if $can_search_year}
+                    <select name="selected_year" class="form-control" id="selected_year">
+                        <option></option>
+                        {section name=year loop=$years}
+                            <option value="{$years[year]['year']}"
+                                    {if $years[year]['year'] == $selected_year}
+                                        selected="selected"
+                                    {/if}>
+                                {$years[year]['year']} ({$years[year]['count']})
+                            </option>
+                        {/section}
+                    </select>
+                {/if}
                 <span class="input-group-addon" id="search" title="{lang code='search'}">{lang code="search"}</span>
             </div>
 
