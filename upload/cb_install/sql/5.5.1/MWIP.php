@@ -34,11 +34,8 @@ class MWIP extends \Migration
                 'type'
             ]
         ], [
-            'constraint_index' => [
-                'table' => 'tmdb_search',
-                'type'  => 'UNIQUE',
-                'name'  => 'unique_search_key'
-            ]
+            'constraint_type'  => 'UNIQUE',
+            'constraint_name'  => 'unique_search_key'
         ]);
 
         self::generateTranslation('movie', [
