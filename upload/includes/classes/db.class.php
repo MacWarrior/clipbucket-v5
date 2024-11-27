@@ -552,7 +552,7 @@ class Clipbucket_db
     private function ping()
     {
         try{
-            $this->mysqli->ping();
+            $this->mysqli->query('DO 1');
         }
         catch(Exception $e){
             error_log('SQL ERROR : ' . $this->mysqli->error);
@@ -597,7 +597,7 @@ class Clipbucket_db
         $this->mysqli->begin_transaction();
     }
 
-    public function getTableName(): string
+    public function getDBName(): string
     {
         return $this->db_name;
     }

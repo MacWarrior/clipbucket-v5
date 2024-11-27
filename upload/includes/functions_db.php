@@ -173,7 +173,7 @@ function execute_sql_file($path): bool
             $templine .= $line;
             if (substr(trim($line), -1, 1) == ';') {
                 $templine = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $templine);
-                $templine = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getTableName(), $templine);
+                $templine = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getDBName(), $templine);
                 Clipbucket_db::getInstance()->execute($templine);
                 if (Clipbucket_db::getInstance()->getError() != '') {
                     throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . Clipbucket_db::getInstance()->getError());
