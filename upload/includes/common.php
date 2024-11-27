@@ -77,7 +77,6 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
-
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
@@ -116,7 +115,11 @@ switch (DEBUG_LEVEL) {
 
     case 2:
     default:
-        error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+        if (version_compare(System::get_software_version('php_web'), '8.4.0', '<')) {
+            error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+        } else {
+            error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
+        }
         ini_set('display_errors', 'on');
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
