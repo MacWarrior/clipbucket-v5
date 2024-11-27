@@ -389,7 +389,7 @@ class Video
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
-                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
                 }
                 $group[] = $this->getTableName() . '.videoid';
             }

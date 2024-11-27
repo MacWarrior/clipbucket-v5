@@ -131,9 +131,6 @@ assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
 
-$available_tags = Tags::fill_auto_complete_tags('video');
-assign('available_tags',$available_tags);
-
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $data['userid']);
 
 subtitle('Edit Video');

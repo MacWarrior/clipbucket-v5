@@ -382,8 +382,8 @@ class Tmdb
             $actors_tags = [];
             foreach ($credits['cast'] as $actor) {
                 $actors_tags[] = trim($actor['name']);
-                Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
             }
+            Tags::saveTags(implode(',', $actors_tags), 'actors', $_POST['videoid']);
         }
 
         $producer_tags = [];
