@@ -296,9 +296,19 @@ class System{
                 if (@$matches[1]) {
                     $version = 'r' . $matches[1];
                 }
-                preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
-                if (@$matches[1]) {
-                    $version = $matches[1];
+
+                if( !$version ){
+                    preg_match('/version ([0-9.]+)/i', $ffmpeg_version, $matches);
+                    if (@$matches[1]) {
+                        $version = $matches[1];
+                    }
+                }
+
+                if( !$version ) {
+                    preg_match('/version\s+(.*?)\s+Copyright/', $ffmpeg_version, $matches);
+                    if (@$matches[1]) {
+                        $version = $matches[1];
+                    }
                 }
 
                 if (!$version) {
@@ -907,7 +917,6 @@ class System{
         $details['bdd'] = $rs[0]['t'];
         $details['php'] = $force_datetime ?? date('Y-m-d H:i:s');
         $details['php_timezone_default'] = date_default_timezone_get();
-
         $datetime1 = new \DateTime($details['bdd']);
         $datetime2 = new \DateTime($details['php']);
         $interval = $datetime1->diff($datetime2);

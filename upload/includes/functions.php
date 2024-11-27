@@ -857,11 +857,14 @@ function unhtmlentities($string): string
  * @internal param $ : { string / int } { $needle } { element to find } { $needle } { element to find }
  * @internal param $ : { array / string }  { $haystack } { element to do search in }  { $haystack } { element to do search in }
  */
-function array_find($needle, $haystack)
-{
-    foreach ($haystack as $item) {
-        if (strpos($item, $needle) !== false) {
-            return $item;
+// array_find already exists on PHP 8.4.X
+if( !function_exists('array_find') ){
+    function array_find($needle, $haystack)
+    {
+        foreach ($haystack as $item) {
+            if (strpos($item, $needle) !== false) {
+                return $item;
+            }
         }
     }
 }
@@ -2776,6 +2779,7 @@ function include_js($params)
         $the_js_files[] = $file;
 
         if (is_array($type)) {
+
             foreach ($type as $t) {
                 if ($t == THIS_PAGE) {
                     return '<script src="' . DirPath::getUrl('js') . $file . '" type="text/javascript"></script>';
@@ -2785,8 +2789,11 @@ function include_js($params)
 
         switch ($type) {
             default:
-            case 'global:':
+            case 'global':
                 $url = DirPath::getUrl('js');
+                break;
+            case 'libs':
+                $url = DirPath::getUrl('libs');
                 break;
             case 'plugin':
                 $url = DirPath::getUrl('plugins');
@@ -2826,8 +2833,11 @@ function include_css($params)
 
         switch ($type) {
             default:
-            case 'global:':
+            case 'global':
                 $url = DirPath::getUrl('css');
+                break;
+            case 'libs':
+                $url = DirPath::getUrl('libs');
                 break;
             case 'plugin':
                 $url = DirPath::getUrl('plugins');

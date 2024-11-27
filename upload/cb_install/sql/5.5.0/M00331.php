@@ -29,6 +29,12 @@ class M00331 extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}categories` ADD FULLTEXT KEY `categorie` (`category_name`);', [
             'table'  => 'categories',
             'column' => 'category_name'
+        ],[
+            'constraint_index' => [
+                'table' => 'categories',
+                'type'  => 'FULLTEXT',
+                'name'  => 'categorie'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}categories_type`
@@ -45,7 +51,7 @@ class M00331 extends \Migration
             'table'  => 'categories',
             'column' => 'id_category_type'
         ], [
-            'constraint_name'  => 'categorie_type',
+            'constraint_name' => 'categorie_type',
             'constraint_type' => 'FOREIGN KEY'
         ]);
 

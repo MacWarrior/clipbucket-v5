@@ -1,10 +1,21 @@
-$(function () {
+$(document).ready(function(){
     init_tags('collection_tags', available_tags);
 
     $('.del_cmt').on('click', function () {
         var id = $(this).data('id');
         deleteComment(id);
     });
+
+    if( visual_editor_comments_enabled ){
+        Array.from(document.querySelectorAll('#clcomments .itemdiv .body .col-md-7 span')).forEach((comment,index) => {
+            new toastui.Editor.factory({
+                el: comment,
+                viewer: true,
+                usageStatistics: false,
+                initialValue: comment.innerHTML
+            });
+        });
+    }
 });
 
 function deleteComment(comment_id) {

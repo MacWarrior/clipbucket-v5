@@ -56,7 +56,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'videos_items_hme_page', '25'),
 	(NULL, 'videos_items_ufav_page', '25'),
 	(NULL, 'videos_items_uvid_page', '25'),
-	(NULL, 'videos_items_search_page', '30'),
+	(NULL, 'videos_items_search_page', '28'),
 	(NULL, 'videos_item_channel_page', '25'),
 	(NULL, 'users_items_subscriptions', '5'),
 	(NULL, 'users_items_contacts_channel', '5'),
@@ -135,13 +135,13 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'playlistsSection', 'yes'),
 	(NULL, 'photo_main_list', '10'),
 	(NULL, 'photo_home_tabs', '30'),
-	(NULL, 'photo_search_result', '30'),
+	(NULL, 'photo_search_result', '28'),
 	(NULL, 'photo_channel_page', '10'),
 	(NULL, 'photo_user_photos', '20'),
 	(NULL, 'photo_user_favorites', '20'),
 	(NULL, 'photo_other_limit', '8'),
 	(NULL, 'collection_per_page', '12'),
-	(NULL, 'collection_search_result', '20'),
+	(NULL, 'collection_search_result', '28'),
 	(NULL, 'collection_home_top_collections', '4'),
 	(NULL, 'collection_collection_top_collections', '6'),
 	(NULL, 'collection_photos_top_collections', '6'),
@@ -304,9 +304,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_video_view_history', 'no'),
     (NULL, 'enable_access_view_video_history', 'no'),
     (NULL, 'video_list_view_video_history', 30),
-    (NULL, 'display_featured_video', 'yes'),
-    (NULL, 'featured_video_style', 'modern'),
-    (NULL, 'number_featured_video', 20);
+    (NULL, 'enable_visual_editor_comments', 'yes'),
+    (NULL, 'hide_uploader_name', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

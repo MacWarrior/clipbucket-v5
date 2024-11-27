@@ -155,6 +155,16 @@ $(document).ready(function(){
     }
     updateListeners();
 
+    if( visual_editor_comments_enabled ){
+        Array.from(document.querySelectorAll('#rcomments .itemdiv .text')).forEach((comment,index) => {
+            new toastui.Editor.factory({
+                el: comment,
+                viewer: true,
+                usageStatistics: false,
+                initialValue: comment.innerHTML
+            });
+        });
+    }
 });
 
 function updateListeners () {

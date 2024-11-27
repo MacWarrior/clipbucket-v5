@@ -21,7 +21,6 @@ $get_limit = create_query_limit($page, config('videos_list_per_page'));
 $params = Video::getInstance()->getFilterParams($_GET['sort'], []);
 $params = Video::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
-$params['join_user_profile'] = true;
 if( $child_ids ){
     $params['category'] = $child_ids;
 }

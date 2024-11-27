@@ -120,6 +120,31 @@ if( ClipBucket::getInstance()->show_page ){
         ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
     ]);
 
+    if( config('enable_comments_channel') == 'yes' ){
+        ClipBucket::getInstance()->addJS([
+            'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
+        ]);
+
+        if( config('enable_visual_editor_comments') == 'yes' ){
+            ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+            ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+            $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+            if( config('default_theme') != '' && file_exists($filepath) ){
+                ClipBucket::getInstance()->addCSS([
+                    'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+                ]);
+            }
+
+            $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
+            if( file_exists($filepath) ){
+                ClipBucket::getInstance()->addJS([
+                    'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
+                ]);
+            }
+        }
+    }
+
     ClipBucket::getInstance()->addCSS([
         'jquery.tagit'.$min_suffixe.'.css'      => 'admin'
         ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
@@ -137,6 +162,7 @@ if( ClipBucket::getInstance()->show_page ){
     $popular_users = User::getInstance()->getAll([
         'order'=>'users.profile_hits DESC',
         'limit'=>'5',
+        'channel_enable'=>true,
         'condition'=>'usr_status = \'ok\' AND users.userid != \''. mysql_clean($udetails['userid']).'\''
     ]);
     assign('popular_users',$popular_users);

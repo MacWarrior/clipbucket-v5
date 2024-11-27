@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"179",
+  "revision":"192",
   "status":"dev",
   "detail":[
     {
@@ -52,6 +52,7 @@
         ,"Update user tags order & display"
         ,"Update System Info interface"
         ,"Update WIP update process"
+        ,"Update timezone selection display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -101,6 +102,7 @@
         ,"Fix action logs user's link"
         ,"Fix collection reindex"
         ,"Fix orphan photos display"
+        ,"Fix active & inactive users pages"
       ]
     },
     {
@@ -121,6 +123,8 @@
         ,"Implement option to disable user channel"
         ,"Implement add more to video collections"
         ,"Implement collection thumbnail selection"
+        ,"Implement comment visual editor"
+        ,"Implement option to disable uploader name display"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -133,6 +137,7 @@
         ,"Update collection creation on photo upload"
         ,"Update orphan photos management"
         ,"Update dark & light themes"
+        ,"Update search engine"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -179,6 +184,10 @@
         ,"Fix add to collection button with SEO URLs"
         ,"Fix private messages to users with disabled private messages"
         ,"Fix photos upload forms"
+        ,"Fix disabled channel links"
+        ,"Fix signup wrong date format"
+        ,"Fix featured video filter"
+        ,"Fix search results pagination"
       ]
     },
     {
@@ -189,6 +198,7 @@
         ,"Update Readme"
         ,"Update composer.json"
         ,"Update discord errors"
+        ,"Update FFMpeg version check"
         ,"Cleanup code"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
@@ -196,6 +206,7 @@
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Update compatibility to PHP 8.4.X"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -221,6 +232,7 @@
         ,"Implement dev mode options"
         ,"Implement DB timezone selection"
         ,"Implement core update during installation"
+        ,"Implement CSS/JS versioning"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Add SSE function check"
@@ -232,6 +244,7 @@
         ,"Update database creation descriptions"
         ,"Update installation script to Ubuntu 24.04"
         ,"Update licence agreement"
+        ,"Update timezone selection display"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -274,7 +287,7 @@
     {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.5"
+        "Update Player to version 2.0.6"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"
@@ -284,7 +297,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.19.1"
+        "Update VideoJS to version 8.19.2"
         ,"Update Windows installation script MariaDB to 11.6.0"
         ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"

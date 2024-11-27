@@ -10,7 +10,7 @@
                     <ul class="breadcrumb">
                         <li><a href="{$collection_baseurl}" class="glyphicon glyphicon-folder-open" title="{lang code='collections'}"></a></li>
                         {foreach $breadcrum as $parent}
-                            <li><a href="{$parent['url']}">{display_clean($parent['title'])}</a></li>
+                            <li><a href="{$parent['url']}" title="{display_clean($parent['title'])}">{display_clean($parent['title'])|truncate:50}</a></li>
                         {/foreach}
                     </ul>
                 </div>
@@ -64,7 +64,9 @@
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
                     <a href="javascript:void(0);" class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
-                    <a href="javascript:void(0);" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#flag_item').toggle();">{lang code='report_this'}</a>
+                    {if $c.userid != user_id()}
+                        <a href="javascript:void(0);" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
+                    {/if}
                     {if config('enable_edit_button') == 'yes'}
                         {if has_access('admin_access', true)}
                             {if user_id() && $c.userid == user_id()}
@@ -87,10 +89,12 @@
                     {/if}
                 </div>
 
-                <div class="video_action_result_boxes clearfix">
-                    {show_flag_form id=$c.collection_id type=Collection}
-                    <div class="action_box" style="display:none;" id="video_action_result_cont"></div>
-                </div>
+                {if $c.userid != user_id()}
+                    <div class="video_action_result_boxes clearfix tab-pane " style="display:none;" id="report_item">
+                        {show_flag_form id=$c.collection_id type=Collection}
+                        <div class="action_box" style="display:none;" id="video_action_result_cont"></div>
+                    </div>
+                {/if}
 
                 <ul class="clearfix desc-list">
                     <li>

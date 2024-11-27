@@ -22,7 +22,7 @@ class Clipbucket_db
 
     public function __construct(){
         global $DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT;
-        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT);
+        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, ($DBPORT ?? '3306'));
     }
 
     /**
@@ -597,7 +597,7 @@ class Clipbucket_db
         $this->mysqli->begin_transaction();
     }
 
-    public function getTableName(): string
+    public function getDBName(): string
     {
         return $this->db_name;
     }
