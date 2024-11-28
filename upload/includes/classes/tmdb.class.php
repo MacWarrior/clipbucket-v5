@@ -452,6 +452,20 @@ class Tmdb
      */
     public function getInfoTmdb(int $videoid, string $type, $params, string $fileName = ''): array
     {
+        switch ($type) {
+            case 'movie':
+            case 'series':
+                break;
+            default:
+                if( in_dev() ){
+                    $msg = 'Wrong TMDB type : ' . $type;
+                    error_log($msg);
+                    DiscordLog::sendDump($msg);
+                }
+                $type = 'movie';
+                break;
+        }
+
         $video_info = Video::getInstance()->getOne([
             'videoid' => $videoid
         ]);
@@ -479,14 +493,18 @@ class Tmdb
             $page_tmdb = 1;
             $years = [];
             do {
-                if ($type == 'movie') {
-                    $results = $this->searchMovie($title, $page_tmdb)['response'];
-                    $date_field = 'release_date';
-                } elseif ($type == 'series') {
-                    $results = $this->searchSeries($title, $page_tmdb)['response'];
-                    $date_field = 'first_air_date';
-                } else {
-                    $results=['results'=>[]];
+                switch ($type) {
+                    case 'movie':
+                        $results = $this->searchMovie($title, $page_tmdb)['response'];
+                        $date_field = 'release_date';
+                        break;
+                    case 'series':
+                        $results = $this->searchSeries($title, $page_tmdb)['response'];
+                        $date_field = 'first_air_date';
+                        break;
+                    default:
+                        $results=['results'=>[]];
+                        break;
                 }
                 $total_rows = $results['total_results'];
                 $tmdb_results = array_merge($tmdb_results, $results['results']);
