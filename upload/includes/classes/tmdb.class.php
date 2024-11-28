@@ -276,8 +276,9 @@ class Tmdb
         }
 
         switch ($type) {
-            case 'movie':
             default:
+                $type = 'movie';
+            case 'movie':
                 $credits = $this->movieCredits($tmdb_id)['response'];
                 $details = $this->movieDetail($tmdb_id)['response'];
                 break;
