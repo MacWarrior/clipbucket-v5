@@ -6,12 +6,6 @@ class Tmdb
 
     const IMAGE_URL = 'https://image.tmdb.org/t/p/original';
 
-    const MIN_VERSION = '5.5.0';
-    const MIN_REVISION = '371';
-
-    CONST MIN_VERSION_IS_ADULT = '5.5.1';
-    CONST MIN_REVISION_IS_ADULT = '20';
-
     private $curl;
     private static $instance;
 
@@ -148,7 +142,7 @@ class Tmdb
     public function getCacheFromQuery(string $query,  $type = 'movie',  $sort = 'release_date',  $sort_order = 'DESC', $limit = '1',  $count = false,  $year = '0000')
     {
         $search_adult = '';
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(Tmdb::MIN_VERSION_IS_ADULT, Tmdb::MIN_REVISION_IS_ADULT)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '20')) {
             if (config('enable_tmdb_mature_content') !== 'yes') {
                 $search_adult = ' AND is_adult = FALSE';
             }
@@ -163,8 +157,8 @@ class Tmdb
             $sql_year = ' AND YEAR(`release_date`) = ' . mysql_clean($year);
         }
         $sql_type = '';
-        //@check
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
             $sql_type = 'AND type = \'' . mysql_clean($type) . '\' 
             AND language = \'' . $this->language. '\'';
         }
@@ -194,8 +188,8 @@ class Tmdb
         $sql = 'SELECT * 
                 FROM ' . tbl('tmdb_search') . ' TS
                 WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' ';
-        //@check
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
             $sql .= ' AND type = \''.mysql_clean($type).'\'
                 AND language = \'' . $this->language. '\'';
         }
@@ -236,8 +230,8 @@ class Tmdb
             $fields[] = 'list_years';
             $values[] = json_encode($years);
         }
-        //@check
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
             $fields[] = 'type';
             $values[] = $type;
             $fields[] = 'language';
@@ -247,7 +241,7 @@ class Tmdb
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
 
         $can_is_adult = false;
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(Tmdb::MIN_VERSION_IS_ADULT, Tmdb::MIN_REVISION_IS_ADULT)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '20')) {
             $can_is_adult = true;
         }
 
@@ -280,12 +274,17 @@ class Tmdb
         if (empty($video_info)) {
             e(lang('class_vdo_del_err'));
         }
-        if ($type == 'movie') {
-            $credits = Tmdb::getInstance()->movieCredits($tmdb_id)['response'];
-            $details = Tmdb::getInstance()->movieDetail($tmdb_id)['response'];
-        } elseif($type == 'series') {
-            $credits = Tmdb::getInstance()->seriesCredits($tmdb_id)['response'];
-            $details = Tmdb::getInstance()->seriesDetail($tmdb_id)['response'];
+
+        switch ($type) {
+            case 'movie':
+            default:
+                $credits = $this->movieCredits($tmdb_id)['response'];
+                $details = $this->movieDetail($tmdb_id)['response'];
+                break;
+            case 'series':
+                $credits = $this->seriesCredits($tmdb_id)['response'];
+                $details = $this->seriesDetail($tmdb_id)['response'];
+                break;
         }
 
         $update_video = false;
@@ -303,10 +302,10 @@ class Tmdb
             switch ($type) {
                 case 'movie':
                 default:
-                    $credentials = Tmdb::getInstance()->movieCurrentLanguageAgeRestriction($tmdb_id);
+                    $credentials = $this->movieCurrentLanguageAgeRestriction($tmdb_id);
                     break;
                 case 'series':
-                    $credentials = Tmdb::getInstance()->seriesCurrentLanguageAgeRestriction($tmdb_id);
+                    $credentials = $this->seriesCurrentLanguageAgeRestriction($tmdb_id);
                     break;
             }
             $video_info['age_restriction'] = $credentials;
@@ -321,11 +320,17 @@ class Tmdb
 
         if (config('tmdb_get_poster') == 'yes' && config('enable_video_poster') == 'yes') {
             Video::getInstance()->deletePictures($video_info, 'poster');
-            if ($type == 'movie') {
-                $posters = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['posters'];
-            } elseif ($type == 'series') {
-                $posters = Tmdb::getInstance()->seriesPosterBackdrops($tmdb_id)['response']['posters'];
+
+            switch ($type) {
+                case 'movie':
+                default:
+                    $posters = $this->moviePosterBackdrops($tmdb_id)['response']['posters'];
+                    break;
+                case 'series':
+                    $posters = $this->seriesPosterBackdrops($tmdb_id)['response']['posters'];
+                    break;
             }
+
             $language_posters = array_filter($posters, function ($elem) {
                 return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
             });
@@ -336,9 +341,9 @@ class Tmdb
             }
             foreach ($poster_iterate as $poster) {
                 $path_without_slash = str_replace('/', '', $poster['file_path']);
-                $url = Tmdb::IMAGE_URL . $poster['file_path'];
+                $url = self::IMAGE_URL . $poster['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
-                $resutl = file_put_contents($tmp_path, file_get_contents($url));
+                file_put_contents($tmp_path, file_get_contents($url));
                 Upload::getInstance()->upload_thumbs($video_info['file_name'], [
                     'tmp_name' => [$tmp_path],
                     'name'     => [$path_without_slash],
@@ -352,11 +357,17 @@ class Tmdb
 
         if (config('tmdb_get_backdrop') == 'yes' && config('enable_video_backdrop') == 'yes') {
             Video::getInstance()->deletePictures($video_info, 'backdrop');
-            if ($type == 'movie') {
-                $backdrops = Tmdb::getInstance()->moviePosterBackdrops($tmdb_id)['response']['backdrops'];
-            } elseif ($type == 'series') {
-                $backdrops = Tmdb::getInstance()->seriesPosterBackdrops($tmdb_id)['response']['backdrops'];
+
+            switch ($type) {
+                case 'movie':
+                default:
+                    $backdrops = $this->moviePosterBackdrops($tmdb_id)['response']['backdrops'];
+                    break;
+                case 'series':
+                    $backdrops = $this->seriesPosterBackdrops($tmdb_id)['response']['backdrops'];
+                    break;
             }
+
             $language_backdrops = array_filter($backdrops, function ($elem) {
                 return $elem['iso_639_1'] == $this->language || $elem['iso_639_1'] == 'null';
             });
@@ -367,9 +378,9 @@ class Tmdb
             }
             foreach ($backdrop_iterate as $backdrop) {
                 $path_without_slash = str_replace('/', '', $backdrop['file_path']);
-                $url = Tmdb::IMAGE_URL . $backdrop['file_path'];
+                $url = self::IMAGE_URL . $backdrop['file_path'];
                 $tmp_path = DirPath::get('temp') . $path_without_slash;
-                $resutl = file_put_contents($tmp_path, file_get_contents($url));
+                file_put_contents($tmp_path, file_get_contents($url));
                 Upload::getInstance()->upload_thumbs($video_info['file_name'], [
                     'tmp_name' => [$tmp_path],
                     'name'     => [$path_without_slash],
@@ -439,7 +450,7 @@ class Tmdb
     /**
      * @throws Exception
      */
-    public function getInfoTmdb(int $videoid, string $type, $params, string $fileName = '')
+    public function getInfoTmdb(int $videoid, string $type, $params, string $fileName = ''): array
     {
         $video_info = Video::getInstance()->getOne([
             'videoid' => $videoid
@@ -460,10 +471,8 @@ class Tmdb
             $sort_order = 'DESC';
         }
 
-        $total_rows = 0;
-        $cache_results = Tmdb::getInstance()->getSearchInfo($title, $type);
+        $cache_results = $this->getSearchInfo($title, $type);
         if (!empty($cache_results)) {
-            $total_rows = $cache_results[0]['total_results'];
             $years = json_decode($cache_results[0]['list_years'], true);
         } else {
             $tmdb_results = [];
@@ -471,10 +480,10 @@ class Tmdb
             $years = [];
             do {
                 if ($type == 'movie') {
-                    $results = Tmdb::getInstance()->searchMovie($title, $page_tmdb)['response'];
+                    $results = $this->searchMovie($title, $page_tmdb)['response'];
                     $date_field = 'release_date';
                 } elseif ($type == 'series') {
-                    $results = Tmdb::getInstance()->searchSeries($title, $page_tmdb)['response'];
+                    $results = $this->searchSeries($title, $page_tmdb)['response'];
                     $date_field = 'first_air_date';
                 } else {
                     $results=['results'=>[]];
@@ -502,16 +511,16 @@ class Tmdb
             if (!empty($tmdb_results)) {
                 rsort($years);
                 try {
-                    Tmdb::getInstance()->setQueryInCache($title, $type,$tmdb_results, $total_rows, $years);
+                    $this->setQueryInCache($title, $type,$tmdb_results, $total_rows, $years);
                 } catch (Exception $e) {
                     e($e->getMessage());
                 }
             }
         }
-        $final_results = Tmdb::getInstance()->getCacheFromQuery($title, $type, $sort, $sort_order, $_POST['page']??'', false, $params['year']);
+        $final_results = $this->getCacheFromQuery($title, $type, $sort, $sort_order, $_POST['page']??'', false, $params['year']);
 
         //use different sql to get numbers of rows
-        $total_rows = Tmdb::getInstance()->getCacheFromQuery($title, $type, $sort, $sort_order, 0, true, $params['year']);
+        $total_rows = $this->getCacheFromQuery($title, $type, $sort, $sort_order, 0, true, $params['year']);
         $total_pages = count_pages($total_rows, config('tmdb_search'));
         return [
             'final_results' => $final_results,

@@ -74,7 +74,7 @@ class Video
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
-        if ($version['version'] > Tmdb::MIN_VERSION || ($version['version'] == Tmdb::MIN_VERSION && $version['revision'] >= Tmdb::MIN_REVISION)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '371')) {
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
         }

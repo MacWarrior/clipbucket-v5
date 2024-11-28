@@ -3,7 +3,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00194 extends \Migration
 {
     /**
      * @throws \Exception
@@ -31,8 +31,8 @@ class MWIP extends \Migration
 
         $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' DROP INDEX `search_key`';
         self::alterTable($sql, [
-                'constraint_type'  => 'UNIQUE',
-                'constraint_name'  => 'search_key'
+            'constraint_type'  => 'UNIQUE',
+            'constraint_name'  => 'search_key'
         ]);
         $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' ADD UNIQUE INDEX unique_search_key (`search_key`, `type`, `language`)';
         self::alterTable($sql, [
