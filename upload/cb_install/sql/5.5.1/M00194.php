@@ -10,19 +10,9 @@ class M00194 extends \Migration
      */
     public function start()
     {
-        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . ' RENAME ' . tbl('temp_user_levels_permissions'), [
-            'table' => 'user_levels_permissions'
-        ], [
-            'table' => 'temp_user_levels_permissions'
-        ]);
 
-        self::alterTable('ALTER TABLE ' . tbl('user_permissions') . ' RENAME ' . tbl('temp_user_permissions'), [
-            'table' => 'user_permissions'
-        ], [
-            'table' => 'temp_user_permissions'
-        ]);
 
-        $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_levels_permissions`
+        $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}new_user_levels_permissions`
         (
             `id_user_levels_permission` INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
             `id_user_permission_types`  INT                NOT NULL,
@@ -33,10 +23,10 @@ class M00194 extends \Migration
           COLLATE utf8mb4_unicode_520_ci; ';
         self::query($sql);
 
-        $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions` 
+        $sql = 'ALTER TABLE `{tbl_prefix}new_user_levels_permissions` 
                     ADD CONSTRAINT `fk_id_user_permission_types` FOREIGN KEY (`id_user_permission_types`) REFERENCES `{tbl_prefix}user_permission_types` (`user_permission_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
-            'table'  => 'user_levels_permissions',
+            'table'  => 'new_user_levels_permissions',
             'column' => 'id_user_permission_types'
         ], [
             'constraint' => [
@@ -75,7 +65,7 @@ class M00194 extends \Migration
                 'name' => 'fk_user_level_id'
             ]
         ]);
-        $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions_values` ADD CONSTRAINT `fk_id_user_levels_permission` FOREIGN KEY (`id_user_levels_permission`) REFERENCES `{tbl_prefix}user_levels_permissions` (`id_user_levels_permission`) ON DELETE NO ACTION ON UPDATE NO ACTION';
+        $sql = 'ALTER TABLE `{tbl_prefix}user_levels_permissions_values` ADD CONSTRAINT `fk_id_user_levels_permission` FOREIGN KEY (`id_user_levels_permission`) REFERENCES `{tbl_prefix}new_user_levels_permissions` (`id_user_levels_permission`) ON DELETE NO ACTION ON UPDATE NO ACTION';
         self::alterTable($sql, [
             'table'  => 'user_levels_permissions_values',
             'column' => 'id_user_levels_permission'
@@ -87,11 +77,11 @@ class M00194 extends \Migration
         ]);
 
         $sql = 'SELECT column_name AS column_name, IFNULL(permission_type, 4) AS permission_type, permission_desc, permission_name FROM INFORMATION_SCHEMA.COLUMNS AS C 
-                   LEFT JOIN `{tbl_prefix}temp_user_permissions` AS TUP ON C.column_name = TUP.permission_code  
-                   WHERE TABLE_NAME = \'{tbl_prefix}temp_user_levels_permissions\' AND TABLE_SCHEMA = \'{dbname}\' AND COLUMN_NAME NOT IN (\'user_level_id\', \'user_level_permission_id\')';
+                   LEFT JOIN `{tbl_prefix}user_permissions` AS TUP ON C.column_name = TUP.permission_code  
+                   WHERE TABLE_NAME = \'{tbl_prefix}user_levels_permissions\' AND TABLE_SCHEMA = \'{dbname}\' AND COLUMN_NAME NOT IN (\'user_level_id\', \'user_level_permission_id\')';
         $columns = self::req($sql);
-        //insert user_levels_permissions
-        $sql = 'INSERT INTO `{tbl_prefix}user_levels_permissions` (id_user_permission_types, permission_name, permission_description) VALUES ';
+        //insert new_user_levels_permissions
+        $sql = 'INSERT INTO `{tbl_prefix}new_user_levels_permissions` (id_user_permission_types, permission_name, permission_description) VALUES ';
         $permissions = [];
         foreach ($columns as $column) {
             $permissions[] = '(' . $column['permission_type'] . ', \'' . $column['column_name'] . '\', \'' . $column['column_name'] . '_desc\')';
@@ -110,7 +100,7 @@ class M00194 extends \Migration
         self::query($sql);
 
         //insert user_levels_permission_values
-        $sql = 'SELECT * FROM `{tbl_prefix}temp_user_levels_permissions` ';
+        $sql = 'SELECT * FROM `{tbl_prefix}user_levels_permissions` ';
         $user_levels_permissions = self::req($sql);
         foreach ($user_levels_permissions as $user_levels_permission) {
             $user_level_id = $user_levels_permission['user_level_id'];
@@ -121,15 +111,21 @@ class M00194 extends \Migration
                 $sql = 'INSERT INTO `{tbl_prefix}user_levels_permissions_values` (user_level_id, id_user_levels_permission, permission_value)  
                             (SELECT ' . $user_level_id . ',
                               id_user_levels_permission ,
-                              \'' . $value . '\'  FROM `{tbl_prefix}user_levels_permissions` WHERE permission_name = \'' . $permission . '\') ';
+                              \'' . $value . '\'  FROM `{tbl_prefix}new_user_levels_permissions` WHERE permission_name = \'' . $permission . '\') ';
                 self::query($sql);
             }
         }
 
-        $sql = 'DROP TABLE IF EXISTS ' . tbl('temp_user_levels_permissions');
+        $sql = 'DROP TABLE IF EXISTS ' . tbl('user_levels_permissions');
         self::query($sql);
-        $sql = 'DROP TABLE IF EXISTS ' . tbl('temp_user_permissions');
+        $sql = 'DROP TABLE IF EXISTS ' . tbl('user_permissions');
         self::query($sql);
+
+        self::alterTable('ALTER TABLE ' . tbl('new_user_levels_permissions') . ' RENAME ' . tbl('user_levels_permissions'), [
+            'table' => 'new_user_levels_permissions'
+        ], [
+            'table' => 'user_levels_permissions'
+        ]);
 
     }
 }
