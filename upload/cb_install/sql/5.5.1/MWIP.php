@@ -19,18 +19,28 @@ class MWIP extends \Migration
                 'column' => 'type'
             ]
         );
+        $sql = 'ALTER TABLE ' . tbl('tmdb_search')
+            . ' ADD COLUMN `language` VARCHAR(20) NOT NULL DEFAULT \'en\'';
+        self::alterTable($sql
+            , ['table' => 'tmdb_search']
+            , [
+                'table'  => 'tmdb_search',
+                'column' => 'language'
+            ]
+        );
 
         $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' DROP INDEX `search_key`';
         self::alterTable($sql, [
                 'constraint_type'  => 'UNIQUE',
                 'constraint_name'  => 'search_key'
         ]);
-        $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' ADD UNIQUE INDEX unique_search_key (`search_key`, `type`)';
+        $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' ADD UNIQUE INDEX unique_search_key (`search_key`, `type`, `language`)';
         self::alterTable($sql, [
             'table'   => 'tmdb_search',
             'columns' => [
                 'search_key',
-                'type'
+                'type',
+                'language'
             ]
         ], [
             'constraint_type'  => 'UNIQUE',
@@ -42,7 +52,7 @@ class MWIP extends \Migration
             'en' => 'Movie'
         ]);
         self::generateTranslation('series', [
-            'fr' => 'Séries',
+            'fr' => 'Série',
             'en' => 'TV Show'
         ]);
     }

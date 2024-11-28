@@ -165,7 +165,8 @@ class Tmdb
         $sql_type = '';
         //@check
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $sql_type = 'AND type = \'' . mysql_clean($type) . '\' ';
+            $sql_type = 'AND type = \'' . mysql_clean($type) . '\' 
+            AND language = \'' . $this->language. '\'';
         }
         $sql = 'SELECT TSR.* 
                 FROM ' . tbl('tmdb_search') . ' TS
@@ -184,6 +185,7 @@ class Tmdb
 
     /**
      * @param string $query
+     * @param string $type
      * @return array|null
      * @throws Exception
      */
@@ -194,7 +196,8 @@ class Tmdb
                 WHERE search_key = \'' . mysql_clean(strtolower($query)) . '\' ';
         //@check
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-            $sql .= ' AND type = \''.mysql_clean($type).'\'';
+            $sql .= ' AND type = \''.mysql_clean($type).'\'
+                AND language = \'' . $this->language. '\'';
         }
         return Clipbucket_db::getInstance()->_select($sql);
     }
@@ -212,6 +215,7 @@ class Tmdb
 
     /**
      * @param string $query
+     * @param string $type
      * @param array $results
      * @param int $total_results
      * @param array $years
@@ -236,6 +240,8 @@ class Tmdb
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $fields[] = 'type';
             $values[] = $type;
+            $fields[] = 'language';
+            $values[] = $this->language;
         }
         Clipbucket_db::getInstance()->insert(tbl('tmdb_search'), $fields, $values);
         $id_tmdb_search = Clipbucket_db::getInstance()->insert_id();
@@ -262,6 +268,7 @@ class Tmdb
     /**
      * @param int $videoid
      * @param int $tmdb_id
+     * @param string $type
      * @return void
      * @throws Exception
      */
@@ -293,10 +300,14 @@ class Tmdb
             $update_video = true;
         }
         if (config('tmdb_get_age_restriction') == 'yes') {
-            if ($type == 'movie') {
-                $credentials = Tmdb::getInstance()->movieCurrentLanguageAgeRestriction($tmdb_id);
-            } elseif($type == 'series') {
-                $credentials = Tmdb::getInstance()->seriesCurrentLanguageAgeRestriction($tmdb_id);
+            switch ($type) {
+                case 'movie':
+                default:
+                    $credentials = Tmdb::getInstance()->movieCurrentLanguageAgeRestriction($tmdb_id);
+                    break;
+                case 'series':
+                    $credentials = Tmdb::getInstance()->seriesCurrentLanguageAgeRestriction($tmdb_id);
+                    break;
             }
             $video_info['age_restriction'] = $credentials;
             if (!$credentials && config('enable_tmdb_mature_content') == 'yes' && $details['adult']) {
@@ -428,7 +439,7 @@ class Tmdb
     /**
      * @throws Exception
      */
-    public function getInfoTmdb(int $videoid, string $type,$params, string $fileName = '')
+    public function getInfoTmdb(int $videoid, string $type, $params, string $fileName = '')
     {
         $video_info = Video::getInstance()->getOne([
             'videoid' => $videoid
