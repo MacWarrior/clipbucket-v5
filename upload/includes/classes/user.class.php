@@ -366,7 +366,7 @@ class User
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '195')) {
                     $group[] = 'user_levels_permissions.id_user_levels_permission ';
                 }
             }
@@ -386,13 +386,13 @@ class User
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             if ($param_channel_enable) {
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '195')) {
                     $conditions[] = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
                 } else {
                     $conditions[] = '(' . UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
                 }
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '195')) {
                 $is_channel_enable = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
                 $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
@@ -422,7 +422,7 @@ class User
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;
         }
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '194')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '195')) {
             $join[] = ' INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermission() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
         }
         $sql ='SELECT ' . implode(', ', $select) . '

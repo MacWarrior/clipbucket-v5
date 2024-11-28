@@ -1066,14 +1066,17 @@ ALTER TABLE `{tbl_prefix}tools_histo_log`
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
 (
-    `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `search_key`      VARCHAR(128) NOT NULL UNIQUE,
-    `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `total_results`   INT          NOT NULL,
-    `list_years`      TEXT         NULL
+    `id_tmdb_search`  INT                      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `search_key`      VARCHAR(128)             NOT NULL,
+    `datetime_search` DATETIME                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `total_results`   INT                      NOT NULL,
+    `list_years`      TEXT                     NULL,
+    `type`            ENUM ('movie', 'series') NOT NULL DEFAULT 'movie',
+    `language`        VARCHAR(20)              NOT NULL DEFAULT 'en'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tmdb_search` ADD UNIQUE INDEX unique_search_key (`search_key`, `type`, `language`);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
 (
