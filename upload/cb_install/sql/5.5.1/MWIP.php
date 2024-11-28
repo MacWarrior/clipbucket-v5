@@ -22,7 +22,6 @@ class MWIP extends \Migration
 
         $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' DROP INDEX `search_key`';
         self::alterTable($sql, [
-                'constraint_schema' => 'tmdb_search',
                 'constraint_type'  => 'UNIQUE',
                 'constraint_name'  => 'search_key'
         ]);

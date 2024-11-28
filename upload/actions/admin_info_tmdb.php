@@ -8,7 +8,7 @@ if (config('enable_tmdb') != 'yes' || config('tmdb_token') == '') {
     return false;
 }
 
-$results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, $_POST['type'] ?? 'movie', [
+$results = Tmdb::getInstance()->getInfoTmdb($_POST['videoid'] ?? 0, ($_POST['type'] ?? 'movie'), [
     'video_title' => $_POST['video_title'],
     'sort'        => $_POST['sort'],
     'sort_order'  => $_POST['sort_order'],
