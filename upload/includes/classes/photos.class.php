@@ -2436,7 +2436,7 @@ class CBPhotos
                                 return $thumbs;
                             } else {
                                 $size = '_' . $p['size'];
-                                $return_thumb = array_find($photo['filename'] . $size, $thumbs);
+                                $return_thumb = array_find_cb($photo['filename'] . $size, $thumbs);
 
                                 if (empty($return_thumb)) {
                                     $this->default_thumb($size, $output);
@@ -2454,7 +2454,7 @@ class CBPhotos
                     if ($p['output'] == 'html') {
                         $size = '_' . $p['size'];
 
-                        $src = array_find($photo['filename'] . $size, $thumbs);
+                        $src = array_find_cb($photo['filename'] . $size, $thumbs);
                         if (empty($src)) {
                             $src = $this->default_thumb($size);
                         }

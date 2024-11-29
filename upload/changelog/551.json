@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"197",
+  "revision":"198",
   "status":"dev",
   "detail":[
     {
@@ -32,6 +32,7 @@
         ,"Implement directory permission checkup"
         ,"Implement force to error admin tool"
         ,"Implement TMDB Tv Show integration"
+        ,"Implement related photos quantity limit"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
