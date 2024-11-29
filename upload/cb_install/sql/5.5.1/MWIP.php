@@ -561,5 +561,10 @@ class MWIP extends \Migration
             'en'=>'Only visible if eligible'
         ]);
 
+        self::generateTranslation('email_is_not_valid', [
+            'fr'=>'%s n\'est pas un email valide',
+            'en'=>'%s is not a valid email'
+        ]);
+
     }
 }

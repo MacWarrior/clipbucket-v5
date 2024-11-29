@@ -8,19 +8,25 @@ $pages->page_redir();
 
 /* Generating breadcrumb */
 
-
+$membership=[];
 //TODO check inputs required etc.
 if (!empty($_POST['id_membership'])) {
     if (Membership::getInstance()->update($_POST)) {
         e(lang('user_level_successfully_saved'),'m');
+    } else {
+        $membership = $_POST;
     }
 } elseif (!empty($_POST)) {
     if (Membership::getInstance()->insert($_POST)) {
         SessionMessageHandler::add_message(lang('user_level_successfully_saved'), 'm', BASEURL . DirPath::getUrl('admin_area') . '/memberships.php');
+    } else {
+        $membership = $_POST;
     }
 }
 
-$membership = Membership::getInstance()->getOne(['id_membership' => $_REQUEST['id_membership'] ?: 0]);
+if (empty($membership)) {
+    $membership = Membership::getInstance()->getOne(['id_membership' => $_REQUEST['id_membership'] ?: 0]);
+}
 assign('membership', $membership);
 assign('frequencies', Membership::getInstance()->getFrequencies());
 assign('currencies', Membership::getInstance()->getAllCurrency());

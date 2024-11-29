@@ -458,6 +458,15 @@ class Membership
                     $value = '\'' . $value . '\'';
                     break;
                 case 'allowed_emails':
+                    if (!empty($value)) {
+                        $list_email = explode(',', $value);
+                        foreach ($list_email as $email) {
+                            if (!isValidEmail($email)) {
+                                e(lang('email_is_not_valid',[$email]));
+                                return false;
+                            }
+                        }
+                    }
                     $value = '\'' . $value . '\'';
                     break;
                 default:

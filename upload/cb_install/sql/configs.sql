@@ -307,7 +307,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_visual_editor_comments', 'yes'),
     (NULL, 'hide_uploader_name', 'no'),
     (NULL, 'limit_photo_related', '8'),
-    (NULL, 'hide_uploader_name', 'no'),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 
