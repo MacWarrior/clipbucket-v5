@@ -1311,4 +1311,5 @@ VALUES ('admin_setting'),
        ('wip_done'),
        ('relaunch'),
        ('movie'),
-       ('series');
+       ('series'),
+       ('limit_photo_related');

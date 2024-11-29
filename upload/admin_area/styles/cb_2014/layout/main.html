@@ -315,6 +315,7 @@
                                 <li class="active"><a data-toggle="tab" href="interfaces_global">{lang code='global'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -632,6 +633,21 @@
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" name="enable_access_view_video_history" id="enable_access_view_video_history" {if $row.enable_access_view_video_history=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_photo">
+                                <div class="row">
+                                    <div class="col-md-10">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label class="nowrap" for="limit_photo_related" title="{lang('limit_photo_related')}">{lang('limit_photo_related')}</label>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <input class="form-control" name="limit_photo_related" id="limit_photo_related" value="{$row.limit_photo_related}"/>
                                             </div>
                                         </div>
                                         <hr/>
