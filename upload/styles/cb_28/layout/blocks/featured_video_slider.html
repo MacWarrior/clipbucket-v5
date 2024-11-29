@@ -1,12 +1,25 @@
 <style>
     /* Slider Container */
-    .slider-container {
+    .slider-container-featured {
         display: block;
         align-items: center;
         overflow: hidden;
         position: relative;
-        height: 300px;
+        height: var(--height-slider-featured);
+
+        --height-poster:var(--height-slider-featured);
+        --width-poster-base:calc(var(--height-slider-featured) * 0.666625);
+        --width-poster:calc(var(--height-slider-featured) * 0.666625);
+        --width-thumb:calc(var(--height-slider-featured) * 1.77777777778);
+        --width-collapsed: 75px;
+
         background: rgba(0,0,0,0.7);
+        max-width: fit-content;
+        margin: auto;
+    }
+
+    .slider-container-featured.without_poster {
+        --width-poster:0;
     }
 
     /* Animation pour la nouvelle diapositive qui s'ajoute */
@@ -15,22 +28,22 @@
             width: 0;
         }
         to {
-            width: 50px; /* Largeur cible de la diapositive active */
+            width: var(--width-collapsed); /* Largeur cible de la diapositive active */
         }
     }
-    .animate-slide-in {
+    .slider-container-featured .animate-slide-in {
         animation: slideInWidth 0.3s forwards; /* Durée et direction de l'animation */
-        width: 50px;
+        width: var(--width-collapsed);
     }
 
-    .slides {
+    .slider-container-featured .slides {
         display: flex;
         transition: transform 0.3s linear;
         width: max-content;
         height: 100%;
     }
 
-    .slide {
+    .slider-container-featured .slide {
         height: 100%;
         min-height: 100%;
         margin: 0;
@@ -38,33 +51,48 @@
         position: relative;
         cursor: pointer;
         transition: width 0.3s linear; /* Animation pour la largeur */
-        width: 50px; /* Largeur réduite pour les diapositives non actives */
+        width: var(--width-collapsed); /* Largeur réduite pour les diapositives non actives */
         overflow: hidden;
         opacity: 0.7;
     }
 
-    .removeAnimation{
+    .slider-container-featured .removeAnimation{
         width: 0;
     }
 
     /* Diapositive active (focus actuel) */
-    .slide.active {
-        width: 500px; /* Largeur complète pour la diapositive active */
+    .slider-container-featured .slide.active {
+        width:calc(var(--width-thumb) + var(--width-poster));
         opacity: 1;
     }
 
-    .slide:hover {
-        opacity: 1;
-    }
-
-    .slide img {
-        width: 100%;
+    .slider-container-featured .slide img.poster {
+        width:var(--width-poster);
         height: 100%;
+    }
+
+    .slider-container-featured .slide:not(.active) img.poster {
+        width: calc(var(--width-poster) * 0.5);
+        animation: slideInWidth 0.3s forwards; /* Durée et direction de l'animation */
+    }
+
+    .slider-container-featured .slide:hover {
+        opacity: 1;
+    }
+
+    .slider-container-featured .slide img {
+        height: 100%;
+        width: 100%;
         object-fit: cover;
+        float:left;
+    }
+
+    .slider-container-featured .slide:has(.poster) img:not(.poster) {
+        width: calc(100% - var(--width-poster));
     }
 
     /* Détails du film */
-    .movie-details {
+    .slider-container-featured .movie-details {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -77,16 +105,16 @@
         color: white;
     }
 
-    .slide.active .movie-details {
+    .slider-container-featured .slide.active .movie-details {
         display: block;
     }
 
-    .movie-title {
+    .slider-container-featured .movie-title {
         font-size: 14px;
         font-weight: bold;
     }
 
-    .movie-description {
+    .slider-container-featured .movie-description {
         font-size: 12px;
         margin: 5px 0;
         white-space: nowrap;        /* Forcer le texte à rester sur une seule ligne */
@@ -96,26 +124,70 @@
         display: block;
     }
 
-    .movie-rating {
+    .slider-container-featured .movie-rating {
         color: gold;
+    }
+
+    /* Style des boutons de navigation */
+    .slider-container-featured .prev-btn,
+    .slider-container-featured .next-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.6);
+        color: white;
+        border: none;
+        padding: 15px 20px;
+        font-size: 24px;
+        cursor: pointer;
+        border-radius: 50%;
+        z-index: 10; /* Assure que les boutons sont au-dessus des diapositives */
+        transition: background-color 0.3s;
+        display: none;
+    }
+
+    .slider-container-featured .prev-btn { left: 10px; }
+    .slider-container-featured .next-btn { right: 10px; }
+
+    /* Effet de survol des boutons */
+    .slider-container-featured .prev-btn:hover,
+    .slider-container-featured .next-btn:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    /* Ajustement pour les petits écrans */
+    @media (max-width: 768px) {
+        .slider-container-featured:has(.slides .slide:nth-child(2)) .prev-btn,
+        .slider-container-featured:has(.slides .slide:nth-child(2)) .next-btn {
+            padding: 10px 15px;
+            font-size: 18px;
+            display: block;
+        }
+
+        .slider-container-featured .slide:not(.active) {
+            display: none;
+        }
     }
 
 </style>
 
-<div class="slider-container"  data-animation-time="300" data-nb_left="2">
-
+<div class="slider-container-featured"  data-animation-time="300" data-nb_left="2" style="--height-slider-featured:300px">
+    <div id='example'></div>
     <!-- Conteneur des diapositives -->
     <div class="slides" id="slides">
         <!-- Structure d'exemple de diapositive, clonez les diapositives si nécessaire -->
         <div class="slide"><img src="https://picsum.photos/500/300?random=joker">
             <div class="movie-details">
                 <div class="movie-title">Joker (2019)</div>
+                <div class="movie-title">Joker (2019)</div>
                 <div class="movie-description">The rise of the machines begins.</div>
                 <div class="movie-rating">★★★★☆</div>
             </div>
         </div>
         <div class="slide active"><img src="https://picsum.photos/500/300?random=terminator" alt="Terminator"><div class="movie-details"><div class="movie-title">Terminator</div>                <div class="movie-description">The rise of the machines begins.</div><div class="movie-rating">★★★☆☆</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=nobody" alt="Nobody">
+        <div class="slide">
+            <img src="https://picsum.photos/500/300?random=nobodyxcc" alt="Nobody" class="poster">
+            <img src="https://picsum.photos/500/300?random=nobody" alt="Nobody">
             <div class="movie-details">
                 <div class="movie-title">Nobody</div>
                 <div class="movie-description">The rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines begins.</div>
@@ -134,9 +206,13 @@
         <div class="slide"><img src="https://picsum.photos/500/300?random=i1654" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
     </div>
 
+    <!-- Boutons de navigation -->
+    <button class="prev-btn">&#10094;</button>
+    <button class="next-btn">&#10095;</button>
 </div>
 
 <script>
+
     class Slider {
         constructor(containerSelector, animationTime = 300, visibleSlides = 2) {
             this.slidesContainerMain = document.querySelector(containerSelector);
@@ -148,6 +224,9 @@
 
         initialize() {
             this.updateSlideListeners();
+            this.addNavigationButtons(); // Méthode pour gérer les boutons de navigation
+            this.initializeResizeObserver(); // Initialise le ResizeObserver
+
             const slideCount = this.slidesContainer.children.length;
             if (slideCount === 0) {
                 this.slidesContainerMain.style.display = 'none';
@@ -159,48 +238,147 @@
             }
         }
 
+        // Méthode pour récupérer la valeur calculée d'une variable CSS
+        getComputedCSSVariable(variableName) {
+            const tempElement = document.createElement('div');
+            tempElement.style.position = 'absolute';
+            tempElement.style.visibility = 'hidden';
+            tempElement.style.width = 'var('+variableName+')';
+            this.slidesContainerMain.appendChild(tempElement);
+            const computedValue = getComputedStyle(tempElement).width;
+            this.slidesContainerMain.removeChild(tempElement);
+            return parseFloat(computedValue);
+        }
+
+        initializeResizeObserver() {
+            const observer = new ResizeObserver(entries => {
+                const widthPoster = this.getComputedCSSVariable('--width-poster-base');
+                const widthThumb = this.getComputedCSSVariable('--width-thumb');
+                const widthCollapsed = this.getComputedCSSVariable('--width-collapsed');
+                const totalRequiredWidth = widthPoster + widthThumb + (2 * widthCollapsed);
+
+                for (let entry of entries) {
+                    const width = entry.contentRect.width;
+                    if (width <= totalRequiredWidth) {
+                        this.slidesContainerMain.classList.add('without_poster');
+                    } else {
+                        this.slidesContainerMain.classList.remove('without_poster');
+                    }
+                }
+            });
+
+            observer.observe(this.slidesContainerMain);
+        }
+
+        getCurrentSlideActive() {
+            const slides = Array.from(this.slidesContainer.children);
+            const activeSlide = slides.find(slide => slide.classList.contains('active'));
+            return activeSlide ? slides.indexOf(activeSlide) : 0;
+        }
+
+        nextSlide() {
+            const slideCount = this.slidesContainer.children.length;  // Nombre total de slides
+            const nextIndex = (this.getCurrentSlideActive() + 1) % slideCount;  // Retour au premier après le dernier
+            this.scrollToSlide(nextIndex);
+        }
+
+        prevSlide() {
+            const slideCount = this.slidesContainer.children.length;  // Nombre total de slides
+            const prevIndex = (this.getCurrentSlideActive() - 1 + slideCount) % slideCount;  // Retour au dernier après le premier
+            this.scrollToSlide(prevIndex);
+        }
+
+        addNavigationButtons() {
+            const nextButton = this.slidesContainerMain.querySelector('.next-btn');
+            const prevButton = this.slidesContainerMain.querySelector('.prev-btn');
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => this.nextSlide());
+            }
+
+            if (prevButton) {
+                prevButton.addEventListener('click', () => this.prevSlide());
+            }
+        }
+
         moveXSlideToEnd(slides, targetIndex, currentIndex) {
+            console.log('moveXSlideToEnd')
+
             if (currentIndex === 0) {
                 this.clearActiveSlide();
                 slides[targetIndex].classList.add('active');
             }
-            if (targetIndex === currentIndex + this.visibleSlides) return;
+            if (targetIndex === currentIndex + this.visibleSlides) {
+                this.isAnimating = false;  // Libère le verrou
+                return;
+            }
 
-            const elem = slides[currentIndex];
-            elem.classList.remove('active');
-            this.slidesContainer.appendChild(elem.cloneNode(true));
-            elem.classList.add('removeAnimation');
-            const t = this.animationTime / this.visibleSlides;
-            elem.style.transition = `width `+t+`ms linear`;
-            setTimeout(() => {
-                elem.remove();
-                elem.style.transition = '';
-                this.updateSlideListeners();
-                this.moveXSlideToEnd(slides, targetIndex, currentIndex + 1);
-            }, t);
+            try {
+
+                const elem = slides[currentIndex];
+                elem.classList.remove('active');
+                this.slidesContainer.appendChild(elem.cloneNode(true));
+                elem.classList.add('removeAnimation');
+                const t = this.animationTime / this.visibleSlides;
+                elem.style.transition = `width `+t+`ms linear`;
+                setTimeout(() => {
+                    elem.remove();
+                    elem.style.transition = '';
+                    this.updateSlideListeners();
+                    this.moveXSlideToEnd(slides, targetIndex, currentIndex + 1);
+                }, t);
+
+            }catch (e){
+                this.isAnimating = false;  // Libère le verrou
+                throw e
+            }
+
         }
 
         moveXSlideToStart(slides, targetIndex, currentIndex) {
+            console.log('moveXSlideToStart')
+
             if (currentIndex === this.slidesContainer.children.length - 1) {
                 this.clearActiveSlide();
                 slides[targetIndex].classList.add('active');
             }
-            if (currentIndex === this.slidesContainer.children.length - 1 - (this.visibleSlides - targetIndex)) return;
+            if (currentIndex === this.slidesContainer.children.length - 1 - (this.visibleSlides - targetIndex)) {
+                this.isAnimating = false;  // Libère le verrou
+                return;
+            }
 
-            const elem = slides[currentIndex];
-            this.slidesContainer.insertBefore(elem, this.slidesContainer.firstElementChild);
-            const t = this.animationTime / this.visibleSlides;
-            elem.style.transition = `width `+t+`ms linear`;
-            elem.classList.add('animate-slide-in');
-            setTimeout(() => {
-                elem.classList.remove('animate-slide-in');
-                elem.style.transition = '';
-                this.updateSlideListeners();
-                this.moveXSlideToStart(slides, targetIndex, currentIndex - 1);
-            }, t);
+            try {
+                const elem = slides[currentIndex];
+                console.log(elem)
+                this.slidesContainer.insertBefore(elem, this.slidesContainer.firstElementChild);
+                const t = this.animationTime / this.visibleSlides;
+                elem.style.transition = `width `+t+`ms linear`;
+                elem.classList.add('animate-slide-in');
+                setTimeout(() => {
+                    elem.classList.remove('animate-slide-in');
+                    elem.style.transition = '';
+                    this.updateSlideListeners();
+                    this.moveXSlideToStart(slides, targetIndex, currentIndex - 1);
+                }, t);
+
+            }catch (e){
+                this.isAnimating = false;  // Libère le verrou
+                throw e
+            }
+
         }
 
         scrollToSlide(targetIndex) {
+
+            console.log('scrollToSlide')
+            console.log(this.isAnimating)
+
+            if (this.isAnimating) {
+                console.log('nope')
+                return;// Empêche l'exécution si l'animation est en cours
+            }
+            this.isAnimating = true;  // Active le verrou d'animation
+
             const slides = Array.from(this.slidesContainer.children);
             const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
             const rect = this.slidesContainerMain.getBoundingClientRect();
@@ -209,10 +387,7 @@
             if (rect2.width <= rect.width) {
                 this.clearActiveSlide();
                 slides[targetIndex].classList.add('active');
-                const widthCollapsed = (rect.width - 500) / (this.slidesContainer.children.length - 1);
-                for (let i = 0; i < this.slidesContainer.children.length; i++) {
-                    slides[i].style.width = i === targetIndex ? '' : widthCollapsed+`px`;
-                }
+                this.isAnimating = false;  // Libère le verrou
                 return;
             }
 
@@ -220,6 +395,8 @@
                 this.moveXSlideToEnd(slides, targetIndex, 0);
             } else if (targetIndex < currentIndex) {
                 this.moveXSlideToStart(slides, targetIndex, this.slidesContainer.children.length - 1);
+            } else {
+                this.isAnimating = false;  // Libère le verrou
             }
         }
 
@@ -237,6 +414,7 @@
 
     // Utilisation
     document.addEventListener("DOMContentLoaded", () => {
-        const slider = new Slider('.slider-container', 300, 2);
+        const slider = new Slider('.slider-container-featured', 300, 1);
     });
+
 </script>
