@@ -38,7 +38,7 @@
         ,"Refactor comments options"
         ,"Refactor collection items management"
         ,"Refactor orphan photos management"
-        ,"Refactor user levels management interface"
+        ,"Refactor user levels management interface & storage"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
