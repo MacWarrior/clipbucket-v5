@@ -95,7 +95,7 @@ if ($photo) {
     assign('top_collections', $top_collections);
 
     // Top collections
-    $related_photos = Photo::getInstance()->getPhotoRelated($photo['photo_id'], 6);
+    $related_photos = Photo::getInstance()->getPhotoRelated($photo['photo_id'], config('limit_photo_related') != 0 ? config('limit_photo_related') : 8);
     assign('related_photos', $related_photos);
 
 } else {

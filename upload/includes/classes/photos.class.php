@@ -177,6 +177,7 @@ class Photo
      */
     public function getAll(array $params = [])
     {
+        $param_not_photo_id = $params['not_photo_id'] ?? false;
         $param_photo_id = $params['photo_id'] ?? false;
         $param_photo_ids = $params['photo_ids'] ?? false;
         $param_photo_key = $params['photo_key'] ?? false;
@@ -204,12 +205,15 @@ class Photo
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
 
         $conditions = [];
-        if( $param_photo_id ){
-            $conditions[] = $this->getTableName() . '.photo_id = \''.mysql_clean($param_photo_id).'\'';
-        } elseif ( $param_photo_ids ) {
-            $conditions[] = $this->getTableName() . '.photo_id IN ('.mysql_clean($param_photo_ids).')';
+        if ($param_not_photo_id) {
+            $conditions[] = $this->getTableName() . '.photo_id != \'' . mysql_clean($param_not_photo_id) . '\'';
         }
-        if( $param_photo_key ){
+        if ($param_photo_id) {
+            $conditions[] = $this->getTableName() . '.photo_id = \'' . mysql_clean($param_photo_id) . '\'';
+        } elseif ($param_photo_ids) {
+            $conditions[] = $this->getTableName() . '.photo_id IN (' . mysql_clean($param_photo_ids) . ')';
+        }
+        if ($param_photo_key ){
             $conditions[] = $this->getTableName() . '.photo_key = \''.mysql_clean($param_photo_key).'\'';
         }
         if( $param_title ){
@@ -530,15 +534,14 @@ class Photo
     {
         $photo = $this->getOne(['photo_id'=>$photo_id]);
         $version = Update::getInstance()->getDBVersion();
+        $title = mysql_clean($photo['title']);
+        $tags = mysql_clean($photo['tags']);
 
-        $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($photo['title']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $cond_title .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($photo['title']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-        }
+        $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . $title . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $title . '%\'';
         $cond_title .= ')';
-        $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($photo['tags']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $tags . '%\'';
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($photo['tags']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . $tags . '%\'';
         }
         $cond_tag .= ')';
 
@@ -557,7 +560,10 @@ class Photo
                 ) AS R
                 ORDER BY score DESC,' . $order ;
         $result = Clipbucket_db::getInstance()->_select($sql);
-        return $this->getAll(['photo_ids'=>$result[0]['ids']]);
+        return $this->getAll([
+            'photo_ids' => $result[0]['ids'],
+            'limit'     => $limit
+        ]);
     }
 }
 
@@ -2430,7 +2436,7 @@ class CBPhotos
                                 return $thumbs;
                             } else {
                                 $size = '_' . $p['size'];
-                                $return_thumb = array_find($photo['filename'] . $size, $thumbs);
+                                $return_thumb = array_find_cb($photo['filename'] . $size, $thumbs);
 
                                 if (empty($return_thumb)) {
                                     $this->default_thumb($size, $output);
@@ -2448,7 +2454,7 @@ class CBPhotos
                     if ($p['output'] == 'html') {
                         $size = '_' . $p['size'];
 
-                        $src = array_find($photo['filename'] . $size, $thumbs);
+                        $src = array_find_cb($photo['filename'] . $size, $thumbs);
                         if (empty($src)) {
                             $src = $this->default_thumb($size);
                         }
