@@ -21,12 +21,12 @@ class M00161 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}languages` CHANGE `language_code` `language_code` VARCHAR(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL UNIQUE;', [
-            'table' => 'languages',
+            'table'  => 'languages',
             'column' => 'language_code'
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}languages_translations` MODIFY COLUMN `translation` VARCHAR(1024) NOT NULL;', [
-            'table' => 'languages_translations',
+            'table'  => 'languages_translations',
             'column' => 'translation'
         ]);
 

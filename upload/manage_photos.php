@@ -7,7 +7,7 @@ if( !isSectionEnabled('photos') ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
@@ -28,7 +28,7 @@ assign(
 switch ($mode) {
     case 'uploaded':
     default:
-        if( !has_access('allow_photo_upload') ){
+        if( !User::getInstance()->hasPermission('allow_photo_upload') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -67,7 +67,7 @@ switch ($mode) {
         break;
 
     case 'favorite':
-        if( !has_access('view_photos') ){
+        if( !User::getInstance()->hasPermission('view_photos') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 

@@ -14,7 +14,7 @@ if (isset($_POST['mode'])) {
 if (!empty($mode)) {
     switch ($mode) {
         case 'most_viewed':
-            if (!isSectionEnabled('videos') || !userquery::getInstance()->perm_check('view_videos', false, true)) {
+            if (!isSectionEnabled('videos') || !User::getInstance()->hasPermission('view_videos')) {
                 exit();
             }
 
@@ -819,7 +819,7 @@ if (!empty($mode)) {
             $comments = Comments::getAll($params);
 
             $admin = '';
-            if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
+            if ($_POST['admin'] == 'yes' && User::getInstance()->hasAdminAccess()) {
                 $admin = 'yes';
             }
 
@@ -857,7 +857,7 @@ if (!empty($mode)) {
             $comments = Comments::getAll($params);
 
             $admin = '';
-            if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
+            if ($_POST['admin'] == 'yes' && User::getInstance()->hasAdminAccess()) {
                 $admin = 'yes';
             }
 

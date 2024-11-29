@@ -2,8 +2,7 @@
 define('THIS_PAGE', 'plugin');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('plugins_moderation', true);
 pages::getInstance()->page_redir();
 
 $file = get('file');

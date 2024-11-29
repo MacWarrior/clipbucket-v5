@@ -10,7 +10,7 @@
 			</div>
 			{/if}
 
-			{if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
+			{if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
 				{ANCHOR place='before_features_videos'}
 			<section class="clearfix featured-videos">
 				<h1>{lang code="featured_videos"}</h1>

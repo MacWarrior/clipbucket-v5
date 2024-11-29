@@ -181,7 +181,7 @@ class cb_pm
                 } elseif (!userquery::getInstance()->user_exists($username) || $user_id == userquery::getInstance()->get_anonymous_user()) {
                     e(lang('unknown_reciever'));
                     //check right pm.
-                } elseif (!has_access_by_user($user_id, 'private_msg_access', true, false)) {
+                } elseif (!User::getInstance($user_id)->hasPermission( 'private_msg_access')) {
                     e(lang('user_cant_receive_pm', $username));
                 } elseif ($user_id == $sender) {
                     e(lang('you_cant_send_pm_yourself'));

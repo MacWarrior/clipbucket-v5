@@ -4,7 +4,7 @@ if (!defined('IN_CLIPBUCKET')) {
     exit('Invalid access');
 }
 
-$userquery->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 $pages->page_redir();
 
 if (!defined('MAIN_PAGE')) {

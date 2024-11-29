@@ -105,7 +105,7 @@
 					<div class="page-hidding"><h3>{lang code='add_new_collection'}</h3>
 					<div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary " href="/collections.php">{lang code="back_to_collection"}</a></div>
 					</div>
-					{if (has_access('allow_create_collection',false,false))}
+					{if User::getInstance()->hasPermission('allow_create_collection')}
 					<div class="upload_info">
 						<div class="account_form">
 							{foreach from=$fields item=field}

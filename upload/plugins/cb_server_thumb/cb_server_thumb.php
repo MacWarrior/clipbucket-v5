@@ -16,7 +16,7 @@ $cache_dir = DirPath::get('cache') . 'cb_server_thumb' . DIRECTORY_SEPARATOR;
 if (!is_writable($cache_dir)) {
     $__resize_thumbs = false;
 
-    if (has_access('admin_access')) {
+    if (User::getInstance()->hasAdminAccess()) {
         e($cache_dir . ' directory is not writeable', 'w');
     }
 }

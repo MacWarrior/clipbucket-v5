@@ -7,7 +7,7 @@ if(empty($_POST['vid'])){
     die();
 }
 
-if (!userquery::getInstance()->perm_check('view_video', true)) {
+if (!User::getInstance()->hasPermission('view_video')) {
     echo json_encode(['video' => false]);
     die();
 }

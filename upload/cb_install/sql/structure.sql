@@ -387,57 +387,38 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_name` varchar(100) NOT NULL,
   `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_levels`
+    ADD PRIMARY KEY (`user_level_id`);
 
-CREATE TABLE `{tbl_prefix}user_levels_permissions` (
-  `user_level_permission_id` int(22) NOT NULL,
-  `user_level_id` int(22) NOT NULL,
-  `admin_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `allow_video_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_photo_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_video` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_channel` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_videos` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `avatar_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `video_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `member_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `ad_manager_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `manage_template_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `group_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `web_config_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `view_channels` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `playlist_access` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_channel_bg` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `private_msg_access` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `edit_video` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `download_video` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `admin_del_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `photos_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `collection_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `plugins_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `tool_box` enum('yes','no') NOT NULL DEFAULT 'no',
-  `plugins_perms` text NOT NULL,
-  `allow_manage_user_level` enum('yes','no') NOT NULL DEFAULT 'no',
-  `allow_create_collection` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `enable_channel_page` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+CREATE TABLE `{tbl_prefix}user_levels_permissions`
+(
+    `id_user_levels_permission` INT(20)            NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `id_user_permission_types`  INT(20)            NOT NULL,
+    `permission_name`           VARCHAR(32) UNIQUE NOT NULL,
+    `permission_description`    VARCHAR(32)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}user_permissions` (
-  `permission_id` int(225) NOT NULL,
-  `permission_type` int(225) NOT NULL,
-  `permission_name` varchar(225) NOT NULL,
-  `permission_code` varchar(225) NOT NULL,
-  `permission_desc` mediumtext NOT NULL,
-  `permission_default` enum('yes','no') NOT NULL DEFAULT 'yes'
+CREATE TABLE `{tbl_prefix}user_levels_permissions_values`
+(
+    `user_level_id`             INT(20)     NOT NULL,
+    `id_user_levels_permission` INT(20)     NOT NULL,
+    `permission_value`          VARCHAR(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_levels_permissions_values`
+    ADD PRIMARY KEY(`user_level_id`, `id_user_levels_permission`);
 
 CREATE TABLE `{tbl_prefix}user_permission_types` (
-  `user_permission_type_id` int(225) NOT NULL,
+  `user_permission_type_id` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_permission_type_name` varchar(225) NOT NULL,
   `user_permission_type_desc` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}user_levels_permissions`
+    ADD CONSTRAINT `fk_id_user_permission_types` FOREIGN KEY (`id_user_permission_types`) REFERENCES `{tbl_prefix}user_permission_types` (`user_permission_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}user_levels_permissions_values`
+    ADD CONSTRAINT `fk_user_level_id` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_id_user_levels_permission` FOREIGN KEY (`id_user_levels_permission`) REFERENCES `{tbl_prefix}user_levels_permissions` (`id_user_levels_permission`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
@@ -662,20 +643,6 @@ ALTER TABLE `{tbl_prefix}users`
   ADD KEY `username` (`username`(255),`userid`),
   ADD FULLTEXT KEY `username_fulltext` (`username`);
 
-ALTER TABLE `{tbl_prefix}user_levels`
-  ADD PRIMARY KEY (`user_level_id`);
-
-ALTER TABLE `{tbl_prefix}user_levels_permissions`
-  ADD PRIMARY KEY (`user_level_permission_id`),
-  ADD KEY `user_level_id` (`user_level_id`);
-
-ALTER TABLE `{tbl_prefix}user_permissions`
-  ADD PRIMARY KEY (`permission_id`),
-  ADD UNIQUE KEY `permission_code` (`permission_code`);
-
-ALTER TABLE `{tbl_prefix}user_permission_types`
-  ADD PRIMARY KEY (`user_permission_type_id`);
-
 ALTER TABLE `{tbl_prefix}user_profile`
   ADD PRIMARY KEY (`user_profile_id`),
   ADD KEY `ind_status_id` (`userid`);
@@ -782,18 +749,6 @@ ALTER TABLE `{tbl_prefix}template`
 
 ALTER TABLE `{tbl_prefix}users`
   MODIFY `userid` bigint(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_levels`
-  MODIFY `user_level_id` int(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_levels_permissions`
-  MODIFY `user_level_permission_id` int(22) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_permissions`
-  MODIFY `permission_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_permission_types`
-  MODIFY `user_permission_type_id` int(225) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}user_profile`
   MODIFY `user_profile_id` int(11) NOT NULL AUTO_INCREMENT;

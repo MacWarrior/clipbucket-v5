@@ -60,7 +60,7 @@ class Playlist
      */
     public static function getGenericConstraints(): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -129,7 +129,7 @@ class Playlist
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true) && !$param_exist ){
+        if( !User::getInstance()->hasAdminAccess() && !$param_exist ){
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only]);
         }
 

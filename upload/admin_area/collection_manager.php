@@ -3,8 +3,7 @@ define('THIS_PAGE', 'collection_manager');
 global $cbcollection, $eh;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 $userquery = userquery::getInstance();
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('collection_moderation',true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */

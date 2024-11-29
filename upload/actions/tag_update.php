@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'tag_update');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 $id_tag = $_POST['id_tag'];
 $tag = $_POST['tag'];

@@ -2,9 +2,8 @@
 define('THIS_PAGE', 'ads_manager');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('ad_manager_access', true);
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('ad_manager_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

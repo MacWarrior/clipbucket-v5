@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'channels');
 
 require 'includes/config.inc.php';
 
-if( !isSectionEnabled('channels') || !userquery::getInstance()->perm_check('view_channel', true)){
+if( !isSectionEnabled('channels') || !User::getInstance()->hasPermission('view_channel')){
     redirect_to(BASEURL);
 }
 
@@ -30,7 +30,7 @@ if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous
 }
 if ($udetails['ban_status'] == 'yes') {
     e(lang('usr_uban_msg'));
-    if (!has_access('admin_access', true)) {
+    if (!User::getInstance()->hasAdminAccess()) {
         ClipBucket::getInstance()->show_page = false;
         display_it();
         exit();
@@ -72,7 +72,7 @@ if (user_id() != $udetails['userid']) {
     } elseif ($perms == 'friends' && !userquery::getInstance()->is_confirmed_friend($udetails['userid'], user_id())) {
         e(lang('only_friends_view_channel', $udetails['username']));
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             ClipBucket::getInstance()->show_page = false;
         }
     }
@@ -81,7 +81,7 @@ if (user_id() != $udetails['userid']) {
         if (userquery::getInstance()->is_user_banned(user_name(), $udetails['userid'], $udetails['banned_users'])) {
             e(lang('you_are_not_allowed_to_view_user_channel', $udetails['username']));
             assign('isBlocked', 'yes');
-            if (!has_access('admin_access', true)) {
+            if (!User::getInstance()->hasAdminAccess()) {
                 ClipBucket::getInstance()->show_page = false;
             }
         }

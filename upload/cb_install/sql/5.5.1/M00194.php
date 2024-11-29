@@ -31,8 +31,11 @@ class M00194 extends \Migration
 
         $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' DROP INDEX `search_key`';
         self::alterTable($sql, [
-            'constraint_type'  => 'UNIQUE',
-            'constraint_name'  => 'search_key'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'tmdb_search',
+                'name'  => 'search_key'
+            ]
         ]);
         $sql = 'ALTER TABLE ' . tbl('tmdb_search') . ' ADD UNIQUE INDEX unique_search_key (`search_key`, `type`, `language`)';
         self::alterTable($sql, [
@@ -43,8 +46,11 @@ class M00194 extends \Migration
                 'language'
             ]
         ], [
-            'constraint_type'  => 'UNIQUE',
-            'constraint_name'  => 'unique_search_key'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'tmdb_search',
+                'name'  => 'unique_search_key'
+            ]
         ]);
 
         self::generateTranslation('movie', [

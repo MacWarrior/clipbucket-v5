@@ -22,7 +22,7 @@ class cb_global_announcement
     function __construct(){
         $this->template_dir = DirPath::get('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
         $this->pages_url = DirPath::getUrl('plugins') . self::class . '/pages/';
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             $this->addAdminMenu();
         }
         $this->register_anchor_function();

@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'edit_account');
 
 require 'includes/config.inc.php';
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 
 //Updating Profile
 if (isset($_POST['update_profile'])) {
@@ -34,19 +34,19 @@ if (isset($_FILES['Filedata'])) {
     $destinationFilePath = DirPath::get('temp') . 'background-' . $user_id . '-'. $timeStamp;
 
     $params = [
-        'fileData' => 'Filedata',
-        'mimeType' => 'image',
+        'fileData'            => 'Filedata',
+        'mimeType'            => 'image',
         'destinationFilePath' => $destinationFilePath,
-        'keepExtension' => true,
-        'maxFileSize' => config('max_bg_size') / 1024,
-        'allowedExtensions' => config('allowed_photo_types')
+        'keepExtension'       => true,
+        'maxFileSize'         => config('max_bg_size') / 1024,
+        'allowedExtensions'   => config('allowed_photo_types')
     ];
 
     FileUpload::getInstance($params)->processUpload();
     $data = [
         'extension' => FileUpload::getInstance()->getExtension(),
-        'filepath' => FileUpload::getInstance()->getDestinationFilePath(),
-        'user_id' => $user_id
+        'filepath'  => FileUpload::getInstance()->getDestinationFilePath(),
+        'user_id'   => $user_id
     ];
 
     $coverUpload = userquery::getInstance()->updateBackground($data);
@@ -79,10 +79,7 @@ if (isset($_POST['block_users'])) {
 }
 
 $mode = $_GET['mode'];
-
-$current_enable_channel_page = userquery::getInstance()->get_user_level(user_id())['enable_channel_page'] !== 'yes';
-assign('current_enable_channel_page', $current_enable_channel_page);
-if ($mode === 'profile' && $current_enable_channel_page) {
+if ($mode === 'profile' && !User::getInstance()->hasPermission('enable_channel_page')) {
     e(lang('cannot_access_page'));
     $mode = 'account';
 }
@@ -103,7 +100,7 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-        if( (config('picture_upload') != 'yes' || !has_access('avatar_upload')) && config('picture_url') != 'yes' && empty(User::getInstance()->get('avatar_url')) && empty(User::getInstance()->get('avatar'))) {
+        if( (config('picture_upload') != 'yes' || !User::getInstance()->hasPermission('avatar_upload')) && config('picture_url') != 'yes' && empty(User::getInstance()->get('avatar_url')) && empty(User::getInstance()->get('avatar'))) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -118,7 +115,7 @@ switch ($mode) {
         break;
 
     case 'subscriptions':
-        if( config('channelsSection') != 'yes' || !has_access('view_channels') ){
+        if( config('channelsSection') != 'yes' || !User::getInstance()->hasPermission('view_channels') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 

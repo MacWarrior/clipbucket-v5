@@ -4,9 +4,9 @@ define('THIS_PAGE', 'manage_players');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $Upload, $myquery, $cbplayer;
-userquery::getInstance()->admin_login_check();
+
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
-userquery::getInstance()->login_check('admin_access');
 
 if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_settings' ){
     redirect_to(BASEURL . DirPath::getUrl('admin_area'));

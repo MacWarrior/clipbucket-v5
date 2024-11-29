@@ -44,12 +44,12 @@
 					<div class="reply">
 						{if $comment.userid != user_id()}
 						<a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}')">{lang code='spam'}</a>
-							{if has_access('admin_del_access') || $comment.type_owner_id==user_id()}
+							{if User::getInstance()->hasPermission('admin_del_access') || $comment.type_owner_id==user_id()}
 						&middot;
 							{/if}
 						{/if}
 
-						{if has_access('admin_del_access') || $comment.userid==user_id() || $comment.type_owner_id==user_id()}
+						{if User::getInstance()->hasPermission('admin_del_access') || $comment.userid==user_id() || $comment.type_owner_id==user_id()}
 						<a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}')">{lang code='delete'}</a>
 						{/if}
 					</div>
@@ -93,7 +93,7 @@
 						{if $comment.userid != user_id()}
 						&middot; <a href="javascript:void(0);" onclick="spam_comment('{$comment.comment_id}')">{lang code='spam'}</a>
 						{/if}
-						{if has_access('admin_del_access') || $comment.userid==user_id() || $comment.type_owner_id==user_id()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}')">{lang code='delete'}</a>{/if}
+						{if User::getInstance()->hasPermission('admin_del_access') || $comment.userid==user_id() || $comment.type_owner_id==user_id()} &middot; <a href="javascript:void(0);" onclick="delete_comment('{$comment.comment_id}')">{lang code='delete'}</a>{/if}
 					</div>
 				</div>
 				{/if}
@@ -137,11 +137,11 @@
 							<div class="reply">
 								{if $comment.userid != user_id()}
 								<a href="javascript:void(0);" onclick="spam_comment('{$reply.comment_id}')">{lang code='spam'}</a>
-									{if has_access('admin_del_access') || $comment.type_owner_id==user_id()}
+									{if User::getInstance()->hasPermission('admin_del_access') || $comment.type_owner_id==user_id()}
 								&middot;
 									{/if}
 								{/if}
-								{if has_access('admin_del_access') || $comment.userid==user_id() || $comment.type_owner_id==user_id()} <a href="javascript:void(0);" onclick="delete_comment('{$reply.comment_id}')">{lang code='delete'}</a>{/if}
+								{if User::getInstance()->hasPermission('admin_del_access') || $comment.userid==user_id() || $comment.type_owner_id==user_id()} <a href="javascript:void(0);" onclick="delete_comment('{$reply.comment_id}')">{lang code='delete'}</a>{/if}
 							</div>
 						</div>
 						{/if}

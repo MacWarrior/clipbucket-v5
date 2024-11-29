@@ -6,7 +6,7 @@
  */
 
 //Registering Admin Options for Watch Video
-if (has_access('admin_access', true)) {
+if (User::getInstance()->hasPermission('admin_access')) {
     function show_video_admin_link($data)
     {
         echo '<a href="' . DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $data['videoid'] . '">Edit Video</a>';

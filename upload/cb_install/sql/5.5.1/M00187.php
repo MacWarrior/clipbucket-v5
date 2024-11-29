@@ -19,9 +19,9 @@ class M00187 extends \Migration
             'table'   => 'video',
             'columns' => ['description','title']
         ],[
-            'constraint_index' => [
-                'table' => 'video',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'video',
                 'name'  => 'description'
             ]
         ]);
@@ -29,9 +29,9 @@ class M00187 extends \Migration
             'table'  => 'video',
             'column' => 'title'
         ],[
-            'constraint_index' => [
-                'table' => 'video',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'video',
                 'name'  => 'title'
             ]
         ]);

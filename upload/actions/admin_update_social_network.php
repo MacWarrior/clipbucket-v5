@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'update_phrase');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 $success = true;
 if (!isset($_POST['id_social_networks_link']) || !isset($_POST['title']) || !isset($_POST['url']) || !isset($_POST['social_network_link_order']) || !isset($_POST['id_fontawesome_icon'])) {

@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'admin_launch_update');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 $core_tool = new AdminTool();
 $db_tool = new AdminTool();
 $error_init = [];
