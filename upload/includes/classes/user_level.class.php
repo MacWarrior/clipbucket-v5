@@ -80,7 +80,7 @@ class UserLevel
      * @return bool
      * @throws Exception
      */
-    public static function hasPermission(string $permission, int $user_level_id = null): bool
+    public static function hasPermission(string $permission, $user_level_id = null): bool
     {
         return (self::getPermission($permission, $user_level_id)) == 'yes';
     }
@@ -92,7 +92,7 @@ class UserLevel
      * @return true
      * @throws Exception
      */
-    public static function hasPermissionOrRedirect(string $permission, int $user_id = null, bool $must_be_logged = false): bool
+    public static function hasPermissionOrRedirect(string $permission, $user_id = null, bool $must_be_logged = false): bool
     {
         if ($must_be_logged && !User::getInstance()->isUserConnected()) {
             User::redirectToLogin();
@@ -102,7 +102,6 @@ class UserLevel
         }
         return true;
     }
-
 
     /**
      * @param $params

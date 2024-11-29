@@ -10,8 +10,6 @@ class M00196 extends \Migration
      */
     public function start()
     {
-
-
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}new_user_levels_permissions`
         (
             `id_user_levels_permission` INT                NOT NULL AUTO_INCREMENT PRIMARY KEY,
