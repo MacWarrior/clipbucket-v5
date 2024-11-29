@@ -272,6 +272,7 @@ function display_tmdb_result($data, $videoid)
     assign('videoid', $videoid);
     assign('years', $data['years']);
     assign('selected_year', $data['selected_year']);
+    assign('type', $data['type']);
     echo templateWithMsgJson('blocks/tmdb_result.html');
 }
 

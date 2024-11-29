@@ -909,7 +909,7 @@ class System{
      * @return bool
      * @throws Exception
      */
-    public static function isDateTimeSynchro(array &$details = [], string $force_datetime = null) :bool
+    public static function isDateTimeSynchro(array &$details = [], $force_datetime = null) :bool
     {
         $query = /** @lang MySQL */'SELECT NOW() AS t';
         $rs = Clipbucket_db::getInstance()->_select($query);
