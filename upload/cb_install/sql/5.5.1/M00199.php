@@ -134,5 +134,8 @@ class M00199 extends \Migration
         self::generateTranslation('view_channels_desc', [
             'fr'=>'Peut voir la page chaînes'
         ]);
+
+        $sql = 'UPDATE ' . tbl('user_levels_permissions') . ' SET id_user_permission_types = 1 WHERE permission_name = \'playlist_access\'';
+        self::query($sql);
     }
 }
