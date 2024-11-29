@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"193",
+  "revision":"198",
   "status":"dev",
   "detail":[
     {
@@ -31,6 +31,8 @@
         ,"Implement collection thumbnail selection"
         ,"Implement directory permission checkup"
         ,"Implement force to error admin tool"
+        ,"Implement TMDB Tv Show integration"
+        ,"Implement related photos quantity limit"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -103,6 +105,8 @@
         ,"Fix collection reindex"
         ,"Fix orphan photos display"
         ,"Fix active & inactive users pages"
+        ,"Fix feature member action"
+        ,"Fix self-update interface"
       ]
     },
     {
@@ -125,6 +129,7 @@
         ,"Implement collection thumbnail selection"
         ,"Implement comment visual editor"
         ,"Implement option to disable uploader name display"
+        ,"Implement TMDB Tv Show integration"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

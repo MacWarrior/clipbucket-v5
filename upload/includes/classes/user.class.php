@@ -147,7 +147,7 @@ class User
     /**
      * @throws Exception
      */
-    public static function getInstance(int $user_id = null): self
+    public static function getInstance($user_id = null): self
     {
         if( empty($user_id) ){
             $user_id = user_id();

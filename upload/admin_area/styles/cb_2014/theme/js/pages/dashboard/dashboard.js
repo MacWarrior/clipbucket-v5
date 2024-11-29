@@ -215,6 +215,8 @@ let showMsg = function(msg, type, autoDismiss){
 
 function update(type){
     $('.launch_wip').off('click').prop('disabled', 'disabled');
+    $('.update_db').off('click').prop('disabled', 'disabled');
+    $('.update_core').off('click').prop('disabled', 'disabled');
     $.ajax({
         url: "/actions/admin_launch_update.php",
         type: "post",

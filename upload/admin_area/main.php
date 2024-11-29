@@ -465,6 +465,8 @@ if (isset($_POST['update'])) {
         'enable_video_view_history',
         'enable_access_view_video_history',
         'video_list_view_video_history',
+        'limit_photo_related',
+        'video_list_view_video_history',
         'enable_membership',
         'enable_public_video_page'
     ];
@@ -524,7 +526,8 @@ if (isset($_POST['update'])) {
 
         'chunk_upload_size',
         'cloudflare_upload_limit',
-        'video_list_view_video_history'
+        'video_list_view_video_history',
+        'limit_photo_related'
     ];
 
     foreach ($rows as $field) {

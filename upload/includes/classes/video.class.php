@@ -74,7 +74,7 @@ class Video
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
-        if ($version['version'] > Tmdb::MIN_VERSION || ($version['version'] == Tmdb::MIN_VERSION && $version['revision'] >= Tmdb::MIN_REVISION)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '371')) {
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
         }
@@ -396,7 +396,7 @@ class Video
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
-                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
                 }
                 $group[] = $this->getTableName() . '.videoid';
             }
