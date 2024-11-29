@@ -241,6 +241,7 @@
         ,"Implement CSS/JS versioning"
         ,"Refactor migration system"
         ,"Refactor installation process"
+        ,"Refactor alterTable constraints"
         ,"Add SSE function check"
         ,"Add Nginx check"
         ,"Stop migration on first error if occurs"
