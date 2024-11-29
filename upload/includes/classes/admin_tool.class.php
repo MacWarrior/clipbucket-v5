@@ -761,7 +761,7 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public static function getToolsReadyForLaunch( int $id_tool = null) :array
+    public static function getToolsReadyForLaunch($id_tool = null) :array
     {
 
         $where = '';
@@ -862,7 +862,7 @@ class AdminTool
      * @return bool
      * @throws Exception
      */
-    public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, int $id_tool = null): bool
+    public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, $id_tool = null): bool
     {
 
         if( !empty($last_date_start) && $last_date_start < $previous_calculated_datetime){
@@ -887,7 +887,7 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public static function getDateStat(string $cron, $last_date_start, string $date_previsionnel_precedente_source, int $id_tool = null): array
+    public static function getDateStat(string $cron, $last_date_start, string $date_previsionnel_precedente_source, $id_tool = null): array
     {
         $next_date =null;
         $date_previsionnel_precedente = null;
@@ -928,7 +928,7 @@ class AdminTool
      * @param string|null $last_previsionnel_date
      * @return bool|int
      */
-    public static function getNextDate(string $cron, string $date, string $date_previsionnel, string &$last_previsionnel_date = null)
+    public static function getNextDate(string $cron, string $date, string $date_previsionnel, &$last_previsionnel_date = null)
     {
 
         /**
