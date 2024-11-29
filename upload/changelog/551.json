@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"195",
+  "revision":"196",
   "status":"dev",
   "detail":[
     {
@@ -104,6 +104,7 @@
         ,"Fix collection reindex"
         ,"Fix orphan photos display"
         ,"Fix active & inactive users pages"
+        ,"Fix feature member action"
       ]
     },
     {
