@@ -128,5 +128,11 @@ class M00197 extends \Migration
             'table' => 'user_levels_permissions'
         ]);
 
+        self::updateTranslation('view_channels_desc', [
+            'en'=>'Can view channels page'
+        ]);
+        self::generateTranslation('view_channels_desc', [
+            'fr'=>'Peut voir la page chaînes'
+        ]);
     }
 }
