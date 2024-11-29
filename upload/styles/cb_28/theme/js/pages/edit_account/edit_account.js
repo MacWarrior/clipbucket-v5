@@ -12,7 +12,7 @@ $(document).ready(function(){
             dateFormat: format_date_js,
             changeYear: true,
             yearRange: "-99y:+0",
-            regional: lang
+            regional: language
         });
     }
 
