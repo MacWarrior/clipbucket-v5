@@ -2,8 +2,6 @@
 //Getting Plugin Config Details
 $installed_plugins = CBPlugin::getInstance()->getInstalledPlugins();
 if (!empty($installed_plugins)) {
-    $plug_permission = userquery::getInstance()->permission['plugins_perms'];
-    $plug_permission = json_decode($plug_permission, true);
 
     foreach ($installed_plugins as $plugin) {
         $folder = '';
@@ -18,7 +16,7 @@ if (!empty($installed_plugins)) {
         ClipBucket::getInstance()->plugins_perms[] = ['plugin_code' => $plugin_code,
                                      'plugin_name' => $plugin['name'], 'plugin_desc' => $plugin['description']];
 
-        if (file_exists($file) && $plug_permission[$plugin_code] != 'no') {
+        if (file_exists($file) ) {
             $pluginFile = $file;
             include_once($file);
         }

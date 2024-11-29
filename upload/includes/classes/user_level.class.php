@@ -35,7 +35,7 @@ class UserLevel
     {
         $user_level_id = empty($user_level_id) ? 4 : $user_level_id;
         if (empty(self::$user_permissions[$user_level_id])) {
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '196')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '197')) {
                 $permissions = self::getAllPermissions(['user_level_id' => $user_level_id]);
                 self::$user_permissions[$user_level_id] = array_combine(array_column($permissions, 'permission_name'), $permissions);
             } else {
@@ -66,7 +66,7 @@ class UserLevel
      */
     public static function getPermission($permission, $user_level_id)
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '196')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '197')) {
             return (self::getPermissions($user_level_id)[$permission]['permission_value'] ?? false);
         }
 

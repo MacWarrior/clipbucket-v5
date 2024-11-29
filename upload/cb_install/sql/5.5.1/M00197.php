@@ -3,7 +3,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class M00196 extends \Migration
+class M00197 extends \Migration
 {
     /**
      * @throws \Exception
@@ -82,6 +82,9 @@ class M00196 extends \Migration
         $sql = 'INSERT INTO `{tbl_prefix}new_user_levels_permissions` (id_user_permission_types, permission_name, permission_description) VALUES ';
         $permissions = [];
         foreach ($columns as $column) {
+            if ($column['column_name'] == 'plugins_perms') {
+                continue;
+            }
             $permissions[] = '(' . $column['permission_type'] . ', \'' . $column['column_name'] . '\', \'' . $column['column_name'] . '_desc\')';
             if (!empty($column['permission_desc'])) {
                 self::generateTranslation($column['column_name'] . '_desc', [
