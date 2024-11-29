@@ -5,8 +5,8 @@
         align-items: center;
         overflow: hidden;
         position: relative;
-        height: var(--height-slider-featured);
 
+        height: var(--height-slider-featured);
         --height-poster:var(--height-slider-featured);
         --width-poster-base:calc(var(--height-slider-featured) * 0.666625);
         --width-poster:calc(var(--height-slider-featured) * 0.666625);
@@ -32,13 +32,13 @@
         }
     }
     .slider-container-featured .animate-slide-in {
-        animation: slideInWidth 0.3s forwards; /* Durée et direction de l'animation */
+        animation: slideInWidth var(--animation-time) forwards; /* Durée et direction de l'animation */
         width: var(--width-collapsed);
     }
 
     .slider-container-featured .slides {
         display: flex;
-        transition: transform 0.3s linear;
+        transition: transform var(--animation-time) linear;
         width: max-content;
         height: 100%;
     }
@@ -50,7 +50,7 @@
         flex-shrink: 0;
         position: relative;
         cursor: pointer;
-        transition: width 0.3s linear; /* Animation pour la largeur */
+        transition: width var(--animation-time) linear; /* Animation pour la largeur */
         width: var(--width-collapsed); /* Largeur réduite pour les diapositives non actives */
         overflow: hidden;
         opacity: 0.7;
@@ -73,7 +73,7 @@
 
     .slider-container-featured .slide:not(.active) img.poster {
         width: calc(var(--width-poster) * 0.5);
-        animation: slideInWidth 0.3s forwards; /* Durée et direction de l'animation */
+        animation: slideInWidth var(--animation-time) forwards; /* Durée et direction de l'animation */
     }
 
     .slider-container-featured .slide:hover {
@@ -142,7 +142,7 @@
         cursor: pointer;
         border-radius: 50%;
         z-index: 10; /* Assure que les boutons sont au-dessus des diapositives */
-        transition: background-color 0.3s;
+        transition: background-color var(--animation-time);
         display: none;
     }
 
@@ -171,7 +171,7 @@
 
 </style>
 
-<div class="slider-container-featured"  data-animation-time="300" data-nb_left="2" style="--height-slider-featured:300px">
+<div class="slider-container-featured" data-animation-time="500" data-nb_left="2" data-height-slider="300px" >
     <div id='example'></div>
     <!-- Conteneur des diapositives -->
     <div class="slides" id="slides">
@@ -214,11 +214,24 @@
 <script>
 
     class Slider {
-        constructor(containerSelector, animationTime = 300, visibleSlides = 2) {
+        constructor(containerSelector) {
             this.slidesContainerMain = document.querySelector(containerSelector);
             this.slidesContainer = this.slidesContainerMain.querySelector('.slides');
-            this.animationTime = animationTime;
-            this.visibleSlides = visibleSlides;
+
+            // Extraction des valeurs à partir des attributs data-* dans le HTML
+            this.animationTime = parseInt(this.slidesContainerMain.dataset.animationTime) || 300;
+            this.visibleSlides = parseInt(this.slidesContainerMain.dataset.nbLeft) || 2;
+            this.main_height = this.slidesContainerMain.dataset.heightSlider ?? '300px';
+
+            if( isNaN(this.visibleSlides) || this.visibleSlides < 0) {
+                this.visibleSlides = 0;
+            }
+
+            if( isNaN(this.animationTime) || this.animationTime < 0) {
+                this.animationTime = 0;
+            }
+
+            this.isAnimating = false;
             this.initialize();
         }
 
@@ -236,6 +249,10 @@
                 const initialIndex = slideCount >= this.visibleSlides ? this.visibleSlides : 1;
                 this.scrollToSlide(initialIndex);
             }
+
+            this.slidesContainerMain.style.setProperty('--height-slider-featured', this.main_height);
+            this.slidesContainerMain.style.setProperty('--animation-time', this.animationTime+'ms');
+
         }
 
         // Méthode pour récupérer la valeur calculée d'une variable CSS
@@ -264,6 +281,19 @@
                     } else {
                         this.slidesContainerMain.classList.remove('without_poster');
                     }
+
+                    const rect = this.slidesContainerMain.getBoundingClientRect();
+                    const rect2 = this.slidesContainer.getBoundingClientRect();
+
+                    if (rect2.width > rect.width && this.isAnimating === false) {
+                        const slides = Array.from(this.slidesContainer.children);
+                        const targetIndex = slides.findIndex(slide => slide.classList.contains('active'));
+                        this.clearActiveSlide();
+                        slides[this.visibleSlides].classList.add('active');
+                        this.scrollToSlide(targetIndex)
+                        return ;
+                    }
+
                 }
             });
 
@@ -302,7 +332,6 @@
         }
 
         moveXSlideToEnd(slides, targetIndex, currentIndex) {
-            console.log('moveXSlideToEnd')
 
             if (currentIndex === 0) {
                 this.clearActiveSlide();
@@ -319,7 +348,17 @@
                 elem.classList.remove('active');
                 this.slidesContainer.appendChild(elem.cloneNode(true));
                 elem.classList.add('removeAnimation');
-                const t = this.animationTime / this.visibleSlides;
+                let t = this.animationTime / this.visibleSlides;
+
+                if (currentIndex > 0) {
+                    t= t/ ( targetIndex - 3 );
+                    if(t <= 75) {
+                        t=75;
+                    }
+                }
+
+                this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
+
                 elem.style.transition = `width `+t+`ms linear`;
                 setTimeout(() => {
                     elem.remove();
@@ -336,7 +375,6 @@
         }
 
         moveXSlideToStart(slides, targetIndex, currentIndex) {
-            console.log('moveXSlideToStart')
 
             if (currentIndex === this.slidesContainer.children.length - 1) {
                 this.clearActiveSlide();
@@ -349,11 +387,11 @@
 
             try {
                 const elem = slides[currentIndex];
-                console.log(elem)
                 this.slidesContainer.insertBefore(elem, this.slidesContainer.firstElementChild);
                 const t = this.animationTime / this.visibleSlides;
                 elem.style.transition = `width `+t+`ms linear`;
                 elem.classList.add('animate-slide-in');
+                this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
                 setTimeout(() => {
                     elem.classList.remove('animate-slide-in');
                     elem.style.transition = '';
@@ -370,11 +408,7 @@
 
         scrollToSlide(targetIndex) {
 
-            console.log('scrollToSlide')
-            console.log(this.isAnimating)
-
             if (this.isAnimating) {
-                console.log('nope')
                 return;// Empêche l'exécution si l'animation est en cours
             }
             this.isAnimating = true;  // Active le verrou d'animation
@@ -385,6 +419,7 @@
             const rect2 = this.slidesContainer.getBoundingClientRect();
 
             if (rect2.width <= rect.width) {
+                this.slidesContainerMain.style.setProperty('--animation-time', this.animationTime+'ms');
                 this.clearActiveSlide();
                 slides[targetIndex].classList.add('active');
                 this.isAnimating = false;  // Libère le verrou
@@ -414,7 +449,7 @@
 
     // Utilisation
     document.addEventListener("DOMContentLoaded", () => {
-        const slider = new Slider('.slider-container-featured', 300, 1);
+        new Slider('.slider-container-featured');
     });
 
 </script>
