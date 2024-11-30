@@ -19,7 +19,7 @@
                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                     <input type="button" class="cb_button btn mtm btn-block btn-primary" name="add_to_collection" value="{lang code='add_to_collection'}" onclick="collection_actions('add_collection_form','add_new_item','{$item_id}','#collection_form_result','{$type}');">
                 </div>
-                {if (has_access('allow_create_collection',false,false)) && !$restore_collection}
+                {if User::getInstance()->hasPermission('allow_create_collection') && !$restore_collection}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">
                         <a class="btn btn-block mtm btn-success" href="/manage_collections.php?mode=add_new">{lang code='create_new_collection_btn'}</a>
                     </div>

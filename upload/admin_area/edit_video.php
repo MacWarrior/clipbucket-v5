@@ -3,8 +3,7 @@ define('THIS_PAGE', 'edit_video');
 global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 $pages->page_redir();
 
 $video_id = $_GET['video'];
@@ -128,9 +127,6 @@ if( config('enable_visual_editor_comments') == 'yes' ){
 }
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
-$available_tags = Tags::fill_auto_complete_tags('video');
-assign('available_tags',$available_tags);
-
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags',$available_tags);
 

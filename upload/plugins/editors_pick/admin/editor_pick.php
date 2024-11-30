@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'editor_pick');
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */

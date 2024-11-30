@@ -3,7 +3,9 @@
 const THIS_PAGE = 'progress';
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'SSE.class.php';
-userquery::getInstance()->admin_login_check();
+if (!User::getInstance()->hasAdminAccess()) {
+    return false;
+}
 
 SSE::processSSE(function () {
     try {

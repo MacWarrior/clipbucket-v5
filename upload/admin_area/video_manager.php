@@ -3,8 +3,7 @@ define('THIS_PAGE', 'video_manager');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 global $cbvid, $userquery, $pages, $myquery, $eh, $cbvideo;
-$userquery->admin_login_check();
-$userquery->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 $pages->page_redir();
 
 /* Generating breadcrumb */

@@ -15,28 +15,28 @@ class M00099 extends \Migration
         self::alterTable(/** @lang MySQL */'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `frequency` varchar(30)', [
             'table' => 'tools'
         ], [
-            'table' => 'tools',
+            'table'  => 'tools',
             'column' => 'frequency'
         ]);
 
         self::alterTable(/** @lang MySQL */'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `previous_calculated_datetime` datetime', [
             'table' => 'tools'
         ], [
-            'table' => 'tools',
+            'table'  => 'tools',
             'column' => 'previous_calculated_datetime'
         ]);
 
         self::alterTable(/** @lang MySQL */'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `is_automatable` BOOL DEFAULT TRUE', [
             'table' => 'tools'
         ], [
-            'table' => 'tools',
+            'table'  => 'tools',
             'column' => 'is_automatable'
         ]);
 
         self::alterTable(/** @lang MySQL */'ALTER TABLE `{tbl_prefix}tools` ADD COLUMN `is_disabled` BOOL DEFAULT FALSE', [
             'table' => 'tools'
         ], [
-            'table' => 'tools',
+            'table'  => 'tools',
             'column' => 'is_disabled'
         ]);
 
@@ -44,10 +44,13 @@ class M00099 extends \Migration
                 CHECK (
                     frequency IS NULL OR TRIM(frequency) = \'\' OR previous_calculated_datetime IS NOT NULL
                 );', [
-            'table'         => 'tools',
-            'columns'         => ['frequency', 'previous_calculated_datetime']
+            'table'   => 'tools',
+            'columns' => ['frequency', 'previous_calculated_datetime']
         ],[
-            'constraint_name' => 'chk_frequency_previous_calculated_datetime_required'
+            'constraint' => [
+                'type' => 'CONSTRAINT',
+                'name' => 'chk_frequency_previous_calculated_datetime_required'
+            ]
         ]);
 
         self::query( /** @lang MySQL */'UPDATE `{tbl_prefix}tools` SET is_disabled = TRUE');

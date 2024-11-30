@@ -4,7 +4,7 @@ require 'includes/config.inc.php';
 
 global $myquery, $Upload;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);
 
 if (@$_GET['msg']) {
     $msg[] = display_clean($_GET['msg']);

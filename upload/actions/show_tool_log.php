@@ -2,7 +2,8 @@
 define('THIS_PAGE', 'show_tool_log');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
+
 $tool = new AdminTool();
 $tool->initById($_POST['id_tool']);
 

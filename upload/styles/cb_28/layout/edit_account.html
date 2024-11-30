@@ -10,7 +10,7 @@
 
     {if in_array($mode, ['profile_settings', 'block_users'])}
 
-                    {if config('channelsSection') == 'yes' && !$current_enable_channel_page}
+                    {if config('channelsSection') == 'yes' && !User::getInstance()->hasPermission('enable_channel_page')}
                         <li class="{if $mode=='profile_settings'}active{/if}">
                             <a href="/edit_account.php?mode=profile">
                                 <h5>{lang code='channel_profile_settings'}</h5>
@@ -53,14 +53,14 @@
                             <h5>{lang code='user_change_email'}</h5>
                         </a>
                     </li>
-                    {if (config('picture_upload') == 'yes' && has_access('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))}
+                    {if (config('picture_upload') == 'yes' && User::getInstance()->hasPermission('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))}
                     <li class="{if $mode =='avatar_bg'}active{/if}">
                         <a href="/edit_account.php?mode=avatar_bg">
                             <h5>{lang code='change_avatar'}</h5>
                         </a>
                     </li>
                     {/if}
-                    {if config('channelsSection') == 'yes' && has_access('view_channels')}
+                    {if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channels')}
                     <li class="{if $mode =='subs'}active{/if}">
                         <a href="/edit_account.php?mode=subscriptions">
                             <h5>{lang code='com_manage_subs'}</h5>
@@ -80,13 +80,13 @@
                     <div id="cemail" class="tab-pane {if $mode =='change_email'}active {/if}">
                         {include file="$style_dir/blocks/my_account/account_change_email.html"}
                     </div>
-                    {if (config('picture_upload') == 'yes' && has_access('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))}
+                    {if (config('picture_upload') == 'yes' && User::getInstance()->hasPermission('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))}
                     <div id="uavatar" class="tab-pane {if $mode=='avatar_bg'}active{/if}">
                         {include file="$style_dir/blocks/my_account/account_change_avatar.html"}
                     </div>
                     {/if}
 
-                    {if config('channelsSection') == 'yes' && has_access('view_channels')}
+                    {if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channels')}
                     <div id="msubscription" class="tab-pane {if $mode =='subs'}active{/if}">
                         {include file="$style_dir/blocks/my_account/account_manage_subscriptions.html"}
                     </div>
@@ -102,7 +102,7 @@
 <script>
     {if config('enable_user_dob_edition') == 'yes'}
         let format_date_js = '{get_date_js()}';
-        let lang = '{$lang_obj->getLang()}';
+        let language = '{$lang_obj->getLang()}';
     {/if}
 
     let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');

@@ -74,7 +74,7 @@ class Video
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
-        if ($version['version'] > Tmdb::MIN_VERSION || ($version['version'] == Tmdb::MIN_VERSION && $version['revision'] >= Tmdb::MIN_REVISION)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '371')) {
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
         }
@@ -372,7 +372,7 @@ class Video
             $conditions[] = 'MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\'';
         }
 
-        if( !has_access('admin_access', true) && !$param_exist && !$param_disable_generic_constraints){
+        if( !User::getInstance()->hasAdminAccess() && !$param_exist && !$param_disable_generic_constraints){
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
@@ -389,7 +389,7 @@ class Video
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
-                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
                 }
                 $group[] = $this->getTableName() . '.videoid';
             }
@@ -422,7 +422,8 @@ class Video
 
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
-            if( !$param_count ) {
+
+            if( !$param_count && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
                 $select[] = 'user_profile.disabled_channel';
                 $group[] = 'user_profile.disabled_channel';
             }
@@ -498,7 +499,7 @@ class Video
      */
     public function getGenericConstraints(array $params = []): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -549,7 +550,7 @@ class Video
      */
     public function isCurrentUserRestricted($video_id): string
     {
-        if( has_access('video_moderation', true) ){
+        if( User::getInstance()->hasPermission('video_moderation') ){
             return false;
         }
 
@@ -960,10 +961,8 @@ class CBvideo extends CBCategory
         if (NEED_UPDATE) {
             return;
         }
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
 
-        if ($per['video_moderation'] == 'yes' && isSectionEnabled('videos')) {
+        if (User::getInstance()->hasPermission('video_moderation') && isSectionEnabled('videos')) {
             $menu_video = [
                 'title'   => lang('videos')
                 , 'class' => 'glyphicon glyphicon-facetime-video'
@@ -1327,7 +1326,7 @@ class CBvideo extends CBCategory
                 }
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if (!empty($array['status'])) {
                     $query_field[] = 'status';
                     $query_val[] = $array['status'];
@@ -1385,7 +1384,7 @@ class CBvideo extends CBCategory
                 e(lang('class_vdo_del_err'));
                 return;
             }
-            if (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
+            if (!$this->is_video_owner($vid, user_id()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('no_edit_video'));
                 return;
             }
@@ -1454,7 +1453,7 @@ class CBvideo extends CBCategory
         if ($this->video_exists($vid)) {
             $vdetails = $this->get_video($vid);
 
-            if ($this->is_video_owner($vid, user_id()) || has_access('admin_access', true)) {
+            if ($this->is_video_owner($vid, user_id()) || User::getInstance()->hasAdminAccess()) {
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
@@ -1660,7 +1659,7 @@ class CBvideo extends CBCategory
 
         $cond = '';
         $superCond = '';
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $superCond = Video::getInstance()->getGenericConstraints();
         } else {
             if ($params['active']) {
@@ -2454,7 +2453,7 @@ class CBvideo extends CBCategory
         ];
 
         $where = '';
-        if( !has_access('admin_access', true) ){
+        if( !User::getInstance()->hasAdminAccess() ){
             $where = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 

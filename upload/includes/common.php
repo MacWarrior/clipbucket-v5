@@ -77,11 +77,11 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
-
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
 require_once DirPath::get('classes') . 'category.class.php';
+require_once DirPath::get('classes') . 'user_level.class.php';
 require_once DirPath::get('classes') . 'user.class.php';
 require_once DirPath::get('classes') . 'lang.class.php';
 require_once DirPath::get('classes') . 'pages.class.php';
@@ -116,7 +116,11 @@ switch (DEBUG_LEVEL) {
 
     case 2:
     default:
-        error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+        if (version_compare(System::get_software_version('php_web'), '8.4.0', '<')) {
+            error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+        } else {
+            error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
+        }
         ini_set('display_errors', 'on');
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
@@ -153,7 +157,7 @@ $sess = new Session();
 $userquery = new userquery();
 $userquery->init();
 
-if (has_access('admin_access', true) && !empty($error_redis)) {
+if (User::getInstance()->hasAdminAccess() && !empty($error_redis)) {
     e($error_redis);
 }
 
@@ -165,7 +169,7 @@ if (!Update::isVersionSystemInstalled()) {
     if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
         && strpos($request_uri, '/admin_area/logout.php') === false
         && strpos($request_uri, 'actions/upgrade_db.php') === false
-        && $userquery->admin_login_check(true)) {
+        && User::getInstance()->hasAdminAccess()) {
         header('Location: /admin_area/upgrade_db.php');
         die();
     }

@@ -480,7 +480,7 @@ class cbactions
      */
     function create_playlist($params)
     {
-        if (has_access('allow_create_playlist', false)) {
+        if (User::getInstance()->hasPermission('allow_create_playlist')) {
             $name = mysql_clean($params['name']);
             if (!user_id()) {
                 e(lang('please_login_create_playlist'));
@@ -500,6 +500,7 @@ class cbactions
                 return $pid;
             }
         }
+        e(lang('insufficient_privileges'));
         return false;
     }
 
@@ -581,7 +582,7 @@ class cbactions
 
         if (!$item) {
             e(lang('playlist_item_not_exist'));
-        } elseif ($item['userid'] != user_id() && !has_access('admin_access')) {
+        } elseif ($item['userid'] != user_id() && !User::getInstance()->hasAdminAccess()) {
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $video = get_video_basic_details($item['object_id']);
@@ -765,7 +766,7 @@ class cbactions
                     }
                 }
 
-                if (has_access('admin_access')) {
+                if (User::getInstance()->hasAdminAccess()) {
                     if (isset($array['played']) and !empty($array['played'])) {
                         $query_values['played'] = $array['played'];
                     }
@@ -791,7 +792,7 @@ class cbactions
         $playlist = Playlist::getInstance()->getOne($id);
         if (!$playlist) {
             e(lang('playlist_not_exist'));
-        } elseif ($playlist['userid'] != user_id() && !has_access('admin_access', true)) {
+        } elseif ($playlist['userid'] != user_id() && !User::getInstance()->hasAdminAccess()) {
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $id = mysql_clean($id);
@@ -814,7 +815,7 @@ class cbactions
     {
         $left_join_video = '';
         $where_video = '';
-        if( !has_access('admin_access', true) ){
+        if( !User::getInstance()->hasAdminAccess() ){
             $left_join_video = ' LEFT JOIN '.cb_sql_table('video').' ON playlist_items.object_id = video.videoid';
             $where_video = 'AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }

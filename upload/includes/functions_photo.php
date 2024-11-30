@@ -201,7 +201,7 @@ function get_image_file($params)
                     return $thumbs;
                 } else {
                     $search_name = sprintf($filename, '_' . $size);
-                    $return_thumb = array_find($search_name, $thumbs);
+                    $return_thumb = array_find_cb($search_name, $thumbs);
 
                     if (empty($return_thumb)) {
                         return get_photo_default_thumb($size, $output);
@@ -218,7 +218,7 @@ function get_image_file($params)
 
         if ($output == 'html') {
             $search_name = sprintf($filename, '_' . $size);
-            $src = array_find($search_name, $thumbs);
+            $src = array_find_cb($search_name, $thumbs);
 
             $src = (empty($src)) ? get_photo_default_thumb($size) : $src;
             $attrs = ['src' => str_replace(DIRECTORY_SEPARATOR, '/', $src)];

@@ -3,7 +3,7 @@
 define('THIS_PAGE', 'check_timezone');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 $success = true;
 if (empty($_POST['timezone'])) {
     $success = false;

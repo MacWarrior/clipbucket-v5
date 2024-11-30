@@ -2,8 +2,7 @@
 define('THIS_PAGE', 'website_configurations');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('web_config_access');
+User::getInstance()->hasPermissionOrRedirect('web_config_access',true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -464,6 +463,7 @@ if (isset($_POST['update'])) {
         'enable_video_view_history',
         'enable_access_view_video_history',
         'video_list_view_video_history',
+        'limit_photo_related',
         'display_featured_video',
         'featured_video_style',
         'number_featured_video'
@@ -525,6 +525,7 @@ if (isset($_POST['update'])) {
         'chunk_upload_size',
         'cloudflare_upload_limit',
         'video_list_view_video_history',
+        'limit_photo_related',
         'number_featured_video'
     ];
 

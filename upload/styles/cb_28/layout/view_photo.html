@@ -111,7 +111,7 @@
                                         {/if}
                                     {/if}
                                     {if config('enable_edit_photo_button') == 'yes'}
-                                        {if has_access('admin_access', true)}
+                                        {if User::getInstance()->hasPermission('admin_access')}
                                             {if user_id() && $photo.userid == user_id()}
                                                 <div class="dropdown">
                                                     <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">

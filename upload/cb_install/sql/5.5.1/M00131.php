@@ -12,8 +12,7 @@ class M00131 extends \Migration
     {
         self::query('DROP TABLE ' . tbl('video_views'));
 
-        self::query('CREATE TABLE ' . tbl('video_views') . '
-            (
+        self::query('CREATE TABLE ' . tbl('video_views') . '(
                 `id_video_view` INT(11)   NOT NULL AUTO_INCREMENT,
                 `id_video`      BIGINT   NOT NULL,
                 `id_user`       BIGINT   NOT NULL,
@@ -25,11 +24,23 @@ class M00131 extends \Migration
         ');
 
         self::alterTable(' ALTER TABLE `'.tbl('video_views').'`
-            ADD CONSTRAINT `video_view_video` FOREIGN KEY (`id_video`) REFERENCES `'.tbl('video').'` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-        ');
+            ADD CONSTRAINT `video_view_video` FOREIGN KEY (`id_video`) REFERENCES `'.tbl('video').'` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
+            'table'  => 'video_views',
+            'column' => 'id_video',
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_view_video'
+            ]
+        ]);
         self::alterTable('ALTER TABLE `'.tbl('video_views').'`
-            ADD CONSTRAINT `video_view_user` FOREIGN KEY (`id_user`) REFERENCES `'.tbl('users').'` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
-        ');
+            ADD CONSTRAINT `video_view_user` FOREIGN KEY (`id_user`) REFERENCES `'.tbl('users').'` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
+            'table'  => 'video_views',
+            'column' => 'id_user',
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_view_user'
+            ]
+        ]);
 
         self::generateConfig('enable_video_view_history', 'no');
 

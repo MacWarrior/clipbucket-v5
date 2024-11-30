@@ -6,7 +6,7 @@ if (config('tmdb_enable_on_front_end') != 'yes' || config('enable_tmdb') != 'yes
     return false;
 }
 
-Tmdb::getInstance()->importDataFromTmdb($_POST['videoid'], $_POST['tmdb_video_id']);
+Tmdb::getInstance()->importDataFromTmdb($_POST['videoid'], $_POST['tmdb_video_id'], $_POST['type']);
 
 if (errorhandler::getInstance()->get_error()) {
     echo json_encode([

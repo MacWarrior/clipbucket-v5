@@ -86,7 +86,7 @@
                     {if $u.ban_status == no && $u.userid != user_id()}
                         <li><a role="menuitem" tabindex="-1" href="?ban={$u.userid}">Ban Member</a></li>
                     {/if}
-                    {if $u.featured == no && $u.is_channel_enable && $u.enable_channel_page == 'yes'}
+                    {if $u.featured == no && $u.is_channel_enable }
                         <li><a role="menuitem" tabindex="-1" href="?featured={$u.userid}">Feature Member</a></li>
                     {/if}
                     {if $u.featured == yes}
@@ -102,11 +102,11 @@
       {/if}
     </td>
   </tr>
-{if $bgcolor == ""}
-{assign var = bgcolor value = "#EEEEEE"}
-{else}
-{assign var = bgcolor value = ""}
-{/if}  
+    {if $bgcolor == ""}
+        {assign var = bgcolor value = "#EEEEEE"}
+    {else}
+        {assign var = bgcolor value = ""}
+    {/if}
 {/foreach}
 </table>
 

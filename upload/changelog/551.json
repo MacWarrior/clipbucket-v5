@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"192",
+  "revision":"199",
   "status":"dev",
   "detail":[
     {
@@ -31,6 +31,8 @@
         ,"Implement collection thumbnail selection"
         ,"Implement directory permission checkup"
         ,"Implement force to error admin tool"
+        ,"Implement TMDB Tv Show integration"
+        ,"Implement related photos quantity limit"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -103,6 +105,8 @@
         ,"Fix collection reindex"
         ,"Fix orphan photos display"
         ,"Fix active & inactive users pages"
+        ,"Fix feature member action"
+        ,"Fix self-update interface"
       ]
     },
     {
@@ -125,6 +129,7 @@
         ,"Implement collection thumbnail selection"
         ,"Implement comment visual editor"
         ,"Implement option to disable uploader name display"
+        ,"Implement TMDB Tv Show integration"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -195,6 +200,7 @@
       "description": [
         "Implement error 500 / maintenance page"
         ,"Refactor anonymous user"
+        ,"Refactor user levels storage"
         ,"Update Readme"
         ,"Update composer.json"
         ,"Update discord errors"
@@ -235,6 +241,7 @@
         ,"Implement CSS/JS versioning"
         ,"Refactor migration system"
         ,"Refactor installation process"
+        ,"Refactor alterTable constraints"
         ,"Add SSE function check"
         ,"Add Nginx check"
         ,"Stop migration on first error if occurs"

@@ -177,6 +177,7 @@ class Photo
      */
     public function getAll(array $params = [])
     {
+        $param_not_photo_id = $params['not_photo_id'] ?? false;
         $param_photo_id = $params['photo_id'] ?? false;
         $param_photo_ids = $params['photo_ids'] ?? false;
         $param_photo_key = $params['photo_key'] ?? false;
@@ -204,12 +205,15 @@ class Photo
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
 
         $conditions = [];
-        if( $param_photo_id ){
-            $conditions[] = $this->getTableName() . '.photo_id = \''.mysql_clean($param_photo_id).'\'';
-        } elseif ( $param_photo_ids ) {
-            $conditions[] = $this->getTableName() . '.photo_id IN ('.mysql_clean($param_photo_ids).')';
+        if ($param_not_photo_id) {
+            $conditions[] = $this->getTableName() . '.photo_id != \'' . mysql_clean($param_not_photo_id) . '\'';
         }
-        if( $param_photo_key ){
+        if ($param_photo_id) {
+            $conditions[] = $this->getTableName() . '.photo_id = \'' . mysql_clean($param_photo_id) . '\'';
+        } elseif ($param_photo_ids) {
+            $conditions[] = $this->getTableName() . '.photo_id IN (' . mysql_clean($param_photo_ids) . ')';
+        }
+        if ($param_photo_key ){
             $conditions[] = $this->getTableName() . '.photo_key = \''.mysql_clean($param_photo_key).'\'';
         }
         if( $param_title ){
@@ -238,7 +242,7 @@ class Photo
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
@@ -347,12 +351,14 @@ class Photo
         }
         if (!$param_not_join_user_profile) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
-            $select[] = 'user_profile.disabled_channel';
-            $group[] = 'user_profile.disabled_channel';
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+                $select[] = 'user_profile.disabled_channel';
+                $group[] = 'user_profile.disabled_channel';
+            }
         }
         $limit = '';
-        if( $param_limit ){
-            $limit = ' LIMIT '.$param_limit;
+        if ($param_limit) {
+            $limit = ' LIMIT ' . $param_limit;
         }
 
         $sql ='SELECT ' . implode(', ', $select) . '
@@ -390,7 +396,7 @@ class Photo
      */
     public function getGenericConstraints(array $params = []): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -443,7 +449,7 @@ class Photo
      */
     public function isCurrentUserRestricted($photo_id): string
     {
-        if (has_access('video_moderation', true)) {
+        if (User::getInstance()->hasPermission('video_moderation')) {
             return false;
         }
 
@@ -528,15 +534,14 @@ class Photo
     {
         $photo = $this->getOne(['photo_id'=>$photo_id]);
         $version = Update::getInstance()->getDBVersion();
+        $title = mysql_clean($photo['title']);
+        $tags = mysql_clean($photo['tags']);
 
-        $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($photo['title']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $cond_title .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($photo['title']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
-        }
+        $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . $title . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $title . '%\'';
         $cond_title .= ')';
-        $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . mysql_clean($photo['tags']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $tags . '%\'';
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($photo['tags']) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . $tags . '%\'';
         }
         $cond_tag .= ')';
 
@@ -555,7 +560,10 @@ class Photo
                 ) AS R
                 ORDER BY score DESC,' . $order ;
         $result = Clipbucket_db::getInstance()->_select($sql);
-        return $this->getAll(['photo_ids'=>$result[0]['ids']]);
+        return $this->getAll([
+            'photo_ids' => $result[0]['ids'],
+            'limit'     => $limit
+        ]);
     }
 }
 
@@ -786,9 +794,7 @@ class CBPhotos
      */
     function photos_admin_menu()
     {
-        $per = userquery::getInstance()->get_user_level(user_id());
-
-        if ($per['photos_moderation'] == "yes" && isSectionEnabled('photos') && !NEED_UPDATE) {
+        if (User::getInstance()->hasPermission('photos_moderation') && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
                 'title'   => 'Photos'
                 , 'class' => 'glyphicon glyphicon-picture'
@@ -832,10 +838,10 @@ class CBPhotos
 
         // My account links
         if (isSectionEnabled('photos')) {
-            if( has_access('allow_photo_upload') ){
+            if( User::getInstance()->hasPermission('allow_photo_upload') ){
                 userquery::getInstance()->user_account[lang('photos')][lang('manage_photos')] = 'manage_photos.php?mode=uploaded';
             }
-            if( has_access('view_photos') ){
+            if( User::getInstance()->hasPermission('view_photos') ){
                 userquery::getInstance()->user_account[lang('photos')][lang('manage_favorite_photos')] = 'manage_photos.php?mode=favorite';
             }
         }
@@ -938,7 +944,7 @@ class CBPhotos
         $limit = $p['limit'];
         $cond = '';
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $cond .= Photo::getInstance()->getGenericConstraints();
         } else {
             if ($p['active']) {
@@ -1047,7 +1053,7 @@ class CBPhotos
             $cond .= $p['extra_cond'];
         }
 
-        if ($p['get_orphans'] || has_access('admin_access', true) || user_id() == ($p['user'] ?? 0)) {
+        if ($p['get_orphans'] || User::getInstance()->hasAdminAccess() || user_id() == ($p['user'] ?? 0)) {
             $p['collection'] = '0';
         }
 
@@ -2242,7 +2248,7 @@ class CBPhotos
                 }
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if (isset($array['views'])) {
                     $query_field[] = 'views';
                     $query_val[] = $array['views'];
@@ -2276,7 +2282,7 @@ class CBPhotos
                     if (!$this->photo_exists($pid)) {
                         e(lang("photo_not_exist"));
                     } else {
-                        if ($this->get_photo_owner($pid) != user_id() && !has_access('admin_access', true)) {
+                        if ($this->get_photo_owner($pid) != user_id() && !User::getInstance()->hasAdminAccess()) {
                             e(lang("cant_edit_photo"));
                         } else {
                             if (empty($array['collection_id'])) {
@@ -2430,7 +2436,7 @@ class CBPhotos
                                 return $thumbs;
                             } else {
                                 $size = '_' . $p['size'];
-                                $return_thumb = array_find($photo['filename'] . $size, $thumbs);
+                                $return_thumb = array_find_cb($photo['filename'] . $size, $thumbs);
 
                                 if (empty($return_thumb)) {
                                     $this->default_thumb($size, $output);
@@ -2448,7 +2454,7 @@ class CBPhotos
                     if ($p['output'] == 'html') {
                         $size = '_' . $p['size'];
 
-                        $src = array_find($photo['filename'] . $size, $thumbs);
+                        $src = array_find_cb($photo['filename'] . $size, $thumbs);
                         if (empty($src)) {
                             $src = $this->default_thumb($size);
                         }

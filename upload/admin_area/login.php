@@ -8,7 +8,7 @@ if ($userquery->is_admin_logged_as_user()) {
     redirect_to('/admin_area');
 }
 
-if ($userquery->admin_login_check(true)) {
+if (User::getInstance()->hasAdminAccess()) {
     redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'index.php');
 }
 
@@ -30,7 +30,7 @@ if (isset($_POST['login'])) {
     }
 }
 
-if (user_id() && !has_access('admin_access', true)) {
+if (user_id() && !User::getInstance()->hasAdminAccess()) {
     e(lang("you_dont_hv_perms"));
 }
 
