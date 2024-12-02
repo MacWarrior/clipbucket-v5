@@ -163,4 +163,277 @@ $(function () {
         });
     })
 
+
+    class SliderFeatured {
+        constructor(container) {
+            this.slidesContainerMain = container;
+            this.slidesContainer = this.slidesContainerMain.querySelector('.slides');
+
+            // Extraction des valeurs à partir des attributs data-* dans le HTML
+            this.animationTime = parseInt(this.slidesContainerMain.dataset.animationTime) || 300;
+            this.timerAutoNext = parseInt(this.slidesContainerMain.dataset.timerAutoNext) || 5000;
+            this.visibleSlides = parseInt(this.slidesContainerMain.dataset.nbLeft) || 1;
+            this.main_height = this.slidesContainerMain.dataset.heightSlider ?? '300px';
+
+            if( isNaN(this.visibleSlides) || this.visibleSlides < 0) {
+                this.visibleSlides = 0;
+            }
+
+            if( isNaN(this.animationTime) || this.animationTime < 0) {
+                this.animationTime = 0;
+            }
+
+            this.isAnimating = false;
+            this.initialize();
+        }
+
+        initialize() {
+            this.updateSlideListeners();
+            this.addNavigationButtons(); // Méthode pour gérer les boutons de navigation
+            this.initializeResizeObserver(); // Initialise le ResizeObserver
+
+            const slideCount = this.slidesContainer.children.length;
+            if (slideCount === 0) {
+                this.slidesContainerMain.style.display = 'none';
+            } else if (slideCount === 1) {
+                this.scrollToSlide(0);
+            } else {
+                const initialIndex = slideCount >= this.visibleSlides ? this.visibleSlides : 1;
+                this.scrollToSlide(initialIndex);
+            }
+
+            this.slidesContainerMain.style.setProperty('--height-slider-featured', this.main_height);
+            this.slidesContainerMain.style.setProperty('--animation-time', this.animationTime+'ms');
+
+
+            let instance = this;
+            this.slidesContainerMain.addEventListener('mouseover', function() {
+                clearInterval(instance.interval); // Arrête l'intervalle quand la souris survole l'élément
+            });
+
+            this.slidesContainerMain.addEventListener('mouseleave', function() {
+                instance.resetTimer(); // Réinitialise le timer quand la souris sort de l'élément
+            });
+
+        }
+
+        resetTimer() {
+
+            if(this.getNumberOfSlides() <= 1) {
+                return ;
+            }
+            console.log(this.getNumberOfSlides())
+
+            let instance = this;
+            clearInterval(this.interval)
+            this.interval = setInterval(function(){
+                instance.nextSlide();
+            },this.timerAutoNext+this.animationTime);
+        }
+
+        // Méthode pour récupérer la valeur calculée d'une variable CSS
+        getComputedCSSVariable(variableName) {
+            const tempElement = document.createElement('div');
+            tempElement.style.position = 'absolute';
+            tempElement.style.visibility = 'hidden';
+            tempElement.style.width = 'var('+variableName+')';
+            this.slidesContainerMain.appendChild(tempElement);
+            const computedValue = getComputedStyle(tempElement).width;
+            this.slidesContainerMain.removeChild(tempElement);
+            return parseFloat(computedValue);
+        }
+
+        getNumberOfSlides() {
+            return this.slidesContainer.children.length; // Compte les enfants (slides) du conteneur
+        }
+
+        initializeResizeObserver() {
+            const observer = new ResizeObserver(entries => {
+                const widthPoster = this.getComputedCSSVariable('--width-poster-base');
+                const widthThumb = this.getComputedCSSVariable('--width-thumb');
+                const widthCollapsed = this.getComputedCSSVariable('--width-collapsed');
+                const totalRequiredWidth = widthPoster + widthThumb + ((1+this.visibleSlides) * widthCollapsed);
+
+                for (let entry of entries) {
+                    const width = entry.contentRect.width;
+                    /** @todo ca particulier si moin de 2 ou 3 images */
+                    if (width <= totalRequiredWidth && this.getNumberOfSlides() >= 1+this.visibleSlides) {
+//                        this.slidesContainerMain.classList.add('without_poster');
+                    } else {
+                        this.slidesContainerMain.classList.remove('without_poster');
+                    }
+
+                    const rect = this.slidesContainerMain.getBoundingClientRect();
+                    const rect2 = this.slidesContainer.getBoundingClientRect();
+
+                    if (rect2.width > rect.width && this.isAnimating === false) {
+                        if(slides[this.visibleSlides] !== undefined) {
+                            const slides = Array.from(this.slidesContainer.children);
+                            const targetIndex = slides.findIndex(slide => slide.classList.contains('active'));
+                            this.clearActiveSlide();
+                            slides[this.visibleSlides].classList.add('active');
+                            this.scrollToSlide(targetIndex)
+                        }
+                        return ;
+                    }
+
+                }
+            });
+
+            observer.observe(this.slidesContainerMain);
+        }
+
+        getCurrentSlideActive() {
+            const slides = Array.from(this.slidesContainer.children);
+            const activeSlide = slides.find(slide => slide.classList.contains('active'));
+            return activeSlide ? slides.indexOf(activeSlide) : 0;
+        }
+
+        nextSlide() {
+            const slideCount = this.slidesContainer.children.length;  // Nombre total de slides
+            const nextIndex = (this.getCurrentSlideActive() + 1) % slideCount;  // Retour au premier après le dernier
+            this.scrollToSlide(nextIndex);
+        }
+
+        prevSlide() {
+            const slideCount = this.slidesContainer.children.length;  // Nombre total de slides
+            const prevIndex = (this.getCurrentSlideActive() - 1 + slideCount) % slideCount;  // Retour au dernier après le premier
+            this.scrollToSlide(prevIndex);
+        }
+
+        addNavigationButtons() {
+            const nextButton = this.slidesContainerMain.querySelector('.next-btn');
+            const prevButton = this.slidesContainerMain.querySelector('.prev-btn');
+
+            if (nextButton) {
+                nextButton.addEventListener('click', () => this.nextSlide());
+            }
+
+            if (prevButton) {
+                prevButton.addEventListener('click', () => this.prevSlide());
+            }
+        }
+
+        moveXSlideToEnd(slides, targetIndex, currentIndex) {
+
+            if (currentIndex === 0) {
+                this.clearActiveSlide();
+                slides[targetIndex].classList.add('active');
+            }
+            if (targetIndex === currentIndex + this.visibleSlides) {
+                this.isAnimating = false;  // Libère le verrou
+                return;
+            }
+
+            try {
+
+                const elem = slides[currentIndex];
+                elem.classList.remove('active');
+                this.slidesContainer.appendChild(elem.cloneNode(true));
+                elem.classList.add('removeAnimation');
+                let t = this.animationTime / this.visibleSlides;
+
+                if (currentIndex > 0) {
+                    t= t/ ( targetIndex - 3 );
+                    if(t <= 75) {
+                        t=75;
+                    }
+                }
+
+                this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
+
+                elem.style.transition = `width `+t+`ms linear`;
+                setTimeout(() => {
+                    elem.remove();
+                    elem.style.transition = '';
+                    this.updateSlideListeners();
+                    this.moveXSlideToEnd(slides, targetIndex, currentIndex + 1);
+                }, t);
+
+            }catch (e){
+                this.isAnimating = false;  // Libère le verrou
+                throw e
+            }
+
+        }
+
+        moveXSlideToStart(slides, targetIndex, currentIndex) {
+
+            if (currentIndex === this.slidesContainer.children.length - 1) {
+                this.clearActiveSlide();
+                slides[targetIndex].classList.add('active');
+            }
+            if (currentIndex === this.slidesContainer.children.length - 1 - (this.visibleSlides - targetIndex)) {
+                this.isAnimating = false;  // Libère le verrou
+                return;
+            }
+
+            try {
+                const elem = slides[currentIndex];
+                this.slidesContainer.insertBefore(elem, this.slidesContainer.firstElementChild);
+                const t = this.animationTime / this.visibleSlides;
+                elem.style.transition = `width `+t+`ms linear`;
+                elem.classList.add('animate-slide-in');
+                this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
+                setTimeout(() => {
+                    elem.classList.remove('animate-slide-in');
+                    elem.style.transition = '';
+                    this.updateSlideListeners();
+                    this.moveXSlideToStart(slides, targetIndex, currentIndex - 1);
+                }, t);
+
+            }catch (e){
+                this.isAnimating = false;  // Libère le verrou
+                throw e
+            }
+
+        }
+
+        scrollToSlide(targetIndex) {
+
+            if (this.isAnimating) {
+                return;// Empêche l'exécution si l'animation est en cours
+            }
+            this.isAnimating = true;  // Active le verrou d'animation
+
+            this.resetTimer();
+
+            const slides = Array.from(this.slidesContainer.children);
+            const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
+            const rect = this.slidesContainerMain.getBoundingClientRect();
+            const rect2 = this.slidesContainer.getBoundingClientRect();
+
+            if (rect2.width <= rect.width) {
+                this.slidesContainerMain.style.setProperty('--animation-time', this.animationTime+'ms');
+                this.clearActiveSlide();
+                slides[targetIndex].classList.add('active');
+                this.isAnimating = false;  // Libère le verrou
+                return;
+            }
+
+            if (targetIndex > currentIndex) {
+                this.moveXSlideToEnd(slides, targetIndex, 0);
+            } else if (targetIndex < currentIndex) {
+                this.moveXSlideToStart(slides, targetIndex, this.slidesContainer.children.length - 1);
+            } else {
+                this.isAnimating = false;  // Libère le verrou
+            }
+        }
+
+        clearActiveSlide() {
+            this.slidesContainer.querySelectorAll('.slide.active').forEach(slide => slide.classList.remove('active'));
+        }
+
+        updateSlideListeners() {
+            const slides = Array.from(this.slidesContainer.children);
+            slides.forEach((slide, index) => {
+                slide.onclick = () => this.scrollToSlide(index);
+            });
+        }
+    }
+
+    document.querySelectorAll('.slider-container-featured').forEach(function(sliderElement){
+        new SliderFeatured(sliderElement);
+    })
+
 });

@@ -544,6 +544,14 @@ class Video
         }
     }
 
+    public static function getLike($video) {
+        return 152;
+    }
+
+    public static function getDislike($video) {
+        return 323 ;
+    }
+
     /**
      * @throws Exception
      */

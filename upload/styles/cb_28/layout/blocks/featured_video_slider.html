@@ -1,455 +1,125 @@
-<style>
-    /* Slider Container */
-    .slider-container-featured {
-        display: block;
-        align-items: center;
-        overflow: hidden;
-        position: relative;
 
-        height: var(--height-slider-featured);
-        --height-poster:var(--height-slider-featured);
-        --width-poster-base:calc(var(--height-slider-featured) * 0.666625);
-        --width-poster:calc(var(--height-slider-featured) * 0.666625);
-        --width-thumb:calc(var(--height-slider-featured) * 1.77777777778);
-        --width-collapsed: 75px;
-
-        background: rgba(0,0,0,0.7);
-        max-width: fit-content;
-        margin: auto;
-    }
-
-    .slider-container-featured.without_poster {
-        --width-poster:0;
-    }
-
-    /* Animation pour la nouvelle diapositive qui s'ajoute */
-    @keyframes slideInWidth {
-        from {
-            width: 0;
-        }
-        to {
-            width: var(--width-collapsed); /* Largeur cible de la diapositive active */
-        }
-    }
-    .slider-container-featured .animate-slide-in {
-        animation: slideInWidth var(--animation-time) forwards; /* Durée et direction de l'animation */
-        width: var(--width-collapsed);
-    }
-
-    .slider-container-featured .slides {
-        display: flex;
-        transition: transform var(--animation-time) linear;
-        width: max-content;
-        height: 100%;
-    }
-
-    .slider-container-featured .slide {
-        height: 100%;
-        min-height: 100%;
-        margin: 0;
-        flex-shrink: 0;
-        position: relative;
-        cursor: pointer;
-        transition: width var(--animation-time) linear; /* Animation pour la largeur */
-        width: var(--width-collapsed); /* Largeur réduite pour les diapositives non actives */
-        overflow: hidden;
-        opacity: 0.7;
-    }
-
-    .slider-container-featured .removeAnimation{
-        width: 0;
-    }
-
-    /* Diapositive active (focus actuel) */
-    .slider-container-featured .slide.active {
-        width:calc(var(--width-thumb) + var(--width-poster));
-        opacity: 1;
-    }
-
-    .slider-container-featured .slide img.poster {
-        width:var(--width-poster);
-        height: 100%;
-    }
-
-    .slider-container-featured .slide:not(.active) img.poster {
-        width: calc(var(--width-poster) * 0.5);
-        animation: slideInWidth var(--animation-time) forwards; /* Durée et direction de l'animation */
-    }
-
-    .slider-container-featured .slide:hover {
-        opacity: 1;
-    }
-
-    .slider-container-featured .slide img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-        float:left;
-    }
-
-    .slider-container-featured .slide:has(.poster) img:not(.poster) {
-        width: calc(100% - var(--width-poster));
-    }
-
-    /* Détails du film */
-    .slider-container-featured .movie-details {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: rgba(0, 0, 0, 0.7);
-        padding: 10px;
-        text-align: left;
-        font-size: 12px;
-        display: none;
-        color: white;
-    }
-
-    .slider-container-featured .slide.active .movie-details {
-        display: block;
-    }
-
-    .slider-container-featured .movie-title {
-        font-size: 14px;
-        font-weight: bold;
-    }
-
-    .slider-container-featured .movie-description {
-        font-size: 12px;
-        margin: 5px 0;
-        white-space: nowrap;        /* Forcer le texte à rester sur une seule ligne */
-        overflow: hidden;           /* Masquer le texte qui dépasse */
-        text-overflow: ellipsis;    /* Ajouter des points de suspension pour le texte tronqué */
-        width: 100%;                /* S'assurer que la largeur s'ajuste */
-        display: block;
-    }
-
-    .slider-container-featured .movie-rating {
-        color: gold;
-    }
-
-    /* Style des boutons de navigation */
-    .slider-container-featured .prev-btn,
-    .slider-container-featured .next-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background-color: rgba(0, 0, 0, 0.6);
-        color: white;
-        border: none;
-        padding: 15px 20px;
-        font-size: 24px;
-        cursor: pointer;
-        border-radius: 50%;
-        z-index: 10; /* Assure que les boutons sont au-dessus des diapositives */
-        transition: background-color var(--animation-time);
-        display: none;
-    }
-
-    .slider-container-featured .prev-btn { left: 10px; }
-    .slider-container-featured .next-btn { right: 10px; }
-
-    /* Effet de survol des boutons */
-    .slider-container-featured .prev-btn:hover,
-    .slider-container-featured .next-btn:hover {
-        background-color: rgba(0, 0, 0, 0.8);
-    }
-
-    /* Ajustement pour les petits écrans */
-    @media (max-width: 768px) {
-        .slider-container-featured:has(.slides .slide:nth-child(2)) .prev-btn,
-        .slider-container-featured:has(.slides .slide:nth-child(2)) .next-btn {
-            padding: 10px 15px;
-            font-size: 18px;
-            display: block;
-        }
-
-        .slider-container-featured .slide:not(.active) {
-            display: none;
-        }
-    }
-
-</style>
-
-<div class="slider-container-featured" data-animation-time="500" data-nb_left="2" data-height-slider="300px" >
-    <div id='example'></div>
-    <!-- Conteneur des diapositives -->
+<div class="slider-container-featured"
+     data-animation-time="{$animationTime}" {* temps d'animation de reference *}
+     data-timer-auto-next="{$timerAutoNext}" {* temps de pause entre les slides automatique *}
+     data-nb_left="{$nbLeft}" {* nombre d'element a conserver visible a gauche *}
+     data-height-slider="{$height}" {* hauteur fixe du slider *}
+>
+    <div id='calculatoire_div'><!-- a conserver, obligatoirement car utile pour le JS --></div>
     <div class="slides" id="slides">
-        <!-- Structure d'exemple de diapositive, clonez les diapositives si nécessaire -->
-        <div class="slide"><img src="https://picsum.photos/500/300?random=joker">
-            <div class="movie-details">
-                <div class="movie-title">Joker (2019)</div>
-                <div class="movie-title">Joker (2019)</div>
-                <div class="movie-description">The rise of the machines begins.</div>
-                <div class="movie-rating">★★★★☆</div>
+        {foreach $video_list as $video}
+            <div class="slide">
+                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
+                </span>
+                {/if}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original')}" >
+                </span>
+                <div class="movie-details">
+                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
+                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
+                    <div class="movie-rating">
+                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+                    </div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                </div>
             </div>
-        </div>
-        <div class="slide active"><img src="https://picsum.photos/500/300?random=terminator" alt="Terminator"><div class="movie-details"><div class="movie-title">Terminator</div>                <div class="movie-description">The rise of the machines begins.</div><div class="movie-rating">★★★☆☆</div></div></div>
-        <div class="slide">
-            <img src="https://picsum.photos/500/300?random=nobodyxcc" alt="Nobody" class="poster">
-            <img src="https://picsum.photos/500/300?random=nobody" alt="Nobody">
-            <div class="movie-details">
-                <div class="movie-title">Nobody</div>
-                <div class="movie-description">The rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines beginshe rise of the machines begins.</div>
-                <div class="movie-rating">★★★★☆</div>
+            <div class="slide">
+                {if config('enable_video_poster') == 'yesss' && !empty($video.default_poster)}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
+                </span>
+                {/if}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original')}" >
+                </span>
+                <div class="movie-details">
+                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
+                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
+                    <div class="movie-rating">
+                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+                    </div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                </div>
             </div>
-        </div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=oppenheimer" alt="Oppenheimer"><div class="movie-details"><div class="movie-title">Oppenheimer</div><div class="movie-rating">★★★★☆</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i1" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i12" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i11" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i16" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i14" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i1564" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i187" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i19875" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
-        <div class="slide"><img src="https://picsum.photos/500/300?random=i1654" alt="Inception"><div class="movie-details"><div class="movie-title">Inception</div><div class="movie-rating">★★★★★</div></div></div>
+            <div class="slide">
+                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
+                </span>
+                {/if}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original')}" >
+                </span>
+                <div class="movie-details">
+                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
+                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
+                    <div class="movie-rating">
+                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+                    </div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                </div>
+            </div>
+            <div class="slide">
+                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
+                </span>
+                {/if}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original')}" >
+                </span>
+                <div class="movie-details">
+                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
+                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
+                    <div class="movie-rating">
+                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+                    </div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                </div>
+            </div>
+            <div class="slide">
+                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
+                </span>
+                {/if}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original')}" >
+                </span>
+                <div class="movie-details">
+                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
+                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
+                    <div class="movie-rating">
+                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+                    </div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                </div>
+            </div>
+            <div class="slide">
+                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
+                </span>
+                {/if}
+                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
+                    <img src="{get_thumb($video, false, 'original')}" >
+                </span>
+                <div class="movie-details">
+                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
+                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
+                    <div class="movie-rating">
+                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
+                    </div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                </div>
+            </div>
+        {/foreach}
     </div>
 
-    <!-- Boutons de navigation -->
     <button class="prev-btn">&#10094;</button>
     <button class="next-btn">&#10095;</button>
 </div>
 
-<script>
-
-    class Slider {
-        constructor(containerSelector) {
-            this.slidesContainerMain = document.querySelector(containerSelector);
-            this.slidesContainer = this.slidesContainerMain.querySelector('.slides');
-
-            // Extraction des valeurs à partir des attributs data-* dans le HTML
-            this.animationTime = parseInt(this.slidesContainerMain.dataset.animationTime) || 300;
-            this.visibleSlides = parseInt(this.slidesContainerMain.dataset.nbLeft) || 2;
-            this.main_height = this.slidesContainerMain.dataset.heightSlider ?? '300px';
-
-            if( isNaN(this.visibleSlides) || this.visibleSlides < 0) {
-                this.visibleSlides = 0;
-            }
-
-            if( isNaN(this.animationTime) || this.animationTime < 0) {
-                this.animationTime = 0;
-            }
-
-            this.isAnimating = false;
-            this.initialize();
-        }
-
-        initialize() {
-            this.updateSlideListeners();
-            this.addNavigationButtons(); // Méthode pour gérer les boutons de navigation
-            this.initializeResizeObserver(); // Initialise le ResizeObserver
-
-            const slideCount = this.slidesContainer.children.length;
-            if (slideCount === 0) {
-                this.slidesContainerMain.style.display = 'none';
-            } else if (slideCount === 1) {
-                this.scrollToSlide(0);
-            } else {
-                const initialIndex = slideCount >= this.visibleSlides ? this.visibleSlides : 1;
-                this.scrollToSlide(initialIndex);
-            }
-
-            this.slidesContainerMain.style.setProperty('--height-slider-featured', this.main_height);
-            this.slidesContainerMain.style.setProperty('--animation-time', this.animationTime+'ms');
-
-        }
-
-        // Méthode pour récupérer la valeur calculée d'une variable CSS
-        getComputedCSSVariable(variableName) {
-            const tempElement = document.createElement('div');
-            tempElement.style.position = 'absolute';
-            tempElement.style.visibility = 'hidden';
-            tempElement.style.width = 'var('+variableName+')';
-            this.slidesContainerMain.appendChild(tempElement);
-            const computedValue = getComputedStyle(tempElement).width;
-            this.slidesContainerMain.removeChild(tempElement);
-            return parseFloat(computedValue);
-        }
-
-        initializeResizeObserver() {
-            const observer = new ResizeObserver(entries => {
-                const widthPoster = this.getComputedCSSVariable('--width-poster-base');
-                const widthThumb = this.getComputedCSSVariable('--width-thumb');
-                const widthCollapsed = this.getComputedCSSVariable('--width-collapsed');
-                const totalRequiredWidth = widthPoster + widthThumb + (2 * widthCollapsed);
-
-                for (let entry of entries) {
-                    const width = entry.contentRect.width;
-                    if (width <= totalRequiredWidth) {
-                        this.slidesContainerMain.classList.add('without_poster');
-                    } else {
-                        this.slidesContainerMain.classList.remove('without_poster');
-                    }
-
-                    const rect = this.slidesContainerMain.getBoundingClientRect();
-                    const rect2 = this.slidesContainer.getBoundingClientRect();
-
-                    if (rect2.width > rect.width && this.isAnimating === false) {
-                        const slides = Array.from(this.slidesContainer.children);
-                        const targetIndex = slides.findIndex(slide => slide.classList.contains('active'));
-                        this.clearActiveSlide();
-                        slides[this.visibleSlides].classList.add('active');
-                        this.scrollToSlide(targetIndex)
-                        return ;
-                    }
-
-                }
-            });
-
-            observer.observe(this.slidesContainerMain);
-        }
-
-        getCurrentSlideActive() {
-            const slides = Array.from(this.slidesContainer.children);
-            const activeSlide = slides.find(slide => slide.classList.contains('active'));
-            return activeSlide ? slides.indexOf(activeSlide) : 0;
-        }
-
-        nextSlide() {
-            const slideCount = this.slidesContainer.children.length;  // Nombre total de slides
-            const nextIndex = (this.getCurrentSlideActive() + 1) % slideCount;  // Retour au premier après le dernier
-            this.scrollToSlide(nextIndex);
-        }
-
-        prevSlide() {
-            const slideCount = this.slidesContainer.children.length;  // Nombre total de slides
-            const prevIndex = (this.getCurrentSlideActive() - 1 + slideCount) % slideCount;  // Retour au dernier après le premier
-            this.scrollToSlide(prevIndex);
-        }
-
-        addNavigationButtons() {
-            const nextButton = this.slidesContainerMain.querySelector('.next-btn');
-            const prevButton = this.slidesContainerMain.querySelector('.prev-btn');
-
-            if (nextButton) {
-                nextButton.addEventListener('click', () => this.nextSlide());
-            }
-
-            if (prevButton) {
-                prevButton.addEventListener('click', () => this.prevSlide());
-            }
-        }
-
-        moveXSlideToEnd(slides, targetIndex, currentIndex) {
-
-            if (currentIndex === 0) {
-                this.clearActiveSlide();
-                slides[targetIndex].classList.add('active');
-            }
-            if (targetIndex === currentIndex + this.visibleSlides) {
-                this.isAnimating = false;  // Libère le verrou
-                return;
-            }
-
-            try {
-
-                const elem = slides[currentIndex];
-                elem.classList.remove('active');
-                this.slidesContainer.appendChild(elem.cloneNode(true));
-                elem.classList.add('removeAnimation');
-                let t = this.animationTime / this.visibleSlides;
-
-                if (currentIndex > 0) {
-                    t= t/ ( targetIndex - 3 );
-                    if(t <= 75) {
-                        t=75;
-                    }
-                }
-
-                this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
-
-                elem.style.transition = `width `+t+`ms linear`;
-                setTimeout(() => {
-                    elem.remove();
-                    elem.style.transition = '';
-                    this.updateSlideListeners();
-                    this.moveXSlideToEnd(slides, targetIndex, currentIndex + 1);
-                }, t);
-
-            }catch (e){
-                this.isAnimating = false;  // Libère le verrou
-                throw e
-            }
-
-        }
-
-        moveXSlideToStart(slides, targetIndex, currentIndex) {
-
-            if (currentIndex === this.slidesContainer.children.length - 1) {
-                this.clearActiveSlide();
-                slides[targetIndex].classList.add('active');
-            }
-            if (currentIndex === this.slidesContainer.children.length - 1 - (this.visibleSlides - targetIndex)) {
-                this.isAnimating = false;  // Libère le verrou
-                return;
-            }
-
-            try {
-                const elem = slides[currentIndex];
-                this.slidesContainer.insertBefore(elem, this.slidesContainer.firstElementChild);
-                const t = this.animationTime / this.visibleSlides;
-                elem.style.transition = `width `+t+`ms linear`;
-                elem.classList.add('animate-slide-in');
-                this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
-                setTimeout(() => {
-                    elem.classList.remove('animate-slide-in');
-                    elem.style.transition = '';
-                    this.updateSlideListeners();
-                    this.moveXSlideToStart(slides, targetIndex, currentIndex - 1);
-                }, t);
-
-            }catch (e){
-                this.isAnimating = false;  // Libère le verrou
-                throw e
-            }
-
-        }
-
-        scrollToSlide(targetIndex) {
-
-            if (this.isAnimating) {
-                return;// Empêche l'exécution si l'animation est en cours
-            }
-            this.isAnimating = true;  // Active le verrou d'animation
-
-            const slides = Array.from(this.slidesContainer.children);
-            const currentIndex = slides.findIndex(slide => slide.classList.contains('active'));
-            const rect = this.slidesContainerMain.getBoundingClientRect();
-            const rect2 = this.slidesContainer.getBoundingClientRect();
-
-            if (rect2.width <= rect.width) {
-                this.slidesContainerMain.style.setProperty('--animation-time', this.animationTime+'ms');
-                this.clearActiveSlide();
-                slides[targetIndex].classList.add('active');
-                this.isAnimating = false;  // Libère le verrou
-                return;
-            }
-
-            if (targetIndex > currentIndex) {
-                this.moveXSlideToEnd(slides, targetIndex, 0);
-            } else if (targetIndex < currentIndex) {
-                this.moveXSlideToStart(slides, targetIndex, this.slidesContainer.children.length - 1);
-            } else {
-                this.isAnimating = false;  // Libère le verrou
-            }
-        }
-
-        clearActiveSlide() {
-            this.slidesContainer.querySelectorAll('.slide.active').forEach(slide => slide.classList.remove('active'));
-        }
-
-        updateSlideListeners() {
-            const slides = Array.from(this.slidesContainer.children);
-            slides.forEach((slide, index) => {
-                slide.onclick = () => this.scrollToSlide(index);
-            });
-        }
-    }
-
-    // Utilisation
-    document.addEventListener("DOMContentLoaded", () => {
-        new Slider('.slider-container-featured');
-    });
-
-</script>

@@ -12,16 +12,35 @@
 
             {if isSectionEnabled('videos') && userquery::getInstance()->perm_check('view_video', true)}
 				{if config('display_featured_video') == 'yes'}
-                    {include file="$style_dir/blocks/featured_video_slider.html" }
 
                     {ANCHOR place='before_features_videos'}
                     <section class="clearfix featured-videos">
                         <h1>{lang code="featured_videos"}</h1>
-                        <div id="featured_vid_sec" class="clearfix row"></div>
-                        <div id="featured_pre" class="clearfix"></div>
-                        <div id="featured-loadmore" class="clearfix text-center">
-                            <button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
-                        </div>
+
+                        {if !is_array($featured_videos)}
+                            <div class="clearfix row">
+                                <span class="well well-info btn-block">{lang code='no_featured_videos_found'}</span>
+                            </div>
+                        {else}
+
+                            {if in_array(config('featured_video_style'), ['classic', false])}
+                                <div id="featured_vid_sec" class="clearfix row"></div>
+                                <div id="featured_pre" class="clearfix"></div>
+                                <div id="featured-loadmore" class="clearfix text-center">
+                                    <button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
+                                </div>
+                            {elseif config(featured_video_style) == 'modern'}
+                                {include
+                                    file="$style_dir/blocks/featured_video_slider.html"
+                                    video_list=$featured_videos
+                                    animationTime="2500"
+                                    timerAutoNext="50000"
+                                    nbLeft="1"
+                                    height="300px"
+                                }
+                            {/if}
+
+                        {/if}
                     </section>
                 {/if}
                 {ANCHOR place='after_features_videos'}

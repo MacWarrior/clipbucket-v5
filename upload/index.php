@@ -71,6 +71,11 @@ if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && 
         assign('featured_collections', Collection::getInstance()->getAll($params));
     }
 
+    if( config('display_featured_video') == 'yes' ){
+        $params = Video::getInstance()->getFilterParams('featured', []);
+        assign('featured_videos', Video::getInstance()->getAll($params));
+    }
+
     template_files('index.html');
 }
 display_it();
