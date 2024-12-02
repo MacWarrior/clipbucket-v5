@@ -2,102 +2,12 @@
 <div class="slider-container-featured"
      data-animation-time="{$animationTime}" {* temps d'animation de reference *}
      data-timer-auto-next="{$timerAutoNext}" {* temps de pause entre les slides automatique *}
-     data-nb_left="{$nbLeft}" {* nombre d'element a conserver visible a gauche *}
+     data-nb-left="{$nbLeft}" {* nombre d'element a conserver visible a gauche *}
      data-height-slider="{$height}" {* hauteur fixe du slider *}
 >
     <div id='calculatoire_div'><!-- a conserver, obligatoirement car utile pour le JS --></div>
     <div class="slides" id="slides">
         {foreach $video_list as $video}
-            <div class="slide">
-                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
-                </span>
-                {/if}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original')}" >
-                </span>
-                <div class="movie-details">
-                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
-                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
-                    <div class="movie-rating">
-                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
-                    </div>
-                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
-                </div>
-            </div>
-            <div class="slide">
-                {if config('enable_video_poster') == 'yesss' && !empty($video.default_poster)}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
-                </span>
-                {/if}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original')}" >
-                </span>
-                <div class="movie-details">
-                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
-                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
-                    <div class="movie-rating">
-                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
-                    </div>
-                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
-                </div>
-            </div>
-            <div class="slide">
-                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
-                </span>
-                {/if}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original')}" >
-                </span>
-                <div class="movie-details">
-                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
-                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
-                    <div class="movie-rating">
-                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
-                    </div>
-                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
-                </div>
-            </div>
-            <div class="slide">
-                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
-                </span>
-                {/if}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original')}" >
-                </span>
-                <div class="movie-details">
-                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
-                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
-                    <div class="movie-rating">
-                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
-                    </div>
-                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
-                </div>
-            </div>
-            <div class="slide">
-                {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster">
-                </span>
-                {/if}
-                <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
-                    <img src="{get_thumb($video, false, 'original')}" >
-                </span>
-                <div class="movie-details">
-                    <div class="movie-title">{display_clean($video.title|truncate:50)}</div>
-                    <div class="movie-description" title="{display_clean($video.description)}">{display_clean($video.description)}</div>
-                    <div class="movie-rating">
-                        <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
-                    </div>
-                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
-                </div>
-            </div>
             <div class="slide">
                 {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
                 <span class="image-container  {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">

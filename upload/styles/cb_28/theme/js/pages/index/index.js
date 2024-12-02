@@ -175,6 +175,10 @@ $(function () {
             this.visibleSlides = parseInt(this.slidesContainerMain.dataset.nbLeft) || 1;
             this.main_height = this.slidesContainerMain.dataset.heightSlider ?? '300px';
 
+            if( this.visibleSlides+2 > this.getNumberOfSlides()) {
+                this.visibleSlides = this.getNumberOfSlides()-2;
+            }
+
             if( isNaN(this.visibleSlides) || this.visibleSlides < 0) {
                 this.visibleSlides = 0;
             }
@@ -191,6 +195,7 @@ $(function () {
             this.updateSlideListeners();
             this.addNavigationButtons(); // Méthode pour gérer les boutons de navigation
             this.initializeResizeObserver(); // Initialise le ResizeObserver
+            this.initializeResizeObserverParent(); // Initialise le ResizeObserver
 
             const slideCount = this.slidesContainer.children.length;
             if (slideCount === 0) {
@@ -246,6 +251,17 @@ $(function () {
             return this.slidesContainer.children.length; // Compte les enfants (slides) du conteneur
         }
 
+        canDivGrowWidth(div, currentWidth) {
+            // Obtenez le conteneur parent de l'élément
+            const parent = div.parentElement;
+
+            // Largeur disponible dans le conteneur parent
+            const parentWidth = parent.offsetWidth;
+
+            // Vérifiez si la largeur de l'élément est inférieure à celle du conteneur
+            return currentWidth < parentWidth;
+        }
+
         initializeResizeObserver() {
             const observer = new ResizeObserver(entries => {
                 const widthPoster = this.getComputedCSSVariable('--width-poster-base');
@@ -256,9 +272,11 @@ $(function () {
                 for (let entry of entries) {
                     const width = entry.contentRect.width;
                     /** @todo ca particulier si moin de 2 ou 3 images */
-                    if (width <= totalRequiredWidth && this.getNumberOfSlides() >= 1+parseInt(this.visibleSlides)) {
-                        console.log(width+' < '+ totalRequiredWidth)
-                        console.log(this.getNumberOfSlides()+' >= '+ (1+parseInt(this.visibleSlides)))
+                    if (
+                        width <= totalRequiredWidth
+                        && this.getNumberOfSlides() >= 2+parseInt(this.visibleSlides)
+                        && this.canDivGrowWidth(this.slidesContainerMain, totalRequiredWidth) === false
+                    ) {
                         this.slidesContainerMain.classList.add('without_poster');
                     } else {
                         this.slidesContainerMain.classList.remove('without_poster');
@@ -270,7 +288,6 @@ $(function () {
                     if (rect2.width > rect.width && this.isAnimating === false) {
                         const slides = Array.from(this.slidesContainer.children);
                         if(slides[this.visibleSlides] !== undefined) {
-                            console.log("mode slide")
                             const slides = Array.from(this.slidesContainer.children);
                             const targetIndex = slides.findIndex(slide => slide.classList.contains('active'));
                             this.clearActiveSlide();
@@ -284,6 +301,31 @@ $(function () {
             });
 
             observer.observe(this.slidesContainerMain);
+        }
+
+        initializeResizeObserverParent() {
+            const observer = new ResizeObserver(entries => {
+                const widthPoster = this.getComputedCSSVariable('--width-poster-base');
+                const widthThumb = this.getComputedCSSVariable('--width-thumb');
+                const widthCollapsed = this.getComputedCSSVariable('--width-collapsed');
+                const totalRequiredWidth = widthPoster + widthThumb + ((1+this.visibleSlides) * widthCollapsed);
+
+                for (let entry of entries) {
+                    const width = entry.contentRect.width;
+                    if (
+                        width <= totalRequiredWidth
+                        && this.getNumberOfSlides() >= 2+parseInt(this.visibleSlides)
+                        && this.canDivGrowWidth(this.slidesContainerMain, totalRequiredWidth) === false
+                    ) {
+                        this.slidesContainerMain.classList.add('without_poster');
+                    } else {
+                        this.slidesContainerMain.classList.remove('without_poster');
+                    }
+
+                }
+            });
+
+            observer.observe(this.slidesContainerMain.parentElement);
         }
 
         getCurrentSlideActive() {
