@@ -451,37 +451,24 @@ class MWIP extends \Migration
         ]);
 
         self::generateConfig('enable_public_video_page', 'no');
-        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . '  ADD COLUMN `allow_public_video_page` ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'no\'',
-            [
-                'table'  => 'user_levels_permissions'
-            ], [
-                'table'  => 'user_levels_permissions',
-                'column' => 'allow_public_video_page'
-            ]
-        );
-        self::alterTable('ALTER TABLE ' . tbl('user_levels_permissions') . ' ADD COLUMN `default_homepage` ENUM(
-            \'homepage\'
-            ,\'videos\'
-            ,\'public_videos\'
-            ,\'photos\'
-            ,\'collections\'
-            ,\'channels\'
-            ,\'my_account\'
-            ,\'login\'
-        ) NOT NULL DEFAULT \'homepage\'',
-            [
-                'table'  => 'user_levels_permissions'
-            ], [
-                'table'  => 'user_levels_permissions',
-                'column' => 'default_homepage'
-            ]
-        );
 
-        $sql = 'INSERT INTO ' . tbl('user_permissions') . ' (permission_type, permission_name, permission_code, permission_desc, permission_default) 
-        SELECT 1, \'Enable public video\', \'allow_public_video_page\', \'Allow user to view public videos\', \'no\' 
-        FROM dual 
-        WHERE NOT exists (SELECT * FROM '.tbl('user_permissions').' WHERE permission_code = \'allow_public_video_page\') ';
-        self::query($sql);
+        self::generatePermission(1, 'allow_public_video_page', 'allow_public_video_page_desc', [
+            1=>'no',
+            2=>'no',
+            3=>'no',
+            4=>'yes',
+            5=>'yes',
+            6=>'no'
+        ]);
+
+        self::generatePermission(4, 'default_homepage', 'default_homepage_desc', [
+            1=>'homepage',
+            2=>'homepage',
+            3=>'homepage',
+            4=>'homepage',
+            5=>'homepage',
+            6=>'homepage'
+        ]);
 
         self::generateTranslation('public_videos', [
             'fr'=>'Vidéos publiques',
@@ -564,6 +551,14 @@ class MWIP extends \Migration
         self::generateTranslation('email_is_not_valid', [
             'fr'=>'%s n\'est pas un email valide',
             'en'=>'%s is not a valid email'
+        ]);
+        self::generateTranslation('allow_public_video_page', [
+            'fr'=>'Autoriser la page de vidéos publiques',
+            'en'=>'Enable public video'
+        ]);
+        self::generateTranslation('allow_public_video_page_desc', [
+            'fr'=>'L\'utilisateur peut voir la page de vidéo publique',
+            'en'=>'Allow user to view public videos page'
         ]);
 
     }

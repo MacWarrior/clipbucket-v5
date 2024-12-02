@@ -593,6 +593,27 @@ class Migration
         Clipbucket_db::getInstance()->executeThrowException($sql);
     }
 
+    /**
+     * @param int $id_type
+     * @param string $name
+     * @param string $description
+     * @param array $array_values
+     * @return void
+     * @throws Exception
+     */
+    public static function generatePermission(int $id_type, string $name, string $description, array $array_values)
+    {
+
+        $sql = 'INSERT IGNORE INTO `' . tbl(UserLevel::getTableNameLevelPermission()) . '` (`id_user_permission_types`, `permission_name`, `permission_description`) 
+        VALUES ('.mysql_clean($id_type).', \''.mysql_clean($name).'\', \''.mysql_clean($description).'\');';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+        $inserted_id = Clipbucket_db::getInstance()->insert_id();
+
+        foreach ($array_values as $user_level_id => $value) {
+            UserLevel::insertUserPermissionValue($user_level_id, $inserted_id, $value);
+        }
+    }
+
     public function start(){}
 
 }
