@@ -3,8 +3,7 @@ define('THIS_PAGE', 'membership_user_levels');
 global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-
+User::getInstance()->hasPermissionOrRedirect('admin_access');
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = [

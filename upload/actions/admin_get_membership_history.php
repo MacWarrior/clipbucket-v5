@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'get_membership_history');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 if (!empty($_POST['page'])) {
     $sql_limit = create_query_limit($_POST['page'], config('video_list_view_video_history'));

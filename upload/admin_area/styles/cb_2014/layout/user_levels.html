@@ -65,9 +65,9 @@
                                     </div>
                                     {if $perm.permission_name == 'default_homepage'}
                                         <div class="col-md-5 paddingTop">
-                                            <select name="default_homepage" id="default_homepage">
+                                            <select name="permission_value[{$perm.id_user_levels_permission}]" >
                                                 {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
-                                                    <option value="{$page}" {if $page== $level_perms.default_homepage}selected="selected"{/if}>{lang($page)}</option>
+                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if}>{lang($page)}</option>
                                                 {/foreach}
                                             </select>
                                         </div>

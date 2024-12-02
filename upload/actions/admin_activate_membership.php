@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'update_phrase');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 $id_membership = $_POST['id_membership'];
 $membership = Membership::getInstance()->getOne(['id_membership'=>$id_membership]);
