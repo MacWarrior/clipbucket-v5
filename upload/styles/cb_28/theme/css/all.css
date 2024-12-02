@@ -7886,6 +7886,10 @@ textarea#comment_box {
 .slider-container-featured.without_poster {
   --width-poster: 0;
 }
+.slider-container-featured.without_poster .slide.active ,
+.slider-container-featured.without_poster .slide.active:not(:has(.poster)) .image-container:not(:has(.poster)) {
+  width: var(--width-thumb);
+}
 
 .slider-container-featured .animate-slide-in {
   animation: slideInWidth var(--animation-time) forwards;
@@ -8104,4 +8108,18 @@ textarea#comment_box {
   .slider-container-featured .slide:has(.poster) .movie-details {
     padding-left: 1rem;
   }
+  .slider-container-featured .slide.active ,
+  .slider-container-featured .slide.active  .image-container:not(:has(.poster)),
+  .slider-container-featured.without_poster .slide.active ,
+  .slider-container-featured .slides ,
+  .slider-container-featured.without_poster .slide.active:not(:has(.poster)) .image-container:not(:has(.poster)) ,
+  .slider-container-featured {
+    width: 100%;
+    max-width: 100%;
+   }
+
+  .slider-container-featured .slide.active  .image-container .poster {
+    display: none;
+  }
+
 }

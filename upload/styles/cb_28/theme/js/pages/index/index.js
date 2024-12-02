@@ -256,8 +256,10 @@ $(function () {
                 for (let entry of entries) {
                     const width = entry.contentRect.width;
                     /** @todo ca particulier si moin de 2 ou 3 images */
-                    if (width <= totalRequiredWidth && this.getNumberOfSlides() >= 1+this.visibleSlides) {
-//                        this.slidesContainerMain.classList.add('without_poster');
+                    if (width <= totalRequiredWidth && this.getNumberOfSlides() >= 1+parseInt(this.visibleSlides)) {
+                        console.log(width+' < '+ totalRequiredWidth)
+                        console.log(this.getNumberOfSlides()+' >= '+ (1+parseInt(this.visibleSlides)))
+                        this.slidesContainerMain.classList.add('without_poster');
                     } else {
                         this.slidesContainerMain.classList.remove('without_poster');
                     }
@@ -266,7 +268,9 @@ $(function () {
                     const rect2 = this.slidesContainer.getBoundingClientRect();
 
                     if (rect2.width > rect.width && this.isAnimating === false) {
+                        const slides = Array.from(this.slidesContainer.children);
                         if(slides[this.visibleSlides] !== undefined) {
+                            console.log("mode slide")
                             const slides = Array.from(this.slidesContainer.children);
                             const targetIndex = slides.findIndex(slide => slide.classList.contains('active'));
                             this.clearActiveSlide();
