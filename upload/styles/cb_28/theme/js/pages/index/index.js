@@ -222,7 +222,6 @@ $(function () {
             if(this.getNumberOfSlides() <= 1) {
                 return ;
             }
-            console.log(this.getNumberOfSlides())
 
             let instance = this;
             clearInterval(this.interval)
@@ -334,10 +333,20 @@ $(function () {
                 let t = this.animationTime / this.visibleSlides;
 
                 if (currentIndex > 0) {
-                    t= t/ ( targetIndex - 3 );
+
+                    let diviseur = ( targetIndex - 3 );
+                    if(diviseur <= 0) {
+                        diviseur = 3
+                    }
+
+                    t= t/ diviseur;
                     if(t <= 75) {
                         t=75;
                     }
+                }
+
+                if(t === Infinity) {
+                    t= 250;
                 }
 
                 this.slidesContainerMain.style.setProperty('--animation-time', t+'ms');
