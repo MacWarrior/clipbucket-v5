@@ -78,14 +78,14 @@ if ($cbcollection->is_viewable($collection_id)) {
         subtitle($cdetails['collection_name']);
         if ($cdetails['type'] == 'photos') {
             if (SEO == 'yes') {
-                $link = '/photo_upload/' . base64_encode(serialize($cdetails['collection_id']));
+                $link = '/photo_upload/' . base64_encode(json_encode($cdetails['collection_id']));
             }
-            $link = '/photo_upload.php?collection=' . base64_encode(serialize($cdetails['collection_id']));
+            $link = '/photo_upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         } elseif ($cdetails['type'] == 'videos') {
             if (SEO == 'yes') {
-                $link = '/upload/' . base64_encode(serialize($cdetails['collection_id']));
+                $link = '/upload/' . base64_encode(json_encode($cdetails['collection_id']));
             }
-            $link = '/upload.php?collection=' . base64_encode(serialize($cdetails['collection_id']));
+            $link = '/upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         }
         assign('link_add_more',  $link);
     }
