@@ -80,13 +80,13 @@ class Upload
 
         $userid = user_id();
         if (!$userid) {
-            if (has_access('allow_video_upload', true, false)) {
+            if (User::getInstance()->hasPermission('allow_video_upload')) {
                 $userid = userquery::getInstance()->get_anonymous_user();
             } else {
                 e(lang('you_not_logged_in'));
                 return false;
             }
-        } else if (!has_access('allow_video_upload', true, true)) {
+        } else if (!User::getInstance()->hasPermission('allow_video_upload')) {
             e(lang('insufficient_privileges'));
             return false;
         }

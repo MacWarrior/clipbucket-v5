@@ -2,8 +2,7 @@
 define('THIS_PAGE', 'mass_email');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('member_moderation');
+User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 pages::getInstance()->page_redir();
 
 if (config('disable_email') == 'yes') {

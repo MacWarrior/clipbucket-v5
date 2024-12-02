@@ -197,133 +197,307 @@ class Migration
 
     /**
      * @param $sql_alter
-     * @param array $params_exists fields available : table, column, constraint_name, constraint_type, constraint_schema
+     * @param array $params_exists fields available : table, column, columns, constraint
      * @param array $params_not_exists
      * @throws Exception
      */
     public static function alterTable($sql_alter, array $params_exists = [], array $params_not_exists = [])
     {
-        $table = 'COLUMNS';
+        if (method_exists('Clipbucket_db', 'getTableName')) {
+            // Temp fix : Case when you just updated to revision 187 with core update function ; previous function name is still loaded
+            $dbname = Clipbucket_db::getInstance()->getTableName();
+        } else {
+            $dbname = Clipbucket_db::getInstance()->getDBName();
+        }
+
         $conditions = [];
-        $conditions[] = 'TABLE_SCHEMA = \'{dbname}\'';
 
-        if (!empty($params_exists['table'])) {
-            $conditions[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
-        }
-
-        if (!empty($params_exists['column'])) {
-            $conditions[] = 'COLUMN_NAME = \'' . mysql_clean($params_exists['column']) . '\'';
-            if( empty($params_exists['table']) ){
+        if (!empty($params_exists)) {
+            if( (!empty($params_exists['column']) || !empty($params_exists['columns'])) && empty($params_exists['table']) ){
                 if( in_dev() ){
-                    $msg = 'Table constraint has to be specified in alterTable with column constraint, in migration '.get_called_class();
+                    $msg = 'Table constraint has to be specified in alterTable with column constraint, in migration ';
                 } else {
-                    $msg = 'A technical error occured on migration '.get_called_class();
+                    $msg = 'A technical error occurred on migration ';
                 }
-                throw new Exception($msg);
+                throw new Exception($msg . get_called_class());
             }
-        }
-        if (!empty($params_exists['columns'])) {
-            $conditions[] = 'COLUMN_NAME IN (\'' . implode('\',\'', $params_exists['columns']) . '\')';
-            if( empty($params_exists['table']) ){
-                if( in_dev() ){
-                    $msg = 'Table constraint has to be specified in alterTable with columns constraint, in migration '.get_called_class();
-                } else {
-                    $msg = 'A technical error occured on migration '.get_called_class();
+
+            if (!empty($params_exists['column'])) {
+                $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
+                $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($params_exists['column']) . '\'';
+
+                $conditions[] = '(
+                    SELECT COUNT(*) FROM information_schema.COLUMNS WHERE
+                    ' . implode(' AND ', $conditions_column) . ' LIMIT 1
+                ) = 1';
+            } else if (!empty($params_exists['columns'])) {
+                foreach ($params_exists['columns'] as $column) {
+                    $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                    $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
+                    $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($column) . '\'';
+
+                    $conditions[] = '(
+                        SELECT COUNT(*) FROM information_schema.COLUMNS WHERE
+                        ' . implode(' AND ', $conditions_column) . ' LIMIT 1
+                    ) = 1';
                 }
-                throw new Exception($msg);
+            } else if (!empty($params_exists['table'])) {
+                $conditions_table[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                $conditions_table[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
+
+                $conditions[] = '(
+                    SELECT COUNT(*) FROM information_schema.COLUMNS WHERE
+                    ' . implode(' AND ', $conditions_table) . ' LIMIT 1
+                ) >= 1';
             }
-        }
 
-        if (!empty($params_exists['constraint_name'])) {
-            $conditions[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_exists['constraint_name']) . '\'';
-            $table = 'TABLE_CONSTRAINTS';
-        }
+            if (!empty($params_exists['constraint'])) {
+                if( empty($params_exists['constraint']['type']) ){
+                    if( in_dev() ){
+                        $msg = 'Missing constraint type, in migration ';
+                    } else {
+                        $msg = 'A technical error occurred on migration ';
+                    }
+                    throw new Exception($msg . get_called_class());
+                }
 
-        if (!empty($params_exists['constraint_type'])) {
-            $conditions[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params_exists['constraint_type']) . '\'';
-            $table = 'TABLE_CONSTRAINTS';
-        }
+                $type = $params_exists['constraint']['type'];
+                switch($type){
+                    case 'FULLTEXT':
+                    case 'UNIQUE':
+                        $required_values = ['name', 'table'];
+                        break;
 
-        if (!empty($params_exists['constraint_schema'])) {
-            $conditions[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params_exists['constraint_schema']) . '\'';
-            $table = 'TABLE_CONSTRAINTS';
+                    case 'FOREIGN KEY':
+                    case 'CONSTRAINT':
+                        $required_values = ['name'];
+                        break;
+
+                    case 'PRIMARY KEY':
+                        $required_values = ['table'];
+                        break;
+
+                    default:
+                        if( in_dev() ){
+                            $msg = 'Unsupported constraint type : ' . $type . ', in migration ';
+                        } else {
+                            $msg = 'A technical error occurred on migration ';
+                        }
+                        throw new Exception($msg . get_called_class());
+                }
+
+                if( !empty($required_values) ){
+                    foreach($required_values as $value){
+                        if( empty($params_exists['constraint'][$value]) ){
+                            if( in_dev() ){
+                                $msg = 'Missing constraint ' . $value . ' for type ' . $type . ', in migration ';
+                            } else {
+                                $msg = 'A technical error occurred on migration ';
+                            }
+                            throw new Exception($msg . get_called_class());
+                        }
+                    }
+                }
+
+                $conditions_constraint = [];
+                $table_constraint = '';
+                switch($type){
+                    case 'FULLTEXT':
+                        $table_constraint = 'STATISTICS';
+                        $conditions_constraint[] = 'INDEX_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'INDEX_NAME = \'' . $params_exists['constraint']['name'] . '\'';
+                        $conditions_constraint[] = 'TABLE_NAME = \'' . tbl($params_exists['constraint']['table']) . '\'';
+                        break;
+
+                    case 'UNIQUE':
+                        $table_constraint = 'TABLE_CONSTRAINTS';
+                        $conditions_constraint[] = 'CONSTRAINT_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_exists['constraint']['name']) . '\'';
+                        $conditions_constraint[] = 'TABLE_NAME = \'' . tbl($params_exists['constraint']['table']) . '\'';
+                        break;
+
+                    case 'FOREIGN KEY':
+                    case 'CONSTRAINT':
+                        $table_constraint = 'TABLE_CONSTRAINTS';
+                        $conditions_constraint[] = 'CONSTRAINT_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_exists['constraint']['name']) . '\'';
+                        break;
+
+                    case 'PRIMARY KEY':
+                        $table_constraint = 'TABLE_CONSTRAINTS';
+                        $conditions_constraint[] = 'CONSTRAINT_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'TABLE_NAME = \'' . tbl($params_exists['constraint']['table']) . '\'';
+                        break;
+                }
+
+                $conditions[] = '(
+                    SELECT COUNT(*) FROM information_schema.' . $table_constraint . ' WHERE
+                    ' . implode(' AND ', $conditions_constraint) . ' LIMIT 1
+                ) = 1';
+            }
+
         }
 
         if (!empty($params_not_exists)) {
-            $table_not_exists = 'COLUMNS';
-            $conditions_not_exists = [];
-            $conditions_not_exists[] = 'TABLE_SCHEMA = \'{dbname}\'';
-            if (!empty($params_not_exists['table'])) {
-                $conditions_not_exists[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
+            if( (!empty($params_not_exists['column']) || !empty($params_not_exists['columns'])) && empty($params_not_exists['table']) ){
+                if( in_dev() ){
+                    $msg = 'Table constraint has to be specified in alterTable with column constraint, in migration ';
+                } else {
+                    $msg = 'A technical error occurred on migration ';
+                }
+                throw new Exception($msg . get_called_class());
             }
 
             if (!empty($params_not_exists['column'])) {
-                $conditions_not_exists[] = 'COLUMN_NAME = \'' . mysql_clean($params_not_exists['column']) . '\'';
-                if( empty($params_not_exists['table']) ){
+                $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
+                $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($params_not_exists['column']) . '\'';
+
+                $conditions[] = '(
+                    SELECT COUNT(*) FROM information_schema.COLUMNS WHERE
+                    ' . implode(' AND ', $conditions_column) . ' LIMIT 1
+                ) = 0';
+            } else if (!empty($params_not_exists['columns'])) {
+                foreach ($params_not_exists['columns'] as $column) {
+                    $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                    $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
+                    $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($column) . '\'';
+
+                    $conditions[] = '(
+                        SELECT COUNT(*) FROM information_schema.COLUMNS WHERE
+                        ' . implode(' AND ', $conditions_column) . ' LIMIT 1
+                    ) = 0';
+                }
+            } else if (!empty($params_not_exists['table'])) {
+                $conditions_table[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                $conditions_table[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
+
+                $conditions[] = '(
+                    SELECT COUNT(*) FROM information_schema.COLUMNS WHERE
+                    ' . implode(' AND ', $conditions_table) . ' LIMIT 1
+                ) = 0';
+            }
+
+            if (!empty($params_not_exists['constraint'])) {
+                if( empty($params_not_exists['constraint']['type']) ){
                     if( in_dev() ){
-                        $msg = 'Table constraint has to be specified in alterTable with column constraint, in migration '.get_called_class();
+                        $msg = 'Missing constraint type, in migration ';
                     } else {
-                        $msg = 'A technical error occured on migration '.get_called_class();
+                        $msg = 'A technical error occurred on migration ';
                     }
-                    throw new Exception($msg);
+                    throw new Exception($msg . get_called_class());
                 }
-            }
-            if (!empty($params_not_exists['columns'])) {
-                $conditions_not_exists[] = 'COLUMN_NAME IN (\'' . implode('\',\'', $params_not_exists['columns']) . '\')';
-                if( empty($params_not_exists['table']) ){
-                    if( in_dev() ){
-                        $msg = 'Table constraint has to be specified in alterTable with columns constraint, in migration '.get_called_class();
-                    } else {
-                        $msg = 'A technical error occured on migration '.get_called_class();
+
+                $type = $params_not_exists['constraint']['type'];
+                switch($type){
+                    case 'FULLTEXT':
+                    case 'UNIQUE':
+                        $required_values = ['name', 'table'];
+                        break;
+
+                    case 'FOREIGN KEY':
+                    case 'CONSTRAINT':
+                        $required_values = ['name'];
+                        break;
+
+                    case 'PRIMARY KEY':
+                        $required_values = ['table'];
+                        break;
+
+                    default:
+                        if( in_dev() ){
+                            $msg = 'Unsupported constraint type : ' . $type . ', in migration ';
+                        } else {
+                            $msg = 'A technical error occurred on migration ';
+                        }
+                        throw new Exception($msg . get_called_class());
+                }
+
+                if( !empty($required_values) ){
+                    foreach($required_values as $value){
+                        if( empty($params_not_exists['constraint'][$value]) ){
+                            if( in_dev() ){
+                                $msg = 'Missing constraint ' . $value . ' for type ' . $type . ', in migration ';
+                            } else {
+                                $msg = 'A technical error occurred on migration ';
+                            }
+                            throw new Exception($msg . get_called_class());
+                        }
                     }
-                    throw new Exception($msg);
-                }
-            }
-
-            if (!empty($params_not_exists['constraint_name'])) {
-                $conditions_not_exists[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_not_exists['constraint_name']) . '\'';
-                $table_not_exists = 'TABLE_CONSTRAINTS';
-            }
-
-            if (!empty($params_not_exists['constraint_type'])) {
-                $conditions_not_exists[] = 'CONSTRAINT_TYPE = \'' . mysql_clean($params_not_exists['constraint_type']) . '\'';
-                $table_not_exists = 'TABLE_CONSTRAINTS';
-            }
-
-            if (!empty($params_not_exists['constraint_schema'])) {
-                $conditions_not_exists[] = 'CONSTRAINT_SCHEMA = \'' . mysql_clean($params_not_exists['constraint_schema']) . '\'';
-                $table_not_exists = 'TABLE_CONSTRAINTS';
-            }
-
-            if (!empty($params_not_exists['constraint_index'])) {
-                $conditions_not_exists[] = 'INDEX_TYPE = \'' . $params_not_exists['constraint_index']['type'] . '\'';
-
-                if (method_exists('Clipbucket_db', 'getTableName')) {
-                    // Temp fix : Case when you just updated to revision 187 with core update function ; previous function name is still loaded
-                    $conditions_not_exists[] = 'TABLE_SCHEMA = \'' . Clipbucket_db::getInstance()->getTableName() . '\'';
-                } else {
-                    $conditions_not_exists[] = 'TABLE_SCHEMA = \'' . Clipbucket_db::getInstance()->getDBName() . '\'';
                 }
 
-                $conditions_not_exists[] = 'INDEX_NAME = \'' . $params_not_exists['constraint_index']['name'] . '\'';
-                $conditions_not_exists[] = 'TABLE_NAME = \'' . tbl($params_not_exists['constraint_index']['table']) . '\'';
-                $table_not_exists = 'STATISTICS';
-            }
+                $conditions_constraint = [];
+                $table_constraint = '';
+                switch($type){
+                    case 'FULLTEXT':
+                        $table_constraint = 'STATISTICS';
+                        $conditions_constraint[] = 'INDEX_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'INDEX_NAME = \'' . $params_not_exists['constraint']['name'] . '\'';
+                        $conditions_constraint[] = 'TABLE_NAME = \'' . tbl($params_not_exists['constraint']['table']) . '\'';
+                        break;
 
-            $conditions[] = '(
-                SELECT COUNT(*) FROM information_schema.' . $table_not_exists . ' WHERE
-                ' . implode(' AND ', $conditions_not_exists) . ' LIMIT 1
-                ) = 0 ';
+                    case 'UNIQUE':
+                        $table_constraint = 'TABLE_CONSTRAINTS';
+                        $conditions_constraint[] = 'CONSTRAINT_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_not_exists['constraint']['name']) . '\'';
+                        $conditions_constraint[] = 'TABLE_NAME = \'' . tbl($params_not_exists['constraint']['table']) . '\'';
+                        break;
+
+                    case 'FOREIGN KEY':
+                    case 'CONSTRAINT':
+                        $table_constraint = 'TABLE_CONSTRAINTS';
+                        $conditions_constraint[] = 'CONSTRAINT_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_NAME = \'' . mysql_clean($params_not_exists['constraint']['name']) . '\'';
+                        break;
+
+                    case 'PRIMARY KEY':
+                        $table_constraint = 'TABLE_CONSTRAINTS';
+                        $conditions_constraint[] = 'CONSTRAINT_TYPE = \'' . $type . '\'';
+                        $conditions_constraint[] = 'CONSTRAINT_SCHEMA = \'' . $dbname . '\'';
+                        $conditions_constraint[] = 'TABLE_NAME = \'' . tbl($params_not_exists['constraint']['table']) . '\'';
+                        break;
+                }
+
+                $conditions[] = '(
+                    SELECT COUNT(*) FROM information_schema.' . $table_constraint . ' WHERE
+                    ' . implode(' AND ', $conditions_constraint) . ' LIMIT 1
+                ) = 0';
+            }
         }
 
-        $sql = 'set @var=if((SELECT true FROM information_schema.' . $table . ' WHERE
+        try {
+            Clipbucket_db::getInstance()->commit();
+        }
+        catch(Exception $e){}
+
+        $sql = 'set @var=if((SELECT true WHERE
         ' . implode(' AND ', $conditions) . ' LIMIT 1)
         , \'' . addslashes($sql_alter) . '\'
         ,\'SELECT 1\');';
         self::query($sql);
-        self::query('prepare stmt from @var;');
-        self::query('execute stmt;');
-        self::query('deallocate prepare stmt;');
+
+        try{
+            self::query('prepare stmt from @var;');
+            self::query('execute stmt;');
+            self::query('deallocate prepare stmt;');
+        }
+        catch(Exception $e){
+            $msg = 'SQL : ' . $sql . "\n";
+            throw new Exception($msg . $e->getMessage());
+        }
+
+        try {
+            Clipbucket_db::getInstance()->begin_transaction();
+        }
+        catch(Exception $e){}
     }
 
     /**
@@ -358,9 +532,27 @@ class Migration
      */
     public static function query($sql)
     {
+        $sql = self::prepare($sql);
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+    /**
+     * @throws Exception
+     */
+    public static function req($sql): array
+    {
+        $sql = self::prepare($sql);
+        return Clipbucket_db::getInstance()->_select($sql);
+    }
+
+    /**
+     * @param $sql
+     * @return string
+     */
+    public static function prepare($sql): string
+    {
         $sql = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $sql);
         $sql = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getDBName(), $sql);
-        Clipbucket_db::getInstance()->executeThrowException($sql);
+        return $sql;
     }
 
     /**

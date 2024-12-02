@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'home');
 
 require 'includes/config.inc.php';
 global $cbvid, $userquery, $cbphoto, $cbvideo;
-$userquery->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 
 assign('user', $userquery->get_user_details(user_id()));
 $videos = $userquery->get_user_vids(user_id(), false, false, true);

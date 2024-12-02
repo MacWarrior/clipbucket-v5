@@ -20,7 +20,7 @@
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<input type="button" class="btn mtm btn-block btn-primary" name="add_to_playlist" value="{lang code='add_to_playlist'}" class="cb_button" onclick="_cb.addToPlaylist('{$params.id}','add_playlist_form','{$type}');">
 				</div>
-				{if (has_access('allow_create_playlist',false,false))}
+				{if User::getInstance()->hasPermission('allow_create_playlist')}
 				<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 					<a class="btn btn-block mtm btn-success" href="javascript:void(0);" onClick="$('#add_playlist_form').css('display','none');$('#new_playlist_form').css('display','block');">{lang code='create_new_playlist'}</a>
 				</div>

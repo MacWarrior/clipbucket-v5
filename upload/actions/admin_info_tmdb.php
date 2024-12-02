@@ -2,7 +2,9 @@
 define('THIS_PAGE', 'admin_info_tmdb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+if (!User::getInstance()->hasAdminAccess()) {
+    return false;
+}
 
 if (config('enable_tmdb') != 'yes' || config('tmdb_token') == '') {
     return false;

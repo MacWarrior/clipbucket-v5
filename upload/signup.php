@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'signup');
 
 require 'includes/config.inc.php';
 global $eh;
-if (userquery::getInstance()->login_check('', true)) {
+if (User::getInstance()->isUserConnected()) {
     redirect_to(BASEURL);
 }
 

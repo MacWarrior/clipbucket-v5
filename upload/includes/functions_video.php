@@ -35,7 +35,7 @@ function video_playable($id): bool
     }
     if ($vdo['status'] != 'Successful') {
         e(lang('this_vdo_not_working'));
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }
         return true;
@@ -43,7 +43,7 @@ function video_playable($id): bool
     if ($vdo['broadcast'] == 'private'
         && !userquery::getInstance()->is_confirmed_friend($vdo['userid'], user_id())
         && !is_video_user($vdo)
-        && !has_access('video_moderation', true)
+        && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
         e(lang('private_video_error'));
         return false;
@@ -51,14 +51,14 @@ function video_playable($id): bool
 
     if ($vdo['broadcast'] == 'logged'
         && !user_id()
-        && !has_access('video_moderation', true)
+        && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
         e(lang('not_logged_video_error'));
         return false;
     }
     if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
         e(lang('vdo_iac_msg'));
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }
         return true;
@@ -67,7 +67,7 @@ function video_playable($id): bool
     if ($vdo['video_password']
         && $vdo['broadcast'] == 'unlisted'
         && $vdo['video_password'] != $video_password
-        && !has_access('video_moderation', true)
+        && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
         if (!$video_password) {
             e(lang("video_pass_protected"));
@@ -88,7 +88,7 @@ function video_playable($id): bool
         }
     }
 
-    if( !has_access('video_moderation', true)
+    if( !User::getInstance()->hasPermission('video_moderation')
         && config('enable_age_restriction') == 'yes'
         && Video::getInstance()->isCurrentUserRestricted($vdo['videoid'])
     ){
@@ -373,7 +373,7 @@ function video_link($vdetails, $type = null, $is_public = false): string
     if (!empty($vid)) {
         $vdetails = get_video_details($vid);
     }
-    $is_public = config('enable_public_video_page')=='yes' && has_access('allow_public_video_page', true,false) && $vdetails['broadcast'] == 'public';
+    $is_public = config('enable_public_video_page')=='yes' && User::getInstance()->hasPermission('allow_public_video_page') && $vdetails['broadcast'] == 'public';
     //calling for custom video link functions
     $functions = cb_get_functions('video_link');
     if ($functions) {

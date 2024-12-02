@@ -10,7 +10,7 @@ if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectio
 
 global $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 $order = 'collection_items.date_added DESC';
@@ -25,7 +25,7 @@ $get_limit = create_query_limit($page, config('collection_per_page'));
 switch ($mode) {
     case 'manage':
     default:
-        if( !has_access('allow_create_collection') ){
+        if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -68,7 +68,7 @@ switch ($mode) {
         break;
 
     case 'add_new':
-        if( !has_access('allow_create_collection') ){
+        if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -90,7 +90,7 @@ switch ($mode) {
     case 'edit':
     case 'edit_collection':
     case 'edit_collect':
-        if( !has_access('allow_create_collection') ){
+        if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -128,7 +128,7 @@ switch ($mode) {
     case 'collection_items':
     case 'items':
     case 'manage_items':
-        if( !has_access('allow_create_collection') ){
+        if( !User::getInstance()->hasPermission('allow_create_collection') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -191,7 +191,7 @@ switch ($mode) {
     case 'favorite':
     case 'favorites':
     case 'fav':
-        if( !has_access('view_collections') ){
+        if( !User::getInstance()->hasPermission('view_collections') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 

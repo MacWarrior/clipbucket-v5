@@ -81,6 +81,7 @@ require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
 require_once DirPath::get('classes') . 'category.class.php';
+require_once DirPath::get('classes') . 'user_level.class.php';
 require_once DirPath::get('classes') . 'user.class.php';
 require_once DirPath::get('classes') . 'lang.class.php';
 require_once DirPath::get('classes') . 'pages.class.php';
@@ -157,7 +158,7 @@ $sess = new Session();
 $userquery = new userquery();
 $userquery->init();
 
-if (has_access('admin_access', true) && !empty($error_redis)) {
+if (User::getInstance()->hasAdminAccess() && !empty($error_redis)) {
     e($error_redis);
 }
 
@@ -169,7 +170,7 @@ if (!Update::isVersionSystemInstalled()) {
     if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
         && strpos($request_uri, '/admin_area/logout.php') === false
         && strpos($request_uri, 'actions/upgrade_db.php') === false
-        && $userquery->admin_login_check(true)) {
+        && User::getInstance()->hasAdminAccess()) {
         header('Location: /admin_area/upgrade_db.php');
         die();
     }

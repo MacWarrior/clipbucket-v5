@@ -3,7 +3,7 @@ global $cbphoto;
 define('THIS_PAGE', 'photo_uploader');
 include('../includes/config.inc.php');
 
-if( !has_access('allow_photo_upload') ){
+if( !User::getInstance()->hasPermission('allow_photo_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
 }

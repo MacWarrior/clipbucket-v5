@@ -3,9 +3,9 @@ require 'includes/config.inc.php';
 
 pages::getInstance()->page_redir();
 if (PARENT_PAGE == 'videos_public') {
-    userquery::getInstance()->perm_check('allow_public_video_page');
+    User::getInstance()->hasPermission('allow_public_video_page');
 } else {
-    userquery::getInstance()->perm_check('view_videos');
+    User::getInstance()->hasPermission('view_videos');
 }
 
 if( !isSectionEnabled('videos') ){
@@ -30,7 +30,7 @@ if( $child_ids ){
     $params['category'] = $child_ids;
 }
 if (config('enable_public_video_page') == 'yes') {
-    if (has_access('view_videos', true, false) && has_access('allow_public_video_page', true, false)) {
+    if (User::getInstance()->hasPermission('view_videos') && User::getInstance()->hasPermission('allow_public_video_page')) {
         $params['public'] = false;
     }
     //hide public videos, they are listed ind public video menu

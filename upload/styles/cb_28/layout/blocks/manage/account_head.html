@@ -31,14 +31,14 @@
 
 <div style="text-align:center;">
 	<div class="padding38">
-		{if isSectionEnabled('videos') && has_access('allow_video_upload')}
+		{if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_videos')}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='videos'}</span>
 		</span>
 		{/if}
-		{if isSectionEnabled('photos') && has_access('allow_photo_upload')}
+		{if isSectionEnabled('photos') && User::getInstance()->hasPermission('allow_photo_upload')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_photos')}</span>
 			<br/>
@@ -50,7 +50,7 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
 		</span>
-		{if isSectionEnabled('videos') && has_access('view_video')}
+		{if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
 			<br/>
@@ -62,14 +62,14 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='comments'}</span>
 		</span>
-		{if isSectionEnabled('collections') && has_access('allow_create_collection')}
+		{if isSectionEnabled('collections') && User::getInstance()->hasPermission('allow_create_collection')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_collections')|number_format}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
 		</span>
 		{/if}
-		{if config('channelsSection') == 'yes' && has_access('enable_channel_page') && User::getInstance()->get('disabled_channel')!= 'yes'}
+		{if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
 			<br/>
@@ -85,7 +85,7 @@
 </div>
 <hr/>
 
-{if isSectionEnabled('videos') && has_access('allow_video_upload')}
+{if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
 <div class="mvideo accountprofile">
 	<span class="lead">
 		{lang code='latest_videos'}

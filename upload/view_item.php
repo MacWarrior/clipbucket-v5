@@ -24,7 +24,7 @@ if ($photo) {
     if (empty($photo)
         || (
             empty($photo['collection_id'])
-            && (!has_access('admin_access') && ($photo['userid'] != user_id()))
+            && (!User::getInstance()->hasAdminAccess() && ($photo['userid'] != user_id()))
         )
     ) {
         redirect_to(BASEURL);
@@ -58,7 +58,7 @@ if ($photo) {
             } else {
                 assign('breadcrum', $breadcrum);
                 assign('collection_baseurl', '');
-                if (has_access('admin_access')) {
+                if (User::getInstance()->hasAdminAccess()) {
                     $param = ['type'=>'photos'];
                 } else {
                     $param = ['userid' => user_id(),'type'=>'photos'];

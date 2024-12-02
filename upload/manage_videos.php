@@ -10,7 +10,7 @@ if( config('videosSection') != 'yes' ){
 
 global $cbvideo, $pages, $cbvid;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
@@ -28,7 +28,7 @@ assign('queryString', queryString(null, ['type',
 switch ($mode) {
     case 'uploaded':
     default:
-        if( !has_access('allow_video_upload') ){
+        if( !User::getInstance()->hasPermission('allow_video_upload') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 
@@ -78,7 +78,7 @@ switch ($mode) {
 
 
     case 'favorites':
-        if( !has_access('view_video') ){
+        if( !User::getInstance()->hasPermission('view_video') ){
             redirect_to(cblink(['name' => 'my_account']));
         }
 

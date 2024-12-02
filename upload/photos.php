@@ -8,8 +8,8 @@ if( !isSectionEnabled('photos') ){
     redirect_to(BASEURL);
 }
 
+User::getInstance()->hasPermissionOrRedirect('view_photos');
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('view_photos', true);
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('photo_main_list'));
@@ -57,7 +57,7 @@ assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 //Pagination
 pages::getInstance()->paginate($total_pages, $page);
 assign('url_edit', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=');
-assign('is_admin', userquery::getInstance()->admin_login_check(true));
+assign('is_admin', User::getInstance()->hasAdminAccess());
 
 subtitle(lang('photos'));
 //Displaying The Template

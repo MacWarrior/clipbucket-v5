@@ -5,7 +5,6 @@ class User
     private $tablename = '';
     private $tablename_profile = '';
     private $tablename_level = '';
-    private $tablename_level_permission = '';
     private $fields = [];
     private $fields_profile = [];
     private $display_block = '';
@@ -116,13 +115,15 @@ class User
             ,'show_my_subscriptions'
             ,'show_my_subscribers'
             ,'show_my_friends'
-            ,'disabled_channel'
         ];
 
-        $this->tablename_level = 'user_levels';
-        $this->tablename_level_permission = 'user_levels_permissions';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+            $this->fields_profile[] = 'disabled_channel';
+        }
 
-        $this->display_block = LAYOUT . '/blocks/user.html';
+        $this->tablename_level = 'user_levels';
+
+        $this->display_block = '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
 
@@ -172,10 +173,6 @@ class User
     {
         return $this->tablename_level;
     }
-    public function getTableNameLevelPermission(): string
-    {
-        return $this->tablename_level_permission;
-    }
 
     private function getAllFields(): array
     {
@@ -197,7 +194,7 @@ class User
 
     public function getDisplayBlock(): string
     {
-        return $this->display_block;
+        return LAYOUT . $this->display_block;
     }
 
     public function getDisplayVarName(): string
@@ -381,7 +378,9 @@ class User
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
-                $group[] = 'user_levels_permissions.user_level_permission_id ';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '199')) {
+                    $group[] = 'user_levels_permissions.id_user_levels_permission ';
+                }
             }
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
@@ -398,12 +397,26 @@ class User
         }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
-            if ($param_channel_enable ) {
-                $conditions[] = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+            if ($param_channel_enable) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '199')) {
+                    $conditions[] = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+                } else {
+                    $conditions[] = '(' . UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel = \'no\')';
+                }
             }
-            $is_channel_enable = '(' .$this->getTableNameLevelPermission().'.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
-            $select[] = $is_channel_enable . ' AS is_channel_enable';
-            $group[] = $is_channel_enable;
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '199')) {
+                $is_channel_enable = '(' . UserLevel::getTableNameLevelPermissionValue() . '.permission_value = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+                $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermissionValue()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
+                $join[] = '  INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermissionValue() . '.id_user_levels_permission = ' . UserLevel::getTableNameLevelPermission() . '.id_user_levels_permission  
+                AND ' . UserLevel::getTableNameLevelPermission() . '.permission_name = \'enable_channel_page\' ';
+            } else {
+                $is_channel_enable = '(' .   UserLevel::getTableNameLevelPermission() . '.enable_channel_page = \'yes\' AND ' . $this->getTableNameProfile() . '.disabled_channel != \'yes\')';
+            }
+
+            if (!$param_count) {
+                $select[] = $is_channel_enable . ' AS is_channel_enable';
+                $group[] = $is_channel_enable;
+            }
         }
 
         $having = '';
@@ -421,12 +434,14 @@ class User
         if( $param_limit ){
             $limit = ' LIMIT '.$param_limit;
         }
-
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '199')) {
+            $join[] = ' INNER JOIN ' . cb_sql_table(UserLevel::getTableNameLevelPermission()) . ' ON ' . UserLevel::getTableNameLevelPermission() . '.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id ';
+        }
         $sql ='SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table('users') . '
-                INNER JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
-                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id 
-                INNER JOIN ' . cb_sql_table($this->getTableNameLevelPermission()) . ' ON '.$this->getTableNameLevelPermission().'.user_level_id = ' . $this->getTableNameLevel() . '.user_level_id '
+                LEFT JOIN ' . cb_sql_table($this->getTableNameProfile()) . ' ON users.userid = ' . $this->getTableNameProfile() . '.userid
+                INNER JOIN ' . cb_sql_table($this->getTableNameLevel()) . ' ON users.level = ' . $this->getTableNameLevel() . '.user_level_id '
+
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
             . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
@@ -482,11 +497,80 @@ class User
         return !empty($this->user_data);
     }
 
+    /**
+     * @param string $permission
+     * @return bool
+     * @throws Exception
+     */
+    public function hasPermission(string $permission): bool
+    {
+        return UserLevel::hasPermission($permission,$this->getCurrentUserLevelID());
+    }
+
+    /**
+     * @param string $permission
+     * @param bool $must_be_logged
+     * @return bool
+     * @throws Exception
+     */
+    public function hasPermissionOrRedirect(string $permission, bool $must_be_logged = false): bool
+    {
+        return UserLevel::hasPermissionOrRedirect($permission, $this->getCurrentUserLevelID(), $must_be_logged);
+    }
+
+    public function isUserConnectedOrRedirect()
+    {
+        if (!$this->isUserConnected()) {
+            self::redirectToLogin();
+        }
+    }
+
+    public static function redirectToLogin()
+    {
+        redirect_to(BASEURL . '/signup.php?mode=login');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function hasAdminAccess(): bool
+    {
+        return $this->hasPermission('admin_access');
+    }
+
+    /**
+     * @param string $permission
+     * @return void
+     * @throws Exception
+     */
+    public function hasPermissionAjax(string $permission)
+    {
+        if (!$this->hasPermission($permission)) {
+            e(lang('insufficient_privileges'));
+            echo json_encode([
+                'template' => false,
+                'success' => false,
+                'msg'     => getTemplateMsg()
+            ]);
+            die;
+        }
+    }
+
+    /**
+     * @param $config
+     * @return false|mixed
+     * @throws Exception
+     */
+    public function getConfig($config)
+    {
+        return UserLevel::getPermission($config, $this->getCurrentUserLevelID());
+    }
+
     public function getCurrentUserID()
     {
         return $this->user_data['userid'] ?? false;
     }
-    public function getCurrentUserUserLevelID()
+    public function getCurrentUserLevelID()
     {
         return $this->user_data['level'] ?? false;
     }
@@ -525,8 +609,9 @@ class User
     public function get(string $value)
     {
         if( !isset($this->user_data[$value]) ){
+            DiscordLog::sendDump($this->user_data);
             if( in_dev() ){
-                $msg = 'User->get() - Unknown value : ' . $value;
+                $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
                 error_log($msg);
                 DiscordLog::sendDump($msg);
             }
@@ -751,7 +836,7 @@ class User
         }
         if (!isset($this->user_data['need_to_active_membership'])) {
             $need_to_active_membership = false;
-            if (config('enable_membership') == 'yes' && !empty($user_id) && !has_access('admin_access')) {
+            if (config('enable_membership') == 'yes' && !empty($user_id) && !User::getInstance()->hasAdminAccess()) {
                 //gettings memberships for current userLevel
                 $memberships = Membership::getInstance()->getAll([
                     'is_disabled'   => 0
@@ -792,7 +877,7 @@ class User
      */
     public static function redirectAfterLogin()
     {
-        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !has_access('admin_access')) {
+        if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
             redirect_to(BASEURL . DIRECTORY_SEPARATOR . 'manage_membership.php');
         } elseif ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
@@ -928,7 +1013,8 @@ class userquery extends CBCategory
             $this->username = $udetails['username'];
             $this->level = $this->udetails['level'];
             $this->email = $this->udetails['email'];
-            $this->permission = $this->get_user_level(user_id());
+            //TODO check if $this->permission is steel needed
+            $this->permission =  UserLevel::getPermissions(user_id());
 
             //Calling Logout Functions
             $funcs = $this->init_login_functions ?? false;
@@ -944,7 +1030,7 @@ class userquery extends CBCategory
                 $this->UpdateLastActive(user_id());
             }
         } else {
-            $this->permission = $this->get_user_level(4, true);
+            $this->permission = $this->get_user_level(4);
         }
 
         //Adding Actions such Report, share,fav etc
@@ -1075,7 +1161,7 @@ class userquery extends CBCategory
         global $sess;
 
         //First we will check weather user is already logged in or not
-        if ($this->login_check(null, true)) {
+        if (User::getInstance()->isUserConnected()) {
             $msg[] = e(lang('you_already_logged'));
         } else {
             $udetails = $this->authenticate($username, $password);
@@ -1179,108 +1265,6 @@ class userquery extends CBCategory
         return true;
     }
 
-    function login_check_by_user(int $userid, $access = null, $check_only = false, $verify_logged_user = true) {
-        if ($verify_logged_user) {
-            //First check weather userid is here or not
-            if (!$userid) {
-                if (!$check_only) {
-                    e(lang('you_not_logged_in'));
-                }
-                return false;
-            }
-
-            //Now Check if logged in user exists or not
-            if (!$this->user_exists($userid, true)) {
-                if (!$check_only) {
-                    e(lang('invalid_user'));
-                }
-                return false;
-            }
-
-            //Now Check logged in user is banned or not
-            if ($this->is_banned($userid) == 'yes') {
-                if (!$check_only) {
-                    e(lang('usr_ban_err'));
-                }
-                return false;
-            }
-        }
-
-        //Now user have passed all the stages, now checking if user has level access or not
-        if ($access) {
-            if ($userid == user_id() && !empty($this->permission)) {
-                $access_details = $this->permission;
-            } else {
-                $access_details = $this->get_user_level($userid);
-            }
-
-            if (is_numeric($access)) {
-                if ($access_details['level_id'] == $access) {
-                    return true;
-                }
-
-                if (!$check_only) {
-                    e(lang('insufficient_privileges'));
-                }
-                ClipBucket::getInstance()->show_page(false);
-                return false;
-            }
-
-            if ($access_details[$access] == 'yes') {
-                return true;
-            }
-
-            if (!$check_only) {
-                e(lang('insufficient_privileges'));
-                ClipBucket::getInstance()->show_page(false);
-            }
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * Function used to check weather user is login or not
-     * it will also check weather user has access or not
-     *
-     * @param $access string access type it can be admin_access, upload_acess etc
-     * you can either set it as level id
-     * @param bool $check_only
-     * @param bool $verify_logged_user
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function login_check($access = null, $check_only = false, $verify_logged_user = true)
-    {
-        return $this->login_check_by_user(user_id(), $access, $check_only, $verify_logged_user);
-    }
-
-    /**
-     * This function was used to check
-     * user is logged in or not -- for v1.7.x and old
-     * it has been replaced by login_check in v2
-     * this function is sitll in use so
-     * we are just replace the lil code of it
-     *
-     * @param null $access
-     * @param bool $redirect
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function logincheck($access = null, $redirect = true): bool
-    {
-
-        if (!$this->login_check($access)) {
-            if ($redirect) {
-                redirect_to(cblink(['name' => 'signup'], true));
-            }
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Function used to get user details using username and password
      *
@@ -1312,44 +1296,6 @@ class userquery extends CBCategory
         }
         return false;
     }
-
-
-    /**
-     * Function used to check weather user is banned or not
-     *
-     * @param $uid
-     *
-     * @return mixed
-     * @throws Exception
-     */
-    function is_banned($uid)
-    {
-        if (empty($this->udetails['ban_status']) && user_id()) {
-            $this->udetails['ban_status'] = $this->get_user_field($uid, 'ban_status');
-        }
-        return $this->udetails['ban_status'];
-    }
-
-    /**
-     * Function used to check user is admin or not
-     *
-     * @param $check_only bool if true, after checking user will be redirected to login page if needed
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function admin_login_check($check_only = false): bool
-    {
-        if (!has_access('admin_access', true)) {
-            if (!$check_only) {
-                redirect_to(BASEURL.'/signup.php?mode=login');
-            }
-            return false;
-        }
-        return true;
-    }
-
-    //This Function Is Used to Logout
 
     /**
      * @throws Exception
@@ -1386,7 +1332,7 @@ class userquery extends CBCategory
 
         $udetails = $this->get_user_details($uid);
 
-        if( user_id() == $uid || !has_access('admin_access', true) ){
+        if( user_id() == $uid || !User::getInstance()->hasAdminAccess() ){
             e(lang('you_cant_delete_this_user'));
             return;
         }
@@ -1453,7 +1399,7 @@ class userquery extends CBCategory
     {
         if (!$this->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
-        } elseif (!has_access('admin_access')) {
+        } elseif (!User::getInstance()->hasAdminAccess()) {
             e(lang('you_dont_hv_perms'));
         } else {
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . ' WHERE userid=\'' . $uid . '\'');
@@ -1471,7 +1417,7 @@ class userquery extends CBCategory
     {
         if (!$this->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
-        } elseif (!has_access('admin_access')) {
+        } elseif (!User::getInstance()->hasAdminAccess()) {
             e(lang('you_dont_hv_perms'));
         } else {
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->dbtbl['subtbl']) . ' WHERE subscribed_to=\'' . $uid . '\'');
@@ -2446,6 +2392,7 @@ class userquery extends CBCategory
     }
 
     /**
+     * @TODO remove function
      * Function used to get user level and its details
      *
      * @param INT $uid userid
@@ -2456,20 +2403,7 @@ class userquery extends CBCategory
      */
     function get_user_level($uid, $is_level = false)
     {
-        if (
-            (($this->udetails['level'] == $uid && $is_level) || (!$is_level && $uid == user_id()))
-            && !empty($this->permission)
-        ) {
-            return $this->permission;
-        }
-        $level = ($is_level ? $uid : $this->get_user_details($uid)['level'] );
-
-        $result = Clipbucket_db::getInstance()->select(tbl('user_levels,user_levels_permissions'), '*',
-            tbl('user_levels_permissions.user_level_id') . "='" . $level . "' 
-                              AND " . tbl('user_levels_permissions.user_level_id') . ' = ' . tbl('user_levels.user_level_id'), false, false, false, 600);
-
-        //Now Merging the two arrays
-        return $result[0] ?? false;
+       return UserLevel::getPermissions($uid);
     }
 
     /**
@@ -2559,10 +2493,6 @@ class userquery extends CBCategory
                 $fields_array[] = $access;
                 $value_array[] = $array[$access] ?: 'no';
             }
-            if (!array_key_exists('plugins_perms', $fields_array)) {
-                $fields_array[] = 'plugins_perms';
-                $value_array[] = '';
-            }
             if (!array_key_exists('enable_channel_page', $fields_array)) {
                 $fields_array[] = 'enable_channel_page';
                 $value_array[] = 'no';
@@ -2619,106 +2549,7 @@ class userquery extends CBCategory
         }
     }
 
-    /**
-     * Function used to update user level
-     * @param INT level_id
-     * @param ARRAY perm_level
-     * @throws Exception
-     */
-    function update_user_level($id, $array): bool
-    {
-        if (!is_array($array)) {
-            $array = $_POST;
-        }
 
-        //First Checking Level
-        $level = $this->get_level_details($id);
-
-        if ($level) {
-            foreach ($this->get_access_type_list() as $access => $name) {
-                $fields_array[] = $access;
-                $value_array[] = $array[$access] ?? 'no';
-            }
-
-            $fields_array[] = 'enable_channel_page';
-            $value_array[] = !empty($array['enable_channel_page']) ? mysql_clean($array['enable_channel_page']) : 'no';
-            $fields_array[] = 'default_homepage';
-            $value_array[] = !empty($array['default_homepage']) ? mysql_clean($array['default_homepage']) : 'homepage';
-            //Checking level Name
-            if (!empty($array['level_name'])) {
-                //Updating Now
-                Clipbucket_db::getInstance()->update(tbl('user_levels'), ['user_level_name'], [mysql_clean($array['level_name'])], " user_level_id = '$id'");
-            }
-
-            if (isset($_POST['plugin_perm'])) {
-                $fields_array[] = 'plugins_perms';
-                $value_array[] = '|no_mc|' . json_encode($_POST['plugin_perm']);
-            }
-
-            //Updating Permissions
-            Clipbucket_db::getInstance()->update(tbl('user_levels_permissions'), $fields_array, $value_array, " user_level_id = '$id'");
-
-            e(lang('level_updated'), 'm');
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Function used to delete user levels
-     * @param INT $id level_id
-     * @throws Exception
-     */
-    function delete_user_level(int $id): bool
-    {
-        $level_details = $this->get_level_details($id);
-        // id 3 = Inactive User
-        $inactive_user_level = $this->get_level_details(3);
-        if ($level_details) {
-            //CHeck if leve is deleteable or not
-            if ($level_details['user_level_is_default'] == 'no') {
-
-                $can_delete = true;
-                //check user_level_membership
-                if (config('enable_membership') == 'yes') {
-                    $user_memberships = Membership::getInstance()->getAll(['user_level_id'=>$id, 'get_user_membership'=>true]);
-                    foreach ($user_memberships as $user_membership) {
-                        if (!empty($user_membership['id_user_membership'])) {
-                            $can_delete = false;
-                            break;
-                        }
-                    }
-                    if ($can_delete) {
-                        foreach ($user_memberships as $user_membership) {
-                            Membership::getInstance()->delete($user_membership['id_membership_from_join']);
-                        }
-                        e(lang('user_level_memberships_deleted'), 'm');
-                    }
-                }
-
-                if ($can_delete) {
-                    Clipbucket_db::getInstance()->delete(tbl('user_levels'), ['user_level_id'], [$id]);
-                    Clipbucket_db::getInstance()->delete(tbl('user_levels_permissions'), ['user_level_id'], [$id]);
-
-                    $users = Clipbucket_db::getInstance()->select(tbl('users'), '*', ' level=' . mysql_clean($id), '1');
-                    if (!empty($users)) {
-                        e(lang('level_del_sucess', lang(strtolower(str_replace(' ', '_', $inactive_user_level['user_level_name'])))), 'm');
-                        Clipbucket_db::getInstance()->update(tbl('users'), ['level'], [3], ' level=' . mysql_clean($id));
-                    } else {
-                        e(lang('level_del_sucess_no_user'), 'm');
-                    }
-                    return true;
-                } else {
-                    e(lang('cant_delete_level_because_membership'));
-                    return false;
-                }
-            }
-            e(lang('level_not_deleteable'));
-            return false;
-        }
-        return false;
-    }
 
     /**
      * Function used to get number of videos uploaded by user
@@ -2823,57 +2654,6 @@ class userquery extends CBCategory
             return $result;
         }
 
-        return false;
-    }
-
-    /**
-     * Function used to check weather current user has permission
-     * to view page or not
-     * it will also check weather current page requires login
-     * if login is required, user will be redirected to signup page
-     *
-     * @param string $access
-     * @param bool $check_login
-     * @param bool $control_page
-     *
-     * @param bool $silent
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function perm_check($access = '', $check_login = false, $control_page = true, $silent = false): bool
-    {
-        $access_details = $this->permission;
-        if (is_numeric($access)) {
-            if ($access_details['level_id'] == $access) {
-                return true;
-            }
-
-            if (!$check_only && !$silent) {
-                e(lang('insufficient_privileges'));
-            }
-
-            if ($control_page) {
-                ClipBucket::getInstance()->show_page(false);
-            }
-            return false;
-        }
-
-        if ($access_details[$access] == 'yes') {
-            return true;
-        }
-
-        if (!$silent) {
-            if (!$check_login || user_id()) {
-                e(lang('insufficient_privileges'));
-            } else {
-                e(lang('insufficient_privileges_loggin', [cblink(['name' => 'signup']), cblink(['name' => 'signup'])]));
-            }
-        }
-
-        if ($control_page) {
-            ClipBucket::getInstance()->show_page(false);
-        }
         return false;
     }
 
@@ -3007,7 +2787,7 @@ class userquery extends CBCategory
         }
 
         //updating user detail
-        if (has_access('admin_access', true) && isset($array['admin_manager'])) {
+        if (User::getInstance()->hasAdminAccess() && isset($array['admin_manager'])) {
             //Checking Username
             if (empty($array['username'])) {
                 e(lang('usr_uname_err'));
@@ -3585,22 +3365,24 @@ class userquery extends CBCategory
             lang('user_change_email') => 'edit_account.php?mode=change_email'
         ];
 
-        if( (config('picture_upload') == 'yes' && has_access('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))) {
+        if( (config('picture_upload') == 'yes' && User::getInstance()->hasPermission('avatar_upload')) || config('picture_url') == 'yes' || !empty(User::getInstance()->get('avatar_url')) || !empty(User::getInstance()->get('avatar'))) {
             $array[lang('account')][lang('change_avatar')] = 'edit_account.php?mode=avatar_bg';
         }
 
-        if( config('channelsSection') == 'yes' && has_access('view_channel') ){
+        if( config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channel') ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
-        if( config('enable_membership') == 'yes' && !has_access('admin_access')){
+        if( config('enable_membership') == 'yes' && !User::getInstance()->hasPermission('admin_access')){
             $array[lang('account')][lang('manage_membership')] = 'manage_membership.php';
         }
 
-        if (isSectionEnabled('channels') && (has_access('view_channel') || (has_access('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'))) {
+        $check_before_551_136 = (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && User::getInstance()->hasPermission('view_channel'));
+        $check_after_551_136 = (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && isSectionEnabled('channels') && (User::getInstance()->hasPermission('view_channel') || (User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes')));
+        if( $check_before_551_136 || $check_after_551_136 ){
             $array[lang('account')][lang('contacts_manager')] = 'manage_contacts.php';
         }
 
-        if (has_access('private_msg_access')) {
+        if (User::getInstance()->hasPermission('private_msg_access')) {
             $array[lang('messages')] = [
                 lang('inbox') . '(' . $this->get_unread_msgs($this->userid) . ')' => 'private_message.php?mode=inbox',
                 lang('notifications')                                             => 'private_message.php?mode=notification',
@@ -3608,7 +3390,7 @@ class userquery extends CBCategory
                 lang('title_crt_new_msg')                                         => cblink(['name' => 'compose_new'])
             ];
         }
-        if (isSectionEnabled('channels') && has_access('enable_channel_page') ) {
+        if (isSectionEnabled('channels') && User::getInstance()->hasPermission('enable_channel_page')) {
             $array[lang('user_channel_profiles')] = [
                 lang('user_profile_settings') => 'edit_account.php?mode=profile',
                 lang('block_users')           => 'edit_account.php?mode=block_users'
@@ -3616,16 +3398,16 @@ class userquery extends CBCategory
         }
 
         if (isSectionEnabled('videos')) {
-            if (has_access('view_video')) {
+            if (User::getInstance()->hasPermission('view_video')) {
                 $array[lang('videos')][lang('user_fav_videos')] = 'manage_videos.php?mode=favorites';
             }
 
-            if (has_access('allow_video_upload')) {
+            if (User::getInstance()->hasPermission('allow_video_upload')) {
                 $array[lang('videos')][lang('uploaded_videos')] = 'manage_videos.php?mode=uploaded';
             }
         }
 
-        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && has_access('allow_create_playlist')){
+        if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && User::getInstance()->hasPermission('allow_create_playlist')){
             $array[lang('playlists')][lang('manage_x', strtolower(lang('playlists')))] = 'manage_playlists.php';
         }
 
@@ -3771,23 +3553,6 @@ class userquery extends CBCategory
             return true;
         }
         return false;
-    }
-
-    /**
-     * function used to get user details with profile
-     *
-     * @param null $uid
-     *
-     * @return array
-     * @throws Exception
-     */
-    function get_user_details_with_profile($uid = null): array
-    {
-        if (!$uid) {
-            $uid = user_id();
-        }
-        $result = Clipbucket_db::getInstance()->select(tbl($this->dbtbl['users'] . ',' . $this->dbtbl['user_profile']), '*', tbl($this->dbtbl['users']) . ".userid ='$uid' AND " . tbl($this->dbtbl['users']) . '.userid = ' . tbl($this->dbtbl['user_profile']) . '.userid');
-        return $result[0];
     }
 
     /**
@@ -4045,13 +3810,13 @@ class userquery extends CBCategory
         }
         $this->validate_form_fields($array);
         //checking terms and policy agreement
-        if ($array['agree'] != 'yes' && !has_access('admin_access', true)) {
+        if ($array['agree'] != 'yes' && !User::getInstance()->hasAdminAccess()) {
             e(lang('usr_ament_err'));
         }
 
         // first checking if captcha plugin is enabled
         // do not trust the form cb_captcha_enabled value
-        if (get_captcha() && !$userquery->admin_login_check(true) && !$isSocial) {
+        if (get_captcha() && !User::getInstance()->hasAdminAccess() && !$isSocial) {
             // now checking if the user posted captcha value is not empty and cb_captcha_enabled == yes
             if (!isset($array['cb_captcha_enabled']) || $array['cb_captcha_enabled'] == 'no') {
                 e(lang('recap_verify_failed'));
@@ -4110,7 +3875,7 @@ class userquery extends CBCategory
                 $welcome_email = 'yes';
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if ($array['active'] == 'Ok') {
                     $usr_status = 'Ok';
                     $welcome_email = 'yes';
@@ -4249,7 +4014,7 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
 
-            if (!has_access('admin_access', true) && EMAIL_VERIFICATION && $send_signup_email) {
+            if (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && EMAIL_VERIFICATION && $send_signup_email) {
                 global $cbemail;
                 $tpl = $cbemail->get_template('email_verify_template');
                 $more_var = [
@@ -4266,7 +4031,7 @@ class userquery extends CBCategory
 
                 //Now Finally Sending Email
                 cbmail(['to' => post('email'), 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
-            } elseif (!has_access('admin_access', true) && $send_signup_email) {
+            } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
                 $this->send_welcome_email($insert_id);
             }
 
@@ -4314,7 +4079,7 @@ class userquery extends CBCategory
         $order = $params['order'];
 
         $cond = ' users.userid != ' . userquery::getInstance()->get_anonymous_user();
-        if (!has_access('admin_access', true) && !$force_admin) {
+        if (!User::getInstance()->hasAdminAccess() && !$force_admin) {
              if ($cond != '') {
                     $cond .= ' AND';
                 }
@@ -4645,7 +4410,7 @@ class userquery extends CBCategory
 
         execute_sql_file(\DirPath::get('cb_install') . DIRECTORY_SEPARATOR . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
-        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous%' AND email='anonymous%'", '1');
+        $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
         return $result[0]['userid'];
     }
 

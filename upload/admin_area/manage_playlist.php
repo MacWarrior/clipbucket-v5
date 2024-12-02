@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $pages, $cbvid, $eh, $Cbucket;
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 $pages->page_redir();
 
 /* Generating breadcrumb */

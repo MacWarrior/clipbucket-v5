@@ -11,8 +11,8 @@ if (!in_array($type, ['videos', 'photos', 'collections', 'channels'])) {
 }
 switch($type){
     case 'videos':
-        $access_public_video = (has_access('allow_public_video_page', true, false) && config('enable_public_video_page') == 'yes');
-        $access_video = (has_access('view_' . $type, true, false) && isSectionEnabled($type));
+        $access_public_video = (User::getInstance()->hasPermission('allow_public_video_page') && config('enable_public_video_page') == 'yes');
+        $access_video = (User::getInstance()->hasPermission('view_' . $type) && isSectionEnabled($type));
         if (!$access_video && !$access_public_video) {
             redirect_to(BASEURL);
         }
@@ -20,10 +20,11 @@ switch($type){
     case 'photos':
     case 'collections':
     case 'channels':
-    if (!userquery::getInstance()->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
+        break;
+}
+
+if (!User::getInstance()->hasPermission('view_' . $type) || !isSectionEnabled($type)) {
         redirect_to(BASEURL);
-    }
-    break;
 }
 
 switch($type) {

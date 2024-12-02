@@ -188,7 +188,7 @@ function cbmail($array, $force = false)
     $mail->MsgHTML($message);
 
     if (!$mail->Send()) {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             e("Mailer Error: " . $mail->ErrorInfo);
         }
         return false;
@@ -647,35 +647,7 @@ function user_dob()
     return false;
 }
 
-/**
- * Function used to check weather user access or not
- * @param      $access
- * @param bool $check_only
- * @param bool $verify_logged_user
- *
- * @return bool
- * @throws Exception
- * @uses : { class : $userquery } { function : login_check }
- */
-function has_access($access, $check_only = true, $verify_logged_user = true): bool
-{
-    return userquery::getInstance()->login_check($access, $check_only, $verify_logged_user);
-}
 
-/**
- * Function used to check weather user access or not
- * @param int $userid
- * @param      $access
- * @param bool $check_only
- * @param bool $verify_logged_user
- *
- * @return bool
- * @uses : { class : $userquery } { function : login_check }
- */
-function has_access_by_user(int $userid, $access, bool $check_only = true, bool $verify_logged_user = true): bool
-{
-    return userquery::getInstance()->login_check_by_user($userid, $access, $check_only, $verify_logged_user);
-}
 
 /**
  * Function used to return mysql time

@@ -47,7 +47,7 @@ if (config('collectionsSection') == 'yes') {
     $params = [];
     $params['type'] = 'videos';
 
-    if (!has_access('admin_access')) {
+    if (!User::getInstance()->hasAdminAccess()) {
         $params['userid'] = user_id();
     }
     $collections = Collection::getInstance()->getAllIndent($params) ?: [];

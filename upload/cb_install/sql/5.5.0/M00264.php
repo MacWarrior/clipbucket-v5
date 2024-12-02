@@ -32,11 +32,13 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}tags` ADD CONSTRAINT `tag_type` FOREIGN KEY (`id_tag_type`) REFERENCES `{tbl_prefix}tags_type` (`id_tag_type`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table'           => 'tags',
-            'column'          => 'id_tag_type'
-            ],[
-            'constraint_name' => 'tag_type',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'tags',
+            'column' => 'id_tag_type'
+        ],[
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'tag_type'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_tags`
@@ -50,19 +52,23 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'video_tags',
-            'column'          => 'id_tag'
-            ], [
-            'constraint_name' => 'video_tags_tag',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'video_tags',
+            'column' => 'id_tag'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_tags_tag'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_tags` ADD CONSTRAINT `video_tags_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'video_tags',
-            'column'          => 'id_video'
-            ], [
-            'constraint_name' => 'video_tags_video',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'video_tags',
+            'column' => 'id_video'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_tags_video'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}photo_tags`
@@ -76,19 +82,23 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'photo_tags',
-            'column'          => 'id_tag'
-            ], [
-            'constraint_name' => 'photo_tags_tag',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'photo_tags',
+            'column' => 'id_tag'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'photo_tags_tag'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}photo_tags` ADD CONSTRAINT `photo_tags_photo` FOREIGN KEY (`id_photo`) REFERENCES `{tbl_prefix}photos` (`photo_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'photo_tags',
-            'column'          => 'id_photo'
-            ], [
-            'constraint_name' => 'photo_tags_photo',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'photo_tags',
+            'column' => 'id_photo'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'photo_tags_photo'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}collection_tags`
@@ -102,19 +112,23 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'collection_tags',
-            'column'          => 'id_tag'
-            ], [
-            'constraint_name' => 'collection_tags_tag',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'collection_tags',
+            'column' => 'id_tag'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'collection_tags_tag'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}collection_tags` ADD CONSTRAINT `collection_tags_collection` FOREIGN KEY (`id_collection`) REFERENCES `{tbl_prefix}collections` (`collection_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'collection_tags',
-            'column'          => 'id_collection'
-            ], [
-            'constraint_name' => 'collection_tags_collection',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'collection_tags',
+            'column' => 'id_collection'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'collection_tags_collection'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}user_tags`
@@ -128,19 +142,23 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'user_tags',
-            'column'          => 'id_tag'
-            ], [
-            'constraint_name' => 'user_tags_tag',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'user_tags',
+            'column' => 'id_tag'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_tags_tag'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}user_tags` ADD CONSTRAINT `user_tags_profile` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'user_tags',
-            'column'          => 'id_user'
-            ], [
-            'constraint_name' => 'user_tags_profile',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'user_tags',
+            'column' => 'id_user'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_tags_profile'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}playlist_tags`
@@ -152,19 +170,23 @@ class M00264 extends \Migration
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_tag` FOREIGN KEY (`id_tag`) REFERENCES `{tbl_prefix}tags` (`id_tag`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'playlist_tags',
-            'column'          => 'id_tag'
-            ], [
-            'constraint_name' => 'playlist_tags_tag',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'playlist_tags',
+            'column' => 'id_tag'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'playlist_tags_tag'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}playlist_tags` ADD CONSTRAINT `playlist_tags_playlist` FOREIGN KEY (`id_playlist`) REFERENCES `{tbl_prefix}playlists` (`playlist_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
-            'table' => 'playlist_tags',
-            'column'          => 'id_playlist'
-            ], [
-            'constraint_name' => 'playlist_tags_playlist',
-            'constraint_type' => 'FOREIGN KEY'
+            'table'  => 'playlist_tags',
+            'column' => 'id_playlist'
+        ], [
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'playlist_tags_playlist'
+            ]
         ]);
 
         $sql = 'INSERT INTO `{tbl_prefix}tags_type` (`name`)
@@ -419,9 +441,9 @@ class M00264 extends \Migration
             'table'  => 'tags',
             'column' => 'name',
         ],[
-            'constraint_index' => [
-                'table' => 'tags',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'tags',
                 'name'  => 'tag'
             ]
         ]);

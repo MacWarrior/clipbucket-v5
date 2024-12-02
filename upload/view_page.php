@@ -11,7 +11,7 @@ $pid = mysql_clean($pid);
 
 $page = $cbpage->get_page($pid);
 
-if($page['active'] == 'no' && !has_access('admin_access', true)){
+if($page['active'] == 'no' && !User::getInstance()->hasAdminAccess()){
     redirect_to(BASEURL);
 }
 

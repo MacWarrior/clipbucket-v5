@@ -596,7 +596,7 @@ class ElasticSearch
             "bool" => $bool_must
         ];
 
-        if (!has_access("admin_access")) {
+        if (!User::getInstance()->hasPermission('admin_access')) {
             $bool["filter"][] = [
                 "match" => [
                     "status" => 'Successful'
@@ -642,7 +642,7 @@ class ElasticSearch
             "bool" => $bool_must
         ];
 
-        if (!has_access("admin_access", true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $bool["filter"][] = [
                 "match" => [
                     "usr_status" => 'Ok'
@@ -702,7 +702,7 @@ class ElasticSearch
             "bool" => $bool_must
         ];
 
-        if (!has_access("admin_access")) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $bool["filter"][] = [
                 "match" => [
                     "active" => 'yes'
@@ -779,7 +779,7 @@ class ElasticSearch
         $bool["must"][] = [
             "bool" => $bool_must
         ];
-        if (!has_access("admin_access", true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $bool["filter"][] = [
                 "match" => [
                     "active" => 'yes'

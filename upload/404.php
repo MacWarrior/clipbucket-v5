@@ -10,7 +10,7 @@ if( !empty($_SERVER['REQUEST_URI']) ){
             error_log($msg);
             DiscordLog::sendDump($msg);
 
-            if( has_access('admin_access') && in_dev() ) {
+            if( User::getInstance()->hasAdminAccess() && in_dev() ) {
                 e($msg);
             }
         }

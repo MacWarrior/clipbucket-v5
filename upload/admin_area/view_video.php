@@ -3,8 +3,7 @@ define('THIS_PAGE', 'view_video');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $pages, $myquery;
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 
 if (@$_GET['msg']) {
