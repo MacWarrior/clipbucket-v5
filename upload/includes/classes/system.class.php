@@ -763,30 +763,32 @@ class System{
             return false;
         }
 
-        if( !self::isDateTimeSynchro() ){
-            if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump('error config : isDateTimeSynchro' . $call_stack);
+        if(  Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
+            if( !self::isDateTimeSynchro() ){
+                if (in_dev()) {
+                    ob_start();
+                    debug_print_backtrace();
+                    print_r($_SERVER);
+                    $call_stack = ob_get_clean();
+                    DiscordLog::sendDump('error config : isDateTimeSynchro' . $call_stack);
+                }
+                self::setGlobalConfigCache(0);
+                return false;
             }
-            self::setGlobalConfigCache(0);
-            return false;
-        }
 
-        $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
-        $tmp = [];
-        if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
-            if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump('error config : isDateTimeSynchro cli ' . $call_stack);
+            $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+            $tmp = [];
+            if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
+                if (in_dev()) {
+                    ob_start();
+                    debug_print_backtrace();
+                    print_r($_SERVER);
+                    $call_stack = ob_get_clean();
+                    DiscordLog::sendDump('error config : isDateTimeSynchro cli ' . $call_stack);
+                }
+                self::setGlobalConfigCache(0);
+                return false;
             }
-            self::setGlobalConfigCache(0);
-            return false;
         }
 
         $permissions = self::checkPermissions(self::getPermissions(false));
@@ -909,7 +911,7 @@ class System{
      * @return bool
      * @throws Exception
      */
-    public static function isDateTimeSynchro(array &$details = [], string $force_datetime = null) :bool
+    public static function isDateTimeSynchro(array &$details = [], $force_datetime = null) :bool
     {
         $query = /** @lang MySQL */'SELECT NOW() AS t';
         $rs = Clipbucket_db::getInstance()->_select($query);

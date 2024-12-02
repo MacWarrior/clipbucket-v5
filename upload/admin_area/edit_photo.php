@@ -3,8 +3,7 @@ global $pages, $cbphoto, $breadcrumb;
 define('THIS_PAGE', 'edit_photo');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation');
 $pages->page_redir();
 
 // TODO : Complete URL

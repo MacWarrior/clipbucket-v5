@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'test_tmdb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 try {
     $tmdb = new TMdb();

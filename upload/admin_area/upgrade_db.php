@@ -6,7 +6,7 @@ if (!NEED_UPDATE) {
     redirect_to('index.php');
 }
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 $breadcrumb[1] = ['title' => 'DB Upgrade', 'url' => DirPath::getUrl('admin_area') . 'upgrade_db.php'];

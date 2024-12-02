@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'language_add');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 Language::add_lang($_POST);
 

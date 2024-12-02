@@ -16,7 +16,7 @@ $cache_dir = DirPath::get('cache') . 'cb_server_thumb' . DIRECTORY_SEPARATOR;
 if (!is_writable($cache_dir)) {
     $__resize_thumbs = false;
 
-    if (has_access('admin_access')) {
+    if (User::getInstance()->hasAdminAccess()) {
         e($cache_dir . ' directory is not writeable', 'w');
     }
 }
@@ -169,7 +169,7 @@ function get_server_img($params)
                 return $thumbs;
             } else {
                 $search_name = sprintf($filename, '_' . $size);
-                $return_thumb = array_find($search_name, $thumbs);
+                $return_thumb = array_find_cb($search_name, $thumbs);
 
                 if (empty($return_thumb)) {
                     return get_photo_default_thumb($size, $output);
@@ -186,7 +186,7 @@ function get_server_img($params)
 
     if ($output == 'html') {
         $search_name = sprintf($filename, '_' . $size);
-        $src = array_find($search_name, $thumbs);
+        $src = array_find_cb($search_name, $thumbs);
 
         $src = (empty($src)) ? get_photo_default_thumb($size) : $src;
         $attrs = ['src' => $src];

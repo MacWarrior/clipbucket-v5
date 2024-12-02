@@ -5,14 +5,14 @@ define('PARENT_PAGE', 'upload');
 global $cbphoto, $Cbucket, $cbcollection;
 
 require 'includes/config.inc.php';
-userquery::getInstance()->logincheck();
+
+User::getInstance()->hasPermissionOrRedirect('allow_photo_upload', true);
 subtitle(lang('photos_upload'));
 if (isset($_GET['collection'])) {
     $selected_collection = $cbphoto->decode_key($_GET['collection']);
     assign('selected_collection', $cbphoto->collection->get_collection($selected_collection));
 }
 
-userquery::getInstance()->logincheck('allow_photo_upload', true);
 
 $collections = Collection::getInstance()->getAllIndent([
     'type'   => 'photos',

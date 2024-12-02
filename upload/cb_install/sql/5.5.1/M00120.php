@@ -71,27 +71,41 @@ class M00120 extends \Migration
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}fontawesome_icons` (
                 `id_fontawesome_icon` int(11) NOT NULL,
-                `icon` varchar(40) NOT NULL UNIQUE
+                `icon` varchar(40) NOT NULL
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;';
         self::query($sql);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}fontawesome_icons`
             ADD PRIMARY KEY (`id_fontawesome_icon`);', [
             'table'  => 'fontawesome_icons',
-            'columns' => [
-                'id_fontawesome_icon',
-                'icon'
-            ]
+            'column' => 'id_fontawesome_icon'
         ], [
-            'table'           => 'fontawesome_icons',
-            'constraint_name' => 'PRIMARY',
-            'constraint_type' => 'PRIMARY KEY'
+            'constraint' => [
+                'type'  => 'PRIMARY KEY',
+                'table' => 'fontawesome_icons'
+            ]
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}fontawesome_icons`
+            ADD UNIQUE KEY `icon` (`icon`);', [
+            'table'  => 'fontawesome_icons',
+            'column' => 'icon'
+        ], [
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'fontawesome_icons',
+                'name'  => 'icon'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}fontawesome_icons`
             MODIFY `id_fontawesome_icon` int(11) NOT NULL AUTO_INCREMENT;', [
-            'table'   => 'fontawesome_icons',
-            'column' => 'id_fontawesome_icon'
+            'table'  => 'fontawesome_icons',
+            'column' => 'id_fontawesome_icon',
+            'constraint' => [
+                'type'  => 'PRIMARY KEY',
+                'table' => 'fontawesome_icons'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}social_networks_links` (
@@ -112,15 +126,20 @@ class M00120 extends \Migration
                 'id_fontawesome_icon'
             ]
         ], [
-            'table'           => 'social_networks_links',
-            'constraint_name' => 'PRIMARY',
-            'constraint_type' => 'PRIMARY KEY'
+            'constraint' => [
+                'type'  => 'PRIMARY KEY',
+                'table' => 'social_networks_links'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}social_networks_links`
             MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;', [
-            'table'   => 'social_networks_links',
-            'column' => 'id_social_networks_link'
+            'table'  => 'social_networks_links',
+            'column' => 'id_social_networks_link',
+            'constraint' => [
+                'type'  => 'PRIMARY KEY',
+                'table' => 'social_networks_links'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}social_networks_links`
@@ -128,8 +147,10 @@ class M00120 extends \Migration
             'table'  => 'social_networks_links',
             'column' => 'id_fontawesome_icon'
         ], [
-            'constraint_name' => 'social_networks_links_ibfk_1',
-            'contraint_type'  => 'FOREIGN KEY'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'social_networks_links_ibfk_1'
+            ]
         ]);
 
         $sql = "INSERT IGNORE INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES

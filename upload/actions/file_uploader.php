@@ -4,7 +4,7 @@ define('THIS_PAGE', 'file_uploader');
 include('../includes/config.inc.php');
 require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
 
-if( !has_access('allow_video_upload') ){
+if( !User::getInstance()->hasPermission('allow_video_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
 }

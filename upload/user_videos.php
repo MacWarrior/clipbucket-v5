@@ -3,8 +3,8 @@ define('THIS_PAGE', 'user_videos');
 define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
+User::getInstance()->hasPermissionOrRedirect('view_videos');
 $pages->page_redir();
-$userquery->perm_check('view_videos', true);
 
 $u = $_GET['user'];
 $u = $u ? $u : $_GET['userid'];

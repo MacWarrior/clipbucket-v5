@@ -138,6 +138,11 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
 
     private static function getTypeFromException($severity){
 
+        // E_STRICT only exists before PHP 8.4.X
+        if( version_compare(PHP_VERSION, '8.4', '<') && defined('E_STRICT') && $severity === constant('E_STRICT')) {
+            return LogLevel::NOTICE;
+        }
+
         switch($severity) {
 
             case E_COMPILE_ERROR :
@@ -161,7 +166,6 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
 
             case E_USER_NOTICE :
             case E_NOTICE :
-            case E_STRICT :
                 $type = LogLevel::NOTICE;
                 break;
 

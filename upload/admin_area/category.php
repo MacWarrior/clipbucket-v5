@@ -4,8 +4,7 @@ define('THIS_PAGE', 'category');
 global $cbvid;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';

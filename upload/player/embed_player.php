@@ -2,9 +2,7 @@
 define('THIS_PAGE', 'watch_video');
 include(dirname(__FILE__, 2) . '/includes/config.inc.php');
 
-if (!userquery::getInstance()->perm_check('view_video', true)) {
-    exit(lang('you_dont_hv_perms'));
-}
+User::getInstance()->hasPermissionOrRedirect('view_video');
 
 if(empty($_GET['vid'])){
     exit(lang('class_vdo_exist_err'));

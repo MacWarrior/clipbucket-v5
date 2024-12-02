@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'rss');
 require 'includes/config.inc.php';
 
-if( !isSectionEnabled('videos') || config('enable_rss_feeds') == 'no' || !userquery::getInstance()->perm_check('view_videos', true)){
+if( !isSectionEnabled('videos') || config('enable_rss_feeds') == 'no' || !User::getInstance()->hasPermission('view_videos')){
     redirect_to(BASEURL);
     die;
 }

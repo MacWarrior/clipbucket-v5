@@ -4,7 +4,7 @@ define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
 global $cbvid;
 
-if (!userquery::getInstance()->perm_check('view_video', true) || config('videosSection') != 'yes') {
+if (!User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes') {
     redirect_to(BASEURL);
 }
 
@@ -48,7 +48,7 @@ if( config('collectionsSection') == 'yes' ){
     $params = [];
     $params['type'] = 'videos';
 
-    if (!has_access('admin_access')) {
+    if (!User::getInstance()->hasAdminAccess()) {
         $params['userid'] = user_id();
     }
     $collections = Collection::getInstance()->getAllIndent($params) ? : [];

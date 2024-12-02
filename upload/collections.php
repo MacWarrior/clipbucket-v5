@@ -8,8 +8,8 @@ if( config('collectionsSection') != 'yes' || (config('videosSection') != 'yes' &
     redirect_to(BASEURL);
 }
 
+User::getInstance()->hasPermissionOrRedirect('view_collections');
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('view_collections', true);
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('collection_per_page'));

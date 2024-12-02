@@ -4,13 +4,13 @@ define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
-if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' || !has_access('allow_create_playlist') ){
+if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' || !User::getInstance()->hasPermission('allow_create_playlist') ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
 global $cbvid;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));

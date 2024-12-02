@@ -3,7 +3,12 @@ define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $myquery, $cbvid, $eh;
-userquery::getInstance()->admin_login_check();
+
+if (!User::getInstance()->hasAdminAccess()) {
+    e(lang('insufisant_privilege'));
+    echo json_encode(['err'=>$eh->get_error()]);
+    die;
+}
 
 $mode = $_POST['mode'];
 switch ($mode) {

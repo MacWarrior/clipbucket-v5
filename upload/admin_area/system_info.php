@@ -4,7 +4,7 @@ define('THIS_PAGE', 'system_info');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $myquery;
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

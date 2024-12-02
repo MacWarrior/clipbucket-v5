@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 
-if (!userquery::getInstance()->perm_check('view_videos', false, false, true) && !user_id()) {
+if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     template_files('signup_or_login.html');
 } else {
     if( config('home_disable_sidebar') != 'yes' ){

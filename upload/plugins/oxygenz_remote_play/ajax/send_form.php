@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__DIR__, 3) . '/includes/config.inc.php';
 
-if( !has_access('allow_video_upload', true, true) ){
+if( !User::getInstance()->hasPermission('allow_video_upload') ){
     echo json_encode(['error'=>lang('insufficient_privileges')]);
     die();
 }

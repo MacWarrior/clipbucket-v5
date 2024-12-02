@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'regenerate_thumbs');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 # Generating more thumbs
 $data = get_video_details($_POST['videoid']);

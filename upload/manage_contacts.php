@@ -4,11 +4,11 @@ define('PARENT_PAGE', 'channels');
 
 require 'includes/config.inc.php';
 
-if( !isSectionEnabled('channels') || (!has_access('view_channel') && (!has_access('enable_channel_page') || User::getInstance()->get('disabled_channel') == 'yes') )) {
+if( !isSectionEnabled('channels') || (!User::getInstance()->hasPermission('view_channel') && (!User::getInstance()->hasPermission('enable_channel_page') || User::getInstance()->get('disabled_channel') == 'yes') )) {
     redirect_to(cblink(['name' => 'my_account']));
 }
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);

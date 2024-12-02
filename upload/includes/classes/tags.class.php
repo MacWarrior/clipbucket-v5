@@ -242,6 +242,9 @@ class Tags
         $tag_array = explode(',', mysql_clean($tags));
         while( !empty($tag_array) ) {
             $tmp_tags = array_splice($tag_array, 0, 500);
+            $tmp_tags = array_filter($tmp_tags, function ($tag) {
+                return mb_strlen($tag) > 2;
+            });
             $values = ' SELECT \'' . implode('\' UNION SELECT \'', $tmp_tags) . '\'';
 
             $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name)

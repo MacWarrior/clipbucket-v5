@@ -2,8 +2,8 @@
 define('THIS_PAGE', 'channels');
 require 'includes/config.inc.php';
 
+User::getInstance()->hasPermissionOrRedirect('view_channels');
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('view_channels', true);
 
 if( !isSectionEnabled('channels') ){
     redirect_to(BASEURL);
