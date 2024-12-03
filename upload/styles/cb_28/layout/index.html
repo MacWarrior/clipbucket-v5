@@ -10,43 +10,33 @@
                 </div>
             {/if}
 
-            {ANCHOR place='before_features_videos'}
             {if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
-				{if config('display_featured_video') == 'yes'}
-
+                {ANCHOR place='before_features_videos'}
+				{if config('display_featured_video') == 'yes' && !empty($featured_videos)}
                     <section class="clearfix featured-videos">
                         <h1>{lang code="featured_videos"}</h1>
-
-                        {if !is_array($featured_videos)}
-                            <div class="clearfix row">
-                                <span class="well well-info btn-block">{lang code='no_featured_videos_found'}</span>
-                            </div>
+                        {if config(featured_video_style) == 'modern'}
+                            {include
+                                file="$style_dir/blocks/featured_video_slider.html"
+                                video_list=$featured_videos
+                                animationTime="250"
+                                timerAutoNext="5000"
+                                nbLeft="2"
+                                height="300px"
+                            }
                         {else}
-
-                            {if in_array(config('featured_video_style'), ['classic', false])}
-                                <div id="featured_vid_sec" class="clearfix row"></div>
-                                <div id="featured_pre" class="clearfix"></div>
-                                <div id="featured-loadmore" class="clearfix text-center">
-                                    <button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
-                                </div>
-                            {elseif config(featured_video_style) == 'modern'}
-                                {include
-                                    file="$style_dir/blocks/featured_video_slider.html"
-                                    video_list=$featured_videos
-                                    animationTime="250"
-                                    timerAutoNext="5000"
-                                    nbLeft="2"
-                                    height="300px"
-                                }
-                            {/if}
-
+                            <div id="featured_vid_sec" class="clearfix row"></div>
+                            <div id="featured_pre" class="clearfix"></div>
+                            <div id="featured-loadmore" class="clearfix text-center">
+                                <button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
+                            </div>
                         {/if}
                     </section>
                 {/if}
                 {ANCHOR place='after_features_videos'}
 
+                {ANCHOR place='before_recent_videos'}
                 {if config('home_display_recent_videos') == 'yes'}
-                    {ANCHOR place='before_recent_videos'}
                     {if in_array(config('homepage_recent_videos_display'), ['paginate', false])}
                         <section class="clearfix videos">
                             <h1>{lang code="recent_videos"}</h1>
@@ -69,11 +59,11 @@
                             {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_recent_video_ratio') video_style=config('homepage_recent_video_style') video_list=$recent_videos title={lang code="recent_videos"} main_link={cblink(['name' => 'videos'])} view_more=$view_more_recent}
                         {/if}
                     {/if}
-                    {ANCHOR place='after_recent_videos'}
                 {/if}
+                {ANCHOR place='after_recent_videos'}
 
+                {ANCHOR place='before_featured_collections'}
                 {if config('home_display_featured_collections') == 'yes' && !empty($featured_collections)}
-                    {ANCHOR place='before_featured_collections'}
                     {foreach $featured_collections as $collection}
                         {if empty($collection.items)}
                             {continue}
@@ -83,8 +73,8 @@
                         {/if}
                         {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={$cbcollection->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
                     {/foreach}
-                    {ANCHOR place='after_featured_collections'}
                 {/if}
+                {ANCHOR place='after_featured_collections'}
 
             {/if}
         </div>

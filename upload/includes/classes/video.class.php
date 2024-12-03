@@ -545,11 +545,13 @@ class Video
         }
     }
 
-    public static function getLike($video) {
+    public static function getLike($video): int
+    {
         return 152;
     }
 
-    public static function getDislike($video) {
+    public static function getDislike($video): int
+    {
         return 323 ;
     }
 
