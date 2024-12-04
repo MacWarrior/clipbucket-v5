@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"205",
+  "revision":"206",
   "status":"dev",
   "detail":[
     {
@@ -196,6 +196,7 @@
         ,"Fix featured video filter"
         ,"Fix search results pagination"
         ,"Fix upload security issue (Thanks @0xbko)"
+        ,"Fix missing footer on video page"
       ]
     },
     {
