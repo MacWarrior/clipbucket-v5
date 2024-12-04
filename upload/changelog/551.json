@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"199",
+  "revision":"200",
   "status":"dev",
   "detail":[
     {
@@ -193,6 +193,7 @@
         ,"Fix signup wrong date format"
         ,"Fix featured video filter"
         ,"Fix search results pagination"
+        ,"Fix upload security issue (Thanks @0xbko)"
       ]
     },
     {
