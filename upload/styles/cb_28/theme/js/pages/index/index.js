@@ -480,10 +480,27 @@ $(function () {
         }
 
         updateSlideListeners() {
+            let instance = this;
+
             const slides = Array.from(this.slidesContainer.children);
             slides.forEach((slide, index) => {
-                slide.onclick = () => this.scrollToSlide(index);
+                slide.onclick = function(event){
+
+                    if (slide.classList.contains('active')) {
+                        if (slide.classList.contains('cd-popup-trigger-slider')) {
+                            $('.cd-popup').addClass('is-visible');
+                            let videoid = this.getAttribute('data-videoid');
+                            _cb.getModalVideo(videoid);
+                        } else {
+                            document.location.href = slide.getAttribute('data-href');
+                        }
+                        return
+                    }
+
+                    instance.scrollToSlide(index);
+                };
             });
+
         }
     }
 

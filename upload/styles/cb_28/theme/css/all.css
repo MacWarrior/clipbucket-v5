@@ -7910,12 +7910,15 @@ textarea#comment_box {
   margin: 0;
   flex-shrink: 0;
   position: relative;
-  cursor: pointer;
   transition: width var(--animation-time) linear;
   width: var(--width-collapsed);
   overflow: hidden;
   opacity: 0.7;
   position: relative;
+}
+
+.slider-container-featured .slide:not(.active) {
+  cursor: pointer;
 }
 
 .slider-container-featured .slide.removeAnimation {

@@ -8,7 +8,7 @@
     <div id='calculatoire_div'><!-- a conserver, obligatoirement car utile pour le JS --></div>
     <div class="slides" id="slides">
         {foreach $video_list as $video}
-            <div class="slide">
+            <div class="slide {if config('popup_video') == 'yes'}cd-popup-trigger-slider{/if} video-link" data-videoid="{$video.videoid}" data-href="{video_link($video)}">
                 {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
                 <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
                     <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster"/>
