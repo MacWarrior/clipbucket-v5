@@ -563,7 +563,7 @@ class Migration
      * @return void
      * @throws Exception
      */
-    public static function insertTool(string $code, string $tool_function, string $frequency = null, bool $is_automatable = false)
+    public static function insertTool(string $code, string $tool_function, $frequency = null, bool $is_automatable = false)
     {
         $label = mysql_clean($code);
 
