@@ -294,7 +294,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'homepage_recent_video_ratio', '1.7777'),
     (NULL, 'list_recent_videos', '20'),
     (NULL, 'list_featured_videos', '20'),
-    (NULL, 'home_enable_fullwidth', 'no'),
+    (NULL, 'home_enable_fullwidth', 'yes'),
     (NULL, 'home_disable_sidebar', 'no'),
     (NULL, 'home_display_featured_collections', 'yes'),
     (NULL, 'homepage_collection_video_style', 'modern'),
