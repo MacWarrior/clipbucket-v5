@@ -7881,6 +7881,7 @@ textarea#comment_box {
   --width-poster: calc(var(--height-slider-featured) * 0.666625);
   --width-thumb: calc(var(--height-slider-featured) * 1.77777777778);
   --width-collapsed: 75px;
+  --width-collapsed-original: var(--width-collapsed);
 }
 
 .slider-container-featured.without_poster {
@@ -7948,6 +7949,7 @@ textarea#comment_box {
   overflow: hidden;
   display: inline-block;
   float: left;
+  transition: right var(--animation-time) linear;
 }
 
 .slider-container-featured .image-container.blured img {
@@ -8086,6 +8088,35 @@ textarea#comment_box {
 
 .slider-container-featured.without_poster .slide:has(.poster) .movie-details {
   padding-left: 1rem;
+}
+
+.slider-container-featured.without_poster .slide .image-container:has(.poster) {
+  --width-poster: 0;
+}
+
+.slider-container-featured.without_poster .slide .image-container:has(.poster) {
+  --width-collapsed: 0;
+}
+
+.slider-container-featured .slide:not(.active):not(:has(.poster)) .image-container:not(:has(.poster)) {
+  --s1: calc(var(--width-collapsed-original) * -0.5);
+  --s2: calc(var(--width-thumb) * -0.5);
+  --s3: calc( var(--s2) - var(--s1)) ;
+  --s4: calc( var(--width-poster) * 0.5) ;
+  right: calc( var(--s3) - var(--s4)) ;
+  transition: right var(--animation-time) linear;
+}
+
+.slider-container-featured.without_poster .slide:not(.active) .image-container:not(:has(.poster)) ,
+.slider-container-featured.without_poster .slide:not(.active):not(:has(.poster)) .image-container:not(:has(.poster)){
+  --s1: calc(var(--width-collapsed-original) * -0.5);
+  --s2: calc(var(--width-thumb) * -0.5);
+  right: calc( var(--s2) - var(--s1)) ;
+  transition: right var(--animation-time) linear;
+}
+
+.slider-container-featured.without_poster .slide:not(:has(.poster)) .image-container:not(:has(.poster)) {
+  width: calc(var(--width-thumb));
 }
 
 /* Responsive styles */
