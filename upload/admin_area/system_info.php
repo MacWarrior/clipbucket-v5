@@ -106,19 +106,31 @@ assign('phpVersionWebOK', $phpVersionWebOK);
 
 $ffReq = '3';
 $ffmpeg_version = System::get_software_version('ffmpeg', true, null, true);
+if (is_array($ffmpeg_version) && array_key_exists('err',$ffmpeg_version)) {
+    $ffmpeg_version = 0;
+}
 assign('ffmpegVersion', $ffmpeg_version);
 $ffmpegVersionOK = $ffmpeg_version >= $ffReq;
 assign('ffmpegVersionOK', $ffmpegVersionOK);
 
 $ffprobe_version = System::get_software_version('ffprobe', true, null, true);
+if (is_array($ffprobe_version) && array_key_exists('err',$ffprobe_version)) {
+    $ffprobe_version = 0;
+}
 assign('ffprobe_path', $ffprobe_version);
 $ffprobe_path_OK = $ffprobe_version >= $ffReq;
 assign('ffprobe_path_OK', $ffprobe_path_OK);
 
 $media_info = System::get_software_version('media_info', true, null, true);
+if (is_array($media_info) && array_key_exists('err',$media_info)) {
+    $media_info = 0;
+}
 assign('media_info', $media_info);
 
 $git_version = System::get_software_version('git', true, null, true);
+if (is_array($git_version) && array_key_exists('err',$git_version)) {
+    $git_version = 0;
+}
 assign('git_version', $git_version);
 
 $mysqlReq = '5.6.0';

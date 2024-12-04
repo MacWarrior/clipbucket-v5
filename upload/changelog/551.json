@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"201",
+  "revision":"202",
   "status":"dev",
   "detail":[
     {
@@ -107,6 +107,7 @@
         ,"Fix active & inactive users pages"
         ,"Fix feature member action"
         ,"Fix self-update interface"
+        ,"Fix system info services check"
       ]
     },
     {
