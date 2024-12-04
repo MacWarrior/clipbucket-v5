@@ -5,7 +5,7 @@
      data-nb-left="{$nbLeft}" {* nombre d'element a conserver visible a gauche *}
      data-height-slider="{$height}" {* hauteur fixe du slider *}
 >
-    <div id='calculatoire_div'><!-- a conserver, obligatoirement car utile pour le JS --></div>
+    <div id='calculatoire_div'>{*a conserver, obligatoirement car utile pour le JS*}</div>
     <div class="slides" id="slides">
         {foreach $video_list as $video}
             <div class="slide {if config('popup_video') == 'yes'}cd-popup-trigger-slider{/if} video-link" data-videoid="{$video.videoid}" data-href="{video_link($video)}">
