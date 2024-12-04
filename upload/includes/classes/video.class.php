@@ -376,15 +376,22 @@ class Video
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
+        $group = [];
+
         if( $param_count ){
             $select = ['COUNT(DISTINCT ' . $this->getTableName() . '.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
+
+            foreach ($this->fields as $field) {
+                $group[] = $this->tablename . '.' . $field;
+            }
+
             $select[] = 'users.username AS user_username';
+            $group[] = 'users.username';
         }
 
         $join = [];
-        $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
                 $types = Tags::getVideoTypes();

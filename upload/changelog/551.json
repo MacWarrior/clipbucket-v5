@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"199",
+  "revision":"203",
   "status":"dev",
   "detail":[
     {
@@ -107,6 +107,7 @@
         ,"Fix active & inactive users pages"
         ,"Fix feature member action"
         ,"Fix self-update interface"
+        ,"Fix system info services check"
       ]
     },
     {
@@ -193,6 +194,7 @@
         ,"Fix signup wrong date format"
         ,"Fix featured video filter"
         ,"Fix search results pagination"
+        ,"Fix upload security issue (Thanks @0xbko)"
       ]
     },
     {
@@ -213,6 +215,7 @@
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
         ,"Update compatibility to PHP 8.4.X"
+        ,"Update compatibility to MySQL 9.X"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -269,6 +272,7 @@
         ,"Fix guest users permissions"
         ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
         ,"Fix timeout after Windows installation script"
+        ,"Fix missing user profile insertions"
       ]
     },
     {

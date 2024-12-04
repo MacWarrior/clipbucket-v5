@@ -10,7 +10,7 @@ class M00001 extends \Migration
      */
     public function start()
     {
-        // Fixing date & datetime formats so MySQL8 won't fail upgrades
+        // Fixing date & datetime formats so MySQL8+ won't fail upgrades
         self::alterTable('ALTER TABLE `{tbl_prefix}ads_data`
             MODIFY COLUMN `last_viewed` DATETIME NOT NULL DEFAULT \'1000-01-01 00:00:00\',
             MODIFY COLUMN `date_added` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP;', [
@@ -78,7 +78,7 @@ class M00001 extends \Migration
                 'date_added'
             ]
         ]);
-        // Now MySQL8 should work properly
+        // Now MySQL8+ should work properly
 
         $tables = ['action_log','admin_notes','admin_todo','ads_data','ads_placements','collections','collection_categories','collection_contributors','collection_items','comments','config','contacts','conversion_queue','counters','countries','editors_picks','email_templates','favorites','flags','groups','group_categories','group_invitations','group_members','group_posts','group_topics','group_videos','languages','mass_emails','messages','modules','pages','photos','phrases','playlists','playlist_items','plugins','plugin_config','sessions','stats','subscriptions','template','users','user_categories','user_levels','user_levels_permissions','user_permissions','user_permission_types','user_profile','validation_re','version','video','video_categories','video_favourites','video_files','video_views'];
         foreach($tables as $table){
