@@ -59,16 +59,6 @@ class pages
         Assign('pageredir', @$_COOKIE['pageredir']);
     }
 
-    //Redirects page to without www.
-    function redirectOrig()
-    {
-        $curpage = $this->GetCurrentUrl();
-        $newPage = preg_replace('/:\/\/www\./', '://', $curpage);
-        if ($curpage != $newPage) {
-            header("location:$newPage");
-        }
-    }
-
     /**
      * Function used to create link
      *

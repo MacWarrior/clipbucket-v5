@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"203",
+  "revision":"204",
   "status":"dev",
   "detail":[
     {
@@ -144,6 +144,7 @@
         ,"Update orphan photos management"
         ,"Update dark & light themes"
         ,"Update search engine"
+        ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
