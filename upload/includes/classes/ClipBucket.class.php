@@ -337,11 +337,6 @@ class ClipBucket
         ];
 
         $menu_configuration['sub'][] = [
-            'title' => lang('update_logos')
-            , 'url' => DirPath::getUrl('admin_area') . 'upload_logo.php'
-        ];
-
-        $menu_configuration['sub'][] = [
             'title' => lang('manage_x', strtolower(lang('pages')))
             , 'url' => DirPath::getUrl('admin_area') . 'manage_pages.php'
         ];

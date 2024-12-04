@@ -1367,4 +1367,9 @@ VALUES ('admin_setting'),
        ('plugins_moderation'),
        ('allow_manage_user_level'),
        ('allow_create_collection'),
-       ('allow_create_playlist');
+       ('allow_create_playlist'),
+       ('recommended_dimension'),
+       ('favicon'),
+       ('tips_logo'),
+       ('tips_favicon'),
+       ('wrong_image_extension');
