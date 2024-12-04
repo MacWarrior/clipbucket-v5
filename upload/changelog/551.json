@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"204",
+  "revision":"205",
   "status":"dev",
   "detail":[
     {
@@ -274,6 +274,7 @@
         ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
         ,"Fix timeout after Windows installation script"
         ,"Fix missing user profile insertions"
+        ,"Fix incomplete SQL in update 5.5.1 - 203"
       ]
     },
     {
