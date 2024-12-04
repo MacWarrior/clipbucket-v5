@@ -1,4 +1,5 @@
 <?php
+define('THIS_PAGE', 'upgrade_db');
 require_once dirname(__FILE__, 2).'/includes/admin_config.php';
 
 $need_to_create_version_table = true;

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"202",
+  "revision":"203",
   "status":"dev",
   "detail":[
     {
@@ -215,6 +215,7 @@
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
         ,"Update compatibility to PHP 8.4.X"
+        ,"Update compatibility to MySQL 9.X"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -271,6 +272,7 @@
         ,"Fix guest users permissions"
         ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
         ,"Fix timeout after Windows installation script"
+        ,"Fix missing user profile insertions"
       ]
     },
     {
