@@ -14,7 +14,9 @@ You can start a fully dedicated video sharing website or photo sharing websites 
 # Update 5.5.0
 After more than 370 revisions, we're proud to officialy announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
 <p align="center">
-  <img src="./upload/images/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
+    <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.0">
+      <img src="./upload/images/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
+    </a>
 </p>
 
 # History
@@ -22,7 +24,7 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/en/" target="_blank">Oxygenz</a>'s projects since 2023
 
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-| PHP 7.0 - 8.4+ compatibility                                      | MySQL 8+ & strict mode compatibility                      |
+| PHP 7.0 - 8.4+ compatibility                                      | MySQL 9+ & strict mode compatibility                      |
 |-------------------------------------------------------------------|-----------------------------------------------------------|
 | UHD video resolutions support                                     | TMDB integration                                          |
 | Dark & Light theme                                                | Age restriction                                           |
@@ -32,6 +34,7 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 | Easy installation scripts                                         | Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i> |
 | Integrated DB update system                                       | Integrated translations <i>(ENG, FRA, DEU, POR, ESP)</i>  |
 | <b>Security, performance, stability and codestyle improvements<b> |                                                           |
+
 And even more !
 
 # Installation

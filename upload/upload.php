@@ -8,7 +8,7 @@ Pages::getInstance()->page_redir();
 subtitle('upload');
 
 if (isset($_GET['collection'])) {
-    $selected_collection = unserialize(base64_decode($_GET['collection']));
+    $selected_collection = json_decode(base64_decode($_GET['collection']));
     assign('selected_collection', Collection::getInstance()->getOne(['collection_id'=>$selected_collection]));
 }
 

@@ -2906,9 +2906,9 @@ class CBPhotos
      *
      * @return string
      */
-    function encode_key($key)
+    function encode_key($key): string
     {
-        return base64_encode(serialize($key));
+        return base64_encode(json_encode($key));
     }
 
     /**
@@ -2920,7 +2920,7 @@ class CBPhotos
      */
     function decode_key($key)
     {
-        return unserialize(base64_decode($key));
+        return json_decode(base64_decode($key));
     }
 
     /**
