@@ -135,6 +135,8 @@ if (isset($_POST['update'])) {
         , 'enable_access_view_video_history'
         , 'enable_visual_editor_comments'
         , 'display_featured_video'
+        , 'enable_membership'
+        , 'enable_public_video_page'
     ];
 
     $config_booleans_to_refactor = [
@@ -466,7 +468,10 @@ if (isset($_POST['update'])) {
         'limit_photo_related',
         'display_featured_video',
         'featured_video_style',
-        'number_featured_video'
+        'number_featured_video',
+        'video_list_view_video_history',
+        'enable_membership',
+        'enable_public_video_page'
     ];
 
     foreach ($opt_list as $optl) {

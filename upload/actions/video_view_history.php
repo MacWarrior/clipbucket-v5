@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'info_tmdb');
+define('THIS_PAGE', 'video_view_history');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 if (config('enable_access_view_video_history') != 'yes' && config('enable_video_view_history') != 'yes') {

@@ -29,6 +29,14 @@ if (config('enable_storage_history_fo') == 'yes') {
     $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser(user_id()), 2);
 }
 assign('storage_use', $storage_use);
+$current_membership = null;
+if (config('enable_membership') == 'yes') {
+    $current_membership = Membership::getInstance()->getAllHistoMembershipForUser([
+        'userid'=>user_id(),
+        'first_only'=>true
+    ]);
+}
+assign('current_membership', $current_membership);
 
 subtitle(lang('my_account'));
 template_files('myaccount.html');
