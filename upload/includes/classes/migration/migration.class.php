@@ -223,6 +223,7 @@ class Migration
             }
 
             if (!empty($params_exists['column'])) {
+                $conditions_column = [];
                 $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
                 $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
                 $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($params_exists['column']) . '\'';
@@ -233,6 +234,7 @@ class Migration
                 ) = 1';
             } else if (!empty($params_exists['columns'])) {
                 foreach ($params_exists['columns'] as $column) {
+                    $conditions_column = [];
                     $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
                     $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
                     $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($column) . '\'';
@@ -243,6 +245,7 @@ class Migration
                     ) = 1';
                 }
             } else if (!empty($params_exists['table'])) {
+                $conditions_table = [];
                 $conditions_table[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
                 $conditions_table[] = 'TABLE_NAME = \'' . tbl($params_exists['table']) . '\'';
 
@@ -354,6 +357,7 @@ class Migration
             }
 
             if (!empty($params_not_exists['column'])) {
+                $conditions_column = [];
                 $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
                 $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
                 $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($params_not_exists['column']) . '\'';
@@ -364,6 +368,7 @@ class Migration
                 ) = 0';
             } else if (!empty($params_not_exists['columns'])) {
                 foreach ($params_not_exists['columns'] as $column) {
+                    $conditions_column = [];
                     $conditions_column[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
                     $conditions_column[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
                     $conditions_column[] = 'COLUMN_NAME = \'' . mysql_clean($column) . '\'';
@@ -374,6 +379,7 @@ class Migration
                     ) = 0';
                 }
             } else if (!empty($params_not_exists['table'])) {
+                $conditions_table = [];
                 $conditions_table[] = 'TABLE_SCHEMA = \'' . $dbname . '\'';
                 $conditions_table[] = 'TABLE_NAME = \'' . tbl($params_not_exists['table']) . '\'';
 
@@ -563,7 +569,7 @@ class Migration
      * @return void
      * @throws Exception
      */
-    public static function insertTool(string $code, string $tool_function, string $frequency = null, bool $is_automatable = false)
+    public static function insertTool(string $code, string $tool_function, $frequency = null, bool $is_automatable = false)
     {
         $label = mysql_clean($code);
 

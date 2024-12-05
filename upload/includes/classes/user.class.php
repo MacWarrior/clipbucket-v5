@@ -368,6 +368,10 @@ class User
             $select = $this->getAllFields();
             $select[] = $this->getTableNameLevel() . '.user_level_name';
 
+            foreach ($this->fields as $field) {
+                $group[] = $this->tablename . '.' . $field;
+            }
+
             foreach ($this->fields_profile as $field) {
                 $group[] = $this->tablename_profile . '.' . $field;
             }

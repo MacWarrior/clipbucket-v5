@@ -134,6 +134,7 @@ if (isset($_POST['update'])) {
         , 'home_display_recent_videos'
         , 'enable_access_view_video_history'
         , 'enable_visual_editor_comments'
+        , 'display_featured_video'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -465,6 +466,9 @@ if (isset($_POST['update'])) {
         'enable_access_view_video_history',
         'video_list_view_video_history',
         'limit_photo_related',
+        'display_featured_video',
+        'featured_video_style',
+        'number_featured_video',
         'video_list_view_video_history',
         'enable_membership',
         'enable_public_video_page'
@@ -526,7 +530,8 @@ if (isset($_POST['update'])) {
         'chunk_upload_size',
         'cloudflare_upload_limit',
         'video_list_view_video_history',
-        'limit_photo_related'
+        'limit_photo_related',
+        'number_featured_video'
     ];
 
     foreach ($rows as $field) {

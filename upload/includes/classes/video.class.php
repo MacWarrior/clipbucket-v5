@@ -383,15 +383,22 @@ class Video
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
+        $group = [];
+
         if( $param_count ){
             $select = ['COUNT(DISTINCT ' . $this->getTableName() . '.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
+
+            foreach ($this->fields as $field) {
+                $group[] = $this->tablename . '.' . $field;
+            }
+
             $select[] = 'users.username AS user_username';
+            $group[] = 'users.username';
         }
 
         $join = [];
-        $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
@@ -550,6 +557,42 @@ class Video
         if( !empty($video['age_restriction']) ){
             echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
         }
+    }
+
+    private static function getRating($video, $type = 'like')
+    {
+        $rating = $video['rating'];
+        $ratings = $video['ratings'];
+        $total = $video['total'];
+
+        if (empty($ratings)) {
+            $ratings = $video['rated_by'];
+        }
+        //Checking Percent
+        if ($total <= 10) {
+            $total = 10;
+        }
+        $perc = round($rating * 100 / $total);
+        $likes = round($ratings * $perc / 100);
+
+        switch($type)
+        {
+            default:
+            case 'like':
+                return $likes;
+            case 'dislike':
+                return $ratings - $likes;
+        }
+    }
+
+    public static function getLike($video): int
+    {
+        return self::getRating($video, 'like');
+    }
+
+    public static function getDislike($video): int
+    {
+        return self::getRating($video, 'dislike');
     }
 
     /**
@@ -2298,7 +2341,6 @@ class CBvideo extends CBCategory
 
         $perc = $perc . '%';
         $disperc = $disperc . '%';
-        $likes = round($ratings * $perc / 100); // get lowest integer
 
         if ($params['is_rating']) {
             if (error()) {
@@ -2311,6 +2353,9 @@ class CBvideo extends CBCategory
             }
         }
 
+        $likes = Video::getLike($params);
+        $dislikes = Video::getDislike($params);
+
         if ($data_only) {
             return [
                 'perc'       => $perc,
@@ -2319,7 +2364,7 @@ class CBvideo extends CBCategory
                 'type'       => $type,
                 'rating_msg' => $rating_msg,
                 'likes'      => $likes,
-                'dislikes'   => ($ratings - $likes),
+                'dislikes'   => $dislikes,
                 'disable'    => $params['disable']
             ];
         }
@@ -2330,7 +2375,7 @@ class CBvideo extends CBCategory
         assign('id', $id);
         assign('rating_msg', $rating_msg);
         assign('likes', $likes);
-        assign('dislikes', ($ratings - $likes));
+        assign('dislikes', $dislikes);
         assign('disable', $params['disable']);
 
         Template('blocks/common/rating.html');

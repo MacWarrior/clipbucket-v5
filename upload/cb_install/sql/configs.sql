@@ -294,7 +294,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'homepage_recent_video_ratio', '1.7777'),
     (NULL, 'list_recent_videos', '20'),
     (NULL, 'list_featured_videos', '20'),
-    (NULL, 'home_enable_fullwidth', 'no'),
+    (NULL, 'home_enable_fullwidth', 'yes'),
     (NULL, 'home_disable_sidebar', 'no'),
     (NULL, 'home_display_featured_collections', 'yes'),
     (NULL, 'homepage_collection_video_style', 'modern'),
@@ -307,6 +307,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_visual_editor_comments', 'yes'),
     (NULL, 'hide_uploader_name', 'no'),
     (NULL, 'limit_photo_related', '8'),
+    (NULL, 'display_featured_video', 'yes'),
+    (NULL, 'featured_video_style', 'modern'),
+    (NULL, 'number_featured_video', '20'),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 

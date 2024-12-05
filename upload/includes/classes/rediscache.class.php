@@ -105,7 +105,6 @@ class CacheRedis
         return $this->isEnabled;
     }
 
-
     private static function redislize($data): string
     {
         // Only serialize if it's not a string or a integer

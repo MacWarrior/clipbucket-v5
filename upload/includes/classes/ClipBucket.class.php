@@ -68,11 +68,8 @@ class ClipBucket
      */
     function __construct()
     {
-        global $pages;
         //Assign Configs
         $this->configs = $this->get_configs();
-        //Get Current Page and Redirects it to without www.
-        $pages->redirectOrig();
 
         //This is used to create Admin Menu
         //Updating Upload Options		

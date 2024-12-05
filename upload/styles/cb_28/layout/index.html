@@ -1,190 +1,202 @@
 {ANCHOR place="before_content"}
 <div id="main" class="clearfix container {if config('home_enable_fullwidth') == 'yes'}fullwidth{/if} {if config('home_disable_sidebar') == 'yes'}nosidebar{/if}">
-	<div id="messageFav" class="alert alert-info marginTop" style="display:none; height:66px;"></div>
-	<div class="clearfix">
-		<div id="content">
-			{ANCHOR place='global'}
-			{if config("enable_advertisement") == "yes"}
-			<div class="clearfix leaderboard-ad">
-				<div class="ad">{AD place='ad_728x90'}</div>
-			</div>
-			{/if}
+    <div id="messageFav" class="alert alert-info marginTop" style="display:none; height:66px;"></div>
+    <div class="clearfix">
+        <div id="content">
+            {ANCHOR place='global'}
+            {if config("enable_advertisement") == "yes"}
+                <div class="clearfix leaderboard-ad">
+                    <div class="ad">{AD place='ad_728x90'}</div>
+                </div>
+            {/if}
 
-			{if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
-				{ANCHOR place='before_features_videos'}
-			<section class="clearfix featured-videos">
-				<h1>{lang code="featured_videos"}</h1>
-				<div id="featured_vid_sec" class="clearfix row"></div>
-				<div id="featured_pre" class="clearfix"></div>
-				<div id="featured-loadmore" class="clearfix text-center">
-					<button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
-				</div>
-			</section>
-				{ANCHOR place='after_features_videos'}
+            {if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
+                {ANCHOR place='before_features_videos'}
+				{if config('display_featured_video') == 'yes' && !empty($featured_videos)}
+                    <section class="clearfix featured-videos">
+                        <h1>{lang code="featured_videos"}</h1>
+                        {if config(featured_video_style) == 'modern'}
+                            {include
+                                file="$style_dir/blocks/featured_video_slider.html"
+                                video_list=$featured_videos
+                                animationTime="500"
+                                timerAutoNext="5000"
+                                nbLeft="2"
+                                height="300px"
+                            }
+                        {else}
+                            <div id="featured_vid_sec" class="clearfix row"></div>
+                            <div id="featured_pre" class="clearfix"></div>
+                            <div id="featured-loadmore" class="clearfix text-center">
+                                <button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="{lang code='load_more'}">{lang code="load_more"}</button>
+                            </div>
+                        {/if}
+                    </section>
+                {/if}
+                {ANCHOR place='after_features_videos'}
 
-				{if config('home_display_recent_videos') == 'yes'}
-					{ANCHOR place='before_recent_videos'}
-					{if in_array(config('homepage_recent_videos_display'), ['paginate', false])}
-					<section class="clearfix videos">
-						<h1>{lang code="recent_videos"}</h1>
-						<div id="recent_vids_sec" class="clearfix row"></div>
-						<div id="recent_pre" class="clearfix"></div>
-						<div id="recent-loadmore" class="clearfix text-center">
-							<button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="{lang code='load_more'}">{lang code="load_more"}</button>
-						</div>
-					</section>
+                {ANCHOR place='before_recent_videos'}
+                {if config('home_display_recent_videos') == 'yes'}
+                    {if in_array(config('homepage_recent_videos_display'), ['paginate', false])}
+                        <section class="clearfix videos">
+                            <h1>{lang code="recent_videos"}</h1>
+                            <div id="recent_vids_sec" class="clearfix row"></div>
+                            <div id="recent_pre" class="clearfix"></div>
+                            <div id="recent-loadmore" class="clearfix text-center">
+                                <button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="{lang code='load_more'}">{lang code="load_more"}</button>
+                            </div>
+                        </section>
+                    {elseif config('homepage_recent_videos_display') == 'slider'}
 
-					{elseif config('homepage_recent_videos_display') == 'slider'}
+                        {if !is_array($recent_videos)}
+                            <section class="clearfix featured-videos">
+                                <h1>{lang code="recent_videos"}</h1>
+                                <div class="clearfix row">
+                                    <span class="well well-info btn-block">{lang code='no_recent_videos_found'}</span>
+                                </div>
+                            </section>
+                        {else}
+                            {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_recent_video_ratio') video_style=config('homepage_recent_video_style') video_list=$recent_videos title={lang code="recent_videos"} main_link={cblink(['name' => 'videos'])} view_more=$view_more_recent}
+                        {/if}
+                    {/if}
+                {/if}
+                {ANCHOR place='after_recent_videos'}
 
-						{if !is_array($recent_videos)}
-							<section class="clearfix featured-videos">
-								<h1>{lang code="recent_videos"}</h1>
-								<div class="clearfix row">
-									<span class="well well-info btn-block">{lang code='no_recent_videos_found'}</span>
-								</div>
-							</section>
-						{else}
-							{include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_recent_video_ratio') video_style=config('homepage_recent_video_style') video_list=$recent_videos title={lang code="recent_videos"} main_link={cblink(['name' => 'videos'])} view_more=$view_more_recent}
-						{/if}
-					{/if}
-					{ANCHOR place='after_recent_videos'}
-				{/if}
+                {ANCHOR place='before_featured_collections'}
+                {if config('home_display_featured_collections') == 'yes' && !empty($featured_collections)}
+                    {foreach $featured_collections as $collection}
+                        {if empty($collection.items)}
+                            {continue}
+                        {/if}
+                        {if $collection.total_objects > config('list_home_collection_videos')}
+                            {$view_more_collection = true}
+                        {/if}
+                        {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={$cbcollection->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
+                    {/foreach}
+                {/if}
+                {ANCHOR place='after_featured_collections'}
 
-				{if config('home_display_featured_collections') == 'yes' && !empty($featured_collections)}
-					{ANCHOR place='before_featured_collections'}
-						{foreach $featured_collections as $collection}
-							{if empty($collection.items)}
-								{continue}
-							{/if}
-							{if $collection.total_objects > config('list_home_collection_videos')}
-								{$view_more_collection = true}
-							{/if}
-							{include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={$cbcollection->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
-						{/foreach}
-					{ANCHOR place='after_featured_collections'}
-				{/if}
+            {/if}
+        </div>
 
-			{/if}
-		</div>
+        {if config('home_disable_sidebar') != 'yes'}
+            <aside id="sidebar">
+                {if config("enable_advertisement") == "yes"}
+                    <div class="box-ad ad">{AD place='ad_300x250'}</div>
+                {/if}
 
-		{if config('home_disable_sidebar') != 'yes'}
-		<aside id="sidebar">
-			{if config("enable_advertisement") == "yes"}
-			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			{/if}
+                {if config('channelsSection') == 'yes' && !empty($featured_users)}
+                    <h2>{lang code="featured_users"}</h2>
+                    <div class="clearfix sidebar-channels">
+                        {foreach $featured_users as $user}
+                            <div class="clearfix channel-item">
+                                <a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
+                                    <img src="{$userquery->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle no_select"/>
+                                </a>
+                                <div class="channel-info">
+                                    <h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
+                                    <div class="clearfix views-videos">
+                                        <span>{prettyNum(User::getInstance($user.userid)->get('profile_hits')|number_format)} {lang code='views'}</span>
+                                        {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
+                                            <span>{prettyNum(User::getInstance($user.userid)->get('total_videos')|number_format)} {lang code='videos'}</span>
+                                        {/if}
+                                    </div>
+                                </div>
+                            </div>
+                        {/foreach}
+                    </div>
+                {/if}
 
-			{if config('channelsSection') == 'yes' && !empty($featured_users)}
-			<h2>{lang code="featured_users"}</h2>
-			<div class="clearfix sidebar-channels">
-					{foreach $featured_users as $user}
-				<div class="clearfix channel-item">
-					<a href="{User::getInstance($user.userid)->getLink('channel')}" class="avatar">
-						<img src="{$userquery->getuserthumb($user,'m')}" alt="avatar" width="50" height="50" class="img-circle no_select"/>
-					</a>
-					<div class="channel-info">
-						<h3><a href="{User::getInstance($user.userid)->getLink('channel')}">{display_clean(User::getInstance($user.userid)->get('username'))}</a></h3>
-						<div class="clearfix views-videos">
-							<span>{prettyNum(User::getInstance($user.userid)->get('profile_hits')|number_format)} {lang code='views'}</span>
-							{if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes'}
-							<span>{prettyNum(User::getInstance($user.userid)->get('total_videos')|number_format)} {lang code='videos'}</span>
-							{/if}
-						</div>
-					</div>
-				</div>
-					{/foreach}
-			</div>
-			{/if}
+                {if config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !empty($top_collections)}
+                    <h2 title="Collections with most items">{lang code="top_collections"}</h2>
+                    <div class="clearfix sidebar-items collections-grid">
+                        <div class="clearfix row">
+                            {foreach from=$top_collections item=collection}
+                                <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    {include file="$style_dir/blocks/collection-item.html"}
+                                </div>
+                            {/foreach}
+                        </div>
+                    </div>
+                {/if}
 
-			{if config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !empty($top_collections)}
-				<h2 title="Collections with most items">{lang code="top_collections"}</h2>
-				<div class="clearfix sidebar-items collections-grid">
-					<div class="clearfix row">
-						{foreach from=$top_collections item=collection}
-							<div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-12">
-								{include file="$style_dir/blocks/collection-item.html"}
-							</div>
-						{/foreach}
-					</div>
-				</div>
-			{/if}
+                {if config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && !empty($playlists)}
+                    <div class="clearfix sidebar-playlists">
+                        <h2 title="Playlists with most videos">{lang code="top_playlists"}</h2>
+                        {foreach $playlists as $playlist}
+                            <div class="playlist clearfix">
+                                {$items = get_playlist_items($playlist.playlist_id, 4)}
+                                <a href="{video_link($items[0])}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
+                                <div class="clearfix row">
+                                    {foreach $items as $item}
+                                        {$videoid = $item.videoid}
+                                        {if $videoid}
+                                            <div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6 no_overflow">
+                                                {$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
+                                                {foreach $videos as $video}
+                                                    <a href="{video_link($video)}{if config('seo') != 'yes'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
+                                                        <img src="{getThumb vdetails=$video size=168x105}" class="img-responsive no_select {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
+                                                    </a>
+                                                {/foreach}
+                                            </div>
+                                        {else}
+                                            <div class="clearfix well">{lang code='no_items'}</div>
+                                        {/if}
+                                    {/foreach}
+                                </div>
+                                <span class="videos-count">{if $items}{count($items)|number_format}{else}0{/if}&nbsp;{lang code="videos"}</span>
+                            </div>
+                        {/foreach}
+                    </div>
+                {/if}
 
-			{if config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && !empty($playlists)}
-				<div class="clearfix sidebar-playlists">
-					<h2 title="Playlists with most videos">{lang code="top_playlists"}</h2>
-					{foreach $playlists as $playlist}
-					<div class="playlist clearfix">
-						{$items = get_playlist_items($playlist.playlist_id, 4)}
-						<a href="{video_link($items[0])}"><h3>{display_clean($playlist.playlist_name)}</h3></a>
-						<div class="clearfix row">
-							{foreach $items as $item}
-								{$videoid = $item.videoid}
-								{if $videoid}
-							<div class="video col-lg-3 col-md-4 col-sm-6 col-xs-6 no_overflow">
-									{$videos = get_videos(['videoid'=>$videoid,'limit'=>'2'])}
-									{foreach $videos as $video}
-								<a href="{video_link($video)}{if config('seo') != 'yes'}&{else}?{/if}play_list={$playlist.playlist_id}" class="playlist-video">
-									<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive no_select {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
-								</a>
-									{/foreach}
-							</div>
-								{else}
-							<div class="clearfix well">{lang code='no_items'}</div>
-								{/if}
-							{/foreach}
-						</div>
-						<span class="videos-count">{if $items}{count($items)|number_format}{else}0{/if}&nbsp;{lang code="videos"}</span>
-					</div>
-					{/foreach}
-				</div>
-			{/if}
-
-			{if config('enable_social_networks_links_home_sidebar')=='yes'}
-			<div class="clearfix sidebar-items">
-				{SocialNetworks::display('vertical')}
-			</div>
-			{/if}
-		</aside>
-		{/if}
-	</div>
+                {if config('enable_social_networks_links_home_sidebar')=='yes'}
+                    <div class="clearfix sidebar-items">
+                        {SocialNetworks::display('vertical')}
+                    </div>
+                {/if}
+            </aside>
+        {/if}
+    </div>
 </div>
 
 <script type="text/javascript">
-	// handles initial and load more
-	// for home page videos
-	var langCo = "{lang code='no_featured_videos_found'}";
-	var noRecent = "{lang code='no_recent_videos_found'}";
-	var loadMoreLang = "{lang code='load_more'}";
-	var previousLang = "{lang code='previous'}";
-	var nextLang = "{lang code='next'}";
+    // handles initial and load more
+    // for home page videos
+    var langCo = "{lang code='no_featured_videos_found'}";
+    var noRecent = "{lang code='no_recent_videos_found'}";
+    var loadMoreLang = "{lang code='load_more'}";
+    var previousLang = "{lang code='previous'}";
+    var nextLang = "{lang code='next'}";
 
-	homePageVideos("{$got_qlitems}");
+    homePageVideos("{$got_qlitems}");
 
     {if config('popup_video') == 'yes'}
-    $(document).ready(function($){
+    $(document).ready(function ($) {
         //open popup
-        $(document).on('click','.cd-popup-trigger:not(.thumb-video)', function(event){
+        $(document).on('click', '.cd-popup-trigger:not(.thumb-video)', function (event) {
             event.preventDefault();
             $('.cd-popup').addClass('is-visible');
         });
 
         //close popup
-        $(document).on('click','.cd-popup', function(event){
-			if( $(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup')  || $(event.target).is('.my-modal-content') ) {
+        $(document).on('click', '.cd-popup', function (event) {
+            if ($(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') || $(event.target).is('.my-modal-content')) {
                 event.preventDefault();
                 $(this).removeClass('is-visible');
-				videojs($('.my-modal-content').find('video')[0]).dispose();
+                videojs($('.my-modal-content').find('video')[0]).dispose();
                 $(".my-modal-content").html('');
             }
         });
 
         //close popup when clicking the esc keyboard button
-        $(document).keydown(function(event){
-            if(event.which=='27'){
+        $(document).keydown(function (event) {
+            if (event.which == '27') {
                 var video_player = _cb.getPlayerEl($(".my-modal-content").attr('id'));
 
-                if (!$(video_player).hasClass('vjs-fullscreen')){
+                if (!$(video_player).hasClass('vjs-fullscreen')) {
                     $('.cd-popup').removeClass('is-visible');
-					videojs($('.my-modal-content').find('video')[0]).dispose();
+                    videojs($('.my-modal-content').find('video')[0]).dispose();
                     $(".my-modal-content").html('');
                 }
             }
