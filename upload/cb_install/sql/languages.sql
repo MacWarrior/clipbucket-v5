@@ -1367,4 +1367,8 @@ VALUES ('admin_setting'),
        ('plugins_moderation'),
        ('allow_manage_user_level'),
        ('allow_create_collection'),
-       ('allow_create_playlist');
+       ('allow_create_playlist'),
+       ('display_featured_video'),
+       ('featured_video_style'),
+       ('classic'),
+       ('modern');

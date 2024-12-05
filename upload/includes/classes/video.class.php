@@ -552,6 +552,42 @@ class Video
         }
     }
 
+    private static function getRating($video, $type = 'like')
+    {
+        $rating = $video['rating'];
+        $ratings = $video['ratings'];
+        $total = $video['total'];
+
+        if (empty($ratings)) {
+            $ratings = $video['rated_by'];
+        }
+        //Checking Percent
+        if ($total <= 10) {
+            $total = 10;
+        }
+        $perc = round($rating * 100 / $total);
+        $likes = round($ratings * $perc / 100);
+
+        switch($type)
+        {
+            default:
+            case 'like':
+                return $likes;
+            case 'dislike':
+                return $ratings - $likes;
+        }
+    }
+
+    public static function getLike($video): int
+    {
+        return self::getRating($video, 'like');
+    }
+
+    public static function getDislike($video): int
+    {
+        return self::getRating($video, 'dislike');
+    }
+
     /**
      * @throws Exception
      */
@@ -2298,7 +2334,6 @@ class CBvideo extends CBCategory
 
         $perc = $perc . '%';
         $disperc = $disperc . '%';
-        $likes = round($ratings * $perc / 100); // get lowest integer
 
         if ($params['is_rating']) {
             if (error()) {
@@ -2311,6 +2346,9 @@ class CBvideo extends CBCategory
             }
         }
 
+        $likes = Video::getLike($params);
+        $dislikes = Video::getDislike($params);
+
         if ($data_only) {
             return [
                 'perc'       => $perc,
@@ -2319,7 +2357,7 @@ class CBvideo extends CBCategory
                 'type'       => $type,
                 'rating_msg' => $rating_msg,
                 'likes'      => $likes,
-                'dislikes'   => ($ratings - $likes),
+                'dislikes'   => $dislikes,
                 'disable'    => $params['disable']
             ];
         }
@@ -2330,7 +2368,7 @@ class CBvideo extends CBCategory
         assign('id', $id);
         assign('rating_msg', $rating_msg);
         assign('likes', $likes);
-        assign('dislikes', ($ratings - $likes));
+        assign('dislikes', $dislikes);
         assign('disable', $params['disable']);
 
         Template('blocks/common/rating.html');

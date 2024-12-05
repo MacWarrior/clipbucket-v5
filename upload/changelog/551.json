@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"206",
+  "revision":"207",
   "status":"dev",
   "detail":[
     {
@@ -131,6 +131,7 @@
         ,"Implement comment visual editor"
         ,"Implement option to disable uploader name display"
         ,"Implement TMDB Tv Show integration"
+        ,"Implement featured video slider"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
