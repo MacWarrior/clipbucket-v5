@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"203",
+  "revision":"206",
   "status":"dev",
   "detail":[
     {
@@ -144,6 +144,7 @@
         ,"Update orphan photos management"
         ,"Update dark & light themes"
         ,"Update search engine"
+        ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -195,6 +196,7 @@
         ,"Fix featured video filter"
         ,"Fix search results pagination"
         ,"Fix upload security issue (Thanks @0xbko)"
+        ,"Fix missing footer on video page"
       ]
     },
     {
@@ -273,6 +275,7 @@
         ,"Fix open_basedir errors blocking installation process <i>(#441)</i>"
         ,"Fix timeout after Windows installation script"
         ,"Fix missing user profile insertions"
+        ,"Fix incomplete SQL in update 5.5.1 - 203"
       ]
     },
     {
