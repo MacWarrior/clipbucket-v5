@@ -7915,9 +7915,6 @@ textarea#comment_box {
   overflow: hidden;
   opacity: 0.7;
   position: relative;
-}
-
-.slider-container-featured .slide:not(.active) {
   cursor: pointer;
 }
 
@@ -8128,7 +8125,11 @@ textarea#comment_box {
   .slider-container-featured:has(.slides .slide:nth-child(2)) .next-btn {
     padding: 10px 15px;
     font-size: 18px;
+    line-height: 23px;
     display: block;
+    height: 40px;
+    width: 40px;
+    overflow: hidden;
   }
 
   .slider-container-featured .slide:not(.active) {
