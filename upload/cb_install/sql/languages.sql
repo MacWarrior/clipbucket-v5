@@ -1371,4 +1371,9 @@ VALUES ('admin_setting'),
        ('display_featured_video'),
        ('featured_video_style'),
        ('classic'),
-       ('modern');
+       ('modern'),
+       ('recommended_dimension'),
+       ('favicon'),
+       ('tips_logo'),
+       ('tips_favicon'),
+       ('wrong_image_extension');
