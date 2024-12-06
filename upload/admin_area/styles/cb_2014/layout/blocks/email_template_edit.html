@@ -1,0 +1,19 @@
+<form method="post" enctype="multipart/form-data" name="email_template_edit" id="email_template_edit">
+    <input name="id_email_template" value="{$template.id_email_template}" type="hidden"/>
+    <div class="row">
+        <label for="email_template_code">{lang('code')}</label>
+        <input name="code" id="email_template_code" value="{$template.code}" type="text"/>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6 border-right">
+            <label for="email_template_content">{lang('content')}</label>
+            <textarea name="content" id="email_template_content" style="width: 100%; min-height: 200px; max-width: 100%;"></textarea>
+        </div>
+
+        <div class="col-md-6 ">
+            <label for="render">{lang('render')}</label>
+            <div id="render" class="tab-content" style="width: 100%; min-height: 200px;"></div>
+        </div>
+    </div>
+</form>

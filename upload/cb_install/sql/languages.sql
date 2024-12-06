@@ -1371,4 +1371,6 @@ VALUES ('admin_setting'),
        ('display_featured_video'),
        ('featured_video_style'),
        ('classic'),
-       ('modern');
+       ('modern'),
+       ('email_template_management'),
+       ('email_template_management_desc');

@@ -1,0 +1,33 @@
+<form name="video_manage." method="post">
+    {if $email_templates}
+        <table class="table table-bordered table-striped manageUsersTable marginTop">
+            <tr>
+                <th>{lang('code')}</th>
+                <th>{lang('is_default')}</th>
+                <th>&nbsp;</th>
+            </tr>
+            {foreach from=$email_templates item=template}
+                <tr>
+                    <td>{$template.code}</td>
+                    <td>
+                        <input value="{$template.is_default}" {if $template.is_default=='yes'}checked{/if}
+                               name="make_default" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                        <span class="lbl"></span>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">{lang('actions')} <i class="caret"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                                <li><a role="menuitem" tabindex="-1" onclick="editEmailTemplate({$template.id_email_template})">{lang code='edit'}</a></li>
+                                {if !$template.is_default && $template.is_deletable}
+                                    <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='delete'}</a></li>
+                                {/if}
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {/foreach}
+        </table>
+    {/if}
+</form>

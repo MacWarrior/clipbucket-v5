@@ -1,0 +1,38 @@
+<div class="heading">
+    <h2>{lang('email_template_management')}</h2>
+</div>
+    <div class="row">
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a data-toggle="tab" href="#email_template">
+                        <h8>{ucfirst(lang('email_template'))}</h8>
+                    </a>
+                </li>
+                <li>
+                    <a data-toggle="tab" href="#email">
+                        <h8>{ucfirst(lang('email'))}</h8>
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div id="email_template" class="tab-pane active">
+                    <div class="row">
+                        {include file="$layout_dir/blocks/email_template_list.html"}
+                    </div>
+                </div>
+
+                <div id="email" class="tab-pane">
+                    <div class="row">
+                        {include file="$layout_dir/blocks/email_list.html"}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div style="text-align:center;">
+        <input type="submit" name="update" class="btn btn-primary btn-sm" value="Update Settings" id="udpate"/>
+    </div>
+</form>
+<span id="floatingMessage" class="glyphicon glyphicon-ok"></span>
