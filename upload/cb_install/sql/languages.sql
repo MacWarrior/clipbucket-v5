@@ -1373,4 +1373,7 @@ VALUES ('admin_setting'),
        ('classic'),
        ('modern'),
        ('email_template_management'),
-       ('email_template_management_desc');
+       ('email_template_management_desc'),
+       ('empty_email_content'),
+       ('rendered'),
+       ('code_cannot_be_empty');

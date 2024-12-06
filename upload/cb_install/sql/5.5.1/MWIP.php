@@ -116,5 +116,20 @@ class MWIP extends \Migration
             'fr' => 'Peut gérer les modèles d\'emails',
             'en' => 'Can manage emails templates'
         ]);
+
+        self::generateTranslation('empty_email_content', [
+            'fr' => 'Merci de renseigner la variable "email_content".',
+            'en' => 'Please enter variable "email_content"'
+        ]);
+
+        self::generateTranslation('rendered', [
+            'fr' => 'Rendu',
+            'en' => 'Rendered'
+        ]);
+
+        self::generateTranslation('code_cannot_be_empty', [
+            'fr'=>'Le code ne peut pas être vide',
+            'en'=>'Code cannot be empty'
+        ]);
     }
 }
