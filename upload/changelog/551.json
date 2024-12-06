@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"210",
+  "revision":"211",
   "status":"dev",
   "detail":[
     {
@@ -109,6 +109,7 @@
         ,"Fix feature member action"
         ,"Fix self-update interface"
         ,"Fix system info services check"
+        ,"Fix login redirect"
       ]
     },
     {
