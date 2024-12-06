@@ -886,7 +886,7 @@ class User
         } elseif ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
-            redirect_to(BASEURL . DIRECTORY_SEPARATOR . self::getDefaultHomepageFromUserLevel());
+            redirect_to(BASEURL . DIRECTORY_SEPARATOR . User::getInstance()->getDefaultHomepageFromUserLevel());
         }
     }
 
@@ -894,9 +894,9 @@ class User
      * @return string
      * @throws Exception
      */
-    public static function getDefaultHomepageFromUserLevel(): string
+    public function getDefaultHomepageFromUserLevel(): string
     {
-        $default_hompepage = userquery::getInstance()->get_user_level(user_id())['default_homepage'];
+        $default_hompepage = UserLevel::getPermission('default_homepage',$this->getCurrentUserLevelID());
         switch ($default_hompepage) {
             case 'homepage':
                 $link = '';
