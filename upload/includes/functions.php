@@ -2391,12 +2391,18 @@ function cbtitle($params = false)
     if (!$sub_sep) {
         $sub_sep = '-';
     }
-    //Getting Subtitle
-    if (!$cbsubtitle || !empty($params['no_subtitle'])) {
-        echo display_clean(TITLE . ' - ' . SLOGAN);
-    } else {
-        echo display_clean($cbsubtitle . ' ' . $sub_sep . ' ' . TITLE);
+
+    if( !empty($params['title_only']) ){
+        echo display_clean(TITLE);
+        return;
     }
+
+    if (!$cbsubtitle || !empty($params['no_subtitle'])) {
+        echo display_clean(TITLE . ' ' . $sub_sep . ' ' . SLOGAN);
+        return;
+    }
+
+    echo display_clean($cbsubtitle . ' ' . $sub_sep . ' ' . TITLE);
 }
 
 /**
