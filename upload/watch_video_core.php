@@ -1,9 +1,8 @@
 <?php
 
 require 'includes/config.inc.php';
-global $cbvid;
 
-if (!userquery::getInstance()->perm_check('view_video', true) || config('videosSection') != 'yes') {
+if (!User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes') {
     redirect_to(BASEURL);
 }
 
@@ -36,7 +35,7 @@ if (config('playlistsSection') == 'yes') {
         ]);
         $assign_arry['playlist'] = $playlist;
 
-        $playlist_items = $cbvid->get_playlist_items($playlist_id, 'playlist_items.date_added DESC');
+        $playlist_items = CBvideo::getInstance()->get_playlist_items($playlist_id, 'playlist_items.date_added DESC');
         $assign_arry['playlist_items'] = $playlist_items;
 
         $is_playlist = true;
