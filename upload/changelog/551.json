@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"207",
+  "revision":"211",
   "status":"dev",
   "detail":[
     {
@@ -39,6 +39,7 @@
         ,"Refactor collection items management"
         ,"Refactor orphan photos management"
         ,"Refactor user levels management interface"
+        ,"Refactor logo & favicon edition"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -108,6 +109,7 @@
         ,"Fix feature member action"
         ,"Fix self-update interface"
         ,"Fix system info services check"
+        ,"Fix login redirect"
       ]
     },
     {
@@ -198,6 +200,8 @@
         ,"Fix search results pagination"
         ,"Fix upload security issue (Thanks @0xbko)"
         ,"Fix missing footer on video page"
+        ,"Fix website closed message"
+        ,"Fix my account settings save"
       ]
     },
     {

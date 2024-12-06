@@ -235,7 +235,7 @@
                         {/if}
 
                         {if user_id()}
-                            <div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
+                            <div class="tab-pane fade in clearfix" id="cb-item-addto">
                                 <div class="clearfix btn-big">
                                     <div id="video_action_result_cont"></div>
                                     <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
@@ -260,7 +260,7 @@
                                 {/if}
                             </div>
 
-                                <div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
+                                <div class="tab-pane fade in clearfix" id="cb-item-report">
                                     <h2>{lang code='report_video'}</h2>
                                     {show_flag_form id=$vdo.videoid type=video}
                                 </div>

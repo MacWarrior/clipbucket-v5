@@ -2,7 +2,7 @@
     <h2>Website Configurations</h2>
 </div>
 
-<form name="form1" method="post" id="main_form">
+<form name="form1" method="post" id="main_form" enctype="multipart/form-data">
     <input name="baseurl" value="{$row.baseurl}" type="hidden"/>
     <input name="basedir" value="{$row.baseurl}" type="hidden"/>
     <div class="row">
@@ -408,6 +408,60 @@
                                         <hr/>
                                     </div>
                                     <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_logo'}"/> Logo</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="file" accept='image/*' name="upload_logo"/>
+                                                <span><i>{lang('recommended_dimension', [200,40])}</i></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12 text-center">
+                                                <img src="{get_website_logo_path()}" class="img-thumbnail" alt="Logo" style="max-width:200px;max-height:100px;margin-top:10px;"/>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <label><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_favicon'}"/> {lang('favicon')}</label>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <input type="file" accept='image/*' name="upload_favicon"/>
+                                                <span><i>{lang('recommended_dimension', [256,256])}</i></span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div id="preview-favicon">
+                                                    <div class="favicon-icon">
+                                                        <img src="{get_website_favicon_path()}" alt="Favicon"/>
+                                                    </div>
+                                                    <div class="browser">
+                                                        <div class="browser-header">
+                                                            <div class="browser-dots">
+                                                                <i class="fa fa-circle"></i>
+                                                                <i class="fa fa-circle"></i>
+                                                                <i class="fa fa-circle"></i>
+                                                            </div>
+                                                            <div class="browser-tab">
+                                                                <div class="favicon-tab">
+                                                                    <img src="{get_website_favicon_path()}" alt="Favicon"/>
+                                                                </div>
+                                                                <div class="browser-tab-title" title="{cbtitle(['title_only'=>true])}">
+                                                                    {cbtitle(['title_only'=>true])}
+                                                                </div>
+                                                                <div class="browser-tab-close">
+                                                                    <i class="fa fa-times"></i>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr/>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label class="nowrap" for="custom_css" title="{lang code='option_custom_css'}">{lang code='option_custom_css'}</label>

@@ -2,7 +2,9 @@
 define('THIS_PAGE', 'dashboard');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-User::getInstance()->hasPermissionOrRedirect('admin_access', true);
+if( !User::getInstance()->hasPermission('admin_access') ){
+    redirect_to('login.php');
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;

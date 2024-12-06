@@ -559,6 +559,15 @@ if (isset($_POST['update'])) {
         myquery::getInstance()->Set_Website_Details($field, $value);
     }
 
+    if (!empty($_FILES['upload_logo']['name'])) {
+        // function used to upload site logo.
+        upload_image('logo');
+    }
+    if (!empty($_FILES['upload_favicon']['name'])) {
+        // function used to upload site logo.
+        upload_image('favicon');
+    }
+
     //clear cache
     CacheRedis::flushAll();
     unset($_SESSION['check_global_configs']);

@@ -2996,7 +2996,7 @@ class userquery extends CBCategory
         }
 
         //updating user profile
-        if (!error()) {
+        if (!error() && !empty($query_field)) {
             $log_array = [
                 'success' => 'yes',
                 'details' => 'updated profile'
