@@ -6,7 +6,7 @@
 			</div>
 			{$flag_options=get_flag_options($type)}
 			<label for="flag_type" class="label-block">{lang("category")}</label>
-			<div class="form-group custom-elements clearfix">
+			<div class="form-group clearfix">
 				<select class="form-control" name="flag_type" id="flag_type">
 					{foreach from=$flag_options key=key item=item}
 					<option value="{$key}">{$item}</option>

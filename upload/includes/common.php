@@ -384,7 +384,6 @@ $Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
-
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');
 $Smarty->register_modifier('getext', 'getext');
@@ -393,7 +392,6 @@ $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
 $Smarty->register_modifier('get_user_level', 'get_user_level');
 $Smarty->register_modifier('nicetime', 'nicetime');
-$Smarty->register_modifier('country', 'get_country');
 $Smarty->register_modifier('flag_type', 'flag_type');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');
