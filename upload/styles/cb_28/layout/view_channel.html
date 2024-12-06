@@ -98,7 +98,7 @@
                                             <ul class="clearfix desc-list">
                                                 {if $field_group.group_id=='profile_location' && config('enable_country')=='yes'}
                                                     <li>
-                                                        <strong>{lang code='country'}</strong> : {$user.country|country}
+                                                        <strong>{lang code='country'}</strong> : {$user.country|get_country}
                                                     </li>
                                                 {/if}
 

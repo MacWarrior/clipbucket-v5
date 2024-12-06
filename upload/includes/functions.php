@@ -2045,6 +2045,25 @@ function outgoing_link($url): string
 }
 
 /**
+ * Function used to get country via country code
+ *
+ * @param : { string } { $code } { country code name }
+ *
+ * @return bool|string : { string } { country name of flag }
+ * @throws Exception
+ */
+function get_country($code)
+{
+    $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
+    if (count($result) > 0) {
+        $result = $result[0];
+        $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        return $flag . $result['name_en'];
+    }
+    return false;
+}
+
+/**
  * function used to get users
  * @param $param
  *

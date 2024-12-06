@@ -60,3 +60,13 @@ include('plugins.php');
 $Smarty->assign_by_ref('cbmass', $cbmass);
 
 cb_call_functions('clipbucket_init_completed');
+
+if( THIS_PAGE != 'admin_login' ){
+    if( !User::getInstance()->isUserConnected() ){
+        redirect_to('login.php');
+    }
+
+    if( !User::getInstance()->hasPermission('admin_access') ){
+        redirect_to(BASEURL . '/403.php');
+    }
+}
