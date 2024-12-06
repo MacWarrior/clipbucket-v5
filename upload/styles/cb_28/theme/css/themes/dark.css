@@ -250,4 +250,9 @@ html.dark {
     .toastui-editor-contents p{
         color: var(--color-02);
     }
+
+    /* Featured videos slider */
+    .slider-container-featured{
+        box-shadow: var(--generic-box-shadow);
+    }
 }
