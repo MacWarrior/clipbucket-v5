@@ -1214,8 +1214,8 @@ a[role='menuitem'] {
     border-radius: 4px;
     border: 1px solid #8c8f94;
     padding: 16px 0 0 16px;
-    width: 350px;
     position: relative;
+    margin-top: 10px;
 }
 
 #preview-favicon:after{
@@ -1229,7 +1229,7 @@ a[role='menuitem'] {
     transform: translate(calc(150% * -.125), calc(150% * -.125));
     filter: blur(8px);
     opacity: .5;
-    background: url("/styles/cb_28/theme/images/favicon.png");
+    background: url('/styles/cb_28/theme/images/favicon.png');
     background-repeat: no-repeat;
     z-index: -1;
 }
@@ -1238,12 +1238,15 @@ a[role='menuitem'] {
     border-radius: 10px;
     box-shadow: 0 1px 5px 0 rgba(0,0,0,0.5);
     width: 58px;
+    height: 58px;
     overflow: hidden;
     float: left;
 }
 
 #preview-favicon .favicon-icon img{
     width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 #preview-favicon .browser .browser-dots{
@@ -1283,10 +1286,12 @@ a[role='menuitem'] {
 #preview-favicon .browser-tab .favicon-tab{
     display: inline-block;
     border-radius: 10px;
+    height: 24px;
+    width: 24px;
 }
 
 #preview-favicon .browser-tab .favicon-tab img{
-    width: 24px;
+    width: 100%;
 }
 
 #preview-favicon .browser-tab .browser-tab-title{
@@ -1298,11 +1303,12 @@ a[role='menuitem'] {
     font-weight: 500;
     width: 110px;
     display: inline-block;
-    height: 24px;
+    line-height: 24px;
 }
 
 #preview-favicon .browser-tab .browser-tab-close{
     float: right;
     color: #f0f0f1;
-    margin-right: 10px;
+    margin-right: 5px;
+    padding-top: 3px;
 }
