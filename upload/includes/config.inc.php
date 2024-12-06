@@ -24,7 +24,7 @@ if (config('closed') && THIS_PAGE != 'ajax' && !$in_bg_cron && THIS_PAGE != 'cb_
     if (!User::getInstance()->hasAdminAccess()) {
         e($row['closed_msg'], 'w');
         template('global_header.html');
-        template('message.html');
+        template('msg.html');
         exit();
     }
     e(lang('website_offline'), 'w');

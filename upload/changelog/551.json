@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"209",
+  "revision":"210",
   "status":"dev",
   "detail":[
     {
@@ -199,6 +199,7 @@
         ,"Fix search results pagination"
         ,"Fix upload security issue (Thanks @0xbko)"
         ,"Fix missing footer on video page"
+        ,"Fix website closed message"
       ]
     },
     {
