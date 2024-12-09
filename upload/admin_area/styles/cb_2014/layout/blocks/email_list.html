@@ -1,27 +1,28 @@
-<form name="video_manage." method="post">
-    {if $email_templates}
+<div style="float: right">
+    <span class="btn btn-primary add_new_email_list">{lang('add')}</span>
+</div>
+<form method="post" id="default_template">
+    {if $emails}
         <table class="table table-bordered table-striped manageUsersTable marginTop">
             <tr>
                 <th>{lang('code')}</th>
-                <th>{lang('default')}</th>
+                <th>{lang('title')}</th>
+                <th>{lang('email_template')}</th>
                 <th>&nbsp;</th>
             </tr>
-            {foreach from=$email_templates item=template}
+            {foreach from=$emails item=email}
                 <tr>
-                    <td>{$template.code}</td>
-                    <td>
-                        <input value="{$template.is_default}" {if $template.is_default=='yes'}checked{/if}
-                               name="make_default" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-                        <span class="lbl"></span>
-                    </td>
+                    <td>{$email.code}</td>
+                    <td>{$email.title}</td>
+                    <td>{$email.template_code}</td>
                     <td>
                         <div class="dropdown">
                             <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">{lang('action')} <i class="caret"></i>
                             </button>
                             <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                                <li><a role="menuitem" tabindex="-1" onclick="editEmailTemplate({$template.id_email_template})">{lang code='edit'}</a></li>
-                                {if !$template.is_default && $template.is_deletable}
-                                    <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='delete'}</a></li>
+                                <li><a role="menuitem" tabindex="-1" onclick="editEmail({$email.id_email})">{lang code='edit'}</a></li>
+                                {if !$email.is_default && $email.is_deletable}
+                                    <li><a role="menuitem" tabindex="-1" onclick="deleteEmail({$email.id_email})">{lang code='delete'}</a></li>
                                 {/if}
                             </ul>
                         </div>

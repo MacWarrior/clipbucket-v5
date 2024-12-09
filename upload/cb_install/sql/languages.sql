@@ -1386,4 +1386,5 @@ VALUES ('admin_setting'),
        ('code_already_exist'),
        ('template_set_default'),
        ('confirm_default_template'),
-       ('email_variable_content');
+       ('email_variable_content'),
+       ('success');

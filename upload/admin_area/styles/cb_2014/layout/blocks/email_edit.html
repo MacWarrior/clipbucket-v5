@@ -1,0 +1,35 @@
+<div style="float: right">
+    <span class="btn btn-primary back_to_email_list">{lang('back_to_list')}</span>
+</div>
+<form method="post" enctype="multipart/form-data" name="email_edit" id="email_edit">
+    <input name="id_email" value="{$email.id_email}" type="hidden"/>
+    <div class="row">
+        <label for="email_id_email_template">{lang('email_template')}</label>
+        <select name="id_email_template" id="email_id_email_template">
+            {foreach from=$email_templates item=template}
+                <option value="{$template.id_email_template}" {if $template.id_email_template == $email.id_email_template } selected="selected" {/if}>{$template.code}</option>
+            {/foreach}
+        </select>
+    </div>
+    <hr>
+    <div class="row">
+        <label for="email_code">{lang('code')}</label>
+        <input name="code" id="email_code" value="{$email.code}" type="text"/>
+    </div>
+    <div class="row">
+        <label for="email_title">{lang('title')}</label>
+        <input name="title" id="email_title" value="{$email.title}" type="text"/>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6 border-right">
+            <label for="email_content">{lang('content')}</label>
+            <textarea name="content" id="email_content" style="width: 100%; min-height: 200px; max-width: 100%;">{$email.content}</textarea>
+        </div>
+        <div class="col-md-6 ">
+            <label for="render">{lang('rendered')}</label>
+            <div id="render_email" class="tab-content" style="width: 100%; min-height: 200px;">{$email.content}</div>
+        </div>
+    </div>
+    <button class="btn btn-primary">{lang('submit_now')}</button>
+</form>

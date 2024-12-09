@@ -4,6 +4,6 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');
 
-EmailTemplate::assignListEmailTemplate('email_template');
+EmailTemplate::assignListEmailTemplate('email');
 
-echo templateWithMsgJson('blocks/email_template_list.html');
+echo templateWithMsgJson('blocks/email_list.html');

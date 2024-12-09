@@ -1143,23 +1143,27 @@ ALTER TABLE `{tbl_prefix}sessions`
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_template`
 (
-    id_email_template INT PRIMARY KEY AUTO_INCREMENT,
-    code              VARCHAR(32) UNIQUE,
-    is_default        BOOLEAN,
-    is_deletable      BOOLEAN,
-    content           TEXT,
-    disabled          BOOLEAN DEFAULT FALSE
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+    id_email_template      INT PRIMARY KEY AUTO_INCREMENT,
+    code                   VARCHAR(32),
+    is_default             BOOLEAN DEFAULT FALSE,
+    is_deletable           BOOLEAN DEFAULT TRUE,
+    content                TEXT,
+    disabled               BOOLEAN DEFAULT FALSE,
+    code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}email`
 (
-    id_email          INT PRIMARY KEY AUTO_INCREMENT,
-    code              VARCHAR(32) UNIQUE,
-    id_email_template INT,
-    is_deletable      BOOLEAN,
-    title             VARCHAR(256),
-    content           TEXT,
-    disabled          BOOLEAN DEFAULT FALSE
+    id_email               INT PRIMARY KEY AUTO_INCREMENT,
+    code                   VARCHAR(32),
+    id_email_template      INT,
+    is_deletable           BOOLEAN DEFAULT TRUE,
+    title                  VARCHAR(256),
+    content                TEXT,
+    disabled               BOOLEAN DEFAULT FALSE,
+    code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}email`
     ADD CONSTRAINT `email_template_fk` FOREIGN KEY (`id_email_template`) REFERENCES `{tbl_prefix}email_template` (`id_email_template`) ON DELETE NO ACTION ON UPDATE NO ACTION;

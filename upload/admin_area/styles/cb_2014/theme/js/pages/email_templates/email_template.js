@@ -1,18 +1,31 @@
 $(function () {
-    initListenerList();
-
+    initListenerEmailTemplateList();
+    initListenerEmailList();
 });
 
-function editEmailTemplate(email_template_id) {
+function editEmailTemplate(id_email_template) {
     showSpinner();
     $.post({
         url: '/actions/admin_email_template_edit.php',
-        data: {email_template_id: email_template_id},
+        data: {id_email_template: id_email_template},
         dataType: "json",
         success: (response) => {
             $('#email_template > .row').html(response.template);
             $('.page-content').prepend(response.msg);
-            initListenerEdit();
+            initListenerEmailTemplateEdit();
+        }
+    }).always(() => hideSpinner());
+}
+function editEmail(id_email) {
+    showSpinner();
+    $.post({
+        url: '/actions/admin_email_edit.php',
+        data: {id_email: id_email},
+        dataType: "json",
+        success: (response) => {
+            $('#email > .row').html(response.template);
+            $('.page-content').prepend(response.msg);
+            initListenerEmailEdit();
         }
     }).always(() => hideSpinner());
 }
@@ -26,9 +39,47 @@ function saveEmailTemplate(form) {
         success: (response) => {
             $('#email_template > .row').html(response.template);
             $('.page-content').prepend(response.msg);
-            initListenerEdit();
+            initListenerEmailTemplateEdit();
         }
     }).always(() => hideSpinner());
+}
+function saveEmail(form) {
+    showSpinner();
+    $.post({
+        url: '/actions/admin_email_save.php',
+        data: form.serialize(),
+        dataType: "json",
+        success: (response) => {
+            $('#email > .row').html(response.template);
+            $('.page-content').prepend(response.msg);
+            initListenerEmailEdit();
+        }
+    }).always(() => hideSpinner());
+}
+
+function deleteEmailTemplate (id_email_template) {
+    showSpinner();
+    $.post({
+        url: '/actions/admin_email_template_delete.php',
+        data: {id_email_template: id_email_template},
+        dataType: "json",
+        success: (response) => {
+            $('.page-content').prepend(response.msg);
+            listEmailTemplate();
+        }
+    });
+}
+function deleteEmail (id_email) {
+    showSpinner();
+    $.post({
+        url: '/actions/admin_email_delete.php',
+        data: {id_email: id_email},
+        dataType: "json",
+        success: (response) => {
+            $('.page-content').prepend(response.msg);
+            listEmail();
+        }
+    });
 }
 
 function listEmailTemplate() {
@@ -39,7 +90,19 @@ function listEmailTemplate() {
         success: (response) => {
             $('#email_template > .row').html(response.template);
             $('.page-content').prepend(response.msg);
-            initListenerList();
+            initListenerEmailTemplateList();
+        }
+    }).always(() => hideSpinner());
+}
+function listEmail() {
+    showSpinner();
+    $.post({
+        url: '/actions/admin_email_list.php',
+        dataType: "json",
+        success: (response) => {
+            $('#email > .row').html(response.template);
+            $('.page-content').prepend(response.msg);
+            initListenerEmailList();
         }
     }).always(() => hideSpinner());
 }
@@ -47,7 +110,7 @@ function listEmailTemplate() {
 var delay = 500;
 var timeout;
 
-function initListenerEdit() {
+function initListenerEmailTemplateEdit() {
     $('#email_template_content').off('keyup').on('keyup', function () {
         var textarea = $(this);
         clearTimeout(timeout);
@@ -67,7 +130,7 @@ function initListenerEdit() {
 
 }
 
-function initListenerList() {
+function initListenerEmailTemplateList() {
     $('.add_new_email_template_list').off('click').on('click', () => {
         editEmailTemplate();
     });
@@ -83,12 +146,39 @@ function initListenerList() {
                 success: function (result) {
                     $('#email_template > .row').html(result.template);
                     $('.page-content').prepend(result.msg);
-                    initListenerList();
+                    initListenerEmailTemplateList();
                 }
             }).always(() => hideSpinner());
         } else {
             $(this).prop('checked', false)
         }
         
+    });
+}
+
+function initListenerEmailEdit() {
+    $('#email_content').off('keyup').on('keyup', function () {
+        var textarea = $(this);
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            $('#render_email').html(textarea.val());
+        }, delay);
+    });
+
+    $('#email_edit').off('submit').on('submit', function (event) {
+        event.preventDefault();
+        saveEmail($(this));
+    });
+
+    $('.back_to_email_list').off('click').on('click', () => {
+        listEmail();
+    })
+
+}
+
+
+function initListenerEmailList() {
+    $('.add_new_email_list').off('click').on('click', () => {
+        editEmail();
     });
 }

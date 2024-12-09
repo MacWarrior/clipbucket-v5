@@ -12,24 +12,28 @@ class MWIP extends \Migration
     {
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_template` (
             id_email_template INT PRIMARY KEY AUTO_INCREMENT,
-            code VARCHAR(32) UNIQUE,
-            is_default BOOLEAN,
-            is_deletable BOOLEAN,
+            code VARCHAR(32),
+            is_default BOOLEAN DEFAULT FALSE,
+            is_deletable BOOLEAN DEFAULT TRUE,
             content TEXT,
-            disabled BOOLEAN DEFAULT FALSE
+            disabled BOOLEAN DEFAULT FALSE,
+            code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE 
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
 
+
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}email` (
             id_email INT PRIMARY KEY AUTO_INCREMENT,
-            code VARCHAR(32) UNIQUE,
+            code VARCHAR(32),
             id_email_template INT,
-            is_deletable BOOLEAN,
+            is_deletable BOOLEAN DEFAULT TRUE,
             title  VARCHAR(256),
             content TEXT,
-            disabled BOOLEAN DEFAULT FALSE
+            disabled BOOLEAN DEFAULT FALSE,
+            code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE 
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
+
         self::alterTable('ALTER TABLE `{tbl_prefix}email`
             ADD CONSTRAINT `email_template_fk` FOREIGN KEY (`id_email_template`) REFERENCES `{tbl_prefix}email_template` (`id_email_template`) ON DELETE NO ACTION ON UPDATE NO ACTION;',
             [
@@ -157,5 +161,10 @@ class MWIP extends \Migration
         ]);
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'email_content\',\'template\', \'email_variable_content\')';
         self::query($sql);
+
+        self::generateTranslation('success', [
+            'fr'=>'Opération réalisée avec succès',
+            'en'=>'Operation completed successfully'
+        ]);
     }
 }
