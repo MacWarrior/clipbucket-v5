@@ -128,8 +128,34 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('code_cannot_be_empty', [
-            'fr'=>'Le code ne peut pas être vide',
-            'en'=>'Code cannot be empty'
+            'fr' => 'Le code ne peut pas être vide',
+            'en' => 'Code cannot be empty'
         ]);
+
+        self::generateTranslation('back_to_list', [
+            'fr' => 'Retour à la liste',
+            'en' => 'Back to list'
+        ]);
+
+        self::generateTranslation('code_already_exist', [
+            'fr' => 'Ce code existe déjà. Merci d\'en choisir un autre',
+            'en' => 'This code already exists. Please chose another'
+        ]);
+        self::generateTranslation('template_set_default', [
+            'fr' => 'Le modèle %s a été enregistré par défaut',
+            'en' => 'Template %s has been set to default'
+        ]);
+
+        self::generateTranslation('confirm_default_template', [
+            'fr' => 'Voulez-vous appliquer ce nouveau modèle d\'email par défaut à tous les emails existants ?',
+            'en' => 'Do you want to apply this new default email template to all existing emails ?'
+        ]);
+
+        self::generateTranslation('email_variable_content', [
+            'fr' => 'Cette variable sera remplacée par le contenu de l\'email',
+            'en' => 'This variable will be remplaced with email content'
+        ]);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'email_content\',\'template\', \'email_variable_content\')';
+        self::query($sql);
     }
 }

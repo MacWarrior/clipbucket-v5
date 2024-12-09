@@ -1381,4 +1381,9 @@ VALUES ('admin_setting'),
        ('email_template_management_desc'),
        ('empty_email_content'),
        ('rendered'),
-       ('code_cannot_be_empty');
+       ('code_cannot_be_empty'),
+       ('back_to_list'),
+       ('code_already_exist'),
+       ('template_set_default'),
+       ('confirm_default_template'),
+       ('email_variable_content');

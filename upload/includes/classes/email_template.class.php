@@ -48,10 +48,11 @@ class EmailTemplate
     {
         //check code unique
         $existing_code = self::getOneTemplate([
-            'code' => $fields['code'] ?: false
+            'code'              => $fields['code'] ?: false,
+            'id_email_template' => ($fields['id_email_template'] ?: 0)
         ]);
         if (!empty($existing_code)) {
-            e(lang('code_already_taken', [
+            e(lang('code_already_exist', [
                 $fields['code']
             ]));
             return false;
@@ -65,18 +66,18 @@ class EmailTemplate
                     $value = (bool)$value;
                     break;
                 case 'content':
-                    if (stripos($value, '{{email_content}}')=== false) {
+                    if (stripos($value, '{{email_content}}') === false) {
                         e(lang('empty_email_content'));
                         return false;
                     }
-                    $value = '\''.mysql_clean($value).'\'';
+                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
                     break;
                 case 'code':
                     if (empty($value)) {
                         e(lang('code_cannot_be_empty'));
                         return false;
                     }
-                    $value = '\''.mysql_clean($value).'\'';
+                    $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 default:
                     break;
@@ -114,6 +115,26 @@ class EmailTemplate
         return Clipbucket_db::getInstance()->insert_id();
     }
 
+    public static function updateEmailTemplate(array $email_template)
+    {
+        $sql = 'UPDATE  ' . tbl(self::$tableName) . ' SET ';
+        $fields = [];
+        $email_template = self::formatAndValidateTemplateFields($email_template);
+        if ($email_template === false) {
+            return false;
+        }
+        foreach (self::$fields as $field) {
+            if ($field == 'id_email_template') {
+                continue;
+            }
+            if (isset($email_template[$field])) {
+                $fields[] = $field . ' = ' . $email_template[$field];
+            }
+        }
+        $sql .= implode(', ', $fields) . ' WHERE id_email_template = ' . mysql_clean($email_template['id_email_template']);
+        return Clipbucket_db::getInstance()->execute($sql);
+    }
+
 
     /**
      * @return array
@@ -146,9 +167,23 @@ class EmailTemplate
         $param_first_only = $params['first_only'] ?? false;
         $param_limit = $params['limit'] ?? false;
         $param_count = $params['count'] ?? false;
+        $param_id_email_template = $params['id_email_template'] ?? false;
+        $param_not_id_email_template = $params['not_id_email_template'] ?? false;
+        $param_code = $params['code'] ?? false;
 
         $conditions = [];
         $join = [];
+
+        if ($param_id_email_template !== false) {
+            $conditions[] = ' id_email_template = ' . mysql_clean($param_id_email_template);
+        }
+        if ($param_not_id_email_template !== false) {
+            $conditions[] = ' id_email_template != ' . mysql_clean($param_not_id_email_template);
+        }
+
+        if ($param_code !== false) {
+            $conditions[] = ' code LIKE \'' . mysql_clean($param_code) . '\'';
+        }
 
         if (!$param_count) {
             $select = self::getAllTemplateFields();
@@ -157,14 +192,14 @@ class EmailTemplate
         }
 
         $limit = '';
-        if( $param_limit ){
-            $limit = ' LIMIT '.$param_limit;
+        if ($param_limit) {
+            $limit = ' LIMIT ' . $param_limit;
         }
         $sql = 'SELECT ' . implode(', ', $select) . '
                 FROM ' . cb_sql_table(self::$tableName)
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
-            . $limit ;
+            . $limit;
 
         $result = Clipbucket_db::getInstance()->_select($sql);
         if ($param_first_only) {
@@ -210,13 +245,12 @@ class EmailTemplate
     }
 
 
-
     /**
      * @param $params
      * @return void
      * @throws Exception
      */
-    public static function assignListEmailTemplate($params =[])
+    public static function assignListEmailTemplate($params = [])
     {
         // Creating Limit
         $page = mysql_clean($_GET['page']);
@@ -232,6 +266,24 @@ class EmailTemplate
 
         $total_pages = count_pages($total_rows, config('admin_pages'));
         pages::getInstance()->paginate($total_pages, $page);
-        assign('templates', $templates);
+        assign('email_templates', $templates);
+    }
+
+    /**
+     * Make Language Default
+     *
+     * @param $lid
+     * @throws Exception
+     */
+    public static function makeDefault($id_email_template)
+    {
+        $template = self::getOneTemplate(['id_email_template' => $id_email_template ?: 0]);
+        if ($template) {
+            Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['is_default'], [0], ' is_default = 1 ');
+            Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['is_default'], [1], ' id_email_template = ' . mysql_clean($id_email_template));
+            e(lang('template_set_default', [$template['code']]), 'm');
+
+            Clipbucket_db::getInstance()->update(tbl(self::$tableNameEmail), ['id_email_template'], [mysql_clean($id_email_template)], ' 1 ');
+        }
     }
 }
