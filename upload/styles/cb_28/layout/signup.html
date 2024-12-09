@@ -35,7 +35,7 @@
 							class="form-control" name="password">
 						</div>
 
-						<div class="checkbox custom-elements form-group">
+						<div class="checkbox form-group">
 							<label>
 								<input type="checkbox" name="remember_me" value="yes">
 								{lang code="remember_me"}
@@ -56,7 +56,7 @@
 					{if $allow_registeration}
 						{$allow_registeration}
 					{else}
-					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form custom-elements">
+					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form">
 						<h2>{lang code='signup'}!</h2>
 						{foreach from=$required_fields item=field}
 							{if $field.type!='checkbox' && $field.type!='radiobutton'}

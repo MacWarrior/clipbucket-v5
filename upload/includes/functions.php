@@ -2410,12 +2410,18 @@ function cbtitle($params = false)
     if (!$sub_sep) {
         $sub_sep = '-';
     }
-    //Getting Subtitle
-    if (!$cbsubtitle) {
-        echo display_clean(TITLE . ' - ' . SLOGAN);
-    } else {
-        echo display_clean($cbsubtitle . ' ' . $sub_sep . ' ' . TITLE);
+
+    if( !empty($params['title_only']) ){
+        echo display_clean(TITLE);
+        return;
     }
+
+    if (!$cbsubtitle || !empty($params['no_subtitle'])) {
+        echo display_clean(TITLE . ' ' . $sub_sep . ' ' . SLOGAN);
+        return;
+    }
+
+    echo display_clean($cbsubtitle . ' ' . $sub_sep . ' ' . TITLE);
 }
 
 /**
@@ -3890,37 +3896,35 @@ function get_website_favicon_path()
  */
 function upload_image($type = 'logo')
 {
+    $file_post = 'upload_' . $type;
     if (!in_array($type, ['logo', 'favicon'])) {
-        e(lang('Wrong logo type !'));
-        return;
+        e(lang('unknown_type'));
+        return false;
     }
-    global $Cbucket;
 
-    $filename = $_FILES['fileToUpload']['name'];
+    $filename = $_FILES[$file_post]['name'];
     $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
     $file_basename = pathinfo($filename, PATHINFO_FILENAME);
-    $filesize = $_FILES['fileToUpload']['size'];
-    $allowed_file_types = explode(',', strtolower($Cbucket->configs['allowed_photo_types']));
+    $filesize = $_FILES[$file_post]['size'];
+    $allowed_file_types = explode(',', strtolower(config('allowed_photo_types')));
 
-    if (in_array($file_ext, $allowed_file_types) && ($filesize < 4000000)) {
+    $max_size = 4000000;
+    if ($filesize > $max_size) {
+        // file size error
+        $explode = explode(' ', System::get_readable_filesize($max_size));
+        e(lang('file_size_cant_exceeds_x_x', $explode));
+        return false;
+    }
+    if (in_array($file_ext, $allowed_file_types)) {
         // Rename file
         $logo_path = DirPath::get('logos') . $file_basename . '-' . $type . '.' . $file_ext;
         unlink($logo_path);
-        move_uploaded_file($_FILES['fileToUpload']['tmp_name'], $logo_path);
+        move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
 
-        $myquery = new myquery();
-        $myquery->Set_Website_Details($type . '_name', $file_basename . '-' . $type . '.' . $file_ext);
-
-        e(lang('File uploaded successfully.'), 'm');
-    } elseif (empty($filename)) {
-        // file selection error
-        e(lang('Please select a file to upload.'));
-    } elseif ($filesize > 4000000) {
-        // file size error
-        e(lang('The file you are trying to upload is too large.'), "e");
+        myquery::getInstance()->Set_Website_Details($type . '_name', $file_basename . '-' . $type . '.' . $file_ext);
     } else {
-        e(lang('Only these file types are allowed for upload: ' . implode(', ', $allowed_file_types)), "e");
-        unlink($_FILES['fileToUpload']['tmp_name']);
+        e(lang('wrong_image_extension', implode(', ', $allowed_file_types)));
+        unlink($_FILES[$file_post]['tmp_name']);
     }
 }
 

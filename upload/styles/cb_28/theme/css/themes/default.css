@@ -114,11 +114,6 @@ h4{
 .form-control:focus{
     border-color: var(--color-main-01);
 }
-.account-container .form-group .chk-checked{
-    background-color: var(--color-main-01);
-    border-color: var(--color-main-01);
-    color: var(--color-main-02);
-}
 .ui-widget-header{
     border-color: var(--color-main-01);
 }
@@ -131,28 +126,6 @@ h4{
     background-color: var(--color-03);
     background-image: none;
 }
-.select-area{
-    background-color: var(--color-01);
-    color: var(--color-02);
-    border-color: var(--color-03);
-}
-.select-area .select-opener{
-    background-color: var(--color-01);
-    color: var(--color-02);
-}
-.select-options{
-    background-color: var(--color-01);
-}
-.select-options .drop-holder{
-    border-color: var(--color-03);
-}
-.select-options ul a{
-    color: var(--color-02);
-}
-.select-options .item-selected a{
-    background-color: var(--color-03);
-    color: var(--color-main-01);
-}
 .form-control,
 .form-control[disabled],
 .form-control[readonly],
@@ -160,9 +133,6 @@ fieldset[disabled]{
     color: var(--color-02);
     background-color: var(--color-05);
     border-color: var(--color-03);
-}
-.rad-checked{
-    color: var(--color-main-01);
 }
 .table-striped>tbody>tr:nth-of-type(odd){
     background-color: var(--color-05);
