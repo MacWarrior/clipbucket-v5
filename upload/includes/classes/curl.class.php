@@ -7,7 +7,6 @@ class Curl
 
     private $curl;
 
-
     /**
      * @param $base_url
      * @param $beared_token
@@ -15,15 +14,14 @@ class Curl
     public function __construct($base_url, $beared_token)
     {
         $this->base_url = $base_url . (substr($base_url, -1) != '/' ? '/' : '');
-        $this->beared_token = $beared_token;
         $this->curl = curl_init();
         curl_setopt_array($this->curl, [
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING       => "",
+            CURLOPT_ENCODING       => '',
             CURLOPT_MAXREDIRS      => 10,
             CURLOPT_TIMEOUT        => 30,
             CURLOPT_HTTP_VERSION   => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST  => "GET",
+            CURLOPT_CUSTOMREQUEST  => 'GET',
             CURLOPT_HTTPHEADER     => [
                 'Authorization: Bearer ' . $beared_token,
                 'accept: application/json'
@@ -36,7 +34,7 @@ class Curl
      * @param $param
      * @return array
      */
-    public function exec($action, $param=[])
+    public function exec($action, $param=[]): array
     {
         curl_setopt_array($this->curl, [
             CURLOPT_URL => $this->base_url . $action . (!empty($param) ? '?' : '') . http_build_query($param)
