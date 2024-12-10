@@ -24,7 +24,7 @@ class Tmdb
         $this->curl = $curl;
         $return = $this->curl->exec('authentication');
         $response = $return['response'];
-        if (!empty($return['error']) || !$response['success']) {
+        if (!empty($return['error']) || $response['success']===false) {
             throw new \Exception($response['status_message']);
         }
     }

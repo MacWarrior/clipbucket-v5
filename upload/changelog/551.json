@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"211",
+  "revision":"212",
   "status":"dev",
   "detail":[
     {
@@ -230,6 +230,7 @@
         ,"Fix PHP8.X compatibility"
         ,"Fix internal logs with IPv6"
         ,"Fix server info checkup"
+        ,"Fix TMDB API call"
       ]
     },
     {
