@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"214",
+  "revision":"215",
   "status":"dev",
   "detail":[
     {
@@ -283,6 +283,7 @@
         ,"Fix missing user profile insertions"
         ,"Fix incomplete SQL in update 5.5.1 - 203"
         ,"Fix user_levels table structure <i>(#483)</i>"
+        ,"Fix translation creation in update 5.5.0 - 294"
       ]
     },
     {
