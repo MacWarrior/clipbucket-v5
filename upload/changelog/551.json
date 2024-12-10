@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"211",
+  "revision":"213",
   "status":"dev",
   "detail":[
     {
@@ -230,6 +230,7 @@
         ,"Fix PHP8.X compatibility"
         ,"Fix internal logs with IPv6"
         ,"Fix server info checkup"
+        ,"Fix TMDB API call"
       ]
     },
     {
@@ -281,6 +282,7 @@
         ,"Fix timeout after Windows installation script"
         ,"Fix missing user profile insertions"
         ,"Fix incomplete SQL in update 5.5.1 - 203"
+        ,"Fix user_levels table structure <i>(#483)</i>"
       ]
     },
     {
