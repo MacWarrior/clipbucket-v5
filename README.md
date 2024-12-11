@@ -59,6 +59,7 @@ Installing ClipBucket using Docker provides a streamlined and isolated environme
    -e MYSQL_ROOT_PASSWORD=clipbucket_password \
    -v clipbucket_db:/var/lib/mysql \
    -v clipbucket_files:/srv/http/clipbucket \
+   -p 80:80 \
    -d --name clipbucket clipbucket
    ```
 
@@ -70,6 +71,7 @@ Installing ClipBucket using Docker provides a streamlined and isolated environme
     - `-e MYSQL_ROOT_PASSWORD=...`: Specifies the root password for MySQL.
     - `-v clipbucket_db:/var/lib/mysql`: Maps a persistent volume for the database.
     - `-v clipbucket_files:/srv/http/clipbucket`: Maps a persistent volume for ClipBucket files.
+    - `-p 80:80`: Maps port 80 on the host to port 80 on the container, making the application accessible via the host machine.
     - `--name clipbucket`: Names the container for easier management.
     - `-d`: Runs the container in detached mode.
 
