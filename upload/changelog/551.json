@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"216",
+  "revision":"217",
   "status":"dev",
   "detail":[
     {
@@ -223,6 +223,7 @@
         ,"Add index to sessions table"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
+        ,"Update Nginx Vhost & Apache Htaccess"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -263,6 +264,7 @@
         ,"Update installation script to Ubuntu 24.04"
         ,"Update licence agreement"
         ,"Update timezone selection display"
+        ,"Update installation script to Ubuntu 24.10"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
