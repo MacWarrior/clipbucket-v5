@@ -44,12 +44,12 @@ All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree
 <i>It should also be noted that these scripts are meant for testing and development purposes only</i>
 
 ## Installation with Docker
-Installing ClipBucket using Docker provides a streamlined and isolated environment for running the application. Here's how you can set it up:
+Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application. Here's how you can set it up:
 
 ### Step-by-Step Installation Guide:
 1. **Build the Docker Image:**
    ```bash
-   docker build -t clipbucket https://github.com/MacWarrior/clipbucket-v5.git#docker
+   docker build -t clipbucket https://github.com/MacWarrior/clipbucket-v5.git#master
    ```
 2. **Run the ClipBucket Container:**
    ```bash

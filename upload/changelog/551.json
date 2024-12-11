@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"217",
+  "revision":"218",
   "status":"dev",
   "detail":[
     {
@@ -251,6 +251,7 @@
         ,"Implement DB timezone selection"
         ,"Implement core update during installation"
         ,"Implement CSS/JS versioning"
+        ,"Implement dockerfile"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Refactor alterTable constraints"
