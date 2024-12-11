@@ -42,6 +42,37 @@ And even more !
 Greetings young adventurer ! Don't worry, we've thought about you and created some easy installation scripts !<br/>
 All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree/master/utils">Installation scripts</a><br/>
 <i>It should also be noted that these scripts are meant for testing and development purposes only</i>
+
+## Installation with Docker
+Installing ClipBucket using Docker provides a streamlined and isolated environment for running the application. Here's how you can set it up:
+
+### Step-by-Step Installation Guide:
+1. **Build the Docker Image:**
+   ```bash
+   docker build -t clipbucket https://github.com/MacWarrior/clipbucket-v5.git#docker
+   ```
+2. **Run the ClipBucket Container:**
+   ```bash
+   docker run \
+   --restart unless-stopped \
+   -e DOMAIN_NAME=clipbucket.local \
+   -e MYSQL_ROOT_PASSWORD=clipbucket_password \
+   -v clipbucket_db:/var/lib/mysql \
+   -v clipbucket_files:/srv/http/clipbucket \
+   -d --name clipbucket clipbucket
+   ```
+
+### Explanation of Docker Commands:
+- **`docker build -t clipbucket ...`**: Builds the ClipBucket Docker image directly from the GitHub repository.
+- **`docker run` options:**
+    - `--restart unless-stopped`: Automatically restarts the container unless explicitly stopped.
+    - `-e DOMAIN_NAME=...`: Sets the domain name for your ClipBucket instance.
+    - `-e MYSQL_ROOT_PASSWORD=...`: Specifies the root password for MySQL.
+    - `-v clipbucket_db:/var/lib/mysql`: Maps a persistent volume for the database.
+    - `-v clipbucket_files:/srv/http/clipbucket`: Maps a persistent volume for ClipBucket files.
+    - `--name clipbucket`: Names the container for easier management.
+    - `-d`: Runs the container in detached mode.
+
 ### Advanced users
 <i>“Your path you must decide.”</i><br/>
 Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
