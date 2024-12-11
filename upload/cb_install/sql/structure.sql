@@ -398,6 +398,8 @@ CREATE TABLE `{tbl_prefix}user_levels` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}user_levels`
     ADD PRIMARY KEY (`user_level_id`);
+ALTER TABLE `{tbl_prefix}user_levels`
+    MODIFY COLUMN `user_level_id` int(20) NOT NULL AUTO_INCREMENT;
 
 CREATE TABLE `{tbl_prefix}user_levels_permissions`
 (

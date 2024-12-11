@@ -68,9 +68,13 @@ html.light {
 
     /* Home */
     #featured_vid_sec .item-video .video-link img,
-    .cb-popup-container .player-holder .vjs-big-play-button,
-    .cb-popup-container .player-holder video{
+    .cb-popup-container .player-holder .vjs-big-play-button{
         border-radius: var(--border-radius);
+    }
+
+    .cb-popup-container .video-js{
+        border-radius: var(--border-radius);
+        overflow: hidden;
     }
 
     /* Video Bloc */
@@ -120,6 +124,12 @@ html.light {
     .video-details{
         background: var(--background-gradient);
         border-radius: var(--border-radius);
+        box-shadow: var(--generic-box-shadow);
+    }
+    #cb_player .video-js{
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: var(--generic-box-shadow);
     }
 
     /* Channel */
@@ -153,6 +163,7 @@ html.light {
     /* Comments */
     .comments-block{
         border-radius: var(--border-radius);
+        box-shadow: var(--generic-box-shadow);
     }
 
     /* Collections */

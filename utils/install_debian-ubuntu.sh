@@ -13,11 +13,22 @@ echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
 echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
 echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
 echo "          |_|            Installation script for"
-echo "                    Debian 9-12 & Ubuntu 16.04-24.04"
+echo "                    Debian 9-12 & Ubuntu 16.04-24.10"
 echo ""
 echo "Disclaimer : This easy installation script is only"
 echo "             made to configure local / dev environments."
-echo "             Use it with caution."
+echo "             Use it with caution, on a clean OS."
+
+echo ""
+echo -ne "Updating system..."
+apt update > /dev/null 2>&1
+apt dist-upgrade -y > /dev/null 2>&1
+echo -ne " OK"
+
+echo ""
+echo -ne "Installing required software for setup..."
+apt install lsb-release --yes > /dev/null 2>&1
+echo -ne " OK"
 
 OS_NAME=$(lsb_release -d | awk -F"\t" '{print $2}')
 case ${OS_NAME} in
@@ -56,6 +67,9 @@ case ${OS_NAME} in
     "Ubuntu 24.04.1 LTS"|"Ubuntu 24.04 LTS"|"Ubuntu 24.04")
         OS="UBUNTU2404"
         ;;
+    "Ubuntu 24.10")
+        OS="UBUNTU2410"
+        ;;
     *)
         echo ""
         echo ""
@@ -72,6 +86,7 @@ case ${OS_NAME} in
         echo " - Ubuntu 23.04"
         echo " - Ubuntu 23.10"
         echo " - Ubuntu 24.04"
+        echo " - Ubuntu 24.10"
         read -p "Which operating system do you use ? " READ_OS
         case ${READ_OS} in
             "Debian 9"|"debian 9")
@@ -104,8 +119,11 @@ case ${OS_NAME} in
             "Ubuntu 23.10"|"ubuntu 23.10")
                 OS="UBUNTU2310"
                 ;;
-            "Ubuntu"|"ubuntu"|"Ubuntu 24.04"|"ubuntu 24.04")
+            "Ubuntu 24.04"|"ubuntu 24.04")
                 OS="UBUNTU2404"
+                ;;
+            "Ubuntu"|"ubuntu"|"Ubuntu 24.10"|"ubuntu 24.10")
+                OS="UBUNTU2410"
                 ;;
             *)
                 echo "Unknown system, please select Debian or Ubuntu"
@@ -114,12 +132,6 @@ case ${OS_NAME} in
         esac
         ;;
 esac
-
-echo ""
-echo -ne "Updating system..."
-apt update > /dev/null 2>&1
-apt dist-upgrade -y > /dev/null 2>&1
-echo -ne " OK"
 
 echo ""
 echo ""
@@ -163,7 +175,7 @@ case ${OS} in
             "7.4"|"8.0"|"8.1"|"8.2"|"8.3")
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
-                apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+                apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
                 wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg > /dev/null 2>&1
                 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" | tee /etc/apt/sources.list.d/php.list
                 apt update > /dev/null 2>&1
@@ -190,7 +202,7 @@ case ${OS} in
             "8.0"|"8.1"|"8.2"|"8.3")
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
-                apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+                apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
                 wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
                 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
                 apt update > /dev/null 2>&1
@@ -214,7 +226,7 @@ case ${OS} in
             "8.3")
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
-                apt install apt-transport-https lsb-release ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
+                apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
                 wget -qO- https://packages.sury.org/php/apt.gpg | gpg --dearmor > /etc/apt/trusted.gpg.d/sury-php-x.x.gpg
                 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
                 apt update > /dev/null 2>&1
@@ -242,7 +254,7 @@ case ${OS} in
     "UBUNTU2310")
         PHP_VERSION="8.2"
         ;;
-    "UBUNTU2404")
+    "UBUNTU2404"|"UBUNTU2410")
         PHP_VERSION="8.3"
         ;;
 esac
@@ -319,6 +331,10 @@ server {
     location ~* \.(ico|css|js)(\?[0-9]+)?$ {
         expires max;
         log_not_found off;
+    }
+
+    location ~ \.(git|github|idea|gitignore|htaccess) {
+        return 302 /403;
     }
 
     location ~* \.php$ {
