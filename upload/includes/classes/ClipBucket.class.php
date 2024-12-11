@@ -514,10 +514,6 @@ class ClipBucket
                         'title' => lang('system_info')
                         , 'url' => DirPath::getUrl('admin_area') . 'system_info.php'
                     ]
-                    , [
-                        'title' => lang('email_tester')
-                        , 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'
-                    ]
                 ]
             ];
 

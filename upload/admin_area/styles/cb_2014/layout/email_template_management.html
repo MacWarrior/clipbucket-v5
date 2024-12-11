@@ -14,6 +14,11 @@
                         <h8>{ucfirst(lang('email'))}</h8>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#email_tester">
+                        <h8>{ucfirst(lang('email_tester'))}</h8>
+                    </a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="email_template" class="tab-pane active">
@@ -25,6 +30,11 @@
                 <div id="email" class="tab-pane">
                     <div class="row">
                         {include file="$layout_dir/blocks/email_list.html"}
+                    </div>
+                </div>
+                <div id="email_tester" class="tab-pane">
+                    <div class="row">
+                        {include file="$layout_dir/blocks/email_tester.html"}
                     </div>
                 </div>
             </div>

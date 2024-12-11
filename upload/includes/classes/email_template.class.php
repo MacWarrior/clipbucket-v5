@@ -1,5 +1,7 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+
 class EmailTemplate
 {
     private static $user_permissions = [];
@@ -176,7 +178,7 @@ class EmailTemplate
         if ($email === false) {
             return false;
         }
-        foreach (self::$fields as $field) {
+        foreach (self::$fieldsEmail as $field) {
             if ($field == 'id_email') {
                 continue;
             }
@@ -355,6 +357,7 @@ class EmailTemplate
         $param_code = $params['code'] ?? false;
         $param_disabled = $params['disabled'];
         $param_has_histo = $params['has_histo'] ?? false;
+        $param_get_template_content = $params['get_template_content'] ?? false;
 
         $conditions = [];
         $join = [];
@@ -377,8 +380,11 @@ class EmailTemplate
         }
         if (!$param_count) {
             $select = self::getAllEmailFields();
-            $select[] = self::$tableNameEmail.'.code as template_code';
-            $group[] = self::$tableNameEmail.'.id_email';
+            $select[] = self::$tableName . '.code as template_code';
+            $group[] = self::$tableNameEmail . '.id_email';
+            if ($param_get_template_content) {
+                $select[] = self::$tableName . '.content as template_content';
+            }
         } else {
             $select[] = 'COUNT(DISTINCT ' . self::$tableNameEmail . '.id_email) AS count';
         }
@@ -489,6 +495,7 @@ class EmailTemplate
         }
         return true;
     }
+
     /**
      * @param $id_email
      * @return bool
@@ -507,11 +514,222 @@ class EmailTemplate
         if ($template['has_histo']) {
             self::updateEmail([
                 'id_email' => $id_email,
-                'disabled'          => true
+                'disabled' => true
             ]);
         } else {
             Clipbucket_db::getInstance()->delete(tbl(self::$tableNameEmail), ['id_email'], [$id_email]);
         }
         return true;
     }
+
+    public static function getVariablesFromEmail(int $id_email, string $type)
+    {
+        $email = self::getOneEmail(['id_email' => $id_email]);
+        if (empty($email)) {
+            return false;
+        }
+        $conditions = [];
+        $conditions[] = ' type = \'' . $type . '\'';
+        switch ($type) {
+            case 'email':
+                $matches_content = self::extractVariable($email['content']);
+                $conditions[] = ' code IN (\'' . implode('\', \'', $matches_content) . '\')';
+                break;
+            case 'title':
+                $matches_title = self::extractVariable($email['title']);
+                $conditions[] = ' code IN (\'' . implode('\', \'', $matches_title) . '\')';
+                break;
+        }
+        $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable) . ' WHERE ' . implode(' AND ', $conditions);
+        $result = Clipbucket_db::getInstance()->_select($sql);
+        return empty($result) ? [] : $result;
+    }
+
+    /**
+     * @param string $content
+     * @return array
+     */
+    public static function extractVariable(string $content): array
+    {
+        $results = [];
+        preg_match_all('/\{\{(\w+)}}/', $content, $results);
+        return $results[1] ?? [];
+    }
+
+    /**
+     * @param string $string
+     * @param array $variables
+     * @return string
+     */
+    public static function fillVariable(string $string, array $variables): string
+    {
+        foreach ($variables as $name => $value) {
+            $string = str_replace('{{' . $name . '}}', $value, $string);
+        }
+        return $string;
+    }
+
+    /**
+     * @param string $subject
+     * @param string $content
+     * @param array|string $to
+     * @param $sender_email
+     * @param $sender_name
+     * @param $par_destinataire
+     * @return bool
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = '')
+    {
+        if (empty($sender_email)) {
+            $sender_email = config('email_sender_address');
+        }
+        if (empty($sender_name)) {
+            $sender_name = config('email_sender_name');
+        }
+        $mail = new PHPMailer();
+//        two lines should be equal to $mail->addCustomHeader('Content-Type', 'text/html; charset="UTF-8"')
+        $mail->CharSet = PHPMailer::CHARSET_UTF8;
+        $mail->isHTML();
+        $mail->setFrom($sender_email, $sender_name, false);
+        $mail->addReplyTo($sender_email, $sender_name);
+
+//        $mail->addCustomHeader('Content-Type', 'text/html; charset="UTF-8"');
+//        $headers  = 'From: "'.$sender_name.'"<'.$sender_email.'>'."\n";
+//        $headers .= 'Reply-To: '.$sender_email."\n";
+//        $headers .= 'Content-Type: text/html; charset="UTF-8"';
+
+        $mail->Subject = $subject;
+        $mail->MsgHTML($content);
+        if (config('mail_type') == 'smtp') {
+            $mail->Host = config('smtp_host');
+            if (config('smtp_auth') == 'yes') {
+                $mail->SMTPAuth = true;
+            }
+            $mail->Port = config('smtp_port');
+            $mail->Username = config('smtp_user');
+            $mail->Password = config('smtp_pass');
+        }
+
+        if (is_array($to) && empty($to['name'])) {
+            foreach ($to as $email) {
+                self::addAddressAndNameIfExist($mail, $email);
+            }
+        } else {
+            self::addAddressAndNameIfExist($mail, $to);
+        }
+        if ($mail->send()) {
+            return true;
+        } else {
+            //send error
+            return false;
+        }
+    }
+
+    /**
+     * @param PHPMailer $mail
+     * @param array|string $to
+     * @return void
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    private static function addAddressAndNameIfExist(PHPMailer &$mail, $to)
+    {
+        if (is_array($to)) {
+            $mail->addAddress($to['mail'], $to['name']);
+        } else {
+            $mail->addAddress($to);
+        }
+    }
+
+    /**
+     * @param $id_email
+     * @param $id_user
+     * @param $to
+     * @param $title
+     * @param $content
+     * @return bool
+     * @throws Exception
+     */
+    public static function saveEmailHisto($id_email, $id_user, $to, $title, $content)
+    {
+        $sql = 'INSERT INTO ' . tbl(self::$tableNameEmailHisto) . ' ';
+        $fields = [
+            'id_email',
+            'send_date',
+            'title',
+            'content'
+        ];
+        $values = [
+            $id_email,
+            'NOW()',
+            $title,
+            $content
+        ];
+
+        if (!empty($id_user)) {
+            $fields[] = 'userid';
+            $values[] = $id_user;
+        } elseif (!empty($to)) {
+            $fields[] = 'email';
+            $values[] = $to;
+        } else {
+            e(lang('missing_recipient'));
+            return false;
+        }
+
+        $sql .= ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ') ';
+        return (bool)Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    /**
+     * @param $code_email
+     * @param $to
+     * @param $variables
+     * @return false|void
+     * @throws \PHPMailer\PHPMailer\Exception
+     */
+    public static function sendMail($code_email, $to, $variables, $from = '', $from_name = '')
+    {
+        if (empty($to)) {
+            e(lang('missing_recipient'));
+            return false;
+        }
+        $email = self::getOneEmail([
+            'code'                 => $code_email,
+            'get_template_content' => true
+        ]);
+        if (empty($email)) {
+            e(lang('unknown_email'));
+        }
+        if (is_numeric($to)) {
+            //if $to = userid => get email + username
+            //add in $variables if user_username is empty
+            $user = User::getInstance()->getOne(['userid' => $to]);
+            $to = [
+                'mail' => $user['email'],
+                'name' => $user['username']
+            ];
+            if (empty($variables['user_username'])) {
+                $variables['user_username'] = $user['username'];
+            }
+        }
+        //put variable on email
+        $title = self::fillVariable($email['title'], $variables);
+        $email_content = self::fillVariable($email['content'], $variables);
+        //put email on template
+        $content = self::fillVariable($email['template_content'], ['email_content' => $email_content]);
+        //send emails
+        if (is_array($to) && !isset($to['mail'])) {
+            if (self::send($title, $content, $to, $from, $from_name)) {
+                foreach ($to as $email_address) {
+                    self::saveEmailHisto($email['id_email'], null, $email_address, $title, $content);
+                }
+            }
+        } else {
+            if (self::send($title, $content, $to, $from, $from_name)) {
+                self::saveEmailHisto($email['id_email'], $user['userid'] ?? null, $to['mail'] ?? $to, $title, $content);
+            }
+        }
+    }
+
 }

@@ -1175,7 +1175,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_histo`
     id_email_histo INT PRIMARY KEY AUTO_INCREMENT,
     send_date      DATETIME   NOT NULL,
     id_email       INT        NOT NULL,
-    `userid`       BIGINT(20) NOT NULL,
+    `userid`       BIGINT(20) NULL,
     email          VARCHAR(256),
     title          TEXT,
     content        TEXT

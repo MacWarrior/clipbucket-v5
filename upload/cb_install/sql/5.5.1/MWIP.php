@@ -50,7 +50,7 @@ class MWIP extends \Migration
             id_email_histo INT PRIMARY KEY AUTO_INCREMENT,
             send_date DATETIME NOT NULL ,
             id_email INT NOT NULL ,
-            `userid` BIGINT(20) NOT NULL,
+            `userid` BIGINT(20) NULL,
             email  VARCHAR(256),
             title TEXT,
             content TEXT
@@ -135,6 +135,10 @@ class MWIP extends \Migration
             'fr' => 'Le code ne peut pas être vide',
             'en' => 'Code cannot be empty'
         ]);
+        self::generateTranslation('title_cannot_be_empty', [
+            'fr' => 'Le titre ne peut pas être vide',
+            'en' => 'Title cannot be empty'
+        ]);
 
         self::generateTranslation('back_to_list', [
             'fr' => 'Retour à la liste',
@@ -155,16 +159,125 @@ class MWIP extends \Migration
             'en' => 'Do you want to apply this new default email template to all existing emails ?'
         ]);
 
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'email_content\',\'template\', \'email_variable_content\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_title\',\'title\', \'email_variable_website_title\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'user_username\',\'title\', \'email_variable_user_username\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_version\',\'title\', \'email_variable_website_version\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_revision\',\'title\', \'email_variable_website_revision\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_title\',\'email\', \'email_variable_website_title\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'user_username\',\'email\', \'email_variable_user_username\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_version\',\'email\', \'email_variable_website_version\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_revision\',\'email\', \'email_variable_website_revision\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'user_avatar\',\'email\', \'email_variable_user_avatar\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'url\',\'email\', \'email_variable_url\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'code\',\'email\', \'email_variable_code\')';
+        self::query($sql);
         self::generateTranslation('email_variable_content', [
             'fr' => 'Cette variable sera remplacée par le contenu de l\'email',
             'en' => 'This variable will be remplaced with email content'
         ]);
-        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'email_content\',\'template\', \'email_variable_content\')';
-        self::query($sql);
-
+        self::generateTranslation('email_variable_website_title', [
+            'fr' => 'Contient le titre du site',
+            'en' => 'The website title'
+        ]);
+        self::generateTranslation('email_variable_user_username', [
+            'fr' => 'Nom d\'utilisateur',
+            'en' => 'Username'
+        ]);
+        self::generateTranslation('email_variable_website_version', [
+            'fr' => 'Version du site',
+            'en' => 'Website version'
+        ]);
+        self::generateTranslation('email_variable_website_revision', [
+            'fr' => 'Révision du site',
+            'en' => 'Website revision'
+        ]);
+        self::generateTranslation('email_variable_user_avatar', [
+            'fr' => 'URL de l\'avatar de l\'utilisateur',
+            'en' => 'User avatar\'s URL'
+        ]);
+        self::generateTranslation('email_variable_url', [
+            'fr' => 'URL',
+            'en' => 'URL'
+        ]);
+        self::generateTranslation('email_variable_code', [
+            'fr' => 'Code',
+            'en' => 'Code'
+        ]);
         self::generateTranslation('success', [
-            'fr'=>'Opération réalisée avec succès',
-            'en'=>'Operation completed successfully'
+            'fr' => 'Opération réalisée avec succès',
+            'en' => 'Operation completed successfully'
+        ]);
+        self::generateTranslation('sender', [
+            'fr' => 'Expéditeur',
+            'en' => 'Sender'
+        ]);
+        self::generateTranslation('email_sender', [
+            'fr' => 'Adresse email de l\'expéditeur',
+            'en' => 'Sender\'s email'
+        ]);
+        self::generateTranslation('recipient', [
+            'fr' => 'Destinataire',
+            'en' => 'Recipient'
+        ]);
+        self::generateTranslation('email_recipient', [
+            'fr' => 'Adresse email du destinataire',
+            'en' => 'Recipient\'s email'
+        ]);
+        self::generateTranslation('select_an_email', [
+            'fr' => 'Choisissez un email',
+            'en' => 'Choose an email'
+        ]);
+        self::generateTranslation('content', [
+            'fr' => 'Contenu',
+            'en' => 'Content'
+        ]);
+        self::generateTranslation('invalid_email_recipient', [
+            'fr' => 'Merci de saisir une adresse de destination valide',
+            'en' => 'Please provide a valid recipient email address'
+        ]);
+        self::generateTranslation('invalid_email_sender', [
+            'fr' => 'Merci de saisir une adresse d\'expédition valide',
+            'en' => 'Please provide a valid sender email address'
+        ]);
+
+        $config_email_sender = config('website_email');
+        self::deleteConfig('website_email');
+        if (empty($config_email_sender)) {
+            $config_email_sender = config('support_email');
+        }
+        self::deleteConfig('support_email');
+        if (empty($config_email_sender)) {
+            $config_email_sender = config('welcome_email');
+        }
+        self::deleteConfig('welcome_email');
+        self::generateConfig('email_sender_address', $config_email_sender);
+        self::generateConfig('email_sender_name', 'no-reply');
+
+        self::generateTranslation('missing_recipient', [
+            'fr'=>'Destinataire manquant',
+            'en'=>'Missing recipient'
+        ]);
+
+        self::generateTranslation('unknown_email', [
+            'fr'=>'Email inconnu',
+            'en'=>'Unknown email'
+        ]);
+
+        self::generateTranslation('template_dont_exist', [
+            'fr'=>'Ce modèle d\'email n\'existe pas',
+            'en'=>'Template doesn\'t exists'
         ]);
     }
 }

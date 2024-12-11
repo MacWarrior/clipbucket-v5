@@ -1,6 +1,7 @@
 $(function () {
     initListenerEmailTemplateList();
     initListenerEmailList();
+    initListenerEmailTester();
 });
 
 function editEmailTemplate(id_email_template) {
@@ -16,6 +17,7 @@ function editEmailTemplate(id_email_template) {
         }
     }).always(() => hideSpinner());
 }
+
 function editEmail(id_email) {
     showSpinner();
     $.post({
@@ -43,6 +45,7 @@ function saveEmailTemplate(form) {
         }
     }).always(() => hideSpinner());
 }
+
 function saveEmail(form) {
     showSpinner();
     $.post({
@@ -57,7 +60,7 @@ function saveEmail(form) {
     }).always(() => hideSpinner());
 }
 
-function deleteEmailTemplate (id_email_template) {
+function deleteEmailTemplate(id_email_template) {
     showSpinner();
     $.post({
         url: '/actions/admin_email_template_delete.php',
@@ -69,7 +72,8 @@ function deleteEmailTemplate (id_email_template) {
         }
     });
 }
-function deleteEmail (id_email) {
+
+function deleteEmail(id_email) {
     showSpinner();
     $.post({
         url: '/actions/admin_email_delete.php',
@@ -94,6 +98,7 @@ function listEmailTemplate() {
         }
     }).always(() => hideSpinner());
 }
+
 function listEmail() {
     showSpinner();
     $.post({
@@ -138,9 +143,8 @@ function initListenerEmailTemplateList() {
         if (confirm(confirm_default_template)) {
             showSpinner();
             $('input[name="make_default"]').not(this).prop('checked', false);
-            $.ajax({
+            $.post({
                 url: "/actions/admin_email_make_default.php",
-                type: "POST",
                 data: $('#default_template').serialize(),
                 dataType: 'json',
                 success: function (result) {
@@ -152,7 +156,7 @@ function initListenerEmailTemplateList() {
         } else {
             $(this).prop('checked', false)
         }
-        
+
     });
 }
 
@@ -176,9 +180,43 @@ function initListenerEmailEdit() {
 
 }
 
-
 function initListenerEmailList() {
     $('.add_new_email_list').off('click').on('click', () => {
         editEmail();
     });
 }
+
+function displayVariable(id_email) {
+    showSpinner();
+    $.post({
+        url: '/actions/admin_display_variables.php',
+        dataType: 'json',
+        data: {id_email: id_email},
+        success: function (response) {
+            $('#edit_variable').html(response.template);
+            $('.page-content').prepend(response.msg);
+        }
+    }).always(() => hideSpinner());
+}
+
+function initListenerEmailTester() {
+    $('#select_email').off('change').on('change', function () {
+        displayVariable($(this).val());
+    });
+
+    $('.send_email').off('click').on('click', function (e) {
+        e.preventDefault();
+        hideSpinner();
+        $.post({
+            url: '/actions/admin_email_tester_send.php',
+            dataType: 'json',
+            data: $('#email_tester_form').serialize(),
+            success: function (response) {
+                $('.page-content').prepend(response.msg);
+            }
+        }).always(() => hideSpinner());
+    });
+}
+
+
+

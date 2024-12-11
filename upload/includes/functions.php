@@ -197,22 +197,6 @@ function cbmail($array, $force = false)
 }
 
 /**
- * Send email from PHP
- * @param $from
- * @param $to
- * @param $subj
- * @param $message
- *
- * @return bool
- * @throws Exception
- * @uses : { function : cbmail }
- */
-function send_email($from, $to, $subj, $message)
-{
-    return cbmail(['from' => $from, 'to' => $to, 'subject' => $subj, 'content' => $message]);
-}
-
-/**
  * Function used to wrap email content in adds HTML AND BODY TAGS
  *
  * @param : { string } { $content } { contents of email to be wrapped }
