@@ -41,8 +41,14 @@ class System{
                         }
                     }
 
-                    foreach($php_extensions as $key => $extension){
-                        self::$extensionsCli[] = $key;
+                    foreach($php_extensions as $key => $extension) {
+                        foreach ($extension['version_tags'] as $tag) {
+                            if (strpos($line, $tag) !== false) {
+                                self::$extensionsCli[$key] = $key;
+
+                                continue 3;
+                            }
+                        }
                     }
 
                 }
@@ -61,34 +67,42 @@ class System{
             'gd' => [
                 'display' => 'GD'
                 ,'version_tags' => ['GD library Version','GD Version']
+                ,'required' => true
             ],
             'mbstring' => [
                 'display' => 'MBstring'
                 ,'version_tags' => ['libmbfl version']
+                ,'required' => true
             ],
             'mysqli' => [
                 'display' => 'MySQLi'
                 ,'version_tags' => ['Client API library version']
+                ,'required' => true
             ],
             'xml' => [
                 'display' => 'XML'
                 ,'version_tags' => ['libxml2 Version']
+                ,'required' => true
             ],
             'curl' => [
                 'display' => 'cURL'
                 ,'version_tags' => ['cURL Information']
+                ,'required' => true
             ],
             'openssl' => [
                 'display' => 'OpenSSL'
                 ,'version_tags' => ['OpenSSL Library Version']
+                ,'required' => true
             ],
             'fileinfo' => [
                 'display' => 'Fileinfo'
                 ,'version_tags' => ['fileinfo support']
+                ,'required' => true
             ],
             'ffi' => [
                 'display' => 'FFI'
                 ,'version_tags' => ['FFI support']
+                ,'required' => false
             ]
         ];
     }

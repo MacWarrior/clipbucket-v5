@@ -29,7 +29,7 @@
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#hosting" style="min-height: 58px;">
-                    <h6>{lang code='hosting'}<img src="{$imageurl}/{if $hosting_ok }tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='hosting'}<img src="{$imageurl}/{if $hosting_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
             <li>
@@ -39,12 +39,12 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#services" style="min-height: 58px;">
-                    <h6>{lang code='services'}<img src="{$imageurl}/{if $services_ok }tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='services'}<img src="{$imageurl}/{if $services_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
             <li>
                 <a data-toggle="tab" href="#permissions" style="min-height: 58px;">
-                    <h6>{lang code='permissions'}<img src="{$imageurl}/{if $permissions_ok }tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='permissions'}<img src="{$imageurl}/{if $permissions_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
         </ul>
@@ -89,7 +89,7 @@
                     {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img src="{$imageurl}/{if in_array($key,$extensionsWEB)}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if in_array($key,$extensionsWEB)}tick{elseif $extension.required == true}alert{else}error{/if}.png"/>
                             <label>
                                 {$extension.display} extension
                                 {if !in_array($key,$extensionsWEB)}
@@ -99,6 +99,7 @@
                                 {/if}
                             </label>
                         </div>
+                    </div>
                     {/foreach}
 
                 </div>
@@ -123,7 +124,7 @@
                     {foreach $php_extensions_list as $key => $extension}
                     <div class="row ml-2">
                         <div class="col-lg-10">
-                            <img src="{$imageurl}/{if in_array($key,$extensionsCLI)}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if in_array($key,$extensionsCLI)}tick{elseif $extension.required == true}alert{else}error{/if}.png"/>
                             <label>
                                 {$extension.display} extension
                                 {if !in_array($key,$extensionsCLI)}
@@ -133,6 +134,7 @@
                                 {/if}
                             </label>
                         </div>
+                    </div>
                     {/foreach}
                 </div>
                 <div class="row">

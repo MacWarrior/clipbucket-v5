@@ -77,7 +77,7 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
 
 ### Advanced users
 <i>“Your path you must decide.”</i><br/>
-Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
+Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo, ffi ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
 Recommended : MariaDB 10.3+ ; PHP 8.3+ ; FFmpeg 4.3+<br/>
 Optionnal : Git<br/>
 <i>Only stable versions have been tested, mainly on Debian</i>
