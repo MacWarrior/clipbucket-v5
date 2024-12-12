@@ -493,7 +493,7 @@ class Migration
         ,\'SELECT 1\');';
         self::query($sql);
 
-        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
+        $sql = 'SET FOREIGN_KEY_CHECKS=1;';
         self::query($sql);
 
         try{
