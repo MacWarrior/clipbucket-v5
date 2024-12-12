@@ -16,6 +16,9 @@ class AIVision
     protected $provider = 'CPUExecutionProvider';
     protected $model;
 
+    /**
+     * @throws Exception
+     */
     public function __construct(array $config = [], $lib = null) {
 
         if(!empty($config)) {
@@ -29,20 +32,20 @@ class AIVision
         }
 
         if(!empty($lib)) {
-
             if(!is_file($lib)) {
                 throw new \Exception( 'Unable to find the lib file : ' . dirname($lib) );
             }
 
             \Onnx\FFI::$lib = $lib;
-
             if (\FFI\WorkDirectory\WorkDirectory::set(dirname($lib)) === false) {
                 throw new \Exception( 'FAILED to CWD has been updated to: ' . dirname($lib) );
             }
-
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function loadModel($model = null) {
         if(!empty($model)) {
             $this->modelNameOrPath = $model;
@@ -80,6 +83,9 @@ class AIVision
         return $image;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getGDImageFromImg($image, $width, $height)
     {
         $img = self::createImageGDFromPath($image);
@@ -98,7 +104,7 @@ class AIVision
         return $image2;
     }
 
-    public static function getPixels($img, $format = 'rgb', $rescale_factor = 1)
+    public static function getPixels($img, $format = 'rgb', $rescale_factor = 1): array
     {
         $pixels = [];
         $width = imagesx($img);
@@ -111,7 +117,7 @@ class AIVision
         ];
 
         // Ensure the format exists, otherwise default to 'rgb'
-        $format = isset($formats[strtolower($format)]) ? $formats[strtolower($format)] : $formats['rgb'];
+        $format = $formats[strtolower($format)] ?? $formats['rgb'];
 
         for ($y = 0; $y < $height; $y++) {
             $row = [];
@@ -129,8 +135,11 @@ class AIVision
         return $pixels;
     }
 
-    public function getTags($image){
-
+    /**
+     * @throws Exception
+     */
+    public function getTags($image): array
+    {
         /** resize de l'image pour qu'elle soit dans le bon format */
         $img = self::getGDImageFromImg( $image, $this->width, $this->height );
 
@@ -148,13 +157,11 @@ class AIVision
         /** prediction IA */
         $result = $this->model->predict([$input_name => $tensor]);
 
-        $clean_result = $this->postprocess($result);
-
-        return $clean_result;
+        return $this->postprocess($result);
     }
 
-    function transposeImage($pixels, $format = 'bhwc') {
-
+    function transposeImage($pixels, $format = 'bhwc')
+    {
         if(strtolower($format) == 'bhwc') {
             return $pixels;
         }
@@ -176,19 +183,16 @@ class AIVision
         return $transposedImage;
     }
 
-    protected function postprocess($result) {
-
+    protected function postprocess($result): array
+    {
         $t = [];
         $output_name = $this->model->outputs()[0]['name'];
 
         foreach ($result[$output_name][0] as $idx => $v) {
-
             if(empty($this->tags[$idx])) {
                 continue;
             }
-
             $t[$this->tags[$idx]] = $v;
-
         }
 
         return $t;
@@ -198,9 +202,8 @@ class AIVision
     {
         if(empty($provider)) {
             $this->provider = 'CPUExecutionProvider';
-            return ;
+            return;
         }
-
         $this->provider = $provider;
     }
 
