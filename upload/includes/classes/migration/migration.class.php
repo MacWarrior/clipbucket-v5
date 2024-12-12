@@ -484,8 +484,8 @@ class Migration
         }
         catch(Exception $e){}
 
-        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
-        self::query($sql);
+        $sql_foreign_key = 'SET FOREIGN_KEY_CHECKS=0;';
+        self::query($sql_foreign_key);
 
         $sql = 'set @var=if((SELECT true WHERE
         ' . implode(' AND ', $conditions) . ' LIMIT 1)
@@ -493,8 +493,8 @@ class Migration
         ,\'SELECT 1\');';
         self::query($sql);
 
-        $sql = 'SET FOREIGN_KEY_CHECKS=1;';
-        self::query($sql);
+        $sql_foreign_key = 'SET FOREIGN_KEY_CHECKS=1;';
+        self::query($sql_foreign_key);
 
         try{
             self::query('prepare stmt from @var;');
@@ -620,6 +620,10 @@ class Migration
         VALUES ('.mysql_clean($id_type).', \''.mysql_clean($name).'\', \''.mysql_clean($description).'\');';
         Clipbucket_db::getInstance()->executeThrowException($sql);
         $inserted_id = Clipbucket_db::getInstance()->insert_id();
+
+        if( empty($inserted_id) ){
+            return;
+        }
 
         foreach ($array_values as $user_level_id => $value) {
             UserLevel::insertUserPermissionValue($user_level_id, $inserted_id, $value);
