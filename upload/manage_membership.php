@@ -3,7 +3,7 @@
 define('THIS_PAGE', 'manage_membership');
 
 require 'includes/config.inc.php';
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 
 if( config('enable_membership') != 'yes' ){
     redirect_to(cblink(['name' => 'my_account']));
@@ -23,7 +23,7 @@ $available_memberships = Membership::getInstance()->getAll([
 ]);
 $can_renew_membership = false;
 foreach ($available_memberships as $key => $available_membership) {
-    if ($available_membership['user_level_id'] == User::getInstance()->getCurrentUserUserLevelID()) {
+    if ($available_membership['user_level_id'] == User::getInstance()->getCurrentUserLevelID()) {
         $can_renew_membership = true;
         break;
     }
