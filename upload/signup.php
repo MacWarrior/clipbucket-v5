@@ -61,11 +61,7 @@ if (isset($_POST['login'])) {
     }
 
     if (userquery::getInstance()->login_user($username, $password, $remember)) {
-        if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
-        } else {
-            redirect_to(cblink(['name' => 'my_account']));
-        }
+       User::redirectAfterLogin();
     }
 }
 

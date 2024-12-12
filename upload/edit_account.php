@@ -85,6 +85,12 @@ if ($mode === 'profile' && !User::getInstance()->hasPermission('enable_channel_p
 }
 assign('mode', $mode);
 
+$params = [
+    'userid' => user_id(),
+    'limit'   => $sql_limit ?? '',
+    'order'  => ' date_start DESC '
+];
+
 switch ($mode) {
     default:
         redirect_to(cblink(['name' => 'my_account']));
@@ -127,7 +133,6 @@ switch ($mode) {
         assign('mode', 'subs');
         assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
         break;
-
 }
 
 $udetails = userquery::getInstance()->get_user_details(user_id());

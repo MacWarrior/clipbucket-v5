@@ -7,20 +7,34 @@
     <br>
     <table class="table table-bordered table-striped">
         <tr>
-            <td>ID</td>
-            <td>Name</td>
-            <td>Active</td>
-            <td>Users</td>
-            <td>Actions</td>
+            <th>ID</th>
+            <th>Name</th>
+            <th>{lang('active')}</th>
+            <th>Users</th>
+            <th>Actions</th>
         </tr>
-        {assign var=levels value=$userquery->get_levels()}
         {section name=l loop=$levels}
             <tr>
                 <td>{$levels[l].user_level_id}</td>
                 <td>{$levels[l].user_level_name}</td>
-                <td>{$levels[l].user_level_active}</td>
+                <td>
+                    <input name="user_level_active" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_active == 'yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
+                    <span class="lbl"></span>
+                </td>
                 <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
-                <td><a href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a>{if $levels[l].user_level_is_default !=yes} | <a href="?action=delete&lid={$levels[l].user_level_id}">{lang code='remove'}</a>{/if}</td>
+                <td>
+                    <div class="dropdown align-center" >
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            {lang('action')} <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" tabindex="-1" href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a></li>
+                            {if  $levels[l].user_level_is_default !=yes}
+                                <li><a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}">{lang code='delete'}</a></li>
+                            {/if}
+                        </ul>
+                    </div>
+                </td>
             </tr>
             {sectionelse}
             <tr>
@@ -34,8 +48,8 @@
         <div class="form-group">
             <label for="level_name2">Level name</label>
             <input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name}"/>
-            <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         </div>
+        <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         {assign var='types' value=$userquery->get_level_types()}
         {section name=t loop=$types}
             <h3>{$types[t].user_permission_type_name}</h3>
@@ -49,10 +63,20 @@
                                         <strong>{lang($perm.permission_name)}</strong><br/>
                                         <small><em>{lang($perm.permission_description)}</em></small>
                                     </div>
-                                    <div class="col-md-4">
-                                        <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-                                        <span class="lbl"></span>
-                                    </div>
+                                    {if $perm.permission_name == 'default_homepage'}
+                                        <div class="col-md-5 paddingTop">
+                                            <select name="permission_value[{$perm.id_user_levels_permission}]" >
+                                                {foreach from=User::getInstance()->getDefaultHomepageList() item=page}
+                                                    <option value="{$page}" {if $page== $perm.permission_value}selected="selected"{/if}>{lang($page)}</option>
+                                                {/foreach}
+                                            </select>
+                                        </div>
+                                    {else}
+                                        <div class="col-md-4">
+                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                            <span class="lbl"></span>
+                                        </div>
+                                    {/if}
                                 </div>
                             </div>
                         </div>
@@ -70,3 +94,31 @@
     </form>
 {/if}
 
+<script>
+    $(function () {
+        $('.delete').on('click', function () {
+            if ($(this).data('confirm')) {
+                if (confirm("{lang('confirm_delete_user_level')}")) {
+                    document.location="?action=delete&lid=" + $(this).data('id');
+                }
+            } else {
+                document.location="?action=delete&lid=" + $(this).data('id');
+            }
+        });
+
+        $('.user_level_active').on('change', function () {
+            var id = $(this).data('id');
+            var checked = $(this).prop('checked');
+            $.post({
+                url: '/actions/admin_activate_user_level.php',
+                data: {
+                    user_level_id: id, active: checked
+                },
+                dataType: "json",
+                success: response => {
+
+                }
+            })
+        });
+    });
+</script>

@@ -1,6 +1,7 @@
 <?php
 define('THIS_PAGE', 'user_levels');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 global $pages, $Cbucket;
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
@@ -35,6 +36,7 @@ switch ($mode) {
     case 'view':
     default:
         Assign('view', 'view');
+        assign('levels', User::getInstance()->getUserLevels());
         break;
 
     case 'edit':
@@ -63,7 +65,6 @@ switch ($mode) {
         Assign('level_perms', $level_perms);
         Assign('view', 'edit');
         break;
-
     case 'add':
         $level_perms = UserLevel::getAllPermissions(['no_values' => true]);
 
