@@ -61,11 +61,16 @@ $skippable_option = get_skippable_options();
             }
             $line++;
 
-            if( empty($php_extensions[$key]) ) {
-                $everything_good = false;
-                $msg = ['err' => $extension['display'] . ' extension is not enabled'];
+            if( !in_array($key, $php_extensions, true) ) {
+                $txt = ' extension is not enabled';
+                if( $key == 'ffi' ){
+                    $msg = ['war' => $extension['display'] . $txt];
+                } else {
+                    $everything_good = false;
+                    $msg = ['err' => $extension['display'] . $txt];
+                }
             } else {
-                $msg = ['msg' => $extension['display'] . ' extension '. $php_extensions[$key]];
+                $msg = ['msg' => $extension['display'] . ' extension enabled'];
             }
 
             echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . $extension['display'] . '</dt>';

@@ -149,16 +149,23 @@ $phpVersionCliOK = $phpVersionCli >= $phpVersionReq;
 assign('phpVersionCliOK', $phpVersionCliOK);
 
 $extensionsCLI = System::get_php_extensions('php_cli');
-assign('extensionsCLI',$extensionsCLI);
+assign('extensionsCLI', $extensionsCLI);
 $extensionsWEB = System::get_php_extensions('php_web');
-assign('extensionsWEB',$extensionsWEB);
+assign('extensionsWEB', $extensionsWEB);
 $php_extensions_list = System::get_php_extensions_list();
 assign('php_extensions_list',$php_extensions_list);
 $extensions_ok = true;
 foreach ($php_extensions_list as $key => $extension) {
-    $extensions_ok = ($extensionsCLI[$key] && $extensionsWEB[$key]) && $extensions_ok;
+    if( !$extension['required'] ){
+        continue;
+    }
+    $extensions_ok = (in_array($key,$extensionsCLI) && in_array($key,$extensionsWEB));
+    if (!$extensions_ok) {
+        break;
+    }
 }
-assign('services_ok', ($phpVersionWebOK && $phpVersionCliOK && $serverMySqlVersionOk && $ffprobe_path_OK && $ffmpegVersionOK && empty($git_version['err'])  && $extensions_ok) );
+
+assign('services_ok', ($phpVersionWebOK && $phpVersionCliOK && $serverMySqlVersionOk && $ffprobe_path_OK && $ffmpegVersionOK && empty($git_version['err']) && $extensions_ok) );
 
 //PHP_INFO
 /** php info web */
