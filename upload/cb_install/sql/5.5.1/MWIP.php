@@ -149,22 +149,28 @@ class MWIP extends \Migration
            ADD UNIQUE KEY `user_frequency` (`frequency`, `user_level_id`);', [
             'table' => 'memberships'
         ], [
-            'table'           => 'memberships',
-            'constraint_name' => 'user_frequency'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'memberships',
+                'name'  => 'user_frequency'
+            ]
         ]);
         self::alterTable('ALTER TABLE `' . tbl('memberships') . '` ADD CONSTRAINT `user_level_membership` FOREIGN KEY (`user_level_id`) REFERENCES `' . tbl('user_levels') . '` (`user_level_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table' => 'memberships'
         ], [
-            'table'           => 'memberships',
-            'constraint_name' => 'user_level_membership'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_level_membership'
+            ]
         ]);
         self::alterTable('ALTER TABLE `' . tbl('memberships') . '` ADD CONSTRAINT `user_level_currency` FOREIGN KEY (`id_currency`) REFERENCES `' . tbl('currency') . '` (`id_currency`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table' => 'memberships'
         ], [
-            'table'           => 'memberships',
-            'constraint_name' => 'user_level_currency'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_level_currency'
+            ]
         ]);
-
 
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships_status') . '` (
             `id_user_memberships_status` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -174,7 +180,7 @@ class MWIP extends \Migration
         $sql = 'SELECT * FROM `' . tbl('user_memberships_status') . '`';
         $results = \Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
-            $sql = 'INSERT INTO `' . tbl('user_memberships_status') . '` (`language_key_title`)  VALUES (\'in_progress\'), (\'completed\'), (\'canceled\'), (\'refunded\')';
+            $sql = 'INSERT IGNORE INTO `' . tbl('user_memberships_status') . '` (`language_key_title`)  VALUES (\'in_progress\'), (\'completed\'), (\'canceled\'), (\'refunded\')';
             self::query($sql);
         }
 
@@ -196,21 +202,27 @@ class MWIP extends \Migration
         self::alterTable('ALTER TABLE `' . tbl('user_memberships') . '` ADD CONSTRAINT `user_membership_user` FOREIGN KEY (`userid`) REFERENCES `' . tbl('users') . '` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table' => 'user_memberships'
         ], [
-            'table'           => 'user_memberships',
-            'constraint_name' => 'user_membership_user'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_membership_user'
+            ]
         ]);
         self::alterTable('ALTER TABLE `' . tbl('user_memberships') . '` ADD CONSTRAINT `user_membership_membership` FOREIGN KEY (`id_membership`) REFERENCES `' . tbl('memberships') . '` (`id_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table' => 'user_memberships'
         ], [
-            'table'           => 'user_memberships',
-            'constraint_name' => 'user_membership_membership'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_membership_membership'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `' . tbl('user_memberships') . '` ADD CONSTRAINT `user_membership_membership_status` FOREIGN KEY (`id_user_memberships_status`) REFERENCES `' . tbl('user_memberships_status') . '` (`id_user_memberships_status`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table' => 'user_memberships'
         ], [
-            'table'           => 'user_memberships',
-            'constraint_name' => 'user_membership_membership_status'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_membership_membership_status'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `' . tbl('user_memberships_transactions') . '` (
@@ -225,16 +237,20 @@ class MWIP extends \Migration
                 'id_paypal_transaction',
             ]
         ], [
-            'constraint_type' => 'PRIMARY KEY'
+            'constraint' => [
+                'type'  => 'PRIMARY KEY',
+                'table' => 'user_memberships_transactions'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `' . tbl('user_memberships_transactions') . '` ADD CONSTRAINT `user_memberships_transactions_user_membership` FOREIGN KEY (`id_user_membership`) REFERENCES `' . tbl('user_memberships') . '` (`id_user_membership`) ON DELETE RESTRICT ON UPDATE RESTRICT;', [
             'table' => 'user_memberships_transactions'
         ], [
-            'table'           => 'user_memberships_transactions',
-            'constraint_name' => 'user_memberships_transactions_user_membership'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'user_memberships_transactions_user_membership'
+            ]
         ]);
-
 
         self::generateConfig('enable_membership', 'no');
         self::generateTranslation('enable_membership', [
