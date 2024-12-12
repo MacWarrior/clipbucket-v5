@@ -489,10 +489,16 @@ class Migration
         }
         catch(Exception $e){}
 
+        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
+        self::query($sql);
+
         $sql = 'set @var=if((SELECT true WHERE
         ' . implode(' AND ', $conditions) . ' LIMIT 1)
         , \'' . addslashes($sql_alter) . '\'
         ,\'SELECT 1\');';
+        self::query($sql);
+
+        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
         self::query($sql);
 
         try{

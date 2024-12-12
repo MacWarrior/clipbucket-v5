@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"213",
+  "revision":"218",
   "status":"dev",
   "detail":[
     {
@@ -223,6 +223,7 @@
         ,"Add index to sessions table"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
+        ,"Update Nginx Vhost & Apache Htaccess"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -250,6 +251,7 @@
         ,"Implement DB timezone selection"
         ,"Implement core update during installation"
         ,"Implement CSS/JS versioning"
+        ,"Implement dockerfile <i>(#216)</i>"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Refactor alterTable constraints"
@@ -263,6 +265,7 @@
         ,"Update installation script to Ubuntu 24.04"
         ,"Update licence agreement"
         ,"Update timezone selection display"
+        ,"Update installation script to Ubuntu 24.10"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -283,6 +286,7 @@
         ,"Fix missing user profile insertions"
         ,"Fix incomplete SQL in update 5.5.1 - 203"
         ,"Fix user_levels table structure <i>(#483)</i>"
+        ,"Fix translation creation in update 5.5.0 - 294"
       ]
     },
     {

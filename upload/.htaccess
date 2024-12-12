@@ -1,8 +1,3 @@
-#<IfModule mod_security.c>
-#    secfilterengine off
-#    secfilterscanPOST off
-#</IfModule>
-
 Options All -Indexes
 FileETag MTime Size
 Options +FollowSymlinks
@@ -33,79 +28,66 @@ RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
 RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
 # Send all blocked request to homepage with 403 Forbidden error!
 #RewriteRule ^(.*)$ index.php [L]
-RewriteRule ^([^.]*)/?$ index.php [L]
-# 
+RewriteRule ^([^.]*)/?$                             index.php [L]
+#
 ########## End - Rewrite rules to block out some common exploits
 
-
 RewriteEngine on
-#
-#
-#
+
 #URL Rewriting for Videos
-RewriteRule ^videos/(.*)/(.*)/(.*)/(.*)/(.*) videos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
-RewriteRule ^videos/([0-9]+) videos.php?page=$1 [L]
-RewriteRule ^videos/?$ videos.php?%{QUERY_STRING} [L]
-RewriteRule ^video/(.*)/(.*) watch_video.php?v=$1&%{QUERY_STRING} [L]
+RewriteRule ^videos/(.*)/(.*)/(.*)/(.*)/(.*)        videos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
+RewriteRule ^videos/([0-9]+)                        videos.php?page=$1 [L]
+RewriteRule ^videos/?$                              videos.php?%{QUERY_STRING} [L]
+RewriteRule ^video/(.*)/(.*)                        watch_video.php?v=$1&%{QUERY_STRING} [L]
 #Alternate watch video links
-RewriteRule ^(.*)\_v([0-9]+) watch_video.php?v=$2&%{QUERY_STRING} [L]
-RewriteRule ^video/([0-9]+)_(.*) watch_video.php?v=$1&%{QUERY_STRING} [L]
+RewriteRule ^(.*)\_v([0-9]+)                        watch_video.php?v=$2&%{QUERY_STRING} [L]
+RewriteRule ^video/([0-9]+)_(.*)                    watch_video.php?v=$1&%{QUERY_STRING} [L]
 
-
-#
 #Users, Channel & Management
-#
-
-RewriteRule ^channels/(.*)/(.*)/(.*)/(.*)/(.*) channels.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
-RewriteRule ^channels/([0-9]+) channels.php?page=$1 [L]
-RewriteRule ^channels/?$ channels.php [L]
-RewriteRule ^members/?$								channels.php [nc]
-RewriteRule ^users/?$								channels.php [nc]
-RewriteRule ^user/(.*)						view_channel.php?user=$1 [nc]
-RewriteRule ^channel/(.*)					view_channel.php?user=$1 [nc]
-
-
-RewriteRule ^my_account					myaccount.php [nc]
-
-
+RewriteRule ^channels/(.*)/(.*)/(.*)/(.*)/(.*)      channels.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
+RewriteRule ^channels/([0-9]+)                      channels.php?page=$1 [L]
+RewriteRule ^channels/?$                            channels.php [L]
+RewriteRule ^members/?$                             channels.php [nc]
+RewriteRule ^users/?$                               channels.php [nc]
+RewriteRule ^user/(.*)                              view_channel.php?user=$1 [nc]
+RewriteRule ^channel/(.*)                           view_channel.php?user=$1 [nc]
+RewriteRule ^my_account                             myaccount.php [nc]
 
 #Pages
-RewriteRule ^page/([0-9]+)/(.*)						view_page.php?pid=$1 [nc]
-#
+RewriteRule ^page/([0-9]+)/(.*)                     view_page.php?pid=$1 [nc]
+
 #Miscellenous
-RewriteRule ^search/result/?$							search_result.php [nc]
-RewriteRule ^upload?$									upload.php [nc]
-RewriteRule ^contact/?$									contact.php [nc]
-RewriteRule ^categories/?$								categories.php [nc]
+RewriteRule ^search/result/?$					    search_result.php [nc]
+RewriteRule ^upload?$							    upload.php [nc]
+RewriteRule ^contact/?$							    contact.php [nc]
+RewriteRule ^categories/?$						    categories.php [nc]
 
 #Collection Section
-RewriteRule ^collections/(.*)/(.*)/(.*)/(.*)/(.*) 		collections.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
-RewriteRule ^collections/([0-9]+) collections.php?page=$1 [L]
-RewriteRule ^collections/?$ 								collections.php [L]
-RewriteRule ^photos/(.*)/(.*)/(.*)/(.*)/(.*) 			photos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
-RewriteRule ^photos/([0-9]+) photos.php?page=$1 [L]
-RewriteRule ^photos/?$ 									photos.php [L]
-RewriteRule ^collection/(.*)/(.*)/(.*)					view_collection.php?cid=$1&type=$2&page=$3 [L]
+RewriteRule ^collections/(.*)/(.*)/(.*)/(.*)/(.*)   collections.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
+RewriteRule ^collections/([0-9]+)                   collections.php?page=$1 [L]
+RewriteRule ^collections/?$ 						collections.php [L]
+RewriteRule ^photos/(.*)/(.*)/(.*)/(.*)/(.*) 		photos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 [L]
+RewriteRule ^photos/([0-9]+)                        photos.php?page=$1 [L]
+RewriteRule ^photos/?$ 								photos.php [L]
+RewriteRule ^collection/(.*)/(.*)/(.*)				view_collection.php?cid=$1&type=$2&page=$3 [L]
 
 #Photo Section
-RewriteRule ^item/(.*)/(.*)/(.*)/(.*) 					view_item.php?item=$3&type=$1&collection=$2 [L]
-RewriteRule ^photo_upload/(.*) 							photo_upload.php?collection=$1 [L]
-RewriteRule ^photo_upload/?$								photo_upload.php [L]
+RewriteRule ^item/(.*)/(.*)/(.*)/(.*) 				view_item.php?item=$3&type=$1&collection=$2 [L]
+RewriteRule ^photo_upload/(.*) 						photo_upload.php?collection=$1 [L]
+RewriteRule ^photo_upload/?$						photo_upload.php [L]
 #
-RewriteRule ^sitemap.xml$ sitemap.php
-RewriteRule ^signup?$ signup.php
+RewriteRule ^sitemap.xml$                           sitemap.php
+RewriteRule ^signup?$                               signup.php
+
+########## End - Rewrite rules For SEO urls ######################
+RewriteRule ^rss$                                   rss.php [nc]
+RewriteRule ^rss/([a-zA-Z0-9].+)$                   rss.php?mode=$1&%{QUERY_STRING} [nc]
+
+########## End - Rewrite rules For SEO urls ######################
+RewriteRule	^([a-zA-Z0-9-]+)/?$ 	                view_channel.php?uid=$1&seo_diret=yes [NS]
+RewriteRule	^list/([0-9]+)/(.*)?$ 	                view_playlist.php?list_id=$1 [NS]
 
 #Error Pages
 ErrorDocument 404 /404.php
 ErrorDocument 403 /403.php
-
-
-########## End - Rewrite rules For SEO urls ######################
-RewriteRule ^rss$                           rss.php [nc]
-RewriteRule ^rss/([a-zA-Z0-9].+)$           rss.php?mode=$1&%{QUERY_STRING} [nc]
-
-########## End - Rewrite rules For SEO urls ######################
-
-RewriteRule	^([a-zA-Z0-9-]+)/?$ 	view_channel.php?uid=$1&seo_diret=yes [NS]
-
-RewriteRule	^list/([0-9]+)/(.*)?$ 	view_playlist.php?list_id=$1 [NS]
+RedirectMatch 302 ^/(\.git|\.github|\.gitignore|\.idea|\.ht) /403

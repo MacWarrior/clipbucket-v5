@@ -30,7 +30,7 @@ class M00294 extends \Migration
         ]);
 
         self::generateTranslation('option_enable_video_internal_sharing', [
-            'Enable internal sharing',
+            'en' => 'Enable internal sharing',
             'fr' => 'Activer le partage interne'
         ]);
 
