@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"218",
+  "revision":"221",
   "status":"dev",
   "detail":[
     {
@@ -202,6 +202,7 @@
         ,"Fix missing footer on video page"
         ,"Fix website closed message"
         ,"Fix my account settings save"
+        ,"Fix access pages check"
       ]
     },
     {
@@ -312,7 +313,7 @@
     {
       "title": "Internal components",
       "description": [
-        "Update Player to version 2.0.6"
+        "Update Player to version 2.0.7"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.4"
         ,"Update Editor's Pick to version 2.0.6"
@@ -322,7 +323,7 @@
     {
       "title": "External components",
       "description": [
-        "Update VideoJS to version 8.19.2"
+        "Update VideoJS to version 8.21.1"
         ,"Update Windows installation script MariaDB to 11.6.0"
         ,"Update Windows installation script PHP to 8.3.12"
         ,"Update Windows installation script FFMpeg to 7.0.2"

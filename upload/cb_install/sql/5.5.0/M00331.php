@@ -30,9 +30,9 @@ class M00331 extends \Migration
             'table'  => 'categories',
             'column' => 'category_name'
         ],[
-            'constraint_index' => [
-                'table' => 'categories',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'categories',
                 'name'  => 'categorie'
             ]
         ]);

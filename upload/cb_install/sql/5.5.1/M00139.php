@@ -38,9 +38,9 @@ class M00139 extends \Migration
             'table'  => 'playlists',
             'column' => 'playlist_name'
         ],[
-            'constraint_index' => [
-                'table' => 'playlists',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'playlists',
                 'name'  => 'playlist_name'
             ]
         ]);
