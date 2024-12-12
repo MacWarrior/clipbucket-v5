@@ -9,12 +9,17 @@ class CBLogs
      */
     function insert($type, $details_array)
     {
-        global $db, $userquery;
         $ip = Network::get_remote_ip();
+        $ipv6 = $ipv4 = null;
+        if(strlen($ip) > 15){
+            $ipv6 = $ip;
+        } else {
+            $ipv4 = $ip;
+        }
 
         $userid = getArrayValue($details_array, 'userid');
         if (!$userid) {
-            $userid = $userquery->udetails['userid'];
+            $userid = userquery::getInstance()->udetails['userid'];
         }
         if (!is_numeric($userid)) {
             $userid = 0;
@@ -22,17 +27,17 @@ class CBLogs
 
         $username = getArrayValue($details_array, 'username');
         if (!$username) {
-            $username = $userquery->udetails['username'];
+            $username = userquery::getInstance()->udetails['username'];
         }
 
         $useremail = getArrayValue($details_array, 'useremail');
         if (!$useremail) {
-            $useremail = $userquery->udetails['email'];
+            $useremail = userquery::getInstance()->udetails['email'];
         }
 
         $userlevel = getArrayValue($details_array, 'userlevel');
         if (!$userlevel) {
-            $userlevel = getArrayValue($userquery->udetails, 'level');
+            $userlevel = getArrayValue(userquery::getInstance()->udetails, 'level');
         }
         if (!is_numeric($userlevel)) {
             $userlevel = 0;
@@ -51,33 +56,43 @@ class CBLogs
         $success = getArrayValue($details_array, 'success');
         $details = getArrayValue($details_array, 'details');
 
-        $db->insert(tbl('action_log'),
-            [
-                'action_type',
-                'action_username',
-                'action_userid',
-                'action_useremail',
-                'action_ip',
-                'date_added',
-                'action_success',
-                'action_details',
-                'action_userlevel',
-                'action_obj_id',
-                'action_done_id'
-            ],
-            [
-                $type,
-                $username,
-                $userid,
-                $useremail,
-                $ip,
-                NOW(),
-                $success,
-                $details,
-                $userlevel,
-                $action_obj_id,
-                $action_done_id
-            ]
-        );
+        $fields = [
+            'action_type',
+            'action_username',
+            'action_userid',
+            'action_useremail',
+            'date_added',
+            'action_success',
+            'action_details',
+            'action_userlevel',
+            'action_obj_id',
+            'action_done_id'
+        ];
+
+        $values = [
+            $type,
+            $username,
+            $userid,
+            $useremail,
+            NOW(),
+            $success,
+            $details,
+            $userlevel,
+            $action_obj_id,
+            $action_done_id
+        ];
+
+        $version = Update::getInstance()->getDBVersion();
+        if ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 153)) {
+            $fields[] = 'action_ipv4';
+            $values[] = $ipv4;
+            $fields[] = 'action_ipv6';
+            $values[] = $ipv6;
+        } else {
+            $fields[] = 'action_ip';
+            $values[] = $ip;
+        }
+
+        Clipbucket_db::getInstance()->insert(tbl('action_log'), $fields, $values);
     }
 }

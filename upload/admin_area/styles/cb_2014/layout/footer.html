@@ -7,7 +7,7 @@
 		<div class="col-lg-6 col-md-6 col-sm-12 col">
 			<div class="col-right" style="float:right;color:#fff;">
 				{if in_dev()}
-					<i class="icon-bug open-modal" title="{lang code='open_debug'}" data-toggle="modal" data-target="#devModal"></i>
+					<i class="fa fa-bug open-modal" title="{lang code='open_debug'}" data-toggle="modal" data-target="#devModal"></i>
 				{/if}
 				<em><a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">V{$Cbucket->cbinfo.version} - {$Cbucket->cbinfo.rev}</a></em> | <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug report</a>
 			</div>
@@ -15,15 +15,11 @@
 	</div>
 </footer>
 
-<!-- basic scripts -->
-
 <script type="text/javascript">
 	if("ontouchend" in document) document.write("<script src='{$theme_url}/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 </script>
 <script src="{$theme_url}/js/bootstrap.min.js"></script>
 <script src="{$theme_url}/js/typeahead-bs2.min.js"></script>
-
-<!-- page specific plugin scripts -->
 
 <!--[if lte IE 8]>
   <script src="assets/js/excanvas.min.js"></script>
@@ -31,11 +27,9 @@
 
 <script src="{$theme_url}/js/jquery.ui.touch-punch.min.js"></script>
 <script src="{$theme_url}/js/jquery.slimscroll.min.js"></script>
-<!-- flot chart added -->
+
 <script language="javascript" type="text/javascript" src="{$theme_url}/js/flot/jquery.flot.js"></script>
 <script language="javascript" type="text/javascript" src="{$theme_url}/js/flot/jquery.flot.categories.js"></script>
-
-<!-- ace scripts -->
 
 <script src="{$theme_url}/js/ace-elements.min.js"></script>
 <script src="{$theme_url}/js/ace.min.js"></script>

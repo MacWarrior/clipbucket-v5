@@ -2,8 +2,7 @@
 define('THIS_PAGE', 'form_category');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-pages::getInstance()->page_redir();
+User::getInstance()->hasPermissionAjax('admin_access');
 
 $type = mysql_clean($_POST['type'] ?? '');
 

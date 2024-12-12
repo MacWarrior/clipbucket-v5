@@ -4,7 +4,7 @@ $(function () {
     });
     $('#button_info_tmdb').on('click', function (e) {
         var video_title = $('#title').val();
-        getInfoTmdb(videoid, video_title, 1);
+        getInfoTmdb(videoid, 'movie',video_title, 1);
     });
     $('.formSection h4').on({
         click: function(e){
@@ -40,13 +40,57 @@ $(function () {
             }
         )
     });
+
+    $('#upload_thumbs_poster').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs_poster')[0].files, function(i, file) {
+            fd.append('vid_thumb_poster[]', file);
+        });
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd
+                , success: function () {
+                    location.reload();
+                }
+            }
+        )
+    });
+
+    $('#upload_thumbs_backdrop').on('click', function (e) {
+        e.preventDefault();
+        var fd = new FormData();
+
+        $.each($('#new_thumbs_backdrop')[0].files, function(i, file) {
+            fd.append('vid_thumb_backdrop[]', file);
+        });
+        $.ajax(
+            'upload_thumb.php?video=' + videoid
+            , {
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                cache: false,
+                data: fd
+                , success: function (data) {
+                    location.reload();
+                }
+            }
+        )
+    });
 });
-function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
+function getInfoTmdb(video_id, type, video_title, page,sort, sort_order,selected_year) {
     showSpinner();
     $.ajax({
         url: "/actions/info_tmdb.php",
         type: "POST",
-        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
+        data: {videoid: video_id, video_title:video_title, type: type, page: page,sort: sort, sort_order: sort_order,selected_year },
         dataType: 'json',
         success: function (result) {
             hideSpinner();
@@ -63,7 +107,7 @@ function saveInfoTmdb(tmdb_video_id) {
     $.ajax({
         url: "/actions/import_tmdb.php",
         type: "POST",
-        data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
+        data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
         success: function (result) {
             if (result.success == false) {
@@ -88,7 +132,7 @@ function pageInfoTmdb(page) {
         sort = 'DESC';
     }
 
-    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
+    getInfoTmdb(videoid, $('#type_tmdb').val(), $('#search_title').val(), page, sort_type, sort,$('#selected_year').val());
 }
 
 function showSpinner() {

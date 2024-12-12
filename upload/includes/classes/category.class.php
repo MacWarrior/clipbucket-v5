@@ -209,7 +209,7 @@ class Category
     public function saveLinks(string $categ_type, int $obj_id, array $categories): bool
     {
         if (!in_array($categ_type, $this->typeNamesByIds)) {
-            e(sprintf(lang('category_type_unknown'), $categ_type));
+            e(lang('category_type_unknown', $categ_type));
             return false;
         }
 
@@ -361,7 +361,7 @@ class Category
         }
 
         if (count($new_array) > config('video_categories')) {
-            e(sprintf(lang('vdo_cat_err2'), config('video_categories')));
+            e(lang('vdo_cat_err2', config('video_categories')));
             return false;
         }
 
@@ -392,13 +392,12 @@ class Category
     }
 
     /**
-     * @param $category_id
-     * @param $multi_level bool if returned array contain children which contain their children in 'children' case, false if all result in 1 level array
+     * @param int $category_id
      * @param $only_id bool
      * @return array|false|int|mixed
      * @throws Exception
      */
-    public function getChildren($category_id, $multi_level = true,$only_id = false)
+    public function getChildren(int $category_id, bool $only_id = false): array
     {
         if (empty($category_id)) {
             return [];
@@ -408,22 +407,24 @@ class Category
         ]);
         if (empty($children)) {
             return [];
-        } else {
-            foreach ($children as &$child) {
-                $children_of_child = $this->getChildren($child['category_id'], $multi_level, $only_id);
-                if ($multi_level) {
-                    $child['children'] = $children_of_child;
-                } else {
-                    $children = array_merge($children, $children_of_child);
+        }
+        $children_to_add=[];
+        foreach ($children as &$child) {
+            if ($only_id && is_array($child)) {
+                $child = $child['category_id'];
+            }
+            $children_of_child = $this->getChildren((is_array($child) ? $child['category_id'] : $child), $only_id);
+            if ($only_id) {
+                foreach ($children_of_child as $child_of_child) {
+                    $children_to_add[]= $child_of_child;
                 }
+            } else {
+                $child['children'] = $children_of_child;
             }
         }
-        if ($only_id) {
-            $children = array_map(function ($elem){
-                return $elem['category_id'];
-            }, $children);
-        }
-        return $children;
+
+
+        return array_merge($children, $children_to_add);
     }
 
     /**
@@ -456,7 +457,7 @@ class Category
         $types = strtolower(config('allowed_photo_types'));
         $supported_extensions = explode(',', $types);
         if (!in_array($ext, $supported_extensions)) {
-             e(sprintf(lang('error_allow_photo_types'), implode(', ', $supported_extensions)));
+             e(lang('error_allow_photo_types', implode(', ', $supported_extensions)));
             return false;
         }
 
@@ -566,7 +567,6 @@ abstract class CBCategory
      */
     function getCbCategories($params): array
     {
-        global $db;
         $params['use_sub_cats'] = $params['use_sub_cats'] ?: 'yes';
         if ($this->use_sub_cats && config('use_subs') == 1 && $params['use_sub_cats'] == 'yes' &&
             ($params['type'] == 'videos' || $params['type'] == 'video' || $params['type'] == 'v')) {
@@ -579,7 +579,7 @@ abstract class CBCategory
         $order = $params['order'] = $params['order'] ?: 'ASC';
         $limit = $params['limit'] = $params['limit'] ? (is_numeric($params['limit']) ? $params['limit'] : null) : null;
 
-        $categories = $db->select(tbl($this->cat_tbl), '*', $cond, $limit, " $orderby $order");
+        $categories = Clipbucket_db::getInstance()->select(tbl($this->cat_tbl), '*', $cond, $limit, " $orderby $order");
 
         $finalArray = [];
         if ($params['with_all']) {
@@ -601,7 +601,6 @@ abstract class CBCategory
      */
     function getCbSubCategories($category_id, $params)
     {
-        global $db;
         if (empty($category_id)) {
             return false;
         }
@@ -623,7 +622,7 @@ abstract class CBCategory
             $finalOrder = $params['sub_order'];
         }
 
-        $subCats = $db->select(tbl($this->cat_tbl), '*', ' parent_id = \'' . $category_id . '\'', $limit, $finalOrder);
+        $subCats = Clipbucket_db::getInstance()->select(tbl($this->cat_tbl), '*', ' parent_id = \'' . $category_id . '\'', $limit, $finalOrder);
         if ($subCats) {
             $subArray = [];
             foreach ($subCats as $subCat) {
@@ -745,8 +744,7 @@ abstract class CBCategory
      */
     function is_parent($cid): bool
     {
-        global $db;
-        $result = $db->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . mysql_clean($cid));
+        $result = Clipbucket_db::getInstance()->count(tbl($this->cat_tbl), 'category_id', ' parent_id = ' . mysql_clean($cid));
 
         if ($result > 0) {
             return true;

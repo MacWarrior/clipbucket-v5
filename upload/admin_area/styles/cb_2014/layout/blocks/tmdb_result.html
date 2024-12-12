@@ -6,14 +6,31 @@
         </div>
         <div class="modal-body tmdb">
             <div class="input-group">
+                <select name="type" class="form-control" id="type_tmdb">
+                        <option value="movie" {if $type=='movie'}selected="selected"{/if}>{lang('movie')}</option>
+                        <option value="series" {if $type=='series'}selected="selected"{/if}>{lang('series')}</option>
+                </select>
                 <input name="title" type="text" class="form-control" id="search_title" value="{$search}"/>
+                {if $can_search_year}
+                    <select name="selected_year" class="form-control" id="selected_year">
+                        <option></option>
+                        {section name=year loop=$years}
+                            <option value="{$years[year]['year']}"
+                                    {if $years[year]['year'] == $selected_year}
+                                        selected="selected"
+                                    {/if}>
+                                {$years[year]['year']} ({$years[year]['count']})
+                            </option>
+                        {/section}
+                    </select>
+                {/if}
                 <span class="input-group-addon" id="search" title="{lang code='search'}">{lang code="search"}</span>
             </div>
 
             <table class="table table-bordered table-striped">
                 <tr>
-                    <th class="col-md-1" style="cursor:pointer;" title="{sprintf(lang('sort_by'),lang('title'))}">{lang code='title'} <span class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></span></th>
-                    <th class="col-md-2" style="cursor:pointer;" title="{sprintf(lang('sort_by'),lang('release_date'))}">{lang code='release_date'}<span class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="release_date"></span></th>
+                    <th class="col-md-1" style="cursor:pointer;" title="{lang('sort_by',lang('title'))}">{lang code='title'} <span class="icon-sort{if $sort=='title'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="title"></span></th>
+                    <th class="col-md-2" style="cursor:pointer;" title="{lang('sort_by',lang('release_date'))}">{lang code='release_date'}<span class="icon-sort{if $sort=='release_date'}{if $sort_order == 'ASC'}-up{elseif $sort_order=='DESC'}-down{/if}{/if}" style="text-align: right;" data-type="release_date"></span></th>
                     <th class="col-md-6">{lang code='description'}</th>
                     <th class="col-md-2">{lang code='poster'}</th>
                     <th class="col-md-1"></th>
@@ -40,7 +57,7 @@
                         {/if}
                     </td>
                     <td>
-                        <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)}, {display_clean($videoid)})">{lang code='import'}</button>
+                        <button onclick="saveInfoTmdb({display_clean($results[sub].id_tmdb_movie)})">{lang code='import'}</button>
                     </td>
                 </tr>
                 {/section}
@@ -54,29 +71,38 @@
     </div>
 </div>
 <script>
+    var selected_year;
+    var videoid;
+    var video_title;
+    var type;
     $(function () {
-        var videoid = $('#modal_videoid').val();
+        videoid = $('#modal_videoid').val();
+        selected_year = $('#selected_year').val();
+        video_title = $('#search_title').val();
+        type = $('#type_tmdb').val();
         $('#search').on('click', function () {
-            var video_title = $('#search_title').val();
-            getInfoTmdb(videoid, video_title, 1);
+            video_title = $('#search_title').val();
+            selected_year = $('#selected_year').val();
+            type = $('#type_tmdb').val();
+            getInfoTmdb(videoid, type, video_title, 1, 'release_date','ASC',selected_year);
         });
         $('.icon-sort').parent().on('click', function () {
-            var video_title = $('#search_title').val();
+            video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort');
             $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC');
+            getInfoTmdb(videoid, type, video_title, 1, $(this).children().first().data('type'), 'ASC', selected_year);
         });
         $('.icon-sort-up').parent().on('click', function () {
-            var video_title = $('#search_title').val();
+            video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort-up');
             $(this).children().first().addClass('icon-sort-down');
-            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'DESC');
+            getInfoTmdb(videoid, type, video_title, 1, $(this).children().first().data('type'), 'DESC',selected_year);
         });
         $('.icon-sort-down').parent().on('click', function () {
-            var video_title = $('#search_title').val();
+            video_title = $('#search_title').val();
             $(this).children().first().removeClass('icon-sort-down');
             $(this).children().first().addClass('icon-sort-up');
-            getInfoTmdb(videoid, video_title, 1, $(this).children().first().data('type'), 'ASC');
+            getInfoTmdb(videoid, type, video_title, 1, $(this).children().first().data('type'), 'ASC',selected_year);
         });
         $('#search_title').keypress(function(event){
             if(event.keyCode == 13){

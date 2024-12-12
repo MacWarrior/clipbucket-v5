@@ -2,7 +2,9 @@
 const THIS_PAGE = 'logs';
 require_once dirname(__FILE__, 3) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'SSE.class.php';
-userquery::getInstance()->admin_login_check();
+if (!User::getInstance()->hasAdminAccess()) {
+    return false;
+}
 $max_id = $_GET['max_id'];
 SSE::processSSE(function () use(&$max_id){
     $tool = new AdminTool();

@@ -2,8 +2,13 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery, $cbvid, $eh, $db;
-userquery::getInstance()->admin_login_check();
+global $myquery, $cbvid, $eh;
+
+if (!User::getInstance()->hasAdminAccess()) {
+    e(lang('insufisant_privilege'));
+    echo json_encode(['err'=>$eh->get_error()]);
+    die;
+}
 
 $mode = $_POST['mode'];
 switch ($mode) {
@@ -11,7 +16,7 @@ switch ($mode) {
         $value = $_POST['note'];
         $myquery->insert_note($value);
         $array['note'] = nl2br($value);
-        $array['id'] = $db->insert_id();
+        $array['id'] = Clipbucket_db::getInstance()->insert_id();
 
         echo json_encode($array);
         break;

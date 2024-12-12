@@ -10,7 +10,7 @@
     <div id="dbresult" style="display:none;"></div>
     <div id="resultsDiv" style="margin-top:20px;">
         <img src="./images/loading.gif" alt="loading" id="loading"/>
-        <span id="current">Creating database structure...</span>
+        <span id="current"><?php echo !empty($_POST['reset_db']) ? 'Dropping previous tables & datas...':'Creating database structure...'; ?></span>
     </div>
 
     <form method="post" id="installation">
@@ -20,16 +20,18 @@
         <input type="hidden" name="dbuser" value="<?php echo $_POST['dbuser']; ?>"/>
         <input type="hidden" name="dbport" value="<?php echo $_POST['dbport']; ?>"/>
         <input type="hidden" name="dbprefix" value="<?php echo $_POST['dbprefix']; ?>"/>
+        <input type="hidden" name="reset_db" id="reset_db" value="<?php echo $_POST['reset_db'] ?? ''; ?>"/>
 
         <?php show_hidden_inputs(); ?>
 
-        <input type="hidden" name="mode" value="adminsettings"/>
+        <input type="hidden" name="mode" value="sitesettings"/>
     </form>
 </div>
 
 <script>
     $(document).ready()
     {
-        dodatabase('structure');
+        var reset_db = $('#reset_db').val();
+        dodatabase(reset_db== '1' ? 'reset_db' : 'structure');
     }
 </script>

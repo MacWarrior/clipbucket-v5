@@ -1,7 +1,7 @@
 {if $control=='' || $control =='view'}
-	{if $mode ==''}
-		{assign var='mode' value='favorites'}
-	{/if}
+{if $mode ==''}
+{assign var='mode' value='favorites'}
+{/if}
 {/if}
 
 {if $control =='full'}
@@ -36,26 +36,26 @@
 			</div>
 		</div>
 	</td>
-		
+
 	<td>
 		<div class="dropdown text-center">
 			<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
 				Actions <i class="caret"></i>
 			</button>
 			<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-			{if $cbvid->is_video_owner($video.videoid,$user.userid) || has_access('admin_access')}
+				{if $cbvid->is_video_owner($video.videoid,$user.userid) || User::getInstance()->hasAdminAccess()}
 				<li><a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
-				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a></li>
-			{/if}
+				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a>ssss</li>
+				{/if}
 				<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
 
-			{foreach from=$cbvid->video_manager_links item=links}
+				{foreach from=$cbvid->video_manager_links item=links}
 				{$cbvid->video_manager_link($links,$video)}
-			{/foreach}
+				{/foreach}
 			</ul>
 		</div>
 	</td>
-</tr>	
+</tr>
 {/if}
 
 {if $control=='playlist'}
@@ -68,9 +68,9 @@
 			<img class="edit-img-thumbnail" src="{getThumb vdetails=$video size=168x105}"/>
 			<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 			<div class="btn-group show">
-				<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='views'}</a>
+				<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">{lang code='watch'}</a>
 				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon_a-{$video.playlist_item_id}">
-				delete
+				{lang('delete')}
 				</a>
 			</div>
 		</div>
@@ -90,20 +90,20 @@
 
 
 {if $control=='basic'}
-	<div class="clearfix">
-	  <input type="checkbox" name="check_vid[]" id="check_vid-{$video.videoid}" value="{$video.videoid}"/>
-	</div>
+<div class="clearfix">
+	<input type="checkbox" name="check_vid[]" id="check_vid-{$video.videoid}" value="{$video.videoid}"/>
+</div>
 
-	<div class="clearfix">
-		<a href="{videoLink vdetails=$video}">
-		  <img src="{getThumb vdetails=$video size=168x105}" id="thumbs_{$video.videoid}" class="vthumb"/>
-		  <p class="marginTop">{display_clean($video.title)|truncate:100}</p>
-		</a>
-	</div>
+<div class="clearfix">
+	<a href="{videoLink vdetails=$video}">
+		<img src="{getThumb vdetails=$video size=168x105}" id="thumbs_{$video.videoid}" class="vthumb"/>
+		<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
+	</a>
+</div>
 
-	<div class="clearfix">{$video.date_added|date_format}</div>
-	<div class="clearfix">{$video.views|number_format}</div>
-	<div class="clearfix">{$video.comments_count|number_format}</div>
+<div class="clearfix">{$video.date_added|date_format}</div>
+<div class="clearfix">{$video.views|number_format}</div>
+<div class="clearfix">{$video.comments_count|number_format}</div>
 {/if}
 
 {if $control=='onWatch'}
@@ -112,7 +112,7 @@
 		<div class="video_thumb">
 			<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
 			<time class="duration">
-			{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
+				{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
 		</div>
 	</a>
 	<div class="details_block">
@@ -122,4 +122,4 @@
 		</div>
 	</div>
 </div>
-{/if}	
+{/if}

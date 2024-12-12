@@ -25,8 +25,7 @@ class CBEmail
      */
     function get_email_template($code)
     {
-        global $db;
-        $result = $db->select(tbl($this->db_tpl), "*", " email_template_code='" . $code . "' OR email_template_id='$code' ");
+        $result = Clipbucket_db::getInstance()->select(tbl($this->db_tpl), "*", " email_template_code='" . $code . "' OR email_template_id='$code' ");
         if (count($result) > 0) {
             $result[0]['email_template'] = stripslashes($result[0]['email_template']);
             $result[0]['email_template_subject'] = stripslashes($result[0]['email_template_subject']);
@@ -102,8 +101,7 @@ class CBEmail
      */
     function get_templates()
     {
-        global $db;
-        $results = $db->select(tbl($this->db_tpl), "*", null, null, " email_template_name DESC");
+        $results = Clipbucket_db::getInstance()->select(tbl($this->db_tpl), "*", null, null, " email_template_name DESC");
         if (count($results) > 0) {
             return $results;
         }
@@ -118,7 +116,6 @@ class CBEmail
      */
     function update_template($params)
     {
-        global $db;
         $id = $params['id'];
         $subj = $params['subj'];
         $msg = $params['msg'];
@@ -130,7 +127,7 @@ class CBEmail
         } elseif (empty($msg)) {
             e(lang("email_msg_empty"));
         } else {
-            $db->update(
+            Clipbucket_db::getInstance()->update(
                 tbl($this->db_tpl),
                 ["email_template_subject", "email_template"],
                 [$subj, '|no_mc|' . $msg],
@@ -148,7 +145,7 @@ class CBEmail
      * @return bool
      * @throws Exception
      */
-    function add_mass_email($array = null)
+    function add_mass_email($array = null): bool
     {
         if (!$array) {
             $array = $_POST;
@@ -170,24 +167,23 @@ class CBEmail
         unset($array);
 
         if (!isValidEmail($from)) {
-            e(lang("Please enter valid email in 'from' field"));
+            e(lang('Please enter valid email in \'from\' field'));
         }
         if (!is_numeric($loop) || $loop < 1 || $loop > 10000) {
-            e(lang("Please enter valid numeric value from 1 to 10000 for loop size"));
+            e(lang('Please enter valid numeric value from 1 to 10000 for loop size'));
         }
         if (!$subj) {
-            e(lang("Please enter a valid subject for your email"));
+            e(lang('Please enter a valid subject for your email'));
         }
         if (!$msg) {
-            e(lang("Email body was empty, please enter your email content"));
+            e(lang('Email body was empty, please enter your email content'));
         }
 
         if (!error()) {
-            global $db;
-            $db->insert(tbl('mass_emails'), ['email_subj', 'email_from', 'email_msg', 'configs', 'users', 'method', 'status', 'date_added'],
+            Clipbucket_db::getInstance()->insert(tbl('mass_emails'), ['email_subj', 'email_from', 'email_msg', 'configs', 'users', 'method', 'status', 'date_added'],
                 [$subj, $from, '|no_mc|' . $msg, '|no_mc|' . json_encode($settings), $users, $method, 'pending', now()]);
 
-            e("Mass email has been added", "m");
+            e('Mass email has been added', 'm');
             return true;
         }
         return false;
@@ -199,8 +195,7 @@ class CBEmail
      */
     function get_mass_emails()
     {
-        global $db;
-        $results = $db->select(tbl("mass_emails"), "*");
+        $results = Clipbucket_db::getInstance()->select(tbl("mass_emails"), "*");
 
         if (count($results) > 0) {
             return $results;
@@ -220,7 +215,6 @@ class CBEmail
      */
     function action($id, $action)
     {
-        global $db;
         $email = $this->email_exists($id);
         if (!$email) {
             e(lang("Email does not exist"));
@@ -229,7 +223,7 @@ class CBEmail
 
         switch ($action) {
             case "delete":
-                $db->execute("DELETE FROM " . tbl('mass_emails') . " WHERE id='$id'");
+                Clipbucket_db::getInstance()->execute("DELETE FROM " . tbl('mass_emails') . " WHERE id='$id'");
                 e(lang("Email has been deleted"), "m");
                 break;
 
@@ -249,8 +243,7 @@ class CBEmail
      */
     function get_email($id)
     {
-        global $db;
-        $result = $db->select(tbl('mass_emails'), '*', 'id='.mysql_clean($id));
+        $result = Clipbucket_db::getInstance()->select(tbl('mass_emails'), '*', 'id='.mysql_clean($id));
         if (count($result) > 0) {
             return $result[0];
         }
@@ -273,7 +266,7 @@ class CBEmail
      */
     function send_emails($id)
     {
-        global $db, $cbemail;
+        global $cbemail;
         if (!is_array($id)) {
             $email = $this->get_email($id);
         } else {
@@ -358,10 +351,10 @@ class CBEmail
         }
 
         if (!$users) {
-            $users = $db->select(tbl("users"), "*", $condition, $limit, " userid ASC ");
+            $users = Clipbucket_db::getInstance()->select(tbl("users"), "*", $condition, $limit, " userid ASC ");
 
             if (!$total) {
-                $total = $db->count(tbl("users"), "userid", $condition);
+                $total = Clipbucket_db::getInstance()->count(tbl("users"), "userid", $condition);
             }
 
             $sent = $email['sent'];
@@ -393,7 +386,7 @@ class CBEmail
                 $sent_to = $total;
             }
 
-            e(sprintf(lang("Sending email from %s to %s"), $start_index + 1, $sent_to), "m");
+            e(lang('Sending email from %s to %s', [$start_index + 1, $sent_to]), 'm');
 
             $start_index = $start_index + $settings['loop_size'];
 
@@ -403,7 +396,7 @@ class CBEmail
                 $status = 'sending';
             }
 
-            $db->update(tbl('mass_emails'), ['sent', 'total', 'start_index', 'status', 'last_update'],
+            Clipbucket_db::getInstance()->update(tbl('mass_emails'), ['sent', 'total', 'start_index', 'status', 'last_update'],
                 [$sent, $total, $start_index, $status, now()], " id='" . $email['id'] . "' ");
 
             return $send_msg;
@@ -420,9 +413,8 @@ class CBEmail
      */
     function friend_request_email($email, $username)
     {
-        global $db;
         $condition = "email = '$email'";
-        $receiver_name = $db->select(tbl('users'), 'username', $condition);
+        $receiver_name = Clipbucket_db::getInstance()->select(tbl('users'), 'username', $condition);
         $var = ['{sender}'        => user_name(),
                 '{website_title}' => TITLE,
                 '{reciever}'      => $receiver_name[0]['username'],

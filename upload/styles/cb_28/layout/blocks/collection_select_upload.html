@@ -1,0 +1,11 @@
+{if !$collections}
+    <p class="alert alert-danger">{lang code="no_collection_found_alert"}</p>
+{/if}
+<div class="form-group clearfix" {if !$collections}style='display:none;'{/if}>
+    <label for="collectionSelection">{lang code="select_collection_upload"}</label>
+    <select class="form-control" id="collectionSelection" name="collectionSelection">
+        {foreach from=$collections item=collection}
+            <option value="{$collection.collection_id}" {if $collection.collection_id == $selected} selected{/if}>{$collection.collection_name}</option>
+        {/foreach}
+    </select>
+</div>

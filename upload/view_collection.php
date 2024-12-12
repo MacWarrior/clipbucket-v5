@@ -6,21 +6,21 @@ require 'includes/config.inc.php';
 
 global $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-userquery::getInstance()->perm_check('view_video', true);
+User::getInstance()->hasPermissionOrRedirect('view_video');
 $pages->page_redir();
 
-$c = (int)$_GET['cid'];
+$collection_id = (int)$_GET['cid'];
 
 $page = $_GET['page'];
 
 $order = 'collection_items.ci_id DESC';
 
-if ($cbcollection->is_viewable($c)) {
+if ($cbcollection->is_viewable($collection_id)) {
     $params = [];
-    $params['collection_id'] = $c;
+    $params['collection_id'] = $collection_id;
     $cdetails = Collection::getInstance()->getOne($params);
 
-    if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !has_access('admin_access', true)) ){
+    if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()->hasAdminAccess()) ){
         $Cbucket->show_page = false;
     }
 
@@ -30,7 +30,7 @@ if ($cbcollection->is_viewable($c)) {
         $get_limit = create_query_limit($page, config('collection_items_page'));
         if (config('enable_sub_collection') == 'yes') {
             $params = [];
-            $params['collection_id_parent'] = $c;
+            $params['collection_id_parent'] = $collection_id;
             $params['limit'] = $get_limit;
             $collections = Collection::getInstance()->getAll($params);
 
@@ -38,7 +38,7 @@ if ($cbcollection->is_viewable($c)) {
         }
 
         $params = [];
-        $params['collection_id'] = $c;
+        $params['collection_id'] = $collection_id;
         $params['limit'] = $get_limit;
         $items = Collection::getInstance()->getItems($params);
 
@@ -63,14 +63,9 @@ if ($cbcollection->is_viewable($c)) {
             $breadcrum = [];
             $collection_parent = $cdetails;
             do {
-                if (config('seo') == 'yes') {
-                    $url = '/collection/' . $collection_parent['collection_id'] . '/' . $collection_parent['type'] . '/' . display_clean($collection_parent['collection_name']);
-                } else {
-                    $url = '/view_collection.php?cid=' . $collection_parent['collection_id'];
-                }
                 $breadcrum[] = [
                     'title' => $collection_parent['collection_name']
-                    , 'url' => $url
+                    , 'url' => Collections::getInstance()->collection_links($collection_parent,'view')
                 ];
                 $collection_parent = $cbcollection->get_parent_collection($collection_parent);
             } while ($collection_parent);
@@ -81,18 +76,60 @@ if ($cbcollection->is_viewable($c)) {
         assign('objects', $items);
         assign('c', $cdetails);
         subtitle($cdetails['collection_name']);
+        if ($cdetails['type'] == 'photos') {
+            if (SEO == 'yes') {
+                $link = '/photo_upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            }
+            $link = '/photo_upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
+        } elseif ($cdetails['type'] == 'videos') {
+            if (SEO == 'yes') {
+                $link = '/upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            }
+            $link = '/upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
+        }
+        assign('link_add_more',  $link);
     }
 } else {
     $Cbucket->show_page = false;
 }
+
+assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));
+
+assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_collection.php?collection=' .$collection_id);
+assign('link_edit_fo',  '/manage_collections.php?mode=edit_collection&cid=' . $collection_id);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it'.$min_suffixe.'.js'                                 => 'admin'
     ,'pages/view_collection/view_collection'.$min_suffixe.'.js' => 'admin'
-    ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
+    ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js'   => 'admin'
 ]);
+
+if( config('enable_comments_collection') == 'yes' ){
+    ClipBucket::getInstance()->addJS([
+        'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
+    ]);
+
+    if( config('enable_visual_editor_comments') == 'yes' ){
+        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+        if( config('default_theme') != '' && file_exists($filepath) ){
+            ClipBucket::getInstance()->addCSS([
+                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+            ]);
+        }
+
+        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
+        if( file_exists($filepath) ){
+            ClipBucket::getInstance()->addJS([
+                'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
+            ]);
+        }
+    }
+}
 
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit'.$min_suffixe.'.css'      => 'admin'

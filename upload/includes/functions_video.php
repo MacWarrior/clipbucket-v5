@@ -35,7 +35,7 @@ function video_playable($id): bool
     }
     if ($vdo['status'] != 'Successful') {
         e(lang('this_vdo_not_working'));
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }
         return true;
@@ -43,7 +43,7 @@ function video_playable($id): bool
     if ($vdo['broadcast'] == 'private'
         && !userquery::getInstance()->is_confirmed_friend($vdo['userid'], user_id())
         && !is_video_user($vdo)
-        && !has_access('video_moderation', true)
+        && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
         e(lang('private_video_error'));
         return false;
@@ -51,14 +51,14 @@ function video_playable($id): bool
 
     if ($vdo['broadcast'] == 'logged'
         && !user_id()
-        && !has_access('video_moderation', true)
+        && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
         e(lang('not_logged_video_error'));
         return false;
     }
     if ($vdo['active'] == 'no' && $vdo['userid'] != user_id()) {
         e(lang('vdo_iac_msg'));
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }
         return true;
@@ -67,7 +67,7 @@ function video_playable($id): bool
     if ($vdo['video_password']
         && $vdo['broadcast'] == 'unlisted'
         && $vdo['video_password'] != $video_password
-        && !has_access('video_moderation', true)
+        && !User::getInstance()->hasPermission('video_moderation')
         && $vdo['userid'] != $uid) {
         if (!$video_password) {
             e(lang("video_pass_protected"));
@@ -88,7 +88,7 @@ function video_playable($id): bool
         }
     }
 
-    if( !has_access('video_moderation', true)
+    if( !User::getInstance()->hasPermission('video_moderation')
         && config('enable_age_restriction') == 'yes'
         && Video::getInstance()->isCurrentUserRestricted($vdo['videoid'])
     ){
@@ -125,6 +125,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     } else {
         if (is_numeric($vdetails)) {
             $vid = $vdetails;
+            $vdetails = Video::getInstance()->getOne(['videoid'=>$vid]);
         } else {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
@@ -211,7 +212,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     }
     $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] != 'auto' ? '-'. array_search($resThumb[0]['type'], Upload::getInstance()->types_thumb) : '') .'.' . $resThumb[0]['extension'];
     if (!file_exists(DirPath::get('thumbs') . $filepath)) {
-        error_log('get_thumb - missing file : ' . $filepath);
+//        error_log('get_thumb - missing file : ' . $filepath . PHP_EOL);
         return default_thumb();
     }
     return DirPath::getUrl('thumbs') . $filepath;
@@ -222,8 +223,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
  */
 function get_count_thumb($videoid)
 {
-    global $db;
-    $resVideo = $db->select(tbl('video') . ' AS V INNER JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . mysql_clean($videoid));
+    $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V INNER JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', 'COUNT(V.videoid) as nb_thumbs', 'V.videoid = ' . mysql_clean($videoid));
     if (empty($resVideo)) {
         error_log('get_count_thumb - no thumbnails for videoid : ' . $videoid);
         return 0;
@@ -244,7 +244,6 @@ function create_thumb($video_db, $multi, $size)
         return default_thumb();
     }
 
-    global $db;
     //check files
     $glob = DirPath::get('thumbs') . $video_db['file_directory'] . DIRECTORY_SEPARATOR . $video_db['file_name'] . '*';
     $vid_thumbs = glob($glob);
@@ -254,13 +253,9 @@ function create_thumb($video_db, $multi, $size)
             //pattern must match :  /`file_name`-`size`-`num`.`extension`
             preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
             if (!empty($files_info)) {
-                $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], VERSION]);
+                Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], VERSION]);
             }
         }
-    } else {
-        //insert default
-        $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$video_db['videoid'], '', '', '', VERSION, 'auto']);
-        error_log('create_thumb - no thumb file for videoid : ' . $video_db['videoid']);
     }
     return get_thumb($video_db['videoid'], $multi, $size);
 }
@@ -303,8 +298,7 @@ function get_video_subtitles($vdetails)
         return false;
     }
 
-    global $db;
-    $results = $db->select(tbl('video_subtitle'), 'videoid,number,title', ' videoid=' . $vdetails['videoid']);
+    $results = Clipbucket_db::getInstance()->select(tbl('video_subtitle'), 'videoid,number,title', ' videoid=' . $vdetails['videoid']);
 
     if (count($results) == 0) {
         return false;
@@ -459,8 +453,7 @@ function videoSmartyLink($params)
  */
 function vkey_exists($key): bool
 {
-    global $db;
-    $results = $db->select(tbl('video'), 'videokey', " videokey='$key'");
+    $results = Clipbucket_db::getInstance()->select(tbl('video'), 'videokey', " videokey='$key'");
     if (count($results) > 0) {
         return true;
     }
@@ -478,8 +471,7 @@ function vkey_exists($key): bool
  */
 function file_name_exists($name)
 {
-    global $db;
-    $results = $db->select(tbl('video'), 'videoid,file_name', " file_name='$name'");
+    $results = Clipbucket_db::getInstance()->select(tbl('video'), 'videoid,file_name', " file_name='$name'");
 
     if (count($results) > 0) {
         return $results[0]['videoid'];
@@ -497,18 +489,16 @@ function file_name_exists($name)
  */
 function get_queued_video(string $fileName): array
 {
-    global $db;
-
     $queueName = getName($fileName);
     $ext = getExt($fileName);
 
-    $results = $db->select(tbl('conversion_queue'), '*', "cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'", 1);
+    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', "cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'", 1);
     if( empty($results) ){
         return [];
     }
 
     $result = $results[0];
-    $db->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], " cqueue_id = '" . $result['cqueue_id'] . "'");
+    Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], " cqueue_id = '" . $result['cqueue_id'] . "'");
     return $result;
 }
 
@@ -679,12 +669,11 @@ function get_video_file($vdetails, $return_default = true, $with_path = true, $m
  */
 function update_processed_video($file_array, string $status = 'Successful')
 {
-    global $db;
     $file_name = $file_array['cqueue_name'];
 
     $result = db_select('SELECT * FROM ' . tbl('video') . " WHERE file_name = '$file_name'");
     if ($result) {
-        $db->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
+        Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
     }
 }
 
@@ -693,8 +682,7 @@ function update_processed_video($file_array, string $status = 'Successful')
  */
 function update_video_status($file_name, $status = 'Successful')
 {
-    global $db;
-    $db->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
+    Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
 }
 
 /**
@@ -705,10 +693,9 @@ function update_video_status($file_name, $status = 'Successful')
  */
 function activate_video_with_file($vid)
 {
-    global $db;
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
-    $results = $db->select(tbl('conversion_queue'), '*', " cqueue_name='$file_name' AND cqueue_conversion='yes'");
+    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', " cqueue_name='$file_name' AND cqueue_conversion='yes'");
     $result = $results[0];
 
     update_processed_video($result);
@@ -790,30 +777,52 @@ function get_thumb_num($name): string
  * @param $num
  * @throws Exception
  */
-function delete_video_thumb($videoDetails, $num)
+function delete_video_thumb($videoDetails, $num, $type)
 {
-    global $db;
-    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .'[-.]*');
+    $db = Clipbucket_db::getInstance();
+    $type_file = array_search($type,Upload::getInstance()->types_thumb);
+    if (!empty($type_file) && in_array($type_file,['p','b']) ) {
+        $type_search = '-' . $type_file . '.*';
+        $lang_key = $type;
+    } else {
+        $type_search = '[-.]*';
+        $lang_key = 'thumbs';
+    }
+    $files = glob(DirPath::get('thumbs') . $videoDetails['file_directory'] . DIRECTORY_SEPARATOR . $videoDetails['file_name'] . '*-' . $num .$type_search);
     if ($files) {
         foreach ($files as $file) {
             if (file_exists($file)) {
                 unlink($file);
             }
         }
-        e(lang('video_thumb_delete_msg'), 'm');
+        e(lang($lang_key . '_delete_successfully'), 'm');
     } else {
         e(lang('video_thumb_delete_err'));
     }
 
-    $db->delete(tbl('video_thumbs'), ['videoid', 'num'], [$videoDetails['videoid'], $num]);
+    Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid', 'num'], [$videoDetails['videoid'], $num]);
 
     //check if there are thumbs left
-    $thumbs = $db->select(tbl('video_thumbs'), '*', ' videoid = ' . mysql_clean($videoDetails['videoid']));
+    $thumbs = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), '*', ' videoid = ' . mysql_clean($videoDetails['videoid']));
     if (count($thumbs) == 0) {
         create_thumb($videoDetails, '', '');
     }
-    if ($videoDetails['default_thumb'] == $num) {
-        $db->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = (SELECT CASE WHEN num = \'\' THEN 0 ELSE MIN(CAST(num AS UNSIGNED)) END FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ') WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+    switch ($type_file) {
+        case 'p':
+            if ($videoDetails['default_poster'] == $num) {
+                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET `default_poster` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'poster\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
+        case 'b':
+            if ($videoDetails['default_backdrop'] == $num) {
+                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET `default_backdrop` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE CAST(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type = \'backdrop\' ), 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
+        default:
+            if ($videoDetails['default_thumb'] == $num) {
+                Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET `default_thumb` = IFNULL((SELECT MIN( CASE WHEN num = \'\' THEN 0 ELSE cast(num AS INTEGER) END)  FROM ' . tbl('video_thumbs') . ' WHERE videoid = ' . mysql_clean($videoDetails['videoid']) . ' AND type IN (\'auto\', \'custom\')) , 0) WHERE videoid = ' . mysql_clean($videoDetails['videoid']), 'update');
+            }
+            break;
     }
 }
 
@@ -921,7 +930,6 @@ function call_delete_video_function($vdo)
  */
 function call_download_video_function($vdo)
 {
-    global $db;
     $funcs = get_functions('download_video_functions');
     if (is_array($funcs) && count($funcs) > 0) {
         foreach ($funcs as $func) {
@@ -932,10 +940,10 @@ function call_download_video_function($vdo)
     }
 
     //Updating Video Downloads
-    $db->update(tbl('video'), ['downloads'], ['|f|downloads+1'], "videoid = '" . $vdo['videoid'] . "'");
+    Clipbucket_db::getInstance()->update(tbl('video'), ['downloads'], ['|f|downloads+1'], "videoid = '" . $vdo['videoid'] . "'");
     //Updating User Download
     if (user_id()) {
-        $db->update(tbl('users'), ['total_downloads'], ['|f|total_downloads+1'], "userid = '" . user_id() . "'");
+        Clipbucket_db::getInstance()->update(tbl('users'), ['total_downloads'], ['|f|total_downloads+1'], "userid = '" . user_id() . "'");
     }
 }
 
@@ -1279,7 +1287,6 @@ function dateNow(): string
  */
 function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
 {
-    global $db;
     if ($byFilename) {
         $type = 'file_name';
     } else {
@@ -1296,7 +1303,7 @@ function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
         $field = 'status';
     }
 
-    $db->update(tbl('video'), [$field], [$status], "$type='$video'");
+    Clipbucket_db::getInstance()->update(tbl('video'), [$field], [$status], "$type='$video'");
 }
 
 
@@ -1308,8 +1315,7 @@ function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
  */
 function checkReConvStatus($vid)
 {
-    global $db;
-    $data = $db->select(tbl('video'), 're_conv_status', 'videoid=' . $vid);
+    $data = Clipbucket_db::getInstance()->select(tbl('video'), 're_conv_status', 'videoid=' . $vid);
     if (isset($data[0]['re_conv_status'])) {
         return $data[0]['re_conv_status'];
     }
@@ -1330,16 +1336,15 @@ function update_castable_status($vdetails)
         return;
     }
 
-    global $db;
     $filepath = get_high_res_file($vdetails);
     $data = get_audio_channels($filepath);
 
     if ($data <= 2 && $vdetails['is_castable'] == 0) {
-        $db->update(tbl('video'), ['is_castable'], [true], 'videoid=' . $vdetails['videoid']);
-        e(sprintf(lang('castable_status_fixed'), $vdetails['title']), 'm');
+        Clipbucket_db::getInstance()->update(tbl('video'), ['is_castable'], [true], 'videoid=' . $vdetails['videoid']);
+        e(lang('castable_status_fixed', $vdetails['title']), 'm');
     } else {
         if ($data > 2) {
-            e(sprintf(lang('castable_status_failed'), $vdetails['title'], $data), 'w');
+            e(lang('castable_status_failed', $vdetails['title'], $data), 'w');
         }
     }
 }
@@ -1349,8 +1354,6 @@ function update_castable_status($vdetails)
  */
 function update_video_files($vdetails)
 {
-    global $db;
-
     $fileDirectory = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     $video_qualities = [];
     switch ($vdetails['file_type'])
@@ -1397,7 +1400,7 @@ function update_video_files($vdetails)
 
     sort($video_qualities, SORT_NUMERIC);
 
-    $db->update(tbl('video'), ['video_files'], [json_encode($video_qualities)], ' videoid = '.display_clean($vdetails['videoid']));
+    Clipbucket_db::getInstance()->update(tbl('video'), ['video_files'], [json_encode($video_qualities)], ' videoid = '.display_clean($vdetails['videoid']));
 }
 
 /**
@@ -1409,12 +1412,11 @@ function update_bits_color($vdetails)
         return;
     }
 
-    global $db;
     $filepath = get_high_res_file($vdetails);
     $cmd = System::get_binaries('ffprobe') . ' -show_streams ' . $filepath . ' 2>/dev/null | grep "bits_per_raw_sample" | grep -v "N/A" | awk -v FS="=" \'{print $2}\'';
     $data = shell_exec($cmd);
 
-    $db->update(tbl('video'), ['bits_color'], [(int)$data], 'videoid=' . $vdetails['videoid']);
+    Clipbucket_db::getInstance()->update(tbl('video'), ['bits_color'], [(int)$data], 'videoid=' . $vdetails['videoid']);
 }
 
 /**
@@ -1585,7 +1587,6 @@ function reConvertVideos($data = '')
  */
 function generatingMoreThumbs($data, bool $regenerate = false)
 {
-    global $db;
     $vid_file = get_high_res_file($data);
     require_once DirPath::get('classes') . 'sLog.php';
     $log = new SLog();
@@ -1606,7 +1607,7 @@ function generatingMoreThumbs($data, bool $regenerate = false)
         e(lang('video_thumbs_regenerated'), 'm');
     }
 
-    $db->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
+    Clipbucket_db::getInstance()->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
 }
 
 /**
@@ -1620,13 +1621,12 @@ function update_duration($vdetails)
         return;
     }
 
-    global $db;
     $filepath = get_high_res_file($vdetails);
     require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $data = FFMpeg::get_video_basic_infos($filepath);
 
     if (isset($data['duration'])) {
-        $db->update(tbl('video'), ['duration'], [$data['duration']], 'videoid=' . $vdetails['videoid']);
+        Clipbucket_db::getInstance()->update(tbl('video'), ['duration'], [(int)$data['duration']], 'videoid=' . $vdetails['videoid']);
     }
 }
 

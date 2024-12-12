@@ -7,8 +7,7 @@
  */
 function db_select($query, $cached_time = -1, $cached_key = ''): array
 {
-    global $db;
-    return $db->_select($query, $cached_time, $cached_key);
+    return Clipbucket_db::getInstance()->_select($query, $cached_time, $cached_key);
 }
 
 function cb_query_id($query): string
@@ -104,8 +103,7 @@ function cb_sql_table($table, $as = null)
  */
 function select($query, $cached_time = -1, $cached_key = ''): array
 {
-    global $db;
-    return $db->_select($query, $cached_time, $cached_key);
+    return Clipbucket_db::getInstance()->_select($query, $cached_time, $cached_key);
 }
 
 /**
@@ -167,24 +165,24 @@ function execute_sql_file($path): bool
         error_lang_cli(lang('class_error_occured'));
         return false;
     }
-    global $db;
+
     $templine = '';
-    $db->mysqli->begin_transaction();
+    Clipbucket_db::getInstance()->begin_transaction();
     try {
         foreach ($lines as $line) {
             $templine .= $line;
             if (substr(trim($line), -1, 1) == ';') {
                 $templine = preg_replace("/{tbl_prefix}/", TABLE_PREFIX, $templine);
-                $templine = preg_replace("/{dbname}/", $db->db_name, $templine);
-                $db->mysqli->query($templine);
-                if ($db->mysqli->error != '') {
-                    throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $db->mysqli->error);
+                $templine = preg_replace("/{dbname}/", Clipbucket_db::getInstance()->getDBName(), $templine);
+                Clipbucket_db::getInstance()->execute($templine);
+                if (Clipbucket_db::getInstance()->getError() != '') {
+                    throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . Clipbucket_db::getInstance()->getError());
                 }
                 $templine = '';
             }
         }
     } catch (mysqli_sql_exception $e) {
-        $db->mysqli->rollback();
+        Clipbucket_db::getInstance()->rollback();
         e('SQL : ' . $templine);
         e('ERROR : ' . $e->getMessage());
         error_log('SQL : ' . $templine);
@@ -193,14 +191,14 @@ function execute_sql_file($path): bool
         DiscordLog::sendDump('ERROR : ' . $e->getMessage());
         throw new Exception('SQL : ' . $templine . "\n" . 'ERROR : ' . $e->getMessage());
     } catch (\Exception $e) {
-        $db->mysqli->rollback();
+        Clipbucket_db::getInstance()->rollback();
         e($e->getMessage());
         error_log( $e->getMessage());
         DiscordLog::sendDump($e->getMessage());
         throw new Exception($e->getMessage());
     }
 
-    $db->mysqli->commit();
+    Clipbucket_db::getInstance()->commit();
     return true;
 }
 

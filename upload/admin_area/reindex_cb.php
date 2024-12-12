@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $cbindex;
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -44,10 +44,10 @@ if (isset($_GET['index_vids'])) {
     while ($i < $total_videos) {
         if ($videos[$i]['videoid']) {
             $params = ['video_id' => $videos[$i]['videoid'], 'video_comments' => true, 'favs_count' => true, 'playlist_count' => true];
-            $indexes = $cbindex->count_index('vid', $params);
+            $indexes = $cbindex->count_index('videos', $params);
             $fields = $cbindex->extract_fields('vid', $params);
             $msg[] = $videos[$i]['video'] . ': Updating <strong><em>' . $videos[$i]['title'] . '</em></strong>';
-            $cbindex->update_index('vid', ['fields' => $fields, 'values' => $indexes, 'video_id' => $videos[$i]['videoid']]);
+            $cbindex->update_index('videos', ['fields' => $fields, 'values' => $indexes, 'video_id' => $videos[$i]['videoid']]);
         }
         $i++;
     }
@@ -80,10 +80,10 @@ if (isset($_GET['index_usrs'])) {
         if ($users[$i]['userid']) {
             $params = ['user'        => $users[$i]['userid'], 'comment_added' => true, 'subscriptions_count' => true, 'subscribers_count' => true,
                        'video_count' => true, 'groups_count' => true, 'collections_count' => true, 'photos_count' => true];
-            $indexes = $cbindex->count_index('user', $params);
+            $indexes = $cbindex->count_index('users', $params);
             $fields = $cbindex->extract_fields('user', $params);
             $msg[] = $users[$i]['userid'] . ': Updating <strong><em>' . $users[$i]['username'] . '</em></strong>';
-            $cbindex->update_index('user', ['fields' => $fields, 'values' => $indexes, 'user' => $users[$i]['userid']]);
+            $cbindex->update_index('users', ['fields' => $fields, 'values' => $indexes, 'user' => $users[$i]['userid']]);
         }
         $i++;
     }
@@ -127,10 +127,15 @@ if (isset($_GET['index_photos'])) {
 }
 
 if (isset($_GET['index_collections'])) {
-    $collections = get_collections(['active' => 'yes', 'limit' => $start_index . ',' . $loop_size]);
-    $total_collections = get_collections(['count_only' => true, 'active' => 'yes']);
+    $params = [
+        'active' => 'yes'
+        ,'limit' => $start_index . ',' . $loop_size
+    ];
+    $collections = Collection::getInstance()->getAll($params);
+    unset($params['limit']);
+    $params['count'] = true;
+    $total_collections = Collection::getInstance()->getAll($params);
     $percent = $cbindex->percent(50, $total_collections);
-    $i = 0;
 
     assign('total', $total_collections);
     assign('from', $start_index + 1);
@@ -142,15 +147,16 @@ if (isset($_GET['index_collections'])) {
     }
     assign('to', $to);
 
-    while ($i < $total_collections) {
-        if ($collections[$i]['collection_id']) {
-            $params = ['collection_id' => $collections[$i]['collection_id'], 'total_items' => true, 'total_comments' => true];
-            $indexes = $cbindex->count_index('collections', $params);
-            $fields = $cbindex->extract_fields('collections', $params);
-            $msg[] = $collections[$i]['collection_id'] . ': Updating <strong><em>' . $collections[$i]['collection_name'] . '</em></strong>';
-            $cbindex->update_index('collections', ['fields' => $fields, 'values' => $indexes, 'photo_id' => $collections[$i]['collection_id']]);
-        }
-        $i++;
+    foreach($collections as $collection){
+        $params = ['collection_id' => $collection['collection_id'], 'total_comments' => true];
+        $indexes = $cbindex->count_index('collections', $params);
+        $fields = $cbindex->extract_fields('collections', $params);
+        $msg[] = $collection['collection_id'] . ': Updating <strong><em>' . $collection['collection_name'] . '</em></strong>';
+        $cbindex->update_index('collections', [
+            'fields' => $fields
+            ,'values' => $indexes
+            ,'collection_id' => $collection['collection_id']
+        ]);
     }
 
     e($start_index + 1 . ' - ' . $to . ' collections have been reindexed successfully.', 'm');

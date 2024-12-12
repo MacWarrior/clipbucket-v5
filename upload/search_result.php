@@ -18,7 +18,7 @@ switch($type){
         break;
 }
 
-if (!userquery::getInstance()->perm_check('view_' . $type, true) || !isSectionEnabled($type)) {
+if (!User::getInstance()->hasPermission('view_' . $type) || !isSectionEnabled($type)) {
     redirect_to(BASEURL);
 }
 
@@ -58,7 +58,7 @@ pages::getInstance()->paginate($total_pages, $page);
 
 assign('type', $type);
 assign('results', $results);
-assign('search_type_title', sprintf(lang('searching_keyword_in_obj'), display_clean($_GET['query']), strtolower(lang($type))));
+assign('search_type_title', lang('searching_keyword_in_obj', [display_clean($_GET['query']), strtolower(lang($type))]));
 
 if (get('query')) {
     $squery = get('query');

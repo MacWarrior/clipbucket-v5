@@ -4,9 +4,9 @@ define('THIS_PAGE', 'manage_players');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $Upload, $myquery, $cbplayer;
-userquery::getInstance()->admin_login_check();
+
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
-userquery::getInstance()->login_check('admin_access');
 
 if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_settings' ){
     redirect_to(BASEURL . DirPath::getUrl('admin_area'));
@@ -14,11 +14,11 @@ if( count($cbplayer->getPlayers()) <= 1 && !in_dev() && $_GET['mode'] != 'show_s
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
+$breadcrumb[0] = ['title'=> lang('configurations'), 'url'=>''];
 if ($_GET['mode'] == 'show_settings') {
     $breadcrumb[1] = ['title' => lang('player_settings'), 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'];
 } else {
-    $breadcrumb[1] = ['title' => 'Players Manager', 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'];
+    $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('players'))), 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'];
 }
 
 //Set Mode

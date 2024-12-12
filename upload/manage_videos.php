@@ -5,12 +5,12 @@ define('PARENT_PAGE', "videos");
 require 'includes/config.inc.php';
 
 if( config('videosSection') != 'yes' ){
-    redirect_to(BASEURL);
+    redirect_to(cblink(['name' => 'my_account']));
 }
 
-global $cbvideo, $eh, $pages, $cbvid;
+global $cbvideo, $pages, $cbvid;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
@@ -20,25 +20,36 @@ $mode = $_GET['mode'];
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
 
+$favorites = User::getInstance()->getFavoritesVideos(user_id());
+assign('favorites', $favorites);
+
 assign('queryString', queryString(null, ['type',
     'vid_delete']));
 switch ($mode) {
     case 'uploaded':
     default:
+        if( !User::getInstance()->hasPermission('allow_video_upload') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('mode', 'uploaded');
 
         //Deleting Video
         if (!empty($_GET['vid_delete'])) {
-            $video = mysql_clean($_GET['vid_delete']);
-            $cbvideo->delete_video($video);
+            $videoid = mysql_clean($_GET['vid_delete']);
+            if ($cbvid->is_video_owner($videoid, user_id())) {
+                $cbvideo->delete_video($videoid);
+            }
         }
 
         //Deleting Videos
         if (isset($_POST['delete_videos'])) {
             for ($id = 0; $id <= config('videos_list_per_page'); $id++) {
-                $cbvideo->delete_video($_POST['check_vid'][$id]);
+                if ($cbvid->is_video_owner($_POST['check_vid'][$id], user_id())) {
+                    $cbvideo->delete_video($_POST['check_vid'][$id]);
+                }
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e(lang('vdo_multi_del_erro'), 'm');
         }
 
@@ -56,6 +67,7 @@ switch ($mode) {
         //Collecting Data for Pagination
         $vid_array['count_only'] = true;
         $total_rows = get_videos($vid_array);
+
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
         //Pagination
@@ -66,20 +78,16 @@ switch ($mode) {
 
 
     case 'favorites':
-        assign('mode', 'favorites');
-        //Removing video from favorites
-        if (!empty($_GET['vid_delete'])) {
-            $video = mysql_clean($_GET['vid_delete']);
-            $cbvideo->action->remove_favorite($video);
+        if( !User::getInstance()->hasPermission('view_video') ){
+            redirect_to(cblink(['name' => 'my_account']));
         }
 
-        //Removing Multiple Videos
-        if (isset($_POST['delete_fav_videos'])) {
-            for ($id = 0; $id <= config('videos_list_per_page'); $id++) {
-                $cbvideo->delete_video($_POST['check_vid'][$id]);
-            }
-            $eh->flush();
-            e(lang('vdo_multi_del_fav_msg'), 'm');
+        assign('mode', 'favorites');
+
+        //Removing video from favorites
+        if (!empty($_GET['remove_fav_videoid']) && in_array($_GET['remove_fav_videoid'], $favorites) ) {
+            $videoid = mysql_clean($_GET['remove_fav_videoid']);
+            $cbvideo->action->remove_favorite($videoid);
         }
         if (get('query') != '') {
             $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";

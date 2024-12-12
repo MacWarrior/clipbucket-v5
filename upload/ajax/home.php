@@ -45,18 +45,14 @@ if (isset($_POST['load_type'])) {
             $params['count_only'] = false;
             $data = Video::getInstance()->getAll($params);
             break;
-        case 'users':
-            $data = get_users($params);
-            break;
-        case 'photos':
-            $data = get_photos($params);
-            break;
-        case 'collections':
-            $data = get_collections($params);
-            break;
 
         default:
             $data = Video::getInstance()->getAll($params);
+            if( in_dev() ){
+                $msg = 'Unknown load_type : ' . $load_type;
+                error_log($msg);
+                DiscordLog::sendDump($msg);
+            }
             break;
     }
 

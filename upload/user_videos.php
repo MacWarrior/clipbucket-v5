@@ -3,8 +3,8 @@ define('THIS_PAGE', 'user_videos');
 define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
+User::getInstance()->hasPermissionOrRedirect('view_videos');
 $pages->page_redir();
-$userquery->perm_check('view_videos', true);
 
 $u = $_GET['user'];
 $u = $u ? $u : $_GET['userid'];
@@ -30,7 +30,7 @@ if ($udetails) {
             assign("the_title", $udetails['username'] . " videos");
             $videos = get_videos(['user' => $udetails['userid'], 'limit' => $get_limit]);
             $total_rows = get_videos(['user' => $udetails['userid'], 'count_only' => true]);
-            subtitle(sprintf(lang("users_videos"), $udetails['username']));
+            subtitle(lang("users_videos", $udetails['username']));
             $total_pages = count_pages($total_rows, config('videos_items_uvid_page'));
             break;
 
@@ -41,18 +41,18 @@ if ($udetails) {
             $videos = $cbvid->action->get_favorites($params);
             $params['count_only'] = "yes";
             $total_rows = $cbvid->action->get_favorites($params);
-            subtitle(sprintf(lang("title_usr_fav_vids"), $udetails['username']));
+            subtitle(lang("title_usr_fav_vids", $udetails['username']));
             $total_pages = count_pages($total_rows, config('videos_items_ufav_page'));
             break;
 
         case 'playlists':
             $get_limit = create_query_limit($page, 10);
             $params = ['userid' => $udetails['userid'], 'limit' => $get_limit];
-            $playlists = get_playlists($params);
+            $playlists = Playlist::getInstance()->getAll($params);
             assign('playlist_mode', 'on');
             assign('playlists', $playlists);
             $params['count_only'] = true;
-            $total_rows = get_playlists($params);
+            $total_rows = Playlist::getInstance()->getAll($params);
             $total_pages = count_pages($total_rows, config('videos_items_ufav_page'));
             break;
     }

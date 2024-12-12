@@ -4,15 +4,14 @@ define('THIS_PAGE', 'email_settings');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $cbemail, $eh, $Cbucket, $myquery;
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('web_config_access');
+User::getInstance()->hasPermissionOrRedirect('web_config_access',true);
 
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Email Templates', 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('email_template'), 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'];
 
 //Updating email templates
 if (isset($_POST['update'])) {

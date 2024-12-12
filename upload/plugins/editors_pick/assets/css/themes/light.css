@@ -1,0 +1,15 @@
+.editorpick-videos .featured-video .video_thumb img{
+    border-radius: var(--border-radius);
+}
+
+.editorpick .video-js .vjs-big-play-button{
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+}
+
+.editorpick{
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+    box-shadow: var(--generic-box-shadow);
+    background: var(--background-gradient);
+}

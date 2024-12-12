@@ -5,13 +5,13 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $myquery;
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
-$breadcrumb[1] = ['title' => 'Manage Comments', 'url' => DirPath::getUrl('admin_area') . 'comments.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('comments'))), 'url' => DirPath::getUrl('admin_area') . 'comments.php'];
 
 if( !empty($_POST['check_comments']) && is_array($_POST['check_comments']) ){
     foreach($_POST['check_comments'] AS $id){
@@ -22,7 +22,6 @@ if( !empty($_POST['check_comments']) && is_array($_POST['check_comments']) ){
         } else if( isset($_POST['mark_spam']) ) {
             Comments::setSpam($id);
         }
-
     }
 }
 
@@ -46,6 +45,21 @@ unset($comment_cond['limit']);
 $total_rows =  Comments::getAll($comment_cond);
 $total_pages = count_pages($total_rows, config('admin_pages'));
 pages::getInstance()->paginate($total_pages, $page);
+
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(['pages/comments/comments'.$min_suffixe.'.js' => 'admin']);
+
+if( config('enable_visual_editor_comments') == 'yes' ){
+    ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+    ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+    $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+    if( config('default_theme') != '' && file_exists($filepath) ){
+        ClipBucket::getInstance()->addAdminCSS([
+            'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+        ]);
+    }
+}
 
 subtitle(lang('comments'));
 template_files('comments.html');

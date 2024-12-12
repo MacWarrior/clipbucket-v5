@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'edit_account');
 
 require 'includes/config.inc.php';
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 
 //Updating Profile
 if (isset($_POST['update_profile'])) {
@@ -34,19 +34,19 @@ if (isset($_FILES['Filedata'])) {
     $destinationFilePath = DirPath::get('temp') . 'background-' . $user_id . '-'. $timeStamp;
 
     $params = [
-        'fileData' => 'Filedata',
-        'mimeType' => 'image',
+        'fileData'            => 'Filedata',
+        'mimeType'            => 'image',
         'destinationFilePath' => $destinationFilePath,
-        'keepExtension' => true,
-        'maxFileSize' => config('max_bg_size') / 1024,
-        'allowedExtensions' => config('allowed_photo_types')
+        'keepExtension'       => true,
+        'maxFileSize'         => config('max_bg_size') / 1024,
+        'allowedExtensions'   => config('allowed_photo_types')
     ];
 
     FileUpload::getInstance($params)->processUpload();
     $data = [
         'extension' => FileUpload::getInstance()->getExtension(),
-        'filepath' => FileUpload::getInstance()->getDestinationFilePath(),
-        'user_id' => $user_id
+        'filepath'  => FileUpload::getInstance()->getDestinationFilePath(),
+        'user_id'   => $user_id
     ];
 
     $coverUpload = userquery::getInstance()->updateBackground($data);
@@ -79,11 +79,16 @@ if (isset($_POST['block_users'])) {
 }
 
 $mode = $_GET['mode'];
-
-
+if ($mode === 'profile' && !User::getInstance()->hasPermission('enable_channel_page')) {
+    e(lang('cannot_access_page'));
+    $mode = 'account';
+}
 assign('mode', $mode);
 
 switch ($mode) {
+    default:
+        redirect_to(cblink(['name' => 'my_account']));
+
     case 'account':
         assign('on', 'account');
         assign('mode', 'account_settings');
@@ -95,7 +100,10 @@ switch ($mode) {
         break;
 
     case 'avatar_bg':
-    case 'channel_bg':
+        if( (config('picture_upload') != 'yes' || !User::getInstance()->hasPermission('avatar_upload')) && config('picture_url') != 'yes' && empty(User::getInstance()->get('avatar_url')) && empty(User::getInstance()->get('avatar'))) {
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         assign('backgroundPhoto', userquery::getInstance()->getBackground(user_id()));
         assign('mode', $mode);
         break;
@@ -107,6 +115,10 @@ switch ($mode) {
         break;
 
     case 'subscriptions':
+        if( config('channelsSection') != 'yes' || !User::getInstance()->hasPermission('view_channels') ){
+            redirect_to(cblink(['name' => 'my_account']));
+        }
+
         //Removing subscription
         if (isset($_GET['delete_subs'])) {
             $sid = mysql_clean($_GET['delete_subs']);
@@ -116,10 +128,6 @@ switch ($mode) {
         assign('subs', userquery::getInstance()->get_user_subscriptions(user_id()));
         break;
 
-    default:
-        assign('on', 'account');
-        assign('mode', 'profile_settings');
-        break;
 }
 
 $udetails = userquery::getInstance()->get_user_details(user_id());

@@ -14,7 +14,7 @@ if (isset($_POST['mode'])) {
 if (!empty($mode)) {
     switch ($mode) {
         case 'most_viewed':
-            if (!isSectionEnabled('videos') || !userquery::getInstance()->perm_check('view_videos', false, true)) {
+            if (!isSectionEnabled('videos') || !User::getInstance()->hasPermission('view_videos')) {
                 exit();
             }
 
@@ -35,11 +35,11 @@ if (!empty($mode)) {
             switch ($inner_mode) {
                 case 'load_more_playlist':
                     $userid = $_POST['cat_id'];
-                    $play_arr = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
-                    $results = $cbvid->action->get_playlists($play_arr);
+                    $play_arr = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $limit . ',' . $limit];
+                    $results = Playlist::getInstance()->getAll($play_arr);
                     $next_limit = $limit + $limit;
-                    $play_arr_next = ['user' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
-                    $playlist_next = $cbvid->action->get_playlists($play_arr_next);
+                    $play_arr_next = ['userid' => $userid, 'order' => 'date_added DESC', 'limit' => '' . $next_limit . ',' . $next_limit];
+                    $playlist_next = Playlist::getInstance()->getAll($play_arr_next);
                     if ($total == $next_limit || $total < $next_limit) {
                         $count_next = 0;
                     } else {
@@ -557,45 +557,6 @@ if (!empty($mode)) {
             echo json_encode($ajax);
             break;
 
-        case "add_new_item":
-            $type = $_POST['type'];
-            $cid = $_POST['cid'];
-            $id = $_POST['obj_id'];
-
-            switch ($type) {
-                case "videos":
-                case "video":
-                case "v":
-                    $cbvideo->collection->add_collection_item($id, $cid);
-                    break;
-
-                case "photos":
-                case "photo":
-                case "p":
-                    $cbphoto->collection->add_collection_item($id, $cid);
-                    break;
-            }
-
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
-
-            if ($error) {
-                $err = '<div class="error">' . $error[0]['val'] . '</div>';
-            } else {
-                if ($warning) {
-                    $err = '<div class="warning">' . $warning[0]['val'] . '</div>';
-                }
-            }
-            if ($message) {
-                $msg = '<div class="msg">' . $message[0]['val'] . '</div>';
-            }
-            $ajax['msg'] = $msg;
-            $ajax['err'] = $err;
-
-            echo json_encode($ajax);
-            break;
-
         case "remove_collection_item":
             $type = $_POST['type'];
             $obj_id = $_POST['obj_id'];
@@ -719,20 +680,14 @@ if (!empty($mode)) {
             }
             $insert_id = $cbcollection->create_collection($CollectParams);
 
-            if (msg()) {
-                $msg = msg_list();
-                $msg = $msg[0]['val'];
-                $ajax['msg'] = $msg;
-            }
-            if (error()) {
-                $err = error_list();
-                $err = $err[0]['val'];
-                $ajax['err'] = $err;
-            }
-
             $ajax['id'] = $insert_id;
-
-            echo json_encode($ajax);
+            $collections = Collection::getInstance()->getAllIndent([
+                'type'   => 'photos',
+                'userid' => user_id()
+            ]);
+            assign('collections', $collections);
+            assign('selected', $insert_id);
+            echo templateWithMsgJson('blocks/collection_select_upload.html');
             break;
 
         case "ajaxPhotos":
@@ -864,7 +819,7 @@ if (!empty($mode)) {
             $comments = Comments::getAll($params);
 
             $admin = '';
-            if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
+            if ($_POST['admin'] == 'yes' && User::getInstance()->hasAdminAccess()) {
                 $admin = 'yes';
             }
 
@@ -902,7 +857,7 @@ if (!empty($mode)) {
             $comments = Comments::getAll($params);
 
             $admin = '';
-            if ($_POST['admin'] == 'yes' && has_access('admin_access', true)) {
+            if ($_POST['admin'] == 'yes' && User::getInstance()->hasAdminAccess()) {
                 $admin = 'yes';
             }
 
@@ -950,12 +905,11 @@ if (!empty($mode)) {
             break;
 
         case 'user_suggest':
-            global $db;
             $typed = mysql_clean($_POST['typed']);
             if (empty($typed)) {
                 return 'none';
             }
-            $raw_users = $db->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
+            $raw_users = Clipbucket_db::getInstance()->select(tbl('users'), 'username', "username LIKE '%$typed%' LIMIT 0,5");
             $matching_users['matching_users'] = [];
             foreach ($raw_users as $key => $userdata) {
                 $matching_users['matching_users'][] = $userdata['username'];

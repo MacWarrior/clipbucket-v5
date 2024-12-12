@@ -11,6 +11,8 @@ class Collection
     private $search_limit = 0;
     private $display_var_name = '';
 
+    private $type_list= [];
+
     public function __construct(){
         $this->tablename = 'collections';
         $this->tablename_items = 'collection_items';
@@ -21,7 +23,6 @@ class Collection
             ,'collection_name'
             ,'collection_description'
             ,'userid'
-            ,'views'
             ,'date_added'
             ,'featured'
             ,'broadcast'
@@ -42,6 +43,10 @@ class Collection
             $this->fields[] = 'collection_id_parent';
         }
 
+        if( ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
+            $this->fields[] = 'thumb_objectid';
+        }
+
         $this->fields_items = [
             'ci_id'
             ,'collection_id'
@@ -54,6 +59,20 @@ class Collection
         $this->display_block = LAYOUT . '/blocks/collection.html';
         $this->display_var_name = 'collection';
         $this->search_limit = (int)config('collection_search_result');
+
+        $this->type_list=[
+            'videos',
+            'photos'
+        ];
+    }
+
+    /**
+     * @param string $type
+     * @return bool
+     */
+    public function isValidType(string $type): bool
+    {
+        return in_array($type, $this->type_list);
     }
 
     public static function getInstance(): self
@@ -108,10 +127,6 @@ class Collection
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
 
-            case 'most_viewed':
-                $params['order'] = $this->getTableName() . '.views DESC';
-                break;
-
             case 'featured':
                 $params['featured'] = true;
                 break;
@@ -153,15 +168,18 @@ class Collection
     {
         $sorts = [
             'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
             ,'most_items'  => lang('sort_most_items')
-            ,'featured'    => lang('featured')
         ];
 
         if( config('enable_comments_collection') == 'yes' ){
             $sorts['most_commented'] = lang('most_comments');
         }
+
+        if( config('collection_rating') == '1' ){
+            $sorts['top_rated'] = lang('top_rated');
+        }
+
+        $sorts['featured'] = lang('featured');
 
         return $sorts;
     }
@@ -178,8 +196,11 @@ class Collection
         $param_search = $params['search'] ?? false;
         $param_hide_empty_collection = $params['hide_empty_collection'];
         $param_featured = $params['featured'] ?? false;
+        $param_active = $params['active'] ?? false;
         $param_type = $params['type'] ?? false;
         $param_parents_only = $params['parents_only'] ?? false;
+        $param_allow_children = !empty($params['allow_children']);
+        $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -191,14 +212,6 @@ class Collection
             $param_having[] = $params['having'];
         }
 
-        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
-            $hide_empty_collection = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) > 0';
-            if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
-            }
-            $param_having[] = $hide_empty_collection;
-        }
-
         $param_count = $params['count'] ?? false;
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
@@ -206,7 +219,7 @@ class Collection
         $version = Update::getInstance()->getDBVersion();
 
         $conditions = [];
-        if( $param_collection_id ){
+        if( $param_collection_id !== false ){
             $conditions[] = $this->getTableName() . '.collection_id = '.(int)$param_collection_id;
         }
 
@@ -219,49 +232,121 @@ class Collection
         if( $param_featured ){
             $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
+        if( $param_active ){
+            $conditions[] = $this->getTableName() . '.active = \'yes\'';
+        }
         if( $param_type ){
             $conditions[] = $this->getTableName() . '.type = \'' . mysql_clean($param_type) . '\'';
         }
         if( $param_parents_only ){
             $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
         }
+        if( $param_parents_only ){
+            $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
+        }
+        if( $param_empty_thumb_objectid ){
+            $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
+        }
+
+        if( $param_empty_thumb_objectid ){
+            $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
+        }
 
         if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
             if( $param_collection_id_parent ){
                 $conditions[] = $this->getTableName() . '.collection_id_parent = '.(int)$param_collection_id_parent;
             }
-            if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id){
+            if( config('enable_sub_collection') == 'yes' && !$param_collection_id_parent && !$param_collection_id && !$param_allow_children){
                 $conditions[] = $this->getTableName() . '.collection_id_parent IS NULL';
             }
         }
 
-        if( $param_search ){
-            /* Search is done on collection title, collection tags */
-            $cond = '(MATCH(collections.collection_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.collection_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+        if ($param_search) {
+            /* Search is done on collection title, collection tags, uploader username, categories */
+
+            /** ORDER BY match score (100 pts if like match search query)
+            - title
+            - tag
+            - username
+            - categories
+             */
+
+            $match_name = 'MATCH(collections.collection_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+            $like_name = 'LOWER(' . $this->getTableName() . '.collection_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $cond = '(' . $match_name . ' OR ' . $like_name;
+            $order_search = ' ORDER BY CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . 'END DESC ';
+
+            /** TAG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) ';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_tag . 'OR ' . $like_tag;
+                $order_search .= ', MAX(CASE WHEN '.$like_tag . ' THEN 100 ELSE ' . $match_tag . ' END) DESC ';
             }
+
+            /** USER */
+            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $cond .= ' OR ' . $like_user;
+            $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
+
+            /** CATEG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
+                $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', MAX(CASE WHEN ' . $like_categ . 'THEN 100 ELSE ' . $match_categ . ' END) DESC ';
             }
             $cond .= ')';
 
             $conditions[] = $cond;
         }
 
-        if( !has_access('admin_access', true) ){
+        if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
+        }
+
+        $join = [];
+
+        $need_collection_enfant = false;
+        $total_objects = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END))';
+        if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+            $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
+            $need_collection_enfant = true;
         }
 
         if( !$param_with_items && $param_count ){
             $select = ['COUNT(' . $this->getTableName() . '.collection_id) AS count, ' . $this->getTableName() . '.userid'];
         } else {
             $select = $this->getAllFields();
-            $select[] = 'users.username AS user_username';
-            $select[] = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) AS total_objects';
+            $select[] = 'users.username AS user_username, users.email, users.dob';
+
+
+            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+                $need_collection_enfant = true;
+
+                $select[] = 'collection_parent.collection_name AS collection_name_parent';
+                $join[] =' LEFT JOIN ' . tbl('collections') . ' collection_parent ON collections.collection_id_parent = collection_parent.collection_id';
+            }
+
+            $select[] = $total_objects . ' AS total_objects';
         }
 
-        $join = [];
+        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
+            $hide_empty_collection = $total_objects . ' > 0';
+            if( !empty(User::getInstance()->getCurrentUserID()) ){
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+            }
+            $param_having[] = $hide_empty_collection;
+
+            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+                $need_collection_enfant = true;
+            }
+        }
+
+        if( $need_collection_enfant ){
+            $join[] = 'LEFT JOIN ' . tbl('collections') .' AS collections_enfant ON collections.collection_id = collections_enfant.collection_id_parent';
+        }
+
         $group = [$this->getTableName() . '.collection_id'];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
             if( !$param_count ){
@@ -294,32 +379,39 @@ class Collection
         }
 
         $order = '';
-        if( $param_order && !$param_count){
-            $order = ' ORDER BY '.$param_order;
+        if (!empty($order_search)) {
+            $order = $order_search;
+        } elseif ($param_order && !$param_count) {
+            $order = ' ORDER BY ' . $param_order;
         }
 
         $limit = '';
-        if( $param_limit ){
+        if( $param_limit && !$param_count){
             $limit = ' LIMIT '.$param_limit;
         }
 
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
-        if( !has_access('admin_access', true) ) {
+        if( !User::getInstance()->hasAdminAccess() ) {
             $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
-        $sql ='SELECT ' . implode(', ', $select) . '
+        $newline = ' ';
+        if( in_dev() ){
+            $newline = "\n";
+        }
+
+        $sql ='SELECT ' . implode($newline . ', ', $select) . '
                 FROM ' . cb_sql_table('collections') . '
                 LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
                 LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collections.collection_id = collection_items.collection_id
                 LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND collection_items.object_id = video.videoid' . $left_join_video_cond . '
                 LEFT JOIN ' . cb_sql_table('photos') . ' ON collections.type = \'photos\' AND collection_items.object_id = photos.photo_id' . $left_join_photos_cond
-            . ' ' . implode(' ', $join)
-            . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
-            . (empty($group) ? '' : ' GROUP BY ' . implode(',', $group))
-            . (empty($param_having) ? '' : ' HAVING ' . implode(' AND ', $param_having))
+            . ' ' . implode($newline, $join)
+            . (empty($conditions) ? '' : ' WHERE ' . implode($newline . ' AND ', $conditions))
+            . (empty($group) ? '' : $newline . ' GROUP BY ' . implode($newline . ',', $group))
+            . (empty($param_having) ? '' : $newline . ' HAVING ' . implode($newline . ' AND ', $param_having))
             . $order
             . $limit;
 
@@ -392,6 +484,25 @@ class Collection
     }
 
     /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getItemRecursivly(array $params = []): array
+    {
+        if( empty($params['collection_id']) ){
+            e(lang('technical_error'));
+            return [];
+        }
+        $items = $this->getItems(['collection_id'=>$params['collection_id']]) ?: [];
+        $children = $this->getChildCollection($params['collection_id']);
+        foreach ($children as $child) {
+            $items = array_merge($items, $this->getItemRecursivly(['collection_id'=>$child['collection_id']]));
+        }
+        return $items;
+    }
+
+    /**
      * @throws Exception
      */
     public function getFirstItem(array $params = [])
@@ -410,7 +521,7 @@ class Collection
      */
     public function getGenericConstraints(array $params = []): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -447,7 +558,7 @@ class Collection
         $text = '';
         $class = '';
         if ($collection['broadcast'] == 'private') {
-            $text = sprintf(lang('collection_is'), strtolower(lang('private')));
+            $text = lang('collection_is', strtolower(lang('private')));
             $class = 'label-warning';
         }
 
@@ -455,6 +566,218 @@ class Collection
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
     }
+
+    public function getChildCollection($collection_id)
+    {
+        return $this->getAll(['collection_id_parent'=>$collection_id]);
+    }
+
+    /**
+     * @param string|int $collection_id collection to change
+     * @param string|int $new_parent_id new parent collection
+     * @return bool
+     * @throws Exception
+     */
+    public function changeParent($collection_id, $new_parent_id): bool
+    {
+        $new_parent_collection = $this->getOne(['collection_id'=>$new_parent_id] );
+        $collection = $this->getOne(['collection_id'=>$collection_id] );
+        if (empty($new_parent_collection) || empty($collection)) {
+            e(lang('no_collection_found'));
+        }
+        if ($new_parent_collection['parent_id'] == $collection['collection_id'] ) {
+            e(lang('cannot_be_own_parent'));
+            return false;
+        }
+        if ($new_parent_collection['type'] != $collection['type']) {
+            e(lang('collection_type_must_be_same_as_parent'));
+            return false;
+        }
+        Clipbucket_db::getInstance()->update(tbl('collections'), ['collection_id_parent'], [$new_parent_collection['collection_id']], ' collection_id = ' . $collection['collection_id']);
+        return true;
+    }
+
+    /**
+     * Function used to add item in collection
+     *
+     * @param int $item_id
+     * @param int $collection_id
+     * @param string $type
+     * @return bool
+     * @throws Exception
+     */
+    function addCollectionItem(int $item_id, int $collection_id, string $type): bool
+    {
+        $item_id = mysql_clean($item_id);
+        $collection_id = mysql_clean($collection_id);
+
+        if (!user_id()) {
+            e(lang('you_not_logged_in'));
+            return false;
+        }
+        if (!$this->isValidType($type)) {
+            e(lang('unknown_type'));
+            return false;
+        }
+        if (!$this->isValidType($type)) {
+            e(lang('unknown_type'));
+            return false;
+        }
+        $collection = $this->getOne(['collection_id' => $collection_id]);
+        if (empty($collection)) {
+            e(lang('collect_not_exist'));
+            return false;
+        }
+        if( $collection['type'] == 'videos' ){
+            $id_field = 'videoid';
+            $name_field = 'title';
+            $item = Video::getInstance()->getOne([$id_field=>$item_id]);
+        } else {
+            $id_field = 'photo_id';
+            $name_field = 'photo_title';
+            $item = Photo::getInstance()->getOne([$id_field=>$item_id]);
+        }
+
+        if (empty($item)) {
+            e(lang('obj_not_exists', lang($type)));
+            return false;
+        }
+
+        if($this->collectionHasItem($collection_id, $item_id, $type)) {
+            e(lang('object_exists_collection', $item[$name_field]));
+            return false;
+        }
+
+        $fields = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
+        $values = [$collection_id, $item_id, $type, user_id(), NOW()];
+
+        Clipbucket_db::getInstance()->insert(tbl($this->getTableNameItems()), $fields, $values);
+        e(lang('item_added_in_collection', strtolower(lang($type))), 'm');
+        return true;
+    }
+
+    /**
+     * @param int $collection_id
+     * @param int $item_id
+     * @param string $type
+     * @return bool
+     * @throws Exception
+     */
+    public function collectionHasItem(int $collection_id, int $item_id, string $type): bool
+    {
+        if ($type == 'videos') {
+            $id_field = 'videoid';
+        } else {
+            $id_field = 'photo_id';
+        }
+        $collection_items = $this->getItems(['collection_id' => $collection_id]) ?: [];
+        $found = false;
+        $i = 0;
+        while ($found == false && $i < count($collection_items)) {
+            if ($item_id == $collection_items[$i][$id_field]) {
+                $found = true;
+            }
+            $i++;
+        }
+        return $found;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function assignDefaultThumb($collection_id)
+    {
+        $tested_collection = $collection_id;
+        do {
+            $sql = '
+            SELECT collections.collection_id,
+               CASE
+                   WHEN items.type = \'photos\' THEN photos.photo_id
+                   WHEN items.type = \'videos\' THEN videos.videoid
+                   END              AS default_thumb,
+               childs.collection_id AS child_id
+            FROM ' . tbl('collections') . ' AS collections
+                 LEFT JOIN ' . tbl('collection_items') . ' AS items ON collections.collection_id = items.collection_id
+                 LEFT JOIN ' . tbl('collections') . ' AS childs ON collections.collection_id = childs.collection_id_parent
+                 LEFT JOIN ' . tbl('photos') . ' AS photos ON photo_id = items.object_id AND items.type = \'photos\'
+                 LEFT JOIN ' . tbl('video') . ' AS videos ON videoid = items.object_id AND items.type = \'videos\'
+            WHERE collections.collection_id = ' . (int)$tested_collection . '
+            ORDER BY items.ci_id
+            LIMIT 1 ';
+            $res = Clipbucket_db::getInstance()->_select($sql);
+            $thumb_num = $res[0]['default_thumb'] ?? false;
+            $tested_collection = $res[0]['child_id'] ?? false;
+        } while (empty($thumb_num) && !empty($tested_collection));
+
+        $version = Update::getInstance()->getDBVersion();
+        if( $thumb_num && ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
+            $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
+            Clipbucket_db::getInstance()->execute($sql);
+        }
+        return is_numeric($thumb_num) ? $thumb_num: false;
+    }
+
+    /**
+     * @param int $default_thumb
+     * @param int $id
+     * @return void
+     * @throws Exception
+     */
+    public function setDefautThumb(int $default_thumb, int $id)
+    {
+        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['thumb_objectid'], [$default_thumb], ' collection_id = ' . $id);
+    }
+
+    /**
+     * @param array $item
+     * @param string $type
+     * @return string
+     * @throws Exception
+     */
+    public function getItemThumb(array $item, string $type): string
+    {
+        if (!$this->isValidType($type)) {
+            return '';
+        }
+        switch ($type) {
+            case 'videos':
+                global $cbvideo;
+                $thumb = get_thumb($item);
+                break;
+
+            case 'photos':
+                global $cbphoto;
+                $thumb = $cbphoto->get_image_file($item);
+                break;
+        }
+        return $thumb;
+    }
+
+    /**
+     * @param array $params
+     * @return array
+     * @throws Exception
+     */
+    public function getAllIndent(array $params = []): array
+    {
+        $indentList = [];
+        if (empty($params['collection_id_parent'])) {
+            $params['collection_id_parent'] = 0;
+        }
+        $parents = $this->getAll($params);
+
+        foreach ($parents as $parent) {
+            $indentList[] = $parent;
+            $params['collection_id_parent'] = $parent['collection_id'];
+            $children = $this->getAllIndent($params);
+            foreach ($children as &$child) {
+                $child['collection_name'] = '&nbsp&nbsp&nbsp' . $child['collection_name'];
+                $indentList[] = $child;
+            }
+        }
+        return $indentList;
+    }
+
 
 }
 
@@ -481,7 +804,7 @@ class Collections extends CBCategory
      * help makes this class reusble for very object
      */
     var $objTable = 'photos';
-    var $objType = 'p';
+    var $objType = 'photos';
     var $objName = 'Photo';
     var $objClass = 'cbphoto';
     var $objFunction = 'photo_exists';
@@ -517,7 +840,7 @@ class Collections extends CBCategory
         $this->init_actions();
 
         $fields = ['collection_id', 'collection_name', 'collection_description',
-            'tags', 'userid', 'type', 'views', 'date_added',
+            'tags', 'userid', 'type', 'date_added',
             'active', 'rating', 'rated_by', 'voters'];
 
         $cb_columns->object('collections')->register_columns($fields);
@@ -551,27 +874,30 @@ class Collections extends CBCategory
      */
     function setting_up_collections()
     {
-        $per = userquery::getInstance()->get_user_level(user_id());
+        $per =  UserLevel::getPermissions(user_id());
         // Adding My Account Links    
         if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !NEED_UPDATE) {
-            userquery::getInstance()->user_account[lang('collections')] = [
-                lang('add_new_collection')          => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']),
-                lang('manage_collections')          => cblink(['name' => 'manage_collections']),
-                lang('manage_favorite_collections') => cblink(['name' => 'manage_collections', 'extra_params' => 'mode=favorite'])
-            ];
+
+            if( User::getInstance()->hasPermission('allow_create_collection') ){
+                userquery::getInstance()->user_account[lang('collections')][lang('add_new_collection')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']);
+                userquery::getInstance()->user_account[lang('collections')][lang('manage_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=manage']);
+            }
+            if( User::getInstance()->hasPermission('view_collections') ){
+                userquery::getInstance()->user_account[lang('collections')][lang('manage_favorite_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=favorite']);
+            }
 
             // Adding Collection links in Admin Area
-            if ($per['collection_moderation'] == 'yes') {
+            if (User::getInstance()->hasPermission('collection_moderation')) {
                 $menu_collection = [
                     'title'   => lang('collections')
                     , 'class' => 'glyphicon glyphicon-folder-close'
                     , 'sub'   => [
                         [
-                            'title' => lang('manage_collections')
+                            'title' => lang('manage_x', strtolower(lang('collections')))
                             , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                         , [
-                            'title' => lang('manage_categories')
+                            'title' => lang('manage_x', strtolower(lang('categories')))
                             , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
@@ -627,8 +953,7 @@ class Collections extends CBCategory
      */
     function collection_exists($id): bool
     {
-        global $db;
-        $result = $db->count(tbl($this->section_tbl), 'collection_id', ' collection_id = ' . $id);
+        $result = Clipbucket_db::getInstance()->count(tbl($this->section_tbl), 'collection_id', ' collection_id = ' . $id);
         if ($result) {
             return true;
         }
@@ -682,8 +1007,8 @@ class Collections extends CBCategory
         }
 
         $left_join_cond = '';
-        if( !has_access('admin_access', true) ) {
-            if( $this->objTable == 'video' ){
+        if( !User::getInstance()->hasAdminAccess() ) {
+            if( $this->objTable == 'videos' ){
                 $left_join_cond = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
                 $left_join_cond = ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
@@ -732,21 +1057,6 @@ class Collections extends CBCategory
     /**
      * @throws Exception
      */
-    private function get_total_object_sub_collection($collection)
-    {
-        $childrens = $this->get_collection_childs($collection['collection_id']);
-        $total = $collection['total_objects'];
-        if ($childrens) {
-            foreach ($childrens as $child) {
-                $total += $this->get_total_object_sub_collection($child);
-            }
-        }
-        return $total;
-    }
-
-    /**
-     * @throws Exception
-     */
     function is_viewable($cid): bool
     {
         $params = [];
@@ -759,7 +1069,7 @@ class Collections extends CBCategory
             return false;
         }
 
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             return true;
         }
 
@@ -770,7 +1080,7 @@ class Collections extends CBCategory
 
         $userid = user_id();
         if ($c['broadcast'] == 'private' && !userquery::getInstance()->is_confirmed_friend($c['userid'], $userid) && $c['userid'] != $userid ) {
-            e(sprintf(lang('collection_is'), strtolower(lang('private'))));
+            e(lang('collection_is', strtolower(lang('private'))));
             return false;
         }
 
@@ -786,230 +1096,6 @@ class Collections extends CBCategory
             return false;
         }
         return $this->get_collection($collection['collection_id_parent']);
-    }
-
-    /**
-     * Function used to get collections
-     *
-     * @param null $p
-     * @param bool $brace
-     *
-     * @return array|bool|void
-     * @throws Exception
-     */
-    function get_collections($p = null, $brace = false)
-    {
-        $limit = $p['limit'];
-        $order = $p['order'];
-        $cond = '';
-
-        if (!empty($p['category'])) {
-            $get_all = false;
-            if (!is_array($p['category'])) {
-                if (strtolower($p['category']) == 'all') {
-                    $get_all = true;
-                }
-            }
-
-            if (!$get_all) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-
-                $cond .= '(';
-                if (!is_array($p['category'])) {
-                    $cats = explode(',', $p['category']);
-                } else {
-                    $cats = $p['category'];
-                }
-                $count = 0;
-
-                foreach ($cats as $cat) {
-                    $count++;
-                    if ($count > 1) {
-                        $cond .= ' OR ';
-                    }
-                    $cond .= 'collections.category LIKE \'%#' . $cat . '#%\'';
-                }
-                $cond .= ')';
-            }
-        }
-
-        if ($p['date_span']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= Search::date_margin('collections.date_added', $p['date_span']);
-        }
-
-        if ($p['type']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.type = \'' . $p['type'] . '\'';
-        }
-
-        if ($p['user']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            if ($brace) {
-                $cond .= '(';
-            }
-            $cond .= 'collections.userid = \'' . $p['user'] . '\'';
-        }
-
-        if ($p['featured']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.featured = \'' . $p['featured'] . '\'';
-        }
-
-        if ($p['public_upload']) {
-            if ($cond != '') {
-                $cond .= ' OR ';
-            }
-
-            $cond .= 'collections.public_upload = \'' . $p['public_upload'] . '\'';
-            if ($brace) {
-                $cond .= ')';
-            }
-        }
-
-        if ($p['exclude']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.collection_id <> \'' . $p['exclude'] . '\'';
-        }
-
-        if ($p['cid']) {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= 'collections.collection_id = \'' . $p['cid'] . '\'';
-        }
-
-        $count = 'COUNT( DISTINCT
-                CASE WHEN collections.type = \'photos\' THEN photos.photo_id ELSE video.videoid END
-            )';
-
-        $having = '';
-        if ($p['has_items']) {
-            $having = $count.' >= 1';
-            if ( isset($p['show_own']) && !empty(User::getInstance()->getCurrentUserID())) {
-                $having .= ' OR ( collections.userid = '.User::getInstance()->getCurrentUserID().')';
-            }
-        }
-
-        $title_tag = '';
-        if ($p['name']) {
-            $title_tag .= 'collections.collection_name LIKE \'%' . $p['name'] . '%\'';
-        }
-
-        if ($p['tags']) {
-            if (!empty($title_tag)) {
-                $title_tag .= ' OR ';
-            }
-            $title_tag .= 'T.name IN (\'' . $p['tags'] . '\') ' ;
-        }
-
-        $version = Update::getInstance()->getDBVersion();
-
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
-            if ($p['parents_only']) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-                $cond .= 'collections.collection_id_parent IS NULL';
-            }
-
-            if ($p['parent_id']) {
-                if ($cond != '') {
-                    $cond .= ' AND ';
-                }
-                $cond .= 'collections.collection_id_parent = ' . mysql_clean($p['parent_id']);
-            }
-        }
-
-        if ($title_tag != '') {
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= '(' . $title_tag . ')';
-        }
-
-        $left_join_video_cond = '';
-        $left_join_photos_cond = '';
-        if( !has_access('admin_access', true) ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
-            $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
-
-            if ($cond != '') {
-                $cond .= ' AND ';
-            }
-            $cond .= Collection::getInstance()->getGenericConstraints();
-        }
-
-        $select_tag = '';
-        $join_tag = '';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-            $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS collection_tags';
-            $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' AS CT ON collections.collection_id = CT.id_collection 
-                    LEFT JOIN ' . tbl('tags') . ' AS T ON CT.id_tag = T.id_tag';
-        }
-
-        $select_collection_parent = '';
-        $join_collection_parent = '';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
-            $select_collection_parent = ', CPARENT.collection_name AS collection_name_parent';
-            $join_collection_parent = ' LEFT JOIN ' . tbl('collections') . ' CPARENT ON collections.collection_id_parent = CPARENT.collection_id';
-        }
-
-        $from = cb_sql_table('collections') .
-            ' INNER JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
-            LEFT JOIN ' . tbl($this->items) . ' citem ON collections.collection_id = citem.collection_id
-            LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND citem.object_id = video.videoid' . $left_join_video_cond . '
-            LEFT JOIN ' . cb_sql_table('photos') . ' ON collections.type = \'photos\' AND citem.object_id = photos.photo_id' . $left_join_photos_cond
-            . $join_tag . $join_collection_parent;
-
-        if (!empty ($cond)) {
-            $cond .= ' GROUP BY collections.collection_id';
-        } else {
-            $cond = ' 1 GROUP BY collections.collection_id';
-        }
-
-        if (!empty($having)){
-            $cond .= ' HAVING '.$having;
-        }
-
-        if ($p['count_only']) {
-            return Clipbucket_db::getInstance()->count($from, 'collections.collection_id', $cond);
-        }
-
-        if (isset($p['count_only'])) {
-            $select = 'COUNT(collections.collection_id) AS total_collections';
-        } else {
-            $select = 'collections.*, users.username, '.$count.' AS total_objects' . $select_tag . $select_collection_parent;
-        }
-
-        $result = Clipbucket_db::getInstance()->select($from, $select, $cond, $limit, $order);
-
-        if (config('enable_sub_collection') == 'yes') {
-            foreach ($result as &$line) {
-                $line['total_objects'] = $this->get_total_object_sub_collection($line);
-            }
-        }
-
-        if ($p['assign']) {
-            assign($p['assign'], $result);
-        } else {
-            if (isset($p['count_only'])) {
-                return $result[0]['total_collections'];
-            }
-            return $result;
-        }
     }
 
     /**
@@ -1107,7 +1193,7 @@ class Collections extends CBCategory
         $condition[] = $this->items . '.object_id = ' . $this->objTable . '.' . $this->objFieldID;
         $condition[] = $this->objTable . '.userid = ' .'users.userid';
 
-        if (!has_access('admin_access', true) ) {
+        if (!User::getInstance()->hasAdminAccess() ) {
             if( $this->objTable == 'video' ){
                 $condition[] = Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             } else {
@@ -1124,7 +1210,7 @@ class Collections extends CBCategory
         if ($result) {
             return $result;
         }
-        return false;
+        return [];
     }
 
     /**
@@ -1236,16 +1322,25 @@ class Collections extends CBCategory
 
         if (config('enable_sub_collection') == 'yes') {
             $list_parent_categories = ['null' => lang('collection_no_parent')];
-            $type = $default['type'] ?? null;
-            foreach ($this->get_collections_list(0, null, $collection_id, $type, user_id()) as $col_id => $col_data) {
-                $list_parent_categories[$col_id] = $col_data['name'];
+            $type = $default['type'] ?? 'videos';
+
+            $params = [
+                'type'      => $type,
+                'userid'    => user_id()
+            ];
+
+            if (!empty($collection_id)) {
+                $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
             }
-            //getting direct parent collection
-            if (array_key_exists('null', $list_parent_categories) && !empty($collection_id_parent)) {
-                $parent = $this->get_collection($collection_id_parent);
-                if ($parent) {
-                    $list_parent_categories [$parent['collection_id']] =$parent['collection_name'];
-                }
+            $collection_list = Collection::getInstance()->getAllIndent($params);
+            $list_parent_categories += array_combine(
+                    array_column($collection_list, 'collection_id') ,
+                    array_column($collection_list,'collection_name')
+            );
+
+            if ($collection_id_parent && config('enable_sub_collection') == 'yes') {
+                $data['type']['disabled'] = true;
+                $data['type']['input_hidden'] = true;
             }
 
             $data['parent'] = [
@@ -1286,12 +1381,12 @@ class Collections extends CBCategory
             $cond .= ' AND C.collection_id != ' . mysql_clean($exclude_id);
         }
 
-        if (!is_null($type)) {
+        if (!is_null($type) && Collection::getInstance()->isValidType($type)) {
             $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
         }
 
-        if (!is_null($type)) {
-            $cond .= ' AND C.userid = ' . mysql_clean($userid);
+        if (!is_null($userid) && !User::getInstance()->hasAdminAccess()) {
+            $cond .= ' AND (C.userid = ' . mysql_clean($userid) . ' OR (broadcast = \'public\' AND public_upload = \'yes\') )';
         }
         if (!empty ($cond)) {
             $cond .= ' GROUP BY C.collection_id';
@@ -1440,7 +1535,8 @@ class Collections extends CBCategory
      */
     function create_collection($array = null)
     {
-        if (!has_access('allow_create_collection', false)) {
+        if (!User::getInstance()->hasPermission('allow_create_collection')) {
+            e(lang('insufficient_privileges'));
             return false;
         }
 
@@ -1535,14 +1631,14 @@ class Collections extends CBCategory
             if (!user_id()) {
                 e(lang('you_not_logged_in'));
             } elseif (!$this->object_exists($objID)) {
-                e(sprintf(lang('object_does_not_exists'), $this->objName));
+                e(lang('object_does_not_exists', $this->objName));
             } elseif ($this->object_in_collection($objID, $cid)) {
-                e(sprintf(lang('object_exists_collection'), $this->objName));
+                e(lang('object_exists_collection', $this->objName));
             } else {
                 $flds = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
                 $vls = [$cid, $objID, $this->objType, user_id(), NOW()];
                 Clipbucket_db::getInstance()->insert(tbl($this->items), $flds, $vls);
-                e(sprintf(lang('item_added_in_collection'), $this->objName), 'm');
+                e(lang('item_added_in_collection', $this->objName), 'm');
             }
         } else {
             e(lang('collect_not_exist'));
@@ -1639,7 +1735,7 @@ class Collections extends CBCategory
             return;
         }
 
-        if ($collection['userid'] != user_id() && !has_access('admin_access', true)) {
+        if ($collection['userid'] != user_id() && !User::getInstance()->hasAdminAccess()) {
             e(lang('cant_perform_action_collect'));
             return;
         }
@@ -1671,7 +1767,7 @@ class Collections extends CBCategory
         $params = [];
         $params['type'] = 'cl';
         $params['type_id'] = $cid;
-        Comments::delete($params);
+        Comments::delete($params, false);
 
         //Removing video From Favorites
         Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['cl', $cid]);
@@ -1679,7 +1775,7 @@ class Collections extends CBCategory
         Clipbucket_db::getInstance()->delete(tbl($this->section_tbl), ['collection_id'], [$cid]);
         //Decrementing users total collection
         Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections-1'], ' userid=\'' . $cid . '\'');
-
+        errorhandler::getInstance()->flush_msg();
         e(lang('collection_deleted'), 'm');
     }
 
@@ -1705,12 +1801,12 @@ class Collections extends CBCategory
         if (!user_id()) {
             e(lang('you_not_logged_in'));
         } elseif (!$this->object_in_collection($id, $cid)) {
-            e(sprintf(lang('object_not_in_collect'), $this->objName));
-        } elseif (!$this->is_collection_owner($cid) && !has_access('admin_access', true)) {
+            e(lang('object_not_in_collect', $this->objName));
+        } elseif (!$this->is_collection_owner($cid) && !User::getInstance()->hasAdminAccess()) {
             e(lang('cant_perform_action_collect'));
         } else {
             Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->items) . ' WHERE object_id = ' . $id . ' AND collection_id = ' . $cid);
-            e(sprintf(lang('collect_item_removed'), $this->objName), 'm');
+            e(lang('collect_item_removed', $this->objName), 'm');
         }
     }
 
@@ -1846,7 +1942,7 @@ class Collections extends CBCategory
 
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if (!empty($array['total_comments'])) {
                     $total_comments = $array['total_comments'];
                     if (!is_numeric($total_comments) || $total_comments < 0) {
@@ -1863,7 +1959,7 @@ class Collections extends CBCategory
                 e(lang('you_not_logged_in'));
             } elseif (!$this->collection_exists($cid)) {
                 e(lang('collect_not_exist'));
-            } elseif (!$this->is_collection_owner($cid, user_id()) && !has_access('admin_access', true)) {
+            } elseif (!$this->is_collection_owner($cid, user_id()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('cant_edit_collection'));
             } else {
                 $cid = mysql_clean($cid);
@@ -1931,12 +2027,12 @@ class Collections extends CBCategory
             $item = $this->get_collection_items($cid, 'ci_id DESC', 1);
             $type = $item[0]['type'];
             switch ($type) {
-                case 'v':
+                case 'videos':
                     global $cbvideo;
                     $thumb = get_thumb($cbvideo->get_video($item[0]['object_id']));
                     break;
 
-                case 'p':
+                case 'photos':
                     global $cbphoto;
                     $thumb = $cbphoto->get_image_file($cbphoto->get_photo($item[0]['object_id']));
                     break;
@@ -1957,45 +2053,6 @@ class Collections extends CBCategory
         }
 
         return $this->get_default_thumb($size);
-    }
-
-
-    /**
-     * Used to display collection voterts details.
-     * User who rated, how many stars and when user rated
-     *
-     * @param      $id
-     * @param bool $return_array
-     * @param bool $show_all
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function collection_voters($id, $return_array = false, $show_all = false)
-    {
-        $c = $this->get_collection($id);
-        if ((!empty($c) && $c['userid'] == user_id()) || $show_all === true) {
-            $voters = $c['voters'];
-            $voters = json_decode($voters, true);
-
-            if (!empty($voters)) {
-                if ($return_array) {
-                    return $voters;
-                }
-
-                foreach ($voters as $id => $details) {
-                    $username = get_username($id);
-                    $output = '<li id=\'user' . $id . $c['collection_id'] . '\' class=\'PhotoRatingStats\'>';
-                    $output .= '<a href=\'' . userquery::getInstance()->profile_link($id) . '\'>' . $username . '</a>';
-                    $output .= ' rated <strong>' . $details['rate'] / 2 . '</strong> stars <small>(';
-                    $output .= niceTime($details['time']) . ')</small>';
-                    $output .= '</li>';
-                    echo $output;
-                }
-            }
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -2104,13 +2161,11 @@ class Collections extends CBCategory
     {
         switch ($type) {
             case 'videos':
-            case 'v':
                 global $cbvideo;
                 $items = $cbvideo->collection->get_collection_items_with_details($cid);
                 break;
 
             case 'photos':
-            case 'p':
                 global $cbphoto;
                 $items = $cbphoto->collection->get_collection_items_with_details($cid);
                 break;
@@ -2154,9 +2209,6 @@ class Collections extends CBCategory
     function collection_links($details, $type = null): string
     {
         if (is_array($details)) {
-            if (empty($details['collection_id'])) {
-                return BASEURL;
-            }
             $cdetails = $details;
         } else {
             if (is_numeric($details)) {
@@ -2167,30 +2219,44 @@ class Collections extends CBCategory
         }
 
         if (!empty($cdetails)) {
-            if ($type == null || $type == 'main') {
-                return $this->get_base_url();
-            }
-            if ($type == 'vc' || $type == 'view_collection' || $type == 'view') {
-                if (SEO == 'yes') {
-                    return BASEURL . '/collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
-                }
-                return BASEURL . '/view_collection.php?cid=' . $cdetails['collection_id'];
-            }
-            if ($type == 'vi' || $type == 'view_item' || $type == 'item') {
-                if (SEO == 'yes') {
-                    return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
-                }
-                return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
-            }
-            if ($type == 'load_more' || $type == 'more_items' || $type = 'moreItems') {
-                if (empty($cdetails['page_no'])) {
-                    $cdetails['page_no'] = 2;
-                }
+            switch ($type) {
+                case 'main':
+                default:
+                    return $this->get_base_url();
+                case 'vc':
+                case 'view_collection':
+                case 'view':
+                    if (empty($details['collection_id'])) {
+                        return BASEURL;
+                    }
+                    if (SEO == 'yes') {
+                        return BASEURL . '/collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
+                    }
+                    return BASEURL . '/view_collection.php?cid=' . $cdetails['collection_id'];
+                case 'vi':
+                case 'view_item':
+                case 'item':
+                    if (SEO == 'yes') {
+                        if (empty($details['collection_id'])) {
+                            return BASEURL;
+                        }
+                        return BASEURL . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+                    }
+                    return BASEURL . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+                case 'load_more':
+                case 'more_items':
+                case 'moreItems':
+                    if (empty($details['collection_id'])) {
+                        return BASEURL;
+                    }
+                    if (empty($cdetails['page_no'])) {
+                        $cdetails['page_no'] = 2;
+                    }
 
-                if (SEO == 'yes') {
+                    if (SEO == 'yes') {
+                        return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
+                    }
                     return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
-                }
-                return BASEURL . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
             }
         }
         return BASEURL;
@@ -2289,17 +2355,10 @@ class Collections extends CBCategory
             return false;
         }
 
-        $params = [];
-        $params['collection_id'] = $col_data['collection_id'];
-
-        $first_item = Collection::getInstance()->getFirstItem($params);
-
-        if( empty($first_item) ){
-            if( $col_data['type'] == 'videos' ){
-                return default_thumb();
-            } else {
-                return get_photo_default_thumb();
-            }
+        if (!empty($col_data['thumb_objectid'])) {
+            $object_id = $col_data['thumb_objectid'];
+        } else {
+            $object_id = Collection::assignDefaultThumb($col_data['collection_id']);
         }
 
         if( $col_data['type'] == 'videos' ){
@@ -2312,16 +2371,18 @@ class Collections extends CBCategory
                     $size = '416x260';
                 }
             }
-            return get_thumb($first_item, false, $size);
-        } else {
-            $param['details'] = $first_item;
-            if (!$size) {
-                $param['size'] = 's';
-            } else {
-                $param['size'] = $size;
-            }
-            return get_photo($param);
+            return get_thumb($object_id, false, $size);
         }
+
+        if ($object_id) {
+            $param['details'] = Photo::getInstance()->getOne(['photo_id'=>$object_id]);
+        }
+        if (!$size) {
+            $param['size'] = 's';
+        } else {
+            $param['size'] = $size;
+        }
+        return get_photo($param);
     }
 
 }

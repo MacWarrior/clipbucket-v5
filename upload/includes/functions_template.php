@@ -158,9 +158,10 @@ function display_language_edit()
 /**
  * @throws Exception
  */
-function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb_thumbs, $display = true)
+function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb_thumbs, $display = true, $type = 'thumbs')
 {
     assign('data', $data);
+    assign('type', $type);
     assign('vidthumbs', $vidthumbs);
     assign('vidthumbs_custom', $vidthumbs_custom);
 
@@ -180,14 +181,23 @@ function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb
  * @return void
  * @throws Exception
  */
-function display_thumb_list($data)
+function display_thumb_list($data, $type)
 {
-    $vidthumbs = get_thumb($data, true, '168x105', 'auto');
-    $vidthumbs_custom = get_thumb($data, true, '168x105', 'custom');
+    $size= false;
+    if ($type == 'thumbs') {
+        $size = '168x105';
+        $vidthumbs = get_thumb($data, true, $size, 'auto');
+        $vidthumbs_custom = get_thumb($data, true, $size, 'custom');
+    } else {
+        $vidthumbs = get_thumb($data, true, $size, $type);
+    }
     display_thumb_list_with_param(
         $data, $vidthumbs
-        , $vidthumbs_custom
+        , ($vidthumbs_custom ?? [])
         , (is_array($vidthumbs) ? count($vidthumbs) : 0)
+        , true
+        , $type
+
     );
 }
 
@@ -260,7 +270,23 @@ function display_tmdb_result($data, $videoid)
     assign('sort', $data['sort']);
     assign('sort_order', $data['sort_order']);
     assign('videoid', $videoid);
+    assign('years', $data['years']);
+    assign('selected_year', $data['selected_year']);
+    assign('type', $data['type']);
     echo templateWithMsgJson('blocks/tmdb_result.html');
+}
+
+/**
+ * @param array $data
+ * @param int $videoid
+ * @return void
+ */
+function display_video_view_history(array $data, int $videoid)
+{
+    assign('results', $data['results']);
+    assign('modal', $data['modal']);
+    assign('videoid', $videoid);
+    echo templateWithMsgJson('blocks/video_view_history.html');
 }
 
 //todO séparer en 2 fonctions
@@ -279,4 +305,13 @@ function return_thumb_mini_list($data)
 function display_categ_form()
 {
     echo templateWithMsgJson('blocks/edit_category.html');
+}
+function template_wip_relaunch(bool $success)
+{
+    assign('success', $success);
+    ob_start();
+    Template('return_msg_wip.html');
+    $msg = ob_get_contents();
+    ob_clean();
+    return $msg;
 }

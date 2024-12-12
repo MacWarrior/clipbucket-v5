@@ -29,13 +29,13 @@ if ($udetails) {
 
         case 'subscriptions':
             assign('mode', $mode);
-            assign('heading', sprintf(lang('user_subscriptions'), $udetails['username']));
+            assign('heading', lang('user_subscriptions', $udetails['username']));
             assign('userSubs', $userquery->get_user_subscriptions($udetails['userid'], null));
             break;
 
         case 'subscribers':
             assign('mode', $mode);
-            assign('heading', sprintf(lang('users_subscribers'), $udetails['username']));
+            assign('heading', lang('users_subscribers', $udetails['username']));
             assign('userSubs', $userquery->get_user_subscribers_detail($udetails['userid'], null));
             break;
     }
@@ -44,7 +44,7 @@ if ($udetails) {
     ClipBucket::getInstance()->show_page = false;
 }
 
-subtitle(sprintf(lang('users_contacts'), $udetails['username']));
+subtitle(lang('users_contacts', $udetails['username']));
 if (ClipBucket::getInstance()->show_page) {
     Template('user_contacts.html');
 } else {

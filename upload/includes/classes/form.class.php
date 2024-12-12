@@ -223,8 +223,11 @@ class formObj
             if ($field['label_class']) {
                 $label_class = 'class="' . $field['label_class'] . '"';
             }
+            if (!empty($field['disabled'])) {
+                $disabled = ' disabled';
+            }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="checkbox" value="' . $key . '" ' . $field_id . ' ' . $checked . ' ' . $field['extra_tags'] . '> ' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="checkbox" value="' . $key . '" ' . $field_id . ' ' . $checked . ' '.$disabled.' ' . $field['extra_tags'] . '> ' . $value . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';
@@ -399,8 +402,11 @@ class formObj
             if ($field['label_class']) {
                 $label_class = 'class="' . $field['label_class'] . '"';
             }
+            if (!empty($field['disabled'])) {
+                $disabled = ' disabled';
+            }
 
-            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $field['extra_tags'] . '>' . $value . '</label>';
+            echo '<label ' . $label_class . '> <input name="' . $field_name . '" type="radio" value="' . $key . '" ' . $field_id . ' ' . $class . ' ' . $title . ' ' . $checked . ' ' . $disabled . ' ' . $field['extra_tags'] . '>' . $value . '</label>';
 
             if ($field['wrapper_class']) {
                 echo '</div>';

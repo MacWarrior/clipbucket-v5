@@ -2,12 +2,18 @@
 define('THIS_PAGE', 'channels');
 require 'includes/config.inc.php';
 
+User::getInstance()->hasPermissionOrRedirect('view_channels');
 pages::getInstance()->page_redir();
-userquery::getInstance()->perm_check('view_channels', true);
 
 if( !isSectionEnabled('channels') ){
     redirect_to(BASEURL);
 }
+$params = [
+    'featured'       => 'yes',
+    'channel_enable' => 'yes',
+    'limit'          => 5
+];
+assign('featured_users', User::getInstance()->getAll($params));
 
 $params = User::getInstance()->getFilterParams($_GET['sort'], []);
 $params = User::getInstance()->getFilterParams($_GET['time'], $params);
@@ -17,10 +23,7 @@ if( config('enable_user_category') == 'yes' && !empty($_GET['cat']) ){
     $params['category'] = (int)$_GET['cat'];
 }
 
-if (isset($_GET['no_user']) && $_GET['no_user'] == 1) {
-    e(lang('usr_exist_err'));
-}
-
+$params['channel_enable'] = true;
 $params['count'] = true;
 $count = User::getInstance()->getAll($params);
 

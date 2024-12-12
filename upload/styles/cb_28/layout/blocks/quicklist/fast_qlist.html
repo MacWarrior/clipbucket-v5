@@ -1,5 +1,5 @@
 	
-	<div class="qlist_item clearfix" style="background-color:#fff;" id="quicklist_playlist_cont_{$ql_item.videoid}">
+	<div class="qlist_item clearfix" id="quicklist_playlist_cont_{$ql_item.videoid}">
 		<div class="pl_num"></div>
 		<div class="pl_thumb">
 			<a href="{video_link($ql_item)}" class="no_overflow">
@@ -9,7 +9,9 @@
 		</div>
 		<div class="pl_details" onclick="window.location=''">
 			<p><a href="{video_link($ql_item)}">{display_clean($ql_item.title|truncate:35)}</a></p>
+			{if config('enable_hide_uploader_name') != 'yes'}
 			<p>{lang code="by"} {display_clean($ql_item.username)}</p>
+			{/if}
 		</div>
 		<button todel={$ql_item.videoid} class="ql_delete glyphicon glyphicon-trash btn btn-danger btn-sm" title="Remove {display_clean($ql_item.title)} from quicklist" alt="quicklist">
 		</button>

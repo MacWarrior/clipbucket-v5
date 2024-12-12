@@ -5,7 +5,8 @@ CREATE TABLE `{tbl_prefix}action_log` (
   `action_userid` int(30) NOT NULL,
   `action_useremail` varchar(200) NOT NULL,
   `action_userlevel` int(11) NOT NULL,
-  `action_ip` varchar(15) NOT NULL,
+  `action_ipv4` varchar(15) NULL DEFAULT NULL,
+  `action_ipv6` varchar(45) NULL DEFAULT NULL,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `action_success` enum('yes','no') DEFAULT NULL,
   `action_details` text NOT NULL,
@@ -51,7 +52,6 @@ CREATE TABLE `{tbl_prefix}collections` (
   `collection_name` varchar(225) NOT NULL,
   `collection_description` text NOT NULL,
   `userid` int(10) NOT NULL,
-  `views` bigint(20) NOT NULL DEFAULT 0,
   `date_added` datetime NOT NULL,
   `featured` varchar(4) NOT NULL DEFAULT 'no',
   `broadcast` varchar(10) NOT NULL,
@@ -64,7 +64,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `voters` longtext DEFAULT NULL,
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
-  `type` varchar(10) NOT NULL
+  `type` ENUM('photos', 'videos') NOT NULL,
+  `thumb_objectid` BIGINT(20) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
@@ -72,7 +73,7 @@ CREATE TABLE `{tbl_prefix}collection_items` (
   `collection_id` bigint(20) NOT NULL,
   `object_id` bigint(20) NOT NULL,
   `userid` bigint(20) NOT NULL,
-  `type` varchar(10) NOT NULL,
+  `type` ENUM('photos', 'videos') NOT NULL,
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
@@ -222,7 +223,6 @@ CREATE TABLE `{tbl_prefix}photos` (
   `photo_title` mediumtext NOT NULL,
   `photo_description` mediumtext NOT NULL,
   `userid` int(255) NOT NULL,
-  `collection_id` int(255) NOT NULL,
   `date_added` datetime NOT NULL,
   `last_viewed` datetime NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `views` bigint(255) NOT NULL DEFAULT 0,
@@ -258,13 +258,7 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `description` mediumtext NOT NULL,
   `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
-  `allow_comments` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_rating` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `total_comments` int(255) NOT NULL DEFAULT 0,
   `total_items` int(255) NOT NULL DEFAULT 0,
-  `rating` int(3) NOT NULL DEFAULT 0,
-  `rated_by` int(255) NOT NULL DEFAULT 0,
-  `voters` text NULL DEFAULT NULL,
   `last_update` text NULL DEFAULT NULL,
   `runtime` int(200) NOT NULL DEFAULT 0,
   `first_item` text NULL DEFAULT NULL,
@@ -356,8 +350,8 @@ CREATE TABLE `{tbl_prefix}users` (
   `last_logged` datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
   `num_visits` bigint(20) NOT NULL DEFAULT 0,
   `session` varchar(32) NOT NULL DEFAULT '',
-  `ip` varchar(15) NOT NULL DEFAULT '',
-  `signup_ip` varchar(15) NOT NULL DEFAULT '',
+  `ip` varchar(45) NOT NULL DEFAULT '',
+  `signup_ip` varchar(45) NOT NULL DEFAULT '',
   `time_zone` tinyint(4) NOT NULL DEFAULT 0,
   `featured` enum('no','yes') NOT NULL DEFAULT 'no',
   `featured_date` datetime DEFAULT NULL,
@@ -393,55 +387,40 @@ CREATE TABLE `{tbl_prefix}user_levels` (
   `user_level_name` varchar(100) NOT NULL,
   `user_level_is_default` enum('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_levels`
+    ADD PRIMARY KEY (`user_level_id`);
+ALTER TABLE `{tbl_prefix}user_levels`
+    MODIFY COLUMN `user_level_id` int(20) NOT NULL AUTO_INCREMENT;
 
-CREATE TABLE `{tbl_prefix}user_levels_permissions` (
-  `user_level_permission_id` int(22) NOT NULL,
-  `user_level_id` int(22) NOT NULL,
-  `admin_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `allow_video_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_video` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_channel` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `view_videos` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `avatar_upload` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `video_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `member_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `ad_manager_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `manage_template_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `group_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `web_config_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `view_channels` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `playlist_access` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_channel_bg` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `private_msg_access` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `edit_video` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `download_video` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `admin_del_access` enum('yes','no') NOT NULL DEFAULT 'no',
-  `photos_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `collection_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `plugins_moderation` enum('yes','no') NOT NULL DEFAULT 'no',
-  `tool_box` enum('yes','no') NOT NULL DEFAULT 'no',
-  `plugins_perms` text NOT NULL,
-  `allow_manage_user_level` enum('yes','no') NOT NULL DEFAULT 'no',
-  `allow_create_collection` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `allow_create_playlist` enum('yes','no') NOT NULL DEFAULT 'yes'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+CREATE TABLE `{tbl_prefix}user_levels_permissions`
+(
+    `id_user_levels_permission` INT(20)            NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `id_user_permission_types`  INT(20)            NOT NULL,
+    `permission_name`           VARCHAR(32) UNIQUE NOT NULL,
+    `permission_description`    VARCHAR(32)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}user_permissions` (
-  `permission_id` int(225) NOT NULL,
-  `permission_type` int(225) NOT NULL,
-  `permission_name` varchar(225) NOT NULL,
-  `permission_code` varchar(225) NOT NULL,
-  `permission_desc` mediumtext NOT NULL,
-  `permission_default` enum('yes','no') NOT NULL DEFAULT 'yes'
+CREATE TABLE `{tbl_prefix}user_levels_permissions_values`
+(
+    `user_level_id`             INT(20)     NOT NULL,
+    `id_user_levels_permission` INT(20)     NOT NULL,
+    `permission_value`          VARCHAR(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}user_levels_permissions_values`
+    ADD PRIMARY KEY(`user_level_id`, `id_user_levels_permission`);
 
 CREATE TABLE `{tbl_prefix}user_permission_types` (
-  `user_permission_type_id` int(225) NOT NULL,
+  `user_permission_type_id` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_permission_type_name` varchar(225) NOT NULL,
   `user_permission_type_desc` mediumtext NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}user_levels_permissions`
+    ADD CONSTRAINT `fk_id_user_permission_types` FOREIGN KEY (`id_user_permission_types`) REFERENCES `{tbl_prefix}user_permission_types` (`user_permission_type_id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+ALTER TABLE `{tbl_prefix}user_levels_permissions_values`
+    ADD CONSTRAINT `fk_user_level_id` FOREIGN KEY (`user_level_id`) REFERENCES `{tbl_prefix}user_levels` (`user_level_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_id_user_levels_permission` FOREIGN KEY (`id_user_levels_permission`) REFERENCES `{tbl_prefix}user_levels_permissions` (`id_user_levels_permission`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
@@ -487,7 +466,8 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `show_my_photos` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscriptions` enum('yes','no') NOT NULL DEFAULT 'yes',
   `show_my_subscribers` enum('yes','no') NOT NULL DEFAULT 'yes',
-  `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes'
+  `show_my_friends` enum('yes','no') NOT NULL DEFAULT 'yes',
+  `disabled_channel` ENUM('yes','no') NOT NULL DEFAULT 'no'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video` (
@@ -524,7 +504,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `last_viewed` datetime NOT NULL DEFAULT '1000-01-01 00:00:00' ON UPDATE CURRENT_TIMESTAMP,
   `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `flagged` varchar(3) NOT NULL DEFAULT 'no',
-  `duration` varchar(20) NOT NULL DEFAULT '00',
+  `duration` INT(20) NOT NULL DEFAULT 0,
   `status` enum('Successful','Processing','Failed','Waiting') NOT NULL DEFAULT 'Processing',
   `default_thumb` int(3) NOT NULL DEFAULT 1,
   `embed_code` text NULL DEFAULT NULL,
@@ -532,8 +512,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `uploader_ip` varchar(20) NOT NULL DEFAULT '',
   `video_files` tinytext NULL DEFAULT NULL,
   `file_server_path` text NULL DEFAULT NULL,
-  `video_version` varchar(30) NOT NULL DEFAULT '5.5.0',
-  `thumbs_version` varchar(5) NOT NULL DEFAULT '5.5.0',
+  `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',
+  `thumbs_version` varchar(8) NOT NULL DEFAULT '5.5.1',
   `re_conv_status` tinytext NULL DEFAULT NULL,
   `is_castable` tinyint(1) NOT NULL DEFAULT 0,
   `bits_color` tinyint(4) DEFAULT NULL,
@@ -543,64 +523,13 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_backdrop` int(3) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}video_favourites` (
-  `fav_id` int(11) NOT NULL,
-  `videoid` int(11) NOT NULL,
-  `userid` int(11) NOT NULL,
-  `date_added` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-CREATE TABLE `{tbl_prefix}video_files` (
-  `id` int(10) UNSIGNED NOT NULL,
-  `status` int(2) NOT NULL,
-  `file_conversion_log` text NOT NULL,
-  `encoder` char(16) NOT NULL,
-  `command_used` text NOT NULL,
-  `src_path` text NOT NULL,
-  `src_name` char(64) NOT NULL,
-  `src_ext` char(8) NOT NULL,
-  `src_format` char(32) NOT NULL,
-  `src_duration` char(10) NOT NULL,
-  `src_size` char(10) NOT NULL,
-  `src_bitrate` char(6) NOT NULL,
-  `src_video_width` char(5) NOT NULL,
-  `src_video_height` char(5) NOT NULL,
-  `src_video_wh_ratio` char(10) NOT NULL,
-  `src_video_codec` char(16) NOT NULL,
-  `src_video_rate` char(10) NOT NULL,
-  `src_video_bitrate` char(10) NOT NULL,
-  `src_video_color` char(16) NOT NULL,
-  `src_audio_codec` char(16) NOT NULL,
-  `src_audio_bitrate` char(10) NOT NULL,
-  `src_audio_rate` char(10) NOT NULL,
-  `src_audio_channels` char(16) NOT NULL,
-  `output_path` text NOT NULL,
-  `output_format` char(32) NOT NULL,
-  `output_duration` char(10) NOT NULL,
-  `output_size` char(10) NOT NULL,
-  `output_bitrate` char(6) NOT NULL,
-  `output_video_width` char(5) NOT NULL,
-  `output_video_height` char(5) NOT NULL,
-  `output_video_wh_ratio` char(10) NOT NULL,
-  `output_video_codec` char(16) NOT NULL,
-  `output_video_rate` char(10) NOT NULL,
-  `output_video_bitrate` char(10) NOT NULL,
-  `output_video_color` char(16) NOT NULL,
-  `output_audio_codec` char(16) NOT NULL,
-  `output_audio_bitrate` char(10) NOT NULL,
-  `output_audio_rate` char(10) NOT NULL,
-  `output_audio_channels` char(16) NOT NULL,
-  `hd` enum('yes','no') NOT NULL DEFAULT 'no',
-  `hq` enum('yes','no') NOT NULL DEFAULT 'no'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 CREATE TABLE `{tbl_prefix}video_views` (
-  `id` int(11) NOT NULL,
-  `video_id` varchar(255) NOT NULL,
-  `video_views` int(11) NOT NULL,
-  `last_updated` int(11) NOT NULL
+    `id_video_view` INT(11)  NOT NULL,
+    `id_video`      BIGINT   NOT NULL,
+    `id_user`       BIGINT   NOT NULL,
+    `view_date`     DATETIME NOT NULL,
+    PRIMARY KEY (`id_video_view`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
 
 ALTER TABLE `{tbl_prefix}action_log`
   ADD PRIMARY KEY (`action_id`);
@@ -676,7 +605,6 @@ ALTER TABLE `{tbl_prefix}pages`
 ALTER TABLE `{tbl_prefix}photos`
   ADD PRIMARY KEY (`photo_id`),
   ADD KEY `userid` (`userid`),
-  ADD KEY `collection_id` (`collection_id`),
   ADD KEY `featured` (`featured`),
   ADD KEY `last_viewed` (`last_viewed`),
   ADD KEY `rating` (`rating`),
@@ -684,7 +612,8 @@ ALTER TABLE `{tbl_prefix}photos`
   ADD FULLTEXT KEY `photo_title` (`photo_title`);
 
 ALTER TABLE `{tbl_prefix}playlists`
-  ADD PRIMARY KEY (`playlist_id`);
+  ADD PRIMARY KEY (`playlist_id`),
+  ADD FULLTEXT KEY `playlist_name` (`playlist_name`);
 
 ALTER TABLE `{tbl_prefix}playlist_items`
   ADD PRIMARY KEY (`playlist_item_id`);
@@ -716,20 +645,6 @@ ALTER TABLE `{tbl_prefix}users`
   ADD KEY `username` (`username`(255),`userid`),
   ADD FULLTEXT KEY `username_fulltext` (`username`);
 
-ALTER TABLE `{tbl_prefix}user_levels`
-  ADD PRIMARY KEY (`user_level_id`);
-
-ALTER TABLE `{tbl_prefix}user_levels_permissions`
-  ADD PRIMARY KEY (`user_level_permission_id`),
-  ADD KEY `user_level_id` (`user_level_id`);
-
-ALTER TABLE `{tbl_prefix}user_permissions`
-  ADD PRIMARY KEY (`permission_id`),
-  ADD UNIQUE KEY `permission_code` (`permission_code`);
-
-ALTER TABLE `{tbl_prefix}user_permission_types`
-  ADD PRIMARY KEY (`user_permission_type_id`);
-
 ALTER TABLE `{tbl_prefix}user_profile`
   ADD PRIMARY KEY (`user_profile_id`),
   ADD KEY `ind_status_id` (`userid`);
@@ -746,16 +661,6 @@ ALTER TABLE `{tbl_prefix}video`
   ADD FULLTEXT KEY `description` (`description`,`title`);
 ALTER TABLE `{tbl_prefix}video`
   ADD FULLTEXT KEY `title` (`title`);
-
-ALTER TABLE `{tbl_prefix}video_favourites`
-  ADD PRIMARY KEY (`fav_id`);
-
-ALTER TABLE `{tbl_prefix}video_files`
-  ADD PRIMARY KEY (`id`),
-  ADD FULLTEXT KEY `src_bitrate` (`src_bitrate`);
-
-ALTER TABLE `{tbl_prefix}video_views`
-  ADD PRIMARY KEY (`id`);
 
 ALTER TABLE `{tbl_prefix}action_log`
   MODIFY `action_id` int(255) NOT NULL AUTO_INCREMENT;
@@ -847,32 +752,19 @@ ALTER TABLE `{tbl_prefix}template`
 ALTER TABLE `{tbl_prefix}users`
   MODIFY `userid` bigint(20) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `{tbl_prefix}user_levels`
-  MODIFY `user_level_id` int(20) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_levels_permissions`
-  MODIFY `user_level_permission_id` int(22) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_permissions`
-  MODIFY `permission_id` int(225) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}user_permission_types`
-  MODIFY `user_permission_type_id` int(225) NOT NULL AUTO_INCREMENT;
-
 ALTER TABLE `{tbl_prefix}user_profile`
   MODIFY `user_profile_id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}video`
   MODIFY `videoid` bigint(20) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `{tbl_prefix}video_favourites`
-  MODIFY `fav_id` int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE `{tbl_prefix}video_files`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+ALTER TABLE `{tbl_prefix}video_views`
+  MODIFY `id_video_view` INT(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `{tbl_prefix}video_views`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+    ADD CONSTRAINT `video_view_video` FOREIGN KEY (`id_video`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `{tbl_prefix}video_views`
+    ADD CONSTRAINT `video_view_user` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 
 CREATE TABLE `{tbl_prefix}video_resolution` (
 	`id_video_resolution` int(11) NOT NULL,
@@ -1176,13 +1068,17 @@ ALTER TABLE `{tbl_prefix}tools_histo_log`
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search`
 (
-    `id_tmdb_search`  INT          NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `search_key`      VARCHAR(128) NOT NULL UNIQUE,
-    `datetime_search` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    `total_results`   INT          NOT NULL
+    `id_tmdb_search`  INT                      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `search_key`      VARCHAR(128)             NOT NULL,
+    `datetime_search` DATETIME                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `total_results`   INT                      NOT NULL,
+    `list_years`      TEXT                     NULL,
+    `type`            ENUM ('movie', 'series') NOT NULL DEFAULT 'movie',
+    `language`        VARCHAR(20)              NOT NULL DEFAULT 'en'
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}tmdb_search` ADD UNIQUE INDEX unique_search_key (`search_key`, `type`, `language`);
 
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}tmdb_search_result`
 (
@@ -1218,3 +1114,31 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}users_storage_histo`
   COLLATE utf8mb4_unicode_520_ci;
 ALTER TABLE `{tbl_prefix}users_storage_histo`
     ADD CONSTRAINT `id_user_ibfk_1` FOREIGN KEY (`id_user`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+CREATE TABLE `{tbl_prefix}fontawesome_icons` (
+    `id_fontawesome_icon` int(11) NOT NULL,
+    `icon` varchar(40) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    ADD PRIMARY KEY (`id_fontawesome_icon`),
+    ADD UNIQUE KEY `icon` (`icon`);
+ALTER TABLE `{tbl_prefix}fontawesome_icons`
+    MODIFY `id_fontawesome_icon` int(11) NOT NULL AUTO_INCREMENT;
+
+CREATE TABLE `{tbl_prefix}social_networks_links` (
+    `id_social_networks_link` int(11) NOT NULL,
+    `id_fontawesome_icon` int(11) NOT NULL,
+    `title` varchar(64) NOT NULL,
+    `url` varchar(256) NOT NULL,
+    `social_network_link_order` int(10) UNSIGNED NOT NULL DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    ADD PRIMARY KEY (`id_social_networks_link`),
+    ADD KEY `id_fontawesome_icon` (`id_fontawesome_icon`);
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    MODIFY `id_social_networks_link` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `{tbl_prefix}social_networks_links`
+    ADD CONSTRAINT `social_networks_links_ibfk_1` FOREIGN KEY (`id_fontawesome_icon`) REFERENCES `{tbl_prefix}fontawesome_icons` (`id_fontawesome_icon`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+ALTER TABLE `{tbl_prefix}sessions`
+    ADD INDEX(`session_date`);

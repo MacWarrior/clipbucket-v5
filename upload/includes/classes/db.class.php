@@ -1,21 +1,28 @@
 <?php
 class Clipbucket_db
 {
-    /** @var mysqli $mysqli */
-    var $mysqli = '';
+    private $mysqli = '';
+    private $db_name = '';
+    private $db_uname = '';
+    private $db_pwd = '';
+    private $db_host = '';
+    private $db_port = '3306';
+    private $total_queries_sql = [];
+    private $total_queries = 0;
 
-    var $db_name = '';
-    var $db_uname = '';
-    var $db_pwd = '';
-    var $db_host = '';
-    var $db_port = '3306';
+    private static $db;
 
-    var $total_queries_sql = [];
-    var $total_queries = 0;
+    public static function getInstance(): self
+    {
+        if( empty(self::$db) ){
+            self::$db = new self();
+        }
+        return self::$db;
+    }
 
-    public static function getInstance(){
-        global $db;
-        return $db;
+    public function __construct(){
+        global $DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT;
+        $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, ($DBPORT ?? '3306'));
     }
 
     /**
@@ -28,6 +35,7 @@ class Clipbucket_db
      * @param string $port
      * @return bool|void
      *
+     * @throws Exception
      */
     function connect(string $host = '', string $name = '', string $uname = '', string $pwd = '', string $port = '3306')
     {
@@ -72,7 +80,10 @@ class Clipbucket_db
             $error = $e->getMessage();
             error_log($error);
             if (in_dev()) {
-                die($error);
+                DiscordLog::sendDump($error);
+                throw new Exception($e);
+            } else {
+                redirect_to('maintenance.php');
             }
         }
     }
@@ -263,10 +274,10 @@ class Clipbucket_db
     /**
      * Update database fields { table, fields, values style }
      *
-     * @param      $tbl
-     * @param      $flds
-     * @param      $vls
-     * @param      $cond
+     * @param      string $tbl
+     * @param      array $flds
+     * @param      array $vls
+     * @param      string $cond
      * @param null $ep
      *
      * @throws Exception
@@ -330,7 +341,7 @@ class Clipbucket_db
      * @internal param $ : { string } { $cond } { mysql condition for query }
      * @internal param $ : { string } { $tbl } { table to update values in }
      */
-    function db_update($tbl, $fields, $cond, $ep = null)
+    function db_update($tbl, $fields, $cond, $ep = null): bool
     {
         $this->ping();
 
@@ -475,54 +486,6 @@ class Clipbucket_db
     }
 
     /**
-     * Function used to insert values in database { table, associative array style }
-     *
-     * @param $tbl
-     * @param $fields
-     *
-     * @return mixed : { integer } { $insert_id } { id of inserted element }
-     *
-     * @throws Exception
-     * @internal param $ : { array } { $flds } { array of fields and values to update (associative array) }
-     * @internal param $ : { string } { $tbl } { table to insert values in }
-     */
-    function db_insert($tbl, $fields)
-    {
-        $this->ping();
-
-        $count = 0;
-        $query_fields = [];
-        $query_values = [];
-        foreach ($fields as $field => $val) {
-            $query_fields[] = $field;
-            $needle = substr($val, 0, 2);
-            if ($needle != '{{') {
-                $query_values[] = "'" . mysql_clean($val) . "'";
-            } else {
-                $val = substr($val, 2, strlen($val) - 4);
-                $query_values[] = mysql_clean($val);
-            }
-
-            $count += $count;
-        }
-
-        $fields_query = implode(',', $query_fields);
-        $values_query = implode(',', $query_values);
-        //Complete Query
-        $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
-        $this->total_queries++;
-        $this->total_queries_sql[] = $query;
-        try {
-            $this->mysqli->query($query);
-
-            $this->handleError($query);
-            return $this->insert_id();
-        } catch (\Exception $e) {
-            $this->handleError($query);
-        }
-    }
-
-    /**
      * Returns last insert id.
      *
      * Always use this right after calling insert method or before
@@ -589,7 +552,7 @@ class Clipbucket_db
     private function ping()
     {
         try{
-            $this->mysqli->ping();
+            $this->mysqli->query('DO 1');
         }
         catch(Exception $e){
             error_log('SQL ERROR : ' . $this->mysqli->error);
@@ -632,6 +595,11 @@ class Clipbucket_db
     function begin_transaction()
     {
         $this->mysqli->begin_transaction();
+    }
+
+    public function getDBName(): string
+    {
+        return $this->db_name;
     }
 
 }

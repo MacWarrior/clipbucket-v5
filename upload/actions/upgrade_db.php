@@ -1,4 +1,5 @@
 <?php
+define('THIS_PAGE', 'upgrade_db');
 require_once dirname(__FILE__, 2).'/includes/admin_config.php';
 
 $need_to_create_version_table = true;
@@ -55,7 +56,7 @@ if (php_sapi_name() == 'cli') {
     }
 
 } else {
-    userquery::getInstance()->admin_login_check();
+    User::getInstance()->hasPermissionAjax('admin_access');
     if (empty($_REQUEST['version']) || empty($_REQUEST['revision'])) {
         error_lang_cli('Version or revision is missing');
         $error = true;
@@ -115,7 +116,7 @@ try {
         execute_sql_file($table_version_path);
 
         $sql = 'INSERT IGNORE INTO ' . tbl('version') . ' (id, version, revision) VALUES (1, \'' . mysql_clean($version) . '\' , ' . mysql_clean((int)$revision) . ')';
-        Clipbucket_db::getInstance()->mysqli->query($sql);
+        Clipbucket_db::getInstance()->execute($sql);
     }
 
     $files = Update::getInstance()->getUpdateFiles(false, $version, $revision);

@@ -1,5 +1,5 @@
 <div class="heading clearfix">
-    <h2 class="pull-left">{lang code='manage_collections'}</h2>
+    <h2 class="pull-left">{lang('manage_x', strtolower(lang('collections')))}</h2>
     {include file="$layout_dir/blocks/advanced_collection_search.html"}
 </div>
 
@@ -8,6 +8,8 @@
 	<div class="btn-group marginBottomLarge">
 		<input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
 		<input class="btn btn-primary btn-xs button" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="make_featured_selected" value="Make Featured"/>
+        <input class="btn btn-primary btn-xs button" type="submit" name="make_unfeatured_selected" value="Make Unfeatured"/>
 		<input class="btn btn-primary btn-xs button" type="submit" name="delete_selected" value="{lang code='delete'}" onclick="return confirm_it('Are you sure you want to delete selected collection(s)')"/>
     </div>
 
@@ -18,7 +20,6 @@
             </td>
             <td>CID</td>
             <td>{lang code='details'}</td>
-            <td>{lang code='views'}</td>
     {if config('enable_sub_collection')}
             <td>{lang code='collection_parent'}</td>
     {/if}
@@ -38,7 +39,16 @@
                                 <img src="{$cbcollection->coll_first_thumb($collections[list],'s')}" width="128" height="80"/>
                             </div>
                             <div class="col-md-9">
-                                <a href="/admin_area/edit_collection.php?collection={$collections[list].collection_id}">{display_clean($collections[list].collection_name)}</a> ({$collections[list].total_objects} {$collections[list].type})
+                                <a href="/admin_area/edit_collection.php?collection={$collections[list].collection_id}">
+                                    {display_clean($collections[list].collection_name)}
+                                </a>
+                                ( {$collections[list].total_objects}
+                                {if $collections[list].total_objects > 1}
+                                    {lang code='objects'}
+                                {else}
+                                    {lang code='object'}
+                                {/if}
+                                )
 
                                 <div class="labels">
                                     {if $collections[list].featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
@@ -58,9 +68,6 @@
                     </div>
                 </div>
             </td>
-            <td>
-                {$collections[list].views}
-            </td>
             {if config('enable_sub_collection')}
             <td>
                 {display_clean($collections[list].collection_name_parent)}
@@ -76,6 +83,12 @@
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$collections[list].collection_id}">{lang code='deactivate'}</a></li>
                         {else}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?activate={$collections[list].collection_id}">{lang code='activate'}</a></li>
+                        {/if}
+                        {if $collections[list].featured == 'yes'}
+                        <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$collections[list].collection_id}">Make Unfeatured</a></li>
+                        {/if}
+                        {if $collections[list].featured == 'no'}
+                        <li><a role="menuitem" tabindex="-1" href="?make_feature={$collections[list].collection_id}">Make Featured</a></li>
                         {/if}
                         <li class="divider"></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_collection={$collections[list].collection_id}">{lang code='delete'}</a></li>

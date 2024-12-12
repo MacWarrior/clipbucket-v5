@@ -10,6 +10,7 @@ $cbLinks = [
     'logout_success'     => ['logout_success.php', 'logout_success.php'],
     'my_account'         => ['myaccount.php', 'my_account'],
     'my_videos'          => ['manage_videos.php', 'manage_videos.php'],
+    'my_photos'          => ['manage_photos.php', 'manage_photos.php'],
     'my_favorites'       => ['manage_videos.php?mode=favorites', 'manage_videos.php?mode=favorites'],
     'my_playlists'       => ['manage_playlists.php', 'manage_playlists.php'],
     'my_contacts'        => ['manage_contacts.php', 'manage_contacts.php'],
@@ -29,6 +30,6 @@ $cbLinks = [
     'edit_account'       => ['edit_account.php', 'edit_account.php']
 ];
 
-if (is_array($Cbucket->links)) {
-    $Cbucket->links = array_merge($Cbucket->links, $cbLinks);
+if (is_array(ClipBucket::getInstance()->links)) {
+    ClipBucket::getInstance()->links = array_merge(ClipBucket::getInstance()->links, $cbLinks);
 }

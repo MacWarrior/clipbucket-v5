@@ -158,7 +158,10 @@ class AdminTool
         Clipbucket_db::getInstance()->update(tbl('tools'), ['frequency', 'previous_calculated_datetime'], [$frequency, date('Y-m-d H:i:s')], 'id_tool = ' . mysql_clean($this->id_tool));
     }
 
-    public function toolErrorHandler($e)
+    /**
+     * @throws Exception
+     */
+    public function toolErrorHandler($e): bool
     {
         $this->addLog('Error : ' . $e->getMessage());
         $this->setToolError($this->id_tool);
@@ -305,7 +308,7 @@ class AdminTool
             $revision = $update->getCurrentCoreRevision();
             //update to current revision
             $sql = 'INSERT INTO ' . tbl('version') . ' SET version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision) . ', id = 1 ON DUPLICATE KEY UPDATE version = \'' . mysql_clean($version) . '\' , revision = ' . mysql_clean($revision);
-            Clipbucket_db::getInstance()->mysqli->query($sql);
+            Clipbucket_db::getInstance()->execute($sql);
             CacheRedis::flushAll();
             Update::getInstance()->flush();
         }
@@ -728,11 +731,15 @@ class AdminTool
     /**
      * @throws Exception
      */
-    public function setToolError($id_tool)
+    public function setToolError($id_tool, $force = false)
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
-            $this->addLog(lang('tool_ended'));
+            if ( $force) {
+                $this->addLog(lang('tool_forced_to_error'));
+            } else {
+                $this->addLog(lang('tool_ended'));
+            }
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . mysql_clean($id_tool));
         }
@@ -740,11 +747,13 @@ class AdminTool
 
     public function calcUserStorage()
     {
-        $users = User::getInstance()->getAll([
-            'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
-        ]) ?: [];
-        $this->array_loop = array_column($users, 'userid') ;
-        $this->executeTool('User::calcUserStorage');
+        if (config('enable_storage_history') == 'yes') {
+            $users = User::getInstance()->getAll([
+                'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
+            ]) ?: [];
+            $this->array_loop = array_column($users, 'userid') ;
+            $this->executeTool('User::calcUserStorage');
+        }
     }
 
     /**
@@ -752,7 +761,7 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public static function getToolsReadyForLaunch( int $id_tool = null) :array
+    public static function getToolsReadyForLaunch($id_tool = null) :array
     {
 
         $where = '';
@@ -853,7 +862,7 @@ class AdminTool
      * @return bool
      * @throws Exception
      */
-    public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, int $id_tool = null): bool
+    public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, $id_tool = null): bool
     {
 
         if( !empty($last_date_start) && $last_date_start < $previous_calculated_datetime){
@@ -878,7 +887,7 @@ class AdminTool
      * @return array
      * @throws Exception
      */
-    public static function getDateStat(string $cron, $last_date_start, string $date_previsionnel_precedente_source, int $id_tool = null): array
+    public static function getDateStat(string $cron, $last_date_start, string $date_previsionnel_precedente_source, $id_tool = null): array
     {
         $next_date =null;
         $date_previsionnel_precedente = null;
@@ -919,7 +928,7 @@ class AdminTool
      * @param string|null $last_previsionnel_date
      * @return bool|int
      */
-    public static function getNextDate(string $cron, string $date, string $date_previsionnel, string &$last_previsionnel_date = null)
+    public static function getNextDate(string $cron, string $date, string $date_previsionnel, &$last_previsionnel_date = null)
     {
 
         /**
@@ -1011,6 +1020,19 @@ class AdminTool
     public function getId()
     {
         return $this->id_tool;
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    public function assignDefaultThumbForCollections()
+    {
+        $collections = Collection::getInstance()->getAll(['thumb_objectid' => true, 'allow_children'=>true]);
+        if (!empty($videos)) {
+            $this->array_loop = array_column($collections, 'collection_id');
+        }
+        $this->executeTool('Collection::assignDefaultThumb');
     }
 
 }

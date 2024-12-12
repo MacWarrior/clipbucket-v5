@@ -153,7 +153,21 @@ $(document).ready(function(){
     if (can_sse === 'true' && is_update_processing === 'true') {
         connectSSE();
     }
+    updateListeners();
 
+    if( visual_editor_comments_enabled ){
+        Array.from(document.querySelectorAll('#rcomments .itemdiv .text')).forEach((comment,index) => {
+            new toastui.Editor.factory({
+                el: comment,
+                viewer: true,
+                usageStatistics: false,
+                initialValue: comment.innerHTML
+            });
+        });
+    }
+});
+
+function updateListeners () {
     $('.update_core').on('click', function () {
         update('core')
     });
@@ -172,10 +186,15 @@ $(document).ready(function(){
                 if (data.success == false) {
                     $(".page-content").prepend(data.msg)
                 }
+                var wip_div = $('.launch_wip').parents('.alert');
+                var parent = wip_div.parent();
+                wip_div.remove();
+                parent.append(data.template)
+                updateListeners();
             }
         });
-    })
-});
+    });
+}
 
 let showMsg = function(msg, type, autoDismiss){
 
@@ -195,6 +214,9 @@ let showMsg = function(msg, type, autoDismiss){
 }
 
 function update(type){
+    $('.launch_wip').off('click').prop('disabled', 'disabled');
+    $('.update_db').off('click').prop('disabled', 'disabled');
+    $('.update_core').off('click').prop('disabled', 'disabled');
     $.ajax({
         url: "/actions/admin_launch_update.php",
         type: "post",
@@ -234,10 +256,14 @@ function connectSSE() {
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);
+        $('#update_div').html(data.html);
+        updateListeners();
         if (data.is_updating === 'false') {
             eventSource.close();
+            checkStatus();
+        } else {
+            $('.launch_wip').off('click');
         }
-        $('#update_div').html(data.html);
 
     });
     eventSource.addEventListener('open', function (e) {
@@ -250,4 +276,17 @@ function connectSSE() {
     eventSource.addEventListener('error', function (e) {
         eventSource.close();
     }, false);
+}
+
+function checkStatus() {
+    $.ajax({
+        url: "/actions/admin_check_update.php",
+        type: "post",
+        dataType: "json",
+        success: function (data) {
+            $('#status_icon').find('span').removeClass();
+            $('#status_icon').find('span').addClass('status-'+ data.status);
+            $('#status_html').html(data.html);
+        }
+    });
 }

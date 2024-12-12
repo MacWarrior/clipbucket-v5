@@ -5,14 +5,14 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $userquery = userquery::getInstance();
 
-$userquery->admin_login_check();
+
+User::getInstance()->hasPermissionOrRedirect('member_moderation', true);
 pages::getInstance()->page_redir();
-$userquery->login_check('member_moderation');
 
 $uid = $_GET['uid'];
 unset($_REQUEST['uid']);
 if ($uid != $userquery->get_anonymous_user()) {
-    $udetails = $userquery->get_user_details($uid);
+    $udetails = User::getInstance()->getOne(['userid'=>$uid]);
 }
 if (empty($udetails)) {
     redirect_to('/members.php?user_not_found=1');
@@ -20,32 +20,32 @@ if (empty($udetails)) {
 /* Generating breadcrumb */
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('users'), 'url' => ''];
-$breadcrumb[1] = ['title' => lang('grp_manage_members_title'), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('users'))), 'url' => DirPath::getUrl('admin_area') . 'members.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username']), 'url' => DirPath::getUrl('admin_area') . 'view_user.php?uid=' . display_clean($uid)];
 
 if ($udetails) {
     //Deactivating User
     if (isset($_GET['deactivate'])) {
         $userquery->action('deactivate', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Activating User
     if (isset($_GET['activate'])) {
         $userquery->action('activate', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Banning User
     if (isset($_GET['ban'])) {
         $userquery->action('ban', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Unbanning User
     if (isset($_GET['unban'])) {
         $userquery->action('unban', $uid);
-        $udetails = $userquery->get_user_details($uid);
+        $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Deleting User
@@ -71,11 +71,11 @@ if ($udetails) {
     if (isset($_POST['update_user'])) {
         $userquery->update_user($_POST);
         if (!error()) {
-            $udetails = $userquery->get_user_details($uid);
+            $udetails = User::getInstance()->getOne(['userid'=>$uid]);
         }
     }
 
-    $profile = $userquery->get_user_profile($udetails['userid']);
+    $profile = $userquery->get_user_profile($uid);
     if (is_array($profile)) {
         $user_profile = array_merge($udetails, $profile);
     } else {
@@ -100,6 +100,19 @@ ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
+
+if( config('enable_visual_editor_comments') == 'yes' ){
+    ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+    ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+    $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+    if( config('default_theme') != '' && file_exists($filepath) ){
+        ClipBucket::getInstance()->addAdminCSS([
+            'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+        ]);
+    }
+}
+
 $available_tags = Tags::fill_auto_complete_tags('profile');
 assign('available_tags',$available_tags);
 
@@ -150,6 +163,13 @@ if (config('enable_storage_history') == 'yes') {
 }
 assign('storage_use',$storage_use);
 assign('storage_history',$storage_history);
+
+$params = [];
+$params['type'] = 'channel';
+$params['type_id'] = $uid;
+$params['order'] = ' comment_id DESC';
+$comments = Comments::getAll($params);
+assign('comments', $comments);
 
 $version = Update::getInstance()->getDBVersion();
 assign('show_categ', ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)));

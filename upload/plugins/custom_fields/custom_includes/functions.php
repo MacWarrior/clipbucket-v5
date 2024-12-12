@@ -6,8 +6,7 @@
  */
 function custom_fields_list()
 {
-    global $db;
-    $raw_flds = $db->select(tbl("custom_fields"), 'custom_field_name', 'custom_field_list_id != 0');
+    $raw_flds = Clipbucket_db::getInstance()->select(tbl("custom_fields"), 'custom_field_name', 'custom_field_list_id != 0');
     $flds = [];
     foreach ($raw_flds as $key => $name) {
         $flds[] = $name['custom_field_name'];
@@ -17,7 +16,6 @@ function custom_fields_list()
 
 function push_custom_field($data = false)
 {
-    global $db;
     if (!is_array($data)) {
         $data = $_POST;
     }
@@ -29,14 +27,14 @@ function push_custom_field($data = false)
     $ptype = $data['section_type'];
     $flds = ['custom_field_name', 'custom_field_title', 'custom_field_type', 'custom_field_value', 'custom_field_ptype'];
     $vals = [$name, $label, $type, $df_val, $ptype];
-    $insert_id = $db->insert(tbl("custom_fields"), $flds, $vals);
+    $insert_id = Clipbucket_db::getInstance()->insert(tbl("custom_fields"), $flds, $vals);
     if ($insert_id) {
         if ($ptype == 'video') {
             $table = 'video';
         } else {
             $table = 'users';
         }
-        $db->execute("ALTER TABLE " . tbl($table) . " ADD `cfld_" . $name . "` varchar(255) NOT NULL");
+        Clipbucket_db::getInstance()->execute("ALTER TABLE " . tbl($table) . " ADD `cfld_" . $name . "` varchar(255) NOT NULL");
         return $insert_id;
     }
     return false;
@@ -44,7 +42,6 @@ function push_custom_field($data = false)
 
 function pull_custom_fields($type = false, $id = false)
 {
-    global $db;
     if ($type) {
         $cond = "custom_field_ptype = '$type'";
     }
@@ -54,7 +51,7 @@ function pull_custom_fields($type = false, $id = false)
             $cond .= " AND custom_field_ptype = '$type'";
         }
     }
-    $raw_pull = $db->select(tbl("custom_fields"), "custom_field_list_id,custom_field_title,custom_field_type,custom_field_ptype,custom_field_name,custom_field_value,custom_field_required", $cond);
+    $raw_pull = Clipbucket_db::getInstance()->select(tbl("custom_fields"), "custom_field_list_id,custom_field_title,custom_field_type,custom_field_ptype,custom_field_name,custom_field_value,custom_field_required", $cond);
     if (is_array($raw_pull)) {
         return $raw_pull;
     }
@@ -63,7 +60,6 @@ function pull_custom_fields($type = false, $id = false)
 
 function update_cstm_field($data = false, $id = false)
 {
-    global $db;
     if (!is_array($data)) {
         $data = $_POST;
     }
@@ -77,12 +73,11 @@ function update_cstm_field($data = false, $id = false)
 
     $flds = ['custom_field_name', 'custom_field_title', 'custom_field_db_field', 'custom_field_type'];
     $vals = [$name, $label, $db_field, $type];
-    $db->update(tbl("custom_fields"), $flds, $vals, "custom_field_list_id = '$id'");
+    Clipbucket_db::getInstance()->update(tbl("custom_fields"), $flds, $vals, "custom_field_list_id = '$id'");
 }
 
 function delete_custom_field($fid)
 {
-    global $db;
     $file_data = pull_custom_fields(false, $fid);
     $type = $file_data[0]['custom_field_ptype'];
     $name = $file_data[0]['custom_field_name'];
@@ -91,8 +86,8 @@ function delete_custom_field($fid)
     } else {
         $table = 'users';
     }
-    $db->execute("ALTER TABLE " . tbl($table) . " DROP `cfld_" . $name . "` varchar(255) NOT NULL");
-    $db->delete(tbl('custom_fields'), ['custom_field_list_id'], [$fid]);
+    Clipbucket_db::getInstance()->execute("ALTER TABLE " . tbl($table) . " DROP `cfld_" . $name . "` varchar(255) NOT NULL");
+    Clipbucket_db::getInstance()->delete(tbl('custom_fields'), ['custom_field_list_id'], [$fid]);
 }
 
 /**
@@ -100,11 +95,10 @@ function delete_custom_field($fid)
  */
 function add_custom_field($array)
 {
-    global $db;
     foreach ($array as $key => $attr) {
         if ($key == 'name' || $key == 'title') {
             if (empty($attr)) {
-                e(sprintf(lang('cust_field_err'), $key));
+                e(lang('cust_field_err', $key));
             }
         }
 
@@ -115,14 +109,14 @@ function add_custom_field($array)
             }
 
             if ($key == 'db_field') {
-                $db->execute("ALTER TABLE " . tbl('video') . " ADD `" . $attr . "` TEXT NOT NULL");
+                Clipbucket_db::getInstance()->execute("ALTER TABLE " . tbl('video') . " ADD `" . $attr . "` TEXT NOT NULL");
             }
         }
 
     }
 
     if (!error_list()) {
-        $db->insert(tbl("custom_fields"), $fields_array, $value_array);
+        Clipbucket_db::getInstance()->insert(tbl("custom_fields"), $fields_array, $value_array);
     }
 }
 
@@ -132,8 +126,7 @@ function add_custom_field($array)
  */
 function load_form_fields()
 {
-    global $db;
-    $results = $db->select(tbl("custom_fields"), "*");
+    $results = Clipbucket_db::getInstance()->select(tbl("custom_fields"), "*");
     if (count($results[0]) > 0) {
         foreach ($results as $result) {
             $name = $result['custom_field_name'];

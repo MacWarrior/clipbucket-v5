@@ -70,9 +70,10 @@ class M00367 extends \Migration
             'table'  => 'tools_histo',
             'column' => 'id_tool'
         ], [
-            'constraint_name'    => 'id_tools_histo',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'id_tools_histo'
+            ]
         ]);
 
         $sql = 'ALTER TABLE `{tbl_prefix}tools_histo` ADD CONSTRAINT `id_tools_histo_status` FOREIGN KEY (`id_tools_histo_status`) REFERENCES `{tbl_prefix}tools_histo_status` (`id_tools_histo_status`) ON DELETE NO ACTION ON UPDATE NO ACTION;';
@@ -80,9 +81,10 @@ class M00367 extends \Migration
             'table'  => 'tools_histo',
             'column' => 'id_tools_histo_status'
         ], [
-            'constraint_name'   => 'id_tools_histo_status',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'id_tools_histo_status'
+            ]
         ]);
 
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_histo_log`
@@ -103,9 +105,10 @@ class M00367 extends \Migration
             'table'  => 'tools_histo_log',
             'column' => 'id_histo'
         ], [
-            'constraint_name'    => 'id_tools_histo_log',
-            'constraint_type'   => 'FOREIGN KEY',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type'  => 'FOREIGN KEY',
+                'name'  => 'id_tools_histo_log'
+            ]
         ]);
 
         $sql = 'UPDATE `{tbl_prefix}tools` SET function_name = REPLACE(function_name, \'AdminTool::\', \'\');';
@@ -140,9 +143,11 @@ class M00367 extends \Migration
             'table'  => 'tools',
             'column' => 'code'
         ], [
-            'constraint_name'   => 'code',
-            'constraint_type'   => 'UNIQUE',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'tools',
+                'name'  => 'code'
+            ]
         ]);
 
         self::generateTranslation('tool_started', [

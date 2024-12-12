@@ -6,14 +6,14 @@ require 'includes/config.inc.php';
 
 global $cbphoto;
 
-userquery::getInstance()->login_check('edit_video');
+User::getInstance()->hasPermissionOrRedirect('edit_video');
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $pid = mysql_clean($_GET['photo']);
-$photo = $cbphoto->get_photo($pid);
+$photo = Photo::getInstance()->getOne(['photo_id' => $pid]);
 
 if (empty($photo)) {
     e(lang('photo_not_exist'));
@@ -23,7 +23,7 @@ if (empty($photo)) {
 } else {
     if (isset($_POST['update_photo'])) {
         $cbphoto->update_photo();
-        $photo = $cbphoto->get_photo($pid);
+        $photo = Photo::getInstance()->getOne(['photo_id' => $pid]);
     }
     assign('p', $photo);
 }
@@ -41,6 +41,6 @@ ClipBucket::getInstance()->addCSS([
 $available_tags = Tags::fill_auto_complete_tags('photo');
 assign('available_tags', $available_tags);
 
-subtitle(lang('Edit Photo'));
+subtitle(lang('edit_photo'));
 template_files('edit_photo.html');
 display_it();

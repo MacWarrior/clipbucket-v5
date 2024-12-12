@@ -7,11 +7,12 @@
 			<label for="check_photo-{$photo.photo_id}">
 				{get_photo details=$photo output='html' class='acc_usr_video_thumb img-responsive'}
 			</label>
-			<br>{display_clean($photo.photo_title)|truncate:100}<br>
+			<br/>{display_clean($photo.photo_title)|truncate:100}<br/>
+			{if !$photo.collection_id}<span class="label label-warning">{lang code='orphan'}</span>{/if}
 			<span class="btn-group show">
-				<a class="btn btn-primary btn-sm" href="{$cbphoto->photo_links($photo,'view_item')}">{lang code='view_ph'}</a>
-				<a class="btn btn-primary btn-sm" href="/edit_photo.php?photo={$photo.photo_id}">{lang code='edit_ph'}</a>
-				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','?mode=uploaded&amp;delete_photo={$photo.photo_id}')"  id="delete_icon_a-{$photo.photo_id}">{lang code='delete_ph'}</a>
+				<a class="btn btn-primary btn-sm" href="{$cbphoto->photo_links($photo,'view_item')}">{lang code='watch'}</a>
+				<a class="btn btn-primary btn-sm" href="/edit_photo.php?photo={$photo.photo_id}">{lang code='edit'}</a>
+				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_icon_a','{$photo.photo_id}','{lang code="confirm_del_photo"}','?mode=uploaded&amp;delete_photo={$photo.photo_id}')"  id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
 			</span>
 		</td>
 		<td>{$photo.date_added|date_format}</td>
@@ -32,7 +33,7 @@
 			</label>
 			{display_clean($photo.photo_title)|truncate:100}<br>
 			<span class="btn-group show">
-				<a class="btn btn-primary btn-sm" href="{$cbphoto->photo_links($photo,'view_item')}">{lang code='views'}</a>
+				{if $photo.collection_id}<a class="btn btn-primary btn-sm" href="{$cbphoto->photo_links($photo,'view_item')}">{lang code='views'}</a>{/if}
 				<a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_video('delete_icon_a','{$photo.photo_id}','{lang code="remove_fav_photo_confirm"}','?mode={$mode}&amp;remove_fav_photo={$photo.photo_id}')" id="delete_icon_a-{$photo.photo_id}">{lang code='delete'}</a>
 			</span>
 		</td>

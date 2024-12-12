@@ -65,7 +65,7 @@ class Upload
      */
     function submit_upload($array = null)
     {
-        global $eh, $db;
+        global $eh;
 
         if (!$array) {
             $array = $_POST;
@@ -80,13 +80,13 @@ class Upload
 
         $userid = user_id();
         if (!$userid) {
-            if (has_access('allow_video_upload', true, false)) {
+            if (User::getInstance()->hasPermission('allow_video_upload')) {
                 $userid = userquery::getInstance()->get_anonymous_user();
             } else {
                 e(lang('you_not_logged_in'));
                 return false;
             }
-        } else if (!has_access('allow_video_upload', true, true)) {
+        } else if (!User::getInstance()->hasPermission('allow_video_upload')) {
             e(lang('insufficient_privileges'));
             return false;
         }
@@ -211,8 +211,8 @@ class Upload
                 $query_field[] = 'tags';
                 $query_val[] = '';
             }
-            $db->insert(tbl('video'),$query_field, $query_val);
-            $insert_id = $db->insert_id();
+            Clipbucket_db::getInstance()->insert(tbl('video'),$query_field, $query_val);
+            $insert_id = Clipbucket_db::getInstance()->insert_id();
 
             Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
             $version = Update::getInstance()->getDBVersion();
@@ -229,7 +229,7 @@ class Upload
             ];
             insert_log('Uploaded a video', $log_array);
 
-            $db->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
+            Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos+1'], ' userid=\'' . $userid . '\'');
 
             update_video_status($file_name, 'Waiting');
 
@@ -243,7 +243,7 @@ class Upload
         }
 
         // Case when video already exists
-        $db->update(tbl('video'), $query_field, $query_val, 'file_name = \''.mysql_clean($file_name).'\'');
+        Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, 'file_name = \''.mysql_clean($file_name).'\'');
         return true;
     }
 
@@ -305,22 +305,22 @@ class Upload
                     $file_name_final =  $video_file_name . '-' . $dimensions . '-' . $file_num . '-'.$type.'.' . $ext;
                     $outputFilePath = DirPath::get('thumbs') . $files_dir . DIRECTORY_SEPARATOR . $file_name_final;
                     $imgObj->CreateThumb($temp_file_path, $outputFilePath, $width_setting, $ext_original, $height_setting, false);
-                    global $db;
-                    $rs = $db->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
+
+                    $rs = Clipbucket_db::getInstance()->select(tbl('video'), 'videoid, default_poster, default_backdrop', 'file_name LIKE \'' . $video_file_name . '\'');
                     if (!empty($rs)) {
                         $videoid = $rs[0]['videoid'];
                     } else {
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    $db->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
                     if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
                         Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
                     }
                 }
 
                 unlink($temp_file_path);
-                e(lang('upload_vid_thumb_msg'), 'm');
+                e(lang($this->types_thumb[$type] . '_upload_successfully'),'m');
             }
         }
     }
@@ -429,7 +429,7 @@ class Upload
                 'name'              => 'category[]',
                 'id'                => 'category',
                 'value'             => $cat_array,
-                'hint_1'            => sprintf(lang('vdo_cat_msg'), config('video_categories')),
+                'hint_1'            => lang('vdo_cat_msg', config('video_categories')),
                 'required'          => 'yes',
                 'validate_function' => 'Category::validate',
                 'invalid_err'       => lang('vdo_cat_err3'),
@@ -763,8 +763,6 @@ class Upload
      */
     function add_conversion_queue($file, $sub_directory = '', $cqueue_name = '')
     {
-        global $db;
-
         $ext = getExt($file);
         $name = getName($file);
         if (!$name) {
@@ -801,9 +799,9 @@ class Upload
         }
 
         //Adding Details to database
-        $db->execute('INSERT INTO ' . tbl('conversion_queue') . " (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
+        Clipbucket_db::getInstance()->execute('INSERT INTO ' . tbl('conversion_queue') . " (cqueue_name,cqueue_ext,cqueue_tmp_ext,date_added)
 							VALUES ('" . mysql_clean($cqueue_name) . "','" . mysql_clean($ext) . "','" . mysql_clean($tmp_ext) . "','" . NOW() . "') ");
-        return $db->insert_id();
+        return Clipbucket_db::getInstance()->insert_id();
     }
 
     /**
@@ -966,7 +964,7 @@ class Upload
             case 'a':
             case 'avatar':
                 if ($file['size'] / 1024 > config('max_profile_pic_size')) {
-                    e(sprintf(lang('file_size_exceeds'), config('max_profile_pic_size')));
+                    e(lang('file_size_exceeds', config('max_profile_pic_size')));
                     return false;
                 }
 
@@ -1000,7 +998,7 @@ class Upload
             case 'b':
             case 'background':
                 if ($file['size'] / 1024 > config('max_bg_size')) {
-                    e(sprintf(lang('file_size_exceeds'), config('max_bg_size')));
+                    e(lang('file_size_exceeds', config('max_bg_size')));
                     return false;
                 }
 

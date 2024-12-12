@@ -1,19 +1,3 @@
-<?php
-//Lets just save admin settings so we can move forward
-$pass = pass_code(post('password'), 1);
-global $db, $userquery;
-
-$db->update(
-    tbl('users'),
-    ['username', 'password', 'email', 'doj', 'num_visits', 'ip', 'signup_ip'],
-    [post('username'), $pass, post('email'), now(), 1, Network::get_remote_ip(), Network::get_remote_ip()]
-    , 'userid=1'
-);
-
-//Login user
-$userquery->login_user(post('username'), post('password'))
-?>
-
 <div class="nav_des clearfix">
     <div class="cb_container">
         <h4 style="color:#fff;"><?php echo lang('website_configuration'); ?></h4>
@@ -50,10 +34,39 @@ $userquery->login_user(post('username'), post('password'))
                     <?php echo lang('website_url_hint'); ?>
                 </p>
             </div>
-
+            <div class="field">
+                <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
+                <select name="language" id="language" class="form-control">
+                    <?php foreach (Language::getInstance()->get_langs() as $lang) {
+                        echo '<option value="'.$lang['language_id'].'">'.$lang['language_name'].'</option>';
+                    } ?>
+                </select>
+            </div>
+            <?php $arr = [];
+            $arr_cli=[];
+            $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
+            if (!System::isDateTimeSynchro($arr) || !System::isDateTimeSynchro($arr,$current_datetime_cli)) {
+                $query = /** @lang MySQL */'SELECT timezones.timezone FROM '.cb_sql_table('timezones').' ORDER BY timezones.timezone';
+                $rs = Clipbucket_db::getInstance()->_select($query);
+                $allTimezone = array_column($rs, 'timezone');?>
+                <div class="field">
+                    <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
+                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;" >
+                        <option value=""></option>
+                        <?php foreach ($allTimezone as $timezone) { ?>
+                            <option value="<?php echo $timezone; ?>">
+                                <?php echo $timezone; ?>
+                            </option>
+                      <?php  } ?>
+                    </select>
+                    <div class="spinner-content" id="spinner-content" style="display: none;">
+                        <p class="fa-spinner fa fa-spin animate-spin"></p>
+                    </div>
+                </div>
+            <?php } ?>
             <br/>
-            <input type="hidden" name="mode" value="finish"/>
-            <?php button(lang('save_continue'), ' onclick="$(\'#installation\').submit()" '); ?>
+            <input type="hidden" name="mode" value="adminsettings"/>
+            <button class="btn btn-primary" onclick="$('#installation').submit()"><?php echo lang('save_continue'); ?></button>
         </form>
     </div>
 </div>

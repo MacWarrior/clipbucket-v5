@@ -4,12 +4,12 @@ define('THIS_PAGE', 'file_uploader');
 include('../includes/config.inc.php');
 require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
 
-if( !has_access('allow_video_upload') ){
+if( !User::getInstance()->hasPermission('allow_video_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
 }
 
-global $cbvid, $Upload, $db, $eh;
+global $cbvid, $Upload, $eh;
 
 $mode = '';
 if ($_FILES['Filedata']) {
@@ -132,6 +132,9 @@ switch ($mode) {
             die();
         }
 
+        if (!empty($_POST['collection_id'])) {
+            Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
+        }
         $Upload->add_conversion_queue($file_name . '.' . $extension);
 
         $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
@@ -146,10 +149,6 @@ switch ($mode) {
 
         $TempLogData = 'Video Converson File executed successfully with Target File > ' . $DestinationFilePath;
         $log->writeLine('Video Conversion File Execution', $TempLogData);
-
-        // inserting into video views as well
-        $query = 'INSERT INTO ' . tbl('video_views') . ' (video_id, video_views, last_updated) VALUES(' . $vid . ',0,' . time() . ')';
-        $db->execute($query);
 
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         die();

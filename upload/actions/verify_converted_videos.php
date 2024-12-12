@@ -1,7 +1,7 @@
 <?php
 define('THIS_PAGE', 'verify_converted_videos');
 
-global $db, $cbvideo;
+global $cbvideo;
 
 $in_bg_cron = true;
 
@@ -20,7 +20,7 @@ if (is_array($files)) {
     foreach ($files as $file) {
         $file_details = get_file_details($fileName, true);
 
-        $db->update(tbl('conversion_queue'),
+        Clipbucket_db::getInstance()->update(tbl('conversion_queue'),
             ['cqueue_conversion', 'time_completed'],
             ['yes', time()], " cqueue_id = '" . $file['cqueue_id'] . "'");
 

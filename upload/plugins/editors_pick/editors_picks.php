@@ -145,12 +145,18 @@ $cbvid->video_manager_link_new[] = 'admin_area_tab';
 //Calling Editor Picks Function
 $cbvid->video_manager_funcs[] = 'editors_pick';
 
-if (in_dev()) {
-    add_js(['editors_pick/assets/js/editors_pick.js' => 'plugin']);
-} else {
-    add_js(['editors_pick/assets/js/editors_pick.min.js' => 'plugin']);
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addJS(['editors_pick/assets/js/editors_pick' . $min_suffixe . '.js' => 'plugin']);
+ClipBucket::getInstance()->addCSS(['editors_pick/assets/css/themes/default' . $min_suffixe . '.css' => 'plugin']);
+
+$filepath = DirPath::get('plugins') . 'editors_pick' . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . config('default_theme') . $min_suffixe . '.css';
+if( config('default_theme') != '' && file_exists($filepath) ){
+    ClipBucket::getInstance()->addCSS([
+        'editors_pick/assets/css/themes/' . config('default_theme') . $min_suffixe . '.css' => 'plugin'
+    ]);
 }
+
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu('Plugin Manager', lang('plugin_editors_picks'), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');
+add_admin_menu(lang('manage_x', strtolower(lang('plugins'))), strtolower(lang('plugin_editors_picks')), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');

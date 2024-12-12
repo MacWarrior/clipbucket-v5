@@ -8,7 +8,7 @@ $json = [];
 
 try {
     $tool = new AdminTool();
-    userquery::getInstance()->admin_login_check();
+    User::getInstance()->hasPermissionAjax('admin_access');
     if($tool->initById($_POST['id_tool']) === false) {
         throw new Exception('tool not found');
     }

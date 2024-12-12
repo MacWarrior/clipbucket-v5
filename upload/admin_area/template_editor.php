@@ -3,13 +3,12 @@ define('THIS_PAGE', 'template_editor');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->perm_check('manage_template_access', true);
+User::getInstance()->hasPermissionOrRedirect('manage_template_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Templates And Players', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Templates Editor', 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('template_editor'), 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'];
 
 /**
  * Getting List Of Templates

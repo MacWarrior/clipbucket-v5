@@ -88,7 +88,7 @@ class CronExpression
      * @param string $expression a cron expression, e.g. "* * * * *"
      * @param DateTimeZone|null $timeZone time zone object
      */
-    public function __construct(string $expression, DateTimeZone $timeZone = null)
+    public function __construct(string $expression, $timeZone = null)
     {
         $this->timeZone = $timeZone;
 

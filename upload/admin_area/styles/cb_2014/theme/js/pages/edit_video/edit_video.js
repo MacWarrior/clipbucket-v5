@@ -52,6 +52,27 @@ function deleteSubtitle(number) {
     }
 }
 
+function deleteComment(comment_id) {
+    if (confirm_it(text_confirm_comment)) {
+        $.ajax({
+            url: "/actions/admin_comment_delete.php",
+            type: "POST",
+            data: {comment_id: comment_id},
+            dataType: 'json',
+            success: function (result) {
+                $('.page-content').prepend(result['msg']);
+                if (result['success']) {
+                    $('#comment_' + comment_id).remove();
+                }
+                var lines = $('.comment_line');
+                if (lines.length === 0 ) {
+                    $('#comments .form-group').html(text_no_comment);
+                }
+            }
+        });
+    }
+}
+
 function editTitle(number) {
     $('#buttons-' + number).css('display', 'inline');
     $('#edit_sub_' + number).css('display', 'inline');
@@ -76,12 +97,12 @@ function saveSubtitle(number) {
     });
 }
 
-function getInfoTmdb(video_id, video_title, page,sort, sort_order) {
+function getInfoTmdb(video_id, type, video_title, page,sort, sort_order, selected_year) {
     showSpinner();
     $.ajax({
         url: "/actions/admin_info_tmdb.php",
         type: "POST",
-        data: {videoid: video_id, video_title:video_title, page: page,sort: sort, sort_order: sort_order },
+        data: {videoid: video_id, video_title: video_title, type: type, page: page,sort: sort, sort_order: sort_order, selected_year: selected_year },
         dataType: 'json',
         success: function (result) {
             hideSpinner();
@@ -98,7 +119,7 @@ function saveInfoTmdb(tmdb_video_id) {
     $.ajax({
         url: "/actions/admin_import_tmdb.php",
         type: "POST",
-        data: {tmdb_video_id: tmdb_video_id, videoid: videoid},
+        data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',
         success: function (result) {
             if (result.success == false) {
@@ -123,21 +144,44 @@ function pageInfoTmdb(page) {
         sort = 'DESC';
     }
 
-    getInfoTmdb(videoid, $('#search_title').val(), page, sort_type, sort);
+    getInfoTmdb(videoid, $('#type_tmdb').val(),$('#search_title').val(), page, sort_type, sort,$('#selected_year').val());
 }
 
-$(function () {
+
+function getViewHistory(video_id, page) {
+    showSpinner();
+    $.ajax({
+        url: "/actions/video_view_history.php",
+        type: "POST",
+        data: {videoid: video_id, page: page, modal: false },
+        dataType: 'json',
+        success: function (result) {
+            hideSpinner();
+            $('#view_history_div').html(result['template']);
+            $('.page-content').prepend(result['msg']);
+        }
+    });
+}
+
+function pageViewHistory(page) {
+    getViewHistory(videoid, page);
+}
+
+$( document ).ready(function() {
     $("[id^=tags]").each(function(elem){
         init_tags(this.id, available_tags, '#list_'+this.id);
     });
 
     $('#button_info_tmdb').on('click', function () {
         var video_title = $('#title').val();
-        getInfoTmdb(videoid, video_title, 1);
+        getInfoTmdb(videoid, 'movie',video_title, 1);
     });
-}); 
 
-$( document ).ready(function() {
+    $('.del_cmt').on('click', function () {
+        var id = $(this).data('id');
+        deleteComment(id);
+    });
+
     $('.poster li').click(function(){
             $('.poster li.selected').removeClass('selected');
             $(this).addClass('selected');
@@ -153,4 +197,15 @@ $( document ).ready(function() {
             $(this).addClass('selected');
         }
     );
+
+    if( visual_editor_comments_enabled ){
+        Array.from(document.querySelectorAll('#comments .itemdiv .body .col-md-7 span')).forEach((comment,index) => {
+            new toastui.Editor.factory({
+                el: comment,
+                viewer: true,
+                usageStatistics: false,
+                initialValue: comment.innerHTML
+            });
+        });
+    }
 });

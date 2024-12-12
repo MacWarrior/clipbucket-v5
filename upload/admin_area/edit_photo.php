@@ -3,8 +3,7 @@ global $pages, $cbphoto, $breadcrumb;
 define('THIS_PAGE', 'edit_photo');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('video_moderation');
 $pages->page_redir();
 
 // TODO : Complete URL
@@ -14,7 +13,7 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => 'Photo Manager',
+    'title' => lang('manage_x', strtolower(lang('photos'))),
     'url'   => DirPath::getUrl('admin_area') . 'photo_manager.php'
 ];
 $breadcrumb[2] = [
@@ -33,7 +32,10 @@ if ($_GET['mode'] != '') {
     $cbphoto->photo_actions($_GET['mode'], $id);
 }
 
-$p = $cbphoto->get_photo($id);
+$p = Photo::getInstance()->getOne(['photo_id'=>$id]);
+if (empty($p)) {
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'photo_manager.php?missing_photo=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
+}
 $p['user'] = $p['userid'];
 
 assign('data', $p);

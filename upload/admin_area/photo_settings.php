@@ -5,14 +5,13 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $pages, $myquery, $cbphoto;
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('photos_moderation', true);
 $pages->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Watermark Settings', 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('watermark_settings'), 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'];
 
 if ($_POST['update_watermark']) {
     $rows = [

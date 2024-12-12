@@ -74,7 +74,7 @@ class Video
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
             $this->fields[] = 'age_restriction';
         }
-        if ($version['version'] > Tmdb::MIN_VERSION || ($version['version'] == Tmdb::MIN_VERSION && $version['revision'] >= Tmdb::MIN_REVISION)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '371')) {
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
         }
@@ -199,6 +199,18 @@ class Video
                 $params['order'] = $this->getTableName() . '.rating DESC, ' . $this->getTableName() . '.rated_by DESC';
                 break;
 
+            case 'longer':
+                $params['order'] = $this->getTableName() . '.duration DESC';
+                break;
+
+            case 'shorter':
+                $params['order'] = $this->getTableName() . '.duration ASC';
+                break;
+
+            case 'viewed_recently':
+                $params['order'] = $this->getTableName() . '.last_viewed DESC';
+                break;
+
             case 'most_commented':
                 if( config('enable_comments_video') == 'yes' ) {
                     $params['order'] = $this->getTableName() . '.comments_count DESC';
@@ -233,13 +245,20 @@ class Video
         $sorts = [
             'most_recent'  => lang('most_recent')
             ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
         ];
 
         if( config('enable_comments_video') == 'yes' ){
             $sorts['most_commented'] = lang('most_comments');
         }
+
+        if( config('video_rating') == '1' ){
+            $sorts['top_rated'] = lang('top_rated');
+        }
+
+        $sorts['featured'] = lang('featured');
+        $sorts['viewed_recently'] = lang('viewed_recently');
+        $sorts['longer'] = lang('longer_video');
+        $sorts['shorter'] = lang('shorter_video');
 
         return $sorts;
     }
@@ -262,7 +281,6 @@ class Video
         $param_tags = $params['tags'] ?? false;
         $param_active = $params['active'] ?? false;
         $param_status = $params['status'] ?? false;
-
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
         $param_order = $params['order'] ?? false;
@@ -273,6 +291,7 @@ class Video
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
+        $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -288,7 +307,7 @@ class Video
             $conditions[] = $this->getTableName() . '.file_name = \''.mysql_clean($param_file_name).'\'';
         }
         if( $param_featured ){
-            $conditions[] = $this->getTableName() . '.featured = \'' . mysql_clean($param_featured) . '\'';
+            $conditions[] = $this->getTableName() . '.featured = \'yes\'';
         }
         if( $param_active ){
             $conditions[] = $this->getTableName() . '.active = \'' . mysql_clean($param_active) . '\'';
@@ -303,14 +322,43 @@ class Video
         $version = Update::getInstance()->getDBVersion();
 
         if( $param_search ){
-            /* Search is done on video title, video tags */
-            $cond = '(MATCH(video.title) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_search) . '%\'';
+            $param_search = mysql_clean($param_search);
+            /* Search is done on video title, video tags, uploader username, video categories, video description */
+
+            /** ORDER BY match score (100 pts if like match search query)
+                - title
+                - tag
+                - username
+                - categories
+                - description
+             */
+            $match_title = 'MATCH(video.title) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+            $match_description = 'MATCH(video.description, video.title) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+            $like_title = 'LOWER(' . $this->getTableName() . '.title) LIKE \'%' . $param_search . '%\'';
+            $order_search = ' ORDER BY CASE WHEN ' . $like_title . ' THEN 100 ELSE ' . $match_title . ' END DESC';
+            $cond = '(' . $match_title . ' OR ' . $match_description . '  OR ' . $like_title;
+
+            /** TAG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
-                $cond .= ' OR MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_tag = 'MATCH(tags.name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+                $like_tag = 'LOWER(tags.name) LIKE \'%' . $param_search . '%\'';
+                $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
+                $order_search .= ', MAX(CASE WHEN '.$like_tag.' THEN 100 ELSE ' . $match_tag . ' END) DESC ';
             }
+
+            /** USER */
+            $like_user = ' lower(users.username) LIKE \'' . $param_search . '\'';
+            $cond .= ' OR ' . $like_user;
+            $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END) DESC ';
+
+            /** CATEG */
             if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-                $cond .= ' OR MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
+                $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
+                $like_categ = ' LOWER(categories.category_name) LIKE \'%' . $param_search . '%\' ';
+                $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
+                $order_search .= ', MAX(CASE WHEN '.$like_title .' THEN 100 ELSE ' . $match_categ . ' END) DESC ';
             }
+            $order_search .= ', ' . $match_description . ' DESC ';
             $cond .= ')';
 
             $conditions[] = $cond;
@@ -324,24 +372,31 @@ class Video
             $conditions[] = 'MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\'';
         }
 
-        if( !has_access('admin_access', true) && !$param_exist && !$param_disable_generic_constraints){
+        if( !User::getInstance()->hasAdminAccess() && !$param_exist && !$param_disable_generic_constraints){
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
+
+        $group = [];
 
         if( $param_count ){
             $select = ['COUNT(DISTINCT ' . $this->getTableName() . '.videoid) AS count'];
         } else {
             $select = $this->getVideoFields();
+
+            foreach ($this->fields as $field) {
+                $group[] = $this->tablename . '.' . $field;
+            }
+
             $select[] = 'users.username AS user_username';
+            $group[] = 'users.username';
         }
 
         $join = [];
-        $group = [];
         if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
-                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
+                    $select[] = 'GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
                 }
                 $group[] = $this->getTableName() . '.videoid';
             }
@@ -372,6 +427,15 @@ class Video
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
+        if (!$param_not_join_user_profile) {
+            $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
+
+            if( !$param_count && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
+                $select[] = 'user_profile.disabled_channel';
+                $group[] = 'user_profile.disabled_channel';
+            }
+        }
+
         if( $param_group ){
             $group[] = $param_group;
         }
@@ -382,8 +446,17 @@ class Video
         }
 
         $order = '';
-        if( $param_order ){
-            $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
+        if (!empty($order_search)) {
+            $order = $order_search;
+            if (!$param_count) {
+                $group[]='video.title';
+                $group[]='video.description';
+            }
+        } elseif( $param_order && !$param_count ){
+            $replace_to_group = str_replace(['asc', 'desc', 'rand()'], '', strtolower($param_order));
+            if (!empty($replace_to_group)) {
+                $group[] = $replace_to_group;
+            }
             $order = ' ORDER BY '.$param_order;
         }
 
@@ -433,7 +506,7 @@ class Video
      */
     public function getGenericConstraints(array $params = []): string
     {
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             return '';
         }
 
@@ -475,8 +548,44 @@ class Video
     public static function display_restricted($video)
     {
         if( !empty($video['age_restriction']) ){
-            echo '<span class="restricted" title="' . sprintf(lang('access_forbidden_under_age'), $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
+            echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $video['age_restriction']) . '">-' . $video['age_restriction'] . '</span>';
         }
+    }
+
+    private static function getRating($video, $type = 'like')
+    {
+        $rating = $video['rating'];
+        $ratings = $video['ratings'];
+        $total = $video['total'];
+
+        if (empty($ratings)) {
+            $ratings = $video['rated_by'];
+        }
+        //Checking Percent
+        if ($total <= 10) {
+            $total = 10;
+        }
+        $perc = round($rating * 100 / $total);
+        $likes = round($ratings * $perc / 100);
+
+        switch($type)
+        {
+            default:
+            case 'like':
+                return $likes;
+            case 'dislike':
+                return $ratings - $likes;
+        }
+    }
+
+    public static function getLike($video): int
+    {
+        return self::getRating($video, 'like');
+    }
+
+    public static function getDislike($video): int
+    {
+        return self::getRating($video, 'dislike');
     }
 
     /**
@@ -484,7 +593,7 @@ class Video
      */
     public function isCurrentUserRestricted($video_id): string
     {
-        if( has_access('video_moderation', true) ){
+        if( User::getInstance()->hasPermission('video_moderation') ){
             return false;
         }
 
@@ -536,7 +645,7 @@ class Video
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
-                e(sprintf(lang('unknown_type'), $type));
+                e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
@@ -560,7 +669,7 @@ class Video
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
-                e(sprintf(lang('unknown_type'), $type));
+                e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
@@ -584,7 +693,7 @@ class Video
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
-                e(sprintf(lang('unknown_type'), $type));
+                e(lang('unknown_type', $type));
             } else {
                 e(lang('technical_error'));
             }
@@ -593,7 +702,7 @@ class Video
         $results = Clipbucket_db::getInstance()->select(tbl('video_thumbs'), 'num', ' type= \''. mysql_clean($type) .'\' and videoid = ' . mysql_clean($video_detail['videoid']));
         if (!empty($results)) {
             foreach ($results as $result) {
-                delete_video_thumb($video_detail, $result['num']);
+                delete_video_thumb($video_detail, $result['num'], $type);
             }
             Video::getInstance()->resetDefaultPicture($video_detail['videoid'], $type);
         }
@@ -758,6 +867,51 @@ class Video
         }
         return $total;
     }
+
+    /**
+     * @throws Exception
+     */
+    public function setDefautThumb($num, $type, $videoid)
+    {
+        if (!empty(Upload::getInstance()->types_thumb[$type])) {
+            $type_db = Upload::getInstance()->types_thumb[$type];
+        } elseif (in_array($type, Upload::getInstance()->types_thumb) || $type == 'thumb') {
+            $type_db = $type;
+        } else {
+            e(lang('error'));
+            return false;
+        }
+        if ($type_db == 'auto' || $type_db == 'custom') {
+            $type_db = 'thumb';
+        }
+        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['default_' . $type_db], [(int)$num], ' videoid = ' . mysql_clean($videoid));
+    }
+
+    /**
+     * @param int $videoid
+     * @param int $page
+     * @return array
+     * @throws Exception
+     */
+    public function getVideoViewHistory(int $videoid, int $page): array
+    {
+        $sql = 'SELECT COUNT(`id_video_view`) as total FROM ' . cb_sql_table('video_views') . ' WHERE `id_video` = ' . mysql_clean($videoid);
+        $total = Clipbucket_db::getInstance()->_select($sql)[0]['total'] ?? 0;
+
+        $sql_limit = '';
+        if (!empty($page)) {
+            $sql_limit = ' LIMIT ' . create_query_limit($page, config('video_list_view_video_history'));
+        }
+        $sql = 'SELECT video_views.*, users.username FROM ' . cb_sql_table('video_views') . '
+         LEFT JOIN ' . cb_sql_table('users') . ' ON video_views.id_user = users.userid
+        WHERE id_video = ' . mysql_clean($videoid) . ' ORDER BY view_date DESC' . $sql_limit;
+        $results = Clipbucket_db::getInstance()->_select($sql);
+
+        return [
+            'total_pages'   => count_pages($total, config('video_list_view_video_history')),
+            'final_results' => $results
+        ];
+    }
 }
 
 class CBvideo extends CBCategory
@@ -827,13 +981,13 @@ class CBvideo extends CBCategory
         $text = '';
         $class = '';
         if ($vdo['active'] == 'no') {
-            $text = sprintf(lang('video_is'), strtolower(lang('inactive')) );
+            $text = lang('video_is', strtolower(lang('inactive')) );
             $class = 'label-danger';
         } else if ($vdo['status'] != 'Successful') {
-            $text = sprintf(lang('video_is'), strtolower(lang(strtolower($vdo['status']))) );
+            $text = lang('video_is', strtolower(lang(strtolower($vdo['status']))) );
             $class = 'label-warning';
         } else if ($vdo['broadcast'] == 'unlisted') {
-            $text = sprintf(lang('video_is'), strtolower(lang('unlisted')));
+            $text = lang('video_is', strtolower(lang('unlisted')));
             $class = 'label-info';
         }
 
@@ -850,10 +1004,8 @@ class CBvideo extends CBCategory
         if (NEED_UPDATE) {
             return;
         }
-        global $userquery;
-        $per = $userquery->get_user_level(user_id());
 
-        if ($per['video_moderation'] == 'yes' && isSectionEnabled('videos')) {
+        if (User::getInstance()->hasPermission('video_moderation') && isSectionEnabled('videos')) {
             $menu_video = [
                 'title'   => lang('videos')
                 , 'class' => 'glyphicon glyphicon-facetime-video'
@@ -861,19 +1013,19 @@ class CBvideo extends CBCategory
             ];
 
             $menu_video['sub'][] =  [
-                'title' => lang('videos_manager')
+                'title' => lang('manage_x', strtolower(lang('videos')))
                 , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'
             ];
 
             if( isSectionEnabled('playlists') ){
                 $menu_video['sub'][] =  [
-                    'title' => lang('manage_playlists')
+                    'title' => lang('manage_x', strtolower(lang('playlists')))
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_playlist.php'
                 ];
             }
 
             $menu_video['sub'][] = [
-                'title' => lang('manage_categories')
+                'title' => lang('manage_x', strtolower(lang('categories')))
                 , 'url' => DirPath::getUrl('admin_area') . 'category.php'
             ];
             $menu_video['sub'][] = [
@@ -943,7 +1095,7 @@ class CBvideo extends CBCategory
     function init_collections()
     {
         $this->collection = new Collections();
-        $this->collection->objType = 'v';
+        $this->collection->objType = 'videos';
         $this->collection->objClass = 'cbvideo';
         $this->collection->objTable = 'video';
         $this->collection->objName = 'Video';
@@ -961,11 +1113,10 @@ class CBvideo extends CBCategory
      */
     function video_exists($vid)
     {
-        global $db;
         if (is_numeric($vid)) {
-            return $db->count(tbl('video'), 'videoid', ' videoid=\'' . mysql_clean($vid) . '\' ');
+            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid=\'' . mysql_clean($vid) . '\' ');
         }
-        return $db->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
+        return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
     }
 
     /**
@@ -1060,8 +1211,6 @@ class CBvideo extends CBCategory
      */
     function action($case, $vid)
     {
-        global $db;
-
         $video = $this->get_video($vid);
 
         if (empty($video)) {
@@ -1074,7 +1223,7 @@ class CBvideo extends CBCategory
             case 'activate':
             case 'av':
             case 'a':
-                $db->update(tbl('video'), ['active'], ['yes'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
+                Clipbucket_db::getInstance()->update(tbl('video'), ['active'], ['yes'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
                 e(lang('class_vdo_act_msg'), 'm');
 
                 if (config('approve_video_notification') == 'yes') {
@@ -1113,7 +1262,7 @@ class CBvideo extends CBCategory
             case 'deactivate':
             case 'dav':
             case 'd':
-                $db->update(tbl('video'), ['active'], ['no'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
+                Clipbucket_db::getInstance()->update(tbl('video'), ['active'], ['no'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
                 e(lang('class_vdo_act_msg1'), 'm');
                 break;
 
@@ -1121,7 +1270,7 @@ class CBvideo extends CBCategory
             case 'feature':
             case 'featured':
             case 'f':
-                $db->update(tbl('video'), ['featured', 'featured_date'], ['yes', now()], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
+                Clipbucket_db::getInstance()->update(tbl('video'), ['featured', 'featured_date'], ['yes', now()], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
                 e(lang('class_vdo_fr_msg'), 'm');
                 return 'featured';
 
@@ -1129,7 +1278,7 @@ class CBvideo extends CBCategory
             case 'unfeature':
             case 'unfeatured':
             case 'uf':
-                $db->update(tbl('video'), ['featured'], ['no'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
+                Clipbucket_db::getInstance()->update(tbl('video'), ['featured'], ['no'], ' videoid=\'' . mysql_clean($vid) . '\' OR videokey = \'' . mysql_clean($vid) . '\' ');
                 e(lang('class_fr_msg1'), 'm');
                 break;
 
@@ -1155,7 +1304,7 @@ class CBvideo extends CBCategory
      */
     function update_video($array = null)
     {
-        global $eh, $db, $Upload, $userquery, $cbvid;
+        global $eh, $Upload, $userquery, $cbvid;
 
         if (!$array) {
             $array = $_POST;
@@ -1220,7 +1369,7 @@ class CBvideo extends CBCategory
                 }
             }
 
-            if (has_access('admin_access', true)) {
+            if (User::getInstance()->hasAdminAccess()) {
                 if (!empty($array['status'])) {
                     $query_field[] = 'status';
                     $query_val[] = $array['status'];
@@ -1278,7 +1427,7 @@ class CBvideo extends CBCategory
                 e(lang('class_vdo_del_err'));
                 return;
             }
-            if (!$this->is_video_owner($vid, user_id()) && !has_access('admin_access', true)) {
+            if (!$this->is_video_owner($vid, user_id()) && !User::getInstance()->hasAdminAccess()) {
                 e(lang('no_edit_video'));
                 return;
             }
@@ -1288,7 +1437,7 @@ class CBvideo extends CBCategory
                 return;
             }
 
-            $db->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
             foreach ($array as $key => $item) {
                 $matches = [];
@@ -1331,10 +1480,8 @@ class CBvideo extends CBCategory
      */
     function update_subtitle ($videoid, $number, $title)
     {
-        global $db;
-
         if ($this->video_exists($videoid)) {
-            $db->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . mysql_clean($videoid) . ' AND number LIKE \'' . $number . '\'');
+            Clipbucket_db::getInstance()->update(tbl('video_subtitle'), ['title'], [$title], ' videoid = ' . mysql_clean($videoid) . ' AND number LIKE \'' . $number . '\'');
         }
     }
 
@@ -1346,12 +1493,10 @@ class CBvideo extends CBCategory
      */
     function delete_video($vid)
     {
-        global $db;
-
         if ($this->video_exists($vid)) {
             $vdetails = $this->get_video($vid);
 
-            if ($this->is_video_owner($vid, user_id()) || has_access('admin_access', true)) {
+            if ($this->is_video_owner($vid, user_id()) || User::getInstance()->hasAdminAccess()) {
                 #THIS SHOULD NOT BE REMOVED :O
                 //list of functions to perform while deleting a video
                 $del_vid_funcs = $this->video_delete_functions;
@@ -1370,7 +1515,7 @@ class CBvideo extends CBCategory
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
                 //Removing video from Playlist
-                $db->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
 
                 //Removing video Comments
                 $params = [];
@@ -1379,11 +1524,11 @@ class CBvideo extends CBCategory
                 Comments::delete($params);
 
                 //Removing video From Favorites
-                $db->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
+                Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
 
                 //Finally Removing Database entry of video
-                $db->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
-                $db->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
+                Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
 
                 e(lang('class_vdo_del_msg'), 'm');
             } else {
@@ -1402,9 +1547,8 @@ class CBvideo extends CBCategory
      */
     function remove_thumbs($vdetails)
     {
-        global $db;
         //delete olds thumbs from db and on disk
-        $db->delete(tbl('video_thumbs'), ['videoid'], [$vdetails['videoid']]);
+        Clipbucket_db::getInstance()->delete(tbl('video_thumbs'), ['videoid'], [$vdetails['videoid']]);
         $pattern = DirPath::get('thumbs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '*';
         $glob = glob($pattern);
         foreach ($glob as $thumb) {
@@ -1412,7 +1556,7 @@ class CBvideo extends CBCategory
         }
 
         //reset default thumb
-        $db->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($vdetails['videoid']));
+        Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($vdetails['videoid']));
         e(lang('vid_thumb_removed_msg'), 'm');
     }
 
@@ -1424,9 +1568,6 @@ class CBvideo extends CBCategory
      */
     function remove_log($vdetails)
     {
-        global $db;
-        $src = $vdetails['videoid'];
-        $db->execute('DELETE FROM ' . tbl('video_files') . ' WHERE src_name = \'' . mysql_clean($src) . '\'');
         $str = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
         $file1 = DirPath::get('logs') . $str . $vdetails['file_name'] . '.log';
         if (file_exists($file1) && is_file($file1)) {
@@ -1442,7 +1583,6 @@ class CBvideo extends CBCategory
      */
     function remove_subtitles($vdetails, string $number = null)
     {
-        global $db;
         $directory = DirPath::get('subtitles') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
         $query = 'SELECT * FROM ' . tbl('video_subtitle') . ' WHERE videoid = ' . $vdetails['videoid'];
         if ($number !== null) {
@@ -1460,7 +1600,7 @@ class CBvideo extends CBCategory
             if ($number !== null) {
                 $query_delete .= ' AND number = \'' . mysql_clean($number) . '\'';
             }
-            $db->execute($query_delete);
+            Clipbucket_db::getInstance()->execute($query_delete);
         }
         if ($number !== null) {
             e(str_replace('%s', $number,lang('video_subtitles_deleted_num')), 'm');
@@ -1504,11 +1644,11 @@ class CBvideo extends CBCategory
                 break;
 
         }
-        global $db;
+
         $video_detail['video_files'] = json_encode(array_values(array_filter(json_decode($video_detail['video_files']), function ($reso) use ($resolution) {
             return $reso != $resolution;
         })));
-        $db->update(tbl('video'), ['video_files'], [$video_detail['video_files']], 'videoid = ' . mysql_clean($video_detail['videoid']));
+        Clipbucket_db::getInstance()->update(tbl('video'), ['video_files'], [$video_detail['video_files']], 'videoid = ' . mysql_clean($video_detail['videoid']));
     }
 
     /**
@@ -1555,14 +1695,14 @@ class CBvideo extends CBCategory
      */
     function get_videos($params)
     {
-        global $db, $cb_columns;
+        global $cb_columns;
 
         $limit = $params['limit'];
         $order = $params['order'];
 
         $cond = '';
         $superCond = '';
-        if (!has_access('admin_access', true)) {
+        if (!User::getInstance()->hasAdminAccess()) {
             $superCond = Video::getInstance()->getGenericConstraints();
         } else {
             if ($params['active']) {
@@ -1968,7 +2108,7 @@ class CBvideo extends CBCategory
             }
 
             $query_count = 'SELECT COUNT(*) AS total FROM (SELECT videoid FROM '.cb_sql_table('video') . ' ' . $cond . ' GROUP BY video.videoid) T';
-            $count = $db->_select($query_count);
+            $count = Clipbucket_db::getInstance()->_select($query_count);
             if (!empty($count)) {
                 $result = $count[0]['total'];
             } else {
@@ -2063,23 +2203,6 @@ class CBvideo extends CBCategory
     }
 
     /**
-     * Function used to update video and set a thumb as default
-     * @param $vid
-     * @param $thumb
-     * @throws Exception
-     */
-    function set_default_thumb($vid, $thumb)
-    {
-        global $db;
-        if (is_null($thumb)) {
-            return;
-        }
-        $num = get_thumb_num($thumb);
-        $db->update(tbl('video'), ['default_thumb'], [$num], ' videoid=\'' . mysql_clean($vid) . '\'');
-        e(lang('vid_thumb_changed'), 'm');
-    }
-
-    /**
      * Function used to check weather current user is video owner or not
      *
      * @param $vid
@@ -2090,9 +2213,7 @@ class CBvideo extends CBCategory
      */
     function is_video_owner($vid, $uid): bool
     {
-        global $db;
-
-        $result = $db->count(tbl($this->dbtbl['video']), 'videoid', 'videoid=\'' . mysql_clean($vid) . '\' AND userid=\'' . mysql_clean($uid) . '\' ');
+        $result = Clipbucket_db::getInstance()->count(tbl($this->dbtbl['video']), 'videoid', 'videoid=\'' . mysql_clean($vid) . '\' AND userid=\'' . mysql_clean($uid) . '\' ');
         if ($result > 0) {
             return true;
         }
@@ -2166,13 +2287,12 @@ class CBvideo extends CBCategory
      */
     function get_video_rating($id)
     {
-        global $db;
         if (is_numeric($id)) {
             $cond = ' videoid=\'' . mysql_clean($id) . '\'';
         } else {
             $cond = ' videokey=\'' . mysql_clean($id) . '\'';
         }
-        $results = $db->select(tbl('video'), 'userid,allow_rating,rating,rated_by,voter_ids', $cond);
+        $results = Clipbucket_db::getInstance()->select(tbl('video'), 'userid,allow_rating,rating,rated_by,voter_ids', $cond);
 
         if (count($results) > 0) {
             return $results[0];
@@ -2214,7 +2334,6 @@ class CBvideo extends CBCategory
 
         $perc = $perc . '%';
         $disperc = $disperc . '%';
-        $likes = round($ratings * $perc / 100); // get lowest integer
 
         if ($params['is_rating']) {
             if (error()) {
@@ -2227,6 +2346,9 @@ class CBvideo extends CBCategory
             }
         }
 
+        $likes = Video::getLike($params);
+        $dislikes = Video::getDislike($params);
+
         if ($data_only) {
             return [
                 'perc'       => $perc,
@@ -2235,7 +2357,7 @@ class CBvideo extends CBCategory
                 'type'       => $type,
                 'rating_msg' => $rating_msg,
                 'likes'      => $likes,
-                'dislikes'   => ($ratings - $likes),
+                'dislikes'   => $dislikes,
                 'disable'    => $params['disable']
             ];
         }
@@ -2246,7 +2368,7 @@ class CBvideo extends CBCategory
         assign('id', $id);
         assign('rating_msg', $rating_msg);
         assign('likes', $likes);
-        assign('dislikes', ($ratings - $likes));
+        assign('dislikes', $dislikes);
         assign('disable', $params['disable']);
 
         Template('blocks/common/rating.html');
@@ -2263,8 +2385,6 @@ class CBvideo extends CBCategory
      */
     function rate_video($id, $rating): array
     {
-        global $db;
-
         if (!is_numeric($rating) || $rating <= 9) {
             $rating = 0;
         }
@@ -2333,7 +2453,7 @@ class CBvideo extends CBCategory
             if ($newrate > 10) {
                 $newrate = 10;
             }
-            $db->update(tbl($this->dbtbl['video']), ['rating', 'rated_by', 'voter_ids'], [$newrate, $new_by, '|no_mc|' . $voters], ' videoid=\'' . mysql_clean($id) . '\'');
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['video']), ['rating', 'rated_by', 'voter_ids'], [$newrate, $new_by, '|no_mc|' . $voters], ' videoid=\'' . mysql_clean($id) . '\'');
             $userDetails = [
                 'object_id' => $id,
                 'type'      => 'video',
@@ -2373,12 +2493,12 @@ class CBvideo extends CBCategory
 
         $fields = [
             'playlist_items' => $cb_columns->object('playlist_items')->temp_change('date_added', 'item_added')->get_columns(),
-            'playlists'      => $cb_columns->object('playlists')->temp_remove('first_item,cover')->temp_change('date_added,description,tags,category', 'playlist_added,playlist_description,playlist_tags,playlist_category')->get_columns(),
+            'playlists'      => Playlist::getInstance()->getFields(),
             'video'          => $cb_columns->object('videos')->get_columns()
         ];
 
         $where = '';
-        if( !has_access('admin_access', true) ){
+        if( !User::getInstance()->hasAdminAccess() ){
             $where = ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 

@@ -2,374 +2,384 @@
 {$type='video'}
 {$channel = $userquery->get_user_details($video.userid)}
 <div id="main" class="clearfix container">
-	<div class="clearfix">
-		<section id="content" class="clearfix videos">
-			<div class="clearfix player-holder">
-				{if $video.status=='Successful'}
-					{if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
-						<span class="label label-warning" style="font-size:1em;">
+    <div class="clearfix">
+        <section id="content" class="clearfix videos">
+            <div class="clearfix player-holder">
+                {if $video.status=='Successful'}
+                    {if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
+                        <span class="label label-warning" style="font-size:1em;">
 							{lang code="bits_color_compatibility"}
 						</span>
-					{/if}
-					<div id="cb_player" class="cb_player no_select">
-						{show_player vdetails=$video}
-					</div>
-				{/if}
-			</div>
-			{if config("enable_advertisement") == "yes"}
-			<div class="clearfix leaderboard-ad ad">
-				{AD place='ad_728x90'}
-			</div>
-			{/if}
-			<section class="video-details clearfix">
-				<header class="clearfix details">
-					<h1>{display_clean($video.title)}</h1>
-					<div class="user-video-info clearfix">
+                    {/if}
+                    <div id="cb_player" class="cb_player no_select">
+                        {show_player vdetails=$video}
+                    </div>
+                {/if}
+            </div>
+            {if config("enable_advertisement") == "yes"}
+                <div class="clearfix leaderboard-ad ad">
+                    {AD place='ad_728x90'}
+                </div>
+            {/if}
+            <section class="video-details clearfix">
+                <header class="clearfix details">
+                    <h1>{display_clean($video.title)}</h1>
+                    <div class="user-video-info clearfix">
 
-						{if isSectionEnabled('channels')  && $anonymous_id != $video.userid}
-							<a href="{$userquery->profile_link($video)}" class="avatar">
-								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
-							</a>
-						{else if $anonymous_id != $video.userid}
-							<span class="avatar">
-								<img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
-							</span>
-						{/if}
-						<h2 class="user-title">
-						{if isSectionEnabled('channels') && $anonymous_id != $video.userid}
-							<a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
-						{elseif $anonymous_id != $video.userid}
-							{display_clean($video.user_username)}
-						{/if}
-						</h2>
-						<div class="views-counter">
+                        {if config('enable_hide_uploader_name') != 'yes'}
+                            {if isSectionEnabled('channels')  && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                                <a href="{$userquery->profile_link($video)}" class="avatar">
+                                    <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
+                                </a>
+                            {elseif $anonymous_id != $video.userid}
+                                <span class="avatar">
+                                    <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
+                                </span>
+                            {/if}
+                        {/if}
+                        <h2 class="user-title">
+                            {if config('enable_hide_uploader_name') != 'yes'}
+                                {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                                    <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                                {elseif $anonymous_id != $video.userid}
+                                    {display_clean($video.user_username)}
+                                {/if}
+                            {/if}
+                        </h2>
+                        <div class="views-counter">
 							<span>
 								{if config('video_round_views') =='yes'}
-									{prettyNum($vdo.views)}
-								{else}
-									{( $vdo.views )}
-								{/if}
-								{if $vdo.views > 1}
-									{lang code='views'}
-								{else}
-									{lang code="view"}
-								{/if}
+                                    {prettyNum($vdo.views)}
+                                {else}
+                                    {( $vdo.views )}
+                                {/if}
+                                {if $vdo.views > 1}
+                                    {lang code='views'}
+                                {else}
+                                    {lang code="view"}
+                                {/if}
+                                {if config('enable_access_view_video_history')=='yes' && config('enable_video_view_history')=='yes' && $vdo.views > 0}
+                                    <i class="view_history fa fa-history pointer" title="{lang('view_history')}"></i>
+                                {/if}
 							</span>
-						</div>
-					</div>
-					<div class="user-likes-sub clearfix">
-						<div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
+
+                        </div>
+                    </div>
+                    <div class="user-likes-sub clearfix">
+                        <div class="clearfix like-rating col-lg-6 col-md-6 col-sm-6 col-xs-12" id="rating_container">
                             {if config('video_rating')=='1'}
-								{show_video_rating rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
-							{/if}
-						</div>
-						<div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
-							{if user_id() && $video.userid != user_id() && $video.userid != $anonymous_id}
-								{if $userquery->is_subscribed($video.userid,user_id())}
-									<button onclick="_cb.unsubscribeToChannel('{$video.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
-										{lang code="unsubscribe"}
-									</button>
-								{else}
-									<button onclick="_cb.subscribeToChannelNew('{$video.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
-										{lang code="subscribe"}
-									</button>
-								{/if}
-							{/if}
+                                {show_video_rating rating=$vdo.rating ratings=$vdo.rated_by total='10' id=$vdo.videoid type=video}
+                            {/if}
+                        </div>
+                        <div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            {if user_id() && $video.userid != user_id() && $video.userid != $anonymous_id}
+                                {if $userquery->is_subscribed($video.userid,user_id())}
+                                    <button onclick="_cb.unsubscribeToChannel('{$video.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
+                                        {lang code="unsubscribe"}
+                                    </button>
+                                {else}
+                                    <button onclick="_cb.subscribeToChannelNew('{$video.userid}','subscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
+                                        {lang code="subscribe"}
+                                    </button>
+                                {/if}
+                            {/if}
 
-							{if config('enable_edit_button') == 'yes'}
-								{if has_access('admin_access', true)}
-									{if user_id() && $video.userid == user_id()}
-										<div class="dropdown">
-											<button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
-												{lang code='edit'}
-												<span class="caret"></span>
-											</button>
-											<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
-												<li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
-												<li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
-											</ul>
-										</div>
-									{else}
-									<a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
-									{/if}
-								{elseif user_id() && $video.userid == user_id()}
-										<a class="btn btn-success" style=" font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
-								{/if}
-							{/if}
+                            {if config('enable_edit_button') == 'yes'}
+                                {if UserLevel::hasPermissionOrRedirect('admin_access', true)}
+                                    {if user_id() && $video.userid == user_id()}
+                                        <div class="dropdown">
+                                            <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
+                                                {lang code='edit'}
+                                                <span class="caret"></span>
+                                            </button>
+                                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownEdit">
+                                                <li><a href="{$link_edit_bo}">{lang code='edit_from_BO'}</a></li>
+                                                <li><a href="{$link_edit_fo}">{lang code='edit_from_FO'}</a></li>
+                                            </ul>
+                                        </div>
+                                    {else}
+                                        <a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
+                                    {/if}
+                                {elseif user_id() && $video.userid == user_id()}
+                                    <a class="btn btn-success" style=" font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
+                                {/if}
+                            {/if}
 
-							{if config('video_download') == 1 && $cbvid->downloadable($vdo)}
-							<div class="dropdown">
-								<button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
-									{lang code='download'}
-									<span class="caret"></span>
-								</button>
-								<ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-								{$files = get_video_files($vdo,true)}
-								{foreach $files as $file}
-									{$quality = explode('-',$file)}
-									{$quality = array_reverse($quality)}
-									{$quality = explode('.',$quality.0)}
-									{$file_quality = $quality.0}
-									<li role="presentation">
-										<a role="menuitem" tabindex="-1" href="{$file}" download>
-										<span class="glyphicon glyphicon-download-alt"></span> {$file_quality}</a>
-									</li>
-								{/foreach}
-								</ul>
-							</div>
-							{/if}
-						</div>
-					</div>
-				</header>
-				<div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
-				<div class="view-tabs clearfix">
-					<ul class="clearfix nav nav-tabs">
-						<li class="active">
-							<a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
-						</li>
-						{if
-							(userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
-							(config('enable_video_internal_sharing') == 'yes' && user_id()))
-							&& (
-								config('enable_video_link_sharing') == 'yes' ||
-								(config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
-								(config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == '')))
-							)
-						}
-						<li>
-							<a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
-						</li>
-						{/if}
-						{if user_id()}
-						<li>
-							<a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang code='add_to'}</a>
-						</li>
-						<li>
-							<a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
-						</li>
-						{/if}
-					</ul>
-					<div class="tab-content clearfix">
-						<div class="tab-pane fade in clearfix active" id="cb-item-info">
-							<div class="clearfix watch-vid-details">
-								{if $video.age_restriction}<p class="age_restriction">{sprintf(lang('access_forbidden_under_age'),$video.age_restriction)}</p>{/if}
-								<p style="white-space: pre-line;">{Video::getInstance()->getDescription($video.description)}</p>
-								<ul class="clearfix desc-list">
-									<li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category_names}</li>
-									<li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
-									<li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
-									{if !empty($vdo.tags_video)}
-									<li>
-										<strong class="pull-left" id="label_tags_video">{lang('tag_title')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_video" value="{$vdo.tags_video}">
-										<ul id="list_tags_video" style="border: 0;"></ul>
-									</li>
-									{/if}
-									{if config('enable_video_genre') == 'yes' && !empty($vdo.tags_genre)}
-									<li>
-										<strong class="pull-left" id="label_tags_genre">{lang('genre')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_genre" value="{$vdo.tags_genre}">
-										<ul id="list_tags_genre" style="border: 0;"></ul>
-									</li>
-									{/if}
-									{if config('enable_video_actor') == 'yes' && !empty($vdo.tags_actors)}
-									<li>
-										<strong class="pull-left" id="label_tags_actors">{lang('actors')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_actors" value="{$vdo.tags_actors}">
-										<ul id="list_tags_actors" style="border: 0;"></ul>
-									</li>
-									{/if}
-									{if config('enable_video_producer') == 'yes' && !empty($vdo.tags_producer)}
-									<li>
-										<strong class="pull-left" id="label_tags_producer">{lang('producer')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_producer" value="{$vdo.tags_producer}">
-										<ul id="list_tags_producer" style="border: 0;"></ul>
-									</li>
-									{/if}
-									{if config('enable_video_executive_producer') == 'yes' && !empty($vdo.tags_executive_producer)}
-									<li>
-										<strong class="pull-left" id="label_tags_executive_producer">{lang('executive_producer')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_executive_producer" value="{$vdo.tags_executive_producer}">
-										<ul id="list_tags_executive_producer" style="border: 0;"></ul>
-									</li>
-									{/if}
-									{if config('enable_video_director') == 'yes' && !empty($vdo.tags_director)}
-									<li>
-										<strong class="pull-left" id="label_tags_director">{lang('director')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_director" value="{$vdo.tags_director}">
-										<ul id="list_tags_director" style="border: 0;"></ul>
-									</li>
-									{/if}
-									{if config('enable_video_crew') == 'yes' && !empty($vdo.tags_crew)}
-									<li>
-										<strong class="pull-left" id="label_tags_crew">{lang('crew')}:&nbsp;&nbsp;</strong>
-										<input type="hidden" id="tags_crew" value="{$vdo.tags_crew}">
-										<ul id="list_tags_crew" style="border: 0;"></ul>
-									</li>
-									{/if}
-								</ul>
-							</div>
-						</div>
-						{if
-							(userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
-							(config('enable_video_internal_sharing') == 'yes' && user_id()))
-							&& (
-								config('enable_video_link_sharing') == 'yes' ||
-								(config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
-								(config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == '')))
-							)
-						}
-						<div class="tab-pane fade in clearfix" id="cb-item-share">
-							{show_share_form id=$vdo.videoid type=video}
-						</div>
-						{/if}
+                            {if config('video_download') == 1 && $cbvid->downloadable($vdo)}
+                                <div class="dropdown">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+                                        {lang code='download'}
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                                        {$files = get_video_files($vdo,true)}
+                                        {foreach $files as $file}
+                                            {$quality = explode('-',$file)}
+                                            {$quality = array_reverse($quality)}
+                                            {$quality = explode('.',$quality.0)}
+                                            {$file_quality = $quality.0}
+                                            <li role="presentation">
+                                                <a role="menuitem" tabindex="-1" href="{$file}" download>
+                                                    <span class="glyphicon glyphicon-download-alt"></span> {$file_quality}</a>
+                                            </li>
+                                        {/foreach}
+                                    </ul>
+                                </div>
+                            {/if}
+                        </div>
+                    </div>
+                </header>
+                <div id="messageFav" class="alert alert-info marginTop" style="display:none;"></div>
+                <div class="view-tabs clearfix">
+                    <ul class="clearfix nav nav-tabs">
+                        <li class="active">
+                            <a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
+                        </li>
+                        {if
+                        (userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
+                        (config('enable_video_internal_sharing') == 'yes' && user_id()))
+                        && (
+                        config('enable_video_link_sharing') == 'yes' ||
+                        (config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
+                        (config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == '')))
+                        )
+                        }
+                            <li>
+                                <a href="#cb-item-share" data-toggle="tab"><span class="icon-share"></span>{lang code='share_embed'}</a>
+                            </li>
+                        {/if}
+                        {if user_id()}
+                            <li>
+                                <a href="#cb-item-addto" data-toggle="tab"><span class="icon-plusrounded"></span>{lang code='add_to'}</a>
+                            </li>
+                            {if $video.userid != user_id()}
+                                <li>
+                                    <a href="#cb-item-report" data-toggle="tab"><span class="icon-flag"></span>{lang code='report_this'}</a>
+                                </li>
+                            {/if}
+                        {/if}
+                    </ul>
+                    <div class="tab-content clearfix">
+                        <div class="tab-pane fade in clearfix active" id="cb-item-info">
+                            <div class="clearfix watch-vid-details">
+                                {if $video.age_restriction}<p class="age_restriction">{lang('access_forbidden_under_age',$video.age_restriction)}</p>{/if}
+                                <p style="white-space: pre-line;">{Video::getInstance()->getDescription($video.description)}</p>
+                                <ul class="clearfix desc-list">
+                                    <li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category_names}</li>
+                                    <li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
+                                    <li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
+                                    {if !empty($vdo.tags_video)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_video">{lang('tag_title')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_video" value="{$vdo.tags_video}">
+                                            <ul id="list_tags_video" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                    {if config('enable_video_genre') == 'yes' && !empty($vdo.tags_genre)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_genre">{lang('genre')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_genre" value="{$vdo.tags_genre}">
+                                            <ul id="list_tags_genre" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                    {if config('enable_video_actor') == 'yes' && !empty($vdo.tags_actors)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_actors">{lang('actors')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_actors" value="{$vdo.tags_actors}">
+                                            <ul id="list_tags_actors" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                    {if config('enable_video_producer') == 'yes' && !empty($vdo.tags_producer)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_producer">{lang('producer')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_producer" value="{$vdo.tags_producer}">
+                                            <ul id="list_tags_producer" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                    {if config('enable_video_executive_producer') == 'yes' && !empty($vdo.tags_executive_producer)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_executive_producer">{lang('executive_producer')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_executive_producer" value="{$vdo.tags_executive_producer}">
+                                            <ul id="list_tags_executive_producer" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                    {if config('enable_video_director') == 'yes' && !empty($vdo.tags_director)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_director">{lang('director')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_director" value="{$vdo.tags_director}">
+                                            <ul id="list_tags_director" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                    {if config('enable_video_crew') == 'yes' && !empty($vdo.tags_crew)}
+                                        <li>
+                                            <strong class="pull-left" id="label_tags_crew">{lang('crew')}:&nbsp;&nbsp;</strong>
+                                            <input type="hidden" id="tags_crew" value="{$vdo.tags_crew}">
+                                            <ul id="list_tags_crew" style="border: 0;"></ul>
+                                        </li>
+                                    {/if}
+                                </ul>
+                            </div>
+                        </div>
+                        {if
+                        (userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
+                        (config('enable_video_internal_sharing') == 'yes' && user_id()))
+                        && (
+                        config('enable_video_link_sharing') == 'yes' ||
+                        (config('enable_video_social_sharing') == 'yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))) ||
+                        (config('video_embed') == 1 && $vdo.allow_embedding=='yes' && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == '')))
+                        )
+                        }
+                            <div class="tab-pane fade in clearfix" id="cb-item-share">
+                                {show_share_form id=$vdo.videoid type=video}
+                            </div>
+                        {/if}
 
-						{if user_id()}
-						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-addto">
-							<div class="clearfix btn-big">
-								<div id="video_action_result_cont"></div>
-								<a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
-							</div>
+                        {if user_id()}
+                            <div class="tab-pane fade in clearfix" id="cb-item-addto">
+                                <div class="clearfix btn-big">
+                                    <div id="video_action_result_cont"></div>
+                                    <a id="addfav" class="btn btn-block btn-primary" href="javascript:void(0);" onclick="_cb.add_to_favNew('video','{$vdo.videoid}');">{lang code='add_to_my_favorites'}</a>
+                                </div>
 
-							{if isSectionEnabled('playlists')}
-							<div class="clearfix btn-big">
-								<a href="javascript:void(0);" onclick="$('#addPlaylistCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_playlist'}</a>
-								<div id="addPlaylistCont" style="display:none;">
-									{show_playlist_form id=$vdo.videoid type=video user=user_id() }
-								</div>
-							</div>
-							{/if}
+                                {if isSectionEnabled('playlists')}
+                                    <div class="clearfix btn-big">
+                                        <a href="javascript:void(0);" onclick="$('#addPlaylistCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_playlist'}</a>
+                                        <div id="addPlaylistCont" style="display:none;">
+                                            {show_playlist_form id=$vdo.videoid type=video user=user_id()}
+                                        </div>
+                                    </div>
+                                {/if}
 
-							{if isSectionEnabled('collections')}
-							<div class="clearfix btn-big">
-								<a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
-								<div id="addCollectionCont" style="display:none;">
-									{show_collection_form()}
-								</div>
-							</div>
-							{/if}
-						</div>
+                                {if config('collectionsSection') == 'yes'}
+                                    <div class="clearfix btn-big">
+                                        <a href="javascript:void(0);" onclick="$('#addCollectionCont').toggle()" class="btn btn-block btn-primary">+ {lang code='add_to_my_collection'}</a>
+                                        <div id="addCollectionCont" style="display:none;">
+                                            {include file="$style_dir/blocks/collection_form.html" id={$vdo.videoid} type=videos}
+                                        </div>
+                                    </div>
+                                {/if}
+                            </div>
 
-						<div class="tab-pane fade in clearfix custom-elements" id="cb-item-report">
-							<h2>{lang code='report_video'}</h2>
-							{show_flag_form id=$vdo.videoid type=video}
-						</div>
-						{/if}
-					</div>
-				</div>
-			</section>
+                                <div class="tab-pane fade in clearfix" id="cb-item-report">
+                                    <h2>{lang code='report_video'}</h2>
+                                    {show_flag_form id=$vdo.videoid type=video}
+                                </div>
+                        {/if}
+                    </div>
+                </div>
+            </section>
 
-			{if config('enable_comments_video') == 'yes'}
-				<div class="clearfix comments-block">
-					{if $myquery->is_commentable($vdo,'v')}
-					<div class="collectionComments addComment">
-						<h2>
-							{if $vdo.comments_count <= 1 }
-								{lang code='comment'}
-							{else}
-								{{lang code='comments'} }
-							{/if}
-							(<span id="comment_count">{$vdo.comments_count}</span>)
-						</h2>
-						<a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
-							<span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
-						</a>
-						<div id="bloc-comment" class="collapse">
-							{include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
+            {if config('enable_comments_video') == 'yes'}
+                <div class="clearfix comments-block">
+                    {if $myquery->is_commentable($vdo,'v')}
+                        <div class="collectionComments addComment">
+                            <h2>
+                                {if $vdo.comments_count <= 1 }
+                                    {lang code='comment'}
+                                {else}
+                                    {{lang code='comments'} }
+                                {/if}
+                                (<span id="comment_count">{$vdo.comments_count}</span>)
+                            </h2>
+                            <a data-toggle="collapse" class="collapsing_arrow collapsed" href="#bloc-comment" aria-expanded="false" aria-controls="bloc-comment">
+                                <span class="icon-up-arrow" title="{lang code='show_comments'}"></span>
+                            </a>
+                            <div id="bloc-comment" class="collapse">
+                                {include file="$style_dir/blocks/comments/add_comment.html" id=$vdo.videoid type=v}
 
-							<div class="userComments">
-								<ul id="userCommentsList" style="margin-left:-40px;"></ul>
-							</div>
-						</div>
-					</div>
-					{else}
-					<div align="center" class="moveL no_comments">
-						{sprintf(lang('comment_disabled_for'),strtolower(lang('video')))}
-					</div>
-					{/if}
-				</div>
-			{/if}
-		</section>
-		<aside id="sidebar">
-			{if config("enable_advertisement") == "yes"}
-			<div class="box-ad ad">{AD place='ad_300x250'}</div>
-			{/if}
+                                <div class="userComments">
+                                    <ul id="userCommentsList" style="margin-left:-40px;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    {else}
+                        <div align="center" class="moveL no_comments">
+                            {lang('comment_disabled_for',strtolower(lang('video')))}
+                        </div>
+                    {/if}
+                </div>
+            {/if}
+        </section>
+        <aside id="sidebar">
+            {if config("enable_advertisement") == "yes"}
+                <div class="box-ad ad">{AD place='ad_300x250'}</div>
+            {/if}
 
-			{if config('playlistsSection') == 'yes' && !empty($playlist_items)}
-			<h2>{lang code='playlist_videos'}</h2>
-			<div class="clearfix sidebar-items">
-				{foreach $playlist_items as $key => $item}
-					{if $item.videokey == $vdo.videokey}
-						{$current_key = $key}
-					{/if}
-				{/foreach}
+            {if config('playlistsSection') == 'yes' && !empty($playlist_items)}
+                <h2>{lang code='playlist_videos'}</h2>
+                <div class="clearfix sidebar-items">
+                    {foreach $playlist_items as $key => $item}
+                        {if $item.videokey == $vdo.videokey}
+                            {$current_key = $key}
+                        {/if}
+                    {/foreach}
 
-				{$next_item_key = $current_key+1}
-				{$prev_item_key = $current_key-1}
-				{assign var=count_index value=count($playlist_items)}
+                    {$next_item_key = $current_key+1}
+                    {$prev_item_key = $current_key-1}
+                    {assign var=count_index value=count($playlist_items)}
 
-				{if $next_item_key==$count_index}
-					{$next_videoLink = '#'}
-				{else}
-					{$next_videoLink = video_link($playlist_items.$next_item_key)}
-				{/if}
+                    {if $next_item_key==$count_index}
+                        {$next_videoLink = '#'}
+                    {else}
+                        {$next_videoLink = video_link($playlist_items.$next_item_key)}
+                    {/if}
 
-				{if $playlist_items.$prev_item_key==0}
-					{$prev_videoLink = '#'}
-				{else}
-					{$prev_videoLink = video_link($playlist_items.$prev_item_key)}
-				{/if}
+                    {if $playlist_items.$prev_item_key==0}
+                        {$prev_videoLink = '#'}
+                    {else}
+                        {$prev_videoLink = video_link($playlist_items.$prev_item_key)}
+                    {/if}
 
-				<div class="clearfix">
-					<a href="{$prev_videoLink}" class="btn btn-primary btn-xs" {if $prev_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}>
-						<span class="glyphicon glyphicon-step-backward"></span> {lang code='previous'}
-					</a>
-					<a href="{$next_videoLink}" class="btn btn-primary btn-xs" {if $next_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}> {lang code='next'}
-						<span class="glyphicon glyphicon-step-forward"></span>
-					</a>
-				</div>
+                    <div class="clearfix">
+                        <a href="{$prev_videoLink}" class="btn btn-primary btn-xs" {if $prev_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}>
+                            <span class="glyphicon glyphicon-step-backward"></span> {lang code='previous'}
+                        </a>
+                        <a href="{$next_videoLink}" class="btn btn-primary btn-xs" {if $next_videoLink=='#'}onclick="_cb.throwHeadMsg('warning','{lang code=empty_next}', 3000, true)"{/if}> {lang code='next'}
+                            <span class="glyphicon glyphicon-step-forward"></span>
+                        </a>
+                    </div>
 
-				<div id="playlist_items" style="padding:10px 0;">
-					{$cur_playlist = $smarty.get.play_list}
-					{$total_items = $cbvid->action->count_playlist_items($cur_playlist)}
-					{section name=plist loop=$playlist_items}
-						{include file="$style_dir/blocks/manage/account_video.html" video=$playlist_items[plist] control="onWatch" pid=$playlist.playlist_id}
-					{/section}
-				</div>
-				{if $total_items > 10}
-				<div style="text-align:center;margin-bottom:5px;">
-					<button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
-				</div>
-				{/if}
-			</div>
-			{else}
-			<h2>{if $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
-			<div class="clearfix sidebar-items">
-				{if $videos}
-					{foreach from=$videos item=pop_video}
-						{if $pop_video@iteration == 9}
-							{break}
-						{/if}
-						<div class="clearfix popular-video">
-							{include file="$style_dir/blocks/videos/video.html" display_type='popVideos_sidebar'}
-						</div>
-					{/foreach}
-				{else}
-				<div class="well well-info">{lang code='no_videos_found'}</div>
-				{/if}
-			</div>
-			{/if}
-		</aside>
-	</div>
+                    <div id="playlist_items" style="padding:10px 0;">
+                        {$cur_playlist = $smarty.get.play_list}
+                        {$total_items = $cbvid->action->count_playlist_items($cur_playlist)}
+                        {section name=plist loop=$playlist_items}
+                            {include file="$style_dir/blocks/manage/account_video.html" video=$playlist_items[plist] control="onWatch" pid=$playlist.playlist_id}
+                        {/section}
+                    </div>
+                    {if $total_items > 10}
+                        <div style="text-align:center;margin-bottom:5px;">
+                            <button class="btn btn-primary text-centre" id="playlist-pull" dataList={$cur_playlist} dataLimit="10" dataHit="2">{lang code='load_more'}</button>
+                        </div>
+                    {/if}
+                </div>
+            {else}
+                <h2>{if $relMode != 'ono'}{lang code='related_videos'}{else}{lang code='popular_videos'}{/if}</h2>
+                <div class="clearfix sidebar-items">
+                    {if $videos}
+                        {foreach from=$videos item=pop_video}
+                            {if $pop_video@iteration == 9}
+                                {break}
+                            {/if}
+                            <div class="clearfix popular-video">
+                                {include file="$style_dir/blocks/videos/video.html" display_type='popVideos_sidebar'}
+                            </div>
+                        {/foreach}
+                    {else}
+                        <div class="well well-info">{lang code='no_videos_found'}</div>
+                    {/if}
+                </div>
+            {/if}
+        </aside>
+    </div>
 </div>
-
+<div class="modal fade" id="myModal" role="dialog"></div>
 <script>
-	/*Cookie based comments backup start*/
-	var current_video = "{$video.videoid}";
-	var playlist_total = "{$total_items}";
-	var videoid='{$vdo.videoid}';
-	var last_commented = '{$vdo.last_commented}';
-	var comments_count = '{$vdo.comments_count}';
-	var object_type= '{$object_type}';
-	var userid= '{$video.userid}';
+    /*Cookie based comments backup start*/
+    var current_video = "{$video.videoid}";
+    var playlist_total = "{$total_items}";
+    var videoid='{$vdo.videoid}';
+    var last_commented = '{$vdo.last_commented}';
+    var comments_count = '{$vdo.comments_count}';
+    var object_type= '{$object_type}';
+    var userid= '{$video.userid}';
 </script>

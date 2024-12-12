@@ -27,14 +27,14 @@
 
 <div style="text-align:center;">
 	<div class="padding38">
-		{if isSectionEnabled('videos')}
+		{if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_videos')}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='videos'}</span>
 		</span>
 		{/if}
-		{if isSectionEnabled('photos')}
+		{if isSectionEnabled('photos') && User::getInstance()->hasPermission('allow_photo_upload')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_photos')}</span>
 			<br/>
@@ -46,7 +46,7 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
 		</span>
-		{if isSectionEnabled('videos')}
+		{if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
 			<br/>
@@ -58,14 +58,14 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='comments'}</span>
 		</span>
-		{if isSectionEnabled('collections')}
+		{if isSectionEnabled('collections') && User::getInstance()->hasPermission('allow_create_collection')}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_collections')|number_format}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
 		</span>
 		{/if}
-		{if config('channelsSection') == 'yes'}
+		{if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'}
 		<span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
 			<br/>
@@ -81,7 +81,7 @@
 </div>
 <hr/>
 
-{if isSectionEnabled('videos')}
+{if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
 <div class="mvideo accountprofile">
 	<span class="lead">
 		{lang code='latest_videos'}
@@ -141,7 +141,7 @@
 			</td>
 			<td>
 				<div class="dropdown">
-					<button id="dropdownMenu1" class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+					<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
 						Actions <i class="caret"></i></button>
 					<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 						<li>

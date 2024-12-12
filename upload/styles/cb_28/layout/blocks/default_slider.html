@@ -1,0 +1,61 @@
+<section class="clearfix default-slider"{if $video_ratio !== false} data-ratio="{$video_ratio}"{/if}>
+<h1>
+    {if !empty($main_link)}
+    <a href="{$main_link}">{$title}</a>
+    {else}
+        {$title}
+    {/if}
+</h1>
+<div class="slider-container-action">
+    <div class="prev"></div>
+    <div class="slider-container-overflow">
+        <div class="slider-container">
+            {if $video_style == 'modern'}
+                {$count = 0}
+                {foreach $video_list as $video}
+                    {include file="$style_dir/blocks/video-new.html"}
+                    {$count = $count + 1}
+                    {if $limit && $count >= $limit}
+                        {break}
+                    {/if}
+                {/foreach}
+
+                {if $view_more}
+                <div class="slider-video-container">
+                    <div class="thumb-video-padding">
+                        <a class="thumb-video" href="{$main_link}" title="{lang code='view_more'}">
+                            <span>{lang code='view_more'}</span>
+                        </a>
+                    </div>
+                </div>
+                {/if}
+
+            {elseif in_array($video_style, [false, 'classic'])}
+            <div class="videos">
+                {$count = 0}
+                {foreach $video_list as $video}
+                <div class="item-video">
+                    {include file="$style_dir/blocks/video.html" display_type='user-videos'}
+                </div>
+                    {$count = $count + 1}
+                    {if $limit && $count >= $limit}
+                        {break}
+                    {/if}
+                {/foreach}
+
+                {if $view_more}
+                <div class="slider-video-container">
+                    <div class="thumb-video-padding">
+                        <a class="thumb-video" href="{$main_link}" title="{lang code='view_more'}">
+                            <span>{lang code='view_more'}</span>
+                        </a>
+                    </div>
+                </div>
+                {/if}
+            </div>
+            {/if}
+        </div>
+    </div>
+    <div class="next"></div>
+</div>
+</section>

@@ -12,9 +12,7 @@
 				{/if}
 			</p>
 		{else}
-			{lang code='signup_success_usr_emailverify' assign='signupsuccessusremailverify'}
-			{link name='login' assign='login_link'}
-			{$signupsuccessusremailverify|sprintf:$login_link}
+			{lang('signup_success_usr_emailverify', lang('login'))}
 		{/if}
 	</div>
 {else}
@@ -37,7 +35,7 @@
 							class="form-control" name="password">
 						</div>
 
-						<div class="checkbox custom-elements form-group">
+						<div class="checkbox form-group">
 							<label>
 								<input type="checkbox" name="remember_me" value="yes">
 								{lang code="remember_me"}
@@ -58,7 +56,7 @@
 					{if $allow_registeration}
 						{$allow_registeration}
 					{else}
-					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form custom-elements">
+					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form">
 						<h2>{lang code='signup'}!</h2>
 						{foreach from=$required_fields item=field}
 							{if $field.type!='checkbox' && $field.type!='radiobutton'}
@@ -128,7 +126,7 @@
 						<div class="form-group checkbox">
 							<label>
 								<input name="agree" type="checkbox" id="agree" value="yes" checked>
-								{sprintf(lang(user_i_agree_to_the),$cbpage->get_page_link(3),$cbpage->get_page_link(2))}
+								{lang('user_i_agree_to_the', [$cbpage->get_page_link(3),$cbpage->get_page_link(2)])}
 							</label>
 						</div>
 						{ANCHOR place="the_form"}
@@ -367,8 +365,6 @@
 
 <style>
     .ui-datepicker {
-        background: #fff;
-        /*border: 1px solid #357EBD;*/
         width: 140px;
         vertical-align: center;
     }

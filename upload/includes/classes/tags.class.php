@@ -26,7 +26,7 @@ class Tags
             e(lang('missing_table'));
             return [];
         }
-        global $db;
+
         $query = 'SELECT T.name AS tag, TT.name AS tag_type, T.id_tag, 
         IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
         FROM ' . tbl('tags') . ' T 
@@ -43,7 +43,7 @@ class Tags
             $query .= 'LIMIT ' . $limit;
         }
 
-        return $db->_select($query, 0);
+        return Clipbucket_db::getInstance()->_select($query, 0);
     }
 
     /**
@@ -56,8 +56,8 @@ class Tags
             e(lang('missing_table'));
             return 0;
         }
-        global $db;
-        return $db->count(tbl('tags') . ' T 
+
+        return Clipbucket_db::getInstance()->count(tbl('tags') . ' T 
         INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
         LEFT JOIN ' . tbl('collection_tags') . ' CT ON CT.id_tag = T.id_tag 
         LEFT JOIN ' . tbl('photo_tags') . ' PT ON PT.id_tag = T.id_tag 
@@ -78,7 +78,7 @@ class Tags
             e(lang('missing_table'));
             return false;
         }
-        global $db;
+
         $query = 'SELECT 
                     IF(COUNT(CT.id_tag) = 0 AND COUNT(PT.id_tag) = 0 AND COUNT(PLT.id_tag) = 0 AND COUNT(UT.id_tag) = 0 AND COUNT(VT.id_tag) = 0, true, false) AS can_delete
                     FROM ' . tbl('tags') . ' T
@@ -88,9 +88,9 @@ class Tags
                     LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
                     LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag 
                     WHERE T.id_tag = ' . mysql_clean($id_tag);
-        $result = $db->_select($query);
+        $result = Clipbucket_db::getInstance()->_select($query);
         if (!empty($result) && $result[0]['can_delete']) {
-            $db->delete(tbl('tags'), ['id_tag'], [$id_tag]);
+            Clipbucket_db::getInstance()->delete(tbl('tags'), ['id_tag'], [$id_tag]);
             e(lang('tag_deleted'), 'm');
         } else {
             e(lang('error'));
@@ -110,13 +110,13 @@ class Tags
             e(lang('missing_table'));
             return false;
         }
-        global $db;
+
         if (strlen(trim($name)) <= 2) {
             e(lang('tag_too_short'), 'warning');
             return false;
         }
         try {
-            $db->update(tbl('tags'), ['name'], [$name], 'id_tag = ' . mysql_clean($id_tag));
+            Clipbucket_db::getInstance()->update(tbl('tags'), ['name'], [$name], 'id_tag = ' . mysql_clean($id_tag));
             e(lang('tag_updated'), 'm');
             return true;
         } catch (Exception $e) {
@@ -242,6 +242,9 @@ class Tags
         $tag_array = explode(',', mysql_clean($tags));
         while( !empty($tag_array) ) {
             $tmp_tags = array_splice($tag_array, 0, 500);
+            $tmp_tags = array_filter($tmp_tags, function ($tag) {
+                return mb_strlen($tag) > 2;
+            });
             $values = ' SELECT \'' . implode('\' UNION SELECT \'', $tmp_tags) . '\'';
 
             $sql_insert_tag = 'INSERT IGNORE INTO ' . tbl('tags') . ' (id_tag_type, name)
@@ -288,7 +291,6 @@ class Tags
      */
     public static function fill_auto_complete_tags($object_type): array
     {
-        global $db;
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
             e(lang('missing_table'));
@@ -297,7 +299,7 @@ class Tags
         $sql_id_type = 'SELECT id_tag_type
                    FROM ' . tbl('tags_type') . '
                    WHERE name LIKE \'' . $object_type . '\'';
-        $res = $db->_select($sql_id_type);
+        $res = Clipbucket_db::getInstance()->_select($sql_id_type);
         if (!empty($res)) {
             $id_type = $res[0]['id_tag_type'];
         } else {
@@ -305,7 +307,7 @@ class Tags
             return [];
         }
         $query = 'SELECT name FROM ' . tbl('tags') . ' T  WHERE T.id_tag_type = ' . mysql_clean($id_type);
-        $result = $db->_select($query, 0);
+        $result = Clipbucket_db::getInstance()->_select($query, 0);
         return array_map(function ($item) {
             return $item['name'];
         }, $result);
@@ -323,8 +325,8 @@ class Tags
             e(lang('missing_table'));
             return [];
         }
-        global $db;
-        return $db->select(tbl('tags_type'), '*', implode(' AND ', $cond), false, false, false, 300);
+
+        return Clipbucket_db::getInstance()->select(tbl('tags_type'), '*', implode(' AND ', $cond), false, false, false, 300);
     }
 
     /**

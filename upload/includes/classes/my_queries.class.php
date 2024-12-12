@@ -14,8 +14,7 @@ class myquery
      */
     function Set_Website_Details($name, $value)
     {
-        global $db;
-        $db->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
+        Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
         ClipBucket::getInstance()->configs[$name] = $value;
         static::$website_details[$name] = $value;
     }
@@ -249,8 +248,7 @@ class myquery
      */
     function get_todos(): array
     {
-        global $db;
-        return $db->select(tbl('admin_todo'), '*', ' userid=\'' . user_id() . '\'', null, ' date_added DESC ');
+        return Clipbucket_db::getInstance()->select(tbl('admin_todo'), '*', ' userid=\'' . user_id() . '\'', null, ' date_added DESC ');
     }
 
     /**
@@ -258,8 +256,7 @@ class myquery
      */
     function insert_todo($text)
     {
-        global $db;
-        $db->insert(tbl('admin_todo'), ['todo,date_added,userid'], [mysql_clean($text), NOW(), user_id()]);
+        Clipbucket_db::getInstance()->insert(tbl('admin_todo'), ['todo,date_added,userid'], [mysql_clean($text), NOW(), user_id()]);
     }
 
     /**
@@ -267,8 +264,7 @@ class myquery
      */
     function delete_todo($id)
     {
-        global $db;
-        $db->delete(tbl('admin_todo'), ['todo_id'], [$id]);
+        Clipbucket_db::getInstance()->delete(tbl('admin_todo'), ['todo_id'], [$id]);
     }
 
     /**
@@ -277,8 +273,7 @@ class myquery
      */
     function insert_note($note)
     {
-        global $db;
-        $db->insert(tbl('admin_notes'), ['note,date_added,userid'], [$note, now(), user_id()]);
+        Clipbucket_db::getInstance()->insert(tbl('admin_notes'), ['note,date_added,userid'], [$note, now(), user_id()]);
     }
 
     /**
@@ -287,8 +282,7 @@ class myquery
      */
     function get_notes(): array
     {
-        global $db;
-        return $db->select(tbl('admin_notes'), '*', ' userid=\'' . user_id() . '\'', null, ' date_added DESC ');
+        return Clipbucket_db::getInstance()->select(tbl('admin_notes'), '*', ' userid=\'' . user_id() . '\'', null, ' date_added DESC ');
     }
 
     /**
@@ -297,8 +291,7 @@ class myquery
      */
     function delete_note($id)
     {
-        global $db;
-        $db->delete(tbl('admin_notes'), ['note_id'], [$id]);
+        Clipbucket_db::getInstance()->delete(tbl('admin_notes'), ['note_id'], [$id]);
     }
 
     /**
@@ -358,8 +351,7 @@ class myquery
      */
     function get_conversion_queue($cond = null, $limit = null, $order = 'date_added DESC')
     {
-        global $db;
-        $result = $db->select(tbl('conversion_queue'), '*', $cond, $limit, $order);
+        $result = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', $cond, $limit, $order);
         if (count($result) > 0) {
             return $result;
         }
@@ -375,18 +367,15 @@ class myquery
      */
     function queue_action($action, $id)
     {
-        global $db;
-
-        $id = mysql_clean($id);
         switch ($action) {
             case 'delete':
-                $db->execute('DELETE FROM ' . tbl('conversion_queue') . ' WHERE cqueue_id =\''.mysql_clean($id).'\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('conversion_queue') . ' WHERE cqueue_id =\'' . mysql_clean($id) . '\'');
                 break;
             case 'processed':
-                $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['yes'], 'cqueue_id =\''.mysql_clean($id).'\'');
+                Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion'], ['yes'], 'cqueue_id =\'' . mysql_clean($id) . '\'');
                 break;
             case 'pending':
-                $db->update(tbl('conversion_queue'), ['cqueue_conversion'], ['no'], 'cqueue_id =\''.mysql_clean($id).'\'');
+                Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion'], ['no'], 'cqueue_id =\'' . mysql_clean($id) . '\'');
                 break;
         }
     }

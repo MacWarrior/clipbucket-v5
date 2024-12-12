@@ -10,7 +10,7 @@ ClipBucket::getInstance()->initAdminMenu();
 require_once DirPath::get('classes') . 'mass_upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
 
-global $db, $Smarty, $myquery;
+global $Smarty, $myquery;
 
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
@@ -36,9 +36,9 @@ define('TEMPLATE', config('template_dir'));
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
-if( THIS_PAGE != 'system_info'){
+if( THIS_PAGE != 'system_info' && php_sapi_name() != 'cli' ){
     if( !System::check_global_configs() ){
-        e(sprintf(lang('error_server_config'), '/admin_area/system_info.php#hosting'), 'w', false);
+        e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
     }
 }
 
@@ -60,3 +60,13 @@ include('plugins.php');
 $Smarty->assign_by_ref('cbmass', $cbmass);
 
 cb_call_functions('clipbucket_init_completed');
+
+if( THIS_PAGE != 'admin_login' ){
+    if( !User::getInstance()->isUserConnected() ){
+        redirect_to('login.php');
+    }
+
+    if( !User::getInstance()->hasPermission('admin_access') ){
+        redirect_to(BASEURL . '/403.php');
+    }
+}

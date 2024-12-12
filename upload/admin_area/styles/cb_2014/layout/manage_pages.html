@@ -1,5 +1,5 @@
 <div class="heading">
-  <h2>Manage Pages</h2>
+  <h2>{lang('manage_x', lang('pages')|lower)}</h2>
 </div>
 {if $mode =="new"}
 <form method="post">
@@ -121,7 +121,7 @@
             Actions <i class="caret"></i>
           </button>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-          <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">{lang code='view'}</a></li>
+          <li role="presentation"><a role="menuitem" tabindex="-1" href="{$cbpage->page_link($cbpages[list])}">{lang code='watch'}</a></li>
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?mode=edit&pid={$cbpages[list].page_id}">{lang code='edit'}</a></li>
           {if $cbpages[list].active == yes}
           <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$cbpages[list].page_id}">{lang code='deactivate'}</a></li>

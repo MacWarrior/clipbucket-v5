@@ -9,14 +9,12 @@
  */
 function config($input)
 {
-    global $Cbucket;
-
-    if (isset($Cbucket->configs[$input])) {
-        return $Cbucket->configs[$input];
+    if (isset(ClipBucket::getInstance()->configs[$input])) {
+        return ClipBucket::getInstance()->configs[$input];
     }
 
     if (in_dev()) {
-        error_log('Missing config : ' . $input);
+        error_log('[CONFIG] Missing config : ' . $input . PHP_EOL);
     }
     return false;
 }

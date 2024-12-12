@@ -1,44 +1,58 @@
 <form method="post" name="edit_photo" id="edit_photo">
-    <div class="heading">
-        <h2>Editing <small>&gt; {$data.photo_title|truncate:40}</small></h2>
-    </div>
-
-    <div class="btn-group">
-        {if $data.collection_id != 0}
-            <a class="btn btn-primary btn-xs" href="edit_collection.php?collection={$data.collection_id}">
-                Edit Collection ({$data.collection_id|get_collection_field})
-            </a>
-        {else}
-            <a class="btn btn-primary btn-xs" id="collection_id">
-                Photo is orphan
-            </a>
-        {/if}
-        {if $data.featured!='yes'}
-            <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
-                Make Featured
-            </a>
-        {else}
-            <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
-                Make Unfeatured
-            </a>
-        {/if}
-        <a class="btn btn-primary btn-xs" href="recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
-            Re-create Photo
-        </a>
-        {if $data.active == 'yes'}
-            <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
-                {lang code='deactivate'}
-            </a>
-        {else}
-            <a class="btn btn-primary btn-xs" href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
-                {lang code='activate'}
-            </a>
-        {/if}
-        <a class="btn btn-primary btn-xs" href="javascript:void(0);" onClick="javascript:_cb.Confirm_Delete('photo_manager.php?delete_photo={$data.photo_id}')">
-            Delete This Photo
-        </a>
-        <input name="admin" type="hidden" id="admin" value="true"/>
-        <input name="photo_id" type="hidden" value="{$data.photo_id}"/>
+    <div class="heading clearfix">
+        <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {$data.photo_title|truncate:40}</small>
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Actions <span class="caret caret_margin"></span>
+                </button>
+                <ul class="dropdown-menu pull-right" role="menu">
+                    <li>
+                        <a href="/view_item.php?item={$data.photo_key}&amp;type=photos&amp;collection={$data.collection_id}" target="_blank">{lang code='watch'}</a>
+                    </li>
+                    <li>
+                        {if $data.featured!='yes'}
+                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
+                                Make Featured
+                            </a>
+                            {else}
+                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
+                                Make Unfeatured
+                            </a>
+                        {/if}
+                    </li>
+                    <li>
+                        <a  href="recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
+                            Re-create Photo
+                        </a>
+                    </li>
+                    <li>
+                        {if $data.active == 'yes'}
+                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
+                                {lang code='deactivate'}
+                            </a>
+                        {else}
+                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
+                                {lang code='activate'}
+                            </a>
+                        {/if}
+                    </li>
+                    <li>
+                        <a href="javascript:void(0);" onClick="javascript:_cb.Confirm_Delete('photo_manager.php?delete_photo={$data.photo_id}')">
+                            {lang('delete_this_img')}
+                        </a>
+                    </li>
+                    {if $data.collection_id != null}
+                    <li>
+                        <a href="edit_collection.php?collection={$data.collection_id}">
+                            {lang('edit_collection')} ({$data.collection_id|get_collection_field})
+                        </a>
+                    </li>
+                    {/if}
+                    <input name="admin" type="hidden" id="admin" value="true"/>
+                    <input name="photo_id" type="hidden" value="{$data.photo_id}"/>
+                </ul>
+            </div>
+        </h2>
     </div>
 
     <div class="row">
@@ -49,6 +63,11 @@
                 </div>
             </div>
             <div class="photoPreview">
+                {if empty($data.collection_id)}
+                <div class="thumb_banner label-warning">
+                    {lang("photo_is", strtolower(lang("orphan")))}
+                </div>
+                {/if}
                 {get_photo details=$data size='l' output='html' class='img-thumbnail'}
             </div>
         </div>
@@ -101,22 +120,22 @@
                     <div id="photodetails" class="tab-pane">
                         <div class="photoDetails">
                             <h3>Photo Details</h3>
-                                {$numCol=3}
-                                {$rowCount=0}
-                                {$isRow=false}
+                            {$numCol=3}
+                            {$rowCount=0}
+                            {$isRow=false}
                             {foreach from=$requiredFields item=field}
                                 {if $rowCount mod $numCol == 0}
                                     <div class="row">
                                 {/if}
                                 {$rowCount=$rowCount+1}
-                                    {$field.class = 'form-control'}
-                                    <div class="col-md-4">
-                                        <label for="{$field.id}">{$field.title}</label>
-                                        {if $field.id == 'tags'}
-                                            <ul id="list_tags"></ul>
-                                        {/if}
-                                        {$formObj->createField($field)}
-                                    </div>
+                                {$field.class = 'form-control'}
+                                <div class="col-md-4">
+                                    <label for="{$field.id}">{$field.title}</label>
+                                    {if $field.id == 'tags'}
+                                        <ul id="list_tags"></ul>
+                                    {/if}
+                                    {$formObj->createField($field)}
+                                </div>
                                 {if $rowCount mod $numCol == 0 || $rowCount==count($requiredFields)}
                                     </div >
                                 {/if}

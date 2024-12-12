@@ -2,11 +2,11 @@
 define('THIS_PAGE', 'editor_pick');
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
-$breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('manage_x', strtolower(lang('plugins'))), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('plugin_editors_picks'), 'url' => DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php'];
 
 //Removing

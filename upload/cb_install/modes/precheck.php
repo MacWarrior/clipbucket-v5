@@ -156,7 +156,7 @@ $skippable_option = get_skippable_options();
 
         </dl>
 
-        <input type="hidden" name="mode" value="permission" id="mode"/>
+        <input type="hidden" name="mode" value="<?php echo ($need_update ? 'update' : 'permission') ?>" id="mode"/>
         <div style="text-align:right;">
             <?php
                 button_green('Recheck', 'onclick="$(\'#mode\').val(\'precheck\'); $(\'#installation\').submit();" ');

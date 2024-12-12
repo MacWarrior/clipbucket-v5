@@ -4,13 +4,13 @@ define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
-if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' ){
-    redirect_to(BASEURL);
+if( config('videosSection') != 'yes' || config('playlistsSection') != 'yes' || !User::getInstance()->hasPermission('allow_create_playlist') ){
+    redirect_to(cblink(['name' => 'my_account']));
 }
 
-global $cbvid, $eh;
+global $cbvid;
 
-userquery::getInstance()->logincheck();
+User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
@@ -37,7 +37,7 @@ switch ($mode) {
                     $cbvid->action->delete_playlist($playlist);
                 }
 
-                $eh->flush();
+                errorhandler::getInstance()->flush();
                 if (!error()) {
                     e(lang('playlists_have_been_removed'), 'm');
                 } else {
@@ -56,8 +56,8 @@ switch ($mode) {
 
         assign('mode', 'manage_playlist');
         //Getting List of available playlists
-        $playlists = $cbvid->action->get_playlists([
-            'user'  => user_id(),
+        $playlists = Playlist::getInstance()->getAll([
+            'userid'  => user_id(),
             'order' => 'playlists.date_added DESC'
         ]);
         assign('playlists', $playlists);
@@ -73,11 +73,11 @@ switch ($mode) {
                 }
 
                 if (!error()) {
-                    $eh->flush();
+                    errorhandler::getInstance()->flush();
                     e(lang('playlist_items_have_been_removed'), "m");
                 } else {
-                    $eh->flush();
-                    e(lang("playlist_item_doesnt_exist"));
+                    errorhandler::getInstance()->flush();
+                    e(lang('playlist_item_doesnt_exist'));
                 }
             } else {
                 e(lang('no_item_was_selected_to_delete'));
@@ -88,7 +88,7 @@ switch ($mode) {
         $pid = $_GET['pid'];
 
         if (isset($_POST['edit_playlist'])) {
-            $_POST['list_id'] = $pid;
+            $_POST['playlist_id'] = $pid;
             $cbvid->action->edit_playlist();
         }
 
@@ -111,7 +111,11 @@ switch ($mode) {
             $cbvid->action->delete_playlist_item($delid);
         }
 
-        $playlist = $cbvid->action->get_playlist($pid, user_id());
+        $playlist = Playlist::getInstance()->getAll([
+            'userid'      => user_id(),
+            'playlist_id' => $pid,
+            'first_only'  => true
+        ]);
         if ($playlist) {
             assign('playlist', $playlist);
             //Getting Playlist Item

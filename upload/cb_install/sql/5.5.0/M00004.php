@@ -34,17 +34,21 @@ class M00004 extends \Migration
                 'number'
             ]
         ], [
-            'constraint_name'   => 'videoid',
-            'constraint_type'   => 'UNIQUE',
-            'constraint_schema' => '{dbname}'
+            'constraint' => [
+                'type'  => 'UNIQUE',
+                'table' => 'video_subtitle',
+                'name'  => 'videoid'
+            ]
         ]);
 
         self::alterTable('ALTER TABLE `{tbl_prefix}video_subtitle` ADD CONSTRAINT `video_subtitle_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE CASCADE ON UPDATE CASCADE;', [
             'table'  => 'video_subtitle',
             'column' => 'videoid'
         ], [
-            'constraint_name' => 'video_subtitle_ibfk_1',
-            'constraint_type' => 'FOREIGN KEY'
+            'constraint' => [
+                'type' => 'FOREIGN KEY',
+                'name' => 'video_subtitle_ibfk_1'
+            ]
         ]);
     }
 }

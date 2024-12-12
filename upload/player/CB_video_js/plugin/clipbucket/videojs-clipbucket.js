@@ -1,26 +1,5 @@
 $(document).ready(function() {
-	var body = $('body');
-
-    body.keydown(function(e)
-    {
-        if( $(document.activeElement).is('body') ||
-            $(document.activeElement).is('button.vjs-fullscreen-control') ||
-            $(document.activeElement).is('div.vjs-volume-menu-button') ||
-            $(document.activeElement).is('video') )
-        {
-            if( e.keyCode === 0 || e.keyCode === 32 )
-            {
-                e.preventDefault();
-                if( cb_player.paused() ){
-                    cb_player.play();
-                } else {
-                    cb_player.pause();
-                }
-            }
-        }
-    });
-
-    body.keyup(function(e)
+    $('body').keyup(function(e)
     {
         if( $(document.activeElement).is('body') ||
             $(document.activeElement).is('button.vjs-fullscreen-control') ||
@@ -85,6 +64,3 @@ function clipbucket_volume()
     });
 }
 videojs.registerPlugin('clipbucket_volume', clipbucket_volume);
-
-
-

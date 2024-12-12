@@ -9,7 +9,7 @@
 				{if $mode =='manage_playlist'}
 				<h2>{lang code='manage_playlists'}</h2>
 
-				{if (has_access('allow_create_playlist',false,false))}
+				{if User::getInstance()->hasPermission('allow_create_playlist')}
 				<div class="account_form">
 					<form method="post" name="edit_profile">
 						<h3>{lang code='add_new_playlist'}</h3>
@@ -112,7 +112,6 @@
 									<td>{lang code='vdo_title'}</td>
 									<td width="100">{lang code='date_added'}</td>
 									<td width="100">{lang code='views'}</td>
-									<td width="100">{lang code='comments'}</td>
 								</tr>
 								{section name=plist loop=$items}
 									{include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] bg=$bg control="playlist" pid=$playlist.playlist_id}

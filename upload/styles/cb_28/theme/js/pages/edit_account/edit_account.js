@@ -1,5 +1,8 @@
 $(document).ready(function(){
     init_tags('profile_tags', available_tags);
+    if ($('#profile_tags').prop('disabled')) {
+        $('#list_tags').find('input').prop('disabled',true);
+    }
 
     if( typeof format_date_js !== 'undefined' ){
         $('#dob').datepicker({
@@ -9,7 +12,7 @@ $(document).ready(function(){
             dateFormat: format_date_js,
             changeYear: true,
             yearRange: "-99y:+0",
-            regional: lang
+            regional: language
         });
     }
 
@@ -45,4 +48,9 @@ $(document).ready(function(){
     if( typeof user_books !== 'undefined' ){
         $('#fav_boooks').value = atob(user_books);
     }
+
+    $('[name="disabled_channel"]').on('change', function () {
+        var inputs = $('.accountForm').find('input, textarea, select').not('#disabled_channel');
+        inputs.each( (i,e)=> $(e).prop('disabled', ($(this).val() === 'yes')))
+    });
 });

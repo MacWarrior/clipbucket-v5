@@ -2,8 +2,7 @@
 define('THIS_PAGE', 'email_tester');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('web_config_access');
+User::getInstance()->hasPermissionOrRedirect('web_config_access',true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -87,9 +86,9 @@ if (isset($_POST['start_test'])) {
         $test = cbmail($mail, true);
 
         if ($test == false) {
-            e(sprintf(lang('mail_not_send'), $to_email));
+            e(lang('mail_not_send', $to_email));
         } else {
-            e(sprintf(lang('mail_send'), $to_email), 'm');
+            e(lang('mail_send', $to_email), 'm');
         }
 
     } catch (\Exception $e) {

@@ -1,16 +1,13 @@
 <?php
-$baseurl = dirname(GetServerURL());
-if (substr($baseurl, strlen($baseurl) - 1, 1) == '/') {
-    $baseurl = substr($baseurl, 0, strlen($baseurl) - 1);
-}
-global $db;
-$db->update(tbl('config'), ['value'], [$baseurl], " name='baseurl'");
-$db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'");
+Migration::updateConfig('site_title', post('title'));
+Migration::updateConfig('site_slogan', post('slogan'));
+Migration::updateConfig('timezone', post('timezone'));
+Migration::updateConfig('basedir', DirPath::get('root'));
 ?>
 
 <div class="nav_des clearfix">
     <div class="cb_container">
-        <h4 style="color:#fff;"><?php echo lang('admin_setting'); ?></h4>
+        <h4 style="color:#fff;"><?php echo lang('admin_account'); ?></h4>
         <p style="color:#fff;font-size:13px;">
             <?php echo lang('admin_install_info'); ?>
         </p>
@@ -41,16 +38,8 @@ $db->update(tbl('config'), ['value'], [DirPath::get('root')], " name='basedir'")
             </p>
         </div>
         <br/>
-        <div class="field">
-            <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
-            <select name="language" id="language" class="form-control">
-                <?php foreach (Language::getInstance()->get_langs() as $lang) {
-                    echo '<option value="'.$lang['language_id'].'">'.$lang['language_name'].'</option>';
-                } ?>
-            </select>
-        </div>
 
-        <input type="hidden" name="mode" value="sitesettings"/>
+        <input type="hidden" name="mode" value="finish"/>
         <?php button(lang('save_continue'), ' onclick="$(\'#installation\').submit()" '); ?>
     </form>
 </div>

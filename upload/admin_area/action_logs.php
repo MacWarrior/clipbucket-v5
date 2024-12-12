@@ -3,7 +3,7 @@ define('THIS_PAGE', 'action_logs');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
@@ -13,8 +13,7 @@ $breadcrumb[1] = ['title' => 'Action Logs', 'url' => DirPath::getUrl('admin_area
 
 //Getting User List
 if (isset($_GET['clean'])) {
-    global $db;
-    $db->execute('TRUNCATE TABLE ' . tbl('action_log'));
+    Clipbucket_db::getInstance()->execute('TRUNCATE TABLE ' . tbl('action_log'));
 }
 
 if (isset($_GET['type'])) {

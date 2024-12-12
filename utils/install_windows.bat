@@ -132,7 +132,7 @@ echo |set /p=Creating PHP directory...
 SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
-SET "PHP_VERSION=8.3.10"
+SET "PHP_VERSION=8.3.12"
 echo /!\ We're using PHP because PHP-FPM doesn't support Windows
 echo |set /p=Downloading PHP %PHP_VERSION%...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-%PHP_VERSION%-Win32-vs16-x64.zip"
@@ -278,7 +278,6 @@ echo http {>> %NGINX_CONF%
 echo     include       mime.types;>> %NGINX_CONF%
 echo     default_type  application/octet-stream;>> %NGINX_CONF%
 echo     sendfile        on;>> %NGINX_CONF%
-echo     keepalive_timeout  65;>> %NGINX_CONF%
 echo     gzip  on;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 	server {>> %NGINX_CONF%
@@ -289,6 +288,8 @@ echo 		root "c:\\ClipBucketV5\\www\\upload\\";>> %NGINX_CONF%
 echo 		index index.php;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		client_max_body_size 2M;>> %NGINX_CONF%
+echo 		fastcgi_send_timeout 7200s;>> %NGINX_CONF%
+echo 		fastcgi_read_timeout 7200s;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		# set expiration of assets to MAX for caching>> %NGINX_CONF%
 echo 		location ~* \.(ico^|css^|js)(\?[0-9]+)?$ {>> %NGINX_CONF%

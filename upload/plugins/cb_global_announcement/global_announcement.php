@@ -22,7 +22,7 @@ class cb_global_announcement
     function __construct(){
         $this->template_dir = DirPath::get('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
         $this->pages_url = DirPath::getUrl('plugins') . self::class . '/pages/';
-        if (has_access('admin_access', true)) {
+        if (User::getInstance()->hasAdminAccess()) {
             $this->addAdminMenu();
         }
         $this->register_anchor_function();
@@ -40,7 +40,7 @@ class cb_global_announcement
      * @throws Exception
      */
     private function addAdminMenu(){
-        add_admin_menu('Plugin Manager', lang($this::$lang_prefix.'menu'), $this->pages_url.'edit_announcement.php');
+        add_admin_menu(lang('configurations'), lang($this::$lang_prefix.'menu'), $this->pages_url.'edit_announcement.php');
     }
 
     private function register_anchor_function(){

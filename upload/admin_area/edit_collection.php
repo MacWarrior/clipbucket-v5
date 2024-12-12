@@ -5,16 +5,13 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('video_moderation');
+User::getInstance()->hasPermissionOrRedirect('collection_moderation', true);
 $pages->page_redir();
 
-if (!isset($_GET['collection'])) {
-    redirect_to('/collection_manager.php');
-}
-
+$id = $_GET['collection'];
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
+    Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $id);
 }
 
 if (isset($_POST['delete_preview'])) {
@@ -22,17 +19,19 @@ if (isset($_POST['delete_preview'])) {
     $cbcollection->delete_thumbs($id);
 }
 
-//Performing Actions
+//Performing Actionsf
 if ($_GET['mode'] != '') {
     $cbcollection->collection_actions($_GET['mode'], $id);
 }
 
-$id = $_GET['collection'];
-$c = Collection::getInstance()->getAll([
+$collection = Collection::getInstance()->getOne([
     'collection_id'         => $id,
-    'first_only'            => true,
-    'hide_empty_collection' => 'no'
+    'hide_empty_collection' => 'no',
+    'with_items'            => true
 ]);
+if (empty($collection)) {
+    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
+}
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -41,35 +40,39 @@ $breadcrumb[0] = [
     'url'   => ''
 ];
 $breadcrumb[1] = [
-    'title' => lang('manage_collections'),
+    'title' => lang('manage_x', strtolower(lang('collections'))),
     'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
 ];
 $breadcrumb[2] = [
-    'title' => 'Editing : ' . display_clean($c['collection_name']),
+    'title' => 'Editing : ' . display_clean($collection['collection_name']),
     'url'   => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . display_clean($id)
 ];
 
-switch ($c['type']) {
-    case 'videos':
-    case 'v':
-        $items = $cbvideo->collection->get_collection_items_with_details($c['collection_id'], null, 4);
-        break;
-
-    case 'photos':
-    case 'p':
-        $items = $cbphoto->collection->get_collection_items_with_details($c['collection_id'], null, 4);
-        break;
+$items = Collection::getInstance()->getItemRecursivly(['collection_id'=> $collection['collection_id']]);
+if ($collection['type'] == 'videos') {
+    foreach ($items as &$item) {
+        $item['id'] = $item['videoid'];
+    }
+} else {
+    foreach ($items as &$item) {
+        $item['id'] = $item['photo_id'];
+    }
 }
-
-if (!empty($items)) {
-    assign('objects', $items);
-}
-assign('data', $c);
+assign('items', $items);
+assign('data', $collection);
 
 $FlaggedPhotos = $cbvid->action->get_flagged_objects();
 Assign('flaggedPhoto', $FlaggedPhotos);
 $count_flagged_photos = $cbvid->action->count_flagged_objects();
 Assign('count_flagged_photos', $FlaggedPhotos);
+assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
+
+$params = [];
+$params['type'] = 'cl';
+$params['type_id'] = $collection['collection_id'];
+$params['order'] = ' comment_id DESC';
+$comments = Comments::getAll($params);
+assign('comments', $comments);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS([
@@ -82,6 +85,19 @@ ClipBucket::getInstance()->addAdminCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin'
 ]);
+
+if( config('enable_visual_editor_comments') == 'yes' ){
+    ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+    ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+    $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
+    if( config('default_theme') != '' && file_exists($filepath) ){
+        ClipBucket::getInstance()->addAdminCSS([
+            'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
+        ]);
+    }
+}
+
 $available_tags = Tags::fill_auto_complete_tags('collection');
 assign('available_tags', $available_tags);
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());

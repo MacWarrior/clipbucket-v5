@@ -24,15 +24,6 @@ function get_photo($params)
     return get_image_file($params);
 }
 
-//Photo Upload Button
-/**
- * @throws Exception
- */
-function upload_photo_button($params)
-{
-    global $cbphoto;
-    return $cbphoto->upload_photo_button($params);
-}
 
 //Photo Embed Cides
 /**
@@ -66,7 +57,7 @@ function plupload_photo_uploader()
  */
 function get_photo_date_folder($photo_id)
 {
-    global $cbphoto, $db;
+    global $cbphoto;
 
     if (is_array($photo_id)) {
         $photo = $photo_id;
@@ -104,7 +95,7 @@ function get_photo_date_folder($photo_id)
             /**
              * Photo exists, update file_directory index
              */
-            $db->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . mysql_clean($photo['photo_id']) . '\'');
+            Clipbucket_db::getInstance()->update(tbl('photos'), ['file_directory'], [$directory], ' photo_id = \'' . mysql_clean($photo['photo_id']) . '\'');
         } else {
             $directory = false;
         }
@@ -206,11 +197,11 @@ function get_image_file($params)
             if (isset($params['assign']) && isset($params['multi'])) {
                 assign($params['assign'], $thumbs);
             } else {
-                if ((isset($params['multi']))) {
+                if (!(empty($params['multi']))) {
                     return $thumbs;
                 } else {
                     $search_name = sprintf($filename, '_' . $size);
-                    $return_thumb = array_find($search_name, $thumbs);
+                    $return_thumb = array_find_cb($search_name, $thumbs);
 
                     if (empty($return_thumb)) {
                         return get_photo_default_thumb($size, $output);
@@ -227,7 +218,7 @@ function get_image_file($params)
 
         if ($output == 'html') {
             $search_name = sprintf($filename, '_' . $size);
-            $src = array_find($search_name, $thumbs);
+            $src = array_find_cb($search_name, $thumbs);
 
             $src = (empty($src)) ? get_photo_default_thumb($size) : $src;
             $attrs = ['src' => str_replace(DIRECTORY_SEPARATOR, '/', $src)];

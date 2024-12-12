@@ -41,9 +41,9 @@ if (file_exists(DirPath::get('temp') . 'development.dev')) {
     }
 }
 $whoops->pushHandler(function($e){
-    $message = $e->getMessage().PHP_EOL.$e->getTraceAsString();
+    $message = 'URL : **' . $_SERVER['REQUEST_URI'] . '**' .PHP_EOL. $e->getMessage().PHP_EOL.$e->getTraceAsString();
     error_log($message);
-    DiscordLog::sendDump($message);
+    DiscordLog::getInstance()->error('URL : ' . $_SERVER['REQUEST_URI'], ['exception'=>$e]);
 });
 $whoops->register();
 
@@ -61,6 +61,7 @@ if (!@$in_bg_cron) {
     session_start();
 }
 
+require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
@@ -76,11 +77,11 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
-require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
 require_once DirPath::get('classes') . 'category.class.php';
+require_once DirPath::get('classes') . 'user_level.class.php';
 require_once DirPath::get('classes') . 'user.class.php';
 require_once DirPath::get('classes') . 'lang.class.php';
 require_once DirPath::get('classes') . 'pages.class.php';
@@ -90,6 +91,7 @@ require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
+require_once DirPath::get('classes') . 'social_networks.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -114,12 +116,22 @@ switch (DEBUG_LEVEL) {
 
     case 2:
     default:
-        error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+        if (version_compare(System::get_software_version('php_web'), '8.4.0', '<')) {
+            error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_STRICT | E_WARNING));
+        } else {
+            error_reporting(E_ALL & ~(E_NOTICE | E_DEPRECATED | E_WARNING));
+        }
         ini_set('display_errors', 'on');
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
+require_once DirPath::get('classes') . 'session_message_handler.class.php';
 $pages = new pages();
 $eh = new errorhandler();
+
+foreach (sessionMessageHandler::get_messages() as $message) {
+    $eh->e($message['message'], $message['type']);
+}
+
 $param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
 
 if ($row['cache_auth'] == 'yes') {
@@ -145,7 +157,7 @@ $sess = new Session();
 $userquery = new userquery();
 $userquery->init();
 
-if (has_access('admin_access', true) && !empty($error_redis)) {
+if (User::getInstance()->hasAdminAccess() && !empty($error_redis)) {
     e($error_redis);
 }
 
@@ -157,7 +169,7 @@ if (!Update::isVersionSystemInstalled()) {
     if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
         && strpos($request_uri, '/admin_area/logout.php') === false
         && strpos($request_uri, 'actions/upgrade_db.php') === false
-        && $userquery->admin_login_check(true)) {
+        && User::getInstance()->hasAdminAccess()) {
         header('Location: /admin_area/upgrade_db.php');
         die();
     }
@@ -354,12 +366,10 @@ $Smarty->register_function('link', 'cblink');
 $Smarty->register_function('show_share_form', 'show_share_form');
 $Smarty->register_function('show_flag_form', 'show_flag_form');
 $Smarty->register_function('show_playlist_form', 'show_playlist_form');
-$Smarty->register_function('show_collection_form', 'show_collection_form');
 $Smarty->register_function('lang', 'smarty_lang');
 $Smarty->register_function('get_videos', 'get_videos');
 $Smarty->register_function('get_users', 'get_users');
 $Smarty->register_function('get_photos', 'get_photos');
-$Smarty->register_function('get_collections', 'get_collections');
 $Smarty->register_function('private_message', 'private_message');
 $Smarty->register_function('show_video_rating', 'show_video_rating');
 $Smarty->register_function('load_captcha', 'load_captcha');
@@ -372,10 +382,8 @@ $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
 $Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
-$Smarty->register_function('uploadButton', 'upload_photo_button');
 $Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
-
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');
 $Smarty->register_modifier('getext', 'getext');
@@ -384,7 +392,6 @@ $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
 $Smarty->register_modifier('get_user_level', 'get_user_level');
 $Smarty->register_modifier('nicetime', 'nicetime');
-$Smarty->register_modifier('country', 'get_country');
 $Smarty->register_modifier('flag_type', 'flag_type');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');

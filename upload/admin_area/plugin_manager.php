@@ -5,13 +5,13 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $cbplugin;
 
-userquery::getInstance()->admin_login_check();
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
-$breadcrumb[1] = ['title' => 'Plugin Manager', 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
+$breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('plugins'))), 'url' => DirPath::getUrl('admin_area') . 'plugin_manager.php'];
 
 //uninstalling Plugin
 if (isset($_GET['uninstall'])) {
@@ -105,6 +105,6 @@ $installed_plugin_list = $cbplugin->getInstalledPlugins();
 
 Assign('installed_plugin_list', $installed_plugin_list);
 Assign('msg', @$msg);
-subtitle('Plugin Manager');
+subtitle(lang('manage_x', strtolower(lang('plugins'))));
 template_files('plugin_manager.html');
 display_it();

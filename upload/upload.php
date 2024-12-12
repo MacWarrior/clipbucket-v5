@@ -3,10 +3,14 @@ define('THIS_PAGE', 'upload');
 define('PARENT_PAGE', 'upload');
 require 'includes/config.inc.php';
 global $eh;
+User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);
 Pages::getInstance()->page_redir();
-userquery::getInstance()->logincheck('allow_video_upload', true);
-
 subtitle('upload');
+
+if (isset($_GET['collection'])) {
+    $selected_collection = json_decode(base64_decode($_GET['collection']));
+    assign('selected_collection', Collection::getInstance()->getOne(['collection_id'=>$selected_collection]));
+}
 
 if (empty(Upload::getInstance()->get_upload_options())) {
     e(lang('video_upload_disabled'));

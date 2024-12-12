@@ -1,37 +1,14 @@
 .main-content, .breadcrumbs{
     overflow: hidden;
 }
-.widgets-wrap .dragbox {
-    padding: 10px;
-    border: solid 1px #ccc;
-    margin-bottom: 10px;
-}
-
-.widgets-wrap .dragbox .item{
-    margin-bottom: 5px;
-    border: solid 1px #ddd;
-    padding: 5px;
-}
-
-.widgets-wrap .dragbox .stats_subitem{
-    font-weight: normal;
-    font-size: 1.3em;
-}
 .page-content{
     padding: 8px 20px 100px !important;
-}
-ul.mainTabs{
-    margin-bottom: 20px;
-}
-.todotab{
-    width:100%
 }
 .main_page_div .form-group{
     border: solid 1px #ccc;
     margin-bottom: 10px;
     padding: 10px;
 }
-
 .horizontalTabs > li{
     margin: 0 0 10px 0;
     width: 100%;
@@ -46,102 +23,38 @@ ul.mainTabs{
     padding: 5px;
 }
 
-.commentsMenu{
-    overflow: hidden;
-}
-
-.commentsMenu > ul{
-    margin-left: 0;
-}
-
 .formOptions{
     margin: 10px 0;
 }
 
-.edit_comment{
-    padding-left: 10px;
-}
-
-.vid_opts{
-    padding-left: 10px;
-}
-
 /* Users Styles */
-
 .manageUsersTable .dropdown{
-    
     padding-right: 0;
 }
-
 .manageUsersTable .dropdown > ul{
     text-align: left;
 }
-
 .manageUsersTable .oneUserName{
     font-size: 1.3em;
 }
-
 .manageUsersTable .oneUserImage{
     margin: 0 5px 5px 0px;
     float: left;
     width: 70px;
 }
-
 .manageUsersTable .userInfo{
     padding: 0px 5px 15px 5px;
 }
-
 .manageUsersTable .userInfo span{
     float: right;
-}
-
-.manageUsersTable .userStatus{
-
 }
 .manageUsersTable .userStatus span{
     padding: 3px;
 }
 
-.usersMenuButtons{
-    margin-bottom: 10px;
-}
-
-
-.flaggedUser{
-    overflow: hidden;
-}
-
-.flaggedUser .flaggedUserInfo{
-    width: 90%;
-}
-
-.flaggedUser .flaggedUserInfo > img{
-    float: left;
-    margin-right: 5px;
-}
-
-.flaggedUser .flaggedUserInfo{
-    float: left;
-    overflow: hidden;
-}
-
-.flaggedUser .flaggedUserInfo .userInfo{
-    margin-left: 5px;
-    padding-bottom: 5px;
-    width: 100%;
-}
-.flaggedUser .flaggedUserInfo .userInfo span.label{
-    float: right;
-}
-
-.flaggedUser .flaggedUserInfo .userStatus{
-    padding: 0 0 0 5px;
-}
-
 .channelSettings label{
     display: block;
 }
-
 .channelSettings input[type="radio"]{
     margin-right: 10px;
     position: relative;
@@ -166,128 +79,17 @@ ul.mainTabs{
     font-size:12px;
     text-align:left
 }
-.addgroup {
-    width: 400px;
-}
 
 .note-editable {
     height: 200px;
-}
-
-.ecollection {
-    width: 200px;
-    height: 40px;
-}
-.ecollection1 {
-    width: 450px;
-}
-
-/* sticky note */
-
-.stickies {
-    width: 350px;
-}
-
-
-.stickies li {
-
-    display: block;
-    list-style: none;
-    z-index: 1;
-    float: left;
-    margin: 30px;
-    padding: 15px 15px 50px 15px;
-    width: 200px;
-    height: 200px;
-    border: 1px solid #bfbfbf;
-    background-color: LightGoldenRodYellow;  /* use #fafad2 if name doesn't work */
-    color: black;
-    text-decoration: none;
-    -webkit-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    -o-box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4);
-    -webkit-transition: all 0.5s ease-in;
-    -moz-transition: all 0.5s ease-in;
-    -o-transition: all 0.5s ease-in;
-    -ms-transition: all 0.5s ease-in;
-    transition: all 0.5s ease-in;
-    overflow: hidden;
-}
-
-.stickies li span.sticky {
-    font-family: Verdana, Helvetica, sans-serif;
-    font-size: 100%;
-}
-
-/*
- * rotation
- */
-.stickies li:nth-child(even) {
-    -webkit-transform: rotate(2deg);
-    -moz-transform: rotate(2deg);
-    -o-transform: rotate(2deg);
-    -ms-transform: rotate(2deg);
-    transform: rotate(2deg);
-}
-
-.stickies li:nth-child(odd) {
-    -webkit-transform: rotate(-1deg);
-    -moz-transform: rotate(-1deg);
-    -o-transform: rotate(-1deg);
-    -ms-transform: rotate(-1deg);
-    transform: rotate(-1deg);
-}
-
-.stickies li:nth-child(3n) {
-    -webkit-transform: rotate(1deg);
-    -moz-transform: rotate(1deg);
-    -o-transform: rotate(1deg);
-    -ms-transform: rotate(1deg);
-    transform: rotate(1deg);
-}
-
-/*
-   Transform demo
-   Uses the transition (defined above) to ease in.
-*/
-
-.stickies li:hover {
-    -webkit-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);
-    -moz-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);
-    -o-box-shadow: 5px 5px 6px rgba(0, 0, 0, 0.4);
-    -webkit-transform: rotate(0deg) scale(1.25);
-    -moz-transform: rotate(0deg) scale(1.25);
-    -o-transform: rotate(0deg) scale(1.25);
-    -ms-transform: rotate(0deg) scale(1.25);
-    transform: rotate(0deg) scale(1.25);
-    z-index: 10;
 }
 
 .navbar-container {
     width: 100%;
 }
 
-.videotable {
-    padding-left: 20px;
-}
-
-.myVideo {
-    margin-left: 20px;
-}
-
-.ItemNotes{
-    color: #000000;
-}
-
-
 #category[] {
     margin-top: 20px;
-}
-
-.uploadCategoryCheckBlock{
-    margin-top: -30px;
-    height: 56px;
 }
 
 /* 
@@ -402,11 +204,6 @@ ul.mainTabs{
     color: #eee;
 }
 
-.addTodoButton{
-    position: relative;
-    right: 20px;
-}
-
 .notesList li{
     list-style-type: none;
     margin-bottom: 5px;
@@ -446,7 +243,7 @@ ul.mainTabs{
     top: 100%;
     z-index: 1000;
 }
-.ralative{
+.relative{
     position: relative;
 }
 
@@ -461,17 +258,9 @@ ul.mainTabs{
     border-bottom: dashed 1px #ccc;
 }
 
-
-#mvideos .widget-main{
-    height: 300px;
-    overflow-y: scroll;
-    overflow-x: hidden;
-}
-
 .myTable td{
     padding: 0;
 }
-
 
 .myTable .first{
     width: 30%;
@@ -505,22 +294,12 @@ ul.mainTabs{
 	white-space: nowrap;
 }
 
-.myTable .last {
-
-}
-
 .myWell{
     padding: 5px;
     border: solid 1px #ccc;
     margin-bottom: 5px;
 }
 
-.boxBordered{
-    border: solid 1px #ccc;
-    overflow-y: scroll;
-    height: 80px;
-    padding: 5px;
-}
 .alignCenter{
     text-align: center;
 }
@@ -538,7 +317,6 @@ ul.mainTabs{
     background: #fff;
 }
 .caret_margin { margin-top:0px !important;}
-
 
 /* usman css start */
 .mrgnt10{
@@ -573,39 +351,6 @@ ul.mainTabs{
     box-shadow: 0px 0px 1px 0px rgba(0,0,0,0.33);
     border-radius: 4px;
     padding: 20px;
-}
-
-.message-container {
-    left: 50%;
-    margin: -8px auto 0 -350px;
-    max-width: 700px !important;
-    position: fixed;
-    text-align: center;
-    top: 0;
-    width: 100%;
-    z-index: 999;
-}
-
-.message-container .alert-danger, .message-container .alert-success, .message-container .alert-info, .message-container .alert-warning {
-    border-radius: 0 0 5px 5px !important;
-}
-.message-container .message-show {
-    animation: 2000ms ease-out 0s normal none 1 running bounce;
-    display: block;
-}
-.message-container .alert {
-    transition: all 500ms ease-in-out 0s;
-    width: 100%;
-}
-
-#hide_stats_contents {
-    background-color: rgba(255, 255, 255, 0.7);
-    height: 100%;
-    left: 0;
-    position: absolute;
-    top: 40px;
-    width: 100%;
-    z-index: 10;
 }
 
 .addTodoText {
@@ -719,6 +464,10 @@ ul.mainTabs{
 .videoResolution-holder {
 	margin-top: 15px;
 	border-radius: 5px;
+}
+
+.nav-list>li a>.arrow{
+    font-size: 12px !important;
 }
 
 .row-size {
@@ -1004,4 +753,307 @@ a[role='menuitem'] {
 }
 #crontab_details_block {
     min-height:calc(34px + 40px);max-height:calc(34px + 41px);padding-top:1rem;
+}
+
+/* collections grid */
+.collections-grid .row {
+    margin: 0 -8px;
+}
+
+.collections-grid .collection-item {
+    padding: 0 8px;
+    margin: 0 0 16px;
+    font-size: 16px;
+    line-height: 16px;
+}
+
+.collections-grid .collection-holder {
+    position: relative;
+    z-index: 1;
+}
+
+.collections-grid .photo-bg {
+    width: 100%;
+    height: auto;
+}
+
+.collections-grid .photo-block {
+    position: absolute;
+    z-index: 2;
+    padding: 7% 0 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.collections-grid .photo-block a {
+    display: block;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+}
+
+.collections-grid .photo-block img {
+    position: absolute;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.collections-grid .photo-block .collection-info {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -30px 0 0 -30px;
+    z-index: 4;
+    border-radius: 30px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 12px;
+    line-height: 14px;
+    font-family: "source_sans_prolight", sans-serif;
+    text-align: center;
+    padding: 12px 4px;
+}
+
+.collections-grid .photo-block .collection-info span {
+    display: block;
+    font-size: 16px;
+    line-height: 16px;
+    font-family: "source_sans_prosemibold", sans-serif;
+    margin: 0 0 6px;
+}
+
+.collections-grid .title {
+    display: block;
+    background: #fff;
+    padding: 10px 0 0;
+    overflow: hidden;
+    height: 28px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.collections {
+    padding: 16px 0;
+    margin: 0 0 20px;
+}
+
+.collections .row {
+    margin: 0 -8px;
+}
+
+.collections .collection-item {
+    padding: 0 8px;
+    margin: 0 0 16px;
+    font-size: 18px;
+    line-height: 18px;
+}
+
+.collections .collection-holder {
+    position: relative;
+    z-index: 1;
+}
+
+.collections .photo-bg {
+    width: 100%;
+    height: auto;
+}
+
+.collections .photo-block {
+    position: absolute;
+    z-index: 2;
+    padding: 7% 0 0;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.collections .photo-block a {
+    display: block;
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    color: #fff;
+}
+
+.collections .photo-block img {
+    position: absolute;
+    z-index: 4;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.collections .photo-block .collection-info {
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -30px 0 0 -30px;
+    z-index: 4;
+    border-radius: 30px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 12px;
+    line-height: 14px;
+    font-family: "source_sans_prolight", sans-serif;
+    text-align: center;
+    padding: 12px 4px;
+}
+
+.collections .photo-block .collection-info span {
+    display: block;
+    font-size: 16px;
+    line-height: 16px;
+    font-family: "source_sans_prosemibold", sans-serif;
+    margin: 0 0 6px;
+}
+
+.collections .title {
+    display: block;
+    background: #fff;
+    padding: 9px 10px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+#edit_social_media .select2-container{
+    display: block;
+}
+#edit_social_media .select2-container .select2-selection{
+    height: 34px;
+}
+.select2-search:after{
+    position: absolute !important;
+    top: 7px !important;
+    left: 8px !important;
+}
+.select2-search__field{
+    padding-left: 20px !important;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+/* Favicon preview */
+#preview-favicon{
+    height: 88px;
+    overflow: hidden;
+    border-radius: 4px;
+    border: 1px solid #8c8f94;
+    padding: 16px 0 0 16px;
+    position: relative;
+    margin-top: 10px;
+}
+
+#preview-favicon:after{
+    aspect-ratio: 1 / 1;
+    content: "";
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 130%;
+    transform: translate(calc(150% * -.125), calc(150% * -.125));
+    filter: blur(8px);
+    opacity: .5;
+    background: url('/styles/cb_28/theme/images/favicon.png');
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+
+#preview-favicon .favicon-icon{
+    border-radius: 10px;
+    box-shadow: 0 1px 5px 0 rgba(0,0,0,0.5);
+    width: 58px;
+    height: 58px;
+    overflow: hidden;
+    float: left;
+}
+
+#preview-favicon .favicon-icon img{
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+#preview-favicon .browser .browser-dots{
+    color: #8c8f94;
+    width: 48px;
+    display: inline-block;
+    vertical-align: top;
+    margin-top: 8px;
+}
+
+#preview-favicon .browser .browser-dots i:not(:first-child){
+    padding-left: 2px;
+}
+
+#preview-favicon .browser{
+    padding: 4px 4px 0 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+    background: linear-gradient(180deg, #2c3338 0, #111 100%);
+    box-shadow: 0 10px 22px 0 rgba(0,0,0,0.2);
+    height: 72px;
+    float: right;
+    width: 258px;
+    border-top-left-radius: 10px;
+}
+
+#preview-favicon .browser-tab{
+    padding: 7px;
+    border-radius: 4px;
+    background-color: #3c434a;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,0.1);
+    display: inline-block;
+    width: 177px;
+    margin-left: 8px;
+}
+
+#preview-favicon .browser-tab .favicon-tab{
+    display: inline-block;
+    border-radius: 10px;
+    height: 24px;
+    width: 24px;
+}
+
+#preview-favicon .browser-tab .favicon-tab img{
+    width: 100%;
+}
+
+#preview-favicon .browser-tab .browser-tab-title{
+    color: #f0f0f1;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    vertical-align: middle;
+    font-weight: 500;
+    width: 110px;
+    display: inline-block;
+    line-height: 24px;
+}
+
+#preview-favicon .browser-tab .browser-tab-close{
+    float: right;
+    color: #f0f0f1;
+    margin-right: 5px;
+    padding-top: 3px;
 }

@@ -3,12 +3,11 @@ define('THIS_PAGE', 'reports');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()->admin_login_check();
-userquery::getInstance()->login_check('web_config_access');
+User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;
-$breadcrumb[0] = ['title' => lang('general'), 'url' => ''];
+$breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Reports &amp; Stats', 'url' => DirPath::getUrl('admin_area') . 'reports.php'];
 
 $vid_dir = get_directory_size(DirPath::get('videos'));
