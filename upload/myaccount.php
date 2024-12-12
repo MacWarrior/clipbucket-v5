@@ -3,11 +3,12 @@ define('THIS_PAGE', 'myaccount');
 define('PARENT_PAGE', 'home');
 
 require 'includes/config.inc.php';
-global $cbvid, $userquery, $cbphoto, $cbvideo;
 User::getInstance()->isUserConnectedOrRedirect();
 
-assign('user', $userquery->get_user_details(user_id()));
-$videos = $userquery->get_user_vids(user_id(), false, false, true);
+global $cbvid, $cbphoto, $cbvideo;
+
+assign('user', userquery::getInstance()->get_user_details(user_id()));
+$videos = userquery::getInstance()->get_user_vids(user_id(), false, false, true);
 assign('videos', $videos);
 
 $get_limit = create_query_limit($_GET['page'], 5);
