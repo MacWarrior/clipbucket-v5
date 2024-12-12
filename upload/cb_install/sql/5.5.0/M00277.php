@@ -16,9 +16,9 @@ class M00277 extends \Migration
             'table' => 'collections',
             'column' => 'collection_name'
         ],[
-            'constraint_index' => [
-                'table' => 'collections',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'collections',
                 'name'  => 'collection_name'
             ]
         ]);
@@ -27,9 +27,9 @@ class M00277 extends \Migration
             'table' => 'users',
             'column' => 'username'
         ],[
-            'constraint_index' => [
-                'table' => 'users',
+            'constraint' => [
                 'type'  => 'FULLTEXT',
+                'table' => 'users',
                 'name'  => 'username_fulltext'
             ]
         ]);

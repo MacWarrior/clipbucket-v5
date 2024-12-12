@@ -3,6 +3,8 @@ define('THIS_PAGE', 'private_message');
 
 require 'includes/config.inc.php';
 
+User::getInstance()->isUserConnectedOrRedirect();
+
 if( !User::getInstance()->hasPermission('private_msg_access') ){
     redirect_to(cblink(['name' => 'my_account']));
 }
@@ -11,8 +13,6 @@ global $cbpm;
 
 //Adding JS Scroll
 add_js('jquery_plugs/compressed/jquery.scrollTo-min.js');
-
-User::getInstance()->hasPermissionOrRedirect('private_msg_access', true);
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
