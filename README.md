@@ -47,10 +47,11 @@ All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree
 Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application. Here's how you can set it up:
 
 ### Step-by-Step Installation Guide:
-1. **Run the ClipBucket Container From Docker Hub:**
+**Run the ClipBucket Container From Docker Hub:**
    ```bash
    docker run \
    --restart unless-stopped \
+   --pull=always \
    -e DOMAIN_NAME=clipbucket.local \
    -e MYSQL_ROOT_PASSWORD=clipbucket_password \
    -v clipbucket_db:/var/lib/mysql \
@@ -61,8 +62,9 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
    ```
 
 ### Explanation of Docker Commands:
-- **`docker run` options:**
+**`docker run` options:**
     - `--restart unless-stopped`: Automatically restarts the container unless explicitly stopped.
+    - `--pull=always`: Ensures the image is always pulled before starting, even if it exists locally.
     - `-e DOMAIN_NAME=...`: Sets the domain name for your ClipBucket instance.
     - `-e MYSQL_ROOT_PASSWORD=...`: Specifies the root password for MySQL.
     - `-v clipbucket_db:/var/lib/mysql`: Maps a persistent volume for the database.
