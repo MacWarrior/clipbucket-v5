@@ -1,10 +1,6 @@
 #!/bin/bash
 set -e
 
-# Définir les variables avec des valeurs par défaut si elles ne sont pas définies
-PHP_VERSION=${PHP_VERSION:-8.2}
-INSTALL_PATH=${INSTALL_PATH:-/srv/http/clipbucket}
-
 # Démarrer MariaDB en arrière-plan
 service mariadb start
 
@@ -20,26 +16,20 @@ else
 fi
 
 # Démarrer les autres services
-if command -v php${PHP_VERSION}-fpm; then
-    service php${PHP_VERSION}-fpm start
-else
-    echo "Error: PHP-FPM version ${PHP_VERSION} not installed."
-    exit 1
-fi
+service php8.2-fpm start
 
 # Vérifier si les sources existe
-if [ ! "$(ls -A ${INSTALL_PATH})" ]; then
+if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
     echo "Init sources..."
-    mkdir -p ${INSTALL_PATH} && \
-    git clone https://github.com/MacWarrior/clipbucket-v5.git ${INSTALL_PATH} && \
+    mkdir -p /srv/http/clipbucket && \
+    git clone https://github.com/MacWarrior/clipbucket-v5.git /srv/http/clipbucket && \
     git config --global core.fileMode false && \
-    git config --global --add safe.directory ${INSTALL_PATH} && \
-    chown www-data: -R ${INSTALL_PATH} && \
-    chmod 755 -R ${INSTALL_PATH}
+    git config --global --add safe.directory /srv/http/clipbucket && \
+    chown www-data: -R /srv/http/clipbucket && \
+    chmod 755 -R /srv/http/clipbucket
 else
     echo "Sources already exists. No init required."
 fi
 
 # Démarrer Nginx en mode foreground
 exec "$@"
-
