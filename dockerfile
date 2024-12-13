@@ -2,9 +2,9 @@
 FROM debian:stable-slim
 
 # Variables d'environnement
-ENV PHP_VERSION=8.2
+ARG PHP_VERSION=8.2
+ARG INSTALL_PATH=/srv/http/clipbucket
 ENV DOMAIN_NAME=clipbucket.local
-ENV INSTALL_PATH=/srv/http/clipbucket
 ENV MYSQL_ROOT_PASSWORD=clipbucket_password
 
 # Mettre à jour le système et installer les dépendances requises
