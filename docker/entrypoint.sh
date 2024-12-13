@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Définir les variables avec des valeurs par défaut si elles ne sont pas définies
+PHP_VERSION=${PHP_VERSION:-8.2}
+INSTALL_PATH=${INSTALL_PATH:-/srv/http/clipbucket}
+
 # Démarrer MariaDB en arrière-plan
 service mariadb start
 
