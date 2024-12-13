@@ -110,6 +110,8 @@ class EmailTemplate
             e(lang('template_dont_exist'));
             return false;
         }
+//        $extracted_titles_variables = self::getVariablesFromEmail($fields, 'title');
+//        $extracted_content_variables = self::getVariablesFromEmail($fields, 'email');
         foreach ($fields as $field => &$value) {
             $value = mysql_clean($value);
             switch ($field) {
@@ -119,13 +121,23 @@ class EmailTemplate
                     break;
                 case 'content':
                     $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
+
                     break;
                 case 'code':
+                    if (empty($value)) {
+                        e(lang($field . '_cannot_be_empty'));
+                        return false;
+                    }
+                    $value = '\'' . mysql_clean($value) . '\'';
+                    break;
                 case 'title':
                     if (empty($value)) {
                         e(lang($field . '_cannot_be_empty'));
                         return false;
                     }
+                    /*if (count) {
+
+                    }*/
                     $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 default:
@@ -522,9 +534,8 @@ class EmailTemplate
         return true;
     }
 
-    public static function getVariablesFromEmail(int $id_email, string $type)
+    public static function getVariablesFromEmail($email, string $type)
     {
-        $email = self::getOneEmail(['id_email' => $id_email]);
         if (empty($email)) {
             return false;
         }
@@ -711,6 +722,9 @@ class EmailTemplate
             ];
             if (empty($variables['user_username'])) {
                 $variables['user_username'] = $user['username'];
+            }
+            if (empty($variables['user_email'])) {
+                $variables['user_email'] = $user['email'];
             }
         }
         //put variable on email

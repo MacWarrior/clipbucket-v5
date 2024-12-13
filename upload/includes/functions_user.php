@@ -73,22 +73,14 @@ function resend_verification($userid)
     $uname = $raw_data[0]['username'];
     $email = $raw_data[0]['email'];
     if (trim($usr_status) == "ToActivate") {
-        global $cbemail;
         $avcode = RandomString(10);
         Clipbucket_db::getInstance()->update(tbl("users"), ["avcode"], [$avcode], "userid = '$userid'");
-        $tpl = $cbemail->get_template('email_verify_template');
-        $more_var = ['{username}' => $uname,
-                     '{email}'    => $email,
-                     '{avcode}'   => $avcode,
+        $var = [
+            'user_username' => $uname,
+            'user_email'    => $email,
+            'code'          => $avcode,
         ];
-        if (!is_array($var)) {
-            $var = [];
-        }
-        $var = array_merge($more_var, $var);
-        $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-        $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
-        //Now Finally Sending Email
-        cbmail(['to' => $email, 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
+        EmailTemplate::sendMail('email_verify_template', $email, $var);
         return $uname;
     }
 

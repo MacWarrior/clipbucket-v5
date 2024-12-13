@@ -440,22 +440,14 @@ class Comments
 
         $owner_email = userquery::getInstance()->get_user_field($owner_id, 'email');
         if( config('send_comment_notification') == 'yes' && isValidEmail($owner_email) ){
-            $email = CBEmail::getInstance();
-
-            $email_template = $email->get_template('user_comment_email');
-
             $email_params = [
-                '{username}'  => $user_name
-                ,'{obj}'      => $type_label
-                ,'{comment}'  => $comment
-                ,'{obj_link}' => $link . '#comment_' . $comment_id
+                'user_username'  => $user_name
+                ,'message_subject'      => $type_label
+                ,'message_content'  => $comment
+                ,'url' => $link . '#comment_' . $comment_id
             ];
 
-            $subject = $email->replace($email_template['email_template_subject'], $email_params);
-            $content = nl2br($email->replace($email_template['email_template'], $email_params));
-
-            cbmail(['to' => $owner_email, 'from' => config('website_email'), 'subject' => $subject, 'content' => $content]);
-
+            EmailTemplate::sendMail('user_comment_email', $owner_email, $email_params);
             if( !empty($reply_to) ) {
                 $params = [];
                 $params['comment_id'] = $reply_to;
@@ -468,11 +460,7 @@ class Comments
                 }
 
                 if (isValidEmail($reply_to)) {
-                    $email_template = $email->get_template('user_reply_email');
-                    $subject = $email->replace($email_template['email_template_subject'], $email_params);
-                    $content = nl2br($email->replace($email_template['email_template'], $email_params));
-
-                    cbmail(['to' => $reply_to, 'from' => config('website_email'), 'subject' => $subject, 'content' => $content]);
+                    EmailTemplate::sendMail('user_reply_email', $reply_to, $email_params);
                 }
             }
         }

@@ -266,18 +266,414 @@ class MWIP extends \Migration
         self::generateConfig('email_sender_name', 'no-reply');
 
         self::generateTranslation('missing_recipient', [
-            'fr'=>'Destinataire manquant',
-            'en'=>'Missing recipient'
+            'fr' => 'Destinataire manquant',
+            'en' => 'Missing recipient'
         ]);
 
         self::generateTranslation('unknown_email', [
-            'fr'=>'Email inconnu',
-            'en'=>'Unknown email'
+            'fr' => 'Email inconnu',
+            'en' => 'Unknown email'
         ]);
 
         self::generateTranslation('template_dont_exist', [
-            'fr'=>'Ce modèle d\'email n\'existe pas',
-            'en'=>'Template doesn\'t exists'
+            'fr' => 'Ce modèle d\'email n\'existe pas',
+            'en' => 'Template doesn\'t exists'
         ]);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email_template') . ' (code, is_default, is_deletable, content, disabled) VALUE (\'main\', TRUE, FALSE, \'<html ><body>{{email_content}}<hr>Regards,<br>ClipBucket Team</body></html>\', FALSE)';
+        self::query($sql);
+        $inserted_template = \Clipbucket_db::getInstance()->insert_id();
+        if (empty($inserted_template)) {
+            $inserted_template = \EmailTemplate::getOneTemplate(['code'=>'main'])['id_email_template'] ?? 0;
+        }
+
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'email_content\',\'template\', \'email_variable_email_content\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'message_subject\',\'email\', \'email_variable_message_subject\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'message_subject\',\'title\', \'email_variable_message_subject\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'message_content\',\'email\', \'email_variable_message_content\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'thumb_url\',\'email\', \'email_variable_thumb_url\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'time\',\'email\', \'email_variable_time\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'receiver_name\',\'email\', \'email_variable_receiver_name\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'sender_name\',\'email\', \'email_variable_sender_name\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'request_link\',\'email\', \'email_variable_request_link\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'sender_link\',\'email\', \'email_variable_sender_link\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'user_email\',\'email\', \'email_variable_user_email\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'userid\',\'email\', \'email_variable_userid\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'password\',\'email\', \'email_variable_password\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'total_item\',\'email\', \'email_variable_total_item\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'type\',\'email\', \'email_variable_type\')';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'share_video_template\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - {{user_username}} wants to share a video with you\',
+            \'<table width="100%" border="0" cellspacing="0" cellpadding="5">
+                  <tr>
+                    <td bgcolor="#53baff" ><span class="title">{{website_title}}</span>share video</td>
+                  </tr>
+                  <tr>
+                    <td height="20" class="messege">{{user_username}} wants to share Video With You
+                      <div id="videoThumb"><a href="{{url}}"><img src="{{thumb_url}}"><br>
+                    watch video</a></div></td>
+                  </tr>
+                  <tr>
+                    <td class="text" ><span class="title2">Video Description</span><br>
+                      <span class="text">{{message_subject}}</span></td>
+                  </tr>
+                  <tr>
+                    <td><span class="title2">Personal Message</span><br>
+                      <span class="text">{{message_content}}
+                      </span><br>
+                      <br>
+                <span class="text">Thanks,</span><br> 
+                <span class="text">{{user_username}}</span></td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#53baff">copyrights {{time}} {{website_title}}</td>
+                  </tr>
+                </table>\',
+            FALSE
+        )';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'photo_share_template\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - {{user_username}} wants to share a photo with you\',
+            \'<table width="100%" border="0" cellspacing="0" cellpadding="5">
+                 <tr>
+                      <td bgcolor="#0099cc" ><span class="title">{{website_title}}</span></td>
+                 </tr>
+            
+                 <tr>
+                      <td height="20" class="messege">{{user_username}} wants to share this photo with you<br>
+                           <div id="videoThumb"><a class="text" href="{{url}}"><img src="{{thumb_url}}"><br>
+                      View Photo</a></div></td>
+                 </tr>
+                 <tr>
+                      <td class="text" ><span class="title2">Photo Description</span><br>
+                           <span class="text">{{message_subject}}</span></td>
+                 </tr>
+                 <tr>
+                      <td><span class="title2">Personal Message</span><br>
+                           <span class="text">{{message_content}}
+                           </span><br>
+                           <br>
+                    <span class="text">Thanks,</span><br> 
+                    <span class="text">{{website_title}}</span></td>
+                 </tr>
+                 <tr>
+                      <td bgcolor="#0099cc">copyrights {{time}} {{website_title}}</td>
+                 </tr>
+            </table>\',
+            FALSE
+        )';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'collection_share_template\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - {{user_username}} wants to share a collection with you\',
+            \'<table width="100%" border="0" cellspacing="0" cellpadding="5">
+             <tr>
+                  <td bgcolor="#0099cc" ><span class="title">{{website_title}}</span></td>
+             </tr>
+        
+             <tr>
+                  <td height="20" class="messege">{{user_username}} wants to share this collection with you.<br>
+                       <div id="videoThumb"><a class="text" href="{{url}}"><img src="{{thumb_url}}"><br>
+                  View Collection <small class="text2">({{total_items}} {{type}})</small></a></div></td>
+             </tr>
+             <tr>
+                  <td class="text" ><span class="title2">Collection Description</span><br>
+                       <span class="text">{{message_subject}}</span></td>
+             </tr>
+             <tr>
+                  <td><span class="title2">Personal Message</span><br>
+                       <span class="text">{{message_content}}
+                       </span><br>
+                       <br>
+                    <span class="text">Thanks,</span><br> 
+                    <span class="text">{{website_title}}</span></td>
+             </tr>
+             <tr>
+                  <td bgcolor="#0099cc">copyrights {{time}} {{website_title}}</td>
+             </tr>
+        </table>\',
+            FALSE
+        )';
+        self::query($sql);
+
+
+
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'email_verify_template\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}]- Account activation email\',
+            \'Hello {{user_username}},
+            Thank you for joining {{website_title}}, one last step is required in order to activate your account
+
+            <a href=\\\'{{url}}/activation.php?av_username={{user_username}}&avcode={{code}}\\\'>Click Here</a>
+            
+            Email           : {{user_email}}
+            Username        : {{user_username}}
+            Activation code : {{code}}
+            
+            if above given is not working , please go here and activate it
+            <a href=\\\'{{url}}/activation.php\\\'>Activate</a>\',
+            FALSE
+        )';
+        self::query($sql);
+
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'pm_email_message\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - {{user_username}} has sent you a private message\',
+            \'{{user_username}} has sent you a private message, 
+
+                {{message_subject}}
+                "{{message_content}}"
+                
+                click here to view your inbox <a href="{{url}}">Inbox</a>
+                
+                {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'avcode_request_template\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - {{user_username}} has sent you a private message\',
+            \'Hello {{user_username}},
+                
+                Your Activation Code is : {{code}}
+                <a   href=\\\'{{url}}/activation.php?av_username={{user_username}}&avcode={{code}}\\\'>Click Here</a> To goto Activation Page
+                
+                Direct Activation
+                ==========================================
+                Click Here or Copy & Paste the following link in your browser
+                {{url}}/activation.php?av_username={{user_username}}&avcode={{code}}
+                
+                if above given links are not working, please go here and activate it
+                
+                Email           : {{user_email}}
+                Username        : {{user_username}}
+                Activation code : {{code}}
+                
+                if above given is not working , please go here and activate it
+                <a  href=\\\'{{url}}/activation.php\\\'>{{url}}/activation.php</a>
+                
+                ----------------
+                Regards
+                {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'welcome_message_template\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'Welcome {{user_username}} to {{website_title}}\',
+            \'Hello {{user_username}},
+            Thanks for joining at {{website_title}}!, you are now part of our community and we hope you will enjoy your stay
+            
+            All the best,
+            {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'password_reset_request\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - Password reset confirmation\',
+            \'Dear {{user_username}}
+            you have requested a password reset, please follow the link in order to reset your password
+            <a href="{{url}}/forgot.php?mode=reset_pass&user={{userid}}&avcode={{code}}">Reset my password</a>
+            
+            -----------------------------------------
+            IF YOU HAVE NOT REQUESTED A PASSWORD RESET - PLEASE IGNORE THIS MESSAGE
+            -----------------------------------------
+            Regards
+            {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'password_reset_details\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - Password reset details\',
+            \'Dear {{user_username}}
+                your password has been reset
+                your new password is : {{password}}
+                
+                <a href="{{url}}">click here to login to website</a>
+                
+                ---------------
+                Regards
+                {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'forgot_username_request\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - your {{website_title}} username\',
+            \'Hello,
+            your {{website_title}} username is : {{user_username}}
+            
+            --------------
+            Regards
+            {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'friend_request_email\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] {{user_username}} add you as friend\',
+            \'Hi {{receiver_name}},
+            {{sender_name}} added you as a friend on {{website_title}}. We need to confirm that you know {{sender_name}} in order for you to be friends on {{website_title}}.
+            
+            <a href="{{sender_link}}">View profile of {{sender_name}}</a> 
+            <a href="{{request_link}}">click here to respond to friendship request</a>
+            
+            Thanks,
+            {{website_title}} Team\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'friend_confirmation_email\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - {{sender_name}} has confirmed you as a friend\',
+            \'Hi {{receiver_name}},
+            {{sender_name}} confirmed you as a friend on {{website_title}}.
+            
+            <a href="{{sender_link}}">View {{sender_name}} profile</a>
+            
+            Thanks,
+            The {{website_title}} Team\',
+            FALSE
+        )';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'contact_form\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}} - Contact] {{message_subject}} from {{user_username}}\',
+            \'Name : {{user_username}}
+                Email : {{user_email}}
+                Reason : {{message_subject}}
+                
+                Message:
+                {{message_content}}
+                
+                <hr>
+                Ip : {{url}}
+                date : {{time}}\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'video_activation_email\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] - Your video has been activated\',
+            \'Hello {{user_username}},
+                Your video has been reviewed and activated by one of our staff, thanks for uploading this video. You can view this video here.
+                {{url}}
+                
+                Thanks
+                {{website_title}} Team\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'user_comment_email\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] {{user_username}} made comment on your {{message_subject}}\',
+            \'{{user_username}} has commented on your {{message_subject}}
+                "{{message_content}}"
+                
+                <a href="{{url}}">{{url}}</a>
+                
+                {{website_title}} team\',
+            FALSE
+        )';
+        self::query($sql);
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'user_reply_email\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] {{user_username}} made reply on your comment\',
+            \'{{user_username}} has replied on your comment
+                "{{message_content}}"
+                
+                <a href="{{url}}">{{url}}</a>
+                
+                {{website_title}} team\',
+            FALSE
+        )';
+        self::query($sql);
+
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'video_subscription_email\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'{{sender_name}} has uploaded new video on {{website_title}}\',
+            \'Hello {{user_username}}
+
+                You have been notified by {{website_title}} that {{sender_name}} has uploaded new video 
+                
+                Video Title : {{message_subject}}
+                Video Description : {{message_content}}
+                
+                
+                <a href="{{url}}">
+                <img src="{{thumb_url}}" border="0" height="90" width="120"><br>
+                click here to watch this video</a>
+                
+                
+                You are notified because you are subscribed to {{sender_name}}, you can manage your subscriptions by going to your account and click on manage subscriptions.
+                {{website_title}}\',
+            FALSE
+        )';
+        self::query($sql);
+
     }
 }

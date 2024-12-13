@@ -518,17 +518,13 @@ class cb_pm
         $emails = $this->get_users_emails($array['to']);
 
         $vars = [
-            '{sender}'  => $sender,
-            '{content}' => $content,
-            '{subject}' => $subject,
-            '{msg_id}'  => $msgid
+            'user_username'  => $sender,
+            'message_content' => $content,
+            'message_subject' => $subject,
+            'url'  => BASEURL . '/private_message.php?mode=inbox&mid='.$msgid
         ];
 
-        $tpl = $cbemail->get_template($this->email_template);
-        $subj = $cbemail->replace($tpl['email_template_subject'], $vars);
-        $msg = $cbemail->replace($tpl['email_template'], $vars);
-
-        cbmail(['to' => $emails, 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg, 'nl2br' => true]);
+        EmailTemplate::sendMail($this->email_template, $emails, $vars);
     }
 
     /**

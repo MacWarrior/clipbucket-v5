@@ -373,10 +373,10 @@ class CBEmail
 
                 $send_message = "";
 
+                //TODO rework mass email system
                 //Now Finally Sending Email
                 cbmail(['from_name' => TITLE, 'to' => $user['email'], 'from' => $email['email_from'], 'subject' => $subj, 'content' => $msg]);
                 $sent++;
-
                 $send_msg[] = $user['userid'] . ": Email has been sent to <strong><em>" . $user['username'] . "</em></strong>";
             }
 
@@ -415,15 +415,14 @@ class CBEmail
     {
         $condition = "email = '$email'";
         $receiver_name = Clipbucket_db::getInstance()->select(tbl('users'), 'username', $condition);
-        $var = ['{sender}'        => user_name(),
-                '{website_title}' => TITLE,
-                '{reciever}'      => $receiver_name[0]['username'],
-                '{sender_link}'   => '/user/' . $username,
-                '{request_link}'  => '/manage_contacts.php?mode=manage',
+        $var = [
+            'sender_name'   => user_name(),
+            'website_title' => TITLE,
+            'receiver_name' => $receiver_name[0]['username'],
+            'sender_link'   => '/user/' . $username,
+            'request_link'  => '/manage_contacts.php?mode=manage',
         ];
-        $templates = $this->get_templates();
-        $subj = $this->replace($templates[10]['email_template_subject'], $var);
-        $msg = nl2br($this->replace($templates[10]['email_template'], $var));
-        cbmail(['from_name' => TITLE, 'to' => $email, 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
+
+        EmailTemplate::sendMail('friend_request_email', $email, $var);
     }
 }

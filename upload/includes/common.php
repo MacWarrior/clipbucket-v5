@@ -246,9 +246,6 @@ define('SEO', $row['seo']); //Set yes / no
 # Registration & Email Settings
 define('EMAIL_VERIFICATION', $row['email_verification']);
 define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
-define('WEBSITE_EMAIL', $row['website_email']);
-define('SUPPORT_EMAIL', $row['support_email']);
-define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
 
 # Defining Photo Limits

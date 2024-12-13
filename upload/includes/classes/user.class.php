@@ -1397,18 +1397,14 @@ class userquery extends CBCategory
         } elseif ($udetails['ban_status'] == 'yes') {
             e(lang('ban_status'));
         } else {
-            $tpl = $cbemail->get_template('avcode_request_template');
             $var = [
-                '{username}' => $udetails['username'],
-                '{email}'    => $udetails['email'],
-                '{avcode}'   => $udetails['avcode']
+                'user_username' => $udetails['username'],
+                'user_email'    => $udetails['email'],
+                'code'   => $udetails['avcode']
             ];
 
-            $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
-
             //Now Finally Sending Email
-            cbmail(['to' => $udetails['email'], 'from' => SUPPORT_EMAIL, 'subject' => $subj, 'content' => $msg]);
+            EmailTemplate::sendMail('avcode_request_template', $udetails['email'],  $var);
             e(lang('usr_activation_em_msg'), 'm');
         }
     }
@@ -1423,8 +1419,6 @@ class userquery extends CBCategory
      */
     function send_welcome_email($user, $update_email_status = false)
     {
-        global $cbemail;
-
         if (!is_array($user)) {
             $udetails = $this->get_user_details($user);
         } else {
@@ -1434,17 +1428,14 @@ class userquery extends CBCategory
         if (!$udetails) {
             e(lang('usr_exist_err'));
         } else {
-            $tpl = $cbemail->get_template('welcome_message_template');
             $var = [
-                '{username}' => $udetails['username'],
-                '{email}'    => $udetails['email']
+                'user_username' => $udetails['username'],
+                'website_title' => TITLE
             ];
-            $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
 
             //Now Finally Sending Email
-            cbmail(['to' => $udetails['email'], 'from' => WELCOME_EMAIL, 'subject' => $subj, 'content' => $msg]);
 
+            EmailTemplate::sendMail('welcome_message_template', $udetails['email'], $var);
             if ($update_email_status) {
                 Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['welcome_email_sent'], ['yes'], ' userid=\'' . $udetails['userid'] . '\' ');
             }
@@ -1621,25 +1612,17 @@ class userquery extends CBCategory
                 e(lang('friend_confirmed'), 'm');
             }
             //Sending friendship confirmation email
-            $tpl = $cbemail->get_template('friend_confirmation_email');
 
             $friend = $this->get_user_details($rid);
             $sender = $this->get_user_details($uid);
 
-            $more_var = [
-                '{reciever}'    => $friend['username'],
-                '{sender}'      => $sender['username'],
-                '{sender_link}' => $this->profile_link($sender)
+            $var = [
+                'receiver_name' => $friend['username'],
+                'sender_name'   => $sender['username'],
+                'sender_link'   => $this->profile_link($sender)
             ];
-            if (!isset($var)) {
-                $var = [];
-            }
-            $var = array_merge($more_var, $var);
-            $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
 
-            //Now Finally Sending Email
-            cbmail(['to' => $friend['email'], 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
+            EmailTemplate::sendMail('friend_confirmation_email', $friend['email'], $var);
 
             //Logging Friendship
 
@@ -1996,30 +1979,21 @@ class userquery extends CBCategory
                     e(lang('recap_verify_failed'));
                 } else {
                     //Sending confirmation email
-                    $tpl = $cbemail->get_template('password_reset_request');
                     $avcode = $udetails['avcode'];
                     if (!$udetails['avcode']) {
                         $avcode = RandomString(10);
                         Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['avcode'], [$avcode], " userid='" . $udetails['userid'] . "'");
                     }
 
-                    $more_var = [
-                        '{username}' => $udetails['username'],
-                        '{email}'    => $udetails['email'],
-                        '{avcode}'   => $avcode,
-                        '{userid}'   => $udetails['userid']
+                    $var = [
+                        'user_username' => $udetails['username'],
+                        'url'           => BASEURL . '/forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
                     ];
-                    if (!is_array($var)) {
-                        $var = [];
-                    }
-                    $var = array_merge($more_var, $var);
-                    $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                    $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
 
                     //Now Finally Sending Email
-                    cbmail(['to' => $udetails['email'], 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
-
-                    e(lang('usr_rpass_email_msg'), 'm');
+                    if (EmailTemplate::sendMail('password_reset_request', $udetails['email'], $var)) {
+                        e(lang('usr_rpass_email_msg'), 'm');
+                    }
                     return true;
                 }
                 break;
@@ -2037,23 +2011,14 @@ class userquery extends CBCategory
                     Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
                     //sending new password email...
                     //Sending confirmation email
-                    $tpl = $cbemail->get_template('password_reset_details');
-                    $more_var = [
-                        '{username}' => $udetails['username'],
-                        '{email}'    => $udetails['email'],
-                        '{avcode}'   => $udetails['avcode'],
-                        '{userid}'   => $udetails['userid'],
-                        '{password}' => $newpass
+                    $var = [
+                        'user_username' => $udetails['username'],
+                        'url'   => BASEURL . '/login.php',
+                        'password' => $newpass
                     ];
-                    if (!is_array($var)) {
-                        $var = [];
-                    }
-                    $var = array_merge($more_var, $var);
-                    $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                    $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
 
                     //Now Finally Sending Email
-                    cbmail(['to' => $udetails['email'], 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
+                    EmailTemplate::sendMail('password_reset_details',  $udetails['email'], $var);
                     e(lang('usr_pass_email_msg'), 'm');
                     return true;
                 }
@@ -2065,31 +2030,21 @@ class userquery extends CBCategory
      * Function used to recover username
      * @throws Exception
      */
-    function recover_username($email): string
+    function recover_username($email)
     {
-        global $cbemail;
         $udetails = $this->get_user_details($email);
         if (!$udetails) {
             e(lang('no_user_associated_with_email'));
         } elseif (!verify_captcha()) {
             e(lang('recap_verify_failed'));
         } else {
-            $tpl = $cbemail->get_template('forgot_username_request');
-            $more_var = [
-                '{username}' => $udetails['username']
-            ];
-            if (!is_array($var)) {
-                $var = [];
-            }
-            $var = array_merge($more_var, $var);
-            $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
+            $var = ['website_title' => TITLE];
 
             //Now Finally Sending Email
-            cbmail(['to' => $udetails['email'], 'from' => SUPPORT_EMAIL, 'subject' => $subj, 'content' => $msg]);
-            e(lang("usr_uname_email_msg"), 'm');
+            if (EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], $var)) {
+                e(lang("usr_uname_email_msg"), 'm');
+            }
         }
-        return $msg;
     }
 
     //FUNCTION USED TO UPDATE LAST ACTIVE FOR OF USER
@@ -3860,22 +3815,14 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
 
             if (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && EMAIL_VERIFICATION && $send_signup_email) {
-                global $cbemail;
-                $tpl = $cbemail->get_template('email_verify_template');
-                $more_var = [
-                    '{username}' => post('username'),
-                    '{password}' => post('password'),
-                    '{email}'    => post('email'),
-                    '{avcode}'   => $avcode
+                $var = [
+                    'user_username' => post('username'),
+                    'user_email' => post('email'),
+                    'website_title' => TITLE,
+                    'url' => BASEURL,
+                    'code'   => $avcode
                 ];
-
-                $var = [];
-                $var = array_merge($more_var, $var);
-                $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
-
-                //Now Finally Sending Email
-                cbmail(['to' => post('email'), 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg]);
+                EmailTemplate::sendMail('email_verify_template', post('email'), $var);
             } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
                 $this->send_welcome_email($insert_id);
             }
@@ -5217,26 +5164,20 @@ class userquery extends CBCategory
         $tpl = $cbemail->get_template('video_subscription_email');
 
         if ($subscribers) {
+            $var = [
+                'sender_name'     => $uploader['username'],
+                'message_subject' => $vidDetails['title'],
+                'message_content' => $vidDetails['description'],
+                'url'             => video_link($vidDetails),
+                'thumb_url'       => get_thumb($vidDetails),
+                'website_title'   => TITLE
+            ];
+            $more_var = $this->custom_subscription_email_vars;
+            if( !empty($more_var) && is_array($more_var) ){
+                $var = array_merge($var, $more_var);
+            }
             foreach ($subscribers as $subscriber) {
-                $var = [
-                    '{username}'          => $subscriber['username'],
-                    '{uploader}'          => $uploader['username'],
-                    '{video_title}'       => $vidDetails['title'],
-                    '{video_description}' => $vidDetails['description'],
-                    '{video_link}'        => video_link($vidDetails),
-                    '{video_thumb}'       => get_thumb($vidDetails)
-                ];
-
-                $more_var = $this->custom_subscription_email_vars;
-                if( !empty($more_var) && is_array($more_var) ){
-                    $var = array_merge($var, $more_var);
-                }
-
-                $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
-
-                //Now Finally Sending Email
-                cbmail(['to' => $subscriber['email'], 'from' => WELCOME_EMAIL, 'subject' => $subj, 'content' => $msg]);
+                EmailTemplate::sendMail('video_subscription_email', $subscriber['userid'], $var);
             }
 
             $total_subscribers = count($subscribers);

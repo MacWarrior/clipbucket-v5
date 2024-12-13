@@ -1658,5 +1658,3 @@ INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('youtube'),
     ('youtube-play'),
     ('youtube-square');
-
-INSERT INTO `{tbl_prefix}email_variable` (code, type, language_key) VALUES ('email_content','template', 'email_variable_content');

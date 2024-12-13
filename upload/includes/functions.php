@@ -1,7 +1,5 @@
 <?php
 
-use PHPMailer\PHPMailer\PHPMailer;
-
 require 'define_php_links.php';
 include_once 'upload_forms.php';
 
@@ -111,101 +109,6 @@ function RandomString($length): string
     $string = md5(microtime());
     $highest_startpoint = 32 - $length;
     return substr($string, rand(0, $highest_startpoint), $length);
-}
-
-/**
- * Function used to send emails. this is a very basic email function
- * you can extend or replace this function easily
- *
- * @param : { array } { $array } { array with all details of email }
- * @param bool $force force sending email even if emails are disabled
- * @return bool
- * @param_list : { content, subject, to, from, to_name, from_name }
- *
- * @throws Exception
- * @author : Arslan Hassan
- */
-function cbmail($array, $force = false)
-{
-    if (config('disable_email') == 'yes' && !$force) {
-        return false;
-    }
-    $from = $array['from'];
-    if (!isValidEmail($from)) {
-        error_log('Invalid sender email : ' . $from);
-        return false;
-    }
-
-    $func_array = get_functions('email_functions');
-    if (is_array($func_array)) {
-        foreach ($func_array as $func) {
-            if (function_exists($func)) {
-                return $func($array);
-            }
-        }
-    }
-
-    $content = $array['content'];
-    $subject = $array['subject'];
-    $to = $array['to'];
-    $to_name = $array['to_name'];
-    $from_name = $array['from_name'];
-    if ($array['nl2br']) {
-        $content = nl2br($content);
-    }
-
-    # Checking Content
-    if (preg_match('/<html>/', $content, $matches)) {
-        if (empty($matches[1])) {
-            $content = wrap_email_content($content);
-        }
-    }
-    $message = $content;
-
-    $mail = new PHPMailer(true); // defaults to using php "mail()"
-    $mail_type = config('mail_type');
-    //---Setting SMTP ---
-    if ($mail_type == 'smtp') {
-        $mail->IsSMTP(); // telling the class to use SMTP
-        $mail->Host = config('smtp_host'); // SMTP server
-        if (config('smtp_auth') == 'yes') {
-            $mail->SMTPAuth = true;             // enable SMTP authentication
-        }
-        $mail->Port = config('smtp_port'); // set the SMTP port for the GMAIL server
-        $mail->Username = config('smtp_user'); // SMTP account username
-        $mail->Password = config('smtp_pass'); // SMTP account password
-    }
-    //--- Ending Smtp Settings
-    $mail->SetFrom($from, $from_name);
-    if (is_array($to)) {
-        foreach ($to as $name) {
-            $mail->AddAddress(strtolower($name), $to_name);
-        }
-    } else {
-        $mail->AddAddress(strtolower($to), $to_name);
-    }
-    $mail->Subject = $subject;
-    $mail->MsgHTML($message);
-
-    if (!$mail->Send()) {
-        if (User::getInstance()->hasAdminAccess()) {
-            e("Mailer Error: " . $mail->ErrorInfo);
-        }
-        return false;
-    }
-    return true;
-}
-
-/**
- * Function used to wrap email content in adds HTML AND BODY TAGS
- *
- * @param : { string } { $content } { contents of email to be wrapped }
- *
- * @return string
- */
-function wrap_email_content($content): string
-{
-    return '<html><body>' . $content . '</body></html>';
 }
 
 /**

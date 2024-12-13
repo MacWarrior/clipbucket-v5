@@ -262,15 +262,19 @@ class cbactions
                     if ($ok) {
                         global $cbemail;
                         $tpl = $cbemail->get_template($tpl);
-                        $more_var = ['{user_message}' => post('message')];
+                        $more_var = [
+                            'user_username'   => user_name(),
+                            'website_title'   => TITLE,
+                            'message_content' => post('message'),
+                            'time'            => cbdate('Y')
+                        ];
                         $var = array_merge($more_var, $var);
                         $subj = $cbemail->replace($tpl['email_template_subject'], $var);
                         $msg = $cbemail->replace($tpl['email_template'], $var);
 
                         //Now Finally Sending Email
                         $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
-
-                        cbmail(['to' => $emails_array, 'from' => $from, 'from_name' => user_name(), 'subject' => $subj, 'content' => $msg, 'use_boundary' => true]);
+                        EmailTemplate::sendMail($tpl, $emails_array, $var, $from, user_name());
                         e(lang('thnx_sharing_msg'), $this->name, 'm');
                     }
                 } else {
