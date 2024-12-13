@@ -61,7 +61,6 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
    ```
 
 ### Explanation of Docker Commands:
-- **`docker build -t clipbucket ...`**: Builds the ClipBucket Docker image directly from the GitHub repository.
 - **`docker run` options:**
     - `--restart unless-stopped`: Automatically restarts the container unless explicitly stopped.
     - `-e DOMAIN_NAME=...`: Sets the domain name for your ClipBucket instance.
