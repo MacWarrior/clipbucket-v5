@@ -2,13 +2,13 @@
 FROM debian:stable-slim
 
 # Variables d'environnement
-ARG PHP_VERSION=8.2
-ARG INSTALL_PATH=/srv/http/clipbucket
 ENV DOMAIN_NAME=clipbucket.local
 ENV MYSQL_ROOT_PASSWORD=clipbucket_password
 
-# Mettre à jour le système et installer les dépendances requises
-RUN apt-get update && \
+# Version de PHP fixée
+RUN PHP_VERSION=8.2 && INSTALL_PATH=/srv/http/clipbucket && \
+    # Mettre à jour le système et installer les dépendances requises
+    apt-get update && \
     apt-get dist-upgrade -y && \
     apt-get install -y \
         nginx-full \
@@ -23,14 +23,12 @@ RUN apt-get update && \
         ffmpeg \
         sendmail \
         mediainfo && \
-    apt-get clean
-
-# Configuration PHP
-RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini && \
-    systemctl enable php${PHP_VERSION}-fpm
-
-# Configure Nginx
-RUN rm -f /etc/nginx/sites-enabled/default && \
+    apt-get clean && \
+    # Configuration PHP
+    sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini && \
+    systemctl enable php${PHP_VERSION}-fpm && \
+    # Configure Nginx
+    rm -f /etc/nginx/sites-enabled/default && \
     echo 'server { \
         listen 80; \
         server_name DOMAIN_NAME_PLACEHOLDER; \
@@ -161,27 +159,14 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
             try_files $uri /rss.php; \
         } \
     }' > /etc/nginx/sites-available/clipbucket && \
-	sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
+    sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
     ln -s /etc/nginx/sites-available/clipbucket /etc/nginx/sites-enabled/
 
-RUN INSTALL_PATH_ESCAPED=$(echo "$INSTALL_PATH" | sed 's/\//\\\//g') && \
-    sed -i "s/DOMAIN_NAME/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
-    sed -i "s/INSTALL_PATH/${INSTALL_PATH_ESCAPED}/g" /etc/nginx/sites-available/clipbucket && \
-    sed -i "s/PHP_VERSION/${PHP_VERSION}/g" /etc/nginx/sites-available/clipbucket
-
-RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
-
-# Ajouter un script d'entrée pour init bdd et sources si necessaire
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Créer les volume pour la bdd et les sources
-VOLUME ["/var/lib/mysql", "label=clipbucket_database"]
-VOLUME ["/srv/http/clipbucket", "label=clipbucket_sources"]
+VOLUME ["/var/lib/mysql", "/srv/http/clipbucket"]
 
-# Port d'écoute
 EXPOSE 80
-
-# Commande de démarrage
 ENTRYPOINT ["entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
