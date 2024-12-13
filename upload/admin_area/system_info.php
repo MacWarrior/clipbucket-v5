@@ -36,8 +36,7 @@ assign('is_cloudflare', Network::is_cloudflare());
 assign('cloudflare_upload_limit', config('cloudflare_upload_limit'));
 $chunk_upload = config('enable_chunk_upload') == 'yes';
 assign('chunk_upload', $chunk_upload);
-$chunk_upload_size = config('chunk_upload_size');
-$chunk_upload_size_mb = (int)$chunk_upload_size * pow(1024, stripos('KMGT', strtoupper(substr($chunk_upload_size, -1)))) / 1024;
+$chunk_upload_size_mb = config('chunk_upload_size');
 assign('chunk_upload_size_mb', $chunk_upload_size_mb);
 
 $post_max_size = ini_get('post_max_size');

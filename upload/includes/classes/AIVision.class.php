@@ -19,8 +19,11 @@ class AIVision
     /**
      * @throws Exception
      */
-    public function __construct(array $config = [], $lib = null) {
-
+    public function __construct(array $config = [], $lib = null)
+    {
+        if( ini_get('ffi.enable') == 'preload') {
+            throw new \Exception( 'FFI extension need to be enabled ; currently is preload' );
+        }
         if(!empty($config)) {
             $this->tags = $config['tags'] ?? [] ;
             $this->rescale_factor = $config['rescale_factor'] ?? 1 ;

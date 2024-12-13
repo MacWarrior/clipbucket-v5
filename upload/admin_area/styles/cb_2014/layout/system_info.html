@@ -450,7 +450,7 @@
                                 PHP is unable to check Nginx configuration.<br/>
                                 Please make sure <b>client_max_body_size</b> is set correctly.<br/>
 
-                                {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
+                                {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size_mb}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
                             </div>
                         {else}
                             <img src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"/>
