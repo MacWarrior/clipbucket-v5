@@ -16,7 +16,12 @@ else
 fi
 
 # Démarrer les autres services
-service php${PHP_VERSION}-fpm start
+if command -v php${PHP_VERSION}-fpm; then
+    service php${PHP_VERSION}-fpm start
+else
+    echo "Error: PHP-FPM version ${PHP_VERSION} not installed."
+    exit 1
+fi
 
 # Vérifier si les sources existe
 if [ ! "$(ls -A ${INSTALL_PATH})" ]; then
