@@ -62,7 +62,7 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
    ```
 
 ### Explanation of Docker Commands:
-**`docker run` options:**
+- **`docker run` options:**
     - `--restart unless-stopped`: Automatically restarts the container unless explicitly stopped.
     - `--pull=always`: Ensures the image is always pulled before starting, even if it exists locally.
     - `-e DOMAIN_NAME=...`: Sets the domain name for your ClipBucket instance.
