@@ -60,7 +60,7 @@ fi
 if [ ! -d "/var/lib/mysql/clipbucket" ]; then
     echo "Init database..."
     mysql -uroot -e "CREATE DATABASE clipbucket;"
-    mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';"
+    mysql -uroot -e "CREATE USER 'clipbucket'@'localhost' IDENTIFIED BY '${MYSQL_PASSWORD}';"
     mysql -uroot -e "GRANT ALL PRIVILEGES ON clipbucket.* TO 'clipbucket'@'localhost';"
     mysql -uroot -e "FLUSH PRIVILEGES;"
 else

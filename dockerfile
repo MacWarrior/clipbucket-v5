@@ -3,7 +3,7 @@ FROM debian:stable-slim
 
 # Variables d'environnement pour le runtime
 ENV DOMAIN_NAME=clipbucket.local
-ENV MYSQL_ROOT_PASSWORD=clipbucket_password
+ENV MYSQL_PASSWORD=clipbucket_password
 
 # Ajouter un utilisateur avec un UID/GID dynamique
 ENV UID=1000
