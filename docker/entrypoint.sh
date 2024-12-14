@@ -13,7 +13,8 @@ fi
 
 # adapter les permission pour le nouvel user
 mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
-chown -R containeruser:containergroup /var/lib/mysql /srv/http/clipbucket /run/mysqld /usr/lib/mysql
+chown -R containeruser:containergroup /var/lib/mysql /run/mysqld /usr/lib/mysql
+chown -R www-data:www-data /srv/http/clipbucket
 
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
