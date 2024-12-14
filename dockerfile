@@ -3,7 +3,11 @@ FROM debian:stable-slim
 
 # Variables d'environnement pour le runtime
 ENV DOMAIN_NAME=clipbucket.local
-ENV MYSQL_ROOT_PASSWORD=clipbucket_password
+ENV MYSQL_PASSWORD=clipbucket_password
+
+# Ajouter un utilisateur avec un UID/GID dynamique
+ENV UID=1000
+ENV GID=1000
 
 # Version de PHP fixée
 RUN apt-get update && \
@@ -24,8 +28,12 @@ RUN apt-get update && \
     apt-get clean
 
 # Configuration PHP
-RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini && \
-    systemctl enable php8.2-fpm
+RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
+
+# change l'utilisateur de nginx et php-fpm
+RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\
+    sed -i 's/^user = www-data$/user = containeruser/' /etc/php/8.2/fpm/pool.d/www.conf ;\
+    sed -i 's/^group = www-data$/group = containeruser/' /etc/php/8.2/fpm/pool.d/www.conf
 
 # Configure Nginx
 RUN rm -f /etc/nginx/sites-enabled/default && \
@@ -52,7 +60,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
             log_not_found off; \
         } \
         location ~* \.php$ { \
-            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock; \
+            fastcgi_pass unix:/run/php/php8.2-fpm.sock; \
             fastcgi_index index.php; \
             fastcgi_split_path_info ^(.+\.php)(.*)$; \
             include fastcgi_params; \
@@ -163,8 +171,6 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 
 RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket
 
-RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
-
 # Ajouter un script d'entrée pour init bdd et sources si necessaire
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
@@ -178,4 +184,3 @@ EXPOSE 80
 
 # Commande de démarrage
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]

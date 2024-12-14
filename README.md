@@ -51,14 +51,15 @@ And even more !
 ## With Docker
 Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application.
 
-### Step-by-Step Installation Guide:
-**Run the ClipBucket Container From Docker Hub:**
+### Run the ClipBucket Container from DockerHub :
    ```bash
    docker run \
    --restart unless-stopped \
    --pull=always \
    -e DOMAIN_NAME=clipbucket.local \
-   -e MYSQL_ROOT_PASSWORD=clipbucket_password \
+   -e MYSQL_PASSWORD=clipbucket_password \
+   -e UID=1000 \
+   -e GID=1000 \
    -v clipbucket_db:/var/lib/mysql \
    -v clipbucket_files:/srv/http/clipbucket \
    -p 80:80 \
@@ -66,27 +67,77 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
    -d oxygenz/clipbucket-v5:latest
    ```
 
-### Explanation of Docker Commands:
-- **`docker run` options:**
-  - `--restart unless-stopped`: Automatically restarts the container unless explicitly stopped.
-  - `--pull=always`: Ensures the image is always pulled before starting, even if it exists locally.
-  - `-e DOMAIN_NAME=...`: Sets the domain name for your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> instance.
-  - `-e MYSQL_ROOT_PASSWORD=...`: Specifies the root password for MySQL.
-  - `-v clipbucket_db:/var/lib/mysql`: Maps a persistent volume for the database.
-  - `-v clipbucket_files:/srv/http/clipbucket`: Maps a persistent volume for ClipBucket files.
-  - `-p 80:80`: Maps port 80 on the host to port 80 on the container, making the application accessible via the host machine.
-  - `--name clipbucket`: Names the container for easier management.
-  - `-d`: Runs the container in detached mode.
+<details>
+  <summary>Docker command options explanation</summary>
+  <code>docker run</code> options :
+  <ul>
+    <li>
+      <code>--restart unless-stopped</code> : Automatically restarts the container unless explicitly stopped.
+    </li>
+    <li>
+      <code>--pull=always</code> : Ensures the image is always pulled before starting, even if it exists locally.
+    </li>
+    <li>
+      <code>-e DOMAIN_NAME=...</code> : Sets the domain name for your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> instance.
+    </li>
+    <li>
+      <code>-e MYSQL_PASSWORD=...</code> : Specifies the root password for MySQL.
+    </li>
+    <li>
+      <code>-e UID=1000</code> : Sets the user ID (UID) for the application running inside the container. 1000 is the typical UID for the first user on Linux systems. If you want a different user, adjust the UID.
+    </li>
+    <li>
+      <code>-e GID=1000</code> : Sets the group ID (GID) for the application running inside the container. Like UID, this is often 1000 by default, but it can be adjusted if you want a different group.
+    </li>
+    <li>
+      <code>-v clipbucket_db:/var/lib/mysql</code> : Maps a persistent volume for the database.
+    </li>
+    <li>
+      <code>-v clipbucket_files:/srv/http/clipbucket</code> : Maps a persistent volume for ClipBucket files.
+    </li>
+    <li>
+      <code>-p 80:80</code> : Maps port 80 on the host to port 80 on the container, making the application accessible via the host machine.
+    </li>
+    <li>
+      <code>--name clipbucket</code> : Names the container for easier management.
+    </li>
+    <li>
+      <code>-d</code> : Runs the container in detached mode.
+    </li>
+  </ul>
+</details>
+
+<details>
+  <summary>UID and GID Explanation for Bind Mounts in Docker</summary>
+  UID and GID are only necessary when using bind mounts in Docker. A bind mount links a directory on your host machine to a directory in the container, like this:<br/>
+  <pre>-v /path/to/host/folder:/srv/http/clipbucket</pre>
+  With bind mounts, Docker does not modify file permissions. 
+  If the UID and GID of the container's user do not match those of the host system, there can be permission issues. 
+  For example, files created by the container might not be accessible from the host and vice versa.
+</details>
+<details>
+  <summary>Why UID and GID matter</summary>
+  UID (User ID) and GID (Group ID) are numeric identifiers for users and groups on the system.<br/>
+  If the container's UID and GID do not match those of the host user, permission issues arise.
+</details>
+<details>
+  <summary>UID and GID solution</summary>
+  Set the UID and GID in the docker run command to match the host user:
+  <pre>-e UID=1000 \
+-e GID=1000</pre>
+  If you use Docker volumes (not bind mounts), UID and GID are not necessary since Docker manages the permissions internally.
+  To find the UID and GID of a user on your host system (Debian), you can run the following commands:
+  <pre>id username</pre>
+Replace username with the name of the user. For example, for the user john, use id john.
+</details>
 
 ## On dedicated server
 <details>
-  <summary>Beginners</summary>
+  <summary>Beginners - Easy installation scripts</summary>
   Greetings young adventurer ! Don't worry, we've thought about you and created some easy installation scripts !<br/>
   All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree/master/utils">Installation scripts</a><br/>
   <i>It should also be noted that these scripts are meant for testing and development purposes only</i>
 </details>
-<br/>
-
 <details>
   <summary>Advanced users</summary>
   <i>“Your path you must decide.”</i><br/>
@@ -112,7 +163,7 @@ Follow our [quick steps tutorial](https://github.com/MacWarrior/clipbucket-v5/wi
 
 # Issues
 Still reading ? Good !<br/>
-Now your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is installed <i>(or maybe not yet)</i> 
+Now your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is installed <i>(or maybe not yet)</i>
 and you request some help ? Or found a bug ? Or have a brilliant idea ?<br/>
 Take a step back, breath slowly, and create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues">issue</a> !<br/>
 Be the more precise you can, add screenshots, give examples... I'm sure we will find a solution !
