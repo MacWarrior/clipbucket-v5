@@ -59,6 +59,8 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
    --pull=always \
    -e DOMAIN_NAME=clipbucket.local \
    -e MYSQL_ROOT_PASSWORD=clipbucket_password \
+   -e UID=1000 \
+   -e GID=1000 \
    -v clipbucket_db:/var/lib/mysql \
    -v clipbucket_files:/srv/http/clipbucket \
    -p 80:80 \
@@ -72,11 +74,40 @@ Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</
     - `--pull=always`: Ensures the image is always pulled before starting, even if it exists locally.
     - `-e DOMAIN_NAME=...`: Sets the domain name for your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> instance.
     - `-e MYSQL_ROOT_PASSWORD=...`: Specifies the root password for MySQL.
+    - `-e UID=1000`: Sets the user ID (UID) for the application running inside the container. 1000 is the typical UID for the first user on Linux systems. If you want a different user, adjust the UID.
+    - `-e GID=1000`: Sets the group ID (GID) for the application running inside the container. Like UID, this is often 1000 by default, but it can be adjusted if you want a different group.
     - `-v clipbucket_db:/var/lib/mysql`: Maps a persistent volume for the database.
     - `-v clipbucket_files:/srv/http/clipbucket`: Maps a persistent volume for ClipBucket files.
     - `-p 80:80`: Maps port 80 on the host to port 80 on the container, making the application accessible via the host machine.
     - `--name clipbucket`: Names the container for easier management.
     - `-d`: Runs the container in detached mode.
+
+### UID and GID Explanation for Bind Mounts in Docker
+UID and GID are only necessary when using bind mounts in Docker. A bind mount links a directory on your host machine to a directory in the container, like this:
+```bash
+-v /path/to/host/folder:/srv/http/clipbucket
+```
+With bind mounts, Docker does not modify file permissions. If the UID and GID of the container's user do not match those of the host system, there can be permission issues. For example, files created by the container might not be accessible from the host and vice versa.
+
+## Why UID and GID matter:
+UID (User ID) and GID (Group ID) are numeric identifiers for users and groups on the system.
+If the container's UID and GID do not match those of the host user, permission issues arise.
+
+## Solution:
+Set the UID and GID in the docker run command to match the host user:
+
+```
+-e UID=1000 \
+-e GID=1000
+```
+If you use Docker volumes (not bind mounts), UID and GID are not necessary since Docker manages the permissions internally.
+
+To find the UID and GID of a user on your host system (Debian), you can run the following commands:
+```
+id username
+```
+Replace username with the name of the user. For example, for the user john, use id john.
+
 
 ## On dedicated server
 <details>
