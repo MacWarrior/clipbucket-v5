@@ -40,7 +40,6 @@ echo "Starting MariaDB..."
 mariadbd --user=containeruser --datadir=/var/lib/mysql &
 mariadb_pid=$!
 
-
 # Initialiser le compteur de temps d'attente
 timeout=200
 elapsed=0
@@ -72,7 +71,6 @@ fi
 echo "Starting PHP-FPM..."
 php-fpm8.2 -F --fpm-config /etc/php/8.2/fpm/php-fpm.conf --nodaemonize &
 php_pid=$!
-
 
 # Initialiser le compteur de temps d'attente
 timeout=200
@@ -110,8 +108,6 @@ fi
 echo "Starting Nginx..."
 nginx -g "daemon off;" &
 nginx_pid=$!
-
-echo "pid nginx = $nginx_pid"
 
 # Surveiller les processus et détecter les arrêts
 while true; do
