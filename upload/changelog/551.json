@@ -267,6 +267,7 @@
         ,"Update licence agreement"
         ,"Update timezone selection display"
         ,"Update installation script to Ubuntu 24.10"
+        ,"Update docker installation <i>(#486)</i>"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
