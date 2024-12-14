@@ -1,24 +1,26 @@
 # Utiliser une image Debian stable comme base
 FROM debian:stable-slim
 
-# Variables d'environnement
-ENV PHP_VERSION=8.2
+# Variables d'environnement pour le runtime
 ENV DOMAIN_NAME=clipbucket.local
-ENV INSTALL_PATH=/srv/http/clipbucket
 ENV MYSQL_ROOT_PASSWORD=clipbucket_password
 
-# Mettre à jour le système et installer les dépendances requises
+# Ajouter un utilisateur avec un UID/GID dynamique
+ENV UID=1000
+ENV GID=1000
+
+# Version de PHP fixée
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
     apt-get install -y \
         nginx-full \
         mariadb-server \
-        php${PHP_VERSION}-fpm \
-        php${PHP_VERSION}-curl \
-        php${PHP_VERSION}-mysqli \
-        php${PHP_VERSION}-xml \
-        php${PHP_VERSION}-mbstring \
-        php${PHP_VERSION}-gd \
+        php8.2-fpm \
+        php8.2-curl \
+        php8.2-mysqli \
+        php8.2-xml \
+        php8.2-mbstring \
+        php8.2-gd \
         git \
         ffmpeg \
         sendmail \
@@ -26,15 +28,19 @@ RUN apt-get update && \
     apt-get clean
 
 # Configuration PHP
-RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini && \
-    systemctl enable php${PHP_VERSION}-fpm
+RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
+
+# change l'utilisateur de nginx et php-fpm
+RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\
+    sed -i 's/^user = www-data$/user = containeruser/' /etc/php/8.2/fpm/pool.d/www.conf ;\
+    sed -i 's/^group = www-data$/group = containeruser/' /etc/php/8.2/fpm/pool.d/www.conf
 
 # Configure Nginx
 RUN rm -f /etc/nginx/sites-enabled/default && \
     echo 'server { \
         listen 80; \
         server_name DOMAIN_NAME_PLACEHOLDER; \
-        root INSTALL_PATH/upload; \
+        root /srv/http/clipbucket/upload; \
         index index.php; \
         client_max_body_size 2M; \
         proxy_connect_timeout 7200s; \
@@ -54,7 +60,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
             log_not_found off; \
         } \
         location ~* \.php$ { \
-            fastcgi_pass unix:/var/run/php/phpPHP_VERSION-fpm.sock; \
+            fastcgi_pass unix:/run/php/php8.2-fpm.sock; \
             fastcgi_index index.php; \
             fastcgi_split_path_info ^(.+\.php)(.*)$; \
             include fastcgi_params; \
@@ -161,21 +167,15 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
             try_files $uri /rss.php; \
         } \
     }' > /etc/nginx/sites-available/clipbucket && \
-	sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
     ln -s /etc/nginx/sites-available/clipbucket /etc/nginx/sites-enabled/
 
-RUN INSTALL_PATH_ESCAPED=$(echo "$INSTALL_PATH" | sed 's/\//\\\//g') && \
-    sed -i "s/DOMAIN_NAME/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket && \
-    sed -i "s/INSTALL_PATH/${INSTALL_PATH_ESCAPED}/g" /etc/nginx/sites-available/clipbucket && \
-    sed -i "s/PHP_VERSION/${PHP_VERSION}/g" /etc/nginx/sites-available/clipbucket
-
-RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
+RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket
 
 # Ajouter un script d'entrée pour init bdd et sources si necessaire
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Créer les volume pour la bdd et les sources
+# Créer les volumes pour la bdd et les sources
 VOLUME ["/var/lib/mysql", "label=clipbucket_database"]
 VOLUME ["/srv/http/clipbucket", "label=clipbucket_sources"]
 
@@ -184,4 +184,3 @@ EXPOSE 80
 
 # Commande de démarrage
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["nginx", "-g", "daemon off;"]

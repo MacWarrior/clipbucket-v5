@@ -13,7 +13,6 @@ if (isset($_GET['collection'])) {
     assign('selected_collection', $cbphoto->collection->get_collection($selected_collection));
 }
 
-
 $collections = Collection::getInstance()->getAllIndent([
     'type'   => 'photos',
     'userid' => user_id()

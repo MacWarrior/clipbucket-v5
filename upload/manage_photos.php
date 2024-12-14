@@ -1,13 +1,15 @@
 <?php
 define('THIS_PAGE', 'manage_photos');
 define('PARENT_PAGE', 'photos');
+
 require 'includes/config.inc.php';
+
+User::getInstance()->isUserConnectedOrRedirect();
 
 if( !isSectionEnabled('photos') ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
-User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));

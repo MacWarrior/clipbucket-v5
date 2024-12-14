@@ -4,13 +4,14 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
+User::getInstance()->isUserConnectedOrRedirect();
+
 if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectionEnabled('photos')) ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
 global $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 $order = 'collection_items.date_added DESC';

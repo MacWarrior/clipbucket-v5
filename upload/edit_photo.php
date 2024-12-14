@@ -4,6 +4,8 @@ define('PARENT_PAGE', 'photos');
 
 require 'includes/config.inc.php';
 
+User::getInstance()->isUserConnectedOrRedirect();
+
 global $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('edit_video');
