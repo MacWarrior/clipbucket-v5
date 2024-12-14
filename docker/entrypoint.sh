@@ -96,12 +96,12 @@ chown containeruser:containeruser /run/php/php8.2-fpm.sock
 # Vérifier si les sources existent
 if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
     echo "Init sources..."
-    mkdir -p /srv/http/clipbucket && \
+    mkdir -p /srv/http/clipbucket ;
     git clone https://github.com/MacWarrior/clipbucket-v5.git /srv/http/clipbucket; 
-    git config --global core.fileMode false && \
-    git config --global --add safe.directory /srv/http/clipbucket && \
-    chown -R containeruser:containeruser /srv/http/clipbucket && \
-    chmod 755 -R /srv/http/clipbucket
+    git config --global core.fileMode false ;
+    git config --global --add safe.directory /srv/http/clipbucket ;
+    chown -R containeruser:containeruser /srv/http/clipbucket ;
+    chmod 755 -R /srv/http/clipbucket ;
 else
     echo "Sources already exist. No init required."
 fi
