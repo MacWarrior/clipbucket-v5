@@ -51,8 +51,7 @@ And even more !
 ## With Docker
 Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application.
 
-### Docker command:
-**Run the ClipBucket Container from DockerHub :**
+### Run the ClipBucket Container from DockerHub :
    ```bash
    docker run \
    --restart unless-stopped \
