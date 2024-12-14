@@ -99,7 +99,7 @@ function get_playlist_default_thumb(): string
 
 function view_playlist($playlist_id)
 {
-    $playlist_link = BASEURL;
+    $playlist_link = get_server_url();
 
     if (is_array($playlist_id) and isset($playlist_id['playlist_id'])) {
         $playlist = $playlist_id;
@@ -108,7 +108,7 @@ function view_playlist($playlist_id)
     }
 
     if (empty($playlist)) {
-        return BASEURL;
+        return get_server_url();
     }
 
     $is_seo = SEO;

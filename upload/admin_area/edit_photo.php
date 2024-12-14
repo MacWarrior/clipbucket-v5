@@ -34,7 +34,7 @@ if ($_GET['mode'] != '') {
 
 $p = Photo::getInstance()->getOne(['photo_id'=>$id]);
 if (empty($p)) {
-    redirect_to(BASEURL . DirPath::getUrl('admin_area') . 'photo_manager.php?missing_photo=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
+    redirect_to(get_server_url() . DirPath::getUrl('admin_area') . 'photo_manager.php?missing_photo=' . ( $_GET['mode'] == 'delete' ? '2' : '1'));
 }
 $p['user'] = $p['userid'];
 

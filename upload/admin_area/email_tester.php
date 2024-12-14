@@ -102,9 +102,9 @@ $_templates = [];
 
 $macros = [
     '{website_title}' => TITLE,
-    '{baseurl}'       => BASEURL,
-    '@baseurl'        => BASEURL,
-    '{website_url}'   => BASEURL,
+    '{baseurl}'       => get_server_url(),
+    '@baseurl'        => get_server_url(),
+    '{website_url}'   => get_server_url(),
     '{date_format}'   => cbdate(DATE_FORMAT),
     '{date}'          => cbdate(),
     '{username}'      => user_name(),

@@ -1,21 +1,31 @@
 # ClipBucket V5 - An updated way to broadcast yourself
 <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is a __free updated and upgraded__ version of <a href="https://github.com/arslancb/clipbucket">ClipBucket</a>.
 
-ClipBucket is an Open Source and freely downloadable PHP script that will let you start your own Video Sharing website (YouTube Clone) in a matter of minutes. ClipBucket is the fastest growing video script with the most advanced video sharing and social features.
+ClipBucket is an Open Source and freely downloadable PHP script that will let you start your own Video Sharing website (YouTube/Netflix Clone) in a matter of minutes.
+ClipBucket is the fastest growing video script with the most advanced video sharing and social features.
 
-With ClipBucket, you will have almost all social media features in your hand. You can let your users create groups, playlists, collections and much more. They can send friend requests and private messages to each other as well.
+With ClipBucket, you will have almost all social media features in your hand. You can let your users create playlists, collections and much more. They can send friend requests and private messages to each other as well.
 You can start a fully dedicated video sharing website or photo sharing websites and also both at the same time as well.
-<br/><br/>
+<br/>
+
+Take a look at our <a href="https://demo.clipbucket.oxygenz.fr/" target="_blank">live demo</a> !
 
 <p align="center">
-  <img src="./upload/images/screenshot.jpg"/>
+  <img width="750px" src="./upload/images/readme/screenshot-dark-theme.jpg"/>
 </p>
+
+<details>
+  <summary>Check out our light theme</summary>
+  <p align="center">
+    <img width="750px" src="./upload/images/readme/screenshot-light-theme.jpg"/>
+  </p>
+</details>
 
 # Update 5.5.0
 After more than 370 revisions, we're proud to officialy announce the release of ClipBucketV5 - 5.5.0, the biggest update of ClipBucket to this day, implementing tons of new features and preparing it's future.
 <p align="center">
     <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.0">
-      <img src="./upload/images/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
+      <img src="./upload/images/readme/release-5.5.0.png" alt="ClipbucketV5 update 5.5.0 features list"/>
     </a>
 </p>
 
@@ -38,63 +48,131 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 And even more !
 
 # Installation
-### Beginners
-Greetings young adventurer ! Don't worry, we've thought about you and created some easy installation scripts !<br/>
-All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree/master/utils">Installation scripts</a><br/>
-<i>It should also be noted that these scripts are meant for testing and development purposes only</i>
+## With Docker
+Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application.
 
-## Installation with Docker
-Installing <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> using Docker provides a streamlined and isolated environment for running the application. Here's how you can set it up:
-
-### Step-by-Step Installation Guide:
-1. **Build the Docker Image:**
-   ```bash
-   docker build -t clipbucket https://github.com/MacWarrior/clipbucket-v5.git#master
-   ```
-2. **Run the ClipBucket Container:**
+### Run the ClipBucket Container from DockerHub :
    ```bash
    docker run \
    --restart unless-stopped \
+   --pull=always \
    -e DOMAIN_NAME=clipbucket.local \
-   -e MYSQL_ROOT_PASSWORD=clipbucket_password \
+   -e MYSQL_PASSWORD=clipbucket_password \
+   -e UID=1000 \
+   -e GID=1000 \
    -v clipbucket_db:/var/lib/mysql \
    -v clipbucket_files:/srv/http/clipbucket \
    -p 80:80 \
-   -d --name clipbucket clipbucket
+   --name clipbucket \
+   -d oxygenz/clipbucket-v5:latest
    ```
 
-### Explanation of Docker Commands:
-- **`docker build -t clipbucket ...`**: Builds the ClipBucket Docker image directly from the GitHub repository.
-- **`docker run` options:**
-    - `--restart unless-stopped`: Automatically restarts the container unless explicitly stopped.
-    - `-e DOMAIN_NAME=...`: Sets the domain name for your ClipBucket instance.
-    - `-e MYSQL_ROOT_PASSWORD=...`: Specifies the root password for MySQL.
-    - `-v clipbucket_db:/var/lib/mysql`: Maps a persistent volume for the database.
-    - `-v clipbucket_files:/srv/http/clipbucket`: Maps a persistent volume for ClipBucket files.
-    - `-p 80:80`: Maps port 80 on the host to port 80 on the container, making the application accessible via the host machine.
-    - `--name clipbucket`: Names the container for easier management.
-    - `-d`: Runs the container in detached mode.
+<details>
+  <summary>Docker command options explanation</summary>
+  <code>docker run</code> options :
+  <ul>
+    <li>
+      <code>--restart unless-stopped</code> : Automatically restarts the container unless explicitly stopped.
+    </li>
+    <li>
+      <code>--pull=always</code> : Ensures the image is always pulled before starting, even if it exists locally.
+    </li>
+    <li>
+      <code>-e DOMAIN_NAME=...</code> : Sets the domain name for your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> instance.
+    </li>
+    <li>
+      <code>-e MYSQL_PASSWORD=...</code> : Specifies the root password for MySQL.
+    </li>
+    <li>
+      <code>-e UID=1000</code> : Sets the user ID (UID) for the application running inside the container. 1000 is the typical UID for the first user on Linux systems. If you want a different user, adjust the UID.
+    </li>
+    <li>
+      <code>-e GID=1000</code> : Sets the group ID (GID) for the application running inside the container. Like UID, this is often 1000 by default, but it can be adjusted if you want a different group.
+    </li>
+    <li>
+      <code>-v clipbucket_db:/var/lib/mysql</code> : Maps a persistent volume for the database.
+    </li>
+    <li>
+      <code>-v clipbucket_files:/srv/http/clipbucket</code> : Maps a persistent volume for ClipBucket files.
+    </li>
+    <li>
+      <code>-p 80:80</code> : Maps port 80 on the host to port 80 on the container, making the application accessible via the host machine.
+    </li>
+    <li>
+      <code>--name clipbucket</code> : Names the container for easier management.
+    </li>
+    <li>
+      <code>-d</code> : Runs the container in detached mode.
+    </li>
+  </ul>
+</details>
 
-### Advanced users
-<i>“Your path you must decide.”</i><br/>
-Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo, ffi ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
-Recommended : MariaDB 10.3+ ; PHP 8.3+ ; FFmpeg 4.3+<br/>
-Optionnal : Git<br/>
-<i>Only stable versions have been tested, mainly on Debian</i>
+<details>
+  <summary>UID and GID Explanation for Bind Mounts in Docker</summary>
+  UID and GID are only necessary when using bind mounts in Docker. A bind mount links a directory on your host machine to a directory in the container, like this:<br/>
+  <pre>-v /path/to/host/folder:/srv/http/clipbucket</pre>
+  With bind mounts, Docker does not modify file permissions. 
+  If the UID and GID of the container's user do not match those of the host system, there can be permission issues. 
+  For example, files created by the container might not be accessible from the host and vice versa.
+</details>
+<details>
+  <summary>Why UID and GID matter</summary>
+  UID (User ID) and GID (Group ID) are numeric identifiers for users and groups on the system.<br/>
+  If the container's UID and GID do not match those of the host user, permission issues arise.
+</details>
+<details>
+  <summary>UID and GID solution</summary>
+  Set the UID and GID in the docker run command to match the host user:
+  <pre>-e UID=1000 \
+-e GID=1000</pre>
+  If you use Docker volumes (not bind mounts), UID and GID are not necessary since Docker manages the permissions internally.
+  To find the UID and GID of a user on your host system (Debian), you can run the following commands:
+  <pre>id username</pre>
+Replace username with the name of the user. For example, for the user john, use id john.
+</details>
 
-# DB auto-update system
-On version 5.5.0, Revision 169, a new DB update system has been implemented, since then, you can easily update your DB from any version since 4.2 RC1 to any new version/revision.<br/>
-Update your sources, log in and follow instructions displayed.
+## On dedicated server
+<details>
+  <summary>Beginners - Easy installation scripts</summary>
+  Greetings young adventurer ! Don't worry, we've thought about you and created some easy installation scripts !<br/>
+  All you need is here : <a href="https://github.com/MacWarrior/clipbucket-v5/tree/master/utils">Installation scripts</a><br/>
+  <i>It should also be noted that these scripts are meant for testing and development purposes only</i>
+</details>
+<details>
+  <summary>Advanced users</summary>
+  <i>“Your path you must decide.”</i><br/>
+  Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
+  Recommended : MariaDB 10.3+ ; PHP 8.3+ ; FFmpeg 4.3+<br/>
+  Optionnal : Git, PHP module FFI<br/>
+  <i>Only stable versions have been tested, mainly on Debian</i>
+</details>
+
+# Continuous integration
+<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> works on the principle of continuous integration, that is to say that the most stable version with the most features and fixes is the <a href="https://github.com/MacWarrior/clipbucket-v5/commits/master/">master version</a>.
+<br/>Use GIT to install your copy of <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> and easily keep it up to date thanks to our integrated systems.
+
+# How to update
+When installed with git, <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> can self-update.<br/>
+Simply log in and follow instruction from Admin Area > Dashboard.
+<p align="center">
+  <img width="750px" src="./upload/images/readme/update.jpg"/>
+</p>
 
 # Updating from ClipBucket 4.2
 Follow our [quick steps tutorial](https://github.com/MacWarrior/clipbucket-v5/wiki/Upgrade-from-Clipbucket-4.2)
 
 # Issues
 Still reading ? Good !<br/>
-Now your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is installed <i>(or maybe not yet)</i> 
+Now your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> is installed <i>(or maybe not yet)</i>
 and you request some help ? Or found a bug ? Or have a brilliant idea ?<br/>
 Take a step back, breath slowly, and create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues">issue</a> !<br/>
 Be the more precise you can, add screenshots, give examples... I'm sure we will find a solution !
 
 # More
-<a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/discord.png "Join us on Discord")</a>
+<a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/readme/discord.png "Join us on Discord")</a>
+
+# How to help us
+- Report <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issues</a> to help us improve <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
+- Star us on <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">GitHub</a>
+- Star us on <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5" target="_blank">DockerHub</a>
+- Follow us on <a href="https://www.linkedin.com/company/oxygenz/" target="_blank">Linkedin</a>

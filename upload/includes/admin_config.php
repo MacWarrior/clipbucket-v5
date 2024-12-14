@@ -42,7 +42,7 @@ if( THIS_PAGE != 'system_info' && php_sapi_name() != 'cli' ){
     }
 }
 
-Assign('baseurl', BASEURL);
+Assign('baseurl', get_server_url());
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');
@@ -67,6 +67,6 @@ if( THIS_PAGE != 'admin_login' ){
     }
 
     if( !User::getInstance()->hasPermission('admin_access') ){
-        redirect_to(BASEURL . '/403.php');
+        redirect_to(get_server_url() . '/403.php');
     }
 }

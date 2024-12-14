@@ -7,7 +7,7 @@ User::getInstance()->hasPermissionOrRedirect('view_videos');
 pages::getInstance()->page_redir();
 
 if( !isSectionEnabled('videos') ){
-    redirect_to(BASEURL);
+    redirect_to(get_server_url());
 }
 
 $child_ids = false;
