@@ -5,6 +5,10 @@ FROM debian:stable-slim
 ENV DOMAIN_NAME=clipbucket.local
 ENV MYSQL_ROOT_PASSWORD=clipbucket_password
 
+# Ajouter un utilisateur avec un UID/GID dynamique
+ENV UID=1000
+ENV GID=1000
+
 # Version de PHP fixée
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
@@ -24,8 +28,7 @@ RUN apt-get update && \
     apt-get clean
 
 # Configuration PHP
-RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini && \
-    systemctl enable php8.2-fpm
+RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
 
 # Configure Nginx
 RUN rm -f /etc/nginx/sites-enabled/default && \
@@ -52,7 +55,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
             log_not_found off; \
         } \
         location ~* \.php$ { \
-            fastcgi_pass unix:/var/run/php/php8.2-fpm.sock; \
+            fastcgi_pass unix:/run/php/php8.2-fpm.sock; \
             fastcgi_index index.php; \
             fastcgi_split_path_info ^(.+\.php)(.*)$; \
             include fastcgi_params; \
@@ -162,8 +165,6 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
     ln -s /etc/nginx/sites-available/clipbucket /etc/nginx/sites-enabled/
 
 RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket
-
-RUN mkdir -p /run/mysqld && chown mysql:mysql /run/mysqld
 
 # Ajouter un script d'entrée pour init bdd et sources si necessaire
 COPY entrypoint.sh /usr/local/bin/
