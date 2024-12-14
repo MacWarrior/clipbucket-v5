@@ -28,13 +28,6 @@
             </div>
 
             <div class="field">
-                <label for="baseurl"><?php echo lang('website_url'); ?></label>
-                <input name="baseurl" type="text" id="baseurl" class="form-control" value="<?php echo BASEURL; ?>">
-                <p class="grey-text font-size" style="margin-top:0;">
-                    <?php echo lang('website_url_hint'); ?>
-                </p>
-            </div>
-            <div class="field">
                 <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
                 <select name="language" id="language" class="form-control">
                     <?php foreach (Language::getInstance()->get_langs() as $lang) {
@@ -51,7 +44,7 @@
                 $allTimezone = array_column($rs, 'timezone');?>
                 <div class="field">
                     <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
-                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;" >
+                    <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>
                             <option value="<?php echo $timezone; ?>">

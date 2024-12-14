@@ -519,7 +519,7 @@ class User
 
     public static function redirectToLogin()
     {
-        redirect_to(BASEURL . '/signup.php?mode=login');
+        redirect_to(get_server_url() . '/signup.php?mode=login');
     }
 
     /**
@@ -2142,7 +2142,7 @@ class userquery extends CBCategory
 
         if (config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email']))) {
             $email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
-            $gravatar = new Gravatar($email, BASEURL . $default);
+            $gravatar = new Gravatar($email, get_server_url() . $default);
             $gravatar->size = $thesize;
             $gravatar->rating = 'G';
             $gravatar->border = 'FF0000';

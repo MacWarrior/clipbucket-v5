@@ -6,7 +6,7 @@ User::getInstance()->hasPermissionOrRedirect('view_channels');
 pages::getInstance()->page_redir();
 
 if( !isSectionEnabled('channels') ){
-    redirect_to(BASEURL);
+    redirect_to(get_server_url());
 }
 $params = [
     'featured'       => 'yes',

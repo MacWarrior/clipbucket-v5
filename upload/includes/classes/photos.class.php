@@ -2583,7 +2583,7 @@ class CBPhotos
     function photo_links($details, $type): string
     {
         if (empty($type)) {
-            return BASEURL;
+            return get_server_url();
         }
 
         switch ($type) {
@@ -2604,7 +2604,7 @@ class CBPhotos
                 return $this->collection->collection_links($details, 'view_item');
 
             default:
-                return BASEURL;
+                return get_server_url();
         }
     }
 
@@ -2823,7 +2823,7 @@ class CBPhotos
                 if ($p['with_url']) {
                     $code .= "&lt;a href='" . $this->collection->collection_links($photo, 'view_item') . "' target='_blank'&gt;";
                 }
-                $code .= "&lt;img src='" . BASEURL . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
+                $code .= "&lt;img src='" . get_server_url() . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
                 if ($p['with_url']) {
                     $code .= '&lt;/a&gt;';
                 }
@@ -2833,7 +2833,7 @@ class CBPhotos
                 if ($p['with_url']) {
                     $code .= '&#91;URL=' . $this->collection->collection_links($photo, 'view_item') . '&#93;';
                 }
-                $code .= '&#91;IMG&#93;' . BASEURL . $image_file . '&#91;/IMG&#93;';
+                $code .= '&#91;IMG&#93;' . get_server_url() . $image_file . '&#91;/IMG&#93;';
                 if ($p['with_url']) {
                     $code .= '&#91;/URL&#93;';
                 }
@@ -2844,7 +2844,7 @@ class CBPhotos
                 break;
 
             case 'direct':
-                $code .= BASEURL . $image_file;
+                $code .= get_server_url() . $image_file;
                 break;
 
             default:

@@ -5,7 +5,7 @@ define('PARENT_PAGE', 'photos');
 require 'includes/config.inc.php';
 
 if( !isSectionEnabled('photos') ){
-    redirect_to(BASEURL);
+    redirect_to(get_server_url());
 }
 
 User::getInstance()->hasPermissionOrRedirect('view_photos');
