@@ -100,7 +100,7 @@ if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
     git clone https://github.com/MacWarrior/clipbucket-v5.git /srv/http/clipbucket && \
     git config --global core.fileMode false && \
     git config --global --add safe.directory /srv/http/clipbucket && \
-    chown www-data: -R /srv/http/clipbucket && \
+    chown -R containeruser:containeruser/srv/http/clipbucket
     chmod 755 -R /srv/http/clipbucket
 else
     echo "Sources already exist. No init required."
