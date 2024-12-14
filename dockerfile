@@ -167,7 +167,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
 RUN sed -i "s/DOMAIN_NAME_PLACEHOLDER/${DOMAIN_NAME}/g" /etc/nginx/sites-available/clipbucket
 
 # Ajouter un script d'entrée pour init bdd et sources si necessaire
-COPY entrypoint.sh /usr/local/bin/
+COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 # Créer les volumes pour la bdd et les sources
