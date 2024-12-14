@@ -9,11 +9,11 @@ fi
 # Vérifier si l'utilisateur existe déjà, sinon le créer
 if ! getent passwd ${UID} > /dev/null; then
   useradd -m -u ${UID} -g ${GID} containeruser
-
-  # adapter les permission pour le nouvel user
-  mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
-  chown -R containeruser:containergroup /var/lib/mysql /srv/http/clipbucket /run/mysqld /usr/lib/mysql
 fi
+
+# adapter les permission pour le nouvel user
+mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
+chown -R containeruser:containergroup /var/lib/mysql /srv/http/clipbucket /run/mysqld /usr/lib/mysql
 
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
