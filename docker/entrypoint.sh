@@ -3,7 +3,7 @@ set -e
 
 # Vérifier si le groupe existe déjà, sinon le créer
 if ! getent group ${GID} > /dev/null; then
-  groupadd -g ${GID} containergroup
+  groupadd -g ${GID} containeruser
 fi
 
 # Vérifier si l'utilisateur existe déjà, sinon le créer
@@ -13,8 +13,7 @@ fi
 
 # adapter les permission pour le nouvel user
 mkdir -p /var/lib/mysql /srv/http/clipbucket /run/mysqld /var/lib/nginx && \
-chown -R containeruser:containergroup /var/lib/mysql /run/mysqld /usr/lib/mysql
-chown -R www-data:www-data /srv/http/clipbucket
+chown -R containeruser:containeruser /var/lib/mysql /run/mysqld /usr/lib/mysql /srv/http/clipbucket /run/php
 
 # Fonction pour terminer correctement les processus enfants
 terminate_processes() {
@@ -41,7 +40,22 @@ echo "Starting MariaDB..."
 mariadbd --user=containeruser --datadir=/var/lib/mysql &
 mariadb_pid=$!
 
-sleep 5
+
+# Initialiser le compteur de temps d'attente
+timeout=20
+elapsed=0
+
+# Attendre que le fichier de socket MariaDB soit créé, avec une limite de 20 secondes
+while [ ! -e /var/run/mysqld/mysqld.sock ] && [ $elapsed -lt $timeout ]; do
+  sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
+  elapsed=$(awk "BEGIN {print $elapsed + 0.1}")  # Incrémenter le compteur
+done
+
+# Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
+if [ ! -e /var/run/mysqld/mysqld.sock ]; then
+  echo "Erreur : Le fichier de socket MariaDB n'a pas été créé après 20 secondes."
+  exit 1
+fi
 
 # Vérifier si la base de données existe
 if [ ! -d "/var/lib/mysql/clipbucket" ]; then
@@ -58,6 +72,26 @@ fi
 echo "Starting PHP-FPM..."
 php-fpm8.2 -F --fpm-config /etc/php/8.2/fpm/php-fpm.conf --nodaemonize &
 php_pid=$!
+
+
+# Initialiser le compteur de temps d'attente
+timeout=20
+elapsed=0
+
+# Attendre que le fichier de socket soit créé, avec une limite de 20 secondes
+while [ ! -e /run/php/php8.2-fpm.sock ] && [ $elapsed -lt $timeout ]; do
+  sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
+  elapsed=$(awk "BEGIN {print $elapsed + 0.1}")  # Incrémenter le compteur
+done
+
+# Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
+if [ ! -e /run/php/php8.2-fpm.sock ]; then
+  echo "Erreur : Le fichier de socket PHP-FPM n'a pas été créé après 20 secondes."
+  exit 1
+fi
+
+# Changer le propriétaire du fichier de socket une fois qu'il est disponible
+chown containeruser:containeruser /run/php/php8.2-fpm.sock
 
 # Vérifier si les sources existent
 if [ ! "$(ls -A /srv/http/clipbucket)" ]; then
@@ -76,6 +110,8 @@ fi
 echo "Starting Nginx..."
 nginx -g "daemon off;" &
 nginx_pid=$!
+
+echo "pid nginx = $nginx_pid"
 
 # Surveiller les processus et détecter les arrêts
 while true; do
