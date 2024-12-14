@@ -42,13 +42,13 @@ mariadb_pid=$!
 
 
 # Initialiser le compteur de temps d'attente
-timeout=20
+timeout=200
 elapsed=0
 
 # Attendre que le fichier de socket MariaDB soit créé, avec une limite de 20 secondes
 while [ ! -e /var/run/mysqld/mysqld.sock ] && [ $elapsed -lt $timeout ]; do
   sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
-  elapsed=$(awk "BEGIN {print $elapsed + 0.1}")  # Incrémenter le compteur
+  elapsed=$((elapsed + 1))  # Incrémenter le compteur en utilisant des entiers
 done
 
 # Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
@@ -75,13 +75,13 @@ php_pid=$!
 
 
 # Initialiser le compteur de temps d'attente
-timeout=20
+timeout=200
 elapsed=0
 
 # Attendre que le fichier de socket soit créé, avec une limite de 20 secondes
 while [ ! -e /run/php/php8.2-fpm.sock ] && [ $elapsed -lt $timeout ]; do
   sleep 0.1  # Petite attente pour éviter une boucle infinie excessive
-  elapsed=$(awk "BEGIN {print $elapsed + 0.1}")  # Incrémenter le compteur
+  elapsed=$((elapsed + 1))  # Incrémenter le compteur en utilisant des entiers
 done
 
 # Si le fichier de socket n'a pas été trouvé après 20 secondes, échouer
