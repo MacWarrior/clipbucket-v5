@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"225",
+  "revision":"226",
   "status":"dev",
   "detail":[
     {
@@ -204,6 +204,8 @@
         ,"Fix my account settings save"
         ,"Fix access pages check"
         ,"Fix URL redirect with specified port <i>(#486)</i>"
+        ,"Fix double / in URL"
+        ,"Fix permission check for guests"
       ]
     },
     {

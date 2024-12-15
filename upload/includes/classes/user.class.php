@@ -519,7 +519,7 @@ class User
 
     public static function redirectToLogin()
     {
-        redirect_to(get_server_url() . '/signup.php?mode=login');
+        redirect_to(get_server_url() . 'signup.php?mode=login');
     }
 
     /**
@@ -844,7 +844,10 @@ class userquery extends CBCategory
         $cb_columns->object('users')->register_columns($basic_fields);
     }
 
-    public function hasUserLevelAccess($user_level, $access)
+    /**
+     * @throws Exception
+     */
+    public function hasUserLevelAccess($user_level, $access): bool
     {
         $perms = userquery::getInstance()->get_user_level($user_level, true);
         if( !isset($perms[$access]) ){
@@ -852,7 +855,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        return $perms[$access] == 'yes';
+        return $perms[$access]['permission_value'] == 'yes';
     }
 
     /**

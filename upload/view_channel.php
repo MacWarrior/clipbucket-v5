@@ -26,7 +26,7 @@ if (is_int($u)) {
 }
 $udetails = User::getInstance()->getOne($params_user);
 if (!$udetails || $udetails['userid'] == userquery::getInstance()->get_anonymous_user() ) {
-    sessionMessageHandler::add_message(lang('channel_doesnt_exists'), 'e', get_server_url() . '/channels.php');
+    sessionMessageHandler::add_message(lang('channel_doesnt_exists'), 'e', get_server_url() . 'channels.php');
 }
 if ($udetails['ban_status'] == 'yes') {
     e(lang('usr_uban_msg'));

@@ -1351,11 +1351,7 @@ function cblink($params, $fullurl = false)
     }
 
     if (isset(ClipBucket::getInstance()->links[$name])) {
-        if (strpos(get_server_protocol(), ClipBucket::getInstance()->links[$name][$val]) !== false) {
-            $link .= ClipBucket::getInstance()->links[$name][$val];
-        } else {
-            $link .= '/' . ClipBucket::getInstance()->links[$name][$val];
-        }
+        $link .= ClipBucket::getInstance()->links[$name][$val];
     } else {
         $link = false;
     }
@@ -2988,7 +2984,7 @@ function check_install($type)
     switch ($type) {
         case 'before':
             if (!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                header('Location: ' . get_server_url() . '/cb_install');
+                header('Location: ' . get_server_url() . 'cb_install');
                 die();
             }
             break;
