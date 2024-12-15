@@ -2230,9 +2230,9 @@ class Collections extends CBCategory
                         return get_server_url();
                     }
                     if (SEO == 'yes') {
-                        return get_server_url() . '/collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
+                        return get_server_url() . 'collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
                     }
-                    return get_server_url() . '/view_collection.php?cid=' . $cdetails['collection_id'];
+                    return get_server_url() . 'view_collection.php?cid=' . $cdetails['collection_id'];
                 case 'vi':
                 case 'view_item':
                 case 'item':
@@ -2240,9 +2240,9 @@ class Collections extends CBCategory
                         if (empty($details['collection_id'])) {
                             return get_server_url();
                         }
-                        return get_server_url() . '/item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+                        return get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
                     }
-                    return get_server_url() . '/view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+                    return get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
                 case 'load_more':
                 case 'more_items':
                 case 'moreItems':

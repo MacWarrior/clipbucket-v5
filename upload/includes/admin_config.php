@@ -67,6 +67,6 @@ if( THIS_PAGE != 'admin_login' ){
     }
 
     if( !User::getInstance()->hasPermission('admin_access') ){
-        redirect_to(get_server_url() . '/403.php');
+        redirect_to(get_server_url() . '403.php');
     }
 }
