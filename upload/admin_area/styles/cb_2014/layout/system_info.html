@@ -446,7 +446,7 @@
                         {if !$canAccessNginx}
                             {$show_warning = true}
                             <div class="row">
-                                <img src="{$imageurl}/help.png"/>
+                                <span class="fa fa-question-circle tips"></span>
                                 PHP is unable to check Nginx configuration.<br/>
                                 Please make sure <b>client_max_body_size</b> is set correctly.<br/>
 
@@ -479,7 +479,7 @@
 
                     <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
                         <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank">
-                            <img alt="help" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
+                            <span class="fa fa-question-circle tips" title="{lang code='cloudflare_documentation'}"></span>
                         </a>
                         Using Cloudflare implies max upload size limits,<br/>
                         depending of your subscription rank.<br/>

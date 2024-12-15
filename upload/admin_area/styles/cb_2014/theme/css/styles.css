@@ -1057,3 +1057,25 @@ a[role='menuitem'] {
     margin-right: 5px;
     padding-top: 3px;
 }
+
+/* Tips icon */
+.tips{
+    color: #1491FF;
+    cursor: help;
+}
+
+/* AI icon */
+.ai-powered{
+    width: 25px;
+    height: 25px;
+    background-image: url('../../images/ai.png');
+    display: inline-block;
+    background-size: contain;
+    vertical-align: middle;
+    margin-left: 10px;
+    transition-duration: 0.5s;
+    cursor: help;
+}
+.ai-powered:hover{
+    filter: opacity(0.5) drop-shadow(0 0 0 #1491FF);
+}

@@ -46,6 +46,27 @@ class AIVision
         }
     }
 
+    public static function is_available(): bool
+    {
+        $php_version_min = '7.4.0';
+
+        $php_web = System::get_software_version('php_web');
+        if( version_compare($php_web, $php_version_min, '<') ){
+            return false;
+        }
+
+        $php_cli = System::get_software_version('php_cli');
+        if( version_compare($php_cli, $php_version_min, '<') ){
+            return false;
+        }
+
+        if( strtolower(ini_get('ffi.enable')) != 'on' ){
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      * @throws Exception
      */

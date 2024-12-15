@@ -145,7 +145,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="censored_words" title="{lang code='option_censored_words'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> {lang code='option_censored_words'}</label>
+                                    <label class="nowrap" for="censored_words" title="{lang code='option_censored_words'}"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> {lang code='option_censored_words'}</label>
                                     <textarea class="form-control" name="censored_words" id="censored_words" cols="45" rows="5">{$row.censored_words}</textarea>
                                 </div>
                             </div>
@@ -359,7 +359,7 @@
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_global_age_restriction'}"/> {lang code='enable_global_age_restriction'}</label>
+                                                <label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><span class="fa fa-question-circle tips" title="{lang code='tips_enable_global_age_restriction'}"></span> {lang code='enable_global_age_restriction'}</label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
@@ -369,7 +369,7 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_blur_restricted_content'}"/> {lang code='option_enable_blur_restricted_content'}</label>
+                                                <label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><span class="fa fa-question-circle tips" title="{lang code='tips_enable_blur_restricted_content'}"></span> {lang code='option_enable_blur_restricted_content'}</label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" id="enable_blur_restricted_content" {if $row.enable_blur_restricted_content=='yes'}checked{/if} name="enable_blur_restricted_content" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
@@ -379,7 +379,7 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="enable_hide_uploader_name" title="{lang code='option_enable_hide_uploader_name'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_hide_uploader_name'}"/> {lang code='option_enable_hide_uploader_name'}</label>
+                                                <label class="nowrap" for="enable_hide_uploader_name" title="{lang code='option_enable_hide_uploader_name'}"><span class="fa fa-question-circle tips" title="{lang code='tips_enable_hide_uploader_name'}"></span> {lang code='option_enable_hide_uploader_name'}</label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" id="enable_hide_uploader_name" {if $row.enable_hide_uploader_name=='yes'}checked{/if} name="enable_hide_uploader_name" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
@@ -392,7 +392,7 @@
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <label><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_logo'}"/> Logo</label>
+                                                <label><span class="fa fa-question-circle tips" title="{lang code='tips_logo'}"></span> Logo</label>
                                             </div>
                                             <div class="col-md-9">
                                                 <input type="file" accept='image/*' name="upload_logo"/>
@@ -407,7 +407,7 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <label><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_favicon'}"/> {lang('favicon')}</label>
+                                                <label><span class="fa fa-question-circle tips" title="{lang code='tips_favicon'}"></span> {lang('favicon')}</label>
                                             </div>
                                             <div class="col-md-9">
                                                 <input type="file" accept='image/*' name="upload_favicon"/>
@@ -603,7 +603,7 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-6">
-                                                <label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_only_with_slider_option'}"> {lang code='option_list_recent_videos'}</label>
+                                                <label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><span class="fa fa-question-circle tips" title="{lang code='tips_only_with_slider_option'}"></span> {lang code='option_list_recent_videos'}</label>
                                             </div>
                                             <div class="col-md-6">
                                                 <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
@@ -739,7 +739,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="min_age_reg" title="Minimum age for registration"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Leave blank to disable this option"> Minimum age for registration</label>
+                                    <label class="nowrap" for="min_age_reg" title="Minimum age for registration"><span class="fa fa-question-circle tips" title="Leave blank to disable this option"></span> Minimum age for registration</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="min_age_reg" id="min_age_reg" value="{$row.min_age_reg}" size="6" maxlength="3"/>
@@ -782,7 +782,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Disallowed usernames</label>
+                                    <label class="nowrap" for="disallowed_usernames" title="Disallowed usernames"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Disallowed usernames</label>
                                     <textarea class="form-control" name="disallowed_usernames" id="disallowed_usernames" cols="45" rows="5">{$row.disallowed_usernames}</textarea>
                                 </div>
                             </div>
@@ -819,7 +819,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="pick_geo_country" title="IP Geolocalisation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Replace default country"> IP Geolocalisation</label>
+                                    <label class="nowrap" for="pick_geo_country" title="IP Geolocalisation"><span class="fa fa-question-circle tips" title="Replace default country"></span> IP Geolocalisation</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="pick_geo_country" id="pick_geo_country" {if $row.pick_geo_country=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -855,7 +855,7 @@
                             <div class="row">
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label class="nowrap" for="email_domain_restriction" title="Email domain restriction"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="List of authorized domains, separated by commas"> Email domain restriction</label>
+                                        <label class="nowrap" for="email_domain_restriction" title="Email domain restriction"><span class="fa fa-question-circle tips" title="List of authorized domains, separated by commas"></span> Email domain restriction</label>
                                     </div>
                                     <div class="col-md-6">
                                         <input class="form-control" name="email_domain_restriction" id="email_domain_restriction" value="{$row.email_domain_restriction}"/>
@@ -865,7 +865,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_profile_pic_width" title="Max profile pic width"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In Pixels"> Max profile pic width</label>
+                                    <label class="nowrap" for="max_profile_pic_width" title="Max profile pic width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max profile pic width</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="max_profile_pic_width" id="max_profile_pic_width" value="{$row.max_profile_pic_width}"/>
@@ -875,7 +875,7 @@
 
                             <div class="row">
                                 <div class="col-md-6">
-                                    <label class="nowrap" for="max_bg_width" title="Max Background width"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="In Pixels"> Max Background width</label>
+                                    <label class="nowrap" for="max_bg_width" title="Max Background width"><span class="fa fa-question-circle tips" title="In Pixels"></span> Max Background width</label>
                                 </div>
                                 <div class="col-md-6">
                                     <input class="form-control" name="max_bg_width" id="max_bg_width" value="{$row.max_bg_width}"/>
@@ -1138,7 +1138,7 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <label class="nowrap" for="max_upload_size" title="Max upload file size">
-                                        <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Global maximum filesize allowed to be uploaded">
+                                        <span class="fa fa-question-circle tips" title="Global maximum filesize allowed to be uploaded"></span>
                                         Max upload file size
                                     </label>
                                 </div>
@@ -1153,7 +1153,7 @@
                             <div class="row">
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_chunk_upload" title="{lang code='option_enable_chunk_upload'}">
-                                        <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_enable_chunk_upload'}">
+                                        <span class="fa fa-question-circle tips" title="{lang code='tips_enable_chunk_upload'}"></span>
                                         {lang code='option_enable_chunk_upload'}
                                     </label>
                                 </div>
@@ -1203,14 +1203,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="activation" title="Video Activation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"> Video Activation</label>
+                                    <label class="nowrap" for="activation" title="Video Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Video Activation</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"> Photo Activation</label>
+                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Photo Activation</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1274,7 +1274,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Delete original files once uploaded from mass upload"> Delete Mass upload</label>
+                                    <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><span class="fa fa-question-circle tips" title="Delete original files once uploaded from mass upload"></span> Delete Mass upload</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1286,14 +1286,14 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Allowed Video extensions</label>
+                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Video extensions</label>
                                     <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
                                 </div>
                             </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='separated_by_commas'}"> Allowed Photo extensions</label>
+                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Photo extensions</label>
                                     <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
                                 </div>
                             </div>
@@ -1346,7 +1346,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-3">
-                                    <label class="nowrap" for="vrate" title="Frame rate target"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video rate will be calculated to be the closer as possible from this value"> Frame rate target</label>
+                                    <label class="nowrap" for="vrate" title="Frame rate target"><span class="fa fa-question-circle tips" title="Video rate will be calculated to be the closer as possible from this value"></span> Frame rate target</label>
                                 </div>
                                 <div class="col-md-3">
                                     <input class="form-control" name="vrate" id="vrate" value="{$row.vrate}"/>
@@ -1364,7 +1364,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="chromecast_fix" title="Chromecast compatibility" class="nowrap"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Force audio conversion to Stereo"> Chromecast compatibility</label>
+                                    <label class="nowrap" for="chromecast_fix" title="Chromecast compatibility" class="nowrap"><span class="fa fa-question-circle tips" title="Force audio conversion to Stereo"></span> Chromecast compatibility</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="chromecast_fix" id="chromecast_fix" {if $row.chromecast_fix=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1374,7 +1374,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="force_8bits" title="Improve compatibility"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Force video to 8bits colors maximum"> Improve compatibility</label>
+                                    <label class="nowrap" for="force_8bits" title="Improve compatibility"><span class="fa fa-question-circle tips" title="Force video to 8bits colors maximum"></span> Improve compatibility</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="force_8bits" id="force_8bits" {if $row.force_8bits=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1384,7 +1384,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="extract_subtitles" title="Extract subtitles"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Extract subtitles to dedicated files"> Extract subtitles</label>
+                                    <label class="nowrap" for="extract_subtitles" title="Extract subtitles"><span class="fa fa-question-circle tips" title="Extract subtitles to dedicated files"></span> Extract subtitles</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="extract_subtitles" id="extract_subtitles" {if $row.extract_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1394,7 +1394,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6 row-size">
-                                    <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download and require FFmpeg 4.3+"> <label>Conversion type</label>
+                                    <label><span class="fa fa-question-circle tips" title="Choose it wisely ! MP4 won't allow multiple audio tracks ; HLS won't allow download and require FFmpeg 4.3+"></span> Conversion type</label>
                                 </div>
                                 <div class="col-md-1">
                                     <input value="mp4" name="conversion_type" id="convesion_type_mp4" {if $row.conversion_type=='mp4'}checked{/if} type="radio" class="ace ace-switch ace-switch-5"/>
@@ -1414,7 +1414,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"> Stay MP4 as it is</label>
+                                    <label class="nowrap" for="stay_mp4" title="Stay MP4 as it is"><span class="fa fa-question-circle tips" title="Only use this option if you only want MP4 file uplad : this option disable video conversion and keep mp4 files as they are uploaded"></span> Stay MP4 as it is</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="stay_mp4" id="stay_mp4" {if $row.stay_mp4=='yes'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
@@ -1425,7 +1425,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="keep_audio_tracks" title="Keep audio tracks"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Conserve all audio tracks in video files"> Keep audio tracks</label>
+                                    <label class="nowrap" for="keep_audio_tracks" title="Keep audio tracks"><span class="fa fa-question-circle tips" title="Conserve all audio tracks in video files"></span> Keep audio tracks</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="keep_audio_tracks" id="keep_audio_tracks" {if $row.keep_audio_tracks=='1'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
@@ -1436,7 +1436,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-10">
-                                    <label class="nowrap" for="keep_subtitles" title="Keep subtitles"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Conserve subtitles in video files"> Keep subtitles</label>
+                                    <label class="nowrap" for="keep_subtitles" title="Keep subtitles"><span class="fa fa-question-circle tips" title="Conserve subtitles in video files"></span> Keep subtitles</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="keep_subtitles" id="keep_subtitles" {if $row.keep_subtitles=='1'}checked{/if} type="checkbox" {if $row.conversion_type=='hls'}disabled{/if} class="ace ace-switch ace-switch-5"/>
@@ -1547,7 +1547,7 @@
                         <hr/>
                         <div class="row">
                             <div class="col-md-10">
-                                <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Allow a 1% lower difference between expected video height/width and current video height/width"/> Allow 1% difference</label>
+                                <label class="nowrap" for="allow_conversion_1_percent" title="Allow 1% difference"><span class="fa fa-question-circle tips" title="Allow a 1% lower difference between expected video height/width and current video height/width"/></label> Allow 1% difference</label>
                             </div>
                             <div class="col-md-2 row-size">
                                 <input value="yes" name="allow_conversion_1_percent" id="allow_conversion_1_percent" {if $row.allow_conversion_1_percent=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1830,6 +1830,27 @@
                             <span class="lbl"></span>
                         </div>
                     </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label class="nowrap" for="video_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
+                                <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
+                                {lang code='option_enable_nsfw_check'}
+                                <span class="ai-powered" title="{lang code='tips_powered_by_ai'}"></span>
+                            </label>
+                        </div>
+                        <div class="col-md-2 row-size">
+                            <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::is_available()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::is_available()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                            <span class="lbl"></span>
+                        </div>
+                    </div>
+                    {if !AIVision::is_available()}
+                        <div class="row">
+                            <div class="col-md-12">
+                                <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
+                            </div>
+                        </div>
+                    {/if}
                     <hr/>
 
                 </div>
@@ -2149,7 +2170,7 @@
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-3">
-                            <label class="nowrap" for="photo_ratio" title="Photo ratio"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Your photo thumb and medium size thumb will be resized according to these ratios"> Photo ratio</label>
+                            <label class="nowrap" for="photo_ratio" title="Photo ratio"><span class="fa fa-question-circle tips" title="Your photo thumb and medium size thumb will be resized according to these ratios"></span> Photo ratio</label>
                         </div>
                         <div class="col-md-3 row-size">
                             <select class="form-control" id="photo_ratio" name="photo_ratio">
@@ -2176,12 +2197,33 @@
                         </div>
                     </div>
                     <hr/>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <label class="nowrap" for="photo_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
+                                <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
+                                {lang code='option_enable_nsfw_check'}
+                                <span class="ai-powered" title="{lang code='tips_powered_by_ai'}"></span>
+                            </label>
+                        </div>
+                        <div class="col-md-2 row-size">
+                            <input value="yes" name="photo_enable_nsfw_check" id="photo_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::is_available()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::is_available()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                            <span class="lbl"></span>
+                        </div>
+                    </div>
+                    {if !AIVision::is_available()}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
+                        </div>
+                    </div>
+                    {/if}
+                    <hr/>
 
                 </div>
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="nowrap" for="max_photo_size" title="Max photo size"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Maximum allowed photo size, in MBs"> Max photo size</label>
+                            <label class="nowrap" for="max_photo_size" title="Max photo size"><span class="fa fa-question-circle tips" title="Maximum allowed photo size, in MBs"></span> Max photo size</label>
                         </div>
                         <div class="col-md-2 row-size">
                             <input class="form-control" type="text" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}"/>
@@ -2550,7 +2592,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_main_list" title="Main Limit"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"> Main Limit</label>
+                            <label class="nowrap" for="photo_main_list" title="Main Limit"><span class="fa fa-question-circle tips" title="We use this limit in most of place where photo is displayed like, My Account, Manage Photos, Manage Favotires Photos etc"></span> Main Limit</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_main_list" id="photo_main_list" value="{$row.photo_main_list}"/>
@@ -2559,7 +2601,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_home_tabs" title="Home Tabs"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on Homepage"> Home Tabs</label>
+                            <label class="nowrap" for="photo_home_tabs" title="Home Tabs"><span class="fa fa-question-circle tips" title="Number of photos to display on Homepage"></span> Home Tabs</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_home_tabs" id="photo_home_tabs" value="{$row.photo_home_tabs}"/>
@@ -2568,7 +2610,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_search_result" title="Search Result"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on Search page"> Search Result</label>
+                            <label class="nowrap" for="photo_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of photos to display on Search page"></span> Search Result</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_search_result" id="photo_search_result" value="{$row.photo_search_result}"/>
@@ -2577,7 +2619,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_channel_page" title="Channel Page"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on User's page"> Channel Page</label>
+                            <label class="nowrap" for="photo_channel_page" title="Channel Page"><span class="fa fa-question-circle tips" title="Number of photos to display on User's page"></span> Channel Page</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_channel_page" id="photo_channel_page" value="{$row.photo_channel_page}"/>
@@ -2586,7 +2628,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_user_photos" title="User Photos"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on User's photos page"> User Photos</label>
+                            <label class="nowrap" for="photo_user_photos" title="User Photos"><span class="fa fa-question-circle tips" title="Number of photos to display on User's photos page"></span> User Photos</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_user_photos" id="photo_user_photos" value="{$row.photo_user_photos}"/>
@@ -2595,7 +2637,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_user_favorites" title="User favorites"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of photos to display on User's favorites page"> User favorites</label>
+                            <label class="nowrap" for="photo_user_favorites" title="User favorites"><span class="fa fa-question-circle tips" title="Number of photos to display on User's favorites page"></span> User favorites</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_user_favorites" id="photo_user_favorites" value="{$row.photo_user_favorites}"/>
@@ -2604,7 +2646,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="photo_other_limit" title="Other Limit"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Use anywhere you want"> Other Limit</label>
+                            <label class="nowrap" for="photo_other_limit" title="Other Limit"><span class="fa fa-question-circle tips" title="Use anywhere you want"></span> Other Limit</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="photo_other_limit" id="photo_other_limit" value="{$row.photo_other_limit}"/>
@@ -2622,7 +2664,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="collection_per_page" title="Collections Page"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on Collections page"> Collection Page</label>
+                            <label class="nowrap" for="collection_per_page" title="Collections Page"><span class="fa fa-question-circle tips" title="Number of collections to display on Collections page"></span> Collection Page</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="collection_per_page" id="collection_per_page" value="{$row.collection_per_page}"/>
@@ -2631,7 +2673,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="collection_items_page" title="Items Page"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of items to display in a Collection"> Items Page</label>
+                            <label class="nowrap" for="collection_items_page" title="Items Page"><span class="fa fa-question-circle tips" title="Number of items to display in a Collection"></span> Items Page</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="collection_items_page" id="collection_items_page" value="{$row.collection_items_page}"/>
@@ -2640,7 +2682,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="collection_search_result" title="Search Result"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display in search results"> Search Result</label>
+                            <label class="nowrap" for="collection_search_result" title="Search Result"><span class="fa fa-question-circle tips" title="Number of collections to display in search results"></span> Search Result</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="collection_search_result" id="collection_search_result" value="{$row.collection_search_result}"/>
@@ -2649,7 +2691,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="collection_home_top_collections" title="Homepage Top Collections"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on homepage top collections"> Homepage Top Collections</label>
+                            <label class="nowrap" for="collection_home_top_collections" title="Homepage Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on homepage top collections"></span> Homepage Top Collections</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="collection_home_top_collections" id="collection_home_top_collections" value="{$row.collection_home_top_collections}"/>
@@ -2658,7 +2700,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="collection_collection_top_collections" title="Collections page Top Collections"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on collection page top collections"> Collections page Top Collections</label>
+                            <label class="nowrap" for="collection_collection_top_collections" title="Collections page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on collection page top collections"></span> Collections page Top Collections</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="collection_collection_top_collections" id="collection_collection_top_collections" value="{$row.collection_collection_top_collections}"/>
@@ -2667,7 +2709,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-8">
-                            <label class="nowrap" for="collection_photos_top_collections" title="Photos page Top Collections"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Number of collections to display on photos page top collections"> Photos page Top Collections</label>
+                            <label class="nowrap" for="collection_photos_top_collections" title="Photos page Top Collections"><span class="fa fa-question-circle tips" title="Number of collections to display on photos page top collections"></span> Photos page Top Collections</label>
                         </div>
                         <div class="col-md-4 row-size">
                             <input class="form-control" name="collection_photos_top_collections" id="collection_photos_top_collections" value="{$row.collection_photos_top_collections}"/>
@@ -2900,7 +2942,7 @@
                 <div class="col-md-4">
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="nowrap" for="php_path" title="PHP Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="PHP Binary Path"> PHP Path</label>
+                            <label class="nowrap" for="php_path" title="PHP Path"><span class="fa fa-question-circle tips" title="PHP Binary Path"></span> PHP Path</label>
                         </div>
                         <div class="col-md-6">
                             <input class="form-control" name="php_path" id="php_path" value="{$row.php_path}"/>
@@ -2909,7 +2951,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="nowrap" for="media_info" title="Mediainfo Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Mediainfo Binary Path"> Mediainfo Path</label>
+                            <label class="nowrap" for="media_info" title="Mediainfo Path"><span class="fa fa-question-circle tips" title="Mediainfo Binary Path"></span> Mediainfo Path</label>
                         </div>
                         <div class="col-md-6">
                             <input class="form-control" name="media_info" id="media_info" value="{$row.media_info}"/>
@@ -2918,7 +2960,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFmpeg Binary Path"> FFmpeg Path</label>
+                            <label class="nowrap" for="ffmpegpath" title="FFmpeg Path"><span class="fa fa-question-circle tips" title="FFmpeg Binary Path"></span> FFmpeg Path</label>
                         </div>
                         <div class="col-md-6">
                             <input class="form-control" name="ffmpegpath" id="ffmpegpath" value="{$row.ffmpegpath}"/>
@@ -2927,7 +2969,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="FFprobe Binary Path"> FFprobe Path</label>
+                            <label class="nowrap" for="ffprobe_path" title="FFprobe Path"><span class="fa fa-question-circle tips" title="FFprobe Binary Path"></span> FFprobe Path</label>
                         </div>
                         <div class="col-md-6">
                             <input class="form-control" name="ffprobe_path" id="ffprobe_path" value="{$row.ffprobe_path}"/>
@@ -2937,7 +2979,7 @@
                     <div class="row">
                         <div class="col-md-6">
                             <label class="nowrap" for="max_conversion" title="Max videos to convert at once">
-                                <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="Video conversion use lot of ressources, be aware of what's you're doing !">
+                                <span class="fa fa-question-circle tips" title="Video conversion use lot of ressources, be aware of what's you're doing !"></span>
                                 Max videos to convert at once
                             </label>
                         </div>
@@ -2973,7 +3015,7 @@
                         <div class="col-md-6">
                             <label class="nowrap" for="cloudflare_upload_limit" title="{lang code='cloudflare_upload_limit'}">
                                 <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank" style="text-decoration: none;">
-                                    <img alt="help" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
+                                    <span class="fa fa-question-circle tips" title="{lang code='cloudflare_documentation'}"></span>
                                 </a> {lang code='cloudflare_upload_limit'}
                             </label>
                         </div>
@@ -2987,7 +3029,7 @@
                     <hr/>
                     <div class="row">
                         <div class="col-md-6">
-                            <label class="nowrap" for="automate_launch_mode" title="{lang code='option_automate_launch_mode'}"><img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang code='tips_automate_launch_mode'}"> {lang code='option_automate_launch_mode'}</label>
+                            <label class="nowrap" for="automate_launch_mode" title="{lang code='option_automate_launch_mode'}"><span class="fa fa-question-circle tips" title="{lang code='tips_automate_launch_mode'}"></span> {lang code='option_automate_launch_mode'}</label>
                         </div>
                         <div class="col-md-6">
                             <select class="form-control" name="automate_launch_mode" id="automate_launch_mode">
