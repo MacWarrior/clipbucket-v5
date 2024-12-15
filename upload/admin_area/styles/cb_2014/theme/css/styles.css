@@ -1062,6 +1062,7 @@ a[role='menuitem'] {
 .tips{
     color: #1491FF;
     cursor: help;
+    font-size: 16px;
 }
 
 /* AI icon */
