@@ -5,13 +5,13 @@ use Onnx\Tensor;
 
 class AIVision
 {
-    protected $tags = [ 0 => "Naked", 1 => "Safe"];
-    protected $rescale_factor = 0.00392156862745098 ;
-    protected $format = 'rgb';
-    protected $height = 224;
-    protected $width = 224;
-    protected $shape = 'bhwc'; /* batch channel height width */
-    protected $modelFilepath ;
+    protected $tags = [];
+    protected $rescale_factor;
+    protected $format;
+    protected $height;
+    protected $width;
+    protected $shape; /* batch channel height width */
+    protected $modelFilepath;
 
     protected $provider = 'CPUExecutionProvider';
     protected $model;
@@ -25,15 +25,8 @@ class AIVision
             throw new \Exception( 'FFI extension is not available.' );
         }
 
-        if(!empty($config)) {
-            $this->tags = $config['tags'] ?? [] ;
-            $this->rescale_factor = $config['rescale_factor'] ?? 1 ;
-            $this->modelFilepath = self::getModel($config['modelType']);
-            $this->format = $config['format'] ?? 'rgb' ;
-            $this->height = $config['height'] ?? 2 ;
-            $this->width = $config['width'] ?? 256 ;
-            $this->shape = $config['shape'] ?? 'bchw' ;
-        }
+        Onnx\Library::setFolder(DirPath::get('ai'));
+        Onnx\Library::install();
 
         if(!empty($lib)) {
             if(!is_file($lib)) {
@@ -44,6 +37,18 @@ class AIVision
             if (\FFI\WorkDirectory\WorkDirectory::set(dirname($lib)) === false) {
                 throw new \Exception( 'FAILED to CWD has been updated to: ' . dirname($lib) );
             }
+        }
+
+        $this->modelFilepath = self::getModel($config['modelType'] ?? 'nsfw');
+        $this->tags = $config['tags'] ?? [];
+        $this->rescale_factor = $config['rescale_factor'] ?? 1;
+        $this->format = $config['format'] ?? 'rgb';
+        $this->height = $config['height'] ?? 256;
+        $this->width = $config['width'] ?? 256;
+        $this->shape = $config['shape'] ?? 'bchw';
+
+        if( !empty($config['autoload']) ){
+            $this->loadModel();
         }
     }
 
@@ -128,7 +133,7 @@ class AIVision
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public static function createImageGDFromPath($path) {
 
@@ -273,6 +278,18 @@ class AIVision
             return;
         }
         $this->provider = $provider;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function is(string $filepath, string $tag): bool
+    {
+        $tags = $this->getTags($filepath);
+        if( isset($tags[$tag]) && $tags[$tag] > 0.8 ){
+            return true;
+        }
+        return false;
     }
 
 }
