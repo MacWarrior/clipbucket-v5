@@ -3,7 +3,6 @@ define('THIS_PAGE', 'system_info');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery;
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 
 /* Generating breadcrumb */
@@ -82,6 +81,9 @@ assign('memory_limit_cli', System::get_php_cli_config('memory_limit') ?? 0);
 assign('max_execution_time_cli', System::get_php_cli_config('max_execution_time') ?? 1);
 assign('disks_usage', System::get_disks_usage());
 
+$ffi_cli = AIVision::isAvailable();
+assign('ffi_cli', $ffi_cli);
+
 $datetime_datas = [];
 $check_time = System::isDateTimeSynchro($datetime_datas);
 assign('check_time', $check_time);
@@ -93,7 +95,7 @@ $check_time_cli = System::isDateTimeSynchro($datetime_datas_cli, $current_dateti
 assign('check_time_cli', $check_time_cli);
 assign('datetime_datas_cli', $datetime_datas_cli);
 
-assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec && $check_time_cli));
+assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec && $check_time_cli && $ffi_cli));
 
 //SERVICES
 $phpVersionReq = '7.0.0';

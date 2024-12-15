@@ -29,6 +29,7 @@ RUN apt-get update && \
 
 # Configuration PHP
 RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.2/cli/php.ini
 
 # change l'utilisateur de nginx et php-fpm
 RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\

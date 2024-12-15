@@ -20,7 +20,7 @@ class System{
 
                 $regex_version = '(\d+\.\d+\.\d+)';
                 $php_extensions = self::get_php_extensions_list();
-                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime'];
+                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime', 'ffi.enable'];
 
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
@@ -98,11 +98,6 @@ class System{
                 'display' => 'Fileinfo'
                 ,'version_tags' => ['fileinfo support']
                 ,'required' => true
-            ],
-            'ffi' => [
-                'display' => 'FFI'
-                ,'version_tags' => ['FFI support']
-                ,'required' => false
             ]
         ];
     }

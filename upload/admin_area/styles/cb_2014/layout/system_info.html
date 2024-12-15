@@ -439,6 +439,19 @@
                                     {lang code='datetime_synchro_error'}
                                 {/if}
                             </div>
+                            <div class="row">
+                                <img src="{$imageurl}/{if $ffi_cli}tick{else}error{/if}.png"/>
+                                <label>FFI :
+                                    <strong>
+                                        {if $ffi_cli}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
+                                    </strong>
+                                </label>
+                                {if !$ffi_cli}
+                                    <br/>{lang code='ai_features_disabled'}
+                                    <br/>{lang code='ai_setup_config'}
+                                {/if}
+
+                            </div>
                         </div>
                     {/if}
                     <div class="col-md-3 {if !$isNginx}hidden{/if}">

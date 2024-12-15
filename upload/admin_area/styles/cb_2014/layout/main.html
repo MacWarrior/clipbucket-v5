@@ -1840,11 +1840,11 @@
                             </label>
                         </div>
                         <div class="col-md-2 row-size">
-                            <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::is_available()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::is_available()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                            <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
                             <span class="lbl"></span>
                         </div>
                     </div>
-                    {if !AIVision::is_available()}
+                    {if !AIVision::isAvailable()}
                         <div class="row">
                             <div class="col-md-12">
                                 <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
@@ -2206,11 +2206,11 @@
                             </label>
                         </div>
                         <div class="col-md-2 row-size">
-                            <input value="yes" name="photo_enable_nsfw_check" id="photo_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::is_available()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::is_available()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                            <input value="yes" name="photo_enable_nsfw_check" id="photo_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
                             <span class="lbl"></span>
                         </div>
                     </div>
-                    {if !AIVision::is_available()}
+                    {if !AIVision::isAvailable()}
                     <div class="row">
                         <div class="col-md-12">
                             <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}

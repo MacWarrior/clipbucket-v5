@@ -11,7 +11,7 @@ class AIVision
     protected $height = 224;
     protected $width = 224;
     protected $shape = 'bhwc'; /* batch channel height width */
-    protected $modelNameOrPath ;
+    protected $modelFilepath ;
 
     protected $provider = 'CPUExecutionProvider';
     protected $model;
@@ -21,13 +21,14 @@ class AIVision
      */
     public function __construct(array $config = [], $lib = null)
     {
-        if( ini_get('ffi.enable') == 'preload') {
-            throw new \Exception( 'FFI extension need to be enabled ; currently is preload' );
+        if( !self::isAvailable() ){
+            throw new \Exception( 'FFI extension is not available.' );
         }
+
         if(!empty($config)) {
             $this->tags = $config['tags'] ?? [] ;
             $this->rescale_factor = $config['rescale_factor'] ?? 1 ;
-            $this->modelNameOrPath = $config['modelNameOrPath'] ?? null ;
+            $this->modelFilepath = self::getModel($config['modelType']);
             $this->format = $config['format'] ?? 'rgb' ;
             $this->height = $config['height'] ?? 2 ;
             $this->width = $config['width'] ?? 256 ;
@@ -46,21 +47,64 @@ class AIVision
         }
     }
 
-    public static function is_available(): bool
+    private static function getModel(string $type)
     {
-        $php_version_min = '7.4.0';
+        $model_filepath = self::downloadModel('nsfw');
 
-        $php_web = System::get_software_version('php_web');
-        if( version_compare($php_web, $php_version_min, '<') ){
-            return false;
+        if( !empty($model_filepath) ){
+            return $model_filepath;
         }
 
+        return false;
+    }
+
+    private static function downloadModel(string $type)
+    {
+        switch($type){
+            default:
+                e('Unknown model type : ' . $type);
+                return false;
+
+            case 'nsfw':
+                $model_name = 'nsfw.onnx';
+                $model_url = 'https://huggingface.co/suko/nsfw/resolve/main/model.onnx';
+                break;
+        }
+
+        $model_filepath = DirPath::get('ai') . 'models' . DIRECTORY_SEPARATOR . $model_name;
+        if( is_file($model_filepath) ){
+            return $model_filepath;
+        }
+
+        ini_set('display_errors',1);
+        error_reporting(E_ALL);
+
+        Network::download_file($model_url, $model_filepath);
+
+        if( is_file($model_filepath) && filesize($model_filepath) > 0 ){
+            return $model_filepath;
+        }
+
+        if( is_file($model_filepath) ){
+            unlink($model_filepath);
+        }
+
+        e('Something went wrong during ' . $type . ' model type download');
+        return false;
+    }
+
+    public static function download($url, $filename) {
+
+    }
+
+    public static function isAvailable(): bool
+    {
         $php_cli = System::get_software_version('php_cli');
-        if( version_compare($php_cli, $php_version_min, '<') ){
+        if( version_compare($php_cli, '7.4.0', '<') ){
             return false;
         }
 
-        if( strtolower(ini_get('ffi.enable')) != 'on' ){
+        if( !in_array(strtolower(System::get_php_cli_config('ffi.enable')), ['1','on']) ){
             return false;
         }
 
@@ -72,15 +116,15 @@ class AIVision
      */
     public function loadModel($model = null) {
         if(!empty($model)) {
-            $this->modelNameOrPath = $model;
+            $this->modelFilepath = $model;
         }
 
-        if(empty($this->modelNameOrPath)) {
+        if(empty($this->modelFilepath)) {
             throw new \Exception('model missing');
         }
 
         /** chargement du model */
-        $this->model = new \Onnx\Model($this->modelNameOrPath);
+        $this->model = new \Onnx\Model($this->modelFilepath);
     }
 
     /**

@@ -233,6 +233,7 @@ class Network{
         switch ($format) {
             default:
             case 'file_get_contents':
+            case 'fopen':
                 $context = null;
                 if (function_exists('config') && config('proxy_enable') == 'yes') {
                     $context = [
@@ -252,5 +253,23 @@ class Network{
 
                 return stream_context_create($context);
         }
+    }
+
+    public static function download_file($url_source, $filepath_destination){
+        $fp = fopen($filepath_destination,'w+');
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url_source);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 50);
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        if( config('proxy_enable') == 'yes' ){
+            curl_setopt($ch, CURLOPT_PROXY, 'tcp://' . config('proxy_url') . ':' . config('proxy_port'));
+            if (config('proxy_auth') == 'yes') {
+                curl_setopt($ch, CURLOPT_PROXYUSERPWD, config('proxy_username') . ':' . config('proxy_password'));
+            }
+        }
+        curl_exec($ch);
+        curl_close($ch);
+        fclose($fp);
     }
 }

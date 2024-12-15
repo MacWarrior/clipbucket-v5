@@ -20,13 +20,13 @@ $ia = new AIVision([
     ,'height' => 224
     ,'width' => 224
     ,'shape' => 'bhwc'  /* batch channel height width */
-    ,'modelNameOrPath' => DirPath::get('classes') . 'models/model.onnx'// https://huggingface.co/suko/nsfw
+    ,'modelType' => 'nsfw'
 ]);
 
 /** Load models */
 $ia->loadModel();
 
 /** analyse one image */
-$tags = $ia->getTags(DirPath::get('classes') . 'images/test_image.jpg');
+$tags = $ia->getTags(DirPath::get('ai') . 'images' . DIRECTORY_SEPARATOR . 'test_image.jpg');
 
 var_dump($tags);
