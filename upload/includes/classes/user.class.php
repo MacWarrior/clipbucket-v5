@@ -519,7 +519,7 @@ class User
 
     public static function redirectToLogin()
     {
-        redirect_to(BASEURL . '/signup.php?mode=login');
+        redirect_to(get_server_url() . 'signup.php?mode=login');
     }
 
     /**
@@ -844,7 +844,10 @@ class userquery extends CBCategory
         $cb_columns->object('users')->register_columns($basic_fields);
     }
 
-    public function hasUserLevelAccess($user_level, $access)
+    /**
+     * @throws Exception
+     */
+    public function hasUserLevelAccess($user_level, $access): bool
     {
         $perms = userquery::getInstance()->get_user_level($user_level, true);
         if( !isset($perms[$access]) ){
@@ -852,7 +855,7 @@ class userquery extends CBCategory
             return false;
         }
 
-        return $perms[$access] == 'yes';
+        return $perms[$access]['permission_value'] == 'yes';
     }
 
     /**
@@ -2097,7 +2100,7 @@ class userquery extends CBCategory
 
         if (config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email']))) {
             $email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
-            $gravatar = new Gravatar($email, BASEURL . $default);
+            $gravatar = new Gravatar($email, get_server_url() . $default);
             $gravatar->size = $thesize;
             $gravatar->rating = 'G';
             $gravatar->border = 'FF0000';

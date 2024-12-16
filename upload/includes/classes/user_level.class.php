@@ -73,7 +73,6 @@ class UserLevel
         return (self::getPermissions($user_level_id)[$permission] ?? false);
     }
 
-
     /**
      * @param string $permission
      * @param int|null $user_level_id
@@ -98,7 +97,7 @@ class UserLevel
             User::redirectToLogin();
         }
         if (!self::hasPermission($permission, $user_id)) {
-            redirect_to(BASEURL . '/403.php');
+            redirect_to(get_server_url() . '/403.php');
         }
         return true;
     }
@@ -159,7 +158,6 @@ class UserLevel
         return array_merge($fields_user, $fields_values ?? []);
     }
 
-
     /**
      * @param int $user_level_id
      * @param int $id_user_levels_permission
@@ -185,7 +183,6 @@ class UserLevel
         Clipbucket_db::getInstance()->execute($sql);
     }
 
-
     /**
      * @return array
      */
@@ -199,6 +196,7 @@ class UserLevel
 
     /**
      * @param array $params
+     * @return array|mixed
      * @throws Exception
      */
     public static function getAll(array $params)
@@ -230,8 +228,9 @@ class UserLevel
     /**
      * @param array $params
      * @return array
+     * @throws Exception
      */
-    public static function getOne(array $params)
+    public static function getOne(array $params): array
     {
         $params['first_only'] = true;
         return self::getAll($params);
@@ -262,6 +261,9 @@ class UserLevel
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function addUserLevel(string $user_level_name, $permissions)
     {
         Clipbucket_db::getInstance()->insert(tbl('user_levels'), ['user_level_name'], [$user_level_name]);
@@ -286,7 +288,7 @@ class UserLevel
      * @return bool
      * @throws Exception
      */
-    public static function deleteUserLevel(int $user_level_id)
+    public static function deleteUserLevel(int $user_level_id): bool
     {
         $user_level = self::getOne(['user_level_id' => $user_level_id]);
         if (!empty($user_level)) {

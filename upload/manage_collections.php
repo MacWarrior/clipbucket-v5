@@ -4,13 +4,14 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
+User::getInstance()->isUserConnectedOrRedirect();
+
 if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectionEnabled('photos')) ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
 global $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 $order = 'collection_items.date_added DESC';
@@ -82,7 +83,7 @@ switch ($mode) {
             $cbcollection->create_collection($_POST);
             if (!error()) {
                 $_POST = '';
-                redirect_to(BASEURL . '/manage_collections.php?new_collection=1');
+                redirect_to(get_server_url() . 'manage_collections.php?new_collection=1');
             }
         }
         break;
@@ -101,7 +102,7 @@ switch ($mode) {
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
-            redirect_to(BASEURL . '/manage_collections.php?missing_collection=1');
+            redirect_to(get_server_url() . 'manage_collections.php?missing_collection=1');
         }
         $items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
         if ($collection['type'] == 'videos') {

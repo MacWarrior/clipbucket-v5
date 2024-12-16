@@ -14,6 +14,6 @@ if (isset($_POST['vid'])) {
         echo json_encode(['data' => '<em>No Video</em>']);
     }
 } else {
-    header('location:' . BASEURL);
+    header('location:' . get_server_url());
     die();
 }

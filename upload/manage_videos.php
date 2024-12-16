@@ -4,13 +4,14 @@ define('PARENT_PAGE', "videos");
 
 require 'includes/config.inc.php';
 
+User::getInstance()->isUserConnectedOrRedirect();
+
 if( config('videosSection') != 'yes' ){
     redirect_to(cblink(['name' => 'my_account']));
 }
 
 global $cbvideo, $pages, $cbvid;
 
-User::getInstance()->isUserConnectedOrRedirect();
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
 assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));

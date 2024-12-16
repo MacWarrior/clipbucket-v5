@@ -489,8 +489,8 @@ class Migration
         }
         catch(Exception $e){}
 
-        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
-        self::query($sql);
+        $sql_foreign_key = 'SET FOREIGN_KEY_CHECKS=0;';
+        self::query($sql_foreign_key);
 
         $sql = 'set @var=if((SELECT true WHERE
         ' . implode(' AND ', $conditions) . ' LIMIT 1)
@@ -498,8 +498,8 @@ class Migration
         ,\'SELECT 1\');';
         self::query($sql);
 
-        $sql = 'SET FOREIGN_KEY_CHECKS=0;';
-        self::query($sql);
+        $sql_foreign_key = 'SET FOREIGN_KEY_CHECKS=1;';
+        self::query($sql_foreign_key);
 
         try{
             self::query('prepare stmt from @var;');

@@ -6,7 +6,7 @@ User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 pages::getInstance()->page_redir();
 
 if (config('disable_email') == 'yes') {
-    redirect_to(BASEURL . DirPath::getUrl('admin_area'));
+    redirect_to(get_server_url() . DirPath::getUrl('admin_area'));
 }
 
 /* Generating breadcrumb */

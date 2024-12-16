@@ -4,13 +4,14 @@ define('PARENT_PAGE', 'videos');
 
 require 'includes/config.inc.php';
 
+User::getInstance()->isUserConnectedOrRedirect();
+
 if( config('videosSection') != 'yes' ){
-    redirect_to(BASEURL);
+    redirect_to(get_server_url());
 }
 
 global $pages, $cbvid, $Upload, $eh;
 
-User::getInstance()->isUserConnectedOrRedirect();
 $pages->page_redir();
 
 $userid = user_id();

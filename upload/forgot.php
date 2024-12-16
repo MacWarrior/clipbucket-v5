@@ -7,7 +7,7 @@ require 'includes/config.inc.php';
 $mode = $_GET['mode'];
 
 if (config('disable_email') == 'yes') {
-    redirect_to(config('baseurl'));
+    redirect_to(get_server_url());
 }
 
 /**
