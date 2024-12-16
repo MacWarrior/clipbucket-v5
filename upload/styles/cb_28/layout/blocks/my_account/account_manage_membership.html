@@ -157,6 +157,10 @@
 
             .plans-main-container:has(.plans-container:nth-child(4)) .plans-container .top {
                 cursor: pointer;
+                -webkit-user-select: none; /* Safari */
+                -moz-user-select: none; /* Firefox */
+                -ms-user-select: none; /* IE10+/Edge */
+                user-select: none; /* Standard */
             }
 
             .plans-main-container:has(.plans-container:nth-child(4)) .plans-container:has(.radio:checked) .bottom_and_quota {
