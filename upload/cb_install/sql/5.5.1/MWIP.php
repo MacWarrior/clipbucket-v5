@@ -577,5 +577,17 @@ class MWIP extends \Migration
             'en'=>'Allow user to view public videos page'
         ]);
 
+
+
+        self::generateTranslation('bouton_souscrire_abonnement', [
+            'fr'=>'Souscrire',
+            'en'=>'Subscription'
+        ]);
+
+        self::generateTranslation('plans_features_title', [
+            'fr'=>'Détails',
+            'en'=>'Details'
+        ]);
+
     }
 }
