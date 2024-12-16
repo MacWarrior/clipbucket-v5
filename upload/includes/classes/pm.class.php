@@ -521,7 +521,7 @@ class cb_pm
             'user_username'  => $sender,
             'message_content' => $content,
             'message_subject' => $subject,
-            'url'  => BASEURL . '/private_message.php?mode=inbox&mid='.$msgid
+            'url'  => get_server_url() . 'private_message.php?mode=inbox&mid='.$msgid
         ];
 
         EmailTemplate::sendMail($this->email_template, $emails, $vars);

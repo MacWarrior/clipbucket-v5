@@ -438,13 +438,14 @@ class Comments
 
         e(lang('grp_comment_msg'), 'm');
 
-        $owner_email = userquery::getInstance()->get_user_field($owner_id, 'email');
+        $owner_email = userquery::getInstance()->get_user_field($owner_id, 'email')['email'];
         if( config('send_comment_notification') == 'yes' && isValidEmail($owner_email) ){
             $email_params = [
-                'user_username'  => $user_name
-                ,'message_subject'      => $type_label
-                ,'message_content'  => $comment
-                ,'url' => $link . '#comment_' . $comment_id
+                'user_username'   => $user_name,
+                'message_subject' => $type_label,
+                'message_content' => $comment,
+                'url'             => $link . '#comment_' . $comment_id,
+                'website_title'   => TITLE
             ];
 
             EmailTemplate::sendMail('user_comment_email', $owner_email, $email_params);

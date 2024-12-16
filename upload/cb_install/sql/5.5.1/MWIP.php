@@ -433,14 +433,14 @@ class MWIP extends \Migration
             \'Hello {{user_username}},
             Thank you for joining {{website_title}}, one last step is required in order to activate your account
 
-            <a href=\\\'{{url}}/activation.php?av_username={{user_username}}&avcode={{code}}\\\'>Click Here</a>
+            <a href=\\\'{{url}}activation.php?av_username={{user_username}}&avcode={{code}}\\\'>Click Here</a>
             
             Email           : {{user_email}}
             Username        : {{user_username}}
             Activation code : {{code}}
             
             if above given is not working , please go here and activate it
-            <a href=\\\'{{url}}/activation.php\\\'>Activate</a>\',
+            <a href=\\\'{{url}}activation.php\\\'>Activate</a>\',
             FALSE
         )';
         self::query($sql);
@@ -470,12 +470,12 @@ class MWIP extends \Migration
             \'Hello {{user_username}},
                 
                 Your Activation Code is : {{code}}
-                <a   href=\\\'{{url}}/activation.php?av_username={{user_username}}&avcode={{code}}\\\'>Click Here</a> To goto Activation Page
+                <a   href=\\\'{{url}}activation.php?av_username={{user_username}}&avcode={{code}}\\\'>Click Here</a> To goto Activation Page
                 
                 Direct Activation
                 ==========================================
                 Click Here or Copy & Paste the following link in your browser
-                {{url}}/activation.php?av_username={{user_username}}&avcode={{code}}
+                {{url}}activation.php?av_username={{user_username}}&avcode={{code}}
                 
                 if above given links are not working, please go here and activate it
                 
@@ -484,7 +484,7 @@ class MWIP extends \Migration
                 Activation code : {{code}}
                 
                 if above given is not working , please go here and activate it
-                <a  href=\\\'{{url}}/activation.php\\\'>{{url}}/activation.php</a>
+                <a  href=\\\'{{url}}activation.php\\\'>{{url}}activation.php</a>
                 
                 ----------------
                 Regards
@@ -513,7 +513,7 @@ class MWIP extends \Migration
             \'[{{website_title}}] - Password reset confirmation\',
             \'Dear {{user_username}}
             you have requested a password reset, please follow the link in order to reset your password
-            <a href="{{url}}/forgot.php?mode=reset_pass&user={{userid}}&avcode={{code}}">Reset my password</a>
+            <a href="{{url}}">Reset my password</a>
             
             -----------------------------------------
             IF YOU HAVE NOT REQUESTED A PASSWORD RESET - PLEASE IGNORE THIS MESSAGE
@@ -561,7 +561,7 @@ class MWIP extends \Migration
             \'friend_request_email\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] {{user_username}} add you as friend\',
+            \'[{{website_title}}] {{sender_name}} add you as friend\',
             \'Hi {{receiver_name}},
             {{sender_name}} added you as a friend on {{website_title}}. We need to confirm that you know {{sender_name}} in order for you to be friends on {{website_title}}.
             

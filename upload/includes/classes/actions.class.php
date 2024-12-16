@@ -260,8 +260,6 @@ class cbactions
                     }
 
                     if ($ok) {
-                        global $cbemail;
-                        $tpl = $cbemail->get_template($tpl);
                         $more_var = [
                             'user_username'   => user_name(),
                             'website_title'   => TITLE,
@@ -269,8 +267,6 @@ class cbactions
                             'time'            => cbdate('Y')
                         ];
                         $var = array_merge($more_var, $var);
-                        $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                        $msg = $cbemail->replace($tpl['email_template'], $var);
 
                         //Now Finally Sending Email
                         $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');

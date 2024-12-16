@@ -1622,7 +1622,8 @@ class userquery extends CBCategory
             $var = [
                 'receiver_name' => $friend['username'],
                 'sender_name'   => $sender['username'],
-                'sender_link'   => $this->profile_link($sender)
+                'sender_link'   => $this->profile_link($sender),
+                'website_title' => TITLE
             ];
 
             EmailTemplate::sendMail('friend_confirmation_email', $friend['email'], $var);
@@ -1990,7 +1991,8 @@ class userquery extends CBCategory
 
                     $var = [
                         'user_username' => $udetails['username'],
-                        'url'           => BASEURL . '/forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
+                        'url'           => get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
+                        'website_title' => TITLE
                     ];
 
                     //Now Finally Sending Email
@@ -2016,7 +2018,7 @@ class userquery extends CBCategory
                     //Sending confirmation email
                     $var = [
                         'user_username' => $udetails['username'],
-                        'url'   => BASEURL . '/login.php',
+                        'url'   => get_server_url() . 'login.php',
                         'password' => $newpass
                     ];
 
@@ -3817,13 +3819,13 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
 
-            if (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && EMAIL_VERIFICATION && $send_signup_email) {
+            if (!User::getInstance()->hasPermission('admin_access') && EMAIL_VERIFICATION && $send_signup_email) {
                 $var = [
                     'user_username' => post('username'),
-                    'user_email' => post('email'),
+                    'user_email'    => post('email'),
                     'website_title' => TITLE,
-                    'url' => BASEURL,
-                    'code'   => $avcode
+                    'url'           => get_server_url(),
+                    'code'          => $avcode
                 ];
                 EmailTemplate::sendMail('email_verify_template', post('email'), $var);
             } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
@@ -5164,8 +5166,6 @@ class userquery extends CBCategory
         //Now lets get details of our uploader bhai saab
         $uploader = $this->get_user_details($vidDetails['userid']);
         //Loading subscription email template
-        $tpl = $cbemail->get_template('video_subscription_email');
-
         if ($subscribers) {
             $var = [
                 'sender_name'     => $uploader['username'],
