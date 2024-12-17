@@ -395,6 +395,13 @@ class ClipBucket
                 ];
             }
         }
+        if (User::getInstance()->hasPermission('email_template_management') ) {
+            $menu_configuration['sub'][] = [
+                'title' =>  lang('email_template_management')
+                , 'url' => DirPath::getUrl('admin_area') . 'email_template_management.php'
+            ];
+        }
+
 
         $this->addMenuAdmin($menu_configuration, 2);
 
@@ -506,10 +513,6 @@ class ClipBucket
                     , [
                         'title' => lang('system_info')
                         , 'url' => DirPath::getUrl('admin_area') . 'system_info.php'
-                    ]
-                    , [
-                        'title' => lang('email_tester')
-                        , 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'
                     ]
                 ]
             ];

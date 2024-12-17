@@ -20,21 +20,17 @@ if (isset($_POST['contact'])) {
     } elseif (!verify_captcha()) {
         e(lang('recap_verify_failed'));
     } else {
-        $tpl = $cbemail->get_template('contact_form');
         $var = [
-            '{name}'       => substr($name, 0, 100),
-            '{email}'      => substr($email, 0, 100),
-            '{reason}'     => substr($reason, 0, 300),
-            '{message}'    => $message,
-            '{ip_address}' => Network::get_remote_ip(),
-            '{now}'        => now()
+            'user_username'   => substr($name, 0, 100),
+            'user_email'      => substr($email, 0, 100),
+            'message_subject' => substr($reason, 0, 300),
+            'message_content' => $message,
+            'url'             => Network::get_remote_ip(),
+            'time'            => now()
         ];
 
-        $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-        $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
-
         //Now Finally Sending Email
-        if (cbmail(['to' => SUPPORT_EMAIL, 'from' => $email, 'subject' => $subj, 'content' => $msg])) {
+        if (EmailTemplate::sendMail('contact_form', config('email_sender_address'), $var, $email, $name)) {
             e(lang("email_send_confirm"), "m");
         }
     }

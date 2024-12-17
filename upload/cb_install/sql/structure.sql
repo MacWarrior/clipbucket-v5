@@ -1142,3 +1142,54 @@ ALTER TABLE `{tbl_prefix}social_networks_links`
 
 ALTER TABLE `{tbl_prefix}sessions`
     ADD INDEX(`session_date`);
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_template`
+(
+    id_email_template      INT PRIMARY KEY AUTO_INCREMENT,
+    code                   VARCHAR(32),
+    is_default             BOOLEAN DEFAULT FALSE,
+    is_deletable           BOOLEAN DEFAULT TRUE,
+    content                TEXT,
+    disabled               BOOLEAN DEFAULT FALSE,
+    code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}email`
+(
+    id_email               INT PRIMARY KEY AUTO_INCREMENT,
+    code                   VARCHAR(32),
+    id_email_template      INT,
+    is_deletable           BOOLEAN DEFAULT TRUE,
+    title                  VARCHAR(256),
+    content                TEXT,
+    disabled               BOOLEAN DEFAULT FALSE,
+    code_unique_for_enable VARCHAR(32) GENERATED ALWAYS AS ( CASE WHEN disabled = FALSE THEN code ELSE NULL END ) UNIQUE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}email`
+    ADD CONSTRAINT `email_template_fk` FOREIGN KEY (`id_email_template`) REFERENCES `{tbl_prefix}email_template` (`id_email_template`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_histo`
+(
+    id_email_histo INT PRIMARY KEY AUTO_INCREMENT,
+    send_date      DATETIME   NOT NULL,
+    id_email       INT        NOT NULL,
+    `userid`       BIGINT(20) NULL,
+    email          VARCHAR(256),
+    title          TEXT,
+    content        TEXT
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}email_histo`
+    ADD CONSTRAINT `histo_email_fk` FOREIGN KEY (`id_email`) REFERENCES `{tbl_prefix}email` (`id_email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `histo_users_fk` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_variable`
+(
+    id_email_variable INT PRIMARY KEY AUTO_INCREMENT,
+    code              VARCHAR(32) NOT NULL,
+    type              ENUM ('email', 'template', 'title'),
+    language_key      VARCHAR(256)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}email_variable`
+    ADD UNIQUE KEY unique_code_type_variable (`code`, `type`);

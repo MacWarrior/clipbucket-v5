@@ -92,6 +92,7 @@ require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
+require_once DirPath::get('classes') . 'email_template.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -243,9 +244,6 @@ define('SEO', $row['seo']); //Set yes / no
 # Registration & Email Settings
 define('EMAIL_VERIFICATION', $row['email_verification']);
 define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
-define('WEBSITE_EMAIL', $row['website_email']);
-define('SUPPORT_EMAIL', $row['support_email']);
-define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
 
 # Defining Photo Limits
