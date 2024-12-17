@@ -13,8 +13,6 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Photos', 'url' => ''];
 $breadcrumb[1] = ['title' => 'Flagged Photos', 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'];
 
-$mode = $_GET['mode'];
-
 //Delete Photo
 if (isset($_GET['delete_photo'])) {
     $photo = mysql_clean($_GET['delete_photo']);
@@ -43,37 +41,18 @@ if (isset($_POST['delete_flags']) && is_array($_POST['check_photo'])) {
     }
 }
 
-switch ($mode) {
-    case 'view':
-    default:
-        assign('mode', 'view');
-        //Getting Video List
-        $page = mysql_clean($_GET['page']);
-        $get_limit = create_query_limit($page, 5);
-        $photos = $cbphoto->action->get_flagged_objects($get_limit);
-        assign('photos', $photos);
+//Getting Video List
+$page = mysql_clean($_GET['page']);
+$get_limit = create_query_limit($page, 5);
+$photos = $cbphoto->action->get_flagged_objects($get_limit);
+assign('photos', $photos);
 
-        //Collecting Data for Pagination
-        $total_rows = $cbphoto->action->count_flagged_objects();
-        $total_pages = count_pages($total_rows, 5);
+//Collecting Data for Pagination
+$total_rows = $cbphoto->action->count_flagged_objects();
+$total_pages = count_pages($total_rows, 5);
 
-        //Pagination
-        $pages->paginate($total_pages, $page);
-        break;
-
-    case 'view_flags':
-        assign('mode', 'view_flags');
-        $pid = mysql_clean($_GET['pid']);
-        $pdetails = $cbphoto->get_photo($pid);
-        if ($pdetails) {
-            $flags = $cbphoto->action->get_flags($pid);
-            assign('flags', $flags);
-            assign('photo', $pdetails);
-        } else {
-            e(lang('photo_not_exist'));
-        }
-        break;
-}
+//Pagination
+$pages->paginate($total_pages, $page);
 
 subtitle('Flagged Photos');
 template_files('flagged_photos.html');
