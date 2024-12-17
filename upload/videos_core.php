@@ -9,10 +9,10 @@ if (PARENT_PAGE == 'videos_public') {
 }
 
 if( !isSectionEnabled('videos') ){
-    redirect_to(BASEURL);
+    redirect_to(get_server_url());
 }
 if (config('enable_public_video_page') != 'yes' && PARENT_PAGE == 'videos_public') {
-    redirect_to(BASEURL . '/' . 'videos.php');
+    redirect_to(get_server_url() . 'videos.php');
 }
 
 $child_ids = false;

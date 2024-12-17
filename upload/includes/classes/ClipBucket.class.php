@@ -708,7 +708,7 @@ class ClipBucket
      */
     function head_menu()
     {
-        $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => BASEURL, 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
+        $this->head_menu[] = ['name' => lang('menu_home'), 'icon' => '<i class="fa fa-home"></i>', 'link' => get_server_url(), 'this' => 'home', 'section' => 'home', 'extra_attr' => ''];
 
         if( config('videosSection') == 'yes' ){
             $this->head_menu[] = ['name' => lang('videos'), 'icon' => '<i class="fa fa-video-camera"></i>', 'link' => cblink(['name' => 'videos']), 'this' => 'videos', 'section' => 'home', 'permission'=>'view_videos'];

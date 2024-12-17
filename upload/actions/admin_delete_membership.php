@@ -18,6 +18,6 @@ if ($success) {
 $url='';
 if (!empty($_POST['redirect'])) {
     SessionMessageHandler::add_message(lang('membership_deleted'));
-    $url = BASEURL . DirPath::getUrl('admin_area') .'memberships.php';
+    $url = DirPath::getUrl('admin_area') .'memberships.php';
 }
 echo json_encode(['msg'=>getTemplateMsg(), 'success'=>$success, 'url'=>$url]);

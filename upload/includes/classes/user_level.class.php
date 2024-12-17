@@ -97,7 +97,7 @@ class UserLevel
             User::redirectToLogin();
         }
         if (!self::hasPermission($permission, $user_id)) {
-            redirect_to(BASEURL . '/403.php');
+            redirect_to(get_server_url() . '/403.php');
         }
         return true;
     }

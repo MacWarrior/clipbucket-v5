@@ -1345,17 +1345,13 @@ function cblink($params, $fullurl = false)
     }
 
     if ($fullurl) {
-        $link = BASEURL;
+        $link = get_server_url();
     } else {
         $link = '';
     }
 
     if (isset(ClipBucket::getInstance()->links[$name])) {
-        if (strpos(get_server_protocol(), ClipBucket::getInstance()->links[$name][$val]) !== false) {
-            $link .= ClipBucket::getInstance()->links[$name][$val];
-        } else {
-            $link .= '/' . ClipBucket::getInstance()->links[$name][$val];
-        }
+        $link .= ClipBucket::getInstance()->links[$name][$val];
     } else {
         $link = false;
     }
@@ -2989,7 +2985,7 @@ function check_install($type)
     switch ($type) {
         case 'before':
             if (!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                header('Location: ' . get_server_url() . '/cb_install');
+                header('Location: ' . get_server_url() . 'cb_install');
                 die();
             }
             break;
@@ -3017,7 +3013,13 @@ function get_server_url(): string
     if (preg_match('/cb_install/i', $DirName)) {
         $DirName = str_replace('/cb_install', '', $DirName);
     }
-    return get_server_protocol() . $_SERVER['HTTP_HOST'] . $DirName;
+
+    $port = '';
+    if( !in_array($_SERVER['SERVER_PORT'], [80, 443]) ){
+        $port = ':' . $_SERVER['SERVER_PORT'];
+    }
+
+    return get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . $DirName;
 }
 
 /**
