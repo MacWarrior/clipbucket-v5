@@ -1347,7 +1347,7 @@ function cblink($params, $fullurl = false)
     if ($fullurl) {
         $link = get_server_url();
     } else {
-        $link = '';
+        $link = '/';
     }
 
     if (isset(ClipBucket::getInstance()->links[$name])) {
