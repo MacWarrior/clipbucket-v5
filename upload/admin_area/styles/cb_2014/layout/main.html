@@ -463,7 +463,7 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="popup_video" title="{lang code='option_homepage_enable_popin_video'}">{lang code='option_homepage_enable_popin_video'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
+                                            <div class="col-md-2 no-padding">
                                                 <input value="yes" name="popup_video" id="popup_video" {if $row.popup_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
@@ -473,7 +473,7 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="enable_social_networks_links_home_sidebar" title="{lang code='option_enable_social_networks_links_sidebar'}">{lang code='option_enable_social_networks_links_sidebar'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
+                                            <div class="col-md-2 no-padding">
                                                 <input value="yes" name="enable_social_networks_links_home_sidebar" id="enable_social_networks_links_home_sidebar" {if $row.enable_social_networks_links_home_sidebar=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
@@ -483,7 +483,7 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="home_enable_fullwidth" title="{lang code='option_enable_fullwidth'}">{lang code='option_enable_fullwidth'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
+                                            <div class="col-md-2 no-padding">
                                                 <input value="yes" name="home_enable_fullwidth" id="home_enable_fullwidth" {if $row.home_enable_fullwidth=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
@@ -493,7 +493,7 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="home_disable_sidebar" title="{lang code='option_disable_sidebar'}">{lang code='option_disable_sidebar'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
+                                            <div class="col-md-2 no-padding">
                                                 <input value="yes" name="home_disable_sidebar" id="home_disable_sidebar" {if $row.home_disable_sidebar=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
@@ -503,18 +503,18 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="display_featured_video" title="{lang code='display_featured_video'}">{lang code='display_featured_video'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
+                                            <div class="col-md-2 no-padding">
                                                 <input value="yes" name="display_featured_video" id="display_featured_video" {if $row.display_featured_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-10">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="featured_video_style" title="{lang code='featured_video_style'}">{lang code='featured_video_style'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
-                                                <select  name="featured_video_style" id="featured_video_style">
+                                            <div class="col-md-4">
+                                                <select class='form-control' name="featured_video_style" id="featured_video_style">
                                                     <option value="classic" {if $row.featured_video_style=='classic'}selected{/if}>{lang('classic')}</option>
                                                     <option value="modern" {if $row.featured_video_style=='modern'}selected{/if}>{lang('modern')}</option>
                                                 </select>
@@ -522,10 +522,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="list_featured_videos" title="{lang code='option_list_featured_videos'}"> {lang code='option_list_featured_videos'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <input class="form-control" name="number_featured_video" id="number_featured_video" value="{$row.number_featured_video}" type="number" min="0"/>
                                             </div>
                                         </div>
@@ -537,17 +537,17 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="home_display_recent_videos" title="{lang code='option_home_display_recent_videos'}">{lang code='option_home_display_recent_videos'}</label>
                                             </div>
-                                            <div class="col-md-2 row-size no_padding">
+                                            <div class="col-md-2 no_padding">
                                                 <input value="yes" name="home_display_recent_videos" id="home_display_recent_videos" {if $row.home_display_recent_videos=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_recent_videos_display" title="{lang code='option_homepage_recent_videos_display'}">{lang code='option_homepage_recent_videos_display'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <select class="form-control" name="homepage_recent_videos_display" id="homepage_recent_videos_display">
                                                     {assign var=array_modes value=[
                                                         'paginate' => 'option_paginate'
@@ -563,10 +563,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_recent_video_style" title="{lang code='option_homepage_recent_video_style'}">{lang code='option_homepage_recent_video_style'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <select class="form-control" name="homepage_recent_video_style" id="homepage_recent_video_style">
                                                     {assign var=array_styles value=[
                                                         'modern' => 'option_modern'
@@ -582,10 +582,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_recent_video_ratio" title="{lang code='option_homepage_recent_video_ratio'}">{lang code='option_homepage_recent_video_ratio'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
                                                     {assign var=array_styles value=[
                                                         '1.3333' => '4/3'
@@ -602,10 +602,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="list_recent_videos" title="{lang code='option_list_recent_videos'}"><span class="fa fa-question-circle tips" title="{lang code='tips_only_with_slider_option'}"></span> {lang code='option_list_recent_videos'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <input class="form-control" name="list_recent_videos" id="list_recent_videos" value="{$row.list_recent_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
@@ -624,10 +624,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_collection_video_style" title="{lang code='option_homepage_collection_video_style'}">{lang code='option_homepage_collection_video_style'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <select class="form-control" name="homepage_collection_video_style" id="homepage_collection_video_style">
                                                     {assign var=array_styles value=[
                                                         'modern' => 'option_modern'
@@ -643,10 +643,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="homepage_collection_video_ratio" title="{lang code='option_homepage_collection_video_ratio'}">{lang code='option_homepage_collection_video_ratio'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <select class="form-control" name="homepage_collection_video_ratio" id="homepage_collection_video_ratio">
                                                     {assign var=array_styles value=[
                                                         '1.3333' => '4/3'
@@ -663,10 +663,10 @@
                                         </div>
                                         <hr/>
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="list_home_collection_videos" title="{lang code='option_list_home_collection_videos'}">{lang code='option_list_home_collection_videos'}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <input class="form-control" name="list_home_collection_videos" id="list_home_collection_videos" value="{$row.list_home_collection_videos}" type="number" min="0"/>
                                             </div>
                                         </div>
@@ -693,13 +693,23 @@
                             </div>
                             <div class="tab-pane interfaces" id="interfaces_photo">
                                 <div class="row">
-                                    <div class="col-md-10">
+                                    <div class="col-md-4">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-8">
                                                 <label class="nowrap" for="limit_photo_related" title="{lang('limit_photo_related')}">{lang('limit_photo_related')}</label>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <input class="form-control" name="limit_photo_related" id="limit_photo_related" value="{$row.limit_photo_related}"/>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_edit_button" title="{lang code='enable_edit_button'}">{lang code='enable_edit_button'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_edit_photo_button" id="enable_edit_photo_button" {if $row.enable_edit_photo_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
                                             </div>
                                         </div>
                                         <hr/>
@@ -1124,6 +1134,77 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="row">
+                                <div class="col-md-12">
+                                    <h3>{lang code='videos'}</h3>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_video_file_upload" title="Enable file upload">Enable video file upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_video_file_upload" id="enable_video_file_upload" {if $row.enable_video_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_video_remote_upload" title="Enable remote upload">Enable video remote upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_video_remote_upload" id="enable_video_remote_upload" {if $row.enable_video_remote_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="activation" title="Video Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Video Activation</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><span class="fa fa-question-circle tips" title="Delete original files once uploaded from mass upload"></span> Delete Mass upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="show_collapsed_checkboxes" title="Collapse video categories">Collapse video categories</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="show_collapsed_checkboxes" id="show_collapsed_checkboxes" {if $row.show_collapsed_checkboxes=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="video_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
+                                        <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
+                                        {lang code='option_enable_nsfw_check'}
+                                        <span class="ai-powered" title="{lang code='tips_powered_by_ai'}"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            {if !AIVision::isAvailable()}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
+                                    </div>
+                                </div>
+                            {/if}
+                            <hr/>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <label class="nowrap" for="max_video_duration" title="Max video duration">Max video duration</label>
                                 </div>
@@ -1132,6 +1213,114 @@
                                         <input class="form-control" name="max_video_duration" id="max_video_duration" value="{$row.max_video_duration}" size="45"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('minutes'))}">{lang code='minutes'}</span>
                                     </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Video extensions</label>
+                                    <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
+                                </div>
+                            </div>
+                            <hr/>
+
+                        </div>
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>{lang code='photos'}</h3>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="enable_photo_file_upload" title="Enable remote upload">Enable photo file upload</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_photo_file_upload" id="enable_photo_file_upload" {if $row.enable_photo_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Photo Activation</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_profile_pic_size" title="Max profile pic size">Max profile pic size</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="max_profile_pic_size" id="max_profile_pic_size" value="{$row.max_profile_pic_size}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_bg_size" title="Max Background Size">Max Background Size</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-10">
+                                    <label class="nowrap" for="photo_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
+                                        <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
+                                        {lang code='option_enable_nsfw_check'}
+                                        <span class="ai-powered" title="{lang code='tips_powered_by_ai'}"></span>
+                                    </label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="photo_enable_nsfw_check" id="photo_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            {if !AIVision::isAvailable()}
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
+                                    </div>
+                                </div>
+                            {/if}
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="max_photo_size" title="Maximum allowed photo size">Maximum allowed photo size</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input class="form-control" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}" size="45"/>
+                                        <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr/>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Photo extensions</label>
+                                    <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
+                                </div>
+                            </div>
+                            <hr/>
+
+                        </div>
+
+                        <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>{lang code='general'}</h3>
                                 </div>
                             </div>
                             <hr/>
@@ -1175,74 +1364,6 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="max_profile_pic_size" title="Max profile pic size">Max profile pic size</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input class="form-control" name="max_profile_pic_size" id="max_profile_pic_size" value="{$row.max_profile_pic_size}" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <label class="nowrap" for="max_bg_size" title="Max Background Size">Max Background Size</label>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="input-group">
-                                        <input class="form-control" name="max_bg_size" id="max_bg_size" value="{$row.max_bg_size}" size="45"/>
-                                        <span class="input-group-addon" title="{lang('in_x',lang('kb'))}">{lang code='kb'}</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <hr/>
-
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="activation" title="Video Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all videos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Video Activation</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="activation" id="activation" {if $row.activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="photo_activation" title="Photo Activation"><span class="fa fa-question-circle tips" title="If left unchecked, all photos will be published directly. If checked, admin will have to approve videos before they appear on website"></span> Photo Activation</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="photo_activation" id="photo_activation" {if $row.photo_activation=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="enable_video_file_upload" title="Enable file upload">Enable video file upload</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_video_file_upload" id="enable_video_file_upload" {if $row.enable_video_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="enable_video_remote_upload" title="Enable remote upload">Enable video remote upload</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_video_remote_upload" id="enable_video_remote_upload" {if $row.enable_video_remote_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="enable_photo_file_upload" title="Enable remote upload">Enable photo file upload</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="enable_photo_file_upload" id="enable_photo_file_upload" {if $row.enable_photo_file_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
                                 <div class="col-md-4">
                                     <label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
                                 </div>
@@ -1250,51 +1371,12 @@
                                     <input value="yes" name="feedsSection" id="feedsSection" {if $row.feedsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <label class="nowrap" for="show_collapsed_checkboxes" title="Collapse video categories">Collapse video categories</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="show_collapsed_checkboxes" id="show_collapsed_checkboxes" {if $row.show_collapsed_checkboxes=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-10">
+                                <div class="col-md-4">
                                     <label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <label class="nowrap" for="delete_mass_upload" title="Delete Mass upload"><span class="fa fa-question-circle tips" title="Delete original files once uploaded from mass upload"></span> Delete Mass upload</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="delete_mass_upload" id="delete_mass_upload" {if $row.delete_mass_upload=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                            </div>
-                            <hr/>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_video_types" title="Allowed Video extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Video extensions</label>
-                                    <textarea class="form-control" name="allowed_video_types" id="allowed_video_types" cols="45" rows="5">{$row.allowed_video_types}</textarea>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label class="nowrap" for="allowed_photo_types" title="Allowed Photo extensions"><span class="fa fa-question-circle tips" title="{lang code='separated_by_commas'}"></span> Allowed Photo extensions</label>
-                                    <textarea class="form-control" name="allowed_photo_types" id="allowed_photo_types" cols="45" rows="5">{$row.allowed_photo_types}</textarea>
                                 </div>
                             </div>
                             <hr/>
@@ -1831,27 +1913,6 @@
                         </div>
                     </div>
                     <hr/>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <label class="nowrap" for="video_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
-                                <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
-                                {lang code='option_enable_nsfw_check'}
-                                <span class="ai-powered" title="{lang code='tips_powered_by_ai'}"></span>
-                            </label>
-                        </div>
-                        <div class="col-md-2 row-size">
-                            <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    {if !AIVision::isAvailable()}
-                        <div class="row">
-                            <div class="col-md-12">
-                                <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
-                            </div>
-                        </div>
-                    {/if}
-                    <hr/>
 
                 </div>
                 <div class="col-md-4">
@@ -2193,49 +2254,6 @@
                         </div>
                         <div class="col-md-2 row-size">
                             <input value="1" name="photo_crop" id="photo_crop" {if $row.photo_crop=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <label class="nowrap" for="photo_enable_nsfw_check" title="{lang code='option_enable_nsfw_check'}">
-                                <span class="fa fa-question-circle tips" title="{lang code='tips_enable_nsfw_check'}"></span>
-                                {lang code='option_enable_nsfw_check'}
-                                <span class="ai-powered" title="{lang code='tips_powered_by_ai'}"></span>
-                            </label>
-                        </div>
-                        <div class="col-md-2 row-size">
-                            <input value="yes" name="photo_enable_nsfw_check" id="photo_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
-                            <span class="lbl"></span>
-                        </div>
-                    </div>
-                    {if !AIVision::isAvailable()}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <img alt="warning" src="{$imageurl}/error.png"/> {lang code='warning_ai_requirements'}
-                        </div>
-                    </div>
-                    {/if}
-                    <hr/>
-
-                </div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <label class="nowrap" for="max_photo_size" title="Max photo size"><span class="fa fa-question-circle tips" title="Maximum allowed photo size, in MBs"></span> Max photo size</label>
-                        </div>
-                        <div class="col-md-2 row-size">
-                            <input class="form-control" type="text" name="max_photo_size" id="max_photo_size" value="{$row.max_photo_size}"/>
-                        </div>
-                    </div>
-                    <hr/>
-                    <div class="row">
-                        <div class="col-md-8">
-                            <label class="nowrap" for="enable_edit_button" title="{lang code='enable_edit_button'}">{lang code='enable_edit_button'}</label>
-                        </div>
-                        <div class="col-md-4 row-size">
-                            <input value="yes" name="enable_edit_photo_button" id="enable_edit_photo_button" {if $row.enable_edit_photo_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                             <span class="lbl"></span>
                         </div>
                     </div>

@@ -19,8 +19,8 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('tips_enable_nsfw_check', [
-            'fr' => 'Les contenus matures nécessiteront une activation manuelle',
-            'en' => 'NSFW detected contents will requiered a manual activation'
+            'fr' => 'Les contenus matures seront reportés et nécessiteront une activation manuelle',
+            'en' => 'NSFW detected contents will be flagged and will requiered a manual activation'
         ]);
 
         self::generateTranslation('tips_powered_by_ai', [
