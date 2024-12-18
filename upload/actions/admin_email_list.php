@@ -4,6 +4,10 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');
 
-EmailTemplate::assignListEmailTemplate('email');
+$params = [];
+if (!empty($_POST['search'])) {
+    $params['code']=$_POST['search'];
+}
+EmailTemplate::assignListEmailTemplate('email',$params);
 
 echo templateWithMsgJson('blocks/email_list.html');

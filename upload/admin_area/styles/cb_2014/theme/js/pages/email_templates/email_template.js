@@ -103,11 +103,12 @@ function listEmailTemplate() {
     }).always(() => hideSpinner());
 }
 
-function listEmail() {
+function listEmail(search) {
     showSpinner();
     $.post({
         url: '/actions/admin_email_list.php',
         dataType: "json",
+        data: {search: search},
         success: (response) => {
             $('#email > .row').html(response.template);
             $('.page-content').prepend(response.msg);
@@ -187,6 +188,11 @@ function initListenerEmailEdit() {
 function initListenerEmailList() {
     $('.add_new_email_list').off('click').on('click', () => {
         editEmail();
+    });
+
+    $('.search_email').off('click').on('click', () => {
+        var search = $('#search').val();
+        listEmail(search);
     });
 }
 

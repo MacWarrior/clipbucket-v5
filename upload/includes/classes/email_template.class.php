@@ -299,7 +299,7 @@ class EmailTemplate
         }
 
         if ($param_code !== false) {
-            $conditions[] = ' ' . self::$tableName . '.code LIKE \'' . mysql_clean($param_code) . '\'';
+            $conditions[] = ' ' . self::$tableName . '.code LIKE \'%' . mysql_clean($param_code) . '\'%';
         }
         if ($param_disabled !== null) {
             $conditions[] = ' ' . self::$tableName . '.disabled = ' . ($param_disabled ? 'true' : 'false');
@@ -386,7 +386,7 @@ class EmailTemplate
         }
 
         if ($param_code !== false) {
-            $conditions[] = ' ' . self::$tableNameEmail . '.code LIKE \'' . mysql_clean($param_code) . '\'';
+            $conditions[] = ' ' . self::$tableNameEmail . '.code LIKE \'%' . mysql_clean($param_code) . '%\'';
         }
         if ($param_disabled !== null) {
             $conditions[] = ' ' . self::$tableNameEmail . '.disabled = ' . ($param_disabled ? 'true' : 'false');
@@ -463,6 +463,10 @@ class EmailTemplate
         $total_pages = count_pages($total_rows, config('admin_pages'));
         pages::getInstance()->paginate($total_pages, $page);
         assign($variable, $list);
+        if (!empty($_POST['search'])) {
+            assign('search', $_POST['search']);
+        }
+        return true;
     }
 
     /**
