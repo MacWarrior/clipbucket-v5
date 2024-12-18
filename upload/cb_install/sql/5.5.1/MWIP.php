@@ -42,5 +42,10 @@ class MWIP extends \Migration
             'fr' => 'Veuillez utiliser PHP 7.4+ et activer l\'extension FFI ("preload" ne fonctionnera pas).',
             'en' => 'Please use PHP 7.4+ and enable FFI extension ("preload" won\'t work).'
         ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}flags` MODIFY COLUMN `userid` bigint(20) NULL;', [
+            'table' => 'flags',
+            'column' => 'userid'
+        ]);
     }
 }

@@ -109,6 +109,10 @@ class AIVision
             return false;
         }
 
+        if( !in_array(strtolower(ini_get('ffi.enable')), ['1','on']) ){
+            return false;
+        }
+
         if( !in_array(strtolower(System::get_php_cli_config('ffi.enable')), ['1','on']) ){
             return false;
         }
