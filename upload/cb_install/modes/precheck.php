@@ -78,14 +78,17 @@ $skippable_option = get_skippable_options();
         }
 
         if( $php == 'php_cli' ){
-            if( AIVision::isAvailable() ){
-                $msg = ['msg' => 'FFI extension enabled'];
-            } else {
-                $msg = ['war' => 'FFI extension disabled<br/>AI features will be disabled.<br/>Please use PHP 7.4+ and enable FFI extension ("preload" won\'t work).'];
-            }
-            echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>FFI</dt>';
-            echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
+            $check_ffi = in_array(strtolower(System::get_php_cli_config('ffi.enable')), ['1','on']);
+        } else {
+            $check_ffi = in_array(strtolower(ini_get('ffi.enable')), ['1','on']);
         }
+        if( $check_ffi ){
+            $msg = ['msg' => 'FFI extension enabled'];
+        } else {
+            $msg = ['war' => 'FFI extension disabled<br/>AI features will be disabled.<br/>Please use PHP 7.4+ and enable FFI extension ("preload" won\'t work).'];
+        }
+        echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>FFI</dt>';
+        echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
 
         foreach($required_php_fonctions as $func => $func_name) {
             if( !System::get_software_version($php, false, $_POST[$php . '_filepath'] ?? null) ){

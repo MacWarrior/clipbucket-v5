@@ -81,8 +81,10 @@ assign('memory_limit_cli', System::get_php_cli_config('memory_limit') ?? 0);
 assign('max_execution_time_cli', System::get_php_cli_config('max_execution_time') ?? 1);
 assign('disks_usage', System::get_disks_usage());
 
-$ffi_cli = AIVision::isAvailable();
-assign('ffi_cli', $ffi_cli);
+$check_ffi_cli = in_array(strtolower(System::get_php_cli_config('ffi.enable')), ['1','on']);
+$check_ffi_web = in_array(strtolower(ini_get('ffi.enable')), ['1','on']);
+assign('ffi_cli', $check_ffi_cli);
+assign('ffi_web', $check_ffi_web);
 
 $datetime_datas = [];
 $check_time = System::isDateTimeSynchro($datetime_datas);
@@ -95,7 +97,7 @@ $check_time_cli = System::isDateTimeSynchro($datetime_datas_cli, $current_dateti
 assign('check_time_cli', $check_time_cli);
 assign('datetime_datas_cli', $datetime_datas_cli);
 
-assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec && $check_time_cli && $ffi_cli));
+assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec && $check_time_cli && $check_ffi_cli && $check_ffi_web));
 
 //SERVICES
 $phpVersionReq = '7.0.0';

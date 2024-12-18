@@ -267,6 +267,7 @@ echo -ne " OK"
 echo ""
 echo -ne "Updating PHP ${PHP_VERSION} configs..."
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/fpm/php.ini
 sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/cli/php.ini
 
 systemctl restart php${PHP_VERSION}-fpm
