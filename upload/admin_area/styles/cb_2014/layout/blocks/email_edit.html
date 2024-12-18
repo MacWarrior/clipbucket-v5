@@ -13,23 +13,38 @@
     </div>
     <hr>
     <div class="row">
-        <label for="email_code">{lang('code')}</label>
-        <input name="code" id="email_code" value="{$email.code}" type="text"/>
+        <div class="col-md-2">
+            <label for="email_code">{lang('code')}</label>
+        </div>
+        <div class="col-md-10">
+            <input name="code" id="email_code" value="{$email.code}" {if $email.is_deletable === '0' } disabled="disabled" {/if} type="text" style="max-width: 80%;"/>
+        </div>
     </div>
     <div class="row">
-        <label for="email_title">{lang('title')}</label>
-        <input name="title" id="email_title" value="{$email.title}" type="text"/>
+        <div class="col-md-2">
+            <label for="email_title">{lang('title')}</label>
+        </div>
+        <div class="col-md-10">
+            <input name="title" id="email_title" value="{$email.title}" type="text"/>
+        </div>
     </div>
     <hr>
     <div class="row">
         <div class="col-md-6 border-right">
-            <label for="email_content">{lang('content')}</label>
-            <textarea name="content" id="email_content" style="width: 100%; min-height: 200px; max-width: 100%;">{$email.content}</textarea>
+            <label for="email_content"><b>{lang('content')}</b></label>
+            <textarea name="content" id="email_content" style="width: 100%; min-height: 200px; max-width: 100%; resize: vertical;"></textarea>
         </div>
         <div class="col-md-6 ">
-            <label for="render">{lang('rendered')}</label>
-            <div id="render_email" class="tab-content" style="width: 100%; min-height: 200px;">{$email.content}</div>
+            <label for="render"><b>{lang('rendered')}</b></label>
+            <div id="render_email" class="tab-content" style="width: 100%; min-height: 200px;"></div>
         </div>
     </div>
     <button class="btn btn-primary">{lang('submit_now')}</button>
 </form>
+<script>
+    email_content_base = "{base64_encode($email.content)}";
+    $(function () {
+        $('#email_content').val(atob(email_content_base));
+        $('#render_email').html(atob(email_content_base));
+    });
+</script>

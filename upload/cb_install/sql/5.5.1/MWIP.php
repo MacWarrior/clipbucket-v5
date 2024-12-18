@@ -263,7 +263,16 @@ class MWIP extends \Migration
         }
         self::deleteConfig('welcome_email');
         self::generateConfig('email_sender_address', $config_email_sender);
+
+        self::generateTranslation('email_sender_address', [
+            'fr'=>'Adresse d\'expédition des emails',
+            'en'=>'Email sender address'
+        ]);
         self::generateConfig('email_sender_name', 'no-reply');
+        self::generateTranslation('email_sender_name', [
+            'fr'=>'Nom de l\'expéditeur des emails',
+            'en'=>'Email sender mail'
+        ]);
 
         self::generateTranslation('missing_recipient', [
             'fr' => 'Destinataire manquant',
@@ -675,5 +684,12 @@ class MWIP extends \Migration
         )';
         self::query($sql);
 
+        self::generateTranslation('error_mail', [
+            'fr'=>'Une erreur est survenue lors de l\'envoi du mail : %s',
+            'en'=>'An error occurred during mail sending : %s'
+        ]);
+        self::updateTranslation('email_template', [
+            'en'=>'Email template'
+        ]);
     }
 }

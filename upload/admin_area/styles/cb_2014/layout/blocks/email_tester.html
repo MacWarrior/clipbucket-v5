@@ -6,7 +6,7 @@
                     <label for="select_email">{lang('select_an_email')}</label>
                 </div>
                 <div class="col-md-7">
-                    <select name="id_email" class="select_email" id="select_email">
+                    <select name="id_email" class="select_email " id="select_email" style="max-width: 100%">
                         <option></option>
                         {foreach from=$emails item=email}
                             <option value="{$email.id_email}">{$email.code} - {$email.title}</option>
@@ -38,7 +38,7 @@
                     <label for="email_sender">{lang('email_sender')}</label>
                 </div>
                 <div class="col-md-7">
-                    <input name="email_sender" id="email_sender">
+                    <input name="email_sender" id="email_sender" placeholder="{config('email_sender_address')}">
                 </div>
             </div>
             <hr>
@@ -47,7 +47,7 @@
                     <label for="sender">{lang('sender')}</label>
                 </div>
                 <div class="col-md-7">
-                    <input name="sender" id="sender">
+                    <input name="sender" id="sender" placeholder="{config('email_sender_name')}">
                 </div>
             </div>
 
@@ -62,3 +62,10 @@
         <button class="btn btn-primary send_email" >{lang('send')}</button>
     </div>
 </form>
+<script>
+    $(function (){
+        $('#select_email').select2({
+            width: '100%'
+        });
+    })
+</script>

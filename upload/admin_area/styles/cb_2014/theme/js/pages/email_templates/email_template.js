@@ -42,6 +42,7 @@ function saveEmailTemplate(form) {
             $('#email_template > .row').html(response.template);
             $('.page-content').prepend(response.msg);
             initListenerEmailTemplateEdit();
+            updateSelect('email_id_email_template', response.email_template_list, 'email_template');
         }
     }).always(() => hideSpinner());
 }
@@ -56,6 +57,7 @@ function saveEmail(form) {
             $('#email > .row').html(response.template);
             $('.page-content').prepend(response.msg);
             initListenerEmailEdit();
+            updateSelect('select_email', response.email_list, 'email');
         }
     }).always(() => hideSpinner());
 }
@@ -69,6 +71,7 @@ function deleteEmailTemplate(id_email_template) {
         success: (response) => {
             $('.page-content').prepend(response.msg);
             listEmailTemplate();
+            updateSelect('email_id_email_template', response.email_template_list, 'email_template');
         }
     });
 }
@@ -82,6 +85,7 @@ function deleteEmail(id_email) {
         success: (response) => {
             $('.page-content').prepend(response.msg);
             listEmail();
+            updateSelect('select_email', response.email_list, 'email');
         }
     });
 }
@@ -218,5 +222,24 @@ function initListenerEmailTester() {
     });
 }
 
+function updateSelect(select_id, options, type) {
+    var id;
+    var text;
+    var selected_option = $('#' + select_id).val();
+    $('#' + select_id + ' option').remove();
+    $.each(options, function (i, item) {
+        if (type == 'email') {
+            id = item.id_email;
+            text = item.code + ' - ' + item.title;
+        } else if (type =='email_template') {
+            id = item.id_email_template;
+            text = item.code;
+        }
+        $('#' + select_id).append($('<option>', {
+            value: id,
+            text: text
+        }));
+    })
+}
 
 

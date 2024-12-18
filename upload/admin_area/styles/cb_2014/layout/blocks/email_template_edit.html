@@ -5,7 +5,7 @@
     <input name="id_email_template" value="{$template.id_email_template}" type="hidden"/>
     <div class="row">
         <label for="email_template_code">{lang('code')}</label>
-        <input name="code" id="email_template_code" value="{$template.code}" type="text"/>
+        <input name="code" id="email_template_code" {if $template.is_deletable === '0' } disabled="disabled" {/if} value="{$template.code}" type="text"/>
     </div>
     <hr>
     <div class="row">

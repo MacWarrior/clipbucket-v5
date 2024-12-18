@@ -72,7 +72,8 @@ class EmailTemplate
                         e(lang('empty_email_content'));
                         return false;
                     }
-                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
+//                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
+                    $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 case 'code':
                     if (empty($value)) {
@@ -93,7 +94,7 @@ class EmailTemplate
     {
         //check code unique
         $existing_code = self::getOneEmail([
-            'code'         => $fields['code'] ?: false,
+            'code'         => $fields['code'] ?: '',
             'not_id_email' => ($fields['id_email'] ?: 0),
             'disabled'     => false
         ]);
@@ -120,8 +121,8 @@ class EmailTemplate
                     $value = (bool)$value;
                     break;
                 case 'content':
-                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
-
+//                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
+                    $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 case 'code':
                     if (empty($value)) {
@@ -633,7 +634,7 @@ class EmailTemplate
             return true;
         } else {
             //send error
-            return false;
+            return $mail->ErrorInfo;
         }
     }
 
@@ -671,10 +672,10 @@ class EmailTemplate
             'content'
         ];
         $values = [
-            $id_email,
+            mysql_clean($id_email),
             'NOW()',
-            $title,
-            $content
+            mysql_clean($title),
+            mysql_clean($content)
         ];
 
         if (!empty($id_user)) {
@@ -696,10 +697,10 @@ class EmailTemplate
      * @param $code_email
      * @param $to
      * @param $variables
-     * @return false|void
+     * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public static function sendMail($code_email, $to, $variables, $from = '', $from_name = '')
+    public static function sendMail($code_email, $to, $variables, $from = '', $from_name = '', $display_error = false)
     {
         if (empty($to)) {
             e(lang('missing_recipient'));
@@ -734,16 +735,27 @@ class EmailTemplate
         $content = self::fillVariable($email['template_content'], ['email_content' => $email_content]);
         //send emails
         if (is_array($to) && !isset($to['mail'])) {
-            if (self::send($title, $content, $to, $from, $from_name)) {
+            $result = self::send($title, $content, $to, $from, $from_name);
+            if ($result === true) {
                 foreach ($to as $email_address) {
                     self::saveEmailHisto($email['id_email'], null, $email_address, $title, $content);
                 }
             }
         } else {
-            if (self::send($title, $content, $to, $from, $from_name)) {
+            $result = self::send($title, $content, $to, $from, $from_name);
+            if ($result === true) {
                 self::saveEmailHisto($email['id_email'], $user['userid'] ?? null, $to['mail'] ?? $to, $title, $content);
             }
         }
+        if ($result !== true) {
+            if ($display_error) {
+                e(lang('error_mail', [$result]));
+            } else {
+                DiscordLog::getInstance()->error(lang('error_mail', [$result]));
+            }
+            return false;
+        }
+        return true;
     }
 
 }

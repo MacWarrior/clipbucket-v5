@@ -306,7 +306,6 @@ if (isset($_POST['update'])) {
         'seo',
         'seo_vido_url',
         'search_list_per_page',
-        'support_email',
         'show_collapsed_checkboxes',
         'disable_email',
         'enable_country',
@@ -371,8 +370,6 @@ if (isset($_POST['update'])) {
         'vrate',
         'video_require_login',
         'feedsSection',
-        'website_email',
-        'welcome_email',
         'store_guest_session',
         'delete_mass_upload',
         'stay_mp4',
@@ -466,7 +463,9 @@ if (isset($_POST['update'])) {
         'limit_photo_related',
         'display_featured_video',
         'featured_video_style',
-        'number_featured_video'
+        'number_featured_video',
+        'email_sender_address',
+        'email_sender_name',
     ];
 
     foreach ($opt_list as $optl) {

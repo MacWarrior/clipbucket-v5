@@ -5,4 +5,8 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 User::getInstance()->hasPermissionAjax('admin_access');
 
 $success = EmailTemplate::deleteEmail($_POST['id_email'] ?? 0);
-echo json_encode(['success'=>$success, 'msg'=>getTemplateMsg()]);
+echo json_encode([
+    'success'    => $success,
+    'msg'        => getTemplateMsg(),
+    'email_list' => EmailTemplate::getAllEmail([])
+]);

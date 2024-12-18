@@ -1404,4 +1404,6 @@ VALUES ('admin_setting'),
        ('invalid_email_sender'),
        ('missing_recipient'),
        ('unknown_email'),
-       ('template_dont_exist');
+       ('template_dont_exist'),
+       ('email_sender_address'),
+       ('email_sender_name');
