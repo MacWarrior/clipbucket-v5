@@ -143,7 +143,7 @@ Replace username with the name of the user. For example, for the user john, use 
   <i>“Your path you must decide.”</i><br/>
   Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
   Recommended : MariaDB 10.3+ ; PHP 8.3+ ; FFmpeg 4.3+<br/>
-  Optionnal : Git<br/>
+  Optionnal : Git, PHP module FFI<br/>
   <i>Only stable versions have been tested, mainly on Debian</i>
 </details>
 

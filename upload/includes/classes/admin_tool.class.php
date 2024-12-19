@@ -725,7 +725,7 @@ class AdminTool
         if( !empty($videos) ){
             $this->array_loop = array_column($videos, 'videoid');
         }
-        $this->executeTool('Video::deleteUnusedVideoFIles');
+        $this->executeTool('Video::deleteUnusedVideoFiles');
     }
 
     /**

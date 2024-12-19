@@ -186,7 +186,7 @@ class Upload
 
         //Setting Activation Option
         $query_field[] = 'active';
-        $query_val[] = config('activation') == 0 ? 'yes' : 'no';
+        $query_val[] = config('activation') || (config('video_enable_nsfw_check') =='yes' && AIVision::isAvailable()) ? 'no' : 'yes';
 
         $query_field[] = 'date_added';
         $query_val[] = dateNow();

@@ -260,6 +260,10 @@ set "SEARCH=max_execution_time = 30"
 set "REPLACEMENT=max_execution_time = 7200"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
+set "SEARCH=;ffi.enable=preload"
+set "REPLACEMENT=ffi.enable=true"
+Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
+
 echo OK
 
 :config_nginx

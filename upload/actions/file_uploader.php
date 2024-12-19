@@ -77,12 +77,12 @@ switch ($mode) {
         $targetFile = DirPath::get('temp') . $file_name;
 
         $params = [
-            'fileData' => 'Filedata',
-            'mimeType' => 'video',
+            'fileData'            => 'Filedata',
+            'mimeType'            => 'video',
             'destinationFilePath' => $targetFile,
-            'keepExtension' => true,
-            'maxFileSize' => config('max_upload_size'),
-            'allowedExtensions' => config('allowed_video_types')
+            'keepExtension'       => true,
+            'maxFileSize'         => config('max_upload_size'),
+            'allowedExtensions'   => config('allowed_video_types')
         ];
 
         FileUpload::getInstance($params)->processUpload();

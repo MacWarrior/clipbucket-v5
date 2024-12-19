@@ -13,4 +13,7 @@ return array(
     'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'OxygenzSAS\\Discord\\' => array($vendorDir . '/oxygenzsas/composer_lib_discord/src'),
+    'Onnx\\' => array($vendorDir . '/veka-server/onnx-php/src'),
+    'FFI\\WorkDirectory\\' => array($vendorDir . '/veka-server/onnx-php/work-directory/src'),
+    'FFI\\Env\\' => array($vendorDir . '/veka-server/onnx-php/env/src'),
 );

@@ -119,6 +119,7 @@ function get_image_file($params)
     $details = $params['details'];
     $output = $params['output'] ?? false;
     $static = $params['static'] ?? false;
+    $param_filepath = $params['filepath'] ?? false;
 
     $default = ['t', 'm', 'l', 'o'];
     $size = $params['size'];
@@ -127,8 +128,12 @@ function get_image_file($params)
     if (!$details) {
         return get_photo_default_thumb($size, $output);
     }
+
     if ($static) {
         return DirPath::getUrl('photos') . $details['file_directory'] . '/' . $details['filename'] . '_' . $size . '.' . $details['ext'];
+    }
+    if( $param_filepath ){
+        return DirPath::get('photos') . $details['file_directory'] . '/' . $details['filename'] . '_' . $size . '.' . $details['ext'];
     }
 
     if (!is_array($details)) {

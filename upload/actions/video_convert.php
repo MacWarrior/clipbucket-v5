@@ -136,6 +136,34 @@ if (!empty($_filename)) {
         setVideoStatus($_filename, 'completed', $reconvert, true);
     }
 
+    $active = config('activation') ? 'yes' : 'no';
+    if( config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
+        $thumbs = get_thumb($videoDetails,TRUE,'original','auto', null, 'filepath');
+
+        if( !empty($thumbs) ){
+            $ia = new AIVision([
+                'tags'            => [0 => 'nsfw', 1 => 'safe']
+                ,'rescale_factor' => 0.00392156862745098
+                ,'height'         => 224
+                ,'width'          => 224
+                ,'shape'          => 'bhwc'
+                ,'modelType'      => 'nsfw'
+                ,'autoload'       => true
+            ]);
+
+            foreach( $thumbs as $thumb ){
+                if( $ia->is($thumb, 'nsfw') ){
+                    $active = 'no';
+                    CbVideo::getInstance()->action->report_it($videoDetails['videoid'], 2 /* sexual_content */, 'NULL' /* system */);
+                    break;
+                }
+            }
+        }
+    }
+    if( $active == 'yes' ){
+        Clipbucket_db::getInstance()->update(tbl('video'), ['active'], ['yes'], 'videoid = ' . mysql_clean($videoDetails['videoid']));
+    }
+
     $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'verify_converted_videos.php ' . $queue_details['cqueue_name'];
     if (stristr(PHP_OS, 'WIN')) {
         $complement = '';

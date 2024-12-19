@@ -29,7 +29,7 @@
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#hosting" style="min-height: 58px;">
-                    <h6>{lang code='hosting'}<img src="{$imageurl}/{if $hosting_ok }tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='hosting'}<img src="{$imageurl}/{if $hosting_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
             <li>
@@ -39,12 +39,12 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#services" style="min-height: 58px;">
-                    <h6>{lang code='services'}<img src="{$imageurl}/{if $services_ok }tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='services'}<img src="{$imageurl}/{if $services_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
             <li>
                 <a data-toggle="tab" href="#permissions" style="min-height: 58px;">
-                    <h6>{lang code='permissions'}<img src="{$imageurl}/{if $permissions_ok }tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='permissions'}<img src="{$imageurl}/{if $permissions_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
         </ul>
@@ -87,19 +87,19 @@
                     </label>
 
                     {foreach $php_extensions_list as $key => $extension}
-                        <div class="row ml-2">
-                            <div class="col-lg-10">
-                                <img src="{$imageurl}/{if $extensionsWEB.$key}tick{else}alert{/if}.png"/>
-                                <label>
-                                    {$extension.display} extension -
-                                    {if !$extensionsWEB.$key}
-                                        <div class="alert alert-danger">{lang code='not_found'}</div>
-                                    {else}
-                                        <strong>{$extensionsWEB.$key}</strong>
-                                    {/if}
-                                </label>
-                            </div>
+                    <div class="row ml-2">
+                        <div class="col-lg-10">
+                            <img src="{$imageurl}/{if in_array($key,$extensionsWEB)}tick{elseif $extension.required == true}alert{else}error{/if}.png"/>
+                            <label>
+                                {$extension.display} extension
+                                {if !in_array($key,$extensionsWEB)}
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
+                                {else}
+                                <strong>enabled</strong>
+                                {/if}
+                            </label>
                         </div>
+                    </div>
                     {/foreach}
 
                 </div>
@@ -122,19 +122,19 @@
                     </label>
 
                     {foreach $php_extensions_list as $key => $extension}
-                        <div class="row ml-2">
-                            <div class="col-lg-10">
-                                <img src="{$imageurl}/{if $extensionsCLI.$key}tick{else}alert{/if}.png"/>
-                                <label>
-                                    {$extension.display} extension -
-                                    {if !$extensionsCLI.$key}
-                                        <div class="alert alert-danger">{lang code='not_found'}</div>
-                                    {else}
-                                        <strong>{$extensionsCLI.$key}</strong>
-                                    {/if}
-                                </label>
-                            </div>
+                    <div class="row ml-2">
+                        <div class="col-lg-10">
+                            <img src="{$imageurl}/{if in_array($key,$extensionsCLI)}tick{elseif $extension.required == true}alert{else}error{/if}.png"/>
+                            <label>
+                                {$extension.display} extension
+                                {if !in_array($key,$extensionsCLI)}
+                                <div class="alert alert-danger">{lang code='not_found'}</div>
+                                {else}
+                                <strong>enabled</strong>
+                                {/if}
+                            </label>
                         </div>
+                    </div>
                     {/foreach}
                 </div>
                 <div class="row">
@@ -329,6 +329,19 @@
                                 {lang code='datetime_synchro_error'}
                             {/if}
                         </div>
+                        <div class="row">
+                            <img src="{$imageurl}/{if $ffi_web}tick{else}error{/if}.png"/>
+                            <label>FFI :
+                                <strong>
+                                    {if $ffi_web}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
+                                </strong>
+                            </label>
+                            {if !$ffi_web}
+                                <br/>{lang code='ai_features_disabled'}
+                                <br/>{lang code='ai_setup_config'}
+                            {/if}
+
+                        </div>
 
                         {$show_warning = false}
 
@@ -439,6 +452,19 @@
                                     {lang code='datetime_synchro_error'}
                                 {/if}
                             </div>
+                            <div class="row">
+                                <img src="{$imageurl}/{if $ffi_cli}tick{else}error{/if}.png"/>
+                                <label>FFI :
+                                    <strong>
+                                        {if $ffi_cli}{lang|ucfirst code='enabled'}{else}{lang|ucfirst code='disabled'}{/if}
+                                    </strong>
+                                </label>
+                                {if !$ffi_cli}
+                                    <br/>{lang code='ai_features_disabled'}
+                                    <br/>{lang code='ai_setup_config'}
+                                {/if}
+
+                            </div>
                         </div>
                     {/if}
                     <div class="col-md-3 {if !$isNginx}hidden{/if}">
@@ -446,11 +472,11 @@
                         {if !$canAccessNginx}
                             {$show_warning = true}
                             <div class="row">
-                                <img src="{$imageurl}/help.png"/>
+                                <span class="fa fa-question-circle tips"></span>
                                 PHP is unable to check Nginx configuration.<br/>
                                 Please make sure <b>client_max_body_size</b> is set correctly.<br/>
 
-                                {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
+                                {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size_mb}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
                             </div>
                         {else}
                             <img src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"/>
@@ -479,7 +505,7 @@
 
                     <div class="col-md-3 {if !$is_cloudflare}hidden{/if}">
                         <a href="https://developers.cloudflare.com/cache/concepts/default-cache-behavior/#upload-limits" target="_blank">
-                            <img alt="help" src="{$imageurl}/help.png" title="{lang code='cloudflare_documentation'}"/>
+                            <span class="fa fa-question-circle tips" title="{lang code='cloudflare_documentation'}"></span>
                         </a>
                         Using Cloudflare implies max upload size limits,<br/>
                         depending of your subscription rank.<br/>

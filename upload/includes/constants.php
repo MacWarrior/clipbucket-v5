@@ -43,6 +43,7 @@ class DirPath
             case 'thumbs':
             case 'videos':
             case 'category_thumbs':
+            case 'ai':
                 $path = $root_directory . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'files/' . $dir_name;
                 break;

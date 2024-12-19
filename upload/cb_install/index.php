@@ -8,6 +8,7 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
+require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 $whoops = new \Whoops\Run;
