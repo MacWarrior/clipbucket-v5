@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"228",
+  "revision":"229",
   "status":"dev",
   "detail":[
     {
@@ -206,6 +206,8 @@
         ,"Fix URL redirect with specified port <i>(#486)</i>"
         ,"Fix double / in URL"
         ,"Fix permission check for guests"
+        ,"Fix video & photo edit button <i>(#494)</i>"
+        ,"Fix anonymous comments form"
       ]
     },
     {
