@@ -181,7 +181,7 @@ class cbactions
             return;
         }
 
-        if( !is_null($user_id) && !User::getInstance()->isUserConnected() ){
+        if( $user_id != 'NULL' && !User::getInstance()->isUserConnected() ){
             e(lang('you_not_logged_in'));
             return;
         }

@@ -47,5 +47,7 @@ class MWIP extends \Migration
             'table' => 'flags',
             'column' => 'userid'
         ]);
+
+        self::generateConfig('enable_hide_uploader_name', 'no');
     }
 }

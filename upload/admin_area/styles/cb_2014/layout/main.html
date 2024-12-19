@@ -260,15 +260,22 @@
                                     <span class="lbl"></span>
                                 </div>
                                 <div class="col-md-4">
+                                    <label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
+                                </div>
+                                <div class="col-md-2 row-size no_padding">
+                                    <input value="yes" name="feedsSection" id="feedsSection" {if $row.feedsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
                                     <label class="nowrap" for="allow_registeration" title="Enable registrations">Enable registrations</label>
                                 </div>
                                 <div class="col-md-2 row-size no_padding">
                                     <input value="1" id="allow_registeration" {if $row.allow_registeration=='1'}checked{/if} name="allow_registeration" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
                                     <span class="lbl"></span>
                                 </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="nowrap" for="use_cached_pagin" title="Use cached pagination">Use cached pagination</label>
                                 </div>
@@ -299,6 +306,13 @@
                                 </div>
                                 <div class="col-md-2 row-size no_padding">
                                     <input class="form-control" name="comments_per_page" id="comments_per_page" value="{$row.comments_per_page}" size="5"/>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>
@@ -1192,7 +1206,7 @@
                                     </label>
                                 </div>
                                 <div class="col-md-2 row-size">
-                                    <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.photo_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
+                                    <input value="yes" name="video_enable_nsfw_check" id="video_enable_nsfw_check" {if $row.video_enable_nsfw_check=='yes' && AIVision::isAvailable()}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -1360,23 +1374,6 @@
                                         <input class="form-control" name="chunk_upload_size" id="chunk_upload_size" value="{$row.chunk_upload_size}" size="45"/>
                                         <span class="input-group-addon" title="{lang('in_x',lang('mb'))}">{lang code='mb'}</span>
                                     </div>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="feedsSection" title="Enable feeds">Enable feeds</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="yes" name="feedsSection" id="feedsSection" {if $row.feedsSection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
-                                </div>
-                                <div class="col-md-2 row-size">
-                                    <input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                                    <span class="lbl"></span>
                                 </div>
                             </div>
                             <hr/>

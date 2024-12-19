@@ -136,6 +136,7 @@ if (isset($_POST['update'])) {
         , 'enable_visual_editor_comments'
         , 'display_featured_video'
         , 'photo_enable_nsfw_check'
+        , 'video_enable_nsfw_check'
     ];
 
     $config_booleans_to_refactor = [
@@ -468,7 +469,8 @@ if (isset($_POST['update'])) {
         'display_featured_video',
         'featured_video_style',
         'number_featured_video',
-        'photo_enable_nsfw_check'
+        'photo_enable_nsfw_check',
+        'video_enable_nsfw_check'
     ];
 
     foreach ($opt_list as $optl) {
