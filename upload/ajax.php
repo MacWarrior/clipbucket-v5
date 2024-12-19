@@ -687,7 +687,9 @@ if (!empty($mode)) {
             ]);
             assign('collections', $collections);
             assign('selected', $insert_id);
-            echo templateWithMsgJson('blocks/collection_select_upload.html');
+            $response = templateWithMsgJson('blocks/collection_select_upload.html', false);
+            $response['success'] = (bool)$insert_id;
+            echo json_encode($response);
             break;
 
         case "ajaxPhotos":
