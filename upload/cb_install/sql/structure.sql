@@ -300,7 +300,7 @@ CREATE TABLE `{tbl_prefix}sessions` (
   `session_user` int(11) NOT NULL,
   `session_string` varchar(60) NOT NULL,
   `session_value` varchar(32) NOT NULL,
-  `ip` varchar(20) NOT NULL,
+  `ip` varchar(45) NOT NULL,
   `session_date` datetime NOT NULL,
   `current_page` text NOT NULL,
   `referer` text NOT NULL,
