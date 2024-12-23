@@ -50,8 +50,13 @@
                                         <small><em>{lang($perm.permission_description)}</em></small>
                                     </div>
                                     <div class="col-md-4">
-                                        <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-                                        <span class="lbl"></span>
+                                        {if $perm.permission_name == 'allow_manage_user_level' && User::getInstance()->get('level') == $level_details.user_level_id}
+                                            <input type="hidden" name="permission_value[{$perm.id_user_levels_permission}]" value="{$perm.permission_value}">
+                                            <input type="checkbox" disabled="disabled" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                        {else}
+                                            <input type="checkbox" name="permission_value[{$perm.id_user_levels_permission}]" value="yes" {if $perm.permission_value==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                                        {/if}
+                                            <span class="lbl"></span>
                                     </div>
                                 </div>
                             </div>
@@ -66,7 +71,7 @@
                 {/foreach}
             </div>
         {/section}
-        <input class="btn btn-primary btn-sm" type="submit"  id="button" value="{if $view == 'add'}{lang('add')}{elseif $view=='edit'}{lang('edit')}{/if}"/>
+        <input class="btn btn-primary btn-sm" type="submit" id="button" value="{if $view == 'add'}{lang('add')}{elseif $view=='edit'}{lang('edit')}{/if}"/>
     </form>
 {/if}
 
