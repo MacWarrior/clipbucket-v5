@@ -34,16 +34,16 @@ ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository<
 <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/en/" target="_blank">Oxygenz</a>'s projects since 2023
 
 # Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-| PHP 7.0 - 8.4+ compatibility                                      | MySQL 9+ & strict mode compatibility                      |
-|-------------------------------------------------------------------|-----------------------------------------------------------|
-| UHD video resolutions support                                     | TMDB integration                                          |
-| Dark & Light theme                                                | Age restriction                                           |
-| Chromecast support                                                | Recursive collections                                     |
-| Subtitles support                                                 | HLS conversion                                            |
-| Visual comments editor                                            | New configuration & personalisation options               |
-| Easy installation scripts                                         | Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i> |
-| Integrated DB update system                                       | Integrated translations <i>(ENG, FRA, DEU, POR, ESP)</i>  |
-| <b>Security, performance, stability and codestyle improvements<b> |                                                           |
+| PHP 7.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
+|-------------------------------|-------------------------------------------------------------------|
+| UHD video resolutions support | TMDB integration                                                  |
+| Dark & Light theme            | Age restriction                                                   |
+| Chromecast support            | Recursive collections                                             |
+| Subtitles support             | HLS conversion                                                    |
+| Visual comments editor        | New configuration & personalisation options                       |
+| Easy installation scripts     | Updated libraries <i>(VideoJS, Smarty, amCharts, ...)</i>         |
+| Integrated DB update system   | Integrated translations <i>(ENG, FRA, DEU, POR, ESP)</i>          |
+| AI NSFW check                 | <b>Security, performance, stability and codestyle improvements<b> |
 
 And even more !
 
