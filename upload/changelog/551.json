@@ -339,6 +339,7 @@
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"
+        ,"Update PhpMailer to 6.9.3"
       ]
     }
   ]
