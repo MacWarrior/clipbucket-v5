@@ -141,16 +141,30 @@ if (!empty($_filename)) {
         $thumbs = get_thumb($videoDetails,TRUE,'original','auto', null, 'filepath');
 
         if( !empty($thumbs) ){
-            $ia = new AIVision([
-                'modelType' => 'nsfw'
-                ,'autoload' => true
-            ]);
-
-            foreach( $thumbs as $thumb ){
-                if( $ia->is($thumb, 'nsfw') ){
-                    $active = 'no';
-                    CbVideo::getInstance()->action->report_it($videoDetails['videoid'], 2 /* sexual_content */, 'NULL' /* system */);
+            switch( config('video_nsfw_check_model') ){
+                default:
+                case 'nudity+nsfw':
+                    $models = ['nudity','nsfw'];
                     break;
+                case 'nsfw':
+                case 'nudity':
+                    $models = [config('video_nsfw_check_model')];
+                    break;
+            }
+
+            foreach($models as $model){
+                $ia = new AIVision([
+                    'modelType' => $model
+                    ,'autoload' => true
+                ]);
+
+                foreach( $thumbs as $thumb ){
+                    if( $ia->is($thumb, $model) ){
+                        $active = 'no';
+                        DiscordLog::sendDump($videoDetails['videoid'] . ' - ' . $thumb . ' is ' . $model);
+                        CbVideo::getInstance()->action->report_it($videoDetails['videoid'], 2 /* sexual_content */, 'NULL' /* system */);
+                        break 2;
+                    }
                 }
             }
         }

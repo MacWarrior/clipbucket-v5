@@ -12,6 +12,14 @@ class MWIP extends \Migration
     {
         self::generateConfig('photo_enable_nsfw_check', 'no');
         self::generateConfig('video_enable_nsfw_check', 'no');
+        self::generateConfig('photo_nsfw_check_model', 'nudity+nsfw');
+        self::generateConfig('video_nsfw_check_model', 'nudity+nsfw');
+        self::generateConfig('enable_hide_uploader_name', 'no');
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}flags` MODIFY COLUMN `userid` bigint(20) NULL;', [
+            'table' => 'flags',
+            'column' => 'userid'
+        ]);
 
         self::generateTranslation('option_enable_nsfw_check', [
             'fr' => 'Activer la vérification de contenu mature',
@@ -43,11 +51,24 @@ class MWIP extends \Migration
             'en' => 'Please use PHP 7.4+ and enable FFI extension ("preload" won\'t work).'
         ]);
 
-        self::alterTable('ALTER TABLE `{tbl_prefix}flags` MODIFY COLUMN `userid` bigint(20) NULL;', [
-            'table' => 'flags',
-            'column' => 'userid'
+        self::generateTranslation('option_nsfw_check_model', [
+            'fr' => 'Modèle de vérification de contenu mature',
+            'en' => 'NSFW check model'
         ]);
 
-        self::generateConfig('enable_hide_uploader_name', 'no');
+        self::generateTranslation('option_nudity', [
+            'fr' => 'Nudité',
+            'en' => 'Nudity'
+        ]);
+
+        self::generateTranslation('option_nsfw', [
+            'fr' => 'Contenu mature',
+            'en' => 'NSFW'
+        ]);
+
+        self::generateTranslation('option_nudity_nsfw', [
+            'fr' => 'Nudité + contenu mature',
+            'en' => 'Nudity + NSFW'
+        ]);
     }
 }

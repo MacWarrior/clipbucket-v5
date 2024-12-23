@@ -48,20 +48,38 @@ switch ($mode) {
         });
 
         if( !empty($details) && config('photo_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
-            $ia = new AIVision([
-                'modelType' => 'nsfw'
-                ,'autoload' => true
-            ]);
+            switch( config('photo_nsfw_check_model') ){
+                default:
+                case 'nudity+nsfw':
+                    $models = ['nudity','nsfw'];
+                    break;
+                case 'nsfw':
+                case 'nudity':
+                    $models = [config('photo_nsfw_check_model')];
+                    break;
+            }
 
-            $params = [
-                'size' => 'o',
-                'filepath' => true,
-                'details' => $details
-            ];
+            $nsfw_flag = false;
+            foreach($models as $model){
+                $ia = new AIVision([
+                    'modelType' => $model
+                    ,'autoload' => true
+                ]);
 
-            if( $ia->is(get_image_file($params), 'nsfw') ){
-                CbPhotos::getInstance()->action->report_it($details['photo_id'], 2 /* sexual_content */, 'NULL' /* system */);
-            } else if( !config('photo_activation') ){
+                $params = [
+                    'size' => 'o',
+                    'filepath' => true,
+                    'details' => $details
+                ];
+
+                if( $ia->is(get_image_file($params), $model) ){
+                    CbPhotos::getInstance()->action->report_it($details['photo_id'], 2 /* sexual_content */, 'NULL' /* system */);
+                    $nsfw_flag = true;
+                    break;
+                }
+            }
+
+            if( !$nsfw_flag && !config('photo_activation') ){
                 Clipbucket_db::getInstance()->update(tbl('photos'), ['active'], ['yes'], 'photo_id = ' . mysql_clean($details['photo_id']));
             }
         }

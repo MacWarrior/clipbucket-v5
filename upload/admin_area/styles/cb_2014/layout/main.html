@@ -1219,6 +1219,26 @@
                             {/if}
                             <hr/>
                             <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="video_nsfw_check_model" title="{lang code='option_nsfw_check_model'}">{lang code='option_nsfw_check_model'}</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="video_nsfw_check_model" id="video_nsfw_check_model" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}>
+                                        {assign var=array_modes value=[
+                                            'nudity'       => 'option_nudity'
+                                            ,'nsfw'        => 'option_nsfw'
+                                            ,'nudity+nsfw' => 'option_nudity_nsfw'
+                                        ]}
+                                        {foreach from=$array_modes item=trad key=code}
+                                            <option {if $code==$row.video_nsfw_check_model}selected{/if} value="{$code}">
+                                                {lang code=$trad}
+                                            </option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <label class="nowrap" for="max_video_duration" title="Max video duration">Max video duration</label>
                                 </div>
@@ -1307,6 +1327,26 @@
                                     </div>
                                 </div>
                             {/if}
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="photo_nsfw_check_model" title="{lang code='option_nsfw_check_model'}">{lang code='option_nsfw_check_model'}</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="photo_nsfw_check_model" id="photo_nsfw_check_model" {if !AIVision::isAvailable()}title="{lang code='warning_ai_requirements'}" disabled{/if}>
+                                        {assign var=array_modes value=[
+                                            'nudity'       => 'option_nudity'
+                                            ,'nsfw'        => 'option_nsfw'
+                                            ,'nudity+nsfw' => 'option_nudity_nsfw'
+                                        ]}
+                                        {foreach from=$array_modes item=trad key=code}
+                                            <option {if $code==$row.photo_nsfw_check_model}selected{/if} value="{$code}">
+                                                {lang code=$trad}
+                                            </option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
                             <hr/>
                             <div class="row">
                                 <div class="col-md-6">
