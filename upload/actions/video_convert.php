@@ -158,10 +158,9 @@ if (!empty($_filename)) {
                     ,'autoload' => true
                 ]);
 
-                foreach( $thumbs as $thumb ){
+                foreach($thumbs as $thumb){
                     if( $ia->is($thumb, $model) ){
                         $active = 'no';
-                        DiscordLog::sendDump($videoDetails['videoid'] . ' - ' . $thumb . ' is ' . $model);
                         CbVideo::getInstance()->action->report_it($videoDetails['videoid'], 2 /* sexual_content */, 'NULL' /* system */);
                         break 2;
                     }

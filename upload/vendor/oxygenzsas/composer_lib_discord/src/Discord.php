@@ -142,7 +142,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
         if( version_compare(PHP_VERSION, '8.4', '<') && defined('E_STRICT') && $severity === constant('E_STRICT')) {
             return LogLevel::NOTICE;
         }
-
+        
         switch($severity) {
 
             case E_COMPILE_ERROR :
