@@ -10,11 +10,12 @@ class MWIP extends \Migration
      */
     public function start()
     {
+        self::generateConfig('enable_hide_uploader_name', 'no');
+
         self::generateConfig('photo_enable_nsfw_check', 'no');
         self::generateConfig('video_enable_nsfw_check', 'no');
         self::generateConfig('photo_nsfw_check_model', 'nudity+nsfw');
         self::generateConfig('video_nsfw_check_model', 'nudity+nsfw');
-        self::generateConfig('enable_hide_uploader_name', 'no');
 
         self::alterTable('ALTER TABLE `{tbl_prefix}flags` MODIFY COLUMN `userid` bigint(20) NULL;', [
             'table' => 'flags',
