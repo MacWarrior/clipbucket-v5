@@ -241,6 +241,7 @@
         ,"Fix server info checkup"
         ,"Fix TMDB API call"
         ,"Fix session management with IPv6"
+        ,"Fix PHP7.0 compatibility"
       ]
     },
     {

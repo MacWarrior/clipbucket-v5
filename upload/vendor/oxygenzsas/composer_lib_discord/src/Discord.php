@@ -265,7 +265,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
         $this->sendCurl($hookObject_original, false, $uncut_hookObject);
     }
 
-    public function log($level, $message, array $context = []): void
+    public function log($level, $message, array $context = [])
     {
         if(!is_string($message)){
             $message = (String) $message;
