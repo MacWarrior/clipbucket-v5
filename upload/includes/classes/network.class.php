@@ -256,6 +256,9 @@ class Network{
     }
 
     public static function download_file($url_source, $filepath_destination){
+
+        file_put_contents($filepath_destination . '_ongoing', '');
+
         $fp = fopen($filepath_destination,'w+');
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url_source);
@@ -271,5 +274,7 @@ class Network{
         curl_exec($ch);
         curl_close($ch);
         fclose($fp);
+
+        unlink($filepath_destination . '_ongoing');
     }
 }

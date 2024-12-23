@@ -39,13 +39,36 @@ class AIVision
             }
         }
 
-        $this->modelFilepath = self::getModel($config['modelType'] ?? 'nsfw');
-        $this->tags = $config['tags'] ?? [];
-        $this->rescale_factor = $config['rescale_factor'] ?? 1;
-        $this->format = $config['format'] ?? 'rgb';
-        $this->height = $config['height'] ?? 256;
-        $this->width = $config['width'] ?? 256;
-        $this->shape = $config['shape'] ?? 'bchw';
+        switch($config['modelType'] ?? 'nudity'){
+            case 'nudity':
+                $this->modelFilepath = self::getModel($config['modelType']);
+                $this->tags = [0 => 'nudity', 1 => 'safe'];
+                $this->rescale_factor = 0.00392156862745098;
+                $this->format = 'rgb';
+                $this->height = 224;
+                $this->width = 224;
+                $this->shape = 'bhwc';
+                break;
+
+            case 'nsfw':
+                $this->modelFilepath = self::getModel($config['modelType']);
+                $this->tags = [0 => 'nsfw', 1 => 'safe'];
+                $this->rescale_factor = 0.00392156862745098;
+                $this->format = 'rgb';
+                $this->height = 256;
+                $this->width = 256;
+                $this->shape = 'bhwc';
+                break;
+
+            default:
+                $this->modelFilepath = self::getModel($config['modelType']);
+                $this->tags = $config['tags'] ?? [];
+                $this->rescale_factor = $config['rescale_factor'] ?? 1;
+                $this->format = $config['format'] ?? 'rgb';
+                $this->height = $config['height'] ?? 256;
+                $this->width = $config['width'] ?? 256;
+                $this->shape = $config['shape'] ?? 'bchw';
+        }
 
         if( !empty($config['autoload']) ){
             $this->loadModel();
@@ -54,7 +77,7 @@ class AIVision
 
     private static function getModel(string $type)
     {
-        $model_filepath = self::downloadModel('nsfw');
+        $model_filepath = self::downloadModel($type);
 
         if( !empty($model_filepath) ){
             return $model_filepath;
@@ -70,19 +93,25 @@ class AIVision
                 e('Unknown model type : ' . $type);
                 return false;
 
+            case 'nudity':
+                $model_name = 'nudity.onnx';
+                $model_url = 'https://huggingface.co/suko/nsfw/resolve/main/model.onnx';
+                break;
+
             case 'nsfw':
                 $model_name = 'nsfw.onnx';
-                $model_url = 'https://huggingface.co/suko/nsfw/resolve/main/model.onnx';
+                $model_url = 'https://huggingface.co/gqfwqgw/NudeNet_classifier_model/resolve/main/classifier_model.onnx';
                 break;
         }
 
         $model_filepath = DirPath::get('ai') . 'models' . DIRECTORY_SEPARATOR . $model_name;
+        while( is_file($model_filepath.'_ongoing') ){
+            sleep(5);
+        }
+
         if( is_file($model_filepath) ){
             return $model_filepath;
         }
-
-        ini_set('display_errors',1);
-        error_reporting(E_ALL);
 
         Network::download_file($model_url, $model_filepath);
 
@@ -90,7 +119,11 @@ class AIVision
             return $model_filepath;
         }
 
+        // Case when download failed
         if( is_file($model_filepath) ){
+            unlink($model_filepath);
+        }
+        if( is_file($model_filepath . '_ongoing' ) ){
             unlink($model_filepath);
         }
 

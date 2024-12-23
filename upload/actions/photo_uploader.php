@@ -49,13 +49,8 @@ switch ($mode) {
 
         if( !empty($details) && config('photo_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
             $ia = new AIVision([
-                'tags'            => [0 => 'nsfw', 1 => 'safe']
-                ,'rescale_factor' => 0.00392156862745098
-                ,'height'         => 224
-                ,'width'          => 224
-                ,'shape'          => 'bhwc'
-                ,'modelType'      => 'nsfw'
-                ,'autoload'       => true
+                'modelType' => 'nsfw'
+                ,'autoload' => true
             ]);
 
             $params = [
