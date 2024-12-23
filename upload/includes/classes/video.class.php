@@ -1229,13 +1229,12 @@ class CBvideo extends CBCategory
                 if (config('approve_video_notification') == 'yes') {
                     //Sending Email
                     $var = [
-                        'url' => video_link($video),
-                        'website_title'=>TITLE
+                        'video_link' => video_link($video)
                     ];
 
                     if ($video['email'] != 'admin@thiswebsite.com') {
                         //Now Finally Sending Email
-                        EmailTemplate::sendMail('video_activation_email', $video['userid'] ?? $video['email'],$var);
+                        EmailTemplate::sendMail('video_activation_email', $video['userid'], $var);
                     }
                 }
 
@@ -2181,9 +2180,9 @@ class CBvideo extends CBCategory
     function set_share_email($details)
     {
         $this->email_template_vars = [
-            'message_subject' => $details['description'],
-            'url'        => video_link($details),
-            'thumb_url'       => get_thumb($details)
+            'video_description' => $details['description'],
+            'video_link'        => video_link($details),
+            'video_thumb'       => get_thumb($details)
         ];
 
         $this->action->share_template_name = 'share_video_template';

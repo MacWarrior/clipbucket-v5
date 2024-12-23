@@ -1,0 +1,19 @@
+<h3>{lang('global')}</h3>
+<div class="row">
+    {foreach from=$global_vars item=var}
+        <div class="col-md-3">
+            <label for="{$var.code}">{$var.code}</label><br>
+            <small><em>{lang($var.language_key)}</em></small>
+        </div>
+    {/foreach}
+</div>
+<hr>
+<h3>{ucfirst(lang('email_specific'))}</h3>
+<div class="row">
+    {foreach from=$content_vars item=var}
+        <div class="col-md-3">
+            <label for="{$var.code}">{$var.code}</label><br>
+            <small><em>{lang($var.language_key)}</em></small>
+        </div>
+    {/foreach}
+</div>

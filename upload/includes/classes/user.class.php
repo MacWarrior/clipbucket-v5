@@ -1400,14 +1400,9 @@ class userquery extends CBCategory
         } elseif ($udetails['ban_status'] == 'yes') {
             e(lang('ban_status'));
         } else {
-            $var = [
-                'user_username' => $udetails['username'],
-                'user_email'    => $udetails['email'],
-                'code'   => $udetails['avcode']
-            ];
-
+            $var = ['avcode'   => $udetails['avcode']];
             //Now Finally Sending Email
-            EmailTemplate::sendMail('avcode_request_template', $udetails['email'],  $var);
+            EmailTemplate::sendMail('avcode_request_template', $udetails['userid'],  $var);
             e(lang('usr_activation_em_msg'), 'm');
         }
     }
@@ -1431,14 +1426,8 @@ class userquery extends CBCategory
         if (!$udetails) {
             e(lang('usr_exist_err'));
         } else {
-            $var = [
-                'user_username' => $udetails['username'],
-                'website_title' => TITLE
-            ];
-
             //Now Finally Sending Email
-
-            EmailTemplate::sendMail('welcome_message_template', $udetails['email'], $var);
+            EmailTemplate::sendMail('welcome_message_template', $udetails['userid'], []);
             if ($update_email_status) {
                 Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['welcome_email_sent'], ['yes'], ' userid=\'' . $udetails['userid'] . '\' ');
             }
@@ -1591,42 +1580,39 @@ class userquery extends CBCategory
     /**
      * Function used to confirm friend
      *
-     * @param      $uid
-     * @param      $rid
+     * @param      $sender_id
+     * @param      $receiver_id
      * @param bool $msg
      *
      * @throws Exception
      */
-    function confirm_friend($uid, $rid, $msg = true)
+    function confirm_friend($sender_id, $receiver_id, $msg = true)
     {
-        global $cbemail;
-        if (!$this->is_requested_friend($rid, $uid, 'out', 'no')) {
+        if (!$this->is_requested_friend($receiver_id, $sender_id, 'out', 'no')) {
             if ($msg) {
                 e(lang('friend_confirm_error'));
             }
         } else {
-            addFeed(['action' => 'add_friend', 'object_id' => $rid, 'object' => 'friend', 'uid' => $uid]);
-            addFeed(['action' => 'add_friend', 'object_id' => $uid, 'object' => 'friend', 'uid' => $rid]);
+            addFeed(['action' => 'add_friend', 'object_id' => $receiver_id, 'object' => 'friend', 'uid' => $sender_id]);
+            addFeed(['action' => 'add_friend', 'object_id' => $sender_id, 'object' => 'friend', 'uid' => $receiver_id]);
 
             Clipbucket_db::getInstance()->insert(tbl($this->dbtbl['contacts']), ['userid', 'contact_userid', 'date_added', 'request_type', 'confirmed'],
-                [$uid, $rid, now(), 'in', 'yes']);
-            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['contacts']), ['confirmed'], ['yes'], ' userid=\'' . $rid . '\' AND contact_userid=\'' . $uid . '\' ');
+                [$sender_id, $receiver_id, now(), 'in', 'yes']);
+            Clipbucket_db::getInstance()->update(tbl($this->dbtbl['contacts']), ['confirmed'], ['yes'], ' userid=\'' . $receiver_id . '\' AND contact_userid=\'' . $sender_id . '\' ');
             if ($msg) {
                 e(lang('friend_confirmed'), 'm');
             }
             //Sending friendship confirmation email
 
-            $friend = $this->get_user_details($rid);
-            $sender = $this->get_user_details($uid);
+            $friend = $this->get_user_details($receiver_id);
+            $sender = $this->get_user_details($sender_id);
 
             $var = [
-                'receiver_name' => $friend['username'],
-                'sender_name'   => $sender['username'],
-                'sender_link'   => $this->profile_link($sender),
-                'website_title' => TITLE
+                'sender_username' => $sender['username'],
+                'profile_link'    => $this->profile_link($sender),
             ];
 
-            EmailTemplate::sendMail('friend_confirmation_email', $friend['email'], $var);
+            EmailTemplate::sendMail('friend_confirmation_email', $receiver_id, $var);
 
             //Logging Friendship
 
@@ -1973,7 +1959,6 @@ class userquery extends CBCategory
      */
     function reset_password($step, $input, $code = null)
     {
-        global $cbemail;
         switch ($step) {
             case 1:
                 $udetails = $this->get_user_details($input);
@@ -1990,13 +1975,10 @@ class userquery extends CBCategory
                     }
 
                     $var = [
-                        'user_username' => $udetails['username'],
-                        'url'           => get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
-                        'website_title' => TITLE
+                        'reset_password_link' => get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
                     ];
-
                     //Now Finally Sending Email
-                    if (EmailTemplate::sendMail('password_reset_request', $udetails['email'], $var)) {
+                    if (EmailTemplate::sendMail('password_reset_request', $udetails['userid'], $var)) {
                         e(lang('usr_rpass_email_msg'), 'm');
                     }
                     return true;
@@ -2017,7 +1999,6 @@ class userquery extends CBCategory
                     //sending new password email...
                     //Sending confirmation email
                     $var = [
-                        'user_username' => $udetails['username'],
                         'url'   => get_server_url() . 'login.php',
                         'password' => $newpass
                     ];
@@ -2043,10 +2024,8 @@ class userquery extends CBCategory
         } elseif (!verify_captcha()) {
             e(lang('recap_verify_failed'));
         } else {
-            $var = ['website_title' => TITLE];
-
             //Now Finally Sending Email
-            if (EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], $var)) {
+            if (EmailTemplate::sendMail('forgot_username_request', $udetails['userid'], [])) {
                 e(lang("usr_uname_email_msg"), 'm');
             }
         }
@@ -3820,14 +3799,8 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
 
             if (!User::getInstance()->hasPermission('admin_access') && EMAIL_VERIFICATION && $send_signup_email) {
-                $var = [
-                    'user_username' => post('username'),
-                    'user_email'    => post('email'),
-                    'website_title' => TITLE,
-                    'url'           => get_server_url(),
-                    'code'          => $avcode
-                ];
-                EmailTemplate::sendMail('email_verify_template', post('email'), $var);
+                $var = ['avcode' => $avcode];
+                EmailTemplate::sendMail('email_verify_template', $insert_id, $var);
             } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
                 $this->send_welcome_email($insert_id);
             }
@@ -5168,17 +5141,12 @@ class userquery extends CBCategory
         //Loading subscription email template
         if ($subscribers) {
             $var = [
-                'sender_name'     => $uploader['username'],
-                'message_subject' => $vidDetails['title'],
-                'message_content' => $vidDetails['description'],
-                'url'             => video_link($vidDetails),
-                'thumb_url'       => get_thumb($vidDetails),
-                'website_title'   => TITLE
+                'sender_name'       => $uploader['username'],
+                'video_title'       => $vidDetails['title'],
+                'video_description' => $vidDetails['description'],
+                'video_link'        => video_link($vidDetails),
+                'video_thumb'       => get_thumb($vidDetails)
             ];
-            $more_var = $this->custom_subscription_email_vars;
-            if( !empty($more_var) && is_array($more_var) ){
-                $var = array_merge($var, $more_var);
-            }
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription_email', $subscriber['userid'], $var);
             }

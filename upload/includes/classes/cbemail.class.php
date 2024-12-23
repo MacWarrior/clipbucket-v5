@@ -413,16 +413,13 @@ class CBEmail
      */
     function friend_request_email($email, $username)
     {
-        $condition = "email = '$email'";
-        $receiver_name = Clipbucket_db::getInstance()->select(tbl('users'), 'username', $condition);
+        $receiver = User::getInstance()->getOne(['email'=>$email]);
         $var = [
-            'sender_name'   => user_name(),
-            'website_title' => TITLE,
-            'receiver_name' => $receiver_name[0]['username'],
-            'sender_link'   => '/user/' . $username,
+            'sender_name'   => $username,
+            'profile_link'   => '/user/' . $username,
             'request_link'  => '/manage_contacts.php?mode=manage',
         ];
 
-        EmailTemplate::sendMail('friend_request_email', $email, $var);
+        EmailTemplate::sendMail('friend_request_email', $receiver['userid'], $var);
     }
 }

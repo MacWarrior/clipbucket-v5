@@ -1187,9 +1187,17 @@ ALTER TABLE `{tbl_prefix}email_histo`
 CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_variable`
 (
     id_email_variable INT PRIMARY KEY AUTO_INCREMENT,
-    code              VARCHAR(32) NOT NULL,
-    type              ENUM ('email', 'template', 'title'),
+    code              VARCHAR(32) UNIQUE NOT NULL,
+    type              ENUM('global', 'email'),
     language_key      VARCHAR(256)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-ALTER TABLE `{tbl_prefix}email_variable`
-    ADD UNIQUE KEY unique_code_type_variable (`code`, `type`);
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_variable_link`
+(
+    id_email_variable INT NOT NULL,
+    id_email          INT NOT NULL,
+    PRIMARY KEY (`id_email_variable`, `id_email`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+ALTER TABLE `{tbl_prefix}email_variable_link`
+    ADD CONSTRAINT `email_variable_link_email_variable_fk` FOREIGN KEY (`id_email`) REFERENCES `{tbl_prefix}email` (`id_email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `email_variable_link_email_variable_email_fk` FOREIGN KEY (`id_email_variable`) REFERENCES `{tbl_prefix}email_variable` (`id_email_variable`) ON DELETE NO ACTION ON UPDATE NO ACTION;

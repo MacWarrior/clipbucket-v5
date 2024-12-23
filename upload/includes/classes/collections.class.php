@@ -932,12 +932,12 @@ class Collections extends CBCategory
     function set_share_mail($data)
     {
         $this->share_variables = [
-            'name'            => $data['collection_name'],
-            'message_subject' => $data['collection_description'],
-            'type'            => $data['type'],
-            'total_items'     => $data['total_objects'],
-            'url'             => $this->collection_links($data, 'view'),
-            'thumb_url'       => $this->get_thumb($data, 'small', true)
+            'collection_title' => $data['collection_name'],
+            'message_subject'  => $data['collection_description'],
+            'collection_type'  => $data['type'],
+            'total_items'      => $data['total_objects'],
+            'collection_link'  => $this->collection_links($data, 'view'),
+            'collection_thumb' => $this->get_thumb($data, 'small', true)
         ];
         $this->action->share_template_name = 'collection_share_template';
         $this->action->val_array = $this->share_variables;

@@ -21,12 +21,10 @@ if (isset($_POST['contact'])) {
         e(lang('recap_verify_failed'));
     } else {
         $var = [
-            'user_username'   => substr($name, 0, 100),
-            'user_email'      => substr($email, 0, 100),
-            'message_subject' => substr($reason, 0, 300),
-            'message_content' => $message,
-            'url'             => Network::get_remote_ip(),
-            'time'            => now()
+            'user_username' => substr($name, 0, 100),
+            'user_email'    => substr($email, 0, 100),
+            'subject'       => substr($reason, 0, 300),
+            'user_message'  => $message,
         ];
 
         //Now Finally Sending Email

@@ -262,9 +262,7 @@ class cbactions
                     if ($ok) {
                         $more_var = [
                             'user_username'   => user_name(),
-                            'website_title'   => TITLE,
-                            'message_content' => post('message'),
-                            'time'            => cbdate('Y')
+                            'user_message' => post('message'),
                         ];
                         $var = array_merge($more_var, $var);
 

@@ -10,6 +10,7 @@ class EmailTemplate
     private static $tableNameEmail = 'email';
     private static $tableNameEmailHisto = 'email_histo';
     private static $tableNameEmailVariable = 'email_variable';
+    private static $tableNameEmailVariableLink = 'email_variable_link';
 
     private static $fields = [
         'id_email_template',
@@ -299,7 +300,7 @@ class EmailTemplate
         }
 
         if ($param_code !== false) {
-            $conditions[] = ' ' . self::$tableName . '.code LIKE \'%' . mysql_clean($param_code) . '\'%';
+            $conditions[] = ' ' . self::$tableName . '.code LIKE \'%' . mysql_clean($param_code) . '%\'';
         }
         if ($param_disabled !== null) {
             $conditions[] = ' ' . self::$tableName . '.disabled = ' . ($param_disabled ? 'true' : 'false');
@@ -539,38 +540,30 @@ class EmailTemplate
         return true;
     }
 
-    public static function getVariablesFromEmail($email, string $type)
+    public static function getVariablesFromEmail(int $id_email)
     {
-        if (empty($email)) {
+        if (empty($id_email)) {
             return false;
         }
         $conditions = [];
-        $conditions[] = ' type = \'' . $type . '\'';
-        switch ($type) {
-            case 'email':
-                $matches_content = self::extractVariable($email['content']);
-                $conditions[] = ' code IN (\'' . implode('\', \'', $matches_content) . '\')';
-                break;
-            case 'title':
-                $matches_title = self::extractVariable($email['title']);
-                $conditions[] = ' code IN (\'' . implode('\', \'', $matches_title) . '\')';
-                break;
-        }
-        $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable) . ' WHERE ' . implode(' AND ', $conditions);
+        $conditions[] = ' type = \'email\'';
+        $conditions[] = ' ' . self::$tableNameEmailVariableLink . '.id_email = ' . $id_email;
+
+        $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
+            . ' INNER JOIN ' . cb_sql_table(self::$tableNameEmailVariableLink) . ' ON ' . self::$tableNameEmailVariableLink . '.id_email_variable = ' . self::$tableNameEmailVariable . '.id_email_variable'
+            . ' WHERE ' . implode(' AND ', $conditions);
         $result = Clipbucket_db::getInstance()->_select($sql);
         return empty($result) ? [] : $result;
     }
 
-    /**
-     * @param string $content
-     * @return array
-     */
-    public static function extractVariable(string $content): array
+    public static function getGlobalVariables()
     {
-        $results = [];
-        preg_match_all('/\{\{(\w+)}}/', $content, $results);
-        return $results[1] ?? [];
+        $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
+            . ' WHERE type = \'global\'';
+        $result = Clipbucket_db::getInstance()->_select($sql);
+        return empty($result) ? [] : $result;
     }
+
 
     /**
      * @param string $string
@@ -731,6 +724,26 @@ class EmailTemplate
             if (empty($variables['user_email'])) {
                 $variables['user_email'] = $user['email'];
             }
+            if (empty($variables['user_avatar'])) {
+                $variables['user_avatar'] = $user['avatar_url'];
+            }
+        }
+        //defaults variables
+        if (empty($variables['baseurl'])) {
+            $variables['baseurl'] = get_server_url();
+        }
+        if (empty($variables['login_link'])) {
+            $variables['login_link'] = cblink(['name' => 'login'], true);
+        }
+
+        if (empty($variables['date_year'])) {
+            $variables['date_year'] = cbdate("Y");
+        }
+        if (empty($variables['date_time'])) {
+            $variables['date_time'] = now();
+        }
+        if (empty($variables['website_title'])) {
+            $variables['website_title'] =TITLE;
         }
         //put variable on email
         $title = self::fillVariable($email['title'], $variables);

@@ -509,7 +509,6 @@ class cb_pm
      */
     function send_pm_email($array)
     {
-        global $cbemail, $userquery;
         $sender = userquery::getInstance()->get_user_field_only($array['from'], 'username');
         $content = mysql_clean($array['content']);
         $subject = mysql_clean($array['subj']);
@@ -518,10 +517,10 @@ class cb_pm
         $emails = $this->get_users_emails($array['to']);
 
         $vars = [
-            'user_username'  => $sender,
-            'message_content' => $content,
-            'message_subject' => $subject,
-            'url'  => get_server_url() . 'private_message.php?mode=inbox&mid='.$msgid
+            'sender_username'  => $sender,
+            'user_message' => $content,
+            'subject' => $subject,
+            'message_link'  => get_server_url() . 'private_message.php?mode=inbox&mid='.$msgid
         ];
 
         EmailTemplate::sendMail($this->email_template, $emails, $vars);
