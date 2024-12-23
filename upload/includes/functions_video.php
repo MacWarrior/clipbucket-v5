@@ -109,13 +109,13 @@ function video_playable($id): bool
  * @return array|string
  * @throws Exception
  */
-function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max_id = null)
+function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max_id = null, $return_type = 'url')
 {
     if (is_array($vdetails)) {
         if (empty($vdetails['videoid']) && empty($vdetails['vid'])) {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
-            return $multi ? [default_thumb()] : default_thumb();
+            return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
         }
         if (!empty($vdetails['videoid'])) {
             $vid = $vdetails['videoid'];
@@ -129,7 +129,7 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
         } else {
             e(lang('technical_error'));
             error_log('get_thumb - called on empty vdetails');
-            return $multi ? [default_thumb()] : default_thumb();
+            return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
         }
     }
 
@@ -144,12 +144,12 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 163)) {
         $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
     } else {
-        return $multi ? [default_thumb()] : default_thumb();
+        return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
     }
     if (empty($resVideo)) {
         error_log('get_thumb - called on missing videoid ' . $vid);
         e(lang('technical_error'));
-        return $multi ? [default_thumb()] : default_thumb();
+        return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
     }
     $resVideo = $resVideo[0];
 
@@ -192,30 +192,45 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
         return create_thumb($resThumb, $multi, $size);
     }
     if (empty($resThumb)) {
-        return $multi ? [default_thumb()] : default_thumb();
+        return $multi ? [default_thumb($return_type)] : default_thumb($return_type);
     }
     if ($multi) {
         $thumb = [];
         foreach ($resThumb as $re) {
             if ($re['size'] === '') {
-                return [default_thumb()];
+                return [default_thumb($return_type)];
             }
             $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $re['resolution'] . '-' . $re['num'] . ($re['type'] != 'auto' ? '-'.array_search($re['type'], Upload::getInstance()->types_thumb) : '') .'.' . $re['extension'];
             if (file_exists(DirPath::get('thumbs') . $filepath)) {
-                $thumb[] = DirPath::getUrl('thumbs') . $filepath;
+                switch($return_type) {
+                    default:
+                    case 'url':
+                        $thumb[] = DirPath::getUrl('thumbs') . $filepath;
+                        break;
+                    case 'filepath':
+                        $thumb[] = DirPath::get('thumbs') . $filepath;
+                        break;
+                }
             } else {
                 error_log('get_thumb - missing file : ' . $filepath);
-                $thumb[] = default_thumb();
+                $thumb[] = default_thumb($return_type);
             }
         }
         return $thumb;
     }
     $filepath = $resVideo['file_directory'] . DIRECTORY_SEPARATOR . $resVideo['file_name'] . '-' . $resThumb[0]['resolution'] . '-' . $resThumb[0]['num'] . ($resThumb[0]['type'] != 'auto' ? '-'. array_search($resThumb[0]['type'], Upload::getInstance()->types_thumb) : '') .'.' . $resThumb[0]['extension'];
     if (!file_exists(DirPath::get('thumbs') . $filepath)) {
-//        error_log('get_thumb - missing file : ' . $filepath . PHP_EOL);
-        return default_thumb();
+        return default_thumb($return_type);
     }
-    return DirPath::getUrl('thumbs') . $filepath;
+
+    switch($return_type) {
+        default:
+        case 'url':
+            return DirPath::getUrl('thumbs') . $filepath;
+        case 'filepath':
+            return DirPath::get('thumbs') . $filepath;
+    }
+
 }
 
 /**
@@ -319,13 +334,25 @@ function get_video_subtitles($vdetails)
 /**
  * function used to get default thumb of ClipBucket
  */
-function default_thumb(): string
+function default_thumb($return_type = 'url'): string
 {
     if (file_exists(TEMPLATEDIR . '/images/thumbs/processing.png')) {
-        return TEMPLATEURL . '/images/thumbs/processing.png';
+        switch($return_type) {
+            default:
+            case 'url':
+                return TEMPLATEURL . '/images/thumbs/processing.png';
+            case 'filepath':
+                return TEMPLATEDIR . '/images/thumbs/processing.png';
+        }
     }
 
-    return DirPath::getUrl('thumbs') . 'processing.jpg';
+    switch($return_type) {
+        default:
+        case 'url':
+            return DirPath::getUrl('thumbs') . 'processing.jpg';
+        case 'filepath':
+            return DirPath::get('thumbs') . 'processing.jpg';
+    }
 }
 
 /**
@@ -775,6 +802,7 @@ function get_thumb_num($name): string
  *
  * @param $videoDetails
  * @param $num
+ * @param $type
  * @throws Exception
  */
 function delete_video_thumb($videoDetails, $num, $type)

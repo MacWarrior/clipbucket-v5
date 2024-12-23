@@ -8,6 +8,7 @@
     ,"ext-xml": "*"
     ,"ext-mbstring": "*"
     ,"ext-openssl": "*"
+    ,"ext-ffi": "*"
 
     ,"filp/whoops": "2.15.4"
     ,"predis/predis": "^v1.1.10"
@@ -15,6 +16,7 @@
     ,"phpmailer/phpmailer": "^6.9.1"
     ,"smarty/smarty": "3.1.48"
     ,"oxygenzsas/composer_lib_discord": "dev-php7"
+    ,"veka-server/onnx-php": "dev-php7"
     ,"psr/http-server-middleware": "1.0.2"
 
     ,"fortawesome/font-awesome": "4.7.0"
