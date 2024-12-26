@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"230",
+  "revision":"231",
   "status":"dev",
   "detail":[
     {
@@ -210,6 +210,7 @@
         ,"Fix permission check for guests"
         ,"Fix video & photo edit button <i>(#494)</i>"
         ,"Fix anonymous comments form"
+        ,"Fix collection creation on photo upload form"
       ]
     },
     {
