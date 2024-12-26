@@ -308,7 +308,7 @@ class AIVision
         return $t;
     }
 
-    public function setProvider(string $provider = null)
+    public function setProvider($provider = null)
     {
         if(empty($provider)) {
             $this->provider = 'CPUExecutionProvider';
