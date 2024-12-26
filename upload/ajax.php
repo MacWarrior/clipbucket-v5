@@ -233,22 +233,22 @@ if (!empty($mode)) {
                 case 'v':
                 case 'video':
                 default:
-                    $cbvideo->action->report_it($id);
+                    $cbvideo->action->report_it($id, $type, user_id());
                     break;
 
                 case 'u':
                 case 'user':
-                    userquery::getInstance()->action->report_it($id);
+                    userquery::getInstance()->action->report_it($id, $type, user_id());
                     break;
 
                 case 'p':
                 case 'photo':
-                    $cbphoto->action->report_it($id);
+                    $cbphoto->action->report_it($id, $type, user_id());
                     break;
 
                 case 'cl':
                 case 'collection':
-                    $cbcollection->action->report_it($id);
+                    $cbcollection->action->report_it($id, $type, user_id());
                     break;
             }
 

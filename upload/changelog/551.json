@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"228",
+  "revision":"230",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Implement force to error admin tool"
         ,"Implement TMDB Tv Show integration"
         ,"Implement related photos quantity limit"
+        ,"Implement AI NSFW check"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -110,6 +111,7 @@
         ,"Fix self-update interface"
         ,"Fix system info services check"
         ,"Fix login redirect"
+        ,"Fix missing config"
       ]
     },
     {
@@ -206,6 +208,8 @@
         ,"Fix URL redirect with specified port <i>(#486)</i>"
         ,"Fix double / in URL"
         ,"Fix permission check for guests"
+        ,"Fix video & photo edit button <i>(#494)</i>"
+        ,"Fix anonymous comments form"
       ]
     },
     {
@@ -237,6 +241,7 @@
         ,"Fix server info checkup"
         ,"Fix TMDB API call"
         ,"Fix session management with IPv6"
+        ,"Fix PHP7.0 compatibility"
       ]
     },
     {
@@ -335,6 +340,7 @@
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"
+        ,"Update PhpMailer to 6.9.3"
       ]
     }
   ]

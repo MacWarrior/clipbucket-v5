@@ -170,28 +170,35 @@ class cbactions
      * Function used to report a content
      *
      * @param $id
+     * @param $flag_type
+     * @param null $user_id
      * @throws Exception
      */
-    function report_it($id)
+    function report_it($id, $flag_type, $user_id)
     {
-        //First checking weather object exists or not
-        if ($this->exists($id)) {
-            if (user_id()) {
-                if (!$this->report_check($id)) {
-                    Clipbucket_db::getInstance()->insert(
-                        tbl($this->flag_tbl),
-                        ['type', 'id', 'userid', 'flag_type', 'date_added'],
-                        [$this->type, $id, user_id(), post('flag_type'), NOW()]
-                    );
-                    e(lang('obj_report_msg', lang($this->name)), 'm');
-                } else {
-                    e(lang('obj_report_err', lang($this->name)));
-                }
-            } else {
-                e(lang('you_not_logged_in'));
-            }
-        } else {
+        if( !$this->exists($id) ){
             e(lang('obj_not_exists', lang($this->name)));
+            return;
+        }
+
+        if( $user_id != 'NULL' && !User::getInstance()->isUserConnected() ){
+            e(lang('you_not_logged_in'));
+            return;
+        }
+
+        if( $this->report_check($id) ){
+            e(lang('obj_report_err', lang($this->name)));
+            return;
+        }
+
+        Clipbucket_db::getInstance()->insert(
+            tbl($this->flag_tbl),
+            ['type', 'id', 'userid', 'flag_type', 'date_added'],
+            [$this->type, $id, $user_id, $flag_type, NOW()]
+        );
+
+        if( !is_null($user_id) ){
+            e(lang('obj_report_msg', lang($this->name)), 'm');
         }
     }
 

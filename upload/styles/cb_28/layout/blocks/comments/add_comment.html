@@ -7,7 +7,7 @@
 			<input type="hidden" name="reply_to" id="reply_to" value="0"/>
 			<input type="hidden" name="obj_id" id="obj_id" value="{$id}"/>
 			<input type="hidden" name="type" value="{$type}"/>
-			{if User::getInstance()->isUserConnected() && config('anonym_comments') == 'yes'}
+			{if !User::getInstance()->isUserConnected()}
 				<div class="form-group">
 					<label for="name" class="block-label">{lang code='name'}</label>
 					<input type="text" name="name" id="name" class="form-control" placeholder="{lang code='your_name'}"/>

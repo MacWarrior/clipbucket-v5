@@ -1711,8 +1711,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        [$w, $h] = getimagesize($file);
-        [$ww, $wh] = getimagesize($watermark);
+        list($w, $h) = getimagesize($file);
+        list($ww, $wh) = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1763,7 +1763,7 @@ class CBPhotos
             return false;
         }
 
-        [$Swidth, $Sheight, $Stype] = getimagesize($input);
+        list($Swidth, $Sheight, $Stype) = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);

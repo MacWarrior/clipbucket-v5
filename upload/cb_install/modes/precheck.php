@@ -61,16 +61,34 @@ $skippable_option = get_skippable_options();
             }
             $line++;
 
-            if( empty($php_extensions[$key]) ) {
-                $everything_good = false;
-                $msg = ['err' => $extension['display'] . ' extension is not enabled'];
+            if( !in_array($key, $php_extensions, true) ) {
+                $txt = ' extension is not enabled';
+                if( $key == 'ffi' ){
+                    $msg = ['war' => $extension['display'] . $txt];
+                } else {
+                    $everything_good = false;
+                    $msg = ['err' => $extension['display'] . $txt];
+                }
             } else {
-                $msg = ['msg' => $extension['display'] . ' extension '. $php_extensions[$key]];
+                $msg = ['msg' => $extension['display'] . ' extension enabled'];
             }
 
             echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . $extension['display'] . '</dt>';
             echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
         }
+
+        if( $php == 'php_cli' ){
+            $check_ffi = in_array(strtolower(System::get_php_cli_config('ffi.enable')), ['1','on']);
+        } else {
+            $check_ffi = in_array(strtolower(ini_get('ffi.enable')), ['1','on']);
+        }
+        if( $check_ffi ){
+            $msg = ['msg' => 'FFI extension enabled'];
+        } else {
+            $msg = ['war' => 'FFI extension disabled<br/>AI features will be disabled.<br/>Please use PHP 7.4+ and enable FFI extension ("preload" won\'t work).'];
+        }
+        echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>FFI</dt>';
+        echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
 
         foreach($required_php_fonctions as $func => $func_name) {
             if( !System::get_software_version($php, false, $_POST[$php . '_filepath'] ?? null) ){
@@ -88,7 +106,7 @@ $skippable_option = get_skippable_options();
             if( System::can_sse() ){
                 $msg = ['msg' => 'fastcgi_finish_request function available'];
             } else {
-                $msg = ['war' => 'fastcgi_finish_request function unavailable'];
+                $msg = ['war' => 'fastcgi_finish_request function unavailable<br/>Some features like auto-refresh and background tasks will be disabled.<br/>Please use PHP-FPM for the best ClipBucketV5 experience.'];
             }
             echo '<dt' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>fastcgi_finish_request()</dt>';
             echo '<dd' . ($line %2 == 0 ? ' class=\'white\'' : '') . '><span>' . msg_arr($msg) . '</span></dd>';
