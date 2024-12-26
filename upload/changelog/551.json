@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"231",
+  "revision":"232",
   "status":"dev",
   "detail":[
     {
@@ -62,6 +62,7 @@
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
         ,"Reorder main menu"
+        ,"Prevent edition of own user level rights"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
