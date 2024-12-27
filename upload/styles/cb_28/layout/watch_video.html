@@ -23,11 +23,11 @@
             {/if}
             <section class="video-details clearfix">
                 <header class="clearfix details">
-                    <h1>{display_clean($video.title)}</h1>
+                    <h1 title="{display_clean($video.title)}">{display_clean($video.title)}</h1>
                     <div class="user-video-info clearfix">
 
                         {if config('enable_hide_uploader_name') != 'yes'}
-                            {if isSectionEnabled('channels')  && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
                                 <a href="{$userquery->profile_link($video)}" class="avatar">
                                     <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
                                 </a>

@@ -373,18 +373,18 @@ function video_link($vdetails, $type = null): string
             #check for videoid
             if (empty($vdetails['videoid']) && empty($vdetails['vid']) && empty($vdetails['videokey'])) {
                 return '/';
+            }
+
+            if (!empty($vdetails['videoid'])) {
+                $vid = $vdetails['videoid'];
             } else {
-                if (!empty($vdetails['videoid'])) {
-                    $vid = $vdetails['videoid'];
+                if (!empty($vdetails['vid'])) {
+                    $vid = $vdetails['vid'];
                 } else {
-                    if (!empty($vdetails['vid'])) {
-                        $vid = $vdetails['vid'];
+                    if (!empty($vdetails['videokey'])) {
+                        $vid = $vdetails['videokey'];
                     } else {
-                        if (!empty($vdetails['videokey'])) {
-                            $vid = $vdetails['videokey'];
-                        } else {
-                            return '/';
-                        }
+                        return '/';
                     }
                 }
             }

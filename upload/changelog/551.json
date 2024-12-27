@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"232",
+  "revision":"233",
   "status":"dev",
   "detail":[
     {
@@ -113,6 +113,7 @@
         ,"Fix system info services check"
         ,"Fix login redirect"
         ,"Fix missing config"
+        ,"Fix links to front office"
       ]
     },
     {
@@ -212,6 +213,7 @@
         ,"Fix video & photo edit button <i>(#494)</i>"
         ,"Fix anonymous comments form"
         ,"Fix collection creation on photo upload form"
+        ,"Fix video title overflow"
       ]
     },
     {
@@ -253,6 +255,7 @@
         ,"Add option to only keep maximum resolution"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
+        ,"Fix video conversion failed with unspecified subtitle format"
       ]
     },
     {
