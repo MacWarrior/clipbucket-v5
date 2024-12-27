@@ -2893,11 +2893,11 @@ function get_server_url(): string
 {
     $DirName = dirname($_SERVER['PHP_SELF']);
     if (preg_match('/admin_area/i', $DirName)) {
-        $DirName = str_replace('/admin_area', '', $DirName);
+        $DirName = str_replace('/admin_area', '/', $DirName);
     }
 
     if (preg_match('/cb_install/i', $DirName)) {
-        $DirName = str_replace('/cb_install', '', $DirName);
+        $DirName = str_replace('/cb_install', '/', $DirName);
     }
 
     $port = '';

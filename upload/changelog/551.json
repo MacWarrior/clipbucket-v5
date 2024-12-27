@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"229",
+  "revision":"234",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,7 @@
         ,"Implement force to error admin tool"
         ,"Implement TMDB Tv Show integration"
         ,"Implement related photos quantity limit"
+        ,"Implement AI NSFW check"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -61,6 +62,8 @@
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
         ,"Reorder main menu"
+        ,"Prevent edition of own user level rights"
+        ,"Remove unused ads placements"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
@@ -110,6 +113,8 @@
         ,"Fix self-update interface"
         ,"Fix system info services check"
         ,"Fix login redirect"
+        ,"Fix missing config"
+        ,"Fix links to front office"
       ]
     },
     {
@@ -208,6 +213,8 @@
         ,"Fix permission check for guests"
         ,"Fix video & photo edit button <i>(#494)</i>"
         ,"Fix anonymous comments form"
+        ,"Fix collection creation on photo upload form"
+        ,"Fix video title overflow"
       ]
     },
     {
@@ -239,6 +246,7 @@
         ,"Fix server info checkup"
         ,"Fix TMDB API call"
         ,"Fix session management with IPv6"
+        ,"Fix PHP7.0 compatibility"
       ]
     },
     {
@@ -248,6 +256,7 @@
         ,"Add option to only keep maximum resolution"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
+        ,"Fix video conversion failed with unspecified subtitle format"
       ]
     },
     {
@@ -337,6 +346,7 @@
         ,"Update Windows installation script FFMpeg to 7.0.2"
         ,"Update Windows installation script MediaInfo to 24.06"
         ,"Update FontAwesome to 4.7.0"
+        ,"Update PhpMailer to 6.9.3"
       ]
     }
   ]

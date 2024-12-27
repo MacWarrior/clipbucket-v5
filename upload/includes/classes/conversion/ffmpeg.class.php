@@ -332,7 +332,12 @@ class FFMpeg
             foreach ($subtitles as $map_id => $data) {
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Extracting '.$data['title'].'...');
 
-                if (isset($data['codec_name']) && in_array($data['codec_name'], ['hdmv_pgs_subtitle', 'dvd_subtitle'])) {
+                if( empty($data['codec_name']) ){
+                    $this->log->writeLine(date('Y-m-d H:i:s').' => Subtitle ' . $data['title'] . ' can\'t be extracted because format is not specified');
+                    continue;
+                }
+
+                if( in_array($data['codec_name'], ['hdmv_pgs_subtitle', 'dvd_subtitle']) ){
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Subtitle ' . $data['title'] . ' can\'t be extracted because it\'s in bitmap format');
                     continue;
                 }
@@ -525,7 +530,7 @@ class FFMpeg
                 if (config('keep_subtitles') || $this->conversion_type == 'hls') {
                     $subtitles = self::get_track_infos($this->input_file, 'subtitle');
                     foreach ($subtitles as $track_id => $data) {
-                        if (in_array($data['codec_name'], ['hdmv_pgs_subtitle', 'dvd_subtitle'])) {
+                        if( empty($data['codec_name']) || in_array($data['codec_name'], ['hdmv_pgs_subtitle', 'dvd_subtitle']) ){
                             continue;
                         }
 
@@ -763,7 +768,7 @@ class FFMpeg
             $dimension = ' -s ' . $dim . ' ';
         }
 
-        $thumb_dir = DirPath::get('thumbs') . $this->file_directory . DIRECTORY_SEPARATOR;
+        $thumb_dir = DirPath::get('thumbs') . $this->file_directory;
         if (!is_dir($thumb_dir)) {
             mkdir($thumb_dir, 0755, true);
         }

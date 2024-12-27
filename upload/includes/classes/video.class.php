@@ -732,7 +732,7 @@ class Video
      * @return void
      * @throws Exception
      */
-    public static function deleteUnusedVideoFIles($videoid)
+    public static function deleteUnusedVideoFiles($videoid)
     {
         $video = CBvideo::getInstance()->get_video($videoid);
         $files = json_decode($video['video_files']);

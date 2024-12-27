@@ -22,6 +22,12 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'O' => 
         array (
             'OxygenzSAS\\Discord\\' => 19,
+            'Onnx\\' => 5,
+        ),
+        'F' => 
+        array (
+            'FFI\\WorkDirectory\\' => 18,
+            'FFI\\Env\\' => 8,
         ),
     );
 
@@ -54,6 +60,18 @@ class ComposerStaticInitc5bfc8e5670876b11014ce9f23d445ff
         'OxygenzSAS\\Discord\\' => 
         array (
             0 => __DIR__ . '/..' . '/oxygenzsas/composer_lib_discord/src',
+        ),
+        'Onnx\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/veka-server/onnx-php/src',
+        ),
+        'FFI\\WorkDirectory\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/veka-server/onnx-php/work-directory/src',
+        ),
+        'FFI\\Env\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/veka-server/onnx-php/env/src',
         ),
     );
 

@@ -161,7 +161,7 @@ CREATE TABLE `{tbl_prefix}flags` (
   `flag_id` int(225) NOT NULL,
   `type` varchar(4) NOT NULL,
   `id` int(225) NOT NULL,
-  `userid` int(225) NOT NULL,
+  `userid` bigint(20) NULL,
   `flag_type` bigint(25) NOT NULL,
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
