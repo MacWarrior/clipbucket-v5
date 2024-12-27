@@ -258,7 +258,7 @@ class MWIP extends \Migration
         ]);
         self::generateTranslation('email_variable_user_avatar', [
             'fr' => 'URL de l\'avatar du destinataire',
-            'en' => 'Receiver avatar\'s URL'
+            'en' => 'Receiver\'s avatar URL'
         ]);
         self::generateTranslation('email_variable_date_year', [
             'fr'=>'Année en cours',
@@ -291,8 +291,8 @@ class MWIP extends \Migration
             'en'=>'Video title'
         ]);
         self::generateTranslation('email_variable_video_thumb', [
-            'fr'=>'Chemin de la vignette de la vidéo',
-            'en'=>'Video thumb path'
+            'fr'=>'URL de la vignette de la vidéo',
+            'en'=>'Video thumb URL'
         ]);
         self::generateTranslation('email_variable_video_description', [
             'fr'=>'Description de la vidéo',
@@ -321,8 +321,8 @@ class MWIP extends \Migration
             'en'=>'Link to photo'
         ]);
         self::generateTranslation('email_variable_photo_thumb',[
-            'fr'=>'Chemin vers la miniature de la photo',
-            'en'=>'Path to photo\'s thumb'
+            'fr'=>'URL vers la miniature de la photo',
+            'en'=>'URL to photo\'s thumb'
         ]);
         self::generateTranslation('email_variable_photo_description', [
             'fr'=>'Description de la photo',
@@ -337,8 +337,8 @@ class MWIP extends \Migration
             'en'=>'Link to collection'
         ]);
         self::generateTranslation('email_variable_collection_thumb', [
-            'fr'=>'Chemin vers la vignette de la collection',
-            'en'=>'Path to collection\'s thumb'
+            'fr'=>'URL vers la vignette de la collection',
+            'en'=>'URL to collection\'s thumb'
         ]);
         self::generateTranslation('email_variable_collection_description', [
             'fr'=>'Description de la collection',
@@ -390,7 +390,6 @@ class MWIP extends \Migration
             'fr'=>'Adresse email du destinataire',
             'en'=>'Receiver\'s email'
         ]);
-
 
         //variables translation
         self::generateTranslation('success', [
@@ -678,7 +677,6 @@ class MWIP extends \Migration
         )';
         self::query($sql);
 
-
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
             \'password_reset_details\',
             ' . $inserted_template . ',
@@ -696,6 +694,7 @@ class MWIP extends \Migration
             FALSE
         )';
         self::query($sql);
+
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
             \'forgot_username_request\',
             ' . $inserted_template . ',
@@ -803,7 +802,6 @@ class MWIP extends \Migration
         )';
         self::query($sql);
 
-
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
             \'video_subscription_email\',
             ' . $inserted_template . ',
@@ -815,13 +813,11 @@ class MWIP extends \Migration
                 
                 Video Title : {{video_title}}
                 Video Description : {{video_description}}
-                
-                
+
                 <a href="{{video_link}}">
                 <img src="{{video_thumb}}" border="0" height="90" width="120"><br>
                 click here to watch this video</a>
-                
-                
+
                 You are notified because you are subscribed to {{sender_username}}, you can manage your subscriptions by going to your account and click on manage subscriptions.
                 {{website_title}}\',
             FALSE
