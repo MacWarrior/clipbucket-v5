@@ -67,7 +67,7 @@ class FFMpeg
 
         $info['format'] = $data['format']['format_name'];
         $info['duration'] = round($data['format']['duration'], 2);
-        $info['video_bitrate'] = (int)($video['bit_rate'] ?? $data['format']['bit_rate']);
+        $info['video_bitrate'] = (int)max(($video['bit_rate'] ?? 0), ($data['format']['bit_rate'] ?? 0));
         $info['video_width'] = (int)$video['width'];
         $info['video_height'] = (int)$video['height'];
         $info['bits_per_raw_sample'] = (int)$video['bits_per_raw_sample'];

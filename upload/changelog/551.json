@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"234",
+  "revision":"235",
   "status":"dev",
   "detail":[
     {
@@ -257,6 +257,7 @@
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
+        ,"Fix rare original video bitrate recovery"
       ]
     },
     {
