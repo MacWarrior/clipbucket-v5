@@ -939,7 +939,7 @@ class Collections extends CBCategory
             'collection_link'  => $this->collection_links($data, 'view'),
             'collection_thumb' => $this->get_thumb($data, 'small', true)
         ];
-        $this->action->share_template_name = 'collection_share_template';
+        $this->action->share_template_name = 'share_collection';
         $this->action->val_array = $this->share_variables;
     }
 

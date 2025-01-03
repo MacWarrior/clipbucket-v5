@@ -80,7 +80,7 @@ function resend_verification($userid)
             'user_email'    => $email,
             'code'          => $avcode,
         ];
-        EmailTemplate::sendMail('email_verify_template', $email, $var);
+        EmailTemplate::sendMail('verify_account', $email, $var);
         return $uname;
     }
 

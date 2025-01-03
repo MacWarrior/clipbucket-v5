@@ -770,7 +770,7 @@ class CBPhotos
             'photo_link'        => $this->collection->collection_links($data, 'view_item'),
             'photo_thumb'       => $this->get_image_file($data['photo_id'], 'm')
         ];
-        $this->action->share_template_name = 'photo_share_template';
+        $this->action->share_template_name = 'share_photo';
         $this->action->val_array = $this->share_email_vars;
     }
 

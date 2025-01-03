@@ -335,7 +335,6 @@ $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
 $Smarty->assign_by_ref('cbpage', $cbpage);
-$Smarty->assign_by_ref('cbemail', $cbemail);
 $Smarty->assign_by_ref('cbcollection', $cbcollection);
 $Smarty->assign_by_ref('cbphoto', $cbphoto);
 $Smarty->assign_by_ref('cbfeeds', $cbfeeds);

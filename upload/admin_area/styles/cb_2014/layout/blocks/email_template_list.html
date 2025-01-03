@@ -1,4 +1,4 @@
-<div style="float: right">
+<div style="float:right;">
     <span class="btn btn-primary add_new_email_template_list">{lang('add')}</span>
 </div>
 <form method="post" id="default_template">
@@ -21,10 +21,10 @@
                         <div class="dropdown">
                             <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">{lang('action')} <i class="caret"></i>
                             </button>
-                            <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                                 <li><a role="menuitem" tabindex="-1" onclick="editEmailTemplate({$template.id_email_template})">{lang code='edit'}</a></li>
                                 {if !$template.is_default && $template.is_deletable}
-                                    <li><a role="menuitem" tabindex="-1" onclick="deleteEmailTemplate({$template.id_email_template})" >{lang code='delete'}</a></li>
+                                    <li><a role="menuitem" tabindex="-1" onclick="deleteEmailTemplate({$template.id_email_template})">{lang code='delete'}</a></li>
                                 {/if}
                             </ul>
                         </div>

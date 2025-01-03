@@ -2,13 +2,19 @@
 {if $data.title neq ""}
 <h3>{lang('manage_x', lang($translation_type)|lower)}</h3>
     {if $type == 'thumbs'}
-<div class="lead dropdown">
-    <a class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
-    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
-        <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$data.videoid}">Back to edit details</a></li>
-    </ul>
-</div>
+        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
+        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}">{lang code='view_video'}</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='vdo_edit_vdo'}</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a></li>
+        </ul><button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown">Actions <i class="caret"></i></button>
+        <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}">{lang code='view_video'}</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='vdo_edit_vdo'}</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_flags={$video.videoid}">Delete Flags</a></li>
+            <li role="presentation"><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">Delete Video</a></li>
+        </ul>
     {/if}
 <form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
     {include file="$style_dir/blocks/thumb_list.html"}

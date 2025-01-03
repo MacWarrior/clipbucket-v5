@@ -1,23 +1,39 @@
-<div style="float: right">
-    <span class="btn btn-primary back_to_template_list">{lang('back_to_list')}</span>
-</div>
 <form method="post" enctype="multipart/form-data" name="email_template_edit" id="email_template_edit">
     <input name="id_email_template" value="{$template.id_email_template}" type="hidden"/>
     <div class="row">
-        <label for="email_template_code">{lang('code')}</label>
-        <input name="code" id="email_template_code" {if $template.is_deletable === '0' } disabled="disabled" {/if} value="{$template.code}" type="text"/>
+        <div class="col-md-10">
+            <label for="email_template_code">{lang('code')}</label>
+            {if $template.is_deletable === '0'}
+                <input name="code" value="{$template.code}" type="hidden"/>
+                <input name="is_deletable" value="{$template.is_deletable}" type="hidden"/>
+            {/if}
+            <input name="code" id="email_template_code" {if $template.is_deletable === '0'}disabled="disabled"{/if} value="{$template.code}" type="text"/>
+        </div>
+        <div class="col-md-2">
+            <span class="btn btn-primary back_to_template_list pull-right">{lang('back_to_list')}</span>
+        </div>
     </div>
     <hr>
     <div class="row">
-        <div class="col-md-6 border-right">
-            <label for="email_template_content">{lang('content')}</label>
-            <textarea name="content" id="email_template_content" style="width: 100%; min-height: 200px; max-width: 100%;" >{$template.content}</textarea>
+        <div class="col-md-6">
+            <label for="email_template_content"><b>{lang('content')|ucfirst}</b></label>
+            <textarea name="content" id="email_template_content" style="width:100%;min-height:200px;max-width:100%;"></textarea>
         </div>
-
-        <div class="col-md-6 ">
-            <label for="render">{lang('rendered')}</label>
-            <div id="render" class="tab-content" style="width: 100%; min-height: 200px;">{$template.content}</div>
+        <div class="col-md-6">
+            <label for="render"><b>{lang('rendered')}</b></label>
+            <div id="render" class="tab-content" style="width:100%;min-height:200px;padding:0;">{EmailTemplate::getRenderedContent($template.content)}</div>
         </div>
     </div>
-    <button class="btn btn-primary">{lang('submit_now')}</button>
+    <div class="row text-center paddingTop">
+        <button class="btn btn-primary">{lang('submit_now')}</button>
+    </div>
+    <div class="row">
+        {{include file="$layout_dir/blocks/email_list_variable.html"}}
+    </div>
 </form>
+<script>
+    template_content = "{base64_encode(stripcslashes($template.content))}";
+    $(function () {
+        $('#email_template_content').val(atob(template_content));
+    });
+</script>

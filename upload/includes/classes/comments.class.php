@@ -447,7 +447,7 @@ class Comments
                 'comment_link'    => $link . '#comment_' . $comment_id,
             ];
 
-            EmailTemplate::sendMail('user_comment_email', $owner_id, $email_params);
+            EmailTemplate::sendMail('user_comment', $owner_id, $email_params);
             if( !empty($reply_to) ) {
                 $params = [];
                 $params['comment_id'] = $reply_to;
@@ -460,7 +460,7 @@ class Comments
                 }
 
                 if (isValidEmail($reply_to)) {
-                    EmailTemplate::sendMail('user_reply_email', $reply_to, $email_params);
+                    EmailTemplate::sendMail('user_reply', $reply_to, $email_params);
                 }
             }
         }

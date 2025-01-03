@@ -121,27 +121,35 @@ var delay = 500;
 var timeout;
 
 function initListenerEmailTemplateEdit() {
-    $('#email_template_content').off('keyup').on('keyup', function () {
-        var textarea = $(this);
+    $('#email_template_content').on('keyup', function () {
+        let email_content = $(this).val();
         clearTimeout(timeout);
         timeout = setTimeout(() => {
-            $('#render').html(textarea.val());
+            $.post({
+                url: '/actions/admin_email_template_render.php',
+                data: {
+                    email_content: email_content
+                },
+                dataType: "json",
+                success: (response) => {
+                    $('#render').html(response.email_render);
+                }
+            });
         }, delay);
     });
 
-    $('#email_template_edit').off('submit').on('submit', function (event) {
+    $('#email_template_edit').on('submit', function (event) {
         event.preventDefault();
         saveEmailTemplate($(this));
     });
 
-    $('.back_to_template_list').off('click').on('click', () => {
+    $('.back_to_template_list').on('click', () => {
         listEmailTemplate();
     })
-
 }
 
 function initListenerEmailTemplateList() {
-    $('.add_new_email_template_list').off('click').on('click', () => {
+    $('.add_new_email_template_list').on('click', () => {
         editEmailTemplate();
     });
     $('input[name="make_default"]').change(function (e) {
@@ -161,36 +169,54 @@ function initListenerEmailTemplateList() {
         } else {
             $(this).prop('checked', false)
         }
-
     });
 }
 
 function initListenerEmailEdit() {
-    $('#email_content').off('keyup').on('keyup', function () {
-        var textarea = $(this);
-        clearTimeout(timeout);
-        timeout = setTimeout(() => {
-            $('#render_email').html(textarea.val());
-        }, delay);
+    $('#email_id_email_template').on('change', function () {
+        refreshRenderEmail();
     });
 
-    $('#email_edit').off('submit').on('submit', function (event) {
+    $('#email_content').on('keyup', function () {
+        refreshRenderEmail();
+    });
+
+    $('#email_edit').on('submit', function (event) {
         event.preventDefault();
         saveEmail($(this));
     });
 
-    $('.back_to_email_list').off('click').on('click', () => {
+    $('.back_to_email_list').on('click', () => {
         listEmail();
     })
+}
 
+function refreshRenderEmail()
+{
+    let email_content = $('#email_content').val();
+    let id_email_template = $('#email_id_email_template').val();
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+        $.post({
+            url: '/actions/admin_email_render.php',
+            data: {
+                email_content: email_content
+                ,id_email_template: id_email_template
+            },
+            dataType: "json",
+            success: (response) => {
+                $('#render_email').html(response.email_render);
+            }
+        });
+    }, delay);
 }
 
 function initListenerEmailList() {
-    $('.add_new_email_list').off('click').on('click', () => {
+    $('.add_new_email_list').on('click', () => {
         editEmail();
     });
 
-    $('.search_email').off('click').on('click', () => {
+    $('.search_email').on('click', () => {
         var search = $('#search').val();
         listEmail(search);
     });
@@ -210,11 +236,11 @@ function displayVariable(id_email) {
 }
 
 function initListenerEmailTester() {
-    $('#select_email').off('change').on('change', function () {
+    $('#select_email').on('change', function () {
         displayVariable($(this).val());
     });
 
-    $('.send_email').off('click').on('click', function (e) {
+    $('.send_email').on('click', function (e) {
         e.preventDefault();
         hideSpinner();
         $.post({
@@ -231,7 +257,6 @@ function initListenerEmailTester() {
 function updateSelect(select_id, options, type) {
     var id;
     var text;
-    var selected_option = $('#' + select_id).val();
     $('#' + select_id + ' option').remove();
     $.each(options, function (i, item) {
         if (type == 'email') {
@@ -247,5 +272,3 @@ function updateSelect(select_id, options, type) {
         }));
     })
 }
-
-

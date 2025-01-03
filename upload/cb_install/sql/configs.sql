@@ -314,7 +314,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'video_nsfw_check_model', 'nudity+nsfw'),
     (NULL, 'email_sender_address', 'website@domain.com'),
     (NULL, 'email_sender_name', 'no-reply');
->>>>>>> master
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

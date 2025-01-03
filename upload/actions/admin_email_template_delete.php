@@ -1,8 +1,8 @@
 <?php
-define('THIS_PAGE', 'admin_edit_email_template');
+define('THIS_PAGE', 'admin_email_template_delete');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
+User::getInstance()->hasPermissionOrRedirect('email_template_management');
 
 $success = EmailTemplate::deleteTemplate($_POST['id_email_template'] ?? 0);
 echo json_encode([

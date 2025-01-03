@@ -4,8 +4,6 @@ use PHPMailer\PHPMailer\PHPMailer;
 
 class EmailTemplate
 {
-    private static $user_permissions = [];
-
     private static $tableName = 'email_template';
     private static $tableNameEmail = 'email';
     private static $tableNameEmailHisto = 'email_histo';
@@ -45,7 +43,9 @@ class EmailTemplate
         'language_key'
     ];
 
-
+    /**
+     * @throws Exception
+     */
     public static function formatAndValidateTemplateFields(array $fields)
     {
         //check code unique
@@ -54,7 +54,7 @@ class EmailTemplate
             'not_id_email_template' => ($fields['id_email_template'] ?: 0),
             'disabled'              => false
         ]);
-        if (!empty($existing_code)) {
+        if (!empty($existing_code) && empty($fields['id_email_template'])) {
             e(lang('code_already_exist', [
                 $fields['code']
             ]));
@@ -73,7 +73,6 @@ class EmailTemplate
                         e(lang('empty_email_content'));
                         return false;
                     }
-//                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
                     $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 case 'code':
@@ -91,6 +90,9 @@ class EmailTemplate
         return $fields;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function formatAndValidateEmailFields(array $fields)
     {
         //check code unique
@@ -99,7 +101,7 @@ class EmailTemplate
             'not_id_email' => ($fields['id_email'] ?: 0),
             'disabled'     => false
         ]);
-        if (!empty($existing_code)) {
+        if (!empty($existing_code) && empty($fields['id_email'])) {
             e(lang('code_already_exist', [
                 $fields['code']
             ]));
@@ -122,24 +124,14 @@ class EmailTemplate
                     $value = (bool)$value;
                     break;
                 case 'content':
-//                    $value = '\'' . mysql_clean(preg_replace('(\\\n|\\\r)', '', $value)) . '\'';
                     $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 case 'code':
-                    if (empty($value)) {
-                        e(lang($field . '_cannot_be_empty'));
-                        return false;
-                    }
-                    $value = '\'' . mysql_clean($value) . '\'';
-                    break;
                 case 'title':
                     if (empty($value)) {
                         e(lang($field . '_cannot_be_empty'));
                         return false;
                     }
-                    /*if (count) {
-
-                    }*/
                     $value = '\'' . mysql_clean($value) . '\'';
                     break;
                 default:
@@ -206,16 +198,19 @@ class EmailTemplate
         return Clipbucket_db::getInstance()->insert_id();
     }
 
+    /**
+     * @throws Exception
+     */
     public static function updateEmailTemplate(array $email_template)
     {
-        $sql = 'UPDATE  ' . tbl(self::$tableName) . ' SET ';
+        $sql = 'UPDATE ' . tbl(self::$tableName) . ' SET ';
         $fields = [];
         $email_template = self::formatAndValidateTemplateFields($email_template);
         if ($email_template === false) {
             return false;
         }
         foreach (self::$fields as $field) {
-            if ($field == 'id_email_template') {
+            if( in_array($field, ['id_email_template', 'is_deletable']) ){
                 continue;
             }
             if (isset($email_template[$field])) {
@@ -226,7 +221,10 @@ class EmailTemplate
         return Clipbucket_db::getInstance()->execute($sql);
     }
 
-    public static function updateEmail(array $email)
+    /**
+     * @throws Exception
+     */
+    public static function updateEmail(array $email): bool
     {
         $sql = 'UPDATE  ' . tbl(self::$tableNameEmail) . ' SET ';
         $fields = [];
@@ -235,7 +233,7 @@ class EmailTemplate
             return false;
         }
         foreach (self::$fieldsEmail as $field) {
-            if ($field == 'id_email') {
+            if( in_array($field, ['id_email', 'is_deletable']) ){
                 continue;
             }
             if (isset($email[$field])) {
@@ -243,9 +241,8 @@ class EmailTemplate
             }
         }
         $sql .= implode(', ', $fields) . ' WHERE id_email = ' . mysql_clean($email['id_email']);
-        return Clipbucket_db::getInstance()->execute($sql);
+        return !empty(Clipbucket_db::getInstance()->execute($sql));
     }
-
 
     /**
      * @return array
@@ -255,7 +252,6 @@ class EmailTemplate
         return array_map(function ($field) {
             return self::$tableName . '.' . $field;
         }, self::$fields);
-
     }
 
     /**
@@ -271,6 +267,7 @@ class EmailTemplate
 
     /**
      * @param array $params
+     * @return array|mixed
      * @throws Exception
      */
     public static function getAllTemplate(array $params)
@@ -360,7 +357,6 @@ class EmailTemplate
         return self::getAllEmail($params);
     }
 
-
     public static function getAllEmail(array $params)
     {
         $param_first_only = $params['first_only'] ?? false;
@@ -429,12 +425,13 @@ class EmailTemplate
         return empty($result) ? [] : $result;
     }
 
-
     /**
-     * @param $params
+     * @param $type
+     * @param array $params
+     * @return bool
      * @throws Exception
      */
-    public static function assignListEmailTemplate($type, $params = [])
+    public static function assignListEmailTemplate($type, $params = []): bool
     {
         switch ($type) {
             case 'email_template':
@@ -473,7 +470,7 @@ class EmailTemplate
     /**
      * Make Language Default
      *
-     * @param $lid
+     * @param $id_email_template
      * @throws Exception
      */
     public static function makeDefault($id_email_template)
@@ -489,7 +486,7 @@ class EmailTemplate
     }
 
     /**
-     * @param $id_email_template
+     * @param int $id_email_template
      * @return bool
      * @throws Exception
      */
@@ -515,7 +512,7 @@ class EmailTemplate
     }
 
     /**
-     * @param $id_email
+     * @param int $id_email
      * @return bool
      * @throws Exception
      */
@@ -556,14 +553,13 @@ class EmailTemplate
         return empty($result) ? [] : $result;
     }
 
-    public static function getGlobalVariables()
+    public static function getGlobalVariables(): array
     {
         $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
             . ' WHERE type = \'global\'';
         $result = Clipbucket_db::getInstance()->_select($sql);
         return empty($result) ? [] : $result;
     }
-
 
     /**
      * @param string $string
@@ -572,7 +568,11 @@ class EmailTemplate
      */
     public static function fillVariable(string $string, array $variables): string
     {
+        $variables = array_merge(self::getGlobalVariablesArray(), $variables);
         foreach ($variables as $name => $value) {
+            if( $name != 'email_content' ){
+                $value = display_clean($value);
+            }
             $string = str_replace('{{' . $name . '}}', $value, $string);
         }
         return $string;
@@ -582,14 +582,16 @@ class EmailTemplate
      * @param string $subject
      * @param string $content
      * @param array|string $to
-     * @param $sender_email
-     * @param $sender_name
-     * @param $par_destinataire
+     * @param string $sender_email
+     * @param string $sender_name
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = '')
+    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = ''): bool
     {
+        if( config('disable_email') == 'yes' ){
+            return true;
+        }
         if (empty($sender_email)) {
             $sender_email = config('email_sender_address');
         }
@@ -612,12 +614,13 @@ class EmailTemplate
         $mail->MsgHTML($content);
         if (config('mail_type') == 'smtp') {
             $mail->Host = config('smtp_host');
+            $mail->Port = config('smtp_port');
+
             if (config('smtp_auth') == 'yes') {
                 $mail->SMTPAuth = true;
+                $mail->Username = config('smtp_user');
+                $mail->Password = config('smtp_pass');
             }
-            $mail->Port = config('smtp_port');
-            $mail->Username = config('smtp_user');
-            $mail->Password = config('smtp_pass');
         }
 
         if (is_array($to) && empty($to['name'])) {
@@ -629,10 +632,9 @@ class EmailTemplate
         }
         if ($mail->send()) {
             return true;
-        } else {
-            //send error
-            return $mail->ErrorInfo;
         }
+        //send error
+        return $mail->ErrorInfo;
     }
 
     /**
@@ -659,9 +661,8 @@ class EmailTemplate
      * @return bool
      * @throws Exception
      */
-    public static function saveEmailHisto($id_email, $id_user, $to, $title, $content)
+    public static function saveEmailHisto($id_email, $id_user, $to, $title, $content): bool
     {
-        $sql = 'INSERT INTO ' . tbl(self::$tableNameEmailHisto) . ' ';
         $fields = [
             'id_email',
             'send_date',
@@ -669,11 +670,13 @@ class EmailTemplate
             'content'
         ];
         $values = [
-            mysql_clean($id_email),
+            $id_email,
             'NOW()',
-            mysql_clean($title),
-            mysql_clean($content)
+            $title,
+            $content
         ];
+
+        DiscordLog::sendDump('```'.$content.'```');
 
         if (!empty($id_user)) {
             $fields[] = 'userid';
@@ -686,18 +689,50 @@ class EmailTemplate
             return false;
         }
 
-        $sql .= ' (' . implode(', ', $fields) . ') VALUES (' . implode(', ', $values) . ') ';
-        return (bool)Clipbucket_db::getInstance()->execute($sql);
+        return (bool) Clipbucket_db::getInstance()->insert(tbl(self::$tableNameEmailHisto), $fields, $values);
+    }
+
+    private static function getGlobalVariablesArray(): array
+    {
+        return [
+            'baseurl' => get_server_url(),
+            'login_link' => cblink(['name' => 'login'], true),
+            'date_year' => cbdate('Y'),
+            'date_time' => now(),
+            'website_title' => config('site_title'),
+            'logo_url' => get_website_logo_path(true),
+            'favicon_url' => get_website_favicon_path(true)
+        ];
+    }
+
+    public static function getRenderedContent($content, array $variables = []): string
+    {
+        return self::fillVariable(trim(stripcslashes($content)), $variables);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function getRenderedEmail(int $id_email_template, $content): string
+    {
+        $template_content = self::getOneTemplate(['id_email_template' => $id_email_template])['content'];
+        $email_content = self::getRenderedContent($content);
+
+        return self::getRenderedContent($template_content, ['email_content'=> $email_content]);
     }
 
     /**
      * @param $code_email
      * @param $to
      * @param $variables
+     * @param string $from
+     * @param string $from_name
+     * @param bool $display_error
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
-    public static function sendMail($code_email, $to, $variables, $from = '', $from_name = '', $display_error = false)
+    public static function sendMail($code_email, $to, $variables = [], $from = '', $from_name = '', $display_error = false): bool
     {
         if (empty($to)) {
             e(lang('missing_recipient'));
@@ -728,28 +763,14 @@ class EmailTemplate
                 $variables['user_avatar'] = $user['avatar_url'];
             }
         }
-        //defaults variables
-        if (empty($variables['baseurl'])) {
-            $variables['baseurl'] = get_server_url();
-        }
-        if (empty($variables['login_link'])) {
-            $variables['login_link'] = cblink(['name' => 'login'], true);
-        }
 
-        if (empty($variables['date_year'])) {
-            $variables['date_year'] = cbdate("Y");
-        }
-        if (empty($variables['date_time'])) {
-            $variables['date_time'] = now();
-        }
-        if (empty($variables['website_title'])) {
-            $variables['website_title'] =TITLE;
-        }
         //put variable on email
         $title = self::fillVariable($email['title'], $variables);
         $email_content = self::fillVariable($email['content'], $variables);
+        $variables['email_content'] = $email_content;
+
         //put email on template
-        $content = self::fillVariable($email['template_content'], ['email_content' => $email_content]);
+        $content = self::fillVariable($email['template_content'], $variables);
         //send emails
         if (is_array($to) && !isset($to['mail'])) {
             $result = self::send($title, $content, $to, $from, $from_name);

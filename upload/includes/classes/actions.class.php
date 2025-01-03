@@ -268,15 +268,15 @@ class cbactions
 
                     if ($ok) {
                         $more_var = [
-                            'user_username'   => user_name(),
-                            'user_message' => post('message'),
+                            'sender_username' => user_name(),
+                            'sender_message'  => display_clean(post('message')),
                         ];
                         $var = array_merge($more_var, $var);
 
                         //Now Finally Sending Email
                         $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
                         EmailTemplate::sendMail($tpl, $emails_array, $var, $from, user_name());
-                        e(lang('thnx_sharing_msg'), $this->name, 'm');
+                        e(lang('thnx_sharing_msg', $this->name), 'm');
                     }
                 } else {
                     e(lang('share_video_no_user_err', $this->name));

@@ -1390,11 +1390,10 @@ class userquery extends CBCategory
      */
     function send_activation_code($email)
     {
-        global $cbemail;
         $udetails = $this->get_user_details($email);
 
         if (!$udetails || !$email) {
-            e(lang("usr_exist_err"));
+            e(lang('usr_exist_err'));
         } elseif ($udetails['usr_status'] == 'Ok') {
             e(lang('usr_activation_err'));
         } elseif ($udetails['ban_status'] == 'yes') {
@@ -1402,7 +1401,7 @@ class userquery extends CBCategory
         } else {
             $var = ['avcode'   => $udetails['avcode']];
             //Now Finally Sending Email
-            EmailTemplate::sendMail('avcode_request_template', $udetails['userid'],  $var);
+            EmailTemplate::sendMail('avcode_request', $udetails['userid'],  $var);
             e(lang('usr_activation_em_msg'), 'm');
         }
     }
@@ -1427,7 +1426,7 @@ class userquery extends CBCategory
             e(lang('usr_exist_err'));
         } else {
             //Now Finally Sending Email
-            EmailTemplate::sendMail('welcome_message_template', $udetails['userid'], []);
+            EmailTemplate::sendMail('welcome_message', $udetails['userid']);
             if ($update_email_status) {
                 Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['welcome_email_sent'], ['yes'], ' userid=\'' . $udetails['userid'] . '\' ');
             }
@@ -1469,8 +1468,6 @@ class userquery extends CBCategory
      */
     function add_contact($uid, $fid)
     {
-        global $cbemail;
-
         $friend = $this->get_user_details($fid);
         $sender = $this->get_user_details($uid);
 
@@ -1491,7 +1488,7 @@ class userquery extends CBCategory
             e(lang('friend_request_sent'), 'm');
 
             //Sending friendship request email
-            $tpl = $cbemail->get_template('friend_request_email');
+            $tpl = CBEmail::getInstance()->get_template('friend_request');
 
             $var = [
                 '{reciever}'     => $friend['username'],
@@ -1500,8 +1497,8 @@ class userquery extends CBCategory
                 '{request_link}' => '/manage_contacts.php?mode=request&confirm=' . $uid
             ];
 
-            $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-            $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
+            $subj = CBEmail::getInstance()->replace($tpl['email_template_subject'], $var);
+            $msg = nl2br(CBEmail::getInstance()->replace($tpl['email_template'], $var));
 
             //Now Finally Sending Email
             #cbmail(['to'=>$friend['email'],'from'=>WEBSITE_EMAIL,'subject'=>$subj,'content'=>$msg]);
@@ -1612,7 +1609,7 @@ class userquery extends CBCategory
                 'profile_link'    => $this->profile_link($sender),
             ];
 
-            EmailTemplate::sendMail('friend_confirmation_email', $receiver_id, $var);
+            EmailTemplate::sendMail('friend_confirmation', $receiver_id, $var);
 
             //Logging Friendship
 
@@ -3800,7 +3797,7 @@ class userquery extends CBCategory
 
             if (!User::getInstance()->hasPermission('admin_access') && EMAIL_VERIFICATION && $send_signup_email) {
                 $var = ['avcode' => $avcode];
-                EmailTemplate::sendMail('email_verify_template', $insert_id, $var);
+                EmailTemplate::sendMail('verify_account', $insert_id, $var);
             } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
                 $this->send_welcome_email($insert_id);
             }
@@ -5123,7 +5120,6 @@ class userquery extends CBCategory
      */
     function sendSubscriptionEmail($vidDetails, bool $updateStatus = true): bool
     {
-        global $cbemail;
         if (!$vidDetails['videoid']) {
             e(lang('invalid_videoid'));
             return false;
@@ -5148,7 +5144,7 @@ class userquery extends CBCategory
                 'video_thumb'       => get_thumb($vidDetails)
             ];
             foreach ($subscribers as $subscriber) {
-                EmailTemplate::sendMail('video_subscription_email', $subscriber['userid'], $var);
+                EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);
             }
 
             $total_subscribers = count($subscribers);

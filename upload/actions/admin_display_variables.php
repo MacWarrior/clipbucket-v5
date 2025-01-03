@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'admin_list_email_template');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
+User::getInstance()->hasPermissionOrRedirect('email_template_management');
 
 $email = EmailTemplate::getOneEmail(['id_email' => ($_POST['id_email'] ?: 0)]);
 assign('global_vars', EmailTemplate::getGlobalVariables());

@@ -145,8 +145,7 @@ CREATE TABLE `{tbl_prefix}email_templates` (
   `email_template_name` varchar(225) NOT NULL,
   `email_template_code` varchar(225) NOT NULL,
   `email_template_subject` mediumtext NOT NULL,
-  `email_template` text NOT NULL,
-  `email_template_allowed_tags` mediumtext NOT NULL
+  `email_template` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}favorites` (
@@ -1188,7 +1187,7 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_variable`
 (
     id_email_variable INT PRIMARY KEY AUTO_INCREMENT,
     code              VARCHAR(32) UNIQUE NOT NULL,
-    type              ENUM('global', 'email'),
+    type              ENUM('global', 'email', 'template'),
     language_key      VARCHAR(256)
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 

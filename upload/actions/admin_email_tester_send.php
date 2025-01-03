@@ -1,8 +1,8 @@
 <?php
-define('THIS_PAGE', 'admin_edit_email_template');
+define('THIS_PAGE', 'admin_email_tester_send');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
+User::getInstance()->hasPermissionOrRedirect('email_template_management');
 
 $success = true;
 if (empty($_POST['id_email'])) {

@@ -343,13 +343,6 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
         ];
 
-        if( config('disable_email') != 'yes' ){
-            $menu_configuration['sub'][] = [
-                'title' => lang('email_template')
-                , 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'
-            ];
-        }
-
         $menu_configuration['sub'][] = [
             'title' => lang('watermark_settings')
             , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
@@ -387,7 +380,6 @@ class ClipBucket
                 ];
             }
 
-
             if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
                 $menu_configuration['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('players')))
@@ -395,13 +387,12 @@ class ClipBucket
                 ];
             }
         }
-        if (User::getInstance()->hasPermission('email_template_management') ) {
+        if( config('disable_email') != 'yes'  && User::getInstance()->hasPermission('email_template_management') ){
             $menu_configuration['sub'][] = [
                 'title' =>  lang('email_template_management')
                 , 'url' => DirPath::getUrl('admin_area') . 'email_template_management.php'
             ];
         }
-
 
         $this->addMenuAdmin($menu_configuration, 2);
 

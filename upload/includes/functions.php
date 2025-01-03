@@ -661,7 +661,7 @@ function validate_collection_category($array = null)
  * @throws Exception
  * @uses : { class : $userquery } { function : avatar }
  */
-function avatar($param)
+function avatar($param): string
 {
     $udetails = $param['details'];
     $size = $param['size'];
@@ -2891,21 +2891,12 @@ function check_install($type)
  */
 function get_server_url(): string
 {
-    $DirName = dirname($_SERVER['PHP_SELF']);
-    if (preg_match('/admin_area/i', $DirName)) {
-        $DirName = str_replace('/admin_area', '/', $DirName);
-    }
-
-    if (preg_match('/cb_install/i', $DirName)) {
-        $DirName = str_replace('/cb_install', '/', $DirName);
-    }
-
     $port = '';
     if( !in_array($_SERVER['SERVER_PORT'], [80, 443]) ){
         $port = ':' . $_SERVER['SERVER_PORT'];
     }
 
-    return get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . $DirName;
+    return get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . '/';
 }
 
 /**
@@ -3756,28 +3747,22 @@ function array_val_assign($vals)
     }
 }
 
-function get_website_logo_path()
+function get_website_logo_path($full_url = false): string
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
-        return DirPath::getUrl('logos') . $logo_name;
+        return DirPath::getUrl('logos', $full_url) . $logo_name;
     }
-    if (defined('TEMPLATEURLFO')) {
-        return TEMPLATEURLFO . '/theme' . '/images/logo.png';
-    }
-    return TEMPLATEURL . '/theme' . '/images/logo.png';
+    return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
 }
 
-function get_website_favicon_path()
+function get_website_favicon_path($full_url = false): string
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
-        return DirPath::getUrl('logos') . $favicon_name;
+        return DirPath::getUrl('logos', $full_url) . $favicon_name;
     }
-    if (defined('TEMPLATEURLFO')) {
-        return TEMPLATEURLFO . '/theme' . '/images/favicon.png';
-    }
-    return TEMPLATEURL . '/theme' . '/images/favicon.png';
+    return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/favicon.png';
 }
 
 /**

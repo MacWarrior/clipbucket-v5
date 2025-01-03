@@ -1,8 +1,8 @@
 <?php
-define('THIS_PAGE', 'admin_edit_email_template');
+define('THIS_PAGE', 'admin_email_template_save');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionAjax('admin_access');
+User::getInstance()->hasPermissionOrRedirect('email_template_management');
 
 if (empty($_POST['id_email_template'])) {
     $id_email_template = EmailTemplate::insertEmailTemplate($_POST);
@@ -18,6 +18,7 @@ if ($success) {
 }
 
 assign('template', $email_template);
+assign('global_vars', EmailTemplate::getGlobalVariables());
 $response = templateWithMsgJson('blocks/email_template_edit.html', false);
 $response['success'] = $success;
 $response['email_template_list'] = EmailTemplate::getAllTemplate([]);

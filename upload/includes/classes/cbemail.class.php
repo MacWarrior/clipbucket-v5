@@ -195,7 +195,7 @@ class CBEmail
      */
     function get_mass_emails()
     {
-        $results = Clipbucket_db::getInstance()->select(tbl("mass_emails"), "*");
+        $results = Clipbucket_db::getInstance()->select(tbl('mass_emails'), '*');
 
         if (count($results) > 0) {
             return $results;
@@ -222,12 +222,12 @@ class CBEmail
         }
 
         switch ($action) {
-            case "delete":
-                Clipbucket_db::getInstance()->execute("DELETE FROM " . tbl('mass_emails') . " WHERE id='$id'");
-                e(lang("Email has been deleted"), "m");
+            case 'delete':
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('mass_emails') . " WHERE id='$id'");
+                e(lang('Email has been deleted'), 'm');
                 break;
 
-            case "send_email":
+            case 'send_email':
                 $this->send_emails($email);
                 break;
         }
@@ -266,7 +266,6 @@ class CBEmail
      */
     function send_emails($id)
     {
-        global $cbemail;
         if (!is_array($id)) {
             $email = $this->get_email($id);
         } else {
@@ -285,21 +284,21 @@ class CBEmail
         $limit = $start_index . ',' . $settings['loop_size'];
 
         //Creating condition
-        $condition = "";
+        $condition = '';
 
         //Levels
-        $level_query = "";
+        $level_query = '';
         $levels = $settings['level'];
         if ($levels) {
             foreach ($levels as $level) {
                 if ($level_query) {
-                    $level_query .= " OR ";
+                    $level_query .= ' OR ';
                 }
                 $level_query .= " level='$level' ";
             }
 
             if ($condition) {
-                $condition .= " AND ";
+                $condition .= ' AND ';
             }
             $condition = $level_query = " ( " . $level_query . ") ";
         }
@@ -310,14 +309,14 @@ class CBEmail
         if ($cats) {
             foreach ($cats as $cat) {
                 if ($cats_query) {
-                    $cats_query .= " OR ";
+                    $cats_query .= ' OR ';
                 }
                 $cats_query .= " category='$cat' ";
             }
 
             $cats_query = " ( " . $cats_query . ") ";
             if ($condition) {
-                $condition .= " AND ";
+                $condition .= ' AND ';
             }
             $condition .= $cats_query;
         }
@@ -325,7 +324,7 @@ class CBEmail
         //Ative users
         if ($settings['active'] != 'any') {
             if ($condition) {
-                $condition .= " AND ";
+                $condition .= ' AND ';
             }
 
             if ($settings['active'] == 'yes') {
@@ -368,8 +367,8 @@ class CBEmail
                     '{avcode}'     => $user['avcode'],
                     '{avlink}'     => '/activation.php?av_username=' . $user['username'] . '&avcode=' . $user['avcode']
                 ];
-                $subj = $cbemail->replace($email['email_subj'], $var);
-                $msg = nl2br($cbemail->replace($email['email_msg'], $var));
+                $subj = self::getInstance()->replace($email['email_subj'], $var);
+                $msg = nl2br(self::getInstance()->replace($email['email_msg'], $var));
 
                 $send_message = "";
 
@@ -403,15 +402,15 @@ class CBEmail
         }
     }
 
+}
+
+class Email{
 
     /**
-     * @param $email
-     * @param $username
-     * @return void
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function friend_request_email($email, $username)
+    public static function send_friend_request($email, $username)
     {
         $receiver = User::getInstance()->getOne(['email'=>$email]);
         $var = [
@@ -420,6 +419,6 @@ class CBEmail
             'request_link'  => '/manage_contacts.php?mode=manage',
         ];
 
-        EmailTemplate::sendMail('friend_request_email', $receiver['userid'], $var);
+        EmailTemplate::sendMail('friend_request', $receiver['userid'], $var);
     }
 }

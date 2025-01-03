@@ -81,7 +81,7 @@ class MWIP extends \Migration
         $sql = 'CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_variable` (
             id_email_variable INT PRIMARY KEY AUTO_INCREMENT,
             code VARCHAR(32) NOT NULL UNIQUE ,
-            type ENUM(\'global\', \'email\'),
+            type ENUM(\'global\', \'email\', \'template\'),
             language_key VARCHAR(256)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
@@ -173,6 +173,9 @@ class MWIP extends \Migration
             'en' => 'Do you want to apply this new default email template to all existing emails ?'
         ]);
 
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'email_content\',\'template\', \'email_variable_content\')';
+        self::query($sql);
+
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'website_title\',\'global\', \'email_variable_website_title\')';
         self::query($sql);
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'user_username\',\'global\', \'email_variable_user_username\')';
@@ -189,6 +192,10 @@ class MWIP extends \Migration
         self::query($sql);
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'login_link\',\'global\', \'email_variable_login_link\')';
         self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'logo_url\',\'global\', \'email_variable_logo_url\')';
+        self::query($sql);
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'favicon_url\',\'global\', \'email_variable_favicon_url\')';
+        self::query($sql);
 
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'video_link\',\'email\', \'email_variable_video_link\')';
         self::query($sql);
@@ -198,7 +205,7 @@ class MWIP extends \Migration
         self::query($sql);
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'video_description\',\'email\', \'email_variable_video_description\')';
         self::query($sql);
-        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'user_message\',\'email\', \'email_variable_user_message\')';
+        $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'sender_message\',\'email\', \'email_variable_sender_message\')';
         self::query($sql);
         $sql = ' INSERT IGNORE INTO ' . tbl('email_variable') . ' (code, type, language_key) VALUES (\'avcode\',\'email\', \'email_variable_avcode\')';
         self::query($sql);
@@ -276,6 +283,14 @@ class MWIP extends \Migration
             'fr'=>'Lien vers la page de connexion',
             'en'=>'Link to login page'
         ]);
+        self::generateTranslation('email_variable_logo_url', [
+            'fr'=>'Lien vers le logo du site',
+            'en'=>'Link to website logo'
+        ]);
+        self::generateTranslation('email_variable_favicon_url', [
+            'fr'=>'Lien vers l\'icone du site',
+            'en'=>'Link to website favicon'
+        ]);
 
         self::generateTranslation('email_variable_avcode', [
             'fr' => 'Code de validation de compte',
@@ -299,7 +314,7 @@ class MWIP extends \Migration
             'en'=>'Video description'
         ]);
 
-        self::generateTranslation('email_variable_user_message', [
+        self::generateTranslation('email_variable_sender_message', [
             'fr'=>'Contenu du message',
             'en'=>'Message content'
         ]);
@@ -466,7 +481,7 @@ class MWIP extends \Migration
             'en' => 'Template doesn\'t exists'
         ]);
 
-        $sql = 'INSERT IGNORE INTO ' . tbl('email_template') . ' (code, is_default, is_deletable, content, disabled) VALUE (\'main\', TRUE, FALSE, \'<html ><body>{{email_content}}<hr>Regards,<br>ClipBucket Team</body></html>\', FALSE)';
+        $sql = 'INSERT IGNORE INTO ' . tbl('email_template') . ' (code, is_default, is_deletable, content, disabled) VALUE (\'main\', TRUE, FALSE, \'<html>\r\n	<body>\r\n		<div style=\"background-color: #EEEEEE;padding-bottom:10px;\">\r\n				<div style=\"background-color:#0080B4;padding-top:10px;padding-bottom:110px;text-align:center;\">\r\n				<a href=\"{{baseurl}}\"><img src=\"{{logo_url}}\" title=\"{{website_title}}\" alt=\"logo\" style=\"background-color: white;border-radius:10px;\"/></a>\r\n				<div style=\"color: white;margin-top:10px;font-size:22px;\">{{website_title}}</div>\r\n			</div>\r\n			<div style=\"background-color: white;width:90%;margin:auto;margin-top:-60px;border-radius:10px;min-height:100px;padding:10px;\">\r\n				{{email_content}}\r\n			</div>\r\n			<div style=\"background-color: #0080B4;width:90%;margin:auto;border-radius:10px;min-height:70px;color:white;margin-top:10px;padding:10px;\">\r\n				<a href=\"{{baseurl}}\" style=\"float:left;\"><img src=\"{{favicon_url}}\" title=\"{{website_title}}\" alt=\"logo\" style=\"background-color:white;border-radius: 10px;width:50px;height:50px;\"/></a>\r\n				<div style=\"text-align:center;line-height:50px;vertical-align:middle;\">\r\n					<a href=\"https://clipbucket.fr\" style=\"color:white;text-decoration:none;\">&copy;ClipBucketV5</a>, maintained by <a href=\"https://oxygenz.fr\" style=\"color:white;text-decoration:none;\">Oxygenz</a>\r\n				</div>\r\n			</div>\r\n		</div>\r\n	</body>\r\n</html>\', FALSE)';
         self::query($sql);
         $inserted_template = \Clipbucket_db::getInstance()->insert_id();
         if (empty($inserted_template)) {
@@ -474,187 +489,146 @@ class MWIP extends \Migration
         }
 
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'share_video_template\',
+            \'share_video\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - {{sender_username}} wants to share a video with you\',
-            \'<table width="100%" border="0" cellspacing="0" cellpadding="5">
-                  <tr>
-                    <td bgcolor="#53baff" ><span class="title">{{website_title}}</span>share video</td>
-                  </tr>
-                  <tr>
-                    <td height="20" class="messege">{{sender_username}} wants to share Video With You
-                      <div id="videoThumb"><a href="{{video_link}}"><img src="{{video_thumb}}"><br>
-                    watch video</a></div></td>
-                  </tr>
-                  <tr>
-                    <td class="text" ><span class="title2">Video Description</span><br>
-                      <span class="text">{{video_description}}</span></td>
-                  </tr>
-                  <tr>
-                    <td><span class="title2">Personal Message</span><br>
-                      <span class="text">{{user_message}}
-                      </span><br>
-                      <br>
-                <span class="text">Thanks,</span><br> 
-                <span class="text">{{website_title}}</span></td>
-                  </tr>
-                  <tr>
-                    <td bgcolor="#53baff">copyrights {{date_year}} {{website_title}}</td>
-                  </tr>
-                </table>\',
-            FALSE
-        )';
-        self::query($sql);
-
-        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'photo_share_template\',
-            ' . $inserted_template . ',
-            FALSE,
-            \'[{{website_title}}] - {{sender_username}} wants to share a photo with you\',
-            \'<table width="100%" border="0" cellspacing="0" cellpadding="5">
-                 <tr>
-                      <td bgcolor="#0099cc" ><span class="title">{{website_title}}</span></td>
-                 </tr>
+            \'[{{website_title}}] {{sender_username}} wants to share a video with you\',
+            \'<b>{{sender_username}}</b> wants to share a video with you :
             
-                 <tr>
-                      <td height="20" class="messege">{{sender_username}} wants to share this photo with you<br>
-                           <div id="videoThumb"><a class="text" href="{{photo_link}}" title="{{photo_title}}"><img src="{{photo_thumb}}"><br>
-                      View Photo</a></div></td>
-                 </tr>
-                 <tr>
-                      <td class="text" ><span class="title2">Photo Description</span><br>
-                           <span class="text">{{photo_description}}</span></td>
-                 </tr>
-                 <tr>
-                      <td><span class="title2">Personal Message</span><br>
-                           <span class="text">{{user_message}}
-                           </span><br>
-                           <br>
-                    <span class="text">Thanks,</span><br> 
-                    <span class="text">{{website_title}}</span></td>
-                 </tr>
-                 <tr>
-                      <td bgcolor="#0099cc">copyrights {{date_year}} {{website_title}}</td>
-                 </tr>
-            </table>\',
+            <div style="text-align:center;margin-top:10px;margin-bottom:10px;">
+                <a href="{{video_link}}">
+                    <img src="{{video_thumb}}" title="{{video_title}}" alt="Video thumb"><br/>
+                    {{video_title}}
+                </a>
+            </div>
+            
+            <div style="margin-bottom:10px;">
+                <b>Video Description</b> : <br/>
+                {{video_description}}
+            </div>
+            
+            <div style="margin-bottom:10px;">
+                <b>Personal Message</b> : <br/>
+                {{sender_message}}
+            </div>\',
             FALSE
         )';
         self::query($sql);
 
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'collection_share_template\',
+            \'share_photo\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - {{sender_username}} wants to share a collection with you\',
-            \'<table width="100%" border="0" cellspacing="0" cellpadding="5">
-             <tr>
-                  <td bgcolor="#0099cc" ><span class="title">{{website_title}}</span></td>
-             </tr>
+            \'[{{website_title}}] {{sender_username}} wants to share a photo with you\',
+            \'<b>{{sender_username}}</b> wants to share a photo with you :
         
-             <tr>
-                  <td height="20" class="messege">{{sender_username}} wants to share this collection with you.<br>
-                       <div id="videoThumb"><a class="text" href="{{collection_link}}" title="{{collection_title}}"><img src="{{collection_thumb}}"><br>
-                  View Collection <small class="text2">({{total_items}} {{collection_type}})</small></a></div></td>
-             </tr>
-             <tr>
-                  <td class="text" ><span class="title2">Collection Description</span><br>
-                       <span class="text">{{collection_description}}</span></td>
-             </tr>
-             <tr>
-                  <td><span class="title2">Personal Message</span><br>
-                       <span class="text">{{user_message}}
-                       </span><br>
-                       <br>
-                    <span class="text">Thanks,</span><br> 
-                    <span class="text">{{website_title}}</span></td>
-             </tr>
-             <tr>
-                  <td bgcolor="#0099cc">copyrights {{date_year}} {{website_title}}</td>
-             </tr>
-        </table>\',
+            <div style="text-align:center;margin-top:10px;margin-bottom:10px;">
+                <a href="{{photo_link}}">
+                    <img src="{{photo_thumb}}" title="{{photo_title}}" alt="Photo thumb"><br/>
+                    {{photo_title}}
+                </a>
+            </div>
+        
+            <div style="margin-bottom:10px;">
+                <b>Photo Description</b> : <br/>
+                {{photo_description}}
+            </div>
+        
+            <div style="margin-bottom:10px;">
+                <b>Personal Message</b> : <br/>
+                {{sender_message}}
+            </div>\',
+            FALSE
+        )';
+        self::query($sql);
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'share_collection\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] {{sender_username}} wants to share a collection with you\',
+            \'<b>{{sender_username}}</b> wants to share a {{collection_type}} collection with you :
+
+            <div style="text-align:center;margin-top:10px;margin-bottom:10px;">
+                <a href="{{collection_link}}">
+                    <img src="{{collection_thumb}}" title="{{collection_title}}" alt="Collection thumb"><br/>
+                    {{collection_title}}
+                </a>
+            </div>
+        
+            <div style="margin-bottom:10px;">
+                <b>Collection Description</b> : <br/>
+                {{collection_description}}
+            </div>
+        
+            <div style="margin-bottom:10px;">
+                <b>Personal Message</b> : <br/>
+                {{sender_message}}
+            </div>\',
             FALSE
         )';
         self::query($sql);
 
 
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'email_verify_template\',
+            \'verify_account\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}]- Account activation email\',
+            \'[{{website_title}}] Email address verification\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            Thanks for registering on <a href="{{baseurl}}">{{website_title}}</a> !<br/>
+            In order to verify your email address, please validate your account by <a href="{{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
+            <br/><br/>
+            If somehow above link isn\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
+            And use your activation code : <b>{{avcode}}</b>
+            <br/><br/>
+            Welcome aboard !\',
+            FALSE
+        )';
+        self::query($sql);
+
+
+        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
+            \'private_message\',
+            ' . $inserted_template . ',
+            FALSE,
+            \'[{{website_title}}] {{sender_username}} has sent you a private message\',
             \'Hello {{user_username}},
-            Thank you for joining {{website_title}}, one last step is required in order to activate your account
-
-            <a href="{{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}">Click Here</a>
-            
-            Email           : {{user_email}}
-            Username        : {{user_username}}
-            Activation code : {{avcode}}
-            
-            if above given is not working , please go here and activate it
-            <a href="{{baseurl}}activation.php">Activate</a>\',
-            FALSE
-        )';
-        self::query($sql);
-
-
-        $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'pm_email_message\',
-            ' . $inserted_template . ',
-            FALSE,
-            \'[{{website_title}}] - {{sender_username}} has sent you a private message\',
-            \'{{sender_username}} has sent you a private message, 
-
-                {{subject}}
-                "{{user_message}}"
-                
-                click here to view your inbox <a href="{{message_link}}">Inbox</a>
-                
-                {{website_title}}\',
+            <br/><br/>
+            <b>{{sender_username}}</b> has sent you a private message :
+            <hr/>
+            Title : <i>{{subject}}</i><br/>
+            "{{sender_message}}"
+            <hr/>
+            Click here to view your inbox <a href="{{message_link}}">Inbox</a>\',
             FALSE
         )';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'avcode_request_template\',
+            \'avcode_request\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{website_title}] - Account activation code request\',
-            \'Hello {{user_username}},
-                
-                Your Activation Code is : {{avcode}}
-                <a   href="{{url}}activation.php?av_username={{user_username}}&avcode={{avcode}}">Click Here</a> To goto Activation Page
-                
-                Direct Activation
-                ==========================================
-                Click Here or Copy & Paste the following link in your browser
-                {{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}
-                
-                if above given links are not working, please go here and activate it
-                
-                Email           : {{user_email}}
-                Username        : {{user_username}}
-                Activation code : {{avcode}}
-                
-                if above given is not working , please go here and activate it
-                <a  href="{{baseurl}}activation.php">{{baseurl}}activation.php</a>
-                
-                ----------------
-                Regards
-                {{website_title}}\',
+            \'[{{website_title}}] Account activation\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            Please validate your account by <a href="{{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
+            <br/><br/>
+            If somehow above link isn\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
+            And use your activation code : <b>{{avcode}}</b>
+            <br/><br/>
+            Welcome aboard !\',
             FALSE
         )';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'welcome_message_template\',
+            \'welcome_message\',
             ' . $inserted_template . ',
             FALSE,
-            \'Welcome {{user_username}} to {{website_title}}\',
-            \'Hello {{user_username}},
-            Thanks for joining at {{website_title}}!, you are now part of our community and we hope you will enjoy your stay
-            
-            All the best,
-            {{website_title}}\',
+            \'[{{website_title}}] Welcome onboard !\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            Welcome to <a href="{{baseurl}}">{{website_title}}</a> !\',
             FALSE
         )';
         self::query($sql);
@@ -663,16 +637,16 @@ class MWIP extends \Migration
             \'password_reset_request\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - Password reset confirmation\',
-            \'Dear {{user_username}}
-            you have requested a password reset, please follow the link in order to reset your password
+            \'[{{website_title}}] Password reset\',
+            \'Dear <b>{{user_username}}</b>,
+            <br/><br/>
+            You have requested a password reset, please follow the link in order to reset your password : <br/>
             <a href="{{reset_password_link}}">Reset my password</a>
-            
-            -----------------------------------------
-            IF YOU HAVE NOT REQUESTED A PASSWORD RESET - PLEASE IGNORE THIS MESSAGE
-            -----------------------------------------
-            Regards
-            {{website_title}}\',
+            <hr/>
+            <div style="text-align:center;font-weight:bold;">
+            If you have not requested a password reset, please ignore this message
+            </div>
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
@@ -681,16 +655,10 @@ class MWIP extends \Migration
             \'password_reset_details\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - Password reset details\',
-            \'Dear {{user_username}}
-                your password has been reset
-                your new password is : {{password}}
-                
-                <a href="{{login_link}}">click here to login to website</a>
-                
-                ---------------
-                Regards
-                {{website_title}}\',
+            \'[{{website_title}}] Password reset details\',
+            \'Dear <b>{{user_username}}</b>,<br/><br/>
+            Your password has been manually reset.<br/>
+            Your new temporary password is : <b>{{password}}</b>\',
             FALSE
         )';
         self::query($sql);
@@ -699,45 +667,44 @@ class MWIP extends \Migration
             \'forgot_username_request\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - your {{website_title}} username\',
-            \'Hello,
-            your {{website_title}} username is : {{user_username}}
-            
-            --------------
-            Regards
-            {{website_title}}\',
+            \'[{{website_title}}] Your username\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            It seems you forgot your username ; here it is : <b>{{user_username}}</b>.\',
             FALSE
         )';
         self::query($sql);
 
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'friend_request_email\',
+            \'friend_request\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] {{sender_username}} add you as friend\',
-            \'Hi {{user_username}},
-            {{sender_username}} added you as a friend on {{website_title}}. We need to confirm that you know {{sender_username}} in order for you to be friends on {{website_title}}.
-            
-            <a href="{{profile_link}}">View profile of {{sender_username}}</a> 
-            <a href="{{request_link}}">click here to respond to friendship request</a>
-            
-            Thanks,
-            {{website_title}} Team\',
+            \'[{{website_title}}] Friend request from {{user_username}}\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            <a href="{{profile_link}}"><b>{{sender_username}}</b></a> sent you a friend request.<br/>
+            <hr/>
+            <div style="text-align:center;">
+            <a href="{{profile_link}}">Click here to view his profile</a><br/><br/>
+            <a href="{{request_link}}"> Click here to respond to friend request</a>
+            </div>
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'friend_confirmation_email\',
+            \'friend_confirmation\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - {{sender_username}} has confirmed you as a friend\',
-            \'Hi {{user_username}},
-            {{sender_username}} confirmed you as a friend on {{website_title}}.
-            
+            \'[{{website_title}}] Friend request confirmation\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            <a href="{{profile_link}}" title="{{sender_username}}">{{sender_username}}</a> confirmed your friend invitation !<br/>
+            <hr/>
+            <div style="text-align:center;">
             <a href="{{profile_link}}">View {{sender_username}} profile</a>
-            
-            Thanks,
-            The {{website_title}} Team\',
+            </div>
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
@@ -746,80 +713,86 @@ class MWIP extends \Migration
             \'contact_form\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}} - Contact] {{subject}} from {{user_username}}\',
-            \'Name : {{user_username}}
-                Email : {{user_email}}
-                Reason : {{subject}}
-                
-                Message:
-                {{user_message}}
-                
-                <hr>
-                date : {{date_time}}\',
+            \'[{{website_title}}] Contact form\',
+            \'<b>Name</b> : {{sender_username}}<br/>
+            <b>Email</b> : {{sender_email}}<br/>
+            <b>Reason</b> : {{subject}}
+            <hr/>
+            <b>Message</b> :<br/>
+            {{sender_message}}
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'video_activation_email\',
+            \'video_activation\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] - Your video has been activated\',
-            \'Hello {{user_username}},
-                Your video has been reviewed and activated by one of our staff, thanks for uploading this video. You can view this video here.
-                {{video_link}}
-                
-                Thanks
-                {{website_title}} Team\',
+            \'[{{website_title}}] Your video has been activated\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            
+            Your video <a href="{{video_link}}" title={{video_title}}>{{video_title}}</a> has been reviewed and activated by one of our staff, thanks for uploading this video.<br/>
+            Watch it <a href="{{video_link}}"><b>here</b></a>.\',
             FALSE
         )';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'user_comment_email\',
+            \'user_comment\',
             ' . $inserted_template . ',
             FALSE,
             \'[{{website_title}}] {{sender_username}} made comment on your {{object}}\',
-            \'{{sender_username}} has commented on your {{object}}
-                "{{user_message}}"
-                
-                <a href="{{comment_link}}">Read comment</a>
-                
-                {{website_title}} team\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            {{sender_username}} has commented on your {{object}} : <br/>
+            "{{sender_message}}"
+            <hr/>
+            <div style="text-align:center;">
+            <a href="{{comment_link}}">View comment</a>
+            </div>
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'user_reply_email\',
+            \'user_reply\',
             ' . $inserted_template . ',
             FALSE,
-            \'[{{website_title}}] {{sender_username}} made reply on your comment\',
-            \'{{sender_username}} has replied on your comment
-                "{{user_message}}"
-                
-                <a href="{{comment_link}}">Read comment</a>
-                
-                {{website_title}} team\',
+            \'[{{website_title}}] {{sender_username}} replied on your comment\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            {{sender_username}} has replied on your comment : <br/>
+            "{{sender_message}}"
+            <hr/>
+            <div style="text-align:center;">
+            <a href="{{comment_link}}">View comment</a>
+            </div>
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
 
         $sql = 'INSERT IGNORE INTO ' . tbl('email') . ' (code, id_email_template, is_deletable, title, content, disabled) VALUE (
-            \'video_subscription_email\',
+            \'video_subscription\',
             ' . $inserted_template . ',
             FALSE,
-            \'{{user}} has uploaded new video on {{website_title}}\',
-            \'Hello {{user_username}}
-
-                You have been notified by {{website_title}} that {{sender_username}} has uploaded new video 
-                
-                Video Title : {{video_title}}
-                Video Description : {{video_description}}
-
-                <a href="{{video_link}}">
-                <img src="{{video_thumb}}" border="0" height="90" width="120"><br>
-                click here to watch this video</a>
-
-                You are notified because you are subscribed to {{sender_username}}, you can manage your subscriptions by going to your account and click on manage subscriptions.
-                {{website_title}}\',
+            \'[{{website_title}}] {{sender_username}} just uploaded a new video\',
+            \'Hello <b>{{user_username}}</b>,
+            <br/><br/>
+            {{sender_username}} just uploaded new video !
+            <br/><br/>
+            <div style="text-align:center;">
+            <a href="{{video_link}}" title="{{video_title}}">
+                    <img src="{{video_thumb}}" border="0" height="90" width="120"><br/>
+                     {{video_title}}
+            </a>
+            </div>
+            <br/>
+            Video Description : {{video_description}}
+            
+            <hr/>
+            <i>You are notified because you subscribed to {{sender_username}}, you can manage your subscriptions by going to your account and click on manage subscriptions.</i>
+            <hr/>\',
             FALSE
         )';
         self::query($sql);
@@ -834,75 +807,93 @@ class MWIP extends \Migration
 
         $sql = 'INSERT IGNORE INTO `' . tbl('email_variable_link') . '` (`id_email`, `id_email_variable`) 
         VALUES
-            ((select id_email from '.tbl('email').' where code = \'share_video_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'share_video_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_description\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'share_video_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_link\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'share_video_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_thumb\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'share_video_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_video\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_video\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_description\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_video\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_video\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_title\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_video\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_thumb\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_video\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'photo_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'photo_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'photo_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_description\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'photo_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_link\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'photo_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_title\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'photo_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_thumb\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_photo\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_photo\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_photo\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_description\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_photo\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_photo\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_title\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_photo\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'photo_thumb\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_link\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_link\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_title\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_thumb\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'total_items\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_type\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_description\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'collection_share_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_title\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_thumb\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'total_items\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_type\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'collection_description\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'share_collection\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'email_verify_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'avcode\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'verify_account\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'avcode\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'pm_email_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'pm_email_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'subject\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'pm_email_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'pm_email_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'message_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'private_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'private_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'subject\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'private_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'private_message\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'message_link\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'avcode_request_template\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'avcode\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'avcode_request\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'avcode\' limit 1)),
             
             ((select id_email from '.tbl('email').' where code = \'password_reset_request\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'reset_password_link\' limit 1)),
             
             ((select id_email from '.tbl('email').' where code = \'password_reset_details\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'password\' limit 1)),
             ((select id_email from '.tbl('email').' where code = \'password_reset_details\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'login_link\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'friend_request_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'friend_request_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'profile_link\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'friend_request_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'request_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'friend_request\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'friend_request\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'profile_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'friend_request\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'request_link\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'friend_confirmation_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'friend_confirmation_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'profile_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'friend_confirmation\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'friend_confirmation\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'profile_link\' limit 1)),
             
             ((select id_email from '.tbl('email').' where code = \'contact_form\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'subject\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'contact_form\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'contact_form\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'contact_form\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'contact_form\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_email\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'video_activation_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'video_activation\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'video_activation\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_title\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'user_comment_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'user_comment_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'object\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'user_comment_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'user_comment_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_comment\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_comment\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'object\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_comment\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_comment\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'user_reply_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'user_reply_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'user_message\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'user_reply_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'comment_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_reply\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_reply\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_message\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'user_reply\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'comment_link\' limit 1)),
             
-            ((select id_email from '.tbl('email').' where code = \'video_subscription_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_title\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'video_subscription_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_description\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'video_subscription_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_link\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'video_subscription_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_thumb\' limit 1)),
-            ((select id_email from '.tbl('email').' where code = \'video_subscription_email\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1));
+            ((select id_email from '.tbl('email').' where code = \'video_subscription\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_title\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'video_subscription\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_description\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'video_subscription\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_link\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'video_subscription\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'video_thumb\' limit 1)),
+            ((select id_email from '.tbl('email').' where code = \'video_subscription\' limit 1), (select id_email_variable from '.tbl('email_variable').' where code = \'sender_username\' limit 1));
         ';
         self::query($sql);
 
         self::generateTranslation('email_specific', [
             'fr'=>'Spécifique à l\'email',
             'en'=>'Email specific'
+        ]);
+
+        self::generateTranslation('title_email_variables', [
+            'fr'=>'Variables utilisables dans l\'email',
+            'en'=>'Usable variables in email'
+        ]);
+
+        self::generateTranslation('tips_email_variables', [
+            'fr'=>'Les variables doivent être placées entre doubles accolades, par exemple : {{website_title}}',
+            'en'=>'Variables must be placed into double braces, per example : {{website_title}}'
+        ]);
+
+        self::alterTable('ALTER TABLE `{tbl_prefix}email_templates` DROP `email_template_allowed_tags`', [
+            'table' => 'email_templates',
+            'column' =>'email_template_allowed_tags'
         ]);
     }
 }

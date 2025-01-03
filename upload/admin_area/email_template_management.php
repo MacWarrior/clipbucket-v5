@@ -1,10 +1,8 @@
 <?php
-define('THIS_PAGE', 'photo_manager');
-
+define('THIS_PAGE', 'email_template_management');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('photos_moderation', true);
-pages::getInstance()->page_redir();
+User::getInstance()->hasPermissionOrRedirect('email_template_management');
 
 /* Generating breadcrumb */
 global $breadcrumb;

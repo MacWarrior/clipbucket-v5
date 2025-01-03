@@ -85,7 +85,7 @@ class cb_pm
     /**
      * Default Template
      */
-    var $email_template = 'pm_email_message';
+    var $email_template = 'private_message';
 
     //Attachment functions
     var $pm_attachments = ['attach_video'];
