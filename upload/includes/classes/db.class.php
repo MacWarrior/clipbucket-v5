@@ -453,8 +453,8 @@ class Clipbucket_db
             } else {
                 $val = $this->clean_var($value);
             }
-            if (strtoupper($val) == 'NULL') {
-                $values_query .= 'NULL';
+            if( in_array(strtoupper($val), ['NULL', 'NOW()']) ){
+                $values_query .= strtoupper($val);
             } else {
                 $needle = substr($val, 0, 3);
                 if ($needle == '|f|') {
@@ -540,7 +540,7 @@ class Clipbucket_db
                 error_log('SQL : ' . $query);
                 error_log('ERROR : ' . $this->getError());
                 error_log(debug_backtrace_string());
-                DiscordLog::sendDump('SQL : ' . $query);
+                DiscordLog::sendDump('SQL : ```' . $query . '```');
                 DiscordLog::sendDump('ERROR : ' . $this->getError());
                 DiscordLog::sendDump(debug_backtrace_string());
             } else {

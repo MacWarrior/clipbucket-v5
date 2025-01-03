@@ -765,12 +765,12 @@ class CBPhotos
     function set_share_email($data)
     {
         $this->share_email_vars = [
-            '{photo_title}'       => $data['photo_title'],
-            '{photo_description}' => $data['photo_description'],
-            '{photo_link}'        => $this->collection->collection_links($data, 'view_item'),
-            '{photo_thumb}'       => $this->get_image_file($data['photo_id'], 'm')
+            'photo_description' => $data['photo_description'],
+            'photo_title'       => $data['photo_title'],
+            'photo_link'        => $this->collection->collection_links($data, 'view_item'),
+            'photo_thumb'       => $this->get_image_file($data['photo_id'], 'm')
         ];
-        $this->action->share_template_name = 'photo_share_template';
+        $this->action->share_template_name = 'share_photo';
         $this->action->val_array = $this->share_email_vars;
     }
 

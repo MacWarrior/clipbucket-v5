@@ -85,7 +85,7 @@ class cb_pm
     /**
      * Default Template
      */
-    var $email_template = 'pm_email_message';
+    var $email_template = 'private_message';
 
     //Attachment functions
     var $pm_attachments = ['attach_video'];
@@ -509,7 +509,6 @@ class cb_pm
      */
     function send_pm_email($array)
     {
-        global $cbemail, $userquery;
         $sender = userquery::getInstance()->get_user_field_only($array['from'], 'username');
         $content = mysql_clean($array['content']);
         $subject = mysql_clean($array['subj']);
@@ -518,17 +517,13 @@ class cb_pm
         $emails = $this->get_users_emails($array['to']);
 
         $vars = [
-            '{sender}'  => $sender,
-            '{content}' => $content,
-            '{subject}' => $subject,
-            '{msg_id}'  => $msgid
+            'sender_username'  => $sender,
+            'user_message' => $content,
+            'subject' => $subject,
+            'message_link'  => get_server_url() . 'private_message.php?mode=inbox&mid='.$msgid
         ];
 
-        $tpl = $cbemail->get_template($this->email_template);
-        $subj = $cbemail->replace($tpl['email_template_subject'], $vars);
-        $msg = $cbemail->replace($tpl['email_template'], $vars);
-
-        cbmail(['to' => $emails, 'from' => WEBSITE_EMAIL, 'subject' => $subj, 'content' => $msg, 'nl2br' => true]);
+        EmailTemplate::sendMail($this->email_template, $emails, $vars);
     }
 
     /**
