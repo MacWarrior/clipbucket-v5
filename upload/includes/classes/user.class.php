@@ -918,9 +918,6 @@ class userquery extends CBCategory
 
         define('AVATAR_SIZE', config('max_profile_pic_width'));
         define('AVATAR_SMALL_SIZE', 40);
-        define('BG_SIZE', config('max_bg_width'));
-        define('BACKGROUND_URL', config('background_url'));
-        define('BACKGROUND_COLOR', config('background_color'));
         if (isSectionEnabled('channels')) {
             ClipBucket::getInstance()->search_types['channels'] = 'userquery';
         }
@@ -2196,11 +2193,11 @@ class userquery extends CBCategory
             return DirPath::getUrl('backgrounds') . $file;
         }
 
-        if (!empty($udetails['background_url']) && BACKGROUND_URL == 'yes') {
+        if (!empty($udetails['background_url']) && config('background_url') == 'yes') {
             return $udetails['background_url'];
         }
 
-        if (!empty($udetails['background_color']) && BACKGROUND_COLOR == 'yes' && $check) {
+        if (!empty($udetails['background_color']) && config('background_color') == 'yes' && $check) {
             return true;
         }
 
@@ -2761,7 +2758,7 @@ class userquery extends CBCategory
             $udetails = $this->get_user_details($array['userid']);
 
             $file = DirPath::get('avatars') . $udetails['avatar'];
-            if (file_exists($file) && $udetails['avatar'] != '') {
+            if( file_exists($file) && empty($udetails['avatar_url']) ){
                 unlink($file);
             }
 
@@ -2769,7 +2766,7 @@ class userquery extends CBCategory
             $uquery_val[] = '';
         } else {
             if (!empty($_FILES['avatar_file']['name'])) {
-                $file = $Upload->upload_user_file('a', $_FILES['avatar_file'], $array['userid']);
+                $file = $Upload->upload_user_file('avatar', $_FILES['avatar_file'], $array['userid']);
                 if ($file) {
                     $uquery_field[] = 'avatar';
                     $uquery_val[] = $file;
@@ -2799,7 +2796,7 @@ class userquery extends CBCategory
         }
 
         if (!empty($_FILES['background_file']['name'])) {
-            $file = $Upload->upload_user_file('b', $_FILES['background_file'], $array['userid']);
+            $file = $Upload->upload_user_file('background', $_FILES['background_file'], $array['userid']);
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;
@@ -2868,14 +2865,12 @@ class userquery extends CBCategory
      */
     function update_user_avatar_bg($array)
     {
-        global $Upload;
-
         //Deleting User Avatar
         if ($array['delete_avatar'] == 'yes') {
             $udetails = $this->get_user_details(user_id());
 
-            $file = DirPath::get('avatars') . $udetails['avatar_url'];
-            if (file_exists($file) && $udetails['avatar_url'] != '') {
+            $file = DirPath::get('avatars') . $udetails['avatar'];
+            if( file_exists($file) ){
                 unlink($file);
             }
 
@@ -2886,13 +2881,17 @@ class userquery extends CBCategory
             $uquery_val[] = '';
         } else {
             if (config('picture_url') == 'yes') {
-                //Updating User Avatar
-                $uquery_field[] = 'avatar_url';
-                $uquery_val[] = $array['avatar_url'];
+                if( filter_var($array['avatar_url'], FILTER_VALIDATE_URL) || empty($array['avatar_url']) ){
+                    //Updating User Avatar
+                    $uquery_field[] = 'avatar_url';
+                    $uquery_val[] = $array['avatar_url'];
+                } else {
+                    e(lang('incorrect_url'));
+                }
             }
 
-            if (isset($_FILES['avatar_file']['name'])) {
-                $file = $Upload->upload_user_file('a', $_FILES['avatar_file'], user_id());
+            if( !empty($_FILES['avatar_file']['name']) ){
+                $file = Upload::getInstance()->upload_user_file('avatar', $_FILES['avatar_file'], user_id());
                 if ($file) {
                     $uquery_field[] = 'avatar';
                     $uquery_val[] = $file;
@@ -2900,15 +2899,21 @@ class userquery extends CBCategory
             }
         }
 
+
+        /* TODO : Re-implement background edition interface or delete this
         //Deleting User Bg
         if ($array['delete_bg'] == 'yes') {
             User::getInstance()->delBackground($array['userid']);
         }
 
         if (config('background_url') == 'yes') {
-            //Updating User Background
-            $uquery_field[] = 'background_url';
-            $uquery_val[] = $array['background_url'];
+            if( filter_var($array['background_url'], FILTER_VALIDATE_URL) || empty($array['background_url']) ){
+                //Updating User Background
+                $uquery_field[] = 'background_url';
+                $uquery_val[] = $array['background_url'];
+            } else {
+                e(lang('incorrect_url'));
+            }
         }
 
         $uquery_field[] = 'background_color';
@@ -2918,9 +2923,10 @@ class userquery extends CBCategory
             $uquery_field[] = 'background_repeat';
             $uquery_val[] = $array['background_repeat'];
         }
+        */
 
-        if (isset($_FILES['background_file']['name'])) {
-            $file = $Upload->upload_user_file('b', $_FILES['background_file'], user_id());
+        if( !empty($_FILES['background_file']['name']) ){
+            $file = $Upload->upload_user_file('background', $_FILES['background_file'], user_id());
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"236",
+  "revision":"237",
   "status":"dev",
   "detail":[
     {
@@ -215,6 +215,7 @@
         ,"Fix anonymous comments form"
         ,"Fix collection creation on photo upload form"
         ,"Fix video title overflow"
+        ,"Fix possible arbitrary file deletion (Thanks @kawing-ho !)"
       ]
     },
     {
