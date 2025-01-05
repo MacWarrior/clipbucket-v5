@@ -16,20 +16,6 @@ $breadcrumb[1] = [
     'url'   => DirPath::getUrl('admin_area') . 'system_info.php'
 ];
 
-$isNginx = System::is_nginx();
-$can_access_nginx = false;
-$client_max_body_size = '';
-$client_max_body_size_mb = '';
-if ($isNginx) {
-    $client_max_body_size = System::get_nginx_config('client_max_body_size');
-    if (empty($client_max_body_size)) {
-        $can_access_nginx = false;
-    } else {
-        $client_max_body_size_mb = (int)$client_max_body_size * pow(1024, stripos('KMGT', strtoupper(substr($client_max_body_size, -1)))) / 1024;
-        $can_access_nginx = true;
-    }
-}
-
 //HOSTING
 assign('is_cloudflare', Network::is_cloudflare());
 assign('cloudflare_upload_limit', config('cloudflare_upload_limit'));
@@ -55,12 +41,30 @@ $upload_max_size_ok = $upload_max_filesize_mb >= config('max_upload_size') || ($
 assign('upload_max_size_ok', $upload_max_size_ok);
 $memory_limit = ini_get('memory_limit');
 assign('memory_limit', $memory_limit);
-$memory_limit_ok = getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M');
+$memory_limit_ok = (getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M') || $memory_limit == -1);
 assign('memory_limit_ok', $memory_limit_ok);
 $max_execution_time = ini_get('max_execution_time');
-$max_execution_time_ok = $max_execution_time >= 7200;
+$max_execution_time_ok = $max_execution_time >= 7200 || $max_execution_time == 0;
 assign('max_execution_time', $max_execution_time);
 assign('max_execution_time_ok', $max_execution_time_ok);
+
+$isNginx = System::is_nginx();
+$can_access_nginx = false;
+$client_max_body_size = '';
+$client_max_body_size_mb = '';
+if ($isNginx) {
+    $client_max_body_size = System::get_nginx_config('client_max_body_size');
+    if (empty($client_max_body_size)) {
+        $can_access_nginx = false;
+    } else {
+        $client_max_body_size_mb = (int)$client_max_body_size * pow(1024, stripos('KMGT', strtoupper(substr($client_max_body_size, -1)))) / 1024;
+        $can_access_nginx = true;
+
+        $client_max_body_size_ok = ($client_max_body_size_mb <= $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb <= $client_max_body_size_mb));
+        assign('client_max_body_size_ok', $client_max_body_size_ok);
+    }
+}
+
 
 $phpWebExec = System::check_php_function('exec', 'web', false);
 assign('phpWebExec',$phpWebExec);
@@ -97,7 +101,7 @@ $check_time_cli = System::isDateTimeSynchro($datetime_datas_cli, $current_dateti
 assign('check_time_cli', $check_time_cli);
 assign('datetime_datas_cli', $datetime_datas_cli);
 
-assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpWebSSE && $phpCliExec && $phpCliShellExec && $check_time_cli && $check_ffi_cli && $check_ffi_web));
+assign('hosting_ok', ($max_upload_size_ok && $upload_max_size_ok && $memory_limit_ok && $max_execution_time_ok && $phpWebExec && $phpWebShellExec && $phpCliExec && $phpCliShellExec && $check_time_cli && $check_ffi_cli && $check_ffi_web));
 
 //SERVICES
 $phpVersionReq = '7.0.0';

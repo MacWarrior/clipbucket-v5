@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"235",
+  "revision":"236",
   "status":"dev",
   "detail":[
     {
@@ -342,10 +342,12 @@
       "title": "External components",
       "description": [
         "Update VideoJS to version 8.21.1"
-        ,"Update Windows installation script MariaDB to 11.6.0"
-        ,"Update Windows installation script PHP to 8.3.12"
-        ,"Update Windows installation script FFMpeg to 7.0.2"
-        ,"Update Windows installation script MediaInfo to 24.06"
+        ,"Update Windows installation script MariaDB to 11.7.1"
+        ,"Update Windows installation script PHP to 8.4.1"
+        ,"Update Windows installation script FFMpeg to 7.1"
+        ,"Update Windows installation script MediaInfo to 24.11"
+        ,"Update Windows installation script Nginx to 1.27.3"
+        ,"Update Windows installation script Git to 2.47.1"
         ,"Update FontAwesome to 4.7.0"
         ,"Update PhpMailer to 6.9.3"
       ]
