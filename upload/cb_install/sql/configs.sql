@@ -315,7 +315,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'video_enable_nsfw_check', 'no'),
     (NULL, 'photo_nsfw_check_model', 'nudity+nsfw'),
     (NULL, 'video_nsfw_check_model', 'nudity+nsfw'),
-    (NULL, 'number_featured_video', '20'),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 
