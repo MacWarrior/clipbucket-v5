@@ -40,15 +40,13 @@
                     <div class="row">
                         <div class="col-md-10 col-md-offset-1">
                             <div class="alignCenter well">
-                                <img src="{$cbtpl->get_preview_thumb($curtpl.dir)}" class="img-thumbnail" >
+                                <img src="{$cbtpl->get_preview_thumb($curtpl.dir)}" class="img-thumbnail">
                                 <h3>{$template.name}</h3>
                                 <em>
                                     {$template.name} <br /><em>by <strong>{$template.author}</strong></em>
                                 </em>
                                 <p>Website : <a href="{$template.website.link}">{$template.website.title}</a></p>
                                 <a href="templates.php?change={$template.dir}">Activate This Template</a>
-                                <a href="/?template={$template.dir}" target="_blank">Preview</a>
-                                <a href="/?template={$template.dir}&amp;set_template=yes" target="_blank">Preview &amp; Activate</a>
                             </div>
                         </div>
                     </div>

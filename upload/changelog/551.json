@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"237",
+  "revision":"238",
   "status":"dev",
   "detail":[
     {
@@ -216,6 +216,7 @@
         ,"Fix collection creation on photo upload form"
         ,"Fix video title overflow"
         ,"Fix possible arbitrary file deletion (Thanks @kawing-ho !)"
+        ,"Fix possible unauthenticated template change (Thanks @kawing-ho !)"
       ]
     },
     {

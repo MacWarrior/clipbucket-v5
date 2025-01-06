@@ -2,6 +2,11 @@
 
 class CBTemplate
 {
+    public static function getInstance(){
+        global $cbtpl;
+        return $cbtpl;
+    }
+
     /**
      * Function used to set Smarty Functions
      */
