@@ -19,7 +19,8 @@ assign('memberships', $memberships);
 $totals_pages = count_pages(Membership::getInstance()->getAllHistoMembershipForUser($params), config('video_list_view_video_history')) ;
 
 $available_memberships = Membership::getInstance()->getAll([
-    'is_disabled'   => false
+    'is_disabled'       => false,
+    'not_user_level_id' => UserLevel::getDefaultId()
 ]);
 $can_renew_membership = false;
 foreach ($available_memberships as $key => $available_membership) {
@@ -38,6 +39,6 @@ foreach ($available_memberships as $key => $available_membership) {
 subtitle(lang('user_manage_my_account'));
 assign('available_memberships', $available_memberships);
 assign('can_renew_membership', $can_renew_membership);
-
 template_files('manage_membership.html');
+
 display_it();

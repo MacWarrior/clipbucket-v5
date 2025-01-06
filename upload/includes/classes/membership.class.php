@@ -91,6 +91,7 @@ class Membership
         $param_count = $params['count'] ?? false;
         $param_limit = $params['limit'] ?? false;
         $param_user_level_id = $params['user_level_id'] ?? false;
+        $param_not_user_level_id = $params['not_user_level_id'] ?? false;
         $param_id_membership = $params['id_membership'] ?? false;
         $param_ids_membership = $params['ids_membership'] ?? false;
         $param_not_id_membership = $params['not_id_membership'] ?? false;
@@ -121,6 +122,9 @@ class Membership
         }
         if ($param_user_level_id !== false) {
             $conditions[] = $this->tablename . '.user_level_id = \'' . mysql_clean($param_user_level_id) . '\'';
+        }
+        if ($param_not_user_level_id !== false) {
+            $conditions[] = $this->tablename . '.user_level_id != \'' . mysql_clean($param_not_user_level_id) . '\'';
         }
         if ($param_frequency !== false) {
             $conditions[] = $this->tablename . '.frequency = \'' . mysql_clean($param_frequency) . '\'';
