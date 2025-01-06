@@ -135,6 +135,10 @@ if (isset($_POST['update'])) {
         , 'enable_access_view_video_history'
         , 'enable_visual_editor_comments'
         , 'display_featured_video'
+        , 'photo_enable_nsfw_check'
+        , 'video_enable_nsfw_check'
+        , 'photo_nsfw_check_model'
+        , 'video_nsfw_check_model'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -468,6 +472,11 @@ if (isset($_POST['update'])) {
         'limit_photo_related',
         'display_featured_video',
         'featured_video_style',
+        'number_featured_video',
+        'photo_enable_nsfw_check',
+        'video_enable_nsfw_check',
+        'photo_nsfw_check_model',
+        'video_nsfw_check_model',
         'number_featured_video',
         'video_list_view_video_history',
         'enable_membership',

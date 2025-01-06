@@ -1558,6 +1558,8 @@ h1 {
   line-height: 25px;
   margin: 0 0 16px;
   font-family: "source_sans_prosemibold", sans-serif;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .view-details header.details .user-video-info,

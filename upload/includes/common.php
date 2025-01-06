@@ -92,6 +92,7 @@ require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
+require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'membership.class.php';
 
 $cb_columns = new cb_columns();

@@ -77,12 +77,12 @@ switch ($mode) {
         $targetFile = DirPath::get('temp') . $file_name;
 
         $params = [
-            'fileData' => 'Filedata',
-            'mimeType' => 'video',
+            'fileData'            => 'Filedata',
+            'mimeType'            => 'video',
             'destinationFilePath' => $targetFile,
-            'keepExtension' => true,
-            'maxFileSize' => config('max_upload_size'),
-            'allowedExtensions' => config('allowed_video_types')
+            'keepExtension'       => true,
+            'maxFileSize'         => config('max_upload_size'),
+            'allowedExtensions'   => config('allowed_video_types')
         ];
 
         FileUpload::getInstance($params)->processUpload();
@@ -96,8 +96,8 @@ switch ($mode) {
 
         $log = new SLog($logFile);
         $log->newSection('Pre-Check Configurations');
-        $log->writeLine('File to be converted', 'Initializing File <strong>' . $file_name . '.mp4</strong> and pre checking configurations...', true);
-        $log->writeLine('Temporary Uploading', 'File Uploaded to Temp directory successfully and video conversion file is being executed !');
+        $log->writeLine(date('Y-m-d H:i:s').' - Initializing File ' . $file_name . '.mp4 and pre checking configurations...');
+        $log->writeLine(date('Y-m-d H:i:s').' - File Uploaded to Temp directory successfully and video conversion file is being executed !');
 
         $filename_without_ext = pathinfo($original_filename, PATHINFO_FILENAME);
         if (strlen($filename_without_ext) > config('max_video_title')) {
@@ -150,8 +150,7 @@ switch ($mode) {
         }
         exec($default_cmd . $complement);
 
-        $TempLogData = 'Video Converson File executed successfully with Target File > ' . $DestinationFilePath;
-        $log->writeLine('Video Conversion File Execution', $TempLogData);
+        $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);
 
         echo json_encode(['success' => 'yes', 'file_name' => $file_name, 'videoid'=>$vid]);
         die();

@@ -9,48 +9,7 @@ class System{
     {
         switch($type){
             case 'php_web':
-                ob_start();
-                phpinfo(INFO_MODULES);
-                $s = ob_get_contents();
-                ob_end_clean();
-
-                $s = strip_tags($s, '<h2><th><td>');
-                $s = preg_replace('/<th[^>]*>([^<]+)<\/th>/', "<info>\\1</info>", $s);
-                $s = preg_replace('/<td[^>]*>([^<]+)<\/td>/', "<info>\\1</info>", $s);
-                $vTmp = preg_split('/(<h2>[^<]+<\/h2>)/', $s, -1, PREG_SPLIT_DELIM_CAPTURE);
-                $vModules = [];
-                for ($i = 1; $i < count($vTmp); $i++) {
-                    if (preg_match('/<h2>([^<]+)<\/h2>/', $vTmp[$i], $vMat)) {
-                        $vName = trim($vMat[1]);
-                        $vTmp2 = explode("\n", $vTmp[$i + 1]);
-                        foreach ($vTmp2 as $vOne) {
-                            $vPat = '<info>([^<]+)<\/info>';
-                            $vPat3 = "/$vPat\s*$vPat\s*$vPat/";
-                            $vPat2 = "/$vPat\s*$vPat/";
-                            if (preg_match($vPat3, $vOne, $vMat)) { // 3cols
-                                $vModules[$vName][trim($vMat[1])] = [
-                                    trim($vMat[2]),
-                                    trim($vMat[3])
-                                ];
-                            } elseif (preg_match($vPat2, $vOne, $vMat)) { // 2cols
-                                $vModules[$vName][trim($vMat[1])] = trim($vMat[2]);
-                            }
-                        }
-                    }
-                }
-
-                $regex_version = '(\d+\.\d+\.\d+)';
-                $php_extensions = self::get_php_extensions_list();
-                foreach($php_extensions as $key => $extension){
-                    foreach($extension['version_tags'] as $tag){
-                        if (!empty($vModules[$key][$tag]) && empty(self::$extensionsWeb[$key])) {
-                            $matches = [];
-                            preg_match($regex_version, $vModules[$key][$tag], $matches);
-                            self::$extensionsWeb[$key] = $matches[0]??$vModules[$key][$tag];
-                        }
-                    }
-                }
-
+                self::$extensionsWeb = array_map('strtolower', get_loaded_extensions());
                 break;
 
             case 'php_cli':
@@ -61,7 +20,7 @@ class System{
 
                 $regex_version = '(\d+\.\d+\.\d+)';
                 $php_extensions = self::get_php_extensions_list();
-                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime'];
+                $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime', 'ffi.enable'];
 
                 foreach ($php_cli_info as $line) {
                     if (strpos($line, 'PHP Version') !== false) {
@@ -82,14 +41,10 @@ class System{
                         }
                     }
 
-                    foreach($php_extensions as $key => $extension){
-                        foreach($extension['version_tags'] as $tag){
+                    foreach($php_extensions as $key => $extension) {
+                        foreach ($extension['version_tags'] as $tag) {
                             if (strpos($line, $tag) !== false) {
-                                $line = explode('=>', $line);
-                                $tmp_version  = trim(end($line));
-
-                                preg_match($regex_version, $tmp_version, $match_version);
-                                self::$extensionsCli[$key] = $match_version[0] ?? $tmp_version;
+                                self::$extensionsCli[$key] = $key;
 
                                 continue 3;
                             }
@@ -112,30 +67,37 @@ class System{
             'gd' => [
                 'display' => 'GD'
                 ,'version_tags' => ['GD library Version','GD Version']
+                ,'required' => true
             ],
             'mbstring' => [
                 'display' => 'MBstring'
                 ,'version_tags' => ['libmbfl version']
+                ,'required' => true
             ],
             'mysqli' => [
                 'display' => 'MySQLi'
                 ,'version_tags' => ['Client API library version']
+                ,'required' => true
             ],
             'xml' => [
                 'display' => 'XML'
                 ,'version_tags' => ['libxml2 Version']
+                ,'required' => true
             ],
             'curl' => [
                 'display' => 'cURL'
                 ,'version_tags' => ['cURL Information']
+                ,'required' => true
             ],
             'openssl' => [
                 'display' => 'OpenSSL'
                 ,'version_tags' => ['OpenSSL Library Version']
+                ,'required' => true
             ],
             'fileinfo' => [
                 'display' => 'Fileinfo'
                 ,'version_tags' => ['fileinfo support']
+                ,'required' => true
             ]
         ];
     }
