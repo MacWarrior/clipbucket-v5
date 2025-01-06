@@ -1446,4 +1446,6 @@ VALUES ('admin_setting'),
        ('only_visible_eligible'),
        ('email_is_not_valid'),
        ('allow_public_video_page'),
-       ('allow_public_video_page_desc');
+       ('allow_public_video_page_desc'),
+       ('membership_cant_be_configured_for_default_user_level'),
+       ('default_user_cant_have_membership');

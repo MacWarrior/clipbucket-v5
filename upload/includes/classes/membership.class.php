@@ -430,6 +430,7 @@ class Membership
             ]));
             return false;
         }
+
         foreach ($fields as $field => &$value) {
             $value = mysql_clean($value);
             switch ($field) {
@@ -468,6 +469,12 @@ class Membership
                         }
                     }
                     $value = '\'' . $value . '\'';
+                    break;
+                case 'user_level_id':
+                    if ($value == UserLevel::getDefaultId()) {
+                        e(lang('membership_cant_be_configured_for_default_user_level'));
+                        return false;
+                    }
                     break;
                 default:
                     break;

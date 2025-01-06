@@ -1,10 +1,10 @@
-INSERT INTO `{tbl_prefix}user_levels` (`user_level_id`, `user_level_active`, `user_level_name`, `user_level_is_default`)
-VALUES (1, 'yes', 'Administrator', 'yes'),
-       (2, 'yes', 'Registered User', 'yes'),
-       (3, 'yes', 'Inactive User', 'yes'),
-       (4, 'yes', 'Guest', 'yes'),
-       (5, 'yes', 'Global Moderator', 'yes'),
-       (6, 'no', 'Anonymous', 'yes');
+INSERT INTO `{tbl_prefix}user_levels` (`user_level_id`, `user_level_active`, `user_level_name`, `user_level_is_origin`, `user_level_is_default`)
+VALUES (1, 'yes', 'Administrator', 'yes', 'no'),
+       (2, 'yes', 'Registered User', 'yes', 'yes'),
+       (3, 'yes', 'Inactive User', 'yes', 'no'),
+       (4, 'yes', 'Guest', 'yes', 'no'),
+       (5, 'yes', 'Global Moderator', 'yes', 'no'),
+       (6, 'no', 'Anonymous', 'yes', 'no');
 
 
 INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_desc`) VALUES

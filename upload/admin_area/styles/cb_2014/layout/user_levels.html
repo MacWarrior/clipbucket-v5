@@ -29,7 +29,7 @@
                         </button>
                         <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                             <li><a role="menuitem" tabindex="-1" href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a></li>
-                            {if  $levels[l].user_level_is_default !=yes}
+                            {if  $levels[l].user_level_is_origin !=yes}
                                 <li><a class="delete pointer" data-id="{$levels[l].user_level_id}" data-confirm="{if $levels[l].has_users}1{else}0{/if}">{lang code='delete'}</a></li>
                             {/if}
                         </ul>
@@ -46,8 +46,15 @@
     <form method="post">
         <h3>User Level Details</h3>
         <div class="form-group">
-            <label for="level_name2">Level name</label>
-            <input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name}"/>
+            <div class="row">
+                <label for="level_name">Level name</label>
+                <input class="form-control" name="level_name" type="text" id="level_name" value="{$level_details.user_level_name}"/>
+            </div>
+            <div class="row">
+                <label for="user_level_is_default">{lang('default')}</label>
+                <input type="checkbox" name="user_level_is_default" id="user_level_is_default" value="yes" {if $level_details.user_level_is_default==yes}checked{/if} class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                <span class="lbl"></span>
+            </div>
         </div>
         <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         {assign var='types' value=$userquery->get_level_types()}

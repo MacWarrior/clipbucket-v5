@@ -231,8 +231,8 @@ class MWIP extends \Migration
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;';
         self::query($sql);
         self::alterTable('ALTER TABLE `' . tbl('user_memberships_transactions') . '` ADD CONSTRAINT `pkey_user_memberships_transactions` PRIMARY KEY (`id_user_membership`, `id_paypal_transaction`);', [
-            'table' => 'user_memberships_transactions',
-            'columns'=>[
+            'table'   => 'user_memberships_transactions',
+            'columns' => [
                 'id_user_membership',
                 'id_paypal_transaction',
             ]
@@ -423,170 +423,195 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('user_level_frequency_already_exist', [
-            'fr'=>'La combinaison %s / %s existe déjà',
-            'en'=>'Combinaison %s / %s already exist'
+            'fr' => 'La combinaison %s / %s existe déjà',
+            'en' => 'Combinaison %s / %s already exist'
         ]);
 
         self::generateTranslation('current_membership', [
-            'fr'=>'Abonnement actuel',
-            'en'=>'Current membership'
+            'fr' => 'Abonnement actuel',
+            'en' => 'Current membership'
         ]);
 
         self::generateTranslation('membership_history', [
-            'fr'=>'Historique des abonnements',
-            'en'=>'Membership history'
+            'fr' => 'Historique des abonnements',
+            'en' => 'Membership history'
         ]);
 
         self::generateTranslation('never', [
-            'fr'=>'Jamais',
-            'en'=>'Never'
+            'fr' => 'Jamais',
+            'en' => 'Never'
         ]);
 
         self::updateTranslation('com_manage_subs', [
-            'fr'=>'Gestion des abonnements de chaîne',
-            'en'=>'Manage channels subscriptions'
+            'fr' => 'Gestion des abonnements de chaîne',
+            'en' => 'Manage channels subscriptions'
         ]);
 
         self::generateTranslation('status', [
-            'fr'=>'Statut',
-            'en'=>'Status'
+            'fr' => 'Statut',
+            'en' => 'Status'
         ]);
 
         self::generateTranslation('search_results_per_page', [
-            'fr'=>'Résultats de recherche par page',
-            'en'=>'Search results per page'
+            'fr' => 'Résultats de recherche par page',
+            'en' => 'Search results per page'
         ]);
 
         self::generateTranslation('enable_public_video_page', [
-            'fr'=>'Activer la page de vidéos publiques',
-            'en'=>'Enable public video page'
+            'fr' => 'Activer la page de vidéos publiques',
+            'en' => 'Enable public video page'
         ]);
         self::generateTranslation('enable_public_video_page_tips', [
-            'fr'=>'Sépare les vidéos publiques dans une page dédiée',
-            'en'=>'Separate public video to a dedicated page'
+            'fr' => 'Sépare les vidéos publiques dans une page dédiée',
+            'en' => 'Separate public video to a dedicated page'
         ]);
 
         self::generateConfig('enable_public_video_page', 'no');
 
         self::generatePermission(1, 'allow_public_video_page', 'allow_public_video_page_desc', [
-            1=>'no',
-            2=>'no',
-            3=>'no',
-            4=>'yes',
-            5=>'yes',
-            6=>'no'
+            1 => 'no',
+            2 => 'no',
+            3 => 'no',
+            4 => 'yes',
+            5 => 'yes',
+            6 => 'no'
         ]);
 
         self::generatePermission(4, 'default_homepage', 'default_homepage_desc', [
-            1=>'homepage',
-            2=>'homepage',
-            3=>'homepage',
-            4=>'homepage',
-            5=>'homepage',
-            6=>'homepage'
+            1 => 'homepage',
+            2 => 'homepage',
+            3 => 'homepage',
+            4 => 'homepage',
+            5 => 'homepage',
+            6 => 'homepage'
         ]);
 
         self::generateTranslation('public_videos', [
-            'fr'=>'Vidéos publiques',
-            'en'=>'Public videos'
+            'fr' => 'Vidéos publiques',
+            'en' => 'Public videos'
         ]);
 
         self::generateTranslation('level_del_sucess_no_user', [
-            'fr'=>'Le niveau d\'utilisateur a été supprimé',
-            'en'=>'User level has been deleted'
+            'fr' => 'Le niveau d\'utilisateur a été supprimé',
+            'en' => 'User level has been deleted'
         ]);
 
         self::generateTranslation('level_del_sucess', [
-            'fr'=>'Le niveau d\'utilisateur a bien été supprimé, tous les utilisateurs de ce niveau ont été transféré vers %s'
+            'fr' => 'Le niveau d\'utilisateur a bien été supprimé, tous les utilisateurs de ce niveau ont été transféré vers %s'
         ]);
 
         self::generateTranslation('available_memberships', [
-            'fr'=>'Abonnement disponibles',
-            'en'=>'Available memberships'
+            'fr' => 'Abonnement disponibles',
+            'en' => 'Available memberships'
         ]);
 
         self::generateTranslation('renew_membership', [
-            'fr'=>'Renouvellement mon abonnement',
-            'en'=>'Renew my membership'
+            'fr' => 'Renouvellement mon abonnement',
+            'en' => 'Renew my membership'
         ]);
 
         self::generateTranslation('renew', [
-            'fr'=>'Renouveler',
-            'en'=>'Renew'
+            'fr' => 'Renouveler',
+            'en' => 'Renew'
         ]);
 
         self::generateTranslation('manage_membership', [
-            'fr'=>'Gestion de l\'abonnement',
-            'en'=>'Manage membership'
+            'fr' => 'Gestion de l\'abonnement',
+            'en' => 'Manage membership'
         ]);
 
         self::generateTranslation('cant_delete_level_because_membership', [
-            'fr'=>'Vous ne pouvez pas supprimer ce niveau d\'utilisateur car il est lié à des abonnements actifs',
-            'en'=>'You cannot delete this user level because it is link to active memberships'
+            'fr' => 'Vous ne pouvez pas supprimer ce niveau d\'utilisateur car il est lié à des abonnements actifs',
+            'en' => 'You cannot delete this user level because it is link to active memberships'
         ]);
 
         self::generateTranslation('user_level_memberships_deleted', [
-            'fr'=>'Les abonnements liés au niveau d\'utilisateur ont été supprimés',
-            'en'=>'User level\'s memberships have been deleted'
+            'fr' => 'Les abonnements liés au niveau d\'utilisateur ont été supprimés',
+            'en' => 'User level\'s memberships have been deleted'
         ]);
 
         self::generateTranslation('nb_users', [
-            'fr'=>'Nombres d\'utilisateurs',
-            'en'=>'Number of users'
+            'fr' => 'Nombres d\'utilisateurs',
+            'en' => 'Number of users'
         ]);
 
         self::generateTranslation('default_homepage', [
-            'fr'=>'Page d\'accueil par défaut',
-            'en'=>'Default homepage'
+            'fr' => 'Page d\'accueil par défaut',
+            'en' => 'Default homepage'
         ]);
         self::generateTranslation('default_homepage_desc', [
-            'fr'=>'Défini la page sur laquelle est redirigé l\'utilisateur à la connexion et au clique sur le logo',
-            'en'=>'Set the page where user is redirect on login and click on logo'
+            'fr' => 'Défini la page sur laquelle est redirigé l\'utilisateur à la connexion et au clique sur le logo',
+            'en' => 'Set the page where user is redirect on login and click on logo'
         ]);
 
         self::generateTranslation('homepage', [
-            'fr'=>'Page d\'accueil',
-            'en'=>'Homepage'
+            'fr' => 'Page d\'accueil',
+            'en' => 'Homepage'
         ]);
 
         self::generateTranslation('allowed_emails', [
-            'fr'=>'Emails autorisés',
-            'en'=>'Allowed emails'
+            'fr' => 'Emails autorisés',
+            'en' => 'Allowed emails'
         ]);
 
         self::generateTranslation('allowed_emails_tips', [
-            'fr'=>'Emails séparés par des virgules',
-            'en'=>'Emails separated by commas'
+            'fr' => 'Emails séparés par des virgules',
+            'en' => 'Emails separated by commas'
         ]);
 
         self::generateTranslation('only_visible_eligible', [
-            'fr'=>'Seulement visible si éligible',
-            'en'=>'Only visible if eligible'
+            'fr' => 'Seulement visible si éligible',
+            'en' => 'Only visible if eligible'
         ]);
 
         self::generateTranslation('email_is_not_valid', [
-            'fr'=>'%s n\'est pas un email valide',
-            'en'=>'%s is not a valid email'
+            'fr' => '%s n\'est pas un email valide',
+            'en' => '%s is not a valid email'
         ]);
         self::generateTranslation('allow_public_video_page', [
-            'fr'=>'Autoriser la page de vidéos publiques',
-            'en'=>'Enable public video'
+            'fr' => 'Autoriser la page de vidéos publiques',
+            'en' => 'Enable public video'
         ]);
         self::generateTranslation('allow_public_video_page_desc', [
-            'fr'=>'L\'utilisateur peut voir la page de vidéo publique',
-            'en'=>'Allow user to view public videos page'
+            'fr' => 'L\'utilisateur peut voir la page de vidéo publique',
+            'en' => 'Allow user to view public videos page'
         ]);
 
-
-
         self::generateTranslation('bouton_souscrire_abonnement', [
-            'fr'=>'Souscrire',
-            'en'=>'Subscription'
+            'fr' => 'Souscrire',
+            'en' => 'Subscription'
         ]);
 
         self::generateTranslation('plans_features_title', [
-            'fr'=>'Détails',
-            'en'=>'Details'
+            'fr' => 'Détails',
+            'en' => 'Details'
+        ]);
+
+        self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' RENAME user_level_is_default TO user_level_is_origin', [
+            'table'  => 'user_levels',
+            'column' => 'user_level_is_default'
+        ], [
+            'table'  => 'user_levels',
+            'column' => 'user_level_is_origin'
+        ]);
+
+        self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' ADD COLUMN user_level_is_default ENUM(\'yes\',\'no\') NOT NULL DEFAULT \'no\'', [
+            'table' => 'user_levels'
+        ], [
+            'table'  => 'user_levels',
+            'column' => 'user_level_is_default'
+        ]);
+
+        self::query('UPDATE ' . tbl('user_levels') . ' SET user_level_is_default = true WHERE user_level_name LIKE \'Registered User\' ');
+
+        self::generateTranslation('membership_cant_be_configured_for_default_user_level', [
+            'fr'=>'L\'abonnement ne peut pas être configuré pour le niveau d\'utilisateur par défaut',
+            'en'=>'Membership can\'t be configured for default user level'
+        ]);
+
+        self::generateTranslation('default_user_cant_have_membership', [
+            'fr'=>'Le niveau d\'utilisateur par défaut ne peut pas avoir d\'abonnement associé',
+            'en'=>'Default user level can\'t have a membership'
         ]);
 
     }
