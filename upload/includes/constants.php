@@ -50,7 +50,6 @@ class DirPath
 
             case 'collection_thumbs':
             case 'icons':
-            case 'playlist_covers':
                 $path = $root_directory . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'images/' . $dir_name;
                 break;

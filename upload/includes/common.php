@@ -285,15 +285,9 @@ $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
 
 Assign('NEED_UPDATE', NEED_UPDATE);
-
 Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
-
 Assign('PLUG_URL', DirPath::getUrl('plugins'));
-
-if (!file_exists(DirPath::get('playlist_covers'))) {
-    mkdir(DirPath::get('playlist_covers'), 0777);
-}
 
 ClipBucket::getInstance()->upload_opt_list = [];
 

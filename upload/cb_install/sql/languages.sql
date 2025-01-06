@@ -1386,4 +1386,5 @@ VALUES ('admin_setting'),
        ('option_nsfw_check_model'),
        ('option_nudity'),
        ('option_nsfw'),
-       ('option_nudity_nsfw');
+       ('option_nudity_nsfw'),
+       ('no_vid_in_playlist');

@@ -75,7 +75,7 @@ switch ($mode) {
 
                 if (!error()) {
                     errorhandler::getInstance()->flush();
-                    e(lang('playlist_items_have_been_removed'), "m");
+                    e(lang('playlist_items_have_been_removed'), 'm');
                 } else {
                     errorhandler::getInstance()->flush();
                     e(lang('playlist_item_doesnt_exist'));
@@ -91,19 +91,6 @@ switch ($mode) {
         if (isset($_POST['edit_playlist'])) {
             $_POST['playlist_id'] = $pid;
             $cbvid->action->edit_playlist();
-        }
-
-        if (isset($_POST['upload_playlist_cover'])) {
-            $cover = $_FILES['playlist_cover'];
-            $cover['playlist_id'] = $pid;
-
-            if (playlist_upload_cover($cover)) {
-                e(lang('Playlist cover has been uploaded'), 'm');
-            }
-
-            if (file_exists($cover['tmp_name'])) {
-                unlink($cover['tmp_name']);
-            }
         }
 
         //Deleting Item

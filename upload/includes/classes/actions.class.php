@@ -487,28 +487,33 @@ class cbactions
      */
     function create_playlist($params)
     {
-        if (User::getInstance()->hasPermission('allow_create_playlist')) {
-            $name = mysql_clean($params['name']);
-            if (!user_id()) {
-                e(lang('please_login_create_playlist'));
-            } elseif (empty($name)) {
-                e(lang('please_enter_playlist_name'));
-            } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
-                e(lang('play_list_with_this_name_arlready_exists', $name));
-            } else {
-                $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
-                $values = [$name, user_id(), now(), $this->type, '', ''];
-
-                Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
-
-                $pid = Clipbucket_db::getInstance()->insert_id();
-                e(lang('new_playlist_created'), 'm');
-
-                return $pid;
-            }
+        if( !User::getInstance()->hasPermission('allow_create_playlist') ){
+            e(lang('insufficient_privileges'));
+            return false;
         }
-        e(lang('insufficient_privileges'));
-        return false;
+
+        if (!user_id()) {
+            e(lang('please_login_create_playlist'));
+            return false;
+        }
+        if (empty($params['name'])) {
+            e(lang('please_enter_playlist_name'));
+            return false;
+        }
+        if ($this->playlist_exists($params['name'], user_id(), $this->type)) {
+            e(lang('play_list_with_this_name_arlready_exists', display_clean($params['name'])));
+            return false;
+        }
+
+        $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
+        $values = [$params['name'], user_id(), now(), $this->type, '', ''];
+
+        Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
+
+        $pid = Clipbucket_db::getInstance()->insert_id();
+        e(lang('new_playlist_created'), 'm');
+
+        return $pid;
     }
 
     /**

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"238",
+  "revision":"239",
   "status":"dev",
   "detail":[
     {
@@ -217,6 +217,7 @@
         ,"Fix video title overflow"
         ,"Fix possible arbitrary file deletion (Thanks @kawing-ho !)"
         ,"Fix possible unauthenticated template change (Thanks @kawing-ho !)"
+        ,"Fix possible remote code execution (Thanks @kawing-ho !)"
       ]
     },
     {
