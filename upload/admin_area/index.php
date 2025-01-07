@@ -166,5 +166,7 @@ if( config('enable_update_checker') == '1' ){
 
 ClipBucket::getInstance()->addAdminJS(['pages/dashboard/dashboard'.$min_suffixe.'.js' => 'admin']);
 
+Update::getInstance()->CheckPHPVersion();
+
 template_files('index.html');
 display_it();

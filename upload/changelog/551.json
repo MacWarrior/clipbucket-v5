@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"239",
+  "revision":"240",
   "status":"dev",
   "detail":[
     {
@@ -34,6 +34,7 @@
         ,"Implement TMDB Tv Show integration"
         ,"Implement related photos quantity limit"
         ,"Implement AI NSFW check"
+        ,"Implement future PHP version check"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"

@@ -1971,3 +1971,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'option_nudity_nsfw'), 'Nudité + contenu mature', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'no_vid_in_playlist'), 'Aucune vidéo trouvée dans cette playlist !', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'warning_php_version'), 'Cher administrateur,<br/> Il semble que vous utilisez une ancienne version de PHP (<b>%s</b>). Cette version ne sera plus prise en charge dans la prochaine version <b>%s</b>.<br/>Veuillez mettre à jour votre version de PHP vers %s ou une version supérieure.<br/><br/>Merci d\'utiliser ClipBucketV5 !', @language_id);

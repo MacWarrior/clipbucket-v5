@@ -1387,4 +1387,5 @@ VALUES ('admin_setting'),
        ('option_nudity'),
        ('option_nsfw'),
        ('option_nudity_nsfw'),
-       ('no_vid_in_playlist');
+       ('no_vid_in_playlist'),
+       ('warning_php_version');
