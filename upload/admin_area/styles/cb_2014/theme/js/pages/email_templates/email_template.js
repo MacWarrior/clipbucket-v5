@@ -57,6 +57,7 @@ function saveEmail(form) {
             $('#email > .row').html(response.template);
             $('.page-content').prepend(response.msg);
             initListenerEmailEdit();
+            listEmailTemplate();
             updateSelect('select_email', response.email_list, 'email');
         }
     }).always(() => hideSpinner());
@@ -85,6 +86,7 @@ function deleteEmail(id_email) {
         success: (response) => {
             $('.page-content').prepend(response.msg);
             listEmail();
+            listEmailTemplate();
             updateSelect('select_email', response.email_list, 'email');
         }
     });
@@ -121,7 +123,7 @@ var delay = 500;
 var timeout;
 
 function initListenerEmailTemplateEdit() {
-    $('#email_template_content').on('keyup', function () {
+    $('#email_template_content').off('keyup').on('keyup', function () {
         let email_content = $(this).val();
         clearTimeout(timeout);
         timeout = setTimeout(() => {
@@ -138,7 +140,7 @@ function initListenerEmailTemplateEdit() {
         }, delay);
     });
 
-    $('#email_template_edit').on('submit', function (event) {
+    $('#email_template_edit').off('submit').on('submit', function (event) {
         event.preventDefault();
         saveEmailTemplate($(this));
     });
@@ -152,41 +154,53 @@ function initListenerEmailTemplateList() {
     $('.add_new_email_template_list').on('click', () => {
         editEmailTemplate();
     });
-    $('input[name="make_default"]').change(function (e) {
-        if (confirm(confirm_default_template)) {
-            showSpinner();
-            $('input[name="make_default"]').not(this).prop('checked', false);
-            $.post({
-                url: "/actions/admin_email_make_default.php",
-                data: $('#default_template').serialize(),
-                dataType: 'json',
-                success: function (result) {
-                    $('#email_template > .row').html(result.template);
-                    $('.page-content').prepend(result.msg);
-                    initListenerEmailTemplateList();
+    $('input[name="make_default"]').change(async function (e) {
+        $('input[name="make_default"]').not(this).prop('checked', false);
+        var change_all = await new Promise((complete, failed) => {
+            $('#confirm-default-all').modal();
+            $('#confirmYes').off('click').on('click', () => {
+                $('#confirm-default-all').modal('hide');
+                complete(1);
+            });
+            $('#confirmNo').off('click').on('click', () => {
+                $('#confirm-default-all').modal('hide');
+                complete(0);
+            });
+        });
+        showSpinner();
+        var data = $('#default_template').serializeArray();
+        data.push({name:'default_all', value:change_all});
+        $.post({
+            url: "/actions/admin_email_make_default.php",
+            data: data,
+            dataType: 'json',
+            success: function (result) {
+                $('#email_template > .row').html(result.template);
+                $('.page-content').prepend(result.msg);
+                initListenerEmailTemplateList();
+                if (change_all) {
+                    listEmail();
                 }
-            }).always(() => hideSpinner());
-        } else {
-            $(this).prop('checked', false)
-        }
+            }
+        }).always(() => hideSpinner());
     });
 }
 
 function initListenerEmailEdit() {
-    $('#email_id_email_template').on('change', function () {
+    $('#email_id_email_template').off('change').on('change', function () {
         refreshRenderEmail();
     });
 
-    $('#email_content').on('keyup', function () {
+    $('#email_content').off('keyup').on('keyup', function () {
         refreshRenderEmail();
     });
 
-    $('#email_edit').on('submit', function (event) {
+    $('#email_edit').off('submit').on('submit', function (event) {
         event.preventDefault();
         saveEmail($(this));
     });
 
-    $('.back_to_email_list').on('click', () => {
+    $('.back_to_email_list').off('click').on('click', () => {
         listEmail();
     })
 }
@@ -212,11 +226,11 @@ function refreshRenderEmail()
 }
 
 function initListenerEmailList() {
-    $('.add_new_email_list').on('click', () => {
+    $('.add_new_email_list').off('click').on('click', () => {
         editEmail();
     });
 
-    $('.search_email').on('click', () => {
+    $('.search_email').off('click').on('click', () => {
         var search = $('#search').val();
         listEmail(search);
     });
@@ -236,11 +250,11 @@ function displayVariable(id_email) {
 }
 
 function initListenerEmailTester() {
-    $('#select_email').on('change', function () {
+    $('#select_email').off('change').on('change', function () {
         displayVariable($(this).val());
     });
 
-    $('.send_email').on('click', function (e) {
+    $('.send_email').off('click').on('click', function (e) {
         e.preventDefault();
         hideSpinner();
         $.post({
@@ -272,3 +286,4 @@ function updateSelect(select_id, options, type) {
         }));
     })
 }
+

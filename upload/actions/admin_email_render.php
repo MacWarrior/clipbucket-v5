@@ -14,5 +14,5 @@ if( empty($_POST['email_content'] || empty($_POST['id_email_template'])) ){
 
 echo json_encode([
     'success'      => true,
-    'email_render' => EmailTemplate::getRenderedEmail($_POST['id_email_template'], $_POST['email_content'])
+    'email_render' => EmailTemplate::getRenderedEmail(($_POST['id_email_template'] ?? 0), $_POST['email_content'])
 ]);

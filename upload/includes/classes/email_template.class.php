@@ -281,9 +281,11 @@ class EmailTemplate
         $param_disabled = $params['disabled'];
         $param_has_histo = $params['has_histo'] ?? false;
         $param_show_disabled = $params['show_disabled'] ?? false;
+        $param_is_default = $params['is_default'] ?? null;
 
         $conditions = [];
         $join = [];
+        $group = [];
 
         if (!$param_show_disabled) {
             $conditions[] = self::$tableName . '.disabled = FALSE';
@@ -302,15 +304,20 @@ class EmailTemplate
         if ($param_disabled !== null) {
             $conditions[] = ' ' . self::$tableName . '.disabled = ' . ($param_disabled ? 'true' : 'false');
         }
+        if ($param_is_default !== null) {
+            $conditions[] = ' ' . self::$tableName . '.is_default = ' . ($param_is_default ? 'true' : 'false');
+        }
 
         if (!$param_count) {
             $select = self::getAllTemplateFields();
+            $join[] = ' LEFT JOIN ' . cb_sql_table(self::$tableNameEmail) . ' ON ' . self::$tableNameEmail . '.id_email_template = ' . self::$tableName . '.id_email_template ';
+            $select[] = 'CASE WHEN COUNT(DISTINCT ' . self::$tableNameEmail . '.id_email ) > 0 THEN TRUE ELSE FALSE END as has_email ';
+            $group[] = self::$tableName.'.id_email_template';
         } else {
             $select[] = 'COUNT(DISTINCT id_email_template) AS count';
         }
 
         if ($param_has_histo) {
-            $join[] = ' LEFT JOIN ' . cb_sql_table(self::$tableNameEmail) . ' ON ' . self::$tableNameEmail . '.id_email_template = ' . self::$tableName . '.id_email_template ';
             $join[] = ' LEFT JOIN ' . cb_sql_table(self::$tableNameEmailHisto) . ' ON ' . self::$tableNameEmailHisto . '.id_email = ' . self::$tableNameEmail . '.id_email ';
             $select[] = 'CASE WHEN COUNT(DISTINCT ' . self::$tableNameEmailHisto . '.id_email_histo ) > 0 THEN TRUE ELSE FALSE END as has_histo ';
         }
@@ -323,6 +330,7 @@ class EmailTemplate
                 FROM ' . cb_sql_table(self::$tableName)
             . implode(' ', $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode(' AND ', $conditions))
+            . (empty($group) ? '' : ' GROUP BY ' . implode(' , ', $group))
             . $limit;
 
         $result = Clipbucket_db::getInstance()->_select($sql);
@@ -471,9 +479,10 @@ class EmailTemplate
      * Make Language Default
      *
      * @param $id_email_template
+     * @param bool $change_all
      * @throws Exception
      */
-    public static function makeDefault($id_email_template)
+    public static function makeDefault($id_email_template, bool $change_all = false)
     {
         $template = self::getOneTemplate(['id_email_template' => $id_email_template ?: 0]);
         if ($template) {
@@ -481,7 +490,9 @@ class EmailTemplate
             Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['is_default'], [1], ' id_email_template = ' . mysql_clean($id_email_template));
             e(lang('template_set_default', [$template['code']]), 'm');
 
-            Clipbucket_db::getInstance()->update(tbl(self::$tableNameEmail), ['id_email_template'], [mysql_clean($id_email_template)], ' 1 ');
+            if ($change_all) {
+                Clipbucket_db::getInstance()->update(tbl(self::$tableNameEmail), ['id_email_template'], [mysql_clean($id_email_template)], ' 1 ');
+            }
         }
     }
 
@@ -553,11 +564,18 @@ class EmailTemplate
         return empty($result) ? [] : $result;
     }
 
-    public static function getGlobalVariables(): array
+    public static function getGlobalVariables($with_values = false): array
     {
         $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
             . ' WHERE type = \'global\'';
         $result = Clipbucket_db::getInstance()->_select($sql);
+        if ($with_values) {
+            foreach ($result as &$item) {
+                if ($item['type'] == 'global') {
+                    $item['value'] = self::getGlobalVariablesArray()[$item['code']];
+                }
+            }
+        }
         return empty($result) ? [] : $result;
     }
 
@@ -796,4 +814,15 @@ class EmailTemplate
         return true;
     }
 
+    public static function getDefault()
+    {
+        return self::getOneTemplate([
+            'is_default'=>true
+        ]);
+    }
+
+    public static function getDefaultId(): int
+    {
+        return self::getDefault()['id_email_template'] ?? 0;
+    }
 }

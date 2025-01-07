@@ -23,7 +23,7 @@
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                                 <li><a role="menuitem" tabindex="-1" onclick="editEmailTemplate({$template.id_email_template})">{lang code='edit'}</a></li>
-                                {if !$template.is_default && $template.is_deletable}
+                                {if !$template.is_default && $template.is_deletable && !$template.has_email}
                                     <li><a role="menuitem" tabindex="-1" onclick="deleteEmailTemplate({$template.id_email_template})">{lang code='delete'}</a></li>
                                 {/if}
                             </ul>
