@@ -121,20 +121,6 @@ switch ($mode) {
             $cbvid->action->edit_playlist();
         }
 
-
-        if (isset($_POST['upload_playlist_cover'])) {
-            $cover = $_FILES['playlist_cover'];
-            $cover['playlist_id'] = $pid;
-
-            if (playlist_upload_cover($cover)) {
-                e(lang('Playlist cover has been uploaded'), 'm');
-            }
-
-            if (file_exists($cover['tmp_name'])) {
-                unlink($cover['tmp_name']);
-            }
-        }
-
         //Deleting Item
         if (!empty($_GET['delete_item'])) {
             $delid = mysql_clean($_GET['delete_item']);

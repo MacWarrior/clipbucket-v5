@@ -252,29 +252,29 @@
                 <div class="row">
                     <div class="col-md-3">
                         <div class="row">
-                            <img src="{$imageurl}/{if $target_upload_size < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb < $post_max_size_mb)}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $max_upload_size_ok}tick{else}alert{/if}.png"/>
                             <label>
                                 post_max_size : <b>{$post_max_size}</b>
                             </label>
                         </div>
                         <div class="row">
-                            <img src="{$imageurl}/{if $upload_max_filesize_mb >= $target_upload_size || ($chunk_upload && $chunk_upload_size_mb < $upload_max_filesize_mb)}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $upload_max_size_ok}tick{else}alert{/if}.png"/>
                             <label>
                                 upload_max_size : <b>{$upload_max_filesize}</b>
                             </label>
                         </div>
                         <div class="row">
-                            <img src="{$imageurl}/{if getBytesFromFileSize($memory_limit) >= getBytesFromFileSize('128M')}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $memory_limit_ok}tick{else}alert{/if}.png"/>
                             <label>memory_limit :
-                                <strong> {$memory_limit} {if getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') }
+                                <strong> {$memory_limit} {if !$memory_limit_ok}
                                         {lang code='must_be_least'} : 128M{/if}
                                 </strong>
                             </label>
                         </div>
                         <div class="row">
-                            <img src="{$imageurl}/{if $max_execution_time >= 7200}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $max_execution_time_ok}tick{else}alert{/if}.png"/>
                             <label>max_execution_time :
-                                <strong> {$max_execution_time} {if $max_execution_time < 7200 }
+                                <strong> {$max_execution_time} {if !$max_execution_time_ok}
                                         {lang code='must_be_least'} : 7200{/if}
                                 </strong>
                             </label>
@@ -398,17 +398,17 @@
                     {if $phpWebExec && $phpVersionCli != 0}
                         <div class="col-md-3 {if $phpVersionCli == 0}hidden{/if}">
                             <div class="row">
-                                <img src="{$imageurl}/{if $memory_limit_cli != '-1'}{if getBytesFromFileSize($memory_limit_cli) >= getBytesFromFileSize('128M')}tick{else}alert{/if}{else}tick{/if}.png"/>
+                                <img src="{$imageurl}/{if $memory_limit_ok}tick{else}alert{/if}.png"/>
                                 <label>memory_limit :
-                                    <strong> {$memory_limit_cli} {if $memory_limit_cli != -1 && getBytesFromFileSize($memory_limit_cli) < getBytesFromFileSize('128M') }
+                                    <strong> {$memory_limit_cli} {if !$memory_limit_ok}
                                             {lang code='must_be_least'} : 128M {/if}
                                     </strong>
                                 </label>
                             </div>
                             <div class="row">
-                                <img src="{$imageurl}/{if $max_execution_time_cli >= 7200 || $max_execution_time_cli==0}tick{else}alert{/if}.png"/>
+                                <img src="{$imageurl}/{if $max_execution_time_ok}tick{else}alert{/if}.png"/>
                                 <label>max_execution_time :
-                                    <strong> {$max_execution_time_cli} {if $max_execution_time_cli < 7200 && $max_execution_time_cli > 0}
+                                    <strong> {$max_execution_time_cli} {if !$max_execution_time_ok}
                                             {lang code='must_be_least'} : 7200 {/if}
                                     </strong>
                                 </label>
@@ -479,7 +479,7 @@
                                 {lang|ucfirst code='must_be_least'} <b>{if $chunk_upload}{$chunk_upload_size_mb}{else}{$target_upload_size}{/if} {lang code='mb'}</b>.
                             </div>
                         {else}
-                            <img src="{$imageurl}/{if $client_max_body_size_mb > $target_upload_size}tick{else}alert{/if}.png"/>
+                            <img src="{$imageurl}/{if $client_max_body_size_ok}tick{else}alert{/if}.png"/>
                             <label>
                                 client_max_body_size : <b>{$client_max_body_size}</b>
                             </label>
