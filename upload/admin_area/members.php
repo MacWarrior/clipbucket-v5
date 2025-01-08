@@ -232,6 +232,7 @@ if (isset($_GET['search'])) {
     $params['level']    = $_GET['level'] ?? false;
     $params['category'] = $_GET['category'] ?? false;
 }
+$params['not_userid'] = $anonymous_id;
 $params['limit'] = $get_limit;
 $params['order'] = 'doj DESC';
 
