@@ -268,6 +268,7 @@ class User
     public function getAll(array $params = [])
     {
         $param_userid = $params['userid'] ?? false;
+        $param_not_userid = $params['not_userid'] ?? false;
         $param_search = $params['search'] ?? false;
         $param_channel_enable = $params['channel_enable'] ?? false;
         $param_email = $params['email'] ?? false;
@@ -290,6 +291,9 @@ class User
         $conditions = [];
         if( $param_userid ){
             $conditions[] = 'users.userid = \'' . mysql_clean($param_userid) . '\'';
+        }
+        if( $param_not_userid !== false ){
+            $conditions[] = 'users.userid != \'' . mysql_clean($param_not_userid) . '\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"240",
+  "revision":"241",
   "status":"dev",
   "detail":[
     {
@@ -65,6 +65,7 @@
         ,"Reorder main menu"
         ,"Prevent edition of own user level rights"
         ,"Remove unused ads placements"
+        ,"Hide anonymous user from user management"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
