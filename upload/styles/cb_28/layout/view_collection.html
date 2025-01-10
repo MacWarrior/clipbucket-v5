@@ -20,7 +20,12 @@
                 {display_clean($c.collection_name)}&nbsp;
                 ({$c.total_objects}&nbsp;{lang code="{$c.type}"})
                 {lang code='collection' assign='object_type'}
-                {if (User::getInstance()->hasPermission('allow_'|cat:($c.type|strstr:'s':true)|cat:'_upload') && $c.public_upload == 'true')
+                {if $c.type=='videos'}
+                    {$upload_permission = 'allow_video_upload'}
+                {else}
+                    {$upload_permission = 'allow_photo_upload'}
+                {/if}
+                {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'true')
                     || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)}
                     <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
                 {/if}
