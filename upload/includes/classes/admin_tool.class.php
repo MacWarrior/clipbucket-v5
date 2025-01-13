@@ -123,11 +123,17 @@ class AdminTool
     public function setToolInProgress(): bool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
-            Clipbucket_db::getInstance()->insert(tbl('tools_histo'), ['id_tool', 'id_tools_histo_status', 'date_start'], [$this->id_tool, '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')', '|no_mc||f|NOW()']);
-            $this->id_histo = Clipbucket_db::getInstance()->insert_id();
+           return $this->setToolInProgressNew();
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'in_progress\')'], 'id_tool = ' . mysql_clean($this->id_tool));
         }
+        return true;
+    }
+
+    public function setToolInProgressNew(): bool
+    {
+        Clipbucket_db::getInstance()->insert(tbl('tools_histo'), ['id_tool', 'id_tools_histo_status', 'date_start'], [$this->id_tool, '|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'in_progress\')', '|no_mc||f|NOW()']);
+        $this->id_histo = Clipbucket_db::getInstance()->insert_id();
         return true;
     }
 
@@ -650,7 +656,7 @@ class AdminTool
      * @return void
      * @throws Exception
      */
-    private function updateToolHisto(array $fields, array $values)
+    public function updateToolHisto(array $fields, array $values)
     {
         if( !empty($this->id_histo) ){
             Clipbucket_db::getInstance()->update(tbl('tools_histo'), $fields, $values, 'id_tool = ' . mysql_clean($this->id_tool) . ' AND id_histo = ' . mysql_clean($this->id_histo));
@@ -993,11 +999,20 @@ class AdminTool
      */
     public function isAlreadyLaunch() :bool
     {
-        /** get all running tools */
-        $query = /** @lang MySQL */'SELECT DISTINCT tools_histo.id_tool
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+
+            /** get all running tools */
+            $query = /** @lang MySQL */'SELECT DISTINCT tools_histo.id_tool
                             FROM '.cb_sql_table('tools_histo').'
                             INNER JOIN '.cb_sql_table('tools_histo_status').' ON tools_histo_status.id_tools_histo_status = tools_histo.id_tools_histo_status
                             WHERE tools_histo_status.language_key_title IN (\'in_progress\',\'stopping\') AND tools_histo.id_tool = '.( (int) $this->id_tool);
+        } else {
+            $query = /** @lang MySQL */
+                'SELECT DISTINCT tools.id_tool
+                            FROM ' . cb_sql_table('tools') . '
+                            INNER JOIN ' . cb_sql_table('tools_status') . ' ON tools_status.id_tools_status = tools.id_tools_status
+                            WHERE tools_status.language_key_title IN (\'in_progress\',\'stopping\') AND tools.id_tool = ' . ((int)$this->id_tool);
+        }
         $rs = Clipbucket_db::getInstance()->_select($query);
         return !empty($rs);
     }

@@ -168,6 +168,7 @@ if (!Update::isVersionSystemInstalled()) {
     if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
         && strpos($request_uri, '/admin_area/logout.php') === false
         && strpos($request_uri, 'actions/upgrade_db.php') === false
+        && strpos($request_uri, 'admin_area/sse/upgrade_db_info.php') === false
         && User::getInstance()->hasAdminAccess()) {
         header('Location: /admin_area/upgrade_db.php');
         die();
@@ -405,9 +406,10 @@ if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity
 
     $dateTime = new DateTime();
     $dateTime->modify('-1 minutes');
-
-    if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
-        AdminTool::launchCli($tool->getId());
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+        if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
+            AdminTool::launchCli($tool->getId());
+        }
     }
 }
 

@@ -27,12 +27,53 @@
                 <button class="btn btn-primary" type="button" id="submit_version">Start DB upgrade</button>
             </div>
         </div>
+        Current file : <span id="current_file"></span>
+        <div id="progress_div" style="text-align: center; vertical-align: middle; display: none;">
+            <br/>
+            <div style="padding: 6px;" ><span id="pourcent"></span>%
+                (<span id="done"></span> / <span id="total"></span>)
+            </div>
+            <div  class="progress">
+                <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100" >
+                </div>
+            </div>
+        </div>
     </form>
 </div>
 
 <script>
     var revisions = JSON.parse('{$revisions|json_encode}');
     {literal}
+    var eventSource;
+    var max_try = 3;
+    function connectSSEDB() {
+        var tries = 0;
+        // Create new event, the server script is sse.php
+        eventSource = new EventSource("/admin_area/sse/upgrade_db_info.php");
+        // Event when receiving a message from the server
+        eventSource.addEventListener("message", function (e) {
+            var data = JSON.parse(e.data);
+            if (data ) {
+                $('#progress-bar').attr('aria-valuenow',data.pourcent).width(data.pourcent + '%');
+                $('#pourcent').html(data.pourcent);
+                $('#done').html(data.elements_done);
+                $('#total').html(data.elements_total);
+                $('#current_file').html(data.current_file);
+            }
+
+        });
+        eventSource.addEventListener('open', function (e) {
+            tries++
+            if (tries > max_try) {
+                eventSource.close();
+            }
+        }, false);
+
+        eventSource.addEventListener('error', function (e) {
+            eventSource.close();
+        }, false);
+    }
+
     $(function (){
         $('#version').change(function () {
             var version = $(this).val();
@@ -44,9 +85,11 @@
             }
         });
 
+        connectSSEDB();
         $('#submit_version').on('click', function () {
             if (confirm('This operation may take a while and must not be interrupted, are you sure you want to continue ?')) {
-                showSpinner();
+                $('#submit_version').hide();
+                $('#progress_div').show();
                 $.ajax({
                     url: "/actions/upgrade_db.php",
                     type: "post",
@@ -57,9 +100,10 @@
                         location.replace('index.php?finish_upgrade=1&version=' + result['msg']);
                     } else {
                         $('.page-content').prepend(result['msg']);
+                        $('.progress-bar').removeClass('progress-bar-success').addClass('progress-bar-danger').addClass('progress-bar-striped').attr('aria-valuenow', 100).width(100 + '%')
                     }
                 }).always(function () {
-                    hideSpinner();
+                    eventSource.close();
                 });
             }
         })

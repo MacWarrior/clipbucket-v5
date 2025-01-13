@@ -52,12 +52,12 @@ class Update
         $this->revision = '';
     }
 
-    public function getDBVersion(): array
+    public function getDBVersion($force_refresh = false): array
     {
         if( empty($this->dbVersion) ){
             $select = implode(', ', $this->getAllFields());
             try{
-                $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+                $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, ($force_refresh ? -1 : 30), 'version')[0];
             }
             catch (Exception $e){
                 return [
@@ -779,9 +779,9 @@ class Update
      * @param $revision
      * @return bool
      */
-    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision): bool
+    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision, $force_refresh = false): bool
     {
-        $version_db = Update::getInstance()->getDBVersion();
+        $version_db = Update::getInstance()->getDBVersion($force_refresh);
         return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));
     }
 
@@ -791,12 +791,12 @@ class Update
     public static function IsUpdateProcessing(): bool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
-            $and = ' AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';
+            $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
         } else {
-            $and = ' AND id_tool IN (11, 5)';
+            $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')   AND id_tool IN (11, 5)  ';
         }
         $tools = AdminTool::getTools([
-            ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\') ' . $and
+            $where
         ]);
         return !empty($tools);
     }

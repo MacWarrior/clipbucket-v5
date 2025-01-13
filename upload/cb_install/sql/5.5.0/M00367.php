@@ -1,6 +1,8 @@
 <?php
 
 namespace V5_5_0;
+use AdminTool;
+
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class M00367 extends \Migration
@@ -10,6 +12,9 @@ class M00367 extends \Migration
      */
     public function start()
     {
+
+        $tool = AdminTool::getTools([' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')  AND id_tool =5 '])[0];
+        AdminTool::getInstance()->initById(5);
         $sql = 'SET @constraint_name = (SELECT CONSTRAINT_NAME
                         FROM information_schema.key_column_usage
                         WHERE CONSTRAINT_SCHEMA = DATABASE()
@@ -158,5 +163,8 @@ class M00367 extends \Migration
             'en' => 'Tool ended',
             'fr' => 'Outil terminé'
         ]);
+
+        AdminTool::getInstance()->setToolInProgressNew();
+        AdminTool::getInstance()->updateToolHisto(['elements_total'], [$tool['elements_total']]);
     }
 }
