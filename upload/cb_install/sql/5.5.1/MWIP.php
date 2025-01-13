@@ -580,7 +580,7 @@ class MWIP extends \Migration
             Thanks for registering on <a href="{{baseurl}}">{{website_title}}</a> !<br/>
             In order to verify your email address, please validate your account by <a href="{{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
             <br/><br/>
-            If somehow above link isn\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
+            If somehow above link isn\\\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
             And use your activation code : <b>{{avcode}}</b>
             <br/><br/>
             Welcome aboard !\',
@@ -614,7 +614,7 @@ class MWIP extends \Migration
             <br/><br/>
             Please validate your account by <a href="{{baseurl}}activation.php?av_username={{user_username}}&avcode={{avcode}}">clicking here !</a>
             <br/><br/>
-            If somehow above link isn\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
+            If somehow above link isn\\\'t working, please go to : <a href="{{baseurl}}activation.php">{{baseurl}}activation.php</a><br/>
             And use your activation code : <b>{{avcode}}</b>
             <br/><br/>
             Welcome aboard !\',
@@ -894,6 +894,11 @@ class MWIP extends \Migration
         self::alterTable('ALTER TABLE `{tbl_prefix}email_templates` DROP `email_template_allowed_tags`', [
             'table' => 'email_templates',
             'column' =>'email_template_allowed_tags'
+        ]);
+
+        self::generateTranslation('cannot_remove_default_have_to_add_one', [
+            'fr'=>'Impossible de retirer le modèle par défaut, merci d\'en choisir un nouveau',
+            'en'=>'Cannot remove default template, please choose another'
         ]);
     }
 }
