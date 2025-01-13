@@ -879,7 +879,6 @@ class Collections extends CBCategory
         if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !NEED_UPDATE) {
 
             if( User::getInstance()->hasPermission('allow_create_collection') ){
-                userquery::getInstance()->user_account[lang('collections')][lang('add_new_collection')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new']);
                 userquery::getInstance()->user_account[lang('collections')][lang('manage_collections')] = cblink(['name' => 'manage_collections', 'extra_params' => 'mode=manage']);
             }
             if( User::getInstance()->hasPermission('view_collections') ){
