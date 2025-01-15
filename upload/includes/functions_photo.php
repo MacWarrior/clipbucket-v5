@@ -25,15 +25,6 @@ function get_photo($params)
 }
 
 
-//Photo Embed Cides
-/**
- * @throws Exception
- */
-function photo_embed_codes($params)
-{
-    global $cbphoto;
-    return $cbphoto->photo_embed_codes($params);
-}
 
 //Create download button
 

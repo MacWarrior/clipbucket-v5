@@ -253,17 +253,29 @@ class cbactions
                 $users = explode(',', $post_users);
                 if (is_array($users) && !empty($post_users)) {
                     foreach ($users as $user) {
-                        if (!userquery::getInstance()->user_exists($user) && !isValidEmail($user)) {
-                            e(lang('user_no_exist_wid_username', $user));
+                        $user = User::getInstance()->getOne(['username' => $user]);
+                        if (!userquery::getInstance()->user_exists($user['username']) && !isValidEmail($user['email'])) {
+                            e(lang('user_no_exist_wid_username', $user['username']));
+                            $ok = false;
+                            break;
+                        }
+                        if (userquery::getInstance()->is_user_banned(User::getInstance()->get('username'), $user['username'])) {
+                            e(lang('this_user_blocked_you', $user['username']));
+                            $ok = false;
+                            break;
+                        }
+                        if ($user['ban_status'] == 'yes') {
+                            e(lang('user_is_banned',$user['username']));
+                            $ok = false;
+                            break;
+                        }
+                        if ($user['username'] == User::getInstance()->get('username')) {
+                            e(lang('you_cant_share_to_yourself'));
                             $ok = false;
                             break;
                         }
 
-                        $email = $user;
-                        if (!isValidEmail($user)) {
-                            $email = userquery::getInstance()->get_user_field_only($user, 'email');
-                        }
-                        $emails_array[] = $email;
+                        $emails_array[] = $user['email'];
                     }
 
                     if ($ok) {

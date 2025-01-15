@@ -1388,4 +1388,9 @@ VALUES ('admin_setting'),
        ('option_nsfw'),
        ('option_nudity_nsfw'),
        ('no_vid_in_playlist'),
-       ('warning_php_version');
+       ('warning_php_version'),
+       ('this_user_blocked_you'),
+       ('user_is_banned'),
+       ('you_cant_share_to_yourself'),
+       ('link_this_photo'),
+       ('link_this_collection');
