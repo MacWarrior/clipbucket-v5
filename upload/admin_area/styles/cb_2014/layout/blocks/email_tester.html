@@ -6,8 +6,8 @@
                     <label for="select_email">{lang('select_an_email')}</label>
                 </div>
                 <div class="col-md-7">
-                    <select name="id_email" class="select_email " id="select_email" style="max-width: 100%">
-                        <option></option>
+                    <select name="id_email" class="select_email" id="select_email">
+                        <option disabled selected></option>
                         {foreach from=$emails item=email}
                             <option value="{$email.id_email}">{$email.code} - {$email.title}</option>
                         {/foreach}
@@ -20,7 +20,7 @@
                     <label for="email_recipient">{lang('email_recipient')}</label>
                 </div>
                 <div class="col-md-7">
-                    <input name="email_recipient" id="email_recipient">
+                    <input name="email_recipient" class="form-control" id="email_recipient"/>
                 </div>
             </div>
             <hr>
@@ -29,7 +29,7 @@
                     <label for="recipient">{lang('recipient')}</label>
                 </div>
                 <div class="col-md-7">
-                    <input name="recipient" id="recipient">
+                    <input name="recipient" class="form-control" id="recipient"/>
                 </div>
             </div>
             <hr>
@@ -38,7 +38,7 @@
                     <label for="email_sender">{lang('email_sender')}</label>
                 </div>
                 <div class="col-md-7">
-                    <input name="email_sender" id="email_sender" placeholder="{config('email_sender_address')}">
+                    <input name="email_sender" id="email_sender" class="form-control" placeholder="{config('email_sender_address')}"/>
                 </div>
             </div>
             <hr>
@@ -47,19 +47,18 @@
                     <label for="sender">{lang('sender')}</label>
                 </div>
                 <div class="col-md-7">
-                    <input name="sender" id="sender" placeholder="{config('email_sender_name')}">
+                    <input name="sender" id="sender" class="form-control" placeholder="{config('email_sender_name')}"/>
                 </div>
             </div>
 
         </div>
         <div class="col-md-8">
             <div id="edit_variable"></div>
-
         </div>
     </div>
     <hr>
     <div class="row">
-        <button class="btn btn-primary send_email" >{lang('send')}</button>
+        <button class="btn btn-primary send_email">{lang('send')}</button>
     </div>
 </form>
 <script>
