@@ -45,8 +45,6 @@ function msg_arr($arr): string
     return '<span class="msg ' . $type . '">' . $text . '</span>';
 }
 
-
-
 function selected($selected): string
 {
     global $mode;
@@ -54,21 +52,6 @@ function selected($selected): string
         return 'class=\'selected\'';
     }
     return '';
-}
-
-function GetServerProtocol(): string
-{
-    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-        return 'https://';
-    }
-    $protocol = preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL']));
-    $protocol .= '://';
-    return $protocol;
-}
-
-function GetServerURL(): string
-{
-    return GetServerProtocol() . $_SERVER['HTTP_HOST'] . dirname($_SERVER['PHP_SELF']);
 }
 
 /**
