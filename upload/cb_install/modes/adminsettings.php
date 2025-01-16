@@ -32,7 +32,7 @@ Migration::updateConfig('basedir', DirPath::get('root'));
         <br/>
         <div class="field">
             <label class="grey-text" for="email"><?php echo lang('admin_email'); ?></label>
-            <input name="email" type="text" id="email" class="form-control" value="admin@thiswebsite.com">
+            <input name="email" type="text" id="email" class="form-control" value="admin@<?php echo $_SERVER['HTTP_HOST']; ?>">
             <p class="grey-text font-size" style="margin-top:0;">
                 <?php echo lang('hint_admin_email'); ?>
             </p>

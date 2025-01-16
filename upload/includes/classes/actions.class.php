@@ -279,18 +279,16 @@ class cbactions
                     }
 
                     if ($ok) {
-                        global $cbemail;
-                        $tpl = $cbemail->get_template($tpl);
-                        $more_var = ['{user_message}' => post('message')];
+                        $more_var = [
+                            'sender_username' => user_name(),
+                            'sender_message'  => display_clean(post('message')),
+                        ];
                         $var = array_merge($more_var, $var);
-                        $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                        $msg = $cbemail->replace($tpl['email_template'], $var);
 
                         //Now Finally Sending Email
                         $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
-
-                        cbmail(['to' => $emails_array, 'from' => $from, 'from_name' => user_name(), 'subject' => $subj, 'content' => $msg, 'use_boundary' => true]);
-                        e(lang('thnx_sharing_msg'), $this->name, 'm');
+                        EmailTemplate::sendMail($tpl, $emails_array, $var, $from, user_name());
+                        e(lang('thnx_sharing_msg', $this->name), 'm');
                     }
                 } else {
                     e(lang('share_video_no_user_err', $this->name));
