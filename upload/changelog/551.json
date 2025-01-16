@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"242",
+  "revision":"244",
   "status":"dev",
   "detail":[
     {
@@ -42,6 +42,7 @@
         ,"Refactor orphan photos management"
         ,"Refactor user levels management interface"
         ,"Refactor logo & favicon edition"
+        ,"Refactor email templates management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -58,6 +59,7 @@
         ,"Update System Info interface"
         ,"Update WIP update process"
         ,"Update timezone selection display"
+        ,"Update serveur configuration global check"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -221,6 +223,7 @@
         ,"Fix possible unauthenticated template change (Thanks @kawing-ho !)"
         ,"Fix possible remote code execution (Thanks @kawing-ho !)"
         ,"Fix collection add more button visibility"
+        ,"Fix base URL usage"
       ]
     },
     {
