@@ -10,10 +10,6 @@ if( !User::getInstance()->hasPermission('admin_access') ){
 global $breadcrumb;
 $breadcrumb[0] = ['title' => 'Dashboard', 'url' => ''];
 
-if (!empty($_GET['finish_upgrade'])) {
-    e('Your database has been successfuly updated to version ' . display_clean($_GET['version']), 'm');
-}
-
 $mode = $_POST['mode'];
 if (!isset($mode)) {
     $mode = $_GET['mode'];

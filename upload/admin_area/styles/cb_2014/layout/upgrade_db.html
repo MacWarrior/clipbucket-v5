@@ -27,10 +27,10 @@
                 <button class="btn btn-primary" type="button" id="submit_version">Start DB upgrade</button>
             </div>
         </div>
-        <div>
-            Current file : <span id="current_file"></span><i class="glyphicon glyphicon-refresh animate-spin"></i>
-        </div>
         <div id="progress_div" style="text-align:center;vertical-align:middle;display:none;">
+            <div>
+                Current file : <span id="current_file"></span><i class="glyphicon glyphicon-refresh animate-spin"></i>
+            </div>
             <br/>
             <div style="padding:6px;" ><span id="pourcent"></span>%
                 (<span id="done"></span> / <span id="total"></span>)
@@ -97,7 +97,7 @@
                     dataType: 'json'
                 }).done(function (result) {
                     if (result['success']) {
-                        location.replace('index.php?finish_upgrade=1&version=' + result['msg']);
+                        location.replace('index.php');
                     } else {
                         $('.page-content').prepend(result['msg']);
                         $('.progress-bar').removeClass('progress-bar-success').addClass('progress-bar-danger').addClass('progress-bar-striped').attr('aria-valuenow', 100).width(100 + '%')

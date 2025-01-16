@@ -14,7 +14,9 @@ class M00367 extends \Migration
     {
 
         $tool = AdminTool::getTools([' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')  AND id_tool =5 '])[0];
-        AdminTool::getInstance()->initById(5);
+        if (!empty($tool)) {
+            AdminTool::getInstance()->initById(5);
+        }
         $sql = 'SET @constraint_name = (SELECT CONSTRAINT_NAME
                         FROM information_schema.key_column_usage
                         WHERE CONSTRAINT_SCHEMA = DATABASE()
@@ -163,8 +165,9 @@ class M00367 extends \Migration
             'en' => 'Tool ended',
             'fr' => 'Outil terminé'
         ]);
-
-        AdminTool::getInstance()->setToolInProgressNew();
-        AdminTool::getInstance()->updateToolHisto(['elements_total'], [$tool['elements_total']]);
+        if (!empty($tool)) {
+            AdminTool::getInstance()->setToolInProgressNew();
+            AdminTool::getInstance()->updateToolHisto(['elements_total'], [$tool['elements_total']]);
+        }
     }
 }

@@ -151,9 +151,9 @@ try {
     if (php_sapi_name() != 'cli') {
         echo json_encode([
             'success' => true
-            , 'msg'   => htmlentities($instance->getVersion() . ' - revision ' . (int)$instance->getRevision())
         ]);
     }
+    sessionMessageHandler::add_message('Your database has been successfuly updated to version ' . htmlentities($instance->getVersion() . ' - revision ' . (int)$instance->getRevision()), 'm');
     if ($file_OK) {
         unlink($path_file_temp);
     }
