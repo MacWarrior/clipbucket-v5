@@ -1,0 +1,37 @@
+<label for="search">{lang code="search"}</label>
+<input style="display: inline-block; width: calc(80% - 150px); vertical-align: middle;" name="search" class="form-control" type="text" id="search" value="{display_clean($search)}"/>
+<button class="btn btn-primary search_email">{{lang('search')}}</button>
+<div style="float: right">
+    <span class="btn btn-primary add_new_email_list">{lang('add')}</span>
+</div>
+<form method="post" id="default_template">
+    {if $emails}
+        <table class="table table-bordered table-striped manageUsersTable marginTop">
+            <tr>
+                <th>{lang('code')}</th>
+                <th>{lang('title')}</th>
+                <th>{lang('email_template')}</th>
+                <th>&nbsp;</th>
+            </tr>
+            {foreach from=$emails item=email}
+                <tr>
+                    <td>{$email.code}</td>
+                    <td>{$email.title}</td>
+                    <td>{$email.template_code}</td>
+                    <td>
+                        <div class="dropdown">
+                            <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">{lang('action')} <i class="caret"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
+                                <li><a role="menuitem" tabindex="-1" onclick="editEmail({$email.id_email})">{lang code='edit'}</a></li>
+                                {if !$email.is_default && $email.is_deletable}
+                                    <li><a role="menuitem" tabindex="-1" onclick="deleteEmail({$email.id_email})">{lang code='delete'}</a></li>
+                                {/if}
+                            </ul>
+                        </div>
+                    </td>
+                </tr>
+            {/foreach}
+        </table>
+    {/if}
+</form>

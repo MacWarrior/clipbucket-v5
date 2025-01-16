@@ -1,19 +1,19 @@
 <ul class="nav nav-pills nav-stacked">
-{foreach $myAccountLinks as $key => $value}
-	{if $key!='Groups'}
+    {foreach $myAccountLinks as $key => $value}
+        {if $key!='Groups'}
 
-		<li class="active"><a>{$key}</a></li>
-	
-		{foreach $value as $subKey => $subValue}
-			<li>
-				<a href="{$subValue}">
-					{if Network::is_current_url($subValue)}
-					<i class="glyphicon glyphicon-hand-right"></i>
-					{/if}
-					{$subKey}
-				</a>
-			</li>
-		{/foreach}
-	{/if}
-{/foreach}
+            <li class="active"><a>{$key}</a></li>
+
+            {foreach $value as $subKey => $subValue}
+                <li>
+                    <a href="{$subValue}">
+                        {if Network::is_current_url($subValue)}
+                            <i class="glyphicon glyphicon-hand-right"></i>
+                        {/if}
+                        {$subKey}
+                    </a>
+                </li>
+            {/foreach}
+        {/if}
+    {/foreach}
 </ul>
