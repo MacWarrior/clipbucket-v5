@@ -895,5 +895,10 @@ class MWIP extends \Migration
             'table' => 'email_templates',
             'column' =>'email_template_allowed_tags'
         ]);
+
+        self::generateTranslation('cannot_remove_default_have_to_add_one', [
+            'fr'=>'Impossible de retirer le modèle par défaut, merci d\'en choisir un nouveau',
+            'en'=>'Cannot remove default template, please choose another'
+        ]);
     }
 }

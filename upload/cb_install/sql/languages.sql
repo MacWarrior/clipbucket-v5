@@ -1451,4 +1451,5 @@ VALUES ('admin_setting'),
        ('title_email_variables'),
        ('tips_email_variables'),
        ('email_variable_logo_url'),
-       ('email_variable_favicon_url');
+       ('email_variable_favicon_url'),
+       ('cannot_remove_default_have_to_add_one');
