@@ -642,7 +642,7 @@ class System{
 
         $max_execution_time = ini_get('max_execution_time');
         if ($max_execution_time > 0 && $max_execution_time < 7200) {
-            self::displayConfigError('error config : max_execution_time ');
+            self::displayConfigError('error config : max_execution_time');
             return false;
         }
 
@@ -663,7 +663,7 @@ class System{
         $chunk_upload_size = config('chunk_upload_size');
 
         if ($chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb)) {
-            self::displayConfigError('error config : chunk_upload_size ');
+            self::displayConfigError('error config : chunk_upload_size');
             return false;
         }
 
@@ -694,18 +694,16 @@ class System{
             $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
             $tmp = [];
             if (!self::isDateTimeSynchro($tmp, $current_datetime_cli)) {
-                self::displayConfigError('error config : isDateTimeSynchro cli ');
+                self::displayConfigError('error config : isDateTimeSynchro cli');
                 return false;
-
             }
         }
 
         // Services
-
         $phpVersionReq = '7.0.0';
         $php_web_version = System::get_software_version('php_web', false, null, true);
         if ($php_web_version < $phpVersionReq) {
-            self::displayConfigError('error config : php web  ');
+            self::displayConfigError('error config : php web');
             return false;
         }
 
@@ -716,7 +714,7 @@ class System{
         }
 
         if ($ffmpeg_version < $ffReq) {
-            self::displayConfigError('error config : FFMPEG ');
+            self::displayConfigError('error config : FFMPEG');
             return false;
         }
 
@@ -726,7 +724,7 @@ class System{
         }
 
         if ($ffprobe_version < $ffReq) {
-            self::displayConfigError('error config : FFPROB ');
+            self::displayConfigError('error config : FFPROB');
             return false;
         }
 
@@ -736,7 +734,7 @@ class System{
         }
 
         if (!$media_info) {
-            self::displayConfigError('error config : Media info ');
+            self::displayConfigError('error config : Media info');
             return false;
         }
 
@@ -754,7 +752,7 @@ class System{
         $phpVersionCli = System::get_software_version('php_cli');
 
         if ($phpVersionCli < $phpVersionReq) {
-            self::displayConfigError('error config : PHP CLi ');
+            self::displayConfigError('error config : PHP CLi');
             return false;
         }
 
@@ -771,7 +769,7 @@ class System{
             $extensions_ok = (in_array($key, $extensionsCLI) && in_array($key, $extensionsWEB));
 
             if (!$extensions_ok) {
-                self::displayConfigError('error config : ' . $extension['display'] . ' ');
+                self::displayConfigError('error config : ' . $extension['display']);
                 return false;
 
             }
@@ -803,11 +801,7 @@ class System{
     private static function displayConfigError($error)
     {
             if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump($error . $call_stack);
+                DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
             }
             self::setGlobalConfigCache(0);
     }
@@ -992,11 +986,7 @@ class System{
         foreach ($permissions as $permission) {
             if ( isset($permission['err'])) {
                 if(in_dev()) {
-                    ob_start();
-                    debug_print_backtrace();
-                    print_r($_SERVER);
-                    $call_stack = ob_get_clean();
-                    DiscordLog::sendDump('error reading folder : ' . $permission['path'] . ' ' . $call_stack);
+                    DiscordLog::sendDump('error reading folder : ' . $permission['path'] . '```' . debug_backtrace_string() . '```');
                 }
                 return 0;
             }
