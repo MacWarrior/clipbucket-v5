@@ -29,8 +29,7 @@ if (isset($_POST['update_dp_options'])) {
 //Do No Edit Below This Line
 define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('SITETEMPLATEDIR', DirPath::get('styles') . config('template_dir'));
-define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
-define('TEMPLATEURLFO', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
+define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles/cb_2014');
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
 define('TEMPLATE', config('template_dir'));
 
@@ -51,8 +50,6 @@ Assign('theme', TEMPLATEURL . '/theme');
 Assign('theme_url', TEMPLATEURL . '/theme');
 Assign('style_dir', LAYOUT);
 Assign('layout_dir', LAYOUT);
-Assign('logged_user', @$_SESSION['username']);
-Assign('superadmin', @$_SESSION['superadmin']);
 
 //Including Plugins
 include('plugins.php');

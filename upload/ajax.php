@@ -338,12 +338,11 @@ if (!empty($mode)) {
             break;
 
         case 'add_friend':
-            global $cbemail;
             $friend = mysql_clean($_POST['uid']);
             $userid = user_id();
             $username = user_name();
             $mailId = userquery::getInstance()->get_user_details($friend, false, true);
-            $cbemail->friend_request_email($mailId['email'], $username);
+            Email::send_friend_request($mailId['email'], $username);
 
             if ($userid) {
                 userquery::getInstance()->add_contact($userid, $friend);

@@ -37,7 +37,7 @@ if ($mode == 'reset_pass' && $user) {
  */
 if (isset($_POST['recover_username'])) {
     $email = mysql_clean($_POST['forgot_email']);
-    $msg = userquery::getInstance()->recover_username($email);
+    userquery::getInstance()->recover_username($email);
 }
 
 assign('mode', $mode);

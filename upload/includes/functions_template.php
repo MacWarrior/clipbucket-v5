@@ -178,6 +178,7 @@ function display_thumb_list_with_param($data, $vidthumbs, $vidthumbs_custom, $nb
 
 /**
  * @param $data
+ * @param $type
  * @return void
  * @throws Exception
  */
@@ -306,6 +307,7 @@ function display_categ_form()
 {
     echo templateWithMsgJson('blocks/edit_category.html');
 }
+
 function template_wip_relaunch(bool $success)
 {
     assign('success', $success);

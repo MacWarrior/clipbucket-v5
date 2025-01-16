@@ -93,6 +93,7 @@ require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
+require_once DirPath::get('classes') . 'email_template.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -245,9 +246,6 @@ define('SEO', $row['seo']); //Set yes / no
 # Registration & Email Settings
 define('EMAIL_VERIFICATION', $row['email_verification']);
 define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
-define('WEBSITE_EMAIL', $row['website_email']);
-define('SUPPORT_EMAIL', $row['support_email']);
-define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
 
 # Defining Photo Limits
@@ -332,7 +330,6 @@ $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
 $Smarty->assign_by_ref('cbpage', $cbpage);
-$Smarty->assign_by_ref('cbemail', $cbemail);
 $Smarty->assign_by_ref('cbcollection', $cbcollection);
 $Smarty->assign_by_ref('cbphoto', $cbphoto);
 $Smarty->assign_by_ref('cbfeeds', $cbfeeds);
