@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"245",
+  "revision":"246",
   "status":"dev",
   "detail":[
     {
@@ -280,6 +280,7 @@
         ,"Implement core update during installation"
         ,"Implement CSS/JS versioning"
         ,"Implement dockerfile <i>(#216)</i>"
+        ,"Implement update progressbar"
         ,"Refactor migration system"
         ,"Refactor installation process"
         ,"Refactor alterTable constraints"
@@ -317,6 +318,7 @@
         ,"Fix incomplete SQL in update 5.5.1 - 203"
         ,"Fix user_levels table structure <i>(#483)</i>"
         ,"Fix translation creation in update 5.5.0 - 294"
+        ,"Fix update 5.5.0 - 367"
       ]
     },
     {

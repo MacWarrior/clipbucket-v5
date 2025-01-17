@@ -111,6 +111,21 @@ if( $error ) {
 }
 
 $templine = '';
+$file_OK = false;
+if (php_sapi_name() != 'cli') {
+//create progress file
+    try {
+        $path_file_temp = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . 'temp' . DIRECTORY_SEPARATOR . 'process_migration';
+        if (file_exists($path_file_temp)) {
+            unlink($path_file_temp);
+        }
+        $file_temp = fopen($path_file_temp, 'w');
+        if ($file_temp) {
+            fclose($file_temp);
+            $file_OK = true;
+        }
+    } catch (Exception $exception) {}
+}
 try {
     if ($need_to_create_version_table) {
         execute_sql_file($table_version_path);
@@ -125,15 +140,22 @@ try {
     $files = array_merge($files, get_plugins_files_to_upgrade($installed_plugins));
 
     $match = [];
-    foreach ($files as $file) {
+    $nb_files = count($files);
+    foreach ($files as $i => $file) {
         /** @var Migration $instance  */
         $instance = execute_migration_file($file);
+        if ($file_OK) {
+            file_put_contents($path_file_temp, json_encode(['elements_total'=> $nb_files, 'elements_done'=>$i+1, 'current_file'=>$file]));
+        }
     }
     if (php_sapi_name() != 'cli') {
         echo json_encode([
             'success' => true
-            , 'msg'   => htmlentities($instance->getVersion() . ' - revision ' . (int)$instance->getRevision())
         ]);
+    }
+    sessionMessageHandler::add_message('Your database has been successfuly updated to version ' . htmlentities($instance->getVersion() . ' - revision ' . (int)$instance->getRevision()), 'm');
+    if ($file_OK) {
+        unlink($path_file_temp);
     }
 } catch (\Exception $e) {
     $regex = '/\/(\d{0,3}\.\d{0,3}\.\d{0,3}|commercial)\/(\D)(\d{5})\.php/';

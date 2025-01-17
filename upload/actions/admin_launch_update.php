@@ -4,17 +4,17 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionAjax('admin_access');
 $core_tool = new AdminTool();
-$db_tool = new AdminTool();
+
 $error_init = [];
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
     $error_init['core'] = $core_tool->initByCode('update_core');
-    $error_init['db'] = $db_tool->initByCode('update_database_version');
+    $error_init['db'] = AdminTool::getInstance()->initByCode('update_database_version');
 } else {
     $error_init['core'] = $core_tool->initById(11);
-    $error_init['db'] = $db_tool->initById(5);
+    $error_init['db'] = AdminTool::getInstance()->initById(5);
 }
 
-if($error_init['core'] === false || $error_init['db'] === false) {
+if(($error_init['core'] === false && $_POST['type'] == 'core' )|| $error_init['db'] === false) {
     echo json_encode([
         'success' => false
         ,'error_msg' => in_dev() ? 'Failed to find tools for update' : lang('technical_error')
@@ -35,7 +35,7 @@ if ($_POST['type'] == 'core' && $core_tool->isAlreadyLaunch() === false) {
 
 // TODO : Here, instead of continuing, we should start a new PHP process to avoid core modifications issue while already loaded by this current script
 Update::getInstance()->flush();
-if (($_POST['type'] == 'core' || $_POST['type'] == 'db') && $db_tool->isAlreadyLaunch() === false ) {
-    $db_tool->setToolInProgress();
-    $db_tool->launch();
+if (($_POST['type'] == 'core' || $_POST['type'] == 'db') && AdminTool::getInstance()->isAlreadyLaunch() === false ) {
+    AdminTool::getInstance()->setToolInProgress();
+    AdminTool::getInstance()->launch();
 }
