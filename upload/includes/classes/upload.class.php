@@ -186,7 +186,7 @@ class Upload
 
         //Setting Activation Option
         $query_field[] = 'active';
-        $query_val[] = config('activation') == 0 ? 'yes' : 'no';
+        $query_val[] = config('activation') || (config('video_enable_nsfw_check') =='yes' && AIVision::isAvailable()) ? 'no' : 'yes';
 
         $query_field[] = 'date_added';
         $query_val[] = dateNow();
@@ -961,7 +961,6 @@ class Upload
         }
 
         switch ($type) {
-            case 'a':
             case 'avatar':
                 if ($file['size'] / 1024 > config('max_profile_pic_size')) {
                     e(lang('file_size_exceeds', config('max_profile_pic_size')));
@@ -995,7 +994,6 @@ class Upload
                 e(lang('class_error_occured'));
                 return false;
 
-            case 'b':
             case 'background':
                 if ($file['size'] / 1024 > config('max_bg_size')) {
                     e(lang('file_size_exceeds', config('max_bg_size')));

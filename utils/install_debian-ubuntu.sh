@@ -267,6 +267,8 @@ echo -ne " OK"
 echo ""
 echo -ne "Updating PHP ${PHP_VERSION} configs..."
 sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/fpm/php.ini
+sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/${PHP_VERSION}/cli/php.ini
 
 systemctl restart php${PHP_VERSION}-fpm
 echo -ne " OK"
@@ -462,10 +464,6 @@ server {
 
     location /rss/ {
         rewrite ^/rss/([a-zA-Z0-9].+)$ /rss.php?mode=$1&$query_string last;
-    }
-
-    location /list/ {
-        rewrite ^/list/([0-9]+)/(.*)?$ /view_playlist.php?list_id=$1 last;
     }
 
     location ~ /rss$ {

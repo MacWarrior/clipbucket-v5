@@ -343,13 +343,6 @@ class ClipBucket
             , 'url' => DirPath::getUrl('admin_area') . 'language_settings.php'
         ];
 
-        if( config('disable_email') != 'yes' ){
-            $menu_configuration['sub'][] = [
-                'title' => lang('email_template')
-                , 'url' => DirPath::getUrl('admin_area') . 'email_settings.php'
-            ];
-        }
-
         $menu_configuration['sub'][] = [
             'title' => lang('watermark_settings')
             , 'url' => DirPath::getUrl('admin_area') . 'photo_settings.php?mode=watermark_settings'
@@ -387,13 +380,18 @@ class ClipBucket
                 ];
             }
 
-
             if( count($cbplayer->getPlayers()) > 1 || in_dev() ){
                 $menu_configuration['sub'][] = [
                     'title' => lang('manage_x', strtolower(lang('players')))
                     , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php'
                 ];
             }
+        }
+        if( config('disable_email') != 'yes'  && User::getInstance()->hasPermission('email_template_management') ){
+            $menu_configuration['sub'][] = [
+                'title' =>  lang('email_template_management')
+                , 'url' => DirPath::getUrl('admin_area') . 'email_template_management.php'
+            ];
         }
 
         $this->addMenuAdmin($menu_configuration, 2);
@@ -507,10 +505,6 @@ class ClipBucket
                         'title' => lang('system_info')
                         , 'url' => DirPath::getUrl('admin_area') . 'system_info.php'
                     ]
-                    , [
-                        'title' => lang('email_tester')
-                        , 'url' => DirPath::getUrl('admin_area') . 'email_tester.php'
-                    ]
                 ]
             ];
 
@@ -595,18 +589,11 @@ class ClipBucket
     /**
      * Function used to set template (Frontend)
      *
-     * @param bool $ctemplate
-     *
      * @return bool|mixed|string
      * @throws Exception
      */
-    function set_the_template($ctemplate = false)
+    function set_the_template()
     {
-        global $cbtpl, $myquery;
-        if ($ctemplate) {
-            $_GET['template'] = $ctemplate;
-        }
-
         if( is_dir(DirPath::get('styles') . $this->template) ){
             $template = $this->template;
         } else {
@@ -615,36 +602,17 @@ class ClipBucket
         }
         require_once DirPath::get('styles') . $template . DIRECTORY_SEPARATOR . 'header.php';
 
-        if (isset($_SESSION['the_template']) && $cbtpl->is_template($_SESSION['the_template'])) {
-            $template = $_SESSION['the_template'];
-        }
-
-        if (isset($_GET['template'])) { //@todo : add permission
-            if (is_dir(DirPath::get('styles') . $_GET['template']) && $_GET['template']) {
-                $template = $_GET['template'];
-            }
-        }
-        if (isset($_GET['set_the_template']) && $cbtpl->is_template($_GET['set_the_template'])) {
-            $template = $_SESSION['the_template'] = $_GET['set_the_template'];
-        }
-
         if (!is_dir(DirPath::get('styles') . $template) || !$template) {
-            $template = $cbtpl->get_any_template();
+            $template = CBTemplate::getInstance()->get_any_template();
         }
 
-        if (!is_dir(DirPath::get('styles') . $template) || !$template) {
-            exit("Unable to find any template, please goto <a href='http://clip-bucket.com/no-template-found'><strong>ClipBucket Support!</strong></a>");
-        }
-
-        if (isset($_GET['set_template'])) {
-            $myquery->set_template($template);
+        if( isset($_GET['set_template']) && User::getInstance()->hasAdminAccess() ){
+            myquery::getInstance()->set_template($template);
         }
 
         //$this->smarty_version
-        $template_details = $cbtpl->get_template_details($template);
-        $cbtpl->smarty_version = $template_details['smarty_version'];
-
-        define('SMARTY_VERSION', $cbtpl->smarty_version);
+        $template_details = CBTemplate::getInstance()->get_template_details($template);
+        CBTemplate::getInstance()->smarty_version = $template_details['smarty_version'];
 
         return $this->template = $template;
     }

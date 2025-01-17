@@ -188,12 +188,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/OxygenzSAS/composer_lib_discord.git",
-                "reference": "ed652117bff3705c81d07866f2259dd2d333b05e"
+                "reference": "c0253042b0a9a966eaa6a7c7c0531595edac61bc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_discord/zipball/ed652117bff3705c81d07866f2259dd2d333b05e",
-                "reference": "ed652117bff3705c81d07866f2259dd2d333b05e",
+                "url": "https://api.github.com/repos/OxygenzSAS/composer_lib_discord/zipball/c0253042b0a9a966eaa6a7c7c0531595edac61bc",
+                "reference": "c0253042b0a9a966eaa6a7c7c0531595edac61bc",
                 "shasum": ""
             },
             "require": {
@@ -201,7 +201,7 @@
                 "psr/http-server-middleware": "1.0.2",
                 "psr/log": "1.1.4"
             },
-            "time": "2024-09-30T14:57:31+00:00",
+            "time": "2024-12-23T16:22:33+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -236,17 +236,17 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.9.1",
-            "version_normalized": "6.9.1.0",
+            "version": "v6.9.3",
+            "version_normalized": "6.9.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "039de174cd9c17a8389754d3b877a2ed22743e18"
+                "reference": "2f5c94fe7493efc213f643c23b1b1c249d40f47e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/039de174cd9c17a8389754d3b877a2ed22743e18",
-                "reference": "039de174cd9c17a8389754d3b877a2ed22743e18",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/2f5c94fe7493efc213f643c23b1b1c249d40f47e",
+                "reference": "2f5c94fe7493efc213f643c23b1b1c249d40f47e",
                 "shasum": ""
             },
             "require": {
@@ -276,7 +276,7 @@
                 "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)",
                 "thenetworg/oauth2-azure": "Needed for Microsoft XOAUTH2 authentication"
             },
-            "time": "2023-11-25T22:23:28+00:00",
+            "time": "2024-11-24T18:04:13+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -308,7 +308,7 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "support": {
                 "issues": "https://github.com/PHPMailer/PHPMailer/issues",
-                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.1"
+                "source": "https://github.com/PHPMailer/PHPMailer/tree/v6.9.3"
             },
             "funding": [
                 {
@@ -389,27 +389,27 @@
         },
         {
             "name": "psr/http-message",
-            "version": "1.0.1",
-            "version_normalized": "1.0.1.0",
+            "version": "1.1",
+            "version_normalized": "1.1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/http-message.git",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363"
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/http-message/zipball/f6561bf28d520154e4b0ec72be95418abe6d9363",
-                "reference": "f6561bf28d520154e4b0ec72be95418abe6d9363",
+                "url": "https://api.github.com/repos/php-fig/http-message/zipball/cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
+                "reference": "cb6ce4845ce34a8ad9e68117c10ee90a29919eba",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^7.2 || ^8.0"
             },
-            "time": "2016-08-06T14:39:51+00:00",
+            "time": "2023-04-04T09:50:52+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.0.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "installation-source": "dist",
@@ -439,7 +439,7 @@
                 "response"
             ],
             "support": {
-                "source": "https://github.com/php-fig/http-message/tree/master"
+                "source": "https://github.com/php-fig/http-message/tree/1.1"
             },
             "install-path": "../psr/http-message"
         },
@@ -725,8 +725,63 @@
                 "source": "https://github.com/smarty-php/smarty/tree/v3.1.48"
             },
             "install-path": "../smarty/smarty"
+        },
+        {
+            "name": "veka-server/onnx-php",
+            "version": "dev-php7",
+            "version_normalized": "dev-php7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/veka-server/onnx-php.git",
+                "reference": "66edb2355215fa5a71349b84f0abb0c114a05120"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/veka-server/onnx-php/zipball/66edb2355215fa5a71349b84f0abb0c114a05120",
+                "reference": "66edb2355215fa5a71349b84f0abb0c114a05120",
+                "shasum": ""
+            },
+            "require": {
+                "ext-ffi": "*",
+                "ext-mbstring": "*",
+                "php": ">= 7"
+            },
+            "time": "2024-12-23T15:07:36+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Onnx\\": "src/",
+                    "FFI\\Env\\": "env/src",
+                    "FFI\\WorkDirectory\\": "work-directory/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "veka-server",
+                    "email": "veka610@gmail.com"
+                }
+            ],
+            "description": "lib for use onnxruntime with php",
+            "keywords": [
+                "ai",
+                "llm",
+                "models",
+                "onnx",
+                "onnxruntime",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/veka-server/onnx-php/issues",
+                "source": "https://github.com/veka-server/onnx-php/tree/php7"
+            },
+            "install-path": "../veka-server/onnx-php"
         }
     ],
-    "dev": true,
+    "dev": false,
     "dev-package-names": []
 }

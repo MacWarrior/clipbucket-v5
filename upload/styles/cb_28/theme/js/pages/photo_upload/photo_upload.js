@@ -406,12 +406,13 @@ $(document).ready(function(){
                                     response = $.parseJSON(response);
                                     $('.close').click();
                                     $("#uploadMessage").prepend(response['msg']);
-                                    $("#CollectionDIV").toggle("fast");
-
-                                    $("#SelectionDIV").html(response.template);
-                                    $('.form_header').show();
-                                    $(".upload-area").show();
-                                    $('#collectionSelection').parent().show();
+                                    if (response.success) {
+                                        $("#CollectionDIV").toggle("fast");
+                                        $("#SelectionDIV").html(response.template);
+                                        $('.form_header').show();
+                                        $(".upload-area").show();
+                                        $('#collectionSelection').parent().show();
+                                    }
                                 }
                             });
                         }

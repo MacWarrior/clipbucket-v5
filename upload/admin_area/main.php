@@ -135,6 +135,10 @@ if (isset($_POST['update'])) {
         , 'enable_access_view_video_history'
         , 'enable_visual_editor_comments'
         , 'display_featured_video'
+        , 'photo_enable_nsfw_check'
+        , 'video_enable_nsfw_check'
+        , 'photo_nsfw_check_model'
+        , 'video_nsfw_check_model'
     ];
 
     $config_booleans_to_refactor = [
@@ -306,7 +310,6 @@ if (isset($_POST['update'])) {
         'seo',
         'seo_vido_url',
         'search_list_per_page',
-        'support_email',
         'show_collapsed_checkboxes',
         'disable_email',
         'enable_country',
@@ -371,8 +374,6 @@ if (isset($_POST['update'])) {
         'vrate',
         'video_require_login',
         'feedsSection',
-        'website_email',
-        'welcome_email',
         'store_guest_session',
         'delete_mass_upload',
         'stay_mp4',
@@ -466,7 +467,13 @@ if (isset($_POST['update'])) {
         'limit_photo_related',
         'display_featured_video',
         'featured_video_style',
-        'number_featured_video'
+        'number_featured_video',
+        'photo_enable_nsfw_check',
+        'video_enable_nsfw_check',
+        'photo_nsfw_check_model',
+        'video_nsfw_check_model',
+        'email_sender_address',
+        'email_sender_name'
     ];
 
     foreach ($opt_list as $optl) {

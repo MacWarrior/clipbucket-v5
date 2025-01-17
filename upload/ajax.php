@@ -233,22 +233,22 @@ if (!empty($mode)) {
                 case 'v':
                 case 'video':
                 default:
-                    $cbvideo->action->report_it($id);
+                    $cbvideo->action->report_it($id, $type, user_id());
                     break;
 
                 case 'u':
                 case 'user':
-                    userquery::getInstance()->action->report_it($id);
+                    userquery::getInstance()->action->report_it($id, $type, user_id());
                     break;
 
                 case 'p':
                 case 'photo':
-                    $cbphoto->action->report_it($id);
+                    $cbphoto->action->report_it($id, $type, user_id());
                     break;
 
                 case 'cl':
                 case 'collection':
-                    $cbcollection->action->report_it($id);
+                    $cbcollection->action->report_it($id, $type, user_id());
                     break;
             }
 
@@ -338,12 +338,11 @@ if (!empty($mode)) {
             break;
 
         case 'add_friend':
-            global $cbemail;
             $friend = mysql_clean($_POST['uid']);
             $userid = user_id();
             $username = user_name();
             $mailId = userquery::getInstance()->get_user_details($friend, false, true);
-            $cbemail->friend_request_email($mailId['email'], $username);
+            Email::send_friend_request($mailId['email'], $username);
 
             if ($userid) {
                 userquery::getInstance()->add_contact($userid, $friend);
@@ -687,7 +686,9 @@ if (!empty($mode)) {
             ]);
             assign('collections', $collections);
             assign('selected', $insert_id);
-            echo templateWithMsgJson('blocks/collection_select_upload.html');
+            $response = templateWithMsgJson('blocks/collection_select_upload.html', false);
+            $response['success'] = (bool)$insert_id;
+            echo json_encode($response);
             break;
 
         case "ajaxPhotos":

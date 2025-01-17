@@ -221,7 +221,11 @@ call_functions(userquery::getInstance()->user_manager_func);
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
 
-$params = [];
+$params = [
+    'not_userid' => $anonymous_id,
+    'limit'      => $get_limit,
+    'order'      => 'doj DESC'
+];
 if (isset($_GET['search'])) {
     $params['userid']   = $_GET['userid'] ?? false;
     $params['username'] = $_GET['username'] ?? false;
@@ -232,8 +236,6 @@ if (isset($_GET['search'])) {
     $params['level']    = $_GET['level'] ?? false;
     $params['category'] = $_GET['category'] ?? false;
 }
-$params['limit'] = $get_limit;
-$params['order'] = 'doj DESC';
 
 $users = User::getInstance()->getAll($params);
 

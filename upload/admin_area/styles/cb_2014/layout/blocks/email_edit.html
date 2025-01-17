@@ -1,0 +1,65 @@
+<form method="post" enctype="multipart/form-data" name="email_edit" id="email_edit">
+    <input name="id_email" value="{$email.id_email}" type="hidden"/>
+    <div class="row">
+        <div class="col-md-10">
+            <label for="email_id_email_template">{lang('email_template')}</label>
+            <select name="id_email_template" id="email_id_email_template">
+                {foreach from=$email_templates item=template}
+                    <option value="{$template.id_email_template}"{if $template.id_email_template == $email.id_email_template || (!$email.id_email_template && $template.id_email_template == EmailTemplate::getDefaultId())} selected="selected"{/if}>{$template.code}</option>
+                {/foreach}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <span class="btn btn-primary back_to_email_list pull-right">{lang('back_to_list')}</span>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="email_code">{lang('code')}</label>
+        </div>
+        <div class="col-md-10">
+            {if $email.is_deletable === '0'}
+                <input name="code" id="email_code" value="{$email.code}" type="hidden"/>
+                <input name="is_deletable" value="{$email.is_deletable}" type="hidden"/>
+            {/if}
+            <input name="code" id="email_code" value="{$email.code}" type="text"{if $email.is_deletable === '0'} disabled="disabled"{/if}/>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <label for="email_title">{lang('title')}</label>
+        </div>
+        <div class="col-md-10">
+            <input name="title" id="email_title" value="{$email.title}" type="text" style="width:100%;"/>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6 border-right">
+            <label for="email_content"><b>{lang('content')|ucfirst}</b></label>
+            <textarea name="content" id="email_content" style="width:100%;min-height:200px;max-width:100%;resize:vertical;"></textarea>
+        </div>
+        <div class="col-md-6 ">
+            <label for="render"><b>{lang('rendered')}</b></label>
+            {if !$email.id_email_template}
+                {assign var=id_email_template value=0}
+            {else}
+                {assign var=id_email_template value=$email.id_email_template}
+            {/if}
+            <div id="render_email" class="tab-content" style="width:100%min-height:200px;padding:0;">{EmailTemplate::getRenderedEmail($id_email_template, $email.content)}</div>
+        </div>
+    </div>
+    <div class="row text-center paddingTop">
+        <button class="btn btn-primary">{lang('submit_now')}</button>
+    </div>
+    <div class="row">
+        {{include file="$layout_dir/blocks/email_list_variable.html"}}
+    </div>
+</form>
+<script>
+    email_content = "{base64_encode(stripcslashes($email.content))}";
+    $(function () {
+        $('#email_content').val(atob(email_content));
+    });
+</script>

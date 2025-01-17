@@ -765,12 +765,12 @@ class CBPhotos
     function set_share_email($data)
     {
         $this->share_email_vars = [
-            '{photo_title}'       => $data['photo_title'],
-            '{photo_description}' => $data['photo_description'],
-            '{photo_link}'        => $this->collection->collection_links($data, 'view_item'),
-            '{photo_thumb}'       => $this->get_image_file($data['photo_id'], 'm')
+            'photo_description' => $data['photo_description'],
+            'photo_title'       => $data['photo_title'],
+            'photo_link'        => $this->collection->collection_links($data, 'view_item'),
+            'photo_thumb'       => $this->get_image_file($data['photo_id'], 'm')
         ];
-        $this->action->share_template_name = 'photo_share_template';
+        $this->action->share_template_name = 'share_photo';
         $this->action->val_array = $this->share_email_vars;
     }
 
@@ -1711,8 +1711,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        [$w, $h] = getimagesize($file);
-        [$ww, $wh] = getimagesize($watermark);
+        list($w, $h) = getimagesize($file);
+        list($ww, $wh) = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1763,7 +1763,7 @@ class CBPhotos
             return false;
         }
 
-        [$Swidth, $Sheight, $Stype] = getimagesize($input);
+        list($Swidth, $Sheight, $Stype) = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);

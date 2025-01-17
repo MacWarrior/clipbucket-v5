@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"226",
+  "revision":"245",
   "status":"dev",
   "detail":[
     {
@@ -33,6 +33,8 @@
         ,"Implement force to error admin tool"
         ,"Implement TMDB Tv Show integration"
         ,"Implement related photos quantity limit"
+        ,"Implement AI NSFW check"
+        ,"Implement future PHP version check"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -40,6 +42,7 @@
         ,"Refactor orphan photos management"
         ,"Refactor user levels management interface"
         ,"Refactor logo & favicon edition"
+        ,"Refactor email templates management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -56,11 +59,15 @@
         ,"Update System Info interface"
         ,"Update WIP update process"
         ,"Update timezone selection display"
+        ,"Update serveur configuration global check"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
         ,"Use video poster in video manager if available"
         ,"Reorder main menu"
+        ,"Prevent edition of own user level rights"
+        ,"Remove unused ads placements"
+        ,"Hide anonymous user from user management"
         ,"Fix TMDB import error display"
         ,"Fix PHP error on user deletion"
         ,"Fix video search"
@@ -110,6 +117,8 @@
         ,"Fix self-update interface"
         ,"Fix system info services check"
         ,"Fix login redirect"
+        ,"Fix missing config"
+        ,"Fix links to front office"
       ]
     },
     {
@@ -147,7 +156,9 @@
         ,"Update orphan photos management"
         ,"Update dark & light themes"
         ,"Update search engine"
+        ,"Update collection management menus"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
+        ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
         ,"Fix pagination on videos, collections & photos"
@@ -206,6 +217,15 @@
         ,"Fix URL redirect with specified port <i>(#486)</i>"
         ,"Fix double / in URL"
         ,"Fix permission check for guests"
+        ,"Fix video & photo edit button <i>(#494)</i>"
+        ,"Fix anonymous comments form"
+        ,"Fix collection creation on photo upload form"
+        ,"Fix video title overflow"
+        ,"Fix possible arbitrary file deletion (Thanks @kawing-ho !)"
+        ,"Fix possible unauthenticated template change (Thanks @kawing-ho !)"
+        ,"Fix possible remote code execution (Thanks @kawing-ho !)"
+        ,"Fix collection add more button visibility"
+        ,"Fix base URL usage"
       ]
     },
     {
@@ -236,6 +256,8 @@
         ,"Fix internal logs with IPv6"
         ,"Fix server info checkup"
         ,"Fix TMDB API call"
+        ,"Fix session management with IPv6"
+        ,"Fix PHP7.0 compatibility"
       ]
     },
     {
@@ -245,6 +267,8 @@
         ,"Add option to only keep maximum resolution"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
+        ,"Fix video conversion failed with unspecified subtitle format"
+        ,"Fix rare original video bitrate recovery"
       ]
     },
     {
@@ -329,11 +353,14 @@
       "title": "External components",
       "description": [
         "Update VideoJS to version 8.21.1"
-        ,"Update Windows installation script MariaDB to 11.6.0"
-        ,"Update Windows installation script PHP to 8.3.12"
-        ,"Update Windows installation script FFMpeg to 7.0.2"
-        ,"Update Windows installation script MediaInfo to 24.06"
+        ,"Update Windows installation script MariaDB to 11.7.1"
+        ,"Update Windows installation script PHP to 8.4.1"
+        ,"Update Windows installation script FFMpeg to 7.1"
+        ,"Update Windows installation script MediaInfo to 24.11"
+        ,"Update Windows installation script Nginx to 1.27.3"
+        ,"Update Windows installation script Git to 2.47.1"
         ,"Update FontAwesome to 4.7.0"
+        ,"Update PhpMailer to 6.9.3"
       ]
     }
   ]

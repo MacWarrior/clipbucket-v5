@@ -13,7 +13,8 @@
 					<h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
 					<div>
 						<img src="{$imageurl}/dot.gif" class="arrow_pointing" />
-						<input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary btn-sm" />
+						<input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary  " />
+						<a class="btn-primary btn" href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a>
 					</div>
 					<br>
 					<div class="marginTop">

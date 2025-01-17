@@ -23,11 +23,11 @@
             {/if}
             <section class="video-details clearfix">
                 <header class="clearfix details">
-                    <h1>{display_clean($video.title)}</h1>
+                    <h1 title="{display_clean($video.title)}">{display_clean($video.title)}</h1>
                     <div class="user-video-info clearfix">
 
                         {if config('enable_hide_uploader_name') != 'yes'}
-                            {if isSectionEnabled('channels')  && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
                                 <a href="{$userquery->profile_link($video)}" class="avatar">
                                     <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
                                 </a>
@@ -84,9 +84,9 @@
                                 {/if}
                             {/if}
 
-                            {if config('enable_edit_button') == 'yes'}
-                                {if UserLevel::hasPermissionOrRedirect('admin_access', true)}
-                                    {if user_id() && $video.userid == user_id()}
+                            {if config('enable_edit_button') == 'yes' && User::getInstance()->isUserConnected()}
+                                {if User::getInstance()->hasPermission('admin_access', true)}
+                                    {if $video.userid == user_id()}
                                         <div class="dropdown">
                                             <button class="btn btn-success dropdown-toggle" type="button" id="dropdownEdit" data-toggle="dropdown" aria-expanded="true">
                                                 {lang code='edit'}
@@ -100,12 +100,12 @@
                                     {else}
                                         <a class="btn btn-success" style="font-size: 14px; line-height: 14px;" href="{$link_edit_bo}">{lang code='edit'}</a>
                                     {/if}
-                                {elseif user_id() && $video.userid == user_id()}
-                                    <a class="btn btn-success" style=" font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
+                                {elseif $video.userid == user_id()}
+                                    <a class="btn btn-success" style="font-size: 14px;line-height: 14px;" href="{$link_edit_fo}">{lang code='edit'}</a>
                                 {/if}
                             {/if}
 
-                            {if config('video_download') == 1 && $cbvid->downloadable($vdo)}
+                            {if config('video_download') == 1 && CbVideo::getInstance()->downloadable($vdo)}
                                 <div class="dropdown">
                                     <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                                         {lang code='download'}

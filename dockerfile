@@ -29,6 +29,8 @@ RUN apt-get update && \
 
 # Configuration PHP
 RUN sed -i "s/max_execution_time = 30/max_execution_time = 7200/g" /etc/php/8.2/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.2/fpm/php.ini
+RUN sed -i "s/;ffi.enable=preload/ffi.enable=true/g" /etc/php/8.2/cli/php.ini
 
 # change l'utilisateur de nginx et php-fpm
 RUN sed -i 's/^user www-data;/user containeruser;/g' /etc/nginx/nginx.conf ;\
@@ -160,9 +162,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
         location /rss/ { \
             rewrite ^/rss/([a-zA-Z0-9].+)$ /rss.php?mode=$1&$query_string last; \
         } \
-        location /list/ { \
-            rewrite ^/list/([0-9]+)/(.*)?$ /view_playlist.php?list_id=$1 last; \
-        } \
+
         location ~ /rss$ { \
             try_files $uri /rss.php; \
         } \

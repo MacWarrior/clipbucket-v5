@@ -17,7 +17,6 @@ class pages
 
     function GetServerUrl(): string
     {
-        $serverName = null;
         if (isset($_SERVER['SERVER_NAME'])) {
             $serverName = $_SERVER['SERVER_NAME'];
         } elseif (isset($_SERVER['HTTP_HOST'])) {

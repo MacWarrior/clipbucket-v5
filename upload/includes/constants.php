@@ -1,7 +1,7 @@
 <?php
 class DirPath
 {
-    public static function get(string $dir_name, $get_url = false): string
+    public static function get(string $dir_name, $get_url = false, $full_url = false): string
     {
         $root_directory = dirname(__DIR__);
         switch($dir_name){
@@ -43,13 +43,13 @@ class DirPath
             case 'thumbs':
             case 'videos':
             case 'category_thumbs':
+            case 'ai':
                 $path = $root_directory . DIRECTORY_SEPARATOR . 'files' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'files/' . $dir_name;
                 break;
 
             case 'collection_thumbs':
             case 'icons':
-            case 'playlist_covers':
                 $path = $root_directory . DIRECTORY_SEPARATOR . 'images' . DIRECTORY_SEPARATOR . $dir_name;
                 $url = 'images/' . $dir_name;
                 break;
@@ -110,14 +110,17 @@ class DirPath
         }
 
         if($get_url){
+            if($full_url){
+                return get_server_url() . $url . '/';
+            }
             return '/' . $url . '/';
         }
         return $path . DIRECTORY_SEPARATOR;
     }
 
-    public static function getUrl($dir_name): string
+    public static function getUrl($dir_name, $full_url = false): string
     {
-        return self::get($dir_name, true);
+        return self::get($dir_name, true, $full_url);
     }
 }
 
