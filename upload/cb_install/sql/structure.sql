@@ -519,7 +519,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `subscription_email` enum('pending','sent') NOT NULL DEFAULT 'pending',
   `age_restriction` INT DEFAULT NULL,
   `default_poster` int(3) NULL DEFAULT NULL,
-  `default_backdrop` int(3) NULL DEFAULT NULL
+  `default_backdrop` int(3) NULL DEFAULT NULL,
+  `convert_percent` FLOAT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (

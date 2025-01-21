@@ -636,12 +636,66 @@ class FFMpeg
 
         $tmp_file = time() . RandomString(5) . '.tmp';
         $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$more_res['height'].'...');
-        $command = config('ffmpegpath') . ' -i ' . $this->input_file . $opt_av . ' ' . $this->output_file . ' 2> ' . DirPath::get('temp') . $tmp_file;
+        $command = config('ffmpegpath') . ' -i ' . $this->input_file . $opt_av . ' ' . $this->output_file . ' 2>&1';
         if (in_dev()) {
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
         }
 
-        $output = shell_exec($command);
+        if( function_exists('proc_open') ){
+            $descriptorspec = [
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w']
+            ];
+
+            $process = proc_open($command, $descriptorspec, $pipes);
+
+            if (is_resource($process)) {
+                stream_set_blocking($pipes[1], false);
+                stream_set_blocking($pipes[2], false);
+
+                $buffer = '';
+                $duration = $this->input_details['duration'];
+                $video_rate = $this->frame_rate;
+                $regex = '/frame=\s*(\d+)/';
+                $video_info = Video::getInstance()->getOne([
+                    'file_name' => $this->file_name
+                    ,'disable_generic_constraints' => true
+                ]);
+                while (true) {
+                    $stdout = stream_get_contents($pipes[1]);
+                    $stderr = stream_get_contents($pipes[2]);
+
+                    $buffer .= $stdout . $stderr;
+
+                    if (strpos($buffer, "\r") !== false) {
+                        $lines = explode("\r", $buffer);
+                        $buffer = array_pop($lines);
+
+                        foreach ($lines as $line) {
+                            $currentTime = time();
+                            if( $currentTime >= $lastOutputTime+3 && preg_match($regex, $line, $matches) ){
+                                Video::getInstance()->set($video_info['videoid'], 'convert_percent', round(((int)$matches[1] / ((int)$video_rate*$duration) * 100), 2));
+                                DiscordLog::sendDump('Pourcentage : ' . round(((int)$matches[1] / ((int)$video_rate*$duration) * 100), 2) . '%' );
+                                $lastOutputTime = $currentTime;
+                            }
+                        }
+                    }
+
+                    $status = proc_get_status($process);
+                    if (!$status['running']) {
+                        break;
+                    }
+
+                    sleep(3);
+                }
+
+                fclose($pipes[1]);
+                fclose($pipes[2]);
+                proc_close($process);
+            }
+        } else {
+            $output = shell_exec($command);
+        }
 
         if (file_exists(DirPath::get('temp') . $tmp_file)) {
             $output = $output ? $output : join('', file(DirPath::get('temp') . $tmp_file));
