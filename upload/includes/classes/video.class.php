@@ -5,6 +5,7 @@ class Video
     private static $video;
     private $tablename = '';
     private $tablename_categories = '';
+    private $field_id = '';
     private $fields = [];
     private $fields_categories = [];
     private $display_block = '';
@@ -16,6 +17,7 @@ class Video
      */
     public function __construct(){
         $this->tablename = 'video';
+        $this->field_id = 'videoid';
         $this->tablename_categories = 'video_categories';
 
         $this->fields = [
@@ -66,17 +68,20 @@ class Video
             ,'subscription_email'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
             $this->fields[] = 'is_castable';
             $this->fields[] = 'bits_color';
         }
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305')) {
             $this->fields[] = 'age_restriction';
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '371')) {
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
+        }
+        // TODO : Update revision
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $this->fields[] = 'convert_percent';
         }
 
         $this->fields_categories = [
@@ -911,6 +916,18 @@ class Video
             'total_pages'   => count_pages($total, config('video_list_view_video_history')),
             'final_results' => $results
         ];
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function set(int $id_video, string $field, $value){
+        if( !in_array($field, $this->fields) ){
+            return;
+        }
+
+        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . $id_video;
+        Clipbucket_db::getInstance()->execute($sql);
     }
 }
 
