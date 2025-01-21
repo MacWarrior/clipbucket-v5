@@ -631,23 +631,18 @@ class System{
     {
         if (config('cache_enable') == 'yes') {
             $cache = CacheRedis::getInstance()->get('check_global_configs');
-            if( $cache != '' ) {
+            if ($cache != '') {
                 return $cache;
             }
-        } elseif( time() < $_SESSION['check_global_configs']['time']) {
+        } elseif (time() < $_SESSION['check_global_configs']['time']) {
             return $_SESSION['check_global_configs']['val'];
         }
 
+        //Hosting
+
         $max_execution_time = ini_get('max_execution_time');
-        if( $max_execution_time > 0 && $max_execution_time < 7200 ){
-            if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump('error config : max_execution_time ' . $call_stack);
-            }
-            self::setGlobalConfigCache(0);
+        if ($max_execution_time > 0 && $max_execution_time < 7200) {
+            self::displayConfigError('error config : max_execution_time');
             return false;
         }
 
@@ -660,96 +655,123 @@ class System{
         $upload_max_filesize = ini_get('upload_max_filesize');
         $upload_max_filesize_mb = (int)$upload_max_filesize * pow(1024, stripos('KMGT', strtoupper(substr($upload_max_filesize, -1)))) / 1024;
 
-        if( !$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb) ){
-            if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump('error config : post_size' . $call_stack);
-            }
-            self::setGlobalConfigCache(0);
+        if (!$chunk_upload && $target_upload_size > min($post_max_size_mb, $upload_max_filesize_mb)) {
+            self::displayConfigError('error config : post_size');
             return false;
         }
 
         $chunk_upload_size = config('chunk_upload_size');
 
-        if( $chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb) ){
-            if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump('error config : chunk_upload_size ' . $call_stack);
-            }
-            self::setGlobalConfigCache(0);
+        if ($chunk_upload && $chunk_upload_size > min($post_max_size_mb, $post_max_size_mb)) {
+            self::displayConfigError('error config : chunk_upload_size');
             return false;
         }
 
         $cloudflare_upload_limit = config('cloudflare_upload_limit');
-        if( Network::is_cloudflare() ){
-            if( !$chunk_upload && $target_upload_size > $cloudflare_upload_limit ){
-                if (in_dev()) {
-                    ob_start();
-                    debug_print_backtrace();
-                    print_r($_SERVER);
-                    $call_stack = ob_get_clean();
-                    DiscordLog::sendDump('error config : cloudflare_upload_limit' . $call_stack);
-                }
-                self::setGlobalConfigCache(0);
+        if (Network::is_cloudflare()) {
+            if (!$chunk_upload && $target_upload_size > $cloudflare_upload_limit) {
+                self::displayConfigError('error config : cloudflare_upload_limit');
                 return false;
             }
-            if( $chunk_upload && $chunk_upload_size > $cloudflare_upload_limit ){
-                if (in_dev()) {
-                    ob_start();
-                    debug_print_backtrace();
-                    print_r($_SERVER);
-                    $call_stack = ob_get_clean();
-                    DiscordLog::sendDump('error config : cloudflare_upload_limit' . $call_stack);
-                }
-                self::setGlobalConfigCache(0);
+            if ($chunk_upload && $chunk_upload_size > $cloudflare_upload_limit) {
+                self::displayConfigError('error config : cloudflare_upload_limit');
                 return false;
             }
         }
 
         $memory_limit = ini_get('memory_limit');
-        if( $memory_limit > 0 && getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M') ){
-            if (in_dev()) {
-                ob_start();
-                debug_print_backtrace();
-                print_r($_SERVER);
-                $call_stack = ob_get_clean();
-                DiscordLog::sendDump('error config : memory_limit' . $call_stack);
-            }
-            self::setGlobalConfigCache(0);
+        if ($memory_limit > 0 && getBytesFromFileSize($memory_limit) < getBytesFromFileSize('128M')) {
+            self::displayConfigError('error config : memory_limit');
             return false;
         }
 
-        if(  Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
-            if( !self::isDateTimeSynchro() ){
-                if (in_dev()) {
-                    ob_start();
-                    debug_print_backtrace();
-                    print_r($_SERVER);
-                    $call_stack = ob_get_clean();
-                    DiscordLog::sendDump('error config : isDateTimeSynchro' . $call_stack);
-                }
-                self::setGlobalConfigCache(0);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
+            if (!self::isDateTimeSynchro()) {
+                self::displayConfigError('error config : isDateTimeSynchro');
                 return false;
             }
 
             $current_datetime_cli = System::get_php_cli_config('CurrentDatetime');
             $tmp = [];
-            if( !self::isDateTimeSynchro($tmp, $current_datetime_cli) ){
-                if (in_dev()) {
-                    ob_start();
-                    debug_print_backtrace();
-                    print_r($_SERVER);
-                    $call_stack = ob_get_clean();
-                    DiscordLog::sendDump('error config : isDateTimeSynchro cli ' . $call_stack);
-                }
-                self::setGlobalConfigCache(0);
+            if (!self::isDateTimeSynchro($tmp, $current_datetime_cli)) {
+                self::displayConfigError('error config : isDateTimeSynchro cli');
                 return false;
+            }
+        }
+
+        // Services
+        $phpVersionReq = '7.0.0';
+        $php_web_version = System::get_software_version('php_web', false, null, true);
+        if ($php_web_version < $phpVersionReq) {
+            self::displayConfigError('error config : php web');
+            return false;
+        }
+
+        $ffReq = '3';
+        $ffmpeg_version = System::get_software_version('ffmpeg', true, null, true);
+        if (is_array($ffmpeg_version) && array_key_exists('err', $ffmpeg_version)) {
+            $ffmpeg_version = 0;
+        }
+
+        if ($ffmpeg_version < $ffReq) {
+            self::displayConfigError('error config : FFMPEG');
+            return false;
+        }
+
+        $ffprobe_version = System::get_software_version('ffprobe', true, null, true);
+        if (is_array($ffprobe_version) && array_key_exists('err', $ffprobe_version)) {
+            $ffprobe_version = 0;
+        }
+
+        if ($ffprobe_version < $ffReq) {
+            self::displayConfigError('error config : FFPROB');
+            return false;
+        }
+
+        $media_info = System::get_software_version('media_info', true, null, true);
+        if (is_array($media_info) && array_key_exists('err', $media_info)) {
+            $media_info = 0;
+        }
+
+        if (!$media_info) {
+            self::displayConfigError('error config : Media info');
+            return false;
+        }
+
+        $mysqlReq = '5.6.0';
+        $serverMySqlVersion = getMysqlServerVersion()[0]['@@version'];
+        $regex_version = '(\d+\.\d+\.\d+)';
+        preg_match($regex_version, $serverMySqlVersion, $match_mysql);
+        $serverMySqlVersion = $match_mysql[0] ?? false;
+
+        if ((version_compare($serverMySqlVersion, $mysqlReq) < 0)) {
+            self::displayConfigError('error config : MYSQL ');
+            return false;
+        }
+
+        $phpVersionCli = System::get_software_version('php_cli');
+
+        if ($phpVersionCli < $phpVersionReq) {
+            self::displayConfigError('error config : PHP CLi');
+            return false;
+        }
+
+        $extensionsCLI = System::get_php_extensions('php_cli');
+        assign('extensionsCLI', $extensionsCLI);
+        $extensionsWEB = System::get_php_extensions('php_web');
+        assign('extensionsWEB', $extensionsWEB);
+        $php_extensions_list = System::get_php_extensions_list();
+        assign('php_extensions_list', $php_extensions_list);
+        foreach ($php_extensions_list as $key => $extension) {
+            if (!$extension['required']) {
+                continue;
+            }
+            $extensions_ok = (in_array($key, $extensionsCLI) && in_array($key, $extensionsWEB));
+
+            if (!$extensions_ok) {
+                self::displayConfigError('error config : ' . $extension['display']);
+                return false;
+
             }
         }
 
@@ -770,6 +792,18 @@ class System{
             $_SESSION['check_global_configs']['val'] = $val;
             $_SESSION['check_global_configs']['time'] = time() + 60;
         }
+    }
+
+    /**
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
+     */
+    private static function displayConfigError($error)
+    {
+            if (in_dev()) {
+                DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
+            }
+            self::setGlobalConfigCache(0);
     }
 
     public static function is_nginx(): bool
@@ -952,11 +986,7 @@ class System{
         foreach ($permissions as $permission) {
             if ( isset($permission['err'])) {
                 if(in_dev()) {
-                    ob_start();
-                    debug_print_backtrace();
-                    print_r($_SERVER);
-                    $call_stack = ob_get_clean();
-                    DiscordLog::sendDump('error reading folder : ' . $permission['path'] . ' ' . $call_stack);
+                    DiscordLog::sendDump('error reading folder : ' . $permission['path'] . '```' . debug_backtrace_string() . '```');
                 }
                 return 0;
             }

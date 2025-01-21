@@ -69,9 +69,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'min_video_tags', '3'),
 	(NULL, 'max_video_tags', '30'),
 	(NULL, 'video_codec', 'libx264'),
-	(NULL, 'support_email', 'webmaster@localhost'),
-	(NULL, 'website_email', 'webmaster@localhost'),
-	(NULL, 'welcome_email', 'webmaster@localhost'),
 	(NULL, 'date_format', 'Y-m-d'),
 	(NULL, 'autoplay_video', 'no'),
 	(NULL, 'max_profile_pic_size', '2500'),
@@ -315,6 +312,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'video_enable_nsfw_check', 'no'),
     (NULL, 'photo_nsfw_check_model', 'nudity+nsfw'),
     (NULL, 'video_nsfw_check_model', 'nudity+nsfw'),
+    (NULL, 'email_sender_address', 'no-reply@domain.com'),
+    (NULL, 'email_sender_name', 'no-reply'),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 

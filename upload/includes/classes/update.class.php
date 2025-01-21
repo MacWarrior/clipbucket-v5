@@ -2,7 +2,7 @@
 class Update
 {
     private static $update;
-    private static $urlGit = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
+    private static $urlChangelogGit = 'https://raw.githubusercontent.com/MacWarrior/clipbucket-v5/master/upload/changelog';
     private static $files = [];
     private $tableName = '';
     private $fields = [];
@@ -52,12 +52,12 @@ class Update
         $this->revision = '';
     }
 
-    public function getDBVersion(): array
+    public function getDBVersion($force_refresh = false): array
     {
         if( empty($this->dbVersion) ){
             $select = implode(', ', $this->getAllFields());
             try{
-                $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, 30, 'version')[0];
+                $result = Clipbucket_db::getInstance()->select(cb_sql_table($this->tableName), $select, false, false, false, false, ($force_refresh ? -1 : 30), 'version')[0];
             }
             catch (Exception $e){
                 return [
@@ -97,7 +97,7 @@ class Update
             return self::$files[$filename];
         }
 
-        $file_url = self::$urlGit . '/' . $filename;
+        $file_url = self::$urlChangelogGit . '/' . $filename;
 
         $context = Network::get_proxy_settings('file_get_contents', 2);
         $file_content = json_decode(file_get_contents($file_url, false, $context), true);
@@ -196,10 +196,9 @@ class Update
         if( empty($this->webVersion) ){
             $type = $this->getCurrentCoreState();
             $versions = $this->getDistantFile('latest.json');
-            $versions_url = self::$urlGit . '/latest.json';
             if (empty($versions[$type])) {
                 e(lang('error_occured'));
-                e(lang('error_file_download') . ' : ' . $versions_url);
+                e(lang('error_file_download') . ' : ' . self::$urlChangelogGit . '/latest.json');
                 return false;
             }
 
@@ -217,7 +216,7 @@ class Update
         if( empty($this->webChangelog) ){
             $version = $this->getWebVersion();
             $changelog = $this->getDistantFile($version.'.json');
-            $changelog_url = self::$urlGit . '/' . $version . '.json';
+            $changelog_url = self::$urlChangelogGit . '/' . $version . '.json';
 
             if (empty($changelog['revision'])) {
                 e(lang('error_occured'));
@@ -780,9 +779,9 @@ class Update
      * @param $revision
      * @return bool
      */
-    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision): bool
+    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision, $force_refresh = false): bool
     {
-        $version_db = Update::getInstance()->getDBVersion();
+        $version_db = Update::getInstance()->getDBVersion($force_refresh);
         return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));
     }
 
@@ -792,14 +791,42 @@ class Update
     public static function IsUpdateProcessing(): bool
     {
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
-            $and = ' AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\')';
+            $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
         } else {
-            $and = ' AND id_tool IN (11, 5)';
+            $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')   AND id_tool IN (11, 5)  ';
         }
         $tools = AdminTool::getTools([
-            ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\') ' . $and
+            $where
         ]);
         return !empty($tools);
+    }
+
+    public function CheckPHPVersion()
+    {
+        $filename = 'php_version.json';
+
+        if( config('enable_update_checker') == '1' ){
+            $php_version = $this->getDistantFile($filename);
+        }
+
+        if( empty($php_version) ){
+            $filepath_php_version = DirPath::get('changelog') . $filename;
+            $php_version = json_decode(file_get_contents($filepath_php_version), true);
+        }
+
+        if( empty($php_version) ){
+            return;
+        }
+
+        $php_web_version = System::get_software_version('php_web', false, null, true);
+        $php_cli_version = System::get_software_version('php_cli', false, null, true);
+
+        foreach($php_version as $version => $min_version){
+            if( $php_web_version < $min_version && $php_cli_version < $min_version ){
+                e(lang('warning_php_version', [$php_web_version, $version, $min_version]), 'w', false);
+                return;
+            }
+        }
     }
 
 }

@@ -1235,23 +1235,14 @@ class CBvideo extends CBCategory
 
                 if (config('approve_video_notification') == 'yes') {
                     //Sending Email
-                    global $cbemail;
-                    $tpl = $cbemail->get_template('video_activation_email');
                     $var = [
-                        '{username}'   => $video['username'],
-                        '{video_link}' => video_link($video)
+                        'video_link'   => video_link($video)
+                        ,'video_title' => $video['title']
                     ];
-                    $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                    $msg = nl2br($cbemail->replace($tpl['email_template'], $var));
 
                     if ($video['email'] != 'admin@thiswebsite.com') {
                         //Now Finally Sending Email
-                        cbmail([
-                            'to'        => $video['email']
-                            , 'from'    => WEBSITE_EMAIL
-                            , 'subject' => $subj
-                            , 'content' => $msg
-                        ]);
+                        EmailTemplate::sendMail('video_activation', $video['userid'], $var);
                     }
                 }
 
@@ -2191,21 +2182,19 @@ class CBvideo extends CBCategory
 
     /**
      * Function used to create value array for email templates
-     * @param array video_details ARRAY
+     * @param array $details video_details ARRAY
      * @throws Exception
      */
     function set_share_email($details)
     {
         $this->email_template_vars = [
-            '{video_title}'       => $details['title'],
-            '{video_description}' => $details['description'],
-            '{video_tags}'        => $details['tags'],
-            '{video_date}'        => cbdate(DATE_FORMAT, $details['date_added']),
-            '{video_link}'        => video_link($details),
-            '{video_thumb}'       => get_thumb($details)
+            'video_description' => $details['description'],
+            'video_title'       => $details['title'],
+            'video_link'        => video_link($details),
+            'video_thumb'       => get_thumb($details)
         ];
 
-        $this->action->share_template_name = 'share_video_template';
+        $this->action->share_template_name = 'share_video';
         $this->action->val_array = $this->email_template_vars;
     }
 

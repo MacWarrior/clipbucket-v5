@@ -477,10 +477,6 @@ server {
         rewrite ^/rss/([a-zA-Z0-9].+)$ /rss.php?mode=$1&$query_string last;
     }
 
-    location /list/ {
-        rewrite ^/list/([0-9]+)/(.*)?$ /view_playlist.php?list_id=$1 last;
-    }
-
     location ~ /rss$ {
         try_files $uri /rss.php;
     }

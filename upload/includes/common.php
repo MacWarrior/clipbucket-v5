@@ -93,6 +93,7 @@ require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
+require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'membership.class.php';
 
 $cb_columns = new cb_columns();
@@ -169,6 +170,7 @@ if (!Update::isVersionSystemInstalled()) {
     if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
         && strpos($request_uri, '/admin_area/logout.php') === false
         && strpos($request_uri, 'actions/upgrade_db.php') === false
+        && strpos($request_uri, 'admin_area/sse/upgrade_db_info.php') === false
         && User::getInstance()->hasAdminAccess()) {
         header('Location: /admin_area/upgrade_db.php');
         die();
@@ -245,9 +247,6 @@ define('SEO', $row['seo']); //Set yes / no
 # Registration & Email Settings
 define('EMAIL_VERIFICATION', $row['email_verification']);
 define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
-define('WEBSITE_EMAIL', $row['website_email']);
-define('SUPPORT_EMAIL', $row['support_email']);
-define('WELCOME_EMAIL', $row['welcome_email']);
 define('DATE_FORMAT', config('date_format'));
 
 # Defining Photo Limits
@@ -286,15 +285,9 @@ $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
 
 Assign('NEED_UPDATE', NEED_UPDATE);
-
 Assign('js', DirPath::getUrl('js'));
 Assign('title', TITLE);
-
 Assign('PLUG_URL', DirPath::getUrl('plugins'));
-
-if (!file_exists(DirPath::get('playlist_covers'))) {
-    mkdir(DirPath::get('playlist_covers'), 0777);
-}
 
 ClipBucket::getInstance()->upload_opt_list = [];
 
@@ -338,7 +331,6 @@ $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
 $Smarty->assign_by_ref('cbpage', $cbpage);
-$Smarty->assign_by_ref('cbemail', $cbemail);
 $Smarty->assign_by_ref('cbcollection', $cbcollection);
 $Smarty->assign_by_ref('cbphoto', $cbphoto);
 $Smarty->assign_by_ref('cbfeeds', $cbfeeds);
@@ -412,9 +404,10 @@ if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity
 
     $dateTime = new DateTime();
     $dateTime->modify('-1 minutes');
-
-    if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
-        AdminTool::launchCli($tool->getId());
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+        if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
+            AdminTool::launchCli($tool->getId());
+        }
     }
 }
 

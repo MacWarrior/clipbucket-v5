@@ -267,18 +267,16 @@ class cbactions
                     }
 
                     if ($ok) {
-                        global $cbemail;
-                        $tpl = $cbemail->get_template($tpl);
-                        $more_var = ['{user_message}' => post('message')];
+                        $more_var = [
+                            'sender_username' => user_name(),
+                            'sender_message'  => display_clean(post('message')),
+                        ];
                         $var = array_merge($more_var, $var);
-                        $subj = $cbemail->replace($tpl['email_template_subject'], $var);
-                        $msg = $cbemail->replace($tpl['email_template'], $var);
 
                         //Now Finally Sending Email
                         $from = userquery::getInstance()->get_user_field_only(user_name(), 'email');
-
-                        cbmail(['to' => $emails_array, 'from' => $from, 'from_name' => user_name(), 'subject' => $subj, 'content' => $msg, 'use_boundary' => true]);
-                        e(lang('thnx_sharing_msg'), $this->name, 'm');
+                        EmailTemplate::sendMail($tpl, $emails_array, $var, $from, user_name());
+                        e(lang('thnx_sharing_msg', $this->name), 'm');
                     }
                 } else {
                     e(lang('share_video_no_user_err', $this->name));
@@ -487,28 +485,33 @@ class cbactions
      */
     function create_playlist($params)
     {
-        if (User::getInstance()->hasPermission('allow_create_playlist')) {
-            $name = mysql_clean($params['name']);
-            if (!user_id()) {
-                e(lang('please_login_create_playlist'));
-            } elseif (empty($name)) {
-                e(lang('please_enter_playlist_name'));
-            } elseif ($this->playlist_exists($name, user_id(), $this->type)) {
-                e(lang('play_list_with_this_name_arlready_exists', $name));
-            } else {
-                $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
-                $values = [$name, user_id(), now(), $this->type, '', ''];
-
-                Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
-
-                $pid = Clipbucket_db::getInstance()->insert_id();
-                e(lang('new_playlist_created'), 'm');
-
-                return $pid;
-            }
+        if( !User::getInstance()->hasPermission('allow_create_playlist') ){
+            e(lang('insufficient_privileges'));
+            return false;
         }
-        e(lang('insufficient_privileges'));
-        return false;
+
+        if (!user_id()) {
+            e(lang('please_login_create_playlist'));
+            return false;
+        }
+        if (empty($params['name'])) {
+            e(lang('please_enter_playlist_name'));
+            return false;
+        }
+        if ($this->playlist_exists($params['name'], user_id(), $this->type)) {
+            e(lang('play_list_with_this_name_arlready_exists', display_clean($params['name'])));
+            return false;
+        }
+
+        $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
+        $values = [$params['name'], user_id(), now(), $this->type, '', ''];
+
+        Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
+
+        $pid = Clipbucket_db::getInstance()->insert_id();
+        e(lang('new_playlist_created'), 'm');
+
+        return $pid;
     }
 
     /**

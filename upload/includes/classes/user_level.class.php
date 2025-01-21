@@ -180,15 +180,8 @@ class UserLevel
      */
     public static function insertUserPermissionValue(int $user_level_id, int $id_user_levels_permission, $permission_value)
     {
-        Clipbucket_db::getInstance()->insert(tbl(self::getTableNameLevelPermissionValue()), [
-            'user_level_id',
-            'id_user_levels_permission',
-            'permission_value'
-        ], [
-            $user_level_id,
-            $id_user_levels_permission,
-            $permission_value
-        ]);
+        $sql = 'INSERT IGNORE INTO '.tbl('user_levels_permissions_values').' (user_level_id,id_user_levels_permission,permission_value) VALUES ('.mysql_clean($user_level_id).','.mysql_clean($id_user_levels_permission).',\''.mysql_clean($permission_value).'\')';
+        Clipbucket_db::getInstance()->execute($sql);
     }
 
     /**

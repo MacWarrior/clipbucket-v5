@@ -436,10 +436,6 @@ echo 		location /rss/ {>> %NGINX_CONF%
 echo 			rewrite ^^/rss/([a-zA-Z0-9].+)$ /rss.php?mode=$1^&$query_string last;>> %NGINX_CONF%
 echo 		}>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /list/ {>> %NGINX_CONF%
-echo 			rewrite ^^/list/([0-9]+)/(.*)?$ /view_playlist.php?list_id=$1 last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
 echo 		location ~ /rss$ {>> %NGINX_CONF%
 echo 			try_files $uri /rss.php;>> %NGINX_CONF%
 echo 		}>> %NGINX_CONF%

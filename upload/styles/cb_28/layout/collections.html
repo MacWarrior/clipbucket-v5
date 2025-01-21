@@ -13,14 +13,8 @@
                     <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
                         <a class="btn btn-default" href="/manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
                     </div>
-                {else}
-                    <div class="col-md-6 text-center">
-                        <div class="alert alert-danger">
-                            <strong>{lang code="creating_collection_is_disabled"}</strong>
-                        </div>
-                    </div>
                 {/if}
-                <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
+                <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix pull-right">
                     <div class="dropdown">
                         {if $smarty.get.sort}
                             {foreach from=$sort_list item=name key=sort name=sorts}

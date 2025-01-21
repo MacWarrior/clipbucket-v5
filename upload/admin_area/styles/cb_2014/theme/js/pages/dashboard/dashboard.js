@@ -262,7 +262,15 @@ function connectSSE() {
             eventSource.close();
             checkStatus();
         } else {
+            var tool = data.update_info;
             $('.launch_wip').off('click');
+            if (tool) {
+                $('#progress_div').show();
+            }
+            $('#progress-bar').attr('aria-valuenow',tool.pourcent).width(tool.pourcent + '%');
+            $('#pourcent' ).html(tool.pourcent);
+            $('#done').html(tool.elements_done);
+            $('#total').html(tool.elements_total);
         }
 
     });
