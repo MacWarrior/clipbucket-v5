@@ -11,6 +11,16 @@
                     {/if}
                 </li>
             </ul>
+            <div id="progress_div" style="text-align: center; vertical-align: middle;">
+                <br/>
+                <div style="padding: 6px;" ><span id="pourcent"></span>%
+                    (<span id="done"></span> / <span id="total"></span>)
+                </div>
+                <div  class="progress">
+                    <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100" >
+                    </div>
+                </div>
+            </div>
         </div>
     {else}
         {if !$need_db_update}
@@ -65,6 +75,16 @@
                     {lang code='db_updating'}
                 </li>
             </ul>
+            <div id="progress_div" style="text-align: center; vertical-align: middle;">
+                <br/>
+                <div style="padding: 6px;" ><span id="pourcent"></span>%
+                    (<span id="done"></span> / <span id="total"></span>)
+                </div>
+                <div  class="progress">
+                    <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100" >
+                    </div>
+                </div>
+            </div>
         </div>
     {elseif !$need_db_update && !$is_plugin_db}
         <div class="alert alert-success alert-dismissable" {if $show_core_update}style="display:inline-block;width:calc(50% - 5px);"{/if}>
