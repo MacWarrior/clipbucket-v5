@@ -1208,6 +1208,9 @@ class userquery extends CBCategory
         $this->remove_user_subscriptions($uid);
         $this->remove_user_subscribers($uid);
 
+        //delete reports for this user
+        Flag::unFlagByElementId($uid, 'user');
+
         $anonymous_id = $this->get_anonymous_user();
         //Changing User Videos To Anonymous
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));

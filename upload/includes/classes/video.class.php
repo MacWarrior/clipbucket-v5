@@ -1029,8 +1029,8 @@ class CBvideo extends CBCategory
                 , 'url' => DirPath::getUrl('admin_area') . 'category.php'
             ];
             $menu_video['sub'][] = [
-                'title' => 'List Flagged Videos'
-                , 'url' => DirPath::getUrl('admin_area') . 'flagged_videos.php'
+                'title' => lang('video_flagged')
+                , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=video'
             ];
             $menu_video['sub'][] = [
                 'title' => 'Mass Upload Videos'
@@ -1502,6 +1502,8 @@ class CBvideo extends CBCategory
 
                 //Remove tags
                 Tags::deleteTags('video', $vdetails['videoid']);
+                //delete reports for this video
+                Flag::unFlagByElementId($vid, 'video');
                 //Remove categories
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 

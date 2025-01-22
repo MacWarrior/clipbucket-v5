@@ -565,6 +565,23 @@ class Photo
             'limit'     => $limit
         ]);
     }
+
+    /**
+     * @param $photo_id
+     * @return string
+     * @throws Exception
+     */
+    public function getFOLink($photo_id)
+    {
+        $details = $this->getOne(['photo_id'=>$photo_id]);
+        if (SEO == 'yes') {
+            if (empty($details['collection_id'])) {
+                return get_server_url();
+            }
+            return get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+        }
+        return get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+    }
 }
 
 class CBPhotos
@@ -808,8 +825,8 @@ class CBPhotos
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'
                     ]
                     , [
-                        'title' => 'Flagged Photos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'
+                        'title' => lang('photo_flagged')
+                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=photo'
                     ]
                     , [
                         'title' => 'Orphan Photos'
@@ -1333,6 +1350,8 @@ class CBPhotos
             //Remove tags
             Tags::deleteTags('photo', $photo['photo_id']);
 
+            //delete reports for this photo
+            Flag::unFlagByElementId($photo['photo_id'], 'photo');
             //now removing photo files
             $this->delete_photo_files($photo);
 

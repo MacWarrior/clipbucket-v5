@@ -67,16 +67,6 @@ class cbactions
     {
         global $cb_columns;
 
-        $this->report_opts = [
-            lang('inapp_content'),
-            lang('copyright_infring'),
-            lang('sexual_content'),
-            lang('violence_replusive_content'),
-            lang('spam'),
-            lang('disturbing'),
-            lang('other')
-        ];
-
         $fields = ['playlist_id', 'playlist_name', 'userid', 'description',
             'played', 'privacy', 'total_comments', 'runtime',
             'last_update', 'date_added', 'first_item', 'playlist_type', 'cover'];
@@ -398,8 +388,9 @@ class cbactions
      */
     function count_flagged_objects(): int
     {
-        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), 'id', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
-            AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\' GROUP BY ' . tbl($this->flag_tbl) . '.id ,' . tbl($this->flag_tbl) . '.type');
+        return 0;
+        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), 'flag_id', tbl($this->flag_tbl) . '.flag_id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
+            AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\' GROUP BY ' . tbl($this->flag_tbl) . '.flag_id ,' . tbl($this->flag_tbl) . '.type');
         return count($results);
     }
 
@@ -503,8 +494,8 @@ class cbactions
             return false;
         }
 
-        $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
-        $values = [$params['name'], user_id(), now(), $this->type, '', ''];
+        $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description'];
+        $values = [$params['name'], user_id(), now(), $this->type, ''];
 
         Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
 
@@ -806,6 +797,9 @@ class cbactions
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $id = mysql_clean($id);
+            //delete reports for this playlist
+            Flag::unFlagByElementId($id, 'playlist');
+
             Clipbucket_db::getInstance()->delete(tbl($this->playlist_tbl), ['playlist_id'], [mysql_clean($id)]);
             Clipbucket_db::getInstance()->delete(tbl($this->playlist_items_tbl), ['playlist_id'], [$id]);
             e(lang('playlist_delete_msg'), 'm');

@@ -418,7 +418,6 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
-
             $this->addMenuAdmin($menu_general, 10);
         }
 
@@ -448,8 +447,8 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=Ok'
                     ]
                     , [
-                        'title' => 'Reported Users'
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_users.php'
+                        'title' => lang('user_flagged')
+                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=user'
                     ]
                 ]
             ];

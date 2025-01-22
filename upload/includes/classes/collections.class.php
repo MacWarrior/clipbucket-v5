@@ -900,8 +900,8 @@ class Collections extends CBCategory
                             , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
                         ]
                         , [
-                            'title' => lang('flagged_collections')
-                            , 'url' => DirPath::getUrl('admin_area') . 'flagged_collections.php'
+                            'title' => lang('collection_flagged')
+                            , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=collection'
                         ]
                     ]
                 ];
@@ -1757,6 +1757,9 @@ class Collections extends CBCategory
 
         //Remove tags
         Tags::deleteTags('collection', $cid);
+
+        //delete reports for this collection
+        Flag::unFlagByElementId($cid, 'collection');
         //Remove categories
         Category::getInstance()->unlinkAll('collection', $cid);
 
