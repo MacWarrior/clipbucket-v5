@@ -252,10 +252,10 @@ class cbactions
                 $post_users = mysql_clean(post('users'));
                 $users = explode(',', $post_users);
                 if (is_array($users) && !empty($post_users)) {
-                    foreach ($users as $user) {
-                        $user = User::getInstance()->getOne(['username' => $user]);
+                    foreach ($users as $username) {
+                        $user = User::getInstance()->getOne(['username' => $username]);
                         if (!userquery::getInstance()->user_exists($user['username']) && !isValidEmail($user['email'])) {
-                            e(lang('user_no_exist_wid_username', $user['username']));
+                            e(lang('user_no_exist_wid_username', $username));
                             $ok = false;
                             break;
                         }
