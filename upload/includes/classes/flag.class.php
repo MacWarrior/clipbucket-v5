@@ -143,6 +143,7 @@ class Flag
                 $select[] = 'count(DISTINCT ' . self::$tableName . '.flag_id) AS nb_flag';
                 $select[] = self::$tableName . '.id_element';
                 $select[] = self::$tableName . '.id_flag_type';
+                $order_search = 'ORDER BY nb_flag desc, MAX(' . self::$tableName . '.date_added) desc ';
             } else {
                 $select = self::getAllFields();
                 $select[] = User::getInstance()->getTableName() . '_reporter.username';

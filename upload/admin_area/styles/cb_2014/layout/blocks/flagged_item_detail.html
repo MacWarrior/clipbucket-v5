@@ -1,0 +1,56 @@
+<div class="modal-dialog" style="width:80%">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">{lang code='details'}</h4>
+        </div>
+        <div class="modal-body tmdb">
+            <form name="category" method="post">
+                <table class="table table-bordered" width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="225" class="left_head" style="text-indent:10px">{lang('element')}</td>
+                        <td width="225" class="left_head" style="text-indent:10px">{lang('motif')}</td>
+                        <td width="75" align="left" class="head">{lang('reporter')}</td>
+                        <td width="75" align="left" class="head">{lang('date')}</td>
+                    </tr>
+                    {foreach from=$flagged item=flagged_item}
+
+                        {if $type == 'video'}
+                            {assign var=link_fo value=video_link($flagged_item.id_element)}
+                            {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'edit_video.php?video=':$flagged_item.id_element}
+                        {elseif $type=='photo'}
+                            {assign var=link_fo value=Photo::getInstance()->getFOLink($flagged_item.id_element)}
+                            {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'edit_photo.php?photo=':$flagged_item.id_element}
+                        {elseif $type=='collection'}
+                            {assign var=link_fo value=Collections::getInstance()->collection_links($flagged_item.id_element)}
+                            {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'edit_collection.php?collection=':$flagged_item.id_element}
+                        {elseif $type=='playlist'}
+                            {assign var=link_fo value=''}
+                            {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'edit_playlist.php?playlist=':$flagged_item.id_element}
+                        {elseif $type=='user'}
+                            {assign var=link_fo value=$userquery->profile_link($flagged_item.id_element)}
+                            {assign var=link_bo value=DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.id_element}
+                        {/if}
+                        <tr>
+                            <td>
+                                {$flagged_item.element_name}
+                                {if $type=='photo' && $flagged_item.is_photo_orphan}
+                                    <span class="label label-primary">{lang code='orphan'}</span>
+                                {/if}
+                            </td>
+                            <td>
+                                {lang($flagged_item.language_key)}
+                            </td>
+                            <td><a href="{DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.userid}">{$flagged_item.username}</a></td>
+                            <td>{$flagged_item.date_added}</td>
+                        </tr>
+                    {/foreach}
+                </table>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">{lang code='cancel'}</button>
+            <input type="hidden" value="{$videoid}" id="modal_videoid">
+        </div>
+    </div>
+</div>
