@@ -694,7 +694,10 @@ class FFMpeg
                     ,'disable_generic_constraints' => true
                 ]);
 
-                $total_current_conversion_percent = ($resolution['video_width'] * $resolution['video_height']) / $this->total_pixels;
+                $total_current_conversion_percent = 0;
+                if( $this->conversion_type == 'mp4' ) {
+                    $total_current_conversion_percent = ($resolution['video_width'] * $resolution['video_height']) / $this->total_pixels;
+                }
                 while (true) {
                     $stdout = stream_get_contents($pipes[1]);
                     $stderr = stream_get_contents($pipes[2]);
