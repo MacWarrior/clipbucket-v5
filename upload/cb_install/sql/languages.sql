@@ -1452,4 +1452,9 @@ VALUES ('admin_setting'),
        ('tips_email_variables'),
        ('email_variable_logo_url'),
        ('email_variable_favicon_url'),
-       ('cannot_remove_default_have_to_add_one');
+       ('cannot_remove_default_have_to_add_one'),
+       ('this_user_blocked_you'),
+       ('user_is_banned'),
+       ('you_cant_share_to_yourself'),
+       ('link_this_photo'),
+       ('link_this_collection');

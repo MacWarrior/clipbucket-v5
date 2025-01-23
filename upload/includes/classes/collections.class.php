@@ -331,7 +331,7 @@ class Collection
             $select[] = $total_objects . ' AS total_objects';
         }
 
-        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no') {
+        if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
             $hide_empty_collection = $total_objects . ' > 0';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
                 $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
