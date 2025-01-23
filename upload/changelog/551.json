@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"246",
+  "revision":"247",
   "status":"dev",
   "detail":[
     {
@@ -143,6 +143,7 @@
         ,"Implement option to disable uploader name display"
         ,"Implement TMDB Tv Show integration"
         ,"Implement featured video slider"
+        ,"Implement collection sharing"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -226,6 +227,7 @@
         ,"Fix possible remote code execution (Thanks @kawing-ho !)"
         ,"Fix collection add more button visibility"
         ,"Fix base URL usage"
+        ,"Fix sharing privacy"
       ]
     },
     {
