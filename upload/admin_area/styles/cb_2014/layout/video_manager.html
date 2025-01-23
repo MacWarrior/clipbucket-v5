@@ -42,17 +42,17 @@
                         {$img_url = get_thumb($video, false, '168x105')}
                     {/if}
                     <div class="col-md-2" style="text-align:center;">
-                        <img src="{$img_url}" id="thumbs_{$video.videoid}" style="max-height:80px; max-width:100%;"/>
+                        <img src="{$img_url}" id="thumbs_{$video.videoid}" alt="video_thumb" style="max-height:80px; max-width:100%;"/>
                     </div>
                     <div class="col-md-8">
                         <a href="edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
                             {display_clean($video.title|truncate:80)}
                         </a>
                         ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br/>
-                        <span class="labels1">
+                        <span>
                             <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
                         </span>
-                        <div class="labels mtl">
+                        <div class="labels">
                             <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
                                 {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
                             </span>
@@ -67,23 +67,33 @@
                                 {$cbvid->video_manager_link_new($links,$video)}
                             {/foreach}
 
-                            {if config('chromecast')=='yes'}
-                                {if $video.is_castable}
-                            <span class="label label-success">{lang code='castable'}</span>
-                                {else}
-                            <span class="label label-warning">{lang code='non_castable'}</span>
+                            {if $video.status|lower == 'successful'}
+                                {if config('chromecast')=='yes'}
+                                    {if $video.is_castable}
+                                <span class="label label-success">{lang code='castable'}</span>
+                                    {else}
+                                <span class="label label-warning">{lang code='non_castable'}</span>
+                                    {/if}
                                 {/if}
-                            {/if}
 
-                            {if $video.bits_color}
-                                {if $video.bits_color > 8}
-                            <span class="label label-warning">{$video.bits_color} {lang code='bits_color'}</span>
-                                {else}
-                            <span class="label label-success" title="This video might not be playable on other browsers than chrome-like">{$video.bits_color} {lang code='bits_color'}</span>
+                                {if $video.bits_color}
+                                    {if $video.bits_color > 8}
+                                <span class="label label-warning">{$video.bits_color} {lang code='bits_color'}</span>
+                                    {else}
+                                <span class="label label-success" title="This video might not be playable on other browsers than chrome-like">{$video.bits_color} {lang code='bits_color'}</span>
+                                    {/if}
                                 {/if}
                             {/if}
 
                             <span class="label label-info">{strtoupper($video.file_type)}</span>
+
+                            {if $video.status|lower == 'processing'}
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%">
+                                        {$video.convert_percent}%
+                                    </div>
+                                </div>
+                            {/if}
 
                             <div class="clearfix"></div>
                             {$catString = {$video.category_names}}
@@ -117,7 +127,10 @@
                     </button>
                     <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
                         <li><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
+
+                        {if $video.status|lower == 'successful'}
                         <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
+                        {/if}
 
                         {if $video.featured == yes}
                         <li><a role="menuitem" tabindex="-1" href="?make_unfeature={$video.videoid}">Make Unfeatured</a></li>

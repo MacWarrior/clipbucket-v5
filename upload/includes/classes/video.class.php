@@ -988,6 +988,7 @@ class CBvideo extends CBCategory
             register_anchor_function('display_restricted', 'in_video_thumb', Video::class);
         }
         register_anchor_function('display_banner', 'in_video_thumb', self::class);
+        register_anchor_function('display_convert_percent', 'in_video_thumb', self::class);
     }
 
     /**
@@ -1011,6 +1012,26 @@ class CBvideo extends CBCategory
         if( !empty($text) ){
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_convert_percent($video = [])
+    {
+        if( strtolower($video['status']) != 'processing' ){
+            return;
+        }
+
+        // TODO : Update revision
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ){
+            return;
+        }
+
+        echo '<div class="processing">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <span>' . $video['convert_percent'] . '%</span>
+              </div>';
     }
 
     /**

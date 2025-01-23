@@ -22,7 +22,7 @@ class MWIP extends \Migration
 
         /* Update revision IN :
          *
-         * video.class.php : L.83
+         * video.class.php : L.83 ; L.1026
          * video_convert.php : L.133
          */
     }

@@ -34,7 +34,7 @@
         </a>
 
         {ANCHOR place='in_video_thumb' data=$video}
-        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
             <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
             </button>
         {/if}
@@ -81,7 +81,7 @@
                     <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}">
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
                     <button data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist"></button>
                 {/if}
                 <span class="duration" title="Video duration : {if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
@@ -152,7 +152,7 @@
                 <h2 class="title">{display_clean($video.title|truncate:50)}</h2>
             </a>
             {ANCHOR place='in_video_thumb' data=$video}
-            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
                 <button data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260 }" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                 </button>
             {/if}
@@ -165,11 +165,11 @@
     <div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <div class="clearfix thumb-holder">
             <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-                <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}">
+                <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}"/>
             </a>
 
             {ANCHOR place='in_video_thumb' data=$video}
-            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+            {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
                 <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                 </button>
             {/if}
@@ -219,7 +219,7 @@
 {if $display_type=='playlistVideos'}
     <div class="video_thumb">
         <a class="video_link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-            <img class="img-responsive" src="{getThumb vdetails=$video size=416x260 }">
+            <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}"/>
             <div class="play-info">
                 <strong class="title">{display_clean($video.title|truncate:30)}</strong>
                 <i class="icon-playweb"></i>
@@ -227,7 +227,7 @@
             </div>
         </a>
         {ANCHOR place='in_video_thumb' data=$video}
-        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+        {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
             <i data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" title="Add {display_clean($video.title)} to Quicklist"></i>
         {/if}
     </div>
@@ -249,7 +249,7 @@
                     <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
                     <button data-quick="quick-{$video.videoid}"
                             class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260 }" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                     </button>
@@ -294,7 +294,7 @@
                     <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
                     <button data-quick="quick-{$video.videoid}"
                             class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                     </button>
@@ -325,7 +325,7 @@
                     <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
-                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid'])}
+                {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
                     <img src="{$imageurl}/dot.gif" data-quick="quick-{$video.videoid}" class="icon-plus2 add_icon cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" title="Add {display_clean($video.title)} to Quicklist" alt="">
                 {/if}
             </div>

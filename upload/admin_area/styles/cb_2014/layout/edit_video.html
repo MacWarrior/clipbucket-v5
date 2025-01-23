@@ -12,9 +12,8 @@
     });
 </script>
 	<div class="row">
-
 		<div class="heading clearfix">
-			<h2 class="pull-left paddingLeftLarge">Editing <small>&gt; {display_clean($data.title)|truncate:80}</small>
+            <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; <span title="{display_clean($data.title)}">{display_clean($data.title)|truncate:80}</span></small>
 				<div class="btn-group">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
 						Actions <span class="caret caret_margin"></span>
@@ -536,8 +535,13 @@
                     </ul>
                     <div class="tab-content">
                         <div id="videoplayer" class="tab-pane active">
-                            {if $data.status=='Successful'}
+                            {if $data.status|lower == 'successful'}
                                 {show_player vdetails=$data}
+                            {else}
+                                <div class="thumb-holder">
+                                    <img class="img-responsive" src="{getThumb vdetails=$data size=632x395}"/>
+                                    {ANCHOR place='in_video_thumb' data=$data}
+                                </div>
                             {/if}
                         </div>
                         <div id="thumbnails" class="tab-pane">

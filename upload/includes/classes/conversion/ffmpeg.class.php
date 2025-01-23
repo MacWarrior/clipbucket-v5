@@ -717,8 +717,6 @@ class FFMpeg
                                 }
 
                                 Video::getInstance()->set($video_info['videoid'], 'convert_percent', round($current_percent * 100, 2));
-
-                                DiscordLog::sendDump('Résolution : ' . $resolution['height'] . ' ; Pourcentage global : ' . round($current_percent * 100, 2) . '%' );
                                 $lastOutputTime = $currentTime;
                             }
 
