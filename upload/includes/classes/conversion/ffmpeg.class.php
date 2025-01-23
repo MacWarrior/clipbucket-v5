@@ -17,6 +17,8 @@ class FFMpeg
     private $start_time;
     private $end_time;
     private $total_time;
+    private $total_pixels = 0;
+    private $convert_percent_done = 0;
 
     private $frame_rate;
 
@@ -277,6 +279,7 @@ class FFMpeg
                         break;
                     }
 
+                    $this->set_total_pixels($resolutions);
                     foreach ($resolutions as $res) {
                         $this->convert_mp4($res);
                     }
@@ -308,6 +311,14 @@ class FFMpeg
         setVideoStatus($this->file_name, $video_status, false, true);
 
         $this->unLock();
+    }
+
+    private function set_total_pixels($resolutions){
+        $total = 0;
+        foreach ($resolutions as $res) {
+            $total += $res['video_height'] * $res['video_width'];
+        }
+        $this->total_pixels = $total;
     }
 
     /**
@@ -603,7 +614,8 @@ class FFMpeg
         $command .= $this->get_conversion_option('map_hls', $resolutions);
         $command .= $this->get_conversion_option('hls');
         $command .= ' 2>&1';
-        $output = shell_exec($command);
+
+        $output = $this->exec_with_percent($command);
 
         if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
             $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
@@ -620,27 +632,46 @@ class FFMpeg
     /**
      * Function used to convert video
      *
-     * @param array $more_res
+     * @param array $resolution
      * @throws Exception
      */
-    function convert_mp4(array $more_res)
+    function convert_mp4(array $resolution)
     {
         $opt_av = $this->get_conversion_option('global');
         $opt_av .= $this->get_conversion_option('video_global');
-        $opt_av .= $this->get_conversion_option('video_mp4', $more_res);
+        $opt_av .= $this->get_conversion_option('video_mp4', $resolution);
         $opt_av .= $this->get_conversion_option('audio_global');
         $opt_av .= $this->get_conversion_option('map_mp4');
         $opt_av .= $this->get_conversion_option('mp4');
 
-        $this->output_file = $this->output_dir . $this->file_name . '-' . $more_res['height'] . '.' . $this->conversion_type;
+        $this->output_file = $this->output_dir . $this->file_name . '-' . $resolution['height'] . '.' . $this->conversion_type;
 
-        $tmp_file = time() . RandomString(5) . '.tmp';
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$more_res['height'].'...');
+        $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$resolution['height'].'...');
         $command = config('ffmpegpath') . ' -i ' . $this->input_file . $opt_av . ' ' . $this->output_file . ' 2>&1';
-        if (in_dev()) {
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
+
+        $output = $this->exec_with_percent($command, $resolution);
+
+        if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
+            $this->video_files[] = $resolution['height'];
+            $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
+        } else {
+            $this->log->writeLine(date('Y-m-d H:i:s').' => Conversion failed, output file doesn\'t exist : '.$this->output_file);
         }
 
+        if (in_dev()) {
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
+            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
+        }
+
+        $this->output_details = $this->get_file_info($this->output_file);
+        $this->log_ouput_file_info();
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function exec_with_percent(string $command, array $resolution = [])
+    {
         if( function_exists('proc_open') ){
             $descriptorspec = [
                 1 => ['pipe', 'w'],
@@ -648,6 +679,7 @@ class FFMpeg
             ];
 
             $process = proc_open($command, $descriptorspec, $pipes);
+            $output = '';
 
             if (is_resource($process)) {
                 stream_set_blocking($pipes[1], false);
@@ -661,6 +693,8 @@ class FFMpeg
                     'file_name' => $this->file_name
                     ,'disable_generic_constraints' => true
                 ]);
+
+                $total_current_conversion_percent = ($resolution['video_width'] * $resolution['video_height']) / $this->total_pixels;
                 while (true) {
                     $stdout = stream_get_contents($pipes[1]);
                     $stderr = stream_get_contents($pipes[2]);
@@ -674,10 +708,21 @@ class FFMpeg
                         foreach ($lines as $line) {
                             $currentTime = time();
                             if( $currentTime >= $lastOutputTime+3 && preg_match($regex, $line, $matches) ){
-                                Video::getInstance()->set($video_info['videoid'], 'convert_percent', round(((int)$matches[1] / ((int)$video_rate*$duration) * 100), 2));
-                                DiscordLog::sendDump('Pourcentage : ' . round(((int)$matches[1] / ((int)$video_rate*$duration) * 100), 2) . '%' );
+                                $current_percent = (int)$matches[1] / ((int)$video_rate*$duration);
+
+                                $line .= ' (' . round($current_percent * 100, 2) . ' %)';
+
+                                if( $this->conversion_type == 'mp4' ){
+                                    $current_percent = $this->convert_percent_done + $total_current_conversion_percent * $current_percent;
+                                }
+
+                                Video::getInstance()->set($video_info['videoid'], 'convert_percent', round($current_percent * 100, 2));
+
+                                DiscordLog::sendDump('Résolution : ' . $resolution['height'] . ' ; Pourcentage global : ' . round($current_percent * 100, 2) . '%' );
                                 $lastOutputTime = $currentTime;
                             }
+
+                            $output .= $line . PHP_EOL;
                         }
                     }
 
@@ -686,35 +731,25 @@ class FFMpeg
                         break;
                     }
 
-                    sleep(3);
+                    sleep(1);
                 }
 
                 fclose($pipes[1]);
                 fclose($pipes[2]);
                 proc_close($process);
+
+                $this->convert_percent_done += $total_current_conversion_percent;
+            } else {
+                try{
+                    proc_close($process);
+                }
+                catch(Exception $e){}
             }
         } else {
             $output = shell_exec($command);
         }
 
-        if (file_exists(DirPath::get('temp') . $tmp_file)) {
-            $output = $output ? $output : join('', file(DirPath::get('temp') . $tmp_file));
-            unlink(DirPath::get('temp') . $tmp_file);
-        }
-
-        if (file_exists($this->output_file) && filesize($this->output_file) > 0) {
-            $this->video_files[] = $more_res['height'];
-            $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
-        } else {
-            $this->log->writeLine(date('Y-m-d H:i:s').' => Conversion failed, output file doesn\'t exist : '.$this->output_file);
-        }
-
-        if (in_dev()) {
-            $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
-        }
-
-        $this->output_details = $this->get_file_info($this->output_file);
-        $this->log_ouput_file_info();
+        return $output;
     }
 
     function prepare()
