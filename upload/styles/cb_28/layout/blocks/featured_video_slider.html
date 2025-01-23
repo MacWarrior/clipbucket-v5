@@ -23,7 +23,7 @@
                     <div class="movie-rating">
                         <span class="icon-thumbup"></span> {Video::getLike($video)} <span class="icon-thumbdown"></span> {Video::getDislike($video)}
                     </div>
-                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if} <span class="movie-limit">{Video::display_restricted($video)}</span></div>
+                    <div class="movie-duration">{if $video.duration>1}{$video.duration|SetTime} {/if}<span class="movie-limit">{Video::display_restricted($video)}</span></div>
                 </div>
             </div>
         {/foreach}

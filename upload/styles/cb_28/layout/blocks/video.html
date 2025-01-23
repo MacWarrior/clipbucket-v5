@@ -10,7 +10,9 @@
                     <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
                     </button>
                 {/if}
-                <span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
+                {if $video.duration>1}
+                    <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
+                {/if}
             </div>
         </div>
         <div class="clearfix video-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
@@ -58,13 +60,9 @@
         <div class="col-xs-6">
             <div class="cb_item_thumb video_thumb">
                 <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-				<span class="duration">
-					{if $video.duration>1}
-                        {$video.duration|SetTime}
-                    {else}
-                        00:00
+                    {if $video.duration>1}
+                        <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
-				</span>
                     <i class="icon-playweb play-icon"></i>
                     <img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
                 </a>
@@ -99,13 +97,9 @@
         <div class="clearfix vid_thumb">
             <div class="cb_item_thumb video_thumb">
                 <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-				<span class="duration">
-					{if $video.duration>1}
-                        {$video.duration|SetTime}
-                    {else}
-                        00:00
+                    {if $video.duration>1}
+                        <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
-				</span>
                     <i class="icon-playweb play-icon"></i>
                     <img class="img-responsive" src="{getThumb vdetails=$video size=300x169}" border="1" loading="lazy"/>
                 </a>
@@ -135,8 +129,9 @@
             <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
             </button>
         {/if}
-        <span class="duration">{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</span>
-
+        {if $video.duration>1}
+            <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
+        {/if}
     </div>
     <div class="clearfix video-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
         <h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>

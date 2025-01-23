@@ -48,7 +48,7 @@
                         <a href="edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
                             {display_clean($video.title|truncate:80)}
                         </a>
-                        ({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br/>
+                        {if $video.duration>1}({$video.duration|SetTime}){/if}<br/>
                         <span>
                             <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
                         </span>

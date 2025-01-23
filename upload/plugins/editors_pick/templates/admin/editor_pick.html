@@ -39,9 +39,10 @@
                                 <img src="{getThumb vdetails=$video size=168x105}" width="130" height="80" id="thumbs_{$video.videoid}"/>
                             </div>
                             <div class="col-md-9">
-                                <a href="/admin_area/edit_video.php?video={$video.videoid}">
-                                    {display_clean($video.title)|truncate:80} </a>({if
-                                $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})<br>
+                                <a href="/admin_area/edit_video.php?video={$video.videoid}" title="display_clean($video.title)">
+                                    {display_clean($video.title)|truncate:80}
+                                </a>
+                                {if $video.duration>1}({$video.duration|SetTime}){/if}<br/>
                                 <span>
                                     <strong>{$video.date_added|niceTime}</strong>
                                     {lang code='views'} : <strong>{$video.views|number_format}</strong>
