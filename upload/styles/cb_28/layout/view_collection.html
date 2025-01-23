@@ -75,6 +75,8 @@
                     {if $c.userid != user_id()}
                         <a href="javascript:void(0);" class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
                     {/if}
+                    <a href="javascript:void(0);" id="shareButton" data-toggle="tab" class="btn btn-ghost" onclick="$('#cb-item-share').toggle();"><span class="icon-share"></span>{lang code='share_embed'}</a>
+
                     {if config('enable_edit_button') == 'yes'}
                         {if User::getInstance()->hasPermission('admin_access')}
                             {if user_id() && $c.userid == user_id()}
@@ -103,6 +105,9 @@
                         <div class="action_box" style="display:none;" id="video_action_result_cont"></div>
                     </div>
                 {/if}
+                <div class="tab-pane fade in clearfix" id="cb-item-share" style="display:none;">
+                    {show_share_form collection=$c id=$c.collection_id type=collection}
+                </div>
 
                 <ul class="clearfix desc-list">
                     <li>
