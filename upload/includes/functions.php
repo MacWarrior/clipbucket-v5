@@ -2200,30 +2200,7 @@ function sort_link($sort, $mode, $type): string
     }
 }
 
-/**
- * Function used to get flag options
- * @uses : { class : $action } { var : $report_opts }
- */
-function get_flag_options()
-{
-    $action = new cbactions();
-    $action->init();
-    return $action->report_opts;
-}
 
-/**
- * Function used to display flag type
- * @param $id
- *
- * @return
- * @uses : { get_flag_options() function }
- *
- */
-function flag_type($id)
-{
-    $flag_opts = get_flag_options();
-    return $flag_opts[$id];
-}
 
 /**
  * Function used to load captcha field

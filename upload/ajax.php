@@ -229,27 +229,8 @@ if (!empty($mode)) {
         case 'flag_object':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
-            switch ($type) {
-                case 'v':
-                case 'video':
-                default:
-                    $cbvideo->action->report_it($id, $type, user_id());
-                    break;
-
-                case 'u':
-                case 'user':
-                    userquery::getInstance()->action->report_it($id, $type, user_id());
-                    break;
-
-                case 'p':
-                case 'photo':
-                    $cbphoto->action->report_it($id, $type, user_id());
-                    break;
-
-                case 'cl':
-                case 'collection':
-                    $cbcollection->action->report_it($id, $type, user_id());
-                    break;
+            if (Flag::flagItem($id, $type, $_POST['flag_type'])) {
+                e(lang('report_successful'), 'm');
             }
 
             $error = $eh->get_error();

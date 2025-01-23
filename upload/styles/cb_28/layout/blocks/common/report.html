@@ -4,12 +4,12 @@
 			<div class="alert alert-info">
 				{lang("report_text", $params.type)}
 			</div>
-			{$flag_options=get_flag_options($type)}
+			{$flag_options=Flag::getFlagTypes()}
 			<label for="flag_type" class="label-block">{lang("category")}</label>
 			<div class="form-group clearfix">
 				<select class="form-control" name="flag_type" id="flag_type">
 					{foreach from=$flag_options key=key item=item}
-					<option value="{$key}">{$item}</option>
+					<option value="{$key}">{lang($item)}</option>
 					{/foreach}
 				</select>
 			</div>
