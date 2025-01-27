@@ -2873,50 +2873,7 @@ class CBPhotos
         return $code;
     }
 
-    /**
-     * Embed Codes
-     *
-     * @param $newArr
-     *
-     * @return array|void
-     * @throws Exception
-     */
-    function photo_embed_codes($newArr)
-    {
-        if (empty($newArr['details'])) {
-            echo "<div class='error'>" . e(lang("need_photo_details")) . "</div>";
-        } else {
-            if ($newArr['details']['allow_embedding'] == 'no') {
-                echo "<div class='error'>" . e(lang("embedding_is_disabled")) . "</div>";
-            } else {
-                $t = $newArr['type'];
-                if (is_array($t)) {
-                    $types = $t;
-                } else {
-                    if ($t == 'all') {
-                        $types = $this->embed_types;
-                    } else {
-                        $types = explode(',', $t);
-                    }
-                }
 
-                foreach ($types as $type) {
-                    $type = strtolower($type);
-                    if (in_array($type, $this->embed_types)) {
-                        $type = str_replace(' ', '', $type);
-                        $newArr['type'] = $type;
-                        $codes[] = ["name" => ucwords($type), "type" => $type, "code" => $this->generate_embed_codes($newArr)];
-                    }
-                }
-
-                if ($newArr['assign']) {
-                    assign($newArr['assign'], $codes);
-                } else {
-                    return $codes;
-                }
-            }
-        }
-    }
 
     /**
      * Used encode photo key

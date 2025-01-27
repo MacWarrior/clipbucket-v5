@@ -1,146 +1,164 @@
 {$type=$params.type}
+{if $type=='video'}
+    {$watch_right = 'view_video'}
+    {$link_config = 'enable_video_link_sharing'}
+    {$share_config = 'enable_video_internal_sharing'}
+    {$item_link = video_link($vdo)}
+    {$trad_link = 'link_this_video'}
+{elseif $type=='photo'}
+    {$watch_right = 'view_photos'}
+    {$link_config = 'enable_video_link_sharing'}
+    {$share_config = 'enable_video_internal_sharing'}
+    {$item_link = $cbphoto->photo_links($params.photo,'view_item')}
+    {$trad_link = 'link_this_photo'}
+{elseif $type=='collection'}
+    {$watch_right = 'view_collections'}
+    {$link_config = 'enable_video_link_sharing'}
+    {$share_config = 'enable_video_internal_sharing'}
+    {$item_link = $cbcollection->collection_links($params.collection,'view')}
+    {$trad_link = 'link_this_collection'}
+{/if}
 <div id="share_form_div" class="action_box share_form clearfix">
-	{if $params.type =='video'}
-		{if
-			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
-			config('enable_video_social_sharing') == 'yes' &&
-			($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
-		}
-	<ul class="social-share">
-		<li>
-			<a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={video_link($vdo)|urlencode}&p[images][0]={get_thumb vdetails=$vdo}&p[title]={$vdo.title|title|urlencode}&p[summary]={$vdo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
-				<span>Facebook</span>
-			</a>
-		</li>
-		<li>
-			<a href="https://twitter.com/share" target="_blank" class="btn-tw icon-twitter">
-				<span>Twitter</span>
-			</a>
-		</li>
-		<li>
-			<a href="https://plus.google.com/share?url={urlencode(video_link($video))}" target="_blank" class="btn-gplus icon-gplus">
-				<span>Google Plus</span>
-			</a>
-		</li>
-	</ul>
-	<hr/>
-		{/if}
+    {if $type =='video'}
+        {if
+        User::getInstance()->hasPermission($watch_right) &&
+        config('enable_video_social_sharing') == 'yes' &&
+        ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
+        }
+            <ul class="social-share">
+                <li>
+                    <a href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={video_link($vdo)|urlencode}&p[images][0]={get_thumb vdetails=$vdo}&p[title]={$vdo.title|title|urlencode}&p[summary]={$vdo.description|description|urlencode}" target="_blank" class="btn-fb icon-facebook">
+                        <span>Facebook</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://twitter.com/share" target="_blank" class="btn-tw icon-twitter">
+                        <span>Twitter</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="https://plus.google.com/share?url={urlencode(video_link($video))}" target="_blank" class="btn-gplus icon-gplus">
+                        <span>Google Plus</span>
+                    </a>
+                </li>
+            </ul>
+            <hr/>
+        {/if}
 
-		{if
-			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
-			config('video_embed') == 1 &&
-			$vdo.allow_embedding=='yes'
-			&& ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
-		}
-	<div class="form-group">
-		<label for="embed_code" class="block-label">{lang code='embed_code'}</label>
-		<textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{display_clean($cbvid->embed_code($vdo))}</textarea>
-	</div>
+        {if
+            User::getInstance()->hasPermission($watch_right) &&
+            config('video_embed') == 1 &&
+            $vdo.allow_embedding=='yes'
+            && ($vdo.broadcast == 'public' || ($vdo.broadcast == 'unlisted' && $vdo.video_password == ''))
+        }
+            <div class="form-group">
+                <label for="embed_code" class="block-label">{lang code='embed_code'}</label>
+                <textarea name="embed_code" id="embed_code" onclick="this.select()" class="form-control">{display_clean($cbvid->embed_code($vdo))}</textarea>
+            </div>
+            <div class="form-group">
+                <label class="block-label">{lang code='player_size'}</label>
+                <div class="clearfix">
+                    <label class="radio-inline">
+                        <input type="radio" name="player_size" value="default" id="player_size_0" checked onclick="updateEmbed('{config('embed_player_width')}' ,'{config('embed_player_height')}')">
+                        {lang code='default'} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
+                    </label>
 
-	<div class="form-group">
-		<label class="block-label">{lang code='player_size'}</label>
-		<div class="clearfix">
-			<label class="radio-inline">
-				<input type="radio" name="player_size" value="default" id="player_size_0" checked onclick="updateEmbed('{config('embed_player_width')}' ,'{config('embed_player_height')}')">
-				{lang code='default'} ({$Cbucket->configs.embed_player_width}x{$Cbucket->configs.embed_player_height})
-			</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="player_size" value="small" id="player_size_1" onclick="updateEmbed('440','272')">
+                        {lang code='small'} (440x272)
+                    </label>
 
-			<label class="radio-inline">
-				<input type="radio" name="player_size" value="small" id="player_size_1" onclick="updateEmbed('440','272')">
-				{lang code='small'} (440x272)
-						</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="player_size" value="medium" id="player_size_2" onclick="updateEmbed('540','334')">
+                        {lang code='medium'} (540x334)
+                    </label>
 
-			<label class="radio-inline">
-				<input type="radio" name="player_size" value="medium" id="player_size_2" onclick="updateEmbed('540','334')">
-				{lang code='medium'} (540x334)
-			</label>
+                    <label class="radio-inline">
+                        <input type="radio" name="player_size" value="large" id="player_size_3" onclick="updateEmbed('600','370')">
+                        {lang code='large'} (600x370)
+                    </label>
+                    <label class="block-label clearfix">Custom Size</label>
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <label for="player_size_width">Width</label>
+                            <input type="text" class="form-control" id="player_size_width" value="640" placeholder="Player width here">
+                        </div>
+                        <div class="form-group">
+                            <label for="player_size_height">Height</label>
+                            <input type="text" class="form-control" id="player_size_height" value="360" placeholder="Player height here">
+                        </div>
+                    </form>
 
-			<label class="radio-inline">
-				<input type="radio" name="player_size" value="large" id="player_size_3" onclick="updateEmbed('600','370')">
-				{lang code='large'} (600x370)
-			</label>
-			<label class="block-label clearfix">Custom Size</label>
-			<form class="form-inline">
-			  <div class="form-group">
-				<label for="player_size_width">Width</label>
-				<input type="text" class="form-control" id="player_size_width" value="640" placeholder="Player width here">
-			  </div>
-			  <div class="form-group">
-				<label for="player_size_height">Height</label>
-				<input type="text" class="form-control" id="player_size_height" value="360" placeholder="Player height here">
-			  </div>
-			</form>
+                </div>
+            </div>
+            <hr/>
+        {/if}
 
-		</div>
-	</div>
-	<hr/>
-		{/if}
+    {/if}
+    {if
+        User::getInstance()->hasPermission($watch_right) &&
+        config($link_config) == 'yes'
+    }
+        <div class="form-group">
+            <label for="link_video" class="block-label">{lang($trad_link)}</label>
+            <input type="text" name="link_video" id="link_video" value="{$item_link}" onclick="this.select()" class="form-control">
+        </div>
+        <hr/>
+    {/if}
 
-		{if
-			userquery::getInstance()->hasUserLevelAccess(4, 'view_video') &&
-			config('enable_video_link_sharing') == 'yes'
-		}
-	<div class="form-group">
-		<label for="link_video" class="block-label">{lang code='link_this_video'}</label>
-		<input type="text" name="link_video" id="link_video" value="{videoLink vdetails=$vdo}" onclick="this.select()" class="form-control" >
-	</div>
-	<hr/>
-		{/if}
-	
-	{/if}
+    {if config($share_config) == 'yes' && user_id()}
+        <div class="form_container">
+            <div id="share_form_results" class="form_result" style="display:none;"></div>
+            <form id="cb_share_item" name="share_form" method="post">
+                <div class="form-group">
+                    <label for="ShareUsers" class="block-label">{lang('share_this_type',$type)}</label>
+                    <input name="users" type="text" class="form-control" id="ShareUsers" placeholder="{lang code='seperate_usernames_with_comma'}" list="suggested_users">
 
-	{if config('enable_video_internal_sharing') == 'yes' && user_id()}
-	<div class="form_container">
-		<div id="share_form_results" class="form_result" style="display:none;"></div>
-		<form id="cb_share_item" name="share_form" method="post">
-			<div class="form-group">
-				<label for="ShareUsers" class="block-label">{lang('share_this_type',$type)}</label>
-				<input name="users" type="text" class="form-control" id="ShareUsers" placeholder="{lang code='seperate_usernames_with_comma'}" list="suggested_users">
-
-				{if $contacts}
-				<datalist id='suggested_users'>
-					{foreach from=$contacts item=contact}
-						<option value='{display_clean($contact.username)}'>
-					{/foreach}
-				</datalist>
-				{/if}
-			</div>
-			<div class="form-group">
-				<label for="message" class="block-label">
-					{lang code='message'}<span>&nbsp;{lang code='optional'}</span>
-				</label>
-				<textarea name="message" id="message" rows="5" class="form-control"></textarea>
-				<input name="objectid" id="objectid" type="hidden" value="{$params.id}">
-			</div>
-			<div class="clearfix text-right">
-				<input type="submit" name="send_content" value="{lang code='send'}" class="btn btn-submit btn-primary">
-			</div>
-	    </form>
-	</div>
-	{/if}
+                    {if $contacts}
+                        <datalist id='suggested_users'>
+                            {foreach from=$contacts item=contact}
+                            <option value='{display_clean($contact.username)}'>
+                                {/foreach}
+                        </datalist>
+                    {/if}
+                </div>
+                <div class="form-group">
+                    <label for="message" class="block-label">
+                        {lang code='message'}<span>&nbsp;{lang code='optional'}</span>
+                    </label>
+                    <textarea name="message" id="message" rows="5" class="form-control"></textarea>
+                    <input name="objectid" id="objectid" type="hidden" value="{$params.id}">
+                </div>
+                <div class="clearfix text-right">
+                    <input type="submit" name="send_content" value="{lang code='send'}" class="btn btn-submit btn-primary">
+                </div>
+            </form>
+        </div>
+    {/if}
 
     {ANCHOR place="video_sharing_options" data=$vdo}
 </div>
 
 <script>
-    $(document).ready(function(){
-        $('body').on('submit','#cb_share_item',function(e){
+    $(document).ready(function () {
+        $('body').on('submit', '#cb_share_item', function (e) {
             e.preventDefault();
-            _cb.submit_share_form('share_form','{$params.type}');return false;
+            _cb.submit_share_form('share_form', '{$params.type}');
+            return false;
         })
     })
 
-    $( "#player_size_width, #player_size_height" ).keyup(function() {
-	  var newWidth = '',
-	  newHeight = '',
-	  currentVal = $(this).val();
+    $("#player_size_width, #player_size_height").keyup(function () {
+        var newWidth = '',
+            newHeight = '',
+            currentVal = $(this).val();
 
-	  if ($.isNumeric( currentVal )) {
-	  	newWidth = $('#player_size_width').val();
-	  	newHeight = $('#player_size_height').val();
-	  	updateEmbed(newWidth,newHeight);
-	  } else {
-	  	alert("Only integer values are allowed");
-	  }
-	});
+        if ($.isNumeric(currentVal)) {
+            newWidth = $('#player_size_width').val();
+            newHeight = $('#player_size_height').val();
+            updateEmbed(newWidth, newHeight);
+        } else {
+            alert("Only integer values are allowed");
+        }
+    });
 </script>
