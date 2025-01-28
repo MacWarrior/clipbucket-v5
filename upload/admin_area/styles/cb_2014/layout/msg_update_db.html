@@ -11,13 +11,13 @@
                     {/if}
                 </li>
             </ul>
-            <div id="progress_div" style="text-align: center; vertical-align: middle;display: none;">
+            <div id="progress_div" style="text-align:center;vertical-align:middle;display:none;">
                 <br/>
-                <div style="padding: 6px;" ><span id="pourcent"></span>%
+                <div style="padding:6px;"><span id="pourcent"></span>%
                     (<span id="done"></span> / <span id="total"></span>)
                 </div>
-                <div  class="progress">
-                    <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100" >
+                <div class="progress">
+                    <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
             </div>
@@ -37,9 +37,8 @@
                 <ul class="list-unstyled">
                     <li>
                         <img alt='warning' src="{$imageurl}/error.png"/>
-
                         {$nb_db_update}
-                        <a style="cursor :pointer;" class="update_db">{lang code='update'}</a>
+                        <a style="cursor:pointer;" class="update_db">{lang code='update'}</a>
                     </li>
                 </ul>
             </div>
@@ -50,7 +49,7 @@
                     <li>
                         <img alt='warning' src="{$imageurl}/error.png"/>
                         {lang code='core_upgrade_avaible'}
-                        <a style="cursor :pointer;" class="update_core">{lang code='update'}</a>
+                        <a style="cursor:pointer;" class="update_core">{lang code='update'}</a>
                     </li>
                 </ul>
             </div>
@@ -64,7 +63,6 @@
                 </ul>
             </div>
         {/if}
-
     {/if}
 {else}
     {if $current_updating}
@@ -77,10 +75,10 @@
             </ul>
             <div id="progress_div" style="text-align:center;vertical-align:middle;display:none;">
                 <br/>
-                <div style="padding: 6px;" ><span id="pourcent"></span>%
+                <div style="padding:6px;"><span id="pourcent"></span>%
                     (<span id="done"></span> / <span id="total"></span>)
                 </div>
-                <div  class="progress">
+                <div class="progress">
                     <div class="progress-bar" role="progressbar" id="progress-bar" aria-valuemin="0" aria-valuemax="100">
                     </div>
                 </div>
@@ -101,7 +99,7 @@
                 <li>
                     <img alt='warning' src="{$imageurl}/error.png"/>
                     {$nb_db_update}
-                    <a style="cursor :pointer;" class="update_db">{lang code='update'}</a>
+                    <a style="cursor:pointer;" class="update_db">{lang code='update'}</a>
                 </li>
             </ul>
         </div>
