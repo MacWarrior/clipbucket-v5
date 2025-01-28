@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"247",
+  "revision":"248",
   "status":"dev",
   "detail":[
     {
@@ -49,6 +49,7 @@
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
         ,"Add link from video edition page to uploader edition page"
+        ,"Add collection sharing options"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -228,6 +229,7 @@
         ,"Fix collection add more button visibility"
         ,"Fix base URL usage"
         ,"Fix sharing privacy"
+        ,"Fix collection sharing JS error"
       ]
     },
     {
