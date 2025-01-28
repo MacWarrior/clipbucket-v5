@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"248",
+  "revision":"249",
   "status":"dev",
   "detail":[
     {
@@ -120,6 +120,7 @@
         ,"Fix login redirect"
         ,"Fix missing config"
         ,"Fix links to front office"
+        ,"Fix DB upgrade progressbar display"
       ]
     },
     {
