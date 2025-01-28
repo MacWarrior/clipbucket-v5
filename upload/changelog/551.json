@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"249",
+  "revision":"250",
   "status":"dev",
   "detail":[
     {
@@ -121,6 +121,7 @@
         ,"Fix missing config"
         ,"Fix links to front office"
         ,"Fix DB upgrade progressbar display"
+        ,"Fix SQL error on website configuration when using an outdated DB"
       ]
     },
     {
