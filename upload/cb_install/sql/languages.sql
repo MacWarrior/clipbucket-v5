@@ -1457,4 +1457,7 @@ VALUES ('admin_setting'),
        ('user_is_banned'),
        ('you_cant_share_to_yourself'),
        ('link_this_photo'),
-       ('link_this_collection');
+       ('link_this_collection'),
+       ('share'),
+       ('enable_link_sharing'),
+       ('enable_internal_sharing');

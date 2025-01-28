@@ -329,6 +329,7 @@
                                 <li><a data-toggle="tab" href="interfaces_home">{lang code='menu_home'}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -723,6 +724,32 @@
                                             </div>
                                             <div class="col-md-2 row-size">
                                                 <input value="yes" name="enable_edit_photo_button" id="enable_edit_photo_button" {if $row.enable_edit_photo_button=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane interfaces" id="interfaces_collection">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_collection_link_sharing" title="{lang('enable_link_sharing')}">{lang('enable_link_sharing')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_collection_link_sharing" id="enable_collection_link_sharing" {if $row.enable_collection_link_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_collection_internal_sharing" title="{lang code='enable_internal_sharing'}">{lang code='enable_internal_sharing'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_collection_internal_sharing" id="enable_collection_internal_sharing" {if $row.enable_collection_internal_sharing=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
                                         </div>
