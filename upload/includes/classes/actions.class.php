@@ -400,10 +400,7 @@ class cbactions
      */
     function count_flagged_objects(): int
     {
-        return 0;
-        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), 'flag_id', tbl($this->flag_tbl) . '.flag_id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
-            AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\' GROUP BY ' . tbl($this->flag_tbl) . '.flag_id ,' . tbl($this->flag_tbl) . '.type');
-        return count($results);
+        return Flag::getAll(['count'=>true, 'element_type'=>$this->name]);
     }
 
     /**

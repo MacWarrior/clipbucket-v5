@@ -181,6 +181,9 @@ class MWIP extends \Migration
         self::updateTranslation('sexual_content', [
             'fr'=>'Contenu à caractère sexuel'
         ]);
+        self::generateTranslation('flagged_obj', [
+            'fr'=>'Éléments signalés'
+        ]);
         /*
           TODO décommenter
             self::query('DROP TABLE IF EXISTS ' . tbl('flags_temp'));

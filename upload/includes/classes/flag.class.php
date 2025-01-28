@@ -84,12 +84,6 @@ class Flag
             $conditions[] = ' ' . self::$tableName . '.id_element = ' . mysql_clean($param_id_element);
         }
 
-        if ($param_group_by_type) {
-            $group_by[] = ' ' . self::$tableName . '.id_flag_type';
-            $group_by[] = ' ' . self::$tableName . '.id_element';
-        } else {
-            $group_by[] = self::$tableName . '.flag_id';
-        }
 
         switch ($param_element_type) {
             case 'video':
@@ -140,10 +134,16 @@ class Flag
             $select = ['COUNT(DISTINCT ' . self::$tableName . '.flag_id) AS count'];
         } else {
             if ($param_group_by_type) {
+                $group_by[] = ' ' . self::$tableName . '.id_flag_type';
+                $group_by[] = ' ' . self::$tableName . '.id_element';
+            } else {
+                $group_by[] = self::$tableName . '.flag_id';
+            }
+            if ($param_group_by_type) {
                 $select[] = 'count(DISTINCT ' . self::$tableName . '.flag_id) AS nb_flag';
                 $select[] = self::$tableName . '.id_element';
                 $select[] = self::$tableName . '.id_flag_type';
-                $order_search = 'ORDER BY nb_flag desc, MAX(' . self::$tableName . '.date_added) desc ';
+                $order_search = ' ORDER BY nb_flag desc, MAX(' . self::$tableName . '.date_added) desc ';
             } else {
                 $select = self::getAllFields();
                 $select[] = User::getInstance()->getTableName() . '_reporter.username';

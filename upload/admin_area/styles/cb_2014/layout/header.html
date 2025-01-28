@@ -7,7 +7,7 @@
                 </a>
             </div>
         </div>
-        {$nbnotif={math equation="a + b + c + d" a={get_videos active='no' count_only=true} b={get_users status='ToActivate' count_only=true} c={get_photos active='no' count_only=true} d=$cbvid->action->count_flagged_objects()}}
+        {$nbnotif={math equation="a + b + c + d" a={get_videos active='no' count_only=true} b={get_users status='ToActivate' count_only=true} c={get_photos active='no' count_only=true} d=Flag::getAll(['count'=>true])}}
         <div class="navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">
                 {if !$NEED_UPDATE}
@@ -57,13 +57,13 @@
                             </a>
                         </li>
                         <li>
-                            <a href="{DirPath::getUrl('admin_area')}flagged_videos.php">
+                            <a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=video">
                                 <div class="clearfix">
                                     <span class="pull-left">
                                         <i class="btn btn-xs no-hover btn-error glyphicon glyphicon-flag"></i>
-                                        Flagged
+                                        {lang('flagged_obj')}
                                     </span>
-                                    <span class="badge badge-info pull-right">{$cbvid->action->count_flagged_objects()} </span>
+                                    <span class="badge badge-info pull-right">{Flag::getAll(['count'=>true])} </span>
                                 </div>
                             </a>
                         </li>
