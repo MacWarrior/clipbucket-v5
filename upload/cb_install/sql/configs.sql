@@ -1663,3 +1663,14 @@ INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('youtube'),
     ('youtube-play'),
     ('youtube-square');
+
+INSERT IGNORE INTO `{tbl_prefix}flag_element_type` (`name`) SELECT name FROM `{tbl_prefix}categories_type`;
+
+INSERT IGNORE INTO `{tbl_prefix}flag_type` (`language_key`)
+VALUES ('inapp_content'),
+       ('copyright_infring'),
+       ('sexual_content'),
+       ('violence_replusive_content'),
+       ('spam'),
+       ('disturbing'),
+       ('other');
