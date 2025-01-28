@@ -465,8 +465,11 @@ class FFMpeg
             case 'video_hls':
                 $count = 0;
                 $bitrates = '';
-                $resolutions = '';
+                $resolutions = ' -filter_complex "';
                 $log_res = '';
+                $filter_complex = '';
+                $video_track_id = self::get_media_stream_id('video', $this->input_file);
+
                 foreach ($resolution as $res) {
                     $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
                     $this->video_files[] = $res['height'];
@@ -481,9 +484,14 @@ class FFMpeg
                     } else {
                         $scale = $res['video_height'] . ':-2';
                     }
-                    $resolutions .= ' -vf:' . $count . ' "scale=' . $scale . '"';
+                    if( $filter_complex != '' ){
+                        $filter_complex .= '; ';
+                    }
+                    $filter_complex .= '[' . $video_track_id . ':v]scale=' . $scale . '[v' . $count . ']';
                     $count++;
                 }
+                $resolutions .= $filter_complex . '"';
+
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$log_res.'...');
                 $cmd .= $bitrates . $resolutions;
                 break;
@@ -550,10 +558,9 @@ class FFMpeg
 
                 $map = '';
                 $var_stream_map = ' -var_stream_map \'';
-                $video_track_id = self::get_media_stream_id('video', $this->input_file);
                 $count = 0;
                 foreach ($resolution as $res) {
-                    $map .= ' -map 0:' . $video_track_id;
+                    $map .= ' -map "[v' . $count . ']"';
                     $var_stream_map .= ' v:' . $count . ',name:video_' . $myquery->getVideoResolutionTitleFromHeight($res['height']) . ',agroup:audios';
 
                     $count++;
