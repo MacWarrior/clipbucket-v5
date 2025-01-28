@@ -475,7 +475,13 @@ class FFMpeg
                     }
                     $log_res .= $res['height'];
                     $bitrates .= ' -b:v:' . $count . ' ' . $video_bitrate;
-                    $resolutions .= ' -s:v:' . $count . ' ' . $res['video_width'] . 'x' . $res['video_height'];
+
+                    if( $this->input_details['video_wh_ratio'] >= 1 ){
+                        $scale = '-2:' . $res['video_height'];
+                    } else {
+                        $scale = $res['video_height'] . ':-2';
+                    }
+                    $resolutions .= ' -vf:' . $count . ' "scale=' . $scale . '"';
                     $count++;
                 }
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$log_res.'...');
