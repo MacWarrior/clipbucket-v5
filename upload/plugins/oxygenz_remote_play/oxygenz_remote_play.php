@@ -122,8 +122,7 @@ class oxygenz_remote_play {
      * @throws Exception
      */
     public static function process_file($video_url, $video_id){
-        require_once(dirname(__DIR__, 2) . '/includes/classes/sLog.php');
-        require_once(dirname(__DIR__, 2) . '/includes/classes/conversion/ffmpeg.class.php');
+        require_once DirPath::get('classes') . 'sLog.php';
 
         $file_directory = create_dated_folder();
         $vdetails = get_video_details($video_id);

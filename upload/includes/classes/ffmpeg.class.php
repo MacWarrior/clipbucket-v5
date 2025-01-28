@@ -1051,4 +1051,16 @@ class FFMpeg
             Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
         }
     }
+
+    public static function getFileType($filepath): string
+    {
+        $output = shell_exec(config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams ' . escapeshellarg($filepath));
+        $info = json_decode($output, true);
+
+        if( !empty($info['format']['format_name']) && $info['format']['format_name'] == 'mpegts' ){
+            return 'video/mp2t';
+        }
+        return '';
+    }
+
 }

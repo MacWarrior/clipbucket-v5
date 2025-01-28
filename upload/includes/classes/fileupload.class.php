@@ -90,7 +90,6 @@ class FileUpload
 
         $tempFile = $_FILES[$this->fileData]['tmp_name'];
 
-
         if( config('enable_chunk_upload') == 'yes'){
             $chunk = $_POST['chunk'] ?? false;
             $chunks = $_POST['chunks'] ?? false;
@@ -109,7 +108,7 @@ class FileUpload
             }
 
             if( $chunk == 0 ){
-                $content_type = get_mime_type($tempFile);
+                $content_type = get_mime_type($tempFile, $original_filename);
                 if( $content_type != $this->mimeType ) {
                     $this->error('Invalid Content : ' . $content_type);
                 }

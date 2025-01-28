@@ -56,7 +56,6 @@ call_view_channel_functions($udetails);
 $p = userquery::getInstance()->get_user_profile($udetails['userid']);
 assign('p', $p);
 assign('backgroundPhoto', userquery::getInstance()->getBackground($udetails['userid']));
-assign('extensions', ClipBucket::getInstance()->get_extensions('photo'));
 
 //Getting users channel List
 $result_array['order'] = ' profile_hits DESC limit 6';

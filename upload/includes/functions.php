@@ -3802,20 +3802,15 @@ function upload_image($type = 'logo')
     }
 }
 
-/**
- * Check for the content mime type of a file provided
- * @param : { FILE } { $mainFile } { File to run check against }
- * @param int $offset
- * @return false|string : { string/boolean } { type or false }
- * @since : 10 January, 2018
- * @todo : will Check for the content mime type of a file provided
- * @author : Fahad Abbas
- * @example : N/A
- */
-function get_mime_type($file, $offset = 0)
+function get_mime_type($filepath, string $filename = '')
 {
-    $raw_content_type = mime_content_type($file);
-    $cont_type = substr($raw_content_type, $offset, strpos($raw_content_type, '/'));
+    $raw_content_type = mime_content_type($filepath);
+
+    if( $raw_content_type == 'application/octet-stream' && getExt($filename) == 'ts' ){
+        $raw_content_type = FFMpeg::getFileType($filepath);
+    }
+
+    $cont_type = substr($raw_content_type, 0, strpos($raw_content_type, '/'));
     if ($cont_type) {
         return $cont_type;
     }

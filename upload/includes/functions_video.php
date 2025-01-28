@@ -1618,7 +1618,6 @@ function generatingMoreThumbs($data, bool $regenerate = false)
     $vid_file = get_high_res_file($data);
     require_once DirPath::get('classes') . 'sLog.php';
     $log = new SLog();
-    require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->input_details['duration'] = $data['duration'];
     $ffmpeg->input_file = $vid_file;
@@ -1650,7 +1649,6 @@ function update_duration($vdetails)
     }
 
     $filepath = get_high_res_file($vdetails);
-    require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
     $data = FFMpeg::get_video_basic_infos($filepath);
 
     if (isset($data['duration'])) {

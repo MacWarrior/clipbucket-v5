@@ -19,7 +19,6 @@ class mass_upload extends Upload
             $dir .= DIRECTORY_SEPARATOR;
         }
 
-        require_once DirPath::get('classes') . 'conversion/ffmpeg.class.php';
         $cache_key = 'vid_info:';
         $allowed_exts = get_vid_extensions();
         $FILES = scandir($dir);

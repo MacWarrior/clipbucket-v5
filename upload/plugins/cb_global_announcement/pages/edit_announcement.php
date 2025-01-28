@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'edit_announcement');
 require_once dirname(__DIR__, 3) . '/includes/admin_config.php';
 
-$breadcrumb[0] = ['title' => 'Plugin Manager', 'url' => ''];
+$breadcrumb[0] = ['title' => lang('configurations'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang(cb_global_announcement::$lang_prefix.'menu'), 'url' => cb_global_announcement::getInstance()->pages_url.'edit_announcement.php'];
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);

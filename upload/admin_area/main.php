@@ -137,8 +137,6 @@ if (isset($_POST['update'])) {
         , 'display_featured_video'
         , 'photo_enable_nsfw_check'
         , 'video_enable_nsfw_check'
-        , 'photo_nsfw_check_model'
-        , 'video_nsfw_check_model'
         , 'enable_collection_internal_sharing'
         , 'enable_collection_link_sharing'
     ];
