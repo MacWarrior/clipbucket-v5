@@ -136,7 +136,7 @@ if (!empty($_filename)) {
         setVideoStatus($_filename, 'completed', $reconvert, true);
     }
 
-    $active = config('activation') ? 'yes' : 'no';
+    $active = config('activation') ? 'no' : 'yes';
     if( config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
         $thumbs = get_thumb($videoDetails,TRUE,'original','auto', null, 'filepath');
 
