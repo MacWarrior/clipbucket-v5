@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"251",
+  "revision":"252",
   "status":"dev",
   "detail":[
     {
@@ -273,6 +273,7 @@
         "Refactor log system"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
+        ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"

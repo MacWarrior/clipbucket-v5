@@ -446,17 +446,6 @@ class FFMpeg
                 // Fix rare video conversion fail
                 $cmd .= ' -max_muxing_queue_size 1024';
                 $cmd .= ' -start_at_zero';
-                // Ratio
-                if ($this->input_details['video_wh_ratio'] >= 2.3) {
-                    $ratio = '21/9';
-                } else {
-                    if ($this->input_details['video_wh_ratio'] >= 1.6) {
-                        $ratio = '16/9';
-                    } else {
-                        $ratio = '4/3';
-                    }
-                }
-                $cmd .= ' -aspect ' . $ratio;
                 break;
 
             case 'video_mp4':
@@ -464,8 +453,13 @@ class FFMpeg
 
                 // Video Bitrate
                 $cmd .= ' -vb ' . $final_video_bitrate;
-                // Resolution
-                $cmd .= ' -s ' . $resolution['video_width'] . 'x' . $resolution['video_height'];
+                // Keeping the original video ratio with wanted height
+                if( $this->input_details['video_wh_ratio'] >= 1 ){
+                    $scale = '-2:' . $resolution['video_height'];
+                } else {
+                    $scale = $resolution['video_height'] . ':-2';
+                }
+                $cmd .= ' -vf "scale=' . $scale . '"';
                 break;
 
             case 'video_hls':
