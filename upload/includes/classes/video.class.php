@@ -10,11 +10,12 @@ class Video
     private $display_block = '';
     private $display_var_name = '';
     private $search_limit = 0;
+    private $video_data = [];
 
     /**
      * @throws Exception
      */
-    public function __construct(){
+    public function __construct($video_id = null){
         $this->tablename = 'video';
         $this->tablename_categories = 'video_categories';
 
@@ -93,14 +94,24 @@ class Video
         $this->display_block = LAYOUT . '/blocks/video.html';
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
+
+        if( !empty($video_id) ){
+            $params = [];
+            $params['videoid'] = $video_id;
+            $params['first_only'] = true;
+            $this->video_data = $this->getAll($params);
+        }
     }
 
-    public static function getInstance(): self
+    /**
+     * @throws Exception
+     */
+    public static function getInstance($video_id = null): self
     {
-        if( empty(self::$video) ){
-            self::$video = new self();
+        if( empty(self::$video[$video_id]) ){
+            self::$video[$video_id] = new self($video_id);
         }
-        return self::$video;
+        return self::$video[$video_id];
     }
 
     public function getTableName(): string
@@ -911,6 +922,30 @@ class Video
             'total_pages'   => count_pages($total, config('video_list_view_video_history')),
             'final_results' => $results
         ];
+    }
+
+    public function getQualityLinks($mode = 'stream')
+    {
+        $base_url = DirPath::getUrl('actions') . 'video_download.php?mode=' . $mode . '&videokey=' . $this->get('videokey') . '&res=';
+        switch($this->get('file_type')) {
+            case 'hls':
+                break;
+            case 'mp4':
+                break;
+        }
+    }
+
+    public function get(string $value)
+    {
+        if( !isset($this->video_data[$value]) ){
+            if( in_dev() ){
+                $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
+                error_log($msg);
+                DiscordLog::sendDump($msg);
+            }
+            return false;
+        }
+        return $this->video_data[$value];
     }
 }
 

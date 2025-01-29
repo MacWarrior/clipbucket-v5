@@ -20,6 +20,9 @@ class Clipbucket_db
         return self::$db;
     }
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         global $DBHOST, $DBNAME, $DBUSER, $DBPASS, $DBPORT;
         $this->connect($DBHOST, $DBNAME, $DBUSER, $DBPASS, ($DBPORT ?? '3306'));
@@ -600,6 +603,10 @@ class Clipbucket_db
     public function getDBName(): string
     {
         return $this->db_name;
+    }
+
+    public function close(){
+        $this->mysqli->close();
     }
 
 }
