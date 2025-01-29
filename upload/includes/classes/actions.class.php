@@ -400,6 +400,9 @@ class cbactions
      */
     function count_flagged_objects(): int
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+            return 0;
+        }
         return Flag::getAll(['count'=>true, 'element_type'=>$this->name]);
     }
 

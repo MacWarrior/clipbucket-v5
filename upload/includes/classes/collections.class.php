@@ -201,6 +201,7 @@ class Collection
         $param_parents_only = $params['parents_only'] ?? false;
         $param_allow_children = !empty($params['allow_children']);
         $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
+        $param_join_flag =$params['join_flag'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -395,6 +396,12 @@ class Collection
         if( !User::getInstance()->hasAdminAccess() ) {
             $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
+        }
+
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') && !$param_count) {
+            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.collection_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'collection\' ) ';
+            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+
         }
 
         $newline = ' ';

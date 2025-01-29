@@ -73,7 +73,9 @@ switch ($mode) {
                 ];
 
                 if( $ia->is(get_image_file($params), $model) ){
-                    CbPhotos::getInstance()->action->report_it($details['photo_id'], 2 /* sexual_content */, 'NULL' /* system */);
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                        Flag::flagItem($details['photo_id'], 'photo', array_search('sexual_content',Flag::getFlagTypes()),0);
+                    }
                     $nsfw_flag = true;
                     break;
                 }

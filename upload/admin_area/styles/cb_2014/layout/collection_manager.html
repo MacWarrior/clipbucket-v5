@@ -55,6 +55,9 @@
                                     <span class="label {if $collections[list].active=='yes'}label-success{else}label-warning{/if}">{if $collections[list].active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}</span>
                                     <span class="label label-info">{lang code='type'} : <strong>{lang code=$collections[list].type}</strong></span>
                                     <span class="label label-info"><strong>{$collections[list].date_added|niceTime}</strong></span>
+                                    {if $collections[list].is_flagged == 1}
+                                        <span class="label label-danger">{strtoupper(lang('flagged'))}</span>
+                                    {/if}
                                 </div>
                             </div>
                         </div>

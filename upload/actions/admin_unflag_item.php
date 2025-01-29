@@ -1,5 +1,5 @@
 <?php
-define('THIS_PAGE', 'admin_import_tmdb');
+define('THIS_PAGE', 'admin_unflag_item');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $right = 'admin_access';
@@ -11,6 +11,9 @@ User::getInstance()->hasPermissionAjax(Flag::getPermissionByType($type));
 if (empty($_POST['id_flag_type']) || empty($_POST['id_element'])) {
     sessionMessageHandler::add_message(lang('unknown'), 'e');
     return false;
+}
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e');
 }
 foreach (Flag::getAll([
     'id_flag_type' => $_POST['id_flag_type'],

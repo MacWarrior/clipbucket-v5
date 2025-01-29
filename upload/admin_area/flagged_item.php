@@ -10,6 +10,10 @@ $type = $_GET['type'] ;
 $right = Flag::getPermissionByType($type);
 User::getInstance()->hasPermissionOrRedirect($right,true);
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e', get_server_url(). DirPath::getUrl('admin_area'));
+}
+
 global $breadcrumb;
 $breadcrumb[0] = [
     'title' => lang($type . 's'),

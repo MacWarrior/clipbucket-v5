@@ -292,6 +292,7 @@ class Video
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
+        $param_join_flag= $params['join_flag'];
 
         $conditions = [];
         if( $param_videoid ){
@@ -364,15 +365,15 @@ class Video
             $conditions[] = $cond;
         }
 
-        if( $param_tags && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))){
+        if ($param_tags && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))) {
             $conditions[] = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
         }
 
-        if( $param_title ){
+        if ($param_title) {
             $conditions[] = 'MATCH(video.title) AGAINST (\'' . mysql_clean($param_title) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(' . $this->getTableName() . '.title) LIKE \'%' . mysql_clean($param_title) . '%\'';
         }
 
-        if( !User::getInstance()->hasAdminAccess() && !$param_exist && !$param_disable_generic_constraints){
+        if (!User::getInstance()->hasAdminAccess() && !$param_exist && !$param_disable_generic_constraints) {
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
@@ -434,6 +435,12 @@ class Video
                 $select[] = 'user_profile.disabled_channel';
                 $group[] = 'user_profile.disabled_channel';
             }
+        }
+
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '248') && !$param_count) {
+            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.videoid AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'video\' ) ';
+            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+
         }
 
         if( $param_group ){

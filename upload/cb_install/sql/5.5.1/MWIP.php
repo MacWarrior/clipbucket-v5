@@ -142,23 +142,23 @@ class MWIP extends \Migration
 
         self::generateTranslation('video_flagged', [
             'fr'=>'Vidéos signalées',
-            'en'=>'Videos flagged'
+            'en'=>'Flagged videos'
         ]);
         self::generateTranslation('user_flagged', [
             'fr'=>'Utilisateurs signalés',
-            'en'=>'Users flagged'
+            'en'=>'Flagged users'
         ]);
         self::generateTranslation('collection_flagged', [
             'fr'=>'Collections signalées',
-            'en'=>'Collections flagged'
+            'en'=>'Flagged collections'
         ]);
         self::generateTranslation('playlist_flagged', [
             'fr'=>'Playlists signalées',
-            'en'=>'Playlists flagged'
+            'en'=>'Flagged playlists'
         ]);
         self::generateTranslation('photo_flagged', [
             'fr'=>'Photos signalées',
-            'en'=>'Photos flagged'
+            'en'=>'Flagged photos'
         ]);
         self::generateTranslation('report_successful', [
             'fr'=>'Le signalement a été effectué avec succès',
@@ -183,6 +183,11 @@ class MWIP extends \Migration
         ]);
         self::generateTranslation('flagged_obj', [
             'fr'=>'Éléments signalés'
+        ]);
+
+        self::generateTranslation('flagged', [
+            'fr'=>'Signalé',
+            'en'=>'Flagged'
         ]);
         /*
           TODO décommenter

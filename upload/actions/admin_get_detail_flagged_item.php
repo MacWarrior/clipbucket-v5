@@ -13,6 +13,9 @@ if (empty($_POST['id_element'])) {
     return false;
 }
 
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e');
+}
 
 $page = mysql_clean($_POST['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));

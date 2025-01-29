@@ -208,7 +208,7 @@ class Flag
      * @return bool
      * @throws Exception
      */
-    public static function flagItem(int $id_element, string $element_type, int $id_flag_type): bool
+    public static function flagItem(int $id_element, string $element_type, int $id_flag_type, $userid=null): bool
     {
         $id_flag_element_type = array_search($element_type, self::getFlagElementTypes());
         if ($id_flag_element_type === false) {
@@ -229,7 +229,7 @@ class Flag
         ], [
             $id_flag_element_type,
             $id_element,
-            User::getInstance()->getCurrentUserID(),
+            $userid ?? User::getInstance()->getCurrentUserID(),
             $id_flag_type,
             '|f|NOW()'
         ]);
@@ -355,6 +355,16 @@ class Flag
     public static function getLinksForFlagById($flag_id, $type)
     {
         return self::getLinksForFlag(self::getOne(['flag_id' => $flag_id]), $type);
+    }
+
+    public static function getTableName(): string
+    {
+        return self::$tableName;
+    }
+
+    public static function getTableNameElementType(): string
+    {
+        return self::$tableNameElementType;
     }
 
 }

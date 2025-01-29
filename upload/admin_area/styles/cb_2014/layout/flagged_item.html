@@ -9,55 +9,59 @@
 </div>
 <div class="row">
 
-    <form name="category" method="post">
-        <table class="table table-bordered" width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
-            <tr>
-                <td width="225" class="left_head" style="text-indent:10px">{lang('element')}</td>
-                <td width="225" class="left_head" style="text-indent:10px">{lang('motif')}</td>
-                <td width="75" align="left" class="head">{lang('nb_flag')}</td>
-                <td width="150" class="head">{lang('action')}</td>
-            </tr>
-            {foreach from=$flagged item=flagged_item}
+    <table class="table table-bordered" width="100%" border="0" align="left" cellpadding="0" cellspacing="0">
+        <tr>
+            <td width="225" class="left_head" style="text-indent:10px">{lang($type)}</td>
+            <td width="225" class="left_head" style="text-indent:10px">{lang('motif')}</td>
+            <td width="75" align="left" class="head">{lang('nb_flag')}</td>
+            <td width="150" class="head">{lang('action')}</td>
+        </tr>
+        {foreach from=$flagged item=flagged_item}
 
-                {assign var=links value=Flag::getLinksForFlag($flagged_item, $type)}
-                <tr>
-                    <td>
-                        <a href="{{$links.bo}}">{$flagged_item.element_name}</a>
-                        {if $type=='photo' && $flagged_item.is_photo_orphan}
-                            <span class="label label-primary">{lang code='orphan'}</span>
-                        {/if}
-                        {if $flagged_item.is_active === '1'}
-                            <span class="label label-primary">{lang code='active'}</span>
-                        {elseif $flagged_item.is_active === '0'}
-                            <span class="label label-danger">{lang code='inactive'}</span>
-                        {/if}
-                        <img src="{$links.thumb}">
-                    </td>
-                    <td>
-                        {lang($flagged_item.language_key)}
-                    </td>
-                    <td>{$flagged_item.nb_flag}</td>
-                    <td>
-                        <div class="lead dropdown">
-                            <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                                {lang('action')} <i class="caret"></i>
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
-                                <li><a role="menuitem" tabindex="-1" class="details" data-id-element="{$flagged_item.id_element}" data-id-flag-type="{$flagged_item.id_flag_type}" >{lang('details')}</a></li>
-                                <li><a role="menuitem" tabindex="-1" class="unflag" data-id-element="{$flagged_item.id_element}" data-id-flag-type="{$flagged_item.id_flag_type}" >{lang('unflag')}</a></li>
-                                <li><a role="menuitem" tabindex="-1" class="delete_element" data-id-element="{$flagged_item.id_element}" >{lang('delete_element')}</a></li>
-                                {if $type != 'playlist'}
-                                    <li><a role="menuitem" tabindex="-1" class="unflag_and_activate" data-id-element="{$flagged_item.id_element}" data-id-flag-type="{$flagged_item.id_flag_type}" >{lang('unflag_and_activate')}</a></li>
-                                {/if}
-                                <li><a role="menuitem" tabindex="-1" href="{$links.bo}">{lang('edit')}</a></li>
-                                <li><a role="menuitem" tabindex="-1" href="{$links.fo}">{lang('watch')}</a></li>
-                            </ul>
+            {assign var=links value=Flag::getLinksForFlag($flagged_item, $type)}
+            <tr>
+                <td>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <a href="{{$links.bo}}">{$flagged_item.element_name}</a>
                         </div>
-                    </td>
-                </tr>
-            {/foreach}
-        </table>
-    </form>
+                        <div class="row">
+                            {if $type=='photo' && $flagged_item.is_photo_orphan}
+                                <span class="label label-primary">{lang code='orphan'}</span>
+                            {/if}
+                            {if $flagged_item.is_active === '1'}
+                                <span class="label label-primary">{lang code='active'}</span>
+                            {elseif $flagged_item.is_active === '0'}
+                                <span class="label label-danger">{lang code='inactive'}</span>
+                            {/if}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <img src="{$links.thumb}" class="acc_usr_video_thumb img-responsive">
+                    </div>
+                </td>
+                <td>{lang($flagged_item.language_key)}</td>
+                <td>{$flagged_item.nb_flag}</td>
+                <td>
+                    <div class="lead dropdown">
+                        <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
+                            {lang('action')} <i class="caret"></i>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
+                            <li><a role="menuitem" tabindex="-1" class="details" data-id-element="{$flagged_item.id_element}" data-id-flag-type="{$flagged_item.id_flag_type}">{lang('details')}</a></li>
+                            <li><a role="menuitem" tabindex="-1" class="unflag" data-id-element="{$flagged_item.id_element}" data-id-flag-type="{$flagged_item.id_flag_type}">{lang('unflag')}</a></li>
+                            <li><a role="menuitem" tabindex="-1" class="delete_element" data-id-element="{$flagged_item.id_element}">{lang('delete_element')}</a></li>
+                            {if $type != 'playlist' && $flagged_item.is_active === '0'}
+                                <li><a role="menuitem" tabindex="-1" class="unflag_and_activate" data-id-element="{$flagged_item.id_element}" data-id-flag-type="{$flagged_item.id_flag_type}">{lang('unflag_and_activate')}</a></li>
+                            {/if}
+                            <li><a role="menuitem" tabindex="-1" href="{$links.bo}">{lang('edit')}</a></li>
+                            <li><a role="menuitem" tabindex="-1" href="{$links.fo}">{lang('watch')}</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+        {/foreach}
+    </table>
 </div>
 <div class="modal fade" id="myModal" role="dialog">
 </div>

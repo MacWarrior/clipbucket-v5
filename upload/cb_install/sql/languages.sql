@@ -1475,4 +1475,5 @@ VALUES ('admin_setting'),
        ('report_successful'),
        ('unflag_successful'),
        ('element_deleted'),
-       ('nb_flag');
+       ('nb_flag'),
+       ('flagged');

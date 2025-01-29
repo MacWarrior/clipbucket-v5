@@ -7,7 +7,12 @@
                 </a>
             </div>
         </div>
-        {$nbnotif={math equation="a + b + c + d" a={get_videos active='no' count_only=true} b={get_users status='ToActivate' count_only=true} c={get_photos active='no' count_only=true} d=Flag::getAll(['count'=>true])}}
+        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)}
+            {assign var=nb_flags value=Flag::getAll(['count'=>true])}
+        {else}
+            {assign var=nb_flags value=0}
+        {/if}
+        {$nbnotif={math equation="a + b + c + d" a={get_videos active='no' count_only=true} b={get_users status='ToActivate' count_only=true} c={get_photos active='no' count_only=true} d=$nb_flags}}
         <div class="navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">
                 {if !$NEED_UPDATE}
@@ -63,7 +68,9 @@
                                         <i class="btn btn-xs no-hover btn-error glyphicon glyphicon-flag"></i>
                                         {lang('flagged_obj')}
                                     </span>
-                                    <span class="badge badge-info pull-right">{Flag::getAll(['count'=>true])} </span>
+                                    <span class="badge badge-info pull-right">
+                                        {$nb_flags}
+                                    </span>
                                 </div>
                             </a>
                         </li>

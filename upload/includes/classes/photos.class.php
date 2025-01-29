@@ -203,6 +203,7 @@ class Photo
         $param_show_unlisted = $params['show_unlisted'] ?? false;
         $param_orphan = $params['orphan'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
+        $param_join_flag= $params['join_flag'] ?? false;
 
         $conditions = [];
         if ($param_not_photo_id) {
@@ -331,6 +332,12 @@ class Photo
 
         if( $param_orphan ){
             $conditions[] = $collection_items_table . '.ci_id IS NULL';
+        }
+
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') && !$param_count) {
+            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
+            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+
         }
 
         if( $param_group ){

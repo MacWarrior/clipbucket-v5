@@ -130,7 +130,7 @@ if (!empty($carray['order'])) {
 } else {
     $carray['order'] = ' collection_id DESC';
 }
-
+$carray['join_flag'] = true;
 $collections = Collection::getInstance()->getAll($carray);
 assign('collections', $collections);
 
