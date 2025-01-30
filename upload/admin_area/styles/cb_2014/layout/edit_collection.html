@@ -57,20 +57,6 @@
 				<span class="line-height-1 smaller-90">{lang code='featured'}</span>
 			</span>
 		</span>
-        <span class="btn btn-app btn-sm btn-primary no-hover">
-			{if $FlaggedPhotos != NULL}
-				{$count_flagged_photos}
-				{section name=list loop=$FlaggedPhotos}
-					<span class="line-height-1 smaller-90">{$count_flagged_photos}</span>
-				{/section}
-				<br>
-				<span class="line-height-1 smaller-90"> Flagged </span>
-			{else}
-				<span class="line-height-1 smaller-90">0</span>
-				<br>
-				<span class="line-height-1 smaller-90"> Flagged </span>
-			{/if}
-		</span>
     </div>
 </div>
 

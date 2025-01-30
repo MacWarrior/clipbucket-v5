@@ -391,7 +391,12 @@ class Clipbucket_db
         $count = 0;
         for ($i = 0; $i < $total_fields; $i++) {
             $count++;
-            $val = $this->clean_var($vls[$i]);
+            preg_match('/\|no_mc\|/', $vls[$i], $matches);
+            if ($matches) {
+                $val = preg_replace('/\|no_mc\|/', '', $vls[$i]);
+            } else {
+                $val = $this->clean_var($vls[$i]);
+            }
             $needle = substr($val, 0, 3);
             if ($needle != '|f|') {
                 $fields_query .= $flds[$i] . "='" . $val . "'";

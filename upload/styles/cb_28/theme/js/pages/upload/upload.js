@@ -6,9 +6,6 @@ $(document).ready(function(){
         uploadurl = uploadScriptPath;
     }
 
-    var extensions = back_extensions;
-    extensions = extensions.substring(0, extensions.length-1);
-
     uploader = new plupload.Uploader({
         browse_button: 'selectFiles',
         dragdrop: true,
@@ -20,7 +17,7 @@ $(document).ready(function(){
         max_file_size : max_file_size,
         filters: {
             mime_types : [
-                { title : 'Video files', extensions : extensions }
+                { title : 'Video files', extensions : video_extensions }
             ]
         },
 

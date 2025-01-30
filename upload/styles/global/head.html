@@ -13,7 +13,6 @@
         lang['remoteUploadFile']    = '{lang code="remote_upload_file"}';
         lang['upload_video_button'] = '{lang code="upload_video_button"}';
         lang['cancel']              = '{lang code="cancel"}';
-    var fileExt = '{$Cbucket->list_extensions()|replace:",":";"}';
     var uploadScriptPath = '{$uploaderDetails.uploadScriptPath}';
 
     function updateEmbed(width,height) {
@@ -71,7 +70,6 @@ function doUpdateVideo(formId,ID)
 
 {if $smarty.const.THIS_PAGE == 'photo_upload'}
 <script type="text/javascript" language="javascript">
-    fileExt = '{$cbphoto->extensions()}',
     lang = new Array(),
     pData = new Array(),
     ajaxImage = '<img src="'+imageurl+'/ajax-loader.gif" style="vertical-align:middle;" /> ',
