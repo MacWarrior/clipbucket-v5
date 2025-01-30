@@ -105,22 +105,18 @@
                                 {/if}
                             {/if}
 
-                            {if config('video_download') == 1 && CbVideo::getInstance()->downloadable($vdo)}
+                            {if $video_download}
                                 <div class="dropdown">
                                     <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
                                         {lang code='download'}
                                         <span class="caret"></span>
                                     </button>
                                     <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
-                                        {$files = get_video_files($vdo,true)}
-                                        {foreach $files as $file}
-                                            {$quality = explode('-',$file)}
-                                            {$quality = array_reverse($quality)}
-                                            {$quality = explode('.',$quality.0)}
-                                            {$file_quality = $quality.0}
+                                        {foreach $video_download_links as $quality => $dl_url}
                                             <li role="presentation">
-                                                <a role="menuitem" tabindex="-1" href="{$file}" download>
-                                                    <span class="glyphicon glyphicon-download-alt"></span> {$file_quality}</a>
+                                                <a role="menuitem" tabindex="-1" href="{$dl_url}">
+                                                    <span class="glyphicon glyphicon-download-alt"></span> {$quality}
+                                                </a>
                                             </li>
                                         {/foreach}
                                     </ul>

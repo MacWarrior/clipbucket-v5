@@ -931,15 +931,24 @@ class Video
         ];
     }
 
-    public function getQualityLinks($mode = 'stream')
+    /**
+     * @throws Exception
+     */
+    public function getQualityLinks(string $mode = 'stream'): array
     {
-        $base_url = DirPath::getUrl('actions') . 'video_download.php?mode=' . $mode . '&videokey=' . $this->get('videokey') . '&res=';
-        switch($this->get('file_type')) {
-            case 'hls':
-                break;
-            case 'mp4':
-                break;
+        if( !in_array($mode, ['stream', 'download']) ){
+            if( in_dev() ){
+                DiscordLog::sendDump('Wrong getQualityLinks mode : ' . $mode);
+            }
+            $mode = 'stream';
         }
+
+        $base_url = DirPath::getUrl('actions') . 'download_video.php?mode=' . $mode . '&videokey=' . $this->get('videokey') . '&res=';
+        $data = [];
+        foreach(json_decode($this->get('video_files')) as $resolution){
+            $data[CB_video_js::getVideoResolutionTitleFromFilePath($resolution)] = $base_url . $resolution;
+        }
+        return $data;
     }
 
     public function get(string $value)

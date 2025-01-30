@@ -76,9 +76,8 @@ class CB_video_js
     {
         $vdetails = $data['vdetails'];
 
-        $video_play = get_video_files($vdetails,true);
+        assign('video_files', Video::getInstance($vdetails['videoid'])->getQualityLinks('stream'));
 
-        assign('video_files', $video_play);
         assign('vdata',$vdetails);
         assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
         Template(DirPath::get('player') . self::class .DIRECTORY_SEPARATOR . 'cb_video_js.html',false);
@@ -106,26 +105,19 @@ class CB_video_js
      * @throws Exception
      * @used-by cb_video_js.html
      */
-    public static function getDefaultVideo($video_files)
+    public static function getDefaultVideo(array $video_files)
     {
-        global $myquery;
-        if (!empty($video_files) && is_array($video_files)) {
-            $res = [];
-            foreach ($video_files as $file) {
-                $res[] = self::getVideoQualityFromFilePath($file);
-            }
-
-            $player_default_resolution = config('player_default_resolution');
-
-            if (in_array($player_default_resolution, $res)){
-                return $myquery->getVideoResolutionTitleFromHeight($player_default_resolution);
-            }
-            if ($player_default_resolution > max($res)) {
-                return 'high';
-            }
-           return 'low';
+        if( empty($video_files) ){
+            return false;
         }
-        return false;
+
+        $player_default_resolution = myquery::getinstance()->getVideoResolutionTitleFromHeight(config('player_default_resolution'));
+
+        if( isset($video_files[$player_default_resolution]) ){
+            return $player_default_resolution;
+        }
+
+        return 'high';
     }
 
     /**

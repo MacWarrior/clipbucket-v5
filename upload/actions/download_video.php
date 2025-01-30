@@ -20,13 +20,13 @@ if( !video_playable($video) ) {
     redirect_to(get_server_url());
 }
 
-if( $_GET['mode'] == 'dl' && !CbVideo::getInstance()->downloadable($video) ){
+if( $_GET['mode'] == 'download' && !CbVideo::getInstance()->downloadable($video) ){
     redirect_to(get_server_url());
 }
 
 $video_files = getResolution_list($video);
 $file = false;
-dump($video_files);die();
+
 foreach($video_files as $video_file) {
     if( $video_file['resolution'] == $_GET['res'] ) {
         $file['size']     = $video_file['size'];
@@ -60,7 +60,7 @@ if (isset($_SERVER['HTTP_RANGE'])) {
     header('HTTP/1.1 200 OK');
 }
 
-if( $_GET['mode'] == 'dl' ){
+if( $_GET['mode'] == 'download' ){
     header('Content-Type: application/octet-stream');
     $file_name = preg_replace('/[\x00-\x1F\x7F"\\\\]/', '', $video['title']) . '-' . CB_video_js::getVideoResolutionTitleFromFilePath($_GET['res']) . '.mp4';
     header('Content-Disposition: attachment; filename="' . $file_name . '"');
