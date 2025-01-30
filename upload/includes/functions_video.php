@@ -15,7 +15,7 @@ function get_video_fields($extra = null)
  */
 function video_playable($id): bool
 {
-    global $cbvideo, $userquery;
+    global $cbvideo;
 
     if (isset($_POST['watch_protected_video'])) {
         $video_password = mysql_clean(post('video_password'));
@@ -1677,6 +1677,7 @@ function getResolution_list($data): array
                 }
                 break;
             case 'hls':
+                $path = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . $data['file_name'] . DIRECTORY_SEPARATOR . 'index.m3u8';
                 $info = getHlsFilesInfo($video_file, $data);
                 $size = $info['files_size'];
                 $nb_file = $info['nb_file'];
@@ -1685,8 +1686,9 @@ function getResolution_list($data): array
         if ($nb_file > 0) {
             $resolution_list[] = [
                 'resolution' => $video_file,
-                'size'       => formatfilesize($size),
-                'nb_files'   => $nb_file
+                'size'       => $size,
+                'nb_files'   => $nb_file,
+                'filepath'   => $path ?? ''
             ];
         }
     }
@@ -1709,7 +1711,10 @@ function getHlsFilesInfo($resolution, $data): array
         $nb++;
         $size += filesize($file);
     }
-    return ['nb_file' => $nb, 'files_size' => $size];
+    return [
+        'nb_file' => $nb,
+        'files_size' => $size
+    ];
 }
 
 /**

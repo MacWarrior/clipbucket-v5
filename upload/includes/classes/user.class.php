@@ -605,7 +605,6 @@ class User
     public function get(string $value)
     {
         if( !isset($this->user_data[$value]) ){
-            DiscordLog::sendDump($this->user_data);
             if( in_dev() ){
                 $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
                 error_log($msg);
