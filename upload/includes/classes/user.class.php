@@ -1208,6 +1208,9 @@ class userquery extends CBCategory
         $this->remove_user_subscriptions($uid);
         $this->remove_user_subscribers($uid);
 
+        //delete reports for this user
+        Flag::unFlagByElementId($uid, 'user');
+
         $anonymous_id = $this->get_anonymous_user();
         //Changing User Videos To Anonymous
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
@@ -1236,8 +1239,10 @@ class userquery extends CBCategory
         Category::getInstance()->unlinkAll('user', $uid);
 
         //Finally Removing Database entry of user
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . mysql_clean($uid));
 
         User::getInstance()->cleanUserFeed($uid);
 
