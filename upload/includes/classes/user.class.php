@@ -1239,8 +1239,10 @@ class userquery extends CBCategory
         Category::getInstance()->unlinkAll('user', $uid);
 
         //Finally Removing Database entry of user
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . mysql_clean($uid));
 
         User::getInstance()->cleanUserFeed($uid);
 

@@ -1476,4 +1476,5 @@ VALUES ('admin_setting'),
        ('unflag_successful'),
        ('element_deleted'),
        ('nb_flag'),
-       ('flagged');
+       ('flagged'),
+       ('must_update_version');

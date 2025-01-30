@@ -10,8 +10,8 @@ $type = $_GET['type'] ;
 $right = Flag::getPermissionByType($type);
 User::getInstance()->hasPermissionOrRedirect($right,true);
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-    sessionMessageHandler::add_message(lang('must_update_version'), 'e', get_server_url(). DirPath::getUrl('admin_area'));
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area', true));
 }
 
 global $breadcrumb;
@@ -49,9 +49,5 @@ pages::getInstance()->paginate($total_pages, $page);
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/flagged_item/flagged_item'.$min_suffixe.'.js' => 'admin']);
 
-switch ($type) {
-    case 'video':
-        $link_fo_function = 'video_link';
-}
 template_files('flagged_item.html');
 display_it();

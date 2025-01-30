@@ -4,7 +4,6 @@ class Flag
 {
     private static $flag_types = [];
     private static $flag_element_types = [];
-
     private static $tableName = 'flags';
     private static $tableNameElementType = 'flag_element_type';
     private static $tableNameType = 'flag_type';
@@ -26,12 +25,11 @@ class Flag
         'language_key'
     ];
 
-
     /**
      * @return array
      * @throws Exception
      */
-    public static function getFlagTypes()
+    public static function getFlagTypes(): array
     {
         if (empty(self::$flag_types)) {
             $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableNameType));
@@ -44,7 +42,7 @@ class Flag
      * @return array
      * @throws Exception
      */
-    public static function getFlagElementTypes()
+    public static function getFlagElementTypes(): array
     {
         if (empty(self::$flag_element_types)) {
             $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableNameElementType));
@@ -52,7 +50,6 @@ class Flag
         }
         return self::$flag_element_types;
     }
-
 
     /**
      * @param $params
@@ -84,7 +81,6 @@ class Flag
             $conditions[] = ' ' . self::$tableName . '.id_element = ' . mysql_clean($param_id_element);
         }
 
-
         switch ($param_element_type) {
             case 'video':
                 $join[] = ' INNER JOIN ' . tbl(Video::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'video\' ) 
@@ -92,6 +88,7 @@ class Flag
                 $select_element = $param_element_type . '.title ';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.active = \'yes\' THEN 1 ELSE 0 END';
                 break;
+
             case 'photo':
                 $join[] = ' INNER JOIN ' . tbl(Photo::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'photo\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.photo_id ';
@@ -99,26 +96,29 @@ class Flag
                 $select_element = $param_element_type . '.photo_title ';
                 $select_orphan = ' CASE WHEN ' . Collection::getInstance()->getTableNameItems() . '.ci_id IS NULL THEN 1 ELSE 0 END AS is_photo_orphan';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.active = \'yes\' THEN 1 ELSE 0 END';
-
                 break;
+
             case 'user':
                 $join[] = ' INNER JOIN ' . tbl(User::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'user\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.userid ';
                 $select_element = $param_element_type . '.username ';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.usr_status = \'Ok\' THEN 1 ELSE 0 END';
                 break;
+
             case 'collection':
                 $join[] = ' INNER JOIN ' . tbl(Collection::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'collection\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.collection_id ';
                 $select_element = $param_element_type . '.collection_name ';
                 $select_is_active = 'CASE WHEN ' . $param_element_type . '.active = \'yes\' THEN 1 ELSE 0 END';
                 break;
+
             case  'playlist':
                 $join[] = ' INNER JOIN ' . tbl(Playlist::getInstance()->getTableName()) . ' AS ' . $param_element_type . ' ON ' . self::$tableName . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(self::$tableNameElementType) . ' WHERE name = \'playlist\') 
                     AND ' . self::$tableName . '.id_element = ' . $param_element_type . '.playlist_id ';
                 $select_element = $param_element_type . '.playlist_name ';
                 $select_is_active = null;
                 break;
+
             default:
                 $select_element = '';
                 break;
@@ -200,11 +200,11 @@ class Flag
         return $result;
     }
 
-
     /**
      * @param int $id_element
      * @param string $element_type
      * @param int $id_flag_type
+     * @param null $userid
      * @return bool
      * @throws Exception
      */
@@ -272,7 +272,8 @@ class Flag
     }
 
     /**
-     * @param int $flag_id
+     * @param int $id_element
+     * @param $type
      * @return bool
      * @throws Exception
      */
@@ -288,7 +289,7 @@ class Flag
         return true;
     }
 
-    public static function getPermissionByType($type)
+    public static function getPermissionByType($type): string
     {
         switch ($type) {
             case 'video':
@@ -310,7 +311,7 @@ class Flag
      * @return string[]
      * @throws Exception
      */
-    public static function getLinksForFlag($flag, $type)
+    public static function getLinksForFlag($flag, $type): array
     {
         switch ($type) {
             case 'video':
@@ -319,20 +320,24 @@ class Flag
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $flag['id_element'],
                     'thumb' => get_thumb($flag['id_element'], false, '168x105')
                 ];
+
             case 'photo':
                 return [
                     'fo'    => Photo::getInstance()->getFOLink($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $flag['id_element'],
                     'thumb' => get_image_file(['details' => $flag['id_element']])
                 ];
+
             case 'collection':
                 return [
                     'fo'    => Collections::getInstance()->collection_links($flag['id_element']),
                     'bo'    => DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' . $flag['id_element'],
                     'thumb' => Collections::getInstance()->get_thumb($flag['id_element'])
                 ];
+
             case 'playlist':
                 return ['bo' => DirPath::getUrl('admin_area') . 'edit_playlist.php?playlist=' . $flag['id_element']];
+
             case 'user':
                 return [
                     'fo'    => userquery::getInstance()->profile_link($flag['id_element']),
@@ -340,6 +345,7 @@ class Flag
                     'thumb' => userquery::getInstance()->getUserThumb([], '', $flag['id_element'])
                 ];
         }
+
         return [
             'bo' => '',
             'fo' => ''
@@ -349,10 +355,10 @@ class Flag
     /**
      * @param $flag_id
      * @param $type
-     * @return array|string|string[]
+     * @return array
      * @throws Exception
      */
-    public static function getLinksForFlagById($flag_id, $type)
+    public static function getLinksForFlagById($flag_id, $type): array
     {
         return self::getLinksForFlag(self::getOne(['flag_id' => $flag_id]), $type);
     }

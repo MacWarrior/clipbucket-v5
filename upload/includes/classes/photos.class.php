@@ -334,7 +334,7 @@ class Photo
             $conditions[] = $collection_items_table . '.ci_id IS NULL';
         }
 
-        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') && !$param_count) {
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255) && !$param_count) {
             $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
             $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
 
@@ -831,20 +831,25 @@ class CBPhotos
                         'title' => 'Inactive Photos'
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'
                     ]
-                    , [
-                        'title' => lang('photo_flagged')
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=photo'
-                    ]
-                    , [
-                        'title' => 'Orphan Photos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
-                    ]
-                    , [
-                        'title' => lang('manage_x', strtolower(lang('categories')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
-                    ]
                 ]
             ];
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                $menu_photo['sub'][] = [
+                    'title' => lang('photo_flagged')
+                    , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=photo'
+                ];
+            }
+
+            $menu_photo['sub'][] = [
+                'title' => 'Orphan Photos'
+                , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
+            ];
+            $menu_photo['sub'][] = [
+                'title' => lang('manage_x', strtolower(lang('categories')))
+                , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
+            ];
+
             ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
     }

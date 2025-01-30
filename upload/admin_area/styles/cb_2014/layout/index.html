@@ -311,11 +311,11 @@
 
 			{
 				"category": "Photos",
-				"column-1": '{$cbphoto->action->count_flagged_objects()}'
+				"column-1": '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}'
 			},
 			{
 				"category": "Videos",
-				"column-1": '{$cbvid->action->count_flagged_objects()}'
+				"column-1": '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}'
 			}
 		]
 	});
@@ -433,7 +433,7 @@
 			},
 			{
 				"category": "Reported",
-				"column-1": '{$cbvid->action->count_flagged_objects()}'
+				"column-1": '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}'
 			}
 		]
 	});

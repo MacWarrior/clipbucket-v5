@@ -1035,10 +1035,13 @@ class CBvideo extends CBCategory
                 'title' => lang('manage_x', strtolower(lang('categories')))
                 , 'url' => DirPath::getUrl('admin_area') . 'category.php'
             ];
-            $menu_video['sub'][] = [
-                'title' => lang('video_flagged')
-                , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=video'
-            ];
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                $menu_video['sub'][] = [
+                    'title' => lang('video_flagged')
+                    , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=video'
+                ];
+            }
             $menu_video['sub'][] = [
                 'title' => 'Mass Upload Videos'
                 , 'url' => DirPath::getUrl('admin_area') . 'mass_uploader.php'

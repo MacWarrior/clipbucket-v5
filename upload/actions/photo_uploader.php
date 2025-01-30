@@ -73,7 +73,7 @@ switch ($mode) {
                 ];
 
                 if( $ia->is(get_image_file($params), $model) ){
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
                         Flag::flagItem($details['photo_id'], 'photo', array_search('sexual_content',Flag::getFlagTypes()),0);
                     }
                     $nsfw_flag = true;

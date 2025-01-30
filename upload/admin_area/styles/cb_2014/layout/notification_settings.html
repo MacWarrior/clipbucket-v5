@@ -13,18 +13,18 @@
     <!-- Admin Todo List -->
     <tr>
         <td class="item"><a href="video_manager.php?search=search&active=no">Approve Videos ({get_videos active='no' count_only=true})</a>
-            <br/><a href="flagged_item.php?type=video">{lang('video_flagged')} ({$cbvid->action->count_flagged_objects()})</a>
+            <br/><a href="flagged_item.php?type=video">{lang('video_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'videoo'])})</a>
         </td>
 
         <td class="item"><a href="members.php?search=yes&amp;status=ToActivate">Approve Members ({get_users status='ToActivate' count_only=true})</a>
-            <br/><a href="flagged_users.php">{lang('user_flagged')} ({$userquery->action->count_flagged_objects()})</a>
+            <br/><a href="flagged_users.php">{lang('user_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'user'])})</a>
         </td>
         <td class="item"><a href="photo_manager.php?active=no&amp;search=yes">Approve Photos ({get_photos active='no' count_only=true})</a>
-            <br/><a href="flagged_item.php?type=photo">{lang('photo_flagged	')} ({$cbphoto->action->count_flagged_objects()})</a>
+            <br/><a href="flagged_item.php?type=photo">{lang('photo_flagged	')} ({Flag::getAll(['count'=>true, 'element_type'=>'photo'])})</a>
         </td>
         <td class="item">
             <a href="flagged_item.php?type=collection">{lang('collection_flagged')}
-                {if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) }
+                {if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) }
                     ({Flag::getAll(['count'=>true, 'element_type'=>'collection'])}
                 {else}
                     0

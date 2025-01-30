@@ -1,5 +1,4 @@
 $(() => {
-    console.log('loaded');
     $('.unflag').on('click', function () {
         const id_flag_type = $(this).data('id-flag-type');
         const id_element = $(this).data('id-element');

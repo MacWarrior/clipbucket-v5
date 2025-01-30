@@ -2,7 +2,6 @@
 define('THIS_PAGE', 'admin_get_detail_flagged_item');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$right = 'admin_access';
 if (empty($_POST['type'])) {
     return false;
 }
@@ -13,7 +12,7 @@ if (empty($_POST['id_element'])) {
     return false;
 }
 
-if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
     sessionMessageHandler::add_message(lang('must_update_version'), 'e');
 }
 
