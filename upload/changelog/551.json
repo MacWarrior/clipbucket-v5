@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"250",
+  "revision":"254",
   "status":"dev",
   "detail":[
     {
@@ -122,6 +122,7 @@
         ,"Fix links to front office"
         ,"Fix DB upgrade progressbar display"
         ,"Fix SQL error on website configuration when using an outdated DB"
+        ,"Fix AI NSFW check options"
       ]
     },
     {
@@ -271,6 +272,8 @@
       "description": [
         "Refactor log system"
         ,"Add option to only keep maximum resolution"
+        ,"Add support for .m4v & .ts video files"
+        ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
@@ -352,8 +355,8 @@
       "description": [
         "Update Player to version 2.0.7"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
-        ,"Update Global Announcement to version 2.0.4"
-        ,"Update Editor's Pick to version 2.0.6"
+        ,"Update Global Announcement to version 2.0.5"
+        ,"Update Editor's Pick to version 2.0.7"
         ,"Remove Social Beast"
       ]
     },

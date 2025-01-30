@@ -53,8 +53,7 @@ if( strpos($check_url[0], '200') === false ){
 switch($step){
     case 'save':
     case 'check_link':
-        require_once(dirname(__DIR__, 3) . '/includes/classes/sLog.php');
-        require_once(dirname(__DIR__, 3) . '/includes/classes/conversion/ffmpeg.class.php');
+        require_once DirPath::get('classes') . 'sLog.php';
         $log = new SLog();
         $ffmpeg = new FFMpeg($log);
         $video_infos = $ffmpeg->get_file_info($video_url);

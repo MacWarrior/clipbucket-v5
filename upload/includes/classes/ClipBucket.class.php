@@ -615,35 +615,15 @@ class ClipBucket
 
         return $this->template = $template;
     }
-
-    /**
-     * Function used to list available extension for clipbucket
-     */
-    function list_extensions()
-    {
-        $exts = $this->configs['allowed_video_types'];
-        $exts = preg_replace('/ /', '', $exts);
-        $exts = explode(',', $exts);
-        $new_form = '';
-        foreach ($exts as $ext) {
-            if (!empty($new_form)) {
-                $new_form .= ';';
-            }
-            $new_form .= "*.$ext";
-        }
-
-        return $new_form;
-    }
-
     function get_extensions($type = 'video'): string
     {
         switch ($type) {
             default:
             case 'video':
-                $exts = $this->configs['allowed_video_types'];
+                $exts = config('allowed_video_types');
                 break;
             case 'photo':
-                $exts = $this->configs['allowed_photo_types'];
+                $exts = config('allowed_photo_types');
                 break;
         }
 

@@ -5,7 +5,7 @@ sleep(5);
 define('THIS_PAGE', 'video_convert');
 
 include(dirname(__FILE__) . '/../includes/config.inc.php');
-require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
+require_once DirPath::get('classes') . 'sLog.php';
 
 global $cbvideo;
 
@@ -107,8 +107,6 @@ if (!empty($_filename)) {
     } else {
         $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
     }
-
-    require_once(DirPath::get('classes') . 'conversion/ffmpeg.class.php');
 
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->conversion_type = config('conversion_type');

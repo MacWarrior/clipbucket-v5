@@ -67,7 +67,7 @@
 	var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
 	var max_file_size ="{config('max_upload_size')}Mb";
 	var chunk_upload ="{config('enable_chunk_upload') == 'yes'}";
-	var back_extensions = '{$extensions}';
+	var video_extensions = '{ClipBucket::getInstance()->get_extensions('video')}';
 	var theme = '{$theme}';
 	var max_video_title = "{config('max_video_title')}";
 	var default_country_iso2 = "{config('default_country_iso2')}";
