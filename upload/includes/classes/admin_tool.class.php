@@ -649,6 +649,9 @@ class AdminTool
                         }
                     }
                     //update nb_done of tools
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                        $this->cleanArrayLoopData();
+                    }
                     $this->array_loop_index++;
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
                         $this->updateToolHisto(['elements_done'], [$this->array_loop_index]);
@@ -657,9 +660,6 @@ class AdminTool
                     }
                 }
             } while (empty($has_to_stop) && !empty($array_loop) && $this->array_loop_index < $element_totals);
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->cleanArrayLoopData();
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
@@ -1146,6 +1146,6 @@ class AdminTool
 
     public function cleanArrayLoopData()
     {
-        Clipbucket_db::getInstance()->delete(tbl('tools_loop_data'), ['id_histo'], [$this->id_histo]);
+        Clipbucket_db::getInstance()->delete(tbl('tools_loop_data'), ['id_histo', 'loop_index'], [$this->id_histo, $this->array_loop_index]);
     }
 }
