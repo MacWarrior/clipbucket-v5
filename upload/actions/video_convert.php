@@ -159,7 +159,9 @@ if (!empty($_filename)) {
                 foreach($thumbs as $thumb){
                     if( $ia->is($thumb, $model) ){
                         $active = 'no';
-                        CbVideo::getInstance()->action->report_it($videoDetails['videoid'], 2 /* sexual_content */, 'NULL' /* system */);
+                        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                            Flag::flagItem($videoDetails['videoid'], 'video', array_search('sexual_content',Flag::getFlagTypes()),0);
+                        }
                         break 2;
                     }
                 }

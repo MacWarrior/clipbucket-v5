@@ -42,13 +42,6 @@ class cbactions
     var $check_func = 'video_exists';
 
     /**
-     * This holds all options that are listed when user wants to report
-     * a content ie - copyrighted content - voilance - sex or something alike
-     * ARRAY = array('Copyrighted','Nudity','bla','another bla');
-     */
-    var $report_opts = [];
-
-    /**
      * share email template name
      */
     var $share_template_name = 'video_share_template';
@@ -66,16 +59,6 @@ class cbactions
     function init()
     {
         global $cb_columns;
-
-        $this->report_opts = [
-            lang('inapp_content'),
-            lang('copyright_infring'),
-            lang('sexual_content'),
-            lang('violence_replusive_content'),
-            lang('spam'),
-            lang('disturbing'),
-            lang('other')
-        ];
 
         $fields = ['playlist_id', 'playlist_name', 'userid', 'description',
             'played', 'privacy', 'total_comments', 'runtime',
@@ -164,73 +147,6 @@ class cbactions
         $obj = ${$obj};
         $func = $this->check_func;
         return $obj->{$func}($id);
-    }
-
-    /**
-     * Function used to report a content
-     *
-     * @param $id
-     * @param $flag_type
-     * @param null $user_id
-     * @throws Exception
-     */
-    function report_it($id, $flag_type, $user_id)
-    {
-        if( !$this->exists($id) ){
-            e(lang('obj_not_exists', lang($this->name)));
-            return;
-        }
-
-        if( $user_id != 'NULL' && !User::getInstance()->isUserConnected() ){
-            e(lang('you_not_logged_in'));
-            return;
-        }
-
-        if( $this->report_check($id) ){
-            e(lang('obj_report_err', lang($this->name)));
-            return;
-        }
-
-        Clipbucket_db::getInstance()->insert(
-            tbl($this->flag_tbl),
-            ['type', 'id', 'userid', 'flag_type', 'date_added'],
-            [$this->type, $id, $user_id, $flag_type, NOW()]
-        );
-
-        if( !is_null($user_id) ){
-            e(lang('obj_report_msg', lang($this->name)), 'm');
-        }
-    }
-
-    /**
-     * Function used to delete flags
-     *
-     * @param $id
-     * @throws Exception
-     */
-    function delete_flags($id)
-    {
-        $id = mysql_clean($id);
-        Clipbucket_db::getInstance()->delete(tbl($this->flag_tbl), ['id', 'type'], [$id, $this->type]);
-        e(lang('type_flags_removed', lang($this->name)), 'm');
-    }
-
-    /**
-     * Function used to check weather user has already reported the object or not
-     *
-     * @param $id
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function report_check($id): bool
-    {
-        $id = mysql_clean($id);
-        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl), 'flag_id', ' id=\'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\' AND userid=\'' . user_id() . '\'');
-        if (count($results) > 0) {
-            return true;
-        }
-        return false;
     }
 
     /**
@@ -370,52 +286,6 @@ class cbactions
     }
 
     /**
-     * Function used to get object flags
-     *
-     * @param null $limit
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_flagged_objects($limit = null)
-    {
-        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), '*', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
-            AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\'', $limit);
-        if (count($results) > 0) {
-            return $results;
-        }
-        return false;
-    }
-
-    /**
-     * Function used to get all flags of an object
-     *
-     * @param $id
-     *
-     * @return array|bool
-     * @throws Exception
-     */
-    function get_flags($id)
-    {
-        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl), '*', 'id = \'' . mysql_clean($id) . '\' AND type=\'' . $this->type . '\'');
-        if (count($results) > 0) {
-            return $results;
-        }
-        return false;
-    }
-
-    /**
-     * Function used to count object flags
-     * @throws Exception
-     */
-    function count_flagged_objects(): int
-    {
-        $results = Clipbucket_db::getInstance()->select(tbl($this->flag_tbl . ',' . $this->type_tbl), 'id', tbl($this->flag_tbl) . '.id = ' . tbl($this->type_tbl) . '.' . $this->type_id_field . ' 
-            AND ' . tbl($this->flag_tbl) . '.type=\'' . $this->type . '\' GROUP BY ' . tbl($this->flag_tbl) . '.id ,' . tbl($this->flag_tbl) . '.type');
-        return count($results);
-    }
-
-    /**
      * @throws Exception
      */
     function load_basic_fields($array = null): array
@@ -471,7 +341,6 @@ class cbactions
         ];
     }
 
-
     /**
      * @throws Exception
      */
@@ -515,8 +384,8 @@ class cbactions
             return false;
         }
 
-        $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description', 'tags'];
-        $values = [$params['name'], user_id(), now(), $this->type, '', ''];
+        $fields = ['playlist_name', 'userid', 'date_added', 'playlist_type', 'description'];
+        $values = [$params['name'], user_id(), now(), $this->type, ''];
 
         Clipbucket_db::getInstance()->insert(tbl($this->playlist_tbl), $fields, $values);
 
@@ -542,8 +411,6 @@ class cbactions
         }
         return false;
     }
-
-
 
     /**
      * Function used to add new item in playlist
@@ -818,12 +685,14 @@ class cbactions
             e(lang('you_dont_hv_permission_del_playlist'));
         } else {
             $id = mysql_clean($id);
+            //delete reports for this playlist
+            Flag::unFlagByElementId($id, 'playlist');
+
             Clipbucket_db::getInstance()->delete(tbl($this->playlist_tbl), ['playlist_id'], [mysql_clean($id)]);
             Clipbucket_db::getInstance()->delete(tbl($this->playlist_items_tbl), ['playlist_id'], [$id]);
             e(lang('playlist_delete_msg'), 'm');
         }
     }
-
 
     /**
      * Function used to count playlist item

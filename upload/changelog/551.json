@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"254",
+  "revision":"255",
   "status":"dev",
   "detail":[
     {
@@ -43,6 +43,7 @@
         ,"Refactor user levels management interface"
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
+        ,"Refactor flagged elements management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -123,6 +124,7 @@
         ,"Fix DB upgrade progressbar display"
         ,"Fix SQL error on website configuration when using an outdated DB"
         ,"Fix AI NSFW check options"
+        ,"Fix user deletion"
       ]
     },
     {

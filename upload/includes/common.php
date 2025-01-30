@@ -95,6 +95,7 @@ require_once DirPath::get('classes') . 'social_networks.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
+require_once DirPath::get('classes') . 'flag.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -383,7 +384,6 @@ $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
 $Smarty->register_modifier('get_user_level', 'get_user_level');
 $Smarty->register_modifier('nicetime', 'nicetime');
-$Smarty->register_modifier('flag_type', 'flag_type');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');
 

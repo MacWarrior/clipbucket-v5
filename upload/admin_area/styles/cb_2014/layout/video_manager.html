@@ -85,6 +85,10 @@
 
                             <span class="label label-info">{strtoupper($video.file_type)}</span>
 
+                            {if $video.is_flagged == 1}
+                                <span class="label label-danger">{lang('flagged')}</span>
+                            {/if}
+
                             <div class="clearfix"></div>
                             {$catString = {$video.category_names}}
                             {$catString = strip_tags($catString)}

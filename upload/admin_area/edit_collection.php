@@ -30,7 +30,7 @@ $collection = Collection::getInstance()->getOne([
     'with_items'            => true
 ]);
 if (empty($collection)) {
-    redirect_to(get_server_url() . DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
+    redirect_to(DirPath::getUrl('admin_area', true) . 'collection_manager.php?missing_collection=1');
 }
 
 /* Generating breadcrumb */
@@ -60,11 +60,6 @@ if ($collection['type'] == 'videos') {
 }
 assign('items', $items);
 assign('data', $collection);
-
-$FlaggedPhotos = $cbvid->action->get_flagged_objects();
-Assign('flaggedPhoto', $FlaggedPhotos);
-$count_flagged_photos = $cbvid->action->count_flagged_objects();
-Assign('count_flagged_photos', $FlaggedPhotos);
 assign('link_user', DirPath::getUrl('admin_area') . 'view_user.php?uid=' . $collection['userid']);
 
 $params = [];
