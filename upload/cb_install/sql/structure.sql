@@ -1200,3 +1200,16 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}email_variable_link`
 ALTER TABLE `{tbl_prefix}email_variable_link`
     ADD CONSTRAINT `email_variable_link_email_variable_fk` FOREIGN KEY (`id_email`) REFERENCES `{tbl_prefix}email` (`id_email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `email_variable_link_email_variable_email_fk` FOREIGN KEY (`id_email_variable`) REFERENCES `{tbl_prefix}email_variable` (`id_email_variable`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_loop_data`
+(
+    `id_histo` INT,
+    `loop_index`    INT,
+    `data`          TEXT,
+    PRIMARY KEY (id_histo, loop_index)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}tools_loop_data`
+    ADD CONSTRAINT `tools_loop_data_id_tool_histo` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
