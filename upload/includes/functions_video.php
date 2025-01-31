@@ -1766,10 +1766,26 @@ function remove_empty_directory($path, string $stop_path)
  */
 function clean_orphan_files($file)
 {
-    if (($file['type'] == 'photo' && in_array($file['photo'], AdminTool::getTemp()['photo']))
-    || ( in_array($file['type'], ['video_mp','video_hls','thumb','log','subtitle']) && in_array($file['video'], AdminTool::getTemp()['video']))
-    || ( $file['type'] == 'userfeeds' && in_array($file['user'], AdminTool::getTemp()['user']))
-    ) {
+
+    switch ($file['type']) {
+        case 'video_mp':
+        case 'video_hls':
+        case 'thumb':
+        case 'subtitle':
+        case 'log':
+        $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \''.mysql_clean($file['data']).'\'';
+        $result = Clipbucket_db::getInstance()->_select($query);
+            break;
+        case 'photo':
+            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \''.mysql_clean($file['data']).'\'';
+            $result = Clipbucket_db::getInstance()->_select($query);
+            break;
+        case 'userfeeds':
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \''.mysql_clean($file['data']).'\'';
+            $result = Clipbucket_db::getInstance()->_select($query);
+            break;
+    }
+    if (!empty($result)) {
         return;
     }
 

@@ -192,6 +192,16 @@ class AdminTool
             e(lang('class_error_occured'));
             return false;
         }
+        $this->array_loop_index = 0;
+        //setting total if exist
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+            $info = $this->getLastHistoNotEndedNotRunning();
+            if (!empty($info)) {
+                $this->array_loop_total = $info[0]['elements_total'];
+                $this->array_loop_index = $info[0]['loop_index'];
+                $this->changeDataHisto();
+            }
+        }
         call_user_func_array([$this, $this->tool['function_name']], []);
     }
 
@@ -366,191 +376,137 @@ class AdminTool
      */
     public function cleanOrphanFiles()
     {
-        $this->array_loop_total = 0;
-        $video_file_name = [];
-        $photo_file_name = [];
-        $array_user_id = [];
-        $this->array_loop = [];
+        if (empty($this->array_loop_total)) {
+            $this->array_loop_total = 0;
+            $this->array_loop = [];
 
-        //LOGS
-        $logs = rglob(DirPath::get('logs') . '*.log');
-        $insert_values = [];
-        foreach ($logs as $log) {
-            $vid_file_name = basename($log, '.log');
-            $video_file_name[] = $vid_file_name;
-            $insert_values[] = [
-                'type'  => 'log',
-                'data'  => $log,
-                'video' => $vid_file_name
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($logs);
-
-        //VIDEO MP4
-        $videos_mp4 = rglob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
-        $insert_values = [];
-        foreach ($videos_mp4 as $video) {
-            $vid_file_name = explode('-', basename($video, '.mp4'))[0];
-            $video_file_name[] = $vid_file_name;
-            $insert_values[] = [
-                'type'  => 'video_mp',
-                'data'  => $video,
-                'video' => $vid_file_name
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($videos_mp4);
-
-        //photos
-        $photos = rglob(DirPath::get('photos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
-        $insert_values = [];
-        foreach ($photos as $photo) {
-            $pic_file_name = explode('_', pathinfo($photo)['filename'])[0];
-            $photo_file_name[] = $pic_file_name;
-            $insert_values[] = [
-                'type'  => 'photo',
-                'data'  => $photo,
-                'photo' => $pic_file_name
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($photos);
-
-        //VIDEO HLS
-        $videos_hls = glob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-        $insert_values = [];
-        foreach ($videos_hls as $video) {
-            $vid_file_name = basename($video);
-            $video_file_name[] = $vid_file_name;
-            $insert_values[] = [
-                'type'  => 'video_hls',
-                'data'  => $video,
-                'video' => $vid_file_name
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($videos_hls);
-
-        //THUMBS
-        $thumbs = rglob(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
-        $insert_values = [];
-        foreach ($thumbs as $thumb) {
-            $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
-            $video_file_name[] = $vid_file_name;
-            $insert_values[] = [
-                'type'  => 'thumb',
-                'data'  => $thumb,
-                'video' => $vid_file_name
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($thumbs);
-
-        //SUBTITLES
-        $subtitles = rglob(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
-        $insert_values = [];
-        foreach ($subtitles as $subtitle) {
-            $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
-            $video_file_name[] = $vid_file_name;
-            $insert_values[] = [
-                'type'  => 'subtitle',
-                'data'  => $subtitle,
-                'video' => $vid_file_name
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($subtitles);
-
-        //USERFEED
-        $userfeeds = rglob(DirPath::get('userfeeds') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
-        $insert_values = [];
-        foreach ($userfeeds as $userfeed) {
-            $user_id = basename(dirname($userfeed));
-            $array_user_id[] = $user_id;
-            $insert_values[] = [
-                'type' => 'userfeeds',
-                'data' => $userfeed,
-                'user' => $user_id
-            ];
-        }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-            $this->insertArrayLoopData($insert_values);
-        } else {
-            $this->array_loop = array_merge($this->array_loop, $insert_values);
-        }
-        unset($userfeeds);
-
-        $sql_video_file_name = array_map(function ($video_file_name) {
-            return '\'' . mysql_clean($video_file_name) . '\'';
-        }, array_unique($video_file_name));
-        $sql_photo_file_name = array_map(function ($photo_file_name) {
-            return '\'' . mysql_clean($photo_file_name) . '\'';
-        }, array_unique($photo_file_name));
-        $sql_user_id = array_map(function ($array_user_id) {
-            return '\'' . mysql_clean($array_user_id) . '\'';
-        }, array_unique($array_user_id));
-
-        $data = [];
-        $data['video'] = [];
-        $data['photo'] = [];
-        $data['user'] = [];
-
-        if (!empty($sql_video_file_name)) {
-            $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name IN (' . implode(', ', $sql_video_file_name) . ')';
-            $result = Clipbucket_db::getInstance()->_select($query);
-            if ($result) {
-                foreach ($result as $line) {
-                    $data['video'][] = $line['file_name'];
-                }
+            //LOGS
+            $logs = rglob(DirPath::get('logs') . '*.log');
+            $insert_values = [];
+            foreach ($logs as $log) {
+                $vid_file_name = basename($log, '.log');
+                $insert_values[] = [
+                    'type'  => 'log',
+                    'data'  => $log,
+                    'video' => $vid_file_name
+                ];
             }
-        }
-
-        if (!empty($sql_photo_file_name)) {
-            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename IN (' . implode(', ', $sql_photo_file_name) . ')';
-            $result = Clipbucket_db::getInstance()->_select($query);
-            if ($result) {
-                foreach ($result as $line) {
-                    $data['photo'][] = $line['filename'];
-                }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
             }
-        }
+            unset($logs);
 
-        if (!empty($sql_user_id)) {
-            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid IN (' . implode(', ', $sql_user_id) . ')';
-            $result = Clipbucket_db::getInstance()->_select($query);
-            if ($result) {
-                foreach ($result as $line) {
-                    $data['user'][] = $line['userid'];
-                }
+            //VIDEO MP4
+            $videos_mp4 = rglob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
+            $insert_values = [];
+            foreach ($videos_mp4 as $video) {
+                $vid_file_name = explode('-', basename($video, '.mp4'))[0];
+                $insert_values[] = [
+                    'type'  => 'video_mp',
+                    'data'  => $video,
+                    'video' => $vid_file_name
+                ];
             }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
+            }
+            unset($videos_mp4);
+
+            //photos
+            $photos = rglob(DirPath::get('photos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
+            $insert_values = [];
+            foreach ($photos as $photo) {
+                $pic_file_name = explode('_', pathinfo($photo)['filename'])[0];
+                $insert_values[] = [
+                    'type'  => 'photo',
+                    'data'  => $photo,
+                    'photo' => $pic_file_name
+                ];
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
+            }
+            unset($photos);
+
+            //VIDEO HLS
+            $videos_hls = glob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
+            $insert_values = [];
+            foreach ($videos_hls as $video) {
+                $vid_file_name = basename($video);
+                $insert_values[] = [
+                    'type'  => 'video_hls',
+                    'data'  => $video,
+                    'video' => $vid_file_name
+                ];
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
+            }
+            unset($videos_hls);
+
+            //THUMBS
+            $thumbs = rglob(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+            $insert_values = [];
+            foreach ($thumbs as $thumb) {
+                $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
+                $insert_values[] = [
+                    'type'  => 'thumb',
+                    'data'  => $thumb,
+                    'video' => $vid_file_name
+                ];
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
+            }
+            unset($thumbs);
+
+            //SUBTITLES
+            $subtitles = rglob(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
+            $insert_values = [];
+            foreach ($subtitles as $subtitle) {
+                $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
+                $insert_values[] = [
+                    'type'  => 'subtitle',
+                    'data'  => $subtitle,
+                    'video' => $vid_file_name
+                ];
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
+            }
+            unset($subtitles);
+
+            //USERFEED
+            $userfeeds = rglob(DirPath::get('userfeeds') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
+            $insert_values = [];
+            foreach ($userfeeds as $userfeed) {
+                $user_id = basename(dirname($userfeed));
+                $insert_values[] = [
+                    'type' => 'userfeeds',
+                    'data' => $userfeed,
+                    'user' => $user_id
+                ];
+            }
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                $this->insertArrayLoopData($insert_values);
+            } else {
+                $this->array_loop = array_merge($this->array_loop, $insert_values);
+            }
+            unset($userfeeds);
         }
 
-        self::$temp = $data;
         $this->executeTool('clean_orphan_files');
 
         //remove already empty folders
@@ -619,7 +575,6 @@ class AdminTool
             } else {
                 Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [$element_totals, 0], ' id_tool = ' . $secureIdTool);
             }
-            $this->array_loop_index = 0;
             //if db
 
             do {
@@ -1147,5 +1102,36 @@ class AdminTool
     public function cleanArrayLoopData()
     {
         Clipbucket_db::getInstance()->delete(tbl('tools_loop_data'), ['id_histo', 'loop_index'], [$this->id_histo, $this->array_loop_index]);
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getLastHistoNotEndedNotRunning()
+    {
+        return Clipbucket_db::getInstance()->_select('SELECT count( DISTINCT CTLD.loop_index) as elements_total, MIN(CTLD.loop_index) as loop_index
+            FROM ' . tbl('tools_histo') . ' th
+            inner join ' . tbl('tools_loop_data') . ' CTLD ON th.id_histo = CTLD.id_histo
+            where id_tool = ' . mysql_clean($this->id_tool) . '
+                and id_tools_histo_status != (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')
+            GROUP BY (th.id_histo)'
+        );
+    }
+
+    /**
+     * @return void
+     * @throws Exception
+     */
+    private function changeDataHisto()
+    {
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('tools_loop_data') . ' SET id_histo = ' . $this->id_histo .' WHERE id_histo = (
+        SELECT A.id_histo FROM (SELECT th.id_histo FROM ' . tbl('tools_histo') . ' th
+         inner join ' . tbl('tools_loop_data') . ' CTLD ON th.id_histo = CTLD.id_histo
+         WHERE id_tool = ' . mysql_clean($this->id_tool) . '
+                AND id_tools_histo_status != (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')
+                AND CTLD.id_histo IS NOT NULL 
+                   GROUP BY th.id_histo
+        ) A )');
     }
 }
