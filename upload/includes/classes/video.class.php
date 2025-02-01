@@ -943,11 +943,21 @@ class Video
             $mode = 'stream';
         }
 
-        $base_url = DirPath::getUrl('actions') . 'download_video.php?mode=' . $mode . '&videokey=' . $this->get('videokey') . '&res=';
+        $base_url = DirPath::getUrl('actions') . 'download_video.php?mode=' . $mode . '&videokey=' . $this->get('videokey');
         $data = [];
-        foreach(json_decode($this->get('video_files')) as $resolution){
-            $data[CB_video_js::getVideoResolutionTitleFromFilePath($resolution)] = $base_url . $resolution;
+
+        switch($this->get('file_type')) {
+            case 'mp4':
+                foreach(json_decode($this->get('video_files')) as $resolution){
+                    $data[CB_video_js::getVideoResolutionTitleFromFilePath($resolution)] = $base_url . '&res=' . $resolution;
+                }
+                break;
+
+            case 'hls':
+                $data['index'] = $base_url;
+                break;
         }
+
         return $data;
     }
 

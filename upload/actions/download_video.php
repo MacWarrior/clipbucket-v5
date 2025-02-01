@@ -6,12 +6,17 @@ if( !User::getInstance()->hasPermission('view_video') || config('videosSection')
     redirect_to(get_server_url() . '403.php');
 }
 
-if( empty($_GET['videokey']) || empty($_GET['res']) || empty($_GET['mode']) ) {
+if( empty($_GET['videokey']) || empty($_GET['mode']) ) {
     redirect_to(get_server_url());
 }
 
-$video = Video::getInstance()->getOne(['videokey' => $_GET['videokey']]);
+$videoKey = $_GET['videokey'];
+$video = Video::getInstance()->getOne(['videokey' => $videoKey]);
 if( empty($video) ) {
+    redirect_to(get_server_url());
+}
+
+if( $video['file_type'] == 'mp4' && empty($_GET['res']) ) {
     redirect_to(get_server_url());
 }
 
@@ -20,31 +25,37 @@ if( !video_playable($video) ) {
     redirect_to(get_server_url());
 }
 
-if( $_GET['mode'] == 'download' && !CbVideo::getInstance()->downloadable($video) ){
+$mode = $_GET['mode'];
+if( $mode == 'download' && !CbVideo::getInstance()->downloadable($video) ){
     redirect_to(get_server_url());
 }
 
-$video_files = getResolution_list($video);
 $file = false;
+if( $video['file_type'] == 'hls' && !empty($_GET['file']) ) {
+    $file['filepath'] = DirPath::get('videos') . $video['file_directory'] . DIRECTORY_SEPARATOR . $video['file_name'] . DIRECTORY_SEPARATOR . basename($_GET['file']);
+    $file['size'] = filesize($file['filepath']);
+} else {
+    $video_files = getResolution_list($video);
 
-foreach($video_files as $video_file) {
-    if( $video_file['resolution'] == $_GET['res'] ) {
-        $file['size']     = $video_file['size'];
-        $file['filepath'] = $video_file['filepath'];
-        break;
+    if( $video['file_type'] == 'mp4' ){
+        foreach($video_files as $video_file) {
+            if( $video_file['resolution'] == $_GET['res'] ) {
+                $file['size']     = $video_file['size'];
+                $file['filepath'] = $video_file['filepath'];
+                break;
+            }
+        }
+    } else {
+        $file = $video_files[0];
     }
+
+    unset($video_files);
 }
 
-unset($video_files);
 
 if( !$file || !file_exists($file['filepath']) ) {
     redirect_to(get_server_url() . '404.php');
 }
-
-$default_speed = 1000;
-$limit_enabled = true;
-
-$speed_limit = max(1, $default_speed);
 
 if (isset($_SERVER['HTTP_RANGE'])) {
     list(, $range) = explode('=', $_SERVER['HTTP_RANGE'], 2);
@@ -60,7 +71,7 @@ if (isset($_SERVER['HTTP_RANGE'])) {
     header('HTTP/1.1 200 OK');
 }
 
-if( $_GET['mode'] == 'download' ){
+if( $mode == 'download' ){
     header('Content-Type: application/octet-stream');
     $file_name = preg_replace('/[\x00-\x1F\x7F"\\\\]/', '', $video['title']) . '-' . CB_video_js::getVideoResolutionTitleFromFilePath($_GET['res']) . '.mp4';
     header('Content-Disposition: attachment; filename="' . $file_name . '"');
@@ -68,7 +79,8 @@ if( $_GET['mode'] == 'download' ){
     header('Pragma: public');
     $buffer_size = 8192;
 } else {
-    switch( getExt($file['filepath']) ){
+    $file_extension = getExt($file['filepath']);
+    switch( $file_extension ){
         case 'm3u8':
             header('Content-Type: application/vnd.apple.mpegurl');
             break;
@@ -86,6 +98,22 @@ if( $_GET['mode'] == 'download' ){
     header('Expires: 0');
     header('X-Accel-Buffering: no');
     $buffer_size = 65536;
+
+    if ($file_extension === 'm3u8') {
+        $content = file_get_contents($file['filepath']);
+        $content = preg_replace_callback('/(URI="([^"]+\.m3u8)")|([^#].*\.ts)|(^[^#].*\.m3u8)/m', function ($matches) use($videoKey, $mode) {
+            if (!empty($matches[2])) {
+                return 'URI="./download_video.php?mode=' . $mode . '&videokey=' . $videoKey . '&file=' . urlencode($matches[2]) . '"';
+            } elseif (!empty($matches[3])) {
+                return "\n" . './download_video.php?mode=' . $mode . '&videokey=' . $videoKey . '&file=' . urlencode(trim($matches[3]));
+            } elseif (!empty($matches[4])) {
+                return "\n" . './download_video.php?mode=' . $mode . '&videokey=' . $videoKey . '&file=' . urlencode(trim($matches[4]));
+            }
+        }, $content);
+
+        echo $content;
+        exit();
+    }
 }
 
 unset($video);
@@ -101,6 +129,7 @@ flush();
 $handle = fopen($file['filepath'], 'rb');
 if ($handle === false) {
     header('HTTP/1.0 500 Internal Server Error');
+    DiscordLog::sendDump('Erreur 500 ?');
     exit('Erreur lors de l\'ouverture du fichier.');
 }
 
@@ -112,6 +141,12 @@ if (connection_aborted()) {
     fclose($handle);
     exit();
 }
+
+// TODO : Get user speed limit
+$user_dl_limit_speed = 1000;
+$limit_enabled = $user_dl_limit_speed > 0;
+
+$speed_limit = max(1, $user_dl_limit_speed);
 
 while (!feof($handle) && ($pos = ftell($handle)) <= $end) {
     $start_time = microtime(true);
