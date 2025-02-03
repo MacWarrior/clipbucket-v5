@@ -38,7 +38,7 @@
         </div>
         {assign var='types' value=$userquery->get_level_types()}
         {section name=t loop=$types}
-            <h3>{$types[t].user_permission_type_name}</h3>
+            <h3>{lang($types[t].user_permission_type_name)}</h3>
             <div class="row">
                 {foreach from=$level_perms item=perm}
                     {if $perm.id_user_levels_permission !="" && $types[t].user_permission_type_id == $perm.id_user_permission_types }

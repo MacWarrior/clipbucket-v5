@@ -27,10 +27,6 @@ class Migration
     /** @var array|mixed|string|string[] */
     protected $version;
 
-    const VIEWING_ID_PERMISSION_TYPE = 1;
-    const UPLOADING_ID_PERMISSION_TYPE = 2;
-    const ADMINISTRATOR_ID_PERMISSION_TYPE = 3;
-    const GENERAL_ID_PERMISSION_TYPE = 3;
 
     public function __construct()
     {

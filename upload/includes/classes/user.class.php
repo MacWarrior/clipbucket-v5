@@ -851,20 +851,6 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    public function hasUserLevelAccess($user_level, $access): bool
-    {
-        $perms = userquery::getInstance()->get_user_level($user_level, true);
-        if( !isset($perms[$access]) ){
-            error_log('Unknown access : '.$access);
-            return false;
-        }
-
-        return $perms[$access]['permission_value'] == 'yes';
-    }
-
-    /**
-     * @throws Exception
-     */
     function init()
     {
         global $sess;
@@ -892,7 +878,7 @@ class userquery extends CBCategory
             $this->level = $this->udetails['level'];
             $this->email = $this->udetails['email'];
             //TODO check if $this->permission is steel needed
-            $this->permission =  UserLevel::getPermissions(user_id());
+            $this->permission =  UserLevel::getPermissions(User::getInstance()->getCurrentUserLevelID());
 
             //Calling Logout Functions
             $funcs = $this->init_login_functions ?? false;
@@ -908,7 +894,7 @@ class userquery extends CBCategory
                 $this->UpdateLastActive(user_id());
             }
         } else {
-            $this->permission = $this->get_user_level(4);
+            $this->permission = UserLevel::getPermissions();
         }
 
         //Adding Actions such Report, share,fav etc
@@ -2186,20 +2172,6 @@ class userquery extends CBCategory
         return $fields[$field];
     }
 
-    /**
-     * @TODO remove function
-     * Function used to get user level and its details
-     *
-     * @param INT $uid userid
-     * @param bool $is_level
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function get_user_level($uid, $is_level = false)
-    {
-       return UserLevel::getPermissions($uid);
-    }
 
     /**
      * Function used to get all levels
