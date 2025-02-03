@@ -1477,4 +1477,7 @@ VALUES ('admin_setting'),
        ('element_deleted'),
        ('nb_flag'),
        ('flagged'),
-       ('must_update_version');
+       ('must_update_version'),
+       ('download_limit'),
+       ('download_limit_desc'),
+       ('kbps');
