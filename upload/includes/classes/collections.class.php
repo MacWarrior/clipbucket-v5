@@ -880,7 +880,6 @@ class Collections extends CBCategory
      */
     function setting_up_collections()
     {
-        $per =  UserLevel::getPermissions(user_id());
         // Adding My Account Links    
         if (config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && !NEED_UPDATE) {
 

@@ -23,7 +23,7 @@ class UserLevel
     private static $fieldsPermissionValue = [
         'user_level_id',
         'id_user_levels_permission',
-        'permission_value',
+        'permission_value'
     ];
 
     /**
