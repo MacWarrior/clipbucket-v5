@@ -404,7 +404,7 @@ class AdminTool
             foreach ($videos_mp4 as $video) {
                 $vid_file_name = explode('-', basename($video, '.mp4'))[0];
                 $insert_values[] = [
-                    'type'  => 'video_mp',
+                    'type'  => 'video_mp4',
                     'data'  => $video,
                     'video' => $vid_file_name
                 ];

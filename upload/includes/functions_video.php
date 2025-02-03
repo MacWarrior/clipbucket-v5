@@ -1829,7 +1829,7 @@ function clean_orphan_files($file)
 
         case 'userfeeds':
             unlink($file['data']);
-            $stop_path = DirPath::getUrl('userfeeds');
+            $stop_path = DirPath::get('userfeeds');
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);

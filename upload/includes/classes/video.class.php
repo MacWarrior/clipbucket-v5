@@ -1683,11 +1683,13 @@ class CBvideo extends CBCategory
             }
         } else if ($vdetails['file_type'] === 'hls') {
             $directory_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
-            $files_hls = array_diff(scandir($directory_path), ['.', '..']);
-            foreach ($files_hls as $file_hls) {
-                unlink($directory_path . DIRECTORY_SEPARATOR . $file_hls);
+            if(is_dir($directory_path)) {
+                $files_hls = array_diff(scandir($directory_path), ['.', '..']);
+                foreach ($files_hls as $file_hls) {
+                    unlink($directory_path . DIRECTORY_SEPARATOR . $file_hls);
+                }
+                rmdir($directory_path);
             }
-            rmdir($directory_path);
         }
         e(lang('vid_files_removed_msg'), 'm');
     }
