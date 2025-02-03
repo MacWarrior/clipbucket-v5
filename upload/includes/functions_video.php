@@ -1773,17 +1773,17 @@ function clean_orphan_files($file)
         case 'thumb':
         case 'subtitle':
         case 'log':
-        $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \''.mysql_clean($file['data']).'\'';
+        $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \''.mysql_clean($file['video']).'\'';
         $result = Clipbucket_db::getInstance()->_select($query);
             break;
 
         case 'photo':
-            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \''.mysql_clean($file['data']).'\'';
+            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \''.mysql_clean($file['photo']).'\'';
             $result = Clipbucket_db::getInstance()->_select($query);
             break;
 
         case 'userfeeds':
-            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \''.mysql_clean($file['data']).'\'';
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \''.mysql_clean($file['user']).'\'';
             $result = Clipbucket_db::getInstance()->_select($query);
             break;
     }
