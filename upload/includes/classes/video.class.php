@@ -1533,7 +1533,10 @@ class CBvideo extends CBCategory
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
                 Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
 
-                e(lang('class_vdo_del_msg'), 'm');
+                if( !error() && !warning() ) {
+                    errorhandler::getInstance()->flush();
+                    e(lang('class_vdo_del_msg'), 'm');
+                }
             } else {
                 e(lang('You cannot delete this video'));
             }
@@ -1672,13 +1675,18 @@ class CBvideo extends CBCategory
         //Calling Video Delete Functions
         call_delete_video_function($vdetails);
 
-        $files = json_decode($vdetails['video_files']);
+        if ($vdetails['file_type'] === 'mp4') {
+            $files = json_decode($vdetails['video_files']);
 
-        foreach ($files as $quality) {
-            $this->remove_resolution($quality, $vdetails);
-        }
-        if ($vdetails['file_type'] == 'hls') {
+            foreach ($files as $quality) {
+                $this->remove_resolution($quality, $vdetails);
+            }
+        } else if ($vdetails['file_type'] === 'hls') {
             $directory_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
+            $files_hls = array_diff(scandir($directory_path), ['.', '..']);
+            foreach ($files_hls as $file_hls) {
+                unlink($directory_path . DIRECTORY_SEPARATOR . $file_hls);
+            }
             rmdir($directory_path);
         }
         e(lang('vid_files_removed_msg'), 'm');

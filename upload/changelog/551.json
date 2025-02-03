@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"255",
+  "revision":"256",
   "status":"dev",
   "detail":[
     {
@@ -125,6 +125,7 @@
         ,"Fix SQL error on website configuration when using an outdated DB"
         ,"Fix AI NSFW check options"
         ,"Fix user deletion"
+        ,"Fix HLS video deletion"
       ]
     },
     {
