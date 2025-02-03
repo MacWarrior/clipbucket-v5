@@ -1763,12 +1763,12 @@ function remove_empty_directory($path, string $stop_path)
 /**
  * @param $file
  * @return void
+ * @throws Exception
  */
 function clean_orphan_files($file)
 {
-
     switch ($file['type']) {
-        case 'video_mp':
+        case 'video_mp4':
         case 'video_hls':
         case 'thumb':
         case 'subtitle':
@@ -1776,10 +1776,12 @@ function clean_orphan_files($file)
         $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \''.mysql_clean($file['data']).'\'';
         $result = Clipbucket_db::getInstance()->_select($query);
             break;
+
         case 'photo':
             $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \''.mysql_clean($file['data']).'\'';
             $result = Clipbucket_db::getInstance()->_select($query);
             break;
+
         case 'userfeeds':
             $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \''.mysql_clean($file['data']).'\'';
             $result = Clipbucket_db::getInstance()->_select($query);
@@ -1795,10 +1797,12 @@ function clean_orphan_files($file)
             unlink($file['data']);
             $stop_path = DirPath::get('logs');
             break;
-        case 'video_mp':
+
+        case 'video_mp4':
             unlink($file['data']);
             $stop_path = DirPath::get('videos');
             break;
+
         case 'video_hls':
             $files_hls = array_diff(scandir($file['data']), ['.', '..']);
             foreach ($files_hls as $file_hls) {
@@ -1807,18 +1811,22 @@ function clean_orphan_files($file)
             rmdir($file['data']);
             $stop_path = DirPath::get('videos');
             break;
+
         case 'thumb':
             unlink($file['data']);
             $stop_path = DirPath::get('thumbs');
             break;
+
         case 'subtitle':
             unlink($file['data']);
             $stop_path = DirPath::get('subtitles');
             break;
+
         case 'photo':
             unlink($file['data']);
             $stop_path = DirPath::get('photos');
             break;
+
         case 'userfeeds':
             unlink($file['data']);
             $stop_path = DirPath::getUrl('userfeeds');
@@ -1830,7 +1838,7 @@ function clean_orphan_files($file)
 /**
  * @throws Exception
  */
-function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
+function age_restriction_check($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
 {
     $sql = ' SELECT 
     TIMESTAMPDIFF(YEAR, U.dob, now()),
@@ -1845,9 +1853,8 @@ function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_fi
     $rs = select($sql);
     if (!empty($rs)) {
         return $rs[0]['can_access'];
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 
