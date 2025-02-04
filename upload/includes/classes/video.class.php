@@ -275,6 +275,7 @@ class Video
     public function getAll(array $params = [])
     {
         $param_videoid = $params['videoid'] ?? false;
+        $param_videoids = $params['videoids'] ?? false;
         $param_videokey = $params['videokey'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_file_name = $params['file_name'] ?? false;
@@ -301,6 +302,9 @@ class Video
         $conditions = [];
         if( $param_videoid ){
             $conditions[] = $this->getTableName() . '.videoid = \''.mysql_clean($param_videoid).'\'';
+        }
+        if( $param_videoids ){
+            $conditions[] = $this->getTableName() . '.videoid IN ( '.mysql_clean(implode(', ', $param_videoids)).')';
         }
         if( $param_videokey ){
             $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_videokey).'\'';
@@ -1028,7 +1032,7 @@ class CBvideo extends CBCategory
             return;
         }
 
-        echo '<div class="processing">
+        echo '<div class="processing" data-id="' . $video['videoid'] . '">
                     <i class="fa fa-spinner fa-spin"></i>
                     <span>' . $video['convert_percent'] . '%</span>
               </div>';

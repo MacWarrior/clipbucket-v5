@@ -159,7 +159,14 @@ if (!$params['order']) {
 
 assign('anonymous_id', $userquery->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
+$ids_to_check_progress = [];
+foreach ($videos as $video) {
+    if (in_array($video['status'], ['Processing', 'Waiting'])) {
+        $ids_to_check_progress[] = $video['videoid'];
+    }
+}
 Assign('videos', $videos);
+Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 
 if( empty($videos) ){
     $total_rows = 0;
@@ -173,6 +180,9 @@ if( empty($videos) ){
 }
 $total_pages = count_pages($total_rows, config('admin_pages'));
 $pages->paginate($total_pages, $page);
+
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS(['pages/video_manager/video_manager'.$min_suffixe.'.js' => 'admin']);
 
 subtitle(lang('manage_x', strtolower(lang('videos'))));
 template_files('video_manager.html');

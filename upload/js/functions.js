@@ -983,3 +983,23 @@ function age_disclaimer(accept) {
         window.location = 'https://www.google.com';
     }
 }
+
+function video_progress(url, ids, success_function, ) {
+    $.post({
+        url: url,
+        dataType: 'json',
+        data: {
+            ids: ids
+        },
+        success: function (response) {
+            var data = JSON.parse(response.data);
+            data.forEach(function (video) {
+                $('#progress-bar-' + video.id).attr('aria-valuenow',video.convert_percent).width(video.convert_percent + '%');
+                $('#pourcent-' + video.id).html(video.convert_percent);
+                if (video.status == 'Successful') {
+                    success_function(video.id);
+                }
+            });
+        }
+    });
+}
