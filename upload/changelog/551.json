@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"246",
+  "revision":"256",
   "status":"dev",
   "detail":[
     {
@@ -43,12 +43,14 @@
         ,"Refactor user levels management interface"
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
+        ,"Refactor flagged elements management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
         ,"Add link from video edition page to uploader edition page"
+        ,"Add collection sharing options"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -119,6 +121,11 @@
         ,"Fix login redirect"
         ,"Fix missing config"
         ,"Fix links to front office"
+        ,"Fix DB upgrade progressbar display"
+        ,"Fix SQL error on website configuration when using an outdated DB"
+        ,"Fix AI NSFW check options"
+        ,"Fix user deletion"
+        ,"Fix HLS video deletion"
       ]
     },
     {
@@ -143,6 +150,7 @@
         ,"Implement option to disable uploader name display"
         ,"Implement TMDB Tv Show integration"
         ,"Implement featured video slider"
+        ,"Implement collection sharing"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -226,6 +234,8 @@
         ,"Fix possible remote code execution (Thanks @kawing-ho !)"
         ,"Fix collection add more button visibility"
         ,"Fix base URL usage"
+        ,"Fix sharing privacy"
+        ,"Fix collection sharing JS error"
       ]
     },
     {
@@ -265,6 +275,8 @@
       "description": [
         "Refactor log system"
         ,"Add option to only keep maximum resolution"
+        ,"Add support for .m4v & .ts video files"
+        ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
@@ -346,8 +358,8 @@
       "description": [
         "Update Player to version 2.0.7"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
-        ,"Update Global Announcement to version 2.0.4"
-        ,"Update Editor's Pick to version 2.0.6"
+        ,"Update Global Announcement to version 2.0.5"
+        ,"Update Editor's Pick to version 2.0.7"
         ,"Remove Social Beast"
       ]
     },

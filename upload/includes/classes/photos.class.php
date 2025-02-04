@@ -203,6 +203,7 @@ class Photo
         $param_show_unlisted = $params['show_unlisted'] ?? false;
         $param_orphan = $params['orphan'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
+        $param_join_flag= $params['join_flag'] ?? false;
 
         $conditions = [];
         if ($param_not_photo_id) {
@@ -331,6 +332,12 @@ class Photo
 
         if( $param_orphan ){
             $conditions[] = $collection_items_table . '.ci_id IS NULL';
+        }
+
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255) && !$param_count) {
+            $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
+            $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
+
         }
 
         if( $param_group ){
@@ -564,6 +571,23 @@ class Photo
             'photo_ids' => $result[0]['ids'],
             'limit'     => $limit
         ]);
+    }
+
+    /**
+     * @param $photo_id
+     * @return string
+     * @throws Exception
+     */
+    public function getFOLink($photo_id)
+    {
+        $details = $this->getOne(['photo_id'=>$photo_id]);
+        if (SEO == 'yes') {
+            if (empty($details['collection_id'])) {
+                return get_server_url();
+            }
+            return get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+        }
+        return get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
     }
 }
 
@@ -807,20 +831,25 @@ class CBPhotos
                         'title' => 'Inactive Photos'
                         , 'url' => DirPath::getUrl('admin_area') . 'photo_manager.php?search=search&active=no'
                     ]
-                    , [
-                        'title' => 'Flagged Photos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_photos.php'
-                    ]
-                    , [
-                        'title' => 'Orphan Photos'
-                        , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
-                    ]
-                    , [
-                        'title' => lang('manage_x', strtolower(lang('categories')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
-                    ]
                 ]
             ];
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                $menu_photo['sub'][] = [
+                    'title' => lang('photo_flagged')
+                    , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=photo'
+                ];
+            }
+
+            $menu_photo['sub'][] = [
+                'title' => 'Orphan Photos'
+                , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
+            ];
+            $menu_photo['sub'][] = [
+                'title' => lang('manage_x', strtolower(lang('categories')))
+                , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
+            ];
+
             ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
     }
@@ -1333,6 +1362,8 @@ class CBPhotos
             //Remove tags
             Tags::deleteTags('photo', $photo['photo_id']);
 
+            //delete reports for this photo
+            Flag::unFlagByElementId($photo['photo_id'], 'photo');
             //now removing photo files
             $this->delete_photo_files($photo);
 
@@ -2854,50 +2885,7 @@ class CBPhotos
         return $code;
     }
 
-    /**
-     * Embed Codes
-     *
-     * @param $newArr
-     *
-     * @return array|void
-     * @throws Exception
-     */
-    function photo_embed_codes($newArr)
-    {
-        if (empty($newArr['details'])) {
-            echo "<div class='error'>" . e(lang("need_photo_details")) . "</div>";
-        } else {
-            if ($newArr['details']['allow_embedding'] == 'no') {
-                echo "<div class='error'>" . e(lang("embedding_is_disabled")) . "</div>";
-            } else {
-                $t = $newArr['type'];
-                if (is_array($t)) {
-                    $types = $t;
-                } else {
-                    if ($t == 'all') {
-                        $types = $this->embed_types;
-                    } else {
-                        $types = explode(',', $t);
-                    }
-                }
 
-                foreach ($types as $type) {
-                    $type = strtolower($type);
-                    if (in_array($type, $this->embed_types)) {
-                        $type = str_replace(' ', '', $type);
-                        $newArr['type'] = $type;
-                        $codes[] = ["name" => ucwords($type), "type" => $type, "code" => $this->generate_embed_codes($newArr)];
-                    }
-                }
-
-                if ($newArr['assign']) {
-                    assign($newArr['assign'], $codes);
-                } else {
-                    return $codes;
-                }
-            }
-        }
-    }
 
     /**
      * Used encode photo key

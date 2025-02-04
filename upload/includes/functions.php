@@ -2201,30 +2201,7 @@ function sort_link($sort, $mode, $type): string
     }
 }
 
-/**
- * Function used to get flag options
- * @uses : { class : $action } { var : $report_opts }
- */
-function get_flag_options()
-{
-    $action = new cbactions();
-    $action->init();
-    return $action->report_opts;
-}
 
-/**
- * Function used to display flag type
- * @param $id
- *
- * @return
- * @uses : { get_flag_options() function }
- *
- */
-function flag_type($id)
-{
-    $flag_opts = get_flag_options();
-    return $flag_opts[$id];
-}
 
 /**
  * Function used to load captcha field
@@ -3803,20 +3780,15 @@ function upload_image($type = 'logo')
     }
 }
 
-/**
- * Check for the content mime type of a file provided
- * @param : { FILE } { $mainFile } { File to run check against }
- * @param int $offset
- * @return false|string : { string/boolean } { type or false }
- * @since : 10 January, 2018
- * @todo : will Check for the content mime type of a file provided
- * @author : Fahad Abbas
- * @example : N/A
- */
-function get_mime_type($file, $offset = 0)
+function get_mime_type($filepath, string $filename = '')
 {
-    $raw_content_type = mime_content_type($file);
-    $cont_type = substr($raw_content_type, $offset, strpos($raw_content_type, '/'));
+    $raw_content_type = mime_content_type($filepath);
+
+    if( $raw_content_type == 'application/octet-stream' && getExt($filename) == 'ts' ){
+        $raw_content_type = FFMpeg::getFileType($filepath);
+    }
+
+    $cont_type = substr($raw_content_type, 0, strpos($raw_content_type, '/'));
     if ($cont_type) {
         return $cont_type;
     }

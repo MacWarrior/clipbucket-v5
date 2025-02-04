@@ -156,14 +156,30 @@ CREATE TABLE `{tbl_prefix}favorites` (
   `date_added` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
-CREATE TABLE `{tbl_prefix}flags` (
-  `flag_id` int(225) NOT NULL,
-  `type` varchar(4) NOT NULL,
-  `id` int(225) NOT NULL,
-  `userid` bigint(20) NULL,
-  `flag_type` bigint(25) NOT NULL,
-  `date_added` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+CREATE TABLE `{tbl_prefix}flags`
+(
+    `flag_id`              INT(225)   NOT NULL AUTO_INCREMENT,
+    `id_flag_element_type` INT        NOT NULL,
+    `id_element`           INT(225)   NOT NULL,
+    `userid`               BIGINT(20) NOT NULL,
+    `id_flag_type`         INT        NOT NULL,
+    `date_added`           DATETIME   NOT NULL,
+    PRIMARY KEY (`flag_id`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}flag_element_type`
+(
+    `id_flag_element_type` INT         NOT NULL AUTO_INCREMENT,
+    `name`                 VARCHAR(32) NOT NULL UNIQUE ,
+    PRIMARY KEY (`id_flag_element_type`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}flag_type`
+(
+    `id_flag_type` INT NOT NULL AUTO_INCREMENT,
+    `language_key` VARCHAR(32) NOT NULL UNIQUE ,
+    PRIMARY KEY (`id_flag_type`)
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}languages` (
   `language_id` int(9) NOT NULL,
@@ -593,9 +609,6 @@ ALTER TABLE `{tbl_prefix}email_templates`
 ALTER TABLE `{tbl_prefix}favorites`
   ADD PRIMARY KEY (`favorite_id`),
   ADD KEY `userid` (`userid`);
-
-ALTER TABLE `{tbl_prefix}flags`
-  ADD PRIMARY KEY (`flag_id`);
 
 ALTER TABLE `{tbl_prefix}languages`
   ADD PRIMARY KEY (`language_id`),
@@ -1210,6 +1223,10 @@ ALTER TABLE `{tbl_prefix}email_variable_link`
     ADD CONSTRAINT `email_variable_link_email_variable_fk` FOREIGN KEY (`id_email`) REFERENCES `{tbl_prefix}email` (`id_email`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `email_variable_link_email_variable_email_fk` FOREIGN KEY (`id_email_variable`) REFERENCES `{tbl_prefix}email_variable` (`id_email_variable`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+ALTER TABLE `{tbl_prefix}flags`
+    ADD CONSTRAINT `fk_id_flag_element_type` FOREIGN KEY (`id_flag_element_type`) REFERENCES `{tbl_prefix}flag_element_type` (`id_flag_element_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_id_flag_type` FOREIGN KEY (`id_flag_type`) REFERENCES `{tbl_prefix}flag_type` (`id_flag_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `fk_flag_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 CREATE TABLE `{tbl_prefix}currency`
 (
     `id_currency` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,

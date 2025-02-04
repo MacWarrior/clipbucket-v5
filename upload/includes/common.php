@@ -94,6 +94,8 @@ require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'email_template.class.php';
+require_once DirPath::get('classes') . 'ffmpeg.class.php';
+require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'membership.class.php';
 
 $cb_columns = new cb_columns();
@@ -374,7 +376,6 @@ $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
 $Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
-$Smarty->register_function('embedCodes', 'photo_embed_codes');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
 $Smarty->register_modifier('SetTime', 'SetTime');
 $Smarty->register_modifier('getname', 'getname');
@@ -384,7 +385,6 @@ $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
 $Smarty->register_modifier('get_user_level', 'get_user_level');
 $Smarty->register_modifier('nicetime', 'nicetime');
-$Smarty->register_modifier('flag_type', 'flag_type');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');
 

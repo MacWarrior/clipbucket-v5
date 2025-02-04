@@ -1,14 +1,3 @@
-{$tcomments_params = ['function'=>'get_timeCommnets','videoid'=>$vdata.videoid]}
-{$Comments_allowed = $myquery->is_commentable($vdata,'v') }
-
-{foreach $videos as $video}
-    {$related['imageSrc'] = get_thumb($video,FALSE,'168x105')}
-    {$related['url'] = video_link($video)}
-    {$related['title'] = display_clean($video.title)|truncate:30}
-    {$related_videos[] = $related}
-{/foreach}
-{$related_videos = json_encode($related_videos)}
-
 <script type="text/javascript">
     var lang_by = "{if $vdata.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}{lang code='by'}{/if}";
     var lang_quality = "{lang code='quality'}";

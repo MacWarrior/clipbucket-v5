@@ -137,6 +137,8 @@ if (isset($_POST['update'])) {
         , 'display_featured_video'
         , 'photo_enable_nsfw_check'
         , 'video_enable_nsfw_check'
+        , 'enable_collection_internal_sharing'
+        , 'enable_collection_link_sharing'
         , 'photo_nsfw_check_model'
         , 'video_nsfw_check_model'
         , 'enable_membership'
@@ -476,6 +478,11 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'email_sender_address',
         'email_sender_name',
+        'enable_collection_internal_sharing',
+        'enable_collection_link_sharing',
+        'photo_nsfw_check_model',
+        'video_nsfw_check_model',
+        'email_sender_name',
         'number_featured_video',
         'video_list_view_video_history',
         'enable_membership',
@@ -648,7 +655,9 @@ if (!empty($_POST)) {
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
 
-$tool = AdminTool::getToolByCode('automate');
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE, true)) {
+    $tool = AdminTool::getToolByCode('automate');
+}
 if(!empty($tool)) {
     $id_tool_automate = $tool['id_tool'];
     $cron_line = '* * * * * '.System::get_binaries('php_cli').' -q '.DirPath::get('actions') . 'launch_tool.php id_tool='.(int) $id_tool_automate;

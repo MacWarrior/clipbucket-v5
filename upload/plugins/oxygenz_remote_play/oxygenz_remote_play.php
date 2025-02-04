@@ -82,7 +82,7 @@ class oxygenz_remote_play {
     public static function load_form()
     {
         $template_dir = DirPath::get('plugins') . self::class . DIRECTORY_SEPARATOR . 'template' . DIRECTORY_SEPARATOR;
-        $plugin_cb_link_video_input_url_example = lang(self::$lang_prefix.'input_url_example', get_server_url() . DirPath::getUrl('plugins') . self::class . DIRECTORY_SEPARATOR . self::$media_dir . 'example.mp4');
+        $plugin_cb_link_video_input_url_example = lang(self::$lang_prefix.'input_url_example', DirPath::getUrl('plugins', true) . self::class . DIRECTORY_SEPARATOR . self::$media_dir . 'example.mp4');
         assign('placeholder_url', $plugin_cb_link_video_input_url_example);
         Template($template_dir.'first-form.html', false);
     }
@@ -122,8 +122,7 @@ class oxygenz_remote_play {
      * @throws Exception
      */
     public static function process_file($video_url, $video_id){
-        require_once(dirname(__DIR__, 2) . '/includes/classes/sLog.php');
-        require_once(dirname(__DIR__, 2) . '/includes/classes/conversion/ffmpeg.class.php');
+        require_once DirPath::get('classes') . 'sLog.php';
 
         $file_directory = create_dated_folder();
         $vdetails = get_video_details($video_id);

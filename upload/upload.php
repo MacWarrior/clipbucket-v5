@@ -28,7 +28,6 @@ if (isset($_POST['submit_data'])) {
 }
 
 assign('step', $step);
-assign('extensions', ClipBucket::getInstance()->get_extensions('video'));
 assign('cancel_uploading', lang('cancel_uploading'));
 assign('pourcent_completed', lang('pourcent_completed'));
 subtitle(lang('upload'));

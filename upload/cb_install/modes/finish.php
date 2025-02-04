@@ -25,7 +25,9 @@ if (in_dev()) {
         }
     }
     //launch tool clean
-    $tool = AdminTool::getToolByCode('clean_orphan_files');
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE, true)) {
+        $tool = AdminTool::getToolByCode('clean_orphan_files');
+    }
     if (!empty($tool)) {
         AdminTool::launchCli($tool['id_tool']);
     }

@@ -5,7 +5,7 @@ sleep(5);
 define('THIS_PAGE', 'video_convert');
 
 include(dirname(__FILE__) . '/../includes/config.inc.php');
-require_once(dirname(__FILE__, 2) . '/includes/classes/sLog.php');
+require_once DirPath::get('classes') . 'sLog.php';
 
 global $cbvideo;
 
@@ -108,8 +108,6 @@ if (!empty($_filename)) {
         $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
     }
 
-    require_once(DirPath::get('classes') . 'conversion/ffmpeg.class.php');
-
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->conversion_type = config('conversion_type');
     $ffmpeg->input_file = $orig_file;
@@ -136,7 +134,7 @@ if (!empty($_filename)) {
         setVideoStatus($_filename, 'completed', $reconvert, true);
     }
 
-    $active = config('activation') ? 'yes' : 'no';
+    $active = config('activation') ? 'no' : 'yes';
     if( config('video_enable_nsfw_check') == 'yes' && AIVision::isAvailable() ){
         $thumbs = get_thumb($videoDetails,TRUE,'original','auto', null, 'filepath');
 
@@ -161,7 +159,9 @@ if (!empty($_filename)) {
                 foreach($thumbs as $thumb){
                     if( $ia->is($thumb, $model) ){
                         $active = 'no';
-                        CbVideo::getInstance()->action->report_it($videoDetails['videoid'], 2 /* sexual_content */, 'NULL' /* system */);
+                        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                            Flag::flagItem($videoDetails['videoid'], 'video', array_search('sexual_content',Flag::getFlagTypes()),0);
+                        }
                         break 2;
                     }
                 }

@@ -8,7 +8,7 @@ if (userquery::getInstance()->is_admin_logged_as_user()) {
 }
 
 if (User::getInstance()->hasAdminAccess()) {
-    redirect_to(get_server_url() . DirPath::getUrl('admin_area') . 'index.php');
+    redirect_to(DirPath::getUrl('admin_area', true) . 'index.php');
 }
 
 if (isset($_POST['login'])) {

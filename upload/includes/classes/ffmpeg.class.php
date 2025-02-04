@@ -446,17 +446,6 @@ class FFMpeg
                 // Fix rare video conversion fail
                 $cmd .= ' -max_muxing_queue_size 1024';
                 $cmd .= ' -start_at_zero';
-                // Ratio
-                if ($this->input_details['video_wh_ratio'] >= 2.3) {
-                    $ratio = '21/9';
-                } else {
-                    if ($this->input_details['video_wh_ratio'] >= 1.6) {
-                        $ratio = '16/9';
-                    } else {
-                        $ratio = '4/3';
-                    }
-                }
-                $cmd .= ' -aspect ' . $ratio;
                 break;
 
             case 'video_mp4':
@@ -464,15 +453,23 @@ class FFMpeg
 
                 // Video Bitrate
                 $cmd .= ' -vb ' . $final_video_bitrate;
-                // Resolution
-                $cmd .= ' -s ' . $resolution['video_width'] . 'x' . $resolution['video_height'];
+                // Keeping the original video ratio with wanted height
+                if( $this->input_details['video_wh_ratio'] >= 1 ){
+                    $scale = '-2:' . $resolution['video_height'];
+                } else {
+                    $scale = $resolution['video_height'] . ':-2';
+                }
+                $cmd .= ' -vf "scale=' . $scale . '"';
                 break;
 
             case 'video_hls':
                 $count = 0;
                 $bitrates = '';
-                $resolutions = '';
+                $resolutions = ' -filter_complex "';
                 $log_res = '';
+                $filter_complex = '';
+                $video_track_id = self::get_media_stream_id('video', $this->input_file);
+
                 foreach ($resolution as $res) {
                     $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
                     $this->video_files[] = $res['height'];
@@ -481,9 +478,20 @@ class FFMpeg
                     }
                     $log_res .= $res['height'];
                     $bitrates .= ' -b:v:' . $count . ' ' . $video_bitrate;
-                    $resolutions .= ' -s:v:' . $count . ' ' . $res['video_width'] . 'x' . $res['video_height'];
+
+                    if( $this->input_details['video_wh_ratio'] >= 1 ){
+                        $scale = '-2:' . $res['video_height'];
+                    } else {
+                        $scale = $res['video_height'] . ':-2';
+                    }
+                    if( $filter_complex != '' ){
+                        $filter_complex .= '; ';
+                    }
+                    $filter_complex .= '[' . $video_track_id . ':v]scale=' . $scale . '[v' . $count . ']';
                     $count++;
                 }
+                $resolutions .= $filter_complex . '"';
+
                 $this->log->writeLine(date('Y-m-d H:i:s').' - Converting into '.$log_res.'...');
                 $cmd .= $bitrates . $resolutions;
                 break;
@@ -550,10 +558,9 @@ class FFMpeg
 
                 $map = '';
                 $var_stream_map = ' -var_stream_map \'';
-                $video_track_id = self::get_media_stream_id('video', $this->input_file);
                 $count = 0;
                 foreach ($resolution as $res) {
-                    $map .= ' -map 0:' . $video_track_id;
+                    $map .= ' -map "[v' . $count . ']"';
                     $var_stream_map .= ' v:' . $count . ',name:video_' . $myquery->getVideoResolutionTitleFromHeight($res['height']) . ',agroup:audios';
 
                     $count++;
@@ -1051,4 +1058,16 @@ class FFMpeg
             Clipbucket_db::getInstance()->update(tbl('video'), ['default_thumb'], [1], ' videoid = ' . mysql_clean($videoid));
         }
     }
+
+    public static function getFileType($filepath): string
+    {
+        $output = shell_exec(config('ffprobe_path') . ' -v quiet -print_format json -show_format -show_streams ' . escapeshellarg($filepath));
+        $info = json_decode($output, true);
+
+        if( !empty($info['format']['format_name']) && $info['format']['format_name'] == 'mpegts' ){
+            return 'video/mp2t';
+        }
+        return '';
+    }
+
 }

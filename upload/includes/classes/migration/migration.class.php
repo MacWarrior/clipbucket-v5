@@ -201,21 +201,18 @@ class Migration
     }
 
     /**
-     * @param $sql_alter
-     * @param array $params_exists fields available : table, column, columns, constraint
-     * @param array $params_not_exists
      * @throws Exception
      */
-    public static function alterTable($sql_alter, array $params_exists = [], array $params_not_exists = [])
+    private static function getConstraints(array $params_exists = [], array $params_not_exists = []): array
     {
+        $conditions = [];
+
         if (method_exists('Clipbucket_db', 'getTableName')) {
             // Temp fix : Case when you just updated to revision 187 with core update function ; previous function name is still loaded
             $dbname = Clipbucket_db::getInstance()->getTableName();
         } else {
             $dbname = Clipbucket_db::getInstance()->getDBName();
         }
-
-        $conditions = [];
 
         if (!empty($params_exists)) {
             if( (!empty($params_exists['column']) || !empty($params_exists['columns'])) && empty($params_exists['table']) ){
@@ -484,6 +481,19 @@ class Migration
             }
         }
 
+        return $conditions;
+    }
+
+    /**
+     * @param $sql_alter
+     * @param array $params_exists fields available : table, column, columns, constraint
+     * @param array $params_not_exists
+     * @throws Exception
+     */
+    public static function alterTable($sql_alter, array $params_exists = [], array $params_not_exists = [])
+    {
+        $conditions = self::getConstraints($params_exists, $params_not_exists);
+
         try {
             Clipbucket_db::getInstance()->commit();
         }
@@ -515,6 +525,30 @@ class Migration
             Clipbucket_db::getInstance()->begin_transaction();
         }
         catch(Exception $e){}
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function constrainedQuery($sql_query, array $params_exists = [], array $params_not_exists = [])
+    {
+        $conditions = self::getConstraints($params_exists, $params_not_exists);
+
+        $sql = 'set @var=if((SELECT true WHERE
+        ' . implode(' AND ', $conditions) . ' LIMIT 1)
+        , \'' . addslashes($sql_query) . '\'
+        ,\'SELECT 1\');';
+        self::query($sql);
+
+        try{
+            self::query('prepare stmt from @var;');
+            self::query('execute stmt;');
+            self::query('deallocate prepare stmt;');
+        }
+        catch(Exception $e){
+            $msg = 'SQL : ' . $sql . "\n";
+            throw new Exception($msg . $e->getMessage());
+        }
     }
 
     /**
