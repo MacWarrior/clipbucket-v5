@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"257",
+  "revision":"258",
   "status":"dev",
   "detail":[
     {
@@ -269,6 +269,7 @@
         ,"Fix session management with IPv6"
         ,"Fix PHP7.0 compatibility"
         ,"Fix video & photo uploads with IPv6"
+        ,"Fix email rendering"
       ]
     },
     {
