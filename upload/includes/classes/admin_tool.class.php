@@ -15,10 +15,10 @@ class AdminTool
     private $id_histo;
     private $id_tool;
     private $tool;
-    private $array_loop;
+    private $tasks;
 
-    private $array_loop_index;
-    private $array_loop_total;
+    private $tasks_index;
+    private $tasks_total;
 
     /**
      * @return AdminTool
@@ -192,13 +192,13 @@ class AdminTool
             e(lang('class_error_occured'));
             return false;
         }
-        $this->array_loop_index = 0;
+        $this->tasks_index = 0;
         //setting total if exist
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
             $info = $this->getLastHistoNotEndedNotRunning();
             if (!empty($info)) {
-                $this->array_loop_total = $info[0]['elements_total'];
-                $this->array_loop_index = $info[0]['loop_index'];
+                $this->tasks_total = $info[0]['elements_total'];
+                $this->tasks_index = $info[0]['loop_index'];
                 $this->changeDataHisto();
             }
         }
@@ -261,7 +261,7 @@ class AdminTool
     public function generateMissingThumbs()
     {
         //get list of video without thumbs
-        $this->array_loop = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON V.videoid = VT.videoid', 'V.*', ' 1 GROUP by videoid HAVING COUNT(VT.videoid) = 0');
         $this->executeTool('generatingMoreThumbs');
     }
 
@@ -272,7 +272,7 @@ class AdminTool
      */
     public function updateCastableStatus()
     {
-        $this->array_loop = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\'');
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\'');
         $this->executeTool('update_castable_status');
     }
 
@@ -283,7 +283,7 @@ class AdminTool
      */
     public function updateBitsColor()
     {
-        $this->array_loop = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\'');
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\'');
         $this->executeTool('update_bits_color');
     }
 
@@ -294,7 +294,7 @@ class AdminTool
      */
     public function updateVideoDuration()
     {
-        $this->array_loop = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\'');
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\'');
         $this->executeTool('update_duration');
     }
 
@@ -305,7 +305,7 @@ class AdminTool
      */
     public function repairVideoDuration()
     {
-        $this->array_loop = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\' AND duration = 0');
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\' AND duration = 0');
         $this->executeTool('update_duration');
     }
 
@@ -331,7 +331,7 @@ class AdminTool
             CacheRedis::flushAll();
             Update::getInstance()->flush();
         }
-        $this->array_loop = $files;
+        $this->tasks = $files;
         $this->executeTool('execute_migration_file', true);
         Update::getInstance()->flush();
     }
@@ -341,7 +341,7 @@ class AdminTool
      */
     public function resetCache()
     {
-        $this->array_loop = ['flush'];
+        $this->tasks = ['flush'];
         $this->executeTool('CacheRedis::flushAll');
     }
 
@@ -366,7 +366,7 @@ class AdminTool
             $result->close();
         }
         self::$temp = $videos;
-        $this->array_loop = $logs;
+        $this->tasks = $logs;
         $this->executeTool('reset_video_log');
     }
 
@@ -376,9 +376,9 @@ class AdminTool
      */
     public function cleanOrphanFiles()
     {
-        if (empty($this->array_loop_total)) {
-            $this->array_loop_total = 0;
-            $this->array_loop = [];
+        if (empty($this->tasks_total)) {
+            $this->tasks_total = 0;
+            $this->tasks = [];
 
             //LOGS
             $logs = rglob(DirPath::get('logs') . '*.log');
@@ -391,10 +391,10 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($logs);
 
@@ -409,10 +409,10 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($videos_mp4);
 
@@ -427,10 +427,10 @@ class AdminTool
                     'photo' => $pic_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($photos);
 
@@ -445,10 +445,10 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($videos_hls);
 
@@ -463,10 +463,10 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($thumbs);
 
@@ -481,10 +481,10 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($subtitles);
 
@@ -499,10 +499,10 @@ class AdminTool
                     'user' => $user_id
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertArrayLoopData($insert_values);
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                $this->insertTaskData($insert_values);
             } else {
-                $this->array_loop = array_merge($this->array_loop, $insert_values);
+                $this->tasks = array_merge($this->tasks, $insert_values);
             }
             unset($userfeeds);
         }
@@ -542,7 +542,7 @@ class AdminTool
         $tags = array_map(function ($tag) {
             return $tag['id_tag'];
         }, $tags);
-        $this->array_loop = $tags;
+        $this->tasks = $tags;
         $this->executeTool('Tags::deleteTag');
     }
 
@@ -551,7 +551,7 @@ class AdminTool
      */
     private function updateCore()
     {
-        $this->array_loop = ['updateGit'];
+        $this->tasks = ['updateGit'];
         $this->executeTool('Update::updateGitSources');
     }
 
@@ -566,8 +566,8 @@ class AdminTool
         //optimisation to call mysql_clean only once
         $secureIdTool = mysql_clean($this->id_tool);
         //get list of video
-        if (!empty($this->array_loop) || !empty($this->array_loop_total)) {
-            $element_totals = empty($this->array_loop) ? $this->array_loop_total : count($this->array_loop);
+        if (!empty($this->tasks) || !empty($this->tasks_total)) {
+            $element_totals = empty($this->tasks) ? $this->tasks_total : count($this->tasks);
             //update nb_elements of tools
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
                 $this->updateToolHisto(['elements_total', 'elements_done'], [$element_totals, 0]);
@@ -578,8 +578,8 @@ class AdminTool
             //if db
 
             do {
-                $array_loop = (empty($this->array_loop) ? $this->getArrayLoopData(10) : $this->array_loop);
-                foreach ($array_loop as $item) {
+                $tasks = (empty($this->tasks) ? $this->getTaskData(10) : $this->tasks);
+                foreach ($tasks as $item) {
                     //check if user request stop
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
                         $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T 
@@ -604,17 +604,17 @@ class AdminTool
                         }
                     }
                     //update nb_done of tools
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                        $this->cleanArrayLoopData();
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                        $this->cleanTaskData();
                     }
-                    $this->array_loop_index++;
+                    $this->tasks_index++;
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
-                        $this->updateToolHisto(['elements_done'], [$this->array_loop_index]);
+                        $this->updateToolHisto(['elements_done'], [$this->tasks_index]);
                     } else {
-                        Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_done'], [$this->array_loop_index], ' id_tool = ' . $secureIdTool);
+                        Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_done'], [$this->tasks_index], ' id_tool = ' . $secureIdTool);
                     }
                 }
-            } while (empty($has_to_stop) && !empty($array_loop) && $this->array_loop_index < $element_totals);
+            } while (empty($has_to_stop) && !empty($tasks) && $this->tasks_index < $element_totals);
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
@@ -697,7 +697,7 @@ class AdminTool
     public function recalculVideoFile()
     {
         $videos = Video::getInstance()->getAll();
-        $this->array_loop=$videos;
+        $this->tasks=$videos;
         $this->executeTool('update_video_files');
     }
 
@@ -708,7 +708,7 @@ class AdminTool
     public function cleanSessionTable()
     {
         $res = Clipbucket_db::getInstance()->select(tbl('sessions'), 'session_id', 'session_date < DATE_SUB(NOW(), INTERVAL 1 MONTH);');
-        $this->array_loop=array_column($res, 'session_id');
+        $this->tasks=array_column($res, 'session_id');
         $this->executeTool('Session::deleteById');
     }
 
@@ -722,7 +722,7 @@ class AdminTool
         if (empty($photos)) {
             $photos = [];
         }
-        $this->array_loop = array_column($photos, 'photo_id');
+        $this->tasks = array_column($photos, 'photo_id');
         $this->executeTool('Photo::generatePhoto');
     }
 
@@ -736,7 +736,7 @@ class AdminTool
         ]);
 
         if( !empty($videos) ){
-            $this->array_loop = array_column($videos, 'videoid');
+            $this->tasks = array_column($videos, 'videoid');
         }
 
         $this->executeTool('Video::correctVideoCategorie');
@@ -756,7 +756,7 @@ class AdminTool
                     );';
         $videos = Clipbucket_db::getInstance()->_select($sql);
         if( !empty($videos) ){
-            $this->array_loop = array_column($videos, 'videoid');
+            $this->tasks = array_column($videos, 'videoid');
         }
         $this->executeTool('Video::deleteUnusedVideoFiles');
     }
@@ -784,7 +784,7 @@ class AdminTool
             $users = User::getInstance()->getAll([
                 'condition'=>' users.userid != ' . mysql_clean(userquery::getInstance()->get_anonymous_user()) . ' AND usr_status like \'ok\''
             ]) ?: [];
-            $this->array_loop = array_column($users, 'userid') ;
+            $this->tasks = array_column($users, 'userid') ;
             $this->executeTool('User::calcUserStorage');
         }
     }
@@ -872,7 +872,7 @@ class AdminTool
             return ;
         }
 
-        $this->array_loop = self::getToolsReadyForLaunch();
+        $this->tasks = self::getToolsReadyForLaunch();
         $this->executeTool('AdminTool::automate');
     }
 
@@ -1072,13 +1072,17 @@ class AdminTool
     {
         $collections = Collection::getInstance()->getAll(['thumb_objectid' => true, 'allow_children'=>true]);
         if (!empty($videos)) {
-            $this->array_loop = array_column($collections, 'collection_id');
+            $this->tasks = array_column($collections, 'collection_id');
         }
         $this->executeTool('Collection::assignDefaultThumb');
     }
 
-    public function getArrayLoopData($step) {
-        $results = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('tools_loop_data') . ' WHERE id_histo =' .mysql_clean($this->id_histo) . ' AND loop_index > ' . mysql_clean($this->array_loop_index) . ' LIMIT ' . $step);
+    /**
+     * @throws Exception
+     */
+    public function getTaskData($step): array
+    {
+        $results = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('tools_tasks') . ' WHERE id_histo =' .mysql_clean($this->id_histo) . ' AND loop_index > ' . mysql_clean($this->tasks_index) . ' LIMIT ' . $step);
         $data = [];
         foreach (array_column($results, 'data') as $result) {
             $data[] = json_decode($result, true);
@@ -1086,33 +1090,39 @@ class AdminTool
         return $data;
     }
 
-    public function insertArrayLoopData($datas)
+    /**
+     * @throws Exception
+     */
+    public function insertTaskData($datas)
     {
         if (empty($datas)) {
             return false;
         }
-        $sql_insert = 'INSERT INTO ' . tbl('tools_loop_data') . ' (id_histo, loop_index, data) VALUES ';
+        $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
         $inserted_values = [];
         foreach ($datas as $data) {
-            $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->array_loop_total++) . ', \'' . json_encode($data) .'\')';
+            $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . json_encode($data) .'\')';
         }
         return Clipbucket_db::getInstance()->execute($sql_insert . implode(', ', $inserted_values));
     }
 
-    public function cleanArrayLoopData()
+    /**
+     * @throws Exception
+     */
+    public function cleanTaskData()
     {
-        Clipbucket_db::getInstance()->delete(tbl('tools_loop_data'), ['id_histo', 'loop_index'], [$this->id_histo, $this->array_loop_index]);
+        Clipbucket_db::getInstance()->delete(tbl('tools_tasks'), ['id_histo', 'loop_index'], [$this->id_histo, $this->tasks_index]);
     }
 
     /**
      * @return array
      * @throws Exception
      */
-    public function getLastHistoNotEndedNotRunning()
+    public function getLastHistoNotEndedNotRunning(): array
     {
         return Clipbucket_db::getInstance()->_select('SELECT count( DISTINCT CTLD.loop_index) as elements_total, MIN(CTLD.loop_index) as loop_index
             FROM ' . tbl('tools_histo') . ' th
-            inner join ' . tbl('tools_loop_data') . ' CTLD ON th.id_histo = CTLD.id_histo
+            inner join ' . tbl('tools_tasks') . ' CTLD ON th.id_histo = CTLD.id_histo
             where id_tool = ' . mysql_clean($this->id_tool) . '
                 and id_tools_histo_status != (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')
             GROUP BY (th.id_histo)'
@@ -1125,9 +1135,9 @@ class AdminTool
      */
     private function changeDataHisto()
     {
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('tools_loop_data') . ' SET id_histo = ' . $this->id_histo .' WHERE id_histo = (
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('tools_tasks') . ' SET id_histo = ' . $this->id_histo .' WHERE id_histo = (
         SELECT A.id_histo FROM (SELECT th.id_histo FROM ' . tbl('tools_histo') . ' th
-         inner join ' . tbl('tools_loop_data') . ' CTLD ON th.id_histo = CTLD.id_histo
+         inner join ' . tbl('tools_tasks') . ' CTLD ON th.id_histo = CTLD.id_histo
          WHERE id_tool = ' . mysql_clean($this->id_tool) . '
                 AND id_tools_histo_status != (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')
                 AND CTLD.id_histo IS NOT NULL 

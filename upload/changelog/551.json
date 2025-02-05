@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"259",
+  "revision":"260",
   "status":"dev",
   "detail":[
     {
@@ -35,6 +35,7 @@
         ,"Implement related photos quantity limit"
         ,"Implement AI NSFW check"
         ,"Implement future PHP version check"
+        ,"Implement admin tools tasks"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"

@@ -1219,7 +1219,7 @@ ALTER TABLE `{tbl_prefix}flags`
     ADD CONSTRAINT `fk_id_flag_type` FOREIGN KEY (`id_flag_type`) REFERENCES `{tbl_prefix}flag_type` (`id_flag_type`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `fk_flag_userid` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_loop_data`
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_tasks`
 (
     `id_histo` INT,
     `loop_index`    INT,
@@ -1229,5 +1229,5 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_loop_data`
   DEFAULT CHARSET = utf8mb4
   COLLATE utf8mb4_unicode_520_ci;
 
-ALTER TABLE `{tbl_prefix}tools_loop_data`
-    ADD CONSTRAINT `tools_loop_data_id_tool_histo` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+ALTER TABLE `{tbl_prefix}tools_tasks`
+    ADD CONSTRAINT `tools_tasks_id_tool_histo` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
