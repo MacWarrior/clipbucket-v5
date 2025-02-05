@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"256",
+  "revision":"259",
   "status":"dev",
   "detail":[
     {
@@ -126,6 +126,7 @@
         ,"Fix AI NSFW check options"
         ,"Fix user deletion"
         ,"Fix HLS video deletion"
+        ,"Fix email tester default variables"
       ]
     },
     {
@@ -268,6 +269,8 @@
         ,"Fix TMDB API call"
         ,"Fix session management with IPv6"
         ,"Fix PHP7.0 compatibility"
+        ,"Fix video & photo uploads with IPv6"
+        ,"Fix email rendering"
       ]
     },
     {
@@ -331,6 +334,7 @@
         ,"Fix user_levels table structure <i>(#483)</i>"
         ,"Fix translation creation in update 5.5.0 - 294"
         ,"Fix update 5.5.0 - 367"
+        ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
       ]
     },
     {

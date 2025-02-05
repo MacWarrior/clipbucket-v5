@@ -260,7 +260,7 @@ CREATE TABLE `{tbl_prefix}photos` (
   `ext` char(5) NOT NULL,
   `downloaded` bigint(255) NOT NULL DEFAULT 0,
   `server_url` text NULL DEFAULT NULL,
-  `owner_ip` varchar(20) NOT NULL,
+  `owner_ip` varchar(45) NOT NULL DEFAULT '',
   `photo_details` text NULL DEFAULT NULL,
   `age_restriction` INT DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
@@ -524,7 +524,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_thumb` int(3) NOT NULL DEFAULT 1,
   `embed_code` text NULL DEFAULT NULL,
   `downloads` bigint(255) NOT NULL DEFAULT 0,
-  `uploader_ip` varchar(20) NOT NULL DEFAULT '',
+  `uploader_ip` varchar(45) NOT NULL DEFAULT '',
   `video_files` tinytext NULL DEFAULT NULL,
   `file_server_path` text NULL DEFAULT NULL,
   `video_version` varchar(8) NOT NULL DEFAULT '5.5.1',

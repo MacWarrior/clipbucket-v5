@@ -1,6 +1,5 @@
 <?php
-define('THIS_PAGE', "forgot");
-define('PARENT_PAGE', 'signup');
+define('THIS_PAGE', 'forgot');
 
 require 'includes/config.inc.php';
 
@@ -8,6 +7,10 @@ $mode = $_GET['mode'];
 
 if (config('disable_email') == 'yes') {
     redirect_to(get_server_url());
+}
+
+if( User::getInstance()->isUserConnected() ){
+    sessionMessageHandler::add_message(lang('you_already_logged'), 'e', get_server_url());
 }
 
 /**
@@ -23,11 +26,10 @@ if (isset($_POST['reset'])) {
  * Reseting Password
  * Real Reseting ;)
  */
-$user = mysql_clean(get('user'));
+$user = get('user');
 if ($mode == 'reset_pass' && $user) {
-    $input = mysql_clean(get('user'));
-    $avcode = mysql_clean(get('avcode'));
-    if (userquery::getInstance()->reset_password(2, $input, $avcode)) {
+    $avcode = get('avcode');
+    if (userquery::getInstance()->reset_password(2, $user, $avcode)) {
         assign('pass_recover', 'success');
     }
 }
