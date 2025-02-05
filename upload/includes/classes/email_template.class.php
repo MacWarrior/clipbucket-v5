@@ -626,16 +626,10 @@ class EmailTemplate
             $sender_name = config('email_sender_name');
         }
         $mail = new PHPMailer();
-//        two lines should be equal to $mail->addCustomHeader('Content-Type', 'text/html; charset="UTF-8"')
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
         $mail->isHTML();
         $mail->setFrom($sender_email, $sender_name, false);
         $mail->addReplyTo($sender_email, $sender_name);
-
-//        $mail->addCustomHeader('Content-Type', 'text/html; charset="UTF-8"');
-//        $headers  = 'From: "'.$sender_name.'"<'.$sender_email.'>'."\n";
-//        $headers .= 'Reply-To: '.$sender_email."\n";
-//        $headers .= 'Content-Type: text/html; charset="UTF-8"';
 
         $mail->Subject = $subject;
         $mail->MsgHTML($content);
@@ -793,11 +787,11 @@ class EmailTemplate
 
         //put variable on email
         $title = self::fillVariable($email['title'], $variables);
-        $email_content = self::fillVariable($email['content'], $variables);
+        $email_content = self::getRenderedContent($email['content'], $variables);
         $variables['email_content'] = $email_content;
 
         //put email on template
-        $content = self::fillVariable($email['template_content'], $variables);
+        $content = self::getRenderedContent($email['template_content'], $variables);
         //send emails
         if (is_array($to) && !isset($to['mail'])) {
             $result = self::send($title, $content, $to, $from, $from_name);
