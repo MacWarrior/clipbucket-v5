@@ -624,15 +624,24 @@ class EmailTemplate
         if( config('disable_email') == 'yes' ){
             return true;
         }
-        if (empty($sender_email)) {
+        if (empty(trim($sender_email))) {
             $sender_email = config('email_sender_address');
+            if (empty($sender_email)) {
+                $sender_email = 'no-reply@' . $_SERVER['HTTP_HOST'];
+            }
         }
-        if (empty($sender_name)) {
+        if (empty(trim($sender_name))) {
             $sender_name = config('email_sender_name');
+            if (empty($sender_name)) {
+                $sender_email = 'no-reply';
+            }
         }
         $mail = new PHPMailer();
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
         $mail->isHTML();
+        if (!isValidEmail($sender_email)) {
+            return lang('invalid_email_sender');
+        }
         $mail->setFrom($sender_email, $sender_name, false);
         $mail->addReplyTo($sender_email, $sender_name);
 
@@ -651,10 +660,18 @@ class EmailTemplate
 
         if (is_array($to) && empty($to['name'])) {
             foreach ($to as $email) {
-                self::addAddressAndNameIfExist($mail, $email);
+                if (isValidEmail($email)) {
+                    self::addAddressAndNameIfExist($mail, $email);
+                } else {
+                    return lang('invalid_email_recipient');
+                }
             }
         } else {
-            self::addAddressAndNameIfExist($mail, $to);
+            if (isValidEmail($to) || isValidEmail($to['mail'])) {
+                self::addAddressAndNameIfExist($mail, $to);
+            } else {
+                return lang('invalid_email_recipient');
+            }
         }
         if ($mail->send()) {
             return true;
