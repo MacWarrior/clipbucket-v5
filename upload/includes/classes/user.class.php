@@ -1963,7 +1963,7 @@ class userquery extends CBCategory
     function reset_password($step, $input, $code = null): bool
     {
         if (User::getInstance()->isUserConnected()) {
-            redirect_to(get_server_url());
+            return false;
         }
 
         switch ($step) {
