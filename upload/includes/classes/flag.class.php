@@ -38,15 +38,7 @@ class Flag
             }
             return self::$flag_types;
         }
-        return  [
-            1=>'inapp_content',
-            2=>'copyright_infring',
-            3=>'sexual_content',
-            4=>'violence_replusive_content',
-            5=>'spam',
-            6=>'disturbing',
-            7=>'other'
-        ];
+        return [];
     }
 
     /**

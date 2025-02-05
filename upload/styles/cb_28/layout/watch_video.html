@@ -136,7 +136,7 @@
                             <a href="#cb-item-info" data-toggle="tab"><span class="icon-info"></span>{lang code='info'}</a>
                         </li>
                         {if
-                            (userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
+                            (UserLevel::getPermission('view_video',4) ||
                             (config('enable_video_internal_sharing') == 'yes' && user_id()))
                             && (
                             config('enable_video_link_sharing') == 'yes' ||
@@ -221,7 +221,7 @@
                             </div>
                         </div>
                         {if
-                            (userquery::getInstance()->hasUserLevelAccess(4, 'view_video') ||
+                            (UserLevel::getPermission('view_video',4) ||
                             (config('enable_video_internal_sharing') == 'yes' && user_id()))
                             && (
                             config('enable_video_link_sharing') == 'yes' ||
