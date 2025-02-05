@@ -31,11 +31,22 @@ class Flag
      */
     public static function getFlagTypes(): array
     {
-        if (empty(self::$flag_types)) {
-            $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableNameType));
-            self::$flag_types = array_combine(array_column($res, 'id_flag_type'), array_column($res, 'language_key'));
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+            if (empty(self::$flag_types)) {
+                $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableNameType));
+                self::$flag_types = array_combine(array_column($res, 'id_flag_type'), array_column($res, 'language_key'));
+            }
+            return self::$flag_types;
         }
-        return self::$flag_types;
+        return  [
+            1=>'inapp_content',
+            2=>'copyright_infring',
+            3=>'sexual_content',
+            4=>'violence_replusive_content',
+            5=>'spam',
+            6=>'disturbing',
+            7=>'other'
+        ];
     }
 
     /**
@@ -58,6 +69,9 @@ class Flag
      */
     public static function getAll($params)
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+            return [];
+        }
         $param_element_type = $params['element_type'] ?? false;
         $param_flag_id = $params['flag_id'] ?? false;
         $param_count = $params['count'] ?? false;
