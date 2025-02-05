@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"256",
+  "revision":"257",
   "status":"dev",
   "detail":[
     {
@@ -268,6 +268,7 @@
         ,"Fix TMDB API call"
         ,"Fix session management with IPv6"
         ,"Fix PHP7.0 compatibility"
+        ,"Fix video & photo uploads with IPv6"
       ]
     },
     {
