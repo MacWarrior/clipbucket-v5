@@ -1477,4 +1477,5 @@ VALUES ('admin_setting'),
        ('nb_flag'),
        ('flagged'),
        ('must_update_version'),
-       ('missing_email_recipient');
+       ('missing_email_recipient'),
+       ('missing_category_report');

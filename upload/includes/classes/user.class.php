@@ -851,20 +851,6 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    public function hasUserLevelAccess($user_level, $access): bool
-    {
-        $perms = userquery::getInstance()->get_user_level($user_level, true);
-        if( !isset($perms[$access]) ){
-            error_log('Unknown access : '.$access);
-            return false;
-        }
-
-        return $perms[$access]['permission_value'] == 'yes';
-    }
-
-    /**
-     * @throws Exception
-     */
     function init()
     {
         global $sess;
