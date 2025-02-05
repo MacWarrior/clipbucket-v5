@@ -82,7 +82,6 @@ class AdminTool
      */
     public static function getTools(array $condition = [])
     {
-
         $where = implode(' AND ', $condition);
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
 
@@ -194,7 +193,7 @@ class AdminTool
         }
         $this->tasks_index = 0;
         //setting total if exist
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
             $info = $this->getLastHistoNotEndedNotRunning();
             if (!empty($info)) {
                 $this->tasks_total = $info[0]['elements_total'];
@@ -391,7 +390,7 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -409,7 +408,7 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -427,7 +426,7 @@ class AdminTool
                     'photo' => $pic_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -445,7 +444,7 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -463,7 +462,7 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -481,7 +480,7 @@ class AdminTool
                     'video' => $vid_file_name
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -499,7 +498,7 @@ class AdminTool
                     'user' => $user_id
                 ];
             }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                 $this->insertTaskData($insert_values);
             } else {
                 $this->tasks = array_merge($this->tasks, $insert_values);
@@ -604,7 +603,7 @@ class AdminTool
                         }
                     }
                     //update nb_done of tools
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 260)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
                         $this->cleanTaskData();
                     }
                     $this->tasks_index++;
@@ -778,6 +777,9 @@ class AdminTool
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function calcUserStorage()
     {
         if (config('enable_storage_history') == 'yes') {
@@ -796,7 +798,6 @@ class AdminTool
      */
     public static function getToolsReadyForLaunch($id_tool = null) :array
     {
-
         $where = '';
         if(!empty($idTask)){
             $where = ' AND tools.id_tool = '. $id_tool;
@@ -897,7 +898,6 @@ class AdminTool
      */
     public static function shouldCronBeExecuted(string $cron, $last_date_start, string $previous_calculated_datetime, $id_tool = null): bool
     {
-
         if( !empty($last_date_start) && $last_date_start < $previous_calculated_datetime){
             if($previous_calculated_datetime > date('Y-m-d H:i:s')){
                 /* should not run because next_date is futur */
@@ -963,7 +963,6 @@ class AdminTool
      */
     public static function getNextDate(string $cron, string $date, string $date_previsionnel, &$last_previsionnel_date = null)
     {
-
         /**
          * replace the L of the month with the last day of the current month if it is at least the 28th of the month, otherwise use the notation 28-31
          */
