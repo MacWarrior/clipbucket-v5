@@ -13,8 +13,8 @@
     {$trad_link = 'link_this_photo'}
 {elseif $type=='collection'}
     {$watch_right = 'view_collections'}
-    {$link_config = 'enable_video_link_sharing'}
-    {$share_config = 'enable_video_internal_sharing'}
+    {$link_config = 'enable_collection_link_sharing'}
+    {$share_config = 'enable_collection_internal_sharing'}
     {$item_link = $cbcollection->collection_links($params.collection,'view')}
     {$trad_link = 'link_this_collection'}
 {/if}
@@ -140,7 +140,7 @@
 </div>
 
 <script>
-    $(document).ready(function () {
+    $(function () {
         $('body').on('submit', '#cb_share_item', function (e) {
             e.preventDefault();
             _cb.submit_share_form('share_form', '{$params.type}');

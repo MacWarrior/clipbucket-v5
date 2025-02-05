@@ -56,6 +56,10 @@
 
                     <span class="label label-info">{strtoupper($video.file_type)}</span>
 
+                    {if $video.is_flagged == 1}
+                        <span class="label label-danger">{lang('flagged')}</span>
+                    {/if}
+
                     {if $video.status|lower == 'processing'}
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%">

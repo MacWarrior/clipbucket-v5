@@ -264,7 +264,8 @@ function connectSSE() {
         } else {
             var tool = data.update_info;
             $('.launch_wip').off('click');
-            if (tool) {
+
+            if (tool && tool.elements_done > 0) {
                 $('#progress_div').show();
             }
             $('#progress-bar').attr('aria-valuenow',tool.pourcent).width(tool.pourcent + '%');

@@ -112,6 +112,7 @@ if (isset($_POST['move_to_selected']) && is_array($_POST['check_photo'])) {
 }
 
 $params = [];
+$params['join_flag'] = true;
 if (isset($_GET['search'])) {
     $params['title'] = $_GET['title'] ?? false;
     $params['photo_id'] = $_GET['photoid'] ?? false;

@@ -104,7 +104,6 @@ switch ($mode) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
-        assign('backgroundPhoto', userquery::getInstance()->getBackground(user_id()));
         assign('mode', $mode);
         break;
 

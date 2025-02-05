@@ -851,20 +851,6 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    public function hasUserLevelAccess($user_level, $access): bool
-    {
-        $perms = userquery::getInstance()->get_user_level($user_level, true);
-        if( !isset($perms[$access]) ){
-            error_log('Unknown access : '.$access);
-            return false;
-        }
-
-        return $perms[$access]['permission_value'] == 'yes';
-    }
-
-    /**
-     * @throws Exception
-     */
     function init()
     {
         global $sess;
@@ -1208,6 +1194,9 @@ class userquery extends CBCategory
         $this->remove_user_subscriptions($uid);
         $this->remove_user_subscribers($uid);
 
+        //delete reports for this user
+        Flag::unFlagByElementId($uid, 'user');
+
         $anonymous_id = $this->get_anonymous_user();
         //Changing User Videos To Anonymous
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
@@ -1236,8 +1225,10 @@ class userquery extends CBCategory
         Category::getInstance()->unlinkAll('user', $uid);
 
         //Finally Removing Database entry of user
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . mysql_clean($uid));
 
         User::getInstance()->cleanUserFeed($uid);
 
@@ -1955,8 +1946,12 @@ class userquery extends CBCategory
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function reset_password($step, $input, $code = null)
+    function reset_password($step, $input, $code = null): bool
     {
+        if (User::getInstance()->isUserConnected()) {
+            return false;
+        }
+
         switch ($step) {
             case 1:
                 $udetails = $this->get_user_details($input);
@@ -1994,7 +1989,6 @@ class userquery extends CBCategory
                     $pass = pass_code($newpass, $udetails['userid']);
                     $avcode = RandomString(10);
                     Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
-                    //sending new password email...
                     //Sending confirmation email
                     $var = [
                         'url'   => get_server_url() . 'login.php',
@@ -2036,7 +2030,7 @@ class userquery extends CBCategory
      */
     function UpdateLastActive($username)
     {
-        $sql = 'UPDATE ' . tbl("users") . " SET last_active = '" . NOW() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
+        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . NOW() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
         Clipbucket_db::getInstance()->execute($sql);
     }
 

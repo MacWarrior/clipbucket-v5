@@ -33,7 +33,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'thumb_width', '120'),
 	(NULL, 'thumb_height', '90'),
 	(NULL, 'allow_upload', ''),
-	(NULL, 'allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,mkv,webm'),
+	(NULL, 'allowed_video_types', 'wmv,avi,divx,3gp,mov,mpeg,mpg,xvid,flv,asf,rm,dat,mp4,mkv,webm,m4v,ts'),
 	(NULL, 'allow_language_change', '1'),
 	(NULL, 'default_site_lang', ''),
 	(NULL, 'video_require_login', ''),
@@ -313,7 +313,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'photo_nsfw_check_model', 'nudity+nsfw'),
     (NULL, 'video_nsfw_check_model', 'nudity+nsfw'),
     (NULL, 'email_sender_address', 'no-reply@domain.com'),
-    (NULL, 'email_sender_name', 'no-reply');
+    (NULL, 'email_sender_name', 'no-reply'),
+    (NULL, 'enable_collection_link_sharing', 'yes'),
+    (NULL, 'enable_collection_internal_sharing', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
@@ -1663,3 +1665,14 @@ INSERT INTO `{tbl_prefix}fontawesome_icons` (`icon`) VALUES
     ('youtube'),
     ('youtube-play'),
     ('youtube-square');
+
+INSERT IGNORE INTO `{tbl_prefix}flag_element_type` (`name`) SELECT name FROM `{tbl_prefix}categories_type`;
+
+INSERT IGNORE INTO `{tbl_prefix}flag_type` (`language_key`)
+VALUES ('inapp_content'),
+       ('copyright_infring'),
+       ('sexual_content'),
+       ('violence_replusive_content'),
+       ('spam'),
+       ('disturbing'),
+       ('other');

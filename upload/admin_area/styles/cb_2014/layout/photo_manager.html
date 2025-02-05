@@ -56,6 +56,9 @@
                                             {if $photos[list].collection_id == 0}
                                                 <span class="label label-primary">{lang code='orphan'}</span>
                                             {/if}
+                                            {if $photos[list].is_flagged == 1}
+                                                <span class="label label-danger">{lang('flagged')}</span>
+                                            {/if}
                                         </div>
                                     </div>
                                 </div>

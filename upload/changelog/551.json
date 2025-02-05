@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"247",
+  "revision":"259",
   "status":"dev",
   "detail":[
     {
@@ -43,12 +43,14 @@
         ,"Refactor user levels management interface"
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
+        ,"Refactor flagged elements management"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
         ,"Add video deletion menu on video edition page"
         ,"Add option to enable playlists"
         ,"Add link from video edition page to uploader edition page"
+        ,"Add collection sharing options"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -119,6 +121,12 @@
         ,"Fix login redirect"
         ,"Fix missing config"
         ,"Fix links to front office"
+        ,"Fix DB upgrade progressbar display"
+        ,"Fix SQL error on website configuration when using an outdated DB"
+        ,"Fix AI NSFW check options"
+        ,"Fix user deletion"
+        ,"Fix HLS video deletion"
+        ,"Fix email tester default variables"
       ]
     },
     {
@@ -228,6 +236,7 @@
         ,"Fix collection add more button visibility"
         ,"Fix base URL usage"
         ,"Fix sharing privacy"
+        ,"Fix collection sharing JS error"
       ]
     },
     {
@@ -260,6 +269,8 @@
         ,"Fix TMDB API call"
         ,"Fix session management with IPv6"
         ,"Fix PHP7.0 compatibility"
+        ,"Fix video & photo uploads with IPv6"
+        ,"Fix email rendering"
       ]
     },
     {
@@ -267,6 +278,8 @@
       "description": [
         "Refactor log system"
         ,"Add option to only keep maximum resolution"
+        ,"Add support for .m4v & .ts video files"
+        ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
         ,"Reduce converted video filesize"
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
@@ -321,6 +334,7 @@
         ,"Fix user_levels table structure <i>(#483)</i>"
         ,"Fix translation creation in update 5.5.0 - 294"
         ,"Fix update 5.5.0 - 367"
+        ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
       ]
     },
     {
@@ -348,8 +362,8 @@
       "description": [
         "Update Player to version 2.0.7"
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
-        ,"Update Global Announcement to version 2.0.4"
-        ,"Update Editor's Pick to version 2.0.6"
+        ,"Update Global Announcement to version 2.0.5"
+        ,"Update Editor's Pick to version 2.0.7"
         ,"Remove Social Beast"
       ]
     },

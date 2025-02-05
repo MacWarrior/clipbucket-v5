@@ -4,7 +4,7 @@
     Description: This plugin is used to display Editor's Pick Player On Home Page and also let you pick videos for editor's pick
     Author: Arslan Hassan & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
-    Version: 2.0.6
+    Version: 2.0.7
     ClipBucket Version: 5.5.1
 */
 
@@ -159,4 +159,4 @@ if( config('default_theme') != '' && file_exists($filepath) ){
 register_anchor_function('display_editors_pick', 'global');
 register_action_remove_video('remove_vid_editors_pick');
 
-add_admin_menu(lang('manage_x', strtolower(lang('plugins'))), strtolower(lang('plugin_editors_picks')), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');
+add_admin_menu(lang('videos'), lang('plugin_editors_picks'), DirPath::getUrl('plugins') . 'editors_pick/admin/editor_pick.php');
