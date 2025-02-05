@@ -365,6 +365,9 @@ class EmailTemplate
         return self::getAllEmail($params);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getAllEmail(array $params)
     {
         $param_first_only = $params['first_only'] ?? false;
@@ -548,6 +551,9 @@ class EmailTemplate
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getVariablesFromEmail(int $id_email)
     {
         if (empty($id_email)) {
@@ -564,6 +570,9 @@ class EmailTemplate
         return empty($result) ? [] : $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getGlobalVariables($with_values = false): array
     {
         $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
@@ -814,6 +823,9 @@ class EmailTemplate
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefault()
     {
         return self::getOneTemplate([
@@ -821,6 +833,9 @@ class EmailTemplate
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefaultId(): int
     {
         return self::getDefault()['id_email_template'] ?? 0;
