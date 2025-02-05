@@ -6,7 +6,8 @@ $(function () {
                 url: '/actions/admin_progress_video.php',
                 dataType: 'json',
                 data: {
-                    ids: ids_to_check_progress
+                    ids: ids_to_check_progress,
+                    output: 'html'
                 },
                 success: function (response) {
                     var data = response.data;
