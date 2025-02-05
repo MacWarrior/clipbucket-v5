@@ -126,6 +126,7 @@
         ,"Fix AI NSFW check options"
         ,"Fix user deletion"
         ,"Fix HLS video deletion"
+        ,"Fix email tester default variables"
       ]
     },
     {
