@@ -595,6 +595,11 @@ class EmailTemplate
      */
     public static function fillVariable(string $string, array $variables): string
     {
+        foreach ($variables as $key => $variable) {
+            if (empty($variable)) {
+                unset($variables[$key]);
+            }
+        }
         $variables = array_merge(self::getGlobalVariablesArray(), $variables);
         foreach ($variables as $name => $value) {
             if( $name != 'email_content' ){
