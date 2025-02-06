@@ -819,7 +819,10 @@ class User
         return array_column($results, 'videoid');
     }
 
-    public function getUserLevels()
+    /**
+     * @throws Exception
+     */
+    public function getUserLevels(): array
     {
         $sql = ' SELECT user_levels.*, IF(users.userid IS NULL, FALSE, TRUE) AS has_users FROM ' . cb_sql_table('user_levels') . ' 
             LEFT JOIN '.cb_sql_table('users').' ON users.level = user_level_id 
@@ -834,10 +837,11 @@ class User
     }
 
     /**
+     * @param int|null $user_id
      * @return bool
      * @throws Exception
      */
-    public function isUserMustRenewMembership(int $user_id = null): bool
+    public function isUserMustRenewMembership($user_id = null): bool
     {
         if (empty($user_id)) {
             $user_id = user_id();
@@ -870,7 +874,7 @@ class User
      * @return bool
      * @throws Exception
      */
-    public function toggleUserLevelActivation(int $user_level_id,bool $activate): bool
+    public function toggleUserLevelActivation(int $user_level_id, bool $activate): bool
     {
         if(empty($user_level_id)) {
             return false;
