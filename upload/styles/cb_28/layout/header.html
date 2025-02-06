@@ -69,7 +69,7 @@
                                             {if $menu.this|lower == 'home'}
                                                 {continue}
                                             {/if}
-                                            {if User::getInstance()->hasPermission('view_'|cat:$menu.this)}
+                                            {if User::getInstance()->hasPermission($menu.permission)}
                                                 <li {if $menu.name|lower == $currentPage || $menu.name|lower == $pageType}class="active"{/if}><a href="{$menu.link}">{$menu.name}</a></li>
                                             {/if}
                                         {/if}

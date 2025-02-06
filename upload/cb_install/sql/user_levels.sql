@@ -7,8 +7,8 @@ VALUES (1, 'yes', 'Administrator', 'yes', 'no'),
        (6, 'no', 'Anonymous', 'yes', 'no');
 
 
-INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_desc`) VALUES
-(1, 'Viewing Permission', ''),
+INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_desc`)
+VALUES (1, 'Viewing Permission', ''),
        (2, 'Uploading Permission', ''),
        (3, 'Administrator Permission', ''),
        (4, 'General Permission', '');
@@ -46,7 +46,7 @@ VALUES (1, 3, 'admin_access', 'admin_access_desc'),
        (29, 2, 'allow_create_playlist', 'allow_create_playlist_desc'),
        (30, 4, 'enable_channel_page', 'enable_channel_page_desc'),
        (31, 3, 'email_template_management', 'email_template_management_desc'),
-       (32, 4, 'allow_public_video_page', 'allow_public_video_page'),
+       (32, 1, 'allow_public_video_page', 'allow_public_video_page'),
        (33, 4, 'default_homepage', 'default_homepage_desc');
 
 INSERT INTO `{tbl_prefix}user_levels_permissions_values` (`user_level_id`, `id_user_levels_permission`, `permission_value`)
