@@ -1478,4 +1478,6 @@ VALUES ('admin_setting'),
        ('flagged'),
        ('must_update_version'),
        ('missing_email_recipient'),
-       ('missing_category_report');
+       ('missing_category_report'),
+       ('website_domain_url'),
+       ('website_domain_url_hint');

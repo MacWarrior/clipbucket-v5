@@ -477,7 +477,8 @@ if (isset($_POST['update'])) {
         'enable_collection_internal_sharing',
         'enable_collection_link_sharing',
         'photo_nsfw_check_model',
-        'video_nsfw_check_model'
+        'video_nsfw_check_model',
+        'domain_url'
     ];
 
     foreach ($opt_list as $optl) {
@@ -670,6 +671,5 @@ ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
 ]);
-
 template_files('main.html');
 display_it();

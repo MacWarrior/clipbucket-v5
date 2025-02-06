@@ -627,7 +627,7 @@ class System{
     /**
      * @throws Exception
      */
-    public static function check_global_configs(): bool
+    public static function check_global_configs(): int
     {
         if (config('cache_enable') == 'yes') {
             $cache = CacheRedis::getInstance()->get('check_global_configs');
@@ -636,6 +636,12 @@ class System{
             }
         } elseif (time() < $_SESSION['check_global_configs']['time']) {
             return $_SESSION['check_global_configs']['val'];
+        }
+
+        //config
+        if (empty(config('domain_url'))) {
+            self::displayConfigError('error config : domain_url');
+            return -1;
         }
 
         //Hosting

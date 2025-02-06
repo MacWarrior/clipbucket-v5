@@ -5141,11 +5141,11 @@ class userquery extends CBCategory
         //Loading subscription email template
         if ($subscribers) {
             $var = [
-                'sender_name'       => $uploader['username'],
+                'sender_username'       => $uploader['username'],
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => get_thumb($vidDetails)
+                'video_thumb'       => get_server_url() . get_thumb($vidDetails)
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

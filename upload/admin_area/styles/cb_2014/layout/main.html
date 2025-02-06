@@ -3060,6 +3060,18 @@
                         </div>
                     </div>
                     <hr/>
+                    <div class="row {if empty($row.domain_url)}bg-danger{/if}">
+                        <div class="col-md-6">
+                            <label class="nowrap" for="domain_url" title="{lang('website_domain_url')}">
+                                <span class="fa fa-question-circle tips" title="{lang('website_domain_url_hint')}"></span>
+                                {lang('website_domain_url')}
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control {if empty($row.domain_url)}has-error{/if}" name="domain_url" id="domain_url" value="{$row.domain_url}"/>
+                        </div>
+                    </div>
+                    <hr/>
 
                 </div>
                 <div class="col-md-4">

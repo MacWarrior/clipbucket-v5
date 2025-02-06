@@ -36,8 +36,13 @@ define('TEMPLATE', config('template_dir'));
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
 if( THIS_PAGE != 'system_info' && php_sapi_name() != 'cli' ){
-    if( !System::check_global_configs() ){
-        e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
+    $check_global = System::check_global_configs();
+    if( $check_global !== 1 ){
+        if ($check_global === -1 ) {
+            e(lang('error_server_config', '/admin_area/main.php#config_hosting'), 'w', false);
+        } else {
+            e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
+        }
     }
 }
 

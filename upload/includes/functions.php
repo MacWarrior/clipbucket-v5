@@ -2868,6 +2868,9 @@ function check_install($type)
  */
 function get_server_url(): string
 {
+    if (!empty(config('domain_url'))) {
+        return config('domain_url');
+    }
     $port = '';
     if( !in_array($_SERVER['SERVER_PORT'], [80, 443]) ){
         $port = ':' . $_SERVER['SERVER_PORT'];
