@@ -13,7 +13,7 @@
             <br/>
             <div class="field">
                 <label for="base_url"><?php echo lang('website_base_url'); ?></label>
-                <input name="base_url" type="text" id="base_url" class="form-control" value="<?php echo get_server_url()?>">
+                <input name="base_url" type="text" id="base_url" class="form-control" value="<?php echo Network::get_server_url(); ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
                     <?php echo lang('website_base_url_hint'); ?>
                 </p>

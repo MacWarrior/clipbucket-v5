@@ -520,7 +520,7 @@ class cb_pm
             'sender_username'  => $sender,
             'user_message' => $content,
             'subject' => $subject,
-            'message_link'  => get_server_url() . 'private_message.php?mode=inbox&mid='.$msgid
+            'message_link'  => Network::get_server_url() . 'private_message.php?mode=inbox&mid='.$msgid
         ];
 
         EmailTemplate::sendMail($this->email_template, $emails, $vars);

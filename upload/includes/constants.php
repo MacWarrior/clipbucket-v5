@@ -111,7 +111,7 @@ class DirPath
 
         if($get_url){
             if($full_url){
-                return get_server_url() . $url . '/';
+                return Network::get_server_url() . $url . '/';
             }
             return '/' . $url . '/';
         }

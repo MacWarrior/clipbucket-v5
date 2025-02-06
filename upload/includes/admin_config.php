@@ -27,7 +27,7 @@ if (isset($_POST['update_dp_options'])) {
 }
 
 //Do No Edit Below This Line
-define('TEMPLATEDIR', DirPath::get('admin_area') . DIRECTORY_SEPARATOR . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
+define('TEMPLATEDIR', DirPath::get('admin_area') . 'styles' . DIRECTORY_SEPARATOR . 'cb_2014');
 define('SITETEMPLATEDIR', DirPath::get('styles') . config('template_dir'));
 define('TEMPLATEURL', DirPath::getUrl('admin_area') . 'styles/cb_2014');
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
@@ -46,7 +46,7 @@ if( THIS_PAGE != 'system_info' && php_sapi_name() != 'cli' ){
     }
 }
 
-Assign('baseurl', get_server_url());
+Assign('baseurl', Network::get_server_url());
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');
@@ -69,6 +69,6 @@ if( THIS_PAGE != 'admin_login' ){
     }
 
     if( !User::getInstance()->hasPermission('admin_access') ){
-        redirect_to(get_server_url() . '403.php');
+        redirect_to(Network::get_server_url() . '403.php');
     }
 }

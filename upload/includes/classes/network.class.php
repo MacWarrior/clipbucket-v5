@@ -255,8 +255,8 @@ class Network{
         }
     }
 
-    public static function download_file($url_source, $filepath_destination){
-
+    public static function download_file($url_source, $filepath_destination)
+    {
         file_put_contents($filepath_destination . '_ongoing', '');
 
         $fp = fopen($filepath_destination,'w+');
@@ -276,5 +276,49 @@ class Network{
         fclose($fp);
 
         unlink($filepath_destination . '_ongoing');
+    }
+
+    public static function get_server_url(): string
+    {
+        if( !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
+            return config('base_url');
+        }
+        
+        $port = '';
+        if( !in_array($_SERVER['SERVER_PORT'], [80, 443]) ){
+            $port = ':' . $_SERVER['SERVER_PORT'];
+        }
+
+        return self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . '/';
+    }
+
+    private static function get_server_protocol(): string
+    {
+        if (self::is_ssl()) {
+            return 'https://';
+        }
+
+        $protocol = preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL']));
+        $protocol .= '://';
+        return $protocol;
+    }
+
+    private static function is_ssl(): bool
+    {
+        if (isset($_SERVER['HTTPS'])) {
+            if ('on' == strtolower($_SERVER['HTTPS'])) {
+                return true;
+            }
+            if ('1' == $_SERVER['HTTPS']) {
+                return true;
+            }
+        }
+        if (isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'])) {
+            return true;
+        }
+        if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+            return true;
+        }
+        return false;
     }
 }

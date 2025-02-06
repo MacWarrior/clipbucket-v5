@@ -1,6 +1,6 @@
 <?php
 namespace V5_5_1;
-require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once \DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class MWIP extends \Migration
 {
@@ -9,7 +9,7 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateConfig('base_url', get_server_url());
+        self::generateConfig('base_url', \Network::get_server_url());
 
         self::generateTranslation('website_base_url', [
             'fr'=>'URL de base',

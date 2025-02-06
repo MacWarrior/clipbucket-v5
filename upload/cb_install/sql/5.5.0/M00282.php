@@ -1,6 +1,6 @@
 <?php
 namespace V5_5_0;
-require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once \DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class M00282 extends \Migration
 {

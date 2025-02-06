@@ -3,7 +3,7 @@ define('THIS_PAGE', 'rss');
 require 'includes/config.inc.php';
 
 if( !isSectionEnabled('videos') || config('enable_rss_feeds') == 'no' || !User::getInstance()->hasPermission('view_videos')){
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
     die;
 }
 
@@ -61,10 +61,10 @@ subtitle($title);
 <rss version="2.0" xmlns:media="http://search.yahoo.com/mrss/">
     <channel>
         <title><?php echo cbtitle(); ?></title>
-        <link><?php echo get_server_url(); ?></link>
+        <link><?php echo Network::get_server_url(); ?></link>
         <image>
             <url><?php echo website_logo(); ?></url>
-            <link><?php echo get_server_url(); ?></link>
+            <link><?php echo Network::get_server_url(); ?></link>
             <title><?php echo cbtitle(); ?></title>
         </image>
         <description><?php echo $Cbucket->configs['description']; ?></description>
