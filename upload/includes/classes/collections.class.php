@@ -2226,7 +2226,7 @@ class Collections extends CBCategory
             if (is_numeric($details)) {
                 $cdetails = $this->get_collection($details);
             } else {
-                return get_server_url();
+                return Network::get_server_url();
             }
         }
 
@@ -2239,39 +2239,39 @@ class Collections extends CBCategory
                 case 'view_collection':
                 case 'view':
                     if (empty($details['collection_id'])) {
-                        return get_server_url();
+                        return Network::get_server_url();
                     }
                     if (SEO == 'yes') {
-                        return get_server_url() . 'collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
+                        return Network::get_server_url() . 'collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
                     }
-                    return get_server_url() . 'view_collection.php?cid=' . $cdetails['collection_id'];
+                    return Network::get_server_url() . 'view_collection.php?cid=' . $cdetails['collection_id'];
                 case 'vi':
                 case 'view_item':
                 case 'item':
                     if (SEO == 'yes') {
                         if (empty($details['collection_id'])) {
-                            return get_server_url();
+                            return Network::get_server_url();
                         }
-                        return get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+                        return Network::get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
                     }
-                    return get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+                    return Network::get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
                 case 'load_more':
                 case 'more_items':
                 case 'moreItems':
                     if (empty($details['collection_id'])) {
-                        return get_server_url();
+                        return Network::get_server_url();
                     }
                     if (empty($cdetails['page_no'])) {
                         $cdetails['page_no'] = 2;
                     }
 
                     if (SEO == 'yes') {
-                        return get_server_url() . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
+                        return Network::get_server_url() . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
                     }
-                    return get_server_url() . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
+                    return Network::get_server_url() . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
             }
         }
-        return get_server_url();
+        return Network::get_server_url();
     }
 
     /**
@@ -2334,7 +2334,7 @@ class Collections extends CBCategory
                 break;
 
             default:
-                header('location:' . get_server_url());
+                header('location:' . Network::get_server_url());
                 break;
         }
     }

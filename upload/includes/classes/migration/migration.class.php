@@ -27,7 +27,6 @@ class Migration
     /** @var array|mixed|string|string[] */
     protected $version;
 
-
     public function __construct()
     {
         $reflector = new ReflectionClass(get_called_class());

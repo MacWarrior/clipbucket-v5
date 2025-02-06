@@ -738,7 +738,7 @@ class EmailTemplate
     private static function getGlobalVariablesArray(): array
     {
         return [
-            'baseurl' => get_server_url(),
+            'baseurl' => Network::get_server_url(),
             'login_link' => cblink(['name' => 'login'], true),
             'date_year' => cbdate('Y'),
             'date_time' => now(),

@@ -6,11 +6,11 @@ require 'includes/config.inc.php';
 $mode = $_GET['mode'];
 
 if (config('disable_email') == 'yes') {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if( User::getInstance()->isUserConnected() ){
-    sessionMessageHandler::add_message(lang('you_already_logged'), 'e', get_server_url());
+    sessionMessageHandler::add_message(lang('you_already_logged'), 'e', Network::get_server_url());
 }
 
 /**

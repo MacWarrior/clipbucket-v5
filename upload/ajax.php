@@ -7,7 +7,7 @@ global $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds, $page
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
 } else {
-    header('location:' . get_server_url());
+    header('location:' . Network::get_server_url());
     die();
 }
 
@@ -908,11 +908,11 @@ if (!empty($mode)) {
             break;
 
         default:
-            header('location:' . get_server_url());
+            header('location:' . Network::get_server_url());
             break;
     }
 } else {
-    header('location:' . get_server_url());
+    header('location:' . Network::get_server_url());
     die();
 }
 

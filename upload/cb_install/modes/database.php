@@ -1,7 +1,7 @@
 <?php
 if (file_exists(DirPath::get('includes') . 'config.php') && DEVELOPMENT_MODE) {
     if (!class_exists('Clipbucket_db')) {
-        require_once DirPath::get('classes') . DIRECTORY_SEPARATOR . 'db.class.php';
+        require_once DirPath::get('classes') . 'db.class.php';
         require_once DirPath::get('includes') . 'functions.php';
     }
     require_once DirPath::get('includes') . 'config.php';

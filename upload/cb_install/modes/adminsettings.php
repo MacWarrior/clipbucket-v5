@@ -1,4 +1,5 @@
 <?php
+Migration::updateConfig('base_url', post('base_url'));
 Migration::updateConfig('site_title', post('title'));
 Migration::updateConfig('site_slogan', post('slogan'));
 Migration::updateConfig('timezone', post('timezone'));
