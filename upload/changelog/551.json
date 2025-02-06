@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"260",
+  "revision":"261",
   "status":"dev",
   "detail":[
     {
@@ -51,6 +51,7 @@
         ,"Add option to enable playlists"
         ,"Add link from video edition page to uploader edition page"
         ,"Add collection sharing options"
+        ,"Add baseurl config"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
