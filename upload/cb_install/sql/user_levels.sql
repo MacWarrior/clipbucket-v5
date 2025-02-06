@@ -7,11 +7,11 @@ VALUES (1, 'yes', 'Administrator', 'yes'),
        (6, 'no', 'Anonymous', 'yes');
 
 
-INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_desc`) VALUES
-(1, 'Viewing Permission', ''),
-       (2, 'Uploading Permission', ''),
-       (3, 'Administrator Permission', ''),
-       (4, 'General Permission', '');
+INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_code`)
+VALUES (1, 'viewing_permission', 'VIEW'),
+       (2, 'uploading_permission', 'UPLOAD'),
+       (3, 'administration_permission', 'ADMIN'),
+       (4, 'general_permission', 'GENERAL');
 
 
 INSERT INTO `{tbl_prefix}user_levels_permissions` (`id_user_levels_permission`, `id_user_permission_types`, `permission_name`, `permission_description`)
