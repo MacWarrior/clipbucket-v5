@@ -10,7 +10,7 @@ $(function () {
                     output: 'html'
                 },
                 success: function (response) {
-                    var data = response.data;
+                    var data = response.data.videos;
 
                     data.forEach(function (video) {
                         $('tr[data-id="' + video.videoid + '"').replaceWith(video.html);

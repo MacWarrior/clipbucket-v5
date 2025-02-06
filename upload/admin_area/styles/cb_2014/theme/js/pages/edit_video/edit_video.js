@@ -221,11 +221,13 @@ $( document ).ready(function() {
                 success: function (response) {
                     var data = response.data;
 
-                    data.forEach(function (video) {
-                        $('tr[data-id="' + video.videoid + '"').replaceWith(video.html);
+                    data.videos.forEach(function (video) {
+                        $('.processing[data-id="' + video.videoid + '"').find('span').html(video.percent + '%');
                     });
+
                     if (response.all_complete) {
                         clearInterval(intervalId);
+                        $('#videoplayer').html(data.html);
                     }
                 }
             })
