@@ -303,6 +303,7 @@
         ,"Refactor alterTable constraints"
         ,"Add SSE function check"
         ,"Add Nginx check"
+        ,"Add baseurl config"
         ,"Stop migration on first error if occurs"
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
