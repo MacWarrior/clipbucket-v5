@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"259",
+  "revision":"260",
   "status":"dev",
   "detail":[
     {
@@ -259,6 +259,7 @@
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
+        ,"Update user level permissions storage"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"

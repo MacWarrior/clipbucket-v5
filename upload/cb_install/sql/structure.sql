@@ -427,7 +427,7 @@ ALTER TABLE `{tbl_prefix}user_levels_permissions_values`
 CREATE TABLE `{tbl_prefix}user_permission_types` (
   `user_permission_type_id` INT(20) NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `user_permission_type_name` varchar(225) NOT NULL,
-  `user_permission_type_code` varchar(225) NOT NULL
+  `user_permission_type_code` varchar(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 ALTER TABLE `{tbl_prefix}user_levels_permissions`

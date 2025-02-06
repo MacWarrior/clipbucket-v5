@@ -10,7 +10,7 @@ VALUES (1, 'yes', 'Administrator', 'yes'),
 INSERT INTO `{tbl_prefix}user_permission_types` (`user_permission_type_id`, `user_permission_type_name`, `user_permission_type_code`)
 VALUES (1, 'viewing_permission', 'VIEW'),
        (2, 'uploading_permission', 'UPLOAD'),
-       (3, 'administrator_permission', 'ADMIN'),
+       (3, 'administration_permission', 'ADMIN'),
        (4, 'general_permission', 'GENERAL');
 
 
