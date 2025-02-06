@@ -229,8 +229,12 @@ if (!empty($mode)) {
         case 'flag_object':
             $type = strtolower($_POST['type']);
             $id = $_POST['id'];
-            if (Flag::flagItem($id, $type, $_POST['flag_type'])) {
-                e(lang('report_successful'), 'm');
+            if (empty($_POST['flag_type'])) {
+                e(lang('missing_category_report'));
+            } else {
+                if (Flag::flagItem($id, $type, $_POST['flag_type'])) {
+                    e(lang('report_successful'), 'm');
+                }
             }
 
             $error = $eh->get_error();

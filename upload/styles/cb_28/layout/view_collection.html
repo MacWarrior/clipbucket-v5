@@ -71,9 +71,11 @@
 
             <div class="clearfix fav-repo">
                 <div class="show clearfix photoStats">
-                    <a  class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
-                    {if $c.userid != user_id()}
-                        <a  class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
+                    {if user_id()}
+                        <a  class="btn btn-ghost" id="addToFav" onclick="slide_up_watch_video('#video_action_result_cont');_cb.add_to_favNew('collection','{$c.collection_id}');">{lang code='add_to_my_favorites'}</a>
+                        {if user_id() != $photo.userid}
+                            <a  class="btn btn-ghost" id="flagPhotoButton" onclick="$('#report_item').toggle();">{lang code='report_this'}</a>
+                        {/if}
                     {/if}
                     {if (config('enable_collection_link_sharing') =='yes' || config('enable_collection_internal_sharing') =='yes') && $c.total_objects > 0 }
                         <a id="shareButton" data-toggle="tab" class="btn btn-ghost" onclick="$('#cb-item-share').toggle();"><span class="icon-share" style="margin-right: 10px;"></span>{lang code='share'}</a>
@@ -101,7 +103,7 @@
                     {/if}
                 </div>
 
-                {if $c.userid != user_id()}
+                {if user_id() && $c.userid != user_id()}
                     <div class="video_action_result_boxes clearfix tab-pane " style="display:none;" id="report_item">
                         {show_flag_form id=$c.collection_id type=Collection}
                         <div class="action_box" style="display:none;" id="video_action_result_cont"></div>
