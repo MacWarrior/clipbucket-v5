@@ -3,6 +3,7 @@
 class UserLevel
 {
     private static $user_permissions = [];
+    private static $user_permission_types = [];
 
     private static $tableName = 'user_levels';
     private static $tableNamePermission = 'user_levels_permissions';
@@ -98,7 +99,7 @@ class UserLevel
             User::redirectToLogin();
         }
         if (!self::hasPermission($permission, $user_id)) {
-            redirect_to(get_server_url() . '/403.php');
+            redirect_to(Network::get_server_url() . '/403.php');
         }
         return true;
     }
@@ -192,7 +193,6 @@ class UserLevel
         return array_map(function ($field) {
             return self::$tableName . '.' . $field;
         }, self::$fields);
-
     }
 
     /**
@@ -245,6 +245,7 @@ class UserLevel
      * @param int $user_level_id
      * @param string $user_level_name
      * @param $permissions
+     * @param null $is_default
      * @return void
      * @throws Exception
      */
@@ -301,7 +302,6 @@ class UserLevel
         }
     }
 
-
     /**
      * @param int $user_level_id
      * @return bool
@@ -325,17 +325,22 @@ class UserLevel
         return false;
     }
 
-    public static function getDefault()
+    /**
+     * @throws Exception
+     */
+    public static function getDefault(): array
     {
         return self::getOne([
             'is_default' => 'yes'
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefaultId()
     {
         return self::getDefault()['user_level_id'] ?? 0;
     }
-
 
 }

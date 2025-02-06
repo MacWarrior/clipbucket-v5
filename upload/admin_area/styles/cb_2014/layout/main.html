@@ -3077,6 +3077,18 @@
                         </div>
                     </div>
                     <hr/>
+                    <div class="row{if empty($row.base_url)} bg-danger{/if}">
+                        <div class="col-md-6">
+                            <label class="nowrap" for="base_url" title="{lang('website_base_url')}">
+                                <span class="fa fa-question-circle tips" title="{lang('website_base_url_hint')}"></span>
+                                {lang('website_base_url')}
+                            </label>
+                        </div>
+                        <div class="col-md-6">
+                            <input class="form-control" name="base_url" id="base_url" value="{$row.base_url}"/>
+                        </div>
+                    </div>
+                    <hr/>
 
                 </div>
                 <div class="col-md-4">

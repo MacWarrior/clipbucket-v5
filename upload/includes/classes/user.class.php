@@ -535,7 +535,7 @@ class User
 
     public static function redirectToLogin()
     {
-        redirect_to(get_server_url() . 'signup.php?mode=login');
+        redirect_to(Network::get_server_url() . 'signup.php?mode=login');
     }
 
     /**
@@ -890,11 +890,11 @@ class User
     public static function redirectAfterLogin()
     {
         if (User::getInstance()->isUserMustRenewMembership(userquery::getInstance()->userid) && !User::getInstance()->hasAdminAccess()) {
-            redirect_to(get_server_url()  . 'manage_membership.php');
+            redirect_to(Network::get_server_url()  . 'manage_membership.php');
         } elseif ($_COOKIE['pageredir']) {
             redirect_to($_COOKIE['pageredir']);
         } else {
-            redirect_to(get_server_url()  . User::getInstance()->getDefaultHomepageFromUserLevel());
+            redirect_to(Network::get_server_url()  . User::getInstance()->getDefaultHomepageFromUserLevel());
         }
     }
 
@@ -1015,7 +1015,7 @@ class userquery extends CBCategory
             $this->level = $this->udetails['level'];
             $this->email = $this->udetails['email'];
             //TODO check if $this->permission is steel needed
-            $this->permission =  UserLevel::getPermissions(user_id());
+            $this->permission =  UserLevel::getPermissions(User::getInstance()->getCurrentUserLevelID());
 
             //Calling Logout Functions
             $funcs = $this->init_login_functions ?? false;
@@ -1031,7 +1031,7 @@ class userquery extends CBCategory
                 $this->UpdateLastActive(user_id());
             }
         } else {
-            $this->permission = $this->get_user_level(4);
+            $this->permission = UserLevel::getPermissions();
         }
 
         //Adding Actions such Report, share,fav etc
@@ -2123,7 +2123,7 @@ class userquery extends CBCategory
                     }
 
                     $var = [
-                        'reset_password_link' => get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
+                        'reset_password_link' => Network::get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
                     ];
                     //Now Finally Sending Email
                     if (EmailTemplate::sendMail('password_reset_request', $udetails['userid'], $var)) {
@@ -2146,7 +2146,7 @@ class userquery extends CBCategory
                     Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
                     //Sending confirmation email
                     $var = [
-                        'url'   => get_server_url() . 'login.php',
+                        'url'   => Network::get_server_url() . 'login.php',
                         'password' => $newpass
                     ];
 
@@ -2228,7 +2228,7 @@ class userquery extends CBCategory
 
         if (config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email']))) {
             $email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
-            $gravatar = new Gravatar($email, get_server_url() . $default);
+            $gravatar = new Gravatar($email, Network::get_server_url() . $default);
             $gravatar->size = $thesize;
             $gravatar->rating = 'G';
             $gravatar->border = 'FF0000';
@@ -2330,20 +2330,6 @@ class userquery extends CBCategory
         return $fields[$field];
     }
 
-    /**
-     * @TODO remove function
-     * Function used to get user level and its details
-     *
-     * @param INT $uid userid
-     * @param bool $is_level
-     *
-     * @return bool|mixed
-     * @throws Exception
-     */
-    function get_user_level($uid, $is_level = false)
-    {
-       return UserLevel::getPermissions($uid);
-    }
 
     /**
      * Function used to get all levels
@@ -4342,7 +4328,7 @@ class userquery extends CBCategory
             return $result[0]['userid'];
         }
 
-        execute_sql_file(\DirPath::get('cb_install') . DIRECTORY_SEPARATOR . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
+        execute_sql_file(\DirPath::get('cb_install') . 'sql' .DIRECTORY_SEPARATOR . 'add_anonymous_user.sql');
 
         $result = Clipbucket_db::getInstance()->select(tbl('users'), 'userid', " username='anonymous' AND email='anonymous@website'", '1');
         return $result[0]['userid'];
@@ -5226,11 +5212,11 @@ class userquery extends CBCategory
         //Loading subscription email template
         if ($subscribers) {
             $var = [
-                'sender_name'       => $uploader['username'],
+                'sender_username'       => $uploader['username'],
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => get_thumb($vidDetails)
+                'video_thumb'       => Network::get_server_url() . get_thumb($vidDetails)
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

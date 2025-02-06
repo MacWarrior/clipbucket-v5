@@ -24,7 +24,7 @@ switch($type){
 }
 
 if (!User::getInstance()->hasPermission('view_' . $type) || !isSectionEnabled($type)) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 switch($type) {

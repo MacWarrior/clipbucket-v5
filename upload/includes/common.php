@@ -383,7 +383,6 @@ $Smarty->register_modifier('getext', 'getext');
 $Smarty->register_modifier('post_form_val', 'post_form_val');
 $Smarty->register_modifier('get_thumb_num', 'get_thumb_num');
 $Smarty->register_modifier('ad', 'ad');
-$Smarty->register_modifier('get_user_level', 'get_user_level');
 $Smarty->register_modifier('nicetime', 'nicetime');
 $Smarty->register_modifier('get_username', 'get_username');
 $Smarty->register_modifier('formatfilesize', 'formatfilesize');

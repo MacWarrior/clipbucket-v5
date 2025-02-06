@@ -1232,7 +1232,7 @@ function cblink($params, $fullurl = false)
     }
 
     if ($fullurl) {
-        $link = get_server_url();
+        $link = Network::get_server_url();
     } else {
         $link = '/';
     }
@@ -1703,18 +1703,6 @@ function count_pages($total, $count)
     return (int)round($records + 0.49, 0);
 }
 
-/**
- * Fetch user level against a given userid
- * @param $id
- *
- * @return
- * @uses : { class : $userquery } { function : usr_levels() }
- *
- */
-function get_user_level($id)
-{
-    return userquery::getInstance()->usr_levels[$id];
-}
 
 /**
  * This function used to check weather user is online or not
@@ -2849,7 +2837,7 @@ function check_install($type)
     switch ($type) {
         case 'before':
             if (!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                header('Location: ' . get_server_url() . 'cb_install');
+                header('Location: ' . Network::get_server_url() . 'cb_install');
                 die();
             }
             break;
@@ -2860,36 +2848,6 @@ function check_install($type)
             }
             break;
     }
-}
-
-/**
- * Function to get server URL
- * @return string { string } { url of server }
- * @internal param $ : { none }
- */
-function get_server_url(): string
-{
-    $port = '';
-    if( !in_array($_SERVER['SERVER_PORT'], [80, 443]) ){
-        $port = ':' . $_SERVER['SERVER_PORT'];
-    }
-
-    return get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . '/';
-}
-
-/**
- * Get current protocol of server that CB is running on
- * @return mixed|string { string } { $protocol } { http or https }
- */
-function get_server_protocol()
-{
-    if (is_ssl()) {
-        return 'https://';
-    }
-
-    $protocol = preg_replace('/^([a-z]+)\/.*$/', '\\1', strtolower($_SERVER['SERVER_PROTOCOL']));
-    $protocol .= '://';
-    return $protocol;
 }
 
 /**
@@ -2951,31 +2909,6 @@ function datecreated($in): string
         return $in;
     }
     return '2000-01-01';
-}
-
-/**
- * Check if website is using SSL or not
- * @return bool { boolean } { true if SSL, else false }
- * @internal param $ { none }
- * @since 2.6.0
- */
-function is_ssl(): bool
-{
-    if (isset($_SERVER['HTTPS'])) {
-        if ('on' == strtolower($_SERVER['HTTPS'])) {
-            return true;
-        }
-        if ('1' == $_SERVER['HTTPS']) {
-            return true;
-        }
-    }
-    if (isset($_SERVER['SERVER_PORT']) && ('443' == $_SERVER['SERVER_PORT'])) {
-        return true;
-    }
-    if (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-        return true;
-    }
-    return false;
 }
 
 /**

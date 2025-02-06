@@ -12,6 +12,13 @@
         <form name="installation" method="post" id="installation" style="background-image:url(images/site_setting.png);background-repeat:no-repeat;background-position:right;">
             <br/>
             <div class="field">
+                <label for="base_url"><?php echo lang('website_base_url'); ?></label>
+                <input name="base_url" type="text" id="base_url" class="form-control" value="<?php echo Network::get_server_url(); ?>">
+                <p class="grey-text font-size" style="margin-top:0;">
+                    <?php echo lang('website_base_url_hint'); ?>
+                </p>
+            </div>
+            <div class="field">
                 <label for="title"><?php echo lang('website_title'); ?></label>
                 <input name="title" type="text" id="title" class="form-control" value="ClipBucketV5 - v<?php echo VERSION . ' ' . STATE; ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
@@ -28,7 +35,7 @@
             </div>
 
             <div class="field">
-                <label class="grey-text" for="email"><?php echo lang('default_language'); ?></label>
+                <label  for="email"><?php echo lang('default_language'); ?></label>
                 <select name="language" id="language" class="form-control">
                     <?php foreach (Language::getInstance()->get_langs() as $lang) {
                         echo '<option value="'.$lang['language_id'].'">'.$lang['language_name'].'</option>';
@@ -43,7 +50,7 @@
                 $rs = Clipbucket_db::getInstance()->_select($query);
                 $allTimezone = array_column($rs, 'timezone');?>
                 <div class="field">
-                    <label class="grey-text" for="timezone"><?php echo lang('option_timezone'); ?></label>
+                    <label  for="timezone"><?php echo lang('option_timezone'); ?></label>
                     <select class="form-control check_timezone has-error" name="timezone" id="timezone" style="display:inline-block;">
                         <option value=""></option>
                         <?php foreach ($allTimezone as $timezone) { ?>

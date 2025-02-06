@@ -3,13 +3,13 @@
 require 'includes/config.inc.php';
 
 if (!User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes') {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 $vkey = $_GET['v'] ?? false;
 
 if (empty($vkey)) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if (is_numeric($vkey)) {
@@ -20,7 +20,7 @@ if (is_numeric($vkey)) {
 
 $vdo = Video::getInstance()->getOne([$search => $vkey]);
 if (!video_playable($vdo)) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 $assign_arry['vdo'] = $vdo;
