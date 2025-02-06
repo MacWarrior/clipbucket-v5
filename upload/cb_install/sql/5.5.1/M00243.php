@@ -116,7 +116,7 @@ class M00243 extends \Migration
                 ]
             ]);
 
-        self::generatePermission(self::ADMINISTRATOR_ID_PERMISSION_TYPE, 'email_template_management', 'email_template_management_desc', [
+        self::generatePermission(3, 'email_template_management', 'email_template_management_desc', [
             1 => 'yes',
             2 => 'no',
             3 => 'no',

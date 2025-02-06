@@ -1703,18 +1703,6 @@ function count_pages($total, $count)
     return (int)round($records + 0.49, 0);
 }
 
-/**
- * Fetch user level against a given userid
- * @param $id
- *
- * @return
- * @uses : { class : $userquery } { function : usr_levels() }
- *
- */
-function get_user_level($id)
-{
-    return userquery::getInstance()->usr_levels[$id];
-}
 
 /**
  * This function used to check weather user is online or not
