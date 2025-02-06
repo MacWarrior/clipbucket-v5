@@ -12,10 +12,10 @@
         <form name="installation" method="post" id="installation" style="background-image:url(images/site_setting.png);background-repeat:no-repeat;background-position:right;">
             <br/>
             <div class="field">
-                <label for="domain_url"><?php echo lang('website_domain_url'); ?></label>
-                <input name="domain_url" type="text" id="domain_url" class="form-control" value="<?php echo get_server_url()?>">
+                <label for="base_url"><?php echo lang('website_base_url'); ?></label>
+                <input name="base_url" type="text" id="base_url" class="form-control" value="<?php echo get_server_url()?>">
                 <p class="grey-text font-size" style="margin-top:0;">
-                    <?php echo lang('website_domain_url_hint'); ?>
+                    <?php echo lang('website_base_url_hint'); ?>
                 </p>
             </div>
             <div class="field">

@@ -478,7 +478,7 @@ if (isset($_POST['update'])) {
         'enable_collection_link_sharing',
         'photo_nsfw_check_model',
         'video_nsfw_check_model',
-        'domain_url'
+        'base_url'
     ];
 
     foreach ($opt_list as $optl) {

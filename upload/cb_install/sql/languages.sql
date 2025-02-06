@@ -1483,5 +1483,5 @@ VALUES ('admin_setting'),
        ('uploading_permission'),
        ('administration_permission'),
        ('general_permission'),
-       ('website_domain_url'),
-       ('website_domain_url_hint');
+       ('website_base_url'),
+       ('website_base_url_hint');

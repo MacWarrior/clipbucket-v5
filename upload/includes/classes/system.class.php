@@ -639,13 +639,12 @@ class System{
         }
 
         //config
-        if (empty(config('domain_url'))) {
-            self::displayConfigError('error config : domain_url');
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 261) && empty(trim(config('base_url'))) ){
+            self::displayConfigError('error config : base_url');
             return -1;
         }
 
         //Hosting
-
         $max_execution_time = ini_get('max_execution_time');
         if ($max_execution_time > 0 && $max_execution_time < 7200) {
             self::displayConfigError('error config : max_execution_time');
