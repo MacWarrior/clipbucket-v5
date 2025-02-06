@@ -365,6 +365,9 @@ class EmailTemplate
         return self::getAllEmail($params);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getAllEmail(array $params)
     {
         $param_first_only = $params['first_only'] ?? false;
@@ -548,6 +551,9 @@ class EmailTemplate
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getVariablesFromEmail(int $id_email)
     {
         if (empty($id_email)) {
@@ -564,6 +570,9 @@ class EmailTemplate
         return empty($result) ? [] : $result;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getGlobalVariables($with_values = false): array
     {
         $sql = 'SELECT * FROM ' . cb_sql_table(self::$tableNameEmailVariable)
@@ -586,6 +595,11 @@ class EmailTemplate
      */
     public static function fillVariable(string $string, array $variables): string
     {
+        foreach ($variables as $key => $variable) {
+            if (empty($variable)) {
+                unset($variables[$key]);
+            }
+        }
         $variables = array_merge(self::getGlobalVariablesArray(), $variables);
         foreach ($variables as $name => $value) {
             if( $name != 'email_content' ){
@@ -610,23 +624,26 @@ class EmailTemplate
         if( config('disable_email') == 'yes' ){
             return true;
         }
-        if (empty($sender_email)) {
+        if (empty(trim($sender_email))) {
             $sender_email = config('email_sender_address');
+            if (empty($sender_email)) {
+                $sender_email = 'no-reply@' . $_SERVER['HTTP_HOST'];
+            }
         }
-        if (empty($sender_name)) {
+        if (empty(trim($sender_name))) {
             $sender_name = config('email_sender_name');
+            if (empty($sender_name)) {
+                $sender_email = 'no-reply';
+            }
         }
         $mail = new PHPMailer();
-//        two lines should be equal to $mail->addCustomHeader('Content-Type', 'text/html; charset="UTF-8"')
         $mail->CharSet = PHPMailer::CHARSET_UTF8;
         $mail->isHTML();
+        if (!isValidEmail($sender_email)) {
+            return lang('invalid_email_sender');
+        }
         $mail->setFrom($sender_email, $sender_name, false);
         $mail->addReplyTo($sender_email, $sender_name);
-
-//        $mail->addCustomHeader('Content-Type', 'text/html; charset="UTF-8"');
-//        $headers  = 'From: "'.$sender_name.'"<'.$sender_email.'>'."\n";
-//        $headers .= 'Reply-To: '.$sender_email."\n";
-//        $headers .= 'Content-Type: text/html; charset="UTF-8"';
 
         $mail->Subject = $subject;
         $mail->MsgHTML($content);
@@ -643,10 +660,18 @@ class EmailTemplate
 
         if (is_array($to) && empty($to['name'])) {
             foreach ($to as $email) {
-                self::addAddressAndNameIfExist($mail, $email);
+                if (isValidEmail($email)) {
+                    self::addAddressAndNameIfExist($mail, $email);
+                } else {
+                    return lang('invalid_email_recipient');
+                }
             }
         } else {
-            self::addAddressAndNameIfExist($mail, $to);
+            if (isValidEmail($to) || isValidEmail($to['mail'])) {
+                self::addAddressAndNameIfExist($mail, $to);
+            } else {
+                return lang('invalid_email_recipient');
+            }
         }
         if ($mail->send()) {
             return true;
@@ -784,11 +809,11 @@ class EmailTemplate
 
         //put variable on email
         $title = self::fillVariable($email['title'], $variables);
-        $email_content = self::fillVariable($email['content'], $variables);
+        $email_content = self::getRenderedContent($email['content'], $variables);
         $variables['email_content'] = $email_content;
 
         //put email on template
-        $content = self::fillVariable($email['template_content'], $variables);
+        $content = self::getRenderedContent($email['template_content'], $variables);
         //send emails
         if (is_array($to) && !isset($to['mail'])) {
             $result = self::send($title, $content, $to, $from, $from_name);
@@ -814,6 +839,9 @@ class EmailTemplate
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefault()
     {
         return self::getOneTemplate([
@@ -821,6 +849,9 @@ class EmailTemplate
         ]);
     }
 
+    /**
+     * @throws Exception
+     */
     public static function getDefaultId(): int
     {
         return self::getDefault()['id_email_template'] ?? 0;
