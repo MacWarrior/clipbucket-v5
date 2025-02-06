@@ -1483,6 +1483,5 @@ VALUES ('admin_setting'),
        ('uploading_permission'),
        ('administration_permission'),
        ('general_permission'),
-       ('missing_category_report'),
        ('website_domain_url'),
        ('website_domain_url_hint');
