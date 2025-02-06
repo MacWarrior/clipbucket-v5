@@ -587,7 +587,7 @@ class MWIP extends \Migration
             'en' => 'Details'
         ]);
 
-        self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' RENAME user_level_is_default TO user_level_is_origin', [
+        self::alterTable('ALTER TABLE ' . tbl('user_levels') . ' CHANGE `user_level_is_default` `user_level_is_origin` ENUM(\'yes\',\'no\') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci NOT NULL DEFAULT \'no\';', [
             'table'  => 'user_levels',
             'column' => 'user_level_is_default'
         ], [
