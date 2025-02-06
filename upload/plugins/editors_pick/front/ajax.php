@@ -14,6 +14,6 @@ if (isset($_POST['vid'])) {
         echo json_encode(['data' => '<em>No Video</em>']);
     }
 } else {
-    header('location:' . get_server_url());
+    header('location:' . Network::get_server_url());
     die();
 }
