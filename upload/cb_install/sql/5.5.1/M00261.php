@@ -9,7 +9,12 @@ class M00261 extends \Migration
      */
     public function start()
     {
-        self::generateConfig('base_url', \Network::get_server_url());
+        if( function_exists('get_server_url') ){
+            $server_url = get_server_url();
+        } else {
+            $server_url = \Network::get_server_url();
+        }
+        self::generateConfig('base_url', $server_url);
 
         self::generateTranslation('website_base_url', [
             'fr'=>'URL de base',
