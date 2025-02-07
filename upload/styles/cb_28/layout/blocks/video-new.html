@@ -9,8 +9,8 @@
 			{if $video.duration>1}
 				<time class="time" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
 			{/if}
+			{ANCHOR place='in_video_thumb' data=$video}
 		</div>
-		{ANCHOR place='in_video_thumb' data=$video}
 	</div><div class="shadow"></div>
 	<div class="details">
 		<div class="titre">
