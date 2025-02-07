@@ -70,8 +70,8 @@ class CBEmail
         //Common Variables
         $com_array = [
             '{website_title}' => TITLE,
-            '{baseurl}'       => get_server_url(),
-            '{website_url}'   => get_server_url(),
+            '{baseurl}'       => Network::get_server_url(),
+            '{website_url}'   => Network::get_server_url(),
             '{date_format}'   => cbdate(DATE_FORMAT),
             '{date}'          => cbdate(),
             '{username}'      => user_name(),

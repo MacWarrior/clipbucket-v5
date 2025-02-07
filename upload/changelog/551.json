@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"259",
+  "revision":"261",
   "status":"dev",
   "detail":[
     {
@@ -51,6 +51,7 @@
         ,"Add option to enable playlists"
         ,"Add link from video edition page to uploader edition page"
         ,"Add collection sharing options"
+        ,"Add baseurl config"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -259,6 +260,7 @@
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
+        ,"Update user level permissions storage"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -301,6 +303,7 @@
         ,"Refactor alterTable constraints"
         ,"Add SSE function check"
         ,"Add Nginx check"
+        ,"Add baseurl config"
         ,"Stop migration on first error if occurs"
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"

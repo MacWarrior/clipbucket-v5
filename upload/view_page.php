@@ -12,7 +12,7 @@ $pid = mysql_clean($pid);
 $page = $cbpage->get_page($pid);
 
 if($page['active'] == 'no' && !User::getInstance()->hasAdminAccess()){
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 if ($page) {

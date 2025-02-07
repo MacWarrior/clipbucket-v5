@@ -7,7 +7,7 @@ require 'includes/config.inc.php';
 User::getInstance()->isUserConnectedOrRedirect();
 
 if( config('videosSection') != 'yes' ){
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 global $pages, $cbvid, $Upload, $eh;

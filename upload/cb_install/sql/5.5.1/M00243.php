@@ -1,7 +1,7 @@
 <?php
 
 namespace V5_5_1;
-require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+require_once \DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class M00243 extends \Migration
 {
@@ -116,7 +116,7 @@ class M00243 extends \Migration
                 ]
             ]);
 
-        self::generatePermission(self::ADMINISTRATOR_ID_PERMISSION_TYPE, 'email_template_management', 'email_template_management_desc', [
+        self::generatePermission(3, 'email_template_management', 'email_template_management_desc', [
             1 => 'yes',
             2 => 'no',
             3 => 'no',
