@@ -12,6 +12,7 @@ function init_tags(id_input, available_tags, list_tag) {
         animate: true,
         caseSensitive: false,
         availableTags: available_tags,
+        allowSpaces: allow_tag_space,
         beforeTagAdded: function (event,info) {
             if (info.tagLabel.length <= 2) {
                 if (!alert_shown) {

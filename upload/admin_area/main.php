@@ -139,6 +139,7 @@ if (isset($_POST['update'])) {
         , 'video_enable_nsfw_check'
         , 'enable_collection_internal_sharing'
         , 'enable_collection_link_sharing'
+        , 'allow_tag_space'
     ];
 
     $config_booleans_to_refactor = [
@@ -477,7 +478,8 @@ if (isset($_POST['update'])) {
         'enable_collection_internal_sharing',
         'enable_collection_link_sharing',
         'photo_nsfw_check_model',
-        'video_nsfw_check_model'
+        'video_nsfw_check_model',
+        'allow_tag_space'
     ];
 
     foreach ($opt_list as $optl) {

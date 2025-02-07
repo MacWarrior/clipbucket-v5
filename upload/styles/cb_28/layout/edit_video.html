@@ -34,6 +34,9 @@
 									{$categories = $field}
 								{elseif $field.id == 'tags_video'}
 									<label for="{$field.id}">{$field.title}</label>
+									{if $field.hint_1}
+										{$field.hint_1}
+									{/if}
 									{$formObj->createField($field)}
 									<ul id="list_{$field.id}"></ul>
 								{elseif !$field.id|strstr:'tags'}

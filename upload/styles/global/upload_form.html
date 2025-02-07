@@ -59,7 +59,7 @@
                             {$categories = $field}
                         {elseif $field.id == 'tags_video'}
                     <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
+                            <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
                             {$formObj->createField($field)}
                             <ul id="list_{$field.id}"></ul>
                     </div>

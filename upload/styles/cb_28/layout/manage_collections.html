@@ -53,8 +53,7 @@
 						<div class="account_form">
 							{foreach from=$fields item=field}
 								<div class="form-group">
-									<label for="{$field.id}">{$field.title}</label>
-									{if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
+									<label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
 									{ANCHOR place=$field.anchor_before}
 									{$field.class="form-control"}
 									{if $field.id == 'collection_tags'}
@@ -111,8 +110,7 @@
 						<div class="account_form">
 							{foreach from=$fields item=field}
 								<div class="form-group">
-									<label for="{$field.id}">{$field.title}</label>
-									{if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
+									<label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
 									{ANCHOR place=$field.anchor_before}
 									{$field.class="form-control"}
 									{$formObj->createField($field)}

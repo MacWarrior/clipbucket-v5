@@ -1852,6 +1852,9 @@ class CBPhotos
             $cl_array = [0=>''] + $cl_array;
         }
         $this->unique = rand(0, 9999);
+
+        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" title=\''.lang('use_tab_tag').'\'></span>' : '';
+
         return [
             'name'       => [
                 'title'       => lang('photo_title'),
@@ -1879,6 +1882,7 @@ class CBPhotos
                 'id'                => 'tags',
                 'value'             => genTags($tags),
                 'required'          => 'no',
+                'hint_1'              =>$hint_tags,
                 'validate_function' => 'genTags'
             ],
             'collection' => [

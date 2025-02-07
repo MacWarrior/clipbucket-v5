@@ -1482,4 +1482,6 @@ VALUES ('admin_setting'),
        ('viewing_permission'),
        ('uploading_permission'),
        ('administration_permission'),
-       ('general_permission');
+       ('general_permission'),
+       ('allow_tag_space'),
+       ('use_tab_tag');

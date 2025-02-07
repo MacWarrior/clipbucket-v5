@@ -21,22 +21,20 @@
                 {foreach from=$reqFields item=item}
                 <div class="field clearfix">
                     <div><label for="{$item.id}" class="label">{$item.title}</label></div>
-                    {$formObj->createField($item)}
                     {if $item.hint_1}
-                    <div class="clear"></div>
-                    <span class="hint">{$item.hint_1}</span>
+                        {$item.hint_1}
                     {/if}
+                    {$formObj->createField($item)}
                 </div>
                 {/foreach}
 
                 {foreach from=$otherFields item=item}
                 <div class="field clearfix">
                     <div><label for="{$item.id}" class="label">{$item.title}</label></div>
-                    {$formObj->createField($item)}
                     {if $item.hint_1}
-                    <div class="clear"></div>
-                    <span class="hint">{$item.hint_1}</span>
+                        {$item.hint_1}
                     {/if}
+                    {$formObj->createField($item)}
                 </div>
                 {/foreach}
 
