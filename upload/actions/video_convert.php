@@ -128,7 +128,7 @@ if (!empty($_filename)) {
     $values = [$video_files, (int)$ffmpeg->input_details['duration']];
 
     // TODO : Update revision
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '247')) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
         $fields[] = 'convert_percent';
         $values[] = 100;
     }
