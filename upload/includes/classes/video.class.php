@@ -80,7 +80,7 @@ class Video
             $this->fields[] = 'default_backdrop';
         }
         // TODO : Update revision
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '247')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $this->fields[] = 'convert_percent';
         }
 
@@ -1035,7 +1035,7 @@ class CBvideo extends CBCategory
         }
 
         // TODO : Update revision
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '247') ){
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ){
             return;
         }
 
