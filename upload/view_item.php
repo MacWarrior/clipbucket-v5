@@ -9,7 +9,7 @@ $cid = (int)($_GET['collection']);
 $order = tbl('collection_items') . '.ci_id DESC';
 
 if (empty($item) || !isSectionEnabled('photos')) {
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 $param = [
@@ -27,7 +27,7 @@ if ($photo) {
             && (!User::getInstance()->hasAdminAccess() && ($photo['userid'] != user_id()))
         )
     ) {
-        redirect_to(get_server_url());
+        redirect_to(Network::get_server_url());
     }
     if (!empty($photo['collection_id']) && !Collections::getInstance()->is_viewable($cid)) {
         ClipBucket::getInstance()->show_page = false;

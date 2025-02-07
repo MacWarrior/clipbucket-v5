@@ -479,6 +479,8 @@ if (isset($_POST['update'])) {
         'enable_collection_link_sharing',
         'photo_nsfw_check_model',
         'video_nsfw_check_model',
+        'base_url',
+        'video_nsfw_check_model',
         'allow_tag_space'
     ];
 
@@ -672,6 +674,5 @@ ClipBucket::getInstance()->addAdminJS([
     'jquery-ui-1.13.2.min.js'             => 'global'
     ,'pages/main/main'.$min_suffixe.'.js' => 'admin'
 ]);
-
 template_files('main.html');
 display_it();

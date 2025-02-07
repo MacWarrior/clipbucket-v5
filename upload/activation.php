@@ -5,7 +5,7 @@ define('PARENT_PAGE', 'signup');
 require 'includes/config.inc.php';
 
 if( userquery::getInstance()->udetails['usr_status'] == 'Ok' ){
-    redirect_to(get_server_url());
+    redirect_to(Network::get_server_url());
 }
 
 /**

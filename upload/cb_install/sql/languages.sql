@@ -1483,5 +1483,7 @@ VALUES ('admin_setting'),
        ('uploading_permission'),
        ('administration_permission'),
        ('general_permission'),
+       ('website_base_url'),
+       ('website_base_url_hint'),
        ('allow_tag_space'),
        ('use_tab_tag');

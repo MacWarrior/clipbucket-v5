@@ -30,7 +30,7 @@
 			</div>
 
 			<div class="col-md-6">
-				<label for="{$requiredFields.tags_video.id}"><b style="color:#000000;">{$requiredFields.tags_video.title}</b></label>
+				<label for="{$requiredFields.tags_video.id}"><b style="color:#000000;">{$requiredFields.tags_video.title}</b> {if $requiredFields.tags_video.hint_1}{$requiredFields.tags_video.hint_1}{/if}</label>
 				{$formObj->createField($requiredFields.tags_video)}
 				<ul id="list_tags{$index}" data-id="{$index}"></ul>
 			</div>

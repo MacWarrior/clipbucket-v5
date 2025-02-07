@@ -83,7 +83,7 @@ switch ($mode) {
             $cbcollection->create_collection($_POST);
             if (!error()) {
                 $_POST = '';
-                redirect_to(get_server_url() . 'manage_collections.php?new_collection=1');
+                redirect_to(Network::get_server_url() . 'manage_collections.php?new_collection=1');
             }
         }
         break;
@@ -102,7 +102,7 @@ switch ($mode) {
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
-            redirect_to(get_server_url() . 'manage_collections.php?missing_collection=1');
+            redirect_to(Network::get_server_url() . 'manage_collections.php?missing_collection=1');
         }
         $items = Collection::getInstance()->getItemRecursivly(['collection_id' => $collection['collection_id']]);
         if ($collection['type'] == 'videos') {
