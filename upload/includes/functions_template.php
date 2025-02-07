@@ -65,6 +65,13 @@ function getTemplateMsg()
     return ob_get_clean();
 }
 
+function getTemplate($template)
+{
+    ob_start();
+    Template($template);
+    return ob_get_clean();
+}
+
 function Assign($name, $value)
 {
     global $cbtpl;

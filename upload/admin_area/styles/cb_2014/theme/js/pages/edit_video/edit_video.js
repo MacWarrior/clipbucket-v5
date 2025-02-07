@@ -208,4 +208,29 @@ $( document ).ready(function() {
             });
         });
     }
+
+    if (ids_to_check_progress) {
+        intervalId = setInterval(function () {
+            $.post({
+                url: '/actions/admin_progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: 'percent'
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        $('.processing[data-id="' + video.videoid + '"').find('span').html(video.percent + '%');
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                        $('#videoplayer').html(data.html);
+                    }
+                }
+            })
+        }, 30000);
+    }
 });

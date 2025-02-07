@@ -46,12 +46,14 @@
                                     <div class="col-md-10">
                                         <div class="row">
                                             <div class="col-md-3">
-                                                <img src="{get_photo details=$obj[list]}" class="img-responsive" id="photo" style="padding:2px;border:1px solid #ccc;" />
+                                                <img src="{get_photo details=$obj[list]}" class="img-responsive" id="photo" style="padding:2px;border:1px solid #ccc;"/>
                                             </div>
                                             <div class="col-md-9">
                                                 <a class="block" href="/admin_area/edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
-                                                <span class="labels1"> <strong>{$obj[list].date_added|niceTime}</strong>
-                                                {lang code='views'} : <strong>{$obj[list].views|number_format}</strong></span>
+                                                <span>
+                                                    <strong>{$obj[list].date_added|niceTime}</strong>
+                                                    {lang code='views'} : <strong>{$obj[list].views|number_format}</strong>
+                                                </span>
                                                 <div class="labels">
                                                     {if $obj[list].featured=='yes'}<span class="label label-primary">{lang code='featured'}</span>{/if}
                                                     <span class="label {if $obj[list].active=='yes'}label-success{else}label-warning{/if}">
@@ -86,7 +88,7 @@
                                             <div class="col-md-9">
                                                 <a href="/admin_area/edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
                                                 <br/>
-                                                <span class="labels1">
+                                                <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
                                                     {lang code='views'} : <strong>{$obj[list].views|number_format}</strong>
                                                 </span>
@@ -154,7 +156,7 @@
                                             <div class="col-md-9">
                                                 <a href="/admin_area/edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].collection_name)}</a>
                                                 <br/>
-                                                <span class="labels1">
+                                                <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
                                                     {lang code='views'} : <strong>{$obj[list].views|number_format}</strong>
                                                 </span>

@@ -10,13 +10,9 @@
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
 				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" id="thumbs_{$video.videoid}" class="vthumb"/>
-				<span class="duration">(
-					{if $video.duration>1}
-						{$video.duration|SetTime}
-					{else}
-						00:00
-					{/if}
-				)</span>
+				{if $video.duration>1}
+					<span class="duration" title="Video duration : {$video.duration|SetTime}">({$video.duration|SetTime})</span>
+				{/if}
 			</a>
 		</div>
 		<div class="col-md-9">
@@ -111,8 +107,9 @@
 	<a href="{video_link($video)}">
 		<div class="video_thumb">
 			<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
-			<time class="duration">
-				{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</time>
+			{if $video.duration>1}
+				<time class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
+			{/if}
 		</div>
 	</a>
 	<div class="details_block">
