@@ -1,4 +1,4 @@
-<div class="slider-video-container" {if empty($width) === false}style="--width:{$width}px;"{/if}>
+<div class="slider-video-container"{if empty($width) === false} style="--width:{$width}px;"{/if}>
 	<div class="thumb-video-padding">
 		<div class="thumb-video {if config('popup_video') == 'yes'}cd-popup-trigger{/if} video-link" data-videoid="{$video.videoid}" data-href="{video_link($video)}" title="{display_clean($video.title)|title}">
 			<img src="{getThumb vdetails=$video size=416x260}" loading="lazy" class="{if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}"/>
@@ -14,7 +14,7 @@
 	</div><div class="shadow"></div>
 	<div class="details">
 		<div class="titre">
-			<a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a>
+			<a href="{video_link($video)}" title="{display_clean($video.title)}">{display_clean($video.title|truncate:50)}</a>
 		</div>
 		{if config('enable_hide_uploader_name') != 'yes'}
 		<div class="auteur">
