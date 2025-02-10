@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"261",
+  "revision":"264",
   "status":"dev",
   "detail":[
     {
@@ -128,6 +128,7 @@
         ,"Fix user deletion"
         ,"Fix HLS video deletion"
         ,"Fix email tester default variables"
+        ,"Fix thumbs regeneration"
       ]
     },
     {
@@ -261,6 +262,7 @@
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
         ,"Update user level permissions storage"
+        ,"Update countries list <i>(#517)</i>"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -279,6 +281,7 @@
       "title": "Conversion",
       "description": [
         "Refactor log system"
+        ,"Implement thumb background color option"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -286,6 +289,7 @@
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
+        ,"Fix video thumbs generation ratio other than 16/9"
       ]
     },
     {
@@ -343,8 +347,8 @@
     {
       "title": "Translations",
       "description": [
-        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
-        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
+        ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
         ,"Fix missing translation"
       ]
     },

@@ -481,7 +481,8 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'base_url',
         'video_nsfw_check_model',
-        'allow_tag_space'
+        'allow_tag_space',
+        'thumb_background_color'
     ];
 
     foreach ($opt_list as $optl) {

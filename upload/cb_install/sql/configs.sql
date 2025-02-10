@@ -317,6 +317,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_collection_link_sharing', 'yes'),
     (NULL, 'enable_collection_internal_sharing', 'yes'),
     (NULL, 'base_url', ''),
+    (NULL, 'thumb_background_color', '#000000'),
     (NULL, 'allow_tag_space', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES

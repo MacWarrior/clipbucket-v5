@@ -1485,5 +1485,6 @@ VALUES ('admin_setting'),
        ('general_permission'),
        ('website_base_url'),
        ('website_base_url_hint'),
+       ('option_thumb_background_color'),
        ('allow_tag_space'),
        ('use_tab_tag');
