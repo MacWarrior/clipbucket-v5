@@ -710,9 +710,10 @@ class Upload
         if (isset($default['datecreated'])) {
             $date_recorded = $default['datecreated'];
         }
+        $fields = [];
 
-        return [
-            'country'       => [
+        if (config('enable_country_video_field') == 'yes') {
+            $fields['country'] = [
                 'title'         => lang('country'),
                 'type'          => 'dropdown',
                 'name'          => 'country',
@@ -722,8 +723,10 @@ class Upload
                 'db_field'      => 'country',
                 'required'      => 'no',
                 'default_value' => ''
-            ],
-            'location'      => [
+            ];
+        }
+        if (config('enable_location_video_field') == 'yes') {
+            $fields['location'] =  [
                 'title'         => lang('location'),
                 'type'          => 'textfield',
                 'name'          => 'location',
@@ -733,8 +736,10 @@ class Upload
                 'db_field'      => 'location',
                 'required'      => 'no',
                 'default_value' => ''
-            ],
-            'date_recorded' => [
+            ];
+        }
+        if (config('enable_recorded_date_video_field') == 'yes') {
+            $fields['date_recorded'] = [
                 'title'             => 'Date Recorded',
                 'type'              => 'textfield',
                 'name'              => 'datecreated',
@@ -748,8 +753,9 @@ class Upload
                 'use_func_val'      => true,
                 'validate_function' => 'datecreated',
                 'hint_2'            => config('date_format')
-            ]
-        ];
+            ];
+        }
+        return $fields;
     }
 
     /**

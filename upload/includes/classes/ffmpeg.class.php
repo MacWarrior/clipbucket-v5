@@ -738,7 +738,15 @@ class FFMpeg
 
     public static function extractVideoThumbnail(array $params): array
     {
-        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $params['dimension'] . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+        $size = '';
+        if( $params['size_tag'] != 'original' ){
+            $color = self::convertHexToFFmpeg(config('thumb_background_color'));
+            $width = $params['width'];
+            $height = $params['height'];
+            $size .= '-vf "scale=\'if(gt(a,' . $width . '/' . $height . '),' . $width . ',-1)\':\'if(gt(a,' . $width . '/' . $height . '),-1,' . $height . ')\',pad=' . $width . ':' . $height . ':(' . $width . '-iw)/2:(' . $height . '-ih)/2:' . $color . '"';
+        }
+        $command = config('ffmpegpath') . ' -ss ' . $params['timecode'] . ' -i ' . $params['input_path'] . ' -pix_fmt yuvj422p -an -r 1 ' . $size . ' -y -f image2 -vframes 1 ' . $params['output_path'] . ' 2>&1';
+
         return [
             'command' => $command
             ,'output' => shell_exec($command)
@@ -753,26 +761,13 @@ class FFMpeg
     public function generateThumbs($array)
     {
         $duration = $array['duration'];
-        $dim = $array['dim'];
+        $size_tag = $array['size_tag'];
         $num = $array['num'];
 
-        $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$dim.'...');
+        $this->log->writeLine(date('Y-m-d H:i:s').' - Generating '.$size_tag.'...');
 
         if ($num > $duration) {
             $num = (int)$duration;
-        }
-
-        if (!empty($array['size_tag'])) {
-            $size_tag = $array['size_tag'];
-        }
-
-        if (!empty($size_tag)) {
-            $size_tag = $size_tag . '-';
-        }
-
-        $dimension = '';
-        if ($dim != 'original') {
-            $dimension = ' -s ' . $dim . ' ';
         }
 
         $thumb_dir = DirPath::get('thumbs') . $this->file_directory;
@@ -788,7 +783,7 @@ class FFMpeg
 
             for ($count = 1; $count <= $num; $count++) {
                 $thumb_file_number = str_pad((string)$count, 4, '0', STR_PAD_LEFT);
-                $file_name = $this->file_name . '-' . $size_tag . $thumb_file_number . '.' . $extension;
+                $file_name = $this->file_name . '-' . $size_tag . '-' . $thumb_file_number . '.' . $extension;
                 $file_path = $thumb_dir . $file_name;
                 $time_sec = (int)($division * $count);
 
@@ -797,7 +792,9 @@ class FFMpeg
                 $return = self::extractVideoThumbnail([
                     'timecode' => $time_sec
                     ,'input_path' => $this->input_file
-                    ,'dimension' => $dimension
+                    ,'size_tag' => $array['size_tag']
+                    ,'width' => $array['width']
+                    ,'height' => $array['height']
                     ,'output_path' => $file_path
                 ]);
 
@@ -807,7 +804,7 @@ class FFMpeg
                 }
 
                 if (file_exists($file_path)) {
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dim, $thumb_file_number, $extension, VERSION, 'auto']);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $size_tag, $thumb_file_number, $extension, VERSION, 'auto']);
                 } else {
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }
@@ -1042,9 +1039,11 @@ class FFMpeg
             $width_setting = $thumbs_size[0];
 
             if ($key == 'original') {
-                $thumbs_settings['dim'] = $thumbs_settings['size_tag'] = $key;
+                $thumbs_settings['size_tag'] = $key;
             } else {
-                $thumbs_settings['dim'] = $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
+                $thumbs_settings['size_tag'] = $width_setting . 'x' . $height_setting;
+                $thumbs_settings['width'] = $width_setting;
+                $thumbs_settings['height'] = $height_setting;
             }
 
             $this->generateThumbs($thumbs_settings);
@@ -1068,6 +1067,15 @@ class FFMpeg
             return 'video/mp2t';
         }
         return '';
+    }
+
+    public static function convertHexToFFmpeg(string $hex_color): string
+    {
+        $hex_color = ltrim($hex_color, '#');
+        if (!preg_match('/^[a-fA-F0-9]{6}$/', $hex_color)) {
+            return '0x000000';
+        }
+        return '0x' . strtoupper($hex_color);
     }
 
 }
