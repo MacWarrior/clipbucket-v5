@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"262",
+  "revision":"263",
   "status":"dev",
   "detail":[
     {
@@ -344,8 +344,8 @@
     {
       "title": "Translations",
       "description": [
-        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
-        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
+        ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
         ,"Fix missing translation"
       ]
     },
