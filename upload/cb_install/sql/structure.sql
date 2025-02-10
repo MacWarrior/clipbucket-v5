@@ -134,7 +134,6 @@ CREATE TABLE `{tbl_prefix}counters` (
 CREATE TABLE `{tbl_prefix}countries` (
   `country_id` int(80) NOT NULL,
   `iso2` char(2) NOT NULL,
-  `name` varchar(80) NOT NULL,
   `name_en` varchar(80) NOT NULL,
   `iso3` char(3) DEFAULT NULL,
   `numcode` smallint(6) DEFAULT NULL
