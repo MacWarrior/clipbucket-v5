@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"264",
+  "revision":"265",
   "status":"dev",
   "detail":[
     {
@@ -350,6 +350,7 @@
         "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
         ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
         ,"Fix missing translation"
+        ,"Fix translation"
       ]
     },
     {
