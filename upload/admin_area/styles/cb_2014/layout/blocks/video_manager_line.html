@@ -2,7 +2,6 @@
     <td>
         <input name="check_video[]" type="checkbox" id="check_video" value="{$video.videoid}"/>
     </td>
-    <td>{$video.videoid}</td>
     <td>
         <div class="row">
             {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
@@ -13,21 +12,21 @@
             <div class="col-md-2" style="text-align:center;">
                 <img src="{$img_url}" id="thumbs_{$video.videoid}" alt="video_thumb" style="max-height:80px; max-width:100%;"/>
             </div>
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <a href="edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
                     {display_clean($video.title|truncate:80)}
                 </a>
                 {if $video.duration>1}({$video.duration|SetTime}){/if}<br/>
                 <span>
-                            <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
-                        </span>
+                    <strong>{$video.date_added|niceTime}</strong> | {lang code='views'} : <strong>{$video.views|number_format}</strong>
+                </span>
                 <div class="labels">
-                            <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
-                                {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
-                            </span>
+                    <span class="label {if $video.active=='yes'}label-success{else}label-danger{/if}">
+                        {if $video.active=='yes'}{lang code='active'}{else}{lang code='inactive'}{/if}
+                    </span>
                     <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-                                {lang(strtolower($video.status))}
-                            </span>
+                        {lang(strtolower($video.status))}
+                    </span>
                     {if $video.featured=='yes'}
                         <span class="label label-info">{lang code='featured'}</span>
                     {/if}
@@ -60,14 +59,6 @@
                         <span class="label label-danger">{lang('flagged')}</span>
                     {/if}
 
-                    {if $video.status|lower == 'processing'}
-                        <div class="progress">
-                            <div class="progress-bar progress-bar-striped" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%">
-                                {$video.convert_percent}%
-                            </div>
-                        </div>
-                    {/if}
-
                     <div class="clearfix"></div>
                     {$catString = {$video.category_names}}
                     {$catString = strip_tags($catString)}
@@ -80,20 +71,31 @@
                     {$finalItems = array_slice($toArray, 0, 4)}
                     {$vcategories = implode(', ',$finalItems)}
                     <span>
-                                <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
-                            </span>
+                        <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
+                    </span>
                 </div>
             </div>
-            <div class="col-md-2">
-                {if $video.userid != $anonymous_id}
-                    <a href="view_user.php?uid={$video.userid}">{display_clean($video.user_username)}</a>
-                {else}
-                    {display_clean(lang($video.user_username))}
-                {/if}
+
+            {if $video.status|lower == 'processing' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')}
+            <div class="col-md-4">
+                <br/>
+                {lang code='ongoing_conversion'}<br/>
+                <div class="progress" style="margin-bottom:0;">
+                    <div class="progress-bar progress-bar-striped animate" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%;">
+                        {$video.convert_percent}%
+                    </div>
+                </div>
             </div>
+            {/if}
         </div>
     </td>
     <td>
+        {if $video.userid != $anonymous_id}
+            {$user = "<a href='view_user.php?uid={$video.userid}'>{display_clean($video.user_username)}</a>"}
+        {else}
+            {$user = display_clean(lang($video.user_username))}
+        {/if}
+        {lang('uploaded_by_x', $user)}<br/><br/>
         <div class="dropdown">
             <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
                 Actions <i class="caret"></i>

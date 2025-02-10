@@ -20,10 +20,23 @@ class MWIP extends \Migration
         $sql = 'UPDATE `' . tbl('video') . '` SET `convert_percent` = 100 WHERE `status` = \'Successful\';';
         self::query($sql);
 
+        self::generateTranslation('uploaded_by_x', [
+            'fr'=>'Téléversé par by %s',
+            'en'=>'Uploaded by %s'
+        ]);
+
+        self::generateTranslation('ongoing_conversion', [
+            'fr'=>'Conversion en cours :',
+            'en'=>'Ongoing conversion :'
+        ]);
+
+
+
         /* Update revision IN :
          *
-         * video.class.php : L.83 ; L.1026
-         * video_convert.php : L.133
+         * video.class.php : L.83 ; L.1038
+         * video_convert.php : L.131
+         * video_manager_line.html : L.79
          */
     }
 }

@@ -22,15 +22,15 @@
     </div>
     <table class="table table-bordered table-striped manageUsersTable marginTop">
         <tr>
-            <td>
-                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/></td>
-            <td>VID</td>
+            <td style="width:50px;">
+                <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
+            </td>
             <td>Videos Details</td>
-            <td>&nbsp;</td>
+            <td style="width:200px;">&nbsp;</td>
         </tr>
        {foreach from=$videos item=video}
            {include file="$style_dir/blocks/video_manager_line.html"}
-        {/foreach}
+       {/foreach}
     </table>
     <div class="btn-group marginBotoomLarge marginTopLarge paddingBotoomLarge paddingTopLarge">
         <input class="btn btn-primary btn-xs button" type="submit" name="activate_selected" value="{lang code='activate'}"/>
