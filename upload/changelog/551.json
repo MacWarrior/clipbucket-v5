@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"263",
+  "revision":"264",
   "status":"dev",
   "detail":[
     {
@@ -128,6 +128,7 @@
         ,"Fix user deletion"
         ,"Fix HLS video deletion"
         ,"Fix email tester default variables"
+        ,"Fix thumbs regeneration"
       ]
     },
     {
@@ -280,6 +281,7 @@
       "title": "Conversion",
       "description": [
         "Refactor log system"
+        ,"Implement thumb background color option"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -287,6 +289,7 @@
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
+        ,"Fix video thumbs generation ratio other than 16/9"
       ]
     },
     {
