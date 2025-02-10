@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"264",
+  "revision":"266",
   "status":"dev",
   "detail":[
     {
@@ -35,6 +35,7 @@
         ,"Implement related photos quantity limit"
         ,"Implement AI NSFW check"
         ,"Implement future PHP version check"
+        ,"Implement options to disable video Date recorded & location"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -350,6 +351,7 @@
         "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
         ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
         ,"Fix missing translation"
+        ,"Fix translation"
       ]
     },
     {
