@@ -139,6 +139,9 @@ if (isset($_POST['update'])) {
         , 'video_enable_nsfw_check'
         , 'enable_collection_internal_sharing'
         , 'enable_collection_link_sharing'
+        , 'enable_country_video_field'
+        , 'enable_location_video_field'
+        , 'enable_recorded_date_video_field'
     ];
 
     $config_booleans_to_refactor = [
@@ -479,7 +482,10 @@ if (isset($_POST['update'])) {
         'photo_nsfw_check_model',
         'video_nsfw_check_model',
         'base_url',
-        'thumb_background_color'
+        'thumb_background_color',
+        'enable_country_video_field',
+        'enable_location_video_field',
+        'enable_recorded_date_video_field'
     ];
 
     foreach ($opt_list as $optl) {

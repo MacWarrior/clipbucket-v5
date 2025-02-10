@@ -317,7 +317,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_collection_link_sharing', 'yes'),
     (NULL, 'enable_collection_internal_sharing', 'yes'),
     (NULL, 'base_url', ''),
-    (NULL, 'thumb_background_color', '#000000');
+    (NULL, 'thumb_background_color', '#000000'),
+    (NULL, 'enable_country_video_field', 'yes'),
+    (NULL, 'enable_location_video_field', 'yes'),
+    (NULL, 'enable_recorded_date_video_field', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
