@@ -380,128 +380,124 @@ class AdminTool
             $this->tasks = [];
 
             //LOGS
-            $logs = rglob(DirPath::get('logs') . '*.log');
-            $insert_values = [];
+            $logs = new GlobIterator(DirPath::get('logs') . '*.log');
             foreach ($logs as $log) {
                 $vid_file_name = basename($log, '.log');
                 $insert_values[] = [
                     'type'  => 'log',
-                    'data'  => $log,
+                    'data'  => $log->getPathname(),
                     'video' => $vid_file_name
                 ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
             }
             unset($logs);
 
             //VIDEO MP4
-            $videos_mp4 = rglob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
-            $insert_values = [];
+            $videos_mp4 = new GlobIterator(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.mp4');
+
             foreach ($videos_mp4 as $video) {
                 $vid_file_name = explode('-', basename($video, '.mp4'))[0];
-                $insert_values[] = [
+                $insert_values =[
                     'type'  => 'video_mp4',
-                    'data'  => $video,
+                    'data'  => $video->getPathname(),
                     'video' => $vid_file_name
                 ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
             }
             unset($videos_mp4);
 
             //photos
-            $photos = rglob(DirPath::get('photos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
-            $insert_values = [];
+            $photos = new GlobIterator(DirPath::get('photos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*');
             foreach ($photos as $photo) {
                 $pic_file_name = explode('_', pathinfo($photo)['filename'])[0];
-                $insert_values[] = [
+                $insert_values = [
                     'type'  => 'photo',
-                    'data'  => $photo,
+                    'data'  => $photo->getPathname(),
                     'photo' => $pic_file_name
                 ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
             }
             unset($photos);
 
             //VIDEO HLS
-            $videos_hls = glob(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR);
-            $insert_values = [];
+            $videos_hls = new GlobIterator(DirPath::get('videos') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*', FilesystemIterator::KEY_AS_FILENAME);
             foreach ($videos_hls as $video) {
-                $vid_file_name = basename($video);
-                $insert_values[] = [
-                    'type'  => 'video_hls',
-                    'data'  => $video,
-                    'video' => $vid_file_name
-                ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if ($video->isDir()) {
+                    $vid_file_name = basename($video);
+                    $insert_values = [
+                        'type'  => 'video_hls',
+                        'data'  => $video->getPathname(),
+                        'video' => $vid_file_name
+                    ];
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                        $this->insertTaskData([$insert_values]);
+                    } else {
+                        $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    }
+                }
             }
             unset($videos_hls);
 
             //THUMBS
-            $thumbs = rglob(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
-            $insert_values = [];
+            $thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
             foreach ($thumbs as $thumb) {
                 $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
-                $insert_values[] = [
+                $insert_values = [
                     'type'  => 'thumb',
-                    'data'  => $thumb,
+                    'data'  => $thumb->getPathname(),
                     'video' => $vid_file_name
                 ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
             }
             unset($thumbs);
 
             //SUBTITLES
-            $subtitles = rglob(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
-            $insert_values = [];
+            $subtitles = new GlobIterator(DirPath::get('subtitles') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.srt');
             foreach ($subtitles as $subtitle) {
                 $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
-                $insert_values[] = [
+                $insert_values = [
                     'type'  => 'subtitle',
-                    'data'  => $subtitle,
+                    'data'  => $subtitle->getPathname(),
                     'video' => $vid_file_name
                 ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
             }
             unset($subtitles);
 
             //USERFEED
-            $userfeeds = rglob(DirPath::get('userfeeds') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
-            $insert_values = [];
+            $userfeeds = new GlobIterator(DirPath::get('userfeeds') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.feed');
             foreach ($userfeeds as $userfeed) {
                 $user_id = basename(dirname($userfeed));
-                $insert_values[] = [
+                $insert_values = [
                     'type' => 'userfeeds',
-                    'data' => $userfeed,
+                    'data' => $userfeed->getPathname(),
                     'user' => $user_id
                 ];
-            }
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
-                $this->insertTaskData($insert_values);
-            } else {
-                $this->tasks = array_merge($this->tasks, $insert_values);
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
             }
             unset($userfeeds);
         }
@@ -1081,7 +1077,7 @@ class AdminTool
      */
     public function getTaskData($step): array
     {
-        $results = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('tools_tasks') . ' WHERE id_histo =' .mysql_clean($this->id_histo) . ' AND loop_index > ' . mysql_clean($this->tasks_index) . ' LIMIT ' . $step);
+        $results = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl('tools_tasks') . ' WHERE id_histo =' .mysql_clean($this->id_histo) . ' AND loop_index >= ' . mysql_clean($this->tasks_index) . ' LIMIT ' . $step);
         $data = [];
         foreach (array_column($results, 'data') as $result) {
             $data[] = json_decode($result, true);
