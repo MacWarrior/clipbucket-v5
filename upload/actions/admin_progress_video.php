@@ -14,17 +14,12 @@ foreach ($videos as $video) {
         $all_complete = false;
     }
     $data = ['videoid' => $video['videoid']];
-    if ($_POST['output'] == 'html') {
+    if ($_POST['output'] == 'line') {
         $data['html'] = getTemplate('blocks/video_manager_line.html');
-    } elseif ($_POST['output'] == 'percent') {
-        $data['percent'] = $video['convert_percent'];
+    } elseif ($_POST['output'] == 'edit') {
+        assign('data', $video);
+        $data['html'] = getTemplate('blocks/video_player.html');
     }
     $return['videos'][] = $data;
-}
-if ($all_complete && $_POST['output'] == 'percent') {
-    ob_start();
-    show_player(['vdetails'=> $video]);
-    $html = ob_get_clean();
-    $return['html'] = $html;
 }
 echo json_encode(['data'=>$return, 'all_complete'=>$all_complete]);

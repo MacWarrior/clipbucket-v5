@@ -7,7 +7,7 @@ $(function () {
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,
-                    output: 'html'
+                    output: 'line'
                 },
                 success: function (response) {
                     var data = response.data.videos;

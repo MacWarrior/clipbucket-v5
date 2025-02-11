@@ -535,14 +535,7 @@
                     </ul>
                     <div class="tab-content">
                         <div id="videoplayer" class="tab-pane active">
-                            {if $data.status|lower == 'successful'}
-                                {show_player vdetails=$data}
-                            {else}
-                                <div class="thumb-holder">
-                                    <img class="img-responsive" src="{getThumb vdetails=$data size=632x395}"/>
-                                    {ANCHOR place='in_video_thumb' data=$data}
-                                </div>
-                            {/if}
+                            {include file="$style_dir/blocks/video_player.html"}
                         </div>
                         <div id="thumbnails" class="tab-pane">
                             {include file="$style_dir/blocks/thumb_mini_list.html"}

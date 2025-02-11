@@ -66,6 +66,7 @@ class Video
             ,'thumbs_version'
             ,'re_conv_status'
             ,'subscription_email'
+            ,'convert_percent'
         ];
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
