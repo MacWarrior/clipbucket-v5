@@ -371,10 +371,11 @@
 
                             <div class="table">
                                 {$field.class='form-control'}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                <label><strong>{$field.title|truncate:80}</strong></label>
                                 {if $field.hint_1}
-                                    {$field.hint_1}<br/>
+                                    {$field.hint_1}
                                 {/if}
+                                <br>
                                 {$formObj->createField($field)}
                                 {if $field.id|strstr:'tags'}
                                     <ul id="list_{$field.id}"></ul>
