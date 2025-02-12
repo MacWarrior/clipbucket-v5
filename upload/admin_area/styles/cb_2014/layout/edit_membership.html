@@ -83,7 +83,7 @@
                                         </div>
 
                                         {if config('enable_storage_history')=='no'}
-                                            <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{htmlspecialchars(lang('must_activate_storage_history'))}">
+                                            <span class="fa fa-question-circle tips" title="{lang('must_activate_storage_history')}"></span>
                                         {/if}
                                     </td>
                                 </tr>
@@ -101,7 +101,7 @@
                                                 </div>
                                             </div>
                                             {if config('enable_storage_history')=='no'}
-                                                <img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{htmlspecialchars(lang('must_activate_storage_history'))}">
+                                                <span class="fa fa-question-circle tips" title="{lang('must_activate_storage_history')}"></span>
                                             {/if}
                                         </div>
                                     </td>
@@ -112,7 +112,7 @@
                                         <div class="row">
                                             <div class="col-md-11">
                                                 <div class="input-group">
-                                                    <select class="form-control" name="id_currency" id="currency" {if !empty($membership.id_user_membership)} disabled="disabled" {/if}>
+                                                    <select class="form-control" name="id_currency" id="currency"{if !empty($membership.id_user_membership)} disabled="disabled"{/if}>
                                                         <option>&nbsp;</option>
                                                         {foreach from=$currencies item=currency}
                                                             <option value="{$currency.id_currency}" {if $membership.id_currency == $currency.id_currency}selected{/if} >
@@ -139,7 +139,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                    <td class="first"><label for="storage_price_per_go">{lang('allowed_emails')}<img src="{$imageurl}/help.png" alt="Tips" class="tipsy_tip" title="{lang('allowed_emails_tips')}"/></label></td>
+                                    <td class="first"><label for="storage_price_per_go">{lang('allowed_emails')} <span class="fa fa-question-circle tips" title="{lang('allowed_emails_tips')}"></span></label></td>
                                     <td>
                                         <div class="row">
                                             <div class="col-md-11">
