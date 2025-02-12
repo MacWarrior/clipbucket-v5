@@ -1517,17 +1517,15 @@ class CBvideo extends CBCategory
                 //Remove categories
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
-                //Removing video from Playlist
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
+                Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
+                Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
 
                 //Removing video Comments
                 $params = [];
                 $params['type'] = 'v';
                 $params['type_id'] = $vdetails['videoid'];
                 Comments::delete($params);
-
-                //Removing video From Favorites
-                Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
 
                 //Finally Removing Database entry of video
                 Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
