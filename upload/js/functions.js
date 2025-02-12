@@ -984,22 +984,40 @@ function age_disclaimer(accept) {
     }
 }
 
-function video_progress(url, ids, success_function, ) {
-    $.post({
-        url: url,
-        dataType: 'json',
-        data: {
-            ids: ids
-        },
-        success: function (response) {
-            var data = JSON.parse(response.data);
-            data.forEach(function (video) {
-                $('#progress-bar-' + video.id).attr('aria-valuenow',video.convert_percent).width(video.convert_percent + '%');
-                $('#pourcent-' + video.id).html(video.convert_percent);
-                if (video.status == 'Successful') {
-                    success_function(video.id);
+function progressVideoCheck(ids_to_check_progress, displayType) {
+    if (ids_to_check_progress && ids_to_check_progress.length > 0) {
+        intervalId = setInterval(function () {
+            //TODO gérer new-slider
+            $.post({
+                url: '/actions/progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: displayType
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        if (video.status.toLowerCase() == 'processing') {
+                            //update %
+                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                            //if process don't exist : get thumb + process div
+                            if (process_div.length == 0) {
+                                $('.item-video[data-id="'+video.videoid+'"]').html(video.html);
+                            } else {
+                                process_div.find('span').html(video.percent + '%');
+                            }
+                        } else {
+                            $('.item-video[data-id="'+video.videoid+'"]').html(video.html)
+                        }
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
                 }
-            });
-        }
-    });
+            })
+        }, 60000);
+    }
 }
