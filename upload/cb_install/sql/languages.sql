@@ -1484,4 +1484,8 @@ VALUES ('admin_setting'),
        ('administration_permission'),
        ('general_permission'),
        ('website_base_url'),
-       ('website_base_url_hint');
+       ('website_base_url_hint'),
+       ('option_thumb_background_color'),
+       ('enable_country_video_field'),
+       ('enable_location_video_field'),
+       ('enable_recorded_date_video_field');

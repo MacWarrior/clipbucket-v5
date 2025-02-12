@@ -129,11 +129,13 @@
                                 <i class="glyphicon glyphicon-eye-open"></i> {lang code='vdo_share_opt'}
                             </a>
                         </li>
-                        <li>
-                            <a data-toggle="tab" href="#datelocation">
-                                <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
-                            </a>
-                        </li>
+                        {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
+                            <li>
+                                <a data-toggle="tab" href="#datelocation">
+                                    <i class="glyphicon glyphicon-globe"></i> {lang code='date_recorded_location'}
+                                </a>
+                            </li>
+                        {/if}
                     </ul>
                     <div class="tab-content">
                         <div id="videodetail" class="tab-pane active">
@@ -280,27 +282,29 @@
                             </div>
                             {/foreach}
                         </div>
-                        <div id="datelocation" class="tab-pane">
-                            {foreach from=$video_datelocation item=field}
-                            <div class="table">
-                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                    {if empty($field.class)}
-                                        {$field.class = 'form-control'}
-                                    {else}
-                                        {$field.class = $field.class|cat:' form-control'}
+                        {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
+                            <div id="datelocation" class="tab-pane">
+                                {foreach from=$video_datelocation item=field}
+                                <div class="table">
+                                    {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
+                                        {if empty($field.class)}
+                                            {$field.class = 'form-control'}
+                                        {else}
+                                            {$field.class = $field.class|cat:' form-control'}
+                                        {/if}
                                     {/if}
-                                {/if}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
-                                {if $field.hint_1}
-                                    {$field.hint_1}<br/>
-                                {/if}
-                                {$formObj->createField($field)}
-                                {if $field.hint_2}<br/>
-                                    {$field.hint_2}
-                                {/if}
+                                    <label><strong>{$field.title|truncate:80}</strong></label><br>
+                                    {if $field.hint_1}
+                                        {$field.hint_1}<br/>
+                                    {/if}
+                                    {$formObj->createField($field)}
+                                    {if $field.hint_2}<br/>
+                                        {$field.hint_2}
+                                    {/if}
+                                </div>
+                                {/foreach}
                             </div>
-                            {/foreach}
-                        </div>
+                        {/if}
                     </div>
                 </div>
                 <div class="tabbable paddingTop">
