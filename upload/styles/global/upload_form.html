@@ -50,24 +50,24 @@
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}
                         {if $field.type == 'radiobutton'}
-                    <div class="form-group">
-                            {$field.label_class='radio'}
-                            {$field.class=''}
-                            {$formObj->createField($field)}
-                    </div>
+                            <div class="form-group">
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            </div>
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
                         {elseif $field.id == 'tags_video'}
-                    <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                            <ul id="list_{$field.id}"></ul>
-                    </div>
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
+                                {$formObj->createField($field)}
+                                <ul id="list_{$field.id}"></ul>
+                            </div>
                         {elseif !$field.id|strstr:'tags'}
-                    <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                    </div>
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            </div>
                         {/if}
 
                     {/foreach}

@@ -376,6 +376,7 @@ class Upload
             $cat_array = explode(',', $default['category']);
         }
 
+        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
         $uploadFormRequiredFieldsArray = [
             /**
@@ -441,7 +442,7 @@ class Upload
                 'name'              => 'tags_video',
                 'id'                => 'tags_video',
                 'value'             => genTags($default['tags_video']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ]
@@ -454,7 +455,7 @@ class Upload
                 'name'              => 'tags_genre',
                 'id'                => 'tags_genre',
                 'value'             => genTags($default['tags_genre']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
@@ -467,7 +468,7 @@ class Upload
                 'name'              => 'tags_actors',
                 'id'                => 'tags_actors',
                 'value'             => genTags($default['tags_actors']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
@@ -480,7 +481,7 @@ class Upload
                 'name'              => 'tags_producer',
                 'id'                => 'tags_producer',
                 'value'             => genTags($default['tags_producer']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
@@ -493,7 +494,7 @@ class Upload
                 'name'              => 'tags_executive_producer',
                 'id'                => 'tags_executive_producer',
                 'value'             => genTags($default['tags_executive_producer']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
@@ -506,7 +507,7 @@ class Upload
                 'name'              => 'tags_director',
                 'id'                => 'tags_director',
                 'value'             => genTags($default['tags_director']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
@@ -519,7 +520,7 @@ class Upload
                 'name'              => 'tags_crew',
                 'id'                => 'tags_crew',
                 'value'             => genTags($default['tags_crew']),
-                'hint_1'            => '',
+                'hint_1'            => $hint_tags,
                 'required'          => 'no',
                 'validate_function' => 'genTags'
             ];
