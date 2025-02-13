@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"266",
+  "revision":"267",
   "status":"dev",
   "detail":[
     {
@@ -130,6 +130,7 @@
         ,"Fix HLS video deletion"
         ,"Fix email tester default variables"
         ,"Fix thumbs regeneration"
+        ,"Fix video deletion"
       ]
     },
     {
@@ -309,6 +310,7 @@
         ,"Add SSE function check"
         ,"Add Nginx check"
         ,"Add baseurl config"
+        ,"Add PHP 8.4 to Debian & Ubuntu install script"
         ,"Stop migration on first error if occurs"
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
