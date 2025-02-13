@@ -77,6 +77,7 @@
 
     .plans-main-container .plans-container .bottom  {
         padding: 2rem;
+        flex-grow: 1;
     }
 
     .plans-main-container .plans-container .bottom .feature-title {
@@ -90,11 +91,18 @@
         font-size: 0.9em;
     }
 
+    .plans-main-container .plans-container  .bottom_and_quota {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
     .plans-main-container .plans-container  .quota {
         display: flex;
         background: rgba(0,0,0,0.07);
         padding:1rem;
         border-top:1px solid rgba(0,0,0,0.2);
+        align-items: center;
     }
 
     .plans-main-container .plans-container .quota .left{
@@ -171,6 +179,7 @@
                 width: calc(100% - 260px - 2rem);
                 border: 1px solid rgba(0, 0, 0, 0.2);
                 border-radius: 9px;
+                height: auto;
             }
 
             .plans-main-container:has(.plans-container:nth-child(4)) .plans-container:has(.radio:checked) .bottom_and_quota .quota {
@@ -208,11 +217,11 @@
         <div class="left-detail"></div>
     <div class="plans-main-container-flex">
         {foreach from=$available_memberships item=membership}
-        <label for="radio_1" class="plans-container">
+        <label for="radio_{$membership.id_membership}" class="plans-container">
 
             <div class="top">
                 <div class="name">
-                    <input class="radio" id="radio_1" type="radio" name="subscribe_option" value="" checked="checked">
+                    <input class="radio" id="radio_{$membership.id_membership}" type="radio" name="subscribe_option" value="" checked="checked">
                     {$membership.user_level_name}</div>
                 <div class="price-tag">
                     <div class="price">
@@ -230,7 +239,7 @@
             <div class="bottom_and_quota">
                 <div class="bottom">
                     <div class="feature-title"> {lang('plans_features_title')} </div>
-                    <div class="description" >{nl2br($membership.description)}{nl2br($membership.description)}{nl2br($membership.description)}</div>
+                    <div class="description" >{nl2br($membership.description)}</div>
                 </div>
                 <div class="quota">
                     <div class="left">
@@ -263,285 +272,6 @@
 
         </label>
         {/foreach}
-
-
-        <label for="radio_2"  class="plans-container">
-
-            <div class="top">
-                <div class="name">
-                    <input class="radio" id="radio_2" type="radio" name="subscribe_option" value="" >
-                    {$membership.user_level_name}</div>
-                <div class="price-tag">
-                    <div class="price">
-                        {if $membership.base_price != 0}
-                        {$membership.base_price} {$membership.symbol}
-                        {else}
-                        {lang('free')}
-                        {/if}
-                    </div>
-                    <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-            <div class="bottom_and_quota">
-                <div class="bottom">
-                    <div class="feature-title"> {lang('plans_features_title')} </div>
-                    <div class="description" >{nl2br($membership.description)}{nl2br($membership.description)}{nl2br($membership.description)}</div>
-                </div>
-                <div class="quota">
-                    <div class="left">
-                        <i class="fa fa-hdd-o"></i>
-                    </div>
-                    <div class="right">
-
-                        <div class="infos">
-                            <span>{lang('storage_quota')} :</span>
-                            {if $membership.storage_quota_included != 0}
-                            {$membership.storage_quota_included} {lang('gb')}
-                            {else}
-                            {lang('none')}
-                            {/if}
-
-                        </div>
-
-                        <div class="infos">
-                            <span>{lang('storage_price')} :</span>
-                            {if $membership.storage_price_per_go != 0}
-                            {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
-                            {else}
-                            {lang('free')}
-                            {/if}
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-        </label>
-
-        <label for="radio_3"  class="plans-container">
-
-            <div class="top">
-                <div class="name">
-                    <input class="radio" id="radio_3"  type="radio" name="subscribe_option" value="" >
-                    {$membership.user_level_name}</div>
-                <div class="price-tag">
-                    <div class="price">
-                        {if $membership.base_price != 0}
-                        {$membership.base_price} {$membership.symbol}
-                        {else}
-                        {lang('free')}
-                        {/if}
-                    </div>
-                    <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-            <div class="bottom_and_quota">
-                <div class="bottom">
-                    <div class="feature-title"> {lang('plans_features_title')} </div>
-                    <div class="description" >{nl2br($membership.description)}{nl2br($membership.description)}{nl2br($membership.description)}</div>
-                </div>
-                <div class="quota">
-                    <div class="left">
-                        <i class="fa fa-hdd-o"></i>
-                    </div>
-                    <div class="right">
-
-                        <div class="infos">
-                            <span>{lang('storage_quota')} :</span>
-                            {if $membership.storage_quota_included != 0}
-                            {$membership.storage_quota_included} {lang('gb')}
-                            {else}
-                            {lang('none')}
-                            {/if}
-
-                        </div>
-
-                        <div class="infos">
-                            <span>{lang('storage_price')} :</span>
-                            {if $membership.storage_price_per_go != 0}
-                            {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
-                            {else}
-                            {lang('free')}
-                            {/if}
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-        </label>
-
-
-        <div class="plans-container">
-
-            <div class="top">
-                <div class="name">
-                    <input class="radio" type="radio" name="subscribe_option" value="" >
-                    {$membership.user_level_name}</div>
-                <div class="price-tag">
-                    <div class="price">
-                        {if $membership.base_price != 0}
-                        {$membership.base_price} {$membership.symbol}
-                        {else}
-                        {lang('free')}
-                        {/if}
-                    </div>
-                    <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-            <div class="bottom_and_quota">
-                <div class="bottom">
-                    <div class="feature-title"> {lang('plans_features_title')} </div>
-                    <div class="description" >{nl2br($membership.description)}{nl2br($membership.description)}{nl2br($membership.description)}</div>
-                </div>
-                <div class="quota">
-                    <div class="left">
-                        <i class="fa fa-hdd-o"></i>
-                    </div>
-                    <div class="right">
-
-                        <div class="infos">
-                            <span>{lang('storage_quota')} :</span>
-                            {if $membership.storage_quota_included != 0}
-                            {$membership.storage_quota_included} {lang('gb')}
-                            {else}
-                            {lang('none')}
-                            {/if}
-
-                        </div>
-
-                        <div class="infos">
-                            <span>{lang('storage_price')} :</span>
-                            {if $membership.storage_price_per_go != 0}
-                            {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
-                            {else}
-                            {lang('free')}
-                            {/if}
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-        </div>
-
-
-        <div class="plans-container">
-
-            <div class="top">
-                <div class="name">
-                    <input class="radio" type="radio" name="subscribe_option" value="" >
-                    {$membership.user_level_name}</div>
-                <div class="price-tag">
-                    <div class="price">
-                        {if $membership.base_price != 0}
-                        {$membership.base_price} {$membership.symbol}
-                        {else}
-                        {lang('free')}
-                        {/if}
-                    </div>
-                    <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-            <div class="bottom_and_quota">
-                <div class="bottom">
-                    <div class="feature-title"> {lang('plans_features_title')} </div>
-                    <div class="description" >{nl2br($membership.description)}{nl2br($membership.description)}{nl2br($membership.description)}</div>
-                </div>
-                <div class="quota">
-                    <div class="left">
-                        <i class="fa fa-hdd-o"></i>
-                    </div>
-                    <div class="right">
-
-                        <div class="infos">
-                            <span>{lang('storage_quota')} :</span>
-                            {if $membership.storage_quota_included != 0}
-                            {$membership.storage_quota_included} {lang('gb')}
-                            {else}
-                            {lang('none')}
-                            {/if}
-
-                        </div>
-
-                        <div class="infos">
-                            <span>{lang('storage_price')} :</span>
-                            {if $membership.storage_price_per_go != 0}
-                            {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
-                            {else}
-                            {lang('free')}
-                            {/if}
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-        </div>
-
-
-        <div class="plans-container">
-
-            <div class="top">
-                <div class="name">
-                    <input class="radio" type="radio" name="subscribe_option" value="" >
-                    {$membership.user_level_name}</div>
-                <div class="price-tag">
-                    <div class="price">
-                        {if $membership.base_price != 0}
-                        {$membership.base_price} {$membership.symbol}
-                        {else}
-                        {lang('free')}
-                        {/if}
-                    </div>
-                    <div class="frequence">{lang('frequency_'|cat:$membership.frequency)}</div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-            <div class="bottom_and_quota">
-                <div class="bottom">
-                    <div class="feature-title"> {lang('plans_features_title')} </div>
-                    <div class="description" >{nl2br($membership.description)}{nl2br($membership.description)}{nl2br($membership.description)}</div>
-                </div>
-                <div class="quota">
-                    <div class="left">
-                        <i class="fa fa-hdd-o"></i>
-                    </div>
-                    <div class="right">
-
-                        <div class="infos">
-                            <span>{lang('storage_quota')} :</span>
-                            {if $membership.storage_quota_included != 0}
-                            {$membership.storage_quota_included} {lang('gb')}
-                            {else}
-                            {lang('none')}
-                            {/if}
-
-                        </div>
-
-                        <div class="infos">
-                            <span>{lang('storage_price')} :</span>
-                            {if $membership.storage_price_per_go != 0}
-                            {$membership.storage_price_per_go} {$membership.symbol} {lang('per_gb')}
-                            {else}
-                            {lang('free')}
-                            {/if}
-                        </div>
-                    </div>
-                </div>
-                <button class="btn btn-default btn-primary btn_subscribe ">{lang('bouton_souscrire_abonnement')}</button>
-            </div>
-
-        </div>
 
     <!-- -->
 
