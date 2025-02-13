@@ -125,21 +125,23 @@ class Video
 
     private function getSQLFields($type = '', $prefix = false): array
     {
-        switch($type){
+        switch ($type) {
             case 'video':
             default:
                 $fields = $this->getFields();
+                $tablename = $this->getTableName();
                 break;
 
             case 'categories':
                 $fields = $this->getFieldsCategories();
+                $tablename = $this->getTableNameCategories();
                 break;
         }
 
-        return array_map(function($field) use ($prefix) {
-            $field_name = $this->getTableName() . '.' . $field;
-            if( $prefix ){
-                $field_name .= ' AS `'.$this->getTableName() . '.' . $field.'`';
+        return array_map(function ($field) use ($prefix, $tablename) {
+            $field_name = $tablename . '.' . $field;
+            if ($prefix) {
+                $field_name .= ' AS `' . $tablename . '.' . $field . '`';
             }
             return $field_name;
         }, $fields);
@@ -291,6 +293,8 @@ class Video
         $param_exist = $params['exist'] ?? false;
         $param_count = $params['count'] ?? false;
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
+        $param_public = $params['public'];
+        $param_join_user_profile = $params['join_user_profile'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'];
 
@@ -315,6 +319,9 @@ class Video
         }
         if( $param_status ){
             $conditions[] = $this->getTableName() . '.status = \'' . mysql_clean($param_status) . '\'';
+        }
+        if ($param_public !== null) {
+            $conditions[] = $this->getTableName() . '.broadcast ' . ($param_public ? '=' : '!=') . ' \'public\'';
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -647,7 +654,7 @@ class Video
     public function setDefaultPicture($video_id, string $poster, string $type = 'auto')
     {
         if (empty($poster)) {
-            e(lang('missing_param'));
+            e(lang('missing_params'));
             return;
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {

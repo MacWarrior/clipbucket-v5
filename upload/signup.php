@@ -31,6 +31,7 @@ if (isset($_POST['signup'])) {
         $signup_data['password'] = mysql_clean($signup_data['password']);
         $signup_data['cpassword'] = mysql_clean($signup_data['cpassword']);
         $signup_data['email'] = mysql_clean($signup_data['email']);
+        $signup_data['level'] = UserLevel::getDefaultId();
         $signup = userquery::getInstance()->signup_user($signup_data);
 
         // checking if user signup was successful
@@ -61,11 +62,7 @@ if (isset($_POST['login'])) {
     }
 
     if (userquery::getInstance()->login_user($username, $password, $remember)) {
-        if ($_COOKIE['pageredir']) {
-            redirect_to($_COOKIE['pageredir']);
-        } else {
-            redirect_to(cblink(['name' => 'my_account']));
-        }
+       User::redirectAfterLogin();
     }
 }
 

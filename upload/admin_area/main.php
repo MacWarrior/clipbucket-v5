@@ -142,6 +142,8 @@ if (isset($_POST['update'])) {
         , 'enable_country_video_field'
         , 'enable_location_video_field'
         , 'enable_recorded_date_video_field'
+        , 'enable_membership'
+        , 'enable_public_video_page'
     ];
 
     $config_booleans_to_refactor = [
@@ -485,7 +487,12 @@ if (isset($_POST['update'])) {
         'thumb_background_color',
         'enable_country_video_field',
         'enable_location_video_field',
-        'enable_recorded_date_video_field'
+        'enable_recorded_date_video_field',
+        'email_sender_name',
+        'number_featured_video',
+        'video_list_view_video_history',
+        'enable_membership',
+        'enable_public_video_page'
     ];
 
     foreach ($opt_list as $optl) {

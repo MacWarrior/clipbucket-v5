@@ -4390,8 +4390,6 @@ textarea#comment_box {
 }
 
 .navbar-default .navbar-toggle {
-  padding: 0;
-  margin: 0 0 0 16px;
   width: 70px;
   height: 34px;
   font-size: 16px;
@@ -6917,4 +6915,8 @@ textarea#comment_box {
     display: none;
   }
 
+}
+
+.newuser-links>li>a {
+  color:var(--color-02);
 }
