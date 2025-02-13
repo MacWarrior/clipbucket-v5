@@ -156,6 +156,15 @@ if( ClipBucket::getInstance()->show_page ){
         ,'limit' => 9
     ];
     $videos = Video::getInstance()->getAll($params);
+    $ids_to_check_progress = [];
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ) {
+        foreach ($videos as $video) {
+            if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                $ids_to_check_progress[] = $video['videoid'];
+            }
+        }
+    }
+    Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 
     assign('uservideos', $videos);
     $popular_users = User::getInstance()->getAll([

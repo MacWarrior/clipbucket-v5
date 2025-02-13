@@ -44,10 +44,18 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     $min_suffixe = in_dev() ? '' : '.min';
     ClipBucket::getInstance()->addJS(['pages/index/index' . $min_suffixe . '.js'  => 'admin']);
 
+    $ids_to_check_progress = [];
     if( config('home_display_recent_videos') == 'yes' && config('homepage_recent_videos_display') == 'slider' ){
         $params = Video::getInstance()->getFilterParams('most_recent', []);
         $params['limit'] = config('list_recent_videos');
         $recent_videos = Video::getInstance()->getAll($params);
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ) {
+            foreach ($recent_videos as $video) {
+                if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                    $ids_to_check_progress[] = $video['videoid'];
+                }
+            }
+        }
         assign('recent_videos', $recent_videos);
         if( empty($recent_videos) || count($recent_videos) < config('list_recent_videos') ) {
             $view_more = false;
@@ -60,6 +68,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
             }
         }
     }
+    Assign('ids_to_check_progress_recent', json_encode($ids_to_check_progress));
 
     if( config('home_display_featured_collections') == 'yes' ){
         $params = [
@@ -70,11 +79,20 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
         ];
         assign('featured_collections', Collection::getInstance()->getAll($params));
     }
-
+    $ids_to_check_progress = [];
     if( config('display_featured_video') == 'yes' ){
         $params = Video::getInstance()->getFilterParams('featured', []);
-        assign('featured_videos', Video::getInstance()->getAll($params));
+        $featured_videos = Video::getInstance()->getAll($params);
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ) {
+            foreach ($featured_videos as $video) {
+                if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                    $ids_to_check_progress[] = $video['videoid'];
+                }
+            }
+        }
+        assign('featured_videos', $featured_videos);
     }
+    Assign('ids_to_check_progress_featured', json_encode($ids_to_check_progress));
 
     template_files('index.html');
 }

@@ -63,7 +63,6 @@ switch ($mode) {
 
         $videos = get_videos($vid_array);
 
-        Assign('uservids', $videos);
 
         //Collecting Data for Pagination
         $vid_array['count_only'] = true;
@@ -72,7 +71,6 @@ switch ($mode) {
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
         //Pagination
-        $pages->paginate($total_pages, $page);
 
         subtitle(lang("vdo_manage_vdeos"));
         break;
@@ -97,18 +95,29 @@ switch ($mode) {
 
         $videos = $cbvid->action->get_favorites($params);
 
-        Assign('uservids', $videos);
 
         //Collecting Data for Pagination
         $params['count_only'] = 'yes';
         $favorites_count = $cbvid->action->get_favorites($params);
         $total_pages = count_pages($favorites_count, config('videos_list_per_page'));
         //Pagination
-        $pages->paginate($total_pages, $page);
 
         subtitle(lang('com_manage_fav'));
         break;
 }
+
+$ids_to_check_progress = [];
+if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ){
+    foreach ($videos as $video) {
+        if (in_array($video['status'], ['Processing', 'Waiting'])) {
+            $ids_to_check_progress[] = $video['videoid'];
+        }
+    }
+}
+Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
+Assign('uservids', $videos);
+$pages->paginate($total_pages, $page);
+
 
 template_files('manage_videos.html');
 display_it();

@@ -987,7 +987,6 @@ function age_disclaimer(accept) {
 function progressVideoCheck(ids_to_check_progress, displayType) {
     if (ids_to_check_progress && ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
-            //TODO gérer new-slider
             $.post({
                 url: '/actions/progress_video.php',
                 dataType: 'json',

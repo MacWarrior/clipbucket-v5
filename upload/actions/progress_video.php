@@ -7,6 +7,7 @@ $videos = Video::getInstance()->getAll([
     'videoids' => $_POST['ids']
 ]);
 $all_complete = true;
+$template = 'blocks/videos/video.html';
 switch ($_POST['output']) {
     case 'videos':
     case 'view_channel':
@@ -23,6 +24,13 @@ switch ($_POST['output']) {
     case 'watch_video':
         $display_type = 'popVideos_sidebar';
         break;
+    case 'account':
+        $display_type = '';
+        $favorites = User::getInstance()->getFavoritesVideos(user_id());
+        assign('favorites', $favorites);
+        assign('control', 'full');
+        $template = 'blocks/manage/account_video.html';
+        break;
     default:
         $display_type = '';
         break;
@@ -38,7 +46,7 @@ foreach ($videos as $video) {
             $data['percent'] = $video['convert_percent'];
         }
     }
-    $data['html'] = getTemplate('blocks/videos/video.html');
+    $data['html'] = getTemplate($template);
     $return['videos'][] = $data;
 }
 echo json_encode(['data'=>$return, 'all_complete'=>$all_complete]);

@@ -246,4 +246,6 @@ $(document).ready(function (){
     getAllComments(libelle_type_channel, channelId, '', 1, 0, '');
 
     init_readonly_tags('profile_tags', '#list_tags_profile');
+
+    progressVideoCheck(ids_to_check_progress, 'view_channel');
 });
