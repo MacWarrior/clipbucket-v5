@@ -1488,4 +1488,6 @@ VALUES ('admin_setting'),
        ('option_thumb_background_color'),
        ('enable_country_video_field'),
        ('enable_location_video_field'),
-       ('enable_recorded_date_video_field');
+       ('enable_recorded_date_video_field'),
+       ('allow_tag_space'),
+       ('use_tab_tag');
