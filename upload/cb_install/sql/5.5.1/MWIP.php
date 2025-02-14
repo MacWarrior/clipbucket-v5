@@ -614,5 +614,34 @@ class MWIP extends \Migration
             'en'=>'Default user level can\'t have a membership'
         ]);
 
+        $sql = /** @lang MySQL */ 'CREATE TABLE IF NOT EXISTS `' . tbl('paypal_transactions') . '` (
+            id_paypal_transaction INT AUTO_INCREMENT PRIMARY KEY,
+            type VARCHAR(20) NOT NULL,
+            paypal_order_id varchar(20),
+            paypal_customer_id varchar(20),
+            paypal_account_id varchar(20),
+            paypal_vault_id varchar(20),
+            paypal_capture_id varchar(20),
+            paypal_refund_id varchar(20),
+            comment text,
+            status TEXT NOT NULL,
+            amount REAL ,
+            net_amount REAL ,
+            paypal_fee REAL ,
+            currency TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            update_time DATETIME,
+            CHECK (type IN (\'payment\', \'refund\'))
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci';
+        self::query($sql);
+
+        $sql = /** @lang MySQL */ 'CREATE TABLE IF NOT EXISTS `' . tbl('paypal_transactions_logs') . '` (
+            id_paypal_transaction_log INT AUTO_INCREMENT PRIMARY KEY,
+            id_paypal_transaction int,
+            data text,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci';
+        self::query($sql);
+
     }
 }
