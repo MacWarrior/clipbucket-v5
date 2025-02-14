@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"267",
+  "revision":"268",
   "status":"dev",
   "detail":[
     {
@@ -36,6 +36,7 @@
         ,"Implement AI NSFW check"
         ,"Implement future PHP version check"
         ,"Implement options to disable video Date recorded & location"
+        ,"Implement spaces in tags"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -156,6 +157,7 @@
         ,"Implement TMDB Tv Show integration"
         ,"Implement featured video slider"
         ,"Implement collection sharing"
+        ,"Implement spaces in tags"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

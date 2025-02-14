@@ -142,6 +142,7 @@ if (isset($_POST['update'])) {
         , 'enable_country_video_field'
         , 'enable_location_video_field'
         , 'enable_recorded_date_video_field'
+        , 'allow_tag_space'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -484,10 +485,12 @@ if (isset($_POST['update'])) {
         'photo_nsfw_check_model',
         'video_nsfw_check_model',
         'base_url',
+        'video_nsfw_check_model',
         'thumb_background_color',
         'enable_country_video_field',
         'enable_location_video_field',
         'enable_recorded_date_video_field',
+        'allow_tag_space',
         'email_sender_name',
         'number_featured_video',
         'video_list_view_video_history',

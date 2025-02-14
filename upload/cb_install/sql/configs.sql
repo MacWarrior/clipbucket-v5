@@ -321,6 +321,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_country_video_field', 'yes'),
     (NULL, 'enable_location_video_field', 'yes'),
     (NULL, 'enable_recorded_date_video_field', 'yes'),
+    (NULL, 'allow_tag_space', 'no'),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 

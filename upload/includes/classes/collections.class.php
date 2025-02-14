@@ -1267,6 +1267,7 @@ class Collections extends CBCategory
         } else {
             $cat_array = explode(',', $default['category']);
         }
+        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
         $data = [
             'name' => [
@@ -1298,7 +1299,8 @@ class Collections extends CBCategory
                 'value'             => genTags($tags),
                 'required'          => 'no',
                 'invalid_err'       => lang('collect_tag_er'),
-                'validate_function' => 'genTags'
+                'validate_function' => 'genTags',
+                'hint_1'            => $hint_tags
             ],
             'cat'  => [
                 'title'             => lang('collect_category'),
