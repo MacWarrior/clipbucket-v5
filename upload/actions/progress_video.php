@@ -14,6 +14,16 @@ switch ($_POST['output']) {
     case 'view_collection':
         $display_type = 'homeVideos';
         break;
+    case 'home':
+        $display_type = 'ajaxHome';
+        break;
+    case 'home_featured':
+        $display_type = 'featuredHome';
+        if (config('featured_video_style') == 'modern') {
+            $display_type = '';
+            $template = 'blocks/videos/featured_video_slider_block.html';
+        }
+        break;
     case 'search':
         $display_type = 'normal';
         break;

@@ -45,7 +45,7 @@
 	left: 0;
 }
 
-.slider-video-container .processing {
+.slider-video-container .processing, .slider-container-featured .processing {
 	position: absolute;
 	color: white;
 	font-size: 1.5rem;
@@ -60,11 +60,11 @@
 	justify-items: center;
 	align-content: center;
 }
-.slider-video-container .processing span {
+.slider-video-container .processing span, .slider-container-featured .processing span{
 	display: block;
 	margin-top:0.5rem;
 }
-.slider-video-container .processing .fa {
+.slider-video-container .processing .fa, .slider-container-featured .processing .fa {
 	width: 25px;
 	height: 25px;
 	font-size: 25px;

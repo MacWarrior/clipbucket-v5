@@ -505,7 +505,76 @@ $(function () {
     }
 
     document.querySelectorAll('.slider-container-featured').forEach(function(sliderElement){
-        new SliderFeatured(sliderElement);
+        slider = new SliderFeatured(sliderElement);
     })
-
 });
+
+function progressVideoCheckHome(ids_to_check_progress, displayType, interval_name) {
+    let class_video;
+    let data_field;
+    let parent_div;
+    if (displayType == 'home') {
+        class_video = video_style == 'modern' ? '.slider-video-container' : '.item-video';
+        data_field = 'data-id';
+        parent_div = $('section.videos');
+    } else if (displayType == 'home_featured') {
+        if (featured_video_style == 'modern') {
+            class_video = '.slide.video-link'
+            data_field = 'data-videoid';
+        } else {
+            class_video = '.item-video';
+            data_field = 'data-id';
+        }
+        parent_div = $('section.featured-videos');
+    } else {
+        class_video = 'no';
+    }
+    if (window[interval_name]) {
+        clearInterval(window[interval_name])
+    }
+
+    if (ids_to_check_progress && ids_to_check_progress.length > 0) {
+        window[interval_name] = setInterval(function () {
+            $.post({
+                url: '/actions/progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: displayType
+                },
+                success: function (response) {
+                    var data = response.data;
+                    data.videos.forEach(function (video) {
+                        let selector = class_video+'['+data_field+'="'+video.videoid+'"]';
+                        if (video.status.toLowerCase() == 'processing') {
+                            //update %
+                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                            //if process don't exist : get thumb + process div
+                            if (process_div.length == 0) {
+                                parent_div.find(selector).replaceWith(video.html);
+                                if (displayType == 'home_featured' && featured_video_style == 'modern') {
+                                    //TODO clean to more optimize and clean
+                                    slider.initialize();
+                                }
+                                parent_div.find(selector).fadeIn('slow');
+                            } else {
+                                process_div.find('span').html(video.percent + '%');
+                            }
+                        } else {
+                            parent_div.find(selector).replaceWith(video.html);
+                            if (displayType == 'home_featured' && featured_video_style == 'modern') {
+                                //TODO clean to more optimize and clean
+                                slider.initialize();
+                            }
+                            parent_div.find(selector).fadeIn('slow');
+                        }
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(window[interval_name]);
+                    }
+                }
+            })
+        }, 60000);
+    }
+}

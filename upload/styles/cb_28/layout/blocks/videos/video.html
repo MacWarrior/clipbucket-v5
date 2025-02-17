@@ -73,7 +73,7 @@
     {if config('homepage_recent_video_style') == 'modern'}
         {include file="$style_dir/blocks/video-new.html" width=270}
     {elseif  in_array(config('homepage_recent_video_style'), [false, 'classic'])}
-        <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending">
+        <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending" data-id="{$video.videoid}">
             <div class="clearfix thumb-holder">
                 <a
                         {if config('popup_video') == 'yes'}
@@ -148,7 +148,7 @@
     {if $total_vids}
         <div style="display:none;" class="total_videos_featured">{$total_vids}</div>
     {/if}
-    <div style="display:none;" class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12 featAppending">
+    <div style="display:none;" class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12 featAppending" data-id="{$video.videoid}">
         <div class="clearfix thumb-holder">
             <a {if config('popup_video') == 'yes'}
                 class="video-link cd-popup-trigger no_overflow" onclick="_cb.getModalVideo({$video.videoid})"
