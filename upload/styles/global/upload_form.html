@@ -50,24 +50,24 @@
                         {$field.class='form-control'}
                         {$field.notShowSeprator='yes'}
                         {if $field.type == 'radiobutton'}
-                    <div class="form-group">
-                            {$field.label_class='radio'}
-                            {$field.class=''}
-                            {$formObj->createField($field)}
-                    </div>
+                            <div class="form-group">
+                                {$field.label_class='radio'}
+                                {$field.class=''}
+                                {$formObj->createField($field)}
+                            </div>
                         {elseif $field.type == 'checkbox'}
                             {$categories = $field}
                         {elseif $field.id == 'tags_video'}
-                    <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                            <ul id="list_{$field.id}"></ul>
-                    </div>
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
+                                {$formObj->createField($field)}
+                                <ul id="list_{$field.id}"></ul>
+                            </div>
                         {elseif !$field.id|strstr:'tags'}
-                    <div class="form-group">
-                            <label for="{$field.id}">{$field.title}</label>
-                            {$formObj->createField($field)}
-                    </div>
+                            <div class="form-group">
+                                <label for="{$field.id}">{$field.title}</label>
+                                {$formObj->createField($field)}
+                            </div>
                         {/if}
 
                     {/foreach}
@@ -126,6 +126,7 @@
                 {/if}
 
                 {ANCHOR place="before_upload_form_location_fields"}
+                {if config('enable_country_video_field') == 'yes' || config('enable_location_video_field') == 'yes' || config('enable_recorded_date_video_field') == 'yes' }
                 <div class="formSection clear">
                     <h4>{$dateAndLocation.group_name} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
                     <div class="sectionContent hidden">
@@ -150,6 +151,7 @@
                         {/foreach}
                     </div>
                 </div>
+                {/if}
                 {ANCHOR place="after_upload_form_location_fields"}
 
                 {ANCHOR place="before_upload_form_sharing_fields"}

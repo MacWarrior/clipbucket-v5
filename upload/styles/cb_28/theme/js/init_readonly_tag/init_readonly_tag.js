@@ -11,7 +11,8 @@
             readOnly: true,
             singleFieldNode: $('#' + id_input),
             animate: false,
-            caseSensitive: false
+            caseSensitive: false,
+            allowSpaces: allow_tag_space
         });
 
         if (link_type !== undefined && link_type) {

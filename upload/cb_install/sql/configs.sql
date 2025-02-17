@@ -316,7 +316,12 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'email_sender_name', 'no-reply'),
     (NULL, 'enable_collection_link_sharing', 'yes'),
     (NULL, 'enable_collection_internal_sharing', 'yes'),
-    (NULL, 'base_url', '');
+    (NULL, 'base_url', ''),
+    (NULL, 'thumb_background_color', '#000000'),
+    (NULL, 'enable_country_video_field', 'yes'),
+    (NULL, 'enable_location_video_field', 'yes'),
+    (NULL, 'enable_recorded_date_video_field', 'yes'),
+    (NULL, 'allow_tag_space', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

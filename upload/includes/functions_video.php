@@ -1621,7 +1621,7 @@ function generatingMoreThumbs($data, bool $regenerate = false)
     $ffmpeg = new FFMpeg($log);
     $ffmpeg->input_details['duration'] = $data['duration'];
     $ffmpeg->input_file = $vid_file;
-    $ffmpeg->file_directory = $data['file_directory'];
+    $ffmpeg->file_directory = $data['file_directory'] . DIRECTORY_SEPARATOR;
     $ffmpeg->file_name = $data['file_name'];
     if ($regenerate) {
         $ffmpeg->generateAllThumbs();
@@ -1634,7 +1634,7 @@ function generatingMoreThumbs($data, bool $regenerate = false)
         e(lang('video_thumbs_regenerated'), 'm');
     }
 
-    Clipbucket_db::getInstance()->update(tbl('video'), ['thumbs_version'], [VERSION], ' file_name = \'' . $data['file_name'] . '\'');
+    Clipbucket_db::getInstance()->update(tbl('video'), ['thumbs_version'], [Update::getInstance()->getCurrentCoreVersion()], ' file_name = \'' . $data['file_name'] . '\'');
 }
 
 /**

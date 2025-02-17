@@ -9,10 +9,10 @@
                     <div class="form-group">
                         <label>{$item.title}</label>
                         {$item.class='form-control'}
-                        {$formObj->createField($item)}
                         {if $item.hint_1}
-                            <span class="hint">{$item.hint_1}</span>
+                            {$item.hint_1}
                         {/if}
+                        {$formObj->createField($item)}
                     </div>
                 {/foreach}
             </div>

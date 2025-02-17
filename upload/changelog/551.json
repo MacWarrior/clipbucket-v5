@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"261",
+  "revision":"268",
   "status":"dev",
   "detail":[
     {
@@ -35,6 +35,8 @@
         ,"Implement related photos quantity limit"
         ,"Implement AI NSFW check"
         ,"Implement future PHP version check"
+        ,"Implement options to disable video Date recorded & location"
+        ,"Implement spaces in tags"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -128,6 +130,8 @@
         ,"Fix user deletion"
         ,"Fix HLS video deletion"
         ,"Fix email tester default variables"
+        ,"Fix thumbs regeneration"
+        ,"Fix video deletion"
       ]
     },
     {
@@ -153,6 +157,7 @@
         ,"Implement TMDB Tv Show integration"
         ,"Implement featured video slider"
         ,"Implement collection sharing"
+        ,"Implement spaces in tags"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -261,6 +266,7 @@
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
         ,"Update user level permissions storage"
+        ,"Update countries list <i>(#517)</i>"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -279,6 +285,7 @@
       "title": "Conversion",
       "description": [
         "Refactor log system"
+        ,"Implement thumb background color option"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -286,6 +293,7 @@
         ,"Fix video conversion on Windows hosts"
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
+        ,"Fix video thumbs generation ratio other than 16/9"
       ]
     },
     {
@@ -304,6 +312,7 @@
         ,"Add SSE function check"
         ,"Add Nginx check"
         ,"Add baseurl config"
+        ,"Add PHP 8.4 to Debian & Ubuntu install script"
         ,"Stop migration on first error if occurs"
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
@@ -343,9 +352,10 @@
     {
       "title": "Translations",
       "description": [
-        "Add spanish (ESP) translation <i>#353</i> (Thanks @gvasquezj !)"
-        ,"Update portuguese (BR) translations <i>#347</i> (Thanks @raiancollyn !)"
+        "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
+        ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
         ,"Fix missing translation"
+        ,"Fix translation"
       ]
     },
     {
