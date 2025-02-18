@@ -351,11 +351,14 @@ $(function () {
             const prevButton = this.slidesContainerMain.querySelector('.prev-btn');
 
             if (nextButton) {
-                nextButton.addEventListener('click', () => this.nextSlide());
+                nextButton.onclick =   () => {
+                    this.nextSlide();
+                }
             }
-
             if (prevButton) {
-                prevButton.addEventListener('click', () => this.prevSlide());
+                prevButton.onclick =  () => {
+                    this.prevSlide();
+                }
             }
         }
 
@@ -485,7 +488,6 @@ $(function () {
             const slides = Array.from(this.slidesContainer.children);
             slides.forEach((slide, index) => {
                 slide.onclick = function(event){
-
                     if (slide.classList.contains('active')) {
                         if (slide.classList.contains('cd-popup-trigger-slider')) {
                             $('.cd-popup').addClass('is-visible');
@@ -516,7 +518,7 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
     if (displayType == 'home') {
         class_video = video_style == 'modern' ? '.slider-video-container' : '.item-video';
         data_field = 'data-id';
-        parent_div = $('section.videos');
+        parent_div = $('section.videos,section.default-slider');
     } else if (displayType == 'home_featured') {
         if (featured_video_style == 'modern') {
             class_video = '.slide.video-link'
@@ -553,8 +555,10 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                             if (process_div.length == 0) {
                                 parent_div.find(selector).replaceWith(video.html);
                                 if (displayType == 'home_featured' && featured_video_style == 'modern') {
-                                    //TODO clean to more optimize and clean
-                                    slider.initialize();
+                                    slider.updateSlideListeners();
+                                    if (slider.slidesContainer.children.length === 1) {
+                                        slider.scrollToSlide(1);
+                                    }
                                 }
                                 parent_div.find(selector).fadeIn('slow');
                             } else {
@@ -563,8 +567,10 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                         } else {
                             parent_div.find(selector).replaceWith(video.html);
                             if (displayType == 'home_featured' && featured_video_style == 'modern') {
-                                //TODO clean to more optimize and clean
-                                slider.initialize();
+                                slider.updateSlideListeners();
+                                if (slider.slidesContainer.children.length === 1) {
+                                    slider.scrollToSlide(1);
+                                }
                             }
                             parent_div.find(selector).fadeIn('slow');
                         }
