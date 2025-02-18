@@ -10,6 +10,7 @@
             <th>ID</th>
             <th>Name</th>
             <th>{lang('active')}</th>
+            <th>{lang('default')}</th>
             <th>Users</th>
             <th>Actions</th>
         </tr>
@@ -19,6 +20,10 @@
                 <td>{$levels[l].user_level_name}</td>
                 <td>
                     <input name="user_level_active" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_active == 'yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_active"/>
+                    <span class="lbl"></span>
+                </td>
+                <td>
+                    <input name="user_level_is_default" data-id="{$levels[l].user_level_id}" {if $levels[l].user_level_is_default == 'yes'}checked disabled="disabled" title="{lang('cannot_remove_default_have_to_add_one')}"{/if} type="checkbox" class="ace ace-switch ace-switch-5 user_level_is_default"/>
                     <span class="lbl"></span>
                 </td>
                 <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
@@ -129,6 +134,22 @@
                 dataType: "json",
                 success: response => {
 
+                }
+            })
+        });
+        $('.user_level_is_default').on('change', function () {
+            var id = $(this).data('id');
+            showSpinner();
+            $.post({
+                url: '/actions/admin_set_default_user_level.php',
+                data: {
+                    user_level_id: id
+                },
+                dataType: "json",
+                success: response => {
+                    if(response.success) {
+                        window.location.reload();
+                    }
                 }
             })
         });

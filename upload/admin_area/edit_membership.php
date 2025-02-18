@@ -30,7 +30,7 @@ if (empty($membership)) {
 assign('membership', $membership);
 assign('frequencies', Membership::getInstance()->getFrequencies());
 assign('currencies', Membership::getInstance()->getAllCurrency());
-assign('user_levels', userquery::getInstance()->get_levels() ?: []);
+assign('user_levels', UserLevel::getAll(['is_default'=>'no']) ?: []);
 
 global $breadcrumb;
 $breadcrumb[0] = [

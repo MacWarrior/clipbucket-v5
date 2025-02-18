@@ -288,6 +288,10 @@ class UserLevel
         }
         Clipbucket_db::getInstance()->insert(tbl('user_levels'), $fields, $values);
         $user_level_id = Clipbucket_db::getInstance()->insert_id();
+
+        Migration::generateTranslation(mysql_clean(str_replace(' ', '_', strtolower($user_level_name))), [
+            Language::getInstance()->getLang() => mysql_clean($user_level_name)
+        ]);
         foreach (self::getPermissions(1) as $permission) {
             if ($permission['permission_value'] == 'yes' && !isset($permissions[$permission['id_user_levels_permission']])) {
                 //update no
@@ -341,6 +345,16 @@ class UserLevel
     public static function getDefaultId()
     {
         return self::getDefault()['user_level_id'] ?? 0;
+    }
+
+    public static function setDefault($user_level_id)
+    {
+        if (empty($user_level_id)) {
+            return false;
+        }
+        Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['yes'], ' user_level_id =' . mysql_clean($user_level_id));
+        Clipbucket_db::getInstance()->update(tbl(self::$tableName), ['user_level_is_default'], ['no'], ' user_level_id !=' . mysql_clean($user_level_id));
+        return true;
     }
 
 }
