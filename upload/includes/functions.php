@@ -3701,11 +3701,11 @@ function upload_image($type = 'logo')
     }
     if (in_array($file_ext, $allowed_file_types)) {
         // Rename file
-        $logo_path = DirPath::get('logos') . $file_basename . '-' . $type . '.' . $file_ext;
+        $logo_path = DirPath::get('logos') . $type . '.' . $file_ext;
         unlink($logo_path);
         move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
 
-        myquery::getInstance()->Set_Website_Details($type . '_name', $file_basename . '-' . $type . '.' . $file_ext);
+        myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
     } else {
         e(lang('wrong_image_extension', implode(', ', $allowed_file_types)));
         unlink($_FILES[$file_post]['tmp_name']);
