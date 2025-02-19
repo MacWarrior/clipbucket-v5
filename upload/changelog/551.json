@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"266",
+  "revision":"268",
   "status":"dev",
   "detail":[
     {
@@ -36,6 +36,7 @@
         ,"Implement AI NSFW check"
         ,"Implement future PHP version check"
         ,"Implement options to disable video Date recorded & location"
+        ,"Implement spaces in tags"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -130,6 +131,7 @@
         ,"Fix HLS video deletion"
         ,"Fix email tester default variables"
         ,"Fix thumbs regeneration"
+        ,"Fix video deletion"
       ]
     },
     {
@@ -155,6 +157,7 @@
         ,"Implement TMDB Tv Show integration"
         ,"Implement featured video slider"
         ,"Implement collection sharing"
+        ,"Implement spaces in tags"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -309,6 +312,7 @@
         ,"Add SSE function check"
         ,"Add Nginx check"
         ,"Add baseurl config"
+        ,"Add PHP 8.4 to Debian & Ubuntu install script"
         ,"Stop migration on first error if occurs"
         ,"Reduce minimum upload size required by default"
         ,"Update Debian 10 installation script"
