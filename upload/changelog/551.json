@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"269",
+  "revision":"270",
   "status":"dev",
   "detail":[
     {
@@ -65,6 +65,7 @@
         ,"Update WIP update process"
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
+        ,"Update logo & favicon storage"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
