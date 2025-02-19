@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"268",
+  "revision":"269",
   "status":"dev",
   "detail":[
     {
@@ -132,6 +132,7 @@
         ,"Fix email tester default variables"
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
+        ,"Fix anonymous flagged medias"
       ]
     },
     {
