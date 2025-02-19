@@ -1786,6 +1786,9 @@ function clean_orphan_files($file)
             $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \''.mysql_clean($file['user']).'\'';
             $result = Clipbucket_db::getInstance()->_select($query);
             break;
+        case 'logos':
+            $result = strtolower($file['logo']) == strtolower(config('logo_name')) || strtolower($file['logo']) == strtolower(config('favicon_name'));
+            break;
     }
     if (!empty($result)) {
         return;
@@ -1830,6 +1833,11 @@ function clean_orphan_files($file)
         case 'userfeeds':
             unlink($file['data']);
             $stop_path = DirPath::get('userfeeds');
+            break;
+
+        case 'logos':
+            unlink($file['data']);
+            $stop_path = DirPath::get('logos');
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);

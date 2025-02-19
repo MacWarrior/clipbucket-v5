@@ -500,6 +500,23 @@ class AdminTool
                 }
             }
             unset($userfeeds);
+
+            //FAVICON - LOGO
+            $logos = new GlobIterator(DirPath::get('logos') . '*.*');
+            foreach ($logos as $logo) {
+                $insert_values = [
+                    'type' => 'logos',
+                    'data' => $logo->getPathname(),
+                    'logo' => basename($logo)
+                ];
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                }
+            }
+            unset($logos);
+
         }
 
         $this->executeTool('clean_orphan_files');
