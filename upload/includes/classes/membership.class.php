@@ -103,12 +103,12 @@ class Membership
         $param_type_join_user_membership = $params['type_join_user_membership'] ?? false;
         $param_get_user_membership = $params['get_user_membership'] ?? false;
         $param_date_between = $params['date_between'] ?? false;
-        $param_is_disabled = $params['is_disabled'] ?? false;
+        $param_is_disabled = $params['is_disabled'] ?? null;
         $param_get_nb_users = $params['get_nb_users'] ?? false;
 
         //CONDITIONS
         $conditions = [];
-        if ($param_is_disabled !== false) {
+        if ($param_is_disabled !== null) {
             $conditions[] = $this->tablename . '.disabled = ' . mysql_clean($param_is_disabled);
         }
         if ($param_id_membership !== false) {

@@ -154,7 +154,7 @@
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
                                                 <li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
                                             {/if}
-                                            {if config('enable_membership') && !User::getInstance()->hasAdminAccess()}
+                                            {if config('enable_membership') && !User::getInstance()->hasAdminAccess() && User::getInstance()->doesUserHaveAvailableMembership()}
                                                 <li><a href="/manage_membership.php">{lang code="memberships"} {if User::getInstance()->isUserMustRenewMembership()}<i class="fa fa-exclamation-circle"></i>{/if}</a></li>
                                             {/if}
                                             {ANCHOR place="inside_user_menu"}

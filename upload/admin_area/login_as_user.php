@@ -23,6 +23,9 @@ if ($userLevel > 1 && $userToLoginAsLevel == 1) {
 }
 
 if (userquery::getInstance()->login_as_user($uid)) {
+    if ($_COOKIE['pageredir']) {
+        unset($_COOKIE['pageredir']);
+    }
     User::redirectAfterLogin();
 }
 display_it();

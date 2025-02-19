@@ -868,6 +868,18 @@ class User
         return $this->user_data['need_to_active_membership'];
     }
 
+    public function doesUserHaveAvailableMembership()
+    {
+        if (!isset($this->user_data['does_user_have_available_membership'])) {
+            $available_memberships = Membership::getInstance()->getAll([
+                'is_disabled'       => 0,
+                'not_user_level_id' => UserLevel::getDefaultId()
+            ]);
+            $this->user_data['does_user_have_available_membership'] = !empty($available_memberships);
+        }
+        return $this->user_data['does_user_have_available_membership'];
+    }
+
     /**
      * @param int $user_level_id
      * @param bool $activate
@@ -905,6 +917,8 @@ class User
     public function getDefaultHomepageFromUserLevel(): string
     {
         $default_hompepage = UserLevel::getPermission('default_homepage',$this->getCurrentUserLevelID());
+        if (empty($default_hompepage)) return '';
+
         switch ($default_hompepage) {
             case 'homepage':
                 $link = '';
@@ -3306,7 +3320,7 @@ class userquery extends CBCategory
         if( config('channelsSection') == 'yes' && User::getInstance()->hasPermission('view_channel') ){
             $array[lang('account')][lang('com_manage_subs')] = 'edit_account.php?mode=subscriptions';
         }
-        if( config('enable_membership') == 'yes' && !User::getInstance()->hasPermission('admin_access')){
+        if( config('enable_membership') == 'yes' && !User::getInstance()->hasPermission('admin_access') && User::getInstance()->doesUserHaveAvailableMembership()){
             $array[lang('account')][lang('manage_membership')] = 'manage_membership.php';
         }
 

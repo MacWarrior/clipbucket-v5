@@ -42,7 +42,7 @@ assign('memberships', $memberships);
 $totals_pages = count_pages(Membership::getInstance()->getAllHistoMembershipForUser($params), config('video_list_view_video_history')) ;
 
 $available_memberships = Membership::getInstance()->getAll([
-    'is_disabled'       => false,
+    'is_disabled'       => 0,
     'not_user_level_id' => UserLevel::getDefaultId()
 ]);
 $can_renew_membership = false;
