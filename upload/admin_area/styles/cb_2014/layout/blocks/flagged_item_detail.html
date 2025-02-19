@@ -34,7 +34,13 @@
                         <td>
                             {lang($flagged_item.language_key)}
                         </td>
-                        <td><a href="{DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.userid}">{$flagged_item.username}</a></td>
+                        <td>
+                            {if $flagged_item.userid != userquery::getInstance()->get_anonymous_user()}
+                                <a href="{DirPath::getUrl('admin_area')|cat:'view_user.php?uid=':$flagged_item.userid}">{$flagged_item.username}</a>
+                            {else}
+                                {lang($flagged_item.username)}
+                            {/if}
+                        </td>
                     </tr>
                 {/foreach}
             </table>
