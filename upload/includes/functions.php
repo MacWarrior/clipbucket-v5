@@ -3687,8 +3687,7 @@ function upload_image($type = 'logo')
     }
 
     $filename = $_FILES[$file_post]['name'];
-    $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-    $file_basename = pathinfo($filename, PATHINFO_FILENAME);
+    $file_ext = getExt($filename);
     $filesize = $_FILES[$file_post]['size'];
     $allowed_file_types = explode(',', strtolower(config('allowed_photo_types')));
 
@@ -3699,17 +3698,19 @@ function upload_image($type = 'logo')
         e(lang('file_size_cant_exceeds_x_x', $explode));
         return false;
     }
-    if (in_array($file_ext, $allowed_file_types)) {
-        // Rename file
-        $logo_path = DirPath::get('logos') . $file_basename . '-' . $type . '.' . $file_ext;
-        unlink($logo_path);
-        move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
 
-        myquery::getInstance()->Set_Website_Details($type . '_name', $file_basename . '-' . $type . '.' . $file_ext);
-    } else {
+    if (!in_array($file_ext, $allowed_file_types)) {
         e(lang('wrong_image_extension', implode(', ', $allowed_file_types)));
         unlink($_FILES[$file_post]['tmp_name']);
+        return false;
     }
+
+    $logo_path = DirPath::get('logos') . $type . '.' . $file_ext;
+    unlink($logo_path);
+    move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
+
+    myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
+    return true;
 }
 
 function get_mime_type($filepath, string $filename = '')

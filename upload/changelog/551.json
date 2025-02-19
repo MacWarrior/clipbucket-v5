@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"269",
+  "revision":"270",
   "status":"dev",
   "detail":[
     {
@@ -268,6 +268,7 @@
         ,"Update Nginx Vhost & Apache Htaccess"
         ,"Update user level permissions storage"
         ,"Update countries list <i>(#517)</i>"
+        ,"Update logo & favicon storage"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
