@@ -30,5 +30,25 @@ class MWIP extends \Migration
                 'name' => 'tools_tasks_id_tool_histo'
             ]
         ]);
+
+        self::generateTranslation('orphan_file_has_been_deleted', [
+            'fr'=>'Suppression du fichier orphelin : %s',
+            'en'=>'Delete orphan file :  %s'
+        ]);
+
+        self::generateTranslation('processing_x_files', [
+            'fr'=>'Traitement de %s fichiers ...',
+            'en'=>'Processing %s files ...'
+        ]);
+
+        self::generateTranslation('x_orphan_files_has_been_deleted', [
+            'fr'=>'%s fichiers orphelins ont été supprimés',
+            'en'=>'%s orphan files has been deleted'
+        ]);
+
+        self::generateTranslation('loading_file_list', [
+            'fr'=>'Chargement de la liste des fichiers..',
+            'en'=>'Loading file list..'
+        ]);
     }
 }

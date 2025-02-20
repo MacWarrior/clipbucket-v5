@@ -18,6 +18,8 @@ class AdminTool
     private $tasks;
 
     private $tasks_index;
+
+    private $tasks_processed;
     private $tasks_total;
 
     /**
@@ -377,7 +379,10 @@ class AdminTool
     {
         if (empty($this->tasks_total)) {
             $this->tasks_total = 0;
+            $this->tasks_processed = 0;
             $this->tasks = [];
+
+            $this->addLog(lang('loading_file_list'));
 
             //LOGS
             $logs = new GlobIterator(DirPath::get('logs') . '*.log');
@@ -519,8 +524,10 @@ class AdminTool
 
         }
 
+        $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));
         $this->executeTool('clean_orphan_files');
 
+        CacheRedis::flushAll();
         //remove already empty folders
         $empty_logs = glob(DirPath::get('logs') . '*', GLOB_ONLYDIR);
         $empty_subs = glob(DirPath::get('subtitles') . '*', GLOB_ONLYDIR);
@@ -532,6 +539,8 @@ class AdminTool
         foreach ($empty_folders as $folder) {
             delete_empty_directories($folder);
         }
+        $this->addLog(lang('x_orphan_files_has_been_deleted', $this->tasks_processed ?? 0));
+
     }
 
     /**
@@ -606,7 +615,11 @@ class AdminTool
                     }
                     //call function
                     try {
-                        call_user_func($function, $item);
+                        $result = call_user_func($function, $item);
+                        if (!empty($result)) {
+                            $this->tasks_processed++;
+                            $this->addLog($result);
+                        }
                     } catch (\Exception $e) {
                         e(lang($e->getMessage()));
                         $this->addLog($e->getMessage());

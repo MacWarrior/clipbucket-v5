@@ -1765,33 +1765,55 @@ function remove_empty_directory($path, string $stop_path)
  * @return void
  * @throws Exception
  */
-function clean_orphan_files($file)
+function clean_orphan_files($file): string
 {
+    $filename = '';
     switch ($file['type']) {
         case 'video_mp4':
         case 'video_hls':
         case 'thumb':
         case 'subtitle':
         case 'log':
-        $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \''.mysql_clean($file['video']).'\'';
-        $result = Clipbucket_db::getInstance()->_select($query);
+            $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\'';
+            $filename = 'video_'.$file['video'];
+            if (config('cache_enable') == 'yes') {
+                $result = CacheRedis::getInstance()->get($filename);
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
             break;
-
         case 'photo':
-            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \''.mysql_clean($file['photo']).'\'';
-            $result = Clipbucket_db::getInstance()->_select($query);
+            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \'' . mysql_clean($file['photo']) . '\'';
+            $filename = 'photo_'.$file['photo'];
+            if (config('cache_enable') == 'yes') {
+                $result = CacheRedis::getInstance()->get($filename);
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
             break;
 
         case 'userfeeds':
-            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \''.mysql_clean($file['user']).'\'';
-            $result = Clipbucket_db::getInstance()->_select($query);
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \'' . mysql_clean($file['user']) . '\'';
+            $filename = 'user_'.$file['user'];
+            if (config('cache_enable') == 'yes') {
+                $result = CacheRedis::getInstance()->get($filename);
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
             break;
         case 'logos':
             $result = strtolower($file['logo']) == strtolower(config('logo_name')) || strtolower($file['logo']) == strtolower(config('favicon_name'));
+            $filename = 'logos_'.$file['logo'];
             break;
     }
     if (!empty($result)) {
-        return;
+        if (config('cache_enable') == 'yes' && empty(CacheRedis::getInstance()->get($filename))) {
+            CacheRedis::getInstance()->set($filename, 'true', 900);
+        }
+        return '';
     }
 
     $stop_path = null;
@@ -1841,6 +1863,7 @@ function clean_orphan_files($file)
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
+    return lang('orphan_file_has_been_deleted', $file['data']);
 }
 
 /**

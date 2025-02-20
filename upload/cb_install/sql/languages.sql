@@ -1490,4 +1490,8 @@ VALUES ('admin_setting'),
        ('enable_location_video_field'),
        ('enable_recorded_date_video_field'),
        ('allow_tag_space'),
-       ('use_tab_tag');
+       ('use_tab_tag'),
+       ('orphan_file_has_been_deleted'),
+       ('processing_x_files'),
+       ('loading_file_list'),
+       ('x_orphan_files_has_been_deleted');
