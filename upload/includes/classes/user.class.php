@@ -2384,6 +2384,9 @@ class userquery extends CBCategory
         if (!is_array($udetails) && is_numeric($udetails)) {
             $udetails = $this->get_user_details($udetails);
         }
+        if ($udetails['userid'] == $this->get_anonymous_user()) {
+            return '';
+        }
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);
         if (config('seo') != 'yes') {
