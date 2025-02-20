@@ -41,9 +41,9 @@ class MWIP extends \Migration
             'en'=>'Processing %s files ...'
         ]);
 
-        self::generateTranslation('x_orphan_files_has_been_deleted', [
+        self::generateTranslation('x_orphan_files_have_been_deleted', [
             'fr'=>'%s fichiers orphelins ont été supprimés',
-            'en'=>'%s orphan files has been deleted'
+            'en'=>'%s orphan files have been deleted'
         ]);
 
         self::generateTranslation('loading_file_list', [

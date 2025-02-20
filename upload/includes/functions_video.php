@@ -1783,6 +1783,7 @@ function clean_orphan_files($file): string
                 $result = Clipbucket_db::getInstance()->_select($query);
             }
             break;
+
         case 'photo':
             $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \'' . mysql_clean($file['photo']) . '\'';
             $filename = 'photo_'.$file['photo'];
@@ -1804,6 +1805,7 @@ function clean_orphan_files($file): string
                 $result = Clipbucket_db::getInstance()->_select($query);
             }
             break;
+
         case 'logos':
             $result = strtolower($file['logo']) == strtolower(config('logo_name')) || strtolower($file['logo']) == strtolower(config('favicon_name'));
             $filename = 'logos_'.$file['logo'];

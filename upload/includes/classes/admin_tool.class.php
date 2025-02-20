@@ -539,7 +539,7 @@ class AdminTool
         foreach ($empty_folders as $folder) {
             delete_empty_directories($folder);
         }
-        $this->addLog(lang('x_orphan_files_has_been_deleted', $this->tasks_processed ?? 0));
+        $this->addLog(lang('x_orphan_files_have_been_deleted', $this->tasks_processed ?? 0));
 
     }
 
