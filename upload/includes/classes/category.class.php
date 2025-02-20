@@ -102,7 +102,7 @@ class Category
             $having = ' HAVING '.$param_having;
         }
 
-        $order = '';
+        $order = ' ORDER BY category_order ASC ';
         if( $param_order ){
             $order = ' ORDER BY '.$param_order;
         }
@@ -279,6 +279,7 @@ class Category
             return;
         }
 
+        $type = $this->typeNamesByIds[$cat_details['id_category_type']];
         //si has child
         $childs = $this->getAll([
             'condition' => 'parent_id = \'' . mysql_clean($category_id) . '\''
@@ -286,7 +287,7 @@ class Category
         if (!empty($childs)) {
             //deplacer
             //si a un parent => décaler vers parent sinon vers default
-            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType($this->typeNamesByIds[$cat_details['id_category_type']])['category_id']);
+            $dest_category_id = (!empty($cat_details['parent_id']) ? $cat_details['parent_id'] : $this->getDefaultByType($type)['category_id']);
             //@TODO rework update for update all children with 1 request
             foreach ($childs as $child) {
                 $this->update([
@@ -294,6 +295,14 @@ class Category
                     'parent_id' => $dest_category_id
                 ]);
             }
+        }
+
+        //si has item
+        $sql = 'SELECT '.$this->getTypeTableID($type).' FROM ' . tbl($this->getTypeTableName($type)) . ' WHERE id_category = ' . $category_id;
+        $has_item = Clipbucket_db::getInstance()->_select($sql);
+        if (!empty($has_item)) {
+            e(lang('cannot_delete_not_empty_category'));
+            return;
         }
 
         //Removing Category

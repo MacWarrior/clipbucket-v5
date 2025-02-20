@@ -1490,4 +1490,5 @@ VALUES ('admin_setting'),
        ('enable_location_video_field'),
        ('enable_recorded_date_video_field'),
        ('allow_tag_space'),
-       ('use_tab_tag');
+       ('use_tab_tag'),
+       ('cannot_delete_not_empty_category');
