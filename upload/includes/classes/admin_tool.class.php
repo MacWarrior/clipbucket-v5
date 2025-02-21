@@ -195,7 +195,7 @@ class AdminTool
         }
         $this->tasks_index = 0;
         //setting total if exist
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $info = $this->getLastHistoNotEndedNotRunning();
             if (!empty($info)) {
                 $this->tasks_total = $info[0]['elements_total'];
@@ -203,7 +203,14 @@ class AdminTool
                 $this->changeDataHisto();
             }
         }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+            $this->addLog(lang('tool_started'));
+        }
         call_user_func_array([$this, $this->tool['function_name']], []);
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+            $this->addLog(lang('tool_ended'));
+        }
     }
 
     /**
@@ -385,18 +392,19 @@ class AdminTool
             $this->addLog(lang('loading_file_list'));
 
             //LOGS
-            $logs = new GlobIterator(DirPath::get('logs') . '*.log');
+            $logs = new GlobIterator(DirPath::get('logs')  . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.log');
             foreach ($logs as $log) {
                 $vid_file_name = basename($log, '.log');
-                $insert_values[] = [
+                $insert_values = [
                     'type'  => 'log',
                     'data'  => $log->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($logs);
@@ -411,10 +419,11 @@ class AdminTool
                     'data'  => $video->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($videos_mp4);
@@ -428,10 +437,11 @@ class AdminTool
                     'data'  => $photo->getPathname(),
                     'photo' => $pic_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($photos);
@@ -446,17 +456,18 @@ class AdminTool
                         'data'  => $video->getPathname(),
                         'video' => $vid_file_name
                     ];
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                         $this->insertTaskData([$insert_values]);
                     } else {
                         $this->tasks = array_merge($this->tasks, [$insert_values]);
+                        $this->tasks_total++;
                     }
                 }
             }
             unset($videos_hls);
 
             //THUMBS
-            $thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
+            $thumbs = new GlobIterator(DirPath::get('thumbs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.jpg');
             foreach ($thumbs as $thumb) {
                 $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
                 $insert_values = [
@@ -464,10 +475,11 @@ class AdminTool
                     'data'  => $thumb->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($thumbs);
@@ -481,10 +493,11 @@ class AdminTool
                     'data'  => $subtitle->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($subtitles);
@@ -498,13 +511,48 @@ class AdminTool
                     'data' => $userfeed->getPathname(),
                     'user' => $user_id
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($userfeeds);
+
+            //AVATARS
+            $avatars = new GlobIterator(DirPath::get('avatars') . '*.*');
+            foreach ($avatars as $avatar) {
+                $insert_values = [
+                    'type' => 'avatar',
+                    'data' => $avatar->getPathname(),
+                    'avatar' => basename($avatar)
+                ];
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
+                }
+            }
+            unset($avatars);
+
+            //BACKGROUNDS
+            $backgrounds = new GlobIterator(DirPath::get('backgrounds') . '*.*');
+            foreach ($backgrounds as $background) {
+                $insert_values = [
+                    'type' => 'background',
+                    'data' => $background->getPathname(),
+                    'background' => basename($background)
+                ];
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                    $this->insertTaskData([$insert_values]);
+                } else {
+                    $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
+                }
+            }
+            unset($backgrounds);
 
             //FAVICON - LOGO
             $logos = new GlobIterator(DirPath::get('logos') . '*.*');
@@ -514,10 +562,11 @@ class AdminTool
                     'data' => $logo->getPathname(),
                     'logo' => basename($logo)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
+                    $this->tasks_total++;
                 }
             }
             unset($logos);
@@ -527,7 +576,7 @@ class AdminTool
         $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));
         $this->executeTool('clean_orphan_files');
 
-        CacheRedis::flushAll();
+        CacheRedis::flushKeyStart('clean_orphan_files');
         //remove already empty folders
         $empty_logs = glob(DirPath::get('logs') . '*', GLOB_ONLYDIR);
         $empty_subs = glob(DirPath::get('subtitles') . '*', GLOB_ONLYDIR);
@@ -592,7 +641,6 @@ class AdminTool
             //update nb_elements of tools
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
                 $this->updateToolHisto(['elements_total', 'elements_done'], [$element_totals, 0]);
-                $this->addLog(lang('tool_started'));
             } else {
                 Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [$element_totals, 0], ' id_tool = ' . $secureIdTool);
             }
@@ -629,7 +677,7 @@ class AdminTool
                         }
                     }
                     //update nb_done of tools
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 999)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                         $this->cleanTaskData();
                     }
                     $this->tasks_index++;
@@ -643,7 +691,6 @@ class AdminTool
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
-            $this->addLog(lang('tool_ended'));
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
         }

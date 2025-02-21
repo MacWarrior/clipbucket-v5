@@ -1768,6 +1768,10 @@ function remove_empty_directory($path, string $stop_path)
 function clean_orphan_files($file): string
 {
     $filename = '';
+    if (config('cache_enable') == 'yes') {
+        $redis_key = 'clean_orphan_files';
+        $tab_redis = CacheRedis::getInstance()->get($redis_key) ?: [];
+    }
     switch ($file['type']) {
         case 'video_mp4':
         case 'video_hls':
@@ -1775,9 +1779,10 @@ function clean_orphan_files($file): string
         case 'subtitle':
         case 'log':
             $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\'';
-            $filename = 'video_'.$file['video'];
+            $filename = $file['video'];
             if (config('cache_enable') == 'yes') {
-                $result = CacheRedis::getInstance()->get($filename);
+                $redis_type_key = 'video';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1786,9 +1791,10 @@ function clean_orphan_files($file): string
 
         case 'photo':
             $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \'' . mysql_clean($file['photo']) . '\'';
-            $filename = 'photo_'.$file['photo'];
+            $filename = $file['photo'];
             if (config('cache_enable') == 'yes') {
-                $result = CacheRedis::getInstance()->get($filename);
+                $redis_type_key = 'photo';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1797,9 +1803,23 @@ function clean_orphan_files($file): string
 
         case 'userfeeds':
             $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \'' . mysql_clean($file['user']) . '\'';
-            $filename = 'user_'.$file['user'];
+            $filename = $file['user'];
             if (config('cache_enable') == 'yes') {
-                $result = CacheRedis::getInstance()->get($filename);
+                $redis_type_key = 'user';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
+            break;
+        case'avatar';
+        case'background';
+            $search_name = str_replace('-small', '', $file[$file['type']]);
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE ' . $file['type'] . ' = \'' . mysql_clean($search_name) . '\'';
+            $filename = str_replace(' ','_',$search_name);
+            if (config('cache_enable') == 'yes') {
+                $redis_type_key = $file['type'];
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
             }
             if (empty($result)) {
                 $result = Clipbucket_db::getInstance()->_select($query);
@@ -1808,12 +1828,13 @@ function clean_orphan_files($file): string
 
         case 'logos':
             $result = strtolower($file['logo']) == strtolower(config('logo_name')) || strtolower($file['logo']) == strtolower(config('favicon_name'));
-            $filename = 'logos_'.$file['logo'];
+            $filename = 'logos_' . $file['logo'];
             break;
     }
     if (!empty($result)) {
-        if (config('cache_enable') == 'yes' && empty(CacheRedis::getInstance()->get($filename))) {
-            CacheRedis::getInstance()->set($filename, 'true', 900);
+        if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
+            $tab_redis[$redis_type_key][] = $filename;
+            CacheRedis::getInstance()->set($redis_key, $tab_redis, 900);
         }
         return '';
     }
@@ -1857,6 +1878,14 @@ function clean_orphan_files($file): string
         case 'userfeeds':
             unlink($file['data']);
             $stop_path = DirPath::get('userfeeds');
+            break;
+        case 'avatar':
+            unlink($file['data']);
+            $stop_path = DirPath::get('avatars');
+            break;
+        case 'background':
+            unlink($file['data']);
+            $stop_path = DirPath::get('backgrounds');
             break;
 
         case 'logos':
