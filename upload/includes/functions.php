@@ -3661,7 +3661,8 @@ function get_website_logo_path($full_url = false): string
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
-        return DirPath::getUrl('logos', $full_url) . $logo_name;
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos', $full_url) . $logo_name . $version;
     }
     return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
 }
@@ -3670,7 +3671,8 @@ function get_website_favicon_path($full_url = false): string
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
-        return DirPath::getUrl('logos', $full_url) . $favicon_name;
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos', $full_url) . $favicon_name . $version;
     }
     return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/favicon.png';
 }

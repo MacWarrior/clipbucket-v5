@@ -579,10 +579,12 @@ if (isset($_POST['update'])) {
     if (!empty($_FILES['upload_logo']['name'])) {
         // function used to upload site logo.
         upload_image('logo');
+        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
     if (!empty($_FILES['upload_favicon']['name'])) {
         // function used to upload site logo.
         upload_image('favicon');
+        myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
     }
 
     //clear cache
