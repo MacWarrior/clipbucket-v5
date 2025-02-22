@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"268",
+  "revision":"271",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
         ,"Refactor flagged elements management"
+        ,"Refactor orphan files deletion tool"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -132,6 +133,7 @@
         ,"Fix email tester default variables"
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
+        ,"Fix anonymous flagged medias"
       ]
     },
     {
@@ -267,6 +269,7 @@
         ,"Update Nginx Vhost & Apache Htaccess"
         ,"Update user level permissions storage"
         ,"Update countries list <i>(#517)</i>"
+        ,"Update logo & favicon storage"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
