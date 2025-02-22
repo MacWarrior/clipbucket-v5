@@ -195,7 +195,7 @@ class AdminTool
         }
         $this->tasks_index = 0;
         //setting total if exist
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
             $info = $this->getLastHistoNotEndedNotRunning();
             if (!empty($info)) {
                 $this->tasks_total = $info[0]['elements_total'];
@@ -400,7 +400,7 @@ class AdminTool
                     'data'  => $log->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -419,7 +419,7 @@ class AdminTool
                     'data'  => $video->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -437,7 +437,7 @@ class AdminTool
                     'data'  => $photo->getPathname(),
                     'photo' => $pic_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -456,7 +456,7 @@ class AdminTool
                         'data'  => $video->getPathname(),
                         'video' => $vid_file_name
                     ];
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                         $this->insertTaskData([$insert_values]);
                     } else {
                         $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -475,7 +475,7 @@ class AdminTool
                     'data'  => $thumb->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -493,7 +493,7 @@ class AdminTool
                     'data'  => $subtitle->getPathname(),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -511,7 +511,7 @@ class AdminTool
                     'data' => $userfeed->getPathname(),
                     'user' => $user_id
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -528,7 +528,7 @@ class AdminTool
                     'data' => $avatar->getPathname(),
                     'avatar' => basename($avatar)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -545,7 +545,7 @@ class AdminTool
                     'data' => $background->getPathname(),
                     'background' => basename($background)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -562,7 +562,7 @@ class AdminTool
                     'data' => $logo->getPathname(),
                     'logo' => basename($logo)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                     $this->insertTaskData([$insert_values]);
                 } else {
                     $this->tasks = array_merge($this->tasks, [$insert_values]);
@@ -677,7 +677,7 @@ class AdminTool
                         }
                     }
                     //update nb_done of tools
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
                         $this->cleanTaskData();
                     }
                     $this->tasks_index++;
