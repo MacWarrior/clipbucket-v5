@@ -664,7 +664,7 @@ class AdminTool
                     //call function
                     try {
                         $result = call_user_func($function, $item);
-                        if (!empty($result)) {
+                        if (!empty($result) && is_string($result)) {
                             $this->tasks_processed++;
                             $this->addLog($result);
                         }
