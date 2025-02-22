@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"270",
+  "revision":"271",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
         ,"Refactor flagged elements management"
+        ,"Refactor orphan files deletion tool"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
