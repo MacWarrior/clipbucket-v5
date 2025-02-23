@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"271",
+  "revision":"272",
   "status":"dev",
   "detail":[
     {
@@ -350,6 +350,7 @@
         ,"Fix translation creation in update 5.5.0 - 294"
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
+        ,"Fix technical issue on new setup <i>(#526)</i>"
       ]
     },
     {
