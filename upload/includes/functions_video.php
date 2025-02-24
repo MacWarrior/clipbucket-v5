@@ -15,7 +15,7 @@ function get_video_fields($extra = null)
  */
 function video_playable($id): bool
 {
-    global $cbvideo, $userquery;
+    global $cbvideo;
 
     if (isset($_POST['watch_protected_video'])) {
         $video_password = mysql_clean(post('video_password'));

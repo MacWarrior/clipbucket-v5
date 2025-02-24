@@ -157,6 +157,15 @@
 							<input value="1" name="player_subtitles" id="player_subtitles" {if $row.player_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
 							<span class="lbl"></span>
 						</div>
+						<div class="col-md-4">
+							<label for="enable_360_video">
+								{lang code='option_enable_360_video'}
+							</label>
+						</div>
+						<div class="col-md-2">
+							<input value="yes" name="enable_360_video" id="enable_360_video" {if $row.enable_360_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+							<span class="lbl"></span>
+						</div>
 					</div>
 
                     <hr/>
@@ -168,11 +177,11 @@
                             <select class="form-control" name="player_default_resolution" id="player_default_resolution">
 
                                 {foreach from=$myquery->getVideoResolutions() item=ratio}
-                                {foreach from=$ratio item=resolution}
+                                	{foreach from=$ratio item=resolution}
                                 <option {if $resolution.height==$row.player_default_resolution}selected{/if} value="{$resolution.height}">
                                     {$resolution.title}
                                 </option>
-                                {/foreach}
+                                	{/foreach}
                                 {/foreach}
 
                             </select>
@@ -186,11 +195,11 @@
                                     {lang code='video_resolution_auto'}
                                 </option>
                                 {foreach from=$myquery->getVideoResolutions() item=ratio}
-                                {foreach from=$ratio item=resolution}
+                                	{foreach from=$ratio item=resolution}
                                 <option {if $resolution.height==$row.player_default_resolution_hls}selected{/if} value="{$resolution.height}">
                                     {$resolution.title}
                                 </option>
-                                {/foreach}
+                                	{/foreach}
                                 {/foreach}
 
                             </select>

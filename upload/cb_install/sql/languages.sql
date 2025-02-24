@@ -1494,4 +1494,7 @@ VALUES ('admin_setting'),
        ('orphan_file_has_been_deleted'),
        ('processing_x_files'),
        ('loading_file_list'),
-       ('x_orphan_files_have_been_deleted');
+       ('x_orphan_files_have_been_deleted'),
+       ('option_enable_360_video'),
+       ('x_fov'),
+       ('video_fov');

@@ -78,6 +78,9 @@ class Video
             $this->fields[] = 'default_poster';
             $this->fields[] = 'default_backdrop';
         }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273')) {
+            $this->fields[] = 'fov';
+        }
 
         $this->fields_categories = [
             'category_id'
@@ -1082,13 +1085,17 @@ class CBvideo extends CBCategory
         ];
 
         $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
             $basic_fields[] = 'is_castable';
             $basic_fields[] = 'bits_color';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305')) {
             $basic_fields[] = 'age_restriction';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273')) {
+            $basic_fields[] = 'fov';
         }
 
         return $this->set_basic_fields($basic_fields);
@@ -1408,6 +1415,11 @@ class CBvideo extends CBCategory
                 if (!empty($array['embed_code'])) {
                     $query_field[] = 'embed_code';
                     $query_val[] = $array['embed_code'];
+                }
+
+                if (!empty($array['video_fov'])) {
+                    $query_field[] = 'fov';
+                    $query_val[] = $array['video_fov'];
                 }
             }
             //changes made

@@ -19,6 +19,20 @@
 	top: calc(50% - 0.75em);
 }
 
+.video-js .vjs-big-vr-play-button{
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: 25% !important;
+}
+
+.vjs-poster img{
+	object-fit: cover;
+}
+
+.vjs-control-bar{
+	z-index: 1;
+}
+
 .video-js .vjs-big-play-button {
 	top: 0 !important;
 	left: 0 !important;

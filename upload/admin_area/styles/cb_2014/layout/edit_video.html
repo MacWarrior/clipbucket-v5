@@ -388,15 +388,33 @@
                         </div>
                         <div id="miscellaneous" class="tab-pane">
                             <div class="row">
-                                <label for="status"><strong>{lang code='vdo_status'}</strong></label>
-                                <select class="form-control" name="status" id="status">
-                                    <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>{lang('successful')}</option>
-                                    <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>{lang('processing')}</option>
-                                    <option class="form-control" value="waiting" {if $data.status=='Waiting'}selected{/if}>{lang('waiting')}</option>
-                                    <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>{lang('failed')}</option>
-                                </select>
+                                <div class="col-md-2">
+                                    <label for="status"><strong>{lang code='vdo_status'}</strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="status" id="status">
+                                        <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>{lang('successful')}</option>
+                                        <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>{lang('processing')}</option>
+                                        <option class="form-control" value="waiting" {if $data.status=='Waiting'}selected{/if}>{lang('waiting')}</option>
+                                        <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>{lang('failed')}</option>
+                                    </select>
+                                </div>
+
+                                {if config('enable_360_video') == 'yes'}
+                                <div class="col-md-2">
+                                    <label for="video_fov"><strong>{lang code='video_fov'}</strong></label>
+                                </div>
+                                <div class="col-md-4">
+                                    <select class="form-control" name="video_fov" id="video_fov">
+                                        <option class="form-control" {if empty($data.fov)}selected{/if}></option>
+                                        <option class="form-control" value="180" {if $data.fov=='180'}selected{/if}>{lang('x_fov', 180)}</option>
+                                        <option class="form-control" value="360" {if $data.fov=='360'}selected{/if}>{lang('x_fov', 360)}</option>
+                                    </select>
+                                </div>
+                                {/if}
                             </div>
                             <hr/>
+
                             <div class="row">
                                 <label><strong>Video Stats</strong></label>
                             </div>

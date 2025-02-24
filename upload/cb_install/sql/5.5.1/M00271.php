@@ -47,8 +47,8 @@ class M00271 extends \Migration
         ]);
 
         self::generateTranslation('loading_file_list', [
-            'fr'=>'Chargement de la liste des fichiers..',
-            'en'=>'Loading file list..'
+            'fr'=>'Chargement de la liste des fichiers...',
+            'en'=>'Loading file list...'
         ]);
     }
 }
