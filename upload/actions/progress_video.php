@@ -24,6 +24,14 @@ switch ($_POST['output']) {
             $template = 'blocks/videos/featured_video_slider_block.html';
         }
         break;
+    case 'home_collection':
+        $display_type = 'user-videos';
+        if (config('homepage_collection_video_style') == 'modern') {
+            $template = "blocks/video-new.html";
+        } else {
+            $template = 'blocks/video.html';
+        }
+        break;
     case 'search':
         $display_type = 'normal';
         break;
@@ -41,6 +49,10 @@ switch ($_POST['output']) {
         assign('control', 'full');
         $template = 'blocks/manage/account_video.html';
         break;
+    case 'view_channel_player':
+        $display_type = 'homeVideos';
+        $get_player = true;
+        break;
     default:
         $display_type = '';
         break;
@@ -55,6 +67,13 @@ foreach ($videos as $video) {
         if ($video['status'] == 'Processing') {
             $data['percent'] = $video['convert_percent'];
         }
+    } elseif (!empty($get_player) && $video['videokey'] == userMainVideo($videos)) {
+        assign('data', $video);
+        ob_start();
+        show_player(['vdetails'=>$video]);
+
+        $return['player']['html'] = ob_get_clean();
+        $return['player']['id'] = $video['videoid'];
     }
     $data['html'] = getTemplate($template);
     $return['videos'][] = $data;

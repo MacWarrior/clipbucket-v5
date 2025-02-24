@@ -70,6 +70,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     }
     Assign('ids_to_check_progress_recent', json_encode($ids_to_check_progress));
 
+    $ids_to_check_progress = [];
     if( config('home_display_featured_collections') == 'yes' ){
         $params = [
             'featured'               => 'yes'
@@ -77,8 +78,18 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
             ,'hide_empty_collection' => true
             ,'with_items'            => true
         ];
-        assign('featured_collections', Collection::getInstance()->getAll($params));
+        $featured_collections = Collection::getInstance()->getAll($params);
+        assign('featured_collections', $featured_collections);
     }
+    foreach ($featured_collections as $featured_collection) {
+        foreach ($featured_collection['items'] as $item) {
+            if (in_array($item['status'], ['Processing', 'Waiting'])) {
+                $ids_to_check_progress[] = $item['videoid'];
+            }
+        }
+    }
+    Assign('ids_to_check_progress_collection', json_encode($ids_to_check_progress));
+
     $ids_to_check_progress = [];
     if( config('display_featured_video') == 'yes' ){
         $params = Video::getInstance()->getFilterParams('featured', []);

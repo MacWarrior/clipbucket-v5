@@ -34,7 +34,7 @@
             <div class="videos">
                 {$count = 0}
                 {foreach $video_list as $video}
-                <div class="item-video">
+                <div class="item-video" data-id="{$video.videoid}">
                     {include file="$style_dir/blocks/video.html" display_type='user-videos'}
                 </div>
                     {$count = $count + 1}

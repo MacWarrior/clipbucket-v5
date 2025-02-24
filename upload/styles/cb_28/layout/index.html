@@ -170,8 +170,10 @@
     var nextLang = "{lang code='next'}";
     var video_style = "{config('homepage_recent_video_style')}";
     var featured_video_style = "{config('featured_video_style')}";
+    var collection_video_style = "{config('homepage_collection_video_style')}";
     var ids_to_check_progress_recent = JSON.parse('{$ids_to_check_progress_recent}');
     var ids_to_check_progress_featured = JSON.parse('{$ids_to_check_progress_featured}');
+    var ids_to_check_progress_collection = JSON.parse('{$ids_to_check_progress_collection}');
     let intervalId_recent;
     let intervalId_featured;
     var slider;
@@ -211,6 +213,7 @@
         //TODO do this only if videos aren't get by home.php ajax
         progressVideoCheckHome(ids_to_check_progress_recent, 'home','intervalId_recent');
         progressVideoCheckHome(ids_to_check_progress_featured, 'home_featured','intervalId_featured');
+        progressVideoCheckHome(ids_to_check_progress_collection, 'home_collection','intervalId_collection');
     });
     {/if}
 </script>

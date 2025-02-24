@@ -247,5 +247,5 @@ $(document).ready(function (){
 
     init_readonly_tags('profile_tags', '#list_tags_profile');
 
-    progressVideoCheck(ids_to_check_progress, 'view_channel');
+    progressVideoCheck(ids_to_check_progress, display_type);
 });

@@ -515,26 +515,33 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
     let class_video;
     let data_field;
     let parent_div;
-    if (displayType == 'home') {
-        class_video = video_style == 'modern' ? '.slider-video-container' : '.item-video';
+    let send_video_style = '';
+    switch (displayType) {
+        case 'home_collection':
+            send_video_style = collection_video_style;
+            break;
+        case 'home':
+            send_video_style = video_style;
+            break;
+        case 'home_featured':
+            send_video_style = featured_video_style;
+            break;
+        default:
+            class_video = 'no';
+    }
+    if (displayType === 'home_collection' || displayType === 'home') {
+        class_video = send_video_style === 'modern' ? '.slider-video-container' : '.item-video';
         data_field = 'data-id';
         parent_div = $('section.videos,section.default-slider');
-    } else if (displayType == 'home_featured') {
-        if (featured_video_style == 'modern') {
-            class_video = '.slide.video-link'
-            data_field = 'data-videoid';
-        } else {
-            class_video = '.item-video';
-            data_field = 'data-id';
-        }
+    } else if (displayType === 'home_featured') {
+        class_video = send_video_style === 'modern' ? '.slide.video-link' : '.item-video';
+        data_field = send_video_style === 'modern' ? 'data-videoid' : 'data-id';
         parent_div = $('section.featured-videos');
-    } else {
-        class_video = 'no';
     }
+
     if (window[interval_name]) {
         clearInterval(window[interval_name])
     }
-
     if (ids_to_check_progress && ids_to_check_progress.length > 0) {
         window[interval_name] = setInterval(function () {
             $.post({
@@ -557,7 +564,7 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                                 if (displayType == 'home_featured' && featured_video_style == 'modern') {
                                     slider.updateSlideListeners();
                                     if (slider.slidesContainer.children.length === 1) {
-                                        slider.scrollToSlide(1);
+                                        slider.scrollToSlide(0);
                                     }
                                 }
                                 parent_div.find(selector).fadeIn('slow');
@@ -569,7 +576,7 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                             if (displayType == 'home_featured' && featured_video_style == 'modern') {
                                 slider.updateSlideListeners();
                                 if (slider.slidesContainer.children.length === 1) {
-                                    slider.scrollToSlide(1);
+                                    slider.scrollToSlide(0);
                                 }
                             }
                             parent_div.find(selector).fadeIn('slow');

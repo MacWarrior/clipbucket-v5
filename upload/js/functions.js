@@ -1008,7 +1008,10 @@ function progressVideoCheck(ids_to_check_progress, displayType) {
                                 process_div.find('span').html(video.percent + '%');
                             }
                         } else {
-                            $('.item-video[data-id="'+video.videoid+'"]').html(video.html)
+                            $('.item-video[data-id="'+video.videoid+'"]').html(video.html);
+                            if (displayType === 'view_channel_player' && data.player !== undefined && data.player.id == video.videoid) {
+                                $('#cb_player').html(data.player.html);
+                            }
                         }
                     });
 
