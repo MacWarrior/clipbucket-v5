@@ -1497,4 +1497,8 @@ VALUES ('admin_setting'),
        ('x_orphan_files_have_been_deleted'),
        ('option_enable_360_video'),
        ('x_fov'),
-       ('video_fov');
+       ('video_fov'),
+       ('basic_settings'),
+       ('advanced_settings'),
+       ('basic_settings_desc'),
+       ('advanced_settings_desc');
