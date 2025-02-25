@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"273",
+  "revision":"274",
   "status":"dev",
   "detail":[
     {
@@ -246,6 +246,7 @@
         ,"Fix base URL usage"
         ,"Fix sharing privacy"
         ,"Fix collection sharing JS error"
+        ,"Fix potentiel logo & favicon browser cache issue"
       ]
     },
     {
