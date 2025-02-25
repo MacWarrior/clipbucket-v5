@@ -322,7 +322,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_location_video_field', 'yes'),
     (NULL, 'enable_recorded_date_video_field', 'yes'),
     (NULL, 'allow_tag_space', 'no'),
-    (NULL, 'enable_360_video', 'yes');
+    (NULL, 'enable_360_video', 'yes'),
+    (NULL, 'logo_update_timestamp', CURRENT_TIMESTAMP());
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
