@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"270",
+  "revision":"273",
   "status":"dev",
   "detail":[
     {
@@ -46,6 +46,7 @@
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
         ,"Refactor flagged elements management"
+        ,"Refactor orphan files deletion tool"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -159,6 +160,7 @@
         ,"Implement featured video slider"
         ,"Implement collection sharing"
         ,"Implement spaces in tags"
+        ,"Implement 360° video support"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -288,6 +290,7 @@
       "description": [
         "Refactor log system"
         ,"Implement thumb background color option"
+        ,"Implement FOV detection"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -349,6 +352,7 @@
         ,"Fix translation creation in update 5.5.0 - 294"
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
+        ,"Fix technical issue on new setup <i>(#526)</i>"
       ]
     },
     {
@@ -379,6 +383,7 @@
         ,"Update Server Thumb for ClipBucket to version 2.0.3"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
+        ,"Update VideoJS player to 2.1"
         ,"Remove Social Beast"
       ]
     },
