@@ -123,7 +123,22 @@ if (!empty($_filename)) {
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);
-    Clipbucket_db::getInstance()->update(tbl('video'), ['video_files', 'duration'], [$video_files, (int)$ffmpeg->input_details['duration']], ' file_name = \''.display_clean($_filename).'\'');
+    $fields = [
+        'video_files'
+        ,'duration'
+    ];
+    $values = [
+        $video_files
+        ,(int)$ffmpeg->input_details['duration']
+    ];
+
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273') && !empty($ffmpeg->input_details['fov'])) {
+        $fields[] = 'fov';
+        $values[] = $ffmpeg->input_details['fov'];
+    }
+
+    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, ' file_name = \''.display_clean($_filename).'\'');
+
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
 

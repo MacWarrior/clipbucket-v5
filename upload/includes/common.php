@@ -65,6 +65,7 @@ require_once DirPath::get('classes') . 'ClipBucket.class.php';
 require_once DirPath::get('includes') . 'functions.php';
 require_once DirPath::get('classes') . 'db.class.php';
 require_once DirPath::get('classes') . 'rediscache.class.php';
+require_once DirPath::get('classes') . 'network.class.php';
 
 check_install('before');
 if (file_exists(DirPath::get('includes') . 'config.php')) {
@@ -90,7 +91,6 @@ require_once DirPath::get('classes') . 'curl.class.php';
 require_once DirPath::get('classes') . 'tmdb.class.php';
 require_once DirPath::get('classes') . 'admin_tool.class.php';
 require_once DirPath::get('classes') . 'system.class.php';
-require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'social_networks.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'email_template.class.php';

@@ -1124,7 +1124,7 @@ function lang($var, $params = [])
     $array_str = ['{title}'];
     $array_replace = ['Title'];
     $lang = str_replace($array_str, $array_replace, $translation);
-    if( empty($params) ){
+    if( $params === [] || !isset($params)){
         return $lang;
     }
 
