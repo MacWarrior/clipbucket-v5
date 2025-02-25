@@ -4632,6 +4632,10 @@ textarea#comment_box {
   height: 99999999px;
 }
 
+.cd-popup .cb-popup-container .modal-inset .my-modal-content .player-holder canvas{
+  left: 0;
+}
+
 .is-visible {
   visibility: visible;
   opacity: 1;

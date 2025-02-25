@@ -124,8 +124,19 @@ if (!empty($_filename)) {
 
     $video_files = json_encode($ffmpeg->video_files);
 
-    $fields = ['video_files', 'duration'];
-    $values = [$video_files, (int)$ffmpeg->input_details['duration']];
+    $fields = [
+        'video_files'
+        ,'duration'
+    ];
+    $values = [
+        $video_files
+        ,(int)$ffmpeg->input_details['duration']
+    ];
+
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273') && !empty($ffmpeg->input_details['fov'])) {
+        $fields[] = 'fov';
+        $values[] = $ffmpeg->input_details['fov'];
+    }
 
     // TODO : Update revision
     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {

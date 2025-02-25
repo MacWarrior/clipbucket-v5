@@ -55,6 +55,10 @@
 
                     <span class="label label-info">{strtoupper($video.file_type)}</span>
 
+                    {if config('enable_360_video')=='yes' && !empty($video.fov)}
+                        <span class="label label-info">{lang(x_fov, $video.fov)}</span>
+                    {/if}
+
                     {if $video.is_flagged == 1}
                         <span class="label label-danger">{lang('flagged')}</span>
                     {/if}

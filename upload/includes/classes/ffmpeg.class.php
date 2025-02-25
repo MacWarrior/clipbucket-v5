@@ -67,6 +67,8 @@ class FFMpeg
             }
         }
 
+        $info['fov'] = self::getFovFromStream($data['streams']);
+
         $info['format'] = $data['format']['format_name'];
         $info['duration'] = round($data['format']['duration'], 2);
         $info['video_bitrate'] = (int)max(($video['bit_rate'] ?? 0), ($data['format']['bit_rate'] ?? 0));
@@ -124,6 +126,26 @@ class FFMpeg
             $info['video_rate'] = $int_1_video_rate / $int_2_video_rate;
         }
         return $info;
+    }
+
+    private static function getFovFromStream($streams) {
+        foreach ($streams as $stream) {
+            if (isset($stream['side_data_list'])) {
+                foreach ($stream['side_data_list'] as $sideData) {
+                    if (isset($sideData['projection'])) {
+                        switch ($sideData['projection']) {
+                            case 'equirectangular':
+                                return 360;
+
+                            case 'hemispherical_equirectangular':
+                            case 'fisheye':
+                                return 180;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
