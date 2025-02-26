@@ -6640,6 +6640,10 @@ textarea#comment_box {
   --width-collapsed-original: var(--width-collapsed);
 }
 
+.slider-container-featured .slide > .restricted{
+  display: none;
+}
+
 .slider-container-featured.without_poster {
   --width-poster: 0;
 }
