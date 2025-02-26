@@ -3,7 +3,7 @@ define('THIS_PAGE', 'system_info');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('admin_access', true);
+User::getInstance()->hasPermissionOrRedirect('advanced_settings', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

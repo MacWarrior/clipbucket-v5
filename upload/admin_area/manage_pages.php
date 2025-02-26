@@ -5,7 +5,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 global $cbpage, $eh;
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access',true);
+User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */

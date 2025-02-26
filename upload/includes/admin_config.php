@@ -39,7 +39,7 @@ if( THIS_PAGE != 'system_info' && php_sapi_name() != 'cli' ){
     $check_global = System::check_global_configs();
     if( $check_global !== 1 ){
         if ($check_global === -1 ) {
-            e(lang('error_server_config', '/admin_area/main.php#config_hosting'), 'w', false);
+            e(lang('error_server_config', '/admin_area/setting_basic.php#config_hosting'), 'w', false);
         } else {
             e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
         }
