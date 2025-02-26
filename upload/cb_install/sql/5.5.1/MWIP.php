@@ -20,7 +20,7 @@ class MWIP extends \Migration
             'en' => 'Advanced settings'
         ]);
 
-        $sql = 'select permission_value, user_level_id FROM ' . tbl('user_levels_permissions_values') . ' WHERE id_user_levels_permission = (SELECT id_user_levels_permission FROM ' . tbl('user_levels_permissions') . ' WHERE permission_name = \'web_config_access\')';
+        $sql = 'SELECT permission_value, user_level_id FROM ' . tbl('user_levels_permissions_values') . ' WHERE id_user_levels_permission = (SELECT id_user_levels_permission FROM ' . tbl('user_levels_permissions') . ' WHERE permission_name = \'web_config_access\')';
         $results = self::req($sql);
 
         self::generatePermission(3, 'advanced_settings', 'advanced_settings_desc', array_combine(array_column($results,'user_level_id'), array_column($results,'permission_value')));
