@@ -26,8 +26,8 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('ongoing_conversion', [
-            'fr'=>'Conversion en cours :',
-            'en'=>'Ongoing conversion :'
+            'fr'=>'Conversion en cours',
+            'en'=>'Ongoing conversion'
         ]);
 
 

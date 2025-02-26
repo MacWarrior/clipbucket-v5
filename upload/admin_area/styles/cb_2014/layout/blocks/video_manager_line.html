@@ -83,7 +83,7 @@
             {if $video.status|lower == 'processing' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')}
             <div class="col-md-4">
                 <br/>
-                {lang code='ongoing_conversion'}<br/>
+                {lang code='ongoing_conversion'} :<br/>
                 <div class="progress" style="margin-bottom:0;">
                     <div class="progress-bar progress-bar-striped animate" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%;">
                         {$video.convert_percent}%
