@@ -80,7 +80,7 @@ class Category
             $conditions[] = 'id_category_type = '. mysql_clean($param_category_type);
         }
         if ($param_category_default !== false) {
-            $conditions[] = 'is_default = '. mysql_clean($param_category_type);
+            $conditions[] = 'is_default = \'' . mysql_clean($param_category_default) . '\'';
         }
         if ($param_parent_id !== false) {
             $conditions[] = 'parent_id = '. mysql_clean($param_parent_id);
@@ -334,9 +334,9 @@ class Category
             return false;
         }
         return $this->getAll([
-            'category_type' => $categ_type_id,
-            'is_default'    => 'yes',
-            'first_only'    => true
+            'category_type'    => $categ_type_id,
+            'category_default' => 'yes',
+            'first_only'       => true
         ]);
     }
 

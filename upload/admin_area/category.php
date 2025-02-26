@@ -43,13 +43,19 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
             $id_category = $_POST['category_id'];
             if (isset($_POST['update_category'])) {
                 Category::getInstance()->update($_POST);
+                if ($_POST['is_default'] == 'yes') {
+                    Category::getInstance()->makeDefault($type, $_POST['category_id']);
+                }
             }
         } else {
             $params = $_POST;
             $params['id_category_type'] = Category::getInstance()->getIdsCategoriesType($type);
             $next_order_place = Category::getInstance()->getNextOrderForParent($type, $_POST['parent_id']);
             $params['category_order'] = $next_order_place;
-            Category::getInstance()->insert($params);
+            $inserted_id = Category::getInstance()->insert($params);
+            if ($_POST['is_default'] == 'yes') {
+                Category::getInstance()->makeDefault($type, $inserted_id);
+            }
         }
 
         if (!empty($_FILES['category_thumb']['tmp_name'])) {
@@ -96,7 +102,7 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
 
     //Assign Category Values
     assign('category', $cats);
-    assign('total', $cats = Category::getInstance()->getAll([
+    assign('total', Category::getInstance()->getAll([
         'category_type' => Category::getInstance()->getIdsCategoriesType($type),
         'count'
     ]));

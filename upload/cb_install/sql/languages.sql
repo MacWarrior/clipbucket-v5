@@ -1498,4 +1498,5 @@ VALUES ('admin_setting'),
        ('option_enable_360_video'),
        ('x_fov'),
        ('video_fov'),
-       ('cannot_delete_not_empty_category');
+       ('cannot_delete_not_empty_category'),
+       ('option_show_collapsed_checkboxes');

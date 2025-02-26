@@ -15,5 +15,9 @@ class MWIP extends \Migration
            'en'=>'You cannot delete a category which is linked to an item'
        ]);
 
+       self::generateTranslation('option_show_collapsed_checkboxes', [
+           'fr'=>'Catégories repliables',
+           'en'=>'Collapsible categories'
+       ]);
     }
 }
