@@ -1174,3 +1174,18 @@ a[role='menuitem'] {
     height: calc(100% - 25px);
     left: 0;
 }
+
+.restricted {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    cursor: help;
+    background-color: #000;
+    opacity: 0.9;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align:center;
+    border-radius: 25px;
+}
