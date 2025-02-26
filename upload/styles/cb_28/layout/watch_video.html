@@ -5,7 +5,7 @@
     <div class="clearfix">
         <section id="content" class="clearfix videos">
             <div class="clearfix player-holder">
-                {if $video.status=='Successful'}
+                {if $video.status|lower == 'successful'}
                     {if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
                         <span class="label label-warning" style="font-size:1em;">
 							{lang code="bits_color_compatibility"}
@@ -13,6 +13,13 @@
                     {/if}
                     <div id="cb_player" class="cb_player no_select">
                         {show_player vdetails=$video}
+                    </div>
+                {else}
+                    <div id="cb_player" class="clearfix cb_player">
+                        <div class="thumb-holder">
+                            <img class="img-responsive" src="{getThumb vdetails=$video size=768x432}"/>
+                            {ANCHOR place='in_video_thumb' data=$video}
+                        </div>
                     </div>
                 {/if}
             </div>

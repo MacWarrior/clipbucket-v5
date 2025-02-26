@@ -30,7 +30,7 @@ class MWIP extends \Migration
             'en'=>'Ongoing conversion'
         ]);
 
-
+        self::deleteTranslation('this_vdo_not_working');
 
         /* Update revision IN :
          *

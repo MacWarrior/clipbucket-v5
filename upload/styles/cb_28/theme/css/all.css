@@ -6223,22 +6223,14 @@ textarea#comment_box {
 /* Homepage options */
 
 
-
 /*  Debut CSS caroucel */
-
-/** @todo hack full width  */
-#main , #content {
-  /*
-  min-width: 100%;
-  /* */
-}
 
 .default-slider {
   width: 100%;
   box-sizing: border-box;
   position: relative;
 
-  /** definir les dimension de chaque bloc di slider */
+  /** definir les dimension de chaque bloc du slider */
   --height :250px;
   --width : 274px;
 }
@@ -6287,9 +6279,6 @@ textarea#comment_box {
 }
 
 .default-slider .slider-container {
-/*
-  height: var(--height);
- */
   width: max-content;
   box-sizing: border-box;
   display: block;
@@ -6305,9 +6294,6 @@ textarea#comment_box {
   justify-content: flex-start;
   transition: opacity 200ms ease;
   width: var(--width);
-/*
-  height: var(--height);
- */
 }
 
 .slider-video-container.disabled {
@@ -6560,9 +6546,6 @@ textarea#comment_box {
   margin-right: 8px;
   margin-left: 8px;
   width: var(--width);
-/*
-  height: var(--height);
-*/
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
