@@ -46,7 +46,7 @@
 							{$video.convert_percent}%
 						</div>
 					</div>
-				{elseif $video.status|lower == 'successful'}
+				{elseif $video.status|lower == 'successful' && $video.views > 0}
 					<span class="label label-info">
 						{lang code='viewed'} {$video.last_viewed|niceTime}
 					</span>
