@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <label class="label-heading" for="{$field.id}">{$field.title}</label>
                                     {$field.class='form-control'}
-                                    {if $field.id == 'tags'}
+                                    {if $field.id == 'playlists_tags'}
                                         {$field.type='hidden'}
                                         <ul id="list_tags"></ul>
                                     {/if}
@@ -123,12 +123,12 @@
                 </div>
             </div>
         </div>
-    
+
     <!-- Manage playlist backend -->
     <!-- lines added for pagination -->
     {include file="$style_dir/blocks/pagination.html"}
     <div class="marginBottomLarge"></div>
 <script>
     var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var id_input = 'tags';
+    var id_input = 'playlists_tags';
 </script>
