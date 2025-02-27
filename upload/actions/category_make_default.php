@@ -14,6 +14,7 @@ $cats = Category::getInstance()->getAll([
 
 //Assign Category Values
 assign('category', $cats);
+assign('type', $_POST['type']);
 assign('total', $cats = Category::getInstance()->getAll([
     'category_type' => Category::getInstance()->getIdsCategoriesType($_POST['type']),
     'count'

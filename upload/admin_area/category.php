@@ -53,6 +53,7 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
             $next_order_place = Category::getInstance()->getNextOrderForParent($type, $_POST['parent_id']);
             $params['category_order'] = $next_order_place;
             $inserted_id = Category::getInstance()->insert($params);
+            $id_category = $inserted_id;
             if ($_POST['is_default'] == 'yes') {
                 Category::getInstance()->makeDefault($type, $inserted_id);
             }

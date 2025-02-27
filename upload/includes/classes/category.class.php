@@ -306,6 +306,10 @@ class Category
         }
 
         //Removing Category
+
+        if (!empty($cat_details['category_thumb'])) {
+            unlink(DirPath::get('category_thumbs') . $type . DIRECTORY_SEPARATOR . $cat_details['category_thumb']);
+        }
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl($this->tablename) . ' WHERE '. $this->primary_key .' = ' . mysql_clean($category_id));
         e(lang('class_cat_del_msg'), 'm');
     }
@@ -479,7 +483,7 @@ class Category
             return false;
         }
 
-        $path = $dir_path . DIRECTORY_SEPARATOR . $cid . '.' . $ext;
+        $path = $dir_path . $cid . '.' . $ext;
 
         //Removing File if already exists
         if (file_exists($path)) {
@@ -495,7 +499,7 @@ class Category
             $imgObj->CreateThumb($path, $path, $this->cat_thumb_width, $ext, $this->cat_thumb_height);
             Category::getInstance()->update([
                 'category_id'    => $cid,
-                'category_thumb' => $file['name']
+                'category_thumb' => $cid . '.' . $ext
             ]);
         }
         return true;
