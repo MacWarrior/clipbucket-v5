@@ -508,8 +508,27 @@ $(function () {
 
     document.querySelectorAll('.slider-container-featured').forEach(function(sliderElement){
         slider = new SliderFeatured(sliderElement);
-    })
+    });
+
+    initListenerHome();
 });
+
+function initListenerHome() {
+    $('.cd-popup-trigger:not(.thumb-video)').on('click',  function (event) {
+        event.preventDefault();
+        $('.cd-popup').addClass('is-visible');
+    });
+
+    //close popup
+    $('.cd-popup').on('click', function (event) {
+        if ($(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') || $(event.target).is('.my-modal-content')) {
+            event.preventDefault();
+            $(this).removeClass('is-visible');
+            videojs($('.my-modal-content').find('video')[0]).dispose();
+            $(".my-modal-content").html('');
+        }
+    });
+}
 
 function progressVideoCheckHome(ids_to_check_progress, displayType, interval_name) {
     let class_video;
@@ -586,6 +605,8 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                     if (response.all_complete) {
                         clearInterval(window[interval_name]);
                     }
+                    initListenerHome();
+                    AddingListenerModernThumbVideoPopinView();
                 }
             })
         }, 60000);

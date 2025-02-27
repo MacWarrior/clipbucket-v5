@@ -49,7 +49,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
         $params = Video::getInstance()->getFilterParams('most_recent', []);
         $params['limit'] = config('list_recent_videos');
         $recent_videos = Video::getInstance()->getAll($params);
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273') ) {
             foreach ($recent_videos as $video) {
                 if (in_array($video['status'], ['Processing', 'Waiting'])) {
                     $ids_to_check_progress[] = $video['videoid'];
@@ -94,7 +94,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     if( config('display_featured_video') == 'yes' ){
         $params = Video::getInstance()->getFilterParams('featured', []);
         $featured_videos = Video::getInstance()->getAll($params);
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273') ) {
             foreach ($featured_videos as $video) {
                 if (in_array($video['status'], ['Processing', 'Waiting'])) {
                     $ids_to_check_progress[] = $video['videoid'];

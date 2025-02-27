@@ -181,22 +181,6 @@
 
     {if config('popup_video') == 'yes'}
     $(document).ready(function ($) {
-        //open popup
-        $(document).on('click', '.cd-popup-trigger:not(.thumb-video)', function (event) {
-            event.preventDefault();
-            $('.cd-popup').addClass('is-visible');
-        });
-
-        //close popup
-        $(document).on('click', '.cd-popup', function (event) {
-            if ($(event.target).is('.cd-popup-close') || $(event.target).is('.cd-popup') || $(event.target).is('.my-modal-content')) {
-                event.preventDefault();
-                $(this).removeClass('is-visible');
-                videojs($('.my-modal-content').find('video')[0]).dispose();
-                $(".my-modal-content").html('');
-            }
-        });
-
         //close popup when clicking the esc keyboard button
         $(document).keydown(function (event) {
             if (event.which == '27') {
