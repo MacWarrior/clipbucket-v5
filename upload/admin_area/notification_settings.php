@@ -5,7 +5,7 @@ global $myquery;
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
+User::getInstance()->hasPermissionOrRedirect('basic_settings', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

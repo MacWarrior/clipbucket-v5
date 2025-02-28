@@ -425,4 +425,43 @@ $(window).resize(function(){
     responsiveFixes();
     loginHeight();
 });
-//shortKeys();
+
+/* Thumbs preview */
+document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll("img[data-thumbs]");
+    if (images.length === 0) return;
+    images.forEach(img => {
+        let thumbnails;
+        try {
+            let thumbsData = img.getAttribute("data-thumbs");
+            thumbnails = JSON.parse(thumbsData);
+        } catch (error) {
+            return;
+        }
+        if (!Array.isArray(thumbnails) || thumbnails.length === 0) return;
+        let index = 0;
+        let interval;
+        const parent = img.closest("div");
+        parent.addEventListener("mouseenter", function () {
+            if( img.src ){
+                img.dataset.originalSrc = img.src;
+            }
+            interval = setInterval(() => {
+                index = (index + 1) % thumbnails.length;
+                if (thumbnails[index]) {
+                    img.src = thumbnails[index];
+                }
+            }, 500);
+        });
+        parent.addEventListener("mouseleave", function () {
+            clearInterval(interval);
+            if (img.dataset.originalSrc) {
+                img.src = img.dataset.originalSrc;
+            }
+            index = 0;
+        });
+    });
+});
+
+
+

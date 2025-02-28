@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"274",
+  "revision":"277",
   "status":"dev",
   "detail":[
     {
@@ -47,6 +47,7 @@
         ,"Refactor email templates management"
         ,"Refactor flagged elements management"
         ,"Refactor orphan files deletion tool"
+        ,"Refactor website configurations"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -161,6 +162,7 @@
         ,"Implement collection sharing"
         ,"Implement spaces in tags"
         ,"Implement 360° video support"
+        ,"Implement video thumbs preview"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

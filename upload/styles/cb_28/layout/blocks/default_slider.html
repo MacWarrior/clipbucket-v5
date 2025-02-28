@@ -13,7 +13,7 @@
             {if $video_style == 'modern'}
                 {$count = 0}
                 {foreach $video_list as $video}
-                    {include file="$style_dir/blocks/video-new.html"}
+                    {include file="$style_dir/blocks/videos/video-new.html"}
                     {$count = $count + 1}
                     {if $limit && $count >= $limit}
                         {break}
@@ -35,7 +35,7 @@
                 {$count = 0}
                 {foreach $video_list as $video}
                 <div class="item-video">
-                    {include file="$style_dir/blocks/video.html" display_type='user-videos'}
+                    {include file="$style_dir/blocks/videos/video.html" display_type='user-videos'}
                 </div>
                     {$count = $count + 1}
                     {if $limit && $count >= $limit}
