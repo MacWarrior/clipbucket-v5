@@ -20,10 +20,6 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-$opt_list = Upload::getInstance()->get_upload_options();
-
-assign('opt_list', $opt_list);
-
 if (isset($_POST['update'])) {
     $config_booleans = [
         'stay_mp4',
@@ -59,7 +55,6 @@ if (isset($_POST['update'])) {
     $rows = [
         'allowed_video_types',
         'allowed_photo_types',
-        'allow_upload',
         'approve_video_notification',
         'audio_codec',
         'activation',
@@ -71,21 +66,10 @@ if (isset($_POST['update'])) {
         'extract_subtitles',
         'conversion_type',
 
-        'big_thumb_width',
-        'big_thumb_height',
-
-        'embedUpload',
-        'enable_groups',
-
         'ffmpegpath',
 
         'ffprobe_path',
         'media_info',
-
-        'keep_mp4_as_is',
-
-        'r_height',
-        'r_width',
 
         'max_bg_size',
         'max_conversion',
@@ -99,36 +83,18 @@ if (isset($_POST['update'])) {
         'git_path',
         'max_photo_size',
 
-        'remoteUpload',
-
         'send_comment_notification',
-        'sys_os',
         'sbrate',
         'srate',
         'show_collapsed_checkboxes',
         'disable_email',
-        'enable_video_social_sharing',
-        'enable_video_internal_sharing',
-        'enable_video_link_sharing',
-        'enable_age_restriction',
-        'enable_user_dob_edition',
-        'enable_blur_restricted_content',
-        'enable_hide_uploader_name',
-        'enable_global_age_restriction',
-        'enable_sitemap',
+
         'enable_chunk_upload',
         'chunk_upload_size',
         'cloudflare_upload_limit',
 
-        'thumb_width',
-        'thumb_height',
-
-        'user_comment_own',
-
-        'vid_categories',
         'video_codec',
         'vrate',
-        'video_require_login',
         'delete_mass_upload',
         'stay_mp4',
         'enable_video_file_upload',
@@ -161,7 +127,6 @@ if (isset($_POST['update'])) {
         'nginx_path',
         'automate_launch_mode',
         'timezone',
-        'homepage_featured_video_display',
         'photo_enable_nsfw_check',
         'video_enable_nsfw_check',
         'photo_nsfw_check_model',
@@ -172,11 +137,14 @@ if (isset($_POST['update'])) {
         'video_nsfw_check_model',
         'base_url',
         'video_nsfw_check_model',
-        'thumb_background_color'
+        'thumb_background_color',
+        'subtitle_format'
     ];
 
-    foreach ($opt_list as $optl) {
-        $rows[] = $optl['load_func'];
+    foreach (Upload::getInstance()->get_upload_options() as $optl) {
+        if( !empty($optl['load_func']) ){
+            $rows[] = $optl['load_func'];
+        }
     }
 
     //Numeric Array

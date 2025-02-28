@@ -30,6 +30,7 @@ class MWIP extends \Migration
 
         self::deleteTranslation('web_config_access');
         self::deleteTranslation('web_config_access_desc');
+        self::deleteTranslation('option_homepage_featured_video_display');
 
         self::generateTranslation('basic_settings_desc', [
             'fr' => 'Permet de modifier les configurations simples du site',
@@ -41,5 +42,31 @@ class MWIP extends \Migration
             'en' => 'User can change website advanced settings'
         ]);
 
+        $configs = [
+            'allow_upload'
+            ,'big_thumb_width'
+            ,'big_thumb_height'
+            ,'embedUpload'
+            ,'remoteUpload'
+            ,'homepage_featured_video_display'
+            ,'basedir'
+            ,'user_comment_own'
+            ,'video_require_login'
+            ,'thumb_height'
+            ,'thumb_width'
+            ,'r_width'
+            ,'r_height'
+            ,'keep_mp4_as_is'
+            ,'enable_groups'
+            ,'resize'
+            ,'number_featured_video'
+        ];
+        foreach($configs as $config_name){
+            self::deleteConfig($config_name);
+        }
+
+        if( config('list_featured_videos') <= 1){
+            self::updateConfig('list_featured_videos', 20);
+        }
     }
 }

@@ -73,6 +73,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
 
     if( config('display_featured_video') == 'yes' ){
         $params = Video::getInstance()->getFilterParams('featured', []);
+        $params['limit'] = config('list_featured_videos');
         assign('featured_videos', Video::getInstance()->getAll($params));
     }
 

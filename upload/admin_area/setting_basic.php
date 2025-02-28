@@ -14,10 +14,6 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
-$opt_list = Upload::getInstance()->get_upload_options();
-
-assign('opt_list', $opt_list);
-
 if (isset($_POST['update'])) {
     $config_booleans = [
         'seo'
@@ -155,7 +151,6 @@ if (isset($_POST['update'])) {
         'allow_username_spaces',
         'allow_registeration',
         'enable_advertisement',
-        'allow_upload',
         'anonym_comments',
         'enable_sub_collection',
         'enable_rss_feeds',
@@ -163,8 +158,6 @@ if (isset($_POST['update'])) {
         'background_color',
         'background_upload',
         'background_url',
-        'big_thumb_width',
-        'big_thumb_height',
         'email_domain_restriction',
 
         'closed',
@@ -192,17 +185,11 @@ if (isset($_POST['update'])) {
         'disallowed_usernames',
         'use_subs',
 
-        'embedUpload',
         'email_verification',
-        'enable_groups',
 
         'gravatars',
 
         'keywords',
-        'keep_mp4_as_is',
-
-        'r_height',
-        'r_width',
 
         'max_bg_width',
         'max_video_title',
@@ -249,11 +236,7 @@ if (isset($_POST['update'])) {
         'photo_med_width',
         'photo_med_height',
 
-        'resize',
-        'remoteUpload',
-
         'site_title',
-        'sys_os',
         'site_slogan',
         'seo',
         'seo_vido_url',
@@ -287,17 +270,12 @@ if (isset($_POST['update'])) {
         'enable_global_age_restriction',
         'enable_sitemap',
 
-        'thumb_width',
-        'thumb_height',
-
-        'user_comment_own',
         'users_items_subscriptions',
         'users_items_contacts_channel',
         'users_items_search_page',
         'use_cached_pagin',
         'cached_pagin_time',
 
-        'vid_categories',
         'vid_cat_height',
         'vid_cat_width',
         'videosSection',
@@ -313,7 +291,6 @@ if (isset($_POST['update'])) {
         'video_rating',
         'photo_rating',
         'video_categories',
-        'video_require_login',
         'feedsSection',
         'store_guest_session',
         'popup_video',
@@ -357,7 +334,6 @@ if (isset($_POST['update'])) {
         'enable_social_networks_links_footer',
         'enable_social_networks_links_home_sidebar',
         'enable_video_view_history',
-        'homepage_featured_video_display',
         'homepage_recent_videos_display',
         'homepage_recent_video_style',
         'homepage_recent_video_ratio',
@@ -377,18 +353,15 @@ if (isset($_POST['update'])) {
         'limit_photo_related',
         'display_featured_video',
         'featured_video_style',
-        'number_featured_video',
         'enable_collection_internal_sharing',
         'enable_collection_link_sharing',
         'enable_country_video_field',
         'enable_location_video_field',
         'enable_recorded_date_video_field',
-        'allow_tag_space'
+        'allow_tag_space',
+        'max_profile_pic_width',
+        'custom_css'
     ];
-
-    foreach ($opt_list as $optl) {
-        $rows[] = $optl['load_func'];
-    }
 
     //Numeric Array
     $num_array = [
@@ -439,7 +412,9 @@ if (isset($_POST['update'])) {
 
         'video_list_view_video_history',
         'limit_photo_related',
-        'number_featured_video'
+
+        'max_profile_pic_width',
+        'list_featured_videos'
     ];
 
     foreach ($rows as $field) {
