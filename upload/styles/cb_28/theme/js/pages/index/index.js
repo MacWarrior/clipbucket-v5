@@ -605,7 +605,7 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
                     if (response.all_complete) {
                         clearInterval(window[interval_name]);
                     }
-                    initListenerHome();
+                    AddingListenerModernThumbVideo();
                     AddingListenerModernThumbVideoPopinView();
                 }
             })

@@ -24,7 +24,11 @@ $vdo = Video::getInstance()->getOne([$search => $vkey]);
 if( !video_playable($vdo) ) {
     redirect_to(Network::get_server_url());
 }
-
+$ids_to_check_progress=[];
+if (in_array($vdo['status'], ['Processing', 'Waiting'])) {
+    $ids_to_check_progress[] = $vdo['videoid'];
+}
+assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 $assign_arry['vdo'] = $vdo;
 
 $is_playlist = false;

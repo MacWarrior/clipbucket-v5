@@ -40,7 +40,8 @@ switch ($_POST['output']) {
         $display_type = 'user-videos';
         break;
     case 'watch_video':
-        $display_type = 'popVideos_sidebar';
+        $display_type = '';
+        $template = "blocks/videos/watch_video.html";
         break;
     case 'account':
         $display_type = '';
