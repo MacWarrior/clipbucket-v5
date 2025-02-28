@@ -3,7 +3,7 @@ define('THIS_PAGE', 'language_setting');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access',true);
+User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */

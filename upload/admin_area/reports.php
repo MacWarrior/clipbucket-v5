@@ -3,7 +3,7 @@ define('THIS_PAGE', 'reports');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
+User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 
 /* Generating breadcrumb */
 global $breadcrumb;

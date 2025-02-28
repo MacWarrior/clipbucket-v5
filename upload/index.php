@@ -93,6 +93,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     $ids_to_check_progress = [];
     if( config('display_featured_video') == 'yes' ){
         $params = Video::getInstance()->getFilterParams('featured', []);
+        $params['limit'] = config('list_featured_videos');
         $featured_videos = Video::getInstance()->getAll($params);
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273') ) {
             foreach ($featured_videos as $video) {
