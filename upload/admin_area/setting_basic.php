@@ -122,6 +122,7 @@ if (isset($_POST['update'])) {
         , 'enable_location_video_field'
         , 'enable_recorded_date_video_field'
         , 'allow_tag_space'
+        , 'enable_video_thumbs_preview'
     ];
 
     $config_booleans_to_refactor = [
@@ -194,10 +195,8 @@ if (isset($_POST['update'])) {
         'max_bg_width',
         'max_video_title',
         'max_video_desc',
-        'max_video_tags',
         'max_username',
         'min_video_title',
-        'min_video_tags',
         'min_video_desc',
         'min_age_reg',
         'min_username',
@@ -360,7 +359,9 @@ if (isset($_POST['update'])) {
         'enable_recorded_date_video_field',
         'allow_tag_space',
         'max_profile_pic_width',
-        'custom_css'
+        'custom_css',
+        'enable_video_thumbs_preview',
+        'video_thumbs_preview_count'
     ];
 
     //Numeric Array
@@ -369,9 +370,7 @@ if (isset($_POST['update'])) {
 
         'max_video_title',
         'max_video_desc',
-        'max_video_tags',
         'min_video_title',
-        'min_video_tags',
         'min_video_desc',
 
         'search_list_per_page',
@@ -414,7 +413,8 @@ if (isset($_POST['update'])) {
         'limit_photo_related',
 
         'max_profile_pic_width',
-        'list_featured_videos'
+        'list_featured_videos',
+        'video_thumbs_preview_count'
     ];
 
     foreach ($rows as $field) {

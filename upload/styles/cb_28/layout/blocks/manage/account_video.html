@@ -9,7 +9,7 @@
 	<td>
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="/watch_video.php?v={$video.videokey}">
-				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive vthumb {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" width="130" height="80" id="thumbs_{$video.videoid}"/>
+				<img src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')} class="img-responsive vthumb {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" width="130" height="80" id="thumbs_{$video.videoid}"/>
 				<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 			</a>
 		</div>
@@ -80,7 +80,7 @@
 		</td>
 		<td>
 			<div>
-				<img class="edit-img-thumbnail" src="{getThumb vdetails=$video size=168x105}">
+				<img class="edit-img-thumbnail" src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')}>
 				<p class="marginTop">{display_clean($video.title)|truncate:100}</p>
 				<div class="btn-group show">
 					<a class="btn btn-primary btn-sm" href="{videoLink vdetails=$video}">
@@ -123,7 +123,7 @@
 	<div class="playlist featured-video clearfix{if $video.videoid==$vdo.videoid} active{/if}" style="{if $ajax_load=='yes'}display:none;{/if}">
 		<a href="{video_link($video)}">
 			<div class="video_thumb">
-				<img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
+				<img src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')} {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
 				<time class="duration">
 					{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}
 				</time>

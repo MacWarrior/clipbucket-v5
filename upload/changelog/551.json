@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"275",
+  "revision":"276",
   "status":"dev",
   "detail":[
     {
@@ -162,6 +162,7 @@
         ,"Implement collection sharing"
         ,"Implement spaces in tags"
         ,"Implement 360° video support"
+        ,"Implement video thumbs preview"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

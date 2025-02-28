@@ -101,7 +101,7 @@
 						<div class="row">
 							<div class="col-md-3">
 							  <a class="manageVid_thumb" href="/edit_video.php?vid={$video.videoid}">
-								<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
+								<img src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')} class="img-responsive vthumb" width="130" height="80" id="thumbs_{$video.videoid}"/>
 								<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
 							   </a>     
 							</div>
