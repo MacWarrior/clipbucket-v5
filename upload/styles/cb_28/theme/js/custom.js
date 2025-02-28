@@ -443,15 +443,21 @@ document.addEventListener("DOMContentLoaded", function () {
         let interval;
         const parent = img.closest("div");
         parent.addEventListener("mouseenter", function () {
-            img.dataset.originalSrc = img.src;
+            if( img.src ){
+                img.dataset.originalSrc = img.src;
+            }
             interval = setInterval(() => {
                 index = (index + 1) % thumbnails.length;
-                img.src = thumbnails[index];
+                if (thumbnails[index]) {
+                    img.src = thumbnails[index];
+                }
             }, 500);
         });
         parent.addEventListener("mouseleave", function () {
             clearInterval(interval);
-            img.src = img.dataset.originalSrc;
+            if (img.dataset.originalSrc) {
+                img.src = img.dataset.originalSrc;
+            }
             index = 0;
         });
     });
