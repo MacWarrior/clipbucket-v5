@@ -2,7 +2,7 @@
     <div class="featured-video clearfix">
         <div class="video_thumb">
             <a href="{video_link($pop_video)}" class="no_overflow">
-                <img src="{getThumb vdetails=$pop_video size=168x105}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive {if Video::getInstance()->isToBlur($pop_video.videoid)}blur{/if}"/>
+                <img src="{getThumb vdetails=$pop_video size=168x105}" {ANCHOR place="video_thumb" data=$pop_video} class="img-responsive {if Video::getInstance()->isToBlur($pop_video.videoid)}blur{/if}" {Video::get_thumbs_preview($pop_video, '168x105')}/>
                 {if $pop_video.duration>1}
                     <time class="duration" title="Video duration : {$pop_video.duration|SetTime}">{$pop_video.duration|SetTime}</time>
                 {/if}
@@ -30,11 +30,11 @@
 {/if}
 
 {if $display_type=='homeVideos'}
+
     <div class="clearfix thumb-holder userAppending no_overflow">
         <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-            <img alt="{display_clean($video.title)|title}" class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" src="{getThumb vdetails=$video size=416x260}"/>
+            <img alt="{display_clean($video.title)|title}" class="img-responsive {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
         </a>
-
         {ANCHOR place='in_video_thumb' data=$video}
         {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
             <button data-quick="quick-{$video.videoid}" class="icon-plus2 cb_quickie cb-btn-quick-{$video.videoid} {if in_array($video.videoid, $qlist_vids)}icon-tick{/if}" vtitle="{display_clean($video.title)}" v-id="{$video.videoid}" vlink="{video_link($video)}" vthumb="{getThumb vdetails=$video size=416x260}" vduration="{$video.duration|SetTime}" vauthor="{if config('enable_hide_uploader_name') != 'yes'}{lang code='by'} {display_clean($video.user_username)}{/if}" title="Add {display_clean($video.title)} to Quicklist">
@@ -44,7 +44,6 @@
             <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
         {/if}
     </div>
-
     <div class="clearfix video-info {if config('enable_hide_uploader_name') == 'yes'}nouploader{/if}">
         <h2 class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></h2>
 
@@ -71,7 +70,7 @@
     {/if}
 
     {if config('homepage_recent_video_style') == 'modern'}
-        {include file="$style_dir/blocks/video-new.html" width=270}
+        {include file="$style_dir/blocks/videos/video-new.html" width=270}
     {elseif  in_array(config('homepage_recent_video_style'), [false, 'classic'])}
         <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending" data-id="{$video.videoid}">
             <div class="clearfix thumb-holder">
@@ -82,7 +81,7 @@
                             class="video-link no_overflow"
                         {/if}
                         href="{video_link($video)}" title="{display_clean($video.title|title)}">
-                    <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}">
+                    <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
                 {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
@@ -121,7 +120,7 @@
     <div class="featured-video clearfix" data-id-video="{$video.videoid}">
         <div class="video_thumb">
             <a href="{video_link($video)}">
-                <img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}"/>
+                <img src="{getThumb vdetails=$video size=168x105}" {ANCHOR place="video_thumb" data=$video} class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" {Video::get_thumbs_preview($video, '168x105')}/>
                 {if $video.duration>1}
                     <time class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
                 {/if}
@@ -156,7 +155,7 @@
                 class="video-link no_overflow"
             {/if}
                     href="{video_link($video)}" title="{display_clean($video.title|title)}">
-                <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=632x395}"/>
+                <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=632x395}" {Video::get_thumbs_preview($video, '632x395')}/>
                 <h2 class="title">{display_clean($video.title|truncate:50)}</h2>
             </a>
             {ANCHOR place='in_video_thumb' data=$video}
@@ -175,7 +174,7 @@
     <div class="item-video col-lg-6 col-md-6 col-sm-6 col-xs-12">
         <div class="clearfix thumb-holder">
             <a class="video-link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-                <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}"/>
+                <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
             </a>
 
             {ANCHOR place='in_video_thumb' data=$video}
@@ -212,7 +211,7 @@
 {if $display_type=='user_videos'}
     <div class="col-md-3  col-sm-4  col-xs-6">
         <a href="{video_link($video)}" title="{display_clean($video.title)|title}">
-            <img alt="{display_clean($video.title)|title}" src="{getThumb vdetails=$video size='416x260'}" id="thumbs_{$video.videoid}" title="{display_clean($video.title)|title}"/>
+            <img {if Video::getInstance()->isToBlur($video.videoid)}class="blur"{/if} alt="{display_clean($video.title)|title}" src="{getThumb vdetails=$video size='416x260'}" id="thumbs_{$video.videoid}" title="{display_clean($video.title)|title}" {Video::get_thumbs_preview($video, '416x260')}/>
         </a>
         <p class="cbHomeVidDuration duration_view">
             {if $video.duration>1}
@@ -231,7 +230,7 @@
 {if $display_type=='playlistVideos'}
     <div class="video_thumb">
         <a class="video_link" href="{video_link($video)}" title="{display_clean($video.title)|title}">
-            <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}"/>
+            <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
             <div class="play-info">
                 <strong class="title">{display_clean($video.title|truncate:30)}</strong>
                 <i class="icon-playweb"></i>
@@ -256,7 +255,7 @@
                         <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
                     <i class="icon-playweb play-icon"></i>
-                    <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" border="1"/>
+                    <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')} border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
                 {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
@@ -297,7 +296,7 @@
                         <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
                     <i class="icon-playweb play-icon"></i>
-                    <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" border="1"/>
+                    <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')} border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
                 {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
@@ -324,7 +323,7 @@
                         <span class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</span>
                     {/if}
                     <i class="icon-playweb play-icon"></i>
-                    <img class="img-responsive" src="{getThumb vdetails=$video size=416x260}" border="1"/>
+                    <img class="img-responsive {if Video::getInstance()->isToBlur($video.videoid)}blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')} border="1"/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
                 {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}

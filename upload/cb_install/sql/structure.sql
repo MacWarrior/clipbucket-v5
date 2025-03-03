@@ -270,7 +270,6 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `userid` int(11) NOT NULL DEFAULT 0,
   `playlist_type` varchar(10) NOT NULL DEFAULT '',
   `description` mediumtext NOT NULL,
-  `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
   `total_items` int(255) NOT NULL DEFAULT 0,
   `last_update` text NULL DEFAULT NULL,

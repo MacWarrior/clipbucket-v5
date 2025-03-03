@@ -66,7 +66,6 @@ class Video
             ,'thumbs_version'
             ,'re_conv_status'
             ,'subscription_email'
-            ,'convert_percent'
         ];
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
@@ -99,7 +98,7 @@ class Video
             ,'isdefault'
         ];
 
-        $this->display_block = LAYOUT . '/blocks/video.html';
+        $this->display_block = LAYOUT . '/blocks/videos/video.html';
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
     }
@@ -943,6 +942,36 @@ class Video
 
         $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . $id_video;
         Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    public static function get_thumbs_preview($vdetails, string $size = '416x260'): string
+    {
+        if( config('enable_video_thumbs_preview') != 'yes'){
+            return '';
+        }
+
+        $thumbs = get_thumb($vdetails, true, $size, 'auto');
+        if( empty($thumbs) ){
+            return '';
+        }
+
+        $nb_thumbs = config('video_thumbs_preview_count');
+        $total = count($thumbs);
+
+        if ($nb_thumbs >= $total) {
+            $result = $thumbs;
+        } else {
+            $result = [];
+            $step = ($total - 1) / ($nb_thumbs - 1);
+
+            for ($i = 0; $i < $nb_thumbs; $i++) {
+                $index = (int) round($i * $step);
+                $result[] = $thumbs[$index];
+            }
+        }
+
+
+        return 'data-thumbs=\'' . json_encode($result) . '\'';
     }
 }
 

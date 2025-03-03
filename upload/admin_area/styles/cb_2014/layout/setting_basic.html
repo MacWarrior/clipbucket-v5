@@ -378,7 +378,25 @@
                                             </div>
                                         </div>
                                         <hr/>
-
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="enable_video_thumbs_preview" title="{lang code='option_enable_video_thumbs_preview'}">{lang code='option_enable_video_thumbs_preview'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="enable_video_thumbs_preview" id="enable_video_thumbs_preview" {if $row.enable_video_thumbs_preview=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="video_thumbs_preview_count" title="{lang code='option_video_thumbs_preview_count'}">{lang code='option_video_thumbs_preview_count'}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input class="form-control" name="video_thumbs_preview_count" id="video_thumbs_preview_count" type="number" min="1" value="{$row.video_thumbs_preview_count}"/>
+                                            </div>
+                                        </div>
+                                        <hr/>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="row">
@@ -539,8 +557,8 @@
                                             <div class="col-md-4">
                                                 <select class="form-control" name="homepage_recent_videos_display" id="homepage_recent_videos_display">
                                                     {assign var=array_modes value=[
-                                                    'paginate' => 'option_paginate'
-                                                    ,'slider' => 'option_slider'
+                                                        'paginate' => 'option_paginate'
+                                                        ,'slider' => 'option_slider'
                                                     ]}
                                                     {foreach from=$array_modes item=trad key=code}
                                                         <option {if $code==$row.homepage_recent_videos_display}selected{/if} value="{$code}">
@@ -558,8 +576,8 @@
                                             <div class="col-md-4">
                                                 <select class="form-control" name="homepage_recent_video_style" id="homepage_recent_video_style">
                                                     {assign var=array_styles value=[
-                                                    'modern' => 'option_modern'
-                                                    ,'classic' => 'option_classic'
+                                                        'modern' => 'option_modern'
+                                                        ,'classic' => 'option_classic'
                                                     ]}
                                                     {foreach from=$array_styles item=trad key=code}
                                                         <option {if $code==$row.homepage_recent_video_style}selected{/if} value="{$code}">
@@ -577,9 +595,9 @@
                                             <div class="col-md-4">
                                                 <select class="form-control" name="homepage_recent_video_ratio" id="homepage_recent_video_ratio">
                                                     {assign var=array_styles value=[
-                                                    '1.3333' => '4/3'
-                                                    ,'1.7777' => '16/9'
-                                                    ,'1.6' => '16/10'
+                                                        '1.3333' => '4/3'
+                                                        ,'1.7777' => '16/9'
+                                                        ,'1.6' => '16/10'
                                                     ]}
                                                     {foreach from=$array_styles item=value key=code}
                                                         <option {if $code==$row.homepage_recent_video_ratio}selected{/if} value="{$code}">
@@ -619,8 +637,8 @@
                                             <div class="col-md-4">
                                                 <select class="form-control" name="homepage_collection_video_style" id="homepage_collection_video_style">
                                                     {assign var=array_styles value=[
-                                                    'modern' => 'option_modern'
-                                                    ,'classic' => 'option_classic'
+                                                        'modern' => 'option_modern'
+                                                        ,'classic' => 'option_classic'
                                                     ]}
                                                     {foreach from=$array_styles item=trad key=code}
                                                         <option {if $code==$row.homepage_collection_video_style}selected{/if} value="{$code}">
@@ -1428,24 +1446,6 @@
                                 </div>
                                 <div class="col-md-2">
                                     <input class="form-control" name="max_video_desc" id="max_video_desc" value="{$row.max_video_desc}"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" title="Video tags size">Video tags size</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="min_video_tags" title="Min">Min</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="min_video_tags" id="min_video_tags" value="{$row.min_video_tags}"/>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="nowrap" for="max_video_tags" title="Max">Max</label>
-                                </div>
-                                <div class="col-md-2">
-                                    <input class="form-control" name="max_video_tags" id="max_video_tags" value="{$row.max_video_tags}"/>
                                 </div>
                             </div>
                             <hr/>

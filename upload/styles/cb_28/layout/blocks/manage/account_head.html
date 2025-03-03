@@ -86,21 +86,20 @@
 	<span class="lead">
 		{lang code='latest_videos'}
 	</span>
-
-        {if $videos}
-            <table class="table table-bordered table-striped manageUsersTable">
-                <tr>
-                    <td><i class="icon-facetime-video"></i> {lang code="videos_details"}</td>
-                    <td>{lang code="option"}</td>
-                </tr>
-                {foreach from=$videos item=video}
-                    <tr class="item-video" data-id="{$video['videoid']}">
-                        {include file="$style_dir/blocks/manage/account_video.html" video=$video control='full' }
-                    </tr>
-                {/foreach}
-            </table>
-        {else}
-            <div align="center"><strong><em>{lang code="no_videos_found"}</em></strong></div>
-        {/if}
+	{if $videos}
+		<table class="table table-bordered table-striped manageUsersTable">
+			<tr>
+				<td><i class="icon-facetime-video"></i> {lang code="videos_details"}</td>
+				<td>{lang code="option"}</td>
+			</tr>
+			{foreach from=$videos item=video}
+				<tr class="item-video" data-id="{$video['videoid']}">
+					{include file="$style_dir/blocks/manage/account_video.html" video=$video control='full'}
+				</tr>
+			{/foreach}
+		</table>
+	{else}
+		<div align="center"><strong><em>{lang code="no_videos_found"}</em></strong></div>
+	{/if}
     </div>
 {/if}

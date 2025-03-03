@@ -1,7 +1,7 @@
 {if $control=='' || $control =='view'}
-{if $mode ==''}
-{assign var='mode' value='favorites'}
-{/if}
+	{if $mode ==''}
+		{assign var='mode' value='favorites'}
+	{/if}
 {/if}
 
 {if $control =='full'}
@@ -9,7 +9,7 @@
 	<td>
 		<div class="col-md-3">
 			<a class="manageVid_thumb" href="edit_video.php?video={$video.videoid}">
-				<img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" id="thumbs_{$video.videoid}" class="vthumb"/>
+				<img src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')} class="img-responsive vthumb" id="thumbs_{$video.videoid}"/>
 				{if $video.duration>1}
 					<span class="duration" title="Video duration : {$video.duration|SetTime}">({$video.duration|SetTime})</span>
 				{/if}
@@ -41,7 +41,7 @@
 			<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
 				{if $cbvid->is_video_owner($video.videoid,$user.userid) || User::getInstance()->hasAdminAccess()}
 				<li><a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
-				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a>ssss</li>
+				<li><a role="menuitem" tabindex="-1" href="javascript:_cb.Confirm_Delete('?vid_delete={$video.videoid}')">{lang code='delete'}</a></li>
 				{/if}
 				<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
 
@@ -57,7 +57,7 @@
 {if $control=='playlist'}
 <tr>
 	<td width="25">
-		<input type="checkbox" name="check_playlist_items[]" id="check_vid-{$video.playlist_item_id}" value="{$video.playlist_item_id}" />
+		<input type="checkbox" name="check_playlist_items[]" id="check_vid-{$video.playlist_item_id}" value="{$video.playlist_item_id}"/>
 	</td>
 	<td>
 		<div>

@@ -1500,5 +1500,7 @@ VALUES ('admin_setting'),
        ('advanced_settings'),
        ('basic_settings_desc'),
        ('advanced_settings_desc'),
+       ('option_enable_video_thumbs_preview'),
+       ('option_video_thumbs_preview_count'),
        ('uploaded_by_x'),
        ('ongoing_conversion');

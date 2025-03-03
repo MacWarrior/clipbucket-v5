@@ -53,8 +53,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'min_video_desc', '5'),
 	(NULL, 'max_video_desc', '300'),
 	(NULL, 'video_categories', '4'),
-	(NULL, 'min_video_tags', '3'),
-	(NULL, 'max_video_tags', '30'),
 	(NULL, 'video_codec', 'libx264'),
 	(NULL, 'date_format', 'Y-m-d'),
 	(NULL, 'autoplay_video', 'no'),
@@ -306,7 +304,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_recorded_date_video_field', 'yes'),
     (NULL, 'allow_tag_space', 'no'),
     (NULL, 'enable_360_video', 'yes'),
-    (NULL, 'logo_update_timestamp', CURRENT_TIMESTAMP());
+    (NULL, 'logo_update_timestamp', CURRENT_TIMESTAMP()),
+    (NULL, 'enable_video_thumbs_preview', 'yes'),
+    (NULL, 'video_thumbs_preview_count', '10');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),

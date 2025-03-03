@@ -294,10 +294,7 @@ class cbactions
             $array = $_POST;
         }
 
-        $title = $array['playlist_name'];
-        $description = $array['description'];
-        $tags = $array['tags'];
-        $privacy = $array['privacy'];
+        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
         return [
             'title'       => [
@@ -306,7 +303,7 @@ class cbactions
                 'name'        => 'playlist_name',
                 'id'          => 'playlist_name',
                 'db_field'    => 'playlist_name',
-                'value'       => $title,
+                'value'       => $array['playlist_name'],
                 'required'    => 'yes',
                 'invalid_err' => lang('please_enter_playlist_name')
             ],
@@ -316,16 +313,19 @@ class cbactions
                 'name'     => 'description',
                 'id'       => 'description',
                 'db_field' => 'description',
-                'value'    => $description
+                'value'    => $array['description']
             ],
-            'tags'        => [
-                'title'    => lang('tags'),
-                'type'     => 'hidden',
-                'name'     => 'tags',
-                'id'       => 'tags',
-                'value'    => genTags($tags)
+            'playlists_tags' => [
+                'title'             => lang('tags'),
+                'type'              => 'hidden',
+                'name'              => 'playlists_tags',
+                'id'                => 'playlists_tags',
+                'value'             => genTags($array['playlists_tags']),
+                'hint_1'            => $hint_tags,
+                'required'          => 'no',
+                'validate_function' => 'genTags'
             ],
-            'privacy'     => [
+            'privacy' => [
                 'title'         => lang('playlist_privacy'),
                 'type'          => 'dropdown',
                 'name'          => 'privacy',
@@ -336,7 +336,7 @@ class cbactions
                     'private' => lang('private')
                 ],
                 'default_value' => 'public',
-                'checked'       => $privacy
+                'checked'       => $array['privacy']
             ]
         ];
     }
@@ -609,7 +609,7 @@ class cbactions
             $array = $_POST;
         }
 
-        $name = mysql_clean($array['name']);
+        $name = mysql_clean($array['playlist_name']);
         $pdetails = Playlist::getInstance()->getOne($array['playlist_id']);
 
         if (!$pdetails) {
@@ -665,7 +665,7 @@ class cbactions
 
                 Clipbucket_db::getInstance()->update(tbl('playlists'), array_keys($query_values), array_values($query_values), ' playlist_id = \'' . mysql_clean($pdetails['playlist_id']) . '\'');
 
-                Tags::saveTags($array['tags'], 'playlist', $pdetails['playlist_id']);
+                Tags::saveTags($array['playlists_tags'], 'playlist', $pdetails['playlist_id']);
 
             }
             e(lang('play_list_updated'), 'm');
