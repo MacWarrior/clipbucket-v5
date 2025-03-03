@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"278",
+  "revision":"279",
   "status":"dev",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Implement future PHP version check"
         ,"Implement options to disable video Date recorded & location"
         ,"Implement spaces in tags"
+        ,"Implement video conversion percent"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -163,6 +164,7 @@
         ,"Implement spaces in tags"
         ,"Implement 360° video support"
         ,"Implement video thumbs preview"
+        ,"Implement video conversion percent"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"

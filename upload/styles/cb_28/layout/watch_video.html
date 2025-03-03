@@ -5,16 +5,7 @@
     <div class="clearfix">
         <section id="content" class="clearfix videos">
             <div class="clearfix player-holder">
-                {if $video.status=='Successful'}
-                    {if config('bits_color_warning') == '1' && $video.bits_color && $video.bits_color > 8}
-                        <span class="label label-warning" style="font-size:1em;">
-							{lang code="bits_color_compatibility"}
-						</span>
-                    {/if}
-                    <div id="cb_player" class="cb_player no_select">
-                        {show_player vdetails=$video}
-                    </div>
-                {/if}
+               {include file="$style_dir/blocks/videos/watch_video.html"}
             </div>
             {if config("enable_advertisement") == "yes"}
                 <div class="clearfix leaderboard-ad ad">
@@ -382,4 +373,5 @@
     var comments_count = '{$vdo.comments_count}';
     var object_type= '{$object_type}';
     var userid= '{$video.userid}';
+    var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
 </script>

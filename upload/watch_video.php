@@ -24,7 +24,11 @@ $vdo = Video::getInstance()->getOne([$search => $vkey]);
 if( !video_playable($vdo) ) {
     redirect_to(Network::get_server_url());
 }
-
+$ids_to_check_progress=[];
+if (in_array($vdo['status'], ['Processing', 'Waiting'])) {
+    $ids_to_check_progress[] = $vdo['videoid'];
+}
+assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 $assign_arry['vdo'] = $vdo;
 
 $is_playlist = false;
@@ -58,7 +62,7 @@ if( config('collectionsSection') == 'yes' ){
 
 if( !$is_playlist ){
     $videoid = $vdo['videoid'];
-    $related_videos = Video::getInstance()->getAll(['title' => $vdo['title'], 'tags' => $vdo['tags'], 'limit' => 12, 'order' => 'RAND()', 'join_user_profile'=>true]);
+    $related_videos = Video::getInstance()->getAll(['title' => $vdo['title'], 'tags' => $vdo['tags'], 'limit' => 12, 'order' => 'RAND()', 'join_user_profile'=>true, 'status'=>'Successful']);
     if ($related_videos) {
         $related_videos = array_filter($related_videos, function ($video) use ($videoid){
             return $video['videoid'] != $videoid;
@@ -67,7 +71,7 @@ if( !$is_playlist ){
     $relMode = '';
     if (!$related_videos) {
         $relMode = 'ono';
-        $related_videos = Video::getInstance()->getAll(['limit' => 12, 'order' => 'date_added DESC', 'join_user_profile'=>true]);
+        $related_videos = Video::getInstance()->getAll(['limit' => 12, 'order' => 'date_added DESC', 'join_user_profile'=>true, 'status'=>'Successful']);
         if ($related_videos) {
             $related_videos = array_filter($related_videos, function ($video) use ($videoid) {
                 return $video['videoid'] != $videoid;
