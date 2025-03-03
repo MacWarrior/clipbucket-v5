@@ -11,6 +11,8 @@ class Video
     private $display_var_name = '';
     private $search_limit = 0;
 
+    private $status_list= [];
+
     /**
      * @throws Exception
      */
@@ -952,6 +954,20 @@ class Video
 
         return 'data-thumbs=\'' . json_encode($result) . '\'';
     }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getStatusList()
+    {
+        if (empty($this->status_list)) {
+            $row = Clipbucket_db::getInstance()->_select('SHOW COLUMNS FROM '.tbl('video').' LIKE \'status\'')[0];
+            preg_match("/^enum\((.*)\)$/", $row['Type'], $matches);
+            $this->status_list = str_getcsv($matches[1], ",", "'");
+        }
+        return $this->status_list;
+    }
 }
 
 class CBvideo extends CBCategory
@@ -1408,7 +1424,7 @@ class CBvideo extends CBCategory
             }
 
             if (User::getInstance()->hasAdminAccess()) {
-                if (!empty($array['status'])) {
+                if (!empty($array['status']) && in_array($array['status'], Video::getInstance()->getStatusList())) {
                     $query_field[] = 'status';
                     $query_val[] = $array['status'];
                 }
@@ -1447,7 +1463,7 @@ class CBvideo extends CBCategory
                     $query_val[] = $array['embed_code'];
                 }
 
-                if (!empty($array['video_fov'])) {
+                if (!empty($array['video_fov']) && in_array($array['video_fov'], [180,360])) {
                     $query_field[] = 'fov';
                     $query_val[] = $array['video_fov'];
                 }

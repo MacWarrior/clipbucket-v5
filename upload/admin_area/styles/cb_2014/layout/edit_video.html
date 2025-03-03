@@ -393,10 +393,9 @@
                                 </div>
                                 <div class="col-md-4">
                                     <select class="form-control" name="status" id="status">
-                                        <option class="form-control" value="Successful" {if $data.status=='Successful'}selected{/if}>{lang('successful')}</option>
-                                        <option class="form-control" value="processing" {if $data.status=='Processing'}selected{/if}>{lang('processing')}</option>
-                                        <option class="form-control" value="waiting" {if $data.status=='Waiting'}selected{/if}>{lang('waiting')}</option>
-                                        <option class="form-control" value="Failed" {if $data.status=='Failed'}selected{/if}>{lang('failed')}</option>
+                                        {foreach from=Video::getInstance()->getStatusList() item=status})}
+                                            <option class="form-control" value="{$status}" {if $data.status == $status} selected{/if} >{lang($status|strtolower)}</option>
+                                        {/foreach}
                                     </select>
                                 </div>
 
