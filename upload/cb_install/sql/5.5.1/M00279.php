@@ -3,7 +3,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00279 extends \Migration
 {
     /**
      * @throws \Exception
@@ -31,12 +31,5 @@ class MWIP extends \Migration
         ]);
 
         self::deleteTranslation('this_vdo_not_working');
-
-        /* Update revision IN :
-         *
-         * video.class.php : L.83 ; L.1038
-         * video_convert.php : L.131
-         * video_manager_line.html : L.79
-         */
     }
 }

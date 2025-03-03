@@ -1,4 +1,4 @@
-<div class="slide {if config('popup_video') == 'yes'}cd-popup-trigger-slider{/if} video-link" data-videoid="{$video.videoid}" data-href="{video_link($video)}">
+<div class="slide video-link {if config('popup_video') == 'yes' && $video.status|lower == 'successful'}cd-popup-trigger-slider{/if}" data-videoid="{$video.videoid}" data-href="{video_link($video)}">
     {if config('enable_video_poster') == 'yes' && !empty($video.default_poster)}
         <span class="image-container {if Video::getInstance()->isToBlur($video['videoid'])}blured{/if}">
             <img src="{get_thumb($video, false, 'original', 'poster')}" class="poster"/>

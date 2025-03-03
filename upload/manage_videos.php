@@ -107,7 +107,7 @@ switch ($mode) {
 }
 
 $ids_to_check_progress = [];
-if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ){
+if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
     foreach ($videos as $video) {
         if (in_array($video['status'], ['Processing', 'Waiting'])) {
             $ids_to_check_progress[] = $video['videoid'];

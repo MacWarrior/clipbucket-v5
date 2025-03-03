@@ -139,7 +139,7 @@ if (!empty($_filename)) {
     }
 
     // TODO : Update revision
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
         $fields[] = 'convert_percent';
         $values[] = 100;
     }

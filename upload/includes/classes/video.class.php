@@ -83,7 +83,7 @@ class Video
             $this->fields[] = 'fov';
         }
         // TODO : Update revision
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $this->fields[] = 'convert_percent';
         }
 
@@ -1068,7 +1068,7 @@ class CBvideo extends CBCategory
         }
 
         // TODO : Update revision
-        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999') ){
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
             return;
         }
 
@@ -1171,7 +1171,7 @@ class CBvideo extends CBCategory
         }
 
         // TODO : Update revision
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $basic_fields[] = 'convert_percent';
         }
 
