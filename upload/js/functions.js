@@ -982,4 +982,23 @@ function age_disclaimer(accept) {
     } else {
         window.location = 'https://www.google.com';
     }
+
+}
+
+function addErrClass(obj, msg, override = false, scroll = true, tclass = false) {
+    $(obj).closest('.form-group').removeClass('success-ind');
+    if (tclass !== false) {
+        $(obj).closest('.form-group').removeClass('invalid-error');
+        $(obj).closest('.form-group').addClass(tclass);
+    } else {
+        $(obj).closest('.form-group').removeClass('warning-ind');
+        $(obj).closest('.form-group').addClass('invalid-error');
+    }
+    if (override === true) {
+        $(obj).next('span').remove();
+    }
+    $('<span class="help-block">'+msg+"</span>").insertAfter(obj);
+    if (scroll === true) {
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+    }
 }
