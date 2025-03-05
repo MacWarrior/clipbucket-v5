@@ -123,6 +123,7 @@ if (!empty($_filename)) {
     $ffmpeg->ClipBucket();
 
     $video_files = json_encode($ffmpeg->video_files);
+
     $fields = [
         'video_files'
         ,'duration'
@@ -137,8 +138,13 @@ if (!empty($_filename)) {
         $values[] = $ffmpeg->input_details['fov'];
     }
 
-    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, ' file_name = \''.display_clean($_filename).'\'');
+    // TODO : Update revision
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+        $fields[] = 'convert_percent';
+        $values[] = 100;
+    }
 
+    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, ' file_name = \''.display_clean($_filename).'\'');
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
 

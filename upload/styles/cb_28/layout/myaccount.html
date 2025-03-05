@@ -11,3 +11,9 @@
 		</div>
 	</div>
 </div>
+<script>
+	var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+	$(function () {
+		progressVideoCheck(ids_to_check_progress, 'account');
+	})
+</script>

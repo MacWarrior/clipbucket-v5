@@ -195,7 +195,7 @@ class AdminTool
         }
         $this->tasks_index = 0;
         //setting total if exist
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $info = $this->getLastHistoNotEndedNotRunning();
             if (!empty($info)) {
                 $this->tasks_total = $info[0]['elements_total'];

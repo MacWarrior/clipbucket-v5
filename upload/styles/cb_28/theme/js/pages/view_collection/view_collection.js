@@ -9,4 +9,5 @@ $(document).ready(function(){
     }
 
     init_readonly_tags('tags', '#list_tags');
+    progressVideoCheck(ids_to_check_progress, 'view_collection');
 });

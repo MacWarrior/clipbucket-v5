@@ -6,10 +6,6 @@
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
 
-{if $uservideos}
-    {$mainVideo = userMainVideo($uservideos)}
-    {$first_video = $cbvid->get_video($mainVideo)}
-{/if}
 
 <div id="main" class="container clearfix">
     <div class="clearfix">
@@ -25,7 +21,14 @@
             {if isSectionEnabled('videos') && User::getInstance($user.userid)->get('show_my_videos') == 'yes' && $uservideos}
                 <div class="clearfix player-holder">
                     <div id="cb_player" class="clearfix cb_player">
-                        {show_player vdetails=$first_video}
+                        {if $first_video.status|lower == 'successful'}
+                            {show_player vdetails=$first_video}
+                        {else}
+                            <div class="thumb-holder">
+                                <img class="img-responsive{if Video::getInstance()->isToBlur($first_video['videoid'])} blur{/if}" src="{getThumb vdetails=$first_video size=768x432}"/>
+                                {ANCHOR place='in_video_thumb' data=$first_video}
+                            </div>
+                        {/if}
                     </div>
                 </div>
             {/if}
@@ -149,7 +152,7 @@
                                 <div class="clearfix row user_vids">
                                     <div id="usr-vids" class="clearfix">
                                         {foreach $uservideos as $video}
-                                            <div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-12">
+                                            <div class="item-video col-lg-4 col-md-4 col-sm-6 col-xs-120" data-id="{$video.videoid}">
                                                 {include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
                                             </div>
                                         {/foreach}
@@ -274,4 +277,6 @@
     var max_upload_size = "{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
     var max_file_size = "{config('max_upload_size')}Mb";
     var photo_extensions = "{ClipBucket::getInstance()->get_extensions('photo')}";
+    var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    var display_type = "{$display_type}"
 </script>
