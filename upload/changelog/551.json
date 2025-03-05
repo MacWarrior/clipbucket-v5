@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"279",
+  "revision":"280",
   "status":"dev",
   "detail":[
     {
@@ -136,6 +136,7 @@
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
+        ,"Fix video resolution settings saving"
       ]
     },
     {
