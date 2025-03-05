@@ -1503,4 +1503,12 @@ VALUES ('admin_setting'),
        ('option_enable_video_thumbs_preview'),
        ('option_video_thumbs_preview_count'),
        ('uploaded_by_x'),
-       ('ongoing_conversion');
+       ('ongoing_conversion'),
+       ('page_name_about_us'),
+       ('page_name_privacy_policy'),
+       ('page_name_terms_of_service'),
+       ('page_name_help'),
+       ('page_name_403_error'),
+       ('page_name_404_error'),
+       ('translation_already_exist_choose_other_name'),
+       ('page_name_cant_have_space');
