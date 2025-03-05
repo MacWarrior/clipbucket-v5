@@ -122,6 +122,11 @@ class DirPath
     {
         return self::get($dir_name, true, $full_url);
     }
+
+    public static function getFromProjectRoot($dir_name): string
+    {
+        return str_replace(self::get('root'), '', $dir_name);
+    }
 }
 
 const IN_CLIPBUCKET = true;
