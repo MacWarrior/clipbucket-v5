@@ -536,9 +536,14 @@ function collection_actions(form,mode,objID,result_con,type,cid)
     $(result_con).html(loading);
     switch(mode) {
         case 'add_new_item':
+            const value = $('#'+form+' #collection').val();
+            if (!value || value =="" || value ==0) {
+                 $(result_con).html('No Data returned');
+                 return false;
+            }
             $.post('/actions/add_to_collection.php', {
                 mode: mode,
-                cid: $('#'+form+' #collection').val(),
+                cid: value,
                 obj_id: objID,
                 type: type
             },
