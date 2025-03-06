@@ -55,18 +55,17 @@ switch ($mode) {
         }
 
         //Getting Video List
-        $vid_array = ['user' => $udetails['userid'], 'limit' => $get_limit];
+        $params_video = ['userid' => $udetails['userid'], 'limit' => $get_limit];
         if (get('query') != '') {
-            $vid_array['title'] = mysql_clean(get('query'));
-            $vid_array['tags'] = mysql_clean(get('query'));
+           $params_video['search'] = get('query');
         }
 
-        $videos = get_videos($vid_array);
+        $videos = Video::getInstance()->getAll($params_video);
 
 
         //Collecting Data for Pagination
-        $vid_array['count_only'] = true;
-        $total_rows = get_videos($vid_array);
+        $params_video['count'] = true;
+        $total_rows =  Video::getInstance()->getAll($params_video);
 
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
