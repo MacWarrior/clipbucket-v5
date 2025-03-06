@@ -485,7 +485,7 @@ class formObj
             $hidden = '<input type="hidden" name="' . $field_name . '" value="' . $field['checked'] . '">';
         }
 
-        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . '>';
+        $ddFieldStart = '<select name=\'' . $field_name . '\'' . $select . ' ' . $field['extra_tags'] . ' >';
         $arrayName = $this->rmBrackets($field['name']);
         if (is_string($field['value'])) {
             $field['value'] = explode(',', $field['value']);
@@ -507,7 +507,7 @@ class formObj
                     }
                     $count++;
                 }
-                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_tags'] . '>' . $value . '</option>';
+                $fieldOpts .= '<option value="' . $key . '" ' . $checked . ' ' . $field['extra_option_tags'] . '>' . $value . '</option>';
             }
         }
         $ddFieldEnd = '</select>';
