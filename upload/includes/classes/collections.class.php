@@ -126,6 +126,9 @@ class Collection
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
 
             case 'featured':
                 $params['featured'] = true;
@@ -168,6 +171,7 @@ class Collection
     {
         $sorts = [
             'most_recent'  => lang('most_recent')
+            ,'most_old'  => lang('most_old')
             ,'most_items'  => lang('sort_most_items')
         ];
 

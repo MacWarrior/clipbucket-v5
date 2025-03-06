@@ -110,7 +110,9 @@ class Photo
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -156,6 +158,7 @@ class Photo
 
         $sorts = [
             'most_recent'  => lang('most_recent')
+            ,'most_old'  => lang('most_old')
             ,'most_viewed' => lang('mostly_viewed')
         ];
 

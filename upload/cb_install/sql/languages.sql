@@ -1503,4 +1503,5 @@ VALUES ('admin_setting'),
        ('option_enable_video_thumbs_preview'),
        ('option_video_thumbs_preview_count'),
        ('uploaded_by_x'),
-       ('ongoing_conversion');
+       ('ongoing_conversion'),
+       ('most_old');

@@ -197,7 +197,9 @@ class User
             default:
                 $params['order'] = $this->getTableName() . '.doj DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.doj ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.profile_hits DESC';
                 break;
@@ -246,6 +248,7 @@ class User
     {
         $sorts = [
             'most_recent'  => lang('most_recent')
+            ,'most_old'  => lang('most_old')
             ,'most_viewed' => lang('mostly_viewed')
             ,'top_rated'   => lang('top_rated')
             ,'featured'    => lang('featured')
