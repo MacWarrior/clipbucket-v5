@@ -1,4 +1,5 @@
 {assign var='requiredFields' value=$Upload->loadRequiredFields($file)}
+{assign var='optionFields' value=$Upload->loadOptionFields($file)}
 
 {$requiredFields.title.class='form-control'}
 {$requiredFields.tags_video.class='form-control'}
@@ -14,63 +15,67 @@
 {$requiredFields.cat.name="{$hash|cat:'_cat[]'}"}
 
 {if isset($requiredFields.audio_track)}
-	{$requiredFields.audio_track.name="{$hash|cat:'_track'}"}
-	{$requiredFields.audio_track.class='form-control'}
+    {$requiredFields.audio_track.name="{$hash|cat:'_track'}"}
+    {$requiredFields.audio_track.class='form-control'}
 {/if}
 {$requiredFields.tags_video.id="{$requiredFields.tags_video.id|cat:$index}"}
 
 <div class="well">
-	<input type="checkbox" name="{$hash}" class="checkboxMassImport"/>
-	<span class="label label-danger display_toggle" style="cursor: pointer;"><b>{display_clean($file.title)}</b></span>
-	<div style="display:none;">
-		<div class="row">
-			<div class="col-md-6">
-				<label for="{$requiredFields.title.id}"><b style="color:#000000;">{$requiredFields.title.title}</b></label>
-				{$formObj->createField($requiredFields.title)}
-			</div>
+    <input type="checkbox" name="{$hash}" class="checkboxMassImport"/>
+    <span class="label label-danger display_toggle" style="cursor: pointer;"><b>{display_clean($file.title)}</b></span>
+    <div style="display:none;">
+        <div class="row">
+            <div class="col-md-6">
+                <label for="{$requiredFields.title.id}"><b style="color:#000000;">{$requiredFields.title.title}</b></label>
+                {$formObj->createField($requiredFields.title)}
+            </div>
 
-			<div class="col-md-6">
-				<label for="{$requiredFields.tags_video.id}"><b style="color:#000000;">{$requiredFields.tags_video.title}</b> {if $requiredFields.tags_video.hint_1}{$requiredFields.tags_video.hint_1}{/if}</label>
-				{$formObj->createField($requiredFields.tags_video)}
-				<ul id="list_tags{$index}" data-id="{$index}"></ul>
-			</div>
-		</div>
+            <div class="col-md-6">
+                <label for="{$requiredFields.tags_video.id}"><b style="color:#000000;">{$requiredFields.tags_video.title}</b> {if $requiredFields.tags_video.hint_1}{$requiredFields.tags_video.hint_1}{/if}</label>
+                {$formObj->createField($requiredFields.tags_video)}
+                <ul id="list_tags{$index}" data-id="{$index}"></ul>
+            </div>
+        </div>
 
-		<div class="row">
-			{if isset($requiredFields.audio_track)}
-			<div class="col-md-6">
-				<label for="{$requiredFields.audio_track.id}"><b style="color:#000000;">{$requiredFields.audio_track.title}</b></label>
-				{$formObj->createField($requiredFields.audio_track)}
-			</div>
-			{/if}
+        <div class="row">
+            {if isset($requiredFields.audio_track)}
+                <div class="col-md-2">
+                    <label for="{$requiredFields.audio_track.id}"><b style="color:#000000;">{$requiredFields.audio_track.title}</b></label>
+                    {$formObj->createField($requiredFields.audio_track)}
+                </div>
+            {/if}
 
-			<div class="col-md-2">
-				<label for="duration"><b style="color:#000000;">{lang code='duration'}</b></label>
-				<span class="form-control" title="{lang code='duration'}" id="duration" disabled>{SetTime($file.duration)}</span>
-			</div>
-			<div class="col-md-2">
-				<label for="resolution"><b style="color:#000000;">{lang code='resolution'}</b></label>
-				<span class="form-control" title="{lang code='resolution'}" id="resolution" disabled>{$file.width}x{$file.height}</span>
-			</div>
-			<div class="col-md-2">
-				<label for="filesize"><b style="color:#000000;">{lang code='filesize'}</b></label>
-				<span class="form-control" title="{lang code='filesize'}" id="filesize" disabled>{$file.size}</span>
-			</div>
-		</div>
+            <div class="col-md-2">
+                <label for="duration"><b style="color:#000000;">{lang code='duration'}</b></label>
+                <span class="form-control" title="{lang code='duration'}" id="duration" disabled>{SetTime($file.duration)}</span>
+            </div>
+            <div class="col-md-2">
+                <label for="resolution"><b style="color:#000000;">{lang code='resolution'}</b></label>
+                <span class="form-control" title="{lang code='resolution'}" id="resolution" disabled>{$file.width}x{$file.height}</span>
+            </div>
+            <div class="col-md-2">
+                <label for="filesize"><b style="color:#000000;">{lang code='filesize'}</b></label>
+                <span class="form-control" title="{lang code='filesize'}" id="filesize" disabled>{$file.size}</span>
+            </div>
+            <div class="col-md-3">
+                <label for="{$optionFields.broadcast.id}"><b style="color:#000000;">{$optionFields.broadcast.title}</b></label>
+                {$formObj->createField($optionFields.broadcast)}
+            </div>
+        </div>
 
-		<div class="row">
-			<div class="col-md-6">
-				<label for="{$requiredFields.desc.id}"><b style="color: #000000">{$requiredFields.desc.title}</b></label>
-				{$formObj->createField($requiredFields.desc)}
-			</div>
+        <div class="row">
+            <div class="col-md-6">
+                <label for="{$requiredFields.desc.id}"><b style="color: #000000">{$requiredFields.desc.title}</b></label>
+                {$formObj->createField($requiredFields.desc)}
+            </div>
 
-			<div class="col-md-6">
-				<label for="{$requiredFields.cat.id}"><b style="color: #000000">{$requiredFields.cat.title}</b></label>
-				<div class="scroll categories">
-					{$formObj->createField($requiredFields.cat)}
-				</div>
-			</div>
-		</div>
+            <div class="col-md-6">
+                <label for="{$requiredFields.cat.id}"><b style="color: #000000">{$requiredFields.cat.title}</b></label>
+                <div class="scroll categories">
+                    {$formObj->createField($requiredFields.cat)}
+                </div>
+            </div>
+        </div>
 
-	</div>
+    </div>
 </div>

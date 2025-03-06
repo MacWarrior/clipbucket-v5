@@ -2,39 +2,47 @@
     <h2>Mass Uploader</h2>
 </div>
 <div class="alert alert-info">
-	<strong>Warning!</strong> Videos with only allowed extensions will be shown here.
+    <strong>Warning!</strong> Videos with only allowed extensions will be shown here.
 </div>
 
 {assign var=vid_files value=$cbmass->get_video_files_list()}
 
 {if $vid_files}
-	<table>
-		<tr>
-			<td id="massUploadSelectAll">
-				<h3>Select/Deselect</h3>
-				<input type="checkbox" id="massUploadSelect"/>
-			</td>
-			<td id="massUploadCategoriesSelection">
-				<h3>Mass Category Selection</h3>
-				{foreach $cats as $cat}
-					<label><input type="checkbox" class="checkall" value="{$cat['category_id']}"/> {display_clean($cat['category_name'])}</label>
-				{/foreach}
-			</td>
-		</tr>
-	</table>
-	<form name="mass_upload" method="post" class="cbform">
-		{include file="$style_dir/blocks/mass_uploader_directory.html" vid_files=$vid_files i=0 index=0}
-		<div class="well align-center">
-			<input type="submit" name="mass_upload_video" id="mass_upload_video" value="Mass Upload Videos Now" class="btn btn-primary" />
-		</div>
-	</form>
+    <table>
+        <tr>
+            <td id="massUploadSelectAll">
+                <h3>Select/Deselect</h3>
+                <input type="checkbox" id="massUploadSelect"/>
+            </td>
+            <td id="massUploadCategoriesSelection">
+                <h3>{lang('mass_category_selection')}</h3>
+                {foreach $cats as $cat}
+                    <label><input type="checkbox" class="checkall" value="{$cat['category_id']}"/> {display_clean($cat['category_name'])}</label>
+                {/foreach}
+            </td>
+            <td style="padding-left: 1em;" id="broadcastSelection">
+                <h3 >{lang('mass_broadcast_selection')}</h3>
+                <select class="broadcast" >
+                    {foreach Video::getInstance()->getBroadcastOption() as $broadcast => $label}
+                        <option  value="{$broadcast}"> {$label}</option>
+                    {/foreach}
+                </select>
+            </td>
+        </tr>
+    </table>
+    <form name="mass_upload" method="post" class="cbform">
+        {include file="$style_dir/blocks/mass_uploader_directory.html" vid_files=$vid_files i=0 index=0}
+        <div class="well align-center">
+            <input type="submit" name="mass_upload_video" id="mass_upload_video" value="Mass Upload Videos Now" class="btn btn-primary" />
+        </div>
+    </form>
 {else}
-	<div class="form-control">
-		NO VIDEO FOUND IN MASS UPLOAD FOLDER
-	</div>
-	{if config('delete_mass_upload') == 'no'}
-		<div class="form-control">Uploaded Videos are stored in mass_uploads/processed.</div>
-	{/if}
+    <div class="form-control">
+        NO VIDEO FOUND IN MASS UPLOAD FOLDER
+    </div>
+    {if config('delete_mass_upload') == 'no'}
+        <div class="form-control">Uploaded Videos are stored in mass_uploads/processed.</div>
+    {/if}
 {/if}
 
 {include file="$style_dir/blocks/pagination.html"}
