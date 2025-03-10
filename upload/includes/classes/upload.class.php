@@ -596,16 +596,15 @@ class Upload
 
         $fields['broadcast'] = [
             'title'             => lang('vdo_br_opt'),
-            'type'              => 'radiobutton',
+            'type'              => 'dropdown',
             'name'              => 'broadcast',
-            'value'             => ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')],
+            'value'             => Video::getInstance()->getBroadcastOption(),
             'checked'           => $broadcast,
             'db_field'          => 'broadcast',
             'required'          => 'no',
-            'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'public',
-            'extra_tags'        => ' onClick="
+            'extra_tags'        => ' onChange="
 				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
                     $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
 					if($(this).val()==\'unlisted\'){

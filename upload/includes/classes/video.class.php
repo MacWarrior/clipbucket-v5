@@ -11,7 +11,7 @@ class Video
     private $display_block = '';
     private $display_var_name = '';
     private $search_limit = 0;
-
+    private $broadcast_option = [];
     private $status_list= [];
 
     /**
@@ -103,6 +103,13 @@ class Video
         $this->display_block = LAYOUT . '/blocks/videos/video.html';
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
+
+        $this->broadcast_option = ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')];
+    }
+
+    public function getBroadcastOption(): array
+    {
+        return $this->broadcast_option;
     }
 
     public static function getInstance(): self
