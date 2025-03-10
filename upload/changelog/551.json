@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"283",
+  "revision":"284",
   "status":"dev",
   "detail":[
     {
@@ -255,6 +255,7 @@
         ,"Fix collection sharing JS error"
         ,"Fix potentiel logo & favicon browser cache issue"
         ,"Fix playlist creation & edition"
+        ,"Fix collection creation and video addition"
       ]
     },
     {
