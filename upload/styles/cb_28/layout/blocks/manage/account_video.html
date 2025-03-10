@@ -5,16 +5,17 @@
 {/if}
 
 {if $control =='full'}
-<tr>
 	<td>
 		<div class="col-md-3">
-			<a class="manageVid_thumb" href="/watch_video.php?v={$video.videokey}">
+			<a class="manageVid_thumb" href="{video_link($video)}">
 				<img src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')} class="img-responsive vthumb {if Video::getInstance()->isToBlur($video['videoid'])}blur{/if}" width="130" height="80" id="thumbs_{$video.videoid}"/>
-				<span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
+				{if $video.duration>1}
+					<span class="duration" title="Video duration : {$video.duration|SetTime}">({$video.duration|SetTime})</span>
+				{/if}
 			</a>
 		</div>
 		<div class="col-md-9">
-			<a href="/watch_video.php?v={$video.videokey}">
+			<a title="{display_clean($video.title)}" href="{video_link($video)}">
 				{display_clean($video.title)|truncate:80}
 			</a>
 			<br/>
@@ -24,25 +25,32 @@
 			</span>
 			<div class="labels">
 				{if $video.featured=='yes'}
-				<span class="label label-primary">{lang code='featured'}</span>
+				<span class="label label-primary" style="margin-right:5px;">{lang code='featured'}</span>
 				{/if}
-				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">
+				<span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel" style="margin-right:5px;">
 				{if $video.active=='yes'}
 					{lang code='active'}
 				{else}
 					{lang code='inactive'}
 				{/if}
 				</span>
-				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-				{if $video.status=='Successful'}
-					{lang code='successful'}
-				{else}
-					{lang code='processing'}
+
+				<span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}" style="margin-right:5px;">
+					{lang(strtolower($video.status))}
+				</span>
+
+				{if $video.status|lower == 'processing' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')}
+					<br/>
+					<div class="progress" style="margin-bottom:0;margin-top:5px;" title="{lang code='ongoing_conversion'}">
+						<div class="progress-bar progress-bar-striped animate" role="progressbar" id="progress-bar" aria-valuenow="{$video.convert_percent}" aria-valuemin="0" aria-valuemax="100" style="width:{$video.convert_percent}%;">
+							{$video.convert_percent}%
+						</div>
+					</div>
+				{elseif $video.status|lower == 'successful' && $video.views > 0}
+					<span class="label label-info">
+						{lang code='viewed'} {$video.last_viewed|niceTime}
+					</span>
 				{/if}
-				</span>
-				<span class="label label-info">
-					{lang code='viewed'} {$video.last_viewed|niceTime}
-				</span>
 			</div>
 		</div>
 	</td>
@@ -52,7 +60,7 @@
 			<button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
 				{lang code='vdo_actions'} <i class="caret"></i></button>
 				<ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-					<li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='view_video'}</a></li>
+					<li><a role="menuitem" tabindex="-1" href="{video_link($video)}" target="_blank">{lang code='view_video'}</a></li>
 					{if in_array($video.videoid, $favorites)}
 						<li><a role="menuitem" tabindex="-1" href="/manage_videos.php?mode=favorites&remove_fav_videoid={$video.videoid}">{lang code='remove_from_favorites'}</a></li>
 					{/if}
@@ -70,13 +78,12 @@
 				</ul>
 			</div>
 		</td>
-	</tr>	
 	{/if}
 
 	{if $control=='playlist'}
 	<tr>
 		<td width="25">
-			<input type="checkbox" name="check_playlist_items[]" id="check_vid-{$video.playlist_item_id}" value="{$video.playlist_item_id}" />
+			<input type="checkbox" name="check_playlist_items[]" id="check_vid-{$video.playlist_item_id}" value="{$video.playlist_item_id}"/>
 		</td>
 		<td>
 			<div>
@@ -91,18 +98,19 @@
 					</a>
 				</div>
 			</div>
-			<a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}">
-				<img src="{$imageurl}/dot.gif" border="0" class="delete_icon" />
-			</a>
-		</td>
-		<td width="100">
-			{$video.date_added|date_format}
-		</td>
-		<td width="100">
-			{$video.views|number_format}
-		</td>
-	</tr>
-	{/if}
+		</div>
+		<a href="javascript:void(0);" onmousedown="delete_video('delete_icon','{$video.playlist_item_id}','{lang code="remove_playlist_item_confirm"}','?mode=edit_playlist&pid={$pid}&amp;delete_item={$video.playlist_item_id}')" id="delete_icon-{$video.playlist_item_id}">
+			<img src="{$imageurl}/dot.gif" border="0" class="delete_icon"/>
+		</a>
+        </td>
+        <td width="100">
+            {$video.date_added|date_format}
+        </td>
+        <td width="100">
+            {$video.views|number_format}
+        </td>
+    </tr>
+{/if}
 
 	{if $control=='basic'}
 	<div class="clearfix">
@@ -124,9 +132,9 @@
 		<a href="{video_link($video)}">
 			<div class="video_thumb">
 				<img src="{getThumb vdetails=$video size=168x105}" {Video::get_thumbs_preview($video, '168x105')} {ANCHOR place="video_thumb" data=$video} class="img-responsive no_select"/>
-				<time class="duration">
-					{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}
-				</time>
+				{if $video.duration>1}
+					<time class="duration" title="Video duration : {$video.duration|SetTime}">{$video.duration|SetTime}</time>
+				{/if}
 			</div>
 		</a>
 		<div class="details_block">

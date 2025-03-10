@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"278",
+  "revision":"281",
   "status":"dev",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Implement future PHP version check"
         ,"Implement options to disable video Date recorded & location"
         ,"Implement spaces in tags"
+        ,"Implement video conversion percent"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -135,6 +136,7 @@
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
+        ,"Fix video resolution settings saving"
       ]
     },
     {
@@ -163,6 +165,7 @@
         ,"Implement spaces in tags"
         ,"Implement 360° video support"
         ,"Implement video thumbs preview"
+        ,"Implement video conversion percent"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -181,6 +184,7 @@
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"

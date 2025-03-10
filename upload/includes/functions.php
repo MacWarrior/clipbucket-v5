@@ -1530,7 +1530,7 @@ function increment_views_new($id, $type = null)
         default:
             $vdetails = get_video_details($id);
             $sessionTime =  ($vdetails['duration'] ?? 3600);
-            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) ) {
+            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
                 Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
                 if (config('enable_video_view_history') == 'yes') {
                     Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$vdetails['videoid'], (user_id() ?: 0), '|f|NOW()']);

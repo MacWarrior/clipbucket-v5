@@ -217,16 +217,20 @@
         window.addEventListener('resize', adaptRatioPlayer);
     });
     function adaptRatioPlayer(){
-        var div = document.querySelector('.player-holder');
-
+        let div = document.querySelector('.player-holder');
         if(div === null){
+            return;
+        }
+
+        let div_vieo = document.querySelector('.player-holder video');
+        if(div_vieo === null){
             return;
         }
 
         const clean_class = div.className.replace(" fix_ratio ", "");
 
         const ratio_window = window.innerWidth / window.innerHeight;
-        const ratio_div = document.querySelector('.player-holder video').videoWidth / document.querySelector('.player-holder video').videoHeight;
+        const ratio_div = div_vieo.videoWidth / div_vieo.videoHeight;
 
         div.style.aspectRatio = ratio_div;
 
