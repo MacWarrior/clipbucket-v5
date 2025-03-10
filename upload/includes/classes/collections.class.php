@@ -1258,7 +1258,7 @@ class Collections extends CBCategory
 
         $name = $default['collection_name'];
         $description = $default['collection_description'];
-        $tags = $default['tags'];
+        $tags = $default['collection_tags'];
         $type = $default['type'];
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
