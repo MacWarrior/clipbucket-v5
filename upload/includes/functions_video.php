@@ -15,7 +15,7 @@ function get_video_fields($extra = null)
  */
 function video_playable($id): bool
 {
-    global $cbvideo, $userquery;
+    global $cbvideo;
 
     if (isset($_POST['watch_protected_video'])) {
         $video_password = mysql_clean(post('video_password'));
@@ -34,7 +34,6 @@ function video_playable($id): bool
         return false;
     }
     if ($vdo['status'] != 'Successful') {
-        e(lang('this_vdo_not_working'));
         if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }
@@ -1763,14 +1762,80 @@ function remove_empty_directory($path, string $stop_path)
 /**
  * @param $file
  * @return void
+ * @throws Exception
  */
-function clean_orphan_files($file)
+function clean_orphan_files($file): string
 {
-    if (($file['type'] == 'photo' && in_array($file['photo'], AdminTool::getTemp()['photo']))
-    || ( in_array($file['type'], ['video_mp','video_hls','thumb','log','subtitle']) && in_array($file['video'], AdminTool::getTemp()['video']))
-    || ( $file['type'] == 'userfeeds' && in_array($file['user'], AdminTool::getTemp()['user']))
-    ) {
-        return;
+    $filename = '';
+    if (config('cache_enable') == 'yes') {
+        $redis_key = 'clean_orphan_files';
+        $tab_redis = CacheRedis::getInstance()->get($redis_key) ?: [];
+    }
+    switch ($file['type']) {
+        case 'video_mp4':
+        case 'video_hls':
+        case 'thumb':
+        case 'subtitle':
+        case 'log':
+            $query = 'SELECT file_name FROM ' . tbl('video') . ' WHERE file_name = \'' . mysql_clean($file['video']) . '\'';
+            $filename = $file['video'];
+            if (config('cache_enable') == 'yes') {
+                $redis_type_key = 'video';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
+            break;
+
+        case 'photo':
+            $query = 'SELECT filename FROM ' . tbl('photos') . ' WHERE filename = \'' . mysql_clean($file['photo']) . '\'';
+            $filename = $file['photo'];
+            if (config('cache_enable') == 'yes') {
+                $redis_type_key = 'photo';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
+            break;
+
+        case 'userfeeds':
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE userid = \'' . mysql_clean($file['user']) . '\'';
+            $filename = $file['user'];
+            if (config('cache_enable') == 'yes') {
+                $redis_type_key = 'user';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
+            break;
+        case'avatar';
+        case'background';
+            $search_name = str_replace('-small', '', $file[$file['type']]);
+            $query = 'SELECT userid FROM ' . tbl('users') . ' WHERE ' . $file['type'] . ' = \'' . mysql_clean($search_name) . '\'';
+            $filename = str_replace(' ','_',$search_name);
+            if (config('cache_enable') == 'yes') {
+                $redis_type_key = $file['type'];
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
+            break;
+
+        case 'logos':
+            $result = strtolower($file['logo']) == strtolower(config('logo_name')) || strtolower($file['logo']) == strtolower(config('favicon_name'));
+            $filename = 'logos_' . $file['logo'];
+            break;
+    }
+    if (!empty($result)) {
+        if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
+            $tab_redis[$redis_type_key][] = $filename;
+            CacheRedis::getInstance()->set($redis_key, $tab_redis, 900);
+        }
+        return '';
     }
 
     $stop_path = null;
@@ -1779,10 +1844,12 @@ function clean_orphan_files($file)
             unlink($file['data']);
             $stop_path = DirPath::get('logs');
             break;
-        case 'video_mp':
+
+        case 'video_mp4':
             unlink($file['data']);
             $stop_path = DirPath::get('videos');
             break;
+
         case 'video_hls':
             $files_hls = array_diff(scandir($file['data']), ['.', '..']);
             foreach ($files_hls as $file_hls) {
@@ -1791,30 +1858,48 @@ function clean_orphan_files($file)
             rmdir($file['data']);
             $stop_path = DirPath::get('videos');
             break;
+
         case 'thumb':
             unlink($file['data']);
             $stop_path = DirPath::get('thumbs');
             break;
+
         case 'subtitle':
             unlink($file['data']);
             $stop_path = DirPath::get('subtitles');
             break;
+
         case 'photo':
             unlink($file['data']);
             $stop_path = DirPath::get('photos');
             break;
+
         case 'userfeeds':
             unlink($file['data']);
-            $stop_path = DirPath::getUrl('userfeeds');
+            $stop_path = DirPath::get('userfeeds');
+            break;
+        case 'avatar':
+            unlink($file['data']);
+            $stop_path = DirPath::get('avatars');
+            break;
+        case 'background':
+            unlink($file['data']);
+            $stop_path = DirPath::get('backgrounds');
+            break;
+
+        case 'logos':
+            unlink($file['data']);
+            $stop_path = DirPath::get('logos');
             break;
     }
     remove_empty_directory(dirname($file['data']), $stop_path);
+    return lang('orphan_file_has_been_deleted', $file['data']);
 }
 
 /**
  * @throws Exception
  */
-function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
+function age_restriction_check($user_id, $video_id, $obj_type = 'video', $id_field= 'videoid')
 {
     $sql = ' SELECT 
     TIMESTAMPDIFF(YEAR, U.dob, now()),
@@ -1829,9 +1914,8 @@ function age_restriction_check ($user_id, $video_id, $obj_type = 'video', $id_fi
     $rs = select($sql);
     if (!empty($rs)) {
         return $rs[0]['can_access'];
-    } else {
-        return 0;
     }
+    return 0;
 }
 
 

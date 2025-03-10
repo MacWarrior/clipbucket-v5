@@ -1212,6 +1212,7 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
 
         //Removing channel Comments
         $params = [];
@@ -2382,6 +2383,9 @@ class userquery extends CBCategory
     {
         if (!is_array($udetails) && is_numeric($udetails)) {
             $udetails = $this->get_user_details($udetails);
+        }
+        if ($udetails['userid'] == $this->get_anonymous_user()) {
+            return '';
         }
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);

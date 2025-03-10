@@ -208,4 +208,29 @@ $( document ).ready(function() {
             });
         });
     }
+
+    if (ids_to_check_progress.length > 0) {
+
+        intervalId = setInterval(function () {
+            $.post({
+                url: '/actions/admin_progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: 'edit'
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        $('#videoplayer').html(video.html)
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
+                }
+            })
+        }, 30000);
+    }
 });

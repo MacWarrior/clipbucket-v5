@@ -1124,7 +1124,7 @@ function lang($var, $params = [])
     $array_str = ['{title}'];
     $array_replace = ['Title'];
     $lang = str_replace($array_str, $array_replace, $translation);
-    if( empty($params) ){
+    if( $params === [] || !isset($params)){
         return $lang;
     }
 
@@ -1530,7 +1530,7 @@ function increment_views_new($id, $type = null)
         default:
             $vdetails = get_video_details($id);
             $sessionTime =  ($vdetails['duration'] ?? 3600);
-            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) ) {
+            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
                 Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
                 if (config('enable_video_view_history') == 'yes') {
                     Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$vdetails['videoid'], (user_id() ?: 0), '|f|NOW()']);
@@ -3661,7 +3661,8 @@ function get_website_logo_path($full_url = false): string
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
-        return DirPath::getUrl('logos', $full_url) . $logo_name;
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos', $full_url) . $logo_name . $version;
     }
     return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
 }
@@ -3670,7 +3671,8 @@ function get_website_favicon_path($full_url = false): string
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
-        return DirPath::getUrl('logos', $full_url) . $favicon_name;
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos', $full_url) . $favicon_name . $version;
     }
     return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/favicon.png';
 }
@@ -3687,8 +3689,7 @@ function upload_image($type = 'logo')
     }
 
     $filename = $_FILES[$file_post]['name'];
-    $file_ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
-    $file_basename = pathinfo($filename, PATHINFO_FILENAME);
+    $file_ext = getExt($filename);
     $filesize = $_FILES[$file_post]['size'];
     $allowed_file_types = explode(',', strtolower(config('allowed_photo_types')));
 
@@ -3699,17 +3700,19 @@ function upload_image($type = 'logo')
         e(lang('file_size_cant_exceeds_x_x', $explode));
         return false;
     }
-    if (in_array($file_ext, $allowed_file_types)) {
-        // Rename file
-        $logo_path = DirPath::get('logos') . $file_basename . '-' . $type . '.' . $file_ext;
-        unlink($logo_path);
-        move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
 
-        myquery::getInstance()->Set_Website_Details($type . '_name', $file_basename . '-' . $type . '.' . $file_ext);
-    } else {
+    if (!in_array($file_ext, $allowed_file_types)) {
         e(lang('wrong_image_extension', implode(', ', $allowed_file_types)));
         unlink($_FILES[$file_post]['tmp_name']);
+        return false;
     }
+
+    $logo_path = DirPath::get('logos') . $type . '.' . $file_ext;
+    unlink($logo_path);
+    move_uploaded_file($_FILES[$file_post]['tmp_name'], $logo_path);
+
+    myquery::getInstance()->Set_Website_Details($type . '_name', $type . '.' . $file_ext);
+    return true;
 }
 
 function get_mime_type($filepath, string $filename = '')

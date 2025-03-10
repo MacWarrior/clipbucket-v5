@@ -73,6 +73,15 @@ if ($cbcollection->is_viewable($collection_id)) {
             assign('collection_baseurl', $cbcollection->get_base_url());
         }
 
+        $ids_to_check_progress = [];
+        if ($cdetails['type'] == 'videos' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+            foreach ($items as $video) {
+                if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                    $ids_to_check_progress[] = $video['videoid'];
+                }
+            }
+        }
+        Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
         assign('objects', $items);
         assign('c', $cdetails);
         subtitle($cdetails['collection_name']);

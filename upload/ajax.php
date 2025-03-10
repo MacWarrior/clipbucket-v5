@@ -22,7 +22,7 @@ if (!empty($mode)) {
             if ($videos) {
                 foreach ($videos as $video) {
                     assign('video', $video);
-                    Template('blocks/video.html');
+                    Template('blocks/videos/video.html');
                 }
             }
             break;

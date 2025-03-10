@@ -38,7 +38,8 @@ if (isset($_POST['update'])) {
         'player_thumbnails',
         'player_default_resolution',
         'player_default_resolution_hls',
-        'player_subtitles'
+        'player_subtitles',
+        'enable_360_video'
     ];
 
     //Checking for logo
