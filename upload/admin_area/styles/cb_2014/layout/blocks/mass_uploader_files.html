@@ -3,8 +3,8 @@
 
 {$requiredFields.title.class='form-control'}
 {$requiredFields.tags_video.class='form-control'}
-
 {$requiredFields.cat.class='form-control'}
+{$optionFields.broadcast.class='form-control'}
 
 {assign var='hash' value=hash('sha512', $file.path|cat:$file.file)}
 
@@ -57,7 +57,7 @@
                 <label for="filesize"><b style="color:#000000;">{lang code='filesize'}</b></label>
                 <span class="form-control" title="{lang code='filesize'}" id="filesize" disabled>{$file.size}</span>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label for="{$optionFields.broadcast.id}"><b style="color:#000000;">{$optionFields.broadcast.title}</b></label>
                 {$formObj->createField($optionFields.broadcast)}
             </div>

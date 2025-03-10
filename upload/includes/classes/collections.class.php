@@ -15,6 +15,9 @@ class Collection
 
     private $type_list= [];
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'collections';
         $this->tablename_items = 'collection_items';
@@ -67,7 +70,10 @@ class Collection
             'photos'
         ];
 
-        $this->broadcast_options = ['public' => lang('collect_borad_pub'), 'private' => lang('collect_broad_pri')];
+        $this->broadcast_options = [
+            'public' => lang('collect_borad_pub')
+            ,'private' => lang('collect_broad_pri')
+        ];
     }
 
     public function getBroadcastOptions(): array
