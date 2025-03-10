@@ -305,7 +305,6 @@ class ClipBucket
      */
     function initAdminMenu()
     {
-
         $menu_dashboard = [
             'title'   => 'Dashboard'
             , 'class' => 'glyphicon glyphicon-dashboard'
