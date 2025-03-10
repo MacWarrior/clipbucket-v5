@@ -1837,62 +1837,63 @@ function clean_orphan_files($file): string
         }
         return '';
     }
+    $full_path = DirPath::get('root') . $file['data'];
 
     $stop_path = null;
     switch ($file['type']) {
         case 'log':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('logs');
             break;
 
         case 'video_mp4':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('videos');
             break;
 
         case 'video_hls':
-            $files_hls = array_diff(scandir($file['data']), ['.', '..']);
+            $files_hls = array_diff(scandir($full_path), ['.', '..']);
             foreach ($files_hls as $file_hls) {
-                unlink($file['data'] . DIRECTORY_SEPARATOR . $file_hls);
+                unlink($full_path . DIRECTORY_SEPARATOR . $file_hls);
             }
-            rmdir($file['data']);
+            rmdir($full_path);
             $stop_path = DirPath::get('videos');
             break;
 
         case 'thumb':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('thumbs');
             break;
 
         case 'subtitle':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('subtitles');
             break;
 
         case 'photo':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('photos');
             break;
 
         case 'userfeeds':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('userfeeds');
             break;
         case 'avatar':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('avatars');
             break;
         case 'background':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('backgrounds');
             break;
 
         case 'logos':
-            unlink($file['data']);
+            unlink($full_path);
             $stop_path = DirPath::get('logos');
             break;
     }
-    remove_empty_directory(dirname($file['data']), $stop_path);
+    remove_empty_directory(dirname($full_path), $stop_path);
     return lang('orphan_file_has_been_deleted', $file['data']);
 }
 

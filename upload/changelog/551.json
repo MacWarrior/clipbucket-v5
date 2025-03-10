@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"280",
+  "revision":"285",
   "status":"dev",
   "detail":[
     {
@@ -137,6 +137,7 @@
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -184,6 +185,7 @@
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -253,6 +255,8 @@
         ,"Fix collection sharing JS error"
         ,"Fix potentiel logo & favicon browser cache issue"
         ,"Fix playlist creation & edition"
+        ,"Fix collection creation and video addition"
+        ,"Fix manage videos & photos search"
       ]
     },
     {
