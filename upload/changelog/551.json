@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"279",
+  "revision":"283",
   "status":"dev",
   "detail":[
     {
@@ -136,6 +136,8 @@
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
+        ,"Fix video resolution settings saving"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -183,6 +185,7 @@
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
