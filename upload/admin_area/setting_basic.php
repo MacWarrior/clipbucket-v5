@@ -457,7 +457,6 @@ if (isset($_POST['update'])) {
     CacheRedis::flushAll();
     unset($_SESSION['check_global_configs']);
 
-    myquery::getInstance()->saveVideoResolutions($_POST);
     e('Website settings have been updated', 'm');
 
     //reset permissions check cache
@@ -468,12 +467,6 @@ if (isset($_POST['update'])) {
 
 $row = myquery::getInstance()->Get_Website_Details();
 Assign('row', $row);
-
-$video_resolutions = myquery::getInstance()->getVideoResolutions();
-Assign('video_resolutions', $video_resolutions);
-
-$ffmpeg_version = System::get_software_version('ffmpeg');
-Assign('ffmpeg_version', $ffmpeg_version);
 
 subtitle(lang('basic_settings'));
 

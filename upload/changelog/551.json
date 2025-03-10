@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"279",
+  "revision":"286",
   "status":"dev",
   "detail":[
     {
@@ -57,6 +57,7 @@
         ,"Add link from video edition page to uploader edition page"
         ,"Add collection sharing options"
         ,"Add baseurl config"
+        ,"Add broadcast configuration on mass upload <i>(#490)</i>"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -68,6 +69,7 @@
         ,"Update WIP update process"
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
+        ,"Update video broadcast upload display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -136,6 +138,8 @@
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
+        ,"Fix video resolution settings saving"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -179,10 +183,12 @@
         ,"Update dark & light themes"
         ,"Update search engine"
         ,"Update collection management menus"
+        ,"Update video broadcast upload display"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -252,6 +258,8 @@
         ,"Fix collection sharing JS error"
         ,"Fix potentiel logo & favicon browser cache issue"
         ,"Fix playlist creation & edition"
+        ,"Fix collection creation and video addition"
+        ,"Fix manage videos & photos search"
       ]
     },
     {
