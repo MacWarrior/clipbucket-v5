@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"280",
+  "revision":"281",
   "status":"dev",
   "detail":[
     {
@@ -184,6 +184,7 @@
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
