@@ -5,6 +5,7 @@ class Video
     private static $video;
     private $tablename = '';
     private $tablename_categories = '';
+    private $field_id = '';
     private $fields = [];
     private $fields_categories = [];
     private $display_block = '';
@@ -16,6 +17,7 @@ class Video
      */
     public function __construct(){
         $this->tablename = 'video';
+        $this->field_id = 'videoid';
         $this->tablename_categories = 'video_categories';
 
         $this->fields = [
@@ -66,12 +68,11 @@ class Video
             ,'subscription_email'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.3.0' || ($version['version'] == '5.3.0' && $version['revision'] >= 1)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
             $this->fields[] = 'is_castable';
             $this->fields[] = 'bits_color';
         }
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305')) {
             $this->fields[] = 'age_restriction';
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '371')) {
@@ -80,6 +81,10 @@ class Video
         }
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273')) {
             $this->fields[] = 'fov';
+        }
+        // TODO : Update revision
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+            $this->fields[] = 'convert_percent';
         }
 
         $this->fields_categories = [
@@ -93,7 +98,7 @@ class Video
             ,'isdefault'
         ];
 
-        $this->display_block = LAYOUT . '/blocks/video.html';
+        $this->display_block = LAYOUT . '/blocks/videos/video.html';
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
     }
@@ -273,6 +278,7 @@ class Video
     public function getAll(array $params = [])
     {
         $param_videoid = $params['videoid'] ?? false;
+        $param_videoids = $params['videoids'] ?? false;
         $param_videokey = $params['videokey'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_file_name = $params['file_name'] ?? false;
@@ -300,6 +306,9 @@ class Video
         $conditions = [];
         if( $param_videoid ){
             $conditions[] = $this->getTableName() . '.videoid = \''.mysql_clean($param_videoid).'\'';
+        }
+        if( $param_videoids ){
+            $conditions[] = $this->getTableName() . '.videoid IN ( '.mysql_clean(implode(', ', $param_videoids)).')';
         }
         if( $param_videokey ){
             $conditions[] = $this->getTableName() . '.videokey = \''.mysql_clean($param_videokey).'\'';
@@ -922,6 +931,48 @@ class Video
             'final_results' => $results
         ];
     }
+
+    /**
+     * @throws Exception
+     */
+    public function set(int $id_video, string $field, $value){
+        if( !in_array($field, $this->fields) ){
+            return;
+        }
+
+        $sql = 'UPDATE ' . tbl($this->tablename) . ' SET ' . $field . ' = ' . $value . ' WHERE ' . $this->field_id . ' = ' . $id_video;
+        Clipbucket_db::getInstance()->execute($sql);
+    }
+
+    public static function get_thumbs_preview($vdetails, string $size = '416x260'): string
+    {
+        if( config('enable_video_thumbs_preview') != 'yes'){
+            return '';
+        }
+
+        $thumbs = get_thumb($vdetails, true, $size, 'auto');
+        if( empty($thumbs) ){
+            return '';
+        }
+
+        $nb_thumbs = config('video_thumbs_preview_count');
+        $total = count($thumbs);
+
+        if ($nb_thumbs >= $total) {
+            $result = $thumbs;
+        } else {
+            $result = [];
+            $step = ($total - 1) / ($nb_thumbs - 1);
+
+            for ($i = 0; $i < $nb_thumbs; $i++) {
+                $index = (int) round($i * $step);
+                $result[] = $thumbs[$index];
+            }
+        }
+
+
+        return 'data-thumbs=\'' . json_encode($result) . '\'';
+    }
 }
 
 class CBvideo extends CBCategory
@@ -981,6 +1032,7 @@ class CBvideo extends CBCategory
             register_anchor_function('display_restricted', 'in_video_thumb', Video::class);
         }
         register_anchor_function('display_banner', 'in_video_thumb', self::class);
+        register_anchor_function('display_convert_percent', 'in_video_thumb', self::class);
     }
 
     /**
@@ -1004,6 +1056,26 @@ class CBvideo extends CBCategory
         if( !empty($text) ){
             echo '<div class="thumb_banner '.$class.'">' . $text . '</div>';
         }
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function display_convert_percent($video = [])
+    {
+        if( strtolower($video['status']) != 'processing' ){
+            return;
+        }
+
+        // TODO : Update revision
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
+            return;
+        }
+
+        echo '<div class="processing" data-id="' . $video['videoid'] . '">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    <span>' . $video['convert_percent'] . '%</span>
+              </div>';
     }
 
     /**
@@ -1096,6 +1168,11 @@ class CBvideo extends CBCategory
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273')) {
             $basic_fields[] = 'fov';
+        }
+
+        // TODO : Update revision
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+            $basic_fields[] = 'convert_percent';
         }
 
         return $this->set_basic_fields($basic_fields);

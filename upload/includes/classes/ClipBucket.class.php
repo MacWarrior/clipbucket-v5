@@ -305,7 +305,6 @@ class ClipBucket
      */
     function initAdminMenu()
     {
-
         $menu_dashboard = [
             'title'   => 'Dashboard'
             , 'class' => 'glyphicon glyphicon-dashboard'
@@ -319,8 +318,12 @@ class ClipBucket
             , 'sub'   => []
         ];
         $menu_configuration['sub'][] = [
-            'title' => lang('website_configuration')
-            , 'url' => DirPath::getUrl('admin_area') . 'main.php'
+            'title' => lang('basic_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'setting_basic.php'
+        ];
+        $menu_configuration['sub'][] = [
+            'title' => lang('advanced_settings')
+            , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
         ];
 
         $menu_configuration['sub'][] = [
@@ -399,7 +402,7 @@ class ClipBucket
         if (NEED_UPDATE) {
             return;
         }
-        if (User::getInstance()->hasPermission('web_config_access')) {
+        if (User::getInstance()->hasPermission('admin_access')) {
             $menu_general = [
                 'title'   => lang('general')
                 , 'class' => 'glyphicon glyphicon-stats'
@@ -515,7 +518,7 @@ class ClipBucket
             }
 
 
-            if (User::getInstance()->hasPermission('web_config_access')) {
+            if (User::getInstance()->hasPermission('advanced_settings')) {
                 $menu_tool['sub'][] = [
                     'title' => 'Maintenance'
                     , 'url' => DirPath::getUrl('admin_area') . 'maintenance.php'

@@ -34,7 +34,6 @@ function video_playable($id): bool
         return false;
     }
     if ($vdo['status'] != 'Successful') {
-        e(lang('this_vdo_not_working'));
         if (!User::getInstance()->hasAdminAccess()) {
             return false;
         }

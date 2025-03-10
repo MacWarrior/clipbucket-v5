@@ -4,7 +4,7 @@ define('THIS_PAGE', 'manage_tags');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once('../includes/classes/admin_tool.class.php');
 
-User::getInstance()->hasPermissionOrRedirect('web_config_access', true);
+User::getInstance()->hasPermissionOrRedirect('advanced_settings', true);
 pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */

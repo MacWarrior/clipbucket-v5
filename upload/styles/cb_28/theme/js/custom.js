@@ -249,7 +249,7 @@ function homePageVideos(qlist_items)
         var loadLink = '/ajax/home.php',
             main_object = $(this),
             sendType = 'post',
-            dataType = 'html',
+            dataType = 'json',
             loadType = $(main_object).attr('loadtype'),
             loadMode = $(main_object).attr('loadmode'),
             loadLimit = $(main_object).attr('loadlimit'),
@@ -346,11 +346,11 @@ function homePageVideos(qlist_items)
 
             success: function(data)
             {
-                try {
-                    var json = jQuery.parseJSON(data);
+                    var json = data;
                     if(json.notice) {
                         if(!first_launch) {
                             _cb.throwHeadMsg('warning', json.notice, 3000,true);
+                            return true
                         } else {
                             $(main_object).remove();
                             if (loadMode == 'featured') {
@@ -369,16 +369,14 @@ function homePageVideos(qlist_items)
                         _cb.throwHeadMsg('error', json.error, 3000,true);
                         return true;
                     }
-                }
 
-                catch(err) {
                     $(main_object).removeAttr('disabled');
                     $(main_object).text(loadMoreLang);
                     if (loadType == 'video') {
                         if (loadMode == 'recent') {
                             $('#recent_load_more').remove();
                             $('#recent_pre').html('');
-                            $(data).appendTo('#recent_vids_sec').fadeIn('slow');
+                            $(json.html).appendTo('#recent_vids_sec').fadeIn('slow');
 
                             recentShown = $('#recent_vids_sec .item-video, #recent_vids_sec .slider-video-container').length;
                             totalRecentVids = $('#container').find('.total_videos_recent').first().text();
@@ -387,10 +385,12 @@ function homePageVideos(qlist_items)
                             if (gotMoreRecent > 0) {
                                 $(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
                             }
+                            ids_to_check_progress_recent = [...new Set([...ids_to_check_progress_recent, ...json.ids_to_check])]
+                            progressVideoCheckHome(ids_to_check_progress_recent, 'home', 'intervalId_recent')
                         } else {
                             $('#featured_load_more').remove();
                             $('#featured_pre').html('');
-                            $(data).appendTo('#featured_vid_sec').fadeIn('slow');
+                            $(json.html).appendTo('#featured_vid_sec').fadeIn('slow');
 
                             featuredShown = $('#featured_vid_sec .item-video, #featured_vid_sec .slider-video-container').length;
                             totalFeaturedVids = $('#container').find('.total_videos_featured').first().text();
@@ -399,11 +399,13 @@ function homePageVideos(qlist_items)
                             if (gotMoreFeatured > 0) {
                                 $(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
                             }
+
+                            ids_to_check_progress_featured = [...new Set([...ids_to_check_progress_featured, ...json.ids_to_check])]
+                            progressVideoCheckHome(ids_to_check_progress_featured, 'home_featured', 'intervalId_featured' )
                         }
                     }
                     $('#container').find('.total_videos_recent').hide();
                     $('#container').find('.total_videos_featured').hide();
-                }
                 AddingListenerModernThumbVideo();
                 AddingListenerModernThumbVideoPopinView();
             }
@@ -425,4 +427,40 @@ $(window).resize(function(){
     responsiveFixes();
     loginHeight();
 });
-//shortKeys();
+
+/* Thumbs preview */
+document.addEventListener("DOMContentLoaded", function () {
+    const images = document.querySelectorAll("img[data-thumbs]");
+    if (images.length === 0) return;
+    images.forEach(img => {
+        let thumbnails;
+        try {
+            let thumbsData = img.getAttribute("data-thumbs");
+            thumbnails = JSON.parse(thumbsData);
+        } catch (error) {
+            return;
+        }
+        if (!Array.isArray(thumbnails) || thumbnails.length === 0) return;
+        let index = 0;
+        let interval;
+        const parent = img.closest("div");
+        parent.addEventListener("mouseenter", function () {
+            if( img.src ){
+                img.dataset.originalSrc = img.src;
+            }
+            interval = setInterval(() => {
+                index = (index + 1) % thumbnails.length;
+                if (thumbnails[index]) {
+                    img.src = thumbnails[index];
+                }
+            }, 500);
+        });
+        parent.addEventListener("mouseleave", function () {
+            clearInterval(interval);
+            if (img.dataset.originalSrc) {
+                img.src = img.dataset.originalSrc;
+            }
+            index = 0;
+        });
+    });
+});

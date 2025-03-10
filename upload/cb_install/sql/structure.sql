@@ -270,7 +270,6 @@ CREATE TABLE `{tbl_prefix}playlists` (
   `userid` int(11) NOT NULL DEFAULT 0,
   `playlist_type` varchar(10) NOT NULL DEFAULT '',
   `description` mediumtext NOT NULL,
-  `tags` mediumtext NOT NULL,
   `privacy` enum('public','private','unlisted') NOT NULL DEFAULT 'public',
   `total_items` int(255) NOT NULL DEFAULT 0,
   `last_update` text NULL DEFAULT NULL,
@@ -535,7 +534,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `age_restriction` INT DEFAULT NULL,
   `default_poster` int(3) NULL DEFAULT NULL,
   `default_backdrop` int(3) NULL DEFAULT NULL,
-  `fov` varchar(3) NULL DEFAULT NULL
+  `fov` varchar(3) NULL DEFAULT NULL,
+  `convert_percent` FLOAT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (

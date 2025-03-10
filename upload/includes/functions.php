@@ -1530,7 +1530,7 @@ function increment_views_new($id, $type = null)
         default:
             $vdetails = get_video_details($id);
             $sessionTime =  ($vdetails['duration'] ?? 3600);
-            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) ) {
+            if (!isset($_SESSION['video_' . $id]) || ( time() - $_SESSION['video_' . $id]  > $sessionTime) && $vdetails['status'] == 'Successful') {
                 Clipbucket_db::getInstance()->update(tbl('video'), ['views', 'last_viewed'], ['|f|views+1', '|f|NOW()'], " videokey='$id'");
                 if (config('enable_video_view_history') == 'yes') {
                     Clipbucket_db::getInstance()->insert(tbl('video_views'), ['id_video', 'id_user', 'view_date'], [$vdetails['videoid'], (user_id() ?: 0), '|f|NOW()']);
@@ -3661,7 +3661,8 @@ function get_website_logo_path($full_url = false): string
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
-        return DirPath::getUrl('logos', $full_url) . $logo_name;
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos', $full_url) . $logo_name . $version;
     }
     return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
 }
@@ -3670,7 +3671,8 @@ function get_website_favicon_path($full_url = false): string
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
-        return DirPath::getUrl('logos', $full_url) . $favicon_name;
+        $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
+        return DirPath::getUrl('logos', $full_url) . $favicon_name . $version;
     }
     return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/favicon.png';
 }

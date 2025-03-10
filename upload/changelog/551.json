@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"273",
+  "revision":"280",
   "status":"dev",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Implement future PHP version check"
         ,"Implement options to disable video Date recorded & location"
         ,"Implement spaces in tags"
+        ,"Implement video conversion percent"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -47,6 +48,7 @@
         ,"Refactor email templates management"
         ,"Refactor flagged elements management"
         ,"Refactor orphan files deletion tool"
+        ,"Refactor website configurations"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -134,6 +136,7 @@
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
+        ,"Fix video resolution settings saving"
       ]
     },
     {
@@ -161,6 +164,8 @@
         ,"Implement collection sharing"
         ,"Implement spaces in tags"
         ,"Implement 360° video support"
+        ,"Implement video thumbs preview"
+        ,"Implement video conversion percent"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -246,6 +251,8 @@
         ,"Fix base URL usage"
         ,"Fix sharing privacy"
         ,"Fix collection sharing JS error"
+        ,"Fix potentiel logo & favicon browser cache issue"
+        ,"Fix playlist creation & edition"
       ]
     },
     {
