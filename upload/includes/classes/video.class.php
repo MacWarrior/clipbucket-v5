@@ -980,7 +980,7 @@ class Video
      * @return array
      * @throws Exception
      */
-    public function getStatusList()
+    public function getStatusList(): array
     {
         if (empty($this->status_list)) {
             $row = Clipbucket_db::getInstance()->_select('SHOW COLUMNS FROM '.tbl('video').' LIKE \'status\'')[0];

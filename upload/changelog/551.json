@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"281",
+  "revision":"282",
   "status":"dev",
   "detail":[
     {
@@ -137,6 +137,7 @@
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
+        ,"Fix possible SQL injection"
       ]
     },
     {
