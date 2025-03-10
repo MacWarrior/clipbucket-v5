@@ -267,7 +267,7 @@ function create_thumb($video_db, $multi, $size)
             //pattern must match :  /`file_name`-`size`-`num`.`extension`
             preg_match('/\/\w*-(\w{1,16})-(\d{1,3})\.(\w{2,4})$/', $thumb, $files_info);
             if (!empty($files_info)) {
-                Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], VERSION]);
+                Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version'], [$video_db['videoid'], $files_info[1], $files_info[2], $files_info[3], Update::getInstance()->getCurrentCoreVersion()]);
             }
         }
     }

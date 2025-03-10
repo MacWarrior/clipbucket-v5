@@ -1,7 +1,7 @@
 {
   "version":"5.5.1",
-  "revision":"286",
-  "status":"dev",
+  "revision":"287",
+  "status":"stable",
   "detail":[
     {
       "title": "Back office",
@@ -285,6 +285,7 @@
         ,"Update user level permissions storage"
         ,"Update countries list <i>(#517)</i>"
         ,"Update logo & favicon storage"
+        ,"Update live version state"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -394,10 +395,10 @@
       "title": "Internal components",
       "description": [
         "Update Player to version 2.0.7"
-        ,"Update Server Thumb for ClipBucket to version 2.0.3"
+        ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
-        ,"Update VideoJS player to 2.1"
+        ,"Update VideoJS player to version 2.1"
         ,"Remove Social Beast"
       ]
     },

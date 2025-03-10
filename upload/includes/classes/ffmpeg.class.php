@@ -916,7 +916,7 @@ class FFMpeg
                 }
 
                 if (file_exists($file_path)) {
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $size_tag, $thumb_file_number, $extension, VERSION, 'auto']);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $size_tag, $thumb_file_number, $extension, Update::getInstance()->getCurrentCoreVersion(), 'auto']);
                 } else {
                     $this->log->writeLine(date('Y-m-d H:i:s').' => Error generating '.$file_name.'...');
                 }

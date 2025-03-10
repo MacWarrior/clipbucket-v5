@@ -145,8 +145,6 @@ if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') 
 $update = Update::getInstance();
 $can_sse = System::can_sse() ? 'true' : 'false';
 assign('can_sse', $can_sse);
-Assign('VERSION', $update->getCurrentCoreVersion());
-Assign('STATE', strtoupper($update->getCurrentCoreState()));
 Assign('comments', $comments);
 Assign('changelog_551', $update->getChangelogHTML('551'));
 Assign('changelog_550', $update->getChangelogHTML('550'));
