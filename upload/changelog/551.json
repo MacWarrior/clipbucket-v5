@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"284",
+  "revision":"285",
   "status":"dev",
   "detail":[
     {
@@ -256,6 +256,7 @@
         ,"Fix potentiel logo & favicon browser cache issue"
         ,"Fix playlist creation & edition"
         ,"Fix collection creation and video addition"
+        ,"Fix manage videos & photos search"
       ]
     },
     {
