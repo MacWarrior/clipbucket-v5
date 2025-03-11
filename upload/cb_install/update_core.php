@@ -5,7 +5,6 @@ require_once dirname(__DIR__ ). DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEP
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'errorhandler.class.php';
 require_once DirPath::get('includes') . 'functions_template.php';

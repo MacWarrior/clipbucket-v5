@@ -64,9 +64,11 @@
                 <div class="clearfix row">
                     {if $users}
                         {foreach $users as $user}
+                            {if !empty($user['username'])}
                             <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
                                 {include file="$style_dir/blocks/channels.html"}
                             </div>
+                            {/if}
                         {/foreach}
                     {else}
                         <div class="well well-info">{lang code="no_channel_found"}</div>

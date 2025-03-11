@@ -13,8 +13,6 @@
  * $Rev$
  */
 
-const VERSION = 'CB5.5.1';                     // Version of this script ; original version 2.8.14
-
 const DEBUG_ON = false;                       // Enable debug logging to web server error log (STDERR)
 const DEBUG_LEVEL = 1;                        // Debug level 1 is less noisy and 3 is the most noisy
 const MEMORY_LIMIT = '30M';                   // Set PHP memory limit
@@ -346,6 +344,9 @@ class timthumb
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     protected function serveErrors()
     {
         header($_SERVER['SERVER_PROTOCOL'] . ' 400 Bad Request');
@@ -359,7 +360,7 @@ class timthumb
         $html .= '</ul>';
         echo '<h1>A TimThumb error has occured</h1>The following error(s) occured:<br />' . $html . '<br />';
         echo '<br />Query String : ' . htmlentities($_SERVER['QUERY_STRING'], ENT_QUOTES);
-        echo '<br />TimThumb version : ' . VERSION . '</pre>';
+        echo '<br />TimThumb version : ' . Update::getInstance()->getCurrentCoreVersion() . '</pre>';
     }
 
     protected function serveInternalImage(): bool

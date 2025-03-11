@@ -11,8 +11,13 @@ class Collection
     private $search_limit = 0;
     private $display_var_name = '';
 
+    private $broadcast_options = [];
+
     private $type_list= [];
 
+    /**
+     * @throws Exception
+     */
     public function __construct(){
         $this->tablename = 'collections';
         $this->tablename_items = 'collection_items';
@@ -65,6 +70,16 @@ class Collection
             'videos',
             'photos'
         ];
+
+        $this->broadcast_options = [
+            'public' => lang('collect_borad_pub')
+            ,'private' => lang('collect_broad_pri')
+        ];
+    }
+
+    public function getBroadcastOptions(): array
+    {
+        return $this->broadcast_options;
     }
 
     /**
@@ -1271,7 +1286,7 @@ class Collections extends CBCategory
 
         $name = $default['collection_name'];
         $description = $default['collection_description'];
-        $tags = $default['tags'];
+        $tags = $default['collection_tags'];
         $type = $default['type'];
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
@@ -1451,10 +1466,10 @@ class Collections extends CBCategory
         $return = [];
         $return['broadcast'] = [
             'title'             => lang('vdo_br_opt'),
-            'type'              => 'radiobutton',
+            'type'              => 'dropdown',
             'name'              => 'broadcast',
             'id'                => 'broadcast',
-            'value'             => ['public' => lang('collect_borad_pub'), 'private' => lang('collect_broad_pri')],
+            'value'             => Collection::getInstance()->getBroadcastOptions(),
             'checked'           => $default['broadcast'],
             'db_field'          => 'broadcast',
             'required'          => 'no',

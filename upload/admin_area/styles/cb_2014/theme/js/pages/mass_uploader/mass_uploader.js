@@ -9,6 +9,10 @@ $(document).ready(function () {
         });
     });
 
+    $('.broadcast').on('change', function() {
+        $('select[name="broadcast"]').val($(this).val());
+    });
+
     $('#massUploadSelect').change(function () {
         var to_check = this.checked;
 

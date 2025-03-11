@@ -76,7 +76,6 @@ if (file_exists(DirPath::get('includes') . 'config.php')) {
 
 require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
 require_once DirPath::get('classes') . 'my_queries.class.php';
@@ -153,7 +152,7 @@ try {
 Language::getInstance()->init();
 $Cbucket = new ClipBucket();
 
-ClipBucket::getInstance()->cbinfo = ['version' => VERSION, 'state' => STATE, 'rev' => REV];
+ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
 
 require_once('classes/session.class.php');
 $sess = new Session();

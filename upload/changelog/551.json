@@ -1,7 +1,7 @@
 {
   "version":"5.5.1",
-  "revision":"280",
-  "status":"dev",
+  "revision":"287",
+  "status":"stable",
   "detail":[
     {
       "title": "Back office",
@@ -57,6 +57,7 @@
         ,"Add link from video edition page to uploader edition page"
         ,"Add collection sharing options"
         ,"Add baseurl config"
+        ,"Add broadcast configuration on mass upload <i>(#490)</i>"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -68,6 +69,7 @@
         ,"Update WIP update process"
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
+        ,"Update video broadcast upload display"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -137,6 +139,7 @@
         ,"Fix video deletion"
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -180,10 +183,12 @@
         ,"Update dark & light themes"
         ,"Update search engine"
         ,"Update collection management menus"
+        ,"Update video broadcast upload display"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -253,6 +258,8 @@
         ,"Fix collection sharing JS error"
         ,"Fix potentiel logo & favicon browser cache issue"
         ,"Fix playlist creation & edition"
+        ,"Fix collection creation and video addition"
+        ,"Fix manage videos & photos search"
       ]
     },
     {
@@ -278,6 +285,7 @@
         ,"Update user level permissions storage"
         ,"Update countries list <i>(#517)</i>"
         ,"Update logo & favicon storage"
+        ,"Update live version state"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -387,10 +395,10 @@
       "title": "Internal components",
       "description": [
         "Update Player to version 2.0.7"
-        ,"Update Server Thumb for ClipBucket to version 2.0.3"
+        ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
-        ,"Update VideoJS player to 2.1"
+        ,"Update VideoJS player to version 2.1"
         ,"Remove Social Beast"
       ]
     },

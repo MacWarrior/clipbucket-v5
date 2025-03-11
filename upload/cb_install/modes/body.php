@@ -1,11 +1,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <?php
-    $cache_key = DEVELOPMENT_MODE ? time() : str_replace('.', '', VERSION) . REV;
+    $cache_key = DEVELOPMENT_MODE ? time() : str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
     ?>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <title>ClipBucket v<?php echo VERSION . ' ' . STATE; ?> Installer</title>
+        <title>ClipBucket v<?php echo Update::getInstance()->getCurrentCoreVersion(); ?> Installer</title>
         <link href="./style<?php if(!DEVELOPMENT_MODE) echo '.min'?>.css" rel="stylesheet" type="text/css"/>
         <script type="text/javascript" src="/vendor/components/jquery/jquery.min.js?v=<?php echo $cache_key; ?>"></script>
         <script type="text/javascript" src="/vendor/select2/select2/dist/js/select2.min.js?v=<?php echo $cache_key; ?>"></script>
@@ -22,7 +22,7 @@
                 <li><a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">Bug Report</a></li>
             </ul>
         </div>
-        <p></p> <span id="logo"><span style="color:#09c;">ClipBucketV5</span> Installer v<?php echo VERSION . ' - Revision ' . REV . ' <i>(' . STATE . ')</i>'; ?></span>
+        <p></p> <span id="logo"><span style="color:#09c;">ClipBucketV5</span> Installer v<?php echo Update::getInstance()->getCurrentCoreVersion() . ' - Revision ' . Update::getInstance()->getCurrentCoreRevision(); ?></span>
         <p></p>
     </div>
 

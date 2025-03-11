@@ -3170,13 +3170,13 @@ class userquery extends CBCategory
         }
 
         if (isSectionEnabled('videos')) {
+            if (User::getInstance()->hasPermission('allow_video_upload')) {
+                $array[lang('videos')][lang('manage_x', strtolower(lang('videos')))] = 'manage_videos.php?mode=uploaded';
+            }
             if (User::getInstance()->hasPermission('view_video')) {
-                $array[lang('videos')][lang('user_fav_videos')] = 'manage_videos.php?mode=favorites';
+                $array[lang('videos')][lang('manage_x',strtolower(lang('user_fav_videos')))] = 'manage_videos.php?mode=favorites';
             }
 
-            if (User::getInstance()->hasPermission('allow_video_upload')) {
-                $array[lang('videos')][lang('uploaded_videos')] = 'manage_videos.php?mode=uploaded';
-            }
         }
 
         if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && User::getInstance()->hasPermission('allow_create_playlist')){
