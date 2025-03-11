@@ -21,12 +21,15 @@ class cbpage
      */
     function create_page(array $param): bool
     {
-        $name = mysql_clean($param['page_name']);
+        $name = strtolower(mysql_clean($param['page_name']));
         $title = mysql_clean($param['page_title']);
         $content = mysql_clean($param['page_content']);
 
         if (empty($name)) {
             e(lang('page_name_empty'));
+        }
+        if (substr_count($name, ' ') > 0) {
+            e(lang('page_name_cant_have_space'));
         }
         if (empty($title)) {
             e(lang('page_title_empty'));
@@ -36,10 +39,19 @@ class cbpage
         }
 
         if (!error()) {
-            Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
-                [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
-            e(lang('new_page_added_successfully'), 'm');
-            return false;
+
+            $translation_name = 'page_name_' . $name;
+            if(empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
+                Migration::generateTranslation($translation_name, [
+                    Language::getInstance()->lang => $name
+                ]);
+                Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
+                    [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
+                e(lang('new_page_added_successfully'), 'm');
+                return false;
+            } else {
+                e(lang('translation_already_exist_choose_other_name'));
+            }
         }
         return false;
     }
@@ -128,7 +140,7 @@ class cbpage
     function edit_page($param)
     {
         $id = $param['page_id'];
-        $name = mysql_clean($param['page_name']);
+        $name = strtolower(mysql_clean($param['page_name']));
         $title = mysql_clean($param['page_title']);
         $content = mysql_clean($param['page_content']);
 
@@ -137,6 +149,10 @@ class cbpage
 
         if (!$page) {
             e(lang('page_doesnt_exist'));
+        }
+
+        if (substr_count($name, ' ') > 0) {
+            e(lang('page_name_cant_have_space'));
         }
         if (empty($name)) {
             e(lang('page_name_empty'));
@@ -149,6 +165,12 @@ class cbpage
         }
 
         if (!error()) {
+            if ($page['page_name'] != $name) {
+                Migration::deleteTranslation('page_name_' . $page['page_name']);
+                Migration::generateTranslation('page_name_' . $name, [
+                    Language::getInstance()->lang => $title
+                ]);
+            }
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
                 [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
             e(lang('page_updated'), 'm');
