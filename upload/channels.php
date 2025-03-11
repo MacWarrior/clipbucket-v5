@@ -15,7 +15,8 @@ $params = [
 ];
 assign('featured_users', User::getInstance()->getAll($params));
 
-$params = User::getInstance()->getFilterParams($_GET['sort'], []);
+$sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
+$params = User::getInstance()->getFilterParams($sort_label, []);
 $params = User::getInstance()->getFilterParams($_GET['time'], $params);
 
 
@@ -40,7 +41,9 @@ pages::getInstance()->paginate($total_pages, $page, null, $extra_params, $tag);
 subtitle(lang('channels'));
 assign('users', $users);
 
-assign('sort_list', User::getInstance()->getSortList());
+assign('sort_list', display_sort_lang_array(User::getInstance()->getSortList()));
+assign('sort_link', $_GET['sort']??0);
+assign('default_sort', SortType::getDefaultByType('channels'));
 assign('time_list', time_links());
 
 template_files('channels.html');

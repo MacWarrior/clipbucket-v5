@@ -13,14 +13,17 @@ pages::getInstance()->page_redir();
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('photo_main_list'));
-$params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
+$sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
+$params = Photo::getInstance()->getFilterParams($sort_label, []);
 $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
 
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
-assign('sort_list', Photo::getInstance()->getSortList());
+assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
+assign('sort_link', $_GET['sort']??0);
+assign('default_sort', SortType::getDefaultByType('photos'));
 assign('time_list', time_links());
 
 if( empty($photos) ){

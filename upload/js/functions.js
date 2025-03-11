@@ -1023,3 +1023,10 @@ function progressVideoCheck(ids_to_check_progress, displayType) {
         }, 60000);
     }
 }
+function showSpinner() {
+    $('.taskHandler').show();
+}
+
+function hideSpinner() {
+    $('.taskHandler').hide();
+}

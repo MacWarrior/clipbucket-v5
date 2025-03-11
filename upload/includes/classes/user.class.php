@@ -246,20 +246,14 @@ class User
      */
     public function getSortList(): array
     {
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_old'  => lang('most_old')
-            ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
-        ];
+       $sorts = SortType::getSortTypes('channels');
 
-        if(config('videosSection') == 'yes' || config('photosSection') == 'yes') {
-            $sorts['most_items'] = lang('sort_most_items');
+        if(config('videosSection') != 'yes' && config('photosSection') != 'yes') {
+            unset($sorts[array_search('sort_most_items', $sorts)]);
         }
 
         if( config('enable_comments_channel') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
         return $sorts;

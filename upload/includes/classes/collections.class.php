@@ -36,6 +36,7 @@ class Collection
             ,'active'
             ,'public_upload'
             ,'type'
+            ,'sort_type'
         ];
 
         $version = Update::getInstance()->getDBVersion();
@@ -169,22 +170,14 @@ class Collection
      */
     public function getSortList(): array
     {
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_old'  => lang('most_old')
-            ,'most_items'  => lang('sort_most_items')
-        ];
+        $sorts = SortType::getSortTypes('collections');
 
-        if( config('enable_comments_collection') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('enable_comments_collection') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
-
-        if( config('collection_rating') == '1' ){
-            $sorts['top_rated'] = lang('top_rated');
+        if (config('collection_rating') != '1') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        $sorts['featured'] = lang('featured');
-
         return $sorts;
     }
 
@@ -198,7 +191,7 @@ class Collection
         $param_category = $params['category'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
-        $param_hide_empty_collection = $params['hide_empty_collection'];
+        $param_hide_empty_collection = $params['hide_empty_collectio n'];
         $param_featured = $params['featured'] ?? false;
         $param_active = $params['active'] ?? false;
         $param_type = $params['type'] ?? false;
@@ -334,6 +327,11 @@ class Collection
             }
 
             $select[] = $total_objects . ' AS total_objects';
+
+            if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+                $select[] = ' sorts.label as sort_type ';
+                $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
+            }
         }
 
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
@@ -433,16 +431,27 @@ class Collection
                 $params = [];
                 $params['collection_id'] = $collection['collection_id'];
                 $params['show_unlisted'] = true;
-                $params['order'] = $this->getTableNameItems() . '.date_added ASC';
 
-                if( $collection['type'] == 'videos' ){
+                if ($collection['type'] == 'videos') {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+                        $params['order'] = Video::getInstance()->getFilterParams($collection['sort_type'], [])['order'] ?? null;
+                    }
+                    if (empty($params['order'])) {
+                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    }
                     $collection['items'] = Video::getInstance()->getAll($params);
                 } else {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+                        $params['order'] = Photo::getInstance()->getFilterParams($collection['sort_type'], [])['order'] ?? null;
+                    }
+                    if (empty($params['order'])) {
+                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    }
                     $collection['items'] = Photo::getInstance()->getAll($params);
                 }
 
-                if( $param_count ){
-                    if( !empty($collection['items']) ){
+                if ($param_count) {
+                    if (!empty($collection['items'])) {
                         $count += count($collection['items']);
                     }
                 }
@@ -1483,6 +1492,20 @@ class Collections extends CBCategory
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'no'
         ];
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+            $list = SortType::getSortTypes($default['type']);
+            $return['sort_type'] = [
+                'title'    => lang('default_sort'),
+                'class'    => 'form-control',
+                'type'     => 'dropdown',
+                'name'     => 'sort_type',
+                'id'       => 'sort_type',
+                'value'    => display_sort_lang_array($list),
+                'db_field' => 'sort_type',
+                'required' => 'yes',
+                'checked'  => $default['sort_type'] ?? 0,
+            ];
+        }
 
         return $return;
     }

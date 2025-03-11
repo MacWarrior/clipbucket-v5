@@ -130,7 +130,9 @@ class Photo
                     $params['order'] = $this->getTableName() . '.total_comments DESC';
                 }
                 break;
-
+            case 'viewed_recently':
+                $params['order'] = $this->getTableName() . '.last_viewed DESC';
+                break;
             case 'all_time':
             case 'today':
             case 'yesterday':
@@ -152,25 +154,15 @@ class Photo
      */
     public function getSortList(): array
     {
-        if (!isset($_GET['sort'])) {
-            $_GET['sort'] = 'most_recent';
+        $sorts = SortType::getSortTypes('photos');
+
+        if (config('enable_comments_photo') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_old'  => lang('most_old')
-            ,'most_viewed' => lang('mostly_viewed')
-        ];
-
-        if( config('enable_comments_photo') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('photo_rating') != 'yes') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        if( config('photo_rating') == 'yes' ){
-            $sorts['top_rated'] = lang('top_rated');
-        }
-
-        $sorts['featured'] = lang('featured');
 
         return $sorts;
     }
