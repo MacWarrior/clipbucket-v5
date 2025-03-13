@@ -136,7 +136,7 @@ $(document).ready(function(){
         id = id.match(/([0-9]+)$/g);
         id = id.pop();
         $.ajax({
-            url: "/admin_area/index.php",
+            url: baseurl + "/admin_area/index.php",
             type: "post",
             data: {
                 id: id,
@@ -178,7 +178,7 @@ function updateListeners () {
     $('.launch_wip').on('click', function () {
         showSpinner();
         $.ajax({
-            url: "/actions/admin_launch_wip.php",
+            url: baseurl+"actions/admin_launch_wip.php",
             type: "post",
             dataType: "json",
             success: function (data) {
@@ -218,7 +218,7 @@ function update(type){
     $('.update_db').off('click').prop('disabled', 'disabled');
     $('.update_core').off('click').prop('disabled', 'disabled');
     $.ajax({
-        url: "/actions/admin_launch_update.php",
+        url: baseurl+"actions/admin_launch_update.php",
         type: "post",
         data: {
             type: type
@@ -252,7 +252,7 @@ function update(type){
 function connectSSE() {
     var tries = 0;
     // Create new event, the server script is sse.php
-    eventSource = new EventSource("/admin_area/sse/update_info.php");
+    eventSource = new EventSource(baseurl+"/admin_area/sse/update_info.php");
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);
@@ -289,7 +289,7 @@ function connectSSE() {
 
 function checkStatus() {
     $.ajax({
-        url: "/actions/admin_check_update.php",
+        url: baseurl+"actions/admin_check_update.php",
         type: "post",
         dataType: "json",
         success: function (data) {

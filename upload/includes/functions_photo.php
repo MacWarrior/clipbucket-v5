@@ -31,7 +31,7 @@ function get_photo($params)
 function plupload_photo_uploader()
 {
     $photoUploaderDetails = [
-        'uploadScriptPath' => '/actions/photo_uploader.php'
+        'uploadScriptPath' => DirPath::getUrl('actions') . 'photo_uploader.php'
     ];
 
     assign('photoUploaderDetails', $photoUploaderDetails);

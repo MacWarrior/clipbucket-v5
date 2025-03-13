@@ -2220,10 +2220,11 @@ class Collections extends CBCategory
 
     public function get_base_url(): string
     {
+        $base_url = DirPath::getUrl('root');
         if (config('seo') == 'yes') {
-            return '/collections/';
+            return $base_url . 'collections/';
         }
-        return '/collections.php';
+        return $base_url . 'collections.php';
     }
 
     /**
@@ -2237,13 +2238,14 @@ class Collections extends CBCategory
      */
     function collection_links($details, $type = null): string
     {
+        $base_url = DirPath::getUrl('root');
         if (is_array($details)) {
             $cdetails = $details;
         } else {
             if (is_numeric($details)) {
                 $cdetails = $this->get_collection($details);
             } else {
-                return Network::get_server_url();
+                return $base_url;
             }
         }
 
@@ -2256,39 +2258,39 @@ class Collections extends CBCategory
                 case 'view_collection':
                 case 'view':
                     if (empty($details['collection_id'])) {
-                        return Network::get_server_url();
+                        return $base_url;
                     }
                     if (SEO == 'yes') {
-                        return Network::get_server_url() . 'collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
+                        return $base_url . 'collection/' . $cdetails['collection_id'] . '/' . $cdetails['type'] . '/' . SEO(($cdetails['collection_name']));
                     }
-                    return Network::get_server_url() . 'view_collection.php?cid=' . $cdetails['collection_id'];
+                    return $base_url . 'view_collection.php?cid=' . $cdetails['collection_id'];
                 case 'vi':
                 case 'view_item':
                 case 'item':
                     if (SEO == 'yes') {
                         if (empty($details['collection_id'])) {
-                            return Network::get_server_url();
+                            return $base_url;
                         }
-                        return Network::get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+                        return $base_url . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
                     }
-                    return Network::get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+                    return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
                 case 'load_more':
                 case 'more_items':
                 case 'moreItems':
                     if (empty($details['collection_id'])) {
-                        return Network::get_server_url();
+                        return $base_url;
                     }
                     if (empty($cdetails['page_no'])) {
                         $cdetails['page_no'] = 2;
                     }
 
                     if (SEO == 'yes') {
-                        return Network::get_server_url() . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
+                        return $base_url . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
                     }
-                    return Network::get_server_url() . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
+                    return $base_url . '?cid=' . $cdetails['collection_id'] . '&amp;page=' . $cdetails['page_no'];
             }
         }
-        return Network::get_server_url();
+        return $base_url;
     }
 
     /**
@@ -2351,7 +2353,7 @@ class Collections extends CBCategory
                 break;
 
             default:
-                header('location:' . Network::get_server_url());
+                header('location:' . DirPath::getUrl('root'));
                 break;
         }
     }

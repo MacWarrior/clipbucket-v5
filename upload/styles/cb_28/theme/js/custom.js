@@ -62,22 +62,22 @@ function shortKeys()
 
             if(key === 86 && e.shiftKey)  // shift + v = videos page
             {
-                window.location.href = "/videos";
+                window.location.href = baseurl + "videos";
             }
 
             if(key === 80 && e.shiftKey)  // shift + p = photos page
             {
-                window.location.href = "/photos";
+                window.location.href = baseurl + "photos";
             }
 
             if(key === 67 && e.shiftKey)  // shift + c = collections page
             {
-                window.location.href = "/collections";
+                window.location.href = baseurl + "collections";
             }
 
             if(key === 85 && e.shiftKey)  // shift + u = channel page
             {
-                window.location.href = "/channels";
+                window.location.href = baseurl + "channels";
             }
         }
 
@@ -246,7 +246,7 @@ function homePageVideos(qlist_items)
     console.log("Greetings Adventurers ! Having a look under the hood ? Happy sneaking buddy ! Drop us an email for any questions : contact+clipbucket@oxygenz.fr")
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
-        var loadLink = '/ajax/home.php',
+        var loadLink = baseurl+'/ajax/home.php',
             main_object = $(this),
             sendType = 'post',
             dataType = 'json',

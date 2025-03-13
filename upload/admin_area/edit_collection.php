@@ -30,7 +30,7 @@ $collection = Collection::getInstance()->getOne([
     'with_items'            => true
 ]);
 if (empty($collection)) {
-    redirect_to(DirPath::getUrl('admin_area', true) . 'collection_manager.php?missing_collection=1');
+    redirect_to(DirPath::getUrl('admin_area') . 'collection_manager.php?missing_collection=1');
 }
 
 /* Generating breadcrumb */

@@ -1,7 +1,7 @@
 (function() {
     var defaults = {
             0: {
-                src: '/files/thumbs/processing.jpg'
+                src: baseurl + '/files/thumbs/processing.jpg'
             }
         },
         extend = function() {

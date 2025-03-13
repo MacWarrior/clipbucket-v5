@@ -578,16 +578,17 @@ class Photo
      * @return string
      * @throws Exception
      */
-    public function getFOLink($photo_id)
+    public function getFOLink($photo_id): string
     {
+        $base_url = DirPath::getUrl('root');
         $details = $this->getOne(['photo_id'=>$photo_id]);
         if (SEO == 'yes') {
             if (empty($details['collection_id'])) {
-                return Network::get_server_url();
+                return $base_url;
             }
-            return Network::get_server_url() . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
+            return $base_url . 'item/photos/' . $details['collection_id'] . '/' . $details['photo_key'] . '/' . SEO(display_clean(str_replace(' ', '-', $details['photo_title'])));
         }
-        return Network::get_server_url() . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
+        return $base_url . 'view_item.php?item=' . $details['photo_key'] . '&amp;collection=' . $details['collection_id'];
     }
 }
 
@@ -2490,6 +2491,7 @@ class CBPhotos
                         $size = '_' . $p['size'];
 
                         $src = array_find_cb($photo['filename'] . $size, $thumbs);
+                        DiscordLog::sendDump($src);
                         if (empty($src)) {
                             $src = $this->default_thumb($size);
                         }
@@ -2617,29 +2619,30 @@ class CBPhotos
      */
     function photo_links($details, $type): string
     {
+        $base_url = DirPath::getUrl('root');
         if (empty($type)) {
-            return Network::get_server_url();
+            return $base_url;
         }
 
         switch ($type) {
             case 'upload':
                 if (SEO == 'yes') {
-                    return '/photo_upload';
+                    return $base_url . 'photo_upload';
                 }
-                return '/photo_upload.php';
+                return $base_url . 'photo_upload.php';
 
             case 'upload_more':
                 if (SEO == 'yes') {
-                    return '/photo_upload/' . $this->encode_key($details['collection_id']);
+                    return $base_url . 'photo_upload/' . $this->encode_key($details['collection_id']);
                 }
-                return '/photo_upload.php?collection=' . $this->encode_key($details['collection_id']);
+                return $base_url . 'photo_upload.php?collection=' . $this->encode_key($details['collection_id']);
 
             case 'view_item':
             case 'view_photo':
                 return $this->collection->collection_links($details, 'view_item');
 
             default:
-                return Network::get_server_url();
+                return $base_url;
         }
     }
 
@@ -2853,12 +2856,14 @@ class CBPhotos
         if (is_array($image_file)) {
             $image_file = $image_file[0];
         }
+
+        $base_url = DirPath::getUrl('root');
         switch ($type) {
             case 'html':
                 if ($p['with_url']) {
                     $code .= "&lt;a href='" . $this->collection->collection_links($photo, 'view_item') . "' target='_blank'&gt;";
                 }
-                $code .= "&lt;img src='" . Network::get_server_url() . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
+                $code .= "&lt;img src='" . $base_url . $image_file . "' title='" . display_clean($photo['photo_title']) . "' alt='" . display_clean($photo['photo_title']) . '&nbsp;' . TITLE . "' /&gt;";
                 if ($p['with_url']) {
                     $code .= '&lt;/a&gt;';
                 }
@@ -2868,7 +2873,7 @@ class CBPhotos
                 if ($p['with_url']) {
                     $code .= '&#91;URL=' . $this->collection->collection_links($photo, 'view_item') . '&#93;';
                 }
-                $code .= '&#91;IMG&#93;' . Network::get_server_url() . $image_file . '&#91;/IMG&#93;';
+                $code .= '&#91;IMG&#93;' . $base_url . $image_file . '&#91;/IMG&#93;';
                 if ($p['with_url']) {
                     $code .= '&#91;/URL&#93;';
                 }
@@ -2879,7 +2884,7 @@ class CBPhotos
                 break;
 
             case 'direct':
-                $code .= Network::get_server_url() . $image_file;
+                $code .= $base_url . $image_file;
                 break;
 
             default:
@@ -2888,8 +2893,6 @@ class CBPhotos
 
         return $code;
     }
-
-
 
     /**
      * Used encode photo key

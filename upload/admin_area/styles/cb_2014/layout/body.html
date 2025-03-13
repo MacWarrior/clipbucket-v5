@@ -13,7 +13,7 @@
                 <div class="main-content">
                     <div id="breadcrumbs" class="breadcrumbs">
                         <ul class="breadcrumb">
-                            <li><a href="/admin_area/" class="glyphicon glyphicon-home"></a></li>
+                            <li><a href="{DirPath::getUrl('admin_area')}" class="glyphicon glyphicon-home"></a></li>
                             {foreach from=$breadcrumb item=page}
                                 <li>{if !empty($page['url'])}<a href="{$page['url']}">{/if}{$page['title']}{if !empty($page['url'])}</a>{/if}</li>
                             {/foreach}

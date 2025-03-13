@@ -37,7 +37,7 @@
                                         {get_photo details=$photos[list] output='html' class='acc_usr_video_thumb img-responsive'}
                                     </div>
                                     <div class="col-md-9">
-                                        <a class="block" href="/admin_area/edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>
+                                        <a class="block" href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>
                                         <span>
                                             <strong>{$photos[list].date_added|niceTime}</strong>
                                             | {lang code='views'} : <strong>{$photos[list].views|number_format}</strong>
@@ -65,7 +65,7 @@
                             </div>
                             <div class="col-md-2">
                                 {if $photos[list].userid != $anonymous_id}
-                                    <a href="view_user.php?uid={$photos[list].userid}">{display_clean($photos[list].username)}</a>
+                                    <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$photos[list].userid}">{display_clean($photos[list].username)}</a>
                                 {else}
                                     {display_clean(lang($photos[list].username))}
                                 {/if}
@@ -79,10 +79,10 @@
                             <button class="btn btn-primary btn-xs dropdown-toggle" id="dropdownMenu1" data-toggle="dropdown">Actions<i class="glyphicon glyphicon-chevron-down icon-on-right"></i></button>
                             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
                                 <li>
-                                    <a href="edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
+                                    <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$photos[list].photo_id}">{lang code='edit'}</a>
                                 </li>
                                 <li>
-                                    <a href="/view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='watch'}</a>
+                                    <a href="{$baseurl}view_item.php?item={$photos[list].photo_key}&amp;type=photos&amp;collection={$photos[list].collection_id}" target="_blank">{lang code='watch'}</a>
                                 </li>
                                 <li>
                                     {if $photos[list]['active'] == 'yes'}

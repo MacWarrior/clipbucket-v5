@@ -27,6 +27,6 @@ if ($userLevel > 1 && $userToLoginAsLevel == 1) {
 }
 
 if (userquery::getInstance()->login_as_user($uid)) {
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 display_it();

@@ -719,8 +719,6 @@ class EmailTemplate
             $content
         ];
 
-        DiscordLog::sendDump('```'.$content.'```');
-
         if (!empty($id_user)) {
             $fields[] = 'userid';
             $values[] = $id_user;
@@ -738,13 +736,13 @@ class EmailTemplate
     private static function getGlobalVariablesArray(): array
     {
         return [
-            'baseurl' => Network::get_server_url(),
-            'login_link' => cblink(['name' => 'login'], true),
+            'baseurl' => DirPath::getUrl('root'),
+            'login_link' => cblink(['name' => 'login']),
             'date_year' => cbdate('Y'),
             'date_time' => now(),
             'website_title' => config('site_title'),
-            'logo_url' => get_website_logo_path(true),
-            'favicon_url' => get_website_favicon_path(true)
+            'logo_url' => get_website_logo_path(),
+            'favicon_url' => get_website_favicon_path()
         ];
     }
 

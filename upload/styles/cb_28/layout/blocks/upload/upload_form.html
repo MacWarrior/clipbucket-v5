@@ -134,7 +134,7 @@ $(document).ready(function(){
             e.preventDefault();
             var data = $("#updateVideoInfoFormNew").serialize();
             $.ajax({
-                url : "/actions/file_uploader.php",
+                url : baseurl+"actions/file_uploader.php",
                 type : "post",
                 data : data,
                 dataType : 'json',

@@ -1,7 +1,7 @@
 function addOrEdit(category_id) {
     $("#edit_category").trigger('reset');
     $.ajax({
-        url: "/actions/form_category.php",
+        url: baseurl+"actions/form_category.php",
         type: "post",
         data: {'category_id': category_id, 'type': type},
         dataType: 'json'

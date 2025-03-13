@@ -311,7 +311,7 @@ echo 		}>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		location / {>> %NGINX_CONF%
 echo 			rewrite /(.*)_v([0-9]+) /watch_video.php?v=$2^&$query_string last;>> %NGINX_CONF%
-echo 			rewrite /([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1^&seo_diret=yes last;>> %NGINX_CONF%
+echo 			rewrite /([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1 last;>> %NGINX_CONF%
 echo 		}>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
 echo 		error_page 404 /404;>> %NGINX_CONF%

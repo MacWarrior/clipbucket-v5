@@ -1,9 +1,11 @@
-var p = 'ajax.php';
+var ajax_url = './ajax.php';
+
 
 function dbconnect() {
-    $('#loading').html('<img src="images/loading.gif"/>');
+    $('#loading').html('<img src="./images/loading.gif"/>');
     var formData = $('#installation').serialize();
-    $.post(p,formData,function(data) {
+
+    $.post(ajax_url,formData,function(data) {
         if(data.err) {
             $('#dbresult').show().html(data.err)
             $('#loading').html('');
@@ -17,7 +19,7 @@ function dodatabase(step) {
     var formData = $('#installation').serialize();
 
     formData += '&step='+step;
-    $.post(p,formData,function(data) {
+    $.post(ajax_url,formData,function(data) {
         if(data.msg){
             $('#dbresult').show().append(data.msg);
         }
@@ -88,7 +90,7 @@ $( document ).ready(function() {
             $('.alert-dismissable').remove();
             $(select_timezone).removeClass('has-error');
             $('#spinner-content').show();
-            $.post('check_timezone.php',{timezone: $(this).val()} ,function(data) {
+            $.post('./check_timezone.php',{timezone: $(this).val()} ,function(data) {
                 if (data.success) {
                     $('.btn-primary').prop('disabled', false);
                 } else {
@@ -111,7 +113,7 @@ $( document ).ready(function() {
         $('.text').hide();
         $('.spinner-content').show();
         $.post({
-            url: 'update_core.php',
+            url: './update_core.php',
             dataType: "json",
             success: (data) => {
                 $('.btn').prop('disabled', '');

@@ -73,7 +73,7 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
                 rewrite ^/([^.]*)/?$ /index.php last; \
             } \
             rewrite ^/(.*)_v([0-9]+) /watch_video.php?v=$2&$query_string last; \
-            rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1&seo_diret=yes last; \
+            rewrite ^/([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1 last; \
         } \
         error_page 404 /404; \
         error_page 403 /403; \

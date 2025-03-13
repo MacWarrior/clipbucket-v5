@@ -12,7 +12,7 @@
                     {if $mode == "manage" || $mode == ""}
                         <h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" />
+                            <img src="{$imageurl}/dot.gif" class="arrow_pointing"/>
                             <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary  " />
                             <a class="btn-primary btn" href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a>
                         </div>
@@ -45,7 +45,7 @@
 
                     {if $mode == "edit_collection"}
                         <div class="page-hidding" ><h3>{lang code='update_collection'}</h3>
-                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="/manage_collections.php">{lang code="back_to_collection"}</a></div>
+                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a></div>
                         </div>
 
                         <input type="hidden" value="{$c.collection_id}" name="collection_id" id="collection_id">
@@ -86,7 +86,7 @@
                                         {foreach from=$items item=item}
                                             <div class="col-md-3">
                                                 <div class="form-group text-center">
-                                                    <label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100" />
+                                                    <label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100"/>
                                                         <input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
                                                     </label>
                                                 </div>
@@ -103,7 +103,7 @@
 
                     {if $mode == "add_new"}
                         <div class="page-hidding"><h3>{lang code='add_new_collection'}</h3>
-                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary " href="/collections.php">{lang code="back_to_collection"}</a></div>
+                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary " href="{$baseurl}collections.php">{lang code="back_to_collection"}</a></div>
                         </div>
                         {if User::getInstance()->hasPermission('allow_create_collection')}
                             <div class="upload_info">
@@ -148,8 +148,8 @@
                     {if $mode == "manage_items" || $mode == "collection_items"}
                         <h2>{lang code='manage_items'} - {display_clean($c.collection_name)}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;" />
-                            <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button" />
+                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;"/>
+                            <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button"/>
                         </div>
                         <div>
                             <table class="table table-striped table-bordered" style="margin-bottom:0;">

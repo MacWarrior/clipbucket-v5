@@ -2277,7 +2277,7 @@ class CBvideo extends CBCategory
         }
 
         $embed_code = '<iframe width="' . config('embed_player_width') . '" height="' . config('embed_player_height') . '" ';
-        $embed_code .= 'src="' . Network::get_server_url() . 'player/embed_player.php?vid=' . $vdetails['videokey'];
+        $embed_code .= 'src="' . DirPath::getUrl('root') . 'player/embed_player.php?vid=' . $vdetails['videokey'];
 
         if (config('autoplay_embed') == 'yes') {
             $embed_code .= '&autoplay=yes';
