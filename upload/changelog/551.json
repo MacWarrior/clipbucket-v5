@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"287",
+  "revision":"288",
   "status":"stable",
   "detail":[
     {
@@ -314,6 +314,8 @@
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
         ,"Fix video thumbs generation ratio other than 16/9"
+        ,"Fix video conversion failed on corrupted subtitle track"
+        ,"Fix incomplete conversion log"
       ]
     },
     {
