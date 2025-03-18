@@ -33,7 +33,7 @@
             {/if}
             <td>{if $category[list].category_desc}{display_clean($category[list].category_desc)}{else}<em>N/A</em>{/if}</td>
             <td>
-                <input value="{$category[list].category_id}" {if $category[list].is_default=='yes'}checked{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
+                <input value="{$category[list].category_id}" {if $category[list].is_default=='yes'}checked disabled{/if} name="make_default" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
                 <span class="lbl"></span></td>
             <td>
                 <div class="lead dropdown">
