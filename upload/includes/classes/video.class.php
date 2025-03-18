@@ -11,6 +11,8 @@ class Video
     private $display_block = '';
     private $display_var_name = '';
     private $search_limit = 0;
+    private $broadcast_option = [];
+    private $status_list= [];
 
     /**
      * @throws Exception
@@ -101,6 +103,13 @@ class Video
         $this->display_block = LAYOUT . '/blocks/videos/video.html';
         $this->display_var_name = 'video';
         $this->search_limit = (int)config('videos_items_search_page');
+
+        $this->broadcast_option = ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')];
+    }
+
+    public function getBroadcastOption(): array
+    {
+        return $this->broadcast_option;
     }
 
     public static function getInstance(): self
@@ -973,6 +982,20 @@ class Video
 
         return 'data-thumbs=\'' . json_encode($result) . '\'';
     }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getStatusList(): array
+    {
+        if (empty($this->status_list)) {
+            $row = Clipbucket_db::getInstance()->_select('SHOW COLUMNS FROM '.tbl('video').' LIKE \'status\'')[0];
+            preg_match("/^enum\((.*)\)$/", $row['Type'], $matches);
+            $this->status_list = str_getcsv($matches[1], ",", "'");
+        }
+        return $this->status_list;
+    }
 }
 
 class CBvideo extends CBCategory
@@ -1455,7 +1478,7 @@ class CBvideo extends CBCategory
             }
 
             if (User::getInstance()->hasAdminAccess()) {
-                if (!empty($array['status'])) {
+                if (!empty($array['status']) && in_array($array['status'], Video::getInstance()->getStatusList())) {
                     $query_field[] = 'status';
                     $query_val[] = $array['status'];
                 }
@@ -1494,7 +1517,7 @@ class CBvideo extends CBCategory
                     $query_val[] = $array['embed_code'];
                 }
 
-                if (!empty($array['video_fov'])) {
+                if (!empty($array['video_fov']) && in_array($array['video_fov'], [180,360])) {
                     $query_field[] = 'fov';
                     $query_val[] = $array['video_fov'];
                 }

@@ -397,7 +397,7 @@ class AdminTool
                 $vid_file_name = basename($log, '.log');
                 $insert_values = [
                     'type'  => 'log',
-                    'data'  => $log->getPathname(),
+                    'data'  => DirPath::getFromProjectRoot($log->getPathname()),
                     'video' => $vid_file_name
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -411,7 +411,7 @@ class AdminTool
                 $vid_file_name = explode('-', basename($video, '.mp4'))[0];
                 $insert_values = [
                     'type'  => 'video_mp4',
-                    'data'  => $video->getPathname(),
+                    'data'  => DirPath::getFromProjectRoot($video->getPathname()),
                     'video' => $vid_file_name
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -424,7 +424,7 @@ class AdminTool
                 $pic_file_name = explode('_', pathinfo($photo)['filename'])[0];
                 $insert_values = [
                     'type'  => 'photo',
-                    'data'  => $photo->getPathname(),
+                    'data'  => DirPath::getFromProjectRoot($photo->getPathname()),
                     'photo' => $pic_file_name
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -438,7 +438,7 @@ class AdminTool
                     $vid_file_name = basename($video);
                     $insert_values = [
                         'type'  => 'video_hls',
-                        'data'  => $video->getPathname(),
+                        'data'  => DirPath::getFromProjectRoot($video->getPathname()),
                         'video' => $vid_file_name
                     ];
                     $this->insertTaskData([$insert_values]);
@@ -452,7 +452,7 @@ class AdminTool
                 $vid_file_name = explode('-', basename($thumb, '.jpg'))[0];
                 $insert_values = [
                     'type'  => 'thumb',
-                    'data'  => $thumb->getPathname(),
+                    'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
                     'video' => $vid_file_name
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -465,7 +465,7 @@ class AdminTool
                 $vid_file_name = explode('-', basename($subtitle, '.srt'))[0];
                 $insert_values = [
                     'type'  => 'subtitle',
-                    'data'  => $subtitle->getPathname(),
+                    'data'  => DirPath::getFromProjectRoot($subtitle->getPathname()),
                     'video' => $vid_file_name
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -478,7 +478,7 @@ class AdminTool
                 $user_id = basename(dirname($userfeed));
                 $insert_values = [
                     'type' => 'userfeeds',
-                    'data' => $userfeed->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($userfeed->getPathname()),
                     'user' => $user_id
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -490,7 +490,7 @@ class AdminTool
             foreach ($avatars as $avatar) {
                 $insert_values = [
                     'type'   => 'avatar',
-                    'data'   => $avatar->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($avatar->getPathname()),
                     'avatar' => basename($avatar)
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -502,7 +502,7 @@ class AdminTool
             foreach ($backgrounds as $background) {
                 $insert_values = [
                     'type'       => 'background',
-                    'data'       => $background->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($background->getPathname()),
                     'background' => basename($background)
                 ];
                 $this->insertTaskData([$insert_values]);
@@ -514,7 +514,7 @@ class AdminTool
             foreach ($logos as $logo) {
                 $insert_values = [
                     'type' => 'logos',
-                    'data' => $logo->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($logo->getPathname()),
                     'logo' => basename($logo)
                 ];
                 $this->insertTaskData([$insert_values]);

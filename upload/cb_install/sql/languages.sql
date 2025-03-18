@@ -1504,5 +1504,7 @@ VALUES ('admin_setting'),
        ('option_video_thumbs_preview_count'),
        ('uploaded_by_x'),
        ('ongoing_conversion'),
+       ('mass_category_selection'),
+       ('mass_broadcast_selection'),
        ('cannot_delete_not_empty_category'),
        ('option_show_collapsed_checkboxes');
