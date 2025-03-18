@@ -2,8 +2,6 @@
 
 namespace V5_5_1;
 
-use Language;
-
 require_once \DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 class MWIP extends \Migration
@@ -19,18 +17,40 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('page_name_cant_have_space', [
-            'fr'=>'Le nom de la page ne peut pas contenir d\'espace',
-            'en'=>'There are can\'t be spaces in page\'s name.'
+            'fr' => 'Le nom de la page ne peut pas contenir d\'espace',
+            'en' => 'There are can\'t be spaces in page\'s name.'
         ]);
-        global $cbpage;
-        $pages = $cbpage->get_pages();
+        $pages = \cbpage::getInstance()->get_pages();
+
 
         foreach ($pages as $page) {
-            self::generateTranslation('page_name_' . str_replace(' ', '_', strtolower($page['page_name'])), [
-                Language::getInstance()->lang => $page['page_title']
-            ]);
+
+            self::updateTranslationKey($page['page_name'], 'page_name_' . str_replace('page_name_', '', str_replace(' ', '_', strtolower($page['page_name']))));
         }
 
+        self::generateTranslation('page_name_about_us', [
+            'fr'=>'À propos de nous'
+        ]);
 
+        self::generateTranslation('page_name_privacy_policy', [
+            'fr'=>'Politique de confidentialité'
+        ]);
+
+        self::generateTranslation('page_name_terms_of_service', [
+            'fr'=>'Conditions d\'utilisation'
+        ]);
+
+        self::generateTranslation('page_name_help', [
+            'fr'=>'Aide'
+        ]);
+
+        self::generateTranslation('page_name_403_error', [
+            'fr'=>'Erreur 403',
+            'en'=>'403 Error'
+        ]);
+        self::generateTranslation('page_name_404_error', [
+            'fr'=>'Erreur 404',
+            'en'=>'404 Error'
+        ]);
     }
 }

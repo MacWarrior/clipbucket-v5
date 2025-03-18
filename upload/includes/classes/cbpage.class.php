@@ -11,6 +11,12 @@ class cbpage
         $this->page_tbl = 'pages';
     }
 
+    public static function getInstance()
+    {
+        global $cbpage;
+        return $cbpage;
+    }
+
     /**
      * Function used to create new page
      *

@@ -161,26 +161,38 @@
         "empty_name": "{lang ('page_name_empty')}",
         "page_name_cant_have_space": "{lang('page_name_cant_have_space')}",
     };
+    var has_error = false;
     $(document).ready(function () {
         $('#page_content').summernote();
 
+        function removeErrClass(obj) {
+            $(obj).closest('.form-group').removeClass('invalid-error');
+            $(obj).closest('.form-group').removeClass('warning-ind');
+            $(obj).next('span').remove();
+        }
+
         $('input#page_name').on('keyup', function () {
-            var page_name = $('#page_name');
+            var page_name = $(this);
             var page_name_val = page_name.val();
-            let has_error = false;
             if (page_name_val === '') {
                 addErrClass(page_name, errors["empty_name"], true, false);
                 has_error = true;
             } else if (page_name_val.indexOf(' ') >= 0) {
                 addErrClass(page_name, errors["page_name_cant_have_space"], true, false);
                 has_error = true;
-            }
-            if (has_error) {
-                $('#update_page').attr('disabled', 'disabled');
             } else {
-                $('#update_page').attr('disabled', false);
+                has_error = false;
             }
-
+            if (!has_error) {
+                removeErrClass(page_name);
+            }
         });
+
+        $('form').on('submit', function (e) {
+            if (has_error) {
+                e.preventDefault();
+                return false;
+            }
+       });
     });
 </script>
