@@ -20,7 +20,7 @@
             </div>
             <div class="field">
                 <label for="title"><?php echo lang('website_title'); ?></label>
-                <input name="title" type="text" id="title" class="form-control" value="ClipBucketV5 - v<?php echo VERSION . ' ' . STATE; ?>">
+                <input name="title" type="text" id="title" class="form-control" value="ClipBucketV5 - v<?php echo Update::getInstance()->getCurrentCoreVersion(); ?>">
                 <p class="grey-text font-size" style="margin-top:0;">
                     <?php echo lang('website_title_hint'); ?>
                 </p>

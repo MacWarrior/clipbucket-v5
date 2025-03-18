@@ -262,6 +262,7 @@ class CBPlugin
      * @param null $sub_dir
      *
      * @return array|bool
+     * @throws Exception
      */
     function get_plugin_details($plug_file, $sub_dir = null)
     {
@@ -304,7 +305,7 @@ class CBPlugin
                 $plugin_array[$detail] = (isset(${$detail}[1])) ? trim(${$detail}[1]) : false;
             }
 
-            $plugin_array['compatibility'] = ($plugin_array['cbversion'] == VERSION);
+            $plugin_array['compatibility'] = ($plugin_array['cbversion'] == Update::getInstance()->getCurrentCoreVersion());
 
             $plugin_array['file'] = $plug_file;
             if (isset($code[1])) {

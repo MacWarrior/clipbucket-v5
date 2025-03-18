@@ -174,11 +174,11 @@ class Upload
 
         //video_version
         $query_field[] = 'video_version';
-        $query_val[] = VERSION;
+        $query_val[] = Update::getInstance()->getCurrentCoreVersion();
 
         //thumbs_version
         $query_field[] = 'thumbs_version';
-        $query_val[] = VERSION;
+        $query_val[] = Update::getInstance()->getCurrentCoreVersion();
 
         //Upload Ip
         $query_field[] = 'uploader_ip';
@@ -313,7 +313,7 @@ class Upload
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, Update::getInstance()->getCurrentCoreVersion(), $this->types_thumb[$type]]);
                     if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
                         Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
                     }
