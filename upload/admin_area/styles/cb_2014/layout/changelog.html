@@ -1,0 +1,37 @@
+<ul class="nav nav-tabs">
+    <li class="title">
+        <h5><i class="glyphicon glyphicon-list-alt"></i> {lang code='dashboard_changelogs'}</h5>
+    </li>
+    {foreach $changelog_tab as $key => $version}
+        <li {if Update::getInstance()->getCurrentCoreVersion() == $version}class="active" {/if}>
+            <a data-toggle="tab" href="#{$key}">
+                <h5>{$version}</h5>
+            </a>
+        </li>
+    {/foreach}
+
+
+    {if config('enable_update_checker')=='1' && count($changelog_tab) <= 1}
+        <li class="right">
+            <a data-toggle="tab" href="#update" id="status_icon">
+                <h5>{lang code='dashboard_update_status'} <span class="status-{$update_checker_status}"></span></h5>
+            </a>
+        </li>
+    {/if}
+</ul>
+<div class="tab-content nopadding">
+    {foreach $changelog_tab as $key => $version}
+        <div id="{$key}" class="tab-pane {if Update::getInstance()->getCurrentCoreVersion() == $version}active{/if}">
+            <div {if count($changelog_tab) <= 1} class="widgetBox" {/if}>
+                {Update::getInstance()->getChangelogHTML($key)}
+            </div>
+        </div>
+    {/foreach}
+    {if config('enable_update_checker')=='1' && count($changelog_tab) <= 1}
+        <div id="update" class="tab-pane">
+            <div class="widgetBox" id="status_html">
+                {$update_checker_content}
+            </div>
+        </div>
+    {/if}
+</div>

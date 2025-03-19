@@ -1505,4 +1505,5 @@ VALUES ('admin_setting'),
        ('uploaded_by_x'),
        ('ongoing_conversion'),
        ('mass_category_selection'),
-       ('mass_broadcast_selection');
+       ('mass_broadcast_selection'),
+       ('changelog');
