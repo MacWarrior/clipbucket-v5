@@ -1506,4 +1506,5 @@ VALUES ('admin_setting'),
        ('ongoing_conversion'),
        ('mass_category_selection'),
        ('mass_broadcast_selection'),
-       ('changelog');
+       ('changelog'),
+       ('older_versions');

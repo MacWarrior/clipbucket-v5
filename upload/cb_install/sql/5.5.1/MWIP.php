@@ -14,5 +14,10 @@ class MWIP extends \Migration
             'fr'=>'Changelog',
             'en'=>'Changelog'
         ]);
+
+        self::generateTranslation('older_versions', [
+            'fr'=>'Anciennes versions',
+            'en'=>'Older versions'
+        ]);
     }
 }

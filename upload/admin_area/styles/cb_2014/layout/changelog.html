@@ -10,12 +10,16 @@
         </li>
     {/foreach}
 
-
-    {if config('enable_update_checker')=='1' && count($changelog_tab) <= 1}
-        <li class="right">
-            <a data-toggle="tab" href="#update" id="status_icon">
-                <h5>{lang code='dashboard_update_status'} <span class="status-{$update_checker_status}"></span></h5>
-            </a>
+    {if count($changelog_tab) <= 1}
+        {if config('enable_update_checker')=='1' }
+            <li class="right">
+                <a data-toggle="tab" href="#update" id="status_icon">
+                    <h5>{lang code='dashboard_update_status'} <span class="status-{$update_checker_status}"></span></h5>
+                </a>
+            </li>
+        {/if}
+        <li>
+           <a href="{DirPath::getUrl('admin_area')}changelog.php"><h5>{lang('older_versions')}</h5></a>
         </li>
     {/if}
 </ul>
