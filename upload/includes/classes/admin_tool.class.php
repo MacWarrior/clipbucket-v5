@@ -392,7 +392,7 @@ class AdminTool
             $this->addLog(lang('loading_file_list'));
 
             //LOGS
-            $logs = new GlobIterator(DirPath::get('logs')  . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.log');
+            $logs = new GlobIterator(DirPath::get('logs') . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '[0-9]*' . DIRECTORY_SEPARATOR . '*.log');
             foreach ($logs as $log) {
                 $vid_file_name = basename($log, '.log');
                 $insert_values = [
@@ -400,12 +400,7 @@ class AdminTool
                     'data'  => DirPath::getFromProjectRoot($log->getPathname()),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($logs);
 
@@ -414,17 +409,12 @@ class AdminTool
 
             foreach ($videos_mp4 as $video) {
                 $vid_file_name = explode('-', basename($video, '.mp4'))[0];
-                $insert_values =[
+                $insert_values = [
                     'type'  => 'video_mp4',
                     'data'  => DirPath::getFromProjectRoot($video->getPathname()),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($videos_mp4);
 
@@ -437,12 +427,7 @@ class AdminTool
                     'data'  => DirPath::getFromProjectRoot($photo->getPathname()),
                     'photo' => $pic_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($photos);
 
@@ -456,12 +441,7 @@ class AdminTool
                         'data'  => DirPath::getFromProjectRoot($video->getPathname()),
                         'video' => $vid_file_name
                     ];
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                        $this->insertTaskData([$insert_values]);
-                    } else {
-                        $this->tasks = array_merge($this->tasks, [$insert_values]);
-                        $this->tasks_total++;
-                    }
+                    $this->insertTaskData([$insert_values]);
                 }
             }
             unset($videos_hls);
@@ -475,12 +455,7 @@ class AdminTool
                     'data'  => DirPath::getFromProjectRoot($thumb->getPathname()),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($thumbs);
 
@@ -493,12 +468,7 @@ class AdminTool
                     'data'  => DirPath::getFromProjectRoot($subtitle->getPathname()),
                     'video' => $vid_file_name
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($subtitles);
 
@@ -511,12 +481,7 @@ class AdminTool
                     'data' => DirPath::getFromProjectRoot($userfeed->getPathname()),
                     'user' => $user_id
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($userfeeds);
 
@@ -524,16 +489,11 @@ class AdminTool
             $avatars = new GlobIterator(DirPath::get('avatars') . '*.*');
             foreach ($avatars as $avatar) {
                 $insert_values = [
-                    'type' => 'avatar',
+                    'type'   => 'avatar',
                     'data' => DirPath::getFromProjectRoot($avatar->getPathname()),
                     'avatar' => basename($avatar)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($avatars);
 
@@ -541,16 +501,11 @@ class AdminTool
             $backgrounds = new GlobIterator(DirPath::get('backgrounds') . '*.*');
             foreach ($backgrounds as $background) {
                 $insert_values = [
-                    'type' => 'background',
+                    'type'       => 'background',
                     'data' => DirPath::getFromProjectRoot($background->getPathname()),
                     'background' => basename($background)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($backgrounds);
 
@@ -562,14 +517,21 @@ class AdminTool
                     'data' => DirPath::getFromProjectRoot($logo->getPathname()),
                     'logo' => basename($logo)
                 ];
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
-                    $this->insertTaskData([$insert_values]);
-                } else {
-                    $this->tasks = array_merge($this->tasks, [$insert_values]);
-                    $this->tasks_total++;
-                }
+                $this->insertTaskData([$insert_values]);
             }
             unset($logos);
+
+            //category thumbs
+            $category_thumbs = new GlobIterator(DirPath::get('category_thumbs') . '*'.DIRECTORY_SEPARATOR .'[0-9]*.*');
+            foreach ($category_thumbs as $category_thumb) {
+                $insert_values = [
+                    'type' => 'category_thumbs',
+                    'data' => $category_thumb->getPathname(),
+                    'thumb' => basename($category_thumb)
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($category_thumbs);
 
         }
 
@@ -1170,12 +1132,18 @@ class AdminTool
         if (empty($datas)) {
             return false;
         }
-        $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
-        $inserted_values = [];
-        foreach ($datas as $data) {
-            $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . json_encode($data) .'\')';
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
+            $inserted_values = [];
+            foreach ($datas as $data) {
+                $inserted_values[] = '(' . $this->id_histo . ', ' . ($this->tasks_total++) . ', \'' . json_encode($data) .'\')';
+            }
+            return Clipbucket_db::getInstance()->execute($sql_insert . implode(', ', $inserted_values));
+        } else {
+            $this->tasks = array_merge($this->tasks, $datas);
+            $this->tasks_total++;
+            return true;
         }
-        return Clipbucket_db::getInstance()->execute($sql_insert . implode(', ', $inserted_values));
     }
 
     /**
