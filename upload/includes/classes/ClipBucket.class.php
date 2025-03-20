@@ -504,6 +504,10 @@ class ClipBucket
                         'title' => lang('system_info')
                         , 'url' => DirPath::getUrl('admin_area') . 'system_info.php'
                     ]
+                    , [
+                        'title' => lang('changelog')
+                        , 'url' => DirPath::getUrl('admin_area') . 'changelog.php'
+                    ]
                 ]
             ];
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"292",
+  "revision":"293",
   "status":"stable",
   "detail":[
     {
@@ -38,6 +38,7 @@
         ,"Implement options to disable video Date recorded & location"
         ,"Implement spaces in tags"
         ,"Implement video conversion percent"
+        ,"Implement changelogs page"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
