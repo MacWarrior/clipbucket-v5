@@ -20,11 +20,9 @@ class MWIP extends \Migration
             'fr' => 'Le nom de la page ne peut pas contenir d\'espace',
             'en' => 'There are can\'t be spaces in page\'s name.'
         ]);
+
         $pages = \cbpage::getInstance()->get_pages();
-
-
         foreach ($pages as $page) {
-
             self::updateTranslationKey($page['page_name'], 'page_name_' . str_replace('page_name_', '', str_replace(' ', '_', strtolower($page['page_name']))));
         }
 
