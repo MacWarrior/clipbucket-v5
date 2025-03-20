@@ -163,9 +163,7 @@ class formObj
                 $this->multi_cat_id = $this->multi_cat_id + 1;
                 $params['categories'] = $catArray;
                 $params['field'] = $field;
-                if (config('show_collapsed_checkboxes') == 1) {
-                    $params['collapsed'] = true;
-                }
+
                 $this->listCategoryCheckBox($params, $multi);
                 return false;
             }
@@ -254,56 +252,16 @@ class formObj
         ';
     }
 
-    function listCategoryCheckBoxCollapsed($in, $multi)
-    {
-        $cats = $in['categories'];
-        $field = $in['field'];
-        $rand = (rand(0, 100000));
-        if ($field['sep'] == '<br/>' || $field['sep'] == '<br>') {
-            $field['sep'] = '';
-        }
-
-        if (!$multi) {
-            $fieldName = $field['name'];
-        } else {
-            $fieldName = $field['name'];
-            $fieldName = $this->rmBrackets($fieldName);
-            $fieldName = $fieldName . $this->multi_cat_id . '[]';
-        }
-        $display = 'none';
-
-        if ($cats) {
-            foreach ($cats as $cat) {
-                $checked = '';
-                if( in_array($cat['category_id'], $field['value']) ){
-                    $checked = 'checked';
-                }
-
-                echo "<div style='position:relative;'>";
-                echo $field['sep'];
-                echo '<label><input name="' . $fieldName . '" type="checkbox" value="' . $cat['category_id'] . '" ' . $checked . ' ' . $field['extra_tags'] . '>' . display_clean($cat['category_name']) . '</label>';
-                if ($cat['children']) {
-                    echo "<span id='" . $cat['category_id'] . "_toggler' alt='" . $cat['category_id'] . "_" . $rand . "' class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-down' style='float:right;margin-left:20px;' onclick='toggleCategory(this);'></span>";
-                    $childField = $field;
-                    $childField['sep'] = $field['sep'] . str_repeat('&nbsp;', 5);
-                    echo "<div id='" . $cat['category_id'] . '_' . $rand . "' class='sub_categories sub_categories_checkbox' style='display:" . $display . "'>";
-                    $this->listCategoryCheckBoxCollapsed(['categories' => $cat['children'], 'field' => $childField, 'children_indent' => true], $multi);
-                    echo '</div>';
-                }
-                echo '</div>';
-            }
-        }
-    }
-
     //Creating checkbox with indent for category childs
     function listCategoryCheckBox($in, $multi)
     {
         $cats = $in['categories'];
         $field = $in['field'];
-        $collapsed = $in['collapsed'];
-        if ($collapsed) {
-            $this->listCategoryCheckBoxCollapsed($in, $multi);
-            return;
+       if (config('show_collapsed_checkboxes') == 1) {
+           $rand = (rand(0, 100000));
+           if ($field['sep'] == '<br/>' || $field['sep'] == '<br>') {
+               $field['sep'] = '';
+           }
         }
         //setting up the field name
         if (!$multi) {
@@ -320,7 +278,7 @@ class formObj
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array($cat['category_id'] , $values)) {
+                if (in_array($cat['category_id'], $values) || $cat['is_default'] == 'yes') {
                     $checked = 'checked';
                 }
 
@@ -328,14 +286,28 @@ class formObj
                 if ($field['label_class']) {
                     $label_class = 'class="' . $field['label_class'] . '"';
                 }
+                if (config('show_collapsed_checkboxes') == 1) {
+                    echo "<div style='position:relative;'>";
+                }
                 if (!isset($field['notShowSeprator'])) {
                     echo $field['sep'];
                 }
                 echo '<label ' . $label_class . '><input name="' . $field_name . '" type="checkbox" value="' . $cat['category_id'] . '" ' . $checked . ' ' . $field['extra_tags'] . '> ' . display_clean($cat['category_name']) . '</label>';
                 if ($cat['children']) {
+                    if (config('show_collapsed_checkboxes') == 1) {
+                        echo "<span id='" . $cat['category_id'] . "_toggler' alt='" . $cat['category_id'] . "_" . $rand . "' class='CategoryToggler CheckBoxCategoryToggler glyphicon glyphicon-chevron-down' style='float:right;margin-left:20px;' onclick='toggleCategory(this);'></span>";
+                        echo "<div id='" . $cat['category_id'] . '_' . $rand . "' class='sub_categories sub_categories_checkbox' style='display:none;'>";
+                    }
                     $childField = $field;
                     $childField['sep'] = $field['sep'] . str_repeat('&nbsp;', 5);
-                    $this->listCategoryCheckBox(['categories' => $cat['children'], 'field' => $childField, 'children_indent' => true], $multi);
+                    $this->listCategoryCheckBox([
+                        'categories'      => $cat['children'],
+                        'field'           => $childField,
+                        'children_indent' => true
+                    ], $multi);
+                    if (config('show_collapsed_checkboxes') == 1) {
+                        echo '</div></div>';
+                    }
                 }
             }
         }

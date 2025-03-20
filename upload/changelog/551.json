@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"288",
+  "revision":"292",
   "status":"stable",
   "detail":[
     {
@@ -70,6 +70,7 @@
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
         ,"Update video broadcast upload display"
+        ,"Update categories management"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -346,6 +347,7 @@
         ,"Update installation script to Ubuntu 24.10"
         ,"Update docker installation <i>(#486)</i>"
         ,"Remove unused baseurl input"
+        ,"Reset language cookie during installation"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
