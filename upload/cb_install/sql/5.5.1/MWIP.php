@@ -10,12 +10,10 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
-
-      self::generateTranslation('default_sort', [
-          'fr'=>'Tri par défaut',
-          'en'=>'Default sort'
-      ]);
+        self::generateTranslation('default_sort', [
+            'fr'=>'Tri par défaut',
+            'en'=>'Default sort'
+        ]);
 
         //add cloumn
         self::query('CREATE TABLE IF NOT EXISTS `'.tbl('sorts').'` (
@@ -29,36 +27,35 @@ class MWIP extends \Migration
         ');
 
         self::query('INSERT IGNORE INTO ' . tbl('sorts') .' ( `label`, `type`, is_default) VALUES 
-        (\'most_old\', \'videos\', false),
-        (\'most_recent\', \'videos\', true),
-        (\'most_viewed\', \'videos\', false),
-        (\'top_rated\', \'videos\', false),
-        (\'longer\', \'videos\', false),
-        (\'shorter\', \'videos\', false),
-        (\'viewed_recently\', \'videos\', false),
-        (\'most_commented\', \'videos\', false),
-        (\'featured\', \'videos\', false),
-        (\'most_recent\', \'photos\', true),
-        (\'most_old\', \'photos\', false),
-        (\'most_viewed\', \'photos\', false),
-        (\'top_rated\', \'photos\', false),
-        (\'most_commented\', \'photos\', false),
-        (\'viewed_recently\', \'photos\', false),
-        (\'featured\', \'photos\', false),
-        (\'most_recent\', \'collections\', true),
-        (\'most_old\', \'collections\', false),
-        (\'most_items\', \'collections\', false),
-        (\'most_commented\', \'collections\', false),
-        (\'top_rated\', \'collections\', false),
-        (\'featured\', \'collections\', false),
-        (\'most_recent\', \'channels\', true),
-        (\'most_old\', \'channels\', false),
-        (\'most_viewed\', \'photos\', false),
-        (\'top_rated\', \'channels\', false),
-        (\'featured\', \'channels\', false),
-        (\'most_items\', \'channels\', false),
-        (\'most_commented\', \'channels\', false);
-        
+            (\'most_old\', \'videos\', false),
+            (\'most_recent\', \'videos\', true),
+            (\'most_viewed\', \'videos\', false),
+            (\'top_rated\', \'videos\', false),
+            (\'longer\', \'videos\', false),
+            (\'shorter\', \'videos\', false),
+            (\'viewed_recently\', \'videos\', false),
+            (\'most_commented\', \'videos\', false),
+            (\'featured\', \'videos\', false),
+            (\'most_recent\', \'photos\', true),
+            (\'most_old\', \'photos\', false),
+            (\'most_viewed\', \'photos\', false),
+            (\'top_rated\', \'photos\', false),
+            (\'most_commented\', \'photos\', false),
+            (\'viewed_recently\', \'photos\', false),
+            (\'featured\', \'photos\', false),
+            (\'most_recent\', \'collections\', true),
+            (\'most_old\', \'collections\', false),
+            (\'most_items\', \'collections\', false),
+            (\'most_commented\', \'collections\', false),
+            (\'top_rated\', \'collections\', false),
+            (\'featured\', \'collections\', false),
+            (\'most_recent\', \'channels\', true),
+            (\'most_old\', \'channels\', false),
+            (\'most_viewed\', \'photos\', false),
+            (\'top_rated\', \'channels\', false),
+            (\'featured\', \'channels\', false),
+            (\'most_items\', \'channels\', false),
+            (\'most_commented\', \'channels\', false);
         ');
 
         //order include in label
