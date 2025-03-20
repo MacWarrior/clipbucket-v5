@@ -12,8 +12,8 @@ class MWIP extends \Migration
     public function start()
     {
         self::generateTranslation('translation_already_exist_choose_other_name', [
-            'fr' => 'Le code de traduction %s existe déjà. Merci de choisir un autre nom de page.',
-            'en' => 'Translation code %s already exists. Please choose a different name.'
+            'fr' => 'Le code de traduction "%s" existe déjà. Merci de choisir un autre nom de page.',
+            'en' => 'Translation code "%s" already exists. Please choose a different name.'
         ]);
 
         self::generateTranslation('page_name_cant_have_space', [
