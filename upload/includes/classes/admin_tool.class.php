@@ -1132,7 +1132,7 @@ class AdminTool
         if (empty($datas)) {
             return false;
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '271')) {
             $sql_insert = 'INSERT INTO ' . tbl('tools_tasks') . ' (id_histo, loop_index, data) VALUES ';
             $inserted_values = [];
             foreach ($datas as $data) {
