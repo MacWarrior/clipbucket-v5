@@ -8,11 +8,11 @@
             <div class="row">
                 <div class="col-md-6">
                     <label for="page_name">Page Name</label>
-                    <input name="page_name" class="form-control" type="text" id="page_name" value="{'page_name'|post}">
+                    <input name="page_name" class="form-control" type="text" id="page_name" value="{display_clean('page_name'|post)}">
                 </div>
                 <div class="col-md-6">
                     <label for="page_title">Page Title</label>
-                    <input type="text" class="form-control" name="page_title" id="page_title" value="{'page_title'|post}"/>
+                    <input type="text" class="form-control" name="page_title" id="page_title" value="{display_clean('page_title'|post)}"/>
                 </div>
                 <div class="form-group col-md-12">
                     <label for="page_content">Page Content</label>
