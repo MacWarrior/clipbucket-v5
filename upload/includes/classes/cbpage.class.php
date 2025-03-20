@@ -53,8 +53,7 @@ class cbpage
                 ]);
                 Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
                     [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
-                e(lang('new_page_added_successfully'), 'm');
-                return false;
+                return true;
             } else {
                 e(lang('translation_already_exist_choose_other_name'));
             }

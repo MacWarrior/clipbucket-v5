@@ -82,7 +82,7 @@ if (isset($_POST['add_page'])) {
         $mode = 'view';
     }
     if (!error()) {
-        header('location:manage_pages.php?msg=' . msg('0'));
+        sessionMessageHandler::add_message(lang('new_page_added_successfully'), 'm', DirPath::getUrl('admin_area',true) . 'manage_pages.php');
     }
 }
 
