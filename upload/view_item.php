@@ -106,6 +106,7 @@ if ($photo) {
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                              => 'admin',
+    'photos' . $min_suffixe . '.js'                              => 'admin',
     'init_readonly_tag/init_readonly_tag' . $min_suffixe . '.js' => 'admin'
 ]);
 if( config('enable_comments_photo') == 'yes' ){

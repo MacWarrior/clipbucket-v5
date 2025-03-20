@@ -1,5 +1,6 @@
 function addOrEdit(category_id) {
     $("#edit_category").trigger('reset');
+    showSpinner();
     $.ajax({
         url: "/actions/form_category.php",
         type: "post",
@@ -14,10 +15,28 @@ function addOrEdit(category_id) {
             $('#hideshow').show();
             $('#content').html('');
         });
-    });
+    }).always(hideSpinner);
     $('html, body').animate({
         scrollTop: 0
     }, 800);
+}
+
+function initListenerList() {
+    $('[name="make_default"]').on('change', function (e) {
+        showSpinner();
+        $('input[name="make_default"]').not(this).prop('checked', false);
+        $.ajax({
+            url: "/actions/category_make_default.php",
+            type: "POST",
+            data: {'category_id': $(this).val(), type: type},
+            dataType: 'json',
+            success: function (result) {
+                $('#category_list').html(result['template']);
+                $('.page-content').prepend(result['msg']);
+                initListenerList();
+            }
+        }).always(hideSpinner);
+    });
 }
 
 $(function () {
@@ -28,6 +47,7 @@ $(function () {
     $('#hideshow').on('click', function () {
         addOrEdit();
     });
+    initListenerList();
     $('body').on('click', function (e) {
         $('[data-toggle="popover"]').each(function () {
             //the 'is' for buttons that trigger popups
