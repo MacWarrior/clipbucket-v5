@@ -343,7 +343,7 @@ class Collection
 
             $select[] = $total_objects . ' AS total_objects';
 
-            if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+            if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                 $select[] = ' sorts.label as sort_type ';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
             }
@@ -448,7 +448,7 @@ class Collection
                 $params['show_unlisted'] = true;
 
                 if ($collection['type'] == 'videos') {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                         $params['order'] = Video::getInstance()->getFilterParams($collection['sort_type'], [])['order'] ?? null;
                     }
                     if (empty($params['order'])) {
@@ -456,7 +456,7 @@ class Collection
                     }
                     $collection['items'] = Video::getInstance()->getAll($params);
                 } else {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                         $params['order'] = Photo::getInstance()->getFilterParams($collection['sort_type'], [])['order'] ?? null;
                     }
                     if (empty($params['order'])) {
@@ -1466,6 +1466,7 @@ class Collections extends CBCategory
         $return = [];
         $return['broadcast'] = [
             'title'             => lang('vdo_br_opt'),
+            'class'             => 'form-control',
             'type'              => 'dropdown',
             'name'              => 'broadcast',
             'id'                => 'broadcast',
@@ -1477,6 +1478,21 @@ class Collections extends CBCategory
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'yes'
         ];
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+            $list = SortType::getSortTypes($default['type']);
+            $return['sort_type'] = [
+                'title'    => lang('default_sort'),
+                'class'    => 'form-control',
+                'type'     => 'dropdown',
+                'name'     => 'sort_type',
+                'id'       => 'sort_type',
+                'value'    => display_sort_lang_array($list),
+                'db_field' => 'sort_type',
+                'required' => 'yes',
+                'checked'  => $default['sort_type'] ?? 0,
+            ];
+        }
 
         if( config('enable_comments_collection') == 'yes' ) {
             $return['comments'] = [
@@ -1507,20 +1523,7 @@ class Collections extends CBCategory
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'no'
         ];
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
-            $list = SortType::getSortTypes($default['type']);
-            $return['sort_type'] = [
-                'title'    => lang('default_sort'),
-                'class'    => 'form-control',
-                'type'     => 'dropdown',
-                'name'     => 'sort_type',
-                'id'       => 'sort_type',
-                'value'    => display_sort_lang_array($list),
-                'db_field' => 'sort_type',
-                'required' => 'yes',
-                'checked'  => $default['sort_type'] ?? 0,
-            ];
-        }
+
 
         return $return;
     }
