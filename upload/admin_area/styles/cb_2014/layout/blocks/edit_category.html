@@ -15,7 +15,7 @@
             {/if}
             <div class="col-md-4">
                 <label for="default_categ">Make Default Category</label>
-                <select class="form-control" name="is_default" id="default_categ">
+                <select class="form-control" name="is_default" id="default_categ" {if $categ.is_default=='yes'}disabled="disabled"{/if}>
                     <option class="form-control" {if $categ.is_default=='yes'}selected{/if} value="yes">{lang code='yes'}</option>
                     <option class="form-control" {if $categ.is_default=='no' || $categ.is_default==''}selected{/if} value="no">{lang code='no'}</option>
                 </select>

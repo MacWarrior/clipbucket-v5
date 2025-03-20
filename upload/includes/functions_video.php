@@ -1829,6 +1829,19 @@ function clean_orphan_files($file): string
             $result = strtolower($file['logo']) == strtolower(config('logo_name')) || strtolower($file['logo']) == strtolower(config('favicon_name'));
             $filename = 'logos_' . $file['logo'];
             break;
+
+        case 'category_thumbs':
+            $query = 'SELECT category_id FROM ' . tbl('categories') . ' WHERE category_thumb = \'' . mysql_clean($file['thumb']) . '\'';
+            $filename = $file['thumb'];
+            if (config('cache_enable') == 'yes') {
+                $redis_type_key = 'category_thumb';
+                $result = $tab_redis[$redis_type_key][$filename] ?? null;
+            }
+            if (empty($result)) {
+                $result = Clipbucket_db::getInstance()->_select($query);
+            }
+            break;
+
     }
     if (!empty($result)) {
         if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
@@ -1891,6 +1904,10 @@ function clean_orphan_files($file): string
         case 'logos':
             unlink($full_path);
             $stop_path = DirPath::get('logos');
+            break;
+        case 'category_thumbs':
+            unlink($file['data']);
+            $stop_path = DirPath::get('category_thumbs');
             break;
     }
     remove_empty_directory(dirname($full_path), $stop_path);
