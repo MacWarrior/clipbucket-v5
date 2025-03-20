@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"287",
+  "revision":"291",
   "status":"stable",
   "detail":[
     {
@@ -70,6 +70,7 @@
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
         ,"Update video broadcast upload display"
+        ,"Update categories management"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -314,6 +315,8 @@
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
         ,"Fix video thumbs generation ratio other than 16/9"
+        ,"Fix video conversion failed on corrupted subtitle track"
+        ,"Fix incomplete conversion log"
       ]
     },
     {
@@ -344,6 +347,7 @@
         ,"Update installation script to Ubuntu 24.10"
         ,"Update docker installation <i>(#486)</i>"
         ,"Remove unused baseurl input"
+        ,"Reset language cookie during installation"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
