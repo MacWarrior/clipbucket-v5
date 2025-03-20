@@ -193,6 +193,7 @@ class Video
     public function getOne(array $params = [])
     {
         $params['first_only'] = true;
+        $params['get_detail'] = true;
         return $this->getAll($params);
     }
 
@@ -311,6 +312,7 @@ class Video
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'];
+        $param_get_detail = $params['get_detail'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -408,13 +410,13 @@ class Video
             foreach ($this->fields as $field) {
                 $group[] = $this->tablename . '.' . $field;
             }
-
-            $select[] = 'users.username AS user_username';
-            $group[] = 'users.username';
+                $select[] = 'users.username AS user_username';
+                $group[] = 'users.username';
         }
 
         $join = [];
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') && ($param_get_detail || $param_search || $param_tags)) {
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
@@ -426,7 +428,7 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') && ($param_get_detail || $param_category || $param_search)) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON ' . $this->getTableName() . '.videoid = videos_categories.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
 
@@ -449,7 +451,7 @@ class Video
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
-        if (!$param_not_join_user_profile) {
+        if (!$param_not_join_user_profile && $param_get_detail) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
 
             if( !$param_count && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
