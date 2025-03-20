@@ -1507,4 +1507,6 @@ VALUES ('admin_setting'),
        ('mass_category_selection'),
        ('mass_broadcast_selection'),
        ('cannot_delete_not_empty_category'),
-       ('option_show_collapsed_checkboxes');
+       ('option_show_collapsed_checkboxes'),
+       ('changelog'),
+       ('older_versions');
