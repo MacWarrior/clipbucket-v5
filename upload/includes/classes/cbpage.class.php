@@ -51,11 +51,14 @@ class cbpage
                 Migration::generateTranslation($translation_name, [
                     Language::getInstance()->lang => $title
                 ]);
+                if (CacheRedis::getInstance()->isEnabled()) {
+                    CacheRedis::flushKeyStart(Language::getRedisKey());
+                }
                 Clipbucket_db::getInstance()->insert(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content', 'userid', 'date_added', 'active', 'page_order'],
                     [$name, $title, '|no_mc|' . $content, user_id(), now(), 'yes', $this->getMaxPageOrder()]);
                 return true;
             } else {
-                e(lang('translation_already_exist_choose_other_name'));
+                e(lang('translation_already_exist_choose_other_name', $translation_name));
             }
         }
         return false;
@@ -169,15 +172,23 @@ class cbpage
         }
 
         if (!error()) {
-            if ($page['page_name'] != $name) {
+            $translation_name = 'page_name_' . $name;
+            if ($page['page_name'] != $name && empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
                 Migration::deleteTranslation('page_name_' . $page['page_name']);
-                Migration::generateTranslation('page_name_' . $name, [
+                Migration::generateTranslation($translation_name, [
                     Language::getInstance()->lang => $title
                 ]);
+                if (CacheRedis::getInstance()->isEnabled()) {
+                    CacheRedis::flushKeyStart(Language::getRedisKey());
+                }
+            } else {
+                e(lang('translation_already_exist_choose_other_name', $translation_name));
+                return false;
             }
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
                 [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
             e(lang('page_updated'), 'm');
+            return true;
         }
     }
 
@@ -266,12 +277,12 @@ class cbpage
 
             case 'display':
                 Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['yes'], ' page_id='.mysql_clean($id));
-                e(lang('Page display mode has been changed'), 'm');
+                e(lang('page_display_changed'), 'm');
                 break;
 
             case 'hide':
                 Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['display'], ['no'], ' page_id='.mysql_clean($id));
-                e(lang('Page display mode has been changed'), 'm');
+                e(lang('page_display_changed'), 'm');
                 break;
         }
     }
