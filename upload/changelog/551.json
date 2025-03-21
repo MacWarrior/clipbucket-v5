@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"293",
+  "revision":"294",
   "status":"stable",
   "detail":[
     {
@@ -281,6 +281,7 @@
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
