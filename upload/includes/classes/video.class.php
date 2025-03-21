@@ -204,7 +204,9 @@ class Video
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -256,27 +258,15 @@ class Video
      */
     public function getSortList(): array
     {
-        if (!isset($_GET['sort'])) {
-            $_GET['sort'] = 'most_recent';
+        $sorts = SortType::getSortTypes('videos');
+
+        if (config('enable_comments_video') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-        ];
-
-        if( config('enable_comments_video') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('video_rating') != '1') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        if( config('video_rating') == '1' ){
-            $sorts['top_rated'] = lang('top_rated');
-        }
-
-        $sorts['featured'] = lang('featured');
-        $sorts['viewed_recently'] = lang('viewed_recently');
-        $sorts['longer'] = lang('longer_video');
-        $sorts['shorter'] = lang('shorter_video');
 
         return $sorts;
     }

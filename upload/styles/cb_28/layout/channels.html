@@ -21,20 +21,20 @@
                         {/if}
 
                         <div class="dropdown">
-                            {if $smarty.get.sort}
-                                {foreach from=$sort_list item=name key=sort name=sorts}
-                                    {if $smarty.get.sort==$sort && isset($smarty.get.sort)}
-                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+                            {if $sort_link}
+                                {foreach from=$sort_list item=sort key=key}
+                                    {if $sort_link == $key}
+                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
                                     {/if}
                                 {/foreach}
                             {else}
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-down-arrow"></span></a>
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
                             {/if}
 
                             <ul class="dropdown-menu">
-                                {foreach from=$sort_list item=name key=sort}
+                                {foreach from=$sort_list item=sort key=key}
                                     <li>
-                                        <a href="{link name=sort sort=$sort type=channels}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+                                        <a href="{link name=sort sort=$key type=channels}&sorting=sort" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
                                     </li>
                                 {/foreach}
                             </ul>
@@ -65,9 +65,9 @@
                     {if $users}
                         {foreach $users as $user}
                             {if !empty($user['username'])}
-                                <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                    {include file="$style_dir/blocks/channels.html"}
-                                </div>
+                            <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                {include file="$style_dir/blocks/channels.html"}
+                            </div>
                             {/if}
                         {/foreach}
                     {else}

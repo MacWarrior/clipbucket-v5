@@ -82,9 +82,6 @@ class ClipBucket
 
         $this->clean_requests();
 
-        if( !isset($_GET['sort']) ){
-            $_GET['sort'] = 'most_recent';
-        }
 
         if( !isset($_GET['time']) ){
             $_GET['time'] = 'all_time';

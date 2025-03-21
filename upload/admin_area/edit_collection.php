@@ -11,7 +11,9 @@ $pages->page_redir();
 $id = $_GET['collection'];
 if (isset($_POST['update_collection'])) {
     $cbcollection->update_collection();
-    Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $id);
+    if (isset($_POST['default_thumb'])) {
+        Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $id);
+    }
 }
 
 if (isset($_POST['delete_preview'])) {

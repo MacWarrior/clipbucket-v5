@@ -6918,3 +6918,15 @@ textarea#comment_box {
   }
 
 }
+
+.no_padding {
+  padding: 0 !important;
+}
+
+.no_padding_left {
+  padding-left: 0 !important;
+}
+
+.no_padding_right {
+  padding-right: 0 !important;
+}
