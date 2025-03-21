@@ -17,11 +17,18 @@ class Language
 
     private $uninstalled = false;
 
+    private static $redis_key = 'languages_keys';
+
     /**
      * __Constructor
      */
     public function __construct()
     {
+    }
+
+    public static function getRedisKey(): string
+    {
+        return self::$redis_key;
     }
 
     /**
@@ -144,7 +151,7 @@ class Language
         LEFT JOIN ' . tbl('languages_translations') . ' AS LT ON LK.id_language_key = LT.id_language_key AND LT.language_id = ' . mysql_clean($language_id);
 
         /** concat aaaaaaa to sort when translation is missing */
-        return Clipbucket_db::getInstance()->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600);
+        return Clipbucket_db::getInstance()->select($select, $fields, $extra_param, $limit, ' CASE WHEN LT.translation IS NULL THEN concat(\'aaaaaaaaaaaaaaaaaaaa\',language_key) ELSE LK.language_key END', false, 3600, self::$redis_key);
     }
 
     /**

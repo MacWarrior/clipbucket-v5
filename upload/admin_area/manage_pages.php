@@ -2,6 +2,7 @@
 define('THIS_PAGE', 'manage_pages');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
 global $cbpage, $eh;
 
@@ -76,11 +77,12 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
 $mode = $_GET['mode'];
 
 if (isset($_POST['add_page'])) {
+
     if ($cbpage->create_page($_POST)) {
         $mode = 'view';
     }
     if (!error()) {
-        header('location:manage_pages.php?msg=' . msg('0'));
+        sessionMessageHandler::add_message(lang('new_page_added_successfully'), 'm', DirPath::getUrl('admin_area',true) . 'manage_pages.php');
     }
 }
 
