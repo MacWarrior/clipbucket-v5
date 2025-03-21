@@ -40,6 +40,14 @@ if ($cbcollection->is_viewable($collection_id)) {
         $params = [];
         $params['collection_id'] = $collection_id;
         $params['limit'] = $get_limit;
+        $sort_label = SortType::getSortLabelById(($_GET['sort']?? $cdetails['sort_type'])) ?? '';
+        if ($cdetails['type'] == 'photos') {
+            $params = Photo::getInstance()->getFilterParams($sort_label, $params);
+        } elseif ($cdetails['type'] == 'videos') {
+            $params = Video::getInstance()->getFilterParams($sort_label, $params);
+        }
+        $params['order_item'] = $params['order'];
+        unset($params['order']);
         $items = Collection::getInstance()->getItems($params);
 
         if( empty($items) ){
@@ -86,11 +94,14 @@ if ($cbcollection->is_viewable($collection_id)) {
         assign('c', $cdetails);
         subtitle($cdetails['collection_name']);
         if ($cdetails['type'] == 'photos') {
+            assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
+
             if (SEO == 'yes') {
                 $link = '/photo_upload/' . base64_encode(json_encode($cdetails['collection_id']));
             }
             $link = '/photo_upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         } elseif ($cdetails['type'] == 'videos') {
+            assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
             if (SEO == 'yes') {
                 $link = '/upload/' . base64_encode(json_encode($cdetails['collection_id']));
             }
@@ -145,6 +156,10 @@ ClipBucket::getInstance()->addCSS([
     ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
     ,'readonly_tag'.$min_suffixe.'.css'     => 'admin'
 ]);
+
+assign('sort_link', $_GET['sort']??0);
+assign('current_link', $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
+assign('default_sort', SortType::getDefaultByType('videos'));
 
 template_files('view_collection.html');
 display_it();

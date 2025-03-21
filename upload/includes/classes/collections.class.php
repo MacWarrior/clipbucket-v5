@@ -214,6 +214,7 @@ class Collection
         $param_allow_children = !empty($params['allow_children']);
         $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
         $param_join_flag =$params['join_flag'] ?? false;
+        $param_order_item = $params['order_item'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -446,10 +447,10 @@ class Collection
                 $params = [];
                 $params['collection_id'] = $collection['collection_id'];
                 $params['show_unlisted'] = true;
-
+                $order_item = $param_order_item ?: $collection['sort_type'];
                 if ($collection['type'] == 'videos') {
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-                        $params['order'] = Video::getInstance()->getFilterParams($collection['sort_type'], [])['order'] ?? null;
+                        $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
                     }
                     if (empty($params['order'])) {
                         $params['order'] = $this->getTableNameItems() . '.date_added ASC';
@@ -457,7 +458,7 @@ class Collection
                     $collection['items'] = Video::getInstance()->getAll($params);
                 } else {
                     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-                        $params['order'] = Photo::getInstance()->getFilterParams($collection['sort_type'], [])['order'] ?? null;
+                        $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
                     }
                     if (empty($params['order'])) {
                         $params['order'] = $this->getTableNameItems() . '.date_added ASC';
