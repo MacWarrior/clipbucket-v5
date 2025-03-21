@@ -278,7 +278,7 @@ class formObj
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array($cat['category_id'], $values) || $cat['is_default'] == 'yes') {
+                if (in_array($cat['category_id'], $values) || ($cat['is_default'] == 'yes' && empty($values))) {
                     $checked = 'checked';
                 }
 

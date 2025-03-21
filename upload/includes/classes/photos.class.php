@@ -2128,7 +2128,23 @@ class CBPhotos
                 'class'             => 'form-control'
             ];
         }
-
+        if (is_array($array['category'])) {
+            $cat_array = $array['category'];
+        } else {
+            $cat_array = explode(',', $array['category']);
+        }
+        
+        $return['cat']   = [
+                'title'             => lang('categories'),
+                'type'              => 'checkbox',
+                'name'              => 'category[]',
+                'id'                => 'category',
+                'value'             => $cat_array,
+                'required'          => 'false',
+                'validate_function' => 'Category::validate',
+                'display_function'  => 'convert_to_categories',
+                'category_type'     => 'photo'
+            ];
         return $return;
     }
 
@@ -2327,6 +2343,8 @@ class CBPhotos
                             }
 
                             Clipbucket_db::getInstance()->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
+
+                            Category::getInstance()->saveLinks('photo', $pid, $array['category']);
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
                             if (empty(errorhandler::getInstance()->get_error)) {
