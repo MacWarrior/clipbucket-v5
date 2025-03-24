@@ -173,22 +173,24 @@ class cbpage
 
         if (!error()) {
             $translation_name = 'page_name_' . $name;
-            if ($page['page_name'] != $name && empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
-                Migration::deleteTranslation('page_name_' . $page['page_name']);
-                Migration::generateTranslation($translation_name, [
-                    Language::getInstance()->lang => $title
-                ]);
-                if (CacheRedis::getInstance()->isEnabled()) {
-                    CacheRedis::flushKeyStart(Language::getRedisKey());
+            if (strtolower($page['page_name']) != $name) {
+                if (empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
+                    Migration::deleteTranslation('page_name_' . $page['page_name']);
+                    Migration::generateTranslation($translation_name, [
+                        Language::getInstance()->lang => $title
+                    ]);
+                    if (CacheRedis::getInstance()->isEnabled()) {
+                        CacheRedis::flushKeyStart(Language::getRedisKey());
+                    }
+                } else {
+                    e(lang('translation_already_exist_choose_other_name', $translation_name));
+                    return false;
                 }
-            } else {
-                e(lang('translation_already_exist_choose_other_name', $translation_name));
-                return false;
+                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
+                    [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
+                e(lang('page_updated'), 'm');
+                return true;
             }
-            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
-                [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
-            e(lang('page_updated'), 'm');
-            return true;
         }
     }
 
