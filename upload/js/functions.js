@@ -536,9 +536,14 @@ function collection_actions(form,mode,objID,result_con,type,cid)
     $(result_con).html(loading);
     switch(mode) {
         case 'add_new_item':
+            const value = $('#'+form+' #collection').val();
+            if (!value || value =="" || value ==0) {
+                 $(result_con).html('No Data returned');
+                 return false;
+            }
             $.post('/actions/add_to_collection.php', {
                 mode: mode,
-                cid: $('#'+form+' #collection').val(),
+                cid: value,
                 obj_id: objID,
                 type: type
             },
@@ -981,5 +986,45 @@ function age_disclaimer(accept) {
         set_cookie_secure('age_restrict','checked');
     } else {
         window.location = 'https://www.google.com';
+    }
+}
+
+function progressVideoCheck(ids_to_check_progress, displayType) {
+    if (ids_to_check_progress && ids_to_check_progress.length > 0) {
+        intervalId = setInterval(function () {
+            $.post({
+                url: '/actions/progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: displayType
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        if (video.status.toLowerCase() == 'processing') {
+                            //update %
+                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                            //if process don't exist : get thumb + process div
+                            if (process_div.length == 0) {
+                                $('.item-video[data-id="'+video.videoid+'"]').html(video.html);
+                            } else {
+                                process_div.find('span').html(video.percent + '%');
+                            }
+                        } else {
+                            $('.item-video[data-id="'+video.videoid+'"]').html(video.html);
+                            if (displayType === 'view_channel_player' && data.player !== undefined && data.player.id == video.videoid) {
+                                $('#cb_player').html(data.player.html);
+                            }
+                        }
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
+                }
+            })
+        }, 60000);
     }
 }

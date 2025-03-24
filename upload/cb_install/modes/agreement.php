@@ -1,6 +1,6 @@
 <div class="nav_des clearfix">
     <div class="cb_container" style="color:#fff;">
-        Welcome to ClipBucketV5 - v<?php echo VERSION; ?> Installer, this will let you install ClipBucketV5 with few clicks.
+        Welcome to ClipBucketV5 - v<?php echo Update::getInstance()->getCurrentCoreVersion(); ?> Installer, this will let you install ClipBucketV5 with few clicks.
         Please contact us on <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank" style="color:#fff;text-decoration:underline;">GitHub</a> if necessary.
         <br/><br/>
         This version of ClipbucketV5 and futher updates are supported by <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank" style="color:#fff;text-decoration:underline;">Clipbucket V5</a> team and <a href='https://clipbucket.oxygenz.fr' target='_blank' style="color:#fff;text-decoration:underline;">Oxygenz</a>.

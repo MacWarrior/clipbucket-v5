@@ -174,11 +174,11 @@ class Upload
 
         //video_version
         $query_field[] = 'video_version';
-        $query_val[] = VERSION;
+        $query_val[] = Update::getInstance()->getCurrentCoreVersion();
 
         //thumbs_version
         $query_field[] = 'thumbs_version';
-        $query_val[] = VERSION;
+        $query_val[] = Update::getInstance()->getCurrentCoreVersion();
 
         //Upload Ip
         $query_field[] = 'uploader_ip';
@@ -313,7 +313,7 @@ class Upload
                         e(lang('technical_error'));
                         $videoid = 0;
                     }
-                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, VERSION, $this->types_thumb[$type]]);
+                    Clipbucket_db::getInstance()->insert(tbl('video_thumbs'), ['videoid', 'resolution', 'num', 'extension', 'version', 'type'], [$videoid, $dimensions, $file_num, $ext, Update::getInstance()->getCurrentCoreVersion(), $this->types_thumb[$type]]);
                     if ($type != 'c' && $videoid && $rs[0]['default_' . $this->types_thumb[$type]] == null) {
                         Video::getInstance()->setDefaultPicture($videoid, $file_name_final, $this->types_thumb[$type]);
                     }
@@ -596,16 +596,15 @@ class Upload
 
         $fields['broadcast'] = [
             'title'             => lang('vdo_br_opt'),
-            'type'              => 'radiobutton',
+            'type'              => 'dropdown',
             'name'              => 'broadcast',
-            'value'             => ['public' => lang('vdo_br_opt1'), 'private' => lang('vdo_br_opt2'), 'unlisted' => lang('vdo_broadcast_unlisted'), 'logged' => lang('logged_users_only')],
+            'value'             => Video::getInstance()->getBroadcastOption(),
             'checked'           => $broadcast,
             'db_field'          => 'broadcast',
             'required'          => 'no',
-            'validate_function' => 'yes_or_no',
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'public',
-            'extra_tags'        => ' onClick="
+            'extra_tags'        => ' onChange="
 				    $(this).closest(\'form\').find(\'#video_password\').attr(\'disabled\',\'disabled\');
                     $(this).closest(\'form\').find(\'#video_users\').attr(\'disabled\',\'disabled\');
 					if($(this).val()==\'unlisted\'){

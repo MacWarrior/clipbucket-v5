@@ -145,15 +145,8 @@ if (config('enable_comments_video') != 'yes' && config('enable_comments_photo') 
 $update = Update::getInstance();
 $can_sse = System::can_sse() ? 'true' : 'false';
 assign('can_sse', $can_sse);
-Assign('VERSION', $update->getCurrentCoreVersion());
-Assign('STATE', strtoupper($update->getCurrentCoreState()));
 Assign('comments', $comments);
-Assign('changelog_551', $update->getChangelogHTML('551'));
-Assign('changelog_550', $update->getChangelogHTML('550'));
-Assign('changelog_541', $update->getChangelogHTML('541'));
-Assign('changelog_540', $update->getChangelogHTML('540'));
-Assign('changelog_531', $update->getChangelogHTML('531'));
-Assign('changelog_530', $update->getChangelogHTML('530'));
+assign('changelog_tab', [Update::getInstance()->getCurrentCoreVersionCode() => Update::getInstance()->getCurrentCoreVersion()]);
 Assign('is_update_processing', (Update::IsUpdateProcessing() ? 'true' : 'false'));
 if( config('enable_update_checker') == '1' ){
     Assign('update_checker_status', $update->getCoreUpdateStatus());

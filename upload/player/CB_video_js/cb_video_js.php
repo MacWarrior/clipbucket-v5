@@ -4,8 +4,8 @@
 	Description: Official CBV5 player
 	Author: Oxygenz
     Author Website: https://clipbucket.oxygenz.fr/
-	Version: 2.0.7
-    Released: 2024-12-12
+	Version: 2.1
+    Released: 2025-02-24
     Website: https://github.com/MacWarrior/clipbucket-v5
  */
 
@@ -60,7 +60,13 @@ class CB_video_js
                 ,$player_name.'/plugin/resolution/videojs-resolution'.$min_suffixe.'.css' => 'player'
                 ,$player_name.'/plugin/ads/videojs.ima.css' => 'player'
             ]);
+        }
 
+        if( config('enable_360_video') == 'yes' ){
+            ClipBucket::getInstance()->addAllJS([
+                $player_name.'/plugin/vr/videojs-vr'.$min_suffixe.'.js' => 'player'
+            ]);
+            ClipBucket::getInstance()->addAllCSS([$player_name.'/plugin/vr/videojs-vr'.$min_suffixe.'.css' => 'player']);
         }
     }
 

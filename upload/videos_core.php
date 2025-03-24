@@ -61,6 +61,13 @@ if( empty($videos) ){
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $total_pages = count_pages($count, config('videos_list_per_page'));
 //Pagination
+$ids_to_check_progress = [];
+foreach ($videos as $video) {
+    if (in_array($video['status'], ['Processing', 'Waiting'])) {
+        $ids_to_check_progress[] = $video['videoid'];
+    }
+}
+Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';
 pages::getInstance()->paginate($total_pages, $page, null, $extra_params, $tag);

@@ -55,24 +55,21 @@ switch ($mode) {
         }
 
         //Getting Video List
-        $vid_array = ['user' => $udetails['userid'], 'limit' => $get_limit];
+        $params_video = ['userid' => $udetails['userid'], 'limit' => $get_limit];
         if (get('query') != '') {
-            $vid_array['title'] = mysql_clean(get('query'));
-            $vid_array['tags'] = mysql_clean(get('query'));
+           $params_video['search'] = get('query');
         }
 
-        $videos = get_videos($vid_array);
+        $videos = Video::getInstance()->getAll($params_video);
 
-        Assign('uservids', $videos);
 
         //Collecting Data for Pagination
-        $vid_array['count_only'] = true;
-        $total_rows = get_videos($vid_array);
+        $params_video['count'] = true;
+        $total_rows =  Video::getInstance()->getAll($params_video);
 
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
 
         //Pagination
-        $pages->paginate($total_pages, $page);
 
         subtitle(lang("vdo_manage_vdeos"));
         break;
@@ -97,18 +94,29 @@ switch ($mode) {
 
         $videos = $cbvid->action->get_favorites($params);
 
-        Assign('uservids', $videos);
 
         //Collecting Data for Pagination
         $params['count_only'] = 'yes';
         $favorites_count = $cbvid->action->get_favorites($params);
         $total_pages = count_pages($favorites_count, config('videos_list_per_page'));
         //Pagination
-        $pages->paginate($total_pages, $page);
 
         subtitle(lang('com_manage_fav'));
         break;
 }
+
+$ids_to_check_progress = [];
+if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
+    foreach ($videos as $video) {
+        if (in_array($video['status'], ['Processing', 'Waiting'])) {
+            $ids_to_check_progress[] = $video['videoid'];
+        }
+    }
+}
+Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
+Assign('uservids', $videos);
+$pages->paginate($total_pages, $page);
+
 
 template_files('manage_videos.html');
 display_it();

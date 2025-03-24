@@ -13,7 +13,6 @@ if (in_dev()) {
     require_once DirPath::get('vendor') . 'autoload.php';
     require_once DirPath::get('classes') . 'DiscordLog.php';
     require_once DirPath::get('classes') . 'update.class.php';
-    require_once DirPath::get('includes') . 'clipbucket.php';
     require_once DirPath::get('classes') . 'system.class.php';
 
     //clean lock
@@ -41,7 +40,7 @@ if (file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::ge
 ?>
 
 <div class="nav_des">
-    <h4 style="color:#fff;">ClipBucketV5 - v<?php echo VERSION; ?> <?php echo lang('successful_install'); ?></h4>
+    <h4 style="color:#fff;">ClipBucketV5 - v<?php echo Update::getInstance()->getCurrentCoreVersion(); ?> <?php echo lang('successful_install'); ?></h4>
 </div>
 
 <div id="sub_container">

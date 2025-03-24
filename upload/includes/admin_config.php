@@ -4,7 +4,20 @@ define('FRONT_END', false);
 define('SLOGAN', 'Administration Panel');
 
 require_once 'common.php';
-ClipBucket::getInstance()->initAdminMenu();
+
+if( THIS_PAGE != 'admin_login' ){
+    if( !User::getInstance()->isUserConnected() ){
+        redirect_to('login.php');
+    }
+
+    if( !User::getInstance()->hasPermission('admin_access') ){
+        redirect_to(Network::get_server_url() . '403.php');
+    }
+}
+
+if( !in_array(THIS_PAGE, ['update_info', 'admin_launch_update']) && php_sapi_name() != 'cli' && User::getInstance()->isUserConnected() ) {
+    ClipBucket::getInstance()->initAdminMenu();
+}
 
 //Including Massuploader Class,
 require_once DirPath::get('classes') . 'mass_upload.class.php';
@@ -35,11 +48,11 @@ define('TEMPLATE', config('template_dir'));
 
 require_once TEMPLATEDIR . DIRECTORY_SEPARATOR . 'header.php';
 
-if( THIS_PAGE != 'system_info' && php_sapi_name() != 'cli' ){
+if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update']) && php_sapi_name() != 'cli' ){
     $check_global = System::check_global_configs();
     if( $check_global !== 1 ){
         if ($check_global === -1 ) {
-            e(lang('error_server_config', '/admin_area/main.php#config_hosting'), 'w', false);
+            e(lang('error_server_config', '/admin_area/setting_basic.php#config_hosting'), 'w', false);
         } else {
             e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
         }
@@ -62,13 +75,3 @@ include('plugins.php');
 $Smarty->assign_by_ref('cbmass', $cbmass);
 
 cb_call_functions('clipbucket_init_completed');
-
-if( THIS_PAGE != 'admin_login' ){
-    if( !User::getInstance()->isUserConnected() ){
-        redirect_to('login.php');
-    }
-
-    if( !User::getInstance()->hasPermission('admin_access') ){
-        redirect_to(Network::get_server_url() . '403.php');
-    }
-}

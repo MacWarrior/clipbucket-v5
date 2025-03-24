@@ -1381,6 +1381,7 @@ class userquery extends CBCategory
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
         Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
 
         //Removing channel Comments
         $params = [];
@@ -2557,6 +2558,9 @@ class userquery extends CBCategory
         if (!is_array($udetails) && is_numeric($udetails)) {
             $udetails = $this->get_user_details($udetails);
         }
+        if ($udetails['userid'] == $this->get_anonymous_user()) {
+            return '';
+        }
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);
         if (config('seo') != 'yes') {
@@ -3346,13 +3350,13 @@ class userquery extends CBCategory
         }
 
         if (isSectionEnabled('videos')) {
+            if (User::getInstance()->hasPermission('allow_video_upload')) {
+                $array[lang('videos')][lang('manage_x', strtolower(lang('videos')))] = 'manage_videos.php?mode=uploaded';
+            }
             if (User::getInstance()->hasPermission('view_video')) {
-                $array[lang('videos')][lang('user_fav_videos')] = 'manage_videos.php?mode=favorites';
+                $array[lang('videos')][lang('manage_x',strtolower(lang('user_fav_videos')))] = 'manage_videos.php?mode=favorites';
             }
 
-            if (User::getInstance()->hasPermission('allow_video_upload')) {
-                $array[lang('videos')][lang('uploaded_videos')] = 'manage_videos.php?mode=uploaded';
-            }
         }
 
         if( config('videosSection') == 'yes' && config('playlistsSection') == 'yes' && User::getInstance()->hasPermission('allow_create_playlist')){

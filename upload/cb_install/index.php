@@ -5,7 +5,6 @@ require_once dirname(__DIR__) . DIRECTORY_SEPARATOR . 'includes' . DIRECTORY_SEP
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'update.class.php';
-require_once DirPath::get('includes') . 'clipbucket.php';
 require_once DirPath::get('classes') . 'system.class.php';
 require_once DirPath::get('classes') . 'network.class.php';
 require_once DirPath::get('classes') . 'AIVision.class.php';
@@ -73,6 +72,9 @@ $has_translation = class_exists('Language');
 
 require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
+    if (isset($_COOKIE['cb_lang'])) {
+        unset($_COOKIE['cb_lang']);
+    }
     Language::getInstance()->make_default($_POST['language']);
     Language::getInstance()->init();
     $has_translation = true;

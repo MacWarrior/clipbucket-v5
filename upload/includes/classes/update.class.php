@@ -120,20 +120,7 @@ class Update
         return $this->latest;
     }
 
-    public function getCurrentCoreState(): string
-    {
-        if( empty($this->state) ){
-            if ($this->getCurrentCoreLatest()['stable'] != $this->getCurrentCoreLatest()['dev']) {
-                $this->state = 'dev';
-            } else {
-                $this->state = 'stable';
-            }
-        }
-
-        return $this->state;
-    }
-
-    private function getCurrentCoreVersionCode(): string
+    public function getCurrentCoreVersionCode(): string
     {
         if( empty($this->versionCode) ){
             $this->versionCode = $this->getCurrentCoreLatest()['dev'];
@@ -167,7 +154,7 @@ class Update
 
             if (!file_exists($filepath_changelog)) {
                 e(lang('error_occured'));
-                e('File don\' exists :' . $filepath_changelog);
+                e('File don\'t exists :' . $filepath_changelog);
                 return [];
             }
 
@@ -194,15 +181,14 @@ class Update
     private function getWebVersion()
     {
         if( empty($this->webVersion) ){
-            $type = $this->getCurrentCoreState();
             $versions = $this->getDistantFile('latest.json');
-            if (empty($versions[$type])) {
+            if (empty($versions['stable'])) {
                 e(lang('error_occured'));
                 e(lang('error_file_download') . ' : ' . self::$urlChangelogGit . '/latest.json');
                 return false;
             }
 
-            $this->webVersion = $versions[$type];
+            $this->webVersion = $versions['stable'];
         }
 
         return $this->webVersion;
@@ -269,7 +255,7 @@ class Update
             $folder_cur_version = basename($folder);
             if ($folder_cur_version == $this->getCurrentDBVersion()) {
                 $folder_version = $folder;
-            } elseif ($folder_cur_version > $this->getCurrentDBVersion() && $folder_cur_version <= VERSION) {
+            } elseif ($folder_cur_version > $this->getCurrentDBVersion() && $folder_cur_version <= Update::getInstance()->getCurrentCoreVersion()) {
                 $this->needCodeDBUpdate = true;
                 return true;
             }
@@ -277,7 +263,7 @@ class Update
         $clean_folder = array_diff(scandir($folder_version), ['..', '.']);
         foreach ($clean_folder as $file) {
             $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
-            if ($file_rev > $this->getCurrentDBRevision() && $file_rev <= REV) {
+            if ($file_rev > $this->getCurrentDBRevision() && $file_rev <= Update::getInstance()->getCurrentCoreRevision()) {
                 $this->needCodeDBUpdate = true;
                 return true;
             }
@@ -488,7 +474,7 @@ class Update
     /**
      * @throws Exception
      */
-    public function getChangelogHTML($version, $title = null): string
+    public function getChangelogHTML($version): string
     {
         if( !is_array($version) ){
             $content_json = $this->getChangelog($version);
@@ -497,11 +483,7 @@ class Update
         }
 
         $html = '<div class="well changelog">';
-        if (is_null($title)) {
-            $html .= '<h3>' . $content_json['version'] . ' Changelog - ' . ucfirst($content_json['status']) . '</h3>';
-        } else {
-            $html .= '<h3>' . $title . '</h3>';
-        }
+        $html .= '<h3>' . $content_json['version'] . ' Changelog</h3>';
         foreach ($content_json['detail'] as $detail) {
             $html .= '<b>' . $detail['title'] . '</b>';
             if (!isset($detail['description'])) {
@@ -530,12 +512,11 @@ class Update
 
         $current_version = $this->getCurrentCoreVersionCode();
         $current_revision = $this->getCurrentCoreRevision();
-        $current_state = $this->getCurrentCoreState();
         $web_version = $this->getWebVersion();
         $web_revision = $this->getWebRevision();
 
-        $html .= '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>' . $current_revision . '</b> <i>(' . ucfirst($current_state) . ')</i><br/>';
-        $html .= 'Latest version <i>(' . ucfirst($current_state) . ')</i> : <b>' . $web_version . '</b> - Revision <b>' . $web_revision . '</b></h5></div>';
+        $html .= '<div class="well changelog"><h5>Current version : <b>' . $current_version . '</b> - Revision <b>' . $current_revision . '</b><br/>';
+        $html .= 'Latest version : <b>' . $web_version . '</b> - Revision <b>' . $web_revision . '</b></h5></div>';
 
         $is_new_version = $current_version > $web_version || ($current_version == $web_version && $current_revision > $web_revision);
 
@@ -558,10 +539,6 @@ class Update
                     }
                 }
             }
-        }
-
-        if ($current_state == 'dev') {
-            $html .= '<div class="well changelog"><h5>Thank you for using the developpement version of ClipbucketV5 !<br/>Please create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issue</a> if you encounter any bug.</h5></div>';
         }
 
         return $html;

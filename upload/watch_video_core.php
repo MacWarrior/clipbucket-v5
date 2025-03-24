@@ -98,6 +98,12 @@ if (!$is_playlist) {
 call_watch_video_function($vdo);
 subtitle(ucfirst($vdo['title']));
 
+$ids_to_check_progress=[];
+if (in_array($vdo['status'], ['Processing', 'Waiting'])) {
+    $ids_to_check_progress[] = $vdo['videoid'];
+}
+assign('ids_to_check_progress', json_encode($ids_to_check_progress));
+
 # assigning all variables
 array_val_assign($assign_arry);
 $anonymous_id = userquery::getInstance()->get_anonymous_user();

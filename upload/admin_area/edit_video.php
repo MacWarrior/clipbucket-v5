@@ -98,6 +98,12 @@ if (isset($_POST['del_cmt'])) {
 
 assign('uploader_info', User::getInstance()->getOne(['userid'=>$data['userid']]));
 
+if (in_array($data['status'], ['Processing', 'Waiting'])) {
+    $ids_to_check_progress[] = $data['videoid'];
+}
+Assign('ids_to_check_progress', json_encode($ids_to_check_progress??[]));
+
+
 $params = [];
 $params['type'] = 'v';
 $params['type_id'] = $video_id;

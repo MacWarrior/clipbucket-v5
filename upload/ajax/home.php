@@ -57,7 +57,6 @@ if (isset($_POST['load_type'])) {
     }
 
     if (!empty($data)) {
-        $json_string['array_meta'] = $data;
         if ($load_mode == 'recent') {
             $display_type = 'ajaxHome';
         } else {
@@ -70,11 +69,18 @@ if (isset($_POST['load_type'])) {
         $anonymous_id = userquery::getInstance()->get_anonymous_user();
         assign('anonymous_id', $anonymous_id);
         assign("qlist_vids", $clean_cookies);
+        $ids_to_check = [];
+        ob_start();
         foreach ($data as $key => $video) {
+            if (in_array($video['status'], ['Processing', 'Waiting'])) {
+                $ids_to_check[] = $video['videoid'];
+            }
             assign("video", $video);
             assign("display_type", $display_type);
             Template('blocks/videos/video.html');
         }
+        $html = ob_get_clean();
+        echo json_encode(['html'=>$html, 'ids_to_check'=>$ids_to_check]);
     } else {
         $msg = [];
         $msg['notice'] = "You've reached end of list";

@@ -30,16 +30,16 @@
 <hr/>
 
 <div style="text-align:center;">
-	<div class="padding38">
-		{if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
+    <div class="padding38">
+        {if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
+            <span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_videos')}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='videos'}</span>
 		</span>
-		{/if}
-		{if isSectionEnabled('photos') && User::getInstance()->hasPermission('allow_photo_upload')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
+        {/if}
+        {if isSectionEnabled('photos') && User::getInstance()->hasPermission('allow_photo_upload')}
+            <span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_photos')}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code="photos"}</span>
@@ -50,8 +50,8 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='total_logins'}</span>
 		</span>
-		{if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
+        {if isSectionEnabled('videos') && User::getInstance()->hasPermission('view_video')}
+            <span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_watched')|number_format}</span>
 			<br/>
 			<span class="line-height-1 smaller-90"> {lang code='watched'} </span>
@@ -62,15 +62,15 @@
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='comments'}</span>
 		</span>
-		{if isSectionEnabled('collections') && User::getInstance()->hasPermission('allow_create_collection')}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
+        {if isSectionEnabled('collections') && User::getInstance()->hasPermission('allow_create_collection')}
+            <span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('total_collections')|number_format}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='collections'}</span>
 		</span>
-		{/if}
-		{if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'}
-		<span class="btn" style="background-color:#000000;color:#ffffff;">
+        {/if}
+        {if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('enable_channel_page') && User::getInstance()->get('disabled_channel') != 'yes'}
+            <span class="btn" style="background-color:#000000;color:#ffffff;">
 			<span class="line-height-1 bigger-170">{User::getInstance()->get('profile_hits')}</span>
 			<br/>
 			<span class="line-height-1 smaller-90">{lang code='views'}</span>
@@ -86,11 +86,10 @@
 <hr/>
 
 {if isSectionEnabled('videos') && User::getInstance()->hasPermission('allow_video_upload')}
-<div class="mvideo accountprofile">
+    <div class="mvideo accountprofile">
 	<span class="lead">
 		{lang code='latest_videos'}
 	</span>
-
         {if $videos}
             <table class="table table-bordered table-striped manageUsersTable">
                 <tr>
@@ -98,73 +97,8 @@
                     <td>{lang code="option"}</td>
                 </tr>
                 {foreach from=$videos item=video}
-                    <tr>
-                        <td>
-                            <div class="row">
-                                <div class="col-md-10">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <a class="manageVid_thumb" href="/edit_video.php?vid={$video.videoid}">
-                                                <img src="{getThumb vdetails=$video size=168x105}" class="img-responsive" width="130" height="80" id="thumbs_{$video.videoid}" class="vthumb"/>
-                                                <span class="duration">({if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if})</span>
-                                            </a>
-                                        </div>
-                                        <div class="col-md-9">
-                                            <a href="edit_video.php?vid={$video.videoid}">
-                                                {display_clean($video.title|truncate:80)}
-                                            </a><br/>
-                                            <span class="maccountlabels">
-                                                <strong>{$video.date_added|niceTime}</strong>
-                                                {lang code='views'} : <strong>{$video.views|number_format}</strong>
-                                            </span>
-                                            <div class="labels">
-                                                {if $video.featured=='yes'}<span class="label label-primary">{lang code="featured"}{/if}</span>
-                                                <span class="label {if $video.active=='yes'}label-success{else}label-warning{/if} mlabel">
-                                                    {if $video.active=='yes'}{lang code="active"}{else}{lang code="inactive"}{/if}
-                                                </span>
-                                                <span class="label {if $video.status=='Successful'}label-success{else}label-warning{/if}">
-                                                    {if $video.status=='Successful'}{lang code="successful"}{else}{lang code="processing"}{/if}
-                                                </span>
-                                                <span class="label label-info">
-                                                   {lang code='viewed'} {$video.last_viewed|niceTime}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="row">
-                                        {if $video.broadcast=='public'}
-                                            <div class="col-md-1"><i class="icon-globe"></i></div>
-                                        {elseif $video.broadcast!='public'}
-                                            <div class="col-md-1"><i class="icon-lock"></i></div>
-                                        {/if}
-                                    </div>
-                                    <a href="view_channel.php?user={$video.userid}">{display_clean($video.user_username)}</a>
-                                </div>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="dropdown">
-                                <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    Actions <i class="caret"></i></button>
-                                <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                                    <li>
-                                        <a role="menuitem" tabindex="-1" href="/edit_video.php?vid={$video.videoid}">{lang code="edit"}</a>
-                                    </li>
-                                    <li>
-                                        <a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code="watch"}</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li>
-                                        <a role="menuitem" tabindex="-1" href="/myaccount.php?delete_video={$video.videoid}">{lang code="delete"}</a>
-                                    </li>
-                                    {foreach from=$cbvid->video_manager_links item=links}
-                                        {$cbvid->video_manager_link($links,$video)}
-                                    {/foreach}
-                                </ul>
-                            </div>
-                        </td>
+				<tr class="item-video" data-id="{$video['videoid']}">
+					{include file="$style_dir/blocks/manage/account_video.html" video=$video control='full'}
                     </tr>
                 {/foreach}
             </table>

@@ -112,6 +112,41 @@ $(document).ready(function () {
         var video_title = $('#title').val();
         getViewHistory(videoid, 1);
     });
+
+    if (ids_to_check_progress.length > 0) {
+        intervalId = setInterval(function () {
+            $.post({
+                url: '/actions/progress_video.php',
+                dataType: 'json',
+                data: {
+                    ids: ids_to_check_progress,
+                    output: 'watch_video'
+                },
+                success: function (response) {
+                    var data = response.data;
+
+                    data.videos.forEach(function (video) {
+                        if (video.status.toLowerCase() == 'processing') {
+                            //update %
+                            var process_div = $('.processing[data-id="' + video.videoid + '"]');
+                            //if process don't exist : get thumb + process div
+                            if (process_div.length == 0) {
+                                $('.player-holder').html(video.html);
+                            } else {
+                                process_div.find('span').html(video.percent + '%');
+                            }
+                        } else {
+                            $('.player-holder').html(video.html);
+                        }
+                    });
+
+                    if (response.all_complete) {
+                        clearInterval(intervalId);
+                    }
+                }
+            })
+        }, 60000);
+    }
 });
 
 function getViewHistory(video_id, page) {
@@ -140,3 +175,4 @@ function showSpinner() {
 function hideSpinner() {
     $('.taskHandler').hide();
 }
+

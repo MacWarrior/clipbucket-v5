@@ -39,6 +39,7 @@ class CacheRedis
     /**
      * @throws \Predis\Connection\ConnectionException
      * @throws \Predis\Response\ServerException
+     * @throws Exception
      */
     private function init($params)
     {
@@ -66,7 +67,7 @@ class CacheRedis
             error_log($e->getMessage());
         }
         self::$_instance = $this;
-        $this->prefix = VERSION . '_' . REV;
+        $this->prefix = Update::getInstance()->getCurrentCoreVersion() . '_' . Update::getInstance()->getCurrentCoreRevision();
     }
 
     /**

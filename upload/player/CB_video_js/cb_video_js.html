@@ -106,9 +106,16 @@
         this.thumbnails({get_player_thumbs_json($vdata)});
         {/if}
     }
+
     //Initializing
     $(document).ready(function() {
         var cb_player = new videojs('cb_video_js_' + video_id, cb_player_setup, cb_vjs_callback);
+        {if !empty($vdata['fov']) && config('enable_360_video') == 'yes'}
+            let video_fov = '{$vdata['fov']}';
+        {literal}
+            cb_player.vr({projection: video_fov});
+        {/literal}
+        {/if}
 
         $('body').keydown(function(e)
         {
@@ -129,5 +136,6 @@
             }
         });
     });
+
 </script>
 

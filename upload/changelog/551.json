@@ -1,7 +1,7 @@
 {
   "version":"5.5.1",
-  "revision":"268",
-  "status":"dev",
+  "revision":"294",
+  "status":"stable",
   "detail":[
     {
       "title": "Back office",
@@ -37,6 +37,8 @@
         ,"Implement future PHP version check"
         ,"Implement options to disable video Date recorded & location"
         ,"Implement spaces in tags"
+        ,"Implement video conversion percent"
+        ,"Implement changelogs page"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -46,6 +48,8 @@
         ,"Refactor logo & favicon edition"
         ,"Refactor email templates management"
         ,"Refactor flagged elements management"
+        ,"Refactor orphan files deletion tool"
+        ,"Refactor website configurations"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -54,6 +58,7 @@
         ,"Add link from video edition page to uploader edition page"
         ,"Add collection sharing options"
         ,"Add baseurl config"
+        ,"Add broadcast configuration on mass upload <i>(#490)</i>"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -65,6 +70,8 @@
         ,"Update WIP update process"
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
+        ,"Update video broadcast upload display"
+        ,"Update categories management"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -132,6 +139,9 @@
         ,"Fix email tester default variables"
         ,"Fix thumbs regeneration"
         ,"Fix video deletion"
+        ,"Fix anonymous flagged medias"
+        ,"Fix video resolution settings saving"
+        ,"Fix possible SQL injection"
       ]
     },
     {
@@ -158,6 +168,9 @@
         ,"Implement featured video slider"
         ,"Implement collection sharing"
         ,"Implement spaces in tags"
+        ,"Implement 360° video support"
+        ,"Implement video thumbs preview"
+        ,"Implement video conversion percent"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -172,10 +185,12 @@
         ,"Update dark & light themes"
         ,"Update search engine"
         ,"Update collection management menus"
+        ,"Update video broadcast upload display"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
         ,"Hide orphan photos from photos page"
+        ,"Hide empty username's channels"
         ,"Fix pagination on videos, collections & photos"
         ,"Fix comments display on photos collection <i>(#91)</i>"
         ,"Fix video upload max filesize check"
@@ -243,6 +258,10 @@
         ,"Fix base URL usage"
         ,"Fix sharing privacy"
         ,"Fix collection sharing JS error"
+        ,"Fix potentiel logo & favicon browser cache issue"
+        ,"Fix playlist creation & edition"
+        ,"Fix collection creation and video addition"
+        ,"Fix manage videos & photos search"
       ]
     },
     {
@@ -262,11 +281,14 @@
         ,"Remove temp files on failed upload"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
         ,"Update user level permissions storage"
         ,"Update countries list <i>(#517)</i>"
+        ,"Update logo & favicon storage"
+        ,"Update live version state"
         ,"Fix SSL detection"
         ,"Fix MySQL8 compatibility"
         ,"Fix old videos without quality specified"
@@ -286,6 +308,7 @@
       "description": [
         "Refactor log system"
         ,"Implement thumb background color option"
+        ,"Implement FOV detection"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -294,6 +317,8 @@
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
         ,"Fix video thumbs generation ratio other than 16/9"
+        ,"Fix video conversion failed on corrupted subtitle track"
+        ,"Fix incomplete conversion log"
       ]
     },
     {
@@ -324,6 +349,7 @@
         ,"Update installation script to Ubuntu 24.10"
         ,"Update docker installation <i>(#486)</i>"
         ,"Remove unused baseurl input"
+        ,"Reset language cookie during installation"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -347,6 +373,7 @@
         ,"Fix translation creation in update 5.5.0 - 294"
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
+        ,"Fix technical issue on new setup <i>(#526)</i>"
       ]
     },
     {
@@ -374,9 +401,10 @@
       "title": "Internal components",
       "description": [
         "Update Player to version 2.0.7"
-        ,"Update Server Thumb for ClipBucket to version 2.0.3"
+        ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
+        ,"Update VideoJS player to version 2.1"
         ,"Remove Social Beast"
       ]
     },

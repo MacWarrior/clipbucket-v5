@@ -57,7 +57,7 @@
                 <div class="videos clearfix">
                     {if $objects}
                         {foreach $objects as $video}
-                            <div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                            <div class="item-video col-lg-3 col-md-4 col-sm-4 col-xs-12" data-id="{$video.videoid}">
                                 {include file="$style_dir/blocks/videos/video.html" display_type='homeVideos'}
                             </div>
                         {/foreach}
@@ -203,4 +203,5 @@
     var last_commented = "{$c.last_commented}";
     var total_comments = "{$c.total_comments}";
     var object_type = "{$object_type}";
+    var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
 </script>
