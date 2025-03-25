@@ -1509,4 +1509,5 @@ VALUES ('admin_setting'),
        ('cannot_delete_not_empty_category'),
        ('option_show_collapsed_checkboxes'),
        ('changelog'),
-       ('older_versions');
+       ('older_versions'),
+       ('enable_categories');

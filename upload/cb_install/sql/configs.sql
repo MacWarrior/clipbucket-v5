@@ -306,7 +306,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_360_video', 'yes'),
     (NULL, 'logo_update_timestamp', CURRENT_TIMESTAMP()),
     (NULL, 'enable_video_thumbs_preview', 'yes'),
-    (NULL, 'video_thumbs_preview_count', '10');
+    (NULL, 'video_thumbs_preview_count', '10'),
+    (NULL, 'enable_photo_categories', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
