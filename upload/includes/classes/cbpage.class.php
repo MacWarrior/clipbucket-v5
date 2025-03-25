@@ -186,11 +186,11 @@ class cbpage
                     e(lang('translation_already_exist_choose_other_name', $translation_name));
                     return false;
                 }
-                Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
-                    [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
-                e(lang('page_updated'), 'm');
-                return true;
             }
+            Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
+                [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
+            e(lang('page_updated'), 'm');
+            return true;
         }
     }
 
