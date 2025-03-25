@@ -142,7 +142,6 @@
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
         ,"Fix possible SQL injection"
-        ,"Fix collapsed categories display"
       ]
     },
     {
@@ -263,6 +262,7 @@
         ,"Fix playlist creation & edition"
         ,"Fix collection creation and video addition"
         ,"Fix manage videos & photos search"
+        ,"Fix collapsed categories display"
       ]
     },
     {
