@@ -79,7 +79,7 @@ switch ($mode) {
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
 
-        if (isset($_POST['add_collection'])) {
+        if (!empty($_POST)) {
             $cbcollection->create_collection($_POST);
             if (!error()) {
                 $_POST = '';

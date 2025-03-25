@@ -17,7 +17,7 @@ $(function () {
     $('select#type').on('change', function () {
         showSpinner();
         $.post({
-            url: '/actions/get_sort_types.php',
+            url: '/actions/get_collection_update.php',
             dataType: 'json',
             data: {type: $(this).val()},
             success: function (data) {
@@ -30,7 +30,13 @@ $(function () {
                         $('#sort_type').append('<option value="' + key + '">' + data.sort_types[key] + '</option>');
                     }
                 }
+                if (Object.keys(data.parents).length > 0) {
+                    $('#collection_id_parent option').remove();
+                    for (const key in data.parents) {
+                        $('#collection_id_parent').append('<option value="' + key + '">' + data.parents[key] + '</option>');
+                    }
+                }
             }
         }).always(hideSpinner);
-    })
+    });
 })

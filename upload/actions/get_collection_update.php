@@ -7,6 +7,7 @@ if (empty($type)) {
     e(lang('missing_params'));
 } else {
     $sorts = SortType::getSortTypes($type);
+    $parents = Collection::getInstance()->getAvailableParents(0, $type);
 }
 
-echo json_encode(['msg' => getTemplateMsg(), 'sort_types' => display_sort_lang_array($sorts)]);
+echo json_encode(['msg' => getTemplateMsg(), 'sort_types' => display_sort_lang_array($sorts), 'parents' => $parents]);

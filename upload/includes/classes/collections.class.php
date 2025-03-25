@@ -447,19 +447,18 @@ class Collection
                 $params = [];
                 $params['collection_id'] = $collection['collection_id'];
                 $params['show_unlisted'] = true;
-                $order_item = $param_order_item ?: $collection['sort_type'];
+                $order_item = '';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
+                }
                 if ($collection['type'] == 'videos') {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-                        $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
-                    }
+                    $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
                     if (empty($params['order'])) {
                         $params['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
                     $collection['items'] = Video::getInstance()->getAll($params);
                 } else {
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-                        $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
-                    }
+                    $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
                     if (empty($params['order'])) {
                         $params['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
@@ -813,7 +812,25 @@ class Collection
         return $indentList;
     }
 
+    public function getAvailableParents($collection_id, $type): array
+    {
+        $list_parent_categories = [0 => lang('collection_no_parent')];
 
+        $params = [
+            'type'      => $type,
+            'userid'    => user_id()
+        ];
+
+        if (!empty($collection_id)) {
+            $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
+        }
+        $collection_list = Collection::getInstance()->getAllIndent($params);
+        $list_parent_categories += array_combine(
+            array_column($collection_list, 'collection_id') ,
+            array_column($collection_list,'collection_name')
+        );
+        return $list_parent_categories;
+    }
 }
 
 
@@ -1271,6 +1288,64 @@ class Collections extends CBCategory
         return false;
     }
 
+
+
+    /**
+     * @throws Exception
+     */
+    public function get_collections_list(int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
+    {
+        $data = [];
+
+        $version = Update::getInstance()->getDBVersion();
+
+        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
+            if ($level == 0 && is_null($collection_id)) {
+                $cond = ' C.collection_id_parent IS NULL';
+            } else {
+                $cond = ' C.collection_id_parent = ' . mysql_clean($collection_id);
+            }
+        } else {
+            $cond = ' 1=1';
+        }
+
+        if (!is_null($exclude_id)) {
+            $cond .= ' AND C.collection_id != ' . mysql_clean($exclude_id);
+        }
+
+        if (!is_null($type) && Collection::getInstance()->isValidType($type)) {
+            $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
+        }
+
+        if (!is_null($userid) && !User::getInstance()->hasAdminAccess()) {
+            $cond .= ' AND (C.userid = ' . mysql_clean($userid) . ' OR (broadcast = \'public\' AND public_upload = \'yes\') )';
+        }
+        if (!empty ($cond)) {
+            $cond .= ' GROUP BY C.collection_id';
+        } else {
+            $cond = ' 1 GROUP BY C.collection_id';
+        }
+        $collections_parent = Clipbucket_db::getInstance()->select(tbl($this->section_tbl) . ' C  
+            LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
+            , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects'
+            , $cond);
+
+        foreach ($collections_parent as $col_parent) {
+            $space = '';
+            if (config('enable_sub_collection') == 'yes') {
+                $space = str_repeat('&nbsp;', $level * 3);
+            }
+            $data[$col_parent['collection_id']]['name'] = $space . display_clean($col_parent['collection_name']);
+            $data[$col_parent['collection_id']]['count'] = $col_parent['total_objects'];
+            $collections_children = $this->get_collections_list(($level + 1), $col_parent['collection_id'], $exclude_id, $type, $userid);
+            foreach ($collections_children as $col_id => $col_name) {
+                $data[$col_id] = $col_name;
+            }
+        }
+
+        return $data;
+    }
+
     /**
      * Function used to load collections fields
      *
@@ -1361,27 +1436,12 @@ class Collections extends CBCategory
         }
 
         if (config('enable_sub_collection') == 'yes') {
-            $list_parent_categories = ['null' => lang('collection_no_parent')];
-            $type = $default['type'] ?? 'videos';
-
-            $params = [
-                'type'      => $type,
-                'userid'    => user_id()
-            ];
-
-            if (!empty($collection_id)) {
-                $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
-            }
-            $collection_list = Collection::getInstance()->getAllIndent($params);
-            $list_parent_categories += array_combine(
-                    array_column($collection_list, 'collection_id') ,
-                    array_column($collection_list,'collection_name')
-            );
 
             if ($collection_id_parent && config('enable_sub_collection') == 'yes') {
                 $data['type']['disabled'] = true;
                 $data['type']['input_hidden'] = true;
             }
+            $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, $default['type'] ?? array_keys($this->types)[0]);
 
             $data['parent'] = [
                 'title'    => lang('collection_parent'),
@@ -1393,62 +1453,6 @@ class Collections extends CBCategory
                 'required' => 'yes',
                 'checked'  => $collection_id_parent
             ];
-        }
-
-        return $data;
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function get_collections_list(int $level = 0, $collection_id = null, $exclude_id = null, $type = null, $userid = null): array
-    {
-        $data = [];
-
-        $version = Update::getInstance()->getDBVersion();
-
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
-            if ($level == 0 && is_null($collection_id)) {
-                $cond = ' C.collection_id_parent IS NULL';
-            } else {
-                $cond = ' C.collection_id_parent = ' . mysql_clean($collection_id);
-            }
-        } else {
-            $cond = ' 1=1';
-        }
-
-        if (!is_null($exclude_id)) {
-            $cond .= ' AND C.collection_id != ' . mysql_clean($exclude_id);
-        }
-
-        if (!is_null($type) && Collection::getInstance()->isValidType($type)) {
-            $cond .= ' AND C.type = \'' . mysql_clean($type) . '\'';
-        }
-
-        if (!is_null($userid) && !User::getInstance()->hasAdminAccess()) {
-            $cond .= ' AND (C.userid = ' . mysql_clean($userid) . ' OR (broadcast = \'public\' AND public_upload = \'yes\') )';
-        }
-        if (!empty ($cond)) {
-            $cond .= ' GROUP BY C.collection_id';
-        } else {
-            $cond = ' 1 GROUP BY C.collection_id';
-        }
-        $collections_parent = Clipbucket_db::getInstance()->select(tbl($this->section_tbl) . ' C  
-            LEFT JOIN ' . tbl($this->items) . ' citem ON C.collection_id = citem.collection_id'
-            , 'C.*, COUNT(DISTINCT citem.ci_id) AS total_objects'
-            , $cond);
-
-        foreach ($collections_parent as $col_parent) {
-            $space = '';
-            if (config('enable_sub_collection') == 'yes') {
-                $space = str_repeat('&nbsp;', $level * 3);
-            }
-            $data[$col_parent['collection_id']]['name'] = $space . display_clean($col_parent['collection_name']);
-            $data[$col_parent['collection_id']]['count'] = $col_parent['total_objects'];
-            $collections_children = $this->get_collections_list(($level + 1), $col_parent['collection_id'], $exclude_id, $type, $userid);
-            foreach ($collections_children as $col_id => $col_name) {
-                $data[$col_id] = $col_name;
-            }
         }
 
         return $data;
@@ -1498,10 +1502,11 @@ class Collections extends CBCategory
         if( config('enable_comments_collection') == 'yes' ) {
             $return['comments'] = [
                 'title'             => lang('comments'),
-                'type'              => 'radiobutton',
+                'class'             => 'form-control',
+                'type'              => 'dropdown',
                 'id'                => 'allow_comments',
                 'name'              => 'allow_comments',
-                'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
+                'value'             => ['yes' => lang('vdo_allow_comm'), 'no'  => lang('vdo_dallow_comm')],
                 'checked'           => $default['allow_comments'],
                 'db_field'          => 'allow_comments',
                 'required'          => 'no',
@@ -1513,7 +1518,8 @@ class Collections extends CBCategory
 
         $return['public_upload'] = [
             'title'             => lang('collect_allow_public_up'),
-            'type'              => 'radiobutton',
+            'class'             => 'form-control',
+            'type'              => 'dropdown',
             'id'                => 'public_upload',
             'name'              => 'public_upload',
             'value'             => ['no' => lang('collect_pub_up_dallow'), 'yes' => lang('collect_pub_up_allow')],
