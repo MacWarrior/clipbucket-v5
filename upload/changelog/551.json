@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"294",
+  "revision":"295",
   "status":"stable",
   "detail":[
     {
@@ -262,6 +262,7 @@
         ,"Fix playlist creation & edition"
         ,"Fix collection creation and video addition"
         ,"Fix manage videos & photos search"
+        ,"Fix collapsed categories display"
       ]
     },
     {
