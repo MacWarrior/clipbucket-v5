@@ -306,8 +306,11 @@ class formObj
                         'children_indent' => true
                     ], $multi);
                     if (config('show_collapsed_checkboxes') == 1) {
-                        echo '</div></div>';
+                        echo '</div>';
                     }
+                }
+                if (config('show_collapsed_checkboxes') == 1) {
+                    echo '</div>';
                 }
             }
         }
