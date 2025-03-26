@@ -1346,6 +1346,16 @@
                             </div>
                             <hr/>
                             <div class="row">
+                                <div class="col-md-6">
+                                    <label class="nowrap" for="enable_video_categories" title="{lang(enable_categories)}">{lang(enable_categories)}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_video_categories" id="enable_video_categories" {if $row.enable_video_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
                                 <div class="col-md-4">
                                     <label class="nowrap" for="enable_video_genre" title="{lang('enable_x_field',lang('genre'))}">{lang('enable_x_field',lang('genre'))}</label>
                                 </div>

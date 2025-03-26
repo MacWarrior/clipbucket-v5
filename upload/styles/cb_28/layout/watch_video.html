@@ -156,7 +156,9 @@
                                 {if $video.age_restriction}<p class="age_restriction">{lang('access_forbidden_under_age',$video.age_restriction)}</p>{/if}
                                 <p style="white-space: pre-line;">{Video::getInstance()->getDescription($video.description)}</p>
                                 <ul class="clearfix desc-list">
-                                    <li><strong>{lang code='category'}</strong>:&nbsp;{$vdo.category_names}</li>
+                                    {if config('enable_video_categories') == 'yes'}
+                                        <li><strong>{lang code='category'}</strong>:&nbsp;{$category_links}</li>
+                                    {/if}
                                     <li><strong>{lang code='duration'}</strong>:&nbsp;{if $video.duration>1}{$video.duration|SetTime}{else}00:00{/if}</li>
                                     <li><strong>{lang code='date'}</strong>:&nbsp; {$video.date_added|nicetime}</li>
                                     {if !empty($vdo.tags_video)}
