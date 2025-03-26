@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
 
-if ($type == 'photo' && config('enable_photo_categories') != 'yes') {
+if (config('enable_'.$type.'_categories') != 'yes') {
     redirect_to(DirPath::getUrl('admin_area',true));
 }
 assign('type', $type);
