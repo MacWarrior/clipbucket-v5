@@ -123,6 +123,7 @@ if (isset($_POST['update'])) {
         , 'enable_recorded_date_video_field'
         , 'allow_tag_space'
         , 'enable_video_thumbs_preview'
+        , 'enable_photo_categories'
     ];
 
     $config_booleans_to_refactor = [
@@ -361,7 +362,8 @@ if (isset($_POST['update'])) {
         'max_profile_pic_width',
         'custom_css',
         'enable_video_thumbs_preview',
-        'video_thumbs_preview_count'
+        'video_thumbs_preview_count',
+        'enable_photo_categories'
     ];
 
     //Numeric Array

@@ -204,6 +204,7 @@ class Photo
         $param_orphan = $params['orphan'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'] ?? false;
+        $param_category = $params['category'] ?? false;
 
         $conditions = [];
         if ($param_not_photo_id) {
@@ -315,9 +316,20 @@ class Photo
             $join[] = 'LEFT JOIN ' . cb_sql_table('photos_categories') . ' ON photos.photo_id = photos_categories.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
 
+            if ($param_category) {
+                if (!is_array($param_category)) {
+                    $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
+
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category , GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
                 $group[] = 'photos.photo_id';
+            }
+            if( $param_first_only ){
+                $select[] = 'JSON_ARRAYAGG(JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)) AS category_list';
             }
         }
 
@@ -845,10 +857,12 @@ class CBPhotos
                 'title' => 'Orphan Photos'
                 , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
             ];
-            $menu_photo['sub'][] = [
-                'title' => lang('manage_x', strtolower(lang('categories')))
-                , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
-            ];
+            if (config('enable_photo_categories') == 'yes') {
+                $menu_photo['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('categories')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
+                ];
+            }
 
             ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
@@ -2128,7 +2142,27 @@ class CBPhotos
                 'class'             => 'form-control'
             ];
         }
+        if (config('enable_photo_categories') == 'yes') {
+            if (empty($array['category'])) {
+                $cat_array = [];
+            }elseif (is_array($array['category'])) {
+                $cat_array = $array['category'];
+            } else {
+                $cat_array = explode(',', $array['category']);
+            }
 
+            $return['cat']   = [
+                'title'             => lang('categories'),
+                'type'              => 'checkbox',
+                'name'              => 'category[]',
+                'id'                => 'category',
+                'value'             => $cat_array,
+                'required'          => 'false',
+                'validate_function' => 'Category::validate',
+                'display_function'  => 'convert_to_categories',
+                'category_type'     => 'photo'
+            ];
+        }
         return $return;
     }
 
@@ -2327,6 +2361,12 @@ class CBPhotos
                             }
 
                             Clipbucket_db::getInstance()->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
+
+                            if (config('enable_photo_categories') == 'yes') {
+                                Category::getInstance()->saveLinks('photo', $pid, $array['category']);
+                            } else {
+                                Category::getInstance()->saveLinks('photo', $pid, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+                            }
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
                             if (empty(errorhandler::getInstance()->get_error)) {
