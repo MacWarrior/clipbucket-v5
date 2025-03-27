@@ -16,5 +16,6 @@ class MWIP extends \Migration
         ]);
 
         self::generateConfig('enable_photo_categories', 'yes');
+        self::generateConfig('enable_collection_categories', 'yes');
     }
 }

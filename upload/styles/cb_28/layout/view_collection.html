@@ -119,9 +119,9 @@
                     <li>
                         <strong>{lang code="uploaded"}:</strong>&nbsp;{$c.date_added|niceTime}
                     </li>
-                    <li>
-                        <strong>{lang code="category"}:</strong>&nbsp;{$c.category_names}
-                    </li>
+                    {if config('enable_collection_categories')=='yes'}
+                        <li><strong>{lang code='category'}</strong>:&nbsp;{$category_links}</li>
+                    {/if}
                     <li>
                         <strong class="pull-left" id="label_tags">{lang('tags')}:&nbsp;&nbsp;</strong>
                         <input type="hidden" id="tags" value="{$c.tags}">

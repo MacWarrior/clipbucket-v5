@@ -376,9 +376,13 @@ class Collection
             $join[] = 'LEFT JOIN ' . cb_sql_table('collections_categories') . ' ON ' . $this->getTableName() . '.collection_id = collections_categories.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON collections_categories.id_category = categories.category_id';
 
-            if( !$param_count ){
+            if (!$param_count) {
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \',\') AS category_names';
+            }
+
+            if ($param_first_only) {
+                $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
             }
 
             if( $param_category ){
@@ -909,24 +913,27 @@ class Collections extends CBCategory
             // Adding Collection links in Admin Area
             if (User::getInstance()->hasPermission('collection_moderation')) {
                 $menu_collection = [
-                    'title'   => lang('collections')
-                    , 'class' => 'glyphicon glyphicon-folder-close'
-                    , 'sub'   => [
+                    'title' => lang('collections'),
+                    'class' => 'glyphicon glyphicon-folder-close',
+                    'sub'   => [
                         [
-                            'title' => lang('manage_x', strtolower(lang('collections')))
-                            , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
-                        ]
-                        , [
-                            'title' => lang('manage_x', strtolower(lang('categories')))
-                            , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
+                            'title' => lang('manage_x', strtolower(lang('collections'))),
+                            'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                     ]
                 ];
 
+                if (config('enable_collection_categories') == 'yes') {
+                    $menu_collection['sub'][] = [
+                        'title' => lang('manage_x', strtolower(lang('categories'))),
+                        'url'   => DirPath::getUrl('admin_area') . 'category.php?type=collection'
+                    ];
+                }
+
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
                     $menu_collection['sub'][] = [
-                        'title' => lang('collection_flagged')
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=collection'
+                        'title' => lang('collection_flagged'),
+                        'url'   => DirPath::getUrl('admin_area') . 'flagged_item.php?type=collection'
                     ];
                 }
 
@@ -1277,10 +1284,14 @@ class Collections extends CBCategory
         $type = $default['type'];
         $collection_id_parent = $default['collection_id_parent'];
         $collection_id = $default['collection_id'];
-        if (is_array($default['category'])) {
-            $cat_array = $default['category'];
-        } else {
-            $cat_array = explode(',', $default['category']);
+        if (config('enable_collection_categories') == 'yes') {
+            if (empty($array['category'])) {
+                $cat_array = [];
+            } elseif (is_array($default['category'])) {
+                $cat_array = $default['category'];
+            } else {
+                $cat_array = explode(',', $default['category']);
+            }
         }
         $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
@@ -1317,18 +1328,6 @@ class Collections extends CBCategory
                 'validate_function' => 'genTags',
                 'hint_1'            => $hint_tags
             ],
-            'cat'  => [
-                'title'             => lang('collect_category'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'invalid_err'       => lang('collect_cat_er'),
-                'display_function'  => 'convert_to_categories',
-                'category_type'     => 'collections'
-            ],
             'type' => [
                 'title'    => lang('collect_type'),
                 'type'     => 'dropdown',
@@ -1344,6 +1343,20 @@ class Collections extends CBCategory
         if ($default['total_objects'] > 0) {
             $data['type']['disabled'] = true;
             $data['type']['input_hidden'] = true;
+        }
+        if (config('enable_collection_categories')=='yes') {
+            $data['cat']  = [
+                'title'             => lang('collect_category'),
+                'type'              => 'checkbox',
+                'name'              => 'category[]',
+                'id'                => 'category',
+                'value'             => $cat_array,
+                'required'          => 'yes',
+                'validate_function' => 'Category::validate',
+                'invalid_err'       => lang('collect_cat_er'),
+                'display_function'  => 'convert_to_categories',
+                'category_type'     => 'collections'
+            ];
         }
 
         if (config('enable_sub_collection') == 'yes') {
