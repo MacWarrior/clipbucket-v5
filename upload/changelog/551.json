@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"295",
+  "revision":"296",
   "status":"stable",
   "detail":[
     {
@@ -142,6 +142,7 @@
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
         ,"Fix possible SQL injection"
+        ,"Fix chart images display"
       ]
     },
     {
