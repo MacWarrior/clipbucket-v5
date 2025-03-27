@@ -282,6 +282,7 @@
         ,"Remove unused functions"
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
+        ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
         ,"Optimize video SQL requests"
