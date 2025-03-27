@@ -158,6 +158,9 @@
                             <div class="tab-pane fade in clearfix active" id="cb-item-info">
                                 <div class="clearfix watch-vid-details">
                                     <ul class="clearfix desc-list">
+                                        {if config('enable_photo_categories')=='yes'}
+                                            <li><strong>{lang code='category'}</strong>:&nbsp;{$photo.category_names}</li>
+                                        {/if}
                                         <li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{display_clean($photo.photo_description)|truncate:90}</li>
                                         <li><strong>{lang('collection_name')}</strong>:&nbsp;
                                             <a href="{$cbcollection->collection_links($c,'view')}">{display_clean($c.collection_name)}</a>

@@ -11,12 +11,19 @@ if( !isSectionEnabled('photos') ){
 User::getInstance()->hasPermissionOrRedirect('view_photos');
 pages::getInstance()->page_redir();
 
+$child_ids = false;
+if ($_GET['cat'] && is_numeric($_GET['cat'])) {
+    $child_ids = Category::getInstance()->getChildren($_GET['cat'], true);
+    $child_ids[] = mysql_clean($_GET['cat']);
+}
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('photo_main_list'));
 $params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
 $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
-
+if( $child_ids ){
+    $params['category'] = $child_ids;
+}
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 

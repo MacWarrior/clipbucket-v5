@@ -437,6 +437,10 @@ class Video
                 $group[] = $this->getTableName() . '.videoid';
             }
 
+            if( $param_get_detail ){
+                $select[] = 'JSON_ARRAYAGG(JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)) AS category_list';
+            }
+
             if( $param_category ){
                 if( !is_array($param_category) ){
                     $conditions[] = 'categories.category_id = '.mysql_clean($param_category);
@@ -1131,10 +1135,12 @@ class CBvideo extends CBCategory
                 ];
             }
 
-            $menu_video['sub'][] = [
-                'title' => lang('manage_x', strtolower(lang('categories')))
-                , 'url' => DirPath::getUrl('admin_area') . 'category.php'
-            ];
+            if (config('enable_video_categories')=='yes') {
+                $menu_video['sub'][] = [
+                    'title'   => lang('manage_x', strtolower(lang('categories')))
+                    , 'url'   => DirPath::getUrl('admin_area') . 'category.php'
+                ];
+            }
 
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
                 $menu_video['sub'][] = [
@@ -1574,7 +1580,11 @@ class CBvideo extends CBCategory
                 $array['category'] = [$array['category']];
             }
 
-            Category::getInstance()->saveLinks('video', $vid, $array['category']);
+            if (config('enable_video_categories') == 'yes') {
+                Category::getInstance()->saveLinks('video', $vid, $array['category']);
+            } else {
+                Category::getInstance()->saveLinks('video', $vid, [Category::getInstance()->getDefaultByType('video')['category_id']]);
+            }
 
             cb_do_action('update_video', [
                 'object_id' => $vid,

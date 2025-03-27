@@ -8,6 +8,10 @@ User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
+
+if (config('enable_'.$type.'_categories') != 'yes') {
+    redirect_to(DirPath::getUrl('admin_area',true));
+}
 assign('type', $type);
 assign('display_type', $type . 's');
 /* Generating breadcrumb */
