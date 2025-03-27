@@ -1510,8 +1510,6 @@ VALUES ('admin_setting'),
        ('page_name_privacy_policy'),
        ('page_name_terms_of_service'),
        ('page_name_help'),
-       ('page_name_403_error'),
-       ('page_name_404_error'),
        ('translation_already_exist_choose_other_name'),
        ('page_name_cant_have_space'),
        ('page_display_changed');

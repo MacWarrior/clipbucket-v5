@@ -47,10 +47,6 @@ class MWIP extends \Migration
             'fr'=>'Aide'
         ]);
 
-        self::generateTranslation('page_name_403_error', [
-            'fr'=>'Erreur 403',
-            'en'=>'403 Error'
-        ]);
         self::generateTranslation('page_name_404_error', [
             'fr'=>'Erreur 404',
             'en'=>'404 Error'
