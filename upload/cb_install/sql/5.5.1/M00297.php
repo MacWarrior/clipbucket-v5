@@ -21,7 +21,13 @@ class M00297 extends \Migration
             'en' => 'There are can\'t be spaces in page\'s name.'
         ]);
 
-        $pages = \cbpage::getInstance()->get_pages();
+        if (method_exists('cbpage', 'getInstance')) {
+            $pages = \cbpage::getInstance()->get_pages();
+        } else {
+            global $cbpage;
+            $pages = $cbpage->get_pages();
+        }
+
         foreach ($pages as $page) {
             if ($page['page_name'] == '403 Error' || $page['page_name'] == '404 Error') {
                 self::query('DELETE FROM '.tbl('pages').' WHERE page_id = ' . $page['page_id']);
