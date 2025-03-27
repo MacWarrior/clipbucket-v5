@@ -85,7 +85,7 @@ class MWIP extends \Migration
         self::updateTranslationKey('longer_video', 'sort_by_longer');
         self::updateTranslationKey('shorter_video', 'sort_by_shorter');
         self::updateTranslationKey('viewed_recently', 'sort_by_viewed_recently');
-        self::updateTranslationKey('most_commented', 'sort_by_most_commented');
+        self::updateTranslationKey('most_comments', 'sort_by_most_commented');
         self::updateTranslationKey('sort_most_items', 'sort_by_most_items');
 
         self::generateTranslation('sort_by_most_viewed', ['fr'=>'Plus visionnés']);
@@ -98,6 +98,7 @@ class MWIP extends \Migration
             'fr'=>'Vedette',
             'en'=>'Featured'
         ]);
+
         self::generateTranslation('sort_by_most_commented', ['fr'=>'Plus commentés']);
 
     }
