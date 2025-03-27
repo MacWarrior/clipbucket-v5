@@ -187,6 +187,14 @@ class cbpage
                     return false;
                 }
             }
+            if (strtolower($page['page_title']) != strtolower($title)) {
+                Migration::updateTranslation('page_name_' . $name, [
+                    Language::getInstance()->lang => $title
+                ]);
+                if (CacheRedis::getInstance()->isEnabled()) {
+                    CacheRedis::flushKeyStart(Language::getRedisKey());
+                }
+            }
             Clipbucket_db::getInstance()->update(tbl($this->page_tbl), ['page_name', 'page_title', 'page_content'],
                 [$name, $title, '|no_mc|' . $content], ' page_id='.mysql_clean($id));
             e(lang('page_updated'), 'm');
