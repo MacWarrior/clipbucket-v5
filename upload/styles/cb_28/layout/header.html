@@ -131,7 +131,7 @@
                                             </ul>
                                         </li>
                                     {/if}
-
+                                    {if config('enable_theme_change')}
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
                                             <img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
