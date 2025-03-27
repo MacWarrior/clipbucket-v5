@@ -206,7 +206,7 @@ class Collection
         $param_category = $params['category'] ?? false;
         $param_userid = $params['userid'] ?? false;
         $param_search = $params['search'] ?? false;
-        $param_hide_empty_collection = $params['hide_empty_collectio n'];
+        $param_hide_empty_collection = $params['hide_empty_collection'];
         $param_featured = $params['featured'] ?? false;
         $param_active = $params['active'] ?? false;
         $param_type = $params['type'] ?? false;
@@ -814,7 +814,7 @@ class Collection
 
     public function getAvailableParents($collection_id, $type): array
     {
-        $list_parent_categories = [0 => lang('collection_no_parent')];
+        $list_parent_categories = ['null' => lang('collection_no_parent')];
 
         $params = [
             'type'      => $type,
@@ -1666,6 +1666,10 @@ class Collections extends CBCategory
             $query_val[] = 'yes';
 
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->section_tbl), $query_field, $query_val);
+            if (empty($insert_id)) {
+                e(lang('on_error'));
+                return false;
+            }
             addFeed(['action' => 'add_collection', 'object_id' => $insert_id, 'object' => 'collection']);
 
             //Incrementing usr collection
