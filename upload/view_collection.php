@@ -6,7 +6,7 @@ require 'includes/config.inc.php';
 
 global $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
 
-User::getInstance()->hasPermissionOrRedirect('view_video');
+User::getInstance()->hasPermissionOrRedirect('view_collections');
 $pages->page_redir();
 
 $collection_id = (int)$_GET['cid'];

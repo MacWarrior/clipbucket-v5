@@ -39,7 +39,8 @@ if( empty($photos) ){
     $count = Photo::getInstance()->getAll($params);
 }
 
-if (config('collectionsSection') == 'yes') {
+$collections = [];
+if( config('collectionsSection') == 'yes' && User::getInstance()->hasPermission('view_collections') ){
     $collections = Collection::getInstance()->getAll([
         'limit'                 => config('collection_photos_top_collections'),
         'active'                => 'yes',
@@ -47,8 +48,6 @@ if (config('collectionsSection') == 'yes') {
         'parents_only'          => true,
         'hide_empty_collection' => true
     ]);
-} else {
-    $collections = [];
 }
 assign('collections', $collections);
 
