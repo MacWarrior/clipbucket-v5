@@ -1752,7 +1752,7 @@ function remove_empty_directory($path, string $stop_path)
     if ($path == $stop_path) {
         return;
     }
-    $current_dir_content = array_diff(scandir($path), ['..', '.']);
+    $current_dir_content = array_diff((scandir($path)??[]), ['..', '.']);
     if (count($current_dir_content) <= 0) {
         rmdir($path);
         remove_empty_directory(dirname($path), $stop_path);
