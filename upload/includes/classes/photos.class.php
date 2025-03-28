@@ -1924,6 +1924,7 @@ class CBPhotos
             $array = array_merge($array, $_FILES);
         }
 
+        $array['category'] = $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']];
         $this->validate_form_fields($array);
         if (!error()) {
             $forms = $this->load_required_forms($array);
