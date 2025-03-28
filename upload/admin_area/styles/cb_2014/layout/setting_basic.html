@@ -346,7 +346,7 @@
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="show_collapsed_checkboxes" title="{lang('option_show_collapsed_checkboxes')}">{lang('option_show_collapsed_checkboxes')}</label>
                                             </div>
-                                            <div class="col-md-2 row-size">
+                                            <div class="col-md-2 row-size no_padding">
                                                 <input value="1" name="show_collapsed_checkboxes" id="show_collapsed_checkboxes" {if $row.show_collapsed_checkboxes=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                                 <span class="lbl"></span>
                                             </div>
@@ -356,8 +356,9 @@
                                     <div class="col-md-4">
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}"><span class="fa fa-question-circle tips"
-                                                                                                                                                                    title="{lang code='tips_enable_global_age_restriction'}"></span> {lang code='enable_global_age_restriction'}</label>
+                                                <label class="nowrap" for="enable_global_age_restriction" title="{lang code='enable_global_age_restriction'}">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_enable_global_age_restriction'}"></span> {lang code='enable_global_age_restriction'}
+                                                </label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" id="enable_global_age_restriction" {if $row.enable_global_age_restriction=='yes'}checked{/if} name="enable_global_age_restriction" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
@@ -367,8 +368,9 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}"><span class="fa fa-question-circle tips"
-                                                                                                                                                                             title="{lang code='tips_enable_blur_restricted_content'}"></span> {lang code='option_enable_blur_restricted_content'}</label>
+                                                <label class="nowrap" for="enable_blur_restricted_content" title="{lang code='option_enable_blur_restricted_content'}">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_enable_blur_restricted_content'}"></span> {lang code='option_enable_blur_restricted_content'}
+                                                </label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" id="enable_blur_restricted_content" {if $row.enable_blur_restricted_content=='yes'}checked{/if} name="enable_blur_restricted_content" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
@@ -378,8 +380,9 @@
                                         <hr/>
                                         <div class="row">
                                             <div class="col-md-10">
-                                                <label class="nowrap" for="enable_hide_uploader_name" title="{lang code='option_enable_hide_uploader_name'}"><span class="fa fa-question-circle tips"
-                                                                                                                                                                   title="{lang code='tips_enable_hide_uploader_name'}"></span> {lang code='option_enable_hide_uploader_name'}</label>
+                                                <label class="nowrap" for="enable_hide_uploader_name" title="{lang code='option_enable_hide_uploader_name'}">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='tips_enable_hide_uploader_name'}"></span> {lang code='option_enable_hide_uploader_name'}
+                                                </label>
                                             </div>
                                             <div class="col-md-2 row-size no_padding">
                                                 <input value="yes" id="enable_hide_uploader_name" {if $row.enable_hide_uploader_name=='yes'}checked{/if} name="enable_hide_uploader_name" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
