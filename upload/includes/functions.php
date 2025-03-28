@@ -813,6 +813,31 @@ function display_sharing_opt($input)
 }
 
 /**
+ *  Use this to translate an array of translation keys
+ * @param $list
+ * @param string $prefix
+ * @return mixed
+ * @throws Exception
+ */
+function display_lang_array($list, string $prefix = '')
+{
+    foreach ($list as &$label) {
+        $label = lang($prefix . $label);
+    }
+    return $list;
+}
+
+/**
+ * @param array $list
+ * @return mixed
+ * @throws Exception
+ */
+function display_sort_lang_array(array $list)
+{
+    return display_lang_array($list, 'sort_by_');
+}
+
+/**
  * Function used to get number of videos uploaded by user
  * @param      $uid
  * @param null $cond
@@ -2081,9 +2106,6 @@ function sort_link($sort, $mode, $type): string
             if (!isset($_GET['time'])) {
                 $_GET['time'] = 'all_time';
             }
-            if (!isset($_GET['sort'])) {
-                $_GET['sort'] = 'most_recent';
-            }
             if (!isset($_GET['page'])) {
                 $_GET['page'] = 1;
             }
@@ -2103,10 +2125,10 @@ function sort_link($sort, $mode, $type): string
                 $time = $_GET['time'];
             }
 
-            if (SEO == 'yes') {
-                return '/videos/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page'];
-            }
-            return '/videos.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
+        if (SEO == 'yes') {
+            return '/videos/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . ($sorting ?: '') . '/' . $time . '/' . $_GET['page'];
+        }
+        return '/videos.php?cat=' . $_GET['cat'] . ($sorting ? '&sort=' . $sorting : '') . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
 
         case 'channels':
         case 'channel':
@@ -2115,9 +2137,6 @@ function sort_link($sort, $mode, $type): string
             }
             if (!isset($_GET['time'])) {
                 $_GET['time'] = 'all_time';
-            }
-            if (!isset($_GET['sort'])) {
-                $_GET['sort'] = 'most_recent';
             }
             if (!isset($_GET['page'])) {
                 $_GET['page'] = 1;
@@ -2150,9 +2169,6 @@ function sort_link($sort, $mode, $type): string
             if (!isset($_GET['time'])) {
                 $_GET['time'] = 'all_time';
             }
-            if (!isset($_GET['sort'])) {
-                $_GET['sort'] = 'most_recent';
-            }
             if (!isset($_GET['page'])) {
                 $_GET['page'] = 1;
             }
@@ -2182,9 +2198,9 @@ function sort_link($sort, $mode, $type): string
             }
 
             if (SEO == 'yes') {
-                return '/' . $type . '/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page'];
+                return '/' . $type . '/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . ($sorting ?: '') . '/' . $time . '/' . $_GET['page'];
             }
-            return '/' . $type . '.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
+            return '/' . $type . '.php?cat=' . $_GET['cat'] . (($sorting) ? '&sort=' . $sorting : '') . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
     }
 }
 

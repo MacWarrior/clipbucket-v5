@@ -1028,6 +1028,13 @@ function progressVideoCheck(ids_to_check_progress, displayType) {
         }, 60000);
     }
 }
+function showSpinner() {
+    $('.taskHandler').show();
+}
+
+function hideSpinner() {
+    $('.taskHandler').hide();
+}
 
 function addErrClass(obj, msg, override = false, scroll = true, tclass = false) {
     $(obj).closest('.form-group').removeClass('success-ind');
