@@ -58,7 +58,7 @@
   font-family: "source_sans_proregular", sans-serif;
 }
 
-.form-control, .btn:not(.btn-xs,.btn-sm,.btn-lg) {
+.form-control {
   font-size: 15px;
   line-height: 28px;
   height: 42px;
@@ -6917,4 +6917,16 @@ textarea#comment_box {
     display: none;
   }
 
+}
+
+.no_padding {
+  padding: 0 !important;
+}
+
+.no_padding_left {
+  padding-left: 0 !important;
+}
+
+.no_padding_right {
+  padding-right: 0 !important;
 }
