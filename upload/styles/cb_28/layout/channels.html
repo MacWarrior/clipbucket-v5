@@ -16,10 +16,10 @@
                 </div>
 
                 <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                    {else}
-                    <div class="sorting-col col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
-                        {/if}
-
+                {else}
+                <div class="sorting-col col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+                {/if}
+                       {if $sort_list}
                         <div class="dropdown">
                             {if $sort_link}
                                 {foreach from=$sort_list item=sort key=key}
@@ -39,7 +39,7 @@
                                 {/foreach}
                             </ul>
                         </div>
-
+                       {/if}
                         <div class="dropdown">
                             {if $smarty.get.time}
 
@@ -65,9 +65,9 @@
                     {if $users}
                         {foreach $users as $user}
                             {if !empty($user['username'])}
-                            <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
-                                {include file="$style_dir/blocks/channels.html"}
-                            </div>
+                                <div class="item-channel col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                                    {include file="$style_dir/blocks/channels.html"}
+                                </div>
                             {/if}
                         {/foreach}
                     {else}
@@ -84,7 +84,6 @@
                 <h2>{lang code="featured_users"}</h2>
                 <div class="clearfix sidebar-channels">
                     {foreach $feature_users as $user}
-
                         <div class="clearfix channel-item">
                             <a href="{$userquery->profile_link($user)}" class="avatar">
                                 <img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle">

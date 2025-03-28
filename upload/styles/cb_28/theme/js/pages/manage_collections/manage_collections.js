@@ -19,7 +19,7 @@ $(function () {
         $.post({
             url: '/actions/get_collection_update.php',
             dataType: 'json',
-            data: {type: $(this).val()},
+            data: {type: $(this).val(), id: $('#collection_id').val()},
             success: function (data) {
                 if (data.msg) {
                     $('.page-content').prepend(data.msg);
@@ -33,8 +33,14 @@ $(function () {
                 if (Object.keys(data.parents).length > 0) {
                     $('#collection_id_parent option').remove();
                     for (const key in data.parents) {
-                        $('#collection_id_parent').append('<option value="' + key + '">' + data.parents[key] + '</option>');
+                        let option = '<option value="' + key + '">' + data.parents[key] + '</option>';
+                        if (key == 'null') {
+                            $('#collection_id_parent').prepend(option);
+                        } else {
+                            $('#collection_id_parent').append(option);
+                        }
                     }
+                    $('#collection_id_parent').val($('#collection_id_parent option:first').val());
                 }
             }
         }).always(hideSpinner);

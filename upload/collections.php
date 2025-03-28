@@ -28,9 +28,11 @@ $params = [
 
 assign('top_collections', Collection::getInstance()->getAll($params));
 
-assign('sort_list', display_sort_lang_array(Collection::getInstance()->getSortList()));
-assign('default_sort', SortType::getDefaultByType('collections'));
-assign('sort_link', $_GET['sort']??0);
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+    assign('sort_list', display_sort_lang_array(Collection::getInstance()->getSortList()));
+    assign('default_sort', SortType::getDefaultByType('collections'));
+    assign('sort_link', $_GET['sort']??0);
+}
 assign('time_list', time_links());
 
 if( empty($collections) ){

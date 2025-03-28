@@ -41,7 +41,6 @@ class Collection
             ,'active'
             ,'public_upload'
             ,'type'
-            ,'sort_type'
         ];
 
         $version = Update::getInstance()->getDBVersion();
@@ -51,6 +50,10 @@ class Collection
 
         if( ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
             $this->fields[] = 'thumb_objectid';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $this->fields[] = 'sort_type';
         }
 
         $this->fields_items = [
@@ -346,6 +349,7 @@ class Collection
 
             if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
                 $select[] = ' sorts.label as sort_type ';
+                $select[] = ' sorts.id as sort_type_id ';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
             }
         }
@@ -449,7 +453,7 @@ class Collection
                 $params['show_unlisted'] = true;
                 $order_item = '';
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
+                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type_id']);
                 }
                 if ($collection['type'] == 'videos') {
                     $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
@@ -1484,7 +1488,7 @@ class Collections extends CBCategory
             'default_value'     => 'yes'
         ];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '280')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $list = SortType::getSortTypes($default['type']);
             $return['sort_type'] = [
                 'title'    => lang('default_sort'),
