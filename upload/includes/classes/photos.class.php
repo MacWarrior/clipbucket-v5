@@ -2023,6 +2023,11 @@ class CBPhotos
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
                 $this->generate_photos($photo);
             }
+            if (config('enable_photo_categories') == 'yes') {
+                Category::getInstance()->saveLinks('photo', $insert_id, $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            } else {
+                Category::getInstance()->saveLinks('photo', $insert_id, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            }
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
@@ -2090,6 +2095,7 @@ class CBPhotos
             $return['comments'] = [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
+                'id'                => 'allow_comments',
                 'db_field'          => 'allow_comments',
                 'type'              => 'radiobutton',
                 'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
@@ -2106,6 +2112,7 @@ class CBPhotos
             'title'             => lang('vdo_embedding'),
             'type'              => 'radiobutton',
             'name'              => 'allow_embedding',
+            'id'                => 'allow_embedding',
             'db_field'          => 'allow_embedding',
             'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
             'checked'           => $array['allow_embedding'],
@@ -2117,6 +2124,7 @@ class CBPhotos
         $return ['rating'] = [
             'title'             => lang('rating'),
             'name'              => 'allow_rating',
+            'id'                => 'allow_rating',
             'type'              => 'radiobutton',
             'db_field'          => 'allow_rating',
             'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
@@ -2151,13 +2159,13 @@ class CBPhotos
                 $cat_array = explode(',', $array['category']);
             }
 
-            $return['cat']   = [
+            $return['cat'] = [
                 'title'             => lang('categories'),
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
                 'value'             => $cat_array,
-                'required'          => 'false',
+                'required'          => 'yes',
                 'validate_function' => 'Category::validate',
                 'display_function'  => 'convert_to_categories',
                 'category_type'     => 'photo'
