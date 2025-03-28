@@ -3,7 +3,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00299 extends \Migration
 {
     /**
      * @throws \Exception
@@ -59,14 +59,14 @@ class MWIP extends \Migration
         ');
 
         //order include in label
-        self::alterTable('ALTER TABLE ' . tbl(\Collection::getInstance()->getTableName()) . ' ADD COLUMN sort_type INT NULL;', [
-            'table' => \Collection::getInstance()->getTableName()
+        self::alterTable('ALTER TABLE ' . tbl('collections') . ' ADD COLUMN sort_type INT NULL;', [
+            'table' => 'collections'
         ],[
-            'table' => \Collection::getInstance()->getTableName(),
+            'table' => 'collections',
             'column' => 'sort_type'
         ]);
 
-        self::alterTable('ALTER TABLE ' . tbl(\Collection::getInstance()->getTableName()) . ' ADD CONSTRAINT `sort_type_ibfk_1` FOREIGN KEY (`sort_type`) REFERENCES '.tbl('sorts').' (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
+        self::alterTable('ALTER TABLE ' . tbl('collections') . ' ADD CONSTRAINT `sort_type_ibfk_1` FOREIGN KEY (`sort_type`) REFERENCES '.tbl('sorts').' (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;', [
             'table'  => 'sorts',
             'column' => 'label'
         ], [
@@ -76,7 +76,7 @@ class MWIP extends \Migration
             ]
         ]);
 
-        self::query('UPDATE ' . tbl(\Collection::getInstance()->getTableName()) . ' AS C SET `sort_type` = (SELECT `id` FROM '.tbl('sorts').' AS S  WHERE S.type=C.type AND S.label = \'most_old\')');
+        self::query('UPDATE ' . tbl('collections') . ' AS C SET `sort_type` = (SELECT `id` FROM '.tbl('sorts').' AS S  WHERE S.type=C.type AND S.label = \'most_old\')');
 
         self::updateTranslationKey('most_old', 'sort_by_most_old');
         self::updateTranslationKey('most_recent', 'sort_by_most_recent');
@@ -100,6 +100,5 @@ class MWIP extends \Migration
         ]);
 
         self::generateTranslation('sort_by_most_commented', ['fr'=>'Plus commentés']);
-
     }
 }

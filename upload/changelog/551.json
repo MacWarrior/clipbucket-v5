@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"298",
+  "revision":"299",
   "status":"stable",
   "detail":[
     {
@@ -39,6 +39,7 @@
         ,"Implement spaces in tags"
         ,"Implement video conversion percent"
         ,"Implement changelogs page"
+        ,"Implement collection order"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"

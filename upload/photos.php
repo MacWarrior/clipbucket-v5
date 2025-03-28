@@ -21,7 +21,7 @@ $params['limit'] = $get_limit;
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
     assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
     assign('sort_link', $_GET['sort']??0);
     assign('default_sort', SortType::getDefaultByType('photos'));
