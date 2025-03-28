@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'get_collection_update');
 require_once dirname(__FILE__, 2) . '/includes/config.inc.php';
 
-User::getInstance()->hasPermissionAjax('view_collections');
+User::getInstance()->hasPermissionAjax('allow_create_collection');
 
 $type = $_POST['type'];
 if (empty($type)) {
