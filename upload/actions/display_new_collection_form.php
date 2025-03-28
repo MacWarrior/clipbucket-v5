@@ -5,4 +5,5 @@ require_once dirname(__FILE__, 2) . DIRECTORY_SEPARATOR .'includes'.DIRECTORY_SE
 global $cbcollection;
 
 assign('reqFields', $cbcollection->load_required_fields(['type'=>'photos']));
+assign('otherFields', $cbcollection->load_other_fields(['type'=>'photos']));
 echo templateWithMsgJson('blocks/new_collection_form.html');
