@@ -2169,7 +2169,8 @@ class CBPhotos
                 'required'          => 'yes',
                 'validate_function' => 'Category::validate',
                 'display_function'  => 'convert_to_categories',
-                'category_type'     => 'photo'
+                'category_type'     => 'photo',
+                'invalid_err'       => lang('vdo_cat_err3')
             ];
         }
         return $return;
