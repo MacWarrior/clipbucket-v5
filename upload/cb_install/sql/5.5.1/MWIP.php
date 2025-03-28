@@ -15,6 +15,6 @@ class MWIP extends \Migration
             'en'=>'Enable categories'
         ]);
 
-        self::generateConfig('enable_photo_categories', 'yes');
+        self::generateConfig('enable_photo_categories', 'no');
     }
 }
