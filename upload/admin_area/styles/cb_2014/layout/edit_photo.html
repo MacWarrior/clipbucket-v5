@@ -194,7 +194,7 @@
                     <ul class="nav nav-tabs" id="otherFieldsTab">
                         {foreach from=$otherFields item=field name=tabs}
                         <li class="{if $smarty.foreach.tabs.first}active{/if}">
-                            <a data-toggle="tab" href="#id_{$field.name}">
+                            <a data-toggle="tab" href="#id_{$field.id}">
                                 {$field.title}
                             </a>
                         </li>
@@ -203,7 +203,7 @@
 
                     <div class="tab-content">
                         {foreach from=$otherFields item=field name=content}
-                        <div id="id_{$field.name}" class="tab-pane {if $smarty.foreach.content.first}active{/if}">
+                        <div id="id_{$field.id}" class="tab-pane {if $smarty.foreach.content.first}active{/if}">
                             <label><strong>{$field.title}</strong></label><br>
                             {$formObj->createField($field)}
                         </div>

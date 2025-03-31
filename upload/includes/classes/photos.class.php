@@ -199,6 +199,7 @@ class Photo
         $param_orphan = $params['orphan'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'] ?? false;
+        $param_category = $params['category'] ?? false;
 
         $conditions = [];
         if ($param_not_photo_id) {
@@ -310,9 +311,20 @@ class Photo
             $join[] = 'LEFT JOIN ' . cb_sql_table('photos_categories') . ' ON photos.photo_id = photos_categories.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
 
+            if ($param_category) {
+                if (!is_array($param_category)) {
+                    $conditions[] = 'categories.category_id = ' . mysql_clean($param_category);
+                } else {
+                    $conditions[] = 'categories.category_id IN (' . implode(', ', $param_category) . ')';
+                }
+            }
+
             if( !$param_count ){
-                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category , GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
                 $group[] = 'photos.photo_id';
+            }
+            if( $param_first_only ){
+                $select[] = 'JSON_ARRAYAGG(JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)) AS category_list';
             }
         }
 
@@ -840,10 +852,12 @@ class CBPhotos
                 'title' => 'Orphan Photos'
                 , 'url' => DirPath::getUrl('admin_area') . 'orphan_photos.php'
             ];
-            $menu_photo['sub'][] = [
-                'title' => lang('manage_x', strtolower(lang('categories')))
-                , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
-            ];
+            if (config('enable_photo_categories') == 'yes') {
+                $menu_photo['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('categories')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=photo'
+                ];
+            }
 
             ClipBucket::getInstance()->addMenuAdmin($menu_photo, 90);
         }
@@ -1905,6 +1919,7 @@ class CBPhotos
             $array = array_merge($array, $_FILES);
         }
 
+        $array['category'] = $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']];
         $this->validate_form_fields($array);
         if (!error()) {
             $forms = $this->load_required_forms($array);
@@ -2004,6 +2019,11 @@ class CBPhotos
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
                 $this->generate_photos($photo);
             }
+            if (config('enable_photo_categories') == 'yes') {
+                Category::getInstance()->saveLinks('photo', $insert_id, $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            } else {
+                Category::getInstance()->saveLinks('photo', $insert_id, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            }
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
@@ -2071,6 +2091,7 @@ class CBPhotos
             $return['comments'] = [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
+                'id'                => 'allow_comments',
                 'db_field'          => 'allow_comments',
                 'type'              => 'radiobutton',
                 'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
@@ -2087,6 +2108,7 @@ class CBPhotos
             'title'             => lang('vdo_embedding'),
             'type'              => 'radiobutton',
             'name'              => 'allow_embedding',
+            'id'                => 'allow_embedding',
             'db_field'          => 'allow_embedding',
             'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
             'checked'           => $array['allow_embedding'],
@@ -2098,6 +2120,7 @@ class CBPhotos
         $return ['rating'] = [
             'title'             => lang('rating'),
             'name'              => 'allow_rating',
+            'id'                => 'allow_rating',
             'type'              => 'radiobutton',
             'db_field'          => 'allow_rating',
             'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
@@ -2123,7 +2146,28 @@ class CBPhotos
                 'class'             => 'form-control'
             ];
         }
+        if (config('enable_photo_categories') == 'yes') {
+            if (empty($array['category'])) {
+                $cat_array = [];
+            }elseif (is_array($array['category'])) {
+                $cat_array = $array['category'];
+            } else {
+                $cat_array = explode(',', $array['category']);
+            }
 
+            $return['cat'] = [
+                'title'             => lang('categories'),
+                'type'              => 'checkbox',
+                'name'              => 'category[]',
+                'id'                => 'category',
+                'value'             => $cat_array,
+                'required'          => 'yes',
+                'validate_function' => 'Category::validate',
+                'display_function'  => 'convert_to_categories',
+                'category_type'     => 'photo',
+                'invalid_err'       => lang('vdo_cat_err3')
+            ];
+        }
         return $return;
     }
 
@@ -2322,6 +2366,12 @@ class CBPhotos
                             }
 
                             Clipbucket_db::getInstance()->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
+
+                            if (config('enable_photo_categories') == 'yes') {
+                                Category::getInstance()->saveLinks('photo', $pid, $array['category']);
+                            } else {
+                                Category::getInstance()->saveLinks('photo', $pid, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+                            }
 
                             Tags::saveTags($array['photo_tags'], 'photo', $pid);
                             if (empty(errorhandler::getInstance()->get_error)) {
