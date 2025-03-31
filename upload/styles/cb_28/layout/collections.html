@@ -8,12 +8,18 @@
                     {AD place='ad_728x90'}
                 </div>
             {/if}
-            {if (User::getInstance()->hasPermission('allow_create_collection'))}
+            <div class="filter-dropdowns clearfix">
+            {if (User::getInstance()->hasPermission('allow_create_collection') || config('enable_collection_categories') == 'yes')}
                 <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                    <a class="btn btn-default" href="/manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
+                        {if config('enable_collection_categories') == 'yes' }
+                            {$categories = getCategoryList(['type'=>'collection']) }
+                            {include file="$style_dir/blocks/category_list.html" type='collections'}
+                        {/if}
+                        {if User::getInstance()->hasPermission('allow_create_collection')}
+                            <a class="btn btn-default" href="/manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
+                        {/if}
                 </div>
             {/if}
-            <div class="filter-dropdowns clearfix">
                 <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix pull-right">
                     {if $sort_list}
                         <div class="dropdown">

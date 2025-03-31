@@ -125,6 +125,7 @@ if (isset($_POST['update'])) {
         , 'enable_video_thumbs_preview'
         , 'enable_photo_categories'
         , 'enable_video_categories'
+        , 'enable_collection_categories'
     ];
 
     $config_booleans_to_refactor = [
@@ -367,7 +368,8 @@ if (isset($_POST['update'])) {
         'enable_video_thumbs_preview',
         'video_thumbs_preview_count',
         'enable_photo_categories',
-        'enable_video_categories'
+        'enable_video_categories',
+        'enable_collection_categories'
     ];
 
     //Numeric Array

@@ -13,7 +13,7 @@
                 {if config('enable_photo_categories') == 'yes'}
                     <div class="cat-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
                         {$categories = getCategoryList(['type'=>'photo']) }
-                        {include file="$style_dir/blocks/category_list.html" type='photo'}
+                        {include file="$style_dir/blocks/category_list.html" type='photos'}
                     </div>
                 {/if}
                 <div class="sorting-col clearfix">
