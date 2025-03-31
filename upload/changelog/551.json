@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"302",
+  "revision":"304",
   "status":"stable",
   "detail":[
     {
@@ -52,6 +52,7 @@
         ,"Refactor orphan files deletion tool"
         ,"Refactor website configurations"
         ,"Refactor photos categories"
+        ,"Refactor collection categories"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -183,6 +184,7 @@
         ,"Refactor orphan photos management"
         ,"Refactor my account"
         ,"Refactor photos categories"
+        ,"Refactor collection categories"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
         ,"Update translations"
@@ -311,6 +313,7 @@
         ,"Fix PHP7.0 compatibility"
         ,"Fix video & photo uploads with IPv6"
         ,"Fix email rendering"
+        ,"Fix last activity datetime saving <i>(#551)</i>"
       ]
     },
     {

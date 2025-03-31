@@ -154,6 +154,11 @@ $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
 
+$timezone = config('timezone');
+if(!empty($timezone) && $timezone !== false) {
+    date_default_timezone_set($timezone);
+}
+
 require_once('classes/session.class.php');
 $sess = new Session();
 $userquery = new userquery();
@@ -227,11 +232,6 @@ $cbphoto = new CBPhotos();
 $cbfeeds = new cbfeeds();
 
 check_install('after');
-
-$timezone = config('timezone');
-if(!empty($timezone) && $timezone !== false) {
-    date_default_timezone_set($timezone);
-}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];
