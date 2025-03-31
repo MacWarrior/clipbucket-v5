@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"295",
+  "revision":"299",
   "status":"stable",
   "detail":[
     {
@@ -39,6 +39,7 @@
         ,"Implement spaces in tags"
         ,"Implement video conversion percent"
         ,"Implement changelogs page"
+        ,"Implement collection custom order"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -72,6 +73,7 @@
         ,"Update serveur configuration global check"
         ,"Update video broadcast upload display"
         ,"Update categories management"
+        ,"Update custom page edition"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -142,6 +144,7 @@
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
         ,"Fix possible SQL injection"
+        ,"Fix chart images display"
       ]
     },
     {
@@ -171,6 +174,7 @@
         ,"Implement 360° video support"
         ,"Implement video thumbs preview"
         ,"Implement video conversion percent"
+        ,"Implement collection custom order"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -280,6 +284,7 @@
         ,"Remove unused functions"
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
+        ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
         ,"Optimize video SQL requests"
@@ -382,6 +387,7 @@
       "description": [
         "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
         ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
+        ,"Update custom pages translations management"
         ,"Fix missing translation"
         ,"Fix translation"
       ]
