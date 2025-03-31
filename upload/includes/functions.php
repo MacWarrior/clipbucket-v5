@@ -541,7 +541,7 @@ function user_dob()
  * @return false|string : { current time }
  * @author : Fwhite
  */
-function NOW()
+function now()
 {
     return date('Y-m-d H:i:s', time());
 }
