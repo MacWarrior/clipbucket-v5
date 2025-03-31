@@ -82,9 +82,6 @@ class ClipBucket
 
         $this->clean_requests();
 
-        if( !isset($_GET['sort']) ){
-            $_GET['sort'] = 'most_recent';
-        }
 
         if( !isset($_GET['time']) ){
             $_GET['time'] = 'all_time';
@@ -755,7 +752,7 @@ class ClipBucket
 
         if ($pages) {
             foreach ($pages as $p) {
-                $this->foot_menu[] = ['name' => lang($p['page_name']), 'link' => $cbpage->page_link($p), 'this' => 'home'];
+                $this->foot_menu[] = ['name' => display_clean(lang('page_name_' . $p['page_name'])), 'link' => $cbpage->page_link($p), 'this' => 'home'];
             }
         }
 

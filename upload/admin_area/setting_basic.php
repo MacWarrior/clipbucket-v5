@@ -146,6 +146,7 @@ if (isset($_POST['update'])) {
         , 'channel_rating'
         , 'own_channel_rating'
         , 'photo_crop'
+        , 'show_collapsed_checkboxes'
     ];
 
     $rows = [
@@ -189,6 +190,7 @@ if (isset($_POST['update'])) {
         'use_subs',
 
         'email_verification',
+        'show_collapsed_checkboxes',
 
         'gravatars',
 

@@ -10,12 +10,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-        self::generateTranslation('enable_categories', [
-            'fr'=>'Activer les catégories',
-            'en'=>'Enable categories'
-        ]);
-
-        self::generateConfig('enable_photo_categories', 'yes');
         self::generateConfig('enable_collection_categories', 'yes');
     }
 }

@@ -15,21 +15,47 @@
                     </ul>
                 </div>
             {/if}
-
-            <h1>
-                {display_clean($c.collection_name)}&nbsp;
-                ({$c.total_objects}&nbsp;{lang code="{$c.type}"})
-                {lang code='collection' assign='object_type'}
+            <div class="row">
+                <div class="col-md-6">
+                    <h1>
+                        {display_clean($c.collection_name)}&nbsp;
+                        ({$c.total_objects}&nbsp;{lang code="{$c.type}"})
+                        {lang code='collection' assign='object_type'}
+                    </h1>
+                </div>
                 {if $c.type=='videos'}
                     {$upload_permission = 'allow_video_upload'}
                 {else}
                     {$upload_permission = 'allow_photo_upload'}
                 {/if}
-                {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'true')
-                    || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)}
-                    <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
-                {/if}
-            </h1>
+                <div class="col-md-6">
+                    <div class="filter-dropdowns">
+                        <div class="dropdown pull-right">
+                            {if $sort_link}
+                                {foreach from=$sort_list item=sort key=key}
+                                    {if $sort_link == $key}
+                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                    {/if}
+                                {/foreach}
+                            {else}
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                            {/if}
+
+                            <ul class="dropdown-menu">
+                                {foreach from=$sort_list item=sort key=key}
+                                    <li>
+                                        <a href="#" data-sort="{$key}" class="sort_dropdown {if $sort_id==$key} selected{/if}">{if $sort_id == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                        {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'true')
+                        || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)}
+                            <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
+                        {/if}
+                    </div>
+                </div>
+            </div>
 
             {if $collections}
                 <div class="collections clearfix">
