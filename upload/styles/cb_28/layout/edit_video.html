@@ -157,17 +157,19 @@
 
 
 						<div class="formSection clear">
-							{ANCHOR place="before_upload_form_categories_field"}
-							<h4>{$categories.title}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-							<div class="sectionContent hidden">
-								<small>{$categories.hint_1}</small>
-								<div class="categoriesContainer">
-									{$categories.label_class='checkbox'}
-									{$categories.class='checkbox'}
-									{$formObj->createField($categories)}
+							{if config('enable_video_categories') != 'no'}
+								{ANCHOR place="before_upload_form_categories_field"}
+								<h4>{$categories.title}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+								<div class="sectionContent hidden">
+									<small>{$categories.hint_1}</small>
+									<div class="categoriesContainer">
+										{$categories.label_class='checkbox'}
+										{$categories.class='checkbox'}
+										{$formObj->createField($categories)}
+									</div>
 								</div>
-							</div>
-							{ANCHOR place="after_upload_form_categories_field"}
+								{ANCHOR place="after_upload_form_categories_field"}
+							{/if}
 						</div>
 						<div class="formSection clear">
 							<h4>{lang code='movie_infos'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
