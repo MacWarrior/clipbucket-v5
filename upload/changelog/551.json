@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"304",
+  "revision":"305",
   "status":"stable",
   "detail":[
     {
@@ -148,6 +148,8 @@
         ,"Fix video resolution settings saving"
         ,"Fix possible SQL injection"
         ,"Fix chart images display"
+        ,"Fix basic settings menu URL <i>(#554)</i>"
+        ,"Fix view online users listing"
       ]
     },
     {
