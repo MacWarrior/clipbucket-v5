@@ -188,7 +188,7 @@
             <button class="btn btn-primary " tabindex="-1" href="javascript:void(0);" data-id="{$videoFields.videoid}" id="button_info_tmdb">{lang code='get_data_tmdb'}</button>
         {/if}
         </div>
-        {if config('enable_video_categories') == 'yes'}
+        {if config('enable_video_categories') != 'no'}
             <div class="col-md-4 uploadFormSidebarDiv">
                 {ANCHOR place="before_upload_form_categories_field"}
                 <h4>{$categories.title}</h4>

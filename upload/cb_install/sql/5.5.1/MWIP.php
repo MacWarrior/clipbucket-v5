@@ -10,7 +10,6 @@ class MWIP extends \Migration
      */
     public function start()
     {
-
-        self::generateConfig('enable_video_categories', 'no');
+        self::generateConfig('enable_video_categories', 'yes');
     }
 }

@@ -448,7 +448,7 @@ class Upload
                 'validate_function' => 'genTags'
             ];
         }
-        if( config('enable_video_categories') == 'yes' ){
+        if( config('enable_video_categories') != 'no' ){
             $uploadFormRequiredFieldsArray['cat'] = [
                 'title'             => lang('vdo_cat'),
                 'type'              => 'checkbox',

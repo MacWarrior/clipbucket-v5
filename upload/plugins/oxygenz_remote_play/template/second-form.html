@@ -168,7 +168,7 @@
             {ANCHOR place="after_upload_form_submit"}
         </div>
     </div>
-    {if config('enable_video_categories') == 'yes'}
+    {if config('enable_video_categories') != 'no'}
         <div class="col-md-4 uploadFormSidebarDiv">
             {ANCHOR place="before_upload_form_categories_field"}
             <h4>{$categories.title}</h4>

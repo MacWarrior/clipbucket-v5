@@ -1125,7 +1125,7 @@ class CBvideo extends CBCategory
                 ];
             }
 
-            if (config('enable_video_categories')=='yes') {
+            if (config('enable_video_categories') != 'no') {
                 $menu_video['sub'][] = [
                     'title'   => lang('manage_x', strtolower(lang('categories')))
                     , 'url'   => DirPath::getUrl('admin_area') . 'category.php'
@@ -1570,7 +1570,7 @@ class CBvideo extends CBCategory
                 $array['category'] = [$array['category']];
             }
 
-            if (config('enable_video_categories') == 'yes') {
+            if (config('enable_video_categories') != 'no') {
                 Category::getInstance()->saveLinks('video', $vid, $array['category']);
             } else {
                 Category::getInstance()->saveLinks('video', $vid, [Category::getInstance()->getDefaultByType('video')['category_id']]);

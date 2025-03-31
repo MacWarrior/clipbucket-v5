@@ -157,7 +157,7 @@
 
 
 						<div class="formSection clear">
-							{if config('enable_video_categories') == 'yes'}
+							{if config('enable_video_categories') != 'no'}
 								{ANCHOR place="before_upload_form_categories_field"}
 								<h4>{$categories.title}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
 								<div class="sectionContent hidden">
