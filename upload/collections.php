@@ -13,7 +13,8 @@ pages::getInstance()->page_redir();
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('collection_per_page'));
-$params = Collection::getInstance()->getFilterParams($_GET['sort'], []);
+$sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
+$params = Collection::getInstance()->getFilterParams($sort_label, []);
 $params = Collection::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
 
@@ -27,7 +28,11 @@ $params = [
 
 assign('top_collections', Collection::getInstance()->getAll($params));
 
-assign('sort_list', Collection::getInstance()->getSortList());
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+    assign('sort_list', display_sort_lang_array(Collection::getInstance()->getSortList()));
+    assign('default_sort', SortType::getDefaultByType('collections'));
+    assign('sort_link', $_GET['sort']??0);
+}
 assign('time_list', time_links());
 
 if( empty($collections) ){

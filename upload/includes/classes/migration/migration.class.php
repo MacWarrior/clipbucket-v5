@@ -195,6 +195,16 @@ class Migration
         }
     }
 
+    public static function updateTranslationKey(string $translation_key_old, string $translation_key_new)
+    {
+        $sql = 'UPDATE ' . tbl('languages_keys') . ' k1
+            LEFT JOIN  ' . tbl('languages_keys') . ' k2 ON k2.language_key = \'' . mysql_clean(strtolower($translation_key_new)) . '\'
+        SET k1.`language_key` =  \'' . mysql_clean(strtolower($translation_key_new)) . '\' 
+        WHERE k1.`language_key` COLLATE utf8mb4_unicode_520_ci = \'' . mysql_clean(strtolower($translation_key_old)) . '\'
+         AND k2.id_language_key IS NULL ';
+        Clipbucket_db::getInstance()->executeThrowException($sql);
+    }
+
     /**
      * @throws Exception
      */

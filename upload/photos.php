@@ -18,7 +18,8 @@ if ($_GET['cat'] && is_numeric($_GET['cat'])) {
 }
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('photo_main_list'));
-$params = Photo::getInstance()->getFilterParams($_GET['sort'], []);
+$sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
+$params = Photo::getInstance()->getFilterParams($sort_label, []);
 $params = Photo::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
 if( $child_ids ){
@@ -27,7 +28,11 @@ if( $child_ids ){
 $photos = Photo::getInstance()->getAll($params);
 assign('photos', $photos);
 
-assign('sort_list', Photo::getInstance()->getSortList());
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+    assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
+    assign('sort_link', $_GET['sort']??0);
+    assign('default_sort', SortType::getDefaultByType('photos'));
+}
 assign('time_list', time_links());
 
 if( empty($photos) ){
@@ -41,7 +46,8 @@ if( empty($photos) ){
     $count = Photo::getInstance()->getAll($params);
 }
 
-if (config('collectionsSection') == 'yes') {
+$collections = [];
+if( config('collectionsSection') == 'yes' && User::getInstance()->hasPermission('view_collections') ){
     $collections = Collection::getInstance()->getAll([
         'limit'                 => config('collection_photos_top_collections'),
         'active'                => 'yes',
@@ -49,8 +55,6 @@ if (config('collectionsSection') == 'yes') {
         'parents_only'          => true,
         'hide_empty_collection' => true
     ]);
-} else {
-    $collections = [];
 }
 assign('collections', $collections);
 

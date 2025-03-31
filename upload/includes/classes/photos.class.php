@@ -110,7 +110,9 @@ class Photo
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -128,7 +130,9 @@ class Photo
                     $params['order'] = $this->getTableName() . '.total_comments DESC';
                 }
                 break;
-
+            case 'viewed_recently':
+                $params['order'] = $this->getTableName() . '.last_viewed DESC';
+                break;
             case 'all_time':
             case 'today':
             case 'yesterday':
@@ -150,24 +154,15 @@ class Photo
      */
     public function getSortList(): array
     {
-        if (!isset($_GET['sort'])) {
-            $_GET['sort'] = 'most_recent';
+        $sorts = SortType::getSortTypes('photos');
+
+        if (config('enable_comments_photo') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-        ];
-
-        if( config('enable_comments_photo') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('photo_rating') != 'yes') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        if( config('photo_rating') == 'yes' ){
-            $sorts['top_rated'] = lang('top_rated');
-        }
-
-        $sorts['featured'] = lang('featured');
 
         return $sorts;
     }
@@ -327,6 +322,9 @@ class Photo
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category , GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
                 $group[] = 'photos.photo_id';
+            }
+            if( $param_first_only ){
+                $select[] = 'JSON_ARRAYAGG(JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)) AS category_list';
             }
         }
 
@@ -1921,6 +1919,7 @@ class CBPhotos
             $array = array_merge($array, $_FILES);
         }
 
+        $array['category'] = $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']];
         $this->validate_form_fields($array);
         if (!error()) {
             $forms = $this->load_required_forms($array);
@@ -2020,6 +2019,11 @@ class CBPhotos
             if (!$array['server_url'] || $array['server_url'] == 'undefined') {
                 $this->generate_photos($photo);
             }
+            if (config('enable_photo_categories') == 'yes') {
+                Category::getInstance()->saveLinks('photo', $insert_id, $array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            } else {
+                Category::getInstance()->saveLinks('photo', $insert_id, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            }
 
             if (empty(errorhandler::getInstance()->get_error())) {
                 e(lang('photo_is_saved_now', display_clean($photo['photo_title'])), 'm');
@@ -2087,6 +2091,7 @@ class CBPhotos
             $return['comments'] = [
                 'title'             => lang('comments'),
                 'name'              => 'allow_comments',
+                'id'                => 'allow_comments',
                 'db_field'          => 'allow_comments',
                 'type'              => 'radiobutton',
                 'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
@@ -2103,6 +2108,7 @@ class CBPhotos
             'title'             => lang('vdo_embedding'),
             'type'              => 'radiobutton',
             'name'              => 'allow_embedding',
+            'id'                => 'allow_embedding',
             'db_field'          => 'allow_embedding',
             'value'             => ['yes' => lang('pic_allow_embed'), 'no' => lang('pic_dallow_embed')],
             'checked'           => $array['allow_embedding'],
@@ -2114,6 +2120,7 @@ class CBPhotos
         $return ['rating'] = [
             'title'             => lang('rating'),
             'name'              => 'allow_rating',
+            'id'                => 'allow_rating',
             'type'              => 'radiobutton',
             'db_field'          => 'allow_rating',
             'value'             => ['yes' => lang('pic_allow_rating'), 'no' => lang('pic_dallow_rating')],
@@ -2148,16 +2155,17 @@ class CBPhotos
                 $cat_array = explode(',', $array['category']);
             }
 
-            $return['cat']   = [
+            $return['cat'] = [
                 'title'             => lang('categories'),
                 'type'              => 'checkbox',
                 'name'              => 'category[]',
                 'id'                => 'category',
                 'value'             => $cat_array,
-                'required'          => 'false',
+                'required'          => 'yes',
                 'validate_function' => 'Category::validate',
                 'display_function'  => 'convert_to_categories',
-                'category_type'     => 'photo'
+                'category_type'     => 'photo',
+                'invalid_err'       => lang('vdo_cat_err3')
             ];
         }
         return $return;
