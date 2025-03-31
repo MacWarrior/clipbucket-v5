@@ -168,15 +168,17 @@
             {ANCHOR place="after_upload_form_submit"}
         </div>
     </div>
-    <div class="col-md-4 uploadFormSidebarDiv">
-        {ANCHOR place="before_upload_form_categories_field"}
-        <h4>{$categories.title}</h4>
-        <small>{$categories.hint_1}</small>
-        <div class="categoriesContainer">
-            {$categories.label_class='checkbox'}
-            {$categories.class='checkbox'}
-            {$formObj->createField($categories)}
+    {if config('enable_video_categories') != 'no'}
+        <div class="col-md-4 uploadFormSidebarDiv">
+            {ANCHOR place="before_upload_form_categories_field"}
+            <h4>{$categories.title}</h4>
+            <small>{$categories.hint_1}</small>
+            <div class="categoriesContainer">
+                {$categories.label_class='checkbox'}
+                {$categories.class='checkbox'}
+                {$formObj->createField($categories)}
+            </div>
+            {ANCHOR place="after_upload_form_categories_field"}
         </div>
-        {ANCHOR place="after_upload_form_categories_field"}
-    </div>
+    {/if}
 </div>

@@ -1373,6 +1373,16 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-4">
+                                    <label class="nowrap" for="enable_video_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_video_categories" id="enable_video_categories" {if $row.enable_video_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
                                     <label class="nowrap" for="enable_video_genre" title="{lang('enable_x_field',lang('genre'))}">{lang('enable_x_field',lang('genre'))}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
@@ -1727,7 +1737,7 @@
                         <div class="col-md-4">
                             <div class="row">
                                 <div class="col-md-4">
-                                    <label class="nowrap" for="enable_photo_categories" title="{lang(enable_categories)}">{lang(enable_categories)}</label>
+                                    <label class="nowrap" for="enable_photo_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_photo_categories" id="enable_photo_categories" {if $row.enable_photo_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
@@ -1741,18 +1751,31 @@
                 <div id="config_collections" class="tab-pane">
                     <div class="row">
                         <div class="col-md-4">
-                            <label class="nowrap" for="hide_empty_collection" title="{lang code='option_hide_empty_collection'}">{lang code='option_hide_empty_collection'}</label>
-                        </div>
-                        <div class="col-md-2 row-size">
-                            <input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
+                            <div class="col-md-8">
+                                <label class="nowrap" for="hide_empty_collection" title="{lang code='option_hide_empty_collection'}">{lang code='option_hide_empty_collection'}</label>
+                            </div>
+                            <div class="col-md-2 row-size">
+                                <input value="yes" name="hide_empty_collection" id="hide_empty_collection" {if $row.hide_empty_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                <span class="lbl"></span>
+                            </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
+                            <div class="col-md-8">
+                                <label class="nowrap" for="enable_collection_categories" title="{lang('enable_categories')}">{lang('enable_categories')}</label>
+                            </div>
+                            <div class="col-md-2 row-size">
+                                <input value="yes" name="enable_collection_categories" id="enable_collection_categories" {if $row.enable_collection_categories=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                <span class="lbl"></span>
+                            </div>
                         </div>
-                        <div class="col-md-2 row-size no_padding">
-                            <input value="yes" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
-                            <span class="lbl"></span>
+                        <div class="col-md-4">
+                            <div class="col-md-8">
+                                <label class="nowrap" for="enable_sub_collection" title="Enable Sub-Collections">Enable Sub-Collections</label>
+                            </div>
+                            <div class="col-md-2 row-size no_padding">
+                                <input value="yes" name="enable_sub_collection" id="enable_sub_collection" {if $row.enable_sub_collection=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                <span class="lbl"></span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,12 @@ if( config('collectionsSection') != 'yes' || (config('videosSection') != 'yes' &
     redirect_to(Network::get_server_url());
 }
 
+$child_ids = false;
+if ($_GET['cat'] && is_numeric($_GET['cat'])) {
+    $child_ids = Category::getInstance()->getChildren($_GET['cat'], true);
+    $child_ids[] = mysql_clean($_GET['cat']);
+}
+
 User::getInstance()->hasPermissionOrRedirect('view_collections');
 pages::getInstance()->page_redir();
 
@@ -17,7 +23,9 @@ $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Collection::getInstance()->getFilterParams($sort_label, []);
 $params = Collection::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
-
+if( $child_ids ){
+    $params['category'] = $child_ids;
+}
 $collections = Collection::getInstance()->getAll($params);
 assign('collections', $collections);
 
