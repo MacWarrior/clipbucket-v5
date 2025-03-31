@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"300",
+  "revision":"301",
   "status":"stable",
   "detail":[
     {
@@ -61,6 +61,7 @@
         ,"Add collection sharing options"
         ,"Add baseurl config"
         ,"Add broadcast configuration on mass upload <i>(#490)</i>"
+        ,"Add option to disable video categories"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
