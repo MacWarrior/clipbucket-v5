@@ -95,6 +95,7 @@ require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
+require_once DirPath::get('classes') . 'sort_type.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -152,6 +153,11 @@ Language::getInstance()->init();
 $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
+
+$timezone = config('timezone');
+if(!empty($timezone) && $timezone !== false) {
+    date_default_timezone_set($timezone);
+}
 
 require_once('classes/session.class.php');
 $sess = new Session();
@@ -226,11 +232,6 @@ $cbphoto = new CBPhotos();
 $cbfeeds = new cbfeeds();
 
 check_install('after');
-
-$timezone = config('timezone');
-if(!empty($timezone) && $timezone !== false) {
-    date_default_timezone_set($timezone);
-}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];

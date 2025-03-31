@@ -42,7 +42,6 @@ if (isset($_POST['update'])) {
     ];
 
     $config_booleans_to_refactor = [
-        'show_collapsed_checkboxes',
         'activation',
         'chromecast_fix',
         'photo_activation',
@@ -86,7 +85,6 @@ if (isset($_POST['update'])) {
         'send_comment_notification',
         'sbrate',
         'srate',
-        'show_collapsed_checkboxes',
         'disable_email',
 
         'enable_chunk_upload',

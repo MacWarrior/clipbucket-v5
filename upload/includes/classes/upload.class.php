@@ -424,18 +424,6 @@ class Upload
                 'required'     => 'yes',
                 'anchor_after' => 'after_desc_compose_box'
             ],
-            'cat'   => [
-                'title'             => lang('vdo_cat'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'hint_1'            => lang('vdo_cat_msg', config('video_categories')),
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'invalid_err'       => lang('vdo_cat_err3'),
-                'display_function'  => 'convert_to_categories'
-            ],
             'tags_video'  => [
                 'title'             => lang('tag_title'),
                 'type'              => 'hidden',
@@ -460,7 +448,20 @@ class Upload
                 'validate_function' => 'genTags'
             ];
         }
-
+        if( config('enable_video_categories') != 'no' ){
+            $uploadFormRequiredFieldsArray['cat'] = [
+                'title'             => lang('vdo_cat'),
+                'type'              => 'checkbox',
+                'name'              => 'category[]',
+                'id'                => 'category',
+                'value'             => $cat_array,
+                'hint_1'            => lang('vdo_cat_msg', config('video_categories')),
+                'required'          => 'yes',
+                'validate_function' => 'Category::validate',
+                'invalid_err'       => lang('vdo_cat_err3'),
+                'display_function'  => 'convert_to_categories'
+            ];
+        }
         if( config('enable_video_actor') == 'yes' ){
             $uploadFormRequiredFieldsArray['tags_actors'] = [
                 'title'             => lang('actors'),

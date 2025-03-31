@@ -307,7 +307,9 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'logo_update_timestamp', CURRENT_TIMESTAMP()),
     (NULL, 'enable_video_thumbs_preview', 'yes'),
     (NULL, 'video_thumbs_preview_count', '10'),
-    (NULL, 'enable_photo_categories', 'no');
+    (NULL, 'enable_photo_categories', 'yes'),
+    (NULL, 'enable_video_categories', 'yes'),
+    (NULL, 'enable_collection_categories', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
@@ -1668,3 +1670,34 @@ VALUES ('inapp_content'),
        ('spam'),
        ('disturbing'),
        ('other');
+
+INSERT IGNORE INTO `{tbl_prefix}sorts` (`label`, `type`, is_default)
+VALUES ('most_old', 'videos', FALSE),
+       ('most_recent', 'videos', TRUE),
+       ('most_viewed', 'videos', FALSE),
+       ('top_rated', 'videos', FALSE),
+       ('longer', 'videos', FALSE),
+       ('shorter', 'videos', FALSE),
+       ('viewed_recently', 'videos', FALSE),
+       ('most_commented', 'videos', FALSE),
+       ('featured', 'videos', FALSE),
+       ('most_recent', 'photos', TRUE),
+       ('most_old', 'photos', FALSE),
+       ('most_viewed', 'photos', FALSE),
+       ('top_rated', 'photos', FALSE),
+       ('most_commented', 'photos', FALSE),
+       ('viewed_recently', 'photos', FALSE),
+       ('featured', 'photos', FALSE),
+       ('most_recent', 'collections', TRUE),
+       ('most_old', 'collections', FALSE),
+       ('most_items', 'collections', FALSE),
+       ('most_commented', 'collections', FALSE),
+       ('top_rated', 'collections', FALSE),
+       ('featured', 'collections', FALSE),
+       ('most_recent', 'channels', TRUE),
+       ('most_old', 'channels', FALSE),
+       ('most_viewed', 'photos', FALSE),
+       ('top_rated', 'channels', FALSE),
+       ('featured', 'channels', FALSE),
+       ('most_items', 'channels', FALSE),
+       ('most_commented', 'channels', FALSE);

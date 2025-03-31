@@ -50,8 +50,10 @@
                                 {foreach from=$optionFields item=field}
                                     <div class="form-group">
                                         <label class="show" for="{$field.id}">{$field.title}</label>
-                                        {$field.notShowSeprator = true}
-                                        {$field.label_class = 'radio-inline'}
+                                        {if $field.id != 'category'}
+                                            {$field.notShowSeprator = true}
+                                            {$field.label_class = 'radio-inline'}
+                                        {/if}
                                         {$field.hint_1}
                                         {$formObj->createField($field)}
                                         {$field.hint_2}

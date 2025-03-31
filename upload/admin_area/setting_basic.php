@@ -124,6 +124,8 @@ if (isset($_POST['update'])) {
         , 'allow_tag_space'
         , 'enable_video_thumbs_preview'
         , 'enable_photo_categories'
+        , 'enable_video_categories'
+        , 'enable_collection_categories'
     ];
 
     $config_booleans_to_refactor = [
@@ -145,6 +147,7 @@ if (isset($_POST['update'])) {
         , 'channel_rating'
         , 'own_channel_rating'
         , 'photo_crop'
+        , 'show_collapsed_checkboxes'
     ];
 
     $rows = [
@@ -188,6 +191,7 @@ if (isset($_POST['update'])) {
         'use_subs',
 
         'email_verification',
+        'show_collapsed_checkboxes',
 
         'gravatars',
 
@@ -363,7 +367,9 @@ if (isset($_POST['update'])) {
         'custom_css',
         'enable_video_thumbs_preview',
         'video_thumbs_preview_count',
-        'enable_photo_categories'
+        'enable_photo_categories',
+        'enable_video_categories',
+        'enable_collection_categories'
     ];
 
     //Numeric Array

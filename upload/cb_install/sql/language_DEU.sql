@@ -188,7 +188,7 @@ VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` 
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'com_advance_results'), 'Erweiterte Suche');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'most_viewed'), 'Meist gesehen');
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'sort_by_most_viewed'), 'Meist gesehen');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'featured'), 'Empfohlen');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -278,7 +278,7 @@ VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` 
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'minutes'), 'Minuten');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'most_recent'), 'Neueste');
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'sort_by_most_recent'), 'Neueste');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'my_account'), 'Mein Konto');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
@@ -922,7 +922,7 @@ VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` 
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'viewed'), 'Gesehen');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
-VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'top_rated'), 'Top bewertet');
+VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'sort_by_top_rated'), 'Top bewertet');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)
 VALUES (@language_id, (SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE language_key = 'searching_keyword_in_obj'), 'Suche nach \'%s\' in %s');
 INSERT INTO `{tbl_prefix}languages_translations` (`language_id`, `id_language_key`, `translation`)

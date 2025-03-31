@@ -52,6 +52,10 @@ class Collection
             $this->fields[] = 'thumb_objectid';
         }
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            $this->fields[] = 'sort_type';
+        }
+
         $this->fields_items = [
             'ci_id'
             ,'collection_id'
@@ -141,6 +145,9 @@ class Collection
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
 
             case 'featured':
                 $params['featured'] = true;
@@ -181,21 +188,14 @@ class Collection
      */
     public function getSortList(): array
     {
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_items'  => lang('sort_most_items')
-        ];
+        $sorts = SortType::getSortTypes('collections');
 
-        if( config('enable_comments_collection') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('enable_comments_collection') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
-
-        if( config('collection_rating') == '1' ){
-            $sorts['top_rated'] = lang('top_rated');
+        if (config('collection_rating') != '1') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        $sorts['featured'] = lang('featured');
-
         return $sorts;
     }
 
@@ -217,6 +217,7 @@ class Collection
         $param_allow_children = !empty($params['allow_children']);
         $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
         $param_join_flag =$params['join_flag'] ?? false;
+        $param_order_item = $params['order_item'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -345,6 +346,12 @@ class Collection
             }
 
             $select[] = $total_objects . ' AS total_objects';
+
+            if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+                $select[] = ' sorts.label as sort_type ';
+                $select[] = ' sorts.id as sort_type_id ';
+                $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
+            }
         }
 
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
@@ -376,9 +383,13 @@ class Collection
             $join[] = 'LEFT JOIN ' . cb_sql_table('collections_categories') . ' ON ' . $this->getTableName() . '.collection_id = collections_categories.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON collections_categories.id_category = categories.category_id';
 
-            if( !$param_count ){
+            if (!$param_count) {
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category';
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \',\') AS category_names';
+            }
+
+            if ($param_first_only) {
+                $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
             }
 
             if( $param_category ){
@@ -444,16 +455,26 @@ class Collection
                 $params = [];
                 $params['collection_id'] = $collection['collection_id'];
                 $params['show_unlisted'] = true;
-                $params['order'] = $this->getTableNameItems() . '.date_added ASC';
-
-                if( $collection['type'] == 'videos' ){
+                $order_item = '';
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type_id']);
+                }
+                if ($collection['type'] == 'videos') {
+                    $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
+                    if (empty($params['order'])) {
+                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    }
                     $collection['items'] = Video::getInstance()->getAll($params);
                 } else {
+                    $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
+                    if (empty($params['order'])) {
+                        $params['order'] = $this->getTableNameItems() . '.date_added ASC';
+                    }
                     $collection['items'] = Photo::getInstance()->getAll($params);
                 }
 
-                if( $param_count ){
-                    if( !empty($collection['items']) ){
+                if ($param_count) {
+                    if (!empty($collection['items'])) {
                         $count += count($collection['items']);
                     }
                 }
@@ -799,7 +820,25 @@ class Collection
         return $indentList;
     }
 
+    public function getAvailableParents($collection_id, $type): array
+    {
+        $list_parent_categories = ['null' => lang('collection_no_parent')];
 
+        $params = [
+            'type'      => $type,
+            'userid'    => user_id()
+        ];
+
+        if (!empty($collection_id)) {
+            $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
+        }
+        $collection_list = Collection::getInstance()->getAllIndent($params);
+        $list_parent_categories += array_combine(
+            array_column($collection_list, 'collection_id') ,
+            array_column($collection_list,'collection_name')
+        );
+        return $list_parent_categories;
+    }
 }
 
 
@@ -909,24 +948,27 @@ class Collections extends CBCategory
             // Adding Collection links in Admin Area
             if (User::getInstance()->hasPermission('collection_moderation')) {
                 $menu_collection = [
-                    'title'   => lang('collections')
-                    , 'class' => 'glyphicon glyphicon-folder-close'
-                    , 'sub'   => [
+                    'title' => lang('collections'),
+                    'class' => 'glyphicon glyphicon-folder-close',
+                    'sub'   => [
                         [
-                            'title' => lang('manage_x', strtolower(lang('collections')))
-                            , 'url' => DirPath::getUrl('admin_area') . 'collection_manager.php'
-                        ]
-                        , [
-                            'title' => lang('manage_x', strtolower(lang('categories')))
-                            , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=collection'
+                            'title' => lang('manage_x', strtolower(lang('collections'))),
+                            'url'   => DirPath::getUrl('admin_area') . 'collection_manager.php'
                         ]
                     ]
                 ];
 
+                if (config('enable_collection_categories') == 'yes') {
+                    $menu_collection['sub'][] = [
+                        'title' => lang('manage_x', strtolower(lang('categories'))),
+                        'url'   => DirPath::getUrl('admin_area') . 'category.php?type=collection'
+                    ];
+                }
+
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
                     $menu_collection['sub'][] = [
-                        'title' => lang('collection_flagged')
-                        , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=collection'
+                        'title' => lang('collection_flagged'),
+                        'url'   => DirPath::getUrl('admin_area') . 'flagged_item.php?type=collection'
                     ];
                 }
 
@@ -1257,132 +1299,7 @@ class Collections extends CBCategory
         return false;
     }
 
-    /**
-     * Function used to load collections fields
-     *
-     * @param null $default
-     *
-     * @return array
-     * @throws Exception
-     */
-    function load_required_fields($default = null): array
-    {
-        if ($default == null) {
-            $default = $_POST;
-        }
 
-        $name = $default['collection_name'];
-        $description = $default['collection_description'];
-        $tags = $default['collection_tags'];
-        $type = $default['type'];
-        $collection_id_parent = $default['collection_id_parent'];
-        $collection_id = $default['collection_id'];
-        if (is_array($default['category'])) {
-            $cat_array = $default['category'];
-        } else {
-            $cat_array = explode(',', $default['category']);
-        }
-        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
-
-        $data = [
-            'name' => [
-                'title'       => lang('collection_name'),
-                'type'        => 'textfield',
-                'name'        => 'collection_name',
-                'id'          => 'collection_name',
-                'value'       => $name,
-                'db_field'    => 'collection_name',
-                'required'    => 'yes',
-                'invalid_err' => lang('collect_name_er')
-            ],
-            'desc' => [
-                'title'         => lang('collection_description'),
-                'type'          => 'textarea',
-                'name'          => 'collection_description',
-                'id'            => 'colleciton_desciption',
-                'value'         => $description,
-                'db_field'      => 'collection_description',
-                'required'      => 'yes',
-                'anchor_before' => 'before_desc_compose_box',
-                'invalid_err'   => lang('collect_descp_er')
-            ],
-            'tags' => [
-                'title'             => lang('collection_tags'),
-                'type'              => 'hidden',
-                'name'              => 'collection_tags',
-                'id'                => 'collection_tags',
-                'value'             => genTags($tags),
-                'required'          => 'no',
-                'invalid_err'       => lang('collect_tag_er'),
-                'validate_function' => 'genTags',
-                'hint_1'            => $hint_tags
-            ],
-            'cat'  => [
-                'title'             => lang('collect_category'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'invalid_err'       => lang('collect_cat_er'),
-                'display_function'  => 'convert_to_categories',
-                'category_type'     => 'collections'
-            ],
-            'type' => [
-                'title'    => lang('collect_type'),
-                'type'     => 'dropdown',
-                'name'     => 'type',
-                'id'       => 'type',
-                'value'    => $this->types,
-                'db_field' => 'type',
-                'required' => 'yes',
-                'checked'  => $type
-            ]
-        ];
-
-        if ($default['total_objects'] > 0) {
-            $data['type']['disabled'] = true;
-            $data['type']['input_hidden'] = true;
-        }
-
-        if (config('enable_sub_collection') == 'yes') {
-            $list_parent_categories = ['null' => lang('collection_no_parent')];
-            $type = $default['type'] ?? 'videos';
-
-            $params = [
-                'type'      => $type,
-                'userid'    => user_id()
-            ];
-
-            if (!empty($collection_id)) {
-                $params['condition'] = ' collections.collection_id != ' . mysql_clean($collection_id);
-            }
-            $collection_list = Collection::getInstance()->getAllIndent($params);
-            $list_parent_categories += array_combine(
-                    array_column($collection_list, 'collection_id') ,
-                    array_column($collection_list,'collection_name')
-            );
-
-            if ($collection_id_parent && config('enable_sub_collection') == 'yes') {
-                $data['type']['disabled'] = true;
-                $data['type']['input_hidden'] = true;
-            }
-
-            $data['parent'] = [
-                'title'    => lang('collection_parent'),
-                'type'     => 'dropdown',
-                'name'     => 'collection_id_parent',
-                'id'       => 'collection_id_parent',
-                'value'    => $list_parent_categories,
-                'db_field' => 'collection_id_parent',
-                'required' => 'yes',
-                'checked'  => $collection_id_parent
-            ];
-        }
-
-        return $data;
-    }
 
     /**
      * @throws Exception
@@ -1441,6 +1358,124 @@ class Collections extends CBCategory
     }
 
     /**
+     * Function used to load collections fields
+     *
+     * @param null $default
+     *
+     * @return array
+     * @throws Exception
+     */
+    function load_required_fields($default = null): array
+    {
+        if ($default == null) {
+            $default = $_POST;
+        }
+
+        $name = $default['collection_name'];
+        $description = $default['collection_description'];
+        $tags = $default['collection_tags'];
+        $type = $default['type'];
+        $collection_id_parent = $default['collection_id_parent'];
+        $collection_id = $default['collection_id'];
+        if (config('enable_collection_categories') == 'yes') {
+            if (empty($array['category'])) {
+                $cat_array = [];
+            } elseif (is_array($default['category'])) {
+                $cat_array = $default['category'];
+            } else {
+                $cat_array = explode(',', $default['category']);
+            }
+        }
+        $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
+
+        $data = [
+            'name' => [
+                'title'       => lang('collection_name'),
+                'type'        => 'textfield',
+                'name'        => 'collection_name',
+                'id'          => 'collection_name',
+                'value'       => $name,
+                'db_field'    => 'collection_name',
+                'required'    => 'yes',
+                'invalid_err' => lang('collect_name_er')
+            ],
+            'desc' => [
+                'title'         => lang('collection_description'),
+                'type'          => 'textarea',
+                'name'          => 'collection_description',
+                'id'            => 'colleciton_desciption',
+                'value'         => $description,
+                'db_field'      => 'collection_description',
+                'required'      => 'yes',
+                'anchor_before' => 'before_desc_compose_box',
+                'invalid_err'   => lang('collect_descp_er')
+            ],
+            'tags' => [
+                'title'             => lang('collection_tags'),
+                'type'              => 'hidden',
+                'name'              => 'collection_tags',
+                'id'                => 'collection_tags',
+                'value'             => genTags($tags),
+                'required'          => 'no',
+                'invalid_err'       => lang('collect_tag_er'),
+                'validate_function' => 'genTags',
+                'hint_1'            => $hint_tags
+            ],
+            'type' => [
+                'title'    => lang('collect_type'),
+                'type'     => 'dropdown',
+                'name'     => 'type',
+                'id'       => 'type',
+                'value'    => $this->types,
+                'db_field' => 'type',
+                'required' => 'yes',
+                'checked'  => $type
+            ]
+        ];
+
+        if ($default['total_objects'] > 0) {
+            $data['type']['disabled'] = true;
+            $data['type']['input_hidden'] = true;
+        }
+        if (config('enable_collection_categories')=='yes') {
+            $data['cat']  = [
+                'title'             => lang('collect_category'),
+                'type'              => 'checkbox',
+                'name'              => 'category[]',
+                'id'                => 'category',
+                'value'             => $cat_array,
+                'required'          => 'yes',
+                'validate_function' => 'Category::validate',
+                'invalid_err'       => lang('collect_cat_er'),
+                'display_function'  => 'convert_to_categories',
+                'category_type'     => 'collections'
+            ];
+        }
+
+        if (config('enable_sub_collection') == 'yes') {
+
+            if ($collection_id_parent && config('enable_sub_collection') == 'yes') {
+                $data['type']['disabled'] = true;
+                $data['type']['input_hidden'] = true;
+            }
+            $list_parent_categories = Collection::getInstance()->getAvailableParents($collection_id, $default['type'] ?? array_keys($this->types)[0]);
+
+            $data['parent'] = [
+                'title'    => lang('collection_parent'),
+                'type'     => 'dropdown',
+                'name'     => 'collection_id_parent',
+                'id'       => 'collection_id_parent',
+                'value'    => $list_parent_categories,
+                'db_field' => 'collection_id_parent',
+                'required' => 'yes',
+                'checked'  => $collection_id_parent
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
      * Function used to load collections optional fields
      * @throws Exception
      */
@@ -1453,6 +1488,7 @@ class Collections extends CBCategory
         $return = [];
         $return['broadcast'] = [
             'title'             => lang('vdo_br_opt'),
+            'class'             => 'form-control',
             'type'              => 'dropdown',
             'name'              => 'broadcast',
             'id'                => 'broadcast',
@@ -1465,13 +1501,29 @@ class Collections extends CBCategory
             'default_value'     => 'yes'
         ];
 
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            $list = SortType::getSortTypes($default['type']);
+            $return['sort_type'] = [
+                'title'    => lang('default_sort'),
+                'class'    => 'form-control',
+                'type'     => 'dropdown',
+                'name'     => 'sort_type',
+                'id'       => 'sort_type',
+                'value'    => display_sort_lang_array($list),
+                'db_field' => 'sort_type',
+                'required' => 'yes',
+                'checked'  => $default['sort_type'] ?? 0,
+            ];
+        }
+
         if( config('enable_comments_collection') == 'yes' ) {
             $return['comments'] = [
                 'title'             => lang('comments'),
-                'type'              => 'radiobutton',
+                'class'             => 'form-control',
+                'type'              => 'dropdown',
                 'id'                => 'allow_comments',
                 'name'              => 'allow_comments',
-                'value'             => ['yes' => lang('vdo_allow_comm'), 'no' => lang('vdo_dallow_comm')],
+                'value'             => ['yes' => lang('vdo_allow_comm'), 'no'  => lang('vdo_dallow_comm')],
                 'checked'           => $default['allow_comments'],
                 'db_field'          => 'allow_comments',
                 'required'          => 'no',
@@ -1483,7 +1535,8 @@ class Collections extends CBCategory
 
         $return['public_upload'] = [
             'title'             => lang('collect_allow_public_up'),
-            'type'              => 'radiobutton',
+            'class'             => 'form-control',
+            'type'              => 'dropdown',
             'id'                => 'public_upload',
             'name'              => 'public_upload',
             'value'             => ['no' => lang('collect_pub_up_dallow'), 'yes' => lang('collect_pub_up_allow')],
@@ -1494,6 +1547,7 @@ class Collections extends CBCategory
             'display_function'  => 'display_sharing_opt',
             'default_value'     => 'no'
         ];
+
 
         return $return;
     }
@@ -1629,6 +1683,10 @@ class Collections extends CBCategory
             $query_val[] = 'yes';
 
             $insert_id = Clipbucket_db::getInstance()->insert(tbl($this->section_tbl), $query_field, $query_val);
+            if (empty($insert_id)) {
+                e(lang('on_error'));
+                return false;
+            }
             addFeed(['action' => 'add_collection', 'object_id' => $insert_id, 'object' => 'collection']);
 
             //Incrementing usr collection

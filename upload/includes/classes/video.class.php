@@ -204,7 +204,9 @@ class Video
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -256,27 +258,15 @@ class Video
      */
     public function getSortList(): array
     {
-        if (!isset($_GET['sort'])) {
-            $_GET['sort'] = 'most_recent';
+        $sorts = SortType::getSortTypes('videos');
+
+        if (config('enable_comments_video') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-        ];
-
-        if( config('enable_comments_video') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('video_rating') != '1') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        if( config('video_rating') == '1' ){
-            $sorts['top_rated'] = lang('top_rated');
-        }
-
-        $sorts['featured'] = lang('featured');
-        $sorts['viewed_recently'] = lang('viewed_recently');
-        $sorts['longer'] = lang('longer_video');
-        $sorts['shorter'] = lang('shorter_video');
 
         return $sorts;
     }
@@ -435,6 +425,10 @@ class Video
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
                 $group[] = $this->getTableName() . '.videoid';
+            }
+
+            if( $param_get_detail ){
+                $select[] = 'JSON_ARRAYAGG(JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)) AS category_list';
             }
 
             if( $param_category ){
@@ -1131,10 +1125,12 @@ class CBvideo extends CBCategory
                 ];
             }
 
-            $menu_video['sub'][] = [
-                'title' => lang('manage_x', strtolower(lang('categories')))
-                , 'url' => DirPath::getUrl('admin_area') . 'category.php'
-            ];
+            if (config('enable_video_categories') != 'no') {
+                $menu_video['sub'][] = [
+                    'title'   => lang('manage_x', strtolower(lang('categories')))
+                    , 'url'   => DirPath::getUrl('admin_area') . 'category.php'
+                ];
+            }
 
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
                 $menu_video['sub'][] = [
@@ -1574,7 +1570,11 @@ class CBvideo extends CBCategory
                 $array['category'] = [$array['category']];
             }
 
-            Category::getInstance()->saveLinks('video', $vid, $array['category']);
+            if (config('enable_video_categories') != 'no') {
+                Category::getInstance()->saveLinks('video', $vid, $array['category']);
+            } else {
+                Category::getInstance()->saveLinks('video', $vid, [Category::getInstance()->getDefaultByType('video')['category_id']]);
+            }
 
             cb_do_action('update_video', [
                 'object_id' => $vid,

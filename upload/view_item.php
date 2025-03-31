@@ -134,6 +134,14 @@ if( config('enable_comments_photo') == 'yes' ){
     }
 }
 
+if (config('enable_photo_categories')=='yes') {
+    $category_links = [];
+    foreach (json_decode($photo['category_list'],true) as $photo_category) {
+        $category_links[] = '<a href="' . cblink(['name' => 'category', 'data' => ['category_id' => $photo_category['id'], 'category_name' => $photo_category['name']], 'type' => 'photos']) . '">' . display_clean($photo_category['name']) . '</a>';
+    }
+    assign('category_links', implode(',', $category_links));
+}
+
 ClipBucket::getInstance()->addCSS([
     'jquery.tagit' . $min_suffixe . '.css'     => 'admin',
     'tagit.ui-zendesk' . $min_suffixe . '.css' => 'admin',

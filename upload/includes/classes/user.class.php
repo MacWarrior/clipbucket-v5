@@ -197,7 +197,9 @@ class User
             default:
                 $params['order'] = $this->getTableName() . '.doj DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.doj ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.profile_hits DESC';
                 break;
@@ -244,19 +246,14 @@ class User
      */
     public function getSortList(): array
     {
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
-        ];
+       $sorts = SortType::getSortTypes('channels');
 
-        if(config('videosSection') == 'yes' || config('photosSection') == 'yes') {
-            $sorts['most_items'] = lang('sort_most_items');
+        if(config('videosSection') != 'yes' && config('photosSection') != 'yes') {
+            unset($sorts[array_search('sort_most_items', $sorts)]);
         }
 
         if( config('enable_comments_channel') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
         return $sorts;
@@ -1077,7 +1074,7 @@ class userquery extends CBCategory
                     //Updating User last login , num of visits and ip
                     Clipbucket_db::getInstance()->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],
-                        ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
+                        ['|f|num_visits+1', now(), Network::get_remote_ip()],
                         'userid=\'' . $udetails['userid'] . '\''
                     );
 
@@ -2031,7 +2028,7 @@ class userquery extends CBCategory
      */
     function UpdateLastActive($username)
     {
-        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . NOW() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
+        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . now() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
         Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -4078,34 +4075,15 @@ class userquery extends CBCategory
     /**
      * Function used to get number of users online
      *
-     * @param bool $group
-     * @param bool $count
-     *
-     * @return array|bool
+     * @return array
      * @throws Exception
      */
-    function get_online_users($group = true, $count = false)
+    function get_online_users(): array
     {
-        if ($group) {
-            $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ") ON 
-             (" . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-                tbl('sessions.*,users.username,users.userid,users.email') . ',count(' . tbl('sessions.session_user') . ') AS logins'
-                , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 GROUP BY " . tbl('users.userid'));
-        } else {
-            if ($count) {
-                $results = Clipbucket_db::getInstance()->count(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
-                 (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-                    tbl('sessions.session_id')
-                    , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 ");
-            } else {
-                $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
-                 (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-                    tbl('sessions.*,users.username,users.userid,users.email')
-                    , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 ");
-            }
-        }
-
-        return $results;
+        return Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
+         (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
+            tbl('sessions.*,users.username,users.userid,users.email')
+            , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . now() . "')  < 10 ", false, ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ',\'' . now() . '\')');
     }
 
     /**
@@ -4171,7 +4149,7 @@ class userquery extends CBCategory
                     //Updating User last login , num of visits and ip
                     Clipbucket_db::getInstance()->update(tbl('users'),
                         ['num_visits', 'last_logged', 'ip'],
-                        ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
+                        ['|f|num_visits+1', now(), Network::get_remote_ip()],
                         'userid=\'' . $userid . '\''
                     );
 

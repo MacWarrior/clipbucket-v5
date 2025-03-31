@@ -9,7 +9,7 @@ pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
 
-if ($type == 'photo' && config('enable_photo_categories') != 'yes') {
+if (config('enable_'.$type.'_categories') != 'yes') {
     redirect_to(DirPath::getUrl('admin_area',true));
 }
 assign('type', $type);
@@ -39,7 +39,7 @@ if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $versi
             e(lang('add_cat_no_name_err'));
         } elseif (!empty(Category::getInstance()->getAll([
                 'category_type' => Category::getInstance()->getIdsCategoriesType($type),
-                'condition'     => 'category_name like \'%' . mysql_clean($_POST['category_name']) . '%\'',
+                'condition'     => 'category_name like \'' . mysql_clean($_POST['category_name']) . '\'',
                 'first_only'    => true
             ])) && ($_POST['cur_name'] != $_POST['category_name'])) {
             e(lang('add_cat_erro'));
