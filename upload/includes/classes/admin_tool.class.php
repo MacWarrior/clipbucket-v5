@@ -766,7 +766,8 @@ class AdminTool
     public function correctVideoCategorie()
     {
         $videos = Video::getInstance()->getAll([
-            'condition'=> 'videos_categories.id_video IS NULL'
+            'condition'   => 'videos_categories.id_video IS NULL'
+            ,'get_detail' => true
         ]);
 
         if( !empty($videos) ){
