@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"301",
+  "revision":"302",
   "status":"stable",
   "detail":[
     {
@@ -270,6 +270,7 @@
         ,"Fix collection creation and video addition"
         ,"Fix manage videos & photos search"
         ,"Fix collapsed categories display"
+        ,"Fix used storage display <i>(#552)</i>"
       ]
     },
     {
