@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"306",
+  "revision":"307",
   "status":"stable",
   "detail":[
     {
@@ -316,6 +316,7 @@
         ,"Fix video & photo uploads with IPv6"
         ,"Fix email rendering"
         ,"Fix last activity datetime saving <i>(#551)</i>"
+        ,"Fix automated tasks through crontab"
       ]
     },
     {
