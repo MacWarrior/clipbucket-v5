@@ -130,7 +130,7 @@ if( config('enable_comments_video') == 'yes' ){
     }
 }
 
-if (config('enable_video_categories')!='no') {
+if (config('enable_video_categories')=='yes') {
     $category_links = [];
     foreach (json_decode($vdo['category_list'],true) as $video_category) {
         $category_links[] = '<a href="' . cblink(['name' => 'category', 'data' => ['category_id' => $video_category['id'], 'category_name' => $video_category['name']], 'type' => 'video']) . '">' . display_clean($video_category['name']) . '</a>';
