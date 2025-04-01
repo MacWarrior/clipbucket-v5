@@ -116,6 +116,12 @@
                                 </div>
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
+                                {if config('enable_theme_change') == 'yes' && (config('default_theme')=='light' || config('default_theme')=='dark')}
+                                    <div>
+                                        <input value="light" {if User::getInstance()->getActiveTheme() == 'light'} checked="checked" {/if} id="theme_switch"  type="checkbox" class="ace ace-switch ace-switch-6"/>
+                                        <span class="lbl"></span>
+                                    </div>
+                                {/if}
                                 {if user_id()}
                                     {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
@@ -131,7 +137,7 @@
                                             </ul>
                                         </li>
                                     {/if}
-                                    {if config('enable_theme_change')}
+
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
                                             <img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>

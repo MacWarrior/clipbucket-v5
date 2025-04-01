@@ -119,6 +119,9 @@ class User
             $this->fields_profile[] = 'disabled_channel';
         }
 
+        if(Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $this->fields[] = 'active_theme';
+        }
         $this->tablename_level = 'user_levels';
 
         $this->display_block = '/blocks/user.html';
@@ -786,8 +789,35 @@ class User
         return array_column($results, 'videoid');
     }
 
-}
+    public function getActiveTheme()
+    {
+        if (config('default_theme') != 'light' && config('default_theme') != 'dark' ) {
+            return config('default_theme');
+        }
+        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            //get from bd
+            return $this->get('active_theme');
+        }
+        if (isset($_COOKIE['user_theme'])) {
+            return $_COOKIE['user_theme'];
+        }
+        return config('default_theme');
+    }
 
+    public function setActiveTheme($theme)
+    {
+        if ($theme != 'light' && $theme != 'dark' ) {
+            return false;
+        }
+        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            //set to bd
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('users') . ' SET active_theme = \'' . mysql_clean($theme) . '\'');
+        }
+        set_cookie_secure('user_theme', $theme);
+        return true;
+    }
+
+}
 
 class userquery extends CBCategory
 {

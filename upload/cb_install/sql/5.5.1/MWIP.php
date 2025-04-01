@@ -21,5 +21,12 @@ class MWIP extends \Migration
             'fr'=>'Disponible uniquement pour les nouveaux thèmes sombre et clair',
             'en'=>'Only available with new light and dark themes'
         ]);
+
+        self::alterTable('ALTER TABLE ' . tbl('users') . ' ADD COLUMN `active_theme` VARCHAR(15) NULL', [
+            'table'=>'users'
+        ], [
+            'table'=>'users',
+            'column'=>'active_theme',
+        ]);
     }
 }
