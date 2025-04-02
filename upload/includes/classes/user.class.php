@@ -383,6 +383,10 @@ class User
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+            if( !$param_count ){
+                $select[] = 'categories.category_id ';
+                $group[] = 'categories.category_id ';
+            }
         }
 
         if( $param_group ){
