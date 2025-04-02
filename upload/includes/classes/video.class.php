@@ -428,7 +428,7 @@ class Video
             }
 
             if( $param_get_detail ){
-                $select[] = 'JSON_ARRAYAGG(JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)) AS category_list';
+                $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
             }
 
             if( $param_category ){
