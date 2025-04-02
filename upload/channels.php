@@ -5,30 +5,32 @@ require 'includes/config.inc.php';
 User::getInstance()->hasPermissionOrRedirect('view_channels');
 pages::getInstance()->page_redir();
 
-if( !isSectionEnabled('channels') ){
+if (!isSectionEnabled('channels')) {
     redirect_to(Network::get_server_url());
 }
-$params = [
+$params_featured = [
     'featured'       => 'yes',
     'channel_enable' => 'yes',
     'limit'          => 5
 ];
-assign('featured_users', User::getInstance()->getAll($params));
+assign('featured_users', User::getInstance()->getAll($params_featured));
+
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
     $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
     $params = User::getInstance()->getFilterParams($sort_label, []);
 
     assign('sort_list', display_sort_lang_array(User::getInstance()->getSortList()));
-    assign('sort_link', $_GET['sort']??0);
+    assign('sort_link', $_GET['sort'] ?? 0);
     assign('default_sort', SortType::getDefaultByType('channels'));
 }
-    $params = User::getInstance()->getFilterParams($_GET['time'], $params);
+$params = User::getInstance()->getFilterParams($_GET['time'], $params);
 
-if( config('enable_user_category') == 'yes' && !empty($_GET['cat']) ){
+if (config('enable_user_category') == 'yes' && !empty($_GET['cat'])) {
     $params['category'] = (int)$_GET['cat'];
 }
 
 $params['channel_enable'] = true;
+$params['not_userid'] =  userquery::getInstance()->get_anonymous_user();
 $params['count'] = true;
 $count = User::getInstance()->getAll($params);
 

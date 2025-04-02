@@ -4112,7 +4112,8 @@ class userquery extends CBCategory
     {
         return Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
          (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-            tbl('sessions.*,users.username,users.userid,users.email'));
+            tbl('sessions.*,users.username,users.userid,users.email')
+            , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . now() . "')  < 10 ", false, ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ',\'' . now() . '\')');
     }
 
     /**

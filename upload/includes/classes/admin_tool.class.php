@@ -766,7 +766,8 @@ class AdminTool
     public function correctVideoCategorie()
     {
         $videos = Video::getInstance()->getAll([
-            'condition'=> 'videos_categories.id_video IS NULL'
+            'condition'   => 'videos_categories.id_video IS NULL'
+            ,'get_detail' => true
         ]);
 
         if( !empty($videos) ){
@@ -834,7 +835,7 @@ class AdminTool
     public static function getToolsReadyForLaunch($id_tool = null) :array
     {
         $where = '';
-        if(!empty($idTask)){
+        if(!empty($id_tool)){
             $where = ' AND tools.id_tool = '. $id_tool;
         }
 
@@ -920,6 +921,7 @@ class AdminTool
     public function automate(array $tool)
     {
         /** start tools from CLI */
+        $this->addLog('launch tool ' . $tool['id_tool']);
         self::launchCli($tool['id_tool']);
     }
 
@@ -961,25 +963,25 @@ class AdminTool
         $date_previsionnel_precedente = null;
         do {
 
-            if(is_null($last_date_start)) {
-                $last_date_start='2000-01-01 01:00:00';
+            if (is_null($last_date_start)) {
+                $last_date_start = '2000-01-01 01:00:00';
             }
 
-            $timestamp = self::getNextDate($cron, MAX($last_date_start,$next_date), MAX($date_previsionnel_precedente,$date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
+            $timestamp = self::getNextDate($cron, MAX($last_date_start, $next_date), MAX($date_previsionnel_precedente, $date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
             $date = new \DateTime();
             $date->setTimeStamp($timestamp);
             $continue = $date->format('Y-m-d H:i:s') < date('Y-m-d H:i:s');
-            if($continue || empty($next_date)){
+            if ($continue || empty($next_date)) {
                 $next_date = $date->format('Y-m-d H:i:s');
             }
-        }while($continue);
+        } while ($continue);
 
-        if(
+        if (
             !empty($id_tool)
             && (empty($date_previsionnel_precedente_source) || $date_previsionnel_precedente_source < $last_date_start)
             && !empty($date_previsionnel_precedente)
-        ){
-            Clipbucket_db::getInstance()->update(tbl('tools'), ['previous_calculated_datetime'],[$date_previsionnel_precedente], 'id_tool = '.$id_tool);
+        ) {
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['previous_calculated_datetime'], [$date_previsionnel_precedente], 'id_tool = ' . $id_tool);
         }
 
         return [

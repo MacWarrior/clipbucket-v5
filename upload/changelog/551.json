@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"304",
+  "revision":"309",
   "status":"stable",
   "detail":[
     {
@@ -148,6 +148,9 @@
         ,"Fix video resolution settings saving"
         ,"Fix possible SQL injection"
         ,"Fix chart images display"
+        ,"Fix basic settings menu URL <i>(#554)</i>"
+        ,"Fix view online users listing"
+        ,"Fix Correct video categories tool"
       ]
     },
     {
@@ -273,6 +276,8 @@
         ,"Fix manage videos & photos search"
         ,"Fix collapsed categories display"
         ,"Fix used storage display <i>(#552)</i>"
+        ,"Fix video categories display on video page"
+        ,"Fix anonymous user display on channels page"
       ]
     },
     {
@@ -314,6 +319,7 @@
         ,"Fix video & photo uploads with IPv6"
         ,"Fix email rendering"
         ,"Fix last activity datetime saving <i>(#551)</i>"
+        ,"Fix automated tasks through crontab"
       ]
     },
     {

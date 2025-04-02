@@ -5,12 +5,12 @@ define('SLOGAN', 'Administration Panel');
 
 require_once 'common.php';
 
-if( THIS_PAGE != 'admin_login' ){
-    if( !User::getInstance()->isUserConnected() ){
+if( THIS_PAGE != 'admin_login' && php_sapi_name() !== 'cli'){
+    if (!User::getInstance()->isUserConnected()) {
         redirect_to('login.php');
     }
 
-    if( !User::getInstance()->hasPermission('admin_access') ){
+    if (!User::getInstance()->hasPermission('admin_access')) {
         redirect_to(Network::get_server_url() . '403.php');
     }
 }
