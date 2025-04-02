@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"308",
+  "revision":"309",
   "status":"stable",
   "detail":[
     {
@@ -276,6 +276,8 @@
         ,"Fix manage videos & photos search"
         ,"Fix collapsed categories display"
         ,"Fix used storage display <i>(#552)</i>"
+        ,"Fix video categories display on video page"
+        ,"Fix anonymous user display on channels page"
       ]
     },
     {
