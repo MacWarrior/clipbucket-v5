@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"310",
+  "revision":"311",
   "status":"stable",
   "detail":[
     {
@@ -293,6 +293,7 @@
         ,"Update discord errors"
         ,"Update FFMpeg version check"
         ,"Cleanup code"
+        ,"Clean sort/filter URLs"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
         ,"Remove unused files"
