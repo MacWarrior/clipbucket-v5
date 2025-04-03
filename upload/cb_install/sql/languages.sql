@@ -1518,5 +1518,6 @@ VALUES ('admin_setting'),
        ('sort_by_most_commented'),
        ('sort_by_most_items'),
        ('enable_categories'),
+       ('launch_tool'),
        ('enable_theme_change'),
        ('enable_theme_change_tips');

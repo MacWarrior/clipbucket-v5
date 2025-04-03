@@ -371,6 +371,10 @@ class User
 
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if ($param_search || $param_condition || !$param_count) {
+                $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
+                $join[] = 'LEFT JOIN ' . cb_sql_table('tags') . ' ON user_tags.id_tag = tags.id_tag';
+            }
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
@@ -378,14 +382,19 @@ class User
                     $group[] = 'user_levels_permissions.id_user_levels_permission ';
                 }
             }
-            $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
-            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
 
         }
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-            $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
-            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+
+            if ($param_search || $param_category || $param_condition || !$param_count) {
+                $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+                $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+            }
+            if( !$param_count ){
+                $select[] = 'categories.category_id ';
+                $group[] = 'categories.category_id ';
+            }
         }
 
         if( $param_group ){

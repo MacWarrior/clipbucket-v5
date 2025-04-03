@@ -921,7 +921,7 @@ class AdminTool
     public function automate(array $tool)
     {
         /** start tools from CLI */
-        $this->addLog('launch tool ' . $tool['id_tool']);
+        $this->addLog(lang('launch_tool' , lang($tool['language_key_label'])));
         self::launchCli($tool['id_tool']);
     }
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"309",
+  "revision":"312",
   "status":"stable",
   "detail":[
     {
@@ -77,6 +77,7 @@
         ,"Update video broadcast upload display"
         ,"Update categories management"
         ,"Update custom page edition"
+        ,"Update automatic launch of tools logs"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -151,6 +152,8 @@
         ,"Fix basic settings menu URL <i>(#554)</i>"
         ,"Fix view online users listing"
         ,"Fix Correct video categories tool"
+        ,"Fix photo deletion <i>(#560)</i>"
+        ,"Fix user category display"
       ]
     },
     {
@@ -291,6 +294,7 @@
         ,"Update discord errors"
         ,"Update FFMpeg version check"
         ,"Cleanup code"
+        ,"Clean sort/filter URLs"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
         ,"Remove unused files"

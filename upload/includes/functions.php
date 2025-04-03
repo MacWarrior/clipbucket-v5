@@ -2017,10 +2017,39 @@ function call_functions($in, $params = null)
  */
 function category_link($data, $type): string
 {
+    switch ($type) {
+        case 'video':
+        case 'videos':
+        case 'v':
+            $type = 'videos';
+            $config_enable_category = 'enable_video_categories';
+            break;
+
+        case 'channels':
+        case 'channel':
+        case 'c':
+        case 'user':
+            $type = 'channels';
+            $config_enable_category = 'enable_user_categories';
+            break;
+
+        case 'photo':
+        case 'photos':
+            $type = 'photos';
+            $config_enable_category = 'enable_photo_categories';
+            break;
+
+        case 'collection':
+        case 'collections':
+            $type = 'collections';
+            $config_enable_category = 'enable_collection_categories';
+            break;
+    }
+    if (config($config_enable_category) != 'yes') {
+        return false;
+    }
     $sort = '';
     $time = '';
-    $seo_cat_name = '';
-
     if (SEO == 'yes') {
         if (isset($_GET['sort']) && $_GET['sort'] != '') {
             $sort = '/' . $_GET['sort'];
@@ -2035,40 +2064,13 @@ function category_link($data, $type): string
         if (isset($_GET['time']) && $_GET['time'] != '') {
             $time = '&time=' . $_GET['time'];
         }
-        if (isset($_GET['seo_cat_name']) && $_GET['seo_cat_name'] != '') {
-            $time = '&seo_cat_name=' . $_GET['seo_cat_name'];
-        }
     }
 
-    switch ($type) {
-        case 'video':
-        case 'videos':
-        case 'v':
-            $type = 'videos';
-            break;
-
-        case 'channels':
-        case 'channel':
-        case 'c':
-        case 'user':
-            $type = 'channels';
-            break;
-
-        case 'photo':
-        case 'photos':
-            $type = 'photos';
-            break;
-
-        case 'collection':
-        case 'collections':
-            $type = 'collections';
-            break;
-    }
 
     if (SEO == 'yes') {
         return '/' . $type . '/' . $data['category_id'] . '/' . SEO($data['category_name']) . $sort . $time . '/';
     }
-    return '/' . $type . '.php?cat=' . $data['category_id'] . $sort . $time . $seo_cat_name;
+    return '/' . $type . '.php?cat=' . $data['category_id'] . $sort . $time;
 }
 
 /**
@@ -2085,30 +2087,35 @@ function category_link($data, $type): string
  */
 function sort_link($sort, $mode, $type): string
 {
+    $config_enable_category = '';
     switch ($type) {
         case 'video':
         case 'videos':
         case 'v':
             $type = 'videos';
+            $config_enable_category = 'enable_video_categories';
             break;
 
         case 'channels':
         case 'channel':
             $type = 'channels';
+            $config_enable_category = 'enable_user_categories';
             break;
 
         case 'collections':
         case 'collection':
             $type = 'collections';
+            $config_enable_category = 'enable_collection_categories';
             break;
 
         case 'photos':
         case 'photo':
             $type = 'photos';
+            $config_enable_category = 'enable_photo_categories';
             break;
     }
 
-    if (!isset($_GET['cat'])) {
+    if (!isset($_GET['cat']) && config($config_enable_category) == 'yes') {
         $_GET['cat'] = 'all';
     }
     if (!isset($_GET['time'])) {
@@ -2116,9 +2123,6 @@ function sort_link($sort, $mode, $type): string
     }
     if (!isset($_GET['page'])) {
         $_GET['page'] = 1;
-    }
-    if (!isset($_GET['seo_cat_name'])) {
-        $_GET['seo_cat_name'] = 'All';
     }
 
     if ($mode == 'sort') {
@@ -2133,9 +2137,9 @@ function sort_link($sort, $mode, $type): string
     }
 
     if (SEO == 'yes') {
-        return '/' . $type . '/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . ($sorting ?: '') . '/' . $time . '/' . $_GET['page'];
+        return '/' . $type . '/' . $_GET['cat'] . '/' . ($sorting ?: '') . '/' . $time . '/' . $_GET['page'];
     }
-    return '/' . $type . '.php?cat=' . $_GET['cat'] . (($sorting) ? '&sort=' . $sorting : '') . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
+    return '/' . $type . '.php?cat=' . $_GET['cat'] . (($sorting) ? '&sort=' . $sorting : '') . '&time=' . $time . '&page=' . $_GET['page'] ;
 }
 
 
