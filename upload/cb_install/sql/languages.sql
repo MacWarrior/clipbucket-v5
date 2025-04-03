@@ -1517,4 +1517,5 @@ VALUES ('admin_setting'),
        ('sort_by_featured'),
        ('sort_by_most_commented'),
        ('sort_by_most_items'),
-       ('enable_categories');
+       ('enable_categories'),
+       ('launch_tool');

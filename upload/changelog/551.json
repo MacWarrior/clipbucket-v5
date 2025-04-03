@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"311",
+  "revision":"312",
   "status":"stable",
   "detail":[
     {
@@ -77,6 +77,7 @@
         ,"Update video broadcast upload display"
         ,"Update categories management"
         ,"Update custom page edition"
+        ,"Update automatic launch of tools logs"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
