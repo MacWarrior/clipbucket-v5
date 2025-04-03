@@ -8,7 +8,7 @@
     <tr>
         <td>{$subtitle_list[sub].number}</td>
         <td>
-            <span style="display: block;">{display_clean($subtitle_list[sub].title)}</span>
+            <span style="display: block;" id="span_sub_{$subtitle_list[sub].number}">{display_clean($subtitle_list[sub].title)}</span>
             <input type="text" class="form-control" value="{display_clean($subtitle_list[sub].title)}" id="edit_sub_{$subtitle_list[sub].number}" style="display:none; width: 80%;">
             <div style="text-align: center; vertical-align: middle;display: none;" id="buttons-{$subtitle_list[sub].number}">
                 <span class="glyphicon glyphicon-ok-circle confirm_update_translation" title="{lang code='confirm'}" style="color:#87b87f;font-size:1.5em;cursor:pointer;" onclick="saveSubtitle('{$subtitle_list[sub].number}');"></span>
