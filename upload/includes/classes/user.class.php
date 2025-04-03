@@ -813,7 +813,10 @@ class User
         return config('default_theme');
     }
 
-    public function setActiveTheme($theme)
+    /**
+     * @throws Exception
+     */
+    public function setActiveTheme($theme): bool
     {
         if ($theme != 'light' && $theme != 'dark' ) {
             return false;
