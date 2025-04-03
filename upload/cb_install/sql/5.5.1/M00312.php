@@ -3,7 +3,7 @@
 namespace V5_5_1;
 require_once \DirPath::get('classes') . DIRECTORY_SEPARATOR . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-class MWIP extends \Migration
+class M00312 extends \Migration
 {
     /**
      * @throws \Exception
@@ -11,8 +11,8 @@ class MWIP extends \Migration
     public function start()
     {
         self::generateTranslation('launch_tool', [
-            'fr'=>'Lancement de l\'outil "%s',
-            'en'=>'Launch tool "%s"',
+            'fr'=>'Lancement de l\'outil "%s"',
+            'en'=>'Launch tool "%s"'
         ]);
     }
 }
