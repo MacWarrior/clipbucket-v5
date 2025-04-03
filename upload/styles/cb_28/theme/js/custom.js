@@ -463,4 +463,58 @@ document.addEventListener("DOMContentLoaded", function () {
             index = 0;
         });
     });
+
+    /* Theme switch */
+    const buttons = document.querySelectorAll('.theme-switch button');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (button.classList.contains('active')) {
+                return;
+            }
+
+            const current_active = document.querySelector('.theme-switch button.active');
+            if (current_active) {
+                current_active.classList.remove('active');
+            }
+
+            button.classList.add('active');
+
+            jQuery.post({
+                'url':'actions/switch_theme.php',
+                'dataType':'json',
+                'data': {
+                    theme: button.dataset.theme,
+                    os: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+                },
+                'success':function(data){
+                    let link = document.createElement("link");
+                    link.rel = "stylesheet";
+                    link.type = "text/css";
+                    link.href = data.url;
+                    document.head.appendChild(link);
+
+                    document.body.classList.add('theme_transition');
+                    if (data.theme === 'dark' ) {
+                        document.documentElement.classList.remove('light');
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                        document.documentElement.classList.add('light');
+                    }
+                    setTimeout(() => {
+                        document.body.classList.remove('theme_transition');
+                    }, 1000);
+                }
+            });
+        });
+    });
+
+    const html = document.documentElement;
+    if (html.classList.contains('auto')) {
+        const osTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        html.classList.remove('auto');
+        html.classList.add(osTheme);
+    }
+    /* Theme switch */
 });
+

@@ -798,16 +798,19 @@ class User
         return array_column($results, 'videoid');
     }
 
-    public function getActiveTheme()
+    public function getActiveTheme(): string
     {
-        if (config('default_theme') != 'light' && config('default_theme') != 'dark' ) {
+        if( !in_array(config('default_theme'), ['light','dark']) ){
             return config('default_theme');
         }
         if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             //get from bd
             return $this->get('active_theme');
         }
-        if (isset($_COOKIE['user_theme'])) {
+        if( isset($_COOKIE['user_theme']) ){
+            if( !in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
+                return config('default_theme');
+            }
             return $_COOKIE['user_theme'];
         }
         return config('default_theme');
@@ -818,7 +821,7 @@ class User
      */
     public function setActiveTheme($theme): bool
     {
-        if ($theme != 'light' && $theme != 'dark' ) {
+        if ( !in_array($theme,['light','dark','auto']) ){
             return false;
         }
         if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {

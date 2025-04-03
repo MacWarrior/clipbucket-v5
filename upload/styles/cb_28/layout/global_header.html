@@ -31,9 +31,9 @@
 			{assign var=qlist_videos value=get_fast_qlist()}
 			{assign var=litems_count value=$qlist_videos|@count}
 			{if $litems_count >= 1}
-			{assign var=got_qlitems value="yes"}
+				{assign var=got_qlitems value="yes"}
 			{else}
-			{assign var=got_qlitems value="no"}
+				{assign var=got_qlitems value="no"}
 			{/if}
 		{/if}
 		<script>
@@ -75,41 +75,6 @@
 				$( 'ul#photos li:visible' ).each( function( i ){
 					$( this )[ (1&i) ? 'addClass' : 'removeClass' ]( 'photo-land-no' );
 				});
-				$('#theme_switch').on( 'change', function() {
-					var theme = $(this).prop('checked') ? 'light' : 'dark';
-					$.post({
-						'url':'actions/switch_theme.php',
-						'dataType':'json',
-						'data': {
-							theme: theme
-						},
-						'success':function(data){
-							if (data.theme == 'dark' || data.theme == 'light') {
-								let link = document.createElement("link");
-								link.rel = "stylesheet";
-								link.type = "text/css";
-								link.href = '{DirPath::getUrl('theme_css')}' + data.url + '.css';
-								document.head.appendChild(link);
-								if (data.theme == 'dark' ) {
-									document.documentElement.classList.remove('light');
-									document.documentElement.classList.add('dark');
-								} else {
-									document.documentElement.classList.remove('dark');
-									document.documentElement.classList.add('light');
-								}
-							}
-						}
-					});
-				});
 			});
 		</script>
-		<style type="text/css">
-			input[type=checkbox].ace.ace-switch.ace-switch-5+.lbl::before{
-				content:"{lang code='yes'}\a0\a0\a0\a0\a0\a0\a0\a0\a0{lang code='no'}" !important;
-			}
-			input[type=checkbox].ace.ace-switch.ace-switch-6+.lbl::before{
-				content:"{lang code='option_default_theme_light'}\a0\a0\a0\a0\a0\a0\a0\a0\a0 {lang code='option_default_theme_dark'}" !important;
-			}
-		</style>
-
 	</head>
