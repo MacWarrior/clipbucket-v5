@@ -436,6 +436,11 @@ if (isset($_POST['update'])) {
                 $value = 1;
             }
         }
+
+        if ($field=='date_format' && !validatePHPDateFormat($value)) {
+            e(('invalid_date_format'));
+            break;
+        }
         if (in_array($field, $config_booleans)) {
             if ($value != 'yes') {
                 $value = 'no';
