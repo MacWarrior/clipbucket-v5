@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"309",
+  "revision":"310",
   "status":"stable",
   "detail":[
     {
@@ -151,6 +151,8 @@
         ,"Fix basic settings menu URL <i>(#554)</i>"
         ,"Fix view online users listing"
         ,"Fix Correct video categories tool"
+        ,"Fix photo deletion <i>(#560)</i>"
+        ,"Fix user category display"
       ]
     },
     {
