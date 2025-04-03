@@ -460,7 +460,7 @@ class Upload
                 'invalid_err'       => lang('vdo_cat_err3'),
                 'display_function'  => 'convert_to_categories'
             ];
-            if (config('video_categories') > 1 && is_array($cat_array)) {
+            if (config('video_categories') > 0 && is_array($cat_array)) {
                 $uploadFormRequiredFieldsArray['cat']['hint_1'] = lang('vdo_cat_msg', config('video_categories'));
             }
         }

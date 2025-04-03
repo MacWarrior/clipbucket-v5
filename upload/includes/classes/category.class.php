@@ -373,12 +373,13 @@ class Category
             return false;
         }
 
-        if (count($new_array) > config('video_categories')) {
+        if( config('video_categories') > 0 && count($new_array) > config('video_categories') ){
             e(lang('vdo_cat_err2', config('video_categories')));
             return false;
         }
 
-        return true;    }
+        return true;
+    }
 
     /**
      * @param string $type
