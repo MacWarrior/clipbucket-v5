@@ -31,7 +31,7 @@
                         <ul class="dropdown-menu">
                             {foreach from=$sort_list item=sort key=key}
                                 <li>
-                                    <a href="{link name=sort sort=$key type=videos}&sorting=sort" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                    <a href="{link name=sort sort=$key type=videos}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
                                 </li>
                             {/foreach}
                         </ul>

@@ -1370,6 +1370,8 @@ class CBPhotos
 
             //Remove tags
             Tags::deleteTags('photo', $photo['photo_id']);
+            //remove categ
+            Category::getInstance()->unlinkAll('photo', $photo['photo_id']);
 
             //delete reports for this photo
             Flag::unFlagByElementId($photo['photo_id'], 'photo');
