@@ -2030,7 +2030,7 @@ function category_link($data, $type): string
         case 'c':
         case 'user':
             $type = 'channels';
-            $config_enable_category = 'enable_user_categories';
+            $config_enable_category = 'enable_user_category';
             break;
 
         case 'photo':
