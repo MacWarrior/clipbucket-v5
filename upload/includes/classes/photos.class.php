@@ -1944,7 +1944,7 @@ class CBPhotos
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 
@@ -2144,7 +2144,6 @@ class CBPhotos
                 'required'          => 'no',
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
-                'use_func_val'      => true,
                 'class'             => 'form-control'
             ];
         }
@@ -2159,15 +2158,15 @@ class CBPhotos
 
             $return['cat'] = [
                 'title'             => lang('categories'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'display_function'  => 'convert_to_categories',
-                'category_type'     => 'photo',
-                'invalid_err'       => lang('vdo_cat_err3')
+                'type'                      => 'checkbox',
+                'name'                      => 'category[]',
+                'id'                        => 'category',
+                'value'                     => $cat_array,
+                'required'                  => 'yes',
+                'validate_function'         => 'Category::validate',
+                'display_function'          => 'convert_to_categories',
+                'category_type'             => 'photo',
+                'invalid_err'               => lang('vdo_cat_err3')
             ];
         }
         return $return;
@@ -2296,7 +2295,7 @@ class CBPhotos
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 

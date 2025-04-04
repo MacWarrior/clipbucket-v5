@@ -124,7 +124,7 @@ class Upload
                 continue;
             }
 
-            if ($field['use_func_val']) {
+            if (!empty($field['validate_function'])) {
                 $val = $field['validate_function']($val);
             }
 
@@ -450,15 +450,16 @@ class Upload
         }
         if( config('enable_video_categories') != 'no' ){
             $uploadFormRequiredFieldsArray['cat'] = [
-                'title'             => lang('vdo_cat'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'invalid_err'       => lang('vdo_cat_err3'),
-                'display_function'  => 'convert_to_categories'
+                'title'                     => lang('vdo_cat'),
+                'type'                      => 'checkbox',
+                'name'                      => 'category[]',
+                'id'                        => 'category',
+                'value'                     => $cat_array,
+                'required'                  => 'yes',
+                'validate_function'         => 'Category::validate',
+                'second_parameter_validate' => 'video',
+                'invalid_err'               => lang('vdo_cat_err3'),
+                'display_function'          => 'convert_to_categories'
             ];
             if (config('video_categories') > 0 && is_array($cat_array)) {
                 $uploadFormRequiredFieldsArray['cat']['hint_1'] = lang('vdo_cat_msg', config('video_categories'));
@@ -593,7 +594,6 @@ class Upload
                 'required'          => 'no',
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
-                'use_func_val'      => true
             ];
         }
 
@@ -640,7 +640,6 @@ class Upload
             'extra_tags'        => " $video_user_disable ",
             'hint_2'            => lang('specify_video_users'),
             'validate_function' => 'video_users',
-            'use_func_val'      => true
         ];
 
         if( config('enable_comments_video') == 'yes' ){
@@ -753,7 +752,6 @@ class Upload
                 'db_field'          => 'datecreated',
                 'required'          => 'no',
                 'default_value'     => '',
-                'use_func_val'      => true,
                 'validate_function' => 'datecreated',
                 'hint_2'            => config('date_format')
             ];

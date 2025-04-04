@@ -62,7 +62,6 @@ class oxygenz_remote_play {
             'db_field'	        => 'remote_play_url',
             'required'	        => 'no',
             'validate_function' => self::class.'::isValidVideoURL',
-            'use_func_val'      => true,
             'type'	            => 'textfield',
             'use_if_value'      => true
         ];
