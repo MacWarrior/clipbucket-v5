@@ -324,11 +324,6 @@ class ClipBucket
         ];
 
         $menu_configuration['sub'][] = [
-            'title' => lang('player_settings')
-            , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'
-        ];
-
-        $menu_configuration['sub'][] = [
             'title' => lang('template_editor')
             , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
         ];

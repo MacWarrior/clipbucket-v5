@@ -14,6 +14,14 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
+if (isset($_POST['reset_control_bar_logo_url'])) {
+    if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
+        unlink(DirPath::get('logos') . 'player-logo.png');
+    }
+    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', '/images/icons/player-logo.png');
+    e(lang('player_logo_reset'), 'm');
+}
+
 if (isset($_POST['update'])) {
     $config_booleans = [
         'seo'
@@ -369,7 +377,22 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count',
         'enable_photo_categories',
         'enable_video_categories',
-        'enable_collection_categories'
+        'enable_collection_categories',
+
+        'autoplay_video',
+        'embed_player_height',
+        'embed_player_width',
+        'autoplay_embed',
+        'chromecast',
+        'control_bar_logo',
+        'contextual_menu_disabled',
+        'control_bar_logo_url',
+        'player_logo_url',
+        'player_thumbnails',
+        'player_default_resolution',
+        'player_default_resolution_hls',
+        'player_subtitles',
+        'enable_360_video'
     ];
 
     //Numeric Array
@@ -425,6 +448,13 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count'
     ];
 
+    if (isset($_FILES['logo_file']['name'])) {
+        $logo_file = Upload::getInstance()->upload_website_logo($_FILES['logo_file']);
+        if ($logo_file) {
+            myquery::getInstance()->Set_Website_Details('player_logo_file', $logo_file);
+        }
+    }
+
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
@@ -436,6 +466,16 @@ if (isset($_POST['update'])) {
                 $value = 1;
             }
         }
+        if ($field == 'control_bar_logo_url') {
+            if (is_null($_FILES[$field]) || empty($_FILES[$field]['tmp_name'])) {
+                continue;
+            }
+            if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
+                unlink(DirPath::get('logos') . 'player-logo.png');
+            }
+            $_POST['control_bar_logo_url'] = DirPath::getUrl('logos') . 'player-logo.png';
+            move_uploaded_file($_FILES[$field]['tmp_name'], DirPath::get('logos') . 'player-logo.png');
+        }
         if (in_array($field, $config_booleans)) {
             if ($value != 'yes') {
                 $value = 'no';
@@ -446,6 +486,7 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
+
 
         myquery::getInstance()->Set_Website_Details($field, $value);
     }
