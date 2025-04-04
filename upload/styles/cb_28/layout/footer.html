@@ -19,9 +19,9 @@
             <div class="lang_wrapper column">
                 {if config('enable_theme_change') == 'yes' && in_array(config('default_theme'), ['light','dark'])}
                     <div class="theme-switch">
-                        <button data-theme="light" {if User::getInstance()->getActiveTheme() == 'light'}class="active"{/if}>{lang code='option_default_theme_light'}</button>
-                        <button data-theme="dark" {if User::getInstance()->getActiveTheme() == 'dark'}class="active"{/if}>{lang code='option_default_theme_dark'}</button>
-                        <button data-theme="auto" {if !in_array(User::getInstance()->getActiveTheme(), ['dark','light'])}class="active"{/if}>Auto</button>
+                        <button data-theme="light" {if User::getInstance()->getUserTheme() == 'light'}class="active"{/if}>{lang code='option_default_theme_light'}</button>
+                        <button data-theme="dark" {if User::getInstance()->getUserTheme() == 'dark'}class="active"{/if}>{lang code='option_default_theme_dark'}</button>
+                        <button data-theme="auto" {if !in_array(User::getInstance()->getUserTheme(), ['dark','light'])}class="active"{/if}>Auto</button>
                     </div>
                 {/if}
                 {if config("allow_language_change")}

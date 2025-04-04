@@ -115,11 +115,11 @@ class User
             ,'show_my_friends'
         ];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
             $this->fields_profile[] = 'disabled_channel';
         }
 
-        if(Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
             $this->fields[] = 'active_theme';
         }
         $this->tablename_level = 'user_levels';
@@ -613,7 +613,7 @@ class User
 
     public function get(string $value)
     {
-        if( !isset($this->user_data[$value]) ){
+        if( !array_key_exists($value, $this->user_data) ){
             DiscordLog::sendDump($this->user_data);
             if( in_dev() ){
                 $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
@@ -800,35 +800,51 @@ class User
 
     public function getActiveTheme(): string
     {
-        if( !in_array(config('default_theme'), ['light','dark']) ){
+        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['light','dark']) ){
             return config('default_theme');
         }
-        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-            //get from bd
-            return $this->get('active_theme');
+
+        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
+            if( in_array($this->get('active_theme'), ['light','dark','auto']) ){
+                return $this->get('active_theme');
+            }
+            return config('default_theme');
         }
+
         if( isset($_COOKIE['user_theme']) ){
             if( !in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
                 return config('default_theme');
+            }
+            if( $_COOKIE['user_theme'] == 'auto' ){
+                if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
+                    return config('default_theme');
+                }
+                return $_COOKIE['user_theme_os'];
             }
             return $_COOKIE['user_theme'];
         }
         return config('default_theme');
     }
 
+    public function getUserTheme(): string
+    {
+        return $_COOKIE['user_theme'];
+    }
+
     /**
      * @throws Exception
      */
-    public function setActiveTheme($theme): bool
+    public function setActiveTheme(string $theme, string $os): bool
     {
         if ( !in_array($theme,['light','dark','auto']) ){
             return false;
         }
-        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
             //set to bd
             Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('users') . ' SET active_theme = \'' . mysql_clean($theme) . '\'');
         }
         set_cookie_secure('user_theme', $theme);
+        set_cookie_secure('user_theme_os', $os);
         return true;
     }
 
