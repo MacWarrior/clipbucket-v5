@@ -1520,4 +1520,7 @@ VALUES ('admin_setting'),
        ('enable_categories'),
        ('launch_tool'),
        ('enable_theme_change'),
-       ('enable_theme_change_tips');
+       ('enable_theme_change_tips'),
+       ('option_theme_auto'),
+       ('title_theme_auto'),
+       ('title_theme_x');
