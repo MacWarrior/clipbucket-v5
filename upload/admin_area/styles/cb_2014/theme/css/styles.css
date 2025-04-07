@@ -1204,3 +1204,8 @@ a[role='menuitem'] {
 .invalid-error .help-block {
     color: #f44336;
 }
+
+/* Fix menu top */
+.navbar-header .dropdown-menu.dropdown-close.pull-right{
+    right: 0;
+}

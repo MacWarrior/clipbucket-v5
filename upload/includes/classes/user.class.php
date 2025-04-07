@@ -249,6 +249,9 @@ class User
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
        $sorts = SortType::getSortTypes('channels');
 
         if(config('videosSection') != 'yes' && config('photosSection') != 'yes') {

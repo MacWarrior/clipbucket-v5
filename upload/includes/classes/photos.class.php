@@ -154,6 +154,9 @@ class Photo
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
         $sorts = SortType::getSortTypes('photos');
 
         if (config('enable_comments_photo') != 'yes') {

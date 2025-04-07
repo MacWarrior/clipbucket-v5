@@ -468,7 +468,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Theme switch */
     function postThemeSwitch(selected_theme){
         jQuery.post({
-            'url':'actions/switch_theme.php',
+            'url':'/actions/switch_theme.php',
             'dataType':'json',
             'data': {
                 theme: selected_theme,
@@ -522,5 +522,20 @@ document.addEventListener("DOMContentLoaded", function () {
         postThemeSwitch('auto');
     }
     /* Theme switch */
+
+    /* Language switch */
+    document.querySelectorAll('.pick-lang').forEach(button => {
+        button.addEventListener('click', () => {
+            const lang_code = button.dataset.lang;
+            const currentUrl = window.location.href;
+
+            if (!currentUrl.includes('?')) {
+                window.location = `?set_site_lang=${lang_code}`;
+            } else {
+                window.location = `${currentUrl}&set_site_lang=${lang_code}`;
+            }
+        });
+    });
+    /* Language switch */
 });
 

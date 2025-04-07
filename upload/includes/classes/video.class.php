@@ -130,6 +130,15 @@ class Video
         return $this->tablename_categories;
     }
 
+    public function addFields(array $fields){
+        if( empty($fields) ){
+            return;
+        }
+        foreach($fields as $field){
+            $this->fields[] = $field;
+        }
+    }
+
     private function getFields(): array
     {
         return $this->fields;
@@ -258,6 +267,9 @@ class Video
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
         $sorts = SortType::getSortTypes('videos');
 
         if (config('enable_comments_video') != 'yes') {
