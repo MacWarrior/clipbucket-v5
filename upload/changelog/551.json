@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"322",
+  "revision":"323",
   "status":"stable",
   "detail":[
     {
@@ -290,6 +290,8 @@
         ,"Fix anonymous user display on channels page"
         ,"Fix age verification disclaimer pop-in display"
         ,"Fix rare display issue on featured video slider"
+        ,"Fix language switch"
+        ,"Fix theme switch on SEO URLs"
       ]
     },
     {
