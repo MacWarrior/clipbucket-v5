@@ -157,12 +157,8 @@ class ClipBucket
      */
     private function addFile(&$array_var, $files)
     {
-        if(in_dev()){
-            $cache_key = time();
-        } else {
-            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
-        }
 
+        $cache_key = $this->getCacheKey();
         if (is_array($files)) {
             foreach ($files as $key => $file) {
                 if (!isset($array_var[$key])) {
@@ -174,6 +170,16 @@ class ClipBucket
                 $array_var[$files . '?v=' . $cache_key] = 'global';
             }
         }
+    }
+
+    public function getCacheKey()
+    {
+        if(in_dev()){
+            $cache_key = time();
+        } else {
+            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+        }
+        return $cache_key;
     }
 
     /**
@@ -321,11 +327,6 @@ class ClipBucket
         $menu_configuration['sub'][] = [
             'title' => lang('advanced_settings')
             , 'url' => DirPath::getUrl('admin_area') . 'setting_advanced.php'
-        ];
-
-        $menu_configuration['sub'][] = [
-            'title' => lang('player_settings')
-            , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'
         ];
 
         $menu_configuration['sub'][] = [

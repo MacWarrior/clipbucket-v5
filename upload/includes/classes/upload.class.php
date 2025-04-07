@@ -1035,21 +1035,20 @@ class Upload
         return false;
     }
 
-
     /**
      * Function used to upload website logo
      * @param $file
      * @return string|bool;
      */
-    function upload_website_logo($file)
+    function upload_player_logo($file)
     {
         global $imgObj;
 
         if (!empty($file['name'])) {
             $ext = getExt($file['name']);
-            $file_name = 'plaery-logo';
+            $file_name = 'player-logo' . '.' . $ext;
             if ($imgObj->ValidateImage($file['tmp_name'], $ext)) {
-                $file_path = DirPath::get('images') . $file_name . '.' . $ext;
+                $file_path = DirPath::get('logos') . $file_name;
                 if (file_exists($file_path)) {
                     if (!unlink($file_path)) {
                         e("Unable to remove '$file_path', please chmod it to 0777");
@@ -1058,10 +1057,10 @@ class Upload
                 }
 
                 move_uploaded_file($file['tmp_name'], $file_path);
-                e('Logo has been uploaded', 'm');
-                return $file_name . '.' . $ext;
+                e('Player logo has been uploaded', 'm');
+                return DirPath::getUrl('logos') . $file_name;
             } else {
-                e('Invalid Image file');
+                e('Invalid player logo image file');
             }
         }
         return false;

@@ -51,6 +51,11 @@
                         <h8>Listings</h8>
                     </a>
                 </li>
+                <li>
+                    <a data-toggle="tab" href="#config_player">
+                        <h8>{lang('player_settings')}</h8>
+                    </a>
+                </li>
             </ul>
             <div class="tab-content">
                 <div id="config_general" class="tab-pane active">
@@ -342,6 +347,20 @@
                                             </div>
                                         </div>
                                         <hr/>
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <label class="nowrap" for="enable_theme_change" title="{lang code='enable_theme_change'}">
+                                                    <span class="fa fa-question-circle tips" title="{lang code='enable_theme_change_tips'}"></span>
+                                                    {lang code='enable_theme_change'}
+                                                </label>
+                                            </div>
+                                            <div class="col-md-2 row-size no_padding">
+                                                <input value="yes" name="enable_theme_change" id="enable_theme_change" {if $row.enable_theme_change=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+
                                         <div class="row">
                                             <div class="col-md-10">
                                                 <label class="nowrap" for="show_collapsed_checkboxes" title="{lang('option_show_collapsed_checkboxes')}">{lang('option_show_collapsed_checkboxes')}</label>
@@ -2229,6 +2248,212 @@
 
                         </div>
 
+                    </div>
+                </div>
+                <div id="config_player" class="tab-pane">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="embed_player_width">
+                                        <span class="fa fa-question-circle tips" title="Embeddable player default width in pixels"></span>
+                                        Embed Player default Width
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control" name="embed_player_width" type="text" id="embed_player_width" value="{$row.embed_player_width}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="embed_player_height">
+                                        <span class="fa fa-question-circle tips" title="Embeddable player default height in pixels"></span>
+                                        Embed Player default Height
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input class="form-control" name="embed_player_height" type="text" id="embed_player_height" value="{$row.embed_player_height}"/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="autoplay_embed">
+                                        <span class="fa fa-question-circle tips" title="Autoplay embeded video by default"></span>
+                                        Autoplay Embed
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input value="yes" name="autoplay_embed" id="autoplay_embed" {if $row.autoplay_embed=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="control_bar_logo">
+                                        <span class="fa fa-question-circle tips" title="Add a logo in the controls bar"></span>
+                                        Enable Controls bar logo
+                                    </label>
+                                </div>
+                                <div class="col-md-4">
+                                    <input value="yes" name="control_bar_logo" id="control_bar_logo" {if $row.control_bar_logo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="control_bar_logo_url">
+                                        <span class="fa fa-question-circle tips" title="Maximum 40x30pxl"></span>
+                                        Controls bar logo
+                                    </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input type="file" accept='image/*' name="control_bar_logo_url" id="control_bar_logo_url" style="display:inline-block;" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                    <div style="display:inline-block;width:40px;height:30px;background-color:rgba(43, 51, 63, 0.7);background-image:url({$row.control_bar_logo_url});background-repeat:no-repeat;background-position:center;vertical-align:middle;">
+                                    </div>
+                                    <input type="submit" name="reset_control_bar_logo_url" value="Reset" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="player_logo_url">
+                                        <span class="fa fa-question-circle tips" title="Will be opened in a new tab"></span>
+                                        Controls bar logo URL
+                                    </label>
+                                </div>
+                                <div class="col-md-8">
+                                    <input class="form-control" name="player_logo_url" type="text" id="player_logo_url" value="{$row.player_logo_url}" {if $row.control_bar_logo!='yes'}disabled{/if}/>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="autoplay_video">
+                                        <span class="fa fa-question-circle tips" title="if yes, all videos will be played automatically"></span>
+                                        Autoplay
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="yes" name="autoplay_video" id="autoplay_video" {if $row.autoplay_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="chromecast">
+                                        <span class="fa fa-question-circle tips" title="Allow users to stream videos on Chromecast"></span>
+                                        Enable Chromecast support
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="yes" name="chromecast" id="chromecast" {if $row.chromecast=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="player_subtitles">
+                                        <span class="fa fa-question-circle tips" title="Allow users to select subtitles"></span>
+                                        Enable subtitles
+                                    </label>
+                                </div>
+                                <div class="col-md-2">
+                                    <input value="1" name="player_subtitles" id="player_subtitles" {if $row.player_subtitles=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="player_default_resolution" title="Default video resolution">Default video resolution</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <select class="form-control" name="player_default_resolution" id="player_default_resolution">
+
+                                        {foreach from=$myquery->getVideoResolutions() item=ratio}
+                                            {foreach from=$ratio item=resolution}
+                                                <option {if $resolution.height==$row.player_default_resolution}selected{/if} value="{$resolution.height}">
+                                                    {$resolution.title}
+                                                </option>
+                                            {/foreach}
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="contextual_menu_disabled">
+                                        <span class="fa fa-question-circle tips" title="Disable right click on video"></span>
+                                        Disable contextual menu
+                                    </label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="contextual_menu_disabled" id="contextual_menu_disabled" {if $row.contextual_menu_disabled=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="player_thumbnails">
+                                        <span class="fa fa-question-circle tips" title="Enable player thumbnails"></span>
+                                        Thumbnails
+                                    </label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="player_thumbnails" id="player_thumbnails" {if $row.player_thumbnails=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label for="enable_360_video">
+                                        {lang code='option_enable_360_video'}
+                                    </label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <input value="yes" name="enable_360_video" id="enable_360_video" {if $row.enable_360_video=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="player_default_resolution_hls" title="Default HLS video resolution">Default HLS video resolution</label>
+                                </div>
+                                <div class="col-md-2 row-size">
+                                    <select class="form-control" name="player_default_resolution_hls" id="player_default_resolution_hls">
+                                        <option {if $row.player_default_resolution_hls=="auto"}selected{/if} value="auto">
+                                            {lang code='video_resolution_auto'}
+                                        </option>
+                                        {foreach from=$myquery->getVideoResolutions() item=ratio}
+                                            {foreach from=$ratio item=resolution}
+                                                <option {if $resolution.height==$row.player_default_resolution_hls}selected{/if} value="{$resolution.height}">
+                                                    {$resolution.title}
+                                                </option>
+                                            {/foreach}
+                                        {/foreach}
+                                    </select>
+                                </div>
+                            </div>
+                            <hr/>
+                        </div>
                     </div>
                 </div>
             </div>

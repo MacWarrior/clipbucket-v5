@@ -74,7 +74,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'max_username', '15'),
 	(NULL, 'allow_username_spaces', 'yes'),
 	(NULL, 'comments_captcha', 'guests'),
-	(NULL, 'player_logo_file', 'logo.jpg'),
 	(NULL, 'own_photo_rating', 'no'),
 	(NULL, 'mail_type', 'mail'),
 	(NULL, 'smtp_host', ''),
@@ -309,7 +308,8 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'video_thumbs_preview_count', '10'),
     (NULL, 'enable_photo_categories', 'yes'),
     (NULL, 'enable_video_categories', 'yes'),
-    (NULL, 'enable_collection_categories', 'yes');
+    (NULL, 'enable_collection_categories', 'yes'),
+    (NULL, 'enable_theme_change', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 428, 240, 240000),
