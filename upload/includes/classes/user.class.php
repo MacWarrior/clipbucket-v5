@@ -2606,10 +2606,6 @@ class userquery extends CBCategory
             }
             $val = $array[$name];
 
-            if ($field['use_func_val']) {
-                $val = $field['validate_function']($val);
-            }
-
             if (!empty($field['db_field'])) {
                 $query_field[] = $field['db_field'];
             }
@@ -2797,10 +2793,6 @@ class userquery extends CBCategory
             foreach ($custom_signup_fields as $field) {
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
-
-                if ($field['use_func_val']) {
-                    $val = $field['validate_function']($val);
-                }
 
                 if (!empty($field['db_field'])) {
                     $uquery_field[] = $field['db_field'];
@@ -3476,7 +3468,6 @@ class userquery extends CBCategory
                 'value'               => $email,
                 'db_field'            => 'email',
                 'required'            => 'yes',
-                'syntax_type'         => 'email',
                 'db_value_check_func' => 'email_exists',
                 'db_value_exists'     => false,
                 'db_value_err'        => lang('usr_email_err3'),
@@ -3690,9 +3681,6 @@ class userquery extends CBCategory
                     }
                 }
 
-                if ($field['use_func_val']) {
-                    $val = $field['validate_function']($val);
-                }
 
                 if (!empty($field['db_field'])) {
                     $query_field[] = $field['db_field'];

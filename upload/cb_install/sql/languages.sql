@@ -1523,4 +1523,6 @@ VALUES ('admin_setting'),
        ('enable_theme_change_tips'),
        ('option_theme_auto'),
        ('title_theme_auto'),
-       ('title_theme_x');
+       ('title_theme_x'),
+       ('max_video_categories'),
+       ('max_video_categories_hint');

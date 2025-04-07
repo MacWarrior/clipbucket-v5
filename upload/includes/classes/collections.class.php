@@ -1647,7 +1647,7 @@ class Collections extends CBCategory
                     }
                 }
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 
@@ -2009,7 +2009,7 @@ class Collections extends CBCategory
                     $val = '|f|null';
                 }
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"315",
+  "revision":"316",
   "status":"stable",
   "detail":[
     {
@@ -79,6 +79,8 @@
         ,"Update custom page edition"
         ,"Update automatic launch of tools logs"
         ,"Update player settings"
+        ,"Update video manager display"
+        ,"Update video max categories option"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"

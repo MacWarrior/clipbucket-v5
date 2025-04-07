@@ -347,10 +347,20 @@ class Category
     /**
      * @throws Exception
      */
-    public function validate($array): bool
+    public static function validate($array, $type = ''): bool
     {
         if ($array == null) {
             $array = $_POST['category'];
+        }
+        switch ($type) {
+            case 'video':
+                $config_categ = 'video_categories';
+                break;
+            default:
+            case 'photo':
+            case 'collection':
+                $config_categ = '';
+                break;
         }
 
         if (!is_array($array)) {
@@ -373,12 +383,13 @@ class Category
             return false;
         }
 
-        if (count($new_array) > config('video_categories')) {
-            e(lang('vdo_cat_err2', config('video_categories')));
+        if(!empty($config_categ) && config($config_categ) > 0 && count($new_array) > config($config_categ) ){
+            e(lang('vdo_cat_err2', config($config_categ)));
             return false;
         }
 
-        return true;    }
+        return true;
+    }
 
     /**
      * @param string $type
