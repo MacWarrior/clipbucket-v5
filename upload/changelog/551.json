@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"323",
+  "revision":"324",
   "status":"stable",
   "detail":[
     {
@@ -292,6 +292,7 @@
         ,"Fix rare display issue on featured video slider"
         ,"Fix language switch"
         ,"Fix theme switch on SEO URLs"
+        ,"Fix collection item management blur"
       ]
     },
     {

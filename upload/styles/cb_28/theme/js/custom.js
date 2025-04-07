@@ -526,14 +526,14 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Language switch */
     document.querySelectorAll('.pick-lang').forEach(button => {
         button.addEventListener('click', () => {
-            const lang_code = button.dataset.lang;
-            const currentUrl = window.location.href;
+            const lang_id = button.dataset.lang;
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
 
-            if (!currentUrl.includes('?')) {
-                window.location = `?set_site_lang=${lang_code}`;
-            } else {
-                window.location = `${currentUrl}&set_site_lang=${lang_code}`;
-            }
+            params.set('set_site_lang', lang_id);
+
+            url.search = params.toString();
+            window.location = url.toString();
         });
     });
     /* Language switch */
