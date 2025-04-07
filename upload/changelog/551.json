@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"312",
+  "revision":"316",
   "status":"stable",
   "detail":[
     {
@@ -78,6 +78,9 @@
         ,"Update categories management"
         ,"Update custom page edition"
         ,"Update automatic launch of tools logs"
+        ,"Update player settings"
+        ,"Update video manager display"
+        ,"Update video max categories option"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -154,6 +157,7 @@
         ,"Fix Correct video categories tool"
         ,"Fix photo deletion <i>(#560)</i>"
         ,"Fix user category display"
+        ,"Fix user categories menu display"
       ]
     },
     {
@@ -184,6 +188,7 @@
         ,"Implement video thumbs preview"
         ,"Implement video conversion percent"
         ,"Implement collection custom order"
+        ,"Implement theme switch"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -193,6 +198,7 @@
         ,"Refactor collection categories"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
+        ,"Add search links on user's category"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"

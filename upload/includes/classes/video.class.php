@@ -1457,8 +1457,12 @@ class CBvideo extends CBCategory
                 $val = $array[$name];
 
                 if (!empty($val) || !$field['use_if_value']) {
-                    if ($field['use_func_val']) {
-                        $val = $field['validate_function']($val);
+                    if (!empty($field['validate_function'])) {
+                        if (isset($field['second_parameter_validate'])) {
+                            $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                        } else {
+                            $val = $field['validate_function']($val);
+                        }
                     }
 
                     if (!empty($field['db_field'])) {
@@ -1489,11 +1493,6 @@ class CBvideo extends CBCategory
                 if (!empty($array['views'])) {
                     $query_field[] = 'views';
                     $query_val[] = $array['views'];
-                }
-
-                if (!empty($array['video_users'])) {
-                    $query_field[] = 'video_users';
-                    $query_val[] = $array['video_users'];
                 }
 
                 if (!empty($array['rating'])) {

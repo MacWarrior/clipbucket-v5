@@ -20,18 +20,6 @@ function config($input)
 }
 
 /**
- * Function used to get player logo
- */
-function website_logo(): string
-{
-    $logo_file = config('player_logo_file');
-    if ($logo_file && file_exists(DirPath::get('images') . $logo_file)) {
-        return DirPath::getUrl('images') . $logo_file;
-    }
-    return DirPath::getUrl('images') . 'logo.png';
-}
-
-/**
  * create_dated_folder()
  *
  * create date folders with respect to date. so that no folder gets overloaded

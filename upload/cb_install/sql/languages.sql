@@ -1518,4 +1518,11 @@ VALUES ('admin_setting'),
        ('sort_by_most_commented'),
        ('sort_by_most_items'),
        ('enable_categories'),
-       ('launch_tool');
+       ('launch_tool'),
+       ('enable_theme_change'),
+       ('enable_theme_change_tips'),
+       ('option_theme_auto'),
+       ('title_theme_auto'),
+       ('title_theme_x'),
+       ('max_video_categories'),
+       ('max_video_categories_hint');
