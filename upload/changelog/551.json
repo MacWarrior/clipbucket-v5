@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"318",
+  "revision":"319",
   "status":"stable",
   "detail":[
     {
@@ -288,6 +288,7 @@
         ,"Fix video categories display on video page"
         ,"Fix anonymous user display on channels page"
         ,"Fix age verification disclaimer pop-in display"
+        ,"Fix rare display issue on featured video slider"
       ]
     },
     {
