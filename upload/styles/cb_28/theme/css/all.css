@@ -6061,8 +6061,8 @@ textarea#comment_box {
   max-width: 70%;
   text-align: center;
   transform: translate(-50%,-20%);
-  background-color: #EEEEEE;
-  border: 1px solid #adadad;
+  border-width: 1px;
+  border-style: solid;
   border-radius: 5px;
   padding: 30px;
 }
