@@ -134,6 +134,7 @@ if (isset($_POST['update'])) {
         , 'enable_photo_categories'
         , 'enable_video_categories'
         , 'enable_collection_categories'
+        , 'enable_theme_change'
     ];
 
     $config_booleans_to_refactor = [
@@ -378,7 +379,7 @@ if (isset($_POST['update'])) {
         'enable_photo_categories',
         'enable_video_categories',
         'enable_collection_categories',
-
+        'enable_theme_change',
         'autoplay_video',
         'embed_player_height',
         'embed_player_width',
