@@ -370,11 +370,6 @@ class Upload
         $title = $default['title'];
         $desc = $default['description'];
 
-        if (is_array($default['category'])) {
-            $cat_array = $default['category'];
-        } else {
-            $cat_array = explode(',', $default['category']);
-        }
 
         $hint_tags = config('allow_tag_space') =='yes' ? '<span class="fa fa-question-circle tips" style="margin-left: 5px;" title=\''.lang('use_tab_tag').'\'></span>' : '';
 
@@ -449,6 +444,13 @@ class Upload
             ];
         }
         if( config('enable_video_categories') != 'no' ){
+            if (empty($default['category'])) {
+                $cat_array = [];
+            }elseif (is_array($default['category'])) {
+                $cat_array = $default['category'];
+            } else {
+                $cat_array = explode(',', $default['category']);
+            }
             $uploadFormRequiredFieldsArray['cat'] = [
                 'title'             => lang('vdo_cat'),
                 'type'              => 'checkbox',
@@ -1079,7 +1081,7 @@ class Upload
      * and that array will be part of video fields
      * @throws Exception
      */
-    function load_video_fields($input): array
+    function load_video_fields($input=null): array
     {
         $fields = [
             [
