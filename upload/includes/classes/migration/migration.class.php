@@ -195,6 +195,9 @@ class Migration
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function updateTranslationKey(string $translation_key_old, string $translation_key_new)
     {
         $sql = 'UPDATE ' . tbl('languages_keys') . ' k1
