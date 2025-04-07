@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"320",
+  "revision":"321",
   "status":"stable",
   "detail":[
     {
@@ -158,6 +158,7 @@
         ,"Fix photo deletion <i>(#560)</i>"
         ,"Fix user category display"
         ,"Fix user categories menu display"
+        ,"Fix top menu display"
       ]
     },
     {
