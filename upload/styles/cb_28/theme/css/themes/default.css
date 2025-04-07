@@ -308,6 +308,12 @@ a:hover{
     color: #f6f6f6;
 }
 
+/* Age verification */
+#disclaimer .content{
+    background-color: var(--color-01);
+    border-color: var(--color-03);
+}
+
 /* Login */
 .signin-block h2,
 .forgot-block h2,

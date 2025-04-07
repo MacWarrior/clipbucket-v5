@@ -372,6 +372,8 @@ body {
   font: 14px/16px "source_sans_proregular", sans-serif;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: none;
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 img {
@@ -6061,8 +6063,8 @@ textarea#comment_box {
   max-width: 70%;
   text-align: center;
   transform: translate(-50%,-20%);
-  background-color: #EEEEEE;
-  border: 1px solid #adadad;
+  border-width: 1px;
+  border-style: solid;
   border-radius: 5px;
   padding: 30px;
 }

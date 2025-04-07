@@ -130,6 +130,15 @@ class Video
         return $this->tablename_categories;
     }
 
+    public function addFields(array $fields){
+        if( empty($fields) ){
+            return;
+        }
+        foreach($fields as $field){
+            $this->fields[] = $field;
+        }
+    }
+
     private function getFields(): array
     {
         return $this->fields;
