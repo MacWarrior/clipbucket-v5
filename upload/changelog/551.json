@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"319",
+  "revision":"322",
   "status":"stable",
   "detail":[
     {
@@ -158,6 +158,7 @@
         ,"Fix photo deletion <i>(#560)</i>"
         ,"Fix user category display"
         ,"Fix user categories menu display"
+        ,"Fix top menu display"
       ]
     },
     {
@@ -332,6 +333,7 @@
         ,"Fix email rendering"
         ,"Fix last activity datetime saving <i>(#551)</i>"
         ,"Fix automated tasks through crontab"
+        ,"Fix outdated database compatibility"
       ]
     },
     {
@@ -436,7 +438,7 @@
         ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
-        ,"Update VideoJS player to version 2.1"
+        ,"Update VideoJS player to version 2.1.1"
         ,"Update Remote Play to version 1.0.7"
         ,"Remove Social Beast"
       ]
