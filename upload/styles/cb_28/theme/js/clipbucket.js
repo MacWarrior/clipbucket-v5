@@ -1567,20 +1567,19 @@
 		};
 
 		this.updateSubscribersCount = function(userid){
-			$.post(page,
-				{
+			$.post(page, {
 					mode : 'get_subscribers_count',
 					userid : userid
 				},
-				function(data)
-				{
+				function(data) {
 					if(!data){
 						alert('No data');
 					} else {
 						subsObj = JSON.parse(data);
 						$('#user_subscribers_'+userid).html(subsObj.subscriber_count);
 					}
-				},'text');
+				},'text'
+			);
 		};
 	};
 
@@ -1588,16 +1587,3 @@
 	window._cb.setRemoteId();
 
 })(window);
-
-$(document).on('click','.pick-lang',function(){
-	var _this = $(this);
-	var lang_code = _this.data('lang');
-	var $currentLocation = window.location.href,
-		matchedElement = $currentLocation.match(/\?/);
-
-	if(matchedElement == null) {
-		window.location = "?set_site_lang="+lang_code;
-	} else {
-		window.location = window.location+"&set_site_lang="+lang_code;
-	}
-});
