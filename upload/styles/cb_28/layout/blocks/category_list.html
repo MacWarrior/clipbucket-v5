@@ -11,7 +11,7 @@
 	<a href="#" class="dropdown-toggle" data-toggle="dropdown">{display_clean($category_name)}<span class="icon-down-arrow"></span></a>
 	<ul class="dropdown-menu">
 	<li>
-        <a href="/{$type}.php">{lang code='cat_all'}</a>
+        <a href="{cblink(['name'=>'category','data'=>['category_id'=>'cat_all','category_name'=>'cat_all'],'type'=>$type])}">{lang code='cat_all'}</a>
 	</li>
 		{$level = '1'}
 		{foreach from=$categories item=maincat}
