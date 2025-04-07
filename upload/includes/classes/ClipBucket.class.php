@@ -436,10 +436,6 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'add_member.php'
                     ]
                     , [
-                        'title' => lang('manage_x', strtolower(lang('categories')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
-                    ]
-                    , [
                         'title' => 'Inactive Only'
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=ToActivate'
                     ]
@@ -453,6 +449,13 @@ class ClipBucket
                     ]
                 ]
             ];
+
+            if( config('enable_user_category') == 'yes' ){
+                $menu_users['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('categories')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
+                ];
+            }
 
             $this->addMenuAdmin($menu_users, 20);
         }

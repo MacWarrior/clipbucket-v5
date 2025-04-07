@@ -391,9 +391,9 @@ class User
                 $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
             }
-            if( !$param_count ){
-                $select[] = 'categories.category_id ';
-                $group[] = 'categories.category_id ';
+            if (!$param_count) {
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
+                $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
             }
         }
 
