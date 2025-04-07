@@ -387,7 +387,7 @@ if (isset($_POST['update'])) {
         'chromecast',
         'control_bar_logo',
         'contextual_menu_disabled',
-        'control_bar_logo_url',
+
         'player_logo_url',
         'player_thumbnails',
         'player_default_resolution',
@@ -449,13 +449,6 @@ if (isset($_POST['update'])) {
         'video_thumbs_preview_count'
     ];
 
-    if (isset($_FILES['logo_file']['name'])) {
-        $logo_file = Upload::getInstance()->upload_website_logo($_FILES['logo_file']);
-        if ($logo_file) {
-            myquery::getInstance()->Set_Website_Details('player_logo_file', $logo_file);
-        }
-    }
-
     foreach ($rows as $field) {
         $value = ($_POST[$field]);
         if (in_array($field, $num_array)) {
@@ -467,16 +460,6 @@ if (isset($_POST['update'])) {
                 $value = 1;
             }
         }
-        if ($field == 'control_bar_logo_url') {
-            if (is_null($_FILES[$field]) || empty($_FILES[$field]['tmp_name'])) {
-                continue;
-            }
-            if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
-                unlink(DirPath::get('logos') . 'player-logo.png');
-            }
-            $_POST['control_bar_logo_url'] = DirPath::getUrl('logos') . 'player-logo.png';
-            move_uploaded_file($_FILES[$field]['tmp_name'], DirPath::get('logos') . 'player-logo.png');
-        }
         if (in_array($field, $config_booleans)) {
             if ($value != 'yes') {
                 $value = 'no';
@@ -487,7 +470,6 @@ if (isset($_POST['update'])) {
                 $value = '0';
             }
         }
-
 
         myquery::getInstance()->Set_Website_Details($field, $value);
     }
@@ -501,6 +483,12 @@ if (isset($_POST['update'])) {
         // function used to upload site logo.
         upload_image('favicon');
         myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    }
+    if( !empty($_FILES['control_bar_logo_url']['name']) ){
+        $logo_file = Upload::getInstance()->upload_player_logo($_FILES['control_bar_logo_url']);
+        if ($logo_file) {
+            myquery::getInstance()->Set_Website_Details('control_bar_logo_url', $logo_file);
+        }
     }
 
     //clear cache

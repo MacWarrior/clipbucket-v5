@@ -74,7 +74,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'max_username', '15'),
 	(NULL, 'allow_username_spaces', 'yes'),
 	(NULL, 'comments_captcha', 'guests'),
-	(NULL, 'player_logo_file', 'logo.jpg'),
 	(NULL, 'own_photo_rating', 'no'),
 	(NULL, 'mail_type', 'mail'),
 	(NULL, 'smtp_host', ''),
