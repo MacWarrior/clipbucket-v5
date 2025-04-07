@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"316",
+  "revision":"317",
   "status":"stable",
   "detail":[
     {
@@ -435,6 +435,7 @@
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
         ,"Update VideoJS player to version 2.1"
+        ,"Update Remote Play to version 1.0.7"
         ,"Remove Social Beast"
       ]
     },
