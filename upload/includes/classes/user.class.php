@@ -834,6 +834,10 @@ class User
 
     public function getUserTheme(): string
     {
+        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light'])) {
+            return config('default_theme');
+        }
+
         return $_COOKIE['user_theme'] ?? $this->getActiveTheme();
     }
 

@@ -428,10 +428,10 @@ $(window).resize(function(){
     loginHeight();
 });
 
-/* Thumbs preview */
+
 document.addEventListener("DOMContentLoaded", function () {
-    const images = document.querySelectorAll("img[data-thumbs]");
-    if (images.length === 0) return;
+    /* Thumbs preview */
+    let images = document.querySelectorAll("img[data-thumbs]");
     images.forEach(img => {
         let thumbnails;
         try {
@@ -443,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!Array.isArray(thumbnails) || thumbnails.length === 0) return;
         let index = 0;
         let interval;
-        const parent = img.closest("div");
+        let parent = img.closest("div");
         parent.addEventListener("mouseenter", function () {
             if( img.src ){
                 img.dataset.originalSrc = img.src;
@@ -463,6 +463,7 @@ document.addEventListener("DOMContentLoaded", function () {
             index = 0;
         });
     });
+    /* Thumbs preview */
 
     /* Theme switch */
     function postThemeSwitch(selected_theme){
@@ -496,14 +497,14 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
 
-    const buttons = document.querySelectorAll('.theme-switch button');
+    let buttons = document.querySelectorAll('.theme-switch button');
     buttons.forEach(button => {
         button.addEventListener('click', () => {
             if (button.classList.contains('active')) {
                 return;
             }
 
-            const current_active = document.querySelector('.theme-switch button.active');
+            let current_active = document.querySelector('.theme-switch button.active');
             if (current_active) {
                 current_active.classList.remove('active');
             }
@@ -514,9 +515,8 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    const html = document.documentElement;
+    let html = document.documentElement;
     if (html.classList.contains('auto')) {
-        const osTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         html.classList.remove('auto');
 
         postThemeSwitch('auto');

@@ -86,7 +86,6 @@
 	display: inline-flex;
 	border: 1px solid var(--color-footer-dropdown);
 	border-radius: 20px;
-	overflow: hidden;
 	font-family: "Segoe UI", system-ui, sans-serif;
 	font-size: 13px;
 	font-weight: 500;
