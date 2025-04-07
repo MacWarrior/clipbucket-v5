@@ -5411,6 +5411,10 @@ textarea#comment_box {
   vertical-align: middle;
 }
 
+#footer .column.lang_wrapper {
+  text-align: center;
+}
+
 #footer .column.copyright-poweredby {
   text-align: right;
 }
@@ -5475,7 +5479,6 @@ textarea#comment_box {
     width: 100%;
   }
 
-  #footer .column.lang_wrapper,
   #footer .column.copyright-poweredby {
     text-align: center;
   }

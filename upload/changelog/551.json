@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"312",
+  "revision":"313",
   "status":"stable",
   "detail":[
     {
@@ -184,6 +184,7 @@
         ,"Implement video thumbs preview"
         ,"Implement video conversion percent"
         ,"Implement collection custom order"
+        ,"Implement theme switch"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
