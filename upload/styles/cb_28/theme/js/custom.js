@@ -465,6 +465,37 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     /* Theme switch */
+    function postThemeSwitch(selected_theme){
+        jQuery.post({
+            'url':'actions/switch_theme.php',
+            'dataType':'json',
+            'data': {
+                theme: selected_theme,
+                os: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            },
+            'success':function(data){
+                let link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.type = "text/css";
+                link.href = data.url;
+                document.head.appendChild(link);
+
+                document.body.classList.add('theme_transition');
+                if (data.theme === 'dark' ) {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                }
+                setTimeout(() => {
+                    document.body.classList.remove('theme_transition');
+                }, 1000);
+            }
+        });
+    }
+
+
     const buttons = document.querySelectorAll('.theme-switch button');
     buttons.forEach(button => {
         button.addEventListener('click', () => {
@@ -479,33 +510,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             button.classList.add('active');
 
-            jQuery.post({
-                'url':'actions/switch_theme.php',
-                'dataType':'json',
-                'data': {
-                    theme: button.dataset.theme,
-                    os: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
-                },
-                'success':function(data){
-                    let link = document.createElement("link");
-                    link.rel = "stylesheet";
-                    link.type = "text/css";
-                    link.href = data.url;
-                    document.head.appendChild(link);
-
-                    document.body.classList.add('theme_transition');
-                    if (data.theme === 'dark' ) {
-                        document.documentElement.classList.remove('light');
-                        document.documentElement.classList.add('dark');
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                        document.documentElement.classList.add('light');
-                    }
-                    setTimeout(() => {
-                        document.body.classList.remove('theme_transition');
-                    }, 1000);
-                }
-            });
+            postThemeSwitch(button.dataset.theme);
         });
     });
 
@@ -513,7 +518,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (html.classList.contains('auto')) {
         const osTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
         html.classList.remove('auto');
-        html.classList.add(osTheme);
+
+        postThemeSwitch('auto');
     }
     /* Theme switch */
 });

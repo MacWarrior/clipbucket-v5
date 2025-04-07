@@ -800,13 +800,19 @@ class User
 
     public function getActiveTheme(): string
     {
-        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['light','dark']) ){
+        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light'])) {
             return config('default_theme');
         }
 
         if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
             if( in_array($this->get('active_theme'), ['light','dark','auto']) ){
-                return $this->get('active_theme');
+                if( $this->get('active_theme') && empty($_COOKIE['user_theme_os']) ){
+                    return $this->get('active_theme');
+                }
+                if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
+                    return config('default_theme');
+                }
+                return $_COOKIE['user_theme_os'];
             }
             return config('default_theme');
         }
@@ -828,7 +834,7 @@ class User
 
     public function getUserTheme(): string
     {
-        return $_COOKIE['user_theme'];
+        return $_COOKIE['user_theme'] ?? $this->getActiveTheme();
     }
 
     /**
