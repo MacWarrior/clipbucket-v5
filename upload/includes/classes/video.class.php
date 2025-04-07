@@ -267,6 +267,9 @@ class Video
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
         $sorts = SortType::getSortTypes('videos');
 
         if (config('enable_comments_video') != 'yes') {

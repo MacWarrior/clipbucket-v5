@@ -14,7 +14,7 @@ $params_featured = [
     'limit'          => 5
 ];
 assign('featured_users', User::getInstance()->getAll($params_featured));
-
+$params = [];
 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
     $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
     $params = User::getInstance()->getFilterParams($sort_label, []);

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"321",
+  "revision":"322",
   "status":"stable",
   "detail":[
     {
@@ -333,6 +333,7 @@
         ,"Fix email rendering"
         ,"Fix last activity datetime saving <i>(#551)</i>"
         ,"Fix automated tasks through crontab"
+        ,"Fix outdated database compatibility"
       ]
     },
     {

@@ -188,6 +188,9 @@ class Collection
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
         $sorts = SortType::getSortTypes('collections');
 
         if (config('enable_comments_collection') != 'yes') {
