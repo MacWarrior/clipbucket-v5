@@ -2099,7 +2099,7 @@ function sort_link($sort, $mode, $type): string
         case 'channels':
         case 'channel':
             $type = 'channels';
-            $config_enable_category = 'enable_user_categories';
+            $config_enable_category = 'enable_user_category';
             break;
 
         case 'collections':
