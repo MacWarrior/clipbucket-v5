@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"319",
+  "revision":"320",
   "status":"stable",
   "detail":[
     {
@@ -436,7 +436,7 @@
         ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
-        ,"Update VideoJS player to version 2.1"
+        ,"Update VideoJS player to version 2.1.1"
         ,"Update Remote Play to version 1.0.7"
         ,"Remove Social Beast"
       ]
