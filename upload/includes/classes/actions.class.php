@@ -633,8 +633,12 @@ class cbactions
                     $name = formObj::rmBrackets($field['name']);
                     $val = $array[$name];
 
-                    if ($field['use_func_val']) {
-                        $val = $field['validate_function']($val);
+                    if (!empty($field['validate_function'])) {
+                        if (isset($field['second_parameter_validate'])) {
+                            $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                        } else {
+                            $val = $field['validate_function']($val);
+                        }
                     }
 
                     if (is_array($val)) {

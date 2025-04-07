@@ -76,11 +76,13 @@ function deleteComment(comment_id) {
 function editTitle(number) {
     $('#buttons-' + number).css('display', 'inline');
     $('#edit_sub_' + number).css('display', 'inline');
+    $('#span_sub_' + number).hide();
 }
 
 function cancelEditTitle(number) {
     $('#buttons-' + number).hide();
     $('#edit_sub_' + number).hide();
+    $('#span_sub_' + number).show();
 }
 
 function saveSubtitle(number) {

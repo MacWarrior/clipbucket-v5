@@ -124,7 +124,7 @@ class Upload
                 continue;
             }
 
-            if ($field['use_func_val']) {
+            if (!empty($field['validate_function'])) {
                 $val = $field['validate_function']($val);
             }
 
@@ -452,17 +452,20 @@ class Upload
                 $cat_array = explode(',', $default['category']);
             }
             $uploadFormRequiredFieldsArray['cat'] = [
-                'title'             => lang('vdo_cat'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'hint_1'            => lang('vdo_cat_msg', config('video_categories')),
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'invalid_err'       => lang('vdo_cat_err3'),
-                'display_function'  => 'convert_to_categories'
+                'title'                     => lang('vdo_cat'),
+                'type'                      => 'checkbox',
+                'name'                      => 'category[]',
+                'id'                        => 'category',
+                'value'                     => $cat_array,
+                'required'                  => 'yes',
+                'validate_function'         => 'Category::validate',
+                'second_parameter_validate' => 'video',
+                'invalid_err'               => lang('vdo_cat_err3'),
+                'display_function'          => 'convert_to_categories'
             ];
+            if (config('video_categories') > 0 && is_array($cat_array)) {
+                $uploadFormRequiredFieldsArray['cat']['hint_1'] = lang('vdo_cat_msg', config('video_categories'));
+            }
         }
         if( config('enable_video_actor') == 'yes' ){
             $uploadFormRequiredFieldsArray['tags_actors'] = [
@@ -593,7 +596,6 @@ class Upload
                 'required'          => 'no',
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
-                'use_func_val'      => true
             ];
         }
 
@@ -640,7 +642,6 @@ class Upload
             'extra_tags'        => " $video_user_disable ",
             'hint_2'            => lang('specify_video_users'),
             'validate_function' => 'video_users',
-            'use_func_val'      => true
         ];
 
         if( config('enable_comments_video') == 'yes' ){
@@ -753,7 +754,6 @@ class Upload
                 'db_field'          => 'datecreated',
                 'required'          => 'no',
                 'default_value'     => '',
-                'use_func_val'      => true,
                 'validate_function' => 'datecreated',
                 'hint_2'            => config('date_format')
             ];
@@ -1037,21 +1037,20 @@ class Upload
         return false;
     }
 
-
     /**
      * Function used to upload website logo
      * @param $file
      * @return string|bool;
      */
-    function upload_website_logo($file)
+    function upload_player_logo($file)
     {
         global $imgObj;
 
         if (!empty($file['name'])) {
             $ext = getExt($file['name']);
-            $file_name = 'plaery-logo';
+            $file_name = 'player-logo' . '.' . $ext;
             if ($imgObj->ValidateImage($file['tmp_name'], $ext)) {
-                $file_path = DirPath::get('images') . $file_name . '.' . $ext;
+                $file_path = DirPath::get('logos') . $file_name;
                 if (file_exists($file_path)) {
                     if (!unlink($file_path)) {
                         e("Unable to remove '$file_path', please chmod it to 0777");
@@ -1060,10 +1059,10 @@ class Upload
                 }
 
                 move_uploaded_file($file['tmp_name'], $file_path);
-                e('Logo has been uploaded', 'm');
-                return $file_name . '.' . $ext;
+                e('Player logo has been uploaded', 'm');
+                return DirPath::getUrl('logos') . $file_name;
             } else {
-                e('Invalid Image file');
+                e('Invalid player logo image file');
             }
         }
         return false;
