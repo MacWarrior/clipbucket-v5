@@ -64,19 +64,21 @@
                     {/if}
 
                     <div class="clearfix"></div>
-                    {$catString = {$video.category_names}}
-                    {$catString = strip_tags($catString)}
-                    {$toArray = explode(', ',$catString)}
-                    {if count($toArray) > 4}
-                        {$moreText = ' + '|cat:{lang code='more'}}
-                    {else}
-                        {$moreText = ''}
+                    {if config('enable_video_categories') !='no'}
+                        {$catString = {$video.category_names}}
+                        {$catString = strip_tags($catString)}
+                        {$toArray = explode(', ',$catString)}
+                        {if count($toArray) > 4}
+                            {$moreText = ' + '|cat:{lang code='more'}}
+                        {else}
+                            {$moreText = ''}
+                        {/if}
+                        {$finalItems = array_slice($toArray, 0, 4)}
+                        {$vcategories = implode(', ',$finalItems)}
+                        <span>
+                            <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
+                        </span>
                     {/if}
-                    {$finalItems = array_slice($toArray, 0, 4)}
-                    {$vcategories = implode(', ',$finalItems)}
-                    <span>
-                        <span class="label label-info">{lang code='categories'} : {$vcategories} {$moreText}</span>
-                    </span>
                 </div>
             </div>
 

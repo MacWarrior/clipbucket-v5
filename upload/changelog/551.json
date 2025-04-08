@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"287",
+  "revision":"325",
   "status":"stable",
   "detail":[
     {
@@ -38,6 +38,8 @@
         ,"Implement options to disable video Date recorded & location"
         ,"Implement spaces in tags"
         ,"Implement video conversion percent"
+        ,"Implement changelogs page"
+        ,"Implement collection custom order"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -49,6 +51,8 @@
         ,"Refactor flagged elements management"
         ,"Refactor orphan files deletion tool"
         ,"Refactor website configurations"
+        ,"Refactor photos categories"
+        ,"Refactor collection categories"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -58,6 +62,7 @@
         ,"Add collection sharing options"
         ,"Add baseurl config"
         ,"Add broadcast configuration on mass upload <i>(#490)</i>"
+        ,"Add option to disable video categories"
         ,"Update server configurations check"
         ,"Update user levels edition breadcrumb"
         ,"Update menu"
@@ -70,6 +75,12 @@
         ,"Update timezone selection display"
         ,"Update serveur configuration global check"
         ,"Update video broadcast upload display"
+        ,"Update categories management"
+        ,"Update custom page edition"
+        ,"Update automatic launch of tools logs"
+        ,"Update player settings"
+        ,"Update video manager display"
+        ,"Update video max categories option"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -140,6 +151,14 @@
         ,"Fix anonymous flagged medias"
         ,"Fix video resolution settings saving"
         ,"Fix possible SQL injection"
+        ,"Fix chart images display"
+        ,"Fix basic settings menu URL <i>(#554)</i>"
+        ,"Fix view online users listing"
+        ,"Fix Correct video categories tool"
+        ,"Fix photo deletion <i>(#560)</i>"
+        ,"Fix user category display"
+        ,"Fix user categories menu display"
+        ,"Fix top menu display"
       ]
     },
     {
@@ -169,13 +188,18 @@
         ,"Implement 360° video support"
         ,"Implement video thumbs preview"
         ,"Implement video conversion percent"
+        ,"Implement collection custom order"
+        ,"Implement theme switch"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
         ,"Refactor orphan photos management"
         ,"Refactor my account"
+        ,"Refactor photos categories"
+        ,"Refactor collection categories"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
+        ,"Add search links on user's category"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
@@ -184,6 +208,7 @@
         ,"Update search engine"
         ,"Update collection management menus"
         ,"Update video broadcast upload display"
+        ,"Update default mail template compatibility with Outlook"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
@@ -260,6 +285,15 @@
         ,"Fix playlist creation & edition"
         ,"Fix collection creation and video addition"
         ,"Fix manage videos & photos search"
+        ,"Fix collapsed categories display"
+        ,"Fix used storage display <i>(#552)</i>"
+        ,"Fix video categories display on video page"
+        ,"Fix anonymous user display on channels page"
+        ,"Fix age verification disclaimer pop-in display"
+        ,"Fix rare display issue on featured video slider"
+        ,"Fix language switch"
+        ,"Fix theme switch on SEO URLs"
+        ,"Fix collection item management blur"
       ]
     },
     {
@@ -273,12 +307,15 @@
         ,"Update discord errors"
         ,"Update FFMpeg version check"
         ,"Cleanup code"
+        ,"Clean sort/filter URLs"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
         ,"Remove unused files"
         ,"Remove temp files on failed upload"
+        ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
         ,"Update Nginx Vhost & Apache Htaccess"
@@ -298,6 +335,9 @@
         ,"Fix PHP7.0 compatibility"
         ,"Fix video & photo uploads with IPv6"
         ,"Fix email rendering"
+        ,"Fix last activity datetime saving <i>(#551)</i>"
+        ,"Fix automated tasks through crontab"
+        ,"Fix outdated database compatibility"
       ]
     },
     {
@@ -314,6 +354,8 @@
         ,"Fix video conversion failed with unspecified subtitle format"
         ,"Fix rare original video bitrate recovery"
         ,"Fix video thumbs generation ratio other than 16/9"
+        ,"Fix video conversion failed on corrupted subtitle track"
+        ,"Fix incomplete conversion log"
       ]
     },
     {
@@ -344,6 +386,7 @@
         ,"Update installation script to Ubuntu 24.10"
         ,"Update docker installation <i>(#486)</i>"
         ,"Remove unused baseurl input"
+        ,"Reset language cookie during installation"
         ,"Fix SSE error on update from old version"
         ,"Fix revision check when current revision is 0"
         ,"Fix update status when working on new version"
@@ -375,6 +418,7 @@
       "description": [
         "Add spanish (ESP) translation <i>(#353)</i> (Thanks @gvasquezj !)"
         ,"Update portuguese (pt-BR) translations <i>(#347, #516)</i> (Thanks @raiancollyn !)"
+        ,"Update custom pages translations management"
         ,"Fix missing translation"
         ,"Fix translation"
       ]
@@ -398,7 +442,8 @@
         ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
-        ,"Update VideoJS player to version 2.1"
+        ,"Update VideoJS player to version 2.1.1"
+        ,"Update Remote Play to version 1.0.7"
         ,"Remove Social Beast"
       ]
     },

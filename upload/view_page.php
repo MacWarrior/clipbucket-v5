@@ -19,8 +19,7 @@ if ($page) {
     assign('page', $page);
     subtitle($page['page_title']);
 } else {
-    e(lang('page_doesnt_exist'));
-    ClipBucket::getInstance()->show_page = false;
+   redirect_to('404.php');
 }
 
 //Displaying The Template

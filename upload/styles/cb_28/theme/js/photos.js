@@ -178,18 +178,7 @@ $( document ).on( 'keydown', function ( e ) {
     }
 });
 
-$(document).on('click','.pick-lang',function(){
-    var _this = $(this);
-    var lang_code = _this.data('lang');
-    var $currentLocation = window.location.href,
-        matchedElement = $currentLocation.match(/\?/);
 
-    if(matchedElement == null) {
-        window.location = "?set_site_lang="+lang_code;
-    } else {
-        window.location = window.location+"&set_site_lang="+lang_code;
-    }
-});
 
 $('.dropdown-menu li').on('click',function(){
     var searchQuery = $('input#query').val();

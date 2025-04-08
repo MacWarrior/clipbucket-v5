@@ -74,7 +74,7 @@ if (isset($_POST['mass_upload_video'])) {
             $log = new SLog($logFile);
 
             $log->newSection('Pre-Check Configurations');
-            $log->writeLine('File to be converted', 'Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...', true);
+            $log->writeLine(date('Y-m-d H:i:s').' - Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...');
 
             $results = $Upload->add_conversion_queue($file_name);
             $str1 = date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . date('d');

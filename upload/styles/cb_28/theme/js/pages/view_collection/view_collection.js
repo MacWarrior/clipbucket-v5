@@ -10,4 +10,10 @@ $(document).ready(function(){
 
     init_readonly_tags('tags', '#list_tags');
     progressVideoCheck(ids_to_check_progress, 'view_collection');
+
+    $('.sort_dropdown').on('click', function(){
+        showSpinner();
+        var sort_id = $(this).data('sort');
+        document.location = 'view_collection.php?cid=' + collection_id + '&sort_id=' + sort_id;
+    });
 });

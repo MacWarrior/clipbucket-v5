@@ -9,10 +9,10 @@ ClipBucket::getInstance()->addCSS([
     'jquery_ui' . $min_suffixe . '.css'                 => 'admin'
 ]);
 
-$filepath = DirPath::get('styles') . ClipBucket::getInstance()->template . DIRECTORY_SEPARATOR . 'theme' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . config('default_theme') . $min_suffixe . '.css';
-if( config('default_theme') != '' && file_exists($filepath) ){
+$filepath = DirPath::get('styles') . ClipBucket::getInstance()->template . DIRECTORY_SEPARATOR . 'theme' . DIRECTORY_SEPARATOR . 'css' . DIRECTORY_SEPARATOR . 'themes' . DIRECTORY_SEPARATOR . User::getInstance()->getActiveTheme() . $min_suffixe . '.css';
+if( User::getInstance()->getActiveTheme() != '' && file_exists($filepath) ){
     ClipBucket::getInstance()->addCSS([
-        'themes/' . config('default_theme') . $min_suffixe . '.css' => 'admin'
+        'themes/' . User::getInstance()->getActiveTheme() . $min_suffixe . '.css' => 'admin'
     ]);
 }
 

@@ -1189,3 +1189,23 @@ a[role='menuitem'] {
     text-align:center;
     border-radius: 25px;
 }
+
+.invalid-error .form-control,
+.invalid-error .form-control,
+.invalid-error .form-control {
+    border-color: #f44336;
+}
+
+.invalid-error .error-txt,
+.invalid-error .help-block,
+.invalid-error .error-txt,
+.invalid-error .help-block,
+.invalid-error .error-txt,
+.invalid-error .help-block {
+    color: #f44336;
+}
+
+/* Fix menu top */
+.navbar-header .dropdown-menu.dropdown-close.pull-right{
+    right: 0;
+}

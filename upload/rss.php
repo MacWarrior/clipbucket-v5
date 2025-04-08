@@ -63,7 +63,7 @@ subtitle($title);
         <title><?php echo cbtitle(); ?></title>
         <link><?php echo DirPath::getUrl('root'); ?></link>
         <image>
-            <url><?php echo website_logo(); ?></url>
+            <url><?php echo get_website_logo_path(); ?></url>
             <link><?php echo DirPath::getUrl('root'); ?></link>
             <title><?php echo cbtitle(); ?></title>
         </image>

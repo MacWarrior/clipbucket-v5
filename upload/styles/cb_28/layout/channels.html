@@ -16,30 +16,30 @@
                 </div>
 
                 <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                    {else}
-                    <div class="sorting-col col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
-                        {/if}
-
+                {else}
+                <div class="sorting-col col-lg-12 col-md-12 col-sm-12 col-xs-12 clearfix">
+                {/if}
+                       {if $sort_list}
                         <div class="dropdown">
-                            {if $smarty.get.sort}
-                                {foreach from=$sort_list item=name key=sort name=sorts}
-                                    {if $smarty.get.sort==$sort && isset($smarty.get.sort)}
-                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$name} <span class="icon-down-arrow"></span></a>
+                            {if $sort_link}
+                                {foreach from=$sort_list item=sort key=key}
+                                    {if $sort_link == $key}
+                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
                                     {/if}
                                 {/foreach}
                             {else}
-                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">Recent <span class="icon-down-arrow"></span></a>
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
                             {/if}
 
                             <ul class="dropdown-menu">
-                                {foreach from=$sort_list item=name key=sort}
+                                {foreach from=$sort_list item=sort key=key}
                                     <li>
-                                        <a href="{link name=sort sort=$sort type=channels}&sorting=sort" {if $smarty.get.sort==$sort} class="selected" {/if}>{if $smarty.get.sort==$sort}<i class="icon-tick"></i>{/if}{$name}</a>
+                                        <a href="{link name=sort sort=$key type=channels}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
                                     </li>
                                 {/foreach}
                             </ul>
                         </div>
-
+                       {/if}
                         <div class="dropdown">
                             {if $smarty.get.time}
 
@@ -84,7 +84,6 @@
                 <h2>{lang code="featured_users"}</h2>
                 <div class="clearfix sidebar-channels">
                     {foreach $feature_users as $user}
-
                         <div class="clearfix channel-item">
                             <a href="{$userquery->profile_link($user)}" class="avatar">
                                 <img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>

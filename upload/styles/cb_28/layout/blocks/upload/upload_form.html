@@ -2,6 +2,7 @@
 {$requiredFields = $videoFields[0]}
 {$sharingOptions = $videoFields[1]}
 {$dateAndLocation = $videoFields[2]}
+{$custom_fields = $videoFields[4]}
 
 <form action="#" id="updateVideoInfoFormNew">
     <div class="row">
@@ -93,13 +94,15 @@
             </div>
         </div>
         <div class="col-md-4 uploadFormSidebarDiv">
-            <h4>{$categories.title}</h4>
-            <small>{$categories.hint_1}</small>
-            <div class="categoriesContainer">
-                {$categories.label_class='checkbox'}
-                {$categories.class='checkbox'}
-                {$formObj->createField($categories)}
-            </div>
+            {if config('enable_video_categories') != 'no'}
+                <h4>{$categories.title}</h4>
+                <small>{$categories.hint_1}</small>
+                <div class="categoriesContainer">
+                    {$categories.label_class='checkbox'}
+                    {$categories.class='checkbox'}
+                    {$formObj->createField($categories)}
+                </div>
+            {/if}
             <input type="hidden" name="videoid" value="{$videoid}">
             <input type="hidden" name="updateVideo" value="yes">
 

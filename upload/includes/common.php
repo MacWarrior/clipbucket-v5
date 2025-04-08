@@ -95,6 +95,7 @@ require_once DirPath::get('classes') . 'AIVision.class.php';
 require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
+require_once DirPath::get('classes') . 'sort_type.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -152,6 +153,11 @@ Language::getInstance()->init();
 $Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
+
+$timezone = config('timezone');
+if(!empty($timezone) && $timezone !== false) {
+    date_default_timezone_set($timezone);
+}
 
 require_once('classes/session.class.php');
 $sess = new Session();
@@ -226,11 +232,6 @@ $cbphoto = new CBPhotos();
 $cbfeeds = new cbfeeds();
 
 check_install('after');
-
-$timezone = config('timezone');
-if(!empty($timezone) && $timezone !== false) {
-    date_default_timezone_set($timezone);
-}
 
 # Holds Advertisement IDS that are being Viewed
 $ads_array = [];
@@ -372,7 +373,6 @@ $Smarty->register_function('include_template_file', 'include_template_file');
 $Smarty->register_function('include_js', 'include_js');
 $Smarty->register_function('include_css', 'include_css');
 $Smarty->register_function('rss_feeds', 'rss_feeds');
-$Smarty->register_function('website_logo', 'website_logo');
 $Smarty->register_function('get_photo', 'get_image_file');
 $Smarty->register_function('cbCategories', 'getSmartyCategoryList');
 $Smarty->register_modifier('SetTime', 'SetTime');

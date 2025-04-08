@@ -120,7 +120,7 @@ class Update
         return $this->latest;
     }
 
-    private function getCurrentCoreVersionCode(): string
+    public function getCurrentCoreVersionCode(): string
     {
         if( empty($this->versionCode) ){
             $this->versionCode = $this->getCurrentCoreLatest()['dev'];
@@ -154,7 +154,7 @@ class Update
 
             if (!file_exists($filepath_changelog)) {
                 e(lang('error_occured'));
-                e('File don\' exists :' . $filepath_changelog);
+                e('File don\'t exists :' . $filepath_changelog);
                 return [];
             }
 

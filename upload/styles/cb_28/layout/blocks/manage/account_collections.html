@@ -55,9 +55,7 @@
 			</tr>
 		</table>
 	</div>
-    {/if}
-    
-    {if $type == "photos"}
+    {elseif $type == "photos"}
 	<div id="collectionItem_{$collection.photo_id}" class="account_vid_list">
 		<table class="table table-bordered table-striped" style="margin-bottom:0;">
 			<tr>
@@ -66,12 +64,23 @@
 				</td>
 				<td width="50%">
 					<label for="check_item-{$collection.photo_id}">
-						{get_photo style='padding:1px; border:1px solid #999;float:left;max-width:168px;margin-right:10px;' details=$collection output="html"}
+						{assign var='photo_class' value='img-responsive no_select'}
+
+						{if Photo::getInstance()->isToBlur($collection.photo_id)}
+							{$photo_class = $photo_class|cat:' blur'}
+						{/if}
+
+						<div style='padding:1px; border:1px solid #999;float:left;max-width:168px;margin-right:10px;'>
+							{get_photo class=$photo_class details=$collection output="html"}
+						</div>
 						{display_clean($collection.photo_title)|truncate:100}
-					</label><br>
+					</label>
+					{if !Photo::getInstance()->isToBlur($collection.photo_id)}
+					<br/>
 					<span class="video_control">
 						<a href="{$cbphoto->photo_links($collection,'view_item')}">{lang code="view_photo"}</a>
 					</span>
+					{/if}
 				</td>
 				<td width="15%">{$collection.date_added|date_format}</td>
 				<td width="7%">

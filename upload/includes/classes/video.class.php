@@ -130,6 +130,15 @@ class Video
         return $this->tablename_categories;
     }
 
+    public function addFields(array $fields){
+        if( empty($fields) ){
+            return;
+        }
+        foreach($fields as $field){
+            $this->fields[] = $field;
+        }
+    }
+
     private function getFields(): array
     {
         return $this->fields;
@@ -193,6 +202,7 @@ class Video
     public function getOne(array $params = [])
     {
         $params['first_only'] = true;
+        $params['get_detail'] = true;
         return $this->getAll($params);
     }
 
@@ -203,7 +213,9 @@ class Video
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.date_added ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -255,27 +267,18 @@ class Video
      */
     public function getSortList(): array
     {
-        if (!isset($_GET['sort'])) {
-            $_GET['sort'] = 'most_recent';
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
+        $sorts = SortType::getSortTypes('videos');
+
+        if (config('enable_comments_video') != 'yes') {
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-        ];
-
-        if( config('enable_comments_video') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+        if (config('video_rating') != '1') {
+            unset($sorts[array_search('top_rated', $sorts)]);
         }
-
-        if( config('video_rating') == '1' ){
-            $sorts['top_rated'] = lang('top_rated');
-        }
-
-        $sorts['featured'] = lang('featured');
-        $sorts['viewed_recently'] = lang('viewed_recently');
-        $sorts['longer'] = lang('longer_video');
-        $sorts['shorter'] = lang('shorter_video');
 
         return $sorts;
     }
@@ -311,6 +314,7 @@ class Video
         $param_disable_generic_constraints = $params['disable_generic_constraints'] ?? false;
         $param_not_join_user_profile = $params['not_join_user_profile'] ?? false;
         $param_join_flag= $params['join_flag'];
+        $param_get_detail = $params['get_detail'] ?? false;
 
         $conditions = [];
         if( $param_videoid ){
@@ -408,13 +412,13 @@ class Video
             foreach ($this->fields as $field) {
                 $group[] = $this->tablename . '.' . $field;
             }
-
-            $select[] = 'users.username AS user_username';
-            $group[] = 'users.username';
+                $select[] = 'users.username AS user_username';
+                $group[] = 'users.username';
         }
 
         $join = [];
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ) {
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') && ($param_get_detail || $param_search || $param_tags)) {
             if( !$param_count ){
                 $types = Tags::getVideoTypes();
                 foreach ($types as $type) {
@@ -426,13 +430,17 @@ class Video
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON video_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') && ($param_get_detail || $param_category || $param_search)) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON ' . $this->getTableName() . '.videoid = videos_categories.id_video';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
 
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
                 $group[] = $this->getTableName() . '.videoid';
+            }
+
+            if( $param_get_detail ){
+                $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
             }
 
             if( $param_category ){
@@ -449,7 +457,7 @@ class Video
             $join[] = 'INNER JOIN ' . cb_sql_table($collection_items_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $param_collection_id . ' AND ' . $this->getTableName() . '.videoid = ' . $collection_items_table . '.object_id';
         }
 
-        if (!$param_not_join_user_profile) {
+        if (!$param_not_join_user_profile && $param_get_detail) {
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
 
             if( !$param_count && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
@@ -1129,10 +1137,12 @@ class CBvideo extends CBCategory
                 ];
             }
 
-            $menu_video['sub'][] = [
-                'title' => lang('manage_x', strtolower(lang('categories')))
-                , 'url' => DirPath::getUrl('admin_area') . 'category.php'
-            ];
+            if (config('enable_video_categories') != 'no') {
+                $menu_video['sub'][] = [
+                    'title'   => lang('manage_x', strtolower(lang('categories')))
+                    , 'url'   => DirPath::getUrl('admin_area') . 'category.php'
+                ];
+            }
 
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
                 $menu_video['sub'][] = [
@@ -1459,8 +1469,12 @@ class CBvideo extends CBCategory
                 $val = $array[$name];
 
                 if (!empty($val) || !$field['use_if_value']) {
-                    if ($field['use_func_val']) {
-                        $val = $field['validate_function']($val);
+                    if (!empty($field['validate_function'])) {
+                        if (isset($field['second_parameter_validate'])) {
+                            $val = $field['validate_function']($val,$field['second_parameter_validate']);
+                        } else {
+                            $val = $field['validate_function']($val);
+                        }
                     }
 
                     if (!empty($field['db_field'])) {
@@ -1491,11 +1505,6 @@ class CBvideo extends CBCategory
                 if (!empty($array['views'])) {
                     $query_field[] = 'views';
                     $query_val[] = $array['views'];
-                }
-
-                if (!empty($array['video_users'])) {
-                    $query_field[] = 'video_users';
-                    $query_val[] = $array['video_users'];
                 }
 
                 if (!empty($array['rating'])) {
@@ -1572,7 +1581,11 @@ class CBvideo extends CBCategory
                 $array['category'] = [$array['category']];
             }
 
-            Category::getInstance()->saveLinks('video', $vid, $array['category']);
+            if (config('enable_video_categories') != 'no') {
+                Category::getInstance()->saveLinks('video', $vid, $array['category']);
+            } else {
+                Category::getInstance()->saveLinks('video', $vid, [Category::getInstance()->getDefaultByType('video')['category_id']]);
+            }
 
             cb_do_action('update_video', [
                 'object_id' => $vid,

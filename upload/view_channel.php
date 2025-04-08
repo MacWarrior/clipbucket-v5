@@ -40,8 +40,11 @@ if ($udetails['ban_status'] == 'yes') {
 assign('user', $udetails);
 
 if( config('enable_user_category')=='yes' ){
-    $user_category = Category::getInstance()->getById($udetails['id_category']);
-    assign('user_category', $user_category['category_name']);
+    $category_links = [];
+    foreach (json_decode($udetails['category_list'],true) as $user_category) {
+        $category_links[] = '<a href="' . cblink(['name' => 'category', 'data' => ['category_id' => $user_category['id'], 'category_name' => $user_category['name']], 'type' => 'channel']) . '">' . display_clean($user_category['name']) . '</a>';
+    }
+    assign('category_links', implode(',', $category_links));
 }
 
 //Subscribing User

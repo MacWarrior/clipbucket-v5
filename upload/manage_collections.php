@@ -79,7 +79,7 @@ switch ($mode) {
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
 
-        if (isset($_POST['add_collection'])) {
+        if (!empty($_POST)) {
             $cbcollection->create_collection($_POST);
             if (!error()) {
                 $_POST = '';
@@ -97,7 +97,9 @@ switch ($mode) {
 
         if (isset($_POST['update_collection'])) {
             $cbcollection->update_collection($_POST);
-            Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $collection_id);
+            if (isset($_POST['default_thumb'])) {
+                Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $collection_id);
+            }
         }
 
         $collection = Collection::getInstance()->getOne(['collection_id' => $collection_id]);
