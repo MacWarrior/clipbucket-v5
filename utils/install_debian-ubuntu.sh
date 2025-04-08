@@ -418,8 +418,8 @@ server {
         break;
     }
 
-    location ~* ^(.*/)?item/(.*)/(.*)/(.*)/(.*)$ {
-        rewrite ^(.*/)?item/(.*)/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last;
+    location ~* ^(.*/)?item/(.*)/(.*)/(.*)$ {
+        rewrite ^(.*/)?item/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last;
         break;
     }
 
