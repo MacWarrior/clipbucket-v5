@@ -36,6 +36,7 @@ RewriteEngine on
 
 #URL Rewriting for Videos
 RewriteRule ^videos/(.*)/(.*)/(.*)/(.*)             videos.php?cat=$1&sort=$2&time=$3&page=$4 [L]
+RewriteRule ^videos/(.*)/(.*)/(.*)                  videos.php?sort=$1&time=$2&page=$3 [L]
 RewriteRule ^videos/([0-9]+)                        videos.php?page=$1 [L]
 RewriteRule ^videos/?$                              videos.php?%{QUERY_STRING} [L]
 RewriteRule ^video/(.*)/(.*)                        watch_video.php?v=$1&%{QUERY_STRING} [L]
@@ -45,6 +46,7 @@ RewriteRule ^video/([0-9]+)_(.*)                    watch_video.php?v=$1&%{QUERY
 
 #Users, Channel & Management
 RewriteRule ^channels/(.*)/(.*)/(.*)/(.*)           channels.php?cat=$1&sort=$2&time=$3&page=$4 [L]
+RewriteRule ^channels/(.*)/(.*)/(.*)                channels.php?sort=$1&time=$2&page=$3 [L]
 RewriteRule ^channels/([0-9]+)                      channels.php?page=$1 [L]
 RewriteRule ^channels/?$                            channels.php [L]
 RewriteRule ^members/?$                             channels.php [nc]
@@ -64,9 +66,11 @@ RewriteRule ^categories/?$						    categories.php [nc]
 
 #Collection Section
 RewriteRule ^collections/(.*)/(.*)/(.*)/(.*)        collections.php?cat=$1&sort=$2&time=$3&page=$4 [L]
+RewriteRule ^collections/(.*)/(.*)/(.*)             collections.php?sort=$1&time=$2&page=$3 [L]
 RewriteRule ^collections/([0-9]+)                   collections.php?page=$1 [L]
 RewriteRule ^collections/?$ 						collections.php [L]
 RewriteRule ^photos/(.*)/(.*)/(.*)/(.*) 		    photos.php?cat=$1&sort=$2&time=$3&page=$4 [L]
+RewriteRule ^photos/(.*)/(.*)/(.*)       		    photos.php?sort=$1&time=$2&page=$3 [L]
 RewriteRule ^photos/([0-9]+)                        photos.php?page=$1 [L]
 RewriteRule ^photos/?$ 								photos.php [L]
 RewriteRule ^collection/(.*)/(.*)/(.*)				view_collection.php?cid=$1&type=$2&page=$3 [L]
