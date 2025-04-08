@@ -1499,9 +1499,7 @@ class Collections extends CBCategory
             'checked'           => $default['broadcast'],
             'db_field'          => 'broadcast',
             'required'          => 'no',
-            'validate_function' => 'yes_or_no',
-            'display_function'  => 'display_sharing_opt',
-            'default_value'     => 'yes'
+            'default_value'     => 'public'
         ];
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
