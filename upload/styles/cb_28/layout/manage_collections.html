@@ -32,7 +32,7 @@
 
                                 {section loop=$usr_collects name=clist}
                                     {include file="$style_dir/blocks/manage/account_collections.html" collection=$usr_collects[clist]}
-                                    {sectionelse}
+                                {sectionelse}
                                     <div>
                                         {lang code="no_collection_found"}
                                     </div>

@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"323",
+  "revision":"325",
   "status":"stable",
   "detail":[
     {
@@ -208,6 +208,7 @@
         ,"Update search engine"
         ,"Update collection management menus"
         ,"Update video broadcast upload display"
+        ,"Update default mail template compatibility with Outlook"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
@@ -292,6 +293,7 @@
         ,"Fix rare display issue on featured video slider"
         ,"Fix language switch"
         ,"Fix theme switch on SEO URLs"
+        ,"Fix collection item management blur"
       ]
     },
     {
