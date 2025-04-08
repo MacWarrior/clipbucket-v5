@@ -117,7 +117,7 @@ $(document).ready(function () {
 
         e.preventDefault();
         $.ajax({
-            url: "/actions/test_tmdb.php",
+            url: baseurl+"actions/test_tmdb.php",
             type: "POST",
             data: {token: $('#tmdb_token').val()},
             dataType: 'json',
@@ -239,7 +239,7 @@ $(document).ready(function () {
             $('.alert-dismissable').remove();
             $(select_timezone).removeClass('has-error');
             $('#spinner-content').show();
-            $.post('/actions/admin_check_timezone.php',{timezone: $(this).val()} ,function(data) {
+            $.post(baseurl+'actions/admin_check_timezone.php',{timezone: $(this).val()} ,function(data) {
                 if (data.success) {
                     $('.btn-primary').prop('disabled', false);
                 } else {

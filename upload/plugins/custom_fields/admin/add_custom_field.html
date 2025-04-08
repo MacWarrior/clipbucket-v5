@@ -65,12 +65,12 @@ Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Fi
                     <i class="glyphicon glyphicon-chevron-down icon-on-right"></i></button>
                     <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1" style="margin-left:100px;">
                        <li>
-                        <a href='/{$custom_field_edit_page}&custom_edit={$field.custom_field_list_id}'>{lang code='edit'}</a>
+                        <a href='{$baseurl}{$custom_field_edit_page}&custom_edit={$field.custom_field_list_id}'>{lang code='edit'}</a>
                       </li>
                       <li>
                       </li>
                         <li>
-            <a tabindex="-1" href="/{$custom_field_edit_page}&del_custom_field={$field.custom_field_list_id}" role="menuitem">{lang code='delete'}</a></li></ul>
+            <a tabindex="-1" href="{$baseurl}{$custom_field_edit_page}&del_custom_field={$field.custom_field_list_id}" role="menuitem">{lang code='delete'}</a></li></ul>
                   </div>
 
                 </td>
@@ -92,12 +92,12 @@ Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Fi
         <i class="glyphicon glyphicon-chevron-down icon-on-right"></i></button>
         <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1" style="margin-left:100px;">
            <li>
-            <a href='{$cb_custom_fields_edit_page}&edit_customfield={$listscustom[listscustom].custom_field_list_id}'>{lang code='edit'}</a>
+            <a href='{$baseurl}{$cb_custom_fields_edit_page}&edit_customfield={$listscustom[listscustom].custom_field_list_id}'>{lang code='edit'}</a>
           </li>
           <li>
           </li>
             <li>
-<a tabindex="-1" href="{$smarty.server.REQUEST_URI}&deletefield={$listscustom[listscustom].custom_field_list_id}&deletefield_name={$listscustom[listscustom].field_name}&dbfield_name={$listscustom[listscustom].db_field}&page_type={$listscustom[listscustom].customfields_flag}" role="menuitem">{lang code='delete'}</a></li></ul>
+<a tabindex="-1" href="{$baseurl}{$smarty.server.REQUEST_URI}&deletefield={$listscustom[listscustom].custom_field_list_id}&deletefield_name={$listscustom[listscustom].field_name}&dbfield_name={$listscustom[listscustom].db_field}&page_type={$listscustom[listscustom].customfields_flag}" role="menuitem">{lang code='delete'}</a></li></ul>
       </div>
 
     </td>
@@ -111,7 +111,7 @@ Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Fi
         <hr>
                  <form method="post">            
 <div id="itemRows">
-Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Field Title(Label): <input type="text" name="fieldtitle" size="20" />Type:  <select name="type" id="test2">
+Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Field Title(Label): <input type="text" name="fieldtitle" size="20" />Type: <select name="type" id="test2">
                     <option value=""></option>
                     <option value="textfield">Textfield</option>
                     <option value="password">Password</option>
@@ -149,12 +149,12 @@ Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Fi
                     <i class="glyphicon glyphicon-chevron-down icon-on-right"></i></button>
                     <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1" style="margin-left:100px;">
                        <li>
-                        <a href='/{$custom_field_edit_page}&custom_edit={$field.custom_field_list_id}'>{lang code='edit'}</a>
+                        <a href='{$baseurl}{$custom_field_edit_page}&custom_edit={$field.custom_field_list_id}'>{lang code='edit'}</a>
                       </li>
                       <li>
                       </li>
                         <li>
-            <a tabindex="-1" href="/{$custom_field_edit_page}&del_custom_field={$field.custom_field_list_id}" role="menuitem">{lang code='delete'}</a></li></ul>
+            <a tabindex="-1" href="{$baseurl}{$custom_field_edit_page}&del_custom_field={$field.custom_field_list_id}" role="menuitem">{lang code='delete'}</a></li></ul>
                   </div>
 
                 </td>
@@ -176,12 +176,12 @@ Field Name: <input type="text" name="fieldname" size="20" class="fieldname"/> Fi
         <i class="glyphicon glyphicon-chevron-down icon-on-right"></i></button>
         <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1" style="margin-left:100px;">
            <li>
-            <a href='{$cb_custom_fields_edit_page}&edit_customfield={$listscustom[listscustom].custom_field_list_id}'>{lang code='edit'}</a>
+            <a href='{$baseurl}{$cb_custom_fields_edit_page}&edit_customfield={$listscustom[listscustom].custom_field_list_id}'>{lang code='edit'}</a>
           </li>
           <li>
           </li>
             <li>
-<a tabindex="-1" href="{$smarty.server.REQUEST_URI}&deletefield={$listscustom[listscustom].custom_field_list_id}&deletefield_name={$listscustom[listscustom].field_name}&dbfield_name={$listscustom[listscustom].db_field}&page_type={$listscustom[listscustom].customfields_flag}" role="menuitem">{lang code='delete'}</a></li></ul>
+<a tabindex="-1" href="{$baseurl}{$smarty.server.REQUEST_URI}&deletefield={$listscustom[listscustom].custom_field_list_id}&deletefield_name={$listscustom[listscustom].field_name}&dbfield_name={$listscustom[listscustom].db_field}&page_type={$listscustom[listscustom].customfields_flag}" role="menuitem">{lang code='delete'}</a></li></ul>
       </div>
 
     </td>

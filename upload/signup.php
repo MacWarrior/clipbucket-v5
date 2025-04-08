@@ -5,7 +5,7 @@ define('PARENT_PAGE', 'signup');
 require 'includes/config.inc.php';
 global $eh;
 if (User::getInstance()->isUserConnected()) {
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 /**
@@ -42,7 +42,7 @@ if (isset($_POST['signup'])) {
             if (empty(ClipBucket::getInstance()->configs['email_verification'])) {
                 // login user and redirect to home page
                 userquery::getInstance()->login_as_user($udetails['userid']);
-                header('Location: ' . Network::get_server_url());
+                header('Location: ' . DirPath::getUrl('root'));
             } else {
                 assign('mode', 'signup_success');
             }

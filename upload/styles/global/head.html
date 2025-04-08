@@ -48,13 +48,13 @@ function doUpdateVideo(formId,ID)
 {
     var formObjectData = $(formId).serialize();
 
-    $('#updateVideoDataLoading').html('<img src="'+imageurl+'/ajax-loader.gif" />');
+    $('#updateVideoDataLoading').html('<img src="'+imageurl+'/ajax-loader.gif"/>');
     $('#cbSubmitUpload'+ID)
     .attr('disabled','disabled')
     .attr("value",lang.savingData)
     .attr("onClick","return false;");
     
-    $.post('/actions/file_uploader.php',formObjectData,function(data) {
+    $.post(baseurl+'actions/file_uploader.php',formObjectData,function(data) {
         if(data.msg){
             show_message(data.msg,ID,true);
         }
@@ -116,7 +116,7 @@ function doUpdateVideo(formId,ID)
     {
         var photoFields = $("#Form"+ID).serialize();
         $.ajax({
-            url : '/actions/photo_uploader.php',
+            url : baseurl+'actions/photo_uploader.php',
             type : 'POST',
             dataType : 'json',
             data : photoFields+"&filename="+filename+"&ext="+extension+"&insertPhoto=yes&server_url="+server_url+
@@ -157,7 +157,7 @@ function doUpdateVideo(formId,ID)
     {
         var updateFields = $("#Form"+ID).serialize();
         $.ajax({
-            url : '/actions/photo_uploader.php',
+            url : baseurl+'actions/photo_uploader.php',
             type : 'POST',
             dataType : 'json',
             data : updateFields+"&updatePhoto=yes",

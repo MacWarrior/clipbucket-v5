@@ -276,14 +276,15 @@ function formatfilesize($data): string
 
 function getCommentAdminLink($type, $id): string
 {
+    $base_url = DirPath::getUrl('admin_area');
     switch($type){
         default:
         case 'v':
-            return '/admin_area/edit_video.php?video=' . $id;
+            return $base_url . 'edit_video.php?video=' . $id;
         case 'p':
-            return '/admin_area/edit_photo.php?photo=' . $id;
+            return $base_url . 'edit_photo.php?photo=' . $id;
         case 'cl':
-            return '/admin_area/edit_collection.php?collection=' . $id;
+            return $base_url . 'edit_collection.php?collection=' . $id;
     }
 }
 
@@ -1232,7 +1233,7 @@ function getConstant($constantName = false)
  *
  * @return string|void
  */
-function cblink($params, $fullurl = false)
+function cblink($params)
 {
     $name = getArrayValue($params, 'name');
     if ($name == 'category') {
@@ -1244,22 +1245,19 @@ function cblink($params, $fullurl = false)
     if ($name == 'time') {
         return sort_link($params['sort'], 'time', $params['type']);
     }
+
+    $link = DirPath::getUrl('root');
+
     if ($name == 'tag') {
-        return '/search_result.php?query=' . urlencode($params['tag']) . '&type=' . $params['type'];
+        return $link . 'search_result.php?query=' . urlencode($params['tag']) . '&type=' . $params['type'];
     }
     if ($name == 'category_search') {
-        return '/search_result.php?category[]=' . $params['category'] . '&type=' . $params['type'];
+        return $link . 'search_result.php?category[]=' . $params['category'] . '&type=' . $params['type'];
     }
 
     $val = 1;
     if (defined('SEO') && SEO != 'yes') {
         $val = 0;
-    }
-
-    if ($fullurl) {
-        $link = Network::get_server_url();
-    } else {
-        $link = '/';
     }
 
     if (isset(ClipBucket::getInstance()->links[$name])) {
@@ -1951,9 +1949,10 @@ function outgoing_link($url): string
 function get_country($code)
 {
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
+    $base_url = DirPath::getUrl('root');
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = '<img src="' . $base_url . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];
     }
     return false;
@@ -2137,9 +2136,9 @@ function sort_link($sort, $mode, $type): string
     }
 
     if (SEO == 'yes') {
-        return '/' . $type . '/' . $_GET['cat'] . '/' . ($sorting ?: '') . '/' . $time . '/' . $_GET['page'];
+        return  Dirpath::getUrl('root') . $type . '/' . $_GET['cat'] . '/' . ($sorting ?: '') . '/' . $time . '/' . $_GET['page'];
     }
-    return '/' . $type . '.php?cat=' . $_GET['cat'] . (($sorting) ? '&sort=' . $sorting : '') . '&time=' . $time . '&page=' . $_GET['page'] ;
+    return  Dirpath::getUrl('root') . $type . '.php?cat=' . $_GET['cat'] . (($sorting) ? '&sort=' . $sorting : '') . '&time=' . $time . '&page=' . $_GET['page'] ;
 }
 
 
@@ -2790,7 +2789,7 @@ function check_install($type)
     switch ($type) {
         case 'before':
             if (!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                header('Location: ' . Network::get_server_url() . 'cb_install');
+                header('Location: ' . DirPath::getUrl('root') . 'cb_install');
                 die();
             }
             break;
@@ -2984,11 +2983,11 @@ function isCurlInstalled(): bool
 function uploaderDetails()
 {
     $uploaderDetails = [
-        'uploadScriptPath' => '/actions/file_uploader.php',
+        'uploadScriptPath' => DirPath::getUrl('actions') . 'file_uploader.php',
     ];
 
     $photoUploaderDetails = [
-        'uploadScriptPath' => '/actions/photo_uploader.php',
+        'uploadScriptPath' => DirPath::getUrl('actions') . 'photo_uploader.php',
     ];
 
     assign('uploaderDetails', $uploaderDetails);
@@ -3611,24 +3610,24 @@ function array_val_assign($vals)
     }
 }
 
-function get_website_logo_path($full_url = false): string
+function get_website_logo_path(): string
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
         $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
-        return DirPath::getUrl('logos', $full_url) . $logo_name . $version;
+        return DirPath::getUrl('logos') . $logo_name . $version;
     }
-    return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
+    return DirPath::getUrl('styles') . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
 }
 
-function get_website_favicon_path($full_url = false): string
+function get_website_favicon_path(): string
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
         $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
-        return DirPath::getUrl('logos', $full_url) . $favicon_name . $version;
+        return DirPath::getUrl('logos') . $favicon_name . $version;
     }
-    return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/favicon.png';
+    return DirPath::getUrl('styles') . ClipBucket::getInstance()->template . '/theme/images/favicon.png';
 }
 
 /**

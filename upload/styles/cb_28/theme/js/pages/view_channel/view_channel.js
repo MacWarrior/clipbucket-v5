@@ -85,7 +85,7 @@ $(document).ready(function (){
             }
             $.ajax({
                 type: "POST",
-                url: "/actions/vote_channel.php",
+                url: baseurl+"actions/vote_channel.php",
                 data: { vote: vote, channelId : channelId},
                 success: function(){
                     $("#likes").text(likes);
@@ -107,7 +107,7 @@ $(document).ready(function (){
 
         nextHit = parseInt(loadHit) + 1;
         $.ajax({
-            url: "/ajax/view_channel.php",
+            url: baseurl+"/ajax/view_channel.php",
             type: "post",
             dataType: "html",
             data: {
@@ -152,7 +152,7 @@ $(document).ready(function (){
 
         nextHit = parseInt(loadHit) + 1;
         $.ajax({
-            url: "/ajax/view_channel.php",
+            url: baseurl+"/ajax/view_channel.php",
             type: "post",
             dataType: "html",
             data: {

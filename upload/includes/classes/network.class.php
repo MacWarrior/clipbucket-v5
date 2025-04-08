@@ -280,8 +280,8 @@ class Network{
 
     public static function get_server_url(): string
     {
-        if( !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
-            return config('base_url');
+        if( function_exists('config') && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
+            return rtrim(config('base_url'), '/') . '/';
         }
         
         $port = '';
@@ -289,7 +289,18 @@ class Network{
             $port = ':' . $_SERVER['SERVER_PORT'];
         }
 
-        return self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . '/';
+        $subdir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+
+        // Exclure cb_install s'il est dans le chemin
+        if (preg_match('#/cb_install(/|$)#', $subdir)) {
+            $subdir = preg_replace('#/cb_install(/|$)#', '/', $subdir);
+        }
+
+        if ($subdir === '/' || $subdir === '\\') {
+            $subdir = '';
+        }
+
+        return rtrim(self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . $subdir, '/') . '/';
     }
 
     private static function get_server_protocol(): string

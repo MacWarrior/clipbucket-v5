@@ -1,5 +1,5 @@
 //include('popup_image.js');
-var page = '/actions/admin.php';
+var page = baseurl+'actions/admin.php';
 
 function admin_spam_comment(cid)
 {

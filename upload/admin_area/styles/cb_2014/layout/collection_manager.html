@@ -39,7 +39,7 @@
                                 <img src="{$cbcollection->coll_first_thumb($collections[list],'s')}" width="128" height="80"/>
                             </div>
                             <div class="col-md-9">
-                                <a href="/admin_area/edit_collection.php?collection={$collections[list].collection_id}">
+                                <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$collections[list].collection_id}">
                                     {display_clean($collections[list].collection_name)}
                                 </a>
                                 ( {$collections[list].total_objects}
@@ -81,7 +81,7 @@
                     <button id="dropdownMenu1" class="btn btn-primary btn-xs dropdown-toggle" data-toggle="dropdown">Actions <i class="caret"></i></button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" role="menu">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_collection.php?collection={$collections[list].collection_id}">{lang code='edit'}</a></li>
-                        <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="/view_collection.php?cid={$collections[list].collection_id}">{lang code='watch'}</a></li>
+                        <li role="presentation"><a target="_blank" role="menuitem" tabindex="-1" href="{$baseurl}view_collection.php?cid={$collections[list].collection_id}">{lang code='watch'}</a></li>
                         {if $collections[list].active == yes}
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="?deactivate={$collections[list].collection_id}">{lang code='deactivate'}</a></li>
                         {else}

@@ -3,7 +3,7 @@
 		<div class="navbar-header pull-left">
             <div class="logoContainer clearfix">
                 <a href="{DirPath::getUrl('admin_area')}">
-                    <img class="pull-left" src="{get_website_logo_path()}" height="45px">
+                    <img class="pull-left" src="{get_website_logo_path()}" height="45px"/>
                 </a>
             </div>
         </div>
@@ -101,7 +101,7 @@
                 </li>
 
                 <li class="blue">
-                    <a target="_blank" href="/">
+                    <a target="_blank" href="{$baseurl}">
                         <i class="glyphicon glyphicon-home"></i>
                         <span class="badge badge-success"></span>
                     </a>
@@ -125,7 +125,7 @@
                         </li>
 
                         <li>
-                            <a href="/admin_area/view_user.php?uid={user_id()}">
+                            <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={user_id()}">
                                 <i class="glyphicon glyphicon-user"></i> Profile
                             </a>
                         </li>

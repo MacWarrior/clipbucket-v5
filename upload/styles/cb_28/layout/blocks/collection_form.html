@@ -21,7 +21,7 @@
                 </div>
                 {if User::getInstance()->hasPermission('allow_create_collection') && !$restore_collection}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">
-                        <a class="btn btn-block mtm btn-success" href="/manage_collections.php?mode=add_new">{lang code='create_new_collection_btn'}</a>
+                        <a class="btn btn-block mtm btn-success" href="{$baseurl}manage_collections.php?mode=add_new">{lang code='create_new_collection_btn'}</a>
                     </div>
                 {else}
                     <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 add_collection">

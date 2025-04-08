@@ -1,9 +1,9 @@
 let intervalId;
 $(function () {
-    if (ids_to_check_progress) {
+    if (ids_to_check_progress !== undefined && ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
             $.post({
-                url: '/actions/admin_progress_video.php',
+                url: baseurl+'actions/admin_progress_video.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,

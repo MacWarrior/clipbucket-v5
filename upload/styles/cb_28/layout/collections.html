@@ -16,7 +16,7 @@
                             {include file="$style_dir/blocks/category_list.html" type='collections'}
                         {/if}
                         {if User::getInstance()->hasPermission('allow_create_collection')}
-                            <a class="btn btn-default" href="/manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
+                            <a class="btn btn-default" href="{$baseurl}manage_collections.php?mode=add_new">{lang code='add_new_collection'}</a>
                         {/if}
                 </div>
             {/if}

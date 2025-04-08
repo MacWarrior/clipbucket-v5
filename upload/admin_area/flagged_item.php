@@ -11,7 +11,7 @@ $right = Flag::getPermissionByType($type);
 User::getInstance()->hasPermissionOrRedirect($right,true);
 
 if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
-    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area', true));
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area'));
 }
 
 global $breadcrumb;

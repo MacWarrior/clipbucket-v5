@@ -10,8 +10,8 @@ if( THIS_PAGE != 'admin_login' && php_sapi_name() !== 'cli'){
         redirect_to('login.php');
     }
 
-    if (!User::getInstance()->hasPermission('admin_access')) {
-        redirect_to(Network::get_server_url() . '403.php');
+    if( !User::getInstance()->hasPermission('admin_access') ){
+        redirect_to(DirPath::getUrl('root') . '403.php');
     }
 }
 
@@ -59,7 +59,7 @@ if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update']) 
     }
 }
 
-Assign('baseurl', Network::get_server_url());
+Assign('baseurl', DirPath::getUrl('root'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');

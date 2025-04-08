@@ -1,4 +1,4 @@
-<h2>{lang code='manage_items'} - <a href="/admin_area/edit_collection.php?collection={$smarty.get.collection}">{display_clean($collection.collection_name)}</a></h2>
+<h2>{lang code='manage_items'} - <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$smarty.get.collection}">{display_clean($collection.collection_name)}</a></h2>
 <form method="post">
     <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
         <tr>
@@ -21,7 +21,7 @@
         {else}
             {if $type == 'photos'}
                 <div class="clearfix PhotoDetails" style=" text-align:center; min-height:10px;">
-                    <a style="font-size:11px;" href="/admin_area/recreate_thumbs.php?mode=collection&cid={$smarty.get.collection}">Re-create photos</a>. This will re-create photos found in the collection.
+                    <a style="font-size:11px;" href="{DirPath::getUrl('admin_area')}recreate_thumbs.php?mode=collection&cid={$smarty.get.collection}">Re-create photos</a>. This will re-create photos found in the collection.
                 </div>
             {/if}
             <table class="table table-bordered table-striped manageUsersTable">
@@ -49,7 +49,7 @@
                                                 <img src="{get_photo details=$obj[list]}" class="img-responsive" id="photo" style="padding:2px;border:1px solid #ccc;"/>
                                             </div>
                                             <div class="col-md-9">
-                                                <a class="block" href="/admin_area/edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
+                                                <a class="block" href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$obj[list].photo_id}">{display_clean($obj[list].photo_title)}</a>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
                                                     {lang code='views'} : <strong>{$obj[list].views|number_format}</strong>
@@ -86,7 +86,7 @@
                                                 <img src="{get_thumb($obj[list],FALSE,'168x105')}" width="120" height="70" id="video_{$obj[list].videoid}" style="padding:2px; border:1px solid #ccc" />
                                             </div>
                                             <div class="col-md-9">
-                                                <a href="/admin_area/edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
+                                                <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].title)}</a>
                                                 <br/>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>
@@ -154,7 +154,7 @@
                                                 </div>
                                             </div>
                                             <div class="col-md-9">
-                                                <a href="/admin_area/edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].collection_name)}</a>
+                                                <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$obj[list].collection_id}" target="_blank">{display_clean($obj[list].collection_name)}</a>
                                                 <br/>
                                                 <span>
                                                     <strong>{$obj[list].date_added|niceTime}</strong>

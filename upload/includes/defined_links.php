@@ -27,7 +27,8 @@ $cbLinks = [
     'user_playlists'     => ['user_videos.php?mode=playlists&user='],
     'videos'             => ['videos.php', 'videos/'],
     'messages'           => ['private_message.php', 'private_message.php'],
-    'edit_account'       => ['edit_account.php', 'edit_account.php']
+    'edit_account'       => ['edit_account.php', 'edit_account.php'],
+    'view_channel'       => ['view_channel.php', 'user/']
 ];
 
 if (is_array(ClipBucket::getInstance()->links)) {

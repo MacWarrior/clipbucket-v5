@@ -151,7 +151,7 @@ $(document).ready(function(){
                 data += "&collection_id="+collectionId;
                 data += "&updatePhoto=yes";
                 $.ajax({
-                    url : "/actions/photo_uploader.php",
+                    url : baseurl+"actions/photo_uploader.php",
                     type : "post",
                     data : data,
                     success: function (msg) {
@@ -321,7 +321,7 @@ $(document).ready(function(){
         });
 
         $.ajax({
-            url : "/actions/photo_uploader.php",
+            url : baseurl+"actions/photo_uploader.php",
             type : "post",
             data : {
                 insertPhoto : "yes"
@@ -381,7 +381,7 @@ $(document).ready(function(){
             e.preventDefault();
             $.ajax({
                 type: "post",
-                url: "/actions/display_new_collection_form.php",
+                url: baseurl+"actions/display_new_collection_form.php",
                 dataType: 'json',
                 success: function(response){
                     $('.close').click();
@@ -401,7 +401,7 @@ $(document).ready(function(){
                             var collectionName = $(this).parents("form").find("#collection_name").val();
                             $.ajax({
                                 type: "post",
-                                url: "/ajax.php",
+                                url: baseurl+"ajax.php",
                                 data: formData,
                                 success: function(response){
                                     response = $.parseJSON(response);

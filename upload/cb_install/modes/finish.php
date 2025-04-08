@@ -46,8 +46,10 @@ if (file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::ge
 <div id="sub_container">
     <div style="margin-top:40px;text-align:center;">
         <?php
-        button_danger(lang('continue_admin_area'), ' onclick="window.location=\'/admin_area\'" ');
-        button(lang('continue_to') . ' ' . display_clean(config('site_title')), ' onclick="window.location=\'/\'" ');
+        $baseurl = DirPath::getUrl('root');
+        $admin_area = DirPath::getUrl('admin_area');
+        button_danger(lang('continue_admin_area'), ' onclick="window.location=\'' . $admin_area . '\'" ');
+        button(lang('continue_to') . ' ' . display_clean(config('site_title')), ' onclick="window.location=\'' . $baseurl . '\'" ');
         ?>
     </div>
 </div>

@@ -29,7 +29,7 @@
         <td>
             <div class="col-md-9">
                     <h4>
-                      <a class="block" href="/admin_area/edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>
+                      <a class="block" href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$photos[list].photo_id}">{display_clean($photos[list].photo_title)}</a>
                     </h4>
                     <span class="label label-primary">{lang code='featured'} : <strong>{$photos[list].featured}</strong></span>
                     <span class="label label-warning">

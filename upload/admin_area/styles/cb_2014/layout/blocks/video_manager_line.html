@@ -110,7 +110,7 @@
                 <li><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
 
                 {if $video.status|lower == 'successful'}
-                    <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="{$baseurl}watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
                 {/if}
 
                 {if $video.featured == yes}

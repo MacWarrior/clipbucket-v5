@@ -229,10 +229,11 @@ class cbpage
      */
     function page_link($pdetails): string
     {
+        $base_url = DirPath::getUrl('root');
         if (SEO == 'yes') {
-            return '/page/' . $pdetails['page_id'] . '/' . SEO(strtolower($pdetails['page_name']));
+            return $base_url . 'page/' . $pdetails['page_id'] . '/' . SEO(strtolower($pdetails['page_name']));
         }
-        return '/view_page.php?pid=' . $pdetails['page_id'];
+        return $base_url . 'view_page.php?pid=' . $pdetails['page_id'];
     }
 
     /**
