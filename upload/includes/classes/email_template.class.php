@@ -618,6 +618,7 @@ class EmailTemplate
      * @param string $sender_name
      * @return bool
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
     public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = ''): bool
     {
@@ -718,8 +719,6 @@ class EmailTemplate
             $title,
             $content
         ];
-
-        DiscordLog::sendDump('```'.$content.'```');
 
         if (!empty($id_user)) {
             $fields[] = 'userid';
