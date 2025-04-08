@@ -1694,7 +1694,11 @@ class Collections extends CBCategory
 
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
-            Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
+            if (config('enable_photo_categories') == 'yes') {
+                Category::getInstance()->saveLinks('collection', $insert_id, ($array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]));
+            } else {
+                Category::getInstance()->saveLinks('collection', $insert_id, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            }
             Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');

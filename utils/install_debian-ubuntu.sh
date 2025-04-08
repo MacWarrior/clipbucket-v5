@@ -376,6 +376,7 @@ server {
 
     location ~* ^(.*/)?videos(/(.*))?$ {
         rewrite ^(.*/)?videos/(.*)/(.*)/(.*)/(.*) $1videos.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?videos/(.*)/(.*)/(.*) $1videos.php?sort=$1&time=$2&page=$3&$query_string last;
         rewrite ^(.*/)?videos/([0-9]+) $1videos.php?page=$2&$query_string last;
         rewrite ^(.*/)?videos/?$ $1videos.php?$query_string last;
         break;
@@ -383,6 +384,7 @@ server {
 
     location ~* ^(.*/)?photos(/(.*))?$ {
         rewrite ^(.*/)?photos/(.*)/(.*)/(.*)/(.*) $1photos.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?photos/(.*)/(.*)/(.*) $1photos.php?sort=$1&time=$2&page=$3&$query_string last;
         rewrite ^(.*/)?photos/([0-9]+) $1photos.php?page=$2&$query_string last;
         rewrite ^(.*/)?photos/?$ $1photos.php?$query_string last;
         break;
@@ -395,6 +397,7 @@ server {
 
     location ~* ^(.*/)?collections(/(.*))?$ {
         rewrite ^(.*/)?collections/(.*)/(.*)/(.*)/(.*) $1collections.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?collections/(.*)/(.*)/(.*) $1collections.php?sort=$1&time=$2&page=$3&$query_string last;
         rewrite ^(.*/)?collections/([0-9]+) $1collections.php?page=$2&$query_string last;
         rewrite ^(.*/)?collections/?$ $1collections.php last;
         break;
@@ -402,6 +405,7 @@ server {
 
     location ~* ^(.*/)?channels(/(.*))?$ {
         rewrite ^(.*/)?channels/(.*)/(.*)/(.*)/(.*) $1channels.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?channels/(.*)/(.*)/(.*) $1channels.php?sort=$1&time=$2&page=$3&$query_string last;
         rewrite ^(.*/)?channels/([0-9]+) $1channels.php?page=$2&$query_string last;
         rewrite ^(.*/)?channels/?$ $1channels.php?$query_string last;
         break;
