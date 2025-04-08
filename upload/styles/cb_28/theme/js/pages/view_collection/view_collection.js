@@ -14,6 +14,10 @@ $(document).ready(function(){
     $('.sort_dropdown').on('click', function(){
         showSpinner();
         var sort_id = $(this).data('sort');
-        document.location = 'view_collection.php?cid=' + collection_id + '&sort_id=' + sort_id;
+        const url = new URL(window.location.href);
+        const params = url.searchParams;
+        params.set('sort_id', sort_id);
+        url.search = params.toString();
+        window.location = url.toString();
     });
 });
