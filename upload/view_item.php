@@ -82,8 +82,8 @@ if ($photo) {
         }
     }
     //link edit
-    assign('link_edit_bo', DirPath::get('admin_area', true) . 'edit_photo.php?photo=' . $photo['photo_id']);
-    assign('link_edit_fo', '/edit_photo.php?photo=' . $photo['photo_id']);
+    assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $photo['photo_id']);
+    assign('link_edit_fo', DirPath::getUrl('root') . 'edit_photo.php?photo=' . $photo['photo_id']);
 
     // Top collections
     $params = [

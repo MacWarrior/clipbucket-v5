@@ -111,8 +111,8 @@ if ($cbcollection->is_viewable($collection_id)) {
 
 assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));
 
-assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_collection.php?collection=' .$collection_id);
-assign('link_edit_fo',  '/manage_collections.php?mode=edit_collection&cid=' . $collection_id);
+assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' .$collection_id);
+assign('link_edit_fo',  DirPath::getUrl('root') . 'manage_collections.php?mode=edit_collection&cid=' . $collection_id);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';

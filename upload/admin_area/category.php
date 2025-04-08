@@ -24,7 +24,7 @@ switch ($type) {
         break;
 }
 if (config($config) != 'yes') {
-    redirect_to(DirPath::getUrl('admin_area',true));
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 assign('type', $type);
 assign('display_type', $type . 's');

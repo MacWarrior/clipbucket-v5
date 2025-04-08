@@ -1229,8 +1229,6 @@ function getConstant($constantName = false)
  * Function used to assign link
  *
  * @param : { array } { $params } { an array of parameters }
- * @param bool $fullurl
- *
  * @return string|void
  */
 function cblink($params)
@@ -1949,10 +1947,9 @@ function outgoing_link($url): string
 function get_country($code)
 {
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
-    $base_url = DirPath::getUrl('root');
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="' . $base_url . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];
     }
     return false;
@@ -2067,9 +2064,9 @@ function category_link($data, $type): string
 
 
     if (SEO == 'yes') {
-        return '/' . $type . '/' . $data['category_id'] . '/' . SEO($data['category_name']) . $sort . $time . '/';
+        return Dirpath::getUrl('root') . $type . '/' . $data['category_id'] . '/' . SEO($data['category_name']) . $sort . $time . '/';
     }
-    return '/' . $type . '.php?cat=' . $data['category_id'] . $sort . $time;
+    return Dirpath::getUrl('root') . $type . '.php?cat=' . $data['category_id'] . $sort . $time;
 }
 
 /**

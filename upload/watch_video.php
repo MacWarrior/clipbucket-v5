@@ -93,7 +93,7 @@ $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //link edit
 assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $vdo['videoid']);
-assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);
+assign('link_edit_fo',  DirPath::getUrl('root') . 'edit_video.php?vid=' . $vdo['videoid']);
 
 $min_suffixe = in_dev() ? '' : '.min';
 
