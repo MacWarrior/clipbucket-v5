@@ -98,7 +98,7 @@ class UserLevel
             User::redirectToLogin();
         }
         if (!self::hasPermission($permission, $user_id)) {
-            redirect_to(DirPath::getUrl('root') . '/403.php');
+            redirect_to(cblink(['name' => 'error_403']));
         }
         return true;
     }

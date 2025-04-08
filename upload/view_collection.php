@@ -89,19 +89,25 @@ if ($cbcollection->is_viewable($collection_id)) {
         assign('objects', $items);
         assign('c', $cdetails);
         subtitle($cdetails['collection_name']);
+        $complement_url = base64_encode(json_encode($cdetails['collection_id']));
         if ($cdetails['type'] == 'photos') {
             assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
 
-            if (SEO == 'yes') {
-                $link = '/photo_upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            $base_url = cblink(['name' => 'photo_upload']);
+            if (config('seo') == 'yes') {
+                $link = $base_url . '/' . $complement_url;
+            } else {
+                $link = $base_url . '?collection=' . $complement_url;
             }
-            $link = '/photo_upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         } elseif ($cdetails['type'] == 'videos') {
             assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
-            if (SEO == 'yes') {
-                $link = '/upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            $base_url = cblink(['name' => 'upload']);
+
+            if (config('seo') == 'yes') {
+                $link = $base_url . '/' . $complement_url;
+            } else {
+                $link = $base_url . '?collection=' . $complement_url;
             }
-            $link = '/upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         }
         assign('link_add_more',  $link);
     }

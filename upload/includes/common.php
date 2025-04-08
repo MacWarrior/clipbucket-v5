@@ -185,6 +185,7 @@ if (!Update::isVersionSystemInstalled()) {
     define('NEED_UPDATE', false);
 }
 
+require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('classes') . 'search.class.php';
 require_once DirPath::get('classes') . 'signup.class.php';
 require_once DirPath::get('classes') . 'image.class.php';
@@ -207,7 +208,6 @@ require_once DirPath::get('classes') . 'cbfeeds.class.php';
 require_once DirPath::get('classes') . 'resizer.class.php';
 require_once DirPath::get('classes') . 'comments.class.php';
 require_once DirPath::get('classes') . 'gravatar.class.php';
-require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
 require_once DirPath::get('includes') . 'plugins_functions.php';
 

@@ -895,8 +895,6 @@ class CBPhotos
         ClipBucket::getInstance()->links['photo_upload'] = ['photo_upload.php', 'photo_upload'];
         ClipBucket::getInstance()->links['manage_favorite_photos'] = ['manage_photos.php?mode=favorite', 'manage_photos.php?mode=favorite'];
         ClipBucket::getInstance()->links['manage_orphan_photos'] = ['manage_photos.php?mode=orphan', 'manage_photos.php?mode=orphan'];
-        ClipBucket::getInstance()->links['user_photos'] = ['user_photos.php?mode=uploaded&amp;user=', 'user_photos.php?mode=uploaded&amp;user='];
-        ClipBucket::getInstance()->links['user_fav_photos'] = ['user_photos.php?mode=favorite&amp;user=', 'user_photos.php?mode=favorite&amp;user='];
     }
 
     /**
@@ -2675,16 +2673,14 @@ class CBPhotos
 
         switch ($type) {
             case 'upload':
-                if (SEO == 'yes') {
-                    return $base_url . 'photo_upload';
-                }
-                return $base_url . 'photo_upload.php';
+                return cblink(['name' => 'photo_upload']);
 
             case 'upload_more':
+                $base_url = cblink(['name' => 'photo_upload']);
                 if (SEO == 'yes') {
-                    return $base_url . 'photo_upload/' . $this->encode_key($details['collection_id']);
+                    return $base_url . '/' . $this->encode_key($details['collection_id']);
                 }
-                return $base_url . 'photo_upload.php?collection=' . $this->encode_key($details['collection_id']);
+                return $base_url . '?collection=' . $this->encode_key($details['collection_id']);
 
             case 'view_item':
             case 'view_photo':

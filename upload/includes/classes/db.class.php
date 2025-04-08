@@ -83,7 +83,7 @@ class Clipbucket_db
                 DiscordLog::sendDump($error);
                 throw new Exception($e);
             } else {
-                redirect_to('maintenance.php');
+                redirect_to(DirPath::getUrl('root') . 'maintenance.php');
             }
         }
     }

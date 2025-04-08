@@ -346,34 +346,53 @@ server {
         log_not_found off;
     }
 
-    error_page 404 /404.php;
-    error_page 403 /403.php;
-
+    error_page 404 /404;
+    error_page 403 /403;
     location ~* ^(.*/)?403$ {
         try_files $uri $1/403.php;
     }
-
     location ~* ^(.*/)?404$ {
         try_files $uri $1/404.php;
     }
 
+    # Forbidden access
     location ~ ^(.*/)?.(git|github|idea|gitignore|htaccess) {
         return 302 $1403;
     }
-
     location ~* ^(.*/)?(includes|changelog)/ {
-        return 302 $1403
+        return 302 $1403;
     }
 
+    # Direct acces to files
     location ~* ^(.*/)?files/ {
         try_files $uri $uri/ =404;
     }
 
+    # External use
     location ~* ^(.*/)?sitemap.xml$ {
         rewrite ^(.*/)?sitemap.xml$ $1sitemap.php last;
         break;
     }
+    location ~* ^(.*/)?rss(/([a-zA-Z0-9][^/]*))?$ {
+        rewrite ^(.*/)?rss/?$ $1rss.php?$query_string last;
+        rewrite ^(.*/)?rss/([a-zA-Z0-9][^/]*)$ $1rss.php?mode=$2&$query_string last;
+        break;
+    }
 
+    # Collections
+    location ~* ^(.*/)?collections(/(.*))?$ {
+        rewrite ^(.*/)?collections/(.*)/(.*)/(.*)/(.*) $1collections.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
+        rewrite ^(.*/)?collections/(.*)/(.*)/(.*) $1collections.php?sort=$1&time=$2&page=$3&$query_string last;
+        rewrite ^(.*/)?collections/([0-9]+) $1collections.php?page=$2&$query_string last;
+        rewrite ^(.*/)?collections/?$ $1collections.php last;
+        break;
+    }
+    location ~* ^(.*/)?collection(/(.*))?$ {
+        rewrite ^(.*/)?collection/(.*)/(.*)/(.*) $1view_collection.php?cid=$2&type=$3&page=$4&$query_string last;
+        break;
+    }
+
+    # Videos
     location ~* ^(.*/)?videos(/(.*))?$ {
         rewrite ^(.*/)?videos/(.*)/(.*)/(.*)/(.*) $1videos.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
         rewrite ^(.*/)?videos/(.*)/(.*)/(.*) $1videos.php?sort=$1&time=$2&page=$3&$query_string last;
@@ -381,7 +400,21 @@ server {
         rewrite ^(.*/)?videos/?$ $1videos.php?$query_string last;
         break;
     }
+    location ~* ^(.*/)?video(/(.*))?$ {
+        rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last;
+        rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last;
+        break;
+    }
+    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {
+        rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last;
+        break;
+    }
 
+    # Photos
+    location ~* ^(.*/)?item(/(.*))?$ {
+        rewrite ^(.*/)?item/(.*)/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last;
+        break;
+    }
     location ~* ^(.*/)?photos(/(.*))?$ {
         rewrite ^(.*/)?photos/(.*)/(.*)/(.*)/(.*) $1photos.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
         rewrite ^(.*/)?photos/(.*)/(.*)/(.*) $1photos.php?sort=$1&time=$2&page=$3&$query_string last;
@@ -390,19 +423,7 @@ server {
         break;
     }
 
-    location ~* ^(.*/)?collection(/(.*))?$ {
-        rewrite ^(.*/)?collection/(.*)/(.*)/(.*) $1view_collection.php?cid=$2&type=$3&page=$4&$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?collections(/(.*))?$ {
-        rewrite ^(.*/)?collections/(.*)/(.*)/(.*)/(.*) $1collections.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
-        rewrite ^(.*/)?collections/(.*)/(.*)/(.*) $1collections.php?sort=$1&time=$2&page=$3&$query_string last;
-        rewrite ^(.*/)?collections/([0-9]+) $1collections.php?page=$2&$query_string last;
-        rewrite ^(.*/)?collections/?$ $1collections.php last;
-        break;
-    }
-
+    # Channels
     location ~* ^(.*/)?channels(/(.*))?$ {
         rewrite ^(.*/)?channels/(.*)/(.*)/(.*)/(.*) $1channels.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;
         rewrite ^(.*/)?channels/(.*)/(.*)/(.*) $1channels.php?sort=$1&time=$2&page=$3&$query_string last;
@@ -410,71 +431,39 @@ server {
         rewrite ^(.*/)?channels/?$ $1channels.php?$query_string last;
         break;
     }
-
-    location ~* ^(.*/)?video(/(.*))?$ {
-        rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last;
-        rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last;
+    location ~* ^(.*/)?user/(.*)$ {
+        rewrite ^(.*/)?user/(.*) $1view_channel.php?user=$2&$query_string last;
         break;
     }
 
-    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {
-        rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?item/(.*)/(.*)/(.*)$ {
-        rewrite ^(.*/)?item/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?channel/(.*)$ {
-        rewrite ^(.*/)?channel/(.*) $1view_channel.php?user=$2&$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?my_account$ {
-        rewrite ^(.*/)?my_account$ $1myaccount.php?$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?page/([0-9]+)/(.*)$ {
-        rewrite ^(.*/)?page/([0-9]+)/(.*) $1view_page.php?pid=$2&$query_string last;
-        break;
-    }
-
+    # Uploads
     location ~* ^(.*/)?photo_upload(/(.*))?$ {
         rewrite ^(.*/)?photo_upload/(.*)$ $1photo_upload.php?collection=$2&$query_string last;
         rewrite ^(.*/)?photo_upload/?$ $1photo_upload.php?$query_string last;
         break;
     }
-
-    location ~* ^(.*/)?rss$ {
-        try_files $uri $1rss.php?$query_string;
-        break;
-    }
-
-    location ~* ^(.*/)?rss/([a-zA-Z0-9].+)$ {
-        rewrite ^(.*/)?rss/([a-zA-Z0-9].+)$ $1rss.php?mode=$2&$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?search/result/?$ {
-        rewrite ^(.*/)?search/result/?$ $1search_result.php?$query_string last;
-        break;
-    }
-
-    location ~* ^(.*/)?signup/?$ {
-        rewrite ^(.*/)?signup/?$ $1signup.php?$query_string last;
-        break;
-    }
-
     location ~* ^(.*/)?upload/?$ {
         rewrite ^(.*/)?upload/?$ $1upload.php?$query_string last;
         break;
     }
 
-    location ~* ^(.*/)?user/(.*)$ {
-        rewrite ^(.*/)?user/(.*) $1view_channel.php?user=$2&$query_string last;
+    # Account
+    location ~* ^(.*/)?my_account$ {
+        rewrite ^(.*/)?my_account$ $1myaccount.php?$query_string last;
+        break;
+    }
+    location ~* ^(.*/)?signup/?$ {
+        rewrite ^(.*/)?signup/?$ $1signup.php?$query_string last;
+        break;
+    }
+    location ~* ^(.*/)?signin/?$ {
+        rewrite ^(.*/)?signin/?$ $1signup.php?mode=login&$query_string last;
+        break;
+    }
+
+    # Custom pages
+    location ~* ^(.*/)?page/([0-9]+)/(.*)$ {
+        rewrite ^(.*/)?page/([0-9]+)/(.*) $1view_page.php?pid=$2&$query_string last;
         break;
     }
 }

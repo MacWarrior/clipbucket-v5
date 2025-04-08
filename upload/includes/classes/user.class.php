@@ -535,7 +535,7 @@ class User
 
     public static function redirectToLogin()
     {
-        redirect_to(DirPath::getUrl('root') . 'signup.php?mode=login');
+        redirect_to(cblink(['name' => 'signin']));
     }
 
     /**
@@ -3139,7 +3139,7 @@ class userquery extends CBCategory
      * @param bool $ck_display_admin
      * @param bool $ck_display_user
      *
-     * @return mixed
+     * @return array
      */
     function load_custom_signup_fields($data, $ck_display_admin = false, $ck_display_user = false)
     {
@@ -3167,14 +3167,6 @@ class userquery extends CBCategory
         }
 
         return $new_array;
-    }
-
-    /**
-     * Function used to get user videos link
-     */
-    function get_user_videos_link($u)
-    {
-        return cblink(['name' => 'user_videos']) . $u['username'];
     }
 
     /**

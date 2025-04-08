@@ -7,7 +7,7 @@ User::getInstance()->hasPermissionOrRedirect('manage_template_access', true);
 $pages->page_redir();
 
 if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
-    redirect_to(DirPath::getUrl('admin_area', true));
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 /* Generating breadcrumb */

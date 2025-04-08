@@ -4,14 +4,17 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-$item = (string)($_GET['item']);
-$cid = (int)($_GET['collection']);
-$order = tbl('collection_items') . '.ci_id DESC';
+if( !isSectionEnabled('photos') || !User::getInstance()->hasPermission('view_photos') ){
+    redirect_to(cblink(['name' => 'error_403']));
+}
 
-if (empty($item) || !isSectionEnabled('photos')) {
+$item = (string)($_GET['item']);
+if( empty($item) ){
     redirect_to(DirPath::getUrl('root'));
 }
 
+$cid = (int)($_GET['collection']);
+$order = tbl('collection_items') . '.ci_id DESC';
 $param = [
     'type'          => 'photos',
     'collection_id' => $cid

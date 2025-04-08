@@ -12,7 +12,7 @@ $pages->page_redir();
 
 if ($_GET['revert']) {
     userquery::getInstance()->revert_from_user();
-    redirect_to('/admin_area');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 $uid = $_GET['uid'];
 

@@ -11,7 +11,7 @@ if( THIS_PAGE != 'admin_login' && php_sapi_name() !== 'cli'){
     }
 
     if( !User::getInstance()->hasPermission('admin_access') ){
-        redirect_to(DirPath::getUrl('root') . '403.php');
+        redirect_to(cblink(['name' => 'error_403']));
     }
 }
 
