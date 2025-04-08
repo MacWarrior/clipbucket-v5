@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"325",
+  "revision":"327",
   "status":"stable",
   "detail":[
     {
@@ -294,6 +294,8 @@
         ,"Fix language switch"
         ,"Fix theme switch on SEO URLs"
         ,"Fix collection item management blur"
+        ,"Fix order & filter URLs"
+        ,"Fix collection creation from photo upload"
       ]
     },
     {
