@@ -1,3 +1,8 @@
-<div class="player-holder clearfix">
+{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329') && !empty($video.aspect_ratio)}
+    {assign var=aspect_ratio value=" style='aspect-ratio:"|cat:$video.aspect_ratio|cat:";max-height:90vh;'"}
+{else}
+    {assign var=aspect_ratio value=''}
+{/if}
+<div class="player-holder clearfix fix_ratio"{$aspect_ratio}>
     {show_player vdetails = $video}
 </div>

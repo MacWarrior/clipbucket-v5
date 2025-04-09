@@ -708,7 +708,15 @@ function update_processed_video($file_array, string $status = 'Successful')
  */
 function update_video_status($file_name, $status = 'Successful')
 {
-    Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
+    update_video_by_filename($file_name, ['status'], [$status]);
+}
+
+/**
+ * @throws Exception
+ */
+function update_video_by_filename($file_name, $fields, $values)
+{
+    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, " file_name='" . display_clean($file_name) . "'");
 }
 
 /**
@@ -1444,6 +1452,30 @@ function update_bits_color($vdetails)
     $data = shell_exec($cmd);
 
     Clipbucket_db::getInstance()->update(tbl('video'), ['bits_color'], [(int)$data], 'videoid=' . $vdetails['videoid']);
+}
+
+/**
+ * @throws Exception
+ */
+function update_aspect_ratio($vdetails)
+{
+    if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files'])) {
+        return;
+    }
+
+    $filepath = get_high_res_file($vdetails);
+
+    require_once DirPath::get('classes') . 'sLog.php';
+    $log = new SLog();
+    $ffmpeg = new FFMpeg($log);
+    $video_infos = $ffmpeg->get_file_info($filepath);
+
+    if( empty($video_infos['video_width']) || empty($video_infos['video_height']) ){
+        return;
+    }
+
+    $aspect = (float)$video_infos['video_width'] / (float)$video_infos['video_height'];
+    Clipbucket_db::getInstance()->update(tbl('video'), ['aspect_ratio'], [$aspect], 'videoid=' . (int)$vdetails['videoid']);
 }
 
 /**

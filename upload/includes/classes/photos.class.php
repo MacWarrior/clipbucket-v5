@@ -344,7 +344,7 @@ class Photo
             $conditions[] = $collection_items_table . '.ci_id IS NULL';
         }
 
-        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255) && !$param_count) {
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
             $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
             $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
 
@@ -844,7 +844,7 @@ class CBPhotos
                 ]
             ];
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                 $menu_photo['sub'][] = [
                     'title' => lang('photo_flagged')
                     , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=photo'
@@ -2011,7 +2011,7 @@ class CBPhotos
                 $query_val[] = $array['folder'];
             }
             $query_val['0'] = $array['title'];
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 128)) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '128')) {
                 $query_field[] = 'collection_id';
                 $query_val[] = 0;
             }

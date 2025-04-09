@@ -7,7 +7,7 @@
                 </a>
             </div>
         </div>
-        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)}
+        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')}
             {assign var=nb_flags value=Flag::getAll(['count'=>true])}
         {else}
             {assign var=nb_flags value=0}

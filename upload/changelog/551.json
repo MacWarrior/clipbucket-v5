@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"327",
+  "revision":"331",
   "status":"stable",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Implement video conversion percent"
         ,"Implement changelogs page"
         ,"Implement collection custom order"
+        ,"Implement missing video aspect ratio tool"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -296,6 +297,7 @@
         ,"Fix collection item management blur"
         ,"Fix order & filter URLs"
         ,"Fix collection creation from photo upload"
+        ,"Fix player max height <i>(#521)</i>"
       ]
     },
     {
@@ -348,6 +350,7 @@
         "Refactor log system"
         ,"Implement thumb background color option"
         ,"Implement FOV detection"
+        ,"Implement video aspect ratio"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -358,6 +361,7 @@
         ,"Fix video thumbs generation ratio other than 16/9"
         ,"Fix video conversion failed on corrupted subtitle track"
         ,"Fix incomplete conversion log"
+        ,"Fix incorrect 16/9 resolutions"
       ]
     },
     {
@@ -413,6 +417,7 @@
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
         ,"Fix technical issue on new setup <i>(#526)</i>"
+        ,"Fix tool creation"
       ]
     },
     {

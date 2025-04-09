@@ -1507,7 +1507,7 @@ h1 {
 }
 
 #cb_player {
-  height: 100%;
+  margin: auto;
 }
 
 #cb_player #link_v {
@@ -4632,6 +4632,11 @@ textarea#comment_box {
   width: initial;
   max-height: 90%;
   height: 99999999px;
+}
+
+.player-holder.fix_ratio {
+  max-height: 90vh;
+  margin: auto;
 }
 
 .cd-popup .cb-popup-container .modal-inset .my-modal-content .player-holder canvas{
