@@ -1465,6 +1465,7 @@ function update_aspect_ratio($vdetails)
 
     $filepath = get_high_res_file($vdetails);
 
+    require_once DirPath::get('classes') . 'sLog.php';
     $log = new SLog();
     $ffmpeg = new FFMpeg($log);
     $video_infos = $ffmpeg->get_file_info($filepath);
