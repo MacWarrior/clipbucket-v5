@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"331",
+  "revision":"332",
   "status":"stable",
   "detail":[
     {
@@ -319,6 +319,7 @@
         ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Add old temporary files cleanup to Delete orphan files tool"
         ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
