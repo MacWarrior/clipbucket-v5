@@ -521,18 +521,29 @@ class AdminTool
             }
             unset($logos);
 
-            //category thumbs
+            //CATEGORY THUMBS
             $category_thumbs = new GlobIterator(DirPath::get('category_thumbs') . '*'.DIRECTORY_SEPARATOR .'[0-9]*.*');
             foreach ($category_thumbs as $category_thumb) {
                 $insert_values = [
                     'type' => 'category_thumbs',
-                    'data' => $category_thumb->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($category_thumb->getPathname()),
                     'thumb' => basename($category_thumb)
                 ];
                 $this->insertTaskData([$insert_values]);
             }
             unset($category_thumbs);
 
+            //VIDEO PARTS
+            $video_parts = new GlobIterator(DirPath::get('temp') . '*.part');
+            foreach ($video_parts as $video_part) {
+                $insert_values = [
+                    'type' => 'video_parts',
+                    'data' => DirPath::getFromProjectRoot($video_part->getPathname()),
+                    'part' => basename($video_part)
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($video_parts);
         }
 
         $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));

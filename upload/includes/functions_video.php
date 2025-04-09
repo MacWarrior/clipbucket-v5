@@ -1842,6 +1842,9 @@ function clean_orphan_files($file): string
             }
             break;
 
+        case 'video_parts':
+            $result = !(time() - filectime(DirPath::get('root') .$file['data']) > 3600);
+            break;
     }
     if (!empty($result)) {
         if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
@@ -1908,6 +1911,10 @@ function clean_orphan_files($file): string
         case 'category_thumbs':
             unlink($file['data']);
             $stop_path = DirPath::get('category_thumbs');
+            break;
+        case 'video_parts':
+            unlink($full_path);
+            $stop_path = DirPath::get('temp');
             break;
     }
     remove_empty_directory(dirname($full_path), $stop_path);
