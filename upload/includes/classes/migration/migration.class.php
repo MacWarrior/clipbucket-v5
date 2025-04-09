@@ -641,6 +641,9 @@ class Migration
             $fields[] = 'is_automatable';
             $values[] = $is_automatable ? '1' : '0';
 
+            $fields[] = 'is_disabled';
+            $values[] = empty($frequency) ? '1' : '0';
+
             $fields[] = 'previous_calculated_datetime';
             $values[] = 'CURRENT_TIMESTAMP';
         }
