@@ -1465,15 +1465,16 @@ function update_aspect_ratio($vdetails)
 
     $filepath = get_high_res_file($vdetails);
 
-    $cmd = System::get_binaries('ffprobe') . ' -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x "' . $filepath . '"';
-    $output = trim(shell_exec($cmd));
+    $log = new SLog();
+    $ffmpeg = new FFMpeg($log);
+    $video_infos = $ffmpeg->get_file_info($filepath);
 
-    $parts = explode('x', $output);
-
-    if (count($parts) === 2 && (int)$parts[1] > 0) {
-        $aspect = (float)$parts[0] / (float)$parts[1];
-        Clipbucket_db::getInstance()->update(tbl('video'), ['aspect_ratio'], [$aspect], 'videoid=' . (int)$vdetails['videoid']);
+    if( empty($video_infos['video_width']) || empty($video_infos['video_height']) ){
+        return;
     }
+
+    $aspect = (float)$video_infos['video_width'] / (float)$video_infos['video_height'];
+    Clipbucket_db::getInstance()->update(tbl('video'), ['aspect_ratio'], [$aspect], 'videoid=' . (int)$vdetails['videoid']);
 }
 
 /**

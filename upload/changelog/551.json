@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"329",
+  "revision":"330",
   "status":"stable",
   "detail":[
     {
@@ -361,6 +361,7 @@
         ,"Fix video thumbs generation ratio other than 16/9"
         ,"Fix video conversion failed on corrupted subtitle track"
         ,"Fix incomplete conversion log"
+        ,"Fix incorrect 16/9 resolutions"
       ]
     },
     {
