@@ -296,6 +296,17 @@ class AdminTool
     }
 
     /**
+     * check videos to change to castable status if needed
+     * @return void
+     * @throws Exception
+     */
+    public function updateAspectRatio()
+    {
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\' AND aspect_ratio IS NULL');
+        $this->executeTool('update_aspect_ratio');
+    }
+
+    /**
      * check videos duration
      * @return void
      * @throws Exception

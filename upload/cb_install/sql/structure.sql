@@ -537,7 +537,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_poster` int(3) NULL DEFAULT NULL,
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
-  `convert_percent` FLOAT NULL DEFAULT 0
+  `convert_percent` FLOAT NULL DEFAULT 0,
+  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (

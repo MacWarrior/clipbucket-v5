@@ -242,10 +242,15 @@ class FFMpeg
         }
 
         $this->log->writeLine(date('Y-m-d H:i:s').' - Starting conversion...');
-        update_video_status($this->file_name, 'Processing');
+        update_video_by_filename($this->file_name, ['status'], ['Processing']);
 
         $this->start_time_check();
         $this->prepare();
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329') && !empty($this->input_details['video_width']) && !empty($this->input_details['video_height'])) {
+            $aspect_ratio = (int)$this->input_details['video_width'] / (int)$this->input_details['video_height'];
+            update_video_by_filename($this->file_name, ['aspect_ratio'], [$aspect_ratio]);
+        }
 
         $max_duration = config('max_video_duration') * 60;
         if ($this->input_details['duration'] > $max_duration) {

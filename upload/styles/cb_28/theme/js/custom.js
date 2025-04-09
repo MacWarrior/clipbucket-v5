@@ -173,6 +173,34 @@ function loginHeight(){
     $(".account-holder .side-box").css('height', loginHeight+'px');
 }
 
+function adaptRatioPlayer(){
+    let div = document.querySelector('.player-holder');
+    if(div === null){
+        return;
+    }
+
+    let div_vieo = document.querySelector('.player-holder video');
+    if(div_vieo === null){
+        return;
+    }
+
+    const player = div.querySelector('.cb_player');
+    if (player && player.style.aspectRatio && player.style.aspectRatio !== ''){
+        return;
+    }
+
+    const ratio_window = window.innerWidth / window.innerHeight;
+    const ratio_div = div_vieo.videoWidth / div_vieo.videoHeight;
+
+    div.style.aspectRatio = ratio_div;
+
+    if ( ratio_window > ratio_div) {
+        div.classList.add('fix_ratio');
+    } else {
+        div.classList.remove('fix_ratio');
+    }
+}
+
 let listenerModernThumbVideo = function(event) {
     if(event.target.tagName !== 'IMG' ) {
         return ;
@@ -238,6 +266,8 @@ $(document).ready(function()
 
     AddingListenerModernThumbVideo();
     AddingListenerModernThumbVideoPopinView();
+
+    window.addEventListener('resize', adaptRatioPlayer);
 });
 
 

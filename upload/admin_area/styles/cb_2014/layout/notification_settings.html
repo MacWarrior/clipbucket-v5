@@ -24,7 +24,7 @@
         </td>
         <td class="item">
             <a href="flagged_item.php?type=collection">{lang('collection_flagged')}
-                {if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) }
+                {if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) }
                     ({Flag::getAll(['count'=>true, 'element_type'=>'collection'])}
                 {else}
                     0

@@ -708,7 +708,15 @@ function update_processed_video($file_array, string $status = 'Successful')
  */
 function update_video_status($file_name, $status = 'Successful')
 {
-    Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
+    update_video_by_filename($file_name, ['status'], [$status]);
+}
+
+/**
+ * @throws Exception
+ */
+function update_video_by_filename($file_name, $fields, $values)
+{
+    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, " file_name='" . display_clean($file_name) . "'");
 }
 
 /**
@@ -1444,6 +1452,28 @@ function update_bits_color($vdetails)
     $data = shell_exec($cmd);
 
     Clipbucket_db::getInstance()->update(tbl('video'), ['bits_color'], [(int)$data], 'videoid=' . $vdetails['videoid']);
+}
+
+/**
+ * @throws Exception
+ */
+function update_aspect_ratio($vdetails)
+{
+    if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files'])) {
+        return;
+    }
+
+    $filepath = get_high_res_file($vdetails);
+
+    $cmd = System::get_binaries('ffprobe') . ' -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0:s=x "' . $filepath . '"';
+    $output = trim(shell_exec($cmd));
+
+    $parts = explode('x', $output);
+
+    if (count($parts) === 2 && (int)$parts[1] > 0) {
+        $aspect = (float)$parts[0] / (float)$parts[1];
+        Clipbucket_db::getInstance()->update(tbl('video'), ['aspect_ratio'], [$aspect], 'videoid=' . (int)$vdetails['videoid']);
+    }
 }
 
 /**
