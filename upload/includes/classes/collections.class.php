@@ -350,9 +350,9 @@ class Collection
 
             $select[] = $total_objects . ' AS total_objects';
 
-            if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-                $select[] = ' sorts.label as sort_type ';
-                $select[] = ' sorts.id as sort_type_id ';
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+                $select[] = ' sorts.label as sort_type_label ';
+                $select[] = ' sorts.id as sort_type ';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
             }
         }
@@ -460,7 +460,7 @@ class Collection
                 $params['show_unlisted'] = true;
                 $order_item = '';
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type_id']);
+                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
                 }
                 if ($collection['type'] == 'videos') {
                     $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
