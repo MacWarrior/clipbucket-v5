@@ -20,6 +20,12 @@ if (isset($_POST['add_member'])) {
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/add_member/add_member'.$min_suffixe.'.js' => 'admin']);
+$datepicker_js_lang = '';
+if( Language::getInstance()->getLang() != 'en'){
+    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+}
+ClipBucket::getInstance()->addAdminJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+ClipBucket::getInstance()->addAdminCSS(['jquery_ui' . $min_suffixe . '.css' => 'admin']);
 
 subtitle('Add New Member');
 template_files('add_members.html');
