@@ -419,6 +419,11 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
+            $menu_general['sub'][] = [
+                'title' => 'Notification settings'
+                , 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'
+            ];
+
             $this->addMenuAdmin($menu_general, 10);
         }
 
