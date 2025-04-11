@@ -1528,4 +1528,6 @@ VALUES ('admin_setting'),
        ('max_video_categories_hint'),
        ('update_aspect_ratio_label'),
        ('update_aspect_ratio_description'),
-       ('notification_settings');
+       ('approve_x'),
+       ('approve'),
+       ('see_all_notifications');

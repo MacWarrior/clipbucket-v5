@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"335",
+  "revision":"336",
   "status":"stable",
   "detail":[
     {
@@ -54,6 +54,7 @@
         ,"Refactor website configurations"
         ,"Refactor photos categories"
         ,"Refactor collection categories"
+        ,"Refactor notifications top menu"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
