@@ -19,6 +19,7 @@ foreach ($videos as $video) {
     } elseif ($_POST['output'] == 'edit') {
         assign('data', $video);
         $data['html'] = getTemplate('blocks/video_player.html');
+        $data['data'] = $video;
     }
     $return['videos'][] = $data;
 }

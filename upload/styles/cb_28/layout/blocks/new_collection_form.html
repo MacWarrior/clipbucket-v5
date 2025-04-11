@@ -14,14 +14,12 @@
         {/if}
     {/foreach}
     {foreach from=$otherFields item=field}
-        {if $field.id == 'sort_type'}
-            <div class="form-group">
-                <label for="{$field.id}">{$field.title}</label>
-                {ANCHOR place=$field.anchor_before}
-                {$field.class = 'form-control'}
-                {$formObj->createField($field)}
-            </div>
-        {/if}
+        <div class="form-group">
+            <label for="{$field.id}">{$field.title}</label>
+            {ANCHOR place=$field.anchor_before}
+            {$field.class = 'form-control'}
+            {$formObj->createField($field)}
+        </div>
     {/foreach}
 
     <div class="moveR" style="float:left;margin:0 5px 0 5px;">
