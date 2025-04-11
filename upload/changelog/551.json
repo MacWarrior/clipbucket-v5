@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"332",
+  "revision":"335",
   "status":"stable",
   "detail":[
     {
@@ -160,6 +160,7 @@
         ,"Fix user category display"
         ,"Fix user categories menu display"
         ,"Fix top menu display"
+        ,"Fix rare status issue when updating video"
       ]
     },
     {
@@ -298,6 +299,8 @@
         ,"Fix order & filter URLs"
         ,"Fix collection creation from photo upload"
         ,"Fix player max height <i>(#521)</i>"
+        ,"Fix collection creation"
+        ,"Fix collection item management display"
       ]
     },
     {
