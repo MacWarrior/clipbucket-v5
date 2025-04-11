@@ -1356,7 +1356,7 @@ class CBPhotos
     function delete_photo($id, $orphan = false)
     {
         if ($this->photo_exists($id)) {
-            $photo = $this->get_photo($id);
+            $photo = Photo::getInstance()->getOne(['photo_id'=>$id]);
 
             $del_photo_funcs = cb_get_functions('delete_photo');
             if (is_array($del_photo_funcs)) {
@@ -1367,9 +1367,7 @@ class CBPhotos
                 }
             }
 
-            if (!$orphan && !empty($photo['collection_id'])) {//removing from collection
-                $this->collection->remove_item($photo['photo_id'], $photo['collection_id']);
-            }
+            Collections::getInstance()->deleteItemFromCollections($id, 'photos');
 
             //Remove tags
             Tags::deleteTags('photo', $photo['photo_id']);
@@ -2366,7 +2364,8 @@ class CBPhotos
                             if (empty($array['collection_id'])) {
                                 e(lang('collection_not_found'), 'w');
                             } elseif ($cid != $array['collection_id']) {
-                                $this->collection->change_collection($array['collection_id'], $pid, $cid);
+                                Collections::getInstance()->deleteItemFromCollections($pid);
+                                Collection::getInstance()->addCollectionItem($pid, $array['collection_id'], 'photos');
                             }
 
                             Clipbucket_db::getInstance()->update(tbl('photos'), $query_field, $query_val, " photo_id='$pid'");
