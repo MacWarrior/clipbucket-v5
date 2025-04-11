@@ -423,7 +423,7 @@ class Collection
         $left_join_video_cond = '';
         $left_join_photos_cond = '';
         if( !User::getInstance()->hasAdminAccess() ) {
-            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true, 'sub_request'=>true]);
+            $left_join_video_cond .= ' AND ' . Video::getInstance()->getGenericConstraints(['show_unlisted' => true]);
             $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
