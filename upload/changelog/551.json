@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"332",
+  "revision":"333",
   "status":"stable",
   "detail":[
     {
@@ -160,6 +160,7 @@
         ,"Fix user category display"
         ,"Fix user categories menu display"
         ,"Fix top menu display"
+        ,"Fix rare status issue when updating video"
       ]
     },
     {
