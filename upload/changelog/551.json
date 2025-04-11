@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"329",
+  "revision":"333",
   "status":"stable",
   "detail":[
     {
@@ -160,6 +160,7 @@
         ,"Fix user category display"
         ,"Fix user categories menu display"
         ,"Fix top menu display"
+        ,"Fix rare status issue when updating video"
       ]
     },
     {
@@ -319,6 +320,7 @@
         ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Add old temporary files cleanup to Delete orphan files tool"
         ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
@@ -361,6 +363,7 @@
         ,"Fix video thumbs generation ratio other than 16/9"
         ,"Fix video conversion failed on corrupted subtitle track"
         ,"Fix incomplete conversion log"
+        ,"Fix incorrect 16/9 resolutions"
       ]
     },
     {
@@ -416,6 +419,7 @@
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
         ,"Fix technical issue on new setup <i>(#526)</i>"
+        ,"Fix tool creation"
       ]
     },
     {
