@@ -1003,7 +1003,7 @@ function get_videos($param)
  *
  * @param $users
  *
- * @return string
+ * @return array
  * @throws Exception
  */
 function video_users($users)
@@ -1012,18 +1012,25 @@ function video_users($users)
         $users_array = explode(',', $users);
     }
     $new_users = [];
-    foreach ($users_array as $user) {
-        if ($user != user_name() && !is_numeric($user) && userquery::getInstance()->user_exists($user)) {
-            $new_users[] = $user;
+    foreach ($users_array as $username) {
+        $username = trim($username);
+        $params = [];
+        if (is_numeric($username) && $username != User::getInstance()->get('userid')) {
+            $params['userid'] = $username;
+        } elseif($username != user_name()) {
+            $params['username'] = $username;
+        }
+        if (!empty($params)) {
+            $user = User::getInstance()->getOne($params);
+        }
+        if (!empty($user)) {
+            $new_users[] = $user['userid'];
         }
     }
 
     $new_users = array_unique($new_users);
 
-    if (count($new_users) > 0) {
-        return implode(',', $new_users);
-    }
-    return " ";
+   return $new_users;
 }
 
 /**
