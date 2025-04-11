@@ -489,6 +489,7 @@ CREATE TABLE `{tbl_prefix}video` (
   `videoid` bigint(20) NOT NULL,
   `videokey` mediumtext NOT NULL,
   `video_password` varchar(255) NOT NULL DEFAULT '',
+  `video_users` text NULL DEFAULT NULL,
   `username` text NULL DEFAULT NULL,
   `userid` int(11) NULL DEFAULT NULL,
   `title` text DEFAULT NULL,
@@ -1248,13 +1249,3 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}sorts`
 
 ALTER TABLE `{tbl_prefix}collections`
     ADD CONSTRAINT `sort_type_ibfk_1` FOREIGN KEY (`sort_type`) REFERENCES `{tbl_prefix}sorts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-
-CREATE TABLE IF NOT EXISTS `{tbl_prefix}video_users`
-(
-    videoid BIGINT(20) NOT NULL,
-    userid  BIGINT(20) NOT NULL,
-    PRIMARY KEY (videoid, userid)
-) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE utf8mb4_unicode_520_ci;
-
-ALTER TABLE `{tbl_prefix}video_users` ADD CONSTRAINT `video_users_ibfk_1` FOREIGN KEY (`videoid`) REFERENCES `{tbl_prefix}video` (`videoid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
-ALTER TABLE `{tbl_prefix}video_users` ADD CONSTRAINT `video_users_ibfk_2` FOREIGN KEY (`userid`) REFERENCES `{tbl_prefix}users` (`userid`) ON DELETE NO ACTION ON UPDATE NO ACTION;
