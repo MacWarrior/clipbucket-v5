@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"334",
+  "revision":"335",
   "status":"stable",
   "detail":[
     {
@@ -300,6 +300,7 @@
         ,"Fix collection creation from photo upload"
         ,"Fix player max height <i>(#521)</i>"
         ,"Fix collection creation"
+        ,"Fix collection item management display"
       ]
     },
     {
