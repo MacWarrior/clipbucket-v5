@@ -154,6 +154,9 @@ class Photo
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
         $sorts = SortType::getSortTypes('photos');
 
         if (config('enable_comments_photo') != 'yes') {
@@ -341,7 +344,7 @@ class Photo
             $conditions[] = $collection_items_table . '.ci_id IS NULL';
         }
 
-        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255) && !$param_count) {
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
             $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
             $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
 
@@ -841,7 +844,7 @@ class CBPhotos
                 ]
             ];
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                 $menu_photo['sub'][] = [
                     'title' => lang('photo_flagged')
                     , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=photo'
@@ -1944,7 +1947,7 @@ class CBPhotos
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 
@@ -2008,7 +2011,7 @@ class CBPhotos
                 $query_val[] = $array['folder'];
             }
             $query_val['0'] = $array['title'];
-            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 128)) {
+            if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '128')) {
                 $query_field[] = 'collection_id';
                 $query_val[] = 0;
             }
@@ -2144,7 +2147,6 @@ class CBPhotos
                 'required'          => 'no',
                 'hint_2'            => lang('info_age_restriction'),
                 'validate_function' => 'ageRestriction',
-                'use_func_val'      => true,
                 'class'             => 'form-control'
             ];
         }
@@ -2159,15 +2161,15 @@ class CBPhotos
 
             $return['cat'] = [
                 'title'             => lang('categories'),
-                'type'              => 'checkbox',
-                'name'              => 'category[]',
-                'id'                => 'category',
-                'value'             => $cat_array,
-                'required'          => 'yes',
-                'validate_function' => 'Category::validate',
-                'display_function'  => 'convert_to_categories',
-                'category_type'     => 'photo',
-                'invalid_err'       => lang('vdo_cat_err3')
+                'type'                      => 'checkbox',
+                'name'                      => 'category[]',
+                'id'                        => 'category',
+                'value'                     => $cat_array,
+                'required'                  => 'yes',
+                'validate_function'         => 'Category::validate',
+                'display_function'          => 'convert_to_categories',
+                'category_type'             => 'photo',
+                'invalid_err'               => lang('vdo_cat_err3')
             ];
         }
         return $return;
@@ -2296,7 +2298,7 @@ class CBPhotos
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 

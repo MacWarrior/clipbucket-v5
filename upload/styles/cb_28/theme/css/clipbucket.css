@@ -80,3 +80,36 @@
 	height: 25px;
 	font-size: 25px;
 }
+
+/* Theme switch */
+.theme-switch {
+	display: inline-flex;
+	border: 1px solid var(--color-footer-dropdown);
+	border-radius: 20px;
+	font-family: "Segoe UI", system-ui, sans-serif;
+	font-size: 13px;
+	font-weight: 500;
+	margin-bottom: 5px;
+}
+
+.theme-switch button {
+	all: unset;
+	padding: 4px 12px;
+	cursor: pointer;
+	background-color: transparent;
+	transition: background-color 0.3s, color 0.3s;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.theme-switch button.active {
+	background-color: #0a84ff;
+	border-radius: 20px;
+	color: white;
+}
+
+.theme_transition {
+	transition: all 0.5s ease;
+}
+/* Theme switch */

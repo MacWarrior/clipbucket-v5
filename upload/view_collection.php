@@ -150,7 +150,7 @@ if( config('enable_comments_collection') == 'yes' ){
 if (config('enable_collection_categories')=='yes') {
     $category_links = [];
     foreach (json_decode($cdetails['category_list'],true) as $collection_category) {
-        $category_links[] = '<a href="' . cblink(['name' => 'category', 'data' => ['category_id' => $collection_category['id'], 'category_name' => $collection_category['name']], 'type' => 'collection']) . '">' . display_clean($collection_category['name']) . '</a>';
+        $category_links[] = '<a href="' . cblink(['name' => 'category', 'data' => ['category_id' => $collection_category['id']], 'type' => 'collection']) . '">' . display_clean($collection_category['name']) . '</a>';
     }
     assign('category_links', implode(',', $category_links));
 }

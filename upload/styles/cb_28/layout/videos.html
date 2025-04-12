@@ -17,26 +17,27 @@
                         {/if}
                     </div>
                 <div class="sorting-col col-lg-6 col-md-6 col-sm-6 col-xs-12 clearfix">
-                    <div class="dropdown">
-                        {if $sort_link}
-                            {foreach from=$sort_list item=sort key=key}
-                                {if $sort_link == $key}
-                                    <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
-                                {/if}
-                            {/foreach}
-                        {else}
-                            <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
-                        {/if}
+                    {if !empty($sort_list)}
+                        <div class="dropdown">
+                            {if $sort_link}
+                                {foreach from=$sort_list item=sort key=key}
+                                    {if $sort_link == $key}
+                                        <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{$sort} <span class="icon-down-arrow"></span></a>
+                                    {/if}
+                                {/foreach}
+                            {else}
+                                <a href="javascript:void(0);" data-toggle="dropdown" class="dropdown-toggle">{lang('sort_by_'|cat:$default_sort.label)}<span class="icon-down-arrow"></span></a>
+                            {/if}
 
-                        <ul class="dropdown-menu">
-                            {foreach from=$sort_list item=sort key=key}
-                                <li>
-                                    <a href="{link name=sort sort=$key type=videos}&sorting=sort" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
-                                </li>
-                            {/foreach}
-                        </ul>
-                    </div>
-
+                            <ul class="dropdown-menu">
+                                {foreach from=$sort_list item=sort key=key}
+                                    <li>
+                                        <a href="{link name=sort sort=$key type=videos}" {if $smarty.get.sort==$key}class="selected"{/if}>{if $smarty.get.sort == $key}<i class="icon-tick"></i>{/if}{$sort}</a>
+                                    </li>
+                                {/foreach}
+                            </ul>
+                        </div>
+                    {/if}
                     <div class="dropdown">
                         {if $smarty.get.time}
 

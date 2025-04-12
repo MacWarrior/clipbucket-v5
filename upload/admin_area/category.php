@@ -8,8 +8,22 @@ User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
 $type = $_GET['type'] ?? 'video';
-
-if (config('enable_'.$type.'_categories') != 'yes') {
+switch ($type) {
+    case 'video':
+    default:
+        $config = 'enable_video_categories';
+        break;
+    case 'photo':
+        $config = 'enable_photo_categories';
+        break;
+    case 'collection':
+        $config = 'enable_collection_categories';
+        break;
+    case 'user':
+        $config = 'enable_user_category';
+        break;
+}
+if (config($config) != 'yes') {
     redirect_to(DirPath::getUrl('admin_area',true));
 }
 assign('type', $type);

@@ -296,6 +296,17 @@ class AdminTool
     }
 
     /**
+     * check videos to change to castable status if needed
+     * @return void
+     * @throws Exception
+     */
+    public function updateAspectRatio()
+    {
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\' AND aspect_ratio IS NULL');
+        $this->executeTool('update_aspect_ratio');
+    }
+
+    /**
      * check videos duration
      * @return void
      * @throws Exception
@@ -521,18 +532,29 @@ class AdminTool
             }
             unset($logos);
 
-            //category thumbs
+            //CATEGORY THUMBS
             $category_thumbs = new GlobIterator(DirPath::get('category_thumbs') . '*'.DIRECTORY_SEPARATOR .'[0-9]*.*');
             foreach ($category_thumbs as $category_thumb) {
                 $insert_values = [
                     'type' => 'category_thumbs',
-                    'data' => $category_thumb->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($category_thumb->getPathname()),
                     'thumb' => basename($category_thumb)
                 ];
                 $this->insertTaskData([$insert_values]);
             }
             unset($category_thumbs);
 
+            //VIDEO PARTS
+            $video_parts = new GlobIterator(DirPath::get('temp') . '*.part');
+            foreach ($video_parts as $video_part) {
+                $insert_values = [
+                    'type' => 'video_parts',
+                    'data' => DirPath::getFromProjectRoot($video_part->getPathname()),
+                    'part' => basename($video_part)
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($video_parts);
         }
 
         $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));
@@ -921,7 +943,7 @@ class AdminTool
     public function automate(array $tool)
     {
         /** start tools from CLI */
-        $this->addLog('launch tool ' . $tool['id_tool']);
+        $this->addLog(lang('launch_tool' , lang($tool['language_key_label'])));
         self::launchCli($tool['id_tool']);
     }
 

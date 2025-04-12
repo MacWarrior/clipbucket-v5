@@ -195,6 +195,9 @@ class Migration
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public static function updateTranslationKey(string $translation_key_old, string $translation_key_new)
     {
         $sql = 'UPDATE ' . tbl('languages_keys') . ' k1
@@ -637,6 +640,9 @@ class Migration
 
             $fields[] = 'is_automatable';
             $values[] = $is_automatable ? '1' : '0';
+
+            $fields[] = 'is_disabled';
+            $values[] = empty($frequency) ? '1' : '0';
 
             $fields[] = 'previous_calculated_datetime';
             $values[] = 'CURRENT_TIMESTAMP';

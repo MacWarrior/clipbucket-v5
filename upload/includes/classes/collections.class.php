@@ -188,6 +188,9 @@ class Collection
      */
     public function getSortList(): array
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
         $sorts = SortType::getSortTypes('collections');
 
         if (config('enable_comments_collection') != 'yes') {
@@ -347,9 +350,9 @@ class Collection
 
             $select[] = $total_objects . ' AS total_objects';
 
-            if ($param_with_items && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-                $select[] = ' sorts.label as sort_type ';
-                $select[] = ' sorts.id as sort_type_id ';
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+                $select[] = ' sorts.label as sort_type_label ';
+                $select[] = ' sorts.id as sort_type ';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('sorts') . ' ON sorts.id = collections.sort_type';
             }
         }
@@ -424,7 +427,7 @@ class Collection
             $left_join_photos_cond .= ' AND ' . Photo::getInstance()->getGenericConstraints(['show_unlisted' => true]);
         }
 
-        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255) && !$param_count) {
+        if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
             $join[] = 'LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.collection_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'collection\' )';
             $select[] = 'IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged';
         }
@@ -457,7 +460,7 @@ class Collection
                 $params['show_unlisted'] = true;
                 $order_item = '';
                 if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
-                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type_id']);
+                    $order_item = SortType::getSortLabelById($param_order_item ?: $collection['sort_type']);
                 }
                 if ($collection['type'] == 'videos') {
                     $params['order'] = Video::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
@@ -965,7 +968,7 @@ class Collections extends CBCategory
                     ];
                 }
 
-                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                     $menu_collection['sub'][] = [
                         'title' => lang('collection_flagged'),
                         'url'   => DirPath::getUrl('admin_area') . 'flagged_item.php?type=collection'
@@ -1496,9 +1499,7 @@ class Collections extends CBCategory
             'checked'           => $default['broadcast'],
             'db_field'          => 'broadcast',
             'required'          => 'no',
-            'validate_function' => 'yes_or_no',
-            'display_function'  => 'display_sharing_opt',
-            'default_value'     => 'yes'
+            'default_value'     => 'public'
         ];
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
@@ -1647,7 +1648,7 @@ class Collections extends CBCategory
                     }
                 }
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 
@@ -1691,7 +1692,11 @@ class Collections extends CBCategory
 
             //Incrementing usr collection
             Clipbucket_db::getInstance()->update(tbl('users'), ['total_collections'], ['|f|total_collections+1'], ' userid=\'' . $userid . '\'');
-            Category::getInstance()->saveLinks('collection', $insert_id, $array['category']);
+            if (config('enable_photo_categories') == 'yes') {
+                Category::getInstance()->saveLinks('collection', $insert_id, ($array['category'] ?? [Category::getInstance()->getDefaultByType('photo')['category_id']]));
+            } else {
+                Category::getInstance()->saveLinks('collection', $insert_id, [Category::getInstance()->getDefaultByType('photo')['category_id']]);
+            }
             Tags::saveTags($array['collection_tags'], 'collection', $insert_id);
 
             e(lang('collect_added_msg'), 'm');
@@ -2009,7 +2014,7 @@ class Collections extends CBCategory
                     $val = '|f|null';
                 }
 
-                if ($field['use_func_val']) {
+                if (!empty($field['validate_function'])) {
                     $val = $field['validate_function']($val);
                 }
 

@@ -261,6 +261,9 @@ function get_image_file($params)
     }
 }
 
+/**
+ * @throws Exception
+ */
 function get_photo_file($photo_id, $size = 't', $multi = false, $assign = null, $with_path = true, $with_orig = false)
 {
     $args = [

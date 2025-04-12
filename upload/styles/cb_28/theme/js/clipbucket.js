@@ -1567,20 +1567,19 @@
 		};
 
 		this.updateSubscribersCount = function(userid){
-			$.post(page,
-				{
+			$.post(page, {
 					mode : 'get_subscribers_count',
 					userid : userid
 				},
-				function(data)
-				{
+				function(data) {
 					if(!data){
 						alert('No data');
 					} else {
 						subsObj = JSON.parse(data);
 						$('#user_subscribers_'+userid).html(subsObj.subscriber_count);
 					}
-				},'text');
+				},'text'
+			);
 		};
 	};
 

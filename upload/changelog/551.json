@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"310",
+  "revision":"336",
   "status":"stable",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Implement video conversion percent"
         ,"Implement changelogs page"
         ,"Implement collection custom order"
+        ,"Implement missing video aspect ratio tool"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -53,6 +54,7 @@
         ,"Refactor website configurations"
         ,"Refactor photos categories"
         ,"Refactor collection categories"
+        ,"Refactor notifications top menu"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -77,6 +79,10 @@
         ,"Update video broadcast upload display"
         ,"Update categories management"
         ,"Update custom page edition"
+        ,"Update automatic launch of tools logs"
+        ,"Update player settings"
+        ,"Update video manager display"
+        ,"Update video max categories option"
         ,"Hide unsupported actions on unsuccessfully converted videos"
         ,"Hide comments tab on collection when collection's comments are disabled"
         ,"Move sub-collections option to collection config tab"
@@ -153,6 +159,9 @@
         ,"Fix Correct video categories tool"
         ,"Fix photo deletion <i>(#560)</i>"
         ,"Fix user category display"
+        ,"Fix user categories menu display"
+        ,"Fix top menu display"
+        ,"Fix rare status issue when updating video"
       ]
     },
     {
@@ -183,6 +192,7 @@
         ,"Implement video thumbs preview"
         ,"Implement video conversion percent"
         ,"Implement collection custom order"
+        ,"Implement theme switch"
         ,"Refactor collections page"
         ,"Refactor video edition interface"
         ,"Refactor user profile options"
@@ -192,6 +202,7 @@
         ,"Refactor collection categories"
         ,"Add edit button on video, photo & collection pages <i>(#319)</i>"
         ,"Add management menus"
+        ,"Add search links on user's category"
         ,"Update translations"
         ,"Update video, photo, collection & channel sorts"
         ,"Update collection creation on photo upload"
@@ -200,6 +211,7 @@
         ,"Update search engine"
         ,"Update collection management menus"
         ,"Update video broadcast upload display"
+        ,"Update default mail template compatibility with Outlook"
         ,"Remove auto-redirect when using www. domain <i>(#479)</i>"
         ,"Remove disabled collection creation block"
         ,"Hide collection comments option when collection comments are disabled"
@@ -280,6 +292,16 @@
         ,"Fix used storage display <i>(#552)</i>"
         ,"Fix video categories display on video page"
         ,"Fix anonymous user display on channels page"
+        ,"Fix age verification disclaimer pop-in display"
+        ,"Fix rare display issue on featured video slider"
+        ,"Fix language switch"
+        ,"Fix theme switch on SEO URLs"
+        ,"Fix collection item management blur"
+        ,"Fix order & filter URLs"
+        ,"Fix collection creation from photo upload"
+        ,"Fix player max height <i>(#521)</i>"
+        ,"Fix collection creation"
+        ,"Fix collection item management display"
       ]
     },
     {
@@ -293,6 +315,7 @@
         ,"Update discord errors"
         ,"Update FFMpeg version check"
         ,"Cleanup code"
+        ,"Clean sort/filter URLs"
         ,"Use jQuery lib from composer"
         ,"Remove unused functions"
         ,"Remove unused files"
@@ -300,6 +323,7 @@
         ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Add old temporary files cleanup to Delete orphan files tool"
         ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
@@ -322,6 +346,7 @@
         ,"Fix email rendering"
         ,"Fix last activity datetime saving <i>(#551)</i>"
         ,"Fix automated tasks through crontab"
+        ,"Fix outdated database compatibility"
       ]
     },
     {
@@ -330,6 +355,7 @@
         "Refactor log system"
         ,"Implement thumb background color option"
         ,"Implement FOV detection"
+        ,"Implement video aspect ratio"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -340,6 +366,7 @@
         ,"Fix video thumbs generation ratio other than 16/9"
         ,"Fix video conversion failed on corrupted subtitle track"
         ,"Fix incomplete conversion log"
+        ,"Fix incorrect 16/9 resolutions"
       ]
     },
     {
@@ -395,6 +422,7 @@
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
         ,"Fix technical issue on new setup <i>(#526)</i>"
+        ,"Fix tool creation"
       ]
     },
     {
@@ -426,7 +454,8 @@
         ,"Update Server Thumb for ClipBucket to version 2.0.4"
         ,"Update Global Announcement to version 2.0.5"
         ,"Update Editor's Pick to version 2.0.7"
-        ,"Update VideoJS player to version 2.1"
+        ,"Update VideoJS player to version 2.1.1"
+        ,"Update Remote Play to version 1.0.7"
         ,"Remove Social Beast"
       ]
     },

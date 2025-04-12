@@ -392,7 +392,8 @@ CREATE TABLE `{tbl_prefix}users` (
   `total_downloads` bigint(255) NOT NULL DEFAULT 0,
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
-  `is_live` enum('yes','no') NOT NULL DEFAULT 'no'
+  `is_live` enum('yes','no') NOT NULL DEFAULT 'no',
+  `active_theme` VARCHAR(15) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
@@ -536,7 +537,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_poster` int(3) NULL DEFAULT NULL,
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
-  `convert_percent` FLOAT NULL DEFAULT 0
+  `convert_percent` FLOAT NULL DEFAULT 0,
+  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (

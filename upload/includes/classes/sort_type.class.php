@@ -11,7 +11,7 @@ class SortType
      */
     public static function getSortTypes($type)
     {
-        if (empty($type)) {
+        if (empty($type) || !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             $type = 'photos';
         }
         $sortTypes = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableName) . ' WHERE type = \'' . mysql_clean($type) . '\'');
@@ -22,7 +22,7 @@ class SortType
 
     public static function getSortLabelById($id)
     {
-        if (empty($id)) {
+        if (empty($id) || !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             return '';
         }
         $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableName) . ' WHERE id = ' . mysql_clean($id)) ;
@@ -31,6 +31,9 @@ class SortType
 
     public static function getDefaultByType($type)
     {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return '';
+        }
         $res = Clipbucket_db::getInstance()->_select('SELECT * FROM ' . tbl(self::$tableName) . ' WHERE is_default = TRUE AND type = \'' . mysql_clean($type) . '\'') ;
         return $res[0] ?? [];
     }
