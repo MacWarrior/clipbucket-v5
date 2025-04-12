@@ -3854,7 +3854,8 @@ function ageRestriction($var) {
     return $var;
 }
 
-function validatePHPDateFormat($format) {
+function validatePHPDateFormat($format): bool
+{
     $validTokens = [
         'd', 'D', 'j', 'l', 'N', 'S', 'w', 'z', 'W', 'F', 'm', 'M', 'n', 't', 'L', 'o', 'Y', 'y',
         'c', 'U', 'u', 'H', 'h', 'i', 's', 'v', 'V', 'e', 'I', 'O', 'P', 'T', 'Z', 'B', 'g', 'G'

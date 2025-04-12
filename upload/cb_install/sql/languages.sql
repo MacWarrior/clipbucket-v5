@@ -1530,4 +1530,5 @@ VALUES ('admin_setting'),
        ('update_aspect_ratio_description'),
        ('approve_x'),
        ('approve'),
-       ('see_all_notifications');
+       ('see_all_notifications'),
+       ('invalid_date_format');
