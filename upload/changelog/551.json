@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"337",
+  "revision":"338",
   "status":"stable",
   "detail":[
     {
@@ -303,6 +303,7 @@
         ,"Fix player max height <i>(#521)</i>"
         ,"Fix collection creation"
         ,"Fix collection item management display"
+        ,"Fix mobile top menu on dark mode"
       ]
     },
     {
