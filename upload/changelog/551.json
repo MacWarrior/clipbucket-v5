@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"339",
+  "revision":"340",
   "status":"stable",
   "detail":[
     {
@@ -304,6 +304,7 @@
         ,"Fix collection creation"
         ,"Fix collection item management display"
         ,"Fix mobile top menu on dark mode"
+        ,"Fix photos filters on mobile view <i>(#584)</i>"
       ]
     },
     {
