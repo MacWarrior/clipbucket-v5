@@ -80,23 +80,25 @@
                                     {/foreach}
                                 </div>
                                 <div class="clearfix"></div>
-                                <div class="formSection clear">
-                                    <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                    <div class="sectionContent hidden">
-                                        <div class="row">
-                                            <h5>{lang code="default_thumb"}</h5>
-                                            {foreach from=$items item=item}
-                                                <div class="col-md-3">
-                                                    <div class="form-group text-center">
-                                                        <label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100"/>
-                                                            <input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
-                                                        </label>
+                                {if $mode != 'add_new' && count($items) > 0}
+                                    <div class="formSection clear">
+                                        <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                        <div class="sectionContent hidden">
+                                            <div class="row">
+                                                <h5>{lang code="default_thumb"}</h5>
+                                                {foreach from=$items item=item}
+                                                    <div class="col-md-3">
+                                                        <div class="form-group text-center">
+                                                            <label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100"/>
+                                                                <input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
+                                                            </label>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            {/foreach}
+                                                {/foreach}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                {/if}
                                 <div class="text-right">
                                     <input type="submit" name="update_collection" class="btn btn-primary btn-lg" value="{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}">
                                 </div>
@@ -111,30 +113,31 @@
                     {if $mode == "manage_items" || $mode == "collection_items"}
                         <h2>{lang code='manage_items'} - {display_clean($c.collection_name)}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;"/>
-                            <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button"/>
+                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;" />
+                            <input type="submit" class="btn btn-danger" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button" />
                         </div>
                         <div>
                             <table class="table table-striped table-bordered" style="margin-bottom:0;">
                                 <tr>
-                                    <td width="3%">
+                                    <th style="width:3%">
                                         <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-                                    </td>
-                                    <td width="50%">{lang code='title'}</td>
-                                    <td width="15%" align="center">{lang code='date_added'}</td>
-                                    <td width="7%" class="last_td" align="center">{lang code='remove'}</td>
+                                    </th>
+                                    <th style="width:50%">{lang code='title'}</th>
+                                    <th style="width:15%" align="center">{lang code='date_added'}</th>
+                                    <th style="width:7%" class="last_td" align="center">{lang code='remove'}</th>
                                 </tr>
+
+                                {if empty($objs['items'])}
+                                    <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
+                                {else}
+                                    {foreach $objs['items'] as $item}
+                                        {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
+                                    {/foreach}
+
+                                {/if}
                             </table>
                         </div>
-                        {if empty($objs['items'])}
-                            <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
-                        {else}
-                            {foreach $objs['items'] as $item}
-                                {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
-                            {/foreach}
-
-                            {include file="$style_dir/blocks/pagination.html"}
-                        {/if}
+                        {include file="$style_dir/blocks/pagination.html"}
                     {/if}
 
                     {if $mode == "favorite"}

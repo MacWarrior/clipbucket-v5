@@ -71,7 +71,7 @@ echo |set /p=Creating GIT directory...
 SET "GIT_DIR=%CB_DIR%\git"
 md %GIT_DIR%
 echo OK
-SET "GIT_VERSION=2.47.1"
+SET "GIT_VERSION=2.49.0"
 echo |set /p=Downloading GIT %GIT_VERSION%...
 SET "GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/PortableGit-%GIT_VERSION%-64-bit.7z.exe"
 SET "GIT_EXE_FILENAME=install_git.exe"
@@ -94,7 +94,7 @@ echo |set /p=Creating MariaDB directory...
 SET "MARIADB_DIR=%CB_DIR%\mariadb"
 md %MARIADB_DIR%
 echo OK
-SET "MARIADB_VERSION=11.7.1"
+SET "MARIADB_VERSION=12.0.0"
 echo |set /p=Downloading MariaDB %MARIADB_VERSION%...
 SET "MARIADB_URL=https://mirrors.ircam.fr/pub/mariadb/mariadb-%MARIADB_VERSION%/winx64-packages/mariadb-%MARIADB_VERSION%-winx64.zip"
 SET "MARIADB_ZIP_FILENAME=mariadb-%MARIADB_VERSION%.zip"
@@ -113,7 +113,7 @@ echo |set /p=Creating Nginx directory...
 SET "NGINX_DIR=%CB_DIR%\nginx"
 md %NGINX_DIR%
 echo OK
-SET "NGINX_VERSION=1.27.3"
+SET "NGINX_VERSION=1.27.4"
 echo |set /p=Downloading Nginx %NGINX_VERSION%...
 SET "NGINX_URL=https://nginx.org/download/nginx-%NGINX_VERSION%.zip"
 SET "NGINX_ZIP_FILENAME=nginx-%NGINX_VERSION%.zip"
@@ -132,7 +132,7 @@ echo |set /p=Creating PHP directory...
 SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
-SET "PHP_VERSION=8.4.1"
+SET "PHP_VERSION=8.4.6"
 echo /!\ We're using PHP because PHP-FPM doesn't support Windows
 echo |set /p=Downloading PHP %PHP_VERSION%...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-%PHP_VERSION%-Win32-vs17-x64.zip"
@@ -153,7 +153,7 @@ echo |set /p=Creating FFMpeg directory...
 SET "FFMPEG_DIR=%CB_DIR%\ffmpeg"
 md %FFMPEG_DIR%
 echo OK
-SET "FFMPEG_VERSION=7.1"
+SET "FFMPEG_VERSION=7.1.1"
 echo |set /p=Downloading FFMpeg %FFMPEG_VERSION%...
 SET "FFMPEG_URL=https://github.com/GyanD/codexffmpeg/releases/download/%FFMPEG_VERSION%/ffmpeg-%FFMPEG_VERSION%-full_build.zip"
 SET "FFMPEG_ZIP_FILENAME=ffmpeg-%FFMPEG_VERSION%.zip"
@@ -172,7 +172,7 @@ echo |set /p=Creating MediaInfo directory...
 SET "MEDIAINFO_DIR=%CB_DIR%\mediainfo"
 md %MEDIAINFO_DIR%
 echo OK
-SET "MEDIAINFO_VERSION=24.11"
+SET "MEDIAINFO_VERSION=25.03"
 echo |set /p=Downloading MediaInfo %MEDIAINFO_VERSION%...
 SET "MEDIAINFO_URL=https://mediaarea.net/download/binary/mediainfo/%MEDIAINFO_VERSION%/MediaInfo_CLI_%MEDIAINFO_VERSION%_Windows_x64.zip"
 SET "MEDIAINFO_ZIP_FILENAME=mediainfo-%MEDIAINFO_VERSION%.zip"
@@ -250,6 +250,10 @@ Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '
 
 set "SEARCH=;extension=fileinfo"
 set "REPLACEMENT=extension=fileinfo"
+Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
+
+set "SEARCH=;extension=ffi"
+set "REPLACEMENT=extension=ffi"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
 set "SEARCH=;extension_dir = \"./\""
@@ -429,6 +433,7 @@ echo    location ~* ^(.*/)?page/([0-9]+)/(.*)$ {>> %NGINX_CONF%
 echo        rewrite ^(.*/)?page/([0-9]+)/(.*) $1view_page.php?pid=$2&$query_string last;>> %NGINX_CONF%
 echo        break;>> %NGINX_CONF%
 echo    }>> %NGINX_CONF%
+echo. >> %NGINX_CONF%
 echo }>> %NGINX_CONF%
 
 echo OK
@@ -439,7 +444,7 @@ echo Configuring server start script...
 SET "START_SCRIPT=%CB_DIR%\start.bat"
 
 echo start %PHP_DIR%\php-cgi.exe -b 127.0.0.1:9000 -c %PHP_DIR%\php.ini >> %START_SCRIPT%
-echo start cmd.exe /k "cd %NGINX_DIR% & %NGINX_DIR%\nginx.exe" >> %START_SCRIPT%
+echo start cmd.exe /k "cd /d %NGINX_DIR% && nginx.exe" >> %START_SCRIPT%
 echo start %MARIADB_SERVER_EXE% --console >> %START_SCRIPT%
 
 :end

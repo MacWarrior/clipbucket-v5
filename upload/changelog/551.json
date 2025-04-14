@@ -1,6 +1,6 @@
 {
   "version":"5.5.1",
-  "revision":"327",
+  "revision":"340",
   "status":"stable",
   "detail":[
     {
@@ -40,6 +40,7 @@
         ,"Implement video conversion percent"
         ,"Implement changelogs page"
         ,"Implement collection custom order"
+        ,"Implement missing video aspect ratio tool"
         ,"Refactor category creation and edition interface"
         ,"Refactor system infos"
         ,"Refactor comments options"
@@ -53,6 +54,7 @@
         ,"Refactor website configurations"
         ,"Refactor photos categories"
         ,"Refactor collection categories"
+        ,"Refactor notifications top menu"
         ,"Add SSE function check"
         ,"Add option to enable links in video description"
         ,"Add Nginx check"
@@ -159,6 +161,8 @@
         ,"Fix user category display"
         ,"Fix user categories menu display"
         ,"Fix top menu display"
+        ,"Fix rare status issue when updating video"
+        ,"Fix possible invalid date format <i>(#558)</i>"
       ]
     },
     {
@@ -296,6 +300,11 @@
         ,"Fix collection item management blur"
         ,"Fix order & filter URLs"
         ,"Fix collection creation from photo upload"
+        ,"Fix player max height <i>(#521)</i>"
+        ,"Fix collection creation"
+        ,"Fix collection item management display"
+        ,"Fix mobile top menu on dark mode"
+        ,"Fix photos filters on mobile view <i>(#584)</i>"
       ]
     },
     {
@@ -317,6 +326,7 @@
         ,"Remove unused custom pages 403 & 404"
         ,"Add timeout on update checker to prevent slow loading dashboard"
         ,"Add index to sessions table"
+        ,"Add old temporary files cleanup to Delete orphan files tool"
         ,"Optimize video SQL requests"
         ,"Update compatibility to PHP 8.4.X"
         ,"Update compatibility to MySQL 9.X"
@@ -348,6 +358,7 @@
         "Refactor log system"
         ,"Implement thumb background color option"
         ,"Implement FOV detection"
+        ,"Implement video aspect ratio"
         ,"Add option to only keep maximum resolution"
         ,"Add support for .m4v & .ts video files"
         ,"Add support for video ratio other than 16/9 <i>(#424)</i>"
@@ -358,6 +369,7 @@
         ,"Fix video thumbs generation ratio other than 16/9"
         ,"Fix video conversion failed on corrupted subtitle track"
         ,"Fix incomplete conversion log"
+        ,"Fix incorrect 16/9 resolutions"
       ]
     },
     {
@@ -413,6 +425,7 @@
         ,"Fix update 5.5.0 - 367"
         ,"Fix update from < 5.5.1 - 199 <i>(#512)</i>"
         ,"Fix technical issue on new setup <i>(#526)</i>"
+        ,"Fix tool creation"
       ]
     },
     {
@@ -453,12 +466,12 @@
       "title": "External components",
       "description": [
         "Update VideoJS to version 8.21.1"
-        ,"Update Windows installation script MariaDB to 11.7.1"
-        ,"Update Windows installation script PHP to 8.4.1"
-        ,"Update Windows installation script FFMpeg to 7.1"
-        ,"Update Windows installation script MediaInfo to 24.11"
-        ,"Update Windows installation script Nginx to 1.27.3"
-        ,"Update Windows installation script Git to 2.47.1"
+        ,"Update Windows installation script MariaDB to 12.0.0"
+        ,"Update Windows installation script PHP to 8.4.6"
+        ,"Update Windows installation script FFMpeg to 7.1.1"
+        ,"Update Windows installation script MediaInfo to 25.03"
+        ,"Update Windows installation script Nginx to 1.27.4"
+        ,"Update Windows installation script Git to 2.49.0"
         ,"Update FontAwesome to 4.7.0"
         ,"Update PhpMailer to 6.9.3"
       ]

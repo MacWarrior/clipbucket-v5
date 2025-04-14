@@ -226,6 +226,7 @@ $( document ).ready(function() {
 
                     data.videos.forEach(function (video) {
                         $('#videoplayer').html(video.html)
+                        $('#status').val(video.data.status)
                     });
 
                     if (response.all_complete) {

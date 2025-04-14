@@ -84,9 +84,11 @@ class Video
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '273')) {
             $this->fields[] = 'fov';
         }
-        // TODO : Update revision
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $this->fields[] = 'convert_percent';
+        }
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329')) {
+            $this->fields[] = 'aspect_ratio';
         }
 
         $this->fields_categories = [
@@ -1098,7 +1100,6 @@ class CBvideo extends CBCategory
             return;
         }
 
-        // TODO : Update revision
         if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
             return;
         }
@@ -1144,7 +1145,7 @@ class CBvideo extends CBCategory
                 ];
             }
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                 $menu_video['sub'][] = [
                     'title' => lang('video_flagged')
                     , 'url' => DirPath::getUrl('admin_area') . 'flagged_item.php?type=video'
@@ -1157,10 +1158,6 @@ class CBvideo extends CBCategory
             $menu_video['sub'][] = [
                 'title' => 'List Inactive Videos'
                 , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php?search=search&active=no'
-            ];
-            $menu_video['sub'][] = [
-                'title' => 'Notification settings'
-                , 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'
             ];
 
             ClipBucket::getInstance()->addMenuAdmin($menu_video, 70);
@@ -1203,9 +1200,12 @@ class CBvideo extends CBCategory
             $basic_fields[] = 'fov';
         }
 
-        // TODO : Update revision
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
             $basic_fields[] = 'convert_percent';
+        }
+
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329')) {
+            $basic_fields[] = 'aspect_ratio';
         }
 
         return $this->set_basic_fields($basic_fields);

@@ -118,7 +118,16 @@ if (!empty($_filename)) {
         $ffmpeg->audio_track = $audio_track;
     }
 
-    Clipbucket_db::getInstance()->update(tbl('video'), ['file_type', 'status'], [$ffmpeg->conversion_type, 'Waiting'], ' file_name = \''.display_clean($_filename).'\'');
+    $fields = [
+        'file_type'
+        ,'status'
+    ];
+    $values = [
+        $ffmpeg->conversion_type
+        ,'Waiting'
+    ];
+
+    update_video_by_filename($_filename, $fields, $values);
 
     $ffmpeg->ClipBucket();
 
@@ -138,13 +147,12 @@ if (!empty($_filename)) {
         $values[] = $ffmpeg->input_details['fov'];
     }
 
-    // TODO : Update revision
     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
         $fields[] = 'convert_percent';
         $values[] = 100;
     }
 
-    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, ' file_name = \''.display_clean($_filename).'\'');
+    update_video_by_filename($_filename, $fields, $values);
 
     $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
 
@@ -180,7 +188,7 @@ if (!empty($_filename)) {
                 foreach($thumbs as $thumb){
                     if( $ia->is($thumb, $model) ){
                         $active = 'no';
-                        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 255)) {
+                        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
                             Flag::flagItem($videoDetails['videoid'], 'video', array_search('sexual_content',Flag::getFlagTypes()),0);
                         }
                         break 2;

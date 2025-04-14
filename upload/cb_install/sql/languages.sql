@@ -1525,4 +1525,10 @@ VALUES ('admin_setting'),
        ('title_theme_auto'),
        ('title_theme_x'),
        ('max_video_categories'),
-       ('max_video_categories_hint');
+       ('max_video_categories_hint'),
+       ('update_aspect_ratio_label'),
+       ('update_aspect_ratio_description'),
+       ('approve_x'),
+       ('approve'),
+       ('see_all_notifications'),
+       ('invalid_date_format');
