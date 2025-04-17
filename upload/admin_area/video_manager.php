@@ -158,6 +158,9 @@ if (!$params['order']) {
 }
 
 $params['join_flag']=true;
+if (config('enable_video_categories') !='no') {
+    $params['get_detail']=true;
+}
 assign('anonymous_id', $userquery->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
 $ids_to_check_progress = [];

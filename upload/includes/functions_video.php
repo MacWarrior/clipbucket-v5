@@ -708,7 +708,15 @@ function update_processed_video($file_array, string $status = 'Successful')
  */
 function update_video_status($file_name, $status = 'Successful')
 {
-    Clipbucket_db::getInstance()->update(tbl('video'), ['status'], [$status], " file_name='" . display_clean($file_name) . "'");
+    update_video_by_filename($file_name, ['status'], [$status]);
+}
+
+/**
+ * @throws Exception
+ */
+function update_video_by_filename($file_name, $fields, $values)
+{
+    Clipbucket_db::getInstance()->update(tbl('video'), $fields, $values, " file_name='" . display_clean($file_name) . "'");
 }
 
 /**
@@ -1447,6 +1455,30 @@ function update_bits_color($vdetails)
 }
 
 /**
+ * @throws Exception
+ */
+function update_aspect_ratio($vdetails)
+{
+    if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files'])) {
+        return;
+    }
+
+    $filepath = get_high_res_file($vdetails);
+
+    require_once DirPath::get('classes') . 'sLog.php';
+    $log = new SLog();
+    $ffmpeg = new FFMpeg($log);
+    $video_infos = $ffmpeg->get_file_info($filepath);
+
+    if( empty($video_infos['video_width']) || empty($video_infos['video_height']) ){
+        return;
+    }
+
+    $aspect = (float)$video_infos['video_width'] / (float)$video_infos['video_height'];
+    Clipbucket_db::getInstance()->update(tbl('video'), ['aspect_ratio'], [$aspect], 'videoid=' . (int)$vdetails['videoid']);
+}
+
+/**
  * Checks if given video is reconvertable or not
  *
  * @param : { array } { $vdetails } { an array with all details regarding video }
@@ -1752,7 +1784,7 @@ function remove_empty_directory($path, string $stop_path)
     if ($path == $stop_path) {
         return;
     }
-    $current_dir_content = array_diff(scandir($path), ['..', '.']);
+    $current_dir_content = array_diff((scandir($path)??[]), ['..', '.']);
     if (count($current_dir_content) <= 0) {
         rmdir($path);
         remove_empty_directory(dirname($path), $stop_path);
@@ -1842,6 +1874,9 @@ function clean_orphan_files($file): string
             }
             break;
 
+        case 'video_parts':
+            $result = !(time() - filectime(DirPath::get('root') .$file['data']) > 3600);
+            break;
     }
     if (!empty($result)) {
         if (config('cache_enable') == 'yes' && !(in_array($filename, $tab_redis[$redis_type_key] ?? []))) {
@@ -1908,6 +1943,10 @@ function clean_orphan_files($file): string
         case 'category_thumbs':
             unlink($file['data']);
             $stop_path = DirPath::get('category_thumbs');
+            break;
+        case 'video_parts':
+            unlink($full_path);
+            $stop_path = DirPath::get('temp');
             break;
     }
     remove_empty_directory(dirname($full_path), $stop_path);

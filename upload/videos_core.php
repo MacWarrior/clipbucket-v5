@@ -23,7 +23,8 @@ if ($_GET['cat'] && is_numeric($_GET['cat'])) {
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
-$params = Video::getInstance()->getFilterParams($_GET['sort'], []);
+$sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
+$params = Video::getInstance()->getFilterParams($sort_label, []);
 $params = Video::getInstance()->getFilterParams($_GET['time'], $params);
 $params['limit'] = $get_limit;
 if( $child_ids ){
@@ -45,7 +46,9 @@ assign('type_link', 'videos' . (!empty($params['public']) ? '_public' : ''));
 $videos = Video::getInstance()->getAll($params);
 assign('videos', $videos);
 
-assign('sort_list', Video::getInstance()->getSortList());
+assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
+assign('sort_link', $_GET['sort']??0);
+assign('default_sort', SortType::getDefaultByType('videos'));
 assign('time_list', time_links());
 
 if( empty($videos) ){
@@ -60,7 +63,6 @@ if( empty($videos) ){
 }
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $total_pages = count_pages($count, config('videos_list_per_page'));
-//Pagination
 $ids_to_check_progress = [];
 foreach ($videos as $video) {
     if (in_array($video['status'], ['Processing', 'Waiting'])) {
@@ -68,6 +70,8 @@ foreach ($videos as $video) {
     }
 }
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
+
+//Pagination
 $extra_params = null;
 $tag = '<li><a #params#>#page#</a><li>';
 pages::getInstance()->paginate($total_pages, $page, null, $extra_params, $tag);

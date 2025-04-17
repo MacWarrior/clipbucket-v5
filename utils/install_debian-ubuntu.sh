@@ -386,7 +386,8 @@ server {
     }
 
     location /videos/ {
-        rewrite ^/videos/(.*)/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
+        rewrite ^/videos/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1&sort=$2&time=$3&page=$4 last;
+        rewrite ^/videos/(.*)/(.*)/(.*) /videos.php?sort=$1&time=$2&page=$3 last;
         rewrite ^/videos/([0-9]+) /videos.php?page=$1 last;
         rewrite ^/videos/?$ /videos.php?$query_string last;
     }
@@ -398,7 +399,8 @@ server {
     }
 
     location /channels/ {
-        rewrite ^/channels/(.*)/(.*)/(.*)/(.*)/(.*) /channels.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
+        rewrite ^/channels/(.*)/(.*)/(.*)/(.*) /channels.php?cat=$1&sort=$2&time=$3&page=$4 last;
+        rewrite ^/channels/(.*)/(.*)/(.*) /channels.php?sort=$1&time=$2&page=$3 last;
         rewrite ^/channels/([0-9]+) /channels.php?page=$1 last;
         rewrite ^/channels/?$ /channels.php last;
     }
@@ -444,13 +446,15 @@ server {
     }
 
     location /collections/ {
-        rewrite ^/collections/(.*)/(.*)/(.*)/(.*)/(.*) /collections.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
+        rewrite ^/collections/(.*)/(.*)/(.*)/(.*) /collections.php?cat=$1&sort=$2&time=$3&page=$4 last;
+        rewrite ^/collections/(.*)/(.*)/(.*) /collections.php?sort=$1&time=$2&page=$3 last;
         rewrite ^/collections/([0-9]+) /collections.php?page=$1 last;
         rewrite ^/collections/?$ /collections.php last;
     }
 
     location /photos/ {
-        rewrite ^/photos/(.*)/(.*)/(.*)/(.*)/(.*) /photos.php?cat=$1&sort=$3&time=$4&page=$5&seo_cat_name=$2 last;
+        rewrite ^/photos/(.*)/(.*)/(.*)/(.*) /photos.php?cat=$1&sort=$2&time=$3&page=$4 last;
+        rewrite ^/photos/(.*)/(.*)/(.*) /photos.php?sort=$1&time=$2&page=$3 last;
         rewrite ^/photos/([0-9]+) /photos.php?page=$1 last;
         rewrite ^/photos/?$ /photos.php last;
     }

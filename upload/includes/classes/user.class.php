@@ -117,10 +117,13 @@ class User
             ,'show_my_friends'
         ];
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
             $this->fields_profile[] = 'disabled_channel';
         }
 
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
+            $this->fields[] = 'active_theme';
+        }
         $this->tablename_level = 'user_levels';
 
         $this->display_block = '/blocks/user.html';
@@ -209,7 +212,9 @@ class User
             default:
                 $params['order'] = $this->getTableName() . '.doj DESC';
                 break;
-
+            case 'most_old':
+                $params['order'] = $this->getTableName() . '.doj ASC';
+                break;
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.profile_hits DESC';
                 break;
@@ -256,19 +261,17 @@ class User
      */
     public function getSortList(): array
     {
-        $sorts = [
-            'most_recent'  => lang('most_recent')
-            ,'most_viewed' => lang('mostly_viewed')
-            ,'top_rated'   => lang('top_rated')
-            ,'featured'    => lang('featured')
-        ];
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
+            return [];
+        }
+       $sorts = SortType::getSortTypes('channels');
 
-        if(config('videosSection') == 'yes' || config('photosSection') == 'yes') {
-            $sorts['most_items'] = lang('sort_most_items');
+        if(config('videosSection') != 'yes' && config('photosSection') != 'yes') {
+            unset($sorts[array_search('sort_most_items', $sorts)]);
         }
 
         if( config('enable_comments_channel') == 'yes' ){
-            $sorts['most_commented'] = lang('most_comments');
+            unset($sorts[array_search('most_commented', $sorts)]);
         }
 
         return $sorts;
@@ -383,6 +386,10 @@ class User
 
         $version = Update::getInstance()->getDBVersion();
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if ($param_search || $param_condition || !$param_count) {
+                $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
+                $join[] = 'LEFT JOIN ' . cb_sql_table('tags') . ' ON user_tags.id_tag = tags.id_tag';
+            }
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
                 $group[] = 'users.userid';
@@ -390,14 +397,19 @@ class User
                     $group[] = 'user_levels_permissions.id_user_levels_permission ';
                 }
             }
-            $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
-            $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON user_tags.id_tag = tags.id_tag';
 
         }
 
         if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-            $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
-            $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+
+            if ($param_search || $param_category || $param_condition || !$param_count) {
+                $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
+                $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
+            }
+            if (!$param_count) {
+                $select[] = 'GROUP_CONCAT( DISTINCT(categories.category_id) SEPARATOR \',\') AS category, GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category_names';
+                $select[] = 'CONCAT(\'[\', GROUP_CONCAT(DISTINCT JSON_OBJECT(\'id\', categories.category_id, \'name\', categories.category_name)),\']\') AS category_list';
+            }
         }
 
         if( $param_group ){
@@ -616,7 +628,7 @@ class User
 
     public function get(string $value)
     {
-        if( !isset($this->user_data[$value]) ){
+        if( !array_key_exists($value, $this->user_data) ){
             DiscordLog::sendDump($this->user_data);
             if( in_dev() ){
                 $msg = 'User->get() - Unknown value : ' . $value . '```' . debug_backtrace_string() . '```';
@@ -819,6 +831,51 @@ class User
         return array_column($results, 'videoid');
     }
 
+    public function getActiveTheme(): string
+    {
+        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light'])) {
+            return config('default_theme');
+        }
+
+        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
+            if( in_array($this->get('active_theme'), ['light','dark','auto']) ){
+                if( $this->get('active_theme') && empty($_COOKIE['user_theme_os']) ){
+                    return $this->get('active_theme');
+                }
+                if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
+                    return config('default_theme');
+                }
+                return $_COOKIE['user_theme_os'];
+            }
+            return config('default_theme');
+        }
+
+        if( isset($_COOKIE['user_theme']) ){
+            if( !in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
+                return config('default_theme');
+            }
+            if( $_COOKIE['user_theme'] == 'auto' ){
+                if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
+                    return config('default_theme');
+                }
+                return $_COOKIE['user_theme_os'];
+            }
+            return $_COOKIE['user_theme'];
+        }
+        return config('default_theme');
+    }
+
+    public function getUserTheme(): string
+    {
+        if (config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), [
+                'dark',
+                'light'
+            ])) {
+            return config('default_theme');
+        }
+
+        return $_COOKIE['user_theme'] ?? $this->getActiveTheme();
+    }
     /**
      * @throws Exception
      */
@@ -939,8 +996,25 @@ class User
     {
         return $this->default_homepage_list;
     }
-}
 
+    /**
+     * @throws Exception
+     */
+    public function setActiveTheme(string $theme, string $os): bool
+    {
+        if ( !in_array($theme,['light','dark','auto']) ){
+            return false;
+        }
+        if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
+            //set to bd
+            Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('users') . ' SET active_theme = \'' . mysql_clean($theme) . '\'');
+        }
+        set_cookie_secure('user_theme', $theme);
+        set_cookie_secure('user_theme_os', $os);
+        return true;
+    }
+
+}
 
 class userquery extends CBCategory
 {
@@ -1259,7 +1333,7 @@ class userquery extends CBCategory
         //Updating User last login , num of visits and ip
         Clipbucket_db::getInstance()->update(tbl('users'),
             ['num_visits', 'last_logged', 'ip'],
-            ['|f|num_visits+1', NOW(), Network::get_remote_ip()],
+                        ['|f|num_visits+1', now(), Network::get_remote_ip()],
             'userid=\'' . $udetails['userid'] . '\''
         );
 
@@ -2200,7 +2274,7 @@ class userquery extends CBCategory
      */
     function UpdateLastActive($username)
     {
-        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . NOW() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
+        $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . now() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
         Clipbucket_db::getInstance()->execute($sql);
     }
 
@@ -2712,10 +2786,6 @@ class userquery extends CBCategory
             }
             $val = $array[$name];
 
-            if ($field['use_func_val']) {
-                $val = $field['validate_function']($val);
-            }
-
             if (!empty($field['db_field'])) {
                 $query_field[] = $field['db_field'];
             }
@@ -2903,10 +2973,6 @@ class userquery extends CBCategory
             foreach ($custom_signup_fields as $field) {
                 $name = formObj::rmBrackets($field['name']);
                 $val = $array[$name];
-
-                if ($field['use_func_val']) {
-                    $val = $field['validate_function']($val);
-                }
 
                 if (!empty($field['db_field'])) {
                     $uquery_field[] = $field['db_field'];
@@ -3585,7 +3651,6 @@ class userquery extends CBCategory
                 'value'               => $email,
                 'db_field'            => 'email',
                 'required'            => 'yes',
-                'syntax_type'         => 'email',
                 'db_value_check_func' => 'email_exists',
                 'db_value_exists'     => false,
                 'db_value_err'        => lang('usr_email_err3'),
@@ -3799,9 +3864,6 @@ class userquery extends CBCategory
                     }
                 }
 
-                if ($field['use_func_val']) {
-                    $val = $field['validate_function']($val);
-                }
 
                 if (!empty($field['db_field'])) {
                     $query_field[] = $field['db_field'];
@@ -4255,34 +4317,15 @@ class userquery extends CBCategory
     /**
      * Function used to get number of users online
      *
-     * @param bool $group
-     * @param bool $count
-     *
-     * @return array|bool
+     * @return array
      * @throws Exception
      */
-    function get_online_users($group = true, $count = false)
+    function get_online_users(): array
     {
-        if ($group) {
-            $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ") ON 
-             (" . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-                tbl('sessions.*,users.username,users.userid,users.email') . ',count(' . tbl('sessions.session_user') . ') AS logins'
-                , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 GROUP BY " . tbl('users.userid'));
-        } else {
-            if ($count) {
-                $results = Clipbucket_db::getInstance()->count(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
-                 (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-                    tbl('sessions.session_id')
-                    , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 ");
-            } else {
-                $results = Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
-                 (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
-                    tbl('sessions.*,users.username,users.userid,users.email')
-                    , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . NOW() . "')  < 6 ");
-            }
-        }
-
-        return $results;
+        return Clipbucket_db::getInstance()->select(tbl('sessions') . ' LEFT JOIN (' . tbl('users') . ') ON 
+         (' . tbl('sessions.session_user=') . tbl('users') . '.userid)',
+            tbl('sessions.*,users.username,users.userid,users.email')
+            , ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ",'" . now() . "')  < 10 ", false, ' TIMESTAMPDIFF(MINUTE,' . tbl('sessions.last_active') . ',\'' . now() . '\')');
     }
 
     /**

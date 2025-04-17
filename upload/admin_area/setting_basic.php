@@ -14,6 +14,14 @@ if (@$_GET['msg']) {
     $msg = mysql_clean($_GET['msg']);
 }
 
+if (isset($_POST['reset_control_bar_logo_url'])) {
+    if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
+        unlink(DirPath::get('logos') . 'player-logo.png');
+    }
+    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', '/images/icons/player-logo.png');
+    e(lang('player_logo_reset'), 'm');
+}
+
 if (isset($_POST['update'])) {
     $config_booleans = [
         'seo'
@@ -123,6 +131,10 @@ if (isset($_POST['update'])) {
         , 'enable_recorded_date_video_field'
         , 'allow_tag_space'
         , 'enable_video_thumbs_preview'
+        , 'enable_photo_categories'
+        , 'enable_video_categories'
+        , 'enable_collection_categories'
+        , 'enable_theme_change'
         , 'enable_membership'
         , 'enable_public_video_page'
     ];
@@ -146,6 +158,7 @@ if (isset($_POST['update'])) {
         , 'channel_rating'
         , 'own_channel_rating'
         , 'photo_crop'
+        , 'show_collapsed_checkboxes'
     ];
 
     $rows = [
@@ -189,6 +202,7 @@ if (isset($_POST['update'])) {
         'use_subs',
 
         'email_verification',
+        'show_collapsed_checkboxes',
 
         'gravatars',
 
@@ -364,6 +378,25 @@ if (isset($_POST['update'])) {
         'custom_css',
         'enable_video_thumbs_preview',
         'video_thumbs_preview_count',
+        'enable_photo_categories',
+        'enable_video_categories',
+        'enable_collection_categories',
+        'enable_theme_change',
+        'autoplay_video',
+        'embed_player_height',
+        'embed_player_width',
+        'autoplay_embed',
+        'chromecast',
+        'control_bar_logo',
+        'contextual_menu_disabled',
+
+        'player_logo_url',
+        'player_thumbnails',
+        'player_default_resolution',
+        'player_default_resolution_hls',
+        'player_subtitles',
+        'enable_360_video',
+        'video_thumbs_preview_count',
         'allow_tag_space',
         'email_sender_name',
         'number_featured_video',
@@ -432,9 +465,14 @@ if (isset($_POST['update'])) {
                 e(lang('error_age_restriction_save'));
                 break;
             }
-            if ($value <= 0 || !is_numeric($value)) {
+            if (($value <= 0 || !is_numeric($value)) && $field != 'video_categories') {
                 $value = 1;
             }
+        }
+
+        if ($field=='date_format' && !validatePHPDateFormat($value)) {
+            e(lang('invalid_date_format'));
+            break;
         }
         if (in_array($field, $config_booleans)) {
             if ($value != 'yes') {
@@ -459,6 +497,12 @@ if (isset($_POST['update'])) {
         // function used to upload site logo.
         upload_image('favicon');
         myquery::getInstance()->Set_Website_Details('logo_update_timestamp', time());
+    }
+    if( !empty($_FILES['control_bar_logo_url']['name']) ){
+        $logo_file = Upload::getInstance()->upload_player_logo($_FILES['control_bar_logo_url']);
+        if ($logo_file) {
+            myquery::getInstance()->Set_Website_Details('control_bar_logo_url', $logo_file);
+        }
     }
 
     //clear cache

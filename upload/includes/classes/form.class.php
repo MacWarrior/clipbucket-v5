@@ -278,7 +278,7 @@ class formObj
             foreach ($cats as $cat) {
                 $checked = '';
                 //checking value
-                if (in_array($cat['category_id'], $values) || $cat['is_default'] == 'yes') {
+                if (in_array($cat['category_id'], $values) || ($cat['is_default'] == 'yes' && empty($values))) {
                     $checked = 'checked';
                 }
 
@@ -306,8 +306,11 @@ class formObj
                         'children_indent' => true
                     ], $multi);
                     if (config('show_collapsed_checkboxes') == 1) {
-                        echo '</div></div>';
+                        echo '</div>';
                     }
+                }
+                if (config('show_collapsed_checkboxes') == 1) {
+                    echo '</div>';
                 }
             }
         }

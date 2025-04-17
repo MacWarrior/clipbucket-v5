@@ -35,9 +35,9 @@ assign('upload_max_filesize', $upload_max_filesize);
 assign('upload_max_filesize_mb', $upload_max_filesize_mb);
 assign('target_upload_size', config('max_upload_size'));
 
-$max_upload_size_ok = (config('max_upload_size') < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb < $post_max_size_mb));
+$max_upload_size_ok = (config('max_upload_size') < $post_max_size_mb || ($chunk_upload && $chunk_upload_size_mb <= $post_max_size_mb));
 assign('max_upload_size_ok', $max_upload_size_ok);
-$upload_max_size_ok = $upload_max_filesize_mb >= config('max_upload_size') || ($chunk_upload && $chunk_upload_size_mb < $upload_max_filesize_mb);
+$upload_max_size_ok = $upload_max_filesize_mb >= config('max_upload_size') || ($chunk_upload && $chunk_upload_size_mb <= $upload_max_filesize_mb);
 assign('upload_max_size_ok', $upload_max_size_ok);
 $memory_limit = ini_get('memory_limit');
 assign('memory_limit', $memory_limit);
@@ -64,7 +64,6 @@ if ($isNginx) {
         assign('client_max_body_size_ok', $client_max_body_size_ok);
     }
 }
-
 
 $phpWebExec = System::check_php_function('exec', 'web', false);
 assign('phpWebExec',$phpWebExec);

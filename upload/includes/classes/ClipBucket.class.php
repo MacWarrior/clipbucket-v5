@@ -82,9 +82,6 @@ class ClipBucket
 
         $this->clean_requests();
 
-        if( !isset($_GET['sort']) ){
-            $_GET['sort'] = 'most_recent';
-        }
 
         if( !isset($_GET['time']) ){
             $_GET['time'] = 'all_time';
@@ -160,12 +157,8 @@ class ClipBucket
      */
     private function addFile(&$array_var, $files)
     {
-        if(in_dev()){
-            $cache_key = time();
-        } else {
-            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
-        }
 
+        $cache_key = $this->getCacheKey();
         if (is_array($files)) {
             foreach ($files as $key => $file) {
                 if (!isset($array_var[$key])) {
@@ -177,6 +170,16 @@ class ClipBucket
                 $array_var[$files . '?v=' . $cache_key] = 'global';
             }
         }
+    }
+
+    public function getCacheKey()
+    {
+        if(in_dev()){
+            $cache_key = time();
+        } else {
+            $cache_key = str_replace('.', '', Update::getInstance()->getCurrentCoreVersion()) . Update::getInstance()->getCurrentCoreRevision();
+        }
+        return $cache_key;
     }
 
     /**
@@ -327,11 +330,6 @@ class ClipBucket
         ];
 
         $menu_configuration['sub'][] = [
-            'title' => lang('player_settings')
-            , 'url' => DirPath::getUrl('admin_area') . 'manage_players.php?mode=show_settings'
-        ];
-
-        $menu_configuration['sub'][] = [
             'title' => lang('template_editor')
             , 'url' => DirPath::getUrl('admin_area') . 'template_editor.php'
         ];
@@ -438,6 +436,18 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
+            if (
+                (config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation'))
+                || (config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation'))
+                || (config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation'))
+                || (config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation'))
+            ) {
+                $menu_general['sub'][] = [
+                    'title' => lang('notifications')
+                    , 'url' => DirPath::getUrl('admin_area') . 'notifications.php'
+                ];
+            }
+
             $this->addMenuAdmin($menu_general, 10);
         }
 
@@ -455,10 +465,6 @@ class ClipBucket
                         , 'url' => DirPath::getUrl('admin_area') . 'add_member.php'
                     ]
                     , [
-                        'title' => lang('manage_x', strtolower(lang('categories')))
-                        , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
-                    ]
-                    , [
                         'title' => 'Inactive Only'
                         , 'url' => DirPath::getUrl('admin_area') . 'members.php?search=yes&status=ToActivate'
                     ]
@@ -472,6 +478,13 @@ class ClipBucket
                     ]
                 ]
             ];
+
+            if( config('enable_user_category') == 'yes' ){
+                $menu_users['sub'][] = [
+                    'title' => lang('manage_x', strtolower(lang('categories')))
+                    , 'url' => DirPath::getUrl('admin_area') . 'category.php?type=user'
+                ];
+            }
 
             $this->addMenuAdmin($menu_users, 20);
         }
@@ -774,7 +787,7 @@ class ClipBucket
 
         if ($pages) {
             foreach ($pages as $p) {
-                $this->foot_menu[] = ['name' => lang($p['page_name']), 'link' => $cbpage->page_link($p), 'this' => 'home'];
+                $this->foot_menu[] = ['name' => display_clean(lang('page_name_' . $p['page_name'])), 'link' => $cbpage->page_link($p), 'this' => 'home'];
             }
         }
 

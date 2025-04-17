@@ -296,6 +296,17 @@ class AdminTool
     }
 
     /**
+     * check videos to change to castable status if needed
+     * @return void
+     * @throws Exception
+     */
+    public function updateAspectRatio()
+    {
+        $this->tasks = Clipbucket_db::getInstance()->select(tbl('video'), '*', ' status LIKE \'Successful\' AND aspect_ratio IS NULL');
+        $this->executeTool('update_aspect_ratio');
+    }
+
+    /**
      * check videos duration
      * @return void
      * @throws Exception
@@ -521,18 +532,29 @@ class AdminTool
             }
             unset($logos);
 
-            //category thumbs
+            //CATEGORY THUMBS
             $category_thumbs = new GlobIterator(DirPath::get('category_thumbs') . '*'.DIRECTORY_SEPARATOR .'[0-9]*.*');
             foreach ($category_thumbs as $category_thumb) {
                 $insert_values = [
                     'type' => 'category_thumbs',
-                    'data' => $category_thumb->getPathname(),
+                    'data' => DirPath::getFromProjectRoot($category_thumb->getPathname()),
                     'thumb' => basename($category_thumb)
                 ];
                 $this->insertTaskData([$insert_values]);
             }
             unset($category_thumbs);
 
+            //VIDEO PARTS
+            $video_parts = new GlobIterator(DirPath::get('temp') . '*.part');
+            foreach ($video_parts as $video_part) {
+                $insert_values = [
+                    'type' => 'video_parts',
+                    'data' => DirPath::getFromProjectRoot($video_part->getPathname()),
+                    'part' => basename($video_part)
+                ];
+                $this->insertTaskData([$insert_values]);
+            }
+            unset($video_parts);
         }
 
         $this->addLog(lang('processing_x_files', $this->tasks_total ?? 0));
@@ -766,7 +788,8 @@ class AdminTool
     public function correctVideoCategorie()
     {
         $videos = Video::getInstance()->getAll([
-            'condition'=> 'videos_categories.id_video IS NULL'
+            'condition'   => 'videos_categories.id_video IS NULL'
+            ,'get_detail' => true
         ]);
 
         if( !empty($videos) ){
@@ -834,7 +857,7 @@ class AdminTool
     public static function getToolsReadyForLaunch($id_tool = null) :array
     {
         $where = '';
-        if(!empty($idTask)){
+        if(!empty($id_tool)){
             $where = ' AND tools.id_tool = '. $id_tool;
         }
 
@@ -920,6 +943,7 @@ class AdminTool
     public function automate(array $tool)
     {
         /** start tools from CLI */
+        $this->addLog(lang('launch_tool' , lang($tool['language_key_label'])));
         self::launchCli($tool['id_tool']);
     }
 
@@ -961,25 +985,25 @@ class AdminTool
         $date_previsionnel_precedente = null;
         do {
 
-            if(is_null($last_date_start)) {
-                $last_date_start='2000-01-01 01:00:00';
+            if (is_null($last_date_start)) {
+                $last_date_start = '2000-01-01 01:00:00';
             }
 
-            $timestamp = self::getNextDate($cron, MAX($last_date_start,$next_date), MAX($date_previsionnel_precedente,$date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
+            $timestamp = self::getNextDate($cron, MAX($last_date_start, $next_date), MAX($date_previsionnel_precedente, $date_previsionnel_precedente_source, $next_date), $date_previsionnel_precedente);
             $date = new \DateTime();
             $date->setTimeStamp($timestamp);
             $continue = $date->format('Y-m-d H:i:s') < date('Y-m-d H:i:s');
-            if($continue || empty($next_date)){
+            if ($continue || empty($next_date)) {
                 $next_date = $date->format('Y-m-d H:i:s');
             }
-        }while($continue);
+        } while ($continue);
 
-        if(
+        if (
             !empty($id_tool)
             && (empty($date_previsionnel_precedente_source) || $date_previsionnel_precedente_source < $last_date_start)
             && !empty($date_previsionnel_precedente)
-        ){
-            Clipbucket_db::getInstance()->update(tbl('tools'), ['previous_calculated_datetime'],[$date_previsionnel_precedente], 'id_tool = '.$id_tool);
+        ) {
+            Clipbucket_db::getInstance()->update(tbl('tools'), ['previous_calculated_datetime'], [$date_previsionnel_precedente], 'id_tool = ' . $id_tool);
         }
 
         return [

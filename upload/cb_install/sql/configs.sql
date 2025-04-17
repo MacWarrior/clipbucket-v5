@@ -74,7 +74,6 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'max_username', '15'),
 	(NULL, 'allow_username_spaces', 'yes'),
 	(NULL, 'comments_captcha', 'guests'),
-	(NULL, 'player_logo_file', 'logo.jpg'),
 	(NULL, 'own_photo_rating', 'no'),
 	(NULL, 'mail_type', 'mail'),
 	(NULL, 'smtp_host', ''),
@@ -307,17 +306,21 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'logo_update_timestamp', CURRENT_TIMESTAMP()),
     (NULL, 'enable_video_thumbs_preview', 'yes'),
     (NULL, 'video_thumbs_preview_count', '10'),
+    (NULL, 'enable_photo_categories', 'yes'),
+    (NULL, 'enable_video_categories', 'yes'),
+    (NULL, 'enable_collection_categories', 'yes'),
+    (NULL, 'enable_theme_change', 'yes'),
     (NULL, 'enable_membership', 'no'),
     (NULL, 'enable_public_video_page', 'no');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
-	('240p', '16/9', 1, 428, 240, 240000),
+	('240p', '16/9', 1, 426, 240, 240000),
 	('360p', '16/9', 1, 640, 360, 400000),
 	('480p', '16/9', 1, 854, 480, 700000),
 	('720p', '16/9', 1, 1280, 720, 2500000),
 	('1080p', '16/9', 1, 1920, 1080, 4096000),
 	('1440p', '16/9', 0, 2560, 1440, 7280000),
-	('2160p', '16/9', 0, 4096, 2160, 17472000);
+	('2160p', '16/9', 0, 3840, 2160, 16380000);
 
 INSERT INTO `{tbl_prefix}tools_histo_status` (`language_key_title`) VALUES ('ready'), ('in_progress'), ('stopping'), ('on_error');
 INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description`, `function_name`, `code`, `frequency`, `previous_calculated_datetime`, `is_automatable`, `is_disabled`) VALUES
@@ -339,7 +342,8 @@ INSERT INTO `{tbl_prefix}tools` (`language_key_label`, `language_key_description
     ('delete_unused_resolution_files_label', 'delete_unused_resolution_files_description', 'AdminTool::deleteUnusedResolutionFile', 'delete_unused_resolution_files', NULL, NULL, '1', '1'),
     ('automate_label', 'automate_description', 'AdminTool::checkAndStartToolsByFrequency', 'automate', NULL, NULL, '0', '0'),
     ('calc_user_storage_label', 'calc_user_storage_description', 'AdminTool::calcUserStorage', 'calc_user_storage', '0 1 * * *', CURRENT_TIMESTAMP, '1', '0'),
-    ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0');
+    ('assign_default_thumb_label', 'assign_default_thumb_description', 'AdminTool::assignDefaultThumbForCollections', 'assign_default_thumb', NULL, CURRENT_TIMESTAMP, '0', '0'),
+    ('update_aspect_ratio_label', 'update_aspect_ratio_description', 'AdminTool::updateAspectRatio', 'update_aspect_ratio', NULL, NULL, '1', '1');
 
 INSERT INTO `{tbl_prefix}tags_type` (`name`) VALUES ('video'), ('photo'), ('collection'), ('profile'), ('playlist'), ('actors'), ('producer'), ('executive_producer'), ('director'), ('crew'), ('genre');
 
@@ -1669,6 +1673,37 @@ VALUES ('inapp_content'),
        ('spam'),
        ('disturbing'),
        ('other');
+
+INSERT IGNORE INTO `{tbl_prefix}sorts` (`label`, `type`, is_default)
+VALUES ('most_old', 'videos', FALSE),
+       ('most_recent', 'videos', TRUE),
+       ('most_viewed', 'videos', FALSE),
+       ('top_rated', 'videos', FALSE),
+       ('longer', 'videos', FALSE),
+       ('shorter', 'videos', FALSE),
+       ('viewed_recently', 'videos', FALSE),
+       ('most_commented', 'videos', FALSE),
+       ('featured', 'videos', FALSE),
+       ('most_recent', 'photos', TRUE),
+       ('most_old', 'photos', FALSE),
+       ('most_viewed', 'photos', FALSE),
+       ('top_rated', 'photos', FALSE),
+       ('most_commented', 'photos', FALSE),
+       ('viewed_recently', 'photos', FALSE),
+       ('featured', 'photos', FALSE),
+       ('most_recent', 'collections', TRUE),
+       ('most_old', 'collections', FALSE),
+       ('most_items', 'collections', FALSE),
+       ('most_commented', 'collections', FALSE),
+       ('top_rated', 'collections', FALSE),
+       ('featured', 'collections', FALSE),
+       ('most_recent', 'channels', TRUE),
+       ('most_old', 'channels', FALSE),
+       ('most_viewed', 'photos', FALSE),
+       ('top_rated', 'channels', FALSE),
+       ('featured', 'channels', FALSE),
+       ('most_items', 'channels', FALSE),
+       ('most_commented', 'channels', FALSE);
 
 INSERT INTO `{tbl_prefix}currency` (`country`, `code`, `symbol`)
 VALUES ('Albania Lek', 'ALL', 'Lek'),

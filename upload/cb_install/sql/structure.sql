@@ -65,7 +65,8 @@ CREATE TABLE `{tbl_prefix}collections` (
   `active` varchar(4) NOT NULL,
   `public_upload` varchar(4) NOT NULL,
   `type` ENUM('photos', 'videos') NOT NULL,
-  `thumb_objectid` BIGINT(20) NULL DEFAULT NULL
+  `thumb_objectid` BIGINT(20) NULL DEFAULT NULL,
+  sort_type INT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}collection_items` (
@@ -391,7 +392,8 @@ CREATE TABLE `{tbl_prefix}users` (
   `total_downloads` bigint(255) NOT NULL DEFAULT 0,
   `album_privacy` enum('public','private','friends') NOT NULL DEFAULT 'private',
   `likes` int(11) NOT NULL DEFAULT 0,
-  `is_live` enum('yes','no') NOT NULL DEFAULT 'no'
+  `is_live` enum('yes','no') NOT NULL DEFAULT 'no',
+  `active_theme` VARCHAR(15) NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}user_levels` (
@@ -545,7 +547,8 @@ CREATE TABLE `{tbl_prefix}video` (
   `default_poster` int(3) NULL DEFAULT NULL,
   `default_backdrop` int(3) NULL DEFAULT NULL,
   `fov` varchar(3) NULL DEFAULT NULL,
-  `convert_percent` FLOAT NULL DEFAULT 0
+  `convert_percent` FLOAT NULL DEFAULT 0,
+  `aspect_ratio` DECIMAL(10,6) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_520_ci;
 
 CREATE TABLE `{tbl_prefix}video_views` (
@@ -1240,6 +1243,21 @@ CREATE TABLE IF NOT EXISTS `{tbl_prefix}tools_tasks`
 
 ALTER TABLE `{tbl_prefix}tools_tasks`
     ADD CONSTRAINT `tools_tasks_id_tool_histo` FOREIGN KEY (`id_histo`) REFERENCES `{tbl_prefix}tools_histo` (`id_histo`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+CREATE TABLE IF NOT EXISTS `{tbl_prefix}sorts`
+(
+    `id`         INT          NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `label`      VARCHAR(255) NOT NULL,
+    `type`       VARCHAR(255) NOT NULL,
+    `is_default` BOOLEAN      NOT NULL DEFAULT FALSE,
+    UNIQUE KEY `uk_label_type` (`label`, `type`),
+    INDEX (`type`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE utf8mb4_unicode_520_ci;
+
+ALTER TABLE `{tbl_prefix}collections`
+    ADD CONSTRAINT `sort_type_ibfk_1` FOREIGN KEY (`sort_type`) REFERENCES `{tbl_prefix}sorts` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 CREATE TABLE `{tbl_prefix}currency`
 (

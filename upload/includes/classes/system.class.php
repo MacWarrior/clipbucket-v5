@@ -639,7 +639,7 @@ class System{
         }
 
         //config
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', 261) && (empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL)) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '261') && (empty(trim(config('base_url'))) || !filter_var(config('base_url'), FILTER_VALIDATE_URL)) ){
             self::displayConfigError('error config : base_url');
             return -1;
         }

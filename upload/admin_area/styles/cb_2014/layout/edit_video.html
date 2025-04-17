@@ -313,6 +313,13 @@
                                 <i class="glyphicon glyphicon-film"></i> {lang code='profile_basic_info'}
                             </a>
                         </li>
+                        {if config('enable_video_categories')=='yes'}
+                            <li>
+                                <a data-toggle="tab" href="#category">
+                                    <i class="glyphicon glyphicon-folder-open"></i> {lang code='categories'}
+                                </a>
+                            </li>
+                        {/if}
                         <li>
                             <a data-toggle="tab" href="#miscellaneous">
                                 <i class="glyphicon glyphicon-info-sign"></i> Miscellaneous informations
@@ -338,36 +345,9 @@
                     <div class="tab-content">
                         <div id="videoinfos" class="tab-pane active">
                             {foreach from=$video_fields item=field}
-                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew'])}
+                                {if in_array($field.id, ['tags_genre','tags_actors','tags_executive_producer','tags_producer','tags_director','tags_crew','category'])}
                                     {continue}
                                 {/if}
-
-                            {if $field.id == 'category'}
-                            <div>
-                                {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
-                                    {if empty($field.class)}
-                                        {$field.class = 'form-control'}
-                                    {else}
-                                        {$field.class = $field.class|cat:' form-control'}
-                                    {/if}
-                                {/if}
-                                <label><strong>{$field.title|truncate:80}</strong></label><br>
-                                {if $field.hint_1}
-                                    {$field.hint_1}
-                                {/if}
-                                <div class="tab-content scroll">
-                                    <div class="VideoCategory" style="{if !config('show_collapsed_checkboxes')}margin-top:-30px;{/if}">
-                                        {$formObj->createField($field)}
-                                        {if $field.hint_2}<br/>
-                                            {$field.hint_2}
-                                        {/if}
-                                    </div>
-                                </div>
-                            </div>
-                            <br/>
-                                {continue}
-                            {/if}
-
                             <div class="table">
                                 {$field.class='form-control'}
                                 <label><strong>{$field.title|truncate:80}</strong></label>
@@ -384,6 +364,32 @@
                                 {/if}
                             </div>
                             {/foreach}
+                        </div>
+                        {if config('enable_video_categories')=='yes'}
+                            <div id="category" class="tab-pane">
+                                <div>
+                                    {if $video_fields.cat.type != 'checkbox' && $video_fields.cat.type != 'radiobutton' && $video_fields.cat.type != 'checkbox2'}
+                                        {if empty($video_fields.cat.class)}
+                                            {$video_fields.cat.class = 'form-control'}
+                                        {else}
+                                            {$video_fields.cat.class = $video_fields.cat.class|cat:' form-control'}
+                                        {/if}
+                                    {/if}
+                                    <label><strong>{$video_fields.cat.title|truncate:80}</strong></label><br>
+                                    {if $video_fields.cat.hint_1}
+                                        {$video_fields.cat.hint_1}
+                                    {/if}
+                                    <div class="tab-content scroll" style="border: 0;">
+                                        <div class="VideoCategory" style="{if !config('show_collapsed_checkboxes')}margin-top:-30px;{/if}">
+                                            {$formObj->createField($video_fields.cat)}
+                                            {if $video_fields.cat.hint_2}<br/>
+                                                {$video_fields.cat.hint_2}
+                                            {/if}
+                                        </div>
+                                    </div>
+                                </div>
+                                <br/>
+                            {/if}
                         </div>
                         <div id="miscellaneous" class="tab-pane">
                             <div class="row">

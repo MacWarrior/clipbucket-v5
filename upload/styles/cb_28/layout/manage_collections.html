@@ -32,7 +32,7 @@
 
                                 {section loop=$usr_collects name=clist}
                                     {include file="$style_dir/blocks/manage/account_collections.html" collection=$usr_collects[clist]}
-                                    {sectionelse}
+                                {sectionelse}
                                     <div>
                                         {lang code="no_collection_found"}
                                     </div>
@@ -43,99 +43,64 @@
                         {include file="$style_dir/blocks/pagination.html"}
                     {/if}
 
-                    {if $mode == "edit_collection"}
-                        <div class="page-hidding" ><h3>{lang code='update_collection'}</h3>
+                    {if $mode == "edit_collection" || $mode == "add_new"}
+                        <div class="page-hidding"><h1>{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}</h1>
                             <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="/manage_collections.php">{lang code="back_to_collection"}</a></div>
                         </div>
-
-                        <input type="hidden" value="{$c.collection_id}" name="collection_id" id="collection_id">
-                        <div class="upload_info">
-                            <div class="account_form">
-                                {foreach from=$fields item=field}
-                                    <div class="form-group">
-                                        <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
-                                        {ANCHOR place=$field.anchor_before}
-                                        {$field.class="form-control"}
-                                        {if $field.id == 'collection_tags'}
-                                            <ul id="list_tags"></ul>
-                                        {/if}
-                                        {$formObj->createField($field)}
-                                        {if $field.hint_2}
-                                            <div class="hint">{$field.hint_2}</div>
-                                        {/if}
-                                    </div>
-                                {/foreach}
-                                {foreach from=$other_fields item=field}
-                                    <div class="form-group">
-                                        <label for="{$field.id}" class="show">{$field.title}</label>
-                                        {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
-                                        {$field.label_class='radio-inline'}
-                                        {$field.notShowSeprator=true}
-                                        {$formObj->createField($field)}
-                                        {if $field.hint_2}
-                                            <small>{$field.hint_2}</small>
-                                        {/if}
-                                    </div>
-                                {/foreach}
-                            </div>
-                            <div class="formSection clear">
-                                <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
-                                <div class="sectionContent hidden">
-                                    <div class="row">
-                                        <h5>{lang code="default_thumb"}</h5>
-                                        {foreach from=$items item=item}
-                                            <div class="col-md-3">
-                                                <div class="form-group text-center">
-                                                    <label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100" />
-                                                        <input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        {/foreach}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <input type="submit" name="update_collection" class="btn btn-primary btn-lg" value="{lang code='update_collection'}">
-                            </div>
-                        </div>
-                    {/if}
-
-                    {if $mode == "add_new"}
-                        <div class="page-hidding"><h3>{lang code='add_new_collection'}</h3>
-                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary " href="/collections.php">{lang code="back_to_collection"}</a></div>
-                        </div>
                         {if User::getInstance()->hasPermission('allow_create_collection')}
+                            <input type="hidden" value="{$c.collection_id}" name="collection_id" id="collection_id">
                             <div class="upload_info">
                                 <div class="account_form">
                                     {foreach from=$fields item=field}
                                         <div class="form-group">
-                                            <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{/if}</label>
+                                            <label for="{$field.id}">{$field.title}{if $field.hint_1}{$field.hint_1}{lang code='add_new_collection'}{/if}</label>
                                             {ANCHOR place=$field.anchor_before}
                                             {$field.class="form-control"}
-                                            {$formObj->createField($field)}
                                             {if $field.id == 'collection_tags'}
                                                 <ul id="list_tags"></ul>
                                             {/if}
+                                            {$formObj->createField($field)}
                                             {if $field.hint_2}
                                                 <div class="hint">{$field.hint_2}</div>
                                             {/if}
                                         </div>
                                     {/foreach}
                                     {foreach from=$other_fields item=field}
-                                        <div class="form-group">
+                                        <div class="form-group {if $field.id == 'broadcast' || $field.id == 'allow_comments'} col-md-6 col-sm-6 col-xs-12 no_padding_left {elseif $field.id == 'sort_type' || $field.id == 'public_upload' }col-md-6 col-sm-6 col-xs-12 no_padding_right{/if}">
                                             <label for="{$field.id}" class="show">{$field.title}</label>
-                                            {if $field.hint_1}<div class="hint">{$field.hint_1}</div>{/if}
+                                            {if $field.hint_1}
+                                                <div class="hint">{$field.hint_1}</div>{/if}
                                             {$field.label_class='radio-inline'}
                                             {$field.notShowSeprator=true}
                                             {$formObj->createField($field)}
                                             {if $field.hint_2}
-                                                <small>{$field.hint_2}</small>{/if}
+                                                <small>{$field.hint_2}</small>
+                                            {/if}
                                         </div>
                                     {/foreach}
                                 </div>
+                                <div class="clearfix"></div>
+                                {if $mode != 'add_new' && count($items) > 0}
+                                    <div class="formSection clear">
+                                        <h4>{lang code='thumbs'} <i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
+                                        <div class="sectionContent hidden">
+                                            <div class="row">
+                                                <h5>{lang code="default_thumb"}</h5>
+                                                {foreach from=$items item=item}
+                                                    <div class="col-md-3">
+                                                        <div class="form-group text-center">
+                                                            <label for="thumb_{$item['id']}"><img class="edit-img-thumbnail" src="{Collection::getInstance()->getItemThumb($item, $c.type)}" width="100" height="100"/>
+                                                                <input class="show" style="margin:5px auto;" type="radio" value="{$item['id']}" id="thumb_{$item['id']}" name="default_thumb" {if $item['id']==$c.thumb_objectid}checked{/if}/>{lang code='default'}
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                {/foreach}
+                                            </div>
+                                        </div>
+                                    </div>
+                                {/if}
                                 <div class="text-right">
-                                    <input type="submit" name="add_collection" class="btn btn-primary" value="{lang code='add_new_collection'}">
+                                    <input type="submit" name="update_collection" class="btn btn-primary btn-lg" value="{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}">
                                 </div>
                             </div>
                         {else}
@@ -149,29 +114,30 @@
                         <h2>{lang code='manage_items'} - {display_clean($c.collection_name)}</h2>
                         <div>
                             <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;" />
-                            <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button" />
+                            <input type="submit" class="btn btn-danger" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button" />
                         </div>
                         <div>
                             <table class="table table-striped table-bordered" style="margin-bottom:0;">
                                 <tr>
-                                    <td width="3%">
+                                    <th style="width:3%">
                                         <input type="checkbox" name="checkall" onclick="checkUncheckAll(this);"/>
-                                    </td>
-                                    <td width="50%">{lang code='title'}</td>
-                                    <td width="15%" align="center">{lang code='date_added'}</td>
-                                    <td width="7%" class="last_td" align="center">{lang code='remove'}</td>
+                                    </th>
+                                    <th style="width:50%">{lang code='title'}</th>
+                                    <th style="width:15%" align="center">{lang code='date_added'}</th>
+                                    <th style="width:7%" class="last_td" align="center">{lang code='remove'}</th>
                                 </tr>
+
+                                {if empty($objs['items'])}
+                                    <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
+                                {else}
+                                    {foreach $objs['items'] as $item}
+                                        {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
+                                    {/foreach}
+
+                                {/if}
                             </table>
                         </div>
-                        {if empty($objs['items'])}
-                            <div align="center" style="font:bold 11px Tahoma; margin-top:5px;">{lang code="no_items_found_in_collect"}</div>
-                        {else}
-                            {foreach $objs['items'] as $item}
-                                {include file="$style_dir/blocks/manage/account_collections.html" display_type="items" collection=$item}
-                            {/foreach}
-
-                            {include file="$style_dir/blocks/pagination.html"}
-                        {/if}
+                        {include file="$style_dir/blocks/pagination.html"}
                     {/if}
 
                     {if $mode == "favorite"}

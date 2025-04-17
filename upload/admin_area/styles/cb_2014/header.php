@@ -8,8 +8,7 @@ ClipBucket::getInstance()->addAdminCSS([
     'ace-ie.min.css'                                    => 'admin',
     'styles' . $min_suffixe . '.css'                    => 'admin',
     'open_sans' . $min_suffixe . '.css'                 => 'admin',
-    'summernote' . $min_suffixe . '.css'                => 'admin',
-    'bootstrap-editable' . $min_suffixe . '.css'        => 'admin'
+    'summernote' . $min_suffixe . '.css'                => 'admin'
 ]);
 
 if (!this_page('admin_login')) {
@@ -22,7 +21,7 @@ if (!this_page('admin_login')) {
 
 ClipBucket::getInstance()->addAdminJS([
     'components/jquery/jquery.min.js'              => 'vendor',
-    'select2/select2/dist/js/select2.min.js'               => 'vendor',
+    'select2/select2/dist/js/select2.min.js'       => 'vendor',
     'jquery-ui-1.13.2.min.js'                      => 'global',
     'html5shiv' . $min_suffixe . '.js'             => 'admin',
     'respond.min.js'                               => 'admin',
@@ -36,6 +35,5 @@ ClipBucket::getInstance()->addAdminJS([
     'jquery.amcharts' . $min_suffixe . '.js'       => 'admin',
     'jquery.pie' . $min_suffixe . '.js'            => 'admin',
     'jquery.light' . $min_suffixe . '.js'          => 'admin',
-    'jquery.serial' . $min_suffixe . '.js'         => 'admin',
-    'bootstrap-editable' . $min_suffixe . '.js'    => 'admin'
+    'jquery.serial' . $min_suffixe . '.js'         => 'admin'
 ]);

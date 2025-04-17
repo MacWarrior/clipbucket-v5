@@ -541,7 +541,7 @@ function user_dob()
  * @return false|string : { current time }
  * @author : Fwhite
  */
-function NOW()
+function now()
 {
     return date('Y-m-d H:i:s', time());
 }
@@ -810,6 +810,31 @@ function display_sharing_opt($input)
     foreach ($input as $key => $i) {
         return $key;
     }
+}
+
+/**
+ *  Use this to translate an array of translation keys
+ * @param $list
+ * @param string $prefix
+ * @return mixed
+ * @throws Exception
+ */
+function display_lang_array($list, string $prefix = '')
+{
+    foreach ($list as &$label) {
+        $label = lang($prefix . $label);
+    }
+    return $list;
+}
+
+/**
+ * @param array $list
+ * @return mixed
+ * @throws Exception
+ */
+function display_sort_lang_array(array $list)
+{
+    return display_lang_array($list, 'sort_by_');
 }
 
 /**
@@ -1210,14 +1235,12 @@ function getConstant($constantName = false)
 function cblink($params, $fullurl = false)
 {
     $name = getArrayValue($params, 'name');
-    if ($name == 'category') {
-        return category_link($params['data'], $params['type']);
-    }
-    if ($name == 'sort') {
-        return sort_link($params['sort'], 'sort', $params['type']);
-    }
-    if ($name == 'time') {
-        return sort_link($params['sort'], 'time', $params['type']);
+    if ($name == 'category' || $name == 'sort' || $name == 'time') {
+        return sort_link(
+            ($name == 'category' ? $params['data'] : $params['sort'])
+            , $name
+            , $params['type']
+        );
     }
     if ($name == 'tag') {
         return '/search_result.php?query=' . urlencode($params['tag']) . '&type=' . $params['type'];
@@ -1980,215 +2003,110 @@ function call_functions($in, $params = null)
     }
 }
 
-/**
- * Category Link is used to return category based link
- *
- * @param $data
- * @param $type
- *
- * @return string : { string } { sorting link }
- * @internal param $ : { array } { $data } { array with category details } { $data } { array with category details }
- * @internal param $ : { string } { $type } { type of category e.g videos } { $type } { type of category e.g videos }
- */
-function category_link($data, $type): string
-{
-    $sort = '';
-    $time = '';
-    $seo_cat_name = '';
-
-    if (SEO == 'yes') {
-        if (isset($_GET['sort']) && $_GET['sort'] != '') {
-            $sort = '/' . $_GET['sort'];
-        }
-        if (isset($_GET['time']) && $_GET['time'] != '') {
-            $time = '/' . $_GET['time'];
-        }
-    } else {
-        if (isset($_GET['sort']) && $_GET['sort'] != '') {
-            $sort = '&sort=' . $_GET['sort'];
-        }
-        if (isset($_GET['time']) && $_GET['time'] != '') {
-            $time = '&time=' . $_GET['time'];
-        }
-        if (isset($_GET['seo_cat_name']) && $_GET['seo_cat_name'] != '') {
-            $time = '&seo_cat_name=' . $_GET['seo_cat_name'];
-        }
-    }
-
-    switch ($type) {
-        case 'video':
-        case 'videos':
-        case 'v':
-            if (SEO == 'yes') {
-                return '/videos/' . $data['category_id'] . '/' . SEO($data['category_name']) . $sort . $time . '/';
-            }
-            return '/videos.php?cat=' . $data['category_id'] . $sort . $time . $seo_cat_name;
-
-        case 'channels':
-        case 'channel':
-        case 'c':
-        case 'user':
-            if (SEO == 'yes') {
-                return '/channels/' . $data['category_id'] . '/' . SEO($data['category_name']) . $sort . $time . '/';
-            }
-            return '/channels.php?cat=' . $data['category_id'] . $sort . $time . $seo_cat_name;
-
-        default:
-            if (THIS_PAGE == 'photos') {
-                $type = 'photos';
-            }
-
-            if (defined("IN_MODULE")) {
-                global $prefix_catlink;
-                $url = 'cat=' . $data['category_id'] . $sort . $time . '&page=' . $_GET['page'] . $seo_cat_name;
-                $url = $prefix_catlink . $url;
-                $rm_array = ['cat', 'sort', 'time', 'page', 'seo_cat_name'];
-                if ($prefix_catlink) {
-                    $rm_array[] = 'p';
-                }
-                $plugURL = queryString($url, $rm_array);
-                return $plugURL;
-            }
-
-            if (SEO == 'yes') {
-                return '/' . $type . '/' . $data['category_id'] . '/' . SEO($data['category_name']) . $sort . $time . '/';
-            }
-            return '/' . $type . '.php?cat=' . $data['category_id'] . $sort . $time . $seo_cat_name;
-    }
-}
 
 /**
  * Sorting Links is used to return Sorting based link
  *
- * @param        $sort
+ * @param $data
  * @param string $mode
  * @param        $type
  *
  * @return string : { string } { sorting link }
- * @internal param $ : { string } { $sort } { specifies sorting style } { $sort } { specifies sorting style }
+ * @internal param $ : { string } { $data } { specifies data to change to url } { $data } { specifies data to change to url }
  * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
  * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
  */
-function sort_link($sort, $mode, $type): string
+function sort_link($data, $mode, $type): string
 {
+    $config_enable_category = '';
     switch ($type) {
         case 'video':
         case 'videos':
         case 'videos_public':
         case 'v':
-            if (!isset($_GET['cat'])) {
-                $_GET['cat'] = 'all';
-            }
-            if (!isset($_GET['time'])) {
-                $_GET['time'] = 'all_time';
-            }
-            if (!isset($_GET['sort'])) {
-                $_GET['sort'] = 'most_recent';
-            }
-            if (!isset($_GET['page'])) {
-                $_GET['page'] = 1;
-            }
-            if (!isset($_GET['seo_cat_name'])) {
-                $_GET['seo_cat_name'] = 'All';
-            }
-
-            $_GET['page'] = 1;
-            if ($mode == 'sort') {
-                $sorting = $sort;
-            } else {
-                $sorting = $_GET['sort'];
-            }
-            if ($mode == 'time') {
-                $time = $sort;
-            } else {
-                $time = $_GET['time'];
-            }
-
-        if (SEO == 'yes') {
-            return ('/videos' . (stripos($type, 'public') !== false ? '_public' : '') . '/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page']);
-        }
-        return ('/videos' . (stripos($type, 'public') !== false ? '_public' : '') . '.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name']);
+            $type = 'videos';
+            $config_enable_category = 'enable_video_categories';
+            break;
 
         case 'channels':
         case 'channel':
-            if (!isset($_GET['cat'])) {
-                $_GET['cat'] = 'all';
-            }
-            if (!isset($_GET['time'])) {
-                $_GET['time'] = 'all_time';
-            }
-            if (!isset($_GET['sort'])) {
-                $_GET['sort'] = 'most_recent';
-            }
-            if (!isset($_GET['page'])) {
-                $_GET['page'] = 1;
-            }
-            if (!isset($_GET['seo_cat_name'])) {
-                $_GET['seo_cat_name'] = 'All';
-            }
+            $type = 'channels';
+            $config_enable_category = 'enable_user_category';
+            break;
 
-            if ($mode == 'sort') {
-                $sorting = $sort;
-            } else {
-                $sorting = $_GET['sort'];
-            }
-            if ($mode == 'time') {
-                $time = $sort;
-            } else {
-                $time = $_GET['time'];
-            }
+        case 'collections':
+        case 'collection':
+            $type = 'collections';
+            $config_enable_category = 'enable_collection_categories';
+            break;
 
-            if (SEO == 'yes') {
-                return '/channels/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page'];
-            }
-            return '/channels.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
-
-
-        default:
-            if (!isset($_GET['cat'])) {
-                $_GET['cat'] = 'all';
-            }
-            if (!isset($_GET['time'])) {
-                $_GET['time'] = 'all_time';
-            }
-            if (!isset($_GET['sort'])) {
-                $_GET['sort'] = 'most_recent';
-            }
-            if (!isset($_GET['page'])) {
-                $_GET['page'] = 1;
-            }
-            if (!isset($_GET['seo_cat_name'])) {
-                $_GET['seo_cat_name'] = 'All';
-            }
-
-            if ($mode == 'sort') {
-                $sorting = $sort;
-            } else {
-                $sorting = $_GET['sort'];
-            }
-            if ($mode == 'time') {
-                $time = $sort;
-            } else {
-                $time = $_GET['time'];
-            }
-
-            if (THIS_PAGE == 'photos') {
-                $type = 'photos';
-            }
-
-            if (defined("IN_MODULE")) {
-                $url = 'cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
-                $plugURL = queryString($url, ["cat", "sort", "time", "page", "seo_cat_name"]);
-                return $plugURL;
-            }
-
-            if (SEO == 'yes') {
-                return '/' . $type . '/' . $_GET['cat'] . '/' . $_GET['seo_cat_name'] . '/' . $sorting . '/' . $time . '/' . $_GET['page'];
-            }
-            return '/' . $type . '.php?cat=' . $_GET['cat'] . '&sort=' . $sorting . '&time=' . $time . '&page=' . $_GET['page'] . '&seo_cat_name=' . $_GET['seo_cat_name'];
+        case 'photos':
+        case 'photo':
+            $type = 'photos';
+            $config_enable_category = 'enable_photo_categories';
+            break;
     }
-}
 
+    //default value
+    $time = $_GET['time'] ?? 'all_time';
+    $page = $_GET['page'] ?? '1';
+    if (isset($_GET['sort'])) {
+        $sort = $_GET['sort'];
+    } else {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $sort = SortType::getDefaultByType($type)['id'];
+        } else {
+            $sort = 0;
+        }
+    }
+    if (config($config_enable_category) != 'yes') {
+        $cat ='';
+    } else {
+        $cat = $_GET['cat'] ?? 'all';
+    }
+
+    //applying filters
+    switch ($mode) {
+        case 'sort':
+            $sort = $data;
+            break;
+        case 'time':
+            $time = $data;
+            $page = '';
+            break;
+        case 'category':
+            if (config($config_enable_category) != 'yes') {
+                return false;
+            }
+            $page = '';
+            $cat = $data['category_id'];
+            break;
+    }
+
+    //prepare url
+    if (SEO == 'yes') {
+        $sort = '/' . $sort;
+        $time = '/' . $time;
+        $page = '/' . (empty($page)?1:$page);
+        if ($cat) {
+            $cat = '/' . $cat;
+        }
+    } else {
+        $time = '&time=' . $time;
+        if ($page) {
+            $page = '&page=' . $page;
+        }
+        if ($cat) {
+            $cat = '?cat=' . $cat;
+            $sort = '&sort=' . $sort;
+        } else {
+            $sort = '?sort=' . $sort;
+        }
+    }
+
+    //return url
+    return '/' . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
+}
 
 
 /**
@@ -3935,6 +3853,24 @@ function ageRestriction($var) {
         return false;
     }
     return $var;
+}
+
+function validatePHPDateFormat($format): bool
+{
+    // https://www.php.net/manual/en/datetime.format.php
+    $validTokens = [
+        'd', 'D', 'j', 'l', 'N', 'S', 'w', 'z', 'W', 'F', 'm', 'M', 'n', 't', 'L', 'o', 'Y', 'y',
+        'c', 'U', 'u', 'H', 'h', 'i', 's', 'v', 'V', 'e', 'I', 'O', 'P', 'T', 'Z', 'B', 'g', 'G'
+    ];
+
+    preg_match_all('/([a-zA-Z]+|[^a-zA-Z]+)/', $format, $matches);
+
+    foreach ($matches[0] as $token) {
+        if (!in_array($token, $validTokens) && !preg_match('/^[\s\-\.\:\/]+$/', $token)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**

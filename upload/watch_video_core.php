@@ -8,27 +8,31 @@ if (!User::getInstance()->hasPermission('view_video') || config('videosSection')
 
 $vkey = $_GET['v'] ?? false;
 
-if (empty($vkey)) {
+if( empty($vkey) ){
     redirect_to(Network::get_server_url());
 }
 
-if (is_numeric($vkey)) {
+if(is_numeric($vkey)){
     $search = 'videoid';
 } else {
     $search = 'videokey';
 }
 
 $vdo = Video::getInstance()->getOne([$search => $vkey]);
-if (!video_playable($vdo)) {
+if( !video_playable($vdo) ) {
     redirect_to(Network::get_server_url());
 }
-
+$ids_to_check_progress=[];
+if (in_array($vdo['status'], ['Processing', 'Waiting'])) {
+    $ids_to_check_progress[] = $vdo['videoid'];
+}
+assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 $assign_arry['vdo'] = $vdo;
 
 $is_playlist = false;
-if (config('playlistsSection') == 'yes') {
+if( config('playlistsSection') == 'yes' ){
     $playlist_id = (int)$_GET['play_list'];
-    if (!empty($playlist_id)) {
+    if( !empty($playlist_id) ){
         $playlist = Playlist::getInstance()->getAll([
             'first_only'  => true,
             'playlist_id' => $playlist_id
@@ -42,26 +46,26 @@ if (config('playlistsSection') == 'yes') {
     }
 }
 
-if (config('collectionsSection') == 'yes') {
+if( config('collectionsSection') == 'yes' ){
     $params = [];
     $params['type'] = 'videos';
 
     if (!User::getInstance()->hasAdminAccess()) {
         $params['userid'] = user_id();
     }
-    $collections = Collection::getInstance()->getAllIndent($params) ?: [];
+    $collections = Collection::getInstance()->getAllIndent($params) ? : [];
     assign('collections', $collections);
     assign('item_id', $vdo['videoid']);
 }
 
-if (!$is_playlist) {
+if( !$is_playlist ){
     $videoid = $vdo['videoid'];
-    $param = [
-        'title'             => $vdo['title'],
-        'tags'              => $vdo['tags'],
-        'limit'             => 12,
-        'order'             => 'RAND()',
-        'join_user_profile' => true
+    $param = ['title'             => $vdo['title'],
+              'tags'              => $vdo['tags'],
+              'limit'             => 12,
+              'order'             => 'RAND()',
+              'join_user_profile' => true,
+              'status'            => 'Successful'
     ];
     $param_public = [];
     if (config('enable_public_video_page') == 'yes' ) {
@@ -70,17 +74,17 @@ if (!$is_playlist) {
     $param = array_merge($param_public, $param);
     $related_videos = Video::getInstance()->getAll($param);
     if ($related_videos) {
-        $related_videos = array_filter($related_videos, function ($video) use ($videoid) {
+        $related_videos = array_filter($related_videos, function ($video) use ($videoid){
             return $video['videoid'] != $videoid;
         });
     }
     $relMode = '';
     if (!$related_videos) {
         $relMode = 'ono';
-        $param = [
-            'limit'             => 12,
-            'order'             => 'date_added DESC',
-            'join_user_profile' => true
+        $param = ['limit'             => 12,
+                  'order'             => 'date_added DESC',
+                  'join_user_profile' => true,
+                  'status'            => 'Successful'
         ];
         $param = array_merge($param_public, $param);
         $related_videos = Video::getInstance()->getAll($param);
@@ -110,7 +114,7 @@ $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //link edit
 assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $vdo['videoid']);
-assign('link_edit_fo', '/edit_video.php?vid=' . $vdo['videoid']);
+assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);
 
 $min_suffixe = in_dev() ? '' : '.min';
 
@@ -125,27 +129,35 @@ ClipBucket::getInstance()->addCSS([
     ,'readonly_tag' . $min_suffixe . '.css'     => 'admin'
 ]);
 
-if (config('enable_comments_video') == 'yes') {
+if( config('enable_comments_video') == 'yes' ){
     ClipBucket::getInstance()->addJS(['pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin']);
 
-    if (config('enable_visual_editor_comments') == 'yes') {
+    if( config('enable_visual_editor_comments') == 'yes' ){
         ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
         ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
 
         $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
-        if (config('default_theme') != '' && file_exists($filepath)) {
+        if( config('default_theme') != '' && file_exists($filepath) ){
             ClipBucket::getInstance()->addCSS([
                 'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
             ]);
         }
 
         $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
-        if (file_exists($filepath)) {
+        if( file_exists($filepath) ){
             ClipBucket::getInstance()->addJS([
                 'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
             ]);
         }
     }
+}
+
+if (config('enable_video_categories')!='no') {
+    $category_links = [];
+    foreach (json_decode($vdo['category_list'],true) as $video_category) {
+        $category_links[] = '<a href="' . cblink(['name' => 'category', 'data' => ['category_id' => $video_category['id'], 'category_name' => $video_category['name']], 'type' => 'video']) . '">' . display_clean($video_category['name']) . '</a>';
+    }
+    assign('category_links', implode(',', $category_links));
 }
 
 template_files('watch_video.html');

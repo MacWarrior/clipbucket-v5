@@ -13,7 +13,7 @@ if (!User::getInstance()->hasPermission('view_videos') && !user_id()) {
     template_files('signup_or_login.html');
 } else {
     if( config('home_disable_sidebar') != 'yes' ){
-        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') ) {
+        if( config('collectionsSection') == 'yes' && (config('videosSection') == 'yes' || config('photosSection') == 'yes') && User::getInstance()->hasPermission('view_collections') ) {
             $params = [
                 'limit'  => config('collection_home_top_collections')
                 ,'order' => 'COUNT(CASE WHEN collections.type = \'videos\' THEN video.videoid ELSE photos.photo_id END) DESC'

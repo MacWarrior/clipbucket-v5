@@ -655,9 +655,10 @@ if (!empty($mode)) {
                 'collection_tags'        => $tags,
                 'category'               => $cat,
                 'type'                   => $type,
-                'allow_comments'         => 'yes',
-                'broadcast'              => 'public',
-                'public_upload'          => 'yes'
+                'allow_comments'         => $_POST['allow_comments'],
+                'broadcast'              => $_POST['broadcast'],
+                'public_upload'          => $_POST['public_upload'],
+                'sort_type'              => $_POST['sort_type'],
             ];
             if (config('enable_sub_collection') == 'yes') {
                 $CollectParams['collection_id_parent'] = $_POST['collection_id_parent'];

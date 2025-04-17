@@ -179,6 +179,34 @@ function loginHeight(){
     $(".account-holder .side-box").css('height', loginHeight+'px');
 }
 
+function adaptRatioPlayer(){
+    let div = document.querySelector('.player-holder');
+    if(div === null){
+        return;
+    }
+
+    let div_vieo = document.querySelector('.player-holder video');
+    if(div_vieo === null){
+        return;
+    }
+
+    const player = div.querySelector('.cb_player');
+    if (player && player.style.aspectRatio && player.style.aspectRatio !== ''){
+        return;
+    }
+
+    const ratio_window = window.innerWidth / window.innerHeight;
+    const ratio_div = div_vieo.videoWidth / div_vieo.videoHeight;
+
+    div.style.aspectRatio = ratio_div;
+
+    if ( ratio_window > ratio_div) {
+        div.classList.add('fix_ratio');
+    } else {
+        div.classList.remove('fix_ratio');
+    }
+}
+
 let listenerModernThumbVideo = function(event) {
     if(event.target.tagName !== 'IMG' ) {
         return ;
@@ -244,6 +272,8 @@ $(document).ready(function()
 
     AddingListenerModernThumbVideo();
     AddingListenerModernThumbVideoPopinView();
+
+    window.addEventListener('resize', adaptRatioPlayer);
 });
 
 
@@ -434,10 +464,10 @@ $(window).resize(function(){
     loginHeight();
 });
 
-/* Thumbs preview */
+
 document.addEventListener("DOMContentLoaded", function () {
-    const images = document.querySelectorAll("img[data-thumbs]");
-    if (images.length === 0) return;
+    /* Thumbs preview */
+    let images = document.querySelectorAll("img[data-thumbs]");
     images.forEach(img => {
         let thumbnails;
         try {
@@ -449,7 +479,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!Array.isArray(thumbnails) || thumbnails.length === 0) return;
         let index = 0;
         let interval;
-        const parent = img.closest("div");
+        let parent = img.closest("div");
         parent.addEventListener("mouseenter", function () {
             if( img.src ){
                 img.dataset.originalSrc = img.src;
@@ -469,4 +499,79 @@ document.addEventListener("DOMContentLoaded", function () {
             index = 0;
         });
     });
+    /* Thumbs preview */
+
+    /* Theme switch */
+    function postThemeSwitch(selected_theme){
+        jQuery.post({
+            'url':'/actions/switch_theme.php',
+            'dataType':'json',
+            'data': {
+                theme: selected_theme,
+                os: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+            },
+            'success':function(data){
+                let link = document.createElement("link");
+                link.rel = "stylesheet";
+                link.type = "text/css";
+                link.href = data.url;
+                document.head.appendChild(link);
+
+                document.body.classList.add('theme_transition');
+                if (data.theme === 'dark' ) {
+                    document.documentElement.classList.remove('light');
+                    document.documentElement.classList.add('dark');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    document.documentElement.classList.add('light');
+                }
+                setTimeout(() => {
+                    document.body.classList.remove('theme_transition');
+                }, 1000);
+            }
+        });
+    }
+
+
+    let buttons = document.querySelectorAll('.theme-switch button');
+    buttons.forEach(button => {
+        button.addEventListener('click', () => {
+            if (button.classList.contains('active')) {
+                return;
+            }
+
+            let current_active = document.querySelector('.theme-switch button.active');
+            if (current_active) {
+                current_active.classList.remove('active');
+            }
+
+            button.classList.add('active');
+
+            postThemeSwitch(button.dataset.theme);
+        });
+    });
+
+    let html = document.documentElement;
+    if (html.classList.contains('auto')) {
+        html.classList.remove('auto');
+
+        postThemeSwitch('auto');
+    }
+    /* Theme switch */
+
+    /* Language switch */
+    document.querySelectorAll('.pick-lang').forEach(button => {
+        button.addEventListener('click', () => {
+            const lang_id = button.dataset.lang;
+            const url = new URL(window.location.href);
+            const params = url.searchParams;
+
+            params.set('set_site_lang', lang_id);
+
+            url.search = params.toString();
+            window.location = url.toString();
+        });
+    });
+    /* Language switch */
 });
+
