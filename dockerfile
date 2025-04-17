@@ -93,6 +93,10 @@ RUN rm -f /etc/nginx/sites-enabled/default && \
             rewrite ^/video/(.*)/(.*) /watch_video.php?v=$1&$query_string last; \
             rewrite ^/video/([0-9]+)_(.*) /watch_video.php?v=$1&$query_string last; \
         } \
+        location /video_public/ { \
+            rewrite ^/video_public/(.*)/(.*) /watch_public_video.php?v=$1&$query_string last; \
+            rewrite ^/video_public/([0-9]+)_(.*) /watch_public_video.php?v=$1&$query_string last; \
+        } \
         location /videos/ { \
             rewrite ^/videos/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1&sort=$2&time=$3&page=$4 last; \
             rewrite ^/videos/(.*)/(.*)/(.*) /videos.php?sort=$1&time=$2&page=$3 last; \
