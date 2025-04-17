@@ -221,6 +221,7 @@ class Collection
         $param_empty_thumb_objectid =$params['empty_thumb_objectid'] ?? false;
         $param_join_flag =$params['join_flag'] ?? false;
         $param_order_item = $params['order_item'] ?? false;
+        $param_can_upload = $params['can_upload'] ?? false;
 
         $param_condition = $params['condition'] ?? false;
         $param_limit = $params['limit'] ?? false;
@@ -323,6 +324,9 @@ class Collection
 
         if( !User::getInstance()->hasAdminAccess() ){
             $conditions[] = $this->getGenericConstraints();
+            if ($param_can_upload ) {
+                $conditions[] = $this->getTableName() . '.public_upload = \'yes\'';
+            }
         }
 
         $join = [];
@@ -360,7 +364,10 @@ class Collection
         if (config('hide_empty_collection') == 'yes' && $param_hide_empty_collection !== 'no' && !User::getInstance()->hasAdminAccess()) {
             $hide_empty_collection = $total_objects . ' > 0';
             if( !empty(User::getInstance()->getCurrentUserID()) ){
-                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . ')';
+                if ($param_can_upload) {
+                    $upload_condition = ' OR collections.public_upload = \'yes\'';
+                }
+                $hide_empty_collection = '(' . $hide_empty_collection . ' OR ' . $this->getTableName() . '.userid = ' . User::getInstance()->getCurrentUserID() . $upload_condition .' )';
             }
             $param_having[] = $hide_empty_collection;
 
@@ -658,10 +665,6 @@ class Collection
 
         if (!user_id()) {
             e(lang('you_not_logged_in'));
-            return false;
-        }
-        if (!$this->isValidType($type)) {
-            e(lang('unknown_type'));
             return false;
         }
         if (!$this->isValidType($type)) {

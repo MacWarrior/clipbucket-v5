@@ -49,7 +49,7 @@
                                 {/foreach}
                             </ul>
                         </div>
-                        {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'true')
+                        {if (User::getInstance()->hasPermission($upload_permission) && $c.public_upload == 'yes')
                         || (User::getInstance()->isUserConnected() && User::getInstance()->get('userid') == $c.userid)}
                             <a href="{$link_add_more}" class="btn btn-success pull-right">{lang('add_more')}</a>
                         {/if}
