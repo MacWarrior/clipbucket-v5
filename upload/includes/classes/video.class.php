@@ -1159,10 +1159,6 @@ class CBvideo extends CBCategory
                 'title' => 'List Inactive Videos'
                 , 'url' => DirPath::getUrl('admin_area') . 'video_manager.php?search=search&active=no'
             ];
-            $menu_video['sub'][] = [
-                'title' => 'Notification settings'
-                , 'url' => DirPath::getUrl('admin_area') . 'notification_settings.php'
-            ];
 
             ClipBucket::getInstance()->addMenuAdmin($menu_video, 70);
         }

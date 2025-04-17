@@ -419,6 +419,18 @@ class ClipBucket
                 , 'url' => DirPath::getUrl('admin_area') . 'manage_tags.php'
             ];
 
+            if (
+                (config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation'))
+                || (config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation'))
+                || (config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation'))
+                || (config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation'))
+            ) {
+                $menu_general['sub'][] = [
+                    'title' => lang('notifications')
+                    , 'url' => DirPath::getUrl('admin_area') . 'notifications.php'
+                ];
+            }
+
             $this->addMenuAdmin($menu_general, 10);
         }
 

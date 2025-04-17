@@ -1,0 +1,48 @@
+<div class="heading">
+    <h2>{lang('notifications')}</h2>
+</div>
+<table class="table table-bordered table-striped manageUsersTable">
+    <tr>
+        {if config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation')}<td>{lang('videos')}</td>{/if}
+        {if config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation')}<td>{lang('users')}</td>{/if}
+        {if config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation')}<td>{lang('photos')}</td>{/if}
+        {if config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation')}<td>{lang('collections')}</td>{/if}
+        <td>Total</td>
+    </tr>
+
+    <tr>
+        {if config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation')}
+            <td class="item"><a href="{DirPath::getUrl('admin_area')}video_manager.php?search=search&active=no">{lang('approve_x', lang('videos'))} ({get_videos active='no' count_only=true})</a>
+                <br/><a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=video">{lang('video_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'videoo'])})</a>
+            </td>
+        {/if}
+        {if config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation')}
+            <td class="item"><a href="{DirPath::getUrl('admin_area')}members.php?search=yes&amp;status=ToActivate">{lang('approve_x', lang('users'))} ({get_users status='ToActivate' count_only=true})</a>
+                <br/><a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=user">{lang('user_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'user'])})</a>
+            </td>
+        {/if}
+        {if config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation')}
+            <td class="item"><a href="{DirPath::getUrl('admin_area')}photo_manager.php?active=no&amp;search=yes">{lang('approve_x', lang('photos'))} ({get_photos active='no' count_only=true})</a>
+                <br/><a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=photo">{lang('photo_flagged')} ({Flag::getAll(['count'=>true, 'element_type'=>'photo'])})</a>
+            </td>
+        {/if}
+        {if config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation')}
+            <td class="item">
+                <a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=collection">{lang('collection_flagged')}
+                    {if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) }
+                        ({Flag::getAll(['count'=>true, 'element_type'=>'collection'])})
+                    {else}
+                        0
+                    {/if}
+                </a>
+            </td>
+        {/if}
+        <td>
+            {lang('approve')} {math equation="x + z" x={get_videos active='no' count_only=true} z={get_users status='ToActivate' count_only=true}}
+            <br/>
+            {lang('flagged')} {Flag::getAll(['count'=>true])}
+        </td>
+    </tr>
+</table>
+
+    
