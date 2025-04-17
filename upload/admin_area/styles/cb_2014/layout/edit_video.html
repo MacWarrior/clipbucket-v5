@@ -275,6 +275,9 @@
                                     {$field.hint_1}<br/>
                                 {/if}
                                 {$formObj->createField($field)}
+                                {if $field.id == 'video_users'}
+                                    <ul id="list_{$field.id}"></ul>
+                                {/if}
                                 {if $field.hint_2}<br/>
                                     {$field.hint_2}
                                 {/if}

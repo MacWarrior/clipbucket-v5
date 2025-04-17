@@ -633,10 +633,10 @@ class Upload
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
             $fields['video_users'] =[
                 'title'             => lang('video_users'),
-                'type'              => 'textarea',
+                'type'              => 'hidden',
                 'name'              => 'video_users',
                 'id'                => 'video_users',
-                'value'             => $default['video_users'],
+                'value'             => genTags($default['video_users']),
                 'required'          => 'no',
                 'extra_tags'        => " $video_user_disable ",
                 'hint_2'            => lang('specify_video_users'),

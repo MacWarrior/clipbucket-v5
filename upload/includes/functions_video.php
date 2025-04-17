@@ -1025,6 +1025,8 @@ function video_users($users)
         }
         if (!empty($user)) {
             $new_users[] = $user['userid'];
+        } else {
+            e(lang('user_no_exist_wid_username', $username),'w');
         }
     }
 
