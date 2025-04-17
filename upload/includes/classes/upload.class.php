@@ -630,19 +630,19 @@ class Upload
             'extra_tags' => " $video_pass_disable ",
             'hint_2'     => lang('set_video_password')
         ];
-
-        $fields['video_users'] =[
-            'title'             => lang('video_users'),
-            'type'              => 'textarea',
-            'name'              => 'video_users',
-            'id'                => 'video_users',
-            'value'             => $default['video_users'],
-            'db_field'          => 'video_users',
-            'required'          => 'no',
-            'extra_tags'        => " $video_user_disable ",
-            'hint_2'            => lang('specify_video_users'),
-            'validate_function' => 'video_users',
-        ];
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            $fields['video_users'] =[
+                'title'             => lang('video_users'),
+                'type'              => 'textarea',
+                'name'              => 'video_users',
+                'id'                => 'video_users',
+                'value'             => $default['video_users'],
+                'required'          => 'no',
+                'extra_tags'        => " $video_user_disable ",
+                'hint_2'            => lang('specify_video_users'),
+                'validate_function' => 'video_users',
+            ];
+        }
 
         if( config('enable_comments_video') == 'yes' ){
             $fields['comments'] = [
