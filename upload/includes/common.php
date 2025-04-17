@@ -96,6 +96,8 @@ require_once DirPath::get('classes') . 'email_template.class.php';
 require_once DirPath::get('classes') . 'ffmpeg.class.php';
 require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
+require_once DirPath::get('classes') . 'membership.class.php';
+require_once DirPath::get('classes') . 'paypal.class.php';
 
 $cb_columns = new cb_columns();
 $myquery = new myquery();
@@ -132,7 +134,7 @@ require_once DirPath::get('classes') . 'session_message_handler.class.php';
 $pages = new pages();
 $eh = new errorhandler();
 
-foreach (sessionMessageHandler::get_messages() as $message) {
+foreach (SessionMessageHandler::get_messages() as $message) {
     $eh->e($message['message'], $message['type']);
 }
 
@@ -355,7 +357,7 @@ $Smarty->register_function('get_all_video_files', 'get_all_video_files_smarty');
 $Smarty->register_function('input_value', 'input_value');
 $Smarty->register_function('userid', 'user_id');
 $Smarty->register_function('show_player', 'show_player');
-$Smarty->register_function('link', 'cblink');
+$Smarty->register_function('cblink', 'cblink');
 $Smarty->register_function('show_share_form', 'show_share_form');
 $Smarty->register_function('show_flag_form', 'show_flag_form');
 $Smarty->register_function('show_playlist_form', 'show_playlist_form');

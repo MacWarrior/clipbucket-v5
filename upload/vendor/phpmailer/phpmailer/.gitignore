@@ -1,0 +1,16 @@
+docs/*
+!docs/README.md
+test/message.txt
+test/testbootstrap.php
+build/
+vendor/
+*.pem
+composer.lock
+.phpcs.xml
+phpcs.xml
+.phpcs-cache
+/.rnd
+test/PHPMailerTest.php*nonexistent_file.txt
+test/*/PHPMailerTest.php*nonexistent_file.txt
+phpunit.xml
+/.phpunit.result.cache

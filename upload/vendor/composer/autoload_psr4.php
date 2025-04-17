@@ -12,6 +12,7 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'Predis\\' => array($vendorDir . '/predis/predis/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
+    'OxygenzSAS\\Paypal\\' => array($vendorDir . '/oxygenzsas/composer_lib_paypal/src'),
     'OxygenzSAS\\Discord\\' => array($vendorDir . '/oxygenzsas/composer_lib_discord/src'),
     'Onnx\\' => array($vendorDir . '/veka-server/onnx-php/src'),
     'FFI\\WorkDirectory\\' => array($vendorDir . '/veka-server/onnx-php/work-directory/src'),

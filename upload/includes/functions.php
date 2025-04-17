@@ -2022,6 +2022,7 @@ function sort_link($data, $mode, $type): string
     switch ($type) {
         case 'video':
         case 'videos':
+        case 'videos_public':
         case 'v':
             $type = 'videos';
             $config_enable_category = 'enable_video_categories';
@@ -3870,6 +3871,18 @@ function validatePHPDateFormat($format): bool
         }
     }
     return true;
+}
+
+/**
+ * @param string $string
+ * @return array|string|string[]|null
+ */
+function string_to_snake_case(string $string):string {
+//    $string = preg_replace('/[\p{L}\p{N}\s]/u', '', strtolower($string));
+    $string =  iconv('UTF-8', 'ASCII//TRANSLIT', $string);
+    $string = preg_replace('/[^\p{L}\p{N}\s]/u', '', strtolower($string));
+    $string = preg_replace('/\s/','_', trim($string));
+    return $string;
 }
 
 include('functions_db.php');

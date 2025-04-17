@@ -1,0 +1,23 @@
+{
+    "name": "oxygenzsas/composer_lib_paypal",
+    "description": "Une librairie de gestion de paiement Paypal",
+    "license": "MIT",
+    "keywords": ["paypal","REST"],
+    "authors": [
+        {
+            "name": "nvanhaezebrocuk",
+            "email": "nicolas@oxygenz.fr"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "OxygenzSAS\\Paypal\\" : "src/"
+        }
+    },
+    "require": {
+        "ext-curl": "*",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "php": ">=7.0"
+    }
+}
