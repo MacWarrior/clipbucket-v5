@@ -22,7 +22,7 @@ Take a look at our <a href="https://demo.clipbucket.oxygenz.fr/" target="_blank"
 </details>
 
 # Update 5.5.1
-After more than 340 revisions, After over a year of development and countless improvements, we're proud to officially release ClipBucketV5 - 5.5.1, our most feature-packed and polished update yet — pushing the platform to a whole new level and laying the groundwork for continuous delivery.
+After more than 340 revisions, over a year of development and countless improvements, we're proud to officially release ClipBucketV5 - 5.5.1, our most feature-packed and polished update yet — pushing the platform to a whole new level and laying the groundwork for continuous delivery.
 <p align="center">
     <a href="https://github.com/MacWarrior/clipbucket-v5/releases/tag/5.5.1">
       <img src="./upload/images/readme/release-5.5.1.png" alt="ClipbucketV5 update 5.5.1 features list"/>
