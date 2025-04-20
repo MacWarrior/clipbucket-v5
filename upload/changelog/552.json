@@ -1,10 +1,19 @@
 {
   "version":"5.5.2",
-  "revision":"1",
+  "revision":"2",
   "status":"stable",
   "detail":[
     {
-      "title": "Nothing to show yet :)"
+      "title": "Miscellaneous",
+      "description": [
+        "Cleanup code"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Fix translation"
+      ]
     }
   ]
 }

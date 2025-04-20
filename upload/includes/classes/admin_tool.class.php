@@ -9,9 +9,6 @@ class AdminTool
 
     CONST CODE_UPDATE_DATABASE_VERSION = 'update_database_version';
 
-    CONST MIN_VERSION_CODE = '5.5.0';
-    CONST MIN_REVISION_CODE = '367';
-
     private $id_histo;
     private $id_tool;
     private $tool;
@@ -85,7 +82,7 @@ class AdminTool
     public static function getTools(array $condition = [])
     {
         $where = implode(' AND ', $condition);
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 
             $complement_select = '';
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99')) {
@@ -126,7 +123,7 @@ class AdminTool
      */
     public function setToolInProgress(): bool
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
            return $this->setToolInProgressNew();
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'in_progress\')'], 'id_tool = ' . mysql_clean($this->id_tool));
@@ -204,11 +201,11 @@ class AdminTool
             }
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->addLog(lang('tool_started'));
         }
         call_user_func_array([$this, $this->tool['function_name']], []);
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->addLog(lang('tool_ended'));
         }
     }
@@ -623,7 +620,7 @@ class AdminTool
         if (!empty($this->tasks) || !empty($this->tasks_total)) {
             $element_totals = empty($this->tasks) ? $this->tasks_total : count($this->tasks);
             //update nb_elements of tools
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
                 $this->updateToolHisto(['elements_total', 'elements_done'], [$element_totals, 0]);
             } else {
                 Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_total', 'elements_done'], [$element_totals, 0], ' id_tool = ' . $secureIdTool);
@@ -634,7 +631,7 @@ class AdminTool
                 $tasks = (empty($this->tasks) ? $this->getTaskData(10) : $this->tasks);
                 foreach ($tasks as $item) {
                     //check if user request stop
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
                         $has_to_stop = Clipbucket_db::getInstance()->select(tbl('tools') . ' AS T 
                         INNER JOIN ' . tbl('tools_histo') . ' AS TH ON T.id_tool = TH.id_tool
                         INNER JOIN ' . tbl('tools_histo_status') . ' AS TS ON TH.id_tools_histo_status = TS.id_tools_histo_status'
@@ -665,7 +662,7 @@ class AdminTool
                         $this->cleanTaskData();
                     }
                     $this->tasks_index++;
-                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+                    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
                         $this->updateToolHisto(['elements_done'], [$this->tasks_index]);
                     } else {
                         Clipbucket_db::getInstance()->update(tbl('tools'), ['elements_done'], [$this->tasks_index], ' id_tool = ' . $secureIdTool);
@@ -673,7 +670,7 @@ class AdminTool
                 }
             } while (empty($has_to_stop) && !empty($tasks) && $this->tasks_index < $element_totals);
         }
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'ready\')', '|f|NOW()']);
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status', 'elements_total', 'elements_done'], [1, '|f|null', '|f|null'], 'id_tool = ' . $secureIdTool);
@@ -691,7 +688,7 @@ class AdminTool
             return false;
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'stopping\')', '|f|NOW()']);
         } else {
             Clipbucket_db::getInstance()->update(tbl('tools'), ['id_tools_status'], ['|no_mc||f|(SELECT id_tools_status FROM ' . tbl('tools_status') . ' WHERE language_key_title like \'stopping\')'], ' id_tool = ' . mysql_clean($this->id_tool));
@@ -823,7 +820,7 @@ class AdminTool
      */
     public function setToolError($id_tool, $force = false)
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(self::MIN_VERSION_CODE, self::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $this->updateToolHisto(['id_tools_histo_status', 'date_end'], ['|no_mc||f|(SELECT id_tools_histo_status FROM ' . tbl('tools_histo_status') . ' WHERE language_key_title like \'on_error\')', '|f|NOW()']);
             if ( $force) {
                 $this->addLog(lang('tool_forced_to_error'));
@@ -911,7 +908,7 @@ class AdminTool
      */
     public function checkAndStartToolsByFrequency()
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') === false) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
             $this->setToolError($this->id_tool);
             return ;
         }
@@ -1084,7 +1081,7 @@ class AdminTool
      */
     public function isAlreadyLaunch() :bool
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
 
             /** get all running tools */
             $query = /** @lang MySQL */'SELECT DISTINCT tools_histo.id_tool

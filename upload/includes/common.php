@@ -401,7 +401,7 @@ if(php_sapi_name() !== 'cli' && config('automate_launch_mode') == 'user_activity
 
     $dateTime = new DateTime();
     $dateTime->modify('-1 minutes');
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
         if($tool->initByCode('automate') && $tool->getLastStart() <= $dateTime->format('Y-m-d H:i:s')) {
             AdminTool::launchCli($tool->getId());
         }
