@@ -11,8 +11,8 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('changelog'), 'url' => DirPath::getUrl('admin_area') . 'changelog.php'];
 
-
 $changelog_tab = [
+    '552' => '5.5.2',
     '551' => '5.5.1',
     '550' => '5.5.0',
     '541' => '5.4.1',
