@@ -280,7 +280,7 @@ class Update
         if (!in_dev()) {
             return false;
         }
-        if (file_exists(DirPath::get('sql') . $this->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
+        if (file_exists(DirPath::get('sql') . $this->getCurrentCoreVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
             return true;
         }
         return false;
@@ -321,13 +321,21 @@ class Update
             $folder_files = array_diff(scandir($folder), ['..', '.']);
             $folder_version = str_replace('.', '', basename($folder));
 
+            if( $folder_version < $version ){
+                continue;
+            }
+
             // Exclude older and future versions
             if( $version > $folder_version || $folder_version > $this->getCurrentCoreVersionCode() ){
                 break;
             }
 
             foreach($folder_files AS $file){
+
                 $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
+                if(empty($file_rev)){
+                    continue;
+                }
 
                 // Exclude future revisions
                 if( $folder_version == $this->getCurrentCoreVersionCode() && $file_rev > $this->getCurrentCoreRevision() ){

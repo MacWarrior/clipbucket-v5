@@ -52,9 +52,9 @@ if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update']) 
     $check_global = System::check_global_configs();
     if( $check_global !== 1 ){
         if ($check_global === -1 ) {
-            e(lang('error_server_config', '/admin_area/setting_basic.php#config_hosting'), 'w', false);
+            e(lang('error_server_config', DirPath::getUrl('admin_area') . 'setting_basic.php#config_hosting'), 'w', false);
         } else {
-            e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
+            e(lang('error_server_config', DirPath::getUrl('admin_area') . 'system_info.php#hosting'), 'w', false);
         }
     }
 }

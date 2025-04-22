@@ -40,7 +40,7 @@ function connectSSE() {
 
     let tries = 0;
     // Create new event, the server script is sse.php
-    eventSource = new EventSource(baseurl+"/admin_area/sse/progress_generate_thumb.php?id_video=" + video_id);
+    eventSource = new EventSource(admin_url+"sse/progress_generate_thumb.php?id_video=" + video_id);
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);

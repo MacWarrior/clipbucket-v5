@@ -285,7 +285,7 @@ function homePageVideos(qlist_items)
 {
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
-        var loadLink = baseurl+'/ajax/home.php',
+        var loadLink = baseurl+'ajax/home.php',
             main_object = $(this),
             sendType = 'post',
             dataType = 'json',
@@ -507,7 +507,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Theme switch */
     function postThemeSwitch(selected_theme){
         jQuery.post({
-            'url':'/actions/switch_theme.php',
+            'url':baseurl+'actions/switch_theme.php',
             'dataType':'json',
             'data': {
                 theme: selected_theme,
@@ -534,7 +534,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
 
     let buttons = document.querySelectorAll('.theme-switch button');
     buttons.forEach(button => {

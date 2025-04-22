@@ -18,7 +18,7 @@ if (isset($_POST['reset_control_bar_logo_url'])) {
     if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
         unlink(DirPath::get('logos') . 'player-logo.png');
     }
-    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', '/images/icons/player-logo.png');
+    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', 'images/icons/player-logo.png');
     e(lang('player_logo_reset'), 'm');
 }
 

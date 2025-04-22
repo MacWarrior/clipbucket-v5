@@ -7,7 +7,7 @@ User::getInstance()->hasPermissionAjax('admin_access');
 $success = true;
 if( Update::getInstance()->isWIPFile() ){
     try {
-        execute_migration_file(DirPath::get('sql') . Update::getInstance()->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php', false);
+        execute_migration_file(DirPath::get('sql') . Update::getInstance()->getCurrentCoreVersion() . DIRECTORY_SEPARATOR . 'MWIP.php', false);
         CacheRedis::flushAll();
         Update::getInstance()->flush();
         Language::getInstance()->init();

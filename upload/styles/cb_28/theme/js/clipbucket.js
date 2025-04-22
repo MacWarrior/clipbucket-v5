@@ -1430,7 +1430,7 @@
 		this.getModalVideo = function(video_id){
 			$.ajax({
 				type: 'post',
-				url: baseurl+'/ajax/commonAjax.php',
+				url: baseurl+'ajax/commonAjax.php',
 				data: { videoid : video_id , mode : 'get_video'},
 				dataType: 'json',
 				beforeSend: function (data) {

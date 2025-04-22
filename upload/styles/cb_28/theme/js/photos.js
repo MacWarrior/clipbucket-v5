@@ -2,8 +2,8 @@ function buildPhotoUrl(xhr,display) {
 	var collectionId = xhr.collection_id,
 	photo_key = xhr.photo_key,
 	photo_title = xhr.photo['0'].photo_title,
-	nonSeoUrl = "view_item.php?item="+photo_key+"&collection="+collectionId,
-	theSeoUrl = "item/photos/"+collectionId+"/"+photo_key+"/"+photo_title,
+	nonSeoUrl = baseurl+"view_item.php?item="+photo_key+"&collection="+collectionId,
+	theSeoUrl = baseurl+"item/photos/"+collectionId+"/"+photo_key+"/"+photo_title,
 	mainUrl = nonSeoUrl;
 
 	if (seoUrls == 'yes' && display == 'aho') {
@@ -89,9 +89,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 
 });
 
-
-// Event which enlarge the image size in model. 
-
+// Event which enlarge the image size in model.
 $(document).on("click", ".en-large", function () {
 	var curr_photo = d;
 	var check = $(this).data('check');
@@ -177,8 +175,6 @@ $( document ).on( 'keydown', function ( e ) {
        	}
     }
 });
-
-
 
 $('.dropdown-menu li').on('click',function(){
     var searchQuery = $('input#query').val();

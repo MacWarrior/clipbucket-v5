@@ -67,7 +67,7 @@ $(document).ready(function () {
         playlist = $(this).attr('dataList');
 
         $.ajax({
-            url: baseurl+'/ajax/watch.php',
+            url: baseurl+'ajax/watch.php',
             type: 'post',
             dataType: 'html',
             data: {

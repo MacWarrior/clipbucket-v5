@@ -178,7 +178,7 @@ if (!Update::isVersionSystemInstalled()) {
         && strpos($request_uri, 'actions/upgrade_db.php') === false
         && strpos($request_uri, 'admin_area/sse/upgrade_db_info.php') === false
         && User::getInstance()->hasAdminAccess()) {
-        header('Location: /admin_area/upgrade_db.php');
+        header('Location: ' . DirPath::getUrl('admin_area') . 'upgrade_db.php');
         die();
     }
 } else {

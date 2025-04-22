@@ -1,7 +1,7 @@
 var max_try = 5;
 var eventSource;
 $(document).ready(function(){
-    var page = '/admin_area/index.php';
+    var page = admin_url + 'index.php';
 
     function delete_note(id)
     {
@@ -136,7 +136,7 @@ $(document).ready(function(){
         id = id.match(/([0-9]+)$/g);
         id = id.pop();
         $.ajax({
-            url: baseurl + "/admin_area/index.php",
+            url: page,
             type: "post",
             data: {
                 id: id,
@@ -165,6 +165,209 @@ $(document).ready(function(){
             });
         });
     }
+
+    AmCharts.makeChart("piechart", {
+        "type": "pie",
+        "adjustPrecision": true,
+        "angle": 12,
+        "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
+        "depth3D": 15,
+        "maxLabelWidth": 150,
+        "titleField": "category",
+        "valueField": "column-1",
+        "processTimeout": 5,
+        "theme": "light",
+        "allLabels": [],
+        "balloon": {},
+        "legend": {
+            "enabled": true,
+            "align": "left",
+            "markerType": "circle"
+        },
+        "titles": [
+            {
+                "bold": false,
+                "id": "Title-1",
+                "size": 15,
+                "text": "Overall Statistics"
+            }
+        ],
+        "dataProvider": [
+            {
+                "category": "Users",
+                "column-1": piechart_users
+            },
+            {
+                "category": "Photos",
+                "column-1": piechart_photos
+            },
+            {
+                "category": "Videos",
+                "column-1": piechart_videos
+            },
+            {
+                "category": "Collections",
+                "column-1": piechart_collections
+            },
+
+        ]
+    });
+
+    AmCharts.makeChart("donutchart", {
+        "type": "pie",
+        "angle": 12,
+        "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
+        "depth3D": 15,
+        "innerRadius": "30%",
+        "titleField": "category",
+        "valueField": "column-1",
+        "processTimeout": 5,
+        "theme": "light",
+        "allLabels": [],
+        "balloon": {},
+        "legend": {
+            "enabled": true,
+            "align": "center",
+            "markerType": "circle"
+        },
+        "titles": [
+            {
+                "bold": false,
+                "id": "Title-1",
+                "size": 15,
+                "text": "Flagged Objects"
+            }
+        ],
+        "dataProvider": [
+
+            {
+                "category": "Photos",
+                "column-1": donutchart_photos
+            },
+            {
+                "category": "Videos",
+                "column-1": donutchart_videos
+            }
+        ]
+    });
+
+    AmCharts.makeChart("ubarchart", {
+        "type": "serial",
+        "pathToImages": "https://www.amcharts.com/lib/3/images/",
+        "categoryField": "category",
+        "startDuration": 1,
+        "mouseWheelZoomEnabled": true,
+        "startEffect": "easeOutSine",
+        "autoDisplay": true,
+        "theme": "light",
+        "categoryAxis": {
+            "gridPosition": "start"
+        },
+        "trendLines": [],
+        "graphs": [
+            {
+                "colorField": "color",
+                "fillAlphas": 1,
+                "id": "AmGraph-1",
+                "lineColorField": "color",
+                "title": "graph 1",
+                "type": "column",
+                "valueField": "column-1"
+            }
+        ],
+        "guides": [],
+        "valueAxes": [
+            {
+                "id": "ValueAxis-1",
+                "title": "Users"
+            }
+        ],
+        "allLabels": [],
+        "balloon": {},
+        "titles": [
+            {
+                "bold": false,
+                "id": "Title-1",
+                "size": 15,
+                "text": "Users Statistics"
+            }
+        ],
+        "dataProvider": [
+            {
+                "category": "Total",
+                "column-1": ubarchart_users
+            },
+            {
+                "category": "Active",
+                "column-1": ubarchart_users_active
+            },
+            {
+                "category": "Inactive",
+                "column-1": ubarchart_users_inactive
+            }
+        ]
+    });
+    AmCharts.makeChart("vbarchart", {
+        "type": "serial",
+        "pathToImages": "https://www.amcharts.com/lib/3/images/",
+        "categoryField": "category",
+        "startDuration": 1,
+        "mouseWheelZoomEnabled": true,
+        "startEffect": "easeOutSine",
+        "autoDisplay": true,
+        "theme": "light",
+        "categoryAxis": {
+            "gridPosition": "start"
+        },
+        "trendLines": [],
+        "graphs": [
+            {
+                "colorField": "color",
+                "fillAlphas": 1,
+                "id": "AmGraph-1",
+                "lineColorField": "color",
+                "title": "graph 1",
+                "type": "column",
+                "valueField": "column-1"
+            }
+        ],
+        "guides": [],
+        "valueAxes": [
+            {
+                "id": "ValueAxis-1",
+                "title": "Videos"
+            }
+        ],
+        "allLabels": [],
+        "balloon": {},
+        "titles": [
+            {
+                "bold": false,
+                "id": "Title-1",
+                "size": 15,
+                "text": "Video Statistics"
+            }
+        ],
+        "dataProvider": [
+            {
+                "category": "Total",
+                "column-1": vbarchart_total
+            },
+            {
+                "category": "Active",
+                "column-1": vbarchart_active
+            },
+            {
+                "category": "Deactive",
+                "column-1": vbarchart_deactive
+            },
+            {
+                "category": "Reported",
+                "column-1": vbarchart_reported
+            }
+        ]
+    });
+
 });
 
 function updateListeners () {
@@ -178,7 +381,7 @@ function updateListeners () {
     $('.launch_wip').on('click', function () {
         showSpinner();
         $.ajax({
-            url: baseurl+"actions/admin_launch_wip.php",
+            url: baseurl+'actions/admin_launch_wip.php',
             type: "post",
             dataType: "json",
             success: function (data) {
@@ -224,7 +427,6 @@ function update(type){
             type: type
         },
         success: function (data) {
-
             let response;
             try {
                 response = JSON.parse(data);
@@ -233,7 +435,6 @@ function update(type){
             }
 
             if(response.success !== true) {
-
                 let error_msg = lang.technical_error;
                 if(response.error_msg !== undefined && response.error_msg != null && response.error_msg != '') {
                     error_msg = response.error_msg;
@@ -244,7 +445,6 @@ function update(type){
             }
 
             connectSSE();
-
         }
     });
 }
@@ -252,7 +452,7 @@ function update(type){
 function connectSSE() {
     var tries = 0;
     // Create new event, the server script is sse.php
-    eventSource = new EventSource(baseurl+"/admin_area/sse/update_info.php");
+    eventSource = new EventSource(admin_url + 'sse/update_info.php');
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function (e) {
         var data = JSON.parse(e.data);
