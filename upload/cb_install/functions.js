@@ -1,6 +1,5 @@
 var ajax_url = './ajax.php';
 
-
 function dbconnect() {
     $('#loading').html('<img src="./images/loading.gif"/>');
     var formData = $('#installation').serialize();
