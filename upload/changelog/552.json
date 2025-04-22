@@ -1,14 +1,16 @@
 {
   "version":"5.5.2",
-  "revision":"3",
+  "revision":"4",
   "status":"stable",
   "detail":[
     {
       "title": "Miscellaneous",
       "description": [
-        "Cleanup code"
-        ,"Fix PHP8.X compatibility"
+        "Implement sub-directory compatibility <i>(#529, #156)</i>"
+        ,"Cleanup code"
         ,"Update Readme"
+        ,"Fix PHP8.X compatibility"
+        ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
       ]
     },
     {
