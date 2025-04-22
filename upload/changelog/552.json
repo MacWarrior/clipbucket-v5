@@ -1,12 +1,14 @@
 {
   "version":"5.5.2",
-  "revision":"2",
+  "revision":"3",
   "status":"stable",
   "detail":[
     {
       "title": "Miscellaneous",
       "description": [
         "Cleanup code"
+        ,"Fix PHP8.X compatibility"
+        ,"Update Readme"
       ]
     },
     {
