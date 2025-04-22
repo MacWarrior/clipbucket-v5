@@ -762,11 +762,8 @@ class System{
         }
 
         $extensionsCLI = System::get_php_extensions('php_cli');
-        assign('extensionsCLI', $extensionsCLI);
         $extensionsWEB = System::get_php_extensions('php_web');
-        assign('extensionsWEB', $extensionsWEB);
         $php_extensions_list = System::get_php_extensions_list();
-        assign('php_extensions_list', $php_extensions_list);
         foreach ($php_extensions_list as $key => $extension) {
             if (!$extension['required']) {
                 continue;
@@ -778,6 +775,10 @@ class System{
                 return false;
 
             }
+        }
+
+        if( !Network::check_forbidden_directory(false) ){
+            return false;
         }
 
         $permissions = self::checkPermissions(self::getPermissions(false));
@@ -805,10 +806,10 @@ class System{
      */
     private static function displayConfigError($error)
     {
-            if (in_dev()) {
-                DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
-            }
-            self::setGlobalConfigCache(0);
+        if (in_dev()) {
+            DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
+        }
+        self::setGlobalConfigCache(0);
     }
 
     public static function is_nginx(): bool

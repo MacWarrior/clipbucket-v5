@@ -192,6 +192,8 @@ $permissions = System::getPermissions(false);
 assign('permissions', $permissions);
 assign('permissions_ok', System::checkPermissions($permissions));
 
+Network::check_forbidden_directory();
+
 subtitle(lang('system_info'));
 template_files("system_info.html");
 display_it();

@@ -332,4 +332,55 @@ class Network{
         }
         return false;
     }
+
+    /**
+     * @throws Exception
+     */
+    public static function check_forbidden_directory($show_error = true): bool
+    {
+        $server_url = self::get_server_url();
+
+        $forbidden_subdir = [
+            'upload'
+            ,'upload_photo'
+            ,'files'
+            ,'rss'
+            ,'collections'
+            ,'collection'
+            ,'videos'
+            ,'video'
+            ,'item'
+            ,'photos'
+            ,'channels'
+            ,'user'
+            ,'signup'
+            ,'signin'
+            ,'page'
+        ];
+
+        foreach ($forbidden_subdir as $subdir) {
+            if( strpos($server_url, '/' . $subdir . '/') !== false ) {
+                if( $show_error ){
+                    if( function_exists('lang') ){
+                        $msg = lang('directory_x_is_forbidden', $subdir);
+                    } else {
+                        $msg = 'The subdirectory "' . $subdir . '" is reserved by the system and cannot be used to host the site. Please choose a different one to ensure proper platform functionality.';
+                    }
+
+                    if( function_exists('e') ){
+                        e($msg);
+                    } else {
+                        echo $msg;
+                    }
+
+                    if( (function_exists('in_dev') && in_dev()) || (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ){
+                        DiscordLog::sendDump($msg);
+                    }
+                }
+
+                return false;
+            }
+        }
+        return true;
+    }
 }
