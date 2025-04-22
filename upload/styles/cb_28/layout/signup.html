@@ -44,7 +44,7 @@
 
 						<input id="login_btn" type="submit" name="login" value="{lang code='login'}" class="btn btn-primary btn-lg btn-block">
 						{if config('disable_email') == 'no'}
-							<a href="/forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="/forgot.php">{lang code='user_forgot_message'}</a>
+							<a href="{$baseurl}forgot.php?mode=recover_username">{lang code='user_forgot_username'}</a> - <a href="{$baseurl}forgot.php">{lang code='user_forgot_message'}</a>
 						{/if}
 						<input type="hidden" name="login" value="login"/>
 					</form>
@@ -56,7 +56,7 @@
 					{if $allow_registeration}
 						{$allow_registeration}
 					{else}
-					<form name="signup_form" id="signup_form" method="post" action="/signup.php" class="user-form">
+					<form name="signup_form" id="signup_form" method="post" action="{$baseurl}signup.php" class="user-form">
 						<h2>{lang code='signup'}!</h2>
 						{foreach from=$required_fields item=field}
 							{if $field.type!='checkbox' && $field.type!='radiobutton'}
@@ -204,7 +204,7 @@
 	     		addErrClass(userSect, errors["name_invalid_chars"], true, false);
 	     	}else{
 		     	$.ajax({
-					url: "/ajax/commonAjax.php",
+					url: baseurl+"ajax/commonAjax.php",
 					type: "post",
 					dataType: "html",
 					data: {
@@ -239,7 +239,7 @@
 	     	addErrClass(emailSec, errors["invalid_email"], true, false);
 	     } else {
 	     	$.ajax({
-				url: "/ajax/commonAjax.php",
+				url: baseurl+"ajax/commonAjax.php",
 				type: "post",
 				dataType: "html",
 				data: {

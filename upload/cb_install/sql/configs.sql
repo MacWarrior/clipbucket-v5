@@ -162,7 +162,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'bits_color_warning', '1'),
 	(NULL, 'control_bar_logo', 'yes'),
 	(NULL, 'contextual_menu_disabled', ''),
-	(NULL, 'control_bar_logo_url', '/images/icons/player-logo.png'),
+	(NULL, 'control_bar_logo_url', 'images/icons/player-logo.png'),
 	(NULL, 'player_thumbnails', 'yes'),
 	(NULL, 'enable_update_checker', '1'),
 	(NULL, 'email_domain_restriction', ''),

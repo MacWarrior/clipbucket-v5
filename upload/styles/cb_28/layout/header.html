@@ -45,7 +45,7 @@
 
                     {ANCHOR place="before_logo"}
                     <h1 class="logo no_select">
-                        <a href="/">
+                        <a href="{$baseurl}">
                             <img alt="logo" src="{get_website_logo_path()}" class="img-responsive"/>
                         </a>
                     </h1>
@@ -152,7 +152,7 @@
                                                 <li class="hidden-xs"><a href="{link name='manage_collections'}">{lang('manage_x', lang('collections')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('playlists') && User::getInstance()->hasPermission('allow_create_playlist')}
-                                                <li><a href="/manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
+                                                <li><a href="{$baseurl}manage_playlists.php?user={display_clean(User::getInstance()->get('username'))}">{lang('manage_x', lang('playlists')|lower)}</a></li>
                                             {/if}
                                             {if isSectionEnabled('channels') && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') && User::getInstance()->get('is_channel_enable')}
                                                 <li><a href="{User::getInstance()->getLink('channel')}">{lang code="my_channel"}</a></li>
@@ -170,7 +170,7 @@
                                         </li>
                                     {/if}
                                     <li class="navbar-sm-login-links">
-                                        <a class="btn btn-default btn-login" href="{link name='signup'}?mode=login">{lang code='login'}</a>
+                                        <a class="btn btn-default btn-login" href="{link name='signin'}">{lang code='login'}</a>
                                     </li>
 
                                 {/if}

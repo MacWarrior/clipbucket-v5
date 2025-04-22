@@ -4,14 +4,17 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-$item = (string)($_GET['item']);
-$cid = (int)($_GET['collection']);
-$order = tbl('collection_items') . '.ci_id DESC';
-
-if (empty($item) || !isSectionEnabled('photos')) {
-    redirect_to(Network::get_server_url());
+if( !isSectionEnabled('photos') || !User::getInstance()->hasPermission('view_photos') ){
+    redirect_to(cblink(['name' => 'error_403']));
 }
 
+$item = (string)($_GET['item']);
+if( empty($item) ){
+    redirect_to(DirPath::getUrl('root'));
+}
+
+$cid = (int)($_GET['collection']);
+$order = tbl('collection_items') . '.ci_id DESC';
 $param = [
     'type'          => 'photos',
     'collection_id' => $cid
@@ -27,7 +30,7 @@ if ($photo) {
             && (!User::getInstance()->hasAdminAccess() && ($photo['userid'] != user_id()))
         )
     ) {
-        redirect_to(Network::get_server_url());
+        redirect_to(DirPath::getUrl('root'));
     }
     if (!empty($photo['collection_id']) && !Collections::getInstance()->is_viewable($cid)) {
         ClipBucket::getInstance()->show_page = false;
@@ -82,8 +85,8 @@ if ($photo) {
         }
     }
     //link edit
-    assign('link_edit_bo', DirPath::get('admin_area', true) . 'edit_photo.php?photo=' . $photo['photo_id']);
-    assign('link_edit_fo', '/edit_photo.php?photo=' . $photo['photo_id']);
+    assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_photo.php?photo=' . $photo['photo_id']);
+    assign('link_edit_fo', DirPath::getUrl('root') . 'edit_photo.php?photo=' . $photo['photo_id']);
 
     // Top collections
     $params = [

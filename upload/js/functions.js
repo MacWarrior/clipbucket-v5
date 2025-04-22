@@ -1,4 +1,4 @@
-var page = '/ajax.php';
+var page = baseurl+'ajax.php';
 var loading_img = "<img style='vertical-align:middle' src='"+imageurl+"/ajax-loader.gif'>";
 var loading = loading_img+" Loading...";
 
@@ -32,7 +32,7 @@ function load_more(limit,mode,inner_mode,append_id,attrb,cat_id,total)
             $('#'+inner_mode).html('loading');
         },
         type: 'POST',
-        url: '/ajax.php',
+        url: baseurl+'ajax.php',
         data: {
             limit : limit,
             mode : mode,
@@ -77,8 +77,8 @@ var total_size = 0;
 var cur_speed = 0;
 
 var status_refesh = 1 //in seconds
-var result_page = '/actions/file_results.php';
-var download_page = '/actions/file_downloader.php';
+var result_page = baseurl+'actions/file_results.php';
+var download_page = baseurl+'actions/file_downloader.php';
 var count = 0;
 
 var force_stop = false;
@@ -105,7 +105,7 @@ function check_remote_url()
         dataType : 'json',
         beforeSend : function() {
             status_update();
-            $("#loading").html('<div style="float:left;display:inline-block;"><img src="'+imageurl+'/ajax-loader.gif"></div><div style="float:left;line-height:16px;padding-left:5px;">'+lang.remoteUploadFile+'</div><div class="clear"></div>');
+            $("#loading").html('<div style="float:left;display:inline-block;"><img src="'+imageurl+'/ajax-loader.gif"/></div><div style="float:left;line-height:16px;padding-left:5px;">'+lang.remoteUploadFile+'</div><div class="clear"></div>');
             $('#remoteFileName').replaceWith('"'+file_name+'"');
         },
         success: function(data) {
@@ -119,7 +119,7 @@ function check_remote_url()
 
             var vid = data.vid;
 
-            $.post('/actions/file_uploader.php', {
+            $.post(baseurl+'actions/file_uploader.php', {
                 "getForm":"get_form",
                 "title":$("#remote_file_url").val(),
                 "objId":remoteObjID,
@@ -221,7 +221,7 @@ function status_update()
 
 function upload_file(Val,file_name)
 {
-    var page = '/actions/file_downloader.php';
+    var page = baseurl+'actions/file_downloader.php';
     $.post(page, {
         file_url : Val,
         file_name : file_name
@@ -541,7 +541,7 @@ function collection_actions(form,mode,objID,result_con,type,cid)
                  $(result_con).html('No Data returned');
                  return false;
             }
-            $.post('/actions/add_to_collection.php', {
+            $.post(baseurl+'actions/add_to_collection.php', {
                 mode: mode,
                 cid: value,
                 obj_id: objID,
@@ -921,7 +921,7 @@ function checkUncheckAll(theElement) {
  */
 function rate(id,rating,type)
 {
-    var page = '/ajax.php';
+    var page = baseurl+'ajax.php';
     $.post(page, {
         mode : 'rating',
         id:id,
@@ -993,7 +993,7 @@ function progressVideoCheck(ids_to_check_progress, displayType) {
     if (ids_to_check_progress && ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
             $.post({
-                url: '/actions/progress_video.php',
+                url: baseurl+'actions/progress_video.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,

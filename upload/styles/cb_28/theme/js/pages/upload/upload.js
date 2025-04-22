@@ -1,7 +1,7 @@
 var uploader;
 
 $(document).ready(function(){
-    var uploadurl = '/actions/file_uploader.php';
+    var uploadurl = baseurl+'actions/file_uploader.php';
     if(uploadScriptPath !== ''){
         uploadurl = uploadScriptPath;
     }
@@ -455,7 +455,7 @@ $(document).ready(function(){
 function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
     showSpinner();
     $.ajax({
-        url: "/actions/info_tmdb.php",
+        url: baseurl+"actions/info_tmdb.php",
         type: "POST",
         data: {videoid: videoid, video_title:video_title, type: type,page: page,sort: sort, sort_order: sort_order },
         dataType: 'json',
@@ -472,7 +472,7 @@ function getInfoTmdb(videoid, type, video_title, page,sort, sort_order) {
 function saveInfoTmdb(tmdb_video_id) {
     showSpinner();
     $.ajax({
-        url: "/actions/import_tmdb.php",
+        url: baseurl+"actions/import_tmdb.php",
         type: "POST",
         data: {tmdb_video_id: tmdb_video_id, videoid: videoid, type: type},
         dataType: 'json',

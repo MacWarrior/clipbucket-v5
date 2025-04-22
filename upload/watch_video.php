@@ -4,14 +4,15 @@ define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
 global $cbvid;
 
+$base_url = DirPath::getUrl('root');
 if (!User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes') {
-    redirect_to(Network::get_server_url());
+    redirect_to($base_url);
 }
 
 $vkey = $_GET['v'] ?? false;
 
 if( empty($vkey) ){
-    redirect_to(Network::get_server_url());
+    redirect_to($base_url);
 }
 
 if(is_numeric($vkey)){
@@ -22,7 +23,7 @@ if(is_numeric($vkey)){
 
 $vdo = Video::getInstance()->getOne([$search => $vkey]);
 if( !video_playable($vdo) ) {
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 $ids_to_check_progress=[];
 if (in_array($vdo['status'], ['Processing', 'Waiting'])) {
@@ -92,7 +93,7 @@ $anonymous_id = userquery::getInstance()->get_anonymous_user();
 assign('anonymous_id', $anonymous_id);
 //link edit
 assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $vdo['videoid']);
-assign('link_edit_fo',  '/edit_video.php?vid=' . $vdo['videoid']);
+assign('link_edit_fo',  DirPath::getUrl('root') . 'edit_video.php?vid=' . $vdo['videoid']);
 
 $min_suffixe = in_dev() ? '' : '.min';
 

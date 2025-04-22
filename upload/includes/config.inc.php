@@ -11,7 +11,7 @@ require_once 'common.php';
 define('TEMPLATEDIR', DirPath::get('styles') . ClipBucket::getInstance()->template);
 define('TEMPLATEURL', DirPath::getUrl('styles') . ClipBucket::getInstance()->template);
 define('LAYOUT', TEMPLATEDIR . DIRECTORY_SEPARATOR . 'layout');
-Assign('baseurl', Network::get_server_url());
+Assign('baseurl', DirPath::getUrl('root'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('layout', TEMPLATEURL . '/layout');
 Assign('theme', TEMPLATEURL . '/theme');

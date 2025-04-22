@@ -564,7 +564,7 @@ function progressVideoCheckHome(ids_to_check_progress, displayType, interval_nam
     if (ids_to_check_progress && ids_to_check_progress.length > 0) {
         window[interval_name] = setInterval(function () {
             $.post({
-                url: '/actions/progress_video.php',
+                url: baseurl+'actions/progress_video.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,

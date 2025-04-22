@@ -12,7 +12,7 @@
                     {if $mode == "manage" || $mode == ""}
                         <h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" />
+                            <img src="{$imageurl}/dot.gif" class="arrow_pointing"/>
                             <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary  " />
                             <a class="btn-primary btn" href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a>
                         </div>
@@ -45,7 +45,7 @@
 
                     {if $mode == "edit_collection" || $mode == "add_new"}
                         <div class="page-hidding"><h1>{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}</h1>
-                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="/manage_collections.php">{lang code="back_to_collection"}</a></div>
+                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a></div>
                         </div>
                         {if User::getInstance()->hasPermission('allow_create_collection')}
                             <input type="hidden" value="{$c.collection_id}" name="collection_id" id="collection_id">

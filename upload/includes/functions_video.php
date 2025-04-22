@@ -366,12 +366,13 @@ function default_thumb($return_type = 'url'): string
  */
 function video_link($vdetails, $type = null): string
 {
+    $base_url = DirPath::getUrl('root');
     #checking what kind of input we have
     if (is_array($vdetails)) {
         if (empty($vdetails['title'])) {
             #check for videoid
             if (empty($vdetails['videoid']) && empty($vdetails['vid']) && empty($vdetails['videokey'])) {
-                return '/';
+                return $base_url;
             }
 
             if (!empty($vdetails['videoid'])) {
@@ -383,7 +384,7 @@ function video_link($vdetails, $type = null): string
                     if (!empty($vdetails['videokey'])) {
                         $vid = $vdetails['videokey'];
                     } else {
-                        return '/';
+                        return $base_url;
                     }
                 }
             }
@@ -392,7 +393,7 @@ function video_link($vdetails, $type = null): string
         if (is_numeric($vdetails)) {
             $vid = $vdetails;
         } else {
-            return '/';
+            return $base_url;
         }
     }
     #checking if we have vid , so fetch the details
@@ -424,29 +425,29 @@ function video_link($vdetails, $type = null): string
 
         switch (config('seo_vido_url')) {
             default:
-                $link = Network::get_server_url() . 'video/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = $base_url . 'video/' . $vdetails['videokey'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 1:
-                $link = Network::get_server_url() . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
+                $link = $base_url . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . '_v' . $vdetails['videoid'] . $plist;
                 break;
             case 2:
-                $link = Network::get_server_url() . 'video/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = $base_url . 'video/' . $vdetails['videoid'] . '/' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
             case 3:
-                $link = Network::get_server_url() . 'video/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
+                $link = $base_url . 'video/' . $vdetails['videoid'] . '_' . SEO(display_clean(str_replace(' ', '-', $vdetails['title']))) . $plist;
                 break;
         }
     } else {
         if ($vdetails['playlist_id']) {
             $plist = '&play_list=' . $vdetails['playlist_id'];
         }
-        $link = Network::get_server_url() . 'watch_video.php?v=' . $vdetails['videokey'] . $plist;
+        $link = $base_url . 'watch_video.php?v=' . $vdetails['videokey'] . $plist;
     }
     if (!$type || $type == 'link') {
         return $link;
     }
     if ($type == 'download') {
-        return '/download.php?v=' . $vdetails['videokey'];
+        return $base_url . 'download.php?v=' . $vdetails['videokey'];
     }
 }
 

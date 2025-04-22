@@ -38,8 +38,7 @@
 				</button>
                 <ul class="dropdown-menu pull-right" role="menu">
                     <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}">{lang code="view_profile"}</a></li>
-                    <li><a role="menuitem" href="/user_videos.php?user={display_clean($user_detail.username)}">{lang code="grp_view_vdos"}</a></li>
-                    <li><a role="menuitem" href="/private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
+                    <li><a role="menuitem" href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
                     {if $friend.confirmed =='yes'}
                     <li><a role="menuitem" href="?mode=delete&userid={$user_detail.userid}">{lang code="unfriend"}</a></li>
                     {else}
@@ -91,8 +90,7 @@
                 <ul class="dropdown-menu pull-right" role="menu">
                     <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}">{lang code="view_profile"}</a></li>
                     <li><a role="menuitem" href="?mode=requests&confirm={$friend.userid}">{lang code="accept_request"}</a></li>
-                    <li><a role="menuitem" href="/user_videos.php?user={display_clean($user_detail.username)}">{lang code="grp_view_vdos"}</a></li>
-                    <li><a role="menuitem" href="/private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
+                    <li><a role="menuitem" href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
                     <li><a role="menuitem" href="?mode=delete&userid={$user_detail.userid}">Reject Request</a>
 
                 </ul>

@@ -62,22 +62,22 @@ function shortKeys()
 
             if(key === 86 && e.shiftKey)  // shift + v = videos page
             {
-                window.location.href = "/videos";
+                window.location.href = baseurl + "videos";
             }
 
             if(key === 80 && e.shiftKey)  // shift + p = photos page
             {
-                window.location.href = "/photos";
+                window.location.href = baseurl + "photos";
             }
 
             if(key === 67 && e.shiftKey)  // shift + c = collections page
             {
-                window.location.href = "/collections";
+                window.location.href = baseurl + "collections";
             }
 
             if(key === 85 && e.shiftKey)  // shift + u = channel page
             {
-                window.location.href = "/channels";
+                window.location.href = baseurl + "channels";
             }
         }
 
@@ -285,7 +285,7 @@ function homePageVideos(qlist_items)
 {
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
-        var loadLink = '/ajax/home.php',
+        var loadLink = baseurl+'ajax/home.php',
             main_object = $(this),
             sendType = 'post',
             dataType = 'json',
@@ -507,7 +507,7 @@ document.addEventListener("DOMContentLoaded", function () {
     /* Theme switch */
     function postThemeSwitch(selected_theme){
         jQuery.post({
-            'url':'/actions/switch_theme.php',
+            'url':baseurl+'actions/switch_theme.php',
             'dataType':'json',
             'data': {
                 theme: selected_theme,
@@ -534,7 +534,6 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-
 
     let buttons = document.querySelectorAll('.theme-switch button');
     buttons.forEach(button => {
@@ -577,4 +576,3 @@ document.addEventListener("DOMContentLoaded", function () {
     });
     /* Language switch */
 });
-

@@ -3,7 +3,7 @@
         <div class="navbar-header pull-left">
             <div class="logoContainer clearfix">
                 <a href="{DirPath::getUrl('admin_area')}">
-                    <img class="pull-left" src="{get_website_logo_path()}" height="45px">
+                    <img class="pull-left" src="{get_website_logo_path()}" height="45px"/>
                 </a>
             </div>
         </div>
@@ -143,17 +143,19 @@
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         {if !$NEED_UPDATE}
-                            <li>
-                                <a href="setting_basic.php">
-                                    <i class="glyphicon glyphicon-cog"></i> {lang('basic_settings')}
-                                </a>
-                            </li>
-                            <li>
-                                <a href="/admin_area/view_user.php?uid={user_id()}">
-                                    <i class="glyphicon glyphicon-user"></i> Profile
-                                </a>
-                            </li>
-                            <li class="divider"></li>
+                        <li>
+                            <a href="{DirPath::getUrl('admin_area')}setting_basic.php">
+                                <i class="glyphicon glyphicon-cog"></i> {lang('basic_settings')}
+                            </a>
+                        </li>
+
+                        <li>
+                            <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={user_id()}">
+                                <i class="glyphicon glyphicon-user"></i> Profile
+                            </a>
+                        </li>
+
+                        <li class="divider"></li>
                         {/if}
                         <li>
                             <a href="logout.php">

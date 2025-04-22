@@ -535,7 +535,7 @@ class User
 
     public static function redirectToLogin()
     {
-        redirect_to(Network::get_server_url() . 'signup.php?mode=login');
+        redirect_to(cblink(['name' => 'signin']));
     }
 
     /**
@@ -639,10 +639,11 @@ class User
         {
             case 'channel':
                 $username = display_clean($this->get('username'));
+                $base_link = cblink(['name' => 'view_channel']);
                 if( $seo_enabled ){
-                    return '/user/' . $username;
+                    return $base_link . $username;
                 }
-                return '/view_channel.php?user=' . $username;
+                return $base_link . '?user=' . $username;
 
             default:
                 if( in_dev() ){
@@ -2040,7 +2041,7 @@ class userquery extends CBCategory
                     }
 
                     $var = [
-                        'reset_password_link' => Network::get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
+                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
                     ];
                     //Now Finally Sending Email
                     if (EmailTemplate::sendMail('password_reset_request', $udetails['userid'], $var)) {
@@ -2063,7 +2064,7 @@ class userquery extends CBCategory
                     Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
                     //Sending confirmation email
                     $var = [
-                        'url'   => Network::get_server_url() . 'login.php',
+                        'url'      => DirPath::getUrl('root') . 'login.php',
                         'password' => $newpass
                     ];
 
@@ -2145,7 +2146,7 @@ class userquery extends CBCategory
 
         if (config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email']))) {
             $email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
-            $gravatar = new Gravatar($email, Network::get_server_url() . $default);
+            $gravatar = new Gravatar($email, DirPath::getUrl('root') . $default);
             $gravatar->size = $thesize;
             $gravatar->rating = 'G';
             $gravatar->border = 'FF0000';
@@ -2166,17 +2167,17 @@ class userquery extends CBCategory
     function get_default_thumb($size = null): string
     {
         if ($size == 'small' && file_exists(TEMPLATEDIR . '/images/avatars/no_avatar-small.png')) {
-            return '/images/avatars/no_avatar-small.png';
+            return TEMPLATEURL . '/images/avatars/no_avatar-small.png';
         }
 
         if (file_exists(TEMPLATEDIR . '/images/avatars/no_avatar.png') && !$size) {
-            return '/images/avatars/no_avatar.png';
+            return TEMPLATEURL . '/images/avatars/no_avatar.png';
         }
 
         if ($size == 'small') {
-            return '/images/avatars/no_avatar-small.png';
+            return DirPath::getUrl('images') . '/avatars/no_avatar-small.png';
         }
-        return '/images/avatars/no_avatar.png';
+        return DirPath::getUrl('images') . 'avatars/no_avatar.png';
     }
 
     /**
@@ -2461,10 +2462,10 @@ class userquery extends CBCategory
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);
         if (config('seo') != 'yes') {
-            return '/view_channel.php?user=' . $username;
+            return cblink(['name' => 'view_channel']) . '?user=' . $username;
         }
 
-        return '/user/' . $username;
+        return cblink(['name' => 'view_channel']) . $username;
     }
 
     /**
@@ -3138,7 +3139,7 @@ class userquery extends CBCategory
      * @param bool $ck_display_admin
      * @param bool $ck_display_user
      *
-     * @return mixed
+     * @return array
      */
     function load_custom_signup_fields($data, $ck_display_admin = false, $ck_display_user = false)
     {
@@ -3166,14 +3167,6 @@ class userquery extends CBCategory
         }
 
         return $new_array;
-    }
-
-    /**
-     * Function used to get user videos link
-     */
-    function get_user_videos_link($u)
-    {
-        return cblink(['name' => 'user_videos']) . $u['username'];
     }
 
     /**
@@ -5171,11 +5164,11 @@ class userquery extends CBCategory
         //Loading subscription email template
         if ($subscribers) {
             $var = [
-                'sender_username'       => $uploader['username'],
+                'sender_username'   => $uploader['username'],
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => Network::get_server_url() . get_thumb($vidDetails)
+                'video_thumb'       => DirPath::getUrl('root') . get_thumb($vidDetails)
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

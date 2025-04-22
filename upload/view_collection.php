@@ -89,19 +89,25 @@ if ($cbcollection->is_viewable($collection_id)) {
         assign('objects', $items);
         assign('c', $cdetails);
         subtitle($cdetails['collection_name']);
+        $complement_url = base64_encode(json_encode($cdetails['collection_id']));
         if ($cdetails['type'] == 'photos') {
             assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
 
-            if (SEO == 'yes') {
-                $link = '/photo_upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            $base_url = cblink(['name' => 'photo_upload']);
+            if (config('seo') == 'yes') {
+                $link = $base_url . '/' . $complement_url;
+            } else {
+                $link = $base_url . '?collection=' . $complement_url;
             }
-            $link = '/photo_upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         } elseif ($cdetails['type'] == 'videos') {
             assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
-            if (SEO == 'yes') {
-                $link = '/upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            $base_url = cblink(['name' => 'upload']);
+
+            if (config('seo') == 'yes') {
+                $link = $base_url . '/' . $complement_url;
+            } else {
+                $link = $base_url . '?collection=' . $complement_url;
             }
-            $link = '/upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         }
         assign('link_add_more',  $link);
     }
@@ -111,8 +117,8 @@ if ($cbcollection->is_viewable($collection_id)) {
 
 assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));
 
-assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_collection.php?collection=' .$collection_id);
-assign('link_edit_fo',  '/manage_collections.php?mode=edit_collection&cid=' . $collection_id);
+assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' .$collection_id);
+assign('link_edit_fo',  DirPath::getUrl('root') . 'manage_collections.php?mode=edit_collection&cid=' . $collection_id);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';

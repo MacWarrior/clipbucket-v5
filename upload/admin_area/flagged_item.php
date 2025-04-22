@@ -4,7 +4,7 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $right = 'admin_access';
 if (empty($_GET['type'])) {
-    redirect_to('/');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 $type = $_GET['type'] ;
 $right = Flag::getPermissionByType($type);

@@ -280,8 +280,8 @@ class Network{
 
     public static function get_server_url(): string
     {
-        if( !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
-            return config('base_url');
+        if( function_exists('config') && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
+            return rtrim(config('base_url'), '/') . '/';
         }
         
         $port = '';
@@ -289,7 +289,18 @@ class Network{
             $port = ':' . $_SERVER['SERVER_PORT'];
         }
 
-        return self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . '/';
+        $subdir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
+
+        // Exclure cb_install s'il est dans le chemin
+        if (preg_match('#/cb_install(/|$)#', $subdir)) {
+            $subdir = preg_replace('#/cb_install(/|$)#', '/', $subdir);
+        }
+
+        if ($subdir === '/' || $subdir === '\\') {
+            $subdir = '';
+        }
+
+        return rtrim(self::get_server_protocol() . $_SERVER['HTTP_HOST'] . $port . $subdir, '/') . '/';
     }
 
     private static function get_server_protocol(): string
@@ -320,5 +331,56 @@ class Network{
             return true;
         }
         return false;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function check_forbidden_directory($show_error = true): bool
+    {
+        $server_url = self::get_server_url();
+
+        $forbidden_subdir = [
+            'upload'
+            ,'upload_photo'
+            ,'files'
+            ,'rss'
+            ,'collections'
+            ,'collection'
+            ,'videos'
+            ,'video'
+            ,'item'
+            ,'photos'
+            ,'channels'
+            ,'user'
+            ,'signup'
+            ,'signin'
+            ,'page'
+        ];
+
+        foreach ($forbidden_subdir as $subdir) {
+            if( strpos($server_url, '/' . $subdir . '/') !== false ) {
+                if( $show_error ){
+                    if( function_exists('lang') ){
+                        $msg = lang('directory_x_is_forbidden', $subdir);
+                    } else {
+                        $msg = 'The subdirectory "' . $subdir . '" is reserved by the system and cannot be used to host the site. Please choose a different one to ensure proper platform functionality.';
+                    }
+
+                    if( function_exists('e') ){
+                        e($msg);
+                    } else {
+                        echo $msg;
+                    }
+
+                    if( (function_exists('in_dev') && in_dev()) || (defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE) ){
+                        DiscordLog::sendDump($msg);
+                    }
+                }
+
+                return false;
+            }
+        }
+        return true;
     }
 }

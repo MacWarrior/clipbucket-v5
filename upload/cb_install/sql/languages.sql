@@ -1531,4 +1531,5 @@ VALUES ('admin_setting'),
        ('approve_x'),
        ('approve'),
        ('see_all_notifications'),
-       ('invalid_date_format');
+       ('invalid_date_format'),
+       ('directory_x_is_forbidden');

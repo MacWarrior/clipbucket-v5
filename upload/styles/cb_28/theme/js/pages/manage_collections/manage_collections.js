@@ -17,7 +17,7 @@ $(function () {
     $('select#type').on('change', function () {
         showSpinner();
         $.post({
-            url: '/actions/get_collection_update.php',
+            url: baseurl+'actions/get_collection_update.php',
             dataType: 'json',
             data: {type: $(this).val(), id: $('#collection_id').val()},
             success: function (data) {

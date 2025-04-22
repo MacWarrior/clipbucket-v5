@@ -1017,7 +1017,7 @@ a[role='menuitem'] {
     transform: translate(calc(150% * -.125), calc(150% * -.125));
     filter: blur(8px);
     opacity: .5;
-    background: url('/styles/cb_28/theme/images/favicon.png');
+    background: url('../../../../../styles/cb_28/theme/images/favicon.png');
     background-repeat: no-repeat;
     z-index: -1;
 }

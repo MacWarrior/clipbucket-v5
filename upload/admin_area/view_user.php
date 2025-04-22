@@ -15,7 +15,7 @@ if ($uid != $userquery->get_anonymous_user()) {
     $udetails = User::getInstance()->getOne(['userid'=>$uid]);
 }
 if (empty($udetails)) {
-    redirect_to('/members.php?user_not_found=1');
+    redirect_to(DirPath::getUrl('admin_area') . 'members.php?user_not_found=1');
 }
 /* Generating breadcrumb */
 global $breadcrumb;

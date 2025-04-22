@@ -9,7 +9,7 @@ User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 
 if( count($cbplayer->getPlayers()) <= 1 && !in_dev() ){
-    redirect_to(DirPath::getUrl('admin_area', true));
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 /* Generating breadcrumb */

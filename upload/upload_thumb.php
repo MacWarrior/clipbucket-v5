@@ -49,4 +49,4 @@ if ($myquery->video_exists($video)) {
     $msg[] = lang('class_vdo_del_err');
 }
 
-redirect_to('/edit_video.php?vid=' . $data['videoid']);
+redirect_to(DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']);

@@ -29,7 +29,7 @@ $(function () {
         if (!elem.parent().hasClass('disabled')) {
             var id_tool = $(this).data('id');
             $.ajax({
-                url: "/actions/launch_tool.php",
+                url: baseurl+"actions/launch_tool.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -56,7 +56,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: "/actions/stop_tool.php",
+                url: baseurl+"actions/stop_tool.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -74,7 +74,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: "/actions/force_tool_to_error.php",
+                url: baseurl+"actions/force_tool_to_error.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -94,7 +94,7 @@ $(function () {
         if (!$(this).parent().hasClass('disabled')) {
             var id_tool = elem.data('id');
             $.ajax({
-                url: "/actions/show_tool_log.php",
+                url: baseurl+"actions/show_tool_log.php",
                 type: "POST",
                 data: {id_tool: id_tool},
                 dataType: 'json',
@@ -124,7 +124,7 @@ $(function () {
 
         e.preventDefault();
         $.ajax({
-            url: "/actions/update_frequency_tool.php",
+            url: baseurl+"actions/update_frequency_tool.php",
             type: "POST",
             data: {id_tool: $(input).attr('data-id'), frequency: value},
             dataType: 'json',
@@ -159,7 +159,7 @@ $(function () {
 
         e.preventDefault();
         $.ajax({
-            url: "/actions/update_frequency_disabled_tool.php",
+            url: baseurl+"actions/update_frequency_disabled_tool.php",
             type: "POST",
             data: {id_tool: $(input).attr('data-id'), is_disabled: !value},
             dataType: 'json',
@@ -191,7 +191,7 @@ $(function () {
 function connectSSE () {
     var tries = 0;
     // Create new event, the server script is sse.php
-    eventSource = new EventSource("/admin_area/sse/progress_tool.php");
+    eventSource = new EventSource(admin_url+"sse/progress_tool.php");
     // Event when receiving a message from the server
     eventSource.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);
@@ -259,7 +259,7 @@ function connectSSE () {
 function connectSSELog (max_id, id_tool) {
     var tries = 0;
     // Create new event, the server script is sse.php
-    eventSourceLog = new EventSource("/admin_area/sse/logs_tool.php?max_id="+max_id+"&id_tool="+id_tool);
+    eventSourceLog = new EventSource(admin_url+"sse/logs_tool.php?max_id="+max_id+"&id_tool="+id_tool);
     // Event when receiving a message from the server
     eventSourceLog.addEventListener("message", function(e) {
         var data = JSON.parse(e.data);

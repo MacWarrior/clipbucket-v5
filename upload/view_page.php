@@ -12,14 +12,14 @@ $pid = mysql_clean($pid);
 $page = $cbpage->get_page($pid);
 
 if($page['active'] == 'no' && !User::getInstance()->hasAdminAccess()){
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 if ($page) {
     assign('page', $page);
     subtitle($page['page_title']);
 } else {
-   redirect_to('404.php');
+    redirect_to(cblink(['name' => 'error_404']));
 }
 
 //Displaying The Template

@@ -57,7 +57,7 @@
       </td>
       <td>{$user_msgs[msg].date_added}</td>
       {if $mode =='inbox'}
-      <td><a {if $user_msgs[msg].message_from == $anonymous_id} disabled="disabled" {else} href="/private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" {/if} class="btn btn-primary">{lang code='reply'}</a></td>
+      <td><a {if $user_msgs[msg].message_from == $anonymous_id} disabled="disabled" {else} href="{$baseurl}private_message.php?mode=new_msg&to={$user_msgs[msg].message_from_user}" {/if} class="btn btn-primary">{lang code='reply'}</a></td>
       {/if}
     </tr>
     {sectionelse}
