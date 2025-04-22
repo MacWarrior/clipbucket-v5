@@ -24,7 +24,7 @@ if (in_dev()) {
         }
     }
     //launch tool clean
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE, true)) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
         $tool = AdminTool::getToolByCode('clean_orphan_files');
     }
     if (!empty($tool)) {

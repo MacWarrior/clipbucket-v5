@@ -11,7 +11,7 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('admin_tool'), 'url' => DirPath::getUrl('admin_area') . 'admin_tool.php'];
 $tool = null;
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
     $can_sse = System::can_sse() ? 'true' : 'false';
     if (!empty($_GET['code_tool'])) {
         $tool = new AdminTool();

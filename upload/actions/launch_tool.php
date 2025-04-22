@@ -10,7 +10,7 @@ $tool = new AdminTool();
 
 /** if CLI , example : php launch_tool.php id_tool=7 */
 if (php_sapi_name() === 'cli') {
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') === false) {
+    if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '99') ){
         return;
     }
 

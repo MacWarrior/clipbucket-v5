@@ -268,12 +268,21 @@ $(document).ready(function()
     AddingListenerModernThumbVideoPopinView();
 
     window.addEventListener('resize', adaptRatioPlayer);
-});
 
+    const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
+    console.log(`%cGreetings Adventurers!` +
+        `\n%cHaving a look under the hood? Happy sneaking buddy!🕵️‍♂️` +
+        `\n%c📬 Drop us an email for any questions : contact+clipbucket@oxygenz.fr` +
+        `\n%c🛠️ Check out the project on GitHub: https://github.com/MacWarrior/clipbucket-v5`,
+        `font-size:18px; font-weight:bold; color:${isDark ? '#90ee90' : '#2e7d32'}`,
+        `font-size:14px; color:${isDark ? '#ccc' : '#444'}`,
+        `font-size:14px; font-style:italic; color:${isDark ? '#80d8ff' : '#1565c0'}`,
+        `font-size:14px; color:${isDark ? '#ffeb3b' : '#f57c00'}; font-weight: bold;`
+    );
+});
 
 function homePageVideos(qlist_items)
 {
-    console.log("Greetings Adventurers ! Having a look under the hood ? Happy sneaking buddy ! Drop us an email for any questions : contact+clipbucket@oxygenz.fr")
     $('#container').on("click","#recent_load_more, #featured_load_more",function()
     {
         var loadLink = baseurl+'/ajax/home.php',
