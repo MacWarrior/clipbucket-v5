@@ -88,16 +88,13 @@ var flag = 0;
 function responsiveFixes()
 {
     var WinWidth = $(window).width();
-    //console.log(WinWidth);
     var SearchHtml = $("#header .menu-holder .user_menu").html();
     var navseach = $('#header .navbar-header');
     var menuLinks = $("#header .menu-holder");
 
-    if (WinWidth <992)
-    {
+    if (WinWidth <992) {
         var length1 = navseach.find('.user_menu').length;
-        if(length1==0)
-        {
+        if(length1==0) {
             $(navseach).append('<div class="col btn-holder user_menu text-right logged-out">'+SearchHtml+"</div>");
         }
         $('.menu-holder').find('.user_menu').remove();
@@ -105,15 +102,13 @@ function responsiveFixes()
         var searchBtns = navseach.find('.user_menu').html();
         var length2 = menuLinks.find('.user_menu').length;
 
-        if(length2==0)
-        {
+        if(length2==0) {
             menuLinks.append('<div class="col btn-holder user_menu text-right logged-out">'+searchBtns+"</div>");
         }
         navseach.find('.user_menu').remove();
 
     }
-    if( WinWidth <1280 )
-    {
+    if( WinWidth <1280 ) {
         $(".btn-newacc .big").hide();
         $(".btn-newacc .little").show();
     } else {
@@ -121,8 +116,7 @@ function responsiveFixes()
         $(".btn-newacc .little").hide();
     }
 
-    if(userid)
-    {
+    if(userid) {
         $(".user_menu").addClass('logged-in');
         $(".user_menu").removeClass('logged-out');
     } else {
@@ -130,20 +124,16 @@ function responsiveFixes()
         $(".user_menu").addClass('logged-out');
     }
 
-    if( WinWidth <768 )
-    {
+    if( WinWidth <768 ) {
         var length3 = $('.menu-holder').find('.newuser-links').length;
-        if(length3==0)
-        {
+        if(length3==0) {
             var rightLinkHtml = $('.navbar-right').html();
             $('.menu-holder').prepend("<ul class='newuser-links'>"+rightLinkHtml+"</ul>");
             $('.navbar-right').remove();
         }
-    }
-    else{
+    } else {
         var length4 = $('.user_menu').find('.right-menu').length;
-        if(length4==0)
-        {
+        if(length4==0) {
             var newLinkHtml = $('.newuser-links').html();
             $('.user_menu').append("<ul class='nav navbar-nav navbar-right right-menu'>"+newLinkHtml+"</ul>");
             $('.newuser-links').remove();
@@ -237,10 +227,7 @@ let AddingListenerModernThumbVideoPopinView = function(){
 
 $(document).ready(function()
 {
-    //footer at bottom
-    headerFooter();
-    if(userid)
-    {
+    if(userid) {
         $(".user_menu").addClass('logged-in');
         $(".user_menu").removeClass('logged-out');
     } else{
@@ -253,12 +240,6 @@ $(document).ready(function()
         $("body").removeClass('sideactive');
     });
 
-    var havechild = $('.adbox-holder').children().length;
-
-    if (havechild == 0){
-        $('.adbox-holder').hide();
-    }
-
     $(".btn-search-toggle").click(function() {
         $(".navbar-header").toggleClass('show-search');
     });
@@ -268,6 +249,35 @@ $(document).ready(function()
     AddingListenerModernThumbVideoPopinView();
 
     window.addEventListener('resize', adaptRatioPlayer);
+
+    $(".cbsearchtype a").on({
+        click: function(e){
+            e.preventDefault();
+            let prent_li = $(this).parents();
+            let theNewVal = $(this).attr('valNow');
+            $('.type').val(theNewVal);
+            $('.cbsearchtype li').removeClass('active');
+            prent_li.addClass('active');
+        }
+    });
+
+    $('.s-types').on("click", function(){
+        let text = $(this).html();
+        $('.search-type').html(text);
+    });
+
+    $('#cbsearch').on("click", function(e){
+        e.preventDefault();
+        let searchQuery = $('#query').val();
+        let queryLen = searchQuery.length;
+        if (queryLen <= 2) {
+            let msg = lang_search_too_short;
+            msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
+            _cb.throwHeadMsg('warning', msg, 3000, true);
+        } else {
+            $('.search-form').submit();
+        }
+    });
 
     const isDark = matchMedia('(prefers-color-scheme: dark)').matches;
     console.log(`%cGreetings Adventurers!` +
@@ -279,6 +289,8 @@ $(document).ready(function()
         `font-size:14px; font-style:italic; color:${isDark ? '#80d8ff' : '#1565c0'}`,
         `font-size:14px; color:${isDark ? '#ffeb3b' : '#f57c00'}; font-weight: bold;`
     );
+
+    headerFooter();
 });
 
 function homePageVideos(qlist_items)
@@ -385,66 +397,66 @@ function homePageVideos(qlist_items)
 
             success: function(data)
             {
-                    var json = data;
-                    if(json.notice) {
-                        if(!first_launch) {
-                            _cb.throwHeadMsg('warning', json.notice, 3000,true);
-                            return true
-                        } else {
-                            $(main_object).remove();
-                            if (loadMode == 'featured') {
-                                $('#featured_load_more').hide();
-                                $('#featured_pre').hide();
-                                $("#featured_vid_sec").html('<span class="well well-info btn-block">'+langCo+'</span>');
-                            } else if (loadMode == 'recent') {
-                                $('#recent_load_more').remove();
-                                $('#recent_pre').remove();
-                                $("#recent_vids_sec").html('<span class="well well-info btn-block">'+noRecent+'</span>');
-                            }
-                        }
-                        return true;
-                    }
-                    if(json.error) {
-                        _cb.throwHeadMsg('error', json.error, 3000,true);
-                        return true;
-                    }
-
-                    $(main_object).removeAttr('disabled');
-                    $(main_object).text(loadMoreLang);
-                    if (loadType == 'video') {
-                        if (loadMode == 'recent') {
+                var json = data;
+                if(json.notice) {
+                    if(!first_launch) {
+                        _cb.throwHeadMsg('warning', json.notice, 3000,true);
+                        return true
+                    } else {
+                        $(main_object).remove();
+                        if (loadMode == 'featured') {
+                            $('#featured_load_more').hide();
+                            $('#featured_pre').hide();
+                            $("#featured_vid_sec").html('<span class="well well-info btn-block">'+langCo+'</span>');
+                        } else if (loadMode == 'recent') {
                             $('#recent_load_more').remove();
-                            $('#recent_pre').html('');
-                            $(json.html).appendTo('#recent_vids_sec').fadeIn('slow');
-
-                            recentShown = $('#recent_vids_sec .item-video, #recent_vids_sec .slider-video-container').length;
-                            totalRecentVids = $('#container').find('.total_videos_recent').first().text();
-                            gotMoreRecent = parseInt(totalRecentVids) - parseInt(recentShown);
-
-                            if (gotMoreRecent > 0) {
-                                $(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
-                            }
-                            ids_to_check_progress_recent = [...new Set([...ids_to_check_progress_recent, ...json.ids_to_check])]
-                            progressVideoCheckHome(ids_to_check_progress_recent, 'home', 'intervalId_recent')
-                        } else {
-                            $('#featured_load_more').remove();
-                            $('#featured_pre').html('');
-                            $(json.html).appendTo('#featured_vid_sec').fadeIn('slow');
-
-                            featuredShown = $('#featured_vid_sec .item-video, #featured_vid_sec .slider-video-container').length;
-                            totalFeaturedVids = $('#container').find('.total_videos_featured').first().text();
-                            gotMoreFeatured = parseInt(totalFeaturedVids) - parseInt(featuredShown);
-
-                            if (gotMoreFeatured > 0) {
-                                $(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
-                            }
-
-                            ids_to_check_progress_featured = [...new Set([...ids_to_check_progress_featured, ...json.ids_to_check])]
-                            progressVideoCheckHome(ids_to_check_progress_featured, 'home_featured', 'intervalId_featured' )
+                            $('#recent_pre').remove();
+                            $("#recent_vids_sec").html('<span class="well well-info btn-block">'+noRecent+'</span>');
                         }
                     }
-                    $('#container').find('.total_videos_recent').hide();
-                    $('#container').find('.total_videos_featured').hide();
+                    return true;
+                }
+                if(json.error) {
+                    _cb.throwHeadMsg('error', json.error, 3000,true);
+                    return true;
+                }
+
+                $(main_object).removeAttr('disabled');
+                $(main_object).text(loadMoreLang);
+                if (loadType == 'video') {
+                    if (loadMode == 'recent') {
+                        $('#recent_load_more').remove();
+                        $('#recent_pre').html('');
+                        $(json.html).appendTo('#recent_vids_sec').fadeIn('slow');
+
+                        recentShown = $('#recent_vids_sec .item-video, #recent_vids_sec .slider-video-container').length;
+                        totalRecentVids = $('#container').find('.total_videos_recent').first().text();
+                        gotMoreRecent = parseInt(totalRecentVids) - parseInt(recentShown);
+
+                        if (gotMoreRecent > 0) {
+                            $(document).find('#recent-loadmore').append('<div class="clearfix text-center"><button id="recent_load_more" class="btn btn-loadmore" loadtype="video" loadmode="recent" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
+                        }
+                        ids_to_check_progress_recent = [...new Set([...ids_to_check_progress_recent, ...json.ids_to_check])]
+                        progressVideoCheckHome(ids_to_check_progress_recent, 'home', 'intervalId_recent')
+                    } else {
+                        $('#featured_load_more').remove();
+                        $('#featured_pre').html('');
+                        $(json.html).appendTo('#featured_vid_sec').fadeIn('slow');
+
+                        featuredShown = $('#featured_vid_sec .item-video, #featured_vid_sec .slider-video-container').length;
+                        totalFeaturedVids = $('#container').find('.total_videos_featured').first().text();
+                        gotMoreFeatured = parseInt(totalFeaturedVids) - parseInt(featuredShown);
+
+                        if (gotMoreFeatured > 0) {
+                            $(document).find('#featured-loadmore').append('<div class="clearfix text-center"><button id="featured_load_more" class="btn btn-loadmore" loadtype="video" loadmode="featured" title="'+loadMoreLang+'">'+loadMoreLang+'</button></div>');
+                        }
+
+                        ids_to_check_progress_featured = [...new Set([...ids_to_check_progress_featured, ...json.ids_to_check])]
+                        progressVideoCheckHome(ids_to_check_progress_featured, 'home_featured', 'intervalId_featured' )
+                    }
+                }
+                $('#container').find('.total_videos_recent').hide();
+                $('#container').find('.total_videos_featured').hide();
                 AddingListenerModernThumbVideo();
                 AddingListenerModernThumbVideoPopinView();
             }
@@ -461,12 +473,11 @@ function homePageVideos(qlist_items)
 }
 //on resize functions
 $(window).resize(function(){
-    headerFooter();
     preLoadingBlock();
     responsiveFixes();
     loginHeight();
+    headerFooter();
 });
-
 
 document.addEventListener("DOMContentLoaded", function () {
     /* Thumbs preview */

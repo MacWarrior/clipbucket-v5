@@ -182,37 +182,4 @@
         </div>
     </nav>
 </header>
-{include file="$style_dir/blocks/spinner.html" }
-<script>
-    $(document).ready(function(){
-        $(".cbsearchtype a").on({
-            click: function(e){
-                e.preventDefault();
-                let prent_li = $(this).parents();
-                let theNewVal = $(this).attr('valNow');
-                $('.type').val(theNewVal);
-                $('.cbsearchtype li').removeClass('active');
-                prent_li.addClass('active');
-            }
-        });
-
-        $('.s-types').on("click", function(){
-            let text = $(this).html();
-            $('.search-type').html(text);
-        });
-
-        $('#cbsearch').on("click", function(e){
-            e.preventDefault();
-            let searchQuery = $('#query').val();
-            let queryLen = searchQuery.length;
-            if (queryLen <= 2) {
-                let msg = '{lang code="search_too_short"}';
-                msg = msg.replace('%s', '<b>'+searchQuery+'</b>');
-                _cb.throwHeadMsg('warning', msg, 3000, true);
-            } else {
-                $('.search-form').submit();
-            }
-        });
-    });
-
-</script>
+{include file="$style_dir/blocks/spinner.html"}
