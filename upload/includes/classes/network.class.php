@@ -291,9 +291,9 @@ class Network{
 
         $subdir = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
 
-        // Exclure cb_install s'il est dans le chemin
-        if (preg_match('#/cb_install(/|$)#', $subdir)) {
-            $subdir = preg_replace('#/cb_install(/|$)#', '/', $subdir);
+        // Exclure cb_install, ajax et admin_area s'ils sont dans le chemin
+        if (preg_match('#/(cb_install|ajax|admin_area)(/|$)#', $subdir)) {
+            $subdir = preg_replace('#/(cb_install|ajax|admin_area)(/|$)#', '/', $subdir);
         }
 
         if ($subdir === '/' || $subdir === '\\') {

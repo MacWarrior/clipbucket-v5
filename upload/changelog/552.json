@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"4",
+  "revision":"5",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Update Readme"
         ,"Fix PHP8.X compatibility"
         ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
+        ,"Fix URL issue when base_url config is not correctly set"
       ]
     },
     {

@@ -2146,7 +2146,7 @@ class userquery extends CBCategory
 
         if (config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email']))) {
             $email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
-            $gravatar = new Gravatar($email, DirPath::getUrl('root') . $default);
+            $gravatar = new Gravatar($email, $default);
             $gravatar->size = $thesize;
             $gravatar->rating = 'G';
             $gravatar->border = 'FF0000';
@@ -2175,7 +2175,7 @@ class userquery extends CBCategory
         }
 
         if ($size == 'small') {
-            return DirPath::getUrl('images') . '/avatars/no_avatar-small.png';
+            return DirPath::getUrl('images') . 'avatars/no_avatar-small.png';
         }
         return DirPath::getUrl('images') . 'avatars/no_avatar.png';
     }
