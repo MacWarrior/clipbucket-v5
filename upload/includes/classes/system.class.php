@@ -777,6 +777,10 @@ class System{
             }
         }
 
+        if( !Network::check_forbidden_directory(false) ){
+            return false;
+        }
+
         $permissions = self::checkPermissions(self::getPermissions(false));
         self::setGlobalConfigCache($permissions);
         return $permissions;
