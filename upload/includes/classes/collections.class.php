@@ -428,7 +428,7 @@ class Collection
         }
 
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
-            $join[] = 'LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.collection_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'collection\' )';
+            $join[] = 'LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->getTableName() . '.collection_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'collection\' )';
             $select[] = 'IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged';
         }
 
@@ -438,11 +438,11 @@ class Collection
         }
 
         $sql ='SELECT ' . implode($newline . ', ', $select) . '
-                FROM ' . cb_sql_table('collections') . '
-                LEFT JOIN ' . cb_sql_table('users') . ' ON collections.userid = users.userid
-                LEFT JOIN ' . cb_sql_table('collection_items') . ' ON collections.collection_id = collection_items.collection_id
-                LEFT JOIN ' . cb_sql_table('video') . ' ON collections.type = \'videos\' AND collection_items.object_id = video.videoid' . $left_join_video_cond . '
-                LEFT JOIN ' . cb_sql_table('photos') . ' ON collections.type = \'photos\' AND collection_items.object_id = photos.photo_id' . $left_join_photos_cond
+                FROM ' . cb_sql_table($this->getTableName()) . '
+                LEFT JOIN ' . cb_sql_table('users') . ' ON ' . $this->getTableName() . '.userid = users.userid
+                LEFT JOIN ' . cb_sql_table($this->getTableNameItems()) . ' ON ' . $this->getTableName() . '.collection_id = ' . $this->getTableNameItems() . '.collection_id
+                LEFT JOIN ' . cb_sql_table('video') . ' ON ' . $this->getTableName() . '.type = \'videos\' AND ' . $this->getTableNameItems() . '.object_id = video.videoid' . $left_join_video_cond . '
+                LEFT JOIN ' . cb_sql_table('photos') . ' ON ' . $this->getTableName() . '.type = \'photos\' AND ' . $this->getTableNameItems() . '.object_id = photos.photo_id' . $left_join_photos_cond
             . ' ' . implode($newline, $join)
             . (empty($conditions) ? '' : ' WHERE ' . implode($newline . ' AND ', $conditions))
             . (empty($group) ? '' : $newline . ' GROUP BY ' . implode($newline . ',', $group))
@@ -768,9 +768,9 @@ class Collection
      * @return void
      * @throws Exception
      */
-    public function setDefautThumb(int $default_thumb, int $id)
+    public function setDefautThumb(int $default_thumb, int $id): void
     {
-        Clipbucket_db::getInstance()->update(tbl($this->tablename), ['thumb_objectid'], [$default_thumb], ' collection_id = ' . $id);
+        Clipbucket_db::getInstance()->update(tbl($this->getTableName()), ['thumb_objectid'], [$default_thumb], ' collection_id = ' . $id);
     }
 
     /**

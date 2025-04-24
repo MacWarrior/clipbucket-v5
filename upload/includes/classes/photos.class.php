@@ -336,6 +336,13 @@ class Photo
         } else {
             $join[] = 'LEFT JOIN  ' . cb_sql_table($collection_items_table) . ' ON  photos.photo_id = ' . $collection_items_table . '.object_id AND ' . $collection_items_table . '.type = \'photos\'';
         }
+
+        if (!User::getInstance()->hasAdminAccess()) {
+            $collection_table = Collection::getInstance()->getTableName();
+            $conditions[] = Collection::getInstance()->getGenericConstraints();
+            $join[] = 'LEFT JOIN ' . cb_sql_table($collection_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $collection_table . '.collection_id';
+        }
+
         if (!$param_count) {
             $group[] = $collection_items_table.'.collection_id';
         }
@@ -347,7 +354,6 @@ class Photo
         if ($param_join_flag && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255') && !$param_count) {
             $join[] = ' LEFT JOIN ' . cb_sql_table(Flag::getTableName()) . ' ON ' . Flag::getTableName() . '.id_element = ' . $this->tablename . '.photo_id AND ' . Flag::getTableName() . '.id_flag_element_type = (SELECT id_flag_element_type FROM ' . tbl(Flag::getTableNameElementType()) . ' WHERE name = \'photo\' ) ';
             $select[] = ' IF(COUNT(distinct ' . Flag::getTableName() . '.flag_id) > 0, 1, 0) AS is_flagged ';
-
         }
 
         if( $param_group ){
@@ -454,7 +460,7 @@ class Photo
     /**
      * @throws Exception
      */
-    public static function display_restricted($photo)
+    public static function display_restricted($photo): void
     {
         if( !empty($photo['age_restriction']) ){
             echo '<span class="restricted" title="' . lang('access_forbidden_under_age', $photo['age_restriction']) . '">' . lang('access_forbidden_under_age_display', $photo['age_restriction']) . '</span>';
@@ -986,6 +992,7 @@ class CBPhotos
 
         if (!User::getInstance()->hasAdminAccess()) {
             $cond .= Photo::getInstance()->getGenericConstraints();
+            $cond .= Collection::getInstance()->getGenericConstraints();
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
