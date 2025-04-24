@@ -10,7 +10,7 @@ if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectio
     redirect_to(cblink(['name' => 'my_account']));
 }
 
-global $cbcollection, $cbvideo, $cbphoto, $Cbucket;
+global $cbphoto;
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
@@ -39,13 +39,13 @@ switch ($mode) {
 
         if (isset($_GET['delete_collection'])) {
             $collection_id = $_GET['delete_collection'];
-            $cbcollection->delete_collection($collection_id);
+            Collections::getInstance()->delete_collection($collection_id);
         }
 
         if ($_POST['delete_selected'] && is_array($_POST['check_col'])) {
             $count = count($_POST['check_col']);
             for ($i = 0; $i < $count; $i++) {
-                $cbcollection->delete_collection($_POST['check_col'][$i]);
+                Collections::getInstance()->delete_collection($_POST['check_col'][$i]);
             }
             errorhandler::getInstance()->flush();
             e('selected_collects_del', 'm');
@@ -73,14 +73,14 @@ switch ($mode) {
             redirect_to(cblink(['name' => 'my_account']));
         }
 
-        $reqFields = $cbcollection->load_required_fields();
-        $otherFields = $cbcollection->load_other_fields();
+        $reqFields = Collections::getInstance()->load_required_fields();
+        $otherFields = Collections::getInstance()->load_other_fields();
 
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
 
         if (!empty($_POST)) {
-            $cbcollection->create_collection($_POST);
+            Collections::getInstance()->create_collection($_POST);
             if (!error()) {
                 $_POST = '';
                 redirect_to(DirPath::getUrl('root') . 'manage_collections.php?new_collection=1');
@@ -96,7 +96,7 @@ switch ($mode) {
         }
 
         if (isset($_POST['update_collection'])) {
-            $cbcollection->update_collection($_POST);
+            Collections::getInstance()->update_collection($_POST);
             if (isset($_POST['default_thumb'])) {
                 Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $collection_id);
             }
@@ -118,8 +118,8 @@ switch ($mode) {
         }
         assign('items', $items);
 
-        $reqFields = $cbcollection->load_required_fields($collection);
-        $otherFields = $cbcollection->load_other_fields($collection);
+        $reqFields = Collections::getInstance()->load_required_fields($collection);
+        $otherFields = Collections::getInstance()->load_other_fields($collection);
 
         assign('fields', $reqFields);
         assign('other_fields', $otherFields);
@@ -160,7 +160,7 @@ switch ($mode) {
                 if (isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
                     for ($i = 0; $i < $count; $i++) {
-                        $cbvideo->collection->remove_item($_POST['check_item'][$i], $collection_id);
+                        CBvideo::getInstance()->collection->remove_item($_POST['check_item'][$i], $collection_id);
                     }
                     errorhandler::getInstance()->flush();
                     e(lang('selected_items_removed', 'videos'), 'm');
@@ -200,13 +200,13 @@ switch ($mode) {
 
         if (isset($_GET['remove_fav_collection'])) {
             $collection_id = mysql_clean($_GET['remove_fav_collection']);
-            $cbcollection->action->remove_favorite($collection_id);
+            Collections::getInstance()->action->remove_favorite($collection_id);
         }
 
         if (isset($_POST['remove_selected_favs']) && is_array($_POST['check_col'])) {
             $total = count($_POST['check_col']);
             for ($i = 0; $i < $total; $i++) {
-                $cbcollection->action->remove_favorite($_POST['check_col'][$i]);
+                Collections::getInstance()->action->remove_favorite($_POST['check_col'][$i]);
             }
             errorhandler::getInstance()->flush();
             e(lang('total_fav_collection_removed', $total), 'm');
@@ -223,11 +223,11 @@ switch ($mode) {
             'order' => tbl('favorites.date_added DESC'),
             'cond'  => $cond
         ];
-        $collections = $cbcollection->action->get_favorites($col_arr);
+        $collections = Collections::getInstance()->action->get_favorites($col_arr);
         assign('collections', $collections);
 
         $col_arr['count_only'] = true;
-        $total_rows = $cbcollection->action->get_favorites($col_arr);
+        $total_rows = Collections::getInstance()->action->get_favorites($col_arr);
         $total_pages = count_pages($total_rows, COLLPP);
 
         //Pagination

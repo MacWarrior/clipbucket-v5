@@ -129,11 +129,9 @@ switch (DEBUG_LEVEL) {
 }
 require_once DirPath::get('classes') . 'errorhandler.class.php';
 require_once DirPath::get('classes') . 'session_message_handler.class.php';
-$pages = new pages();
-$eh = new errorhandler();
 
 foreach (sessionMessageHandler::get_messages() as $message) {
-    $eh->e($message['message'], $message['type']);
+    errorhandler::getInstance()->e($message['message'], $message['type']);
 }
 
 $param_redis = ['host' => $row['cache_host'], 'port' => $row['cache_port']];
@@ -150,7 +148,6 @@ try {
 }
 
 Language::getInstance()->init();
-$Cbucket = new ClipBucket();
 
 ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
 
@@ -212,7 +209,6 @@ require_once DirPath::get('includes') . 'plugin.functions.php';
 require_once DirPath::get('includes') . 'plugins_functions.php';
 
 $signup = new signup();
-$Upload = new Upload();
 $adsObj = new AdsManager();
 $formObj = new formObj();
 
@@ -220,13 +216,11 @@ $cbplugin = new CBPlugin();
 
 $cblog = new CBLogs();
 $imgObj = new ResizeImage();
-$cbvideo = $cbvid = new CBvideo();
 $cbplayer = new CBPlayer();
 $cbemail = new CBEmail();
 $cbpm = new cb_pm();
 $cbpage = new cbpage();
 $cbindex = new CBreindex();
-$cbcollection = new Collections();
 $cbphoto = new CBPhotos();
 
 $cbfeeds = new cbfeeds();
@@ -257,7 +251,7 @@ define('MAINPLIST', $row['photo_main_list']);
 define('COLLPP', $row['collection_per_page']);
 define('COLLIP', $row['collection_items_page']);
 
-define('MAX_COMMENT_CHR', $Cbucket->configs['max_comment_chr']);
+define('MAX_COMMENT_CHR', ClipBucket::getInstance()->configs['max_comment_chr']);
 
 # SETTING PHOTO SETTING
 $cbphoto->thumb_width = $row['photo_thumb_width'];
@@ -277,10 +271,10 @@ $cbtpl = new CBTemplate();
 # STOP CACHING
 $cbtpl->caching = 0;
 
-$cbvideo->init();
+CBvideo::getInstance()->init();
 $cbphoto->init_photos();
 
-$Cbucket->set_the_template();
+ClipBucket::getInstance()->set_the_template();
 
 $cbtpl->init();
 require DirPath::get('includes') . 'active.php';
@@ -316,31 +310,23 @@ Assign('page', getConstant('PAGE'));
 
 # REGISTER OBJECTS FOR SMARTY
 global $Smarty;
-$Smarty->assign_by_ref('pages', $pages);
 $Smarty->assign_by_ref('myquery', $myquery);
 $Smarty->assign_by_ref('userquery', $userquery);
 $Smarty->assign_by_ref('signup', $signup);
-$Smarty->assign_by_ref('Upload', $Upload);
 $Smarty->assign_by_ref('adsObj', $adsObj);
 $Smarty->assign_by_ref('formObj', $formObj);
-$Smarty->assign_by_ref('Cbucket', $Cbucket);
-$Smarty->assign_by_ref('ClipBucket', $Cbucket);
-$Smarty->assign_by_ref('eh', $eh);
 $Smarty->assign_by_ref('lang_obj', Language::getInstance());
-$Smarty->assign_by_ref('cbvid', $cbvid);
 $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
 $Smarty->assign_by_ref('cbpage', $cbpage);
-$Smarty->assign_by_ref('cbcollection', $cbcollection);
 $Smarty->assign_by_ref('cbphoto', $cbphoto);
 $Smarty->assign_by_ref('cbfeeds', $cbfeeds);
 
 # REGISTERING FUNCTION FOR SMARTY TEMPLATES
 function show_video_rating($params)
 {
-    global $cbvid;
-    return $cbvid->show_video_rating($params);
+    return CBvideo::getInstance()->show_video_rating($params);
 }
 
 $Smarty->register_function('AD', 'getAd');

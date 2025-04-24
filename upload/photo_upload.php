@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'photo_upload');
 define('PARENT_PAGE', 'upload');
 
-global $cbphoto, $Cbucket, $cbcollection;
+global $cbphoto;
 
 require 'includes/config.inc.php';
 
@@ -19,17 +19,17 @@ $collections = Collection::getInstance()->getAllIndent([
 ]);
 
 assign('collections', $collections);
-assign('reqFields', $cbcollection->load_required_fields(['type'=>'photos']));
+assign('reqFields', Collections::getInstance()->load_required_fields(['type'=>'photos']));
 subtitle(lang('photos_upload'));
 
 //Displaying The Template
 if (!isSectionEnabled('photos')) {
     e('Photos are disabled');
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 } else {
     if (config('enable_photo_file_upload') == 'no') {
         e('Photo upload is disabled');
-        $Cbucket->show_page = false;
+        ClipBucket::getInstance()->show_page = false;
     }
 }
 

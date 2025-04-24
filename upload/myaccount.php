@@ -3,7 +3,7 @@ define('THIS_PAGE', 'myaccount');
 define('PARENT_PAGE', 'home');
 
 require 'includes/config.inc.php';
-global $userquery, $cbvideo;
+global $userquery;
 User::getInstance()->isUserConnectedOrRedirect();
 
 assign('user', $userquery->get_user_details(user_id()));
@@ -21,7 +21,7 @@ Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 
 if (isset($_GET['delete_video'])) {
     $video = mysql_clean($_GET['delete_video']);
-    $cbvideo->delete_video($video);
+    CBvideo::getInstance()->delete_video($video);
 }
 $storage_use = null;
 if (config('enable_storage_history_fo') == 'yes') {

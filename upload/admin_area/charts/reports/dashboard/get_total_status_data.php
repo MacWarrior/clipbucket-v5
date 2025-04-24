@@ -3,9 +3,9 @@
 error_reporting(E_ALL);
 require_once('../../../../includes/admin_config.php');
 
-$totalVideos['today'] = $cbvid->get_videos(["count_only" => true, "data_span" => "today"], true);
-$totalVideos['this_week'] = $cbvid->get_videos(["count_only" => true, "data_span" => "this_week"], true);
-$totalVideos['this_month'] = $cbvid->get_videos(["count_only" => true, "data_span" => "this_month"], true);
+$totalVideos['today'] = CBvideo::getInstance()->get_videos(["count_only" => true, "data_span" => "today"], true);
+$totalVideos['this_week'] = CBvideo::getInstance()->get_videos(["count_only" => true, "data_span" => "this_week"], true);
+$totalVideos['this_month'] = CBvideo::getInstance()->get_videos(["count_only" => true, "data_span" => "this_month"], true);
 
 $totalUsers['today'] = $userquery->get_users(["count_only" => true, "data_span" => "today"], true);
 $totalUsers['this_week'] = $userquery->get_users(["count_only" => true, "data_span" => "this_week"], true);

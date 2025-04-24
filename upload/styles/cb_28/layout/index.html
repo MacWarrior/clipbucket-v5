@@ -71,7 +71,7 @@
                         {if $collection.total_objects > config('list_home_collection_videos')}
                             {$view_more_collection = true}
                         {/if}
-                        {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={$cbcollection->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
+                        {include file="$style_dir/blocks/default_slider.html"  home=true video_ratio=config('homepage_collection_video_ratio') video_style=config('homepage_collection_video_style') video_list=$collection.items title=$collection.collection_name main_link={Collections::getInstance()->collection_links($collection,'view')} view_more=$view_more_collection limit={config('list_home_collection_videos')}}
                     {/foreach}
                 {/if}
                 {ANCHOR place='after_featured_collections'}

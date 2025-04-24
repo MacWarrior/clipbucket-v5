@@ -1,4 +1,4 @@
-{$videoFields = $Upload->load_video_fields($input)}
+{$videoFields = Upload::getInstance()->load_video_fields($input)}
 {$requiredFields = $videoFields[0]}
 {$sharingOptions = $videoFields[1]}
 {$dateAndLocation = $videoFields[2]}

@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'ajax');
 require 'includes/config.inc.php';
 
-global $cbvid, $cbphoto, $cbcollection, $eh, $cbvideo, $myquery, $cbfeeds, $pages;
+global $cbphoto;
 
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
@@ -74,9 +74,9 @@ if (!empty($mode)) {
                 case 'video':
                     $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $cbvid->rate_video($id, $rating);
+                    $result = CBvideo::getInstance()->rate_video($id, $rating);
                     $result['is_rating'] = true;
-                    $cbvid->show_video_rating($result);
+                    CBvideo::getInstance()->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_video');
                     if ($funcs) {
@@ -91,7 +91,7 @@ if (!empty($mode)) {
                     $id = mysql_clean($_POST['id']);
                     $result = $cbphoto->rate_photo($id, $rating);
                     $result['is_rating'] = true;
-                    $cbvid->show_video_rating($result);
+                    CBvideo::getInstance()->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_photo');
                     if ($funcs) {
@@ -104,9 +104,9 @@ if (!empty($mode)) {
                 case 'collection':
                     $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $cbcollection->rate_collection($id, $rating);
+                    $result = Collections::getInstance()->rate_collection($id, $rating);
                     $result['is_rating'] = true;
-                    $cbvid->show_video_rating($result);
+                    CBvideo::getInstance()->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_collection');
                     if ($funcs) {
@@ -121,7 +121,7 @@ if (!empty($mode)) {
                     $id = mysql_clean($_POST['id']);
                     $result = userquery::getInstance()->rate_user($id, $rating);
                     $result['is_rating'] = true;
-                    $cbvid->show_video_rating($result);
+                    CBvideo::getInstance()->show_video_rating($result);
 
                     $funcs = cb_get_functions('rate_user');
                     if ($funcs) {
@@ -140,9 +140,9 @@ if (!empty($mode)) {
                 case 'video':
                 default:
                     $id = mysql_clean($_POST['id']);
-                    $vdo = $cbvid->get_video($id);
-                    $cbvid->set_share_email($vdo);
-                    $cbvid->action->share_content($vdo['videoid']);
+                    $vdo = CBvideo::getInstance()->get_video($id);
+                    CBvideo::getInstance()->set_share_email($vdo);
+                    CBvideo::getInstance()->action->share_content($vdo['videoid']);
                     break;
 
                 case 'p':
@@ -154,15 +154,15 @@ if (!empty($mode)) {
 
                 case 'cl':
                 case 'collection':
-                    $cl = $cbcollection->get_collection($_POST['id']);
-                    $cbcollection->set_share_mail($cl);
-                    $cbcollection->action->share_content($cl['collection_id']);
+                    $cl = Collections::getInstance()->get_collection($_POST['id']);
+                    Collections::getInstance()->set_share_mail($cl);
+                    Collections::getInstance()->action->share_content($cl['collection_id']);
                     break;
             }
 
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 echo '<div class="error">' . $error[0]['val'] . '</div>';
@@ -184,7 +184,7 @@ if (!empty($mode)) {
                 case 'v':
                 case 'video':
                 default:
-                    $cbvideo->action->add_to_fav($id);
+                    CBvideo::getInstance()->action->add_to_fav($id);
                     updateObjectStats('fav', 'video', $id); // Increment in total favs
                     $funcs = cb_get_functions('favorite_video');
                     break;
@@ -198,7 +198,7 @@ if (!empty($mode)) {
 
                 case 'cl':
                 case 'collection':
-                    $cbcollection->action->add_to_fav($id);
+                    Collections::getInstance()->action->add_to_fav($id);
                     $funcs = cb_get_functions('favorite_collection');
                     break;
             }
@@ -209,9 +209,9 @@ if (!empty($mode)) {
                 }
             }
 
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 echo '<div class="error">' . $error[0]['val'] . '</div>';
@@ -237,9 +237,9 @@ if (!empty($mode)) {
                 }
             }
 
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 echo '<div class="error">' . $error[0]['val'] . '</div>';
@@ -259,9 +259,9 @@ if (!empty($mode)) {
             $mailId = userquery::getInstance()->get_user_details($subscribe_to, false, true);
             userquery::getInstance()->subscribe_user($subscribe_to);
 
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 $msg['msg'] = $error[0]['val'];
@@ -287,9 +287,9 @@ if (!empty($mode)) {
             $subscribe_to = mysql_clean($_POST['subscribe_to']);
             userquery::getInstance()->unsubscribe_user($subscribe_to);
 
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 $msg['msg'] = $error[0]['val'];
@@ -331,9 +331,9 @@ if (!empty($mode)) {
 
             if ($userid) {
                 userquery::getInstance()->add_contact($userid, $friend);
-                $error = $eh->get_error();
-                $warning = $eh->get_warning();
-                $message = $eh->get_message();
+                $error = errorhandler::getInstance()->get_error();
+                $warning = errorhandler::getInstance()->get_warning();
+                $message = errorhandler::getInstance()->get_message();
 
                 if ($error) {
                     echo '<div class="error">' . $error[0]['val'] . '</div>';
@@ -354,9 +354,9 @@ if (!empty($mode)) {
         case 'ban_user':
             $user = $_POST['user'];
             userquery::getInstance()->ban_user($user);
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 echo '<div class="error">' . $error[0]['val'] . '</div>';
@@ -375,11 +375,11 @@ if (!empty($mode)) {
             $rating = Comments::setSpam($_POST['cid']);
 
             if (msg()) {
-                $msg = msg_list();
+                $msg = errorhandler::getInstance()->get_message();
                 $msg = $msg[0]['val'];
             }
             if (error()) {
-                $err = error_list();
+                $err = errorhandler::getInstance()->get_error();
                 $err = $err[0]['val'];
             }
             $ajax['msg'] = $msg;
@@ -407,14 +407,14 @@ if (!empty($mode)) {
             $comment_id = Comments::add($comment, $id, $type, $reply_to);
 
             if (msg()) {
-                $msg = msg_list();
+                $msg = errorhandler::getInstance()->get_message();
                 $msg = $msg[0]['val'];
                 $ajax['msg'] = $msg ? $msg : '';
                 $ajax['err'] = "";
                 $is_msg = true;
             }
             if (error()) {
-                $err = error_list();
+                $err = errorhandler::getInstance()->get_error();
                 $err = $err[0]['val'];
                 $ajax['err'] = $err;
             }
@@ -460,12 +460,12 @@ if (!empty($mode)) {
             $type = post('objtype');
 
             if ($type == 'video') {
-                $cbvid->action->add_playlist_item($pid, $id);
+                CBvideo::getInstance()->action->add_playlist_item($pid, $id);
                 updateObjectStats('plist', 'video', $id);
 
-                $error = $eh->get_error();
-                $warning = $eh->get_warning();
-                $message = $eh->get_message();
+                $error = errorhandler::getInstance()->get_error();
+                $warning = errorhandler::getInstance()->get_warning();
+                $message = errorhandler::getInstance()->get_message();
 
                 if ($error) {
                     $err = '<div class="error">' . $error[0]['val'] . '</div>';
@@ -490,16 +490,16 @@ if (!empty($mode)) {
                 $vid = mysql_clean($_POST['id']);
 
                 $params = ['name' => mysql_clean($_POST['plname'])];
-                $pid = $cbvid->action->create_playlist($params);
+                $pid = CBvideo::getInstance()->action->create_playlist($params);
 
                 if ($pid) {
-                    $eh->flush();
-                    $cbvid->action->add_playlist_item($pid, $vid);
+                    errorhandler::getInstance()->flush();
+                    CBvideo::getInstance()->action->add_playlist_item($pid, $vid);
                 }
 
-                $error = $eh->get_error();
-                $warning = $eh->get_warning();
-                $message = $eh->get_message();
+                $error = errorhandler::getInstance()->get_error();
+                $warning = errorhandler::getInstance()->get_warning();
+                $message = errorhandler::getInstance()->get_message();
 
                 if ($error) {
                     $err = '<div class="error">' . $error[0]['val'] . '</div>';
@@ -520,9 +520,9 @@ if (!empty($mode)) {
 
         case 'delete_comment':
             $nb_affected = Comments::delete(['comment_id' => $_POST['cid']]);
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 $err = $error[0]['val'];
@@ -546,14 +546,14 @@ if (!empty($mode)) {
             $obj_id = $_POST['obj_id'];
             $cid = $_POST['cid'];
 
-            $cbvideo->collection->remove_item($obj_id, $cid);
+            CBvideo::getInstance()->collection->remove_item($obj_id, $cid);
             if ($type == 'photos') {
                 $cbphoto->make_photo_orphan($cid, $obj_id);
             }
 
-            $error = $eh->get_error();
-            $warning = $eh->get_warning();
-            $message = $eh->get_message();
+            $error = errorhandler::getInstance()->get_error();
+            $warning = errorhandler::getInstance()->get_warning();
+            $message = errorhandler::getInstance()->get_message();
 
             if ($error) {
                 $err = '<div class="error">' . $error[0]['val'] . '</div>';
@@ -582,7 +582,7 @@ if (!empty($mode)) {
                 case "video":
                 case "v":
                 default:
-                    $N_item = $cbvideo->collection->get_next_prev_item($item_id, $cid, $direc);
+                    $N_item = CBvideo::getInstance()->collection->get_next_prev_item($item_id, $cid, $direc);
                     break;
 
                 case "photos":
@@ -617,7 +617,7 @@ if (!empty($mode)) {
                 case "videos":
                 case "video":
                 case "v":
-                    $items = $cbvideo->collection->get_collection_items_with_details($cid, $order, $limit);
+                    $items = CBvideo::getInstance()->collection->get_collection_items_with_details($cid, $order, $limit);
                     break;
 
                 case "photos":
@@ -663,7 +663,7 @@ if (!empty($mode)) {
             if (config('enable_sub_collection') == 'yes') {
                 $CollectParams['collection_id_parent'] = $_POST['collection_id_parent'];
             }
-            $insert_id = $cbcollection->create_collection($CollectParams);
+            $insert_id = Collections::getInstance()->create_collection($CollectParams);
 
             $ajax['id'] = $insert_id;
             $collections = Collection::getInstance()->getAllIndent([
@@ -682,12 +682,12 @@ if (!empty($mode)) {
             $ajax = [];
 
             if (msg()) {
-                $msg = msg_list();
+                $msg = errorhandler::getInstance()->get_message();
                 $msg = '<div id="photoUploadingMessages" class="ajaxMessages msg">' . $msg[0]['val'] . '</div>';
                 $ajax['msg'] = $msg;
             }
             if (error()) {
-                $err = error_list();
+                $err = errorhandler::getInstance()->get_error();
                 $err = '<div id="photoUploadingMessages" class="ajaxMessages err">' . $err[0]['val'] . '</div>';
                 $ajax['err'] = $err;
             }
@@ -712,7 +712,7 @@ if (!empty($mode)) {
                     case "vid":
                     case "v":
                     case "vdo":
-                        $video = $cbvideo->get_video(mysql_clean($_POST['objID']));
+                        $video = CBvideo::getInstance()->get_video(mysql_clean($_POST['objID']));
                         if ($video) {
                             assign('object', $video);
                             $content = Fetch('/blocks/view_channel/channel_item.html');
@@ -815,7 +815,7 @@ if (!empty($mode)) {
             assign('object_type', $_POST['object_type']);
 
             //Pagination
-            $pages->paginate($total_pages, $page, null, null, '<li><a href="javascript:void(0);"
+            pages::getInstance()->paginate($total_pages, $page, null, null, '<li><a href="javascript:void(0);"
             onClick="_cb.getAllComments(\'' . display_clean($_POST['type']) . '\',\'' . display_clean($_POST['type_id']) . '\',\'' .display_clean($_POST['last_update']) . '\',
             \'#page#\',\'' . $_POST['total_comments'] . '\',\'' . display_clean($_POST['object_type']) . '\',\'' . $admin . '\')">#page#</a></li>');
 
@@ -875,7 +875,7 @@ if (!empty($mode)) {
                     $items = $_POST['item'];
                     $ci_id = $photo['ci_id'];
                     $collection = $photo['collection_id'];    // collection id.
-                    $link = $cbcollection->get_next_prev_item($ci_id, $collection, $item = $items, $limit = 1, $check_only = false); // getting Previous item
+                    $link = Collections::getInstance()->get_next_prev_item($ci_id, $collection, $item = $items, $limit = 1, $check_only = false); // getting Previous item
                     $srcString = '/files/photos/' . $link[0]['file_directory'] . '/' . $link[0]['filename'] . '.' . $link[0]['ext']; // Image Source...
                     $photo_key = $link[0]['photo_key']; // Image Key.
                     $response['photo'] = $link;

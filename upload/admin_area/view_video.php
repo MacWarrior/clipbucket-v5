@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'view_video');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $myquery;
+global $myquery;
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 

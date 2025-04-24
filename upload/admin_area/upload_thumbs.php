@@ -2,10 +2,10 @@
 define('THIS_PAGE', 'upload_thumb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery, $Upload, $pages;
+global $myquery;
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $video = mysql_clean($_GET['video']);
 $data = get_video_details($video);
@@ -48,7 +48,7 @@ if ($myquery->video_exists($video)) {
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {
-        $Upload->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $_POST['db_type']);
+        Upload::getInstance()->upload_thumbs($data['file_name'], $_FILES['vid_thumb'], $data['file_directory'], $_POST['db_type']);
     }
 
     assign('data', $data);

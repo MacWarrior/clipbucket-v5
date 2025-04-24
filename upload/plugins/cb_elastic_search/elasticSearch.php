@@ -326,7 +326,7 @@ class ElasticSearch
      */
     public function FormatVideo($video)
     {
-        global $cbvid, $userquery;
+        global $userquery;
 
         $newVideo = (object)[];
 
@@ -336,7 +336,7 @@ class ElasticSearch
         $newVideo->description = htmlspecialchars($video["description"]);
         $newVideo->tags = $video['tags'];
 
-        $categories = $cbvid->get_category_names($video["category"]);
+        $categories = CBvideo::getInstance()->get_category_names($video["category"]);
         $category = [];
         if (is_array($categories)) {
             foreach ($categories as $key => $cat) {

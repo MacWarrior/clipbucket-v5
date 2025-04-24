@@ -74,7 +74,7 @@
                                 <span class="upload-logo"></span>
                                 <strong class="block-title">{lang code="drag_drop"}</strong>
                                 <p>
-                                    {lang(page_upload_photo_limits,$Cbucket->configs['max_photo_size'])}
+                                    {lang(page_upload_photo_limits,ClipBucket::getInstance()->configs['max_photo_size'])}
                                 </p>
                             </div>
                             <div class="selectButtonContainer">

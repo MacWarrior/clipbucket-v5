@@ -1,10 +1,10 @@
 <?php
 define('THIS_PAGE', 'video_manager');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-global $cbvid, $userquery, $pages, $myquery, $eh, $cbvideo;
+
+global $userquery, $myquery;
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -22,7 +22,7 @@ if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 //Feature / UnFeature Video
 if (isset($_GET['make_feature'])) {
     $video = mysql_clean($_GET['make_feature']);
-    $cbvid->action('feature', $video);
+    CBvideo::getInstance()->action('feature', $video);
     $row = $myquery->Get_Website_Details();
     if ($row['notification_option'] == '1') {
         send_video_notification($video);
@@ -31,7 +31,7 @@ if (isset($_GET['make_feature'])) {
 
 if (isset($_GET['make_unfeature'])) {
     $video = mysql_clean($_GET['make_unfeature']);
-    $cbvid->action('unfeature', $video);
+    CBvideo::getInstance()->action('unfeature', $video);
 }
 
 if (isset($_GET['check_castable'])) {
@@ -61,62 +61,62 @@ if (isset($_POST['update_bits_color_selected']) && is_array($_POST['check_video'
 //Using Multiple Action
 if (isset($_POST['make_featured_selected']) && is_array($_POST['check_video'])) {
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $cbvid->action('feature', $_POST['check_video'][$id]);
+        CBvideo::getInstance()->action('feature', $_POST['check_video'][$id]);
     }
-    $eh->flush();
+    errorhandler::getInstance()->flush();
     e('Selected videos have been set as featured', 'm');
 }
 if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_video'])) {
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $cbvid->action('unfeature', $_POST['check_video'][$id]);
+        CBvideo::getInstance()->action('unfeature', $_POST['check_video'][$id]);
     }
-    $eh->flush();
+    errorhandler::getInstance()->flush();
     e('Selected videos have been removed from featured list', 'm');
 }
 
 //Activate / Deactivate
 if (isset($_GET['activate'])) {
     $video = mysql_clean($_GET['activate']);
-    $cbvid->action('activate', $video);
+    CBvideo::getInstance()->action('activate', $video);
 }
 if (isset($_GET['deactivate'])) {
     $video = mysql_clean($_GET['deactivate']);
-    $cbvid->action('deactivate', $video);
+    CBvideo::getInstance()->action('deactivate', $video);
 }
 
 //Using Multiple Action
 if (isset($_POST['activate_selected']) && is_array($_POST['check_video'])) {
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $cbvid->action('activate', $_POST['check_video'][$id]);
+        CBvideo::getInstance()->action('activate', $_POST['check_video'][$id]);
     }
-    $eh->flush();
+    errorhandler::getInstance()->flush();
     e('Selected Videos Have Been Activated', 'm');
 }
 if (isset($_POST['deactivate_selected']) && is_array($_POST['check_video'])) {
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $cbvid->action('deactivate', $_POST['check_video'][$id]);
+        CBvideo::getInstance()->action('deactivate', $_POST['check_video'][$id]);
     }
-    $eh->flush();
+    errorhandler::getInstance()->flush();
     e('Selected Videos Have Been Dectivated', 'm');
 }
 
 //Delete Video
 if (isset($_GET['delete_video'])) {
     $video = mysql_clean($_GET['delete_video']);
-    $cbvideo->delete_video($video);
+    CBvideo::getInstance()->delete_video($video);
 }
 
 //Deleting Multiple Videos
 if (isset($_POST['delete_selected']) && is_array($_POST['check_video'])) {
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $cbvideo->delete_video($_POST['check_video'][$id]);
+        CBvideo::getInstance()->delete_video($_POST['check_video'][$id]);
     }
-    $eh->flush();
+    errorhandler::getInstance()->flush();
     e(lang('vdo_multi_del_erro'), 'm');
 }
 
 //Calling Video Manager Functions
-call_functions($cbvid->video_manager_funcs);
+call_functions(CBvideo::getInstance()->video_manager_funcs);
 
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('admin_pages'));
@@ -183,7 +183,7 @@ if( empty($videos) ){
     $total_rows = Video::getInstance()->getAll($params);
 }
 $total_pages = count_pages($total_rows, config('admin_pages'));
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/video_manager/video_manager'.$min_suffixe.'.js' => 'admin']);

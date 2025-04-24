@@ -1,16 +1,15 @@
 <?php
 define('THIS_PAGE', 'edit_collection');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $cbcollection, $cbvideo, $cbphoto, $cbvid;
+global $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('collection_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $id = $_GET['collection'];
 if (isset($_POST['update_collection'])) {
-    $cbcollection->update_collection();
+    Collections::getInstance()->update_collection();
     if (isset($_POST['default_thumb'])) {
         Collection::getInstance()->setDefautThumb($_POST['default_thumb'], $id);
     }
@@ -18,12 +17,12 @@ if (isset($_POST['update_collection'])) {
 
 if (isset($_POST['delete_preview'])) {
     $id = mysql_clean($_POST['delete_preview']);
-    $cbcollection->delete_thumbs($id);
+    Collections::getInstance()->delete_thumbs($id);
 }
 
 //Performing Actionsf
 if ($_GET['mode'] != '') {
-    $cbcollection->collection_actions($_GET['mode'], $id);
+    Collections::getInstance()->collection_actions($_GET['mode'], $id);
 }
 
 $collection = Collection::getInstance()->getOne([

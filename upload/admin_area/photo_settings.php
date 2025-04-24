@@ -3,10 +3,10 @@ define('THIS_PAGE', 'photo_settings');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $myquery, $cbphoto;
+global $myquery, $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('photos_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;

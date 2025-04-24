@@ -1,6 +1,15 @@
 <?php
 class Upload
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $custom_form_fields = [];  //Step 1 of Uploading
     var $custom_form_fields_groups = []; //Groups of custom fields
     var $custom_upload_fields = []; //Step 2 of Uploading
@@ -13,11 +22,6 @@ class Upload
         'a' => 'auto'
     ];
 
-    public static function getInstance(){
-        global $Upload;
-        return $Upload;
-    }
-
     /**
      * Function used to validate upload form fields
      *
@@ -25,7 +29,7 @@ class Upload
      * @param bool $is_upload
      * @throws \PHPMailer\PHPMailer\Exception|Exception
      */
-    function validate_video_upload_form($array = null, $is_upload = false)
+    function validate_video_upload_form($array = null, $is_upload = false): void
     {
         //First Load All Fields in an array
         $required_fields = $this->loadRequiredFields($array);
@@ -65,15 +69,13 @@ class Upload
      */
     function submit_upload($array = null)
     {
-        global $eh;
-
         if (!$array) {
             $array = $_POST;
         }
 
         $this->validate_video_upload_form($array, true);
 
-        $errors = $eh->get_error();
+        $errors = errorhandler::getInstance()->get_error();
         if( !empty($errors) ){
             return false;
         }
@@ -791,9 +793,8 @@ class Upload
         switch ($ext) {
             default:
             case 'mp4':
-                global $Cbucket;
                 //Get Temp Ext
-                $tmp_ext = $Cbucket->temp_exts;
+                $tmp_ext = ClipBucket::getInstance()->temp_exts;
                 $tmp_ext = $tmp_ext[rand(0, count($tmp_ext) - 1)];
                 //Creating New File Name
                 $dest_filepath = DirPath::get('temp') . $sub_directory . $name . '.' . $tmp_ext;
@@ -841,15 +842,14 @@ class Upload
      */
     function get_upload_options(): array
     {
-        global $Cbucket;
-        return $Cbucket->upload_opt_list;
+        return ClipBucket::getInstance()->upload_opt_list;
     }
 
     /**
      * Function used to perform some actions , after video is upload
-     * @param int Videoid
+     * @param int $vid Videoid
      */
-    function do_after_video_upload($vid)
+    function do_after_video_upload($vid): void
     {
         foreach ($this->actions_after_video_upload as $funcs) {
             if (function_exists($funcs)) {

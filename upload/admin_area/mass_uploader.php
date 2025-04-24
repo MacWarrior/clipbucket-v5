@@ -1,11 +1,11 @@
 <?php
 define('THIS_PAGE', 'mass_uploader');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
 require_once DirPath::get('classes') . 'sLog.php';
-global $Cbucket, $userquery, $pages, $cbmass, $Upload, $cbvid, $breadcrumb;
+global $userquery, $cbmass, $breadcrumb;
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $delMassUpload = config('delete_mass_upload');
 
@@ -57,7 +57,7 @@ if (isset($_POST['mass_upload_video'])) {
             , 'allow_embedding' => 'yes'
         ];
 
-        $vid = $Upload->submit_upload($array);
+        $vid = Upload::getInstance()->submit_upload($array);
 
         if (error()) {
             e('Unable to upload "' . $file_arr['title'] . '"', 'e');
@@ -76,7 +76,7 @@ if (isset($_POST['mass_upload_video'])) {
             $log->newSection('Pre-Check Configurations');
             $log->writeLine(date('Y-m-d H:i:s').' - Initializing File <strong>' . $file_name . '</strong> and pre checking configurations...');
 
-            $results = $Upload->add_conversion_queue($file_name);
+            $results = Upload::getInstance()->add_conversion_queue($file_name);
             $str1 = date('Y') . DIRECTORY_SEPARATOR . date('m') . DIRECTORY_SEPARATOR . date('d');
             $str = $str1 . DIRECTORY_SEPARATOR;
             mkdir(DirPath::get('videos') . $str, 0755, true);

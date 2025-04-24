@@ -1,6 +1,6 @@
 <h2>Selected Template</h2>
 
-{assign var="selected" value=$Cbucket->configs.template_dir}
+{assign var="selected" value=ClipBucket::getInstance()->configs.template_dir}
 {assign var="curtpl" value=$cbtpl->get_template_details($selected)}
 
 <div class="selectedTemplate">

@@ -353,14 +353,12 @@ class FFMpeg
      */
     public function extract_subtitles()
     {
-        global $cbvideo;
-
         $this->log->newSection('Subtitle extraction');
 
         $subtitles = FFMpeg::get_track_infos($this->input_file, 'subtitle');
 
         if (count($subtitles) > 0) {
-            $video = $cbvideo->get_video($this->file_name, true);
+            $video = CBvideo::getInstance()->get_video($this->file_name, true);
             $subtitle_dir = DirPath::get('subtitles') . $this->file_directory;
             if (!is_dir($subtitle_dir)) {
                 mkdir($subtitle_dir, 0755, true);

@@ -30,14 +30,14 @@
     var allow_tag_space = {(config('allow_tag_space') == 'yes') ? 'true' : 'false'};
 </script>
 
-{if $Cbucket->AdminJSArray}
-    {foreach from=$Cbucket->AdminJSArray key=file item=type}
+{if ClipBucket::getInstance()->AdminJSArray}
+    {foreach from=ClipBucket::getInstance()->AdminJSArray key=file item=type}
         {include_js type=$type file=$file}
     {/foreach}
 {/if}
 
-{if $Cbucket->AdminCSSArray}
-    {foreach from=$Cbucket->AdminCSSArray key=file item=type}
+{if ClipBucket::getInstance()->AdminCSSArray}
+    {foreach from=ClipBucket::getInstance()->AdminCSSArray key=file item=type}
         {include_css type=$type file=$file}
     {/foreach}
 {/if}
@@ -66,8 +66,8 @@
 	}
 </style>
 
-{if $Cbucket->admin_header_files}
-    {foreach from=$Cbucket->admin_header_files key=file item=type}
+{if ClipBucket::getInstance()->admin_header_files}
+    {foreach from=ClipBucket::getInstance()->admin_header_files key=file item=type}
         {include_header type=$type file=$file}
     {/foreach}
 {/if}

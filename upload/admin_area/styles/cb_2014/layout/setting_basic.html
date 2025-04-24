@@ -801,7 +801,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="form-control" name="default_country_iso2" id="default_country_iso2">
-                                        {foreach from=$Cbucket->get_countries(iso2) item=country key=code}
+                                        {foreach from=ClipBucket::getInstance()->get_countries(iso2) item=country key=code}
                                             <option {if $code==$row.default_country_iso2}selected{/if} value="{$code}">
                                                 {$country}
                                             </option>

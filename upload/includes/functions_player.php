@@ -1,15 +1,13 @@
 <?php
 function show_player($param): bool
 {
-    global $Cbucket;
-
     if (!$param['autoplay']) {
         $param['autoplay'] = config('autoplay_video');
     }
 
     assign('player_params', $param);
 
-    $funcs = $Cbucket->actions_play_video;
+    $funcs = ClipBucket::getInstance()->actions_play_video;
 
     if (!empty($funcs) && is_array($funcs)) {
         foreach ($funcs as $func) {

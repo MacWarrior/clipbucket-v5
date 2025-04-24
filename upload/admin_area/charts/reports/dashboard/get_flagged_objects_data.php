@@ -2,9 +2,9 @@
 error_reporting(E_ALL);
 require_once('../../../../includes/admin_config.php');
 
-$flaggedVideos['today'] = $cbvid->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
-$flaggedVideos['this_week'] = $cbvid->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
-$flaggedVideos['this_month'] = $cbvid->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
+$flaggedVideos['today'] = CBvideo::getInstance()->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
+$flaggedVideos['this_week'] = CBvideo::getInstance()->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
+$flaggedVideos['this_month'] = CBvideo::getInstance()->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
 $flaggedUsers['today'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
 $flaggedUsers['this_week'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);

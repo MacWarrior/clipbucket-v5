@@ -786,7 +786,6 @@ class Collection
         }
         switch ($type) {
             case 'videos':
-                global $cbvideo;
                 $thumb = get_thumb($item);
                 break;
 
@@ -847,6 +846,15 @@ class Collection
 
 class Collections extends CBCategory
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public $search;
 
     var $collect_thumb_width = 360;
@@ -872,12 +880,6 @@ class Collections extends CBCategory
     var $objClass = 'cbphoto';
     var $objFunction = 'photo_exists';
     var $objFieldID = 'photo_id';
-
-    public static function getInstance()
-    {
-        global $cbcollection;
-        return $cbcollection;
-    }
 
     /**
      * Constructor function to set values of tables
@@ -1578,39 +1580,6 @@ class Collections extends CBCategory
     }
 
     /**
-     * Function used to validate collection category
-     *
-     * @param $array
-     *
-     * @return bool
-     * @throws Exception
-     */
-    function validate_collection_category($array = null): bool
-    {
-        if ($array == null) {
-            $array = $_POST['category'];
-        }
-
-        if (!is_array($array) || count($array) == 0) {
-            return false;
-        }
-
-        $new_array = [];
-        foreach ($array as $arr) {
-            if ($this->category_exists($arr)) {
-                $new_array[] = $arr;
-            }
-        }
-
-        if (count($new_array) == 0) {
-            e(lang('vdo_cat_err3'));
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
@@ -2120,8 +2089,7 @@ class Collections extends CBCategory
             $type = $item[0]['type'];
             switch ($type) {
                 case 'videos':
-                    global $cbvideo;
-                    $thumb = get_thumb($cbvideo->get_video($item[0]['object_id']));
+                    $thumb = get_thumb(CBvideo::getInstance()->get_video($item[0]['object_id']));
                     break;
 
                 case 'photos':
@@ -2253,8 +2221,7 @@ class Collections extends CBCategory
     {
         switch ($type) {
             case 'videos':
-                global $cbvideo;
-                $items = $cbvideo->collection->get_collection_items_with_details($cid);
+                $items = CBvideo::getInstance()->collection->get_collection_items_with_details($cid);
                 break;
 
             case 'photos':

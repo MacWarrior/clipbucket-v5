@@ -2,10 +2,8 @@
 define('THIS_PAGE', 'members');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $eh;
-
 User::getInstance()->hasPermissionOrRedirect('member_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 if (!empty($_GET['user_not_found'])) {
     e(lang('user_doesnt_exist'));
@@ -44,7 +42,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_user'])) {
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been deleted', 'm');
     }
 }
@@ -78,7 +76,7 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_user'])) {
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been activated', 'm');
     }
 }
@@ -92,7 +90,7 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_user'])) {
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been deactivated', 'm');
     }
 }
@@ -147,7 +145,7 @@ if (isset($_POST['make_featured_selected']) && is_array($_POST['check_user'])) {
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been set as featured', 'm');
     }
 }
@@ -160,7 +158,7 @@ if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_user']))
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been removed from featured list', 'm');
     }
 }
@@ -195,7 +193,7 @@ if (isset($_POST['ban_selected']) && is_array($_POST['check_user'])) {
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been banned', 'm');
     }
 }
@@ -209,7 +207,7 @@ if (isset($_POST['unban_selected']) && is_array($_POST['check_user'])) {
         }
     }
     if( empty(errorhandler::getInstance()->get_error()) ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected users have been unbanned', 'm');
     }
 }
@@ -261,10 +259,10 @@ if( empty($users) ){
 }
 
 $total_pages = count_pages($total_rows, config('admin_pages'));
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 //Pagination
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 //Category Array
 if (is_array($_GET['category'])) {

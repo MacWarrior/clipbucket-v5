@@ -1422,9 +1422,8 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function activate_user_with_avcode($user, $avcode)
+    function activate_user_with_avcode($user, $avcode): void
     {
-        global $eh;
         $data = $this->get_user_details($user);
         if (!$data || !$user) {
             e(lang("usr_exist_err"));
@@ -1436,7 +1435,7 @@ class userquery extends CBCategory
             e(lang('avcode_incorrect'));
         } else {
             $this->action('activate', $data['userid']);
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e(lang("usr_activation_msg"), "m");
 
             if ($data['welcome_email_sent'] == 'no') {
@@ -1453,7 +1452,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function send_activation_code($email)
+    function send_activation_code($email): void
     {
         $udetails = $this->get_user_details($email);
 
@@ -1479,7 +1478,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function send_welcome_email($user, $update_email_status = false)
+    function send_welcome_email($user, $update_email_status = false): void
     {
         if (!is_array($user)) {
             $udetails = $this->get_user_details($user);
@@ -1501,7 +1500,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function change_password($array)
+    function change_password($array): void
     {
         $old_pass = $array['old_pass'];
         $new_pass = $array['new_pass'];
@@ -1519,8 +1518,6 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['new_pass'], $uid)], ' userid=\'' . $uid . '\'');
             e(lang('usr_pass_email_msg'), 'm');
         }
-
-        return $msg;
     }
 
     /**
@@ -1531,7 +1528,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function add_contact($uid, $fid)
+    function add_contact($uid, $fid): void
     {
         $friend = $this->get_user_details($fid);
         $sender = $this->get_user_details($uid);
@@ -2570,9 +2567,8 @@ class userquery extends CBCategory
      * @param $array
      * @throws Exception
      */
-    function update_user($array)
+    function update_user($array): void
     {
-        global $Upload;
         if (is_null($array)) {
             $array = $_POST;
         }
@@ -2755,7 +2751,7 @@ class userquery extends CBCategory
             $uquery_val[] = '';
         } else {
             if (!empty($_FILES['avatar_file']['name'])) {
-                $file = $Upload->upload_user_file('avatar', $_FILES['avatar_file'], $array['userid']);
+                $file = Upload::getInstance()->upload_user_file('avatar', $_FILES['avatar_file'], $array['userid']);
                 if ($file) {
                     $uquery_field[] = 'avatar';
                     $uquery_val[] = $file;
@@ -2785,7 +2781,7 @@ class userquery extends CBCategory
         }
 
         if (!empty($_FILES['background_file']['name'])) {
-            $file = $Upload->upload_user_file('background', $_FILES['background_file'], $array['userid']);
+            $file = Upload::getInstance()->upload_user_file('background', $_FILES['background_file'], $array['userid']);
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;
@@ -2911,7 +2907,7 @@ class userquery extends CBCategory
         */
 
         if( !empty($_FILES['background_file']['name']) ){
-            $file = $Upload->upload_user_file('background', $_FILES['background_file'], user_id());
+            $file = Upload::getInstance()->upload_user_file('background', $_FILES['background_file'], user_id());
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;
@@ -3714,8 +3710,8 @@ class userquery extends CBCategory
                 $query_field[] = 'level';
                 $query_val[] = $array['level'];
             }
-            global $Upload;
-            $custom_fields_array = $Upload->load_custom_form_fields(false, false, false, true);
+
+            $custom_fields_array = Upload::getInstance()->load_custom_form_fields(false, false, false, true);
             foreach ($custom_fields_array as $cfield) {
                 $db_field = $cfield['db_field'];
                 $query_field[] = $db_field;
@@ -4292,16 +4288,15 @@ class userquery extends CBCategory
      * @param $uid
      * @throws Exception
      */
-    function delete_user_vids($uid)
+    function delete_user_vids($uid): void
     {
-        global $cbvid, $eh;
         $vids = get_videos(['user' => $uid]);
         if (is_array($vids)) {
             foreach ($vids as $vid) {
-                $cbvid->delete_video($vid['videoid']);
+                CBvideo::getInstance()->delete_video($vid['videoid']);
             }
         }
-        $eh->flush_msg();
+        errorhandler::getInstance()->flush_msg();
         e(lang('user_vids_hv_deleted'), 'm');
     }
 
@@ -4311,16 +4306,15 @@ class userquery extends CBCategory
      * @param $uid
      * @throws Exception
      */
-    function remove_contacts($uid)
+    function remove_contacts($uid): void
     {
-        global $eh;
         $contacts = $this->get_contacts($uid);
         if (is_array($contacts)) {
             foreach ($contacts as $contact) {
                 $this->remove_contact($contact['userid'], $contact['contact_userid']);
             }
         }
-        $eh->flush_msg();
+        errorhandler::getInstance()->flush_msg();
         e(lang('user_contacts_hv_removed'), 'm');
     }
 
@@ -4331,9 +4325,9 @@ class userquery extends CBCategory
      * @param string $box
      * @throws Exception
      */
-    function remove_user_pms($uid, $box = 'both')
+    function remove_user_pms($uid, $box = 'both'): void
     {
-        global $cbpm, $eh;
+        global $cbpm;
 
         if ($box == 'inbox' || $box == 'both') {
             $inboxs = $cbpm->get_user_inbox_messages($uid);
@@ -4342,7 +4336,7 @@ class userquery extends CBCategory
                     $cbpm->delete_msg($inbox['message_id'], $uid);
                 }
             }
-            $eh->flush_msg();
+            errorhandler::getInstance()->flush_msg();
             e(lang('all_user_inbox_deleted'), 'm');
         }
 

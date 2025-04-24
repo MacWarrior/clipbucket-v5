@@ -334,7 +334,7 @@
 
                     <div id="playlist_items" style="padding:10px 0;">
                         {$cur_playlist = $smarty.get.play_list}
-                        {$total_items = $cbvid->action->count_playlist_items($cur_playlist)}
+                        {$total_items = CBvideo::getInstance()->action->count_playlist_items($cur_playlist)}
                         {section name=plist loop=$playlist_items}
                             {include file="$style_dir/blocks/manage/account_video.html" video=$playlist_items[plist] control="onWatch" pid=$playlist.playlist_id}
                         {/section}

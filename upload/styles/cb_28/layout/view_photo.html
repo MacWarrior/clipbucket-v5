@@ -163,7 +163,7 @@
                                         {/if}
                                         <li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{display_clean($photo.photo_description)|truncate:90}</li>
                                         <li><strong>{lang('collection_name')}</strong>:&nbsp;
-                                            <a href="{$cbcollection->collection_links($c,'view')}">{display_clean($c.collection_name)}</a>
+                                            <a href="{Collections::getInstance()->collection_links($c,'view')}">{display_clean($c.collection_name)}</a>
                                         </li>
                                         {if !empty($photo.photo_tags)}
                                             <li>

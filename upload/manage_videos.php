@@ -1,7 +1,6 @@
 <?php
 define('THIS_PAGE', 'manage_videos');
 define('PARENT_PAGE', "videos");
-
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
@@ -9,8 +8,6 @@ User::getInstance()->isUserConnectedOrRedirect();
 if( config('videosSection') != 'yes' ){
     redirect_to(cblink(['name' => 'my_account']));
 }
-
-global $cbvideo, $pages, $cbvid;
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
@@ -38,16 +35,16 @@ switch ($mode) {
         //Deleting Video
         if (!empty($_GET['vid_delete'])) {
             $videoid = mysql_clean($_GET['vid_delete']);
-            if ($cbvid->is_video_owner($videoid, user_id())) {
-                $cbvideo->delete_video($videoid);
+            if (CBvideo::getInstance()->is_video_owner($videoid, user_id())) {
+                CBvideo::getInstance()->delete_video($videoid);
             }
         }
 
         //Deleting Videos
         if (isset($_POST['delete_videos'])) {
             for ($id = 0; $id <= config('videos_list_per_page'); $id++) {
-                if ($cbvid->is_video_owner($_POST['check_vid'][$id], user_id())) {
-                    $cbvideo->delete_video($_POST['check_vid'][$id]);
+                if (CBvideo::getInstance()->is_video_owner($_POST['check_vid'][$id], user_id())) {
+                    CBvideo::getInstance()->delete_video($_POST['check_vid'][$id]);
                 }
             }
             errorhandler::getInstance()->flush();
@@ -85,19 +82,19 @@ switch ($mode) {
         //Removing video from favorites
         if (!empty($_GET['remove_fav_videoid']) && in_array($_GET['remove_fav_videoid'], $favorites) ) {
             $videoid = mysql_clean($_GET['remove_fav_videoid']);
-            $cbvideo->action->remove_favorite($videoid);
+            CBvideo::getInstance()->action->remove_favorite($videoid);
         }
         if (get('query') != '') {
             $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
         }
         $params = ['userid' => user_id(), 'limit' => $get_limit, 'cond' => $cond];
 
-        $videos = $cbvid->action->get_favorites($params);
+        $videos = CBvideo::getInstance()->action->get_favorites($params);
 
 
         //Collecting Data for Pagination
         $params['count_only'] = 'yes';
-        $favorites_count = $cbvid->action->get_favorites($params);
+        $favorites_count = CBvideo::getInstance()->action->get_favorites($params);
         $total_pages = count_pages($favorites_count, config('videos_list_per_page'));
         //Pagination
 
@@ -115,7 +112,7 @@ if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
 }
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 Assign('uservids', $videos);
-$pages->paginate($total_pages, $page);
+pages::getInstance()->paginate($total_pages, $page);
 
 
 template_files('manage_videos.html');

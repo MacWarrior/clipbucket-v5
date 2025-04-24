@@ -1,10 +1,10 @@
 <?php
-global $pages, $cbphoto, $breadcrumb;
+global $cbphoto, $breadcrumb;
 define('THIS_PAGE', 'edit_photo');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 // TODO : Complete URL
 /* Generating breadcrumb */

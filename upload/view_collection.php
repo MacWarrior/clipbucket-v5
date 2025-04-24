@@ -4,10 +4,10 @@ define('PARENT_PAGE', 'collections');
 
 require 'includes/config.inc.php';
 
-global $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
+global $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('view_collections');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $collection_id = (int)$_GET['cid'];
 
@@ -15,13 +15,13 @@ $page = $_GET['page'];
 
 $order = 'collection_items.ci_id DESC';
 
-if ($cbcollection->is_viewable($collection_id)) {
+if (Collections::getInstance()->is_viewable($collection_id)) {
     $params = [];
     $params['collection_id'] = $collection_id;
     $cdetails = Collection::getInstance()->getOne($params);
 
     if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()->hasAdminAccess()) ){
-        $Cbucket->show_page = false;
+        ClipBucket::getInstance()->show_page = false;
     }
 
     if (!$cdetails) {
@@ -61,7 +61,7 @@ if ($cbcollection->is_viewable($collection_id)) {
 
         $total_pages = count_pages($total_items, config('collection_items_page'));
         //Pagination
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
 
         if (config('enable_sub_collection') == 'yes') {
             $breadcrum = [];
@@ -71,10 +71,10 @@ if ($cbcollection->is_viewable($collection_id)) {
                     'title' => $collection_parent['collection_name']
                     , 'url' => Collections::getInstance()->collection_links($collection_parent,'view')
                 ];
-                $collection_parent = $cbcollection->get_parent_collection($collection_parent);
+                $collection_parent = Collections::getInstance()->get_parent_collection($collection_parent);
             } while ($collection_parent);
             assign('breadcrum', array_reverse($breadcrum));
-            assign('collection_baseurl', $cbcollection->get_base_url());
+            assign('collection_baseurl', Collections::getInstance()->get_base_url());
         }
 
         $ids_to_check_progress = [];
@@ -112,7 +112,7 @@ if ($cbcollection->is_viewable($collection_id)) {
         assign('link_add_more',  $link);
     }
 } else {
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 }
 
 assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));

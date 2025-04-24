@@ -1,15 +1,13 @@
 <?php
 define('THIS_PAGE', 'file_uploader');
-
 include('../includes/config.inc.php');
+
 require_once DirPath::get('classes') . 'sLog.php';
 
 if( !User::getInstance()->hasPermission('allow_video_upload') ){
     upload_error(lang('insufficient_privileges_loggin'));
     die();
 }
-
-global $cbvid, $Upload, $eh;
 
 $mode = '';
 if ($_FILES['Filedata']) {
@@ -24,7 +22,7 @@ if ($_POST['getForm']) {
 
 switch ($mode) {
     case 'update_video':
-        $cbvid->update_video();
+        CBvideo::getInstance()->update_video();
 
         if (error()) {
             echo json_encode(['error' => error('single')]);
@@ -68,7 +66,7 @@ switch ($mode) {
         $vid = $_POST['vid'];
         assign('videoid', $vid);
 
-        $videoFields = $Upload->load_video_fields($vidDetails);
+        $videoFields = Upload::getInstance()->load_video_fields($vidDetails);
         Template('blocks/upload/upload_form.html');
         break;
 
@@ -125,17 +123,17 @@ switch ($mode) {
             , 'broadcast'       => 'public'
         ];
 
-        $vid = $Upload->submit_upload($vidDetails);
+        $vid = Upload::getInstance()->submit_upload($vidDetails);
 
         if (!$vid) {
-            upload_error($eh->get_error()[0]['val']);
+            upload_error(errorhandler::getInstance()->get_error()[0]['val']);
             die();
         }
 
         if (!empty($_POST['collection_id'])) {
             Collection::getInstance()->addCollectionItem($vid, $_POST['collection_id'], 'videos');
         }
-        $Upload->add_conversion_queue($file_name . '.' . $extension);
+        Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
 
         $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
         if (stristr(PHP_OS, 'WIN')) {

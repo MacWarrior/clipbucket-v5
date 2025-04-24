@@ -2,7 +2,6 @@
 define('THIS_PAGE', 'watch_video');
 define('PARENT_PAGE', 'videos');
 require 'includes/config.inc.php';
-global $cbvid;
 
 $base_url = DirPath::getUrl('root');
 if (!User::getInstance()->hasPermission('view_video') || config('videosSection') != 'yes') {
@@ -42,7 +41,7 @@ if( config('playlistsSection') == 'yes' ){
         ]);
         $assign_arry['playlist'] = $playlist;
 
-        $playlist_items = $cbvid->get_playlist_items($playlist_id, 'playlist_items.date_added DESC');
+        $playlist_items = CBvideo::getInstance()->get_playlist_items($playlist_id, 'playlist_items.date_added DESC');
         $assign_arry['playlist_items'] = $playlist_items;
 
         $is_playlist = true;

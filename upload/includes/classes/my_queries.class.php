@@ -157,23 +157,21 @@ class myquery
      */
     function video_exists($videoid)
     {
-        global $cbvid;
-        return $cbvid->video_exists($videoid);
+        return CBvideo::getInstance()->video_exists($videoid);
     }
 
     /**
      * Function used to get video details
      * from video table
      *
-     * @param INPUT vid or videokey
+     * @param INPUT $vid vid or videokey
      *
      * @return bool|mixed|STRING
      * @throws Exception
      */
     function get_video_details($vid)
     {
-        global $cbvid;
-        return $cbvid->get_video($vid);
+        return CBvideo::getInstance()->get_video($vid);
     }
 
     /**
@@ -189,7 +187,7 @@ class myquery
      * Function used to check weather email exists not
      * @throws Exception
      */
-    function check_email($email)
+    function check_email($email): bool
     {
         return userquery::getInstance()->email_exists($email);
     }
@@ -212,26 +210,25 @@ class myquery
      * @return void
      * @throws Exception
      */
-    function set_default_thumb($vid, $thumb)
+    function set_default_thumb($vid, $thumb): void
     {
-        global $cbvid;
-        $cbvid->set_default_thumb($vid, $thumb);
+        CBvideo::getInstance()->set_default_thumb($vid, $thumb);
     }
 
     /**
      * Function used to update video
+     * @throws Exception
      */
-    function update_video()
+    function update_video(): void
     {
-        global $cbvid;
-        return $cbvid->update_video();
+        CBvideo::getInstance()->update_video();
     }
 
     /**
      * Function used to set website template
      * @throws Exception
      */
-    function set_template($template)
+    function set_template($template): void
     {
         global $myquery;
         if (is_dir(DirPath::get('styles') . $template) && $template) {

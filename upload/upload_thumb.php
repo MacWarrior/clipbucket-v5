@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'upload_thumb');
 require 'includes/config.inc.php';
 
-global $myquery, $Upload;
+global $myquery;
 
 User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);
 
@@ -43,7 +43,7 @@ if ($myquery->video_exists($video)) {
         $type='b';
     }
     if ($is_file_to_upload) {
-        $Upload->upload_thumbs($data['file_name'], $files, $data['file_directory'], $type);
+        Upload::getInstance()->upload_thumbs($data['file_name'], $files, $data['file_directory'], $type);
     }
 } else {
     $msg[] = lang('class_vdo_del_err');

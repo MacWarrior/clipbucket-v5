@@ -159,7 +159,7 @@ class cbfeeds
      */
     function getUserFeeds($user)
     {
-        global $cbphoto, $userquery, $cbvid, $cbcollection;
+        global $cbphoto, $userquery;
         $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
@@ -216,7 +216,7 @@ class cbfeeds
 
                     case 'upload_video':
                     case 'add_favorite':
-                        $video = $cbvid->get_video($object_id);
+                        $video = CBvideo::getInstance()->get_video($object_id);
                         //If photo does not exists, simply remove the feed
                         if (!$video) {
                             $this->deleteFeed($uid, $feed['file']);
@@ -263,15 +263,15 @@ class cbfeeds
                         break;
 
                     case 'add_collection':
-                        $collection = $cbcollection->get_collection($object_id);
+                        $collection = Collections::getInstance()->get_collection($object_id);
                         if (!$collection) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
                             $farr['action_title'] = lang('user_has_created_new_collection', $userlink);
-                            $farr['thumb'] = $cbcollection->get_thumb($collection, 'small');
+                            $farr['thumb'] = Collections::getInstance()->get_thumb($collection, 'small');
                             $farr['title'] = $collection['collection_name'];
-                            $collection_link = $cbcollection->collection_links($collection, 'view');
+                            $collection_link = Collections::getInstance()->collection_links($collection, 'view');
                             $farr['link'] = $collection_link;
                             $farr['object_content'] = $collection['collection_description'] . '<br>' . $collection['total_objects'] . ' ' . $collection['type'];
                             $farr['icon'] = 'photos.png';

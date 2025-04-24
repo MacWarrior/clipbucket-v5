@@ -10,9 +10,7 @@ if( config('videosSection') != 'yes' ){
     redirect_to(DirPath::getUrl('root'));
 }
 
-global $pages, $cbvid, $Upload, $eh;
-
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $userid = user_id();
 $udetails = userquery::getInstance()->get_user_details($userid);
@@ -29,10 +27,10 @@ if ($vdetails['userid'] != $userid) {
 } else {
     //Updating Video Details
     if (isset($_POST['update_video'])) {
-        $Upload->validate_video_upload_form();
-        if (empty($eh->get_error())) {
+        Upload::getInstance()->validate_video_upload_form();
+        if (empty(errorhandler::getInstance()->get_error())) {
             $_POST['videoid'] = $vid;
-            $cbvid->update_video();
+            CBvideo::getInstance()->update_video();
             Video::getInstance()->setDefautThumb($_POST['default_thumb'], 'thumb', $vid);
             Video::getInstance()->setDefautThumb($_POST['default_poster'], 'poster', $vid);
             Video::getInstance()->setDefautThumb($_POST['default_backdrop'], 'backdrop', $vid);

@@ -1,11 +1,19 @@
 <?php
 class ClipBucket
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $JSArray = [];
     var $AdminJSArray = [];
     var $CSSArray = [];
     var $AdminCSSArray = [];
-    var $moduleList = [];
     var $actionList = [];
     var $anchorList = [];
     var $ids = []; //IDS WILL BE USED FOR JS FUNCTIONS
@@ -57,11 +65,6 @@ class ClipBucket
 
     //This array contains the public pages name for private access to website 
     var $public_pages = ["signup", "view_page"];
-
-    public static function getInstance(){
-        global $Cbucket;
-        return $Cbucket;
-    }
 
     /**
      * @throws Exception
@@ -259,26 +262,25 @@ class ClipBucket
         return !empty($funcs) ? $funcs : false;
     }
 
-    function addMenuAdmin($menu_params, $order = null)
+    function addMenuAdmin($menu_params, $order = null): void
     {
-        global $Cbucket;
         $menu_already_exists = false;
 
         if (is_null($order)) {
-            if( empty($Cbucket->AdminMenu) ){
+            if( empty(self::getInstance()->AdminMenu) ){
                 $order = 1;
             } else {
-                $order = max(array_keys($Cbucket->AdminMenu)) + 1;
+                $order = max(array_keys(self::getInstance()->AdminMenu)) + 1;
             }
         } else {
-            if (array_key_exists($order, $Cbucket->AdminMenu)) {
+            if (array_key_exists($order, self::getInstance()->AdminMenu)) {
                 do {
                     $order++;
-                } while (array_key_exists($order, $Cbucket->AdminMenu));
+                } while (array_key_exists($order, self::getInstance()->AdminMenu));
             }
         }
 
-        foreach ($Cbucket->AdminMenu as &$menu) {
+        foreach (self::getInstance()->AdminMenu as &$menu) {
             if ($menu['title'] == $menu_params['title']) {
                 foreach ($menu_params['sub'] as $subMenu) {
                     $submenu_already_exists = false;
@@ -298,9 +300,9 @@ class ClipBucket
             }
         }
         if (!$menu_already_exists) {
-            $Cbucket->AdminMenu[$order] = $menu_params;
+            self::getInstance()->AdminMenu[$order] = $menu_params;
         }
-        ksort($Cbucket->AdminMenu);
+        ksort(self::getInstance()->AdminMenu);
     }
 
     /**

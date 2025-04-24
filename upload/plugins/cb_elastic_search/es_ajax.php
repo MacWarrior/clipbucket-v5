@@ -61,7 +61,7 @@ try {
                     }
 
                     //Fetching Videos to process
-                    $videos = $cbvid->get_videos($videoRequest);
+                    $videos = CBvideo::getInstance()->get_videos($videoRequest);
                     $extras["method"] = $method;
 
                     if ($videos) {

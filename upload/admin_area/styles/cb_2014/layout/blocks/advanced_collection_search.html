@@ -69,7 +69,7 @@
                     <label for="collection_type">Type</label>
                     <select name="collection_type" id="collection_type" class="form-control">
                         <option value="" ></option>
-                        {foreach from=$cbcollection->types item=name key=type}
+                        {foreach from=Collections::getInstance()->types item=name key=type}
                         <option value="{$type}" {if $smarty.get.collection_type==$type}selected{/if}>{$name}</option>
                         {/foreach}
                     </select>

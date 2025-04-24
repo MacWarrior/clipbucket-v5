@@ -239,6 +239,5 @@ function get_server_img($params)
     return false;
 }
 
-global $Cbucket;
-$Cbucket->custom_get_photo_funcs[] = 'get_server_img';
-$Cbucket->custom_user_thumb[] = 'user_thumb';
+ClipBucket::getInstance()->custom_get_photo_funcs[] = 'get_server_img';
+ClipBucket::getInstance()->custom_user_thumb[] = 'user_thumb';

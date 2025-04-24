@@ -53,21 +53,21 @@
 			var allow_tag_space = {(config('allow_tag_space') == 'yes') ? 'true' : 'false'};
 		</script>
 
-		{if $Cbucket->JSArray}
-			{foreach from=$Cbucket->JSArray key=file item=type}
+		{if ClipBucket::getInstance()->JSArray}
+			{foreach from=ClipBucket::getInstance()->JSArray key=file item=type}
 				{include_js type=$type file=$file}
 			{/foreach}
 		{/if}
 
-		{if $Cbucket->CSSArray}
-			{foreach from=$Cbucket->CSSArray key=file item=type}
+		{if ClipBucket::getInstance()->CSSArray}
+			{foreach from=ClipBucket::getInstance()->CSSArray key=file item=type}
 				{include_css type=$type file=$file}
 			{/foreach}
 		{/if}
 
 		{include_header file='global_header'}
-		{if $Cbucket->header_files}
-		    {foreach from=$Cbucket->header_files key=file item=type}
+		{if ClipBucket::getInstance()->header_files}
+		    {foreach from=ClipBucket::getInstance()->header_files key=file item=type}
 		        {include_header type=$type file=$file}
 		    {/foreach}
 		{/if}

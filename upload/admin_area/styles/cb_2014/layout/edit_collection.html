@@ -1,5 +1,5 @@
-{assign var=requiredFields value=$cbcollection->load_required_fields($data)}
-{assign var=otherFields value=$cbcollection->load_other_fields($data)}
+{assign var=requiredFields value=Collections::getInstance()->load_required_fields($data)}
+{assign var=otherFields value=Collections::getInstance()->load_other_fields($data)}
 
 <div class="heading clearfix marginBottomLarge paddingBottomSmall">
     <h2 class="pull-left">Editing <small>&gt; {display_clean($data.collection_name)}</small>
@@ -221,7 +221,7 @@
                     <div id="clpreview" class="tab-pane">
                         <legend>Collection Preview</legend>
                         <div class="form-group">
-                            <img style="padding:2px; border:1px solid #ccc;" src="{$cbcollection->coll_first_thumb($data,'l')}"/>
+                            <img style="padding:2px; border:1px solid #ccc;" src="{Collections::getInstance()->coll_first_thumb($data,'l')}"/>
                         </div>
                     </div>
                     {if config('enable_comments_collection') == 'yes'}

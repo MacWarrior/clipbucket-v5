@@ -1010,6 +1010,15 @@ class Video
 
 class CBvideo extends CBCategory
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $embed_func_list = []; //Function list that are applied while asking for video embed code
     var $action = ''; // variable used to call action class
     var $collection = '';
@@ -1024,19 +1033,13 @@ class CBvideo extends CBCategory
     private $basic_fields = [];
     private $extra_fields = [];
 
-    public static function getInstance()
-    {
-        global $cbvid;
-        return $cbvid;
-    }
-
     /**
      * __Constructor of CBVideo
      * @throws Exception
      */
-    function init()
+    function init(): void
     {
-        global $Cbucket, $cb_columns;
+        global $cb_columns;
         $this->cat_tbl = 'videos_categories';
         $this->section_tbl = 'video';
         $this->use_sub_cats = true;
@@ -1052,7 +1055,7 @@ class CBvideo extends CBCategory
         }
 
         if (isSectionEnabled('videos')) {
-            $Cbucket->search_types['videos'] = 'cbvid';
+            ClipBucket::getInstance()->search_types['videos'] = 'cbvid';
         }
 
         $this->video_delete_functions[] = 'delete_video_from_collection';
@@ -1420,25 +1423,25 @@ class CBvideo extends CBCategory
      * @param null $array
      * @throws Exception
      */
-    function update_video($array = null)
+    function update_video($array = null): void
     {
-        global $eh, $Upload, $userquery, $cbvid;
+        global $userquery;
 
         if (!$array) {
             $array = $_POST;
         }
-        $Upload->validate_video_upload_form($array, true);
+        Upload::getInstance()->validate_video_upload_form($array, true);
 
-        if (empty($eh->get_error())) {
-            $required_fields = $Upload->loadRequiredFields($array);
-            $location_fields = $Upload->loadLocationFields($array);
-            $option_fields = $Upload->loadOptionFields($array);
+        if (empty(errorhandler::getInstance()->get_error())) {
+            $required_fields = Upload::getInstance()->loadRequiredFields($array);
+            $location_fields = Upload::getInstance()->loadLocationFields($array);
+            $option_fields = Upload::getInstance()->loadOptionFields($array);
 
             $upload_fields = array_merge($required_fields, $location_fields, $option_fields);
 
             //Adding Custom Upload Fields
             if (function_exists('custom_fields_list')) {
-                $custom_flds = $Upload->load_custom_form_fields($array, true);
+                $custom_flds = Upload::getInstance()->load_custom_form_fields($array, true);
                 $upload_fields = array_merge($upload_fields, $custom_flds);
             }
 
@@ -1592,7 +1595,7 @@ class CBvideo extends CBCategory
                 'results'   => $array
             ]);
 
-            $videoDetails = $cbvid->get_video($vid);
+            $videoDetails = CBvideo::getInstance()->get_video($vid);
             if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
                 $userquery->sendSubscriptionEmail($videoDetails, true);
             }

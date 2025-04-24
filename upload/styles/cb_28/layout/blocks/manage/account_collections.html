@@ -7,7 +7,7 @@
         <td width="50%">
             <p>{display_clean($collection.collection_name)}</p>
             <div class="btn-group show">
-                <a class="btn btn-primary btn-sm" href="{$cbcollection->collection_links($collection,'view')}">
+                <a class="btn btn-primary btn-sm" href="{Collections::getInstance()->collection_links($collection,'view')}">
                     {lang code="view_collection"}
                 </a>
                 <a class="btn btn-primary btn-sm" href="?mode=edit_collection&amp;cid={$collection.collection_id}">
@@ -94,11 +94,11 @@
         </td>
         <td width="50%">
             <label for="check_col-{$collection.collection_id}">
-                <img src="{$cbcollection->coll_first_thumb($collection,'l')}" border="0" class="acc_usr_video_thumb img-responsive"/>
+                <img src="{Collections::getInstance()->coll_first_thumb($collection,'l')}" border="0" class="acc_usr_video_thumb img-responsive"/>
             </label>
             {display_clean($collection.collection_name)}
             <div class="btn-group show">
-                <a class="btn btn-primary btn-sm" href="{$cbcollection->collection_links($collection,'view')}">{lang code="view_collection"}</a>
+                <a class="btn btn-primary btn-sm" href="{Collections::getInstance()->collection_links($collection,'view')}">{lang code="view_collection"}</a>
                 <a class="btn btn-primary btn-sm" href="javascript:void(0);" onmousedown="delete_item('delete_coll','{$collection.collection_id}','{lang code="remove_fav_collection_confirm"}','?mode={$mode}&amp;remove_fav_collection={$collection.collection_id}');" id="delete_coll-{$collection.collection_id}">
                     {lang code="remove"}
                 </a>

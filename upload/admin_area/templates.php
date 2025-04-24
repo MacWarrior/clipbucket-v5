@@ -2,9 +2,9 @@
 define('THIS_PAGE', 'templates');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $myquery, $cbtpl;
+global $myquery, $cbtpl;
 User::getInstance()->hasPermissionOrRedirect('manage_template_access', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 if( count($cbtpl->get_templates()) <= 1 && !in_dev() ){
     redirect_to(DirPath::getUrl('admin_area'));

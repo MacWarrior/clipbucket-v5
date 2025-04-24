@@ -31,8 +31,8 @@
                         <span class="label label-info">{lang code='featured'}</span>
                     {/if}
 
-                    {foreach from=$cbvid->video_manager_link_new item=links}
-                        {$cbvid->video_manager_link_new($links,$video)}
+                    {foreach from=CBvideo::getInstance()->video_manager_link_new item=links}
+                        {CBvideo::getInstance()->video_manager_link_new($links,$video)}
                     {/foreach}
 
                     {if $video.status|lower == 'successful'}
@@ -137,8 +137,8 @@
 
                 <li class="divider"></li>
                 <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a></li>
-                {foreach from=$cbvid->video_manager_link item=links}
-                    {$cbvid->video_manager_link($links,$video)}
+                {foreach from=CBvideo::getInstance()->video_manager_link item=links}
+                    {CBvideo::getInstance()->video_manager_link($links,$video)}
                 {/foreach}
             </ul>
         </div>

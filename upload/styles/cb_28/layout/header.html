@@ -83,7 +83,7 @@
                             </nav>
                         </div>
                         {$types_list = array()}
-                        {foreach from=$Cbucket->search_types item=t key=stypes}
+                        {foreach from=ClipBucket::getInstance()->search_types item=t key=stypes}
                             {if !User::getInstance()->hasPermission('view_'|cat:$menu.this)}
                                 {continue}
                             {/if}
@@ -117,11 +117,11 @@
                             {/if}
                             <ul class="nav navbar-nav navbar-right right-menu">
                                 {if user_id()}
-                                    {if (isSectionEnabled('videos') && !empty($Upload->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
+                                    {if (isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options()) && User::getInstance()->hasPermission('allow_video_upload')) || (isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes' && User::getInstance()->hasPermission('allow_photo_upload'))}
                                         <li class="dropdown upload_link">
                                             <a href="{link name='upload'}" class="dropdown-toggle btn-upload btn btn-default" data-toggle="dropdown"><i class="icon-upload"></i><span>{lang code="upload"}</span><b class="icon-down-arrow"></b></a>
                                             <ul role="menu" class="dropdown-menu">
-                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty($Upload->get_upload_options())}
+                                                {if User::getInstance()->hasPermission('allow_video_upload') && isSectionEnabled('videos') && !empty(Upload::getInstance()->get_upload_options())}
                                                     <li class="up_vid"><a href="{link name='upload'}">{lang code="upload_video"}<i class="icon-video visible-xs"></i></a></li>
                                                 {/if}
                                                 {if User::getInstance()->hasPermission('allow_photo_upload') && isSectionEnabled('photos') && config('enable_photo_file_upload') == 'yes'}

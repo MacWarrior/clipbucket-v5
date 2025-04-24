@@ -2,9 +2,9 @@
 define('THIS_PAGE', 'view_page');
 define('PARENT_PAGE', 'home');
 require 'includes/config.inc.php';
-global $pages, $cbpage;
+global $cbpage;
 
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $pid = $_GET['pid'];
 $pid = mysql_clean($pid);

@@ -66,7 +66,7 @@ header("Content-type: text/xml; charset=utf-8");
             <link><?php echo DirPath::getUrl('root'); ?></link>
             <title><?php echo cbtitle(); ?></title>
         </image>
-        <description><?php echo $Cbucket->configs['description']; ?></description>
+        <description><?php echo config('description'); ?></description>
         <?php
         if ($total_vids) {
             ?>

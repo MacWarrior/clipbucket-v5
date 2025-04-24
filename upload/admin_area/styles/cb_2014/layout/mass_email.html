@@ -203,7 +203,7 @@
 
 		<a class="btn btn-primary" href="mass_email.php">Go back to mass email page</a>
 
-		{$eh->message_list.0}
+		{errorhandler::getInstance()->message_list.0}
 		{if $msgs}
 		<ul>
 			{foreach from=$msgs item=msg}

@@ -4,7 +4,7 @@ define('THIS_PAGE', 'manage_pages');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
 
-global $cbpage, $eh;
+global $cbpage;
 
 User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
 pages::getInstance()->page_redir();
@@ -49,7 +49,7 @@ if (isset($_POST['activate_selected']) && is_array($_POST['check_page'])) {
         $cbpage->page_actions('activate', $id);
     }
     if( !error() && !warning() ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected pages have been activated', 'm');
     }
 }
@@ -59,7 +59,7 @@ if (isset($_POST['deactivate_selected']) && is_array($_POST['check_page'])) {
         $cbpage->page_actions('deactivate', $id);
     }
     if( !error() && !warning() ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected pages have been deactivated', 'm');
     }
 }
@@ -69,7 +69,7 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
         $cbpage->page_actions('delete', $id);
     }
     if( !error() && !warning() ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e('Selected pages have been deleted', 'm');
     }
 }
@@ -90,7 +90,7 @@ if (isset($_POST['add_page'])) {
 if (isset($_POST['update_order'])) {
     $cbpage->update_order();
     if( !error() && !warning() ) {
-        $eh->flush();
+        errorhandler::getInstance()->flush();
         e(lang('Page order has been updated'), 'm');
     }
 }

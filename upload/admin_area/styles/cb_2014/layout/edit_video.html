@@ -1,7 +1,7 @@
-{assign var='video_privacyoption' value=$Upload->loadOptionFields($data)}
-{assign var='video_datelocation' value=$Upload->loadLocationFields($data)}
-{assign var='custom_upload_fields' value=$Upload->load_custom_upload_fields($data,TRUE)}
-{assign var='video_fields' value=$Upload->loadRequiredFields($data)}
+{assign var='video_privacyoption' value=Upload::getInstance()->loadOptionFields($data)}
+{assign var='video_datelocation' value=Upload::getInstance()->loadLocationFields($data)}
+{assign var='custom_upload_fields' value=Upload::getInstance()->load_custom_upload_fields($data,TRUE)}
+{assign var='video_fields' value=Upload::getInstance()->loadRequiredFields($data)}
 
 {if $data.title neq ""}
 <script>

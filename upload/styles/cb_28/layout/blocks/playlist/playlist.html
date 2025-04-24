@@ -1,6 +1,6 @@
 {$list_id=$playlist.playlist_id}
 {$first=get_playlist_items($list_id,1)}
-{$count_items = $cbvid->action->count_playlist_items($list_id)}
+{$count_items = CBvideo::getInstance()->action->count_playlist_items($list_id)}
 <div class="clearfix item_playlist">
 	<h3>{$playlist.playlist_name}<span><i class="fa fa-play"></i>{$count_items}</span></h3>
 	<div class="playlist-thumb">

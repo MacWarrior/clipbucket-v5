@@ -469,9 +469,8 @@ function dbInsert($tbl, $flds, $vls, $ep = null)
  */
 function e($msg = null, $type = 'e', $secure = true)
 {
-    global $eh;
     if (!empty($msg)) {
-        return $eh->e($msg, $type, $secure);
+        return errorhandler::getInstance()->e($msg, $type, $secure);
     }
 }
 
@@ -636,20 +635,6 @@ function yes_or_no($input, $return = 'yes'): string
         return $return;
     }
     return $input;
-}
-
-/**
- * Function used to validate collection category
- * @param null $array
- *
- * @return bool
- * @throws Exception
- * @uses : { class : $cbcollection } { function : validate_collection_category }
- */
-function validate_collection_category($array = null)
-{
-    global $cbcollection;
-    return $cbcollection->validate_collection_category($array);
 }
 
 /**
@@ -853,25 +838,6 @@ function get_user_vids($uid, $cond = null, $count_only = false)
     return userquery::getInstance()->get_user_vids($uid, $cond, $count_only);
 }
 
-function error_list(): array
-{
-    global $eh;
-    return $eh->get_error();
-}
-
-function warning_list(): array
-{
-    global $eh;
-    return $eh->get_warning();
-}
-
-
-function msg_list(): array
-{
-    global $eh;
-    return $eh->get_message();
-}
-
 /**
  * Function used to add template in display template list
  *
@@ -879,7 +845,7 @@ function msg_list(): array
  * @param bool $folder
  * @param bool $follow_show_page
  */
-function template_files($file, $folder = false, $follow_show_page = true)
+function template_files($file, $folder = false, $follow_show_page = true): void
 {
     if (!$folder) {
         ClipBucket::getInstance()->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
@@ -915,8 +881,7 @@ function include_template_file($params)
  */
 function username_check($username): bool
 {
-    global $Cbucket;
-    $banned_words = $Cbucket->configs['disallowed_usernames'];
+    $banned_words = ClipBucket::getInstance()->configs['disallowed_usernames'];
     $banned_words = explode(',', $banned_words);
     foreach ($banned_words as $word) {
         preg_match("/$word/Ui", $username, $match);
@@ -980,8 +945,7 @@ function check_email_domain($email): bool
  */
 function error($param = 'array')
 {
-    global $eh;
-    $error = $eh->get_error();
+    $error = errorhandler::getInstance()->get_error();
     if (count($error) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -996,8 +960,7 @@ function error($param = 'array')
 
 function warning($param = 'array')
 {
-    global $eh;
-    $error = $eh->get_warning();
+    $error = errorhandler::getInstance()->get_warning();
     if (count($error) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -1019,8 +982,7 @@ function warning($param = 'array')
  */
 function msg($param = 'array')
 {
-    global $eh;
-    $message = $eh->get_message();
+    $message = errorhandler::getInstance()->get_message();
     if (count($message) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -1400,9 +1362,8 @@ function ad($in): string
  */
 function get_functions($name)
 {
-    global $Cbucket;
-    if (isset($Cbucket->$name)) {
-        $funcs = $Cbucket->$name;
+    if (isset(ClipBucket::getInstance()->$name)) {
+        $funcs = ClipBucket::getInstance()->$name;
         if (is_array($funcs) && count($funcs) > 0) {
             return $funcs;
         }
@@ -1417,7 +1378,7 @@ function get_functions($name)
  * @uses { class : $Cbucket } { function : addJS }
  *
  */
-function add_js($files)
+function add_js($files): void
 {
     ClipBucket::getInstance()->addJS($files);
 }
@@ -1433,9 +1394,8 @@ function add_js($files)
  * @uses : { class : $Cbucket } { function : add_header }
  *
  */
-function add_header($files)
+function add_header($files): void
 {
-    global $Cbucket;
     ClipBucket::getInstance()->add_header($files);
 }
 
@@ -1445,9 +1405,8 @@ function add_header($files)
  * @uses : { class : $Cbucket } { function : add_admin_header }
  *
  */
-function add_admin_header($files)
+function add_admin_header($files): void
 {
-    global $Cbucket;
     ClipBucket::getInstance()->add_admin_header($files);
 }
 
@@ -1456,7 +1415,7 @@ function add_admin_header($files)
  * @param : { array } { $u } { array with details of user }
  * @throws Exception
  */
-function call_view_channel_functions($u)
+function call_view_channel_functions($u): void
 {
     $funcs = get_functions('view_channel_functions');
     if (is_array($funcs) && count($funcs) > 0) {
@@ -1474,7 +1433,7 @@ function call_view_channel_functions($u)
  * @param : { array } { $cdetails } { array with details of collection }
  * @throws Exception
  */
-function call_view_collection_functions($cdetails)
+function call_view_collection_functions($cdetails): void
 {
     $funcs = get_functions('view_collection_functions');
     if (is_array($funcs) && count($funcs) > 0) {
@@ -1497,7 +1456,7 @@ function call_view_collection_functions($cdetails)
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
-function increment_views($id, $type = null)
+function increment_views($id, $type = null): void
 {
     switch ($type) {
         case 'v':
@@ -1545,7 +1504,7 @@ function increment_views($id, $type = null)
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
-function increment_views_new($id, $type = null)
+function increment_views_new($id, $type = null): void
 {
     switch ($type) {
         case 'v':
@@ -1614,7 +1573,7 @@ function post($var)
  * @param : { array } { $array } { array of parameters }
  * @throws Exception
  */
-function show_share_form($array)
+function show_share_form($array): void
 {
     assign('params', $array);
 
@@ -1627,7 +1586,7 @@ function show_share_form($array)
  * Function used to show flag form
  * @param : { array } { $array } { array of parameters }
  */
-function show_flag_form($array)
+function show_flag_form($array): void
 {
     assign('params', $array);
     Template('blocks/common/report.html');
@@ -1636,11 +1595,10 @@ function show_flag_form($array)
 /**
  * Function used to show playlist form
  * @param : { array } { $array } { array of parameters }
+ * @throws Exception
  */
-function show_playlist_form($array)
+function show_playlist_form($array): void
 {
-    global $cbvid;
-
     assign('params', $array);
     assign('type', $array['type']);
     // decides to show all or user only playlists
@@ -1670,11 +1628,11 @@ function show_playlist_form($array)
  * @param null $format
  * @param null $timestamp
  *
- * @return false|string : { string } { time formatted into date }
+ * @return string : { string } { time formatted into date }
  * @internal param $ : { string } { $format } { current format of date } { $format } { current format of date }
  * @internal param $ : { string } { $timestamp } { time to be converted to date } { $timestamp } { time to be converted to date }
  */
-function cbdate($format = null, $timestamp = null)
+function cbdate($format = null, $timestamp = null): string
 {
     if (!$format) {
         $format = DATE_FORMAT;
@@ -1695,7 +1653,7 @@ function cbdate($format = null, $timestamp = null)
     return date($format, $timestamp);
 }
 
-function cbdatetime($format = null, $timestamp = null)
+function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
         $format = DATE_FORMAT . ' h:m:s';
@@ -1710,11 +1668,11 @@ function cbdatetime($format = null, $timestamp = null)
  * @param $total
  * @param $count
  *
- * @return float : { integer } { $total_pages }
+ * @return int
  * @internal param $ { integer } { $total } { total number of pages }
  * @internal param $ { integer } { $count } { number of pages to be displayed }
  */
-function count_pages($total, $count)
+function count_pages($total, $count): int
 {
     if (empty($total)){
         return 0;
@@ -2106,16 +2064,14 @@ function sort_link($data, $mode, $type): string
     return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
 }
 
-
 /**
  * Function used to load captcha field
  * @uses : { class : $Cbucket }  { var : $captchas }
  */
 function get_captcha()
 {
-    global $Cbucket;
-    if (count($Cbucket->captchas) > 0) {
-        return $Cbucket->captchas[0];
+    if (count(ClipBucket::getInstance()->captchas) > 0) {
+        return ClipBucket::getInstance()->captchas[0];
     }
     return false;
 }
@@ -2219,14 +2175,12 @@ function get_username($uid)
  * @param        $cid
  * @param string $field
  *
- * @return bool
+ * @return array|bool
  * @throws Exception
- * @uses : { class : $cbcollection } { function : get_collection_field }
  */
 function get_collection_field($cid, $field = 'collection_name')
 {
-    global $cbcollection;
-    return $cbcollection->get_collection_field($cid, $field);
+    return Collections::getInstance()->get_collection_field($cid, $field);
 }
 
 /**
@@ -2637,7 +2591,7 @@ function get_ffmpeg_codecs($type)
 /**
  * Calls ClipBucket footer into the battlefield
  */
-function footer()
+function footer(): void
 {
     $funcs = get_functions('clipbucket_footer');
     if (is_array($funcs) && count($funcs) > 0) {
@@ -2749,7 +2703,6 @@ function check_install($type)
         return true;
     }
 
-    global $Cbucket;
     switch ($type) {
         case 'before':
             if (!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
@@ -2760,7 +2713,7 @@ function check_install($type)
 
         case 'after':
             if (file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                $Cbucket->configs['closed'] = 1;
+                ClipBucket::getInstance()->configs['closed'] = 1;
             }
             break;
     }
@@ -3195,7 +3148,7 @@ function get_browser_details($in = null, $assign = false)
 /**
  * @throws Exception
  */
-function update_user_voted($array, $userid = null)
+function update_user_voted($array, $userid = null): void
 {
     userquery::getInstance()->update_user_voted($array, $userid);
 }
@@ -3205,10 +3158,9 @@ function update_user_voted($array, $userid = null)
  * @param : { array } { $vdetails } { video details of video to be deleted }
  * @action : { calls function from video class }
  */
-function delete_video_from_collection($vdetails)
+function delete_video_from_collection($vdetails): void
 {
-    global $cbvid;
-    $cbvid->collection->deleteItemFromCollections($vdetails['videoid']);
+    CBvideo::getInstance()->collection->deleteItemFromCollections($vdetails['videoid']);
 }
 
 /**

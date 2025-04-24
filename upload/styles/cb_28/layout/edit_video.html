@@ -1,5 +1,5 @@
 {$myAccountLinks = $userquery->my_account_links()}
-{assign var='custom_upload_fields' value=$Upload->load_custom_upload_fields($v,TRUE)}
+{assign var='custom_upload_fields' value=Upload::getInstance()->load_custom_upload_fields($v,TRUE)}
 
 <div class="container manage-page marginBottom">
 	<div class="row cb-box">
@@ -7,7 +7,7 @@
 			{include file="$style_dir/blocks/manage/userMenuLeft.html"}
 		</div>
 		<div class="mainContent col-lg-9 col-md-9 col-sm-9 col-xs-12">
-			{$videoFields = $Upload->load_video_fields($v)}
+			{$videoFields = Upload::getInstance()->load_video_fields($v)}
 			{$requiredFields = $videoFields[0]}
 			{$sharingOptions = $videoFields[1]}
 			{$dateAndLocation = $videoFields[2]}

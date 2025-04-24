@@ -64,7 +64,7 @@
 					{if in_array($video.videoid, $favorites)}
 						<li><a role="menuitem" tabindex="-1" href="{$baseurl}manage_videos.php?mode=favorites&remove_fav_videoid={$video.videoid}">{lang code='remove_from_favorites'}</a></li>
 					{/if}
-					{if $cbvid->is_video_owner($video.videoid,$user.userid) }
+					{if CBvideo::getInstance()->is_video_owner($video.videoid,$user.userid) }
 						<li class="divider"></li>
 						<li><a role="menuitem" tabindex="-1" href="{$baseurl}edit_video.php?vid={$video.videoid}">{lang code='edit'}</a></li>
 						{if $mode != 'favorites'}
@@ -72,8 +72,8 @@
 						{/if}
 					{/if}
 
-					{foreach from=$cbvid->video_manager_links item=links}
-						{$cbvid->video_manager_link($links,$video)}
+					{foreach from=CBvideo::getInstance()->video_manager_links item=links}
+						{CBvideo::getInstance()->video_manager_link($links,$video)}
 					{/foreach}
 				</ul>
 			</div>

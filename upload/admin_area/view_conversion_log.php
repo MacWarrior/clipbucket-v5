@@ -1,9 +1,10 @@
 <?php
 define('THIS_PAGE', 'view_conversion_log');
-global $pages, $myquery, $Cbucket;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
+global $myquery;
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $file_name = $_GET['file_name'];
 $data = get_basic_video_details_from_filename($file_name);

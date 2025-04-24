@@ -12,8 +12,7 @@ define('CB_PM_MAX_INBOX', 500); // 0 - OFF , U - Unlimited
  */
 function attach_video($array)
 {
-    global $cbvid;
-    if ($cbvid->video_exists($array['attach_video'])) {
+    if (CBvideo::getInstance()->video_exists($array['attach_video'])) {
         return '{v:' . $array['attach_video'] . '}';
     }
 }
@@ -24,13 +23,12 @@ function attach_video($array)
  * @param $att
  * @throws Exception
  */
-function parse_and_attach_video($att)
+function parse_and_attach_video($att): void
 {
-    global $cbvid;
     preg_match('/{v:(.*)}/', $att, $matches);
     $vkey = $matches[1];
     if (!empty($vkey)) {
-        assign('video', $cbvid->get_video($vkey));
+        assign('video', CBvideo::getInstance()->get_video($vkey));
         assign('only_once', true);
         echo '<h3>Attached Video</h3>';
         echo '<div class="clearfix videos row">';
@@ -45,9 +43,8 @@ function parse_and_attach_video($att)
  */
 function video_attachment_form(): array
 {
-    global $cbvid;
     $vid_array = ['user' => user_id(), 'order' => 'date_added DESC', 'limit' => 15];
-    $videos = $cbvid->get_videos($vid_array);
+    $videos = CBvideo::getInstance()->get_videos($vid_array);
     $vids_array = ['' => lang('no_video')];
 
     if ($videos) {
@@ -436,7 +433,7 @@ class cb_pm
      *
      * @param $attachment
      */
-    function parse_attachments($attachment)
+    function parse_attachments($attachment): void
     {
         $funcs = $this->pm_attachments_parse;
         if (is_array($funcs)) {

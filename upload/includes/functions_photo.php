@@ -106,7 +106,7 @@ function get_photo_default_thumb($size = null, $output = null)
  */
 function get_image_file($params)
 {
-    global $cbphoto, $Cbucket;
+    global $cbphoto;
     $details = $params['details'];
     $output = $params['output'] ?? false;
     $static = $params['static'] ?? false;
@@ -143,8 +143,8 @@ function get_image_file($params)
 
     $params['photo'] = $photo;
 
-    if (isset($Cbucket->custom_get_photo_funcs) && count($Cbucket->custom_get_photo_funcs) > 0) {
-        $functions = $Cbucket->custom_get_photo_funcs;
+    if (isset(ClipBucket::getInstance()->custom_get_photo_funcs) && count(ClipBucket::getInstance()->custom_get_photo_funcs) > 0) {
+        $functions = ClipBucket::getInstance()->custom_get_photo_funcs;
         foreach ($functions as $func) {
             if (function_exists($func)) {
                 ob_start();

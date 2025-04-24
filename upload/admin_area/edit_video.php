@@ -1,17 +1,17 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
+global $myquery, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $video_id = $_GET['video'];
 
 //Updating Video Details
 if (isset($_POST['update'])) {
-    $Upload->validate_video_upload_form();
-    if (empty($eh->get_error())) {
+    Upload::getInstance()->validate_video_upload_form();
+    if (empty(errorhandler::getInstance()->get_error())) {
         $myquery->update_video();
         Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
@@ -37,7 +37,7 @@ if (@$_GET['msg']) {
 
 //Performing Video Actions
 if ($_GET['mode'] != '') {
-    $modedata = $cbvid->action($_GET['mode'], $video_id);
+    $modedata = CBvideo::getInstance()->action($_GET['mode'], $video_id);
     assign('modedata', $modedata);
 
     //add parameter to display message after redirect

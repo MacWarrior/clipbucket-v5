@@ -1,9 +1,8 @@
 <?php
 define('THIS_PAGE', 'signup');
 define('PARENT_PAGE', 'signup');
-
 require 'includes/config.inc.php';
-global $eh;
+
 if (User::getInstance()->isUserConnected()) {
     redirect_to(DirPath::getUrl('root'));
 }
@@ -37,7 +36,7 @@ if (isset($_POST['signup'])) {
         if ($signup) {
             // user signed up, lets get his details
             $udetails = userquery::getInstance()->get_user_details($signup);
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             assign('udetails', $udetails);
             if (empty(ClipBucket::getInstance()->configs['email_verification'])) {
                 // login user and redirect to home page
