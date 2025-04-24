@@ -1209,3 +1209,27 @@ a[role='menuitem'] {
 .navbar-header .dropdown-menu.dropdown-close.pull-right{
     right: 0;
 }
+
+/* System Info > Nginx VirtualHost */
+#nginx_vhost .holder{
+    margin: 10px 0;
+    padding: 5px;
+    background-color: #F5F5F5;
+    border: 1px solid #ADADAD;
+    border-radius: 3px;
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+}
+#nginx_vhost .holder .content{
+    padding: 3px 15px;
+    height: 300px;
+    color: #555;
+    font-size: 14px;
+    text-align: left;
+    overflow: auto;
+}
+#nginx_vhost .holder .content pre{
+    color: inherit;
+    margin: 0;
+    padding: 0;
+    border: none;
+}

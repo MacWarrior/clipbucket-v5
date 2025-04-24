@@ -1,13 +1,20 @@
 {
   "version":"5.5.2",
-  "revision":"8",
+  "revision":"9",
   "status":"stable",
   "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Implement Nginx VirtualHost check"
+      ]
+    },
     {
       "title": "Miscellaneous",
       "description": [
         "Implement sub-directory compatibility <i>(#529, #156)</i>"
         ,"Cleanup code"
+        ,"Drop support for PHP 7.0 to 7.4"
         ,"Update Readme"
         ,"Fix PHP8.X compatibility"
         ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"

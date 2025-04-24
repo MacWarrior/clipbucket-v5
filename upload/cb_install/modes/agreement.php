@@ -14,7 +14,7 @@
     </div>
     <div class="cb-instal-licenc-holder">
         <div class="cb-instal-licenc-sec">
-            <?php echo System::get_license('LICENSE'); ?>
+            <pre><?php echo System::get_file_content(DirPath::get('docs') . 'LICENSE'); ?></pre>
         </div>
     </div>
 

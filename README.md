@@ -51,7 +51,7 @@ After more than 340 revisions, over a year of development and countless improvem
 </details>
 
 # 🌟 Why <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
-| PHP 7.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
+| PHP 8.0 - 8.4+ compatibility  | MySQL 9+ & strict mode compatibility                              |
 |-------------------------------|-------------------------------------------------------------------|
 | UHD video resolutions support | TMDB integration                                                  |
 | Dark & Light theme            | Age restriction                                                   |
@@ -170,8 +170,8 @@ Replace username with the name of the user. For example, for the user john, use 
 <details>
   <summary>Advanced users</summary>
   <i>“Your path you must decide.”</i><br/>
-  Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP-FPM 7.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
-  Recommended : MariaDB 10.3+ ; PHP 8.3+ ; FFmpeg 4.3+<br/>
+  Required : MySQL 5.6+ / MariaDB 10.3+ ; PHP 8.0+ (+ modules : mysqli, curl, xml, mbstring, gd, openssl, fileinfo ; + functions exec, shell_exec) ; FFmpeg 3+ ; mediainfo ; sendmail<br/>
+  Recommended : MariaDB 10.3+ ; PHP-FPM 8.3+ ; FFmpeg 4.3+<br/>
   Optionnal : Git, PHP module FFI<br/>
   <i>Only stable versions have been tested, mainly on Debian</i>
 </details>

@@ -1158,7 +1158,11 @@ function lang($var, $params = [])
         $params = [$params];
     }
 
-    return vsprintf($lang, $params);
+    try {
+        return vsprintf($lang, $params);
+    } catch (ValueError) {
+        return $lang;
+    }
 }
 
 /**
@@ -1182,7 +1186,7 @@ function get_current_language()
 function smarty_lang($param)
 {
     if (getArrayValue($param, 'assign') == '') {
-        return lang($param['code']);
+        return lang($param['code'], $param['params'] ?? []);
     }
     assign($param['assign'], lang($param['code']));
 }

@@ -13,7 +13,7 @@ echo "| |   | | | '_ \|  _ \| | | |/ __| |/ / _ \ __\ \ / /|___ \\"
 echo "| |___| | | |_) | |_) | |_| | (__|   <  __/ |_ \ V /  ___) |"
 echo " \____|_|_| .__/|____/ \__,_|\___|_|\_\___|\__| \_/  |____/"
 echo "          |_|            Installation script for"
-echo "                    Debian 9-12 & Ubuntu 16.04-24.10"
+echo "                    Debian 10-12 & Ubuntu 22.04-24.10"
 echo ""
 echo "Disclaimer : This easy installation script is only"
 echo "             made to configure local / dev environments."
@@ -33,9 +33,6 @@ echo -ne " OK"
 OS_NAME=$(lsb_release -d | awk -F"\t" '{print $2}')
 case ${OS_NAME} in
 
-    "Debian GNU/Linux 9.13 (stretch)")
-        OS="DEBIAN9"
-        ;;
     "Debian GNU/Linux 10 (buster)")
         OS="DEBIAN10"
         ;;
@@ -46,15 +43,6 @@ case ${OS_NAME} in
         OS="DEBIAN12"
         ;;
 
-    "Ubuntu 16.04.7 LTS"|"Ubuntu 16.04.6 LTS"|"Ubuntu 16.04.5 LTS"|"Ubuntu 16.04.4 LTS"|"Ubuntu 16.04.3 LTS"|"Ubuntu 16.04.2 LTS"|"Ubuntu 16.04.1 LTS"|"Ubuntu 16.04 LTS"|"Ubuntu 16.04")
-        OS="UBUNTU1604"
-        ;;
-    "Ubuntu 18.04.6 LTS"|"Ubuntu 18.04.5 LTS"|"Ubuntu 18.04.4 LTS"|"Ubuntu 18.04.3 LTS"|"Ubuntu 18.04.2 LTS"|"Ubuntu 18.04.1 LTS"|"Ubuntu 18.04 LTS"|"Ubuntu 18.04")
-        OS="UBUNTU1804"
-        ;;
-    "Ubuntu 20.04.6 LTS"|"Ubuntu 20.04.5 LTS"|"Ubuntu 20.04.4 LTS"|"Ubuntu 20.04.3 LTS"|"Ubuntu 20.04.2 LTS"|"Ubuntu 20.04.1 LTS"|"Ubuntu 20.04 LTS"|"Ubuntu 20.04")
-        OS="UBUNTU2004"
-        ;;
     "Ubuntu 22.04.3 LTS"|"Ubuntu 22.04.2 LTS"|"Ubuntu 22.04.1 LTS"|"Ubuntu 22.04 LTS"|"Ubuntu 22.04")
         OS="UBUNTU2204"
         ;;
@@ -75,13 +63,9 @@ case ${OS_NAME} in
         echo ""
         echo "Installation script haven't been able to determine your operating system."
         echo "Please select one : "
-        echo " - Debian 9"
         echo " - Debian 10"
         echo " - Debian 11"
         echo " - Debian 12"
-        echo " - Ubuntu 16.04"
-        echo " - Ubuntu 18.04"
-        echo " - Ubuntu 20.04"
         echo " - Ubuntu 22.04"
         echo " - Ubuntu 23.04"
         echo " - Ubuntu 23.10"
@@ -89,9 +73,6 @@ case ${OS_NAME} in
         echo " - Ubuntu 24.10"
         read -p "Which operating system do you use ? " READ_OS
         case ${READ_OS} in
-            "Debian 9"|"debian 9")
-                OS="DEBIAN9"
-                ;;
             "Debian 10"|"debian 10")
                 OS="DEBIAN10"
                 ;;
@@ -100,15 +81,6 @@ case ${OS_NAME} in
                 ;;
             "Debian"|"debian"|"Debian 12"|"debian 12")
                 OS="DEBIAN12"
-                ;;
-            "Ubuntu 16.04"|"ubuntu 16.04")
-                OS="UBUNTU1604"
-                ;;
-            "Ubuntu 18.04"|"ubuntu 18.04")
-                OS="UBUNTU1804"
-                ;;
-            "Ubuntu 20.04"|"ubuntu 20.04")
-                OS="UBUNTU2004"
                 ;;
             "Ubuntu 22.04"|"ubuntu 22.04")
                 OS="UBUNTU2204"
@@ -156,24 +128,18 @@ esac
 echo -ne " OK"
 
 case ${OS} in
-    "DEBIAN9")
-        PHP_VERSION="7.0"
-        ;;
-
     "DEBIAN10")
         echo ""
         echo ""
         echo "PHP versions availables : "
-        echo " - 7.3 [Default]"
-        echo " - 7.4"
-        echo " - 8.0"
+        echo " - 8.0 [Default]"
         echo " - 8.1"
         echo " - 8.2"
         echo " - 8.3"
         echo " - 8.4"
-        read -p "Which PHP version do you want to use ? [7.3] " READ_PHP_VERSION
+        read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "7.4"|"8.0"|"8.1"|"8.2"|"8.3"|"8.4")
+            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -183,9 +149,6 @@ case ${OS} in
                 echo -ne " OK"
                 PHP_VERSION=${READ_PHP_VERSION}
                 ;;
-            "7.3"|*)
-                PHP_VERSION="7.3"
-                ;;
         esac
         ;;
 
@@ -193,15 +156,14 @@ case ${OS} in
         echo ""
         echo ""
         echo "PHP versions availables : "
-        echo " - 7.4 [Default]"
-        echo " - 8.0"
+        echo " - 8.0 [Default]"
         echo " - 8.1"
         echo " - 8.2"
         echo " - 8.3"
         echo " - 8.4"
-        read -p "Which PHP version do you want to use ? [7.4] " READ_PHP_VERSION
+        read -p "Which PHP version do you want to use ? [8.0] " READ_PHP_VERSION
         case ${READ_PHP_VERSION} in
-            "8.0"|"8.1"|"8.2"|"8.3"|"8.4")
+            "8.0"|"8.1"|"8.2"|"8.3"|"8.4"|*)
                 echo ""
                 echo -ne "Configuring PHP ${READ_PHP_VERSION} repo..."
                 apt install apt-transport-https ca-certificates curl wget gnupg2 --yes > /dev/null 2>&1
@@ -210,9 +172,6 @@ case ${OS} in
                 apt update > /dev/null 2>&1
                 echo -ne " OK"
                 PHP_VERSION=${READ_PHP_VERSION}
-                ;;
-            "7.4"|*)
-                PHP_VERSION="7.4"
                 ;;
         esac
         ;;
@@ -242,15 +201,6 @@ case ${OS} in
         esac
         ;;
 
-    "UBUNTU1604")
-        PHP_VERSION="7.0"
-        ;;
-    "UBUNTU1804")
-        PHP_VERSION="7.2"
-        ;;
-    "UBUNTU2004")
-        PHP_VERSION="7.4"
-        ;;
     "UBUNTU2304"|"UBUNTU2204")
         PHP_VERSION="8.1"
         ;;

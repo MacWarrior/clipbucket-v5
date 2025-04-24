@@ -29,7 +29,7 @@
         <ul class="nav nav-tabs">
             <li class="active">
                 <a data-toggle="tab" href="#hosting" style="min-height: 58px;">
-                    <h6>{lang code='hosting'}<img src="{$imageurl}/{if $hosting_ok}tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='hosting'} <img src="{$imageurl}/{if $hosting_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
             <li>
@@ -39,14 +39,21 @@
             </li>
             <li>
                 <a data-toggle="tab" href="#services" style="min-height: 58px;">
-                    <h6>{lang code='services'}<img src="{$imageurl}/{if $services_ok}tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='services'} <img src="{$imageurl}/{if $services_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
             <li>
                 <a data-toggle="tab" href="#permissions" style="min-height: 58px;">
-                    <h6>{lang code='permissions'}<img src="{$imageurl}/{if $permissions_ok}tick{else}alert{/if}.png"/></h6>
+                    <h6>{lang code='permissions'} <img src="{$imageurl}/{if $permissions_ok}tick{else}alert{/if}.png"/></h6>
                 </a>
             </li>
+            {if $isNginx}
+            <li>
+                <a data-toggle="tab" href="#nginx_vhost" style="min-height: 58px;">
+                    <h6>{lang code='nginx_vhost'} {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9')}<img src="{$imageurl}/{if $nginx_vhost_first_update}error{elseif $nginx_vhost_no_update}tick{else}alert{/if}.png"/>{/if}</h6>
+                </a>
+            </li>
+            {/if}
         </ul>
         <div class="tab-content">
             <div id="php_info" class="tab-pane">
@@ -54,7 +61,7 @@
                     <div class="col-md-8">
                         <h3 style="margin-left: 4em;">PHP WEB</h3>
                     </div>
-                    <div class="col-md-4 {if $phpVersionCli == 0} hidden {/if}">
+                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}">
                         <h3>PHP CLI</h3>
                     </div>
                 </div>
@@ -62,7 +69,7 @@
                     <div class="col-md-8 php_info" style="overflow-x: scroll;">
                         {$php_info}
                     </div>
-                    <div class="col-md-4 {if $phpVersionCli == 0} hidden {/if}" style="overflow-x: scroll;">
+                    <div class="col-md-4 {if $phpVersionCli == 0}hidden{/if}" style="overflow-x: scroll;">
                         {$cli_php_info}
                     </div>
                 </div>
@@ -562,6 +569,34 @@
 
                     </div>
                 {/foreach}
+            </div>
+            <div id="nginx_vhost" class="tab-pane">
+                {lang code="nginx_vhost_desc"}
+                <div class="holder">
+                    <div class="content">
+                        <pre>{$nginx_vhost}</pre>
+                    </div>
+                </div>
+                {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9')}
+                    {$nginx_vhost_last_updated}
+                    <br/>
+                    {if $nginx_vhost_first_update}
+                        {$nginx_vhost_first_update} <img src="{$imageurl}/error.png"/>
+                    {elseif $nginx_vhost_no_update}
+                        {$nginx_vhost_no_update} <img src="{$imageurl}/tick.png"/>
+                    {else}
+                        {$nginx_vhost_update} <img src="{$imageurl}/alert.png"/>
+                    {/if}
+
+                    {if $nginx_vhost_first_update || $nginx_vhost_update}
+                        <div class="text-center">
+                            <form method="post">
+                                <input type="hidden" name="update_nginx_vhost" value="yes"/>
+                                <button class="btn btn-primary btn-xs">{lang code="nginx_vhost_updated"}</button>
+                            </form>
+                        </div>
+                    {/if}
+                {/if}
             </div>
         </div>
     </div>

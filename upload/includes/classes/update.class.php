@@ -9,7 +9,6 @@ class Update
     private $dbVersion = [];
     private $latest = [];
     private $changelog = [];
-    private $state = '';
     private $version = '';
     private $versionCode = '';
     private $revision = '';
@@ -46,7 +45,8 @@ class Update
         }, $this->fields);
     }
 
-    public function flush(){
+    public function flush(): void
+    {
         $this->dbVersion = [];
         $this->version = '';
         $this->revision = '';
@@ -123,7 +123,7 @@ class Update
     public function getCurrentCoreVersionCode(): string
     {
         if( empty($this->versionCode) ){
-            $this->versionCode = $this->getCurrentCoreLatest()['dev'];
+            $this->versionCode = $this->getCurrentCoreLatest()['stable'];
         }
 
         return $this->versionCode;
@@ -147,7 +147,7 @@ class Update
     private function getChangelog($version): array
     {
         if( empty($this->changelog[$version]) ){
-            if (strpos($version, '.') !== false) {
+            if (str_contains($version, '.')) {
                 $version = str_replace('.','', $version);
             }
             $filepath_changelog = DirPath::get('changelog') . $version . '.json';

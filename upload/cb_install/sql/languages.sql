@@ -1532,4 +1532,11 @@ VALUES ('admin_setting'),
        ('approve'),
        ('see_all_notifications'),
        ('invalid_date_format'),
-       ('directory_x_is_forbidden');
+       ('directory_x_is_forbidden'),
+       ('nginx_vhost'),
+       ('nginx_vhost_desc'),
+       ('nginx_vhost_last_updated'),
+       ('nginx_vhost_first_update'),
+       ('nginx_vhost_no_update'),
+       ('nginx_vhost_update'),
+       ('nginx_vhost_updated');

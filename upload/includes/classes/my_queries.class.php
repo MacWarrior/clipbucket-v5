@@ -12,7 +12,7 @@ class myquery
     /**
      * @throws Exception
      */
-    function Set_Website_Details($name, $value)
+    function Set_Website_Details($name, $value): void
     {
         Clipbucket_db::getInstance()->update(tbl('config'), ['value'], [$value], " name = '" . $name . "'");
         ClipBucket::getInstance()->configs[$name] = $value;

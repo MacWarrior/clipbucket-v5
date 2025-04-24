@@ -84,7 +84,7 @@ class Migration
      * @return void
      * @throws Exception
      */
-    public function updateVersion()
+    public function updateVersion(): void
     {
         self::sUpdateVersion($this->version, $this->revision, $this->type);
     }
@@ -98,7 +98,7 @@ class Migration
      * @throws \Predis\Response\ServerException
      * @throws Exception
      */
-    public static function sUpdateVersion($version, $revision, $type = 'm')
+    public static function sUpdateVersion($version, $revision, $type = 'm'): void
     {
         if (strtolower($type) == 'p') {
             $sql = 'UPDATE ' . tbl('plugins') . ' SET plugin_version = \'' . mysql_clean($version) . '\' WHERE plugin_folder = \'' . $revision . '\'';
@@ -139,7 +139,7 @@ class Migration
      * @param array $translations ex: ['fr' => 'Bonjour', 'en' => 'Hello']
      * @throws Exception
      */
-    public static function generateTranslation(string $translation_key, array $translations)
+    public static function generateTranslation(string $translation_key, array $translations): void
     {
         $sql = 'SET @language_key = \'' . mysql_clean(strtolower($translation_key)) . '\' COLLATE utf8mb4_unicode_520_ci; ';
         Clipbucket_db::getInstance()->executeThrowException($sql);
@@ -163,7 +163,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function deleteTranslation(string $translation_key)
+    public static function deleteTranslation(string $translation_key): void
     {
         $sql = 'DELETE FROM `' . tbl('languages_translations') . '`
             WHERE `id_language_key` = (
@@ -180,7 +180,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function updateTranslation(string $translation_key, array $translations)
+    public static function updateTranslation(string $translation_key, array $translations): void
     {
         $sql = 'SET @id_language_key = (SELECT id_language_key FROM `' . tbl('languages_keys') . '` WHERE `language_key` COLLATE utf8mb4_unicode_520_ci = \'' . mysql_clean(strtolower($translation_key)) . '\' );';
         Clipbucket_db::getInstance()->executeThrowException($sql);
@@ -198,7 +198,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function updateTranslationKey(string $translation_key_old, string $translation_key_new)
+    public static function updateTranslationKey(string $translation_key_old, string $translation_key_new): void
     {
         $sql = 'UPDATE ' . tbl('languages_keys') . ' k1
             LEFT JOIN  ' . tbl('languages_keys') . ' k2 ON k2.language_key = \'' . mysql_clean(strtolower($translation_key_new)) . '\'
@@ -498,7 +498,7 @@ class Migration
      * @param array $params_not_exists
      * @throws Exception
      */
-    public static function alterTable($sql_alter, array $params_exists = [], array $params_not_exists = [])
+    public static function alterTable($sql_alter, array $params_exists = [], array $params_not_exists = []): void
     {
         $conditions = self::getConstraints($params_exists, $params_not_exists);
 
@@ -538,7 +538,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function constrainedQuery($sql_query, array $params_exists = [], array $params_not_exists = [])
+    public static function constrainedQuery($sql_query, array $params_exists = [], array $params_not_exists = []): void
     {
         $conditions = self::getConstraints($params_exists, $params_not_exists);
 
@@ -562,7 +562,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function generateConfig(string $config_name, string $config_value)
+    public static function generateConfig(string $config_name, string $config_value): void
     {
         $sql = 'INSERT IGNORE INTO `' . tbl('config') . '` (`name`, `value`) VALUES (\''.mysql_clean($config_name).'\', \''.mysql_clean($config_value).'\');';
         Clipbucket_db::getInstance()->executeThrowException($sql);
@@ -571,7 +571,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function deleteConfig(string $config_name)
+    public static function deleteConfig(string $config_name): void
     {
         $sql = 'DELETE FROM `' . tbl('config') . '` WHERE name = \''.mysql_clean($config_name).'\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
@@ -580,7 +580,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function updateConfig(string $config_name, string $config_value)
+    public static function updateConfig(string $config_name, string $config_value): void
     {
         $sql = 'UPDATE `' . tbl('config') . '` SET value = \''.mysql_clean($config_value).'\' WHERE name = \''.mysql_clean($config_name).'\';';
         Clipbucket_db::getInstance()->executeThrowException($sql);
@@ -589,7 +589,7 @@ class Migration
     /**
      * @throws Exception
      */
-    public static function query($sql)
+    public static function query($sql): void
     {
         $sql = self::prepare($sql);
         Clipbucket_db::getInstance()->executeThrowException($sql);
@@ -622,7 +622,7 @@ class Migration
      * @return void
      * @throws Exception
      */
-    public static function insertTool(string $code, string $tool_function, $frequency = null, bool $is_automatable = false)
+    public static function insertTool(string $code, string $tool_function, $frequency = null, bool $is_automatable = false): void
     {
         $label = mysql_clean($code);
 
@@ -663,7 +663,7 @@ class Migration
      * @return void
      * @throws Exception
      */
-    public static function generatePermission(int $id_type, string $name, string $description, array $array_values)
+    public static function generatePermission(int $id_type, string $name, string $description, array $array_values): void
     {
 
         $sql = 'INSERT IGNORE INTO `' . tbl(UserLevel::getTableNameLevelPermission()) . '` (`id_user_permission_types`, `permission_name`, `permission_description`) 

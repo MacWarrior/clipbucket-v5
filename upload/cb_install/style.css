@@ -408,6 +408,13 @@ dt.white {
 	overflow: auto;
 }
 
+.cb-instal-licenc-sec pre {
+	color: inherit;
+	margin: 0;
+	padding: 0;
+	border: none;
+}
+
 .small {
 	line-height: 8px;
 }

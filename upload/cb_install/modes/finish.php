@@ -1,5 +1,4 @@
 <?php
-global $myquery;
 $pass = pass_code(post('password'), 1);
 
 Clipbucket_db::getInstance()->update(
