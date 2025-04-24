@@ -3,7 +3,8 @@
 /*
  * This file is part of the Predis package.
  *
- * (c) Daniele Alessandri <suppakilla@gmail.com>
+ * (c) 2009-2020 Daniele Alessandri
+ * (c) 2021-2024 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,24 +12,29 @@
 
 namespace Predis\Transaction;
 
+use Exception;
+use InvalidArgumentException;
 use Predis\ClientContextInterface;
 use Predis\ClientException;
 use Predis\ClientInterface;
 use Predis\Command\CommandInterface;
 use Predis\CommunicationException;
-use Predis\Connection\AggregateConnectionInterface;
+use Predis\Connection\Cluster\ClusterInterface;
+use Predis\Connection\RelayConnection;
 use Predis\NotSupportedException;
 use Predis\Protocol\ProtocolException;
+use Predis\Response\Error;
 use Predis\Response\ErrorInterface as ErrorResponseInterface;
 use Predis\Response\ServerException;
 use Predis\Response\Status as StatusResponse;
+use Relay\Exception as RelayException;
+use Relay\Relay;
+use SplQueue;
 
 /**
  * Client-side abstraction of a Redis transaction based on MULTI / EXEC.
  *
  * {@inheritdoc}
- *
- * @author Daniele Alessandri <suppakilla@gmail.com>
  */
 class MultiExec implements ClientContextInterface
 {
@@ -38,21 +44,21 @@ class MultiExec implements ClientContextInterface
     protected $commands;
     protected $exceptions = true;
     protected $attempts = 0;
-    protected $watchKeys = array();
+    protected $watchKeys = [];
     protected $modeCAS = false;
 
     /**
      * @param ClientInterface $client  Client instance used by the transaction.
-     * @param array           $options Initialization options.
+     * @param array|null      $options Initialization options.
      */
-    public function __construct(ClientInterface $client, array $options = null)
+    public function __construct(ClientInterface $client, ?array $options = null)
     {
         $this->assertClient($client);
 
         $this->client = $client;
         $this->state = new MultiExecState();
 
-        $this->configure($client, $options ?: array());
+        $this->configure($client, $options ?: []);
         $this->reset();
     }
 
@@ -66,15 +72,15 @@ class MultiExec implements ClientContextInterface
      */
     private function assertClient(ClientInterface $client)
     {
-        if ($client->getConnection() instanceof AggregateConnectionInterface) {
+        if ($client->getConnection() instanceof ClusterInterface) {
             throw new NotSupportedException(
-                'Cannot initialize a MULTI/EXEC transaction over aggregate connections.'
+                'Cannot initialize a MULTI/EXEC transaction over cluster connections.'
             );
         }
 
-        if (!$client->getProfile()->supportsCommands(array('MULTI', 'EXEC', 'DISCARD'))) {
+        if (!$client->getCommandFactory()->supports('MULTI', 'EXEC', 'DISCARD')) {
             throw new NotSupportedException(
-                'The current profile does not support MULTI, EXEC and DISCARD.'
+                'MULTI, EXEC and DISCARD are not supported by the current command factory.'
             );
         }
     }
@@ -112,7 +118,7 @@ class MultiExec implements ClientContextInterface
     protected function reset()
     {
         $this->state->reset();
-        $this->commands = new \SplQueue();
+        $this->commands = new SplQueue();
     }
 
     /**
@@ -168,15 +174,30 @@ class MultiExec implements ClientContextInterface
      * @param string $commandID Command ID.
      * @param array  $arguments Arguments for the command.
      *
-     * @throws ServerException
-     *
      * @return mixed
+     * @throws ServerException
      */
-    protected function call($commandID, array $arguments = array())
+    protected function call($commandID, array $arguments = [])
     {
-        $response = $this->client->executeCommand(
-            $this->client->createCommand($commandID, $arguments)
-        );
+        try {
+            $response = $this->client->executeCommand(
+                $this->client->createCommand($commandID, $arguments)
+            );
+        } catch (ServerException $exception) {
+            if (!$this->client->getConnection() instanceof RelayConnection) {
+                throw $exception;
+            }
+
+            if (strcasecmp($commandID, 'EXEC') != 0) {
+                throw $exception;
+            }
+
+            if (!strpos($exception->getMessage(), 'RELAY_ERR_REDIS')) {
+                throw $exception;
+            }
+
+            return null;
+        }
 
         if ($response instanceof ErrorResponseInterface) {
             throw new ServerException($response->getMessage());
@@ -190,10 +211,9 @@ class MultiExec implements ClientContextInterface
      *
      * @param CommandInterface $command Command instance.
      *
+     * @return $this|mixed
      * @throws AbortedMultiExecException
      * @throws CommunicationException
-     *
-     * @return $this|mixed
      */
     public function executeCommand(CommandInterface $command)
     {
@@ -206,6 +226,8 @@ class MultiExec implements ClientContextInterface
         $response = $this->client->getConnection()->executeCommand($command);
 
         if ($response instanceof StatusResponse && $response == 'QUEUED') {
+            $this->commands->enqueue($command);
+        } elseif ($response instanceof Relay) {
             $this->commands->enqueue($command);
         } elseif ($response instanceof ErrorResponseInterface) {
             throw new AbortedMultiExecException($this, $response->getMessage());
@@ -221,22 +243,21 @@ class MultiExec implements ClientContextInterface
      *
      * @param string|array $keys One or more keys.
      *
+     * @return mixed
      * @throws NotSupportedException
      * @throws ClientException
-     *
-     * @return mixed
      */
     public function watch($keys)
     {
-        if (!$this->client->getProfile()->supportsCommand('WATCH')) {
-            throw new NotSupportedException('WATCH is not supported by the current profile.');
+        if (!$this->client->getCommandFactory()->supports('WATCH')) {
+            throw new NotSupportedException('WATCH is not supported by the current command factory.');
         }
 
         if ($this->state->isWatchAllowed()) {
             throw new ClientException('Sending WATCH after MULTI is not allowed.');
         }
 
-        $response = $this->call('WATCH', is_array($keys) ? $keys : array($keys));
+        $response = $this->call('WATCH', is_array($keys) ? $keys : [$keys]);
         $this->state->flag(MultiExecState::WATCH);
 
         return $response;
@@ -262,20 +283,19 @@ class MultiExec implements ClientContextInterface
     /**
      * Executes UNWATCH.
      *
-     * @throws NotSupportedException
-     *
      * @return MultiExec
+     * @throws NotSupportedException
      */
     public function unwatch()
     {
-        if (!$this->client->getProfile()->supportsCommand('UNWATCH')) {
+        if (!$this->client->getCommandFactory()->supports('UNWATCH')) {
             throw new NotSupportedException(
-                'UNWATCH is not supported by the current profile.'
+                'UNWATCH is not supported by the current command factory.'
             );
         }
 
         $this->state->unflag(MultiExecState::WATCH);
-        $this->__call('UNWATCH', array());
+        $this->__call('UNWATCH', []);
 
         return $this;
     }
@@ -313,7 +333,7 @@ class MultiExec implements ClientContextInterface
      *
      * @param mixed $callable Callback for execution.
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      * @throws ClientException
      */
     private function checkBeforeExecution($callable)
@@ -326,7 +346,7 @@ class MultiExec implements ClientContextInterface
 
         if ($callable) {
             if (!is_callable($callable)) {
-                throw new \InvalidArgumentException('The argument must be a callable object.');
+                throw new InvalidArgumentException('The argument must be a callable object.');
             }
 
             if (!$this->commands->isEmpty()) {
@@ -350,11 +370,10 @@ class MultiExec implements ClientContextInterface
      *
      * @param mixed $callable Optional callback for execution.
      *
+     * @return array
      * @throws CommunicationException
      * @throws AbortedMultiExecException
      * @throws ServerException
-     *
-     * @return array
      */
     public function execute($callable = null)
     {
@@ -378,7 +397,9 @@ class MultiExec implements ClientContextInterface
 
             $execResponse = $this->call('EXEC');
 
-            if ($execResponse === null) {
+            // The additional `false` check is needed for Relay,
+            // let's hope it won't break anything
+            if ($execResponse === null || $execResponse === false) {
                 if ($attempts === 0) {
                     throw new AbortedMultiExecException(
                         $this, 'The current transaction has been aborted by the server.'
@@ -393,7 +414,7 @@ class MultiExec implements ClientContextInterface
             break;
         } while ($attempts-- > 0);
 
-        $response = array();
+        $response = [];
         $commands = $this->commands;
         $size = count($execResponse);
 
@@ -404,8 +425,18 @@ class MultiExec implements ClientContextInterface
         for ($i = 0; $i < $size; ++$i) {
             $cmdResponse = $execResponse[$i];
 
-            if ($cmdResponse instanceof ErrorResponseInterface && $this->exceptions) {
+            if ($this->exceptions && $cmdResponse instanceof ErrorResponseInterface) {
                 throw new ServerException($cmdResponse->getMessage());
+            }
+
+            if ($cmdResponse instanceof RelayException) {
+                if ($this->exceptions) {
+                    throw new ServerException($cmdResponse->getMessage(), $cmdResponse->getCode(), $cmdResponse);
+                }
+
+                $commands->dequeue();
+                $response[$i] = new Error($cmdResponse->getMessage());
+                continue;
             }
 
             $response[$i] = $commands->dequeue()->parseResponse($cmdResponse);
@@ -433,7 +464,7 @@ class MultiExec implements ClientContextInterface
             // NOOP
         } catch (ServerException $exception) {
             // NOOP
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->discard();
         }
 

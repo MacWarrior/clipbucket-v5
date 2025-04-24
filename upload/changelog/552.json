@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"9",
+  "revision":"10",
   "status":"stable",
   "detail":[
     {
@@ -31,6 +31,15 @@
       "title": "Plugins",
       "description": [
         "Update compatibility notice to 5.5.2"
+      ]
+    },
+    {
+      "title": "External components",
+      "description": [
+        "Update psr/log to 3.0.2"
+        ,"Update filp/whoops to 2.18.0"
+        ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
+        ,"Update predis/predis to 2.3.0"
       ]
     }
   ]
