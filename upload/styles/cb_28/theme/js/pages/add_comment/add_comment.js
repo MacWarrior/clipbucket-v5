@@ -225,4 +225,25 @@ $(document).ready(function(){
             }
         });
     }
+
+    document.addEventListener('postThemeSwitch', function(e) {
+        if( e.detail.theme === 'light' ){
+            document.querySelectorAll('.toastui-editor-defaultUI.toastui-editor-dark').forEach(el => {
+                el.classList.remove('toastui-editor-dark');
+            });
+        } else {
+            document.querySelectorAll('.toastui-editor-defaultUI').forEach(el => {
+                if (!el.classList.contains('toastui-editor-dark')) {
+                    el.classList.add('toastui-editor-dark');
+                }
+            });
+            if (!document.querySelector(`link[href="${toastui_editor_theme_dark_url}"]`)) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = toastui_editor_theme_dark_url;
+                link.type = 'text/css';
+                document.head.appendChild(link);
+            }
+        }
+    });
 });

@@ -69,7 +69,7 @@
 <script type="text/javascript">
 	let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
 	let visual_editor_comments_placeholder = "{lang code='type_comment_box'}";
-	let template_dir = "{$theme}";
-	let default_theme = "{config('default_theme')}";
-	let current_language = '{$lang_obj->getLang()}';
+	let default_theme = "{User::getInstance()->getActiveTheme()}";
+	let current_language = "{$lang_obj->getLang()}";
+	let toastui_editor_theme_dark_url = "{$toastui_editor_theme_dark}";
 </script>

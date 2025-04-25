@@ -542,8 +542,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 setTimeout(() => {
                     document.body.classList.remove('theme_transition');
                 }, 1000);
+
+                const event = new CustomEvent("postThemeSwitch", {
+                    detail: {
+                        theme: data.theme
+                    }
+                });
+                document.dispatchEvent(event);
             }
         });
+
     }
 
     let buttons = document.querySelectorAll('.theme-switch button');

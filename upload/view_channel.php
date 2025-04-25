@@ -127,24 +127,7 @@ if( ClipBucket::getInstance()->show_page ){
             'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
         ]);
 
-        if( config('enable_visual_editor_comments') == 'yes' ){
-            ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
-            ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
-
-            $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
-            if( config('default_theme') != '' && file_exists($filepath) ){
-                ClipBucket::getInstance()->addCSS([
-                    'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
-                ]);
-            }
-
-            $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
-            if( file_exists($filepath) ){
-                ClipBucket::getInstance()->addJS([
-                    'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
-                ]);
-            }
-        }
+        Comments::initVisualComments();
     }
 
     ClipBucket::getInstance()->addCSS([

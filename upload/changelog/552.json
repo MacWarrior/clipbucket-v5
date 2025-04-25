@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"13",
+  "revision":"14",
   "status":"stable",
   "detail":[
     {
@@ -13,6 +13,7 @@
       "title": "Front office",
       "description": [
         "Fix collection privacy on photos page"
+        ,"Fix visual editor theme change <i>(#590)</i>"
       ]
     },
     {

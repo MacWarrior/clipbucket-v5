@@ -810,28 +810,28 @@ class User
 
         if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
             if( in_array($this->get('active_theme'), ['light','dark','auto']) ){
-                if( $this->get('active_theme') && empty($_COOKIE['user_theme_os']) ){
+                if( in_array( $this->get('active_theme'), ['light','dark'] ) ){
+                    return $this->get('active_theme');
+                }
+                if( empty($_COOKIE['user_theme_os']) ){
                     return $this->get('active_theme');
                 }
                 if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
-                    return config('default_theme');
+                    return $this->get('active_theme');
                 }
                 return $_COOKIE['user_theme_os'];
             }
             return config('default_theme');
         }
 
-        if( isset($_COOKIE['user_theme']) ){
-            if( !in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
-                return config('default_theme');
+        if( isset($_COOKIE['user_theme']) && in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
+            if( in_array( $_COOKIE['user_theme'], ['light','dark'] ) ){
+                return $_COOKIE['user_theme'];
             }
-            if( $_COOKIE['user_theme'] == 'auto' ){
-                if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
-                    return config('default_theme');
-                }
-                return $_COOKIE['user_theme_os'];
+            if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
+                return $_COOKIE['user_theme'];
             }
-            return $_COOKIE['user_theme'];
+            return $_COOKIE['user_theme_os'];
         }
         return config('default_theme');
     }

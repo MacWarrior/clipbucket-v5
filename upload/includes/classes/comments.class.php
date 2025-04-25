@@ -221,7 +221,7 @@ class Comments
     /**
      * @throws Exception
      */
-    public static function updateCommentsCount($type, $type_id)
+    public static function updateCommentsCount($type, $type_id): void
     {
         $params = [];
         $params['type'] = $type;
@@ -565,6 +565,36 @@ class Comments
         ];
 
         return CMS::getInstance($comment, $params)->getClean();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function initVisualComments(): void
+    {
+        if( config('enable_visual_editor_comments') != 'yes' ) {
+            return;
+        }
+
+        $min_suffixe = in_dev() ? '' : '.min';
+        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+        if( User::getInstance()->getActiveTheme() == 'dark' ){
+            ClipBucket::getInstance()->addCSS([
+                'toastui/toastui-editor-dark' . $min_suffixe . '.css' => 'libs'
+            ]);
+        }
+
+        $fileUrl = DirPath::getUrl('libs') . 'toastui/toastui-editor-dark' . $min_suffixe . '.css';
+        assign('toastui_editor_theme_dark', $fileUrl);
+
+        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
+        if( file_exists($filepath) ){
+            ClipBucket::getInstance()->addJS([
+                'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
+            ]);
+        }
     }
 
 }
