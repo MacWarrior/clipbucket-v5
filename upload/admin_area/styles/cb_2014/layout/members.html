@@ -42,7 +42,7 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col-md-3">
-                        <img src="{$userquery->getUserThumb($u)}" class="img-thumbnail oneUserImage" style="height: 80px; width: 80px;"/>
+                        <img src="{userquery::getInstance()->getUserThumb($u)}" class="img-thumbnail oneUserImage" style="height: 80px; width: 80px;"/>
                     </div>
                     <div class="col-md-9">
                         <a href="view_user.php?uid={$u.userid}" class="oneUserName">{display_clean($u.username)} </a>
@@ -70,7 +70,7 @@
                     <li><a role="menuitem" tabindex="-1" href="view_user.php?uid={$u.userid}">{lang code='edit'}</a></li>
 
                     {if isSectionEnabled('channels') && $u.is_channel_enable}
-                        <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
+                        <li><a role="menuitem" tabindex="-1" href="{userquery::getInstance()->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
                     {/if}
                     <li><a role="menuitem" tabindex="-1" href="manage_playlist.php?userid={$u.userid}&search=Search">View Playlists</a></li>
 

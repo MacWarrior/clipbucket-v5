@@ -98,8 +98,7 @@ require_once DirPath::get('classes') . 'flag.class.php';
 require_once DirPath::get('classes') . 'sort_type.class.php';
 
 $cb_columns = new cb_columns();
-$myquery = new myquery();
-$row = $myquery->Get_Website_Details();
+$row = myquery::getInstance()->Get_Website_Details();
 
 if (!in_dev()) {
     define('DEBUG_LEVEL', 0);
@@ -147,19 +146,15 @@ try {
     $error_redis = 'You need to authenticate to Redis server';
 }
 
-Language::getInstance()->init();
-
 ClipBucket::getInstance()->cbinfo = ['version' => Update::getInstance()->getCurrentCoreVersion(), 'rev' => Update::getInstance()->getCurrentCoreRevision()];
 
 $timezone = config('timezone');
-if(!empty($timezone) && $timezone !== false) {
+if(!empty($timezone)) {
     date_default_timezone_set($timezone);
 }
 
 require_once('classes/session.class.php');
 $sess = new Session();
-$userquery = new userquery();
-$userquery->init();
 
 if (User::getInstance()->hasAdminAccess() && !empty($error_redis)) {
     e($error_redis);
@@ -219,9 +214,7 @@ $imgObj = new ResizeImage();
 $cbplayer = new CBPlayer();
 $cbemail = new CBEmail();
 $cbpm = new cb_pm();
-$cbpage = new cbpage();
 $cbindex = new CBreindex();
-$cbphoto = new CBPhotos();
 
 $cbfeeds = new cbfeeds();
 
@@ -252,16 +245,6 @@ define('COLLPP', $row['collection_per_page']);
 define('COLLIP', $row['collection_items_page']);
 
 define('MAX_COMMENT_CHR', ClipBucket::getInstance()->configs['max_comment_chr']);
-
-# SETTING PHOTO SETTING
-$cbphoto->thumb_width = $row['photo_thumb_width'];
-$cbphoto->thumb_height = $row['photo_thumb_height'];
-$cbphoto->mid_width = $row['photo_med_width'];
-$cbphoto->mid_height = $row['photo_med_height'];
-$cbphoto->lar_width = $row['photo_lar_width'];
-$cbphoto->cropping = $row['photo_crop'];
-$cbphoto->position = $row['watermark_placement'];
-
 define('EMBED_VDO_WIDTH', $row['embed_player_width']);
 define('EMBED_VDO_HEIGHT', $row['embed_player_height']);
 
@@ -272,7 +255,7 @@ $cbtpl = new CBTemplate();
 $cbtpl->caching = 0;
 
 CBvideo::getInstance()->init();
-$cbphoto->init_photos();
+CBPhotos::getInstance()->init_photos();
 
 ClipBucket::getInstance()->set_the_template();
 
@@ -310,8 +293,6 @@ Assign('page', getConstant('PAGE'));
 
 # REGISTER OBJECTS FOR SMARTY
 global $Smarty;
-$Smarty->assign_by_ref('myquery', $myquery);
-$Smarty->assign_by_ref('userquery', $userquery);
 $Smarty->assign_by_ref('signup', $signup);
 $Smarty->assign_by_ref('adsObj', $adsObj);
 $Smarty->assign_by_ref('formObj', $formObj);
@@ -319,8 +300,6 @@ $Smarty->assign_by_ref('lang_obj', Language::getInstance());
 $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
-$Smarty->assign_by_ref('cbpage', $cbpage);
-$Smarty->assign_by_ref('cbphoto', $cbphoto);
 $Smarty->assign_by_ref('cbfeeds', $cbfeeds);
 
 # REGISTERING FUNCTION FOR SMARTY TEMPLATES

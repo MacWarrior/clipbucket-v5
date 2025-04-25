@@ -83,7 +83,7 @@
       {lang code='from'} : 
       <strong>
           {if $pr_msg.message_from != $anonymous_id}
-          <a href="{$userquery->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
+          <a href="{userquery::getInstance()->profile_link($pr_msg)}">{display_clean($pr_msg.username)}</a>
           {else}
             {display_clean(lang($pr_msg.username))}
           {/if}
@@ -95,7 +95,7 @@
         {$to_id = $pr_msg.message_to}
         {$trimed_to = str_replace('#','', $to_id)}
           {if $trimed_to != $anonymous_id}
-            <a href="{$userquery->profile_link($trimed_to)}">
+            <a href="{userquery::getInstance()->profile_link($trimed_to)}">
               {display_clean(ucfirst(get_username($trimed_to)))}
             </a>
           {else}

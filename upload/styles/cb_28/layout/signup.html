@@ -1,5 +1,5 @@
-{$required_fields=$userquery->load_signup_fields()|array_filter}
-{$custom_fields=$userquery->custom_signup_fields}
+{$required_fields=userquery::getInstance()->load_signup_fields()|array_filter}
+{$custom_fields=userquery::getInstance()->custom_signup_fields}
 {if $mode == 'signup_success'}
 	<div class="simple_container">
 		{if $udetails.usr_status != 'Ok'}
@@ -126,7 +126,7 @@
 						<div class="form-group checkbox">
 							<label>
 								<input name="agree" type="checkbox" id="agree" value="yes" checked>
-								{lang('user_i_agree_to_the', [$cbpage->get_page_link(3),$cbpage->get_page_link(2)])}
+								{lang('user_i_agree_to_the', [cbpage::getInstance()->get_page_link(3),cbpage::getInstance()->get_page_link(2)])}
 							</label>
 						</div>
 						{ANCHOR place="the_form"}

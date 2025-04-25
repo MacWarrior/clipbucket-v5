@@ -790,8 +790,7 @@ class Collection
                 break;
 
             case 'photos':
-                global $cbphoto;
-                $thumb = $cbphoto->get_image_file($item);
+                $thumb = CBPhotos::getInstance()->get_image_file($item);
                 break;
         }
         return $thumb;
@@ -2093,8 +2092,7 @@ class Collections extends CBCategory
                     break;
 
                 case 'photos':
-                    global $cbphoto;
-                    $thumb = $cbphoto->get_image_file($cbphoto->get_photo($item[0]['object_id']));
+                    $thumb = CBPhotos::getInstance()->get_image_file(CBPhotos::getInstance()->get_photo($item[0]['object_id']));
                     break;
             }
 
@@ -2225,8 +2223,7 @@ class Collections extends CBCategory
                 break;
 
             case 'photos':
-                global $cbphoto;
-                $items = $cbphoto->collection->get_collection_items_with_details($cid);
+                $items = CBPhotos::getInstance()->collection->get_collection_items_with_details($cid);
                 break;
         }
 

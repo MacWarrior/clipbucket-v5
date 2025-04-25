@@ -132,9 +132,9 @@
                                     <div class="row">
                                      
                                      {foreach $users as $user}
-	                                    {$user_details = $userquery->get_user_details($user.userid)}
+	                                    {$user_details = userquery::getInstance()->get_user_details($user.userid)}
 	                                        <div class="user-col">
-	                                            <a href="{$userquery->profile_link($user_details)}">
+	                                            <a href="{userquery::getInstance()->profile_link($user_details)}">
 	                                                <img src="{avatar details=$user_details}" alt="" class="img-responsive">
 	                                            </a>
 	                                            <div class="popper-content clearfix hide">
@@ -291,9 +291,9 @@
                                     <div class="row">
                                         {if $users}
 	                                    {foreach $users as $user}
-	                                    {$user_details = $userquery->get_user_details($user.userid)}
+	                                    {$user_details = userquery::getInstance()->get_user_details($user.userid)}
 	                                        <div class="user-col">
-	                                            <a href="{$userquery->profile_link($user_details)}">
+	                                            <a href="{userquery::getInstance()->profile_link($user_details)}">
 	                                                <img src="{avatar details=$user_details}" alt="" class="img-responsive">
 	                                            </a>
 	                                            <div class="popper-content clearfix hide">

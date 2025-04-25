@@ -159,7 +159,6 @@ class cbfeeds
      */
     function getUserFeeds($user)
     {
-        global $cbphoto, $userquery;
         $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
@@ -186,11 +185,11 @@ class cbfeeds
                 $farr['file'] = getName($feed['file']);
                 $farr['datetime'] = nicetime($farr['time'], true);
 
-                $userlink = '<a href="' . $userquery->profile_link($user) . '">' . display_clean($user['username']) . '</a>';
+                $userlink = '<a href="' . userquery::getInstance()->profile_link($user) . '">' . display_clean($user['username']) . '</a>';
                 //Creating Links
                 switch ($action) {
                     case 'upload_photo':
-                        $photo = $cbphoto->get_photo($object_id);
+                        $photo = CBPhotos::getInstance()->get_photo($object_id);
 
                         //If photo does not exists, simply remove the feed
                         if (!$photo) {
@@ -201,14 +200,14 @@ class cbfeeds
                             $objectArr['size'] = 't';
                             $objectArr['output'] = 'non_html';
                             $objectArr['alt'] = $photo['photo_title'];
-                            $farr['thumb'] = $cbphoto->getFileSmarty($objectArr);
-                            $farr['link'] = $cbphoto->photo_links($photo, 'view_item');
+                            $farr['thumb'] = CBPhotos::getInstance()->getFileSmarty($objectArr);
+                            $farr['link'] = CBPhotos::getInstance()->photo_links($photo, 'view_item');
 
                             //Content Title
                             $farr['title'] = $photo['photo_title'];
                             $farr['action_title'] = lang('user_has_uploaded_new_photo', $userlink);
 
-                            $farr['links'][] = ['link' => ($cbphoto->photo_links($photo, 'view_item')), 'text' => lang('view_photo')];
+                            $farr['links'][] = ['link' => (CBPhotos::getInstance()->photo_links($photo, 'view_item')), 'text' => lang('view_photo')];
 
                             $farr['icon'] = 'images.png';
                         }
@@ -250,13 +249,13 @@ class cbfeeds
                         break;
 
                     case 'add_friend':
-                        $friend = $userquery->get_user_details($object_id);
+                        $friend = userquery::getInstance()->get_user_details($object_id);
 
                         if (!$friend) {
                             $this->deleteFeed($uid, $feed['file']);
                             $remove_feed = true;
                         } else {
-                            $friendlink = '<a href="' . $userquery->profile_link($friend) . '">' . display_clean($friend['username']) . '</a>';
+                            $friendlink = '<a href="' . userquery::getInstance()->profile_link($friend) . '">' . display_clean($friend['username']) . '</a>';
                             $farr['action_title'] = lang('user_is_now_friend_with_other', [$userlink, $friendlink]);
                             $farr['icon'] = 'user_add.png';
                         }

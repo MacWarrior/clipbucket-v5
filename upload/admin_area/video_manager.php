@@ -2,7 +2,6 @@
 define('THIS_PAGE', 'video_manager');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $userquery, $myquery;
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 
@@ -23,7 +22,7 @@ if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 if (isset($_GET['make_feature'])) {
     $video = mysql_clean($_GET['make_feature']);
     CBvideo::getInstance()->action('feature', $video);
-    $row = $myquery->Get_Website_Details();
+    $row = myquery::getInstance()->Get_Website_Details();
     if ($row['notification_option'] == '1') {
         send_video_notification($video);
     }
@@ -161,7 +160,7 @@ $params['join_flag']=true;
 if (config('enable_video_categories') !='no') {
     $params['get_detail']=true;
 }
-assign('anonymous_id', $userquery->get_anonymous_user());
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $videos = Video::getInstance()->getAll($params);
 $ids_to_check_progress = [];
 foreach ($videos as $video) {

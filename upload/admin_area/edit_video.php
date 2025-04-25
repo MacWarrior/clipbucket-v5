@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $myquery, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
@@ -12,7 +11,7 @@ $video_id = $_GET['video'];
 if (isset($_POST['update'])) {
     Upload::getInstance()->validate_video_upload_form();
     if (empty(errorhandler::getInstance()->get_error())) {
-        $myquery->update_video();
+        myquery::getInstance()->update_video();
         Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
         if( config('enable_video_poster') == 'yes' ){
@@ -27,6 +26,7 @@ if (isset($_POST['update'])) {
 $data = Video::getInstance()->getOne(['videoid'=>$video_id]);
 
 /* Generating breadcrumb */
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
@@ -47,7 +47,7 @@ if ($_GET['mode'] != '') {
 }
 
 //Check Video Exists or Not
-if ($myquery->video_exists($video_id)) {
+if (myquery::getInstance()->video_exists($video_id)) {
     assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);

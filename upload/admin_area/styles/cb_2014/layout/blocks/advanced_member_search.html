@@ -65,7 +65,7 @@
             <label for="level">Level</label>
                 <select name="level" id="level" class="form-control">
                     <option value="">------</option>
-                    {assign var=levels value=$userquery->get_levels()}
+                    {assign var=levels value=userquery::getInstance()->get_levels()}
                     {foreach from=$levels item=level}
                     <option value="{$level.user_level_id}" {if $smarty.get.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
                     {/foreach}

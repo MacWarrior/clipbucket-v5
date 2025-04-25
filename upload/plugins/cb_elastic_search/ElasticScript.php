@@ -118,7 +118,7 @@ try {
                     }
 
                     //Fetching users to process
-                    $users = $userquery->get_users($userRequest);
+                    $users = userquery::getInstance()->get_users($userRequest);
                     $extras["method"] = $method;
 
                     if ($users) {

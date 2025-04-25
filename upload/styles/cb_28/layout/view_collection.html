@@ -157,7 +157,7 @@
             </div>
             {if config('enable_comments_collection') == 'yes'}
                 <div class="clearfix comments-block">
-                    {if $myquery->is_commentable($c,'collection')}
+                    {if myquery::getInstance()->is_commentable($c,'collection')}
                         <div class="collectionComments addComment">
                             <h2>
                                 {if $c.total_comments <= 1 }

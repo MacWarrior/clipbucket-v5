@@ -9,7 +9,7 @@
     {$watch_right = 'view_photos'}
     {$link_config = 'enable_video_link_sharing'}
     {$share_config = 'enable_video_internal_sharing'}
-    {$item_link = $cbphoto->photo_links($params.photo,'view_item')}
+    {$item_link = CBPhotos::getInstance()->photo_links($params.photo,'view_item')}
     {$trad_link = 'link_this_photo'}
 {elseif $type=='collection'}
     {$watch_right = 'view_collections'}

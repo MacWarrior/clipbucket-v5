@@ -54,7 +54,7 @@
           <label for="extension">Extension</label>
           <select class="form-control" name="extension" id="extension">
             <option value="" ></option>
-            {foreach from=$cbphoto->exts item=ext}
+            {foreach from=CBPhotos::getInstance()->exts item=ext}
               <option value="{$ext}"{if $smarty.get.extension == $ext} selected{/if}>{$ext|capitalize}</option>
             {/foreach}
           </select>

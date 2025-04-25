@@ -1,9 +1,6 @@
 <?php
 define('THIS_PAGE', 'photo_settings');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-
-global $myquery, $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('photos_moderation', true);
 pages::getInstance()->page_redir();
@@ -28,10 +25,10 @@ if ($_POST['update_watermark']) {
                 $value = 1;
             }
         }
-        $myquery->Set_Website_Details($field, $value);
+        myquery::getInstance()->Set_Website_Details($field, $value);
     }
     if (!empty($_FILES['watermark_file']['tmp_name'])) {
-        $cbphoto->update_watermark($_FILES['watermark_file']);
+        CBPhotos::getInstance()->update_watermark($_FILES['watermark_file']);
     }
 
     e("Watermark Settings Have Been Updated", 'm');
@@ -39,7 +36,7 @@ if ($_POST['update_watermark']) {
 }
 
 
-$row = $myquery->Get_Website_Details();
+$row = myquery::getInstance()->Get_Website_Details();
 assign('row', $row);
 
 template_files('photo_settings.html');

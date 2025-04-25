@@ -1,9 +1,8 @@
 <?php
 define('THIS_PAGE', 'manage_players');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery, $cbplayer;
+global $cbplayer;
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();

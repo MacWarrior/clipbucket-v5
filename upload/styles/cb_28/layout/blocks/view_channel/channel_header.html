@@ -36,7 +36,7 @@
 		</div>
 		<div class="friend-block clearfix">
 			{if user_id() && $user.userid != user_id()}
-				{$friend_status = $userquery->friendship_status(user_id(), $user.userid)}
+				{$friend_status = userquery::getInstance()->friendship_status(user_id(), $user.userid)}
 				{if $friend_status == "f"}
 				<a href="{$baseurl}manage_contacts.php?mode=delete&userid={$u.userid}" class="btn btn-danger btn-sm new1">
 					{lang code="unfriend"}
@@ -60,7 +60,7 @@
 	</div>
 
 	<div class="avatar">
-		<img class="img-responsive img-circle" src="{$userquery->getUserThumb($user)}">
+		<img class="img-responsive img-circle" src="{userquery::getInstance()->getUserThumb($user)}">
 	</div>
 
 	<div class="profile-buttons clearfix">
@@ -73,7 +73,7 @@
 				<a href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user.username)}" class="btn btn-default">
 					{lang code="user_send_message"}
 				</a>
-				{if $userquery->is_subscribed($user.userid,user_id())}
+				{if userquery::getInstance()->is_subscribed($user.userid,user_id())}
 					<button class="btn btn-default subs_{$user.userid}" onclick="_cb.unsubscribeToChannel('{$user.userid}','unsubscribe_user');">
 						{lang code="unsubscribe"}
 					</button>

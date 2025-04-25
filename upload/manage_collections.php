@@ -1,7 +1,6 @@
 <?php
 define('THIS_PAGE', 'manage_collections');
 define('PARENT_PAGE', 'collections');
-
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
@@ -9,8 +8,6 @@ User::getInstance()->isUserConnectedOrRedirect();
 if( !isSectionEnabled('collections') || !(isSectionEnabled('videos') && isSectionEnabled('photos')) ){
     redirect_to(cblink(['name' => 'my_account']));
 }
-
-global $cbphoto;
 
 $udetails = userquery::getInstance()->get_user_details(user_id());
 assign('user', $udetails);
@@ -171,8 +168,8 @@ switch ($mode) {
                 if (isset($_POST['delete_selected'])) {
                     $count = count($_POST['check_item']);
                     for ($i = 0; $i < $count; $i++) {
-                        $cbphoto->collection->remove_item($_POST['check_item'][$i], $collection_id);
-                        $cbphoto->make_photo_orphan($collection_id, $_POST['check_item'][$i]);
+                        CBPhotos::getInstance()->collection->remove_item($_POST['check_item'][$i], $collection_id);
+                        CBPhotos::getInstance()->make_photo_orphan($collection_id, $_POST['check_item'][$i]);
                     }
                     errorhandler::getInstance()->flush();
                     e(lang('selected_items_removed', 'photos'), 'm');

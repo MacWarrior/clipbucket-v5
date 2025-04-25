@@ -3,7 +3,7 @@ define('THIS_PAGE', 'view_user');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-$userquery = userquery::getInstance();
+userquery::getInstance()-> = userquery::getInstance();
 
 
 User::getInstance()->hasPermissionOrRedirect('member_moderation', true);
@@ -11,7 +11,7 @@ pages::getInstance()->page_redir();
 
 $uid = $_GET['uid'];
 unset($_REQUEST['uid']);
-if ($uid != $userquery->get_anonymous_user()) {
+if ($uid != userquery::getInstance()->get_anonymous_user()) {
     $udetails = User::getInstance()->getOne(['userid'=>$uid]);
 }
 if (empty($udetails)) {
@@ -26,56 +26,56 @@ $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($udetails['username'])
 if ($udetails) {
     //Deactivating User
     if (isset($_GET['deactivate'])) {
-        $userquery->action('deactivate', $uid);
+        userquery::getInstance()->action('deactivate', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Activating User
     if (isset($_GET['activate'])) {
-        $userquery->action('activate', $uid);
+        userquery::getInstance()->action('activate', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Banning User
     if (isset($_GET['ban'])) {
-        $userquery->action('ban', $uid);
+        userquery::getInstance()->action('ban', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Unbanning User
     if (isset($_GET['unban'])) {
-        $userquery->action('unban', $uid);
+        userquery::getInstance()->action('unban', $uid);
         $udetails = User::getInstance()->getOne(['userid'=>$uid]);
     }
 
     //Deleting User
     if (isset($_GET['delete'])) {
-        $userquery->delete_user($uid);
+        userquery::getInstance()->delete_user($uid);
     }
 
     //Deleting User Videos
     if (isset($_GET['delete_vids'])) {
-        $userquery->delete_user_vids($uid);
+        userquery::getInstance()->delete_user_vids($uid);
     }
 
     //Deleting User Contacts
     if (isset($_GET['delete_contacts'])) {
-        $userquery->remove_contacts($uid);
+        userquery::getInstance()->remove_contacts($uid);
     }
 
     //Deleting User Pms
     if (isset($_GET['delete_pms'])) {
-        $userquery->remove_user_pms($uid);
+        userquery::getInstance()->remove_user_pms($uid);
     }
 
     if (isset($_POST['update_user'])) {
-        $userquery->update_user($_POST);
+        userquery::getInstance()->update_user($_POST);
         if (!error()) {
             $udetails = User::getInstance()->getOne(['userid'=>$uid]);
         }
     }
 
-    $profile = $userquery->get_user_profile($uid);
+    $profile = userquery::getInstance()->get_user_profile($uid);
     if (is_array($profile)) {
         $user_profile = array_merge($udetails, $profile);
     } else {
@@ -109,9 +109,9 @@ if( config('enable_visual_editor_comments') == 'yes' ){
 $available_tags = Tags::fill_auto_complete_tags('profile');
 assign('available_tags',$available_tags);
 
-assign('signup_fields', $userquery->load_signup_fields($udetails));
+assign('signup_fields', userquery::getInstance()->load_signup_fields($udetails));
 
-$channel_profile_fields = $userquery->load_user_fields($user_profile);
+$channel_profile_fields = userquery::getInstance()->load_user_fields($user_profile);
 
 $location_fields = [];
 foreach($channel_profile_fields AS $field){

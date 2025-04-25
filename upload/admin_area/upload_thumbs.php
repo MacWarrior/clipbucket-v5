@@ -2,8 +2,6 @@
 define('THIS_PAGE', 'upload_thumb');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery;
-
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 
@@ -44,7 +42,7 @@ if (@$_GET['msg']) {
 $can_sse = System::can_sse() ? 'true' : 'false';
 assign('can_sse', $can_sse);
 //Check Video Exists or Not
-if ($myquery->video_exists($video)) {
+if (myquery::getInstance()->video_exists($video)) {
 
     # Uploading Thumbs
     if (isset($_POST['upload_thumbs'])) {

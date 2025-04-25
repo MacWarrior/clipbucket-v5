@@ -557,10 +557,9 @@ class ClipBucket
      * Function used to assign ClipBucket configurations
      * @throws Exception
      */
-    function get_configs()
+    function get_configs(): array
     {
-        global $myquery;
-        return $myquery->Get_Website_Details();
+        return myquery::getInstance()->Get_Website_Details();
     }
 
     /**
@@ -764,13 +763,11 @@ class ClipBucket
      */
     function foot_menu($params = null)
     {
-        global $cbpage;
-
-        $pages = $cbpage->get_pages(['active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC']);
+        $pages = cbpage::getInstance()->get_pages(['active' => 'yes', 'display_only' => 'yes', 'order' => 'page_order ASC']);
 
         if ($pages) {
             foreach ($pages as $p) {
-                $this->foot_menu[] = ['name' => display_clean(lang('page_name_' . $p['page_name'])), 'link' => $cbpage->page_link($p), 'this' => 'home'];
+                $this->foot_menu[] = ['name' => display_clean(lang('page_name_' . $p['page_name'])), 'link' => cbpage::getInstance()->page_link($p), 'this' => 'home'];
             }
         }
 

@@ -30,10 +30,10 @@
             {if $comments !== false}
                 <div id="rcomments" class="tab-pane {$active}">
                     {foreach from=$comments item=comment}
-                        {$userdetails = $userquery->get_user_details($comment.userid)}
+                        {$userdetails = userquery::getInstance()->get_user_details($comment.userid)}
                         <div class="itemdiv dialogdiv">
                             <div class="user">
-                                <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+                                <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{userquery::getInstance()->getUserThumb($userdetails,'small')}">
                             </div>
                             <div class="body">
                                 <div class="time">
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                {assign var=todos value=$myquery->get_todos()}
+                {assign var=todos value=myquery::getInstance()->get_todos()}
                 <ul class="row todosList">
                     {foreach from=$todos item=note}
                         <li class="col-md-12 oneTodo">
@@ -85,7 +85,7 @@
                         <a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
                     </div>
                 </div>
-                {assign var=notes value=$myquery->get_notes()}
+                {assign var=notes value=myquery::getInstance()->get_notes()}
                 <ul class="notesList row paddingRightSmall">
                     {foreach from=$notes item=note}
                         <li class="col-md-4">

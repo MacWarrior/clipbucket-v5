@@ -1,4 +1,4 @@
-{$myAccountLinks = $userquery->my_account_links()}
+{$myAccountLinks = userquery::getInstance()->my_account_links()}
 {$leftMenuLinks = array_slice($myAccountLinks, 7)}
 <div id="main" class="clearfix container">
     <div class="clearfix">
@@ -85,11 +85,11 @@
                 <div class="clearfix sidebar-channels">
                     {foreach $feature_users as $user}
                         <div class="clearfix channel-item">
-                            <a href="{$userquery->profile_link($user)}" class="avatar">
-                                <img src="{$userquery->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
+                            <a href="{userquery::getInstance()->profile_link($user)}" class="avatar">
+                                <img src="{userquery::getInstance()->getuserthumb($user,'m')}" width="50" height="50" class="img-circle"/>
                             </a>
                             <div class="channel-info">
-                                <h3><a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a></h3>
+                                <h3><a href="{userquery::getInstance()->profile_link($user)}">{display_clean($user.username)}</a></h3>
                                 <div class="clearfix views-videos">
                                     <span>{prettyNum($user.profile_hits|number_format)} {lang code='views'}</span>
                                     <span>{prettyNum($user.total_videos|number_format)} {lang code='videos'}</span>

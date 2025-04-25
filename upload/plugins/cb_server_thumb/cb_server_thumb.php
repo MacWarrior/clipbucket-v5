@@ -92,8 +92,7 @@ function get_server_img($params)
     }
 
     if (!is_array($details)) {
-        global $cbphoto;
-        $photo = $cbphoto->get_photo($details, true);
+        $photo = CBPhotos::getInstance()->get_photo($details, true);
     } else {
         $photo = $details;
     }
@@ -150,11 +149,10 @@ function get_server_img($params)
         return get_photo_default_thumb($size, $output);
     }
 
-    global $cbphoto;
     foreach ($files as $file) {
         $thumb_name = explode('/', $file);
         $thumb_name = end($thumb_name);
-        $thumb_type = $cbphoto->get_image_type($thumb_name);
+        $thumb_type = CBPhotos::getInstance()->get_image_type($thumb_name);
 
         if ($with_original || !empty($thumb_type)) {
             $thumbs[] = $timthumb_path . $thumb_name . '&directory=photos/' . $directory . $tim_postfix;
@@ -195,7 +193,7 @@ function get_server_img($params)
 
         if (empty($image_details) || empty($image_details[$size])) {
             /* UPDATING IMAGE DETAILS */
-            $cbphoto->update_image_details($photo);
+            CBPhotos::getInstance()->update_image_details($photo);
         }
 
         $attrs['id'] = ($params['id'] ? $params['id'] . '_' : 'photo_') . $photo['photo_id'];

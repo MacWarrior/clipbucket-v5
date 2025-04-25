@@ -17,7 +17,7 @@
           <a href="view_user.php?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
           <br>
           <a href="view_user.php?uid={$user.userid}">
-             <img src="{$userquery->getUserThumb([],'small', $user.userid)}" class="img-thumbnail oneUserImage"/>
+             <img src="{userquery::getInstance()->getUserThumb([],'small', $user.userid)}" class="img-thumbnail oneUserImage"/>
           </a>
         {else}
           {$user.session_string}

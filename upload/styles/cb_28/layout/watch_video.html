@@ -1,6 +1,6 @@
 {$video=$vdo}
 {$type='video'}
-{$channel = $userquery->get_user_details($video.userid)}
+{$channel = userquery::getInstance()->get_user_details($video.userid)}
 <div id="main" class="clearfix container">
     <div class="clearfix">
         <section id="content" class="clearfix videos">
@@ -19,19 +19,19 @@
 
                         {if config('enable_hide_uploader_name') != 'yes'}
                             {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                                <a href="{$userquery->profile_link($video)}" class="avatar">
-                                    <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
+                                <a href="{userquery::getInstance()->profile_link($video)}" class="avatar">
+                                    <img src="{userquery::getInstance()->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
                                 </a>
                             {elseif $anonymous_id != $video.userid}
                                 <span class="avatar">
-                                    <img src="{$userquery->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
+                                    <img src="{userquery::getInstance()->getUserThumb([], '', $video.userid)}" class="img-responsive no_select"/>
                                 </span>
                             {/if}
                         {/if}
                         <h2 class="user-title">
                             {if config('enable_hide_uploader_name') != 'yes'}
                                 {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                                    <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                                    <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
                                 {elseif $anonymous_id != $video.userid}
                                     {display_clean($video.user_username)}
                                 {/if}
@@ -64,7 +64,7 @@
                         </div>
                         <div class="clearfix subscribe-col col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             {if user_id() && $video.userid != user_id() && $video.userid != $anonymous_id}
-                                {if $userquery->is_subscribed($video.userid,user_id())}
+                                {if userquery::getInstance()->is_subscribed($video.userid,user_id())}
                                     <button onclick="_cb.unsubscribeToChannel('{$video.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$video.userid}">
                                         {lang code="unsubscribe"}
                                     </button>
@@ -264,7 +264,7 @@
 
             {if config('enable_comments_video') == 'yes'}
                 <div class="clearfix comments-block">
-                    {if $myquery->is_commentable($vdo,'v')}
+                    {if myquery::getInstance()->is_commentable($vdo,'v')}
                         <div class="collectionComments addComment">
                             <h2>
                                 {if $vdo.comments_count <= 1 }

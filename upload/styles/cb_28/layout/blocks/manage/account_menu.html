@@ -11,7 +11,7 @@
         <div class="userPicContainer">
             {if user_id()}
             <a class="navbar-brand {if user_id()}nopadding{/if}" style="{if user_id()}padding-top:7px !important;{/if}" href="#">
-                <img class="cb_img_thum" src="{$userquery->getUserThumb('','small',user_id())}" style="width:40px; height:40px;"/>
+                <img class="cb_img_thum" src="{userquery::getInstance()->getUserThumb('','small',user_id())}" style="width:40px; height:40px;"/>
                 My Account &nbsp;&nbsp;&nbsp;<small>Total Uploaded Videos: {$user['total_videos']}</small>
             </a>
             {/if}
@@ -31,7 +31,7 @@
             {/foreach}
         </ul> 
         <div class="pull-right">
-            <a class="btn btn-info" href="{$userquery->profile_link($userquery->udetails)}">{lang code='com_my_channel'}</a>
+            <a class="btn btn-info" href="{userquery::getInstance()->profile_link(userquery::getInstance()->udetails)}">{lang code='com_my_channel'}</a>
         </div>
     </div>
 </div>

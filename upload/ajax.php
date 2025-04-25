@@ -2,8 +2,6 @@
 define('THIS_PAGE', 'ajax');
 require 'includes/config.inc.php';
 
-global $cbphoto;
-
 if (isset($_POST['mode'])) {
     $mode = $_POST['mode'];
 } else {
@@ -89,7 +87,7 @@ if (!empty($mode)) {
                 case 'photo':
                     $rating = mysql_clean($_POST['rating']) * 2;
                     $id = mysql_clean($_POST['id']);
-                    $result = $cbphoto->rate_photo($id, $rating);
+                    $result = CBPhotos::getInstance()->rate_photo($id, $rating);
                     $result['is_rating'] = true;
                     CBvideo::getInstance()->show_video_rating($result);
 
@@ -147,9 +145,9 @@ if (!empty($mode)) {
 
                 case 'p':
                 case 'photo':
-                    $ph = $cbphoto->get_photo($_POST['id']);
-                    $cbphoto->set_share_email($ph);
-                    $cbphoto->action->share_content($ph['photo_id']);
+                    $ph = CBPhotos::getInstance()->get_photo($_POST['id']);
+                    CBPhotos::getInstance()->set_share_email($ph);
+                    CBPhotos::getInstance()->action->share_content($ph['photo_id']);
                     break;
 
                 case 'cl':
@@ -191,7 +189,7 @@ if (!empty($mode)) {
 
                 case 'p':
                 case 'photo':
-                    $cbphoto->action->add_to_fav($id);
+                    CBPhotos::getInstance()->action->add_to_fav($id);
                     updateObjectStats('fav', 'photo', $id); // Increment in total favs
                     $funcs = cb_get_functions('favorite_photo');
                     break;
@@ -548,7 +546,7 @@ if (!empty($mode)) {
 
             CBvideo::getInstance()->collection->remove_item($obj_id, $cid);
             if ($type == 'photos') {
-                $cbphoto->make_photo_orphan($cid, $obj_id);
+                CBPhotos::getInstance()->make_photo_orphan($cid, $obj_id);
             }
 
             $error = errorhandler::getInstance()->get_error();
@@ -588,7 +586,7 @@ if (!empty($mode)) {
                 case "photos":
                 case "photo":
                 case "p":
-                    $N_item = $cbphoto->collection->get_next_prev_item($item_id, $cid, $direc);
+                    $N_item = CBPhotos::getInstance()->collection->get_next_prev_item($item_id, $cid, $direc);
                     increment_views($N_item[0]['photo_id'], 'photo');
                     break;
             }
@@ -623,7 +621,7 @@ if (!empty($mode)) {
                 case "photos":
                 case "photo":
                 case "p":
-                    $items = $cbphoto->collection->get_collection_items_with_details($cid, $order, $limit);
+                    $items = CBPhotos::getInstance()->collection->get_collection_items_with_details($cid, $order, $limit);
                     break;
             }
             if ($items) {
@@ -678,7 +676,7 @@ if (!empty($mode)) {
             break;
 
         case "ajaxPhotos":
-            $cbphoto->insert_photo();
+            CBPhotos::getInstance()->insert_photo();
             $ajax = [];
 
             if (msg()) {
@@ -697,7 +695,7 @@ if (!empty($mode)) {
 
         case "viewPhotoRating":
             $pid = mysql_clean($_POST['photoid']);
-            $returnedArray = $cbphoto->photo_voters($pid);
+            $returnedArray = CBPhotos::getInstance()->photo_voters($pid);
             echo $returnedArray;
             break;
 
@@ -723,7 +721,7 @@ if (!empty($mode)) {
                     case "photos":
                     case "foto":
                     case "p":
-                        $photo = $cbphoto->get_photo(mysql_clean($_POST['objID']));
+                        $photo = CBPhotos::getInstance()->get_photo(mysql_clean($_POST['objID']));
                         if ($photo) {
                             assign('object', $photo);
                             $content = Fetch('/blocks/view_channel/channel_item.html');

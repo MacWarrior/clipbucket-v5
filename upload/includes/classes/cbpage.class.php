@@ -1,6 +1,15 @@
 <?php
 class cbpage
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $page_tbl = '';
 
     /**
@@ -9,12 +18,6 @@ class cbpage
     function __construct()
     {
         $this->page_tbl = 'pages';
-    }
-
-    public static function getInstance()
-    {
-        global $cbpage;
-        return $cbpage;
     }
 
     /**
@@ -258,7 +261,7 @@ class cbpage
      * @param $id
      * @throws Exception
      */
-    function page_actions($type, $id)
+    function page_actions($type, $id): void
     {
         $page = $this->get_page($id);
         if (!$page) {

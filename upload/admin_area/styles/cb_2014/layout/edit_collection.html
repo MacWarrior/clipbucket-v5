@@ -150,7 +150,7 @@
                             </div>
                             {if $data.userid != $anonymous_id}
                                 <div class="col-md-2">
-                                    <img src="{$userquery->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
+                                    <img src="{userquery::getInstance()->getUserThumb($u)}" alt="User avatar" class="img-thumbnail marginBottomLarge"/>
                                 </div>
                             {/if}
                         </div>

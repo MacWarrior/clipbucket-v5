@@ -3,7 +3,7 @@ define('THIS_PAGE', 'mass_uploader');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 require_once DirPath::get('classes') . 'sLog.php';
-global $userquery, $cbmass, $breadcrumb;
+global $cbmass, $breadcrumb;
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
 

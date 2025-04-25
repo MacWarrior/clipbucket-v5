@@ -134,7 +134,7 @@
                 {/if}
                 <li class="blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img src="{$userquery->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
+                        <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
                          {display_clean(User::getInstance()->get('username'))|ucfirst}<br/>
                          {display_clean(User::getInstance()->get('user_level_name'))}

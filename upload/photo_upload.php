@@ -1,16 +1,13 @@
 <?php
 define('THIS_PAGE', 'photo_upload');
 define('PARENT_PAGE', 'upload');
-
-global $cbphoto;
-
 require 'includes/config.inc.php';
 
 User::getInstance()->hasPermissionOrRedirect('allow_photo_upload', true);
 subtitle(lang('photos_upload'));
 if (isset($_GET['collection'])) {
-    $selected_collection = $cbphoto->decode_key($_GET['collection']);
-    assign('selected_collection', $cbphoto->collection->get_collection($selected_collection));
+    $selected_collection = CBPhotos::getInstance()->decode_key($_GET['collection']);
+    assign('selected_collection', CBPhotos::getInstance()->collection->get_collection($selected_collection));
 }
 
 $collections = Collection::getInstance()->getAllIndent([

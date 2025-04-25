@@ -119,7 +119,7 @@ try {
                     }
 
                     //Fetching photos to process
-                    $photos = $cbphoto->get_photos($photoRequest);
+                    $photos = CBPhotos::getInstance()->get_photos($photoRequest);
                     $extras["method"] = $method;
 
                     if ($photos) {
@@ -177,7 +177,7 @@ try {
                     }
 
                     //Fetching users to process
-                    $users = $userquery->get_users($userRequest);
+                    $users = userquery::getInstance()->get_users($userRequest);
                     $extras["method"] = $method;
 
                     if ($users) {

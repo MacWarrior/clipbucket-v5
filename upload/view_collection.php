@@ -1,10 +1,7 @@
 <?php
 define('THIS_PAGE', 'view_collection');
 define('PARENT_PAGE', 'collections');
-
 require 'includes/config.inc.php';
-
-global $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('view_collections');
 pages::getInstance()->page_redir();

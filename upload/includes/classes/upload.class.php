@@ -957,14 +957,14 @@ class Upload
      */
     function upload_user_file(string $type, $file, $uid)
     {
-        global $userquery, $cbphoto, $imgObj;
+        global $imgObj;
         if (empty($file['tmp_name'])) {
             e(lang('please_select_img_file'));
             return false;
         }
         $av_details = getimagesize($file['tmp_name']);
 
-        if (!$userquery->user_exists($uid)) {
+        if (!userquery::getInstance()->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
             return false;
         }
@@ -996,8 +996,8 @@ class Upload
                         return false;
                     }
                     $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
-                    $cbphoto->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
-                    $cbphoto->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
+                    CBPhotos::getInstance()->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
+                    CBPhotos::getInstance()->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
                     return $file_name;
                 }
                 e(lang('class_error_occured'));

@@ -1425,8 +1425,6 @@ class CBvideo extends CBCategory
      */
     function update_video($array = null): void
     {
-        global $userquery;
-
         if (!$array) {
             $array = $_POST;
         }
@@ -1597,7 +1595,7 @@ class CBvideo extends CBCategory
 
             $videoDetails = CBvideo::getInstance()->get_video($vid);
             if( !empty($videoDetails) && $videoDetails['status'] == 'Successful' && in_array($videoDetails['broadcast'], ['public', 'logged']) && $videoDetails['subscription_email'] == 'pending' && $videoDetails['active'] == 'yes' ){
-                $userquery->sendSubscriptionEmail($videoDetails, true);
+                userquery::getInstance()->sendSubscriptionEmail($videoDetails, true);
             }
 
             e(lang('class_vdo_update_msg'), 'm');

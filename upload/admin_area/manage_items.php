@@ -2,8 +2,6 @@
 define('THIS_PAGE', 'manage_items');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $cbphoto;
-
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
 pages::getInstance()->page_redir();
 
@@ -36,8 +34,8 @@ switch ($type) {
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                $cbphoto->collection->remove_item($_POST['check_obj'][$i], $id);
-                $cbphoto->make_photo_orphan($id, $_POST['check_obj'][$i]);
+                CBPhotos::getInstance()->collection->remove_item($_POST['check_obj'][$i], $id);
+                CBPhotos::getInstance()->make_photo_orphan($id, $_POST['check_obj'][$i]);
             }
             errorhandler::getInstance()->flush();
             e($total . ' photos have been removed.', 'm');
@@ -47,14 +45,14 @@ switch ($type) {
             $total = count($_POST['check_obj']);
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
-                $cbphoto->collection->change_collection($new, $_POST['check_obj'][$i], $id);
+                CBPhotos::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $id);
                 Clipbucket_db::getInstance()->update(tbl('photos'), ['collection_id'], [$new], ' collection_id = ' . $id . ' AND photo_id = ' . $_POST['check_obj'][$i]);
             }
             errorhandler::getInstance()->flush();
             e($total . ' photo(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
         }
 
-        $items = $cbphoto->collection->get_collection_items_with_details($id);
+        $items = CBPhotos::getInstance()->collection->get_collection_items_with_details($id);
         break;
 
     default:

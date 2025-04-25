@@ -2,8 +2,6 @@
 define('THIS_PAGE', 'edit_collection');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $cbphoto;
-
 User::getInstance()->hasPermissionOrRedirect('collection_moderation', true);
 pages::getInstance()->page_redir();
 

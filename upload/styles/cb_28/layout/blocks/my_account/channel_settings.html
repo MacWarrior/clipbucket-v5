@@ -1,5 +1,5 @@
 <div class="channelSettings col-md-10">
-    {$channel_profile_fields = $userquery->load_user_fields($user)}
+    {$channel_profile_fields = userquery::getInstance()->load_user_fields($user)}
     {foreach from=$channel_profile_fields item=field_group}
         {if count($field_group.fields) > 1}
             <div class="field_group">

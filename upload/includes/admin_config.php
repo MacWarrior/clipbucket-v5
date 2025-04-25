@@ -23,7 +23,7 @@ if( !in_array(THIS_PAGE, ['update_info', 'admin_launch_update']) && php_sapi_nam
 require_once DirPath::get('classes') . 'mass_upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
 
-global $Smarty, $myquery;
+global $Smarty;
 
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
@@ -36,7 +36,7 @@ if (isset($_POST['update_dp_options'])) {
         $num = $_POST['admin_pages'];
     }
 
-    $myquery->Set_Website_Details('admin_pages', $num);
+    myquery::getInstance()->Set_Website_Details('admin_pages', $num);
 }
 
 //Do No Edit Below This Line

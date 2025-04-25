@@ -866,12 +866,25 @@ class User
 
 class userquery extends CBCategory
 {
+    private static self $instance;
+
+    /**
+     * @throws Exception
+     */
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+            self::$instance->init();
+        }
+        return self::$instance;
+    }
+
     var $userid = '';
     var $username = '';
     var $email = '';
     var $level = '';
     var $access_type_list = []; //Access list
-    var $usr_levels = [];
     var $custom_signup_fields = [];
     var $custom_profile_fields = [];
     var $custom_profile_fields_groups = [];
@@ -880,7 +893,6 @@ class userquery extends CBCategory
     var $user_account = [];
     var $sessions = '';
     var $is_login = false;
-    var $custom_subscription_email_vars = [];
 
     var $dbtbl = [
         'user_permission_type'  => 'user_permission_types',
@@ -897,12 +909,6 @@ class userquery extends CBCategory
 
     private $basic_fields = [];
     private $extra_fields = [];
-
-    public static function getInstance()
-    {
-        global $userquery;
-        return $userquery;
-    }
 
     function __construct()
     {
@@ -2992,8 +2998,7 @@ class userquery extends CBCategory
             $userId = user_id();
         }
 
-        global $userquery;
-        return $userquery->getUserBg($userquery->get_user_details($userId));
+        return userquery::getInstance()->getUserBg(userquery::getInstance()->get_user_details($userId));
     }
 
     public function getImageExt($imageName = false)
@@ -3621,8 +3626,6 @@ class userquery extends CBCategory
      */
     function signup_user($array = null, $send_signup_email = true)
     {
-        global $userquery;
-
         $isSocial = false;
         if (isset($array['social_account_id'])) {
             $isSocial = true;
@@ -3835,7 +3838,7 @@ class userquery extends CBCategory
             $fields_list[] = 'voters';
             $fields_data[] = '';
 
-            Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
+            Clipbucket_db::getInstance()->insert(tbl(userquery::getInstance()->dbtbl['user_profile']), $fields_list, $fields_data);
 
             if (!User::getInstance()->hasPermission('admin_access') && EMAIL_VERIFICATION && $send_signup_email) {
                 $var = ['avcode' => $avcode];
@@ -3866,8 +3869,7 @@ class userquery extends CBCategory
 
     function duplicate_email($name): bool
     {
-        $myquery = new myquery();
-        if ($myquery->check_email($name)) {
+        if (myquery::getInstance()->check_email($name)) {
             return true;
         }
         return false;

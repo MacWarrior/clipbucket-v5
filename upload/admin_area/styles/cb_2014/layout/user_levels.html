@@ -13,13 +13,13 @@
             <td>Users</td>
             <td>Actions</td>
         </tr>
-        {assign var=levels value=$userquery->get_levels()}
+        {assign var=levels value=userquery::getInstance()->get_levels()}
         {section name=l loop=$levels}
             <tr>
                 <td>{$levels[l].user_level_id}</td>
                 <td>{$levels[l].user_level_name}</td>
                 <td>{$levels[l].user_level_active}</td>
-                <td>{$userquery->get_level_users($levels[l].user_level_id,true)}</td>
+                <td>{userquery::getInstance()->get_level_users($levels[l].user_level_id,true)}</td>
                 <td><a href="?mode=edit&lid={$levels[l].user_level_id}">{lang code='edit'}</a>{if $levels[l].user_level_is_default !=yes} | <a href="?action=delete&lid={$levels[l].user_level_id}">{lang code='remove'}</a>{/if}</td>
             </tr>
             {sectionelse}
@@ -36,7 +36,7 @@
             <input class="form-control" name="level_name" type="text" id="level_name2" value="{$level_details.user_level_name}"/>
             <input type="hidden" name="user_level_id" value="{$level_details.user_level_id}">
         </div>
-        {assign var='types' value=$userquery->get_level_types()}
+        {assign var='types' value=userquery::getInstance()->get_level_types()}
         {section name=t loop=$types}
             <h3>{lang($types[t].user_permission_type_name)}</h3>
             <div class="row">

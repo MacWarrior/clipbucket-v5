@@ -2,7 +2,6 @@
 define('THIS_PAGE', 'view_video');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery;
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
 pages::getInstance()->page_redir();
 
@@ -13,7 +12,7 @@ if (@$_GET['msg']) {
 $video = mysql_clean($_GET['video']);
 
 //Check Video Exists or Not
-if ($myquery->video_exists($video)) {
+if (myquery::getInstance()->video_exists($video)) {
     //Deleting Comment
     $cid = $_GET['delete_comment'];
     if (!empty($cid)) {

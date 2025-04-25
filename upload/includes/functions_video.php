@@ -1226,8 +1226,7 @@ function get_high_res_file($vdetails): string
             return $filepath . $vdetails['file_name'] . '-' . $max_quality . '.mp4';
 
         case 'hls':
-            global $myquery;
-            $video_quality_title = $myquery->getVideoResolutionTitleFromHeight($max_quality);
+            $video_quality_title = myquery::getInstance()->getVideoResolutionTitleFromHeight($max_quality);
             return $filepath . $vdetails['file_name'] . DIRECTORY_SEPARATOR . 'video_' . $video_quality_title . '.m3u8';
     }
 }

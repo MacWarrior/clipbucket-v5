@@ -134,7 +134,7 @@
 
                                     <li class="dropdown myaccount-dd">
                                         <a href="javascript:void(0);" class="user-area dropdown-toggle" data-toggle="dropdown">
-                                            <img src="{$userquery->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
+                                            <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="no_select" width="35" height="35"/>
                                             <span>{display_clean(User::getInstance()->get('username')|truncate:15)}</span>
                                         </a>
                                         <ul class="dropdown-menu">

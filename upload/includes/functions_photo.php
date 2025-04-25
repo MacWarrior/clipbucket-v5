@@ -11,8 +11,7 @@ function get_photo_fields()
  */
 function get_photos($param)
 {
-    global $cbphoto;
-    return $cbphoto->get_photos($param);
+    return CBPhotos::getInstance()->get_photos($param);
 }
 
 //Photo File Fetcher
@@ -28,7 +27,7 @@ function get_photo($params)
 
 //Create download button
 
-function plupload_photo_uploader()
+function plupload_photo_uploader(): void
 {
     $photoUploaderDetails = [
         'uploadScriptPath' => DirPath::getUrl('actions') . 'photo_uploader.php'
@@ -48,12 +47,10 @@ function plupload_photo_uploader()
  */
 function get_photo_date_folder($photo_id)
 {
-    global $cbphoto;
-
     if (is_array($photo_id)) {
         $photo = $photo_id;
     } else {
-        $photo = $cbphoto->get_photo($photo_id);
+        $photo = CBPhotos::getInstance()->get_photo($photo_id);
     }
 
     if (!$photo) {
@@ -97,8 +94,7 @@ function get_photo_date_folder($photo_id)
 
 function get_photo_default_thumb($size = null, $output = null)
 {
-    global $cbphoto;
-    return $cbphoto->default_thumb($size, $output);
+    return CBPhotos::getInstance()->default_thumb($size, $output);
 }
 
 /**
@@ -106,7 +102,6 @@ function get_photo_default_thumb($size = null, $output = null)
  */
 function get_image_file($params)
 {
-    global $cbphoto;
     $details = $params['details'];
     $output = $params['output'] ?? false;
     $static = $params['static'] ?? false;
@@ -128,7 +123,7 @@ function get_image_file($params)
     }
 
     if (!is_array($details)) {
-        $photo = $cbphoto->get_photo($details);
+        $photo = CBPhotos::getInstance()->get_photo($details);
     } else {
         $photo = $details;
     }
@@ -178,7 +173,7 @@ function get_image_file($params)
         foreach ($files as $file) {
             $splitted = explode(DIRECTORY_SEPARATOR, $file);
             $thumb_name = end($splitted);
-            $thumb_type = $cbphoto->get_image_type($thumb_name);
+            $thumb_type = CBPhotos::getInstance()->get_image_type($thumb_name);
 
             if ($with_original) {
                 $thumbs[] = (($with_path) ? DirPath::getUrl('photos') : '') . $directory . $thumb_name;

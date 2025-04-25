@@ -6,13 +6,13 @@ $flaggedVideos['today'] = CBvideo::getInstance()->get_videos(["count_only" => tr
 $flaggedVideos['this_week'] = CBvideo::getInstance()->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
 $flaggedVideos['this_month'] = CBvideo::getInstance()->get_videos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
-$flaggedUsers['today'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
-$flaggedUsers['this_week'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
-$flaggedUsers['this_month'] = $userquery->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
+$flaggedUsers['today'] = userquery::getInstance()->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
+$flaggedUsers['this_week'] = userquery::getInstance()->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
+$flaggedUsers['this_month'] = userquery::getInstance()->get_users(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
-$flaggedPhotos['today'] = $cbphoto->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
-$flaggedPhotos['this_week'] = $cbphoto->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
-$flaggedPhotos['this_month'] = $cbphoto->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
+$flaggedPhotos['today'] = CBPhotos::getInstance()->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "today"], true);
+$flaggedPhotos['this_week'] = CBPhotos::getInstance()->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "this_week"], true);
+$flaggedPhotos['this_month'] = CBPhotos::getInstance()->get_photos(["count_only" => true, "flagged" => "yes", "data_span" => "this_month"], true);
 
 
 $flaggedTodayStats = [

@@ -15,7 +15,7 @@
             {if config('enable_hide_uploader_name') != 'yes'}
             <span class="author">
             {if isSectionEnabled('channels') && $anonymous_id != $pop_video.userid && $pop_video.disabled_channel !='yes'}
-                {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($pop_video.user_username)}</a>
+                {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($pop_video.user_username)}</a>
             {elseif $anonymous_id != $pop_video.userid}
                 {lang code="by"} {display_clean($pop_video.user_username)}
             {/if}
@@ -50,7 +50,7 @@
         {if config('enable_hide_uploader_name') != 'yes'}
         <span class="author">
 			{if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
                 {lang code="by"} {display_clean($video.user_username)}
             {/if}
@@ -99,7 +99,7 @@
                 {if config('enable_hide_uploader_name') != 'yes'}
                 <span class="author">
                     {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                        {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                        {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
                     {elseif $anonymous_id != $video.userid}
                         {lang code="by"} {display_clean($video.user_username)}
                     {/if}
@@ -131,7 +131,7 @@
             <strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>
             <span class="author">
 			{if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                {lang code='by'} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                {lang code='by'} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
                 {lang code='by'} {display_clean($video.user_username)}
             {/if}
@@ -193,7 +193,7 @@
             {if config('enable_hide_uploader_name') != 'yes'}
             <span class="author">
                 {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean($video.user_username)}</a>
+                    {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
                 {elseif $anonymous_id != $video.userid}
                     {lang code="by"} {display_clean($video.user_username)}
                 {/if}
@@ -254,7 +254,7 @@
             {if config('enable_hide_uploader_name') != 'yes'}
             <h5>
                 {if isSectionEnabled('channels') && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+                    {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean(name($video))}</a>
                 {else}
                     {lang code="by"} {display_clean(name($video))}
                 {/if}
@@ -320,7 +320,7 @@
             {if config('enable_hide_uploader_name') != 'yes'}
             <h5>
                 {if isSectionEnabled('channels') && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{$userquery->profile_link($video)}">{display_clean(name($video))}</a>
+                    {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean(name($video))}</a>
                 {elseif $anonymous_id != $video.userid}}
                     {lang code="by"} {display_clean(name($video))}
                 {/if}

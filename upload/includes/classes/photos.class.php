@@ -610,6 +610,22 @@ class Photo
 
 class CBPhotos
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+            self::$instance->thumb_width = config('photo_thumb_width');
+            self::$instance->thumb_height = config('photo_thumb_height');
+            self::$instance->mid_width = config('photo_med_width');
+            self::$instance->mid_height = config('photo_med_height');
+            self::$instance->lar_width = config('photo_lar_width');
+            self::$instance->cropping = config('photo_crop');
+            self::$instance->position = config('watermark_placement');
+        }
+        return self::$instance;
+    }
+
     var $action = '';
     var $collection = '';
     var $p_tbl = 'photos';
@@ -631,12 +647,6 @@ class CBPhotos
 
     private $basic_fields = [];
     private $extra_fields = [];
-
-    public static function getInstance()
-    {
-        global $cbphoto;
-        return $cbphoto;
-    }
 
     /**
      * __Constructor of CBPhotos
@@ -773,8 +783,9 @@ class CBPhotos
 
     /**
      * Setting up Photos Section
+     * @throws Exception
      */
-    function init_photos()
+    function init_photos(): void
     {
         $this->init_actions();
         $this->init_collections();
@@ -786,7 +797,7 @@ class CBPhotos
     /**
      * Initiating Actions for Photos
      */
-    function init_actions()
+    function init_actions(): void
     {
         $this->action = new cbactions();
         $this->action->init();     // Setting up reporting excuses
@@ -803,7 +814,7 @@ class CBPhotos
      *
      * @param $data
      */
-    function set_share_email($data)
+    function set_share_email($data): void
     {
         $this->share_email_vars = [
             'photo_description' => $data['photo_description'],
@@ -818,7 +829,7 @@ class CBPhotos
     /**
      * Initiating Collections for Photos
      */
-    function init_collections()
+    function init_collections(): void
     {
         $this->collection = new Collections();
         $this->collection->objType = "p";
@@ -833,7 +844,7 @@ class CBPhotos
      * Create Admin Area menu for photos
      * @throws Exception
      */
-    function photos_admin_menu()
+    function photos_admin_menu(): void
     {
         if (User::getInstance()->hasPermission('photos_moderation') && isSectionEnabled('photos') && !NEED_UPDATE) {
             $menu_photo = [
@@ -877,7 +888,7 @@ class CBPhotos
      * Setting other things
      * @throws Exception
      */
-    function setting_other_things()
+    function setting_other_things(): void
     {
         // Search type
         if (isSectionEnabled('photos')) {
@@ -906,7 +917,7 @@ class CBPhotos
     /**
      * Set File Max Size
      */
-    function set_photo_max_size()
+    function set_photo_max_size(): void
     {
         $adminSize = ClipBucket::getInstance()->configs['max_photo_size'];
         if (!$adminSize) {
@@ -1314,8 +1325,9 @@ class CBPhotos
     /**
      * Used to generate photo key
      * Replica of video_keygen function
+     * @throws Exception
      */
-    function photo_key()
+    function photo_key(): string
     {
         $char_list = 'ABDGHKMNORSUXWY';
         $char_list .= '123456789';
@@ -1359,7 +1371,7 @@ class CBPhotos
      * @param bool $orphan
      * @throws Exception
      */
-    function delete_photo($id, $orphan = false)
+    function delete_photo($id, $orphan = false): void
     {
         if ($this->photo_exists($id)) {
             $photo = $this->get_photo($id);
@@ -1413,7 +1425,7 @@ class CBPhotos
      * @param $id
      * @throws Exception
      */
-    function delete_photo_files($id)
+    function delete_photo_files($id): void
     {
         if (!is_array($id)) {
             $photo = $this->get_photo($id);
@@ -1440,7 +1452,7 @@ class CBPhotos
      * @param $id
      * @throws Exception
      */
-    function delete_from_db($id)
+    function delete_from_db($id): void
     {
         if (is_array($id)) {
             $delete_id = $id['photo_id'];
@@ -1551,7 +1563,7 @@ class CBPhotos
      * @param $array
      * @throws Exception
      */
-    function generate_photos($array)
+    function generate_photos($array): void
     {
         $path = DirPath::get('photos');
 
@@ -1593,7 +1605,7 @@ class CBPhotos
      * @param $photo
      * @throws Exception
      */
-    function update_image_details($photo)
+    function update_image_details($photo): void
     {
         if (is_array($photo) && !empty($photo['photo_id'])) {
             $p = $photo;
@@ -1643,7 +1655,7 @@ class CBPhotos
      * @param bool $force_copy
      * @throws Exception
      */
-    function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false)
+    function createThumb($from, $to, $ext, $d_width = null, $d_height = null, $force_copy = false): void
     {
         $file = $from;
         $info = getimagesize($file);
@@ -1736,11 +1748,11 @@ class CBPhotos
 
     /**
      * Fetches watermark default position from database
-     * @return : { position of watermark }
+     * @return bool|string : { position of watermark }
      */
     function get_watermark_position()
     {
-        return ClipBucket::getInstance()->configs['watermark_placement'];
+        return config('watermark_placement');
     }
 
     /**
@@ -1762,8 +1774,8 @@ class CBPhotos
 
         $x = $info[0];
         $y = $info[1];
-        list($w, $h) = getimagesize($file);
-        list($ww, $wh) = getimagesize($watermark);
+        [$w, $h] = getimagesize($file);
+        [$ww, $wh] = getimagesize($watermark);
         $padding = $this->padding;
 
         switch ($x) {
@@ -1814,7 +1826,7 @@ class CBPhotos
             return false;
         }
 
-        list($Swidth, $Sheight, $Stype) = getimagesize($input);
+        [$Swidth, $Sheight, $Stype] = getimagesize($input);
         $wImage = imagecreatefrompng($watermark_file);
         $ww = imagesx($wImage);
         $wh = imagesy($wImage);

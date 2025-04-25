@@ -1,13 +1,12 @@
 <?php
 define('THIS_PAGE', 'myaccount');
 define('PARENT_PAGE', 'home');
-
 require 'includes/config.inc.php';
-global $userquery;
+
 User::getInstance()->isUserConnectedOrRedirect();
 
-assign('user', $userquery->get_user_details(user_id()));
-$videos = $userquery->get_user_vids(user_id(), false, false, true);
+assign('user', userquery::getInstance()->get_user_details(user_id()));
+$videos = userquery::getInstance()->get_user_vids(user_id(), false, false, true);
 assign('videos', $videos);
 $ids_to_check_progress = [];
 if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ) {

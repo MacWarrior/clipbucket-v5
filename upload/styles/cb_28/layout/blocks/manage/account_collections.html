@@ -72,7 +72,7 @@
                 {if !Photo::getInstance()->isToBlur($collection.photo_id)}
                     <br/>
                     <span class="video_control">
-                        <a href="{$cbphoto->photo_links($collection,'view_item')}">{lang code="view_photo"}</a>
+                        <a href="{CBPhotos::getInstance()->photo_links($collection,'view_item')}">{lang code="view_photo"}</a>
                     </span>
                 {/if}
             </td>

@@ -2,14 +2,13 @@
 define('THIS_PAGE', 'view_page');
 define('PARENT_PAGE', 'home');
 require 'includes/config.inc.php';
-global $cbpage;
 
 pages::getInstance()->page_redir();
 
 $pid = $_GET['pid'];
 $pid = mysql_clean($pid);
 
-$page = $cbpage->get_page($pid);
+$page = cbpage::getInstance()->get_page($pid);
 
 if($page['active'] == 'no' && !User::getInstance()->hasAdminAccess()){
     redirect_to(DirPath::getUrl('root'));

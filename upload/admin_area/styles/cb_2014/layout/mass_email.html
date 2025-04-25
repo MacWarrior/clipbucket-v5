@@ -90,7 +90,7 @@
 								<h4>User level<br/>
 									<small>Choose which user level to send email</small>
 								</h4>
-								{assign var=levels value=$userquery->get_levels()}
+								{assign var=levels value=userquery::getInstance()->get_levels()}
 								{foreach from=$levels item=level}
 									{if $level.user_level_id !='4'}
 										<label class="checkbox-inline">

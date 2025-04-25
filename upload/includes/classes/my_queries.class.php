@@ -1,13 +1,17 @@
 <?php
 class myquery
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     static $website_details = [];
     static $video_resolutions = [];
-
-    public static function getInstance(){
-        global $myquery;
-        return $myquery;
-    }
 
     /**
      * @throws Exception
@@ -72,7 +76,7 @@ class myquery
     /**
      * @throws Exception
      */
-    public function saveVideoResolutions($post)
+    public function saveVideoResolutions($post): void
     {
         $video_resolutions = self::getVideoResolutions();
         foreach ($video_resolutions as $ratio) {
@@ -230,9 +234,8 @@ class myquery
      */
     function set_template($template): void
     {
-        global $myquery;
         if (is_dir(DirPath::get('styles') . $template) && $template) {
-            $myquery->Set_Website_Details('template_dir', $template);
+            self::getInstance()->Set_Website_Details('template_dir', $template);
             e(lang('template_activated'), 'm');
         } else {
             e(lang('error_occured_changing_template'));

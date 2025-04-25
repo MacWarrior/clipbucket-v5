@@ -326,8 +326,6 @@ class ElasticSearch
      */
     public function FormatVideo($video)
     {
-        global $userquery;
-
         $newVideo = (object)[];
 
         $newVideo->videoid = $video["videoid"];
@@ -346,7 +344,7 @@ class ElasticSearch
             }
         }
 
-        $user_details = $userquery->get_user_details($video["userid"]);
+        $user_details = userquery::getInstance()->get_user_details($video["userid"]);
         if ($user_details) {
             $newVideo->username = $user_details['username'];
             $newVideo->first_name = $user_details['first_name'];
@@ -384,8 +382,6 @@ class ElasticSearch
      */
     public function FormatPhoto($photo)
     {
-        global $userquery;
-
         $newPhoto = (object)[];
 
         $newPhoto->photo_id = $photo["photo_id"];
@@ -395,7 +391,7 @@ class ElasticSearch
         $newPhoto->photo_description = htmlspecialchars($photo["photo_description"]);
         $newPhoto->photo_tags = $photo['photo_tags'];
 
-        $user_details = $userquery->get_user_details($photo["userid"]);
+        $user_details = userquery::getInstance()->get_user_details($photo["userid"]);
         if ($user_details) {
             $newPhoto->username = $user_details['username'];
             $newPhoto->first_name = $user_details['first_name'];
@@ -429,8 +425,6 @@ class ElasticSearch
      */
     public function FormatUser($user)
     {
-        global $userquery;
-
         $newUser = (object)[];
 
         $newUser->userid = $user["userid"];
@@ -440,7 +434,7 @@ class ElasticSearch
         $newUser->email = $user["email"];
         $newUser->views = $user["profile_hits"];
         $newUser->usr_status = $user["usr_status"];
-        $categories = $userquery->get_category_names($user["category"]);
+        $categories = userquery::getInstance()->get_category_names($user["category"]);
         $category = [];
         if (is_array($categories)) {
             foreach ($categories as $key => $cat) {
@@ -449,7 +443,7 @@ class ElasticSearch
                 $category[] = $cattemp;
             }
         }
-        $user_details = $userquery->get_user_details($user["userid"]);
+        $user_details = userquery::getInstance()->get_user_details($user["userid"]);
         if ($user_details) {
             $newUser->username = $user_details['username'];
             $newUser->first_name = $user_details['first_name'];
@@ -481,7 +475,7 @@ class ElasticSearch
      */
     public function FormatGroupCollection($group)
     {
-        global $cbgroup, $userquery;
+        global $cbgroup;
 
         $NewGroup = (object)[];
 
@@ -500,7 +494,7 @@ class ElasticSearch
                 $category[] = $cattemp;
             }
         }
-        $user_details = $userquery->get_user_details($group["userid"]);
+        $user_details = userquery::getInstance()->get_user_details($group["userid"]);
         if ($user_details) {
             $NewGroup->username = $user_details['username'];
             $NewGroup->first_name = $user_details['first_name'];

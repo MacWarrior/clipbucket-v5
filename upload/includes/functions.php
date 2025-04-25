@@ -496,7 +496,7 @@ function pr($text, $pretty = false)
 /**
  * Function used to get userid anywhere
  * if there is no user_id it will return false
- * @uses : { class : $userquery } { var : userid }
+ * @uses : { class : userquery::getInstance()-> } { var : userid }
  */
 function user_id()
 {
@@ -509,7 +509,7 @@ function user_id()
 /**
  * Function used to get username anywhere
  * if there is no usern_name it will return false
- * @uses : { class : $userquery } { var : $username }
+ * @uses : { class : userquery::getInstance()-> } { var : $username }
  */
 function user_name()
 {
@@ -645,7 +645,7 @@ function yes_or_no($input, $return = 'yes'): string
  *
  * @return string
  * @throws Exception
- * @uses : { class : $userquery } { function : avatar }
+ * @uses : { class : userquery::getInstance()-> } { function : avatar }
  */
 function avatar($param): string
 {
@@ -831,7 +831,7 @@ function display_sort_lang_array(array $list)
  *
  * @return array|bool|int
  * @throws Exception
- * @uses : { class : $userquery } { function : get_user_vids }
+ * @uses : { class : userquery::getInstance()-> } { function : get_user_vids }
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
 {
@@ -911,7 +911,7 @@ function username_check($username): bool
  *
  * @return bool
  * @throws Exception
- * @uses : { class : $userquery } { function : username_exists }
+ * @uses : { class : userquery::getInstance()-> } { function : username_exists }
  */
 function user_exists($user): bool
 {
@@ -924,7 +924,7 @@ function user_exists($user): bool
  * @param : { string } { $user } { email address to check }
  *
  * @return bool
- * @uses : { class : $userquery } { function : duplicate_email }
+ * @uses : { class : userquery::getInstance()-> } { function : duplicate_email }
  */
 function email_exists($user): bool
 {
@@ -1921,7 +1921,7 @@ function get_country($code)
  *
  * @return bool|mixed
  * @throws Exception
- * @uses : { class : $userquery } { function : get_users }
+ * @uses : { class : userquery::getInstance()-> } { function : get_users }
  */
 function get_users($param)
 {
@@ -2160,7 +2160,7 @@ function subtitle($title)
  * @param $uid
  *
  * @return
- * @uses : { class : $userquery } { function : get_username }
+ * @uses : { class : userquery::getInstance()-> } { function : get_username }
  *
  */
 function get_username($uid)

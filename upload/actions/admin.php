@@ -2,8 +2,6 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery;
-
 if (!User::getInstance()->hasAdminAccess()) {
     e(lang('insufisant_privilege'));
     echo json_encode(['err'=>errorhandler::getInstance()->get_error()]);
@@ -14,7 +12,7 @@ $mode = $_POST['mode'];
 switch ($mode) {
     case 'add_sticky':
         $value = $_POST['note'];
-        $myquery->insert_note($value);
+        myquery::getInstance()->insert_note($value);
         $array['note'] = nl2br($value);
         $array['id'] = Clipbucket_db::getInstance()->insert_id();
 
@@ -23,7 +21,7 @@ switch ($mode) {
 
     case 'delete_note':
         $id = mysql_clean($_POST['id']);
-        $myquery->delete_note($id);
+        myquery::getInstance()->delete_note($id);
         break;
 
     case 'delete_comment':

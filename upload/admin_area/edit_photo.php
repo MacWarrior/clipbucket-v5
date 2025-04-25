@@ -1,5 +1,5 @@
 <?php
-global $cbphoto, $breadcrumb;
+global $breadcrumb;
 define('THIS_PAGE', 'edit_photo');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
@@ -24,12 +24,12 @@ $breadcrumb[2] = [
 $id = mysql_clean($_GET['photo']);
 
 if (isset($_POST['photo_id'])) {
-    $cbphoto->update_photo();
+    CBPhotos::getInstance()->update_photo();
 }
 
 //Performing Actions
 if ($_GET['mode'] != '') {
-    $cbphoto->photo_actions($_GET['mode'], $id);
+    CBPhotos::getInstance()->photo_actions($_GET['mode'], $id);
 }
 
 $p = Photo::getInstance()->getOne(['photo_id'=>$id]);
@@ -40,8 +40,8 @@ $p['user'] = $p['userid'];
 
 assign('data', $p);
 
-$requiredFields = $cbphoto->load_required_forms($p);
-$otherFields = $cbphoto->load_other_forms($p);
+$requiredFields = CBPhotos::getInstance()->load_required_forms($p);
+$otherFields = CBPhotos::getInstance()->load_other_forms($p);
 assign('requiredFields', $requiredFields);
 assign('otherFields', $otherFields);
 

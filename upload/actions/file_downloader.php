@@ -53,7 +53,7 @@ the fourth is the total number of bytes expected to be uploaded in
 this transfer, and the fifth is the number of bytes uploaded so far. 
 */
 
-function callback($resource, $download_size, $downloaded, $upload_size, $uploaded)
+function callback($resource, $download_size, $downloaded, $upload_size, $uploaded): void
 {
     global $log_file, $logDetails;
 

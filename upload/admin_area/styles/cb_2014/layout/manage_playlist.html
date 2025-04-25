@@ -1,5 +1,5 @@
 <!-- Manage playlist backend -->
-{$myAccountLinks = $userquery->my_account_links()}
+{$myAccountLinks = userquery::getInstance()->my_account_links()}
     <div class="row cb-box">
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="account_box">
@@ -44,7 +44,7 @@
                                     <td valign="middle">
                                     <span class="label label-primary">
                                         <strong>{lang code='playlist_owner'} :
-                                            {assign var=obj value=$userquery->get_user_details($playlists[plist].userid)}
+                                            {assign var=obj value=userquery::getInstance()->get_user_details($playlists[plist].userid)}
                                             {if $playlists[plist].userid != $anonymous_id}
                                                 {display_clean($obj['username'])}
                                             {else}

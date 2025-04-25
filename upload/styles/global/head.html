@@ -75,8 +75,8 @@ function doUpdateVideo(formId,ID)
     ajaxImage = '<img src="'+imageurl+'/ajax-loader.gif" style="vertical-align:middle;" /> ',
     uploadError = false;
     {if $smarty.get.collection}
-        {assign var=cid value=$cbphoto->decode_key($smarty.get.collection)}
-        {if $cbphoto->is_addable($cid)}
+        {assign var=cid value=CBPhotos::getInstance()->decode_key($smarty.get.collection)}
+        {if CBPhotos::getInstance()->is_addable($cid)}
             collectionID = '{$cid}';
         {/if}
     {/if}
