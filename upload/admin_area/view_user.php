@@ -3,9 +3,6 @@ define('THIS_PAGE', 'view_user');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-userquery::getInstance()-> = userquery::getInstance();
-
-
 User::getInstance()->hasPermissionOrRedirect('member_moderation', true);
 pages::getInstance()->page_redir();
 

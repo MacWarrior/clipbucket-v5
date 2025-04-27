@@ -496,7 +496,8 @@ function pr($text, $pretty = false)
 /**
  * Function used to get userid anywhere
  * if there is no user_id it will return false
- * @uses : { class : userquery::getInstance()-> } { var : userid }
+ * @throws Exception
+ * @uses : { class : userquery } { var : userid }
  */
 function user_id()
 {
@@ -509,7 +510,8 @@ function user_id()
 /**
  * Function used to get username anywhere
  * if there is no usern_name it will return false
- * @uses : { class : userquery::getInstance()-> } { var : $username }
+ * @throws Exception
+ * @uses : { class : userquery } { var : $username }
  */
 function user_name()
 {
@@ -519,6 +521,9 @@ function user_name()
     return userquery::getInstance()->get_logged_username();
 }
 
+/**
+ * @throws Exception
+ */
 function user_email()
 {
     if (userquery::getInstance()->email) {
@@ -526,6 +531,10 @@ function user_email()
     }
     return false;
 }
+
+/**
+ * @throws Exception
+ */
 function user_dob()
 {
     if (userquery::getInstance()->udetails['dob']) {
@@ -534,14 +543,11 @@ function user_dob()
     return false;
 }
 
-
-
 /**
  * Function used to return mysql time
- * @return false|string : { current time }
  * @author : Fwhite
  */
-function now()
+function now(): string
 {
     return date('Y-m-d H:i:s', time());
 }
@@ -645,7 +651,7 @@ function yes_or_no($input, $return = 'yes'): string
  *
  * @return string
  * @throws Exception
- * @uses : { class : userquery::getInstance()-> } { function : avatar }
+ * @uses : { class : userquery } { function : avatar }
  */
 function avatar($param): string
 {
@@ -831,7 +837,7 @@ function display_sort_lang_array(array $list)
  *
  * @return array|bool|int
  * @throws Exception
- * @uses : { class : userquery::getInstance()-> } { function : get_user_vids }
+ * @uses : { class : userquery } { function : get_user_vids }
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
 {
@@ -911,7 +917,7 @@ function username_check($username): bool
  *
  * @return bool
  * @throws Exception
- * @uses : { class : userquery::getInstance()-> } { function : username_exists }
+ * @uses : { class : userquery } { function : username_exists }
  */
 function user_exists($user): bool
 {
@@ -924,13 +930,17 @@ function user_exists($user): bool
  * @param : { string } { $user } { email address to check }
  *
  * @return bool
- * @uses : { class : userquery::getInstance()-> } { function : duplicate_email }
+ * @throws Exception
+ * @uses : { class : userquery } { function : duplicate_email }
  */
 function email_exists($user): bool
 {
     return userquery::getInstance()->duplicate_email($user);
 }
 
+/**
+ * @throws Exception
+ */
 function check_email_domain($email): bool
 {
     return userquery::getInstance()->check_email_domain($email);
@@ -1921,7 +1931,7 @@ function get_country($code)
  *
  * @return bool|mixed
  * @throws Exception
- * @uses : { class : userquery::getInstance()-> } { function : get_users }
+ * @uses : { class : userquery } { function : get_users }
  */
 function get_users($param)
 {
@@ -2159,9 +2169,9 @@ function subtitle($title)
  * Extract user's name using userid
  * @param $uid
  *
- * @return
- * @uses : { class : userquery::getInstance()-> } { function : get_username }
- *
+ * @return mixed
+ * @throws Exception
+ * @uses : { class : userquery } { function : get_username }
  */
 function get_username($uid)
 {
@@ -2194,150 +2204,6 @@ function get_collection_field($cid, $field = 'collection_name')
 function foot_menu($params = null)
 {
     return Clipbucket::getInstance()->foot_menu($params);
-}
-
-/**
- * Converts given array XML into a PHP array
- *
- * @param : { array } { $array } { array to be converted into XML }
- * @param int $get_attributes
- * @param string $priority
- * @param bool $is_url
- *
- * @return array|bool : { string } { $xml } { array converted into XML }
- */
-function xml2array($url, $get_attributes = 1, $priority = 'tag', $is_url = true)
-{
-    $contents = "";
-
-    if ($is_url) {
-        $fp = @ fopen($url, 'rb');
-        if ($fp) {
-            while (!feof($fp)) {
-                $contents .= fread($fp, 8192);
-            }
-        } else {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_USERAGENT,
-                'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2) Gecko/20070219 Firefox/3.0.0.2');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 600);
-            $contents = curl_exec($ch);
-            curl_close($ch);
-        }
-        fclose($fp);
-
-        if (!$contents) {
-            return false;
-        }
-    } else {
-        $contents = $url;
-    }
-
-    if (!function_exists('xml_parser_create')) {
-        return false;
-    }
-    $parser = xml_parser_create('');
-    xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8");
-    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-    xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-    xml_parse_into_struct($parser, trim($contents), $xml_values);
-    xml_parser_free($parser);
-    if (!$xml_values) {
-        return false;
-    }
-    $xml_array = [];
-
-    $current = &$xml_array;
-    $repeated_tag_index = [];
-    foreach ($xml_values as $data) {
-        unset ($attributes, $value);
-        extract($data);
-        $result = [];
-        $attributes_data = [];
-        if (isset ($value)) {
-            if ($priority == 'tag') {
-                $result = $value;
-            } else {
-                $result['value'] = $value;
-            }
-        }
-        if (isset ($attributes) and $get_attributes) {
-            foreach ($attributes as $attr => $val) {
-                if ($priority == 'tag') {
-                    $attributes_data[$attr] = $val;
-                } else {
-                    $result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
-                }
-            }
-        }
-        if ($type == "open") {
-            $parent[$level - 1] = &$current;
-            if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
-                $current[$tag] = $result;
-                if ($attributes_data) {
-                    $current[$tag . '_attr'] = $attributes_data;
-                }
-                $repeated_tag_index[$tag . '_' . $level] = 1;
-                $current = &$current[$tag];
-            } else {
-                if (isset ($current[$tag][0])) {
-                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-                    $repeated_tag_index[$tag . '_' . $level]++;
-                } else {
-                    $current[$tag] = [
-                        $current[$tag],
-                        $result
-                    ];
-                    $repeated_tag_index[$tag . '_' . $level] = 2;
-                    if (isset ($current[$tag . '_attr'])) {
-                        $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                        unset ($current[$tag . '_attr']);
-                    }
-                }
-                $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
-                $current = &$current[$tag][$last_item_index];
-            }
-        } elseif ($type == "complete") {
-            if (!isset ($current[$tag])) {
-                $current[$tag] = $result;
-                $repeated_tag_index[$tag . '_' . $level] = 1;
-                if ($priority == 'tag' and $attributes_data) {
-                    $current[$tag . '_attr'] = $attributes_data;
-                }
-            } else {
-                if (isset ($current[$tag][0]) and is_array($current[$tag])) {
-                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-                    if ($priority == 'tag' and $get_attributes and $attributes_data) {
-                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-                    }
-                    $repeated_tag_index[$tag . '_' . $level]++;
-                } else {
-                    $current[$tag] = [
-                        $current[$tag],
-                        $result
-                    ];
-                    $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' and $get_attributes) {
-                        if (isset ($current[$tag . '_attr'])) {
-                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                            unset ($current[$tag . '_attr']);
-                        }
-                        if ($attributes_data) {
-                            $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-                        }
-                    }
-                    $repeated_tag_index[$tag . '_' . $level]++; //0 and 1 index is already taken
-                }
-            }
-        } elseif ($type == 'close') {
-            $current = &$parent[$level - 1];
-        }
-    }
-    return ($xml_array);
 }
 
 /**
@@ -2418,7 +2284,7 @@ function array2xml($array, $level = 1)
  * @return bool : { false }
  * @throws Exception
  */
-function include_header($params)
+function include_header($params): bool
 {
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
@@ -2444,7 +2310,7 @@ function include_header($params)
  *
  * @return bool : { boolean } { true or false depending on situation }
  */
-function is_includeable($array)
+function is_includeable($array): bool
 {
     if (!is_array($array)) {
         $array = [$array];
@@ -2554,40 +2420,6 @@ function include_css($params)
     return false;
 }
 
-function get_ffmpeg_codecs($type)
-{
-    switch ($type) {
-        case 'audio':
-            $codecs = [
-                'aac',
-                'aac_latm',
-                'libfaac',
-                'libvo_aacenc',
-                'libxvid',
-                'libmp3lame'
-            ];
-            break;
-
-        case 'video':
-        default:
-            $codecs = [
-                'libx264',
-                'libtheora'
-            ];
-            break;
-    }
-
-    $codec_installed = [];
-    foreach ($codecs as $codec) {
-        $get_codec = System::shell_output(System::get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
-        if ($get_codec) {
-            $codec_installed[] = $codec;
-        }
-    }
-
-    return $codec_installed;
-}
-
 /**
  * Calls ClipBucket footer into the battlefield
  */
@@ -2648,7 +2480,7 @@ function rss_feeds($params)
  * @throws Exception
  * @uses { class : $cblog } { function : insert }
  */
-function insert_log($type, $details)
+function insert_log($type, $details): void
 {
     global $cblog;
     $cblog->insert($type, $details);
@@ -2675,6 +2507,7 @@ function get_db_size(): int
  * @param : { array } { $comment } { array with all details of comment }
  *
  * @return bool : { boolean } { true if marked as spam, else false }
+ * @throws Exception
  */
 function marked_spammed($comment): bool
 {
@@ -2728,7 +2561,7 @@ function check_install($type)
  * if (!$isUTF8) --> we need to apply utf8_encode() to be in UTF8
  * else --> we are in UTF8 :)
  * </code>
- * @param mixed A string, or an array from a file() function.
+ * @param $string
  * @return boolean
  */
 function isUTF8($string): bool
@@ -2738,27 +2571,6 @@ function isUTF8($string): bool
         return @!((ord($enc[0]) != 239) && (ord($enc[1]) != 187) && (ord($enc[2]) != 191));
     }
     return (utf8_encode(utf8_decode($string)) == $string);
-}
-
-/**
- * Generate embed code of provided video
- *
- * @param : { array } { $vdetails } { all details of video }
- *
- * @return string : { string } { $code } { embed code for video }
- */
-function embeded_code($vdetails): string
-{
-    $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
-    $code .= '<param name="allowFullScreen" value="true">';
-    $code .= '</param><param name="allowscriptaccess" value="always"></param>';
-    //Replacing Height And Width
-    $h_w_p = ["{Width}", "{Height}"];
-    $h_w_r = [EMBED_VDO_WIDTH, EMBED_VDO_HEIGHT];
-    $embed_code = str_replace($h_w_p, $h_w_r, $vdetails['embed_code']);
-    $code .= unhtmlentities($embed_code);
-    $code .= '</object>';
-    return $code;
 }
 
 /**
@@ -2791,7 +2603,7 @@ function datecreated($in): string
  * @throws Exception
  * @action : database updation
  */
-function updateObjectStats($type, $object, $id, $op = '+')
+function updateObjectStats($type, $object, $id, $op = '+'): void
 {
     switch ($type) {
         case "favorite":
@@ -2855,7 +2667,7 @@ function conv_lock_exists(): bool
  *
  * @return string
  */
-function queryString($var = false, $remove = false)
+function queryString($var = false, $remove = false): string
 {
     $queryString = $_SERVER['QUERY_STRING'];
     if ($var) {
@@ -2897,7 +2709,7 @@ function isCurlInstalled(): bool
 /**
  * Load configuration related files for uploader (video, photo)
  */
-function uploaderDetails()
+function uploaderDetails(): void
 {
     $uploaderDetails = [
         'uploadScriptPath' => DirPath::getUrl('actions') . 'file_uploader.php',
@@ -2936,7 +2748,7 @@ function isSectionEnabled($input)
  * @throws Exception
  * @action : database updation
  */
-function update_last_commented($type, $id)
+function update_last_commented($type, $id): void
 {
     if ($type && $id) {
         switch ($type) {
@@ -2981,6 +2793,7 @@ function update_last_commented($type, $id)
  *
  * @param : { array } { $array } { array with all details of feed e.g userid, action etc }
  * @action : inserts feed into database
+ * @throws Exception
  */
 function addFeed($array)
 {
@@ -3034,7 +2847,7 @@ function addFeed($array)
  *
  * @return string :    { string } { basename($pluginFile) } { directory path of plugin }
  */
-function this_plugin($pluginFile = null)
+function this_plugin($pluginFile = null): string
 {
     if (!$pluginFile) {
         global $pluginFile;
@@ -3048,7 +2861,7 @@ function this_plugin($pluginFile = null)
  * @param : { string } { $in } { false by default, HTTP_USER_AGENT }
  * @param bool $assign
  *
- * @return array : { array } { $array } { array with all details of user }
+ * @return array|void : { array } { $array } { array with all details of user }
  */
 function get_browser_details($in = null, $assign = false)
 {
@@ -3227,7 +3040,7 @@ function in_dev(): bool
  * @param array $data
  * @param bool $die
  */
-function dump($data = [], $die = false)
+function dump($data = [], $die = false): void
 {
     echo '<pre>';
     var_dump($data);
@@ -3260,7 +3073,7 @@ function debug_backtrace_string(): string
  *
  * @param { Object } { $e } { complete current object }
  */
-function show_cb_error($e)
+function show_cb_error($e): void
 {
     echo $e->getMessage();
     echo '<br>';

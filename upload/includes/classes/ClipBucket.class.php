@@ -108,7 +108,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addJS($files)
+    function addJS($files): void
     {
         $this->addFile($this->JSArray, $files);
     }
@@ -116,7 +116,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAdminJS($files)
+    function addAdminJS($files): void
     {
         $this->addFile($this->AdminJSArray, $files);
     }
@@ -124,7 +124,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAllJS($files)
+    function addAllJS($files): void
     {
         $this->addFile($this->JSArray, $files);
         $this->addFile($this->AdminJSArray, $files);
@@ -133,7 +133,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addCSS($files)
+    function addCSS($files): void
     {
         $this->addFile($this->CSSArray, $files);
     }
@@ -141,7 +141,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAdminCSS($files)
+    function addAdminCSS($files): void
     {
         $this->addFile($this->AdminCSSArray, $files);
     }
@@ -149,7 +149,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function addAllCSS($files)
+    function addAllCSS($files): void
     {
         $this->addFile($this->CSSArray, $files);
         $this->addFile($this->AdminCSSArray, $files);
@@ -158,9 +158,8 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    private function addFile(&$array_var, $files)
+    private function addFile(&$array_var, $files): void
     {
-
         $cache_key = $this->getCacheKey();
         if (is_array($files)) {
             foreach ($files as $key => $file) {
@@ -193,7 +192,7 @@ class ClipBucket
      * @param $file
      * @param string $place
      */
-    function add_header($file, $place = 'global')
+    function add_header($file, $place = 'global'): void
     {
         if (!is_array($place)) {
             $place = [$place];
@@ -209,7 +208,7 @@ class ClipBucket
      * @param $file
      * @param string $place
      */
-    function add_admin_header($file, $place = 'global')
+    function add_admin_header($file, $place = 'global'): void
     {
         if (!is_array($place)) {
             $place = [$place];
@@ -308,7 +307,7 @@ class ClipBucket
     /**
      * @throws Exception
      */
-    function initAdminMenu()
+    function initAdminMenu(): void
     {
         $menu_dashboard = [
             'title'   => 'Dashboard'
@@ -601,7 +600,7 @@ class ClipBucket
      *
      * @param bool $val
      */
-    function show_page($val = true)
+    function show_page($val = true): void
     {
         $this->show_page = $val;
     }
@@ -781,7 +780,7 @@ class ClipBucket
     /**
      * Function used to clean requests
      */
-    function clean_requests()
+    function clean_requests(): void
     {
         $posts = $_POST;
         $gets = $_GET;
