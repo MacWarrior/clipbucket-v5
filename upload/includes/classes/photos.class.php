@@ -339,7 +339,7 @@ class Photo
 
         if (!User::getInstance()->hasAdminAccess()) {
             $collection_table = Collection::getInstance()->getTableName();
-            $conditions[] = Collection::getInstance()->getGenericConstraints();
+            $conditions[] = '(' . Collection::getInstance()->getGenericConstraints() . ' OR ' . $collection_table . '.collection_id IS NULL )';
             $join[] = 'LEFT JOIN ' . cb_sql_table($collection_table) . ' ON ' . $collection_items_table . '.collection_id = ' . $collection_table . '.collection_id';
         }
 
@@ -447,7 +447,6 @@ class Photo
             $cond.=')';
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $cond .= ' OR (photos.active = \'yes\' AND photos.broadcast IN(\'public\',\'logged\')'.$sql_age_restrict.')';
-            $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
             $cond .= ' OR (photos.broadcast = \'private\' AND photos.userid IN(' . $select_contacts . ')'.$sql_age_restrict.')';
         } else {
             $cond .= ')';
@@ -1003,7 +1002,7 @@ class CBPhotos
 
         if (!User::getInstance()->hasAdminAccess()) {
             $cond .= Photo::getInstance()->getGenericConstraints();
-            $cond .= Collection::getInstance()->getGenericConstraints();
+            $cond .= ' AND ( ' . Collection::getInstance()->getGenericConstraints() . ')';
         } else {
             if ($p['active']) {
                 $cond .= 'photos.active = \'' . mysql_clean($p['active']) . '\'';
@@ -1371,7 +1370,7 @@ class CBPhotos
      * @param bool $orphan
      * @throws Exception
      */
-    function delete_photo($id, $orphan = false): void
+    function delete_photo($id, bool $orphan = false): void
     {
         if ($this->photo_exists($id)) {
             $photo = $this->get_photo($id);

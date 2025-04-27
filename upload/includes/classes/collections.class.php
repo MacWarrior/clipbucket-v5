@@ -570,7 +570,7 @@ class Collection
             return '';
         }
 
-        $cond = '(collections.active = \'yes\' AND collections.broadcast = \'public\'';
+        $cond = '((collections.active = \'yes\' AND collections.broadcast = \'public\'';
 
         if (!isSectionEnabled('photos') && !isSectionEnabled('videos')) {
             $cond .= ' AND collections.type = \'none\'';
@@ -587,10 +587,10 @@ class Collection
         $current_user_id = user_id();
         if( $current_user_id ){
             $select_contacts = 'SELECT contact_userid FROM '.tbl('contacts').' WHERE confirmed = \'yes\' AND userid = '.$current_user_id;
+            $cond .= ') OR (collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.'))';
             $cond .= ' OR collections.userid = '.$current_user_id.')';
-            $cond .= ' OR ( collections.broadcast = \'private\' AND collections.userid IN('.$select_contacts.'))';
         } else {
-            $cond .= ') ';
+            $cond .= '))';
         }
         return $cond;
     }

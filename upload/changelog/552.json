@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"16",
+  "revision":"17",
   "status":"stable",
   "detail":[
     {
@@ -16,6 +16,7 @@
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
         ,"Fix a potential erroneous error message on collection deletion"
+        ,"Fix photo upload <i>(#594)</i>"
       ]
     },
     {
