@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"15",
+  "revision":"16",
   "status":"stable",
   "detail":[
     {
@@ -14,6 +14,8 @@
       "description": [
         "Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
+        ,"Fix manage collection list"
+        ,"Fix a potential erroneous error message on collection deletion"
       ]
     },
     {

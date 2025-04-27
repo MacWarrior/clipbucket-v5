@@ -1784,7 +1784,7 @@ class Collections extends CBCategory
      * @param $cid
      * @throws Exception
      */
-    function delete_collection($cid)
+    function delete_collection($cid): void
     {
         $collection = $this->get_collection($cid);
         if (empty($collection)) {

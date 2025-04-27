@@ -48,7 +48,7 @@ switch ($mode) {
             e('selected_collects_del', 'm');
         }
         $collectArray = [
-            'user'  => user_id(),
+            'userid'  => user_id(),
             'limit' => $get_limit,
             'allow_children'=>true
         ];
