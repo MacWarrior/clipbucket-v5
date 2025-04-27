@@ -65,6 +65,9 @@ html.dark {
     .sidebar-items .item-photo .photo-holder img{
         border-radius: var(--border-radius);
     }
+    .sidebar-items .item-photo .photo-holder:after{
+        border-radius: var(--border-radius);
+    }
 
     /* Home */
     #featured_vid_sec .item-video .video-link img,

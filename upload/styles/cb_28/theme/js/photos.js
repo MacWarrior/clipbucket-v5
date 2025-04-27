@@ -69,7 +69,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 			$('.view-photo').prop("disabled",true);
 		},
 		success:function(xhr) {	
-			var getUrl = baseurl + buildPhotoUrl(xhr);
+			var getUrl = buildPhotoUrl(xhr);
 			$.get( getUrl, function( data ) {
 			  	$('#main').html(data);
 			  	$('.view-photo').prop("disabled",false);
@@ -78,7 +78,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 				//d = xhr.photo[0];
 				$('#gallery-exd').attr("src",key_globel);	
 				$("#gallery").attr("src",key_globel);
-				window.history.pushState("", "", baseurl + buildPhotoUrl(xhr,"aho"));
+				window.history.pushState("", "", buildPhotoUrl(xhr,"aho"));
 				$('.dropdown-toggle').dropdown();
 				$('.pic-glyp').remove();
 				galleryDimension();
