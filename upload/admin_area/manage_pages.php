@@ -1,11 +1,9 @@
 <?php
 define('THIS_PAGE', 'manage_pages');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
-
-require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+pages::getInstance()->page_redir();
 
 User::getInstance()->hasPermissionOrRedirect('basic_settings',true);
-pages::getInstance()->page_redir();
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -75,7 +73,6 @@ if (isset($_POST['delete_selected']) && is_array($_POST['check_page'])) {
 $mode = $_GET['mode'];
 
 if (isset($_POST['add_page'])) {
-
     if (cbpage::getInstance()->create_page($_POST)) {
         $mode = 'view';
     }
@@ -122,6 +119,15 @@ switch ($mode) {
         break;
 
 }
+
+$min_suffixe = in_dev() ? '' : '.min';
+ClipBucket::getInstance()->addAdminJS([
+    'summernote/summernote' . $min_suffixe . '.js' => 'libs',
+    'pages/manage_pages/manage_pages'.$min_suffixe.'.js' => 'admin'
+]);
+ClipBucket::getInstance()->addAdminCSS([
+    'summernote/summernote' . $min_suffixe . '.css'     => 'libs'
+]);
 
 subtitle(lang('manage_x', strtolower(lang('pages'))));
 template_files('manage_pages.html');

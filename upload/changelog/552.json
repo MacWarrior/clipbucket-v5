@@ -1,12 +1,13 @@
 {
   "version":"5.5.2",
-  "revision":"19",
+  "revision":"20",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Implement Nginx VirtualHost check"
+        ,"Fix code mode on page edition <i>(#595)</i>"
       ]
     },
     {
@@ -47,6 +48,12 @@
       ]
     },
     {
+      "title": "Internal components",
+      "description": [
+        "Update Global Announcement to version 2.0.6"
+      ]
+    },
+    {
       "title": "External components",
       "description": [
         "Update psr/log to 3.0.2"
@@ -54,6 +61,7 @@
         ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
         ,"Update predis/predis to 2.3.0"
         ,"Update VideoJS to version 8.23.3"
+        ,"Update summernote to version 0.9.1"
       ]
     }
   ]

@@ -14,5 +14,9 @@
 <script>
     $(document).ready(function() {
         $('#page_content').summernote();
+
+		$('form').on('submit', function (e) {
+			$('#page_content').summernote('code', $('#page_content').summernote('code'));
+		});
     });
 </script>

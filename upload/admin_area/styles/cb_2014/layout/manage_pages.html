@@ -17,9 +17,6 @@
                 <div class="form-group col-md-12">
                     <label for="page_content">Page Content</label>
                     <textarea name="page_content" id="page_content" class="form-control" style="width:100%; min-height:250px">{display_clean('page_content'|post)}</textarea>
-                    <script type="text/javascript">
-                        {literal}new nicEditor({fullPanel: true, maxHeight: 350}).panelInstance('page_content');{/literal}
-                    </script>
                 </div>
                 <div class="form-group">
                     <input type="submit" name="add_page" id="add_page" value="Create new page +" class="btn btn-primary btn-sm"/>
@@ -49,9 +46,6 @@
             <div class="form-group col-md-12">
                 <label for="page_content">Page Content</label>
                 <textarea name="page_content" id="page_content" cols="8" rows="8" class="form-control">{display_clean($page.page_content)}</textarea>
-                <script type="text/javascript">
-                    {literal}new nicEditor({fullPanel: true, maxHeight: 350}).panelInstance('page_content');{/literal}
-                </script>
             </div>
             <div class="form-group">
                 <input type="submit" name="update_page" id="update_page" value="Update page" class="btn btn-primary"/>
@@ -157,42 +151,8 @@
     </form>
 {/if}
 <script>
-    var errors = {
+    let errors = {
         "empty_name": "{lang ('page_name_empty')}",
         "page_name_cant_have_space": "{lang('page_name_cant_have_space')}",
     };
-    var has_error = false;
-    $(document).ready(function () {
-        $('#page_content').summernote();
-
-        function removeErrClass(obj) {
-            $(obj).closest('.form-group').removeClass('invalid-error');
-            $(obj).closest('.form-group').removeClass('warning-ind');
-            $(obj).next('span').remove();
-        }
-
-        $('input#page_name').on('keyup', function () {
-            var page_name = $(this);
-            var page_name_val = page_name.val();
-            if (page_name_val === '') {
-                addErrClass(page_name, errors["empty_name"], true, false);
-                has_error = true;
-            } else if (page_name_val.indexOf(' ') >= 0) {
-                addErrClass(page_name, errors["page_name_cant_have_space"], true, false);
-                has_error = true;
-            } else {
-                has_error = false;
-            }
-            if (!has_error) {
-                removeErrClass(page_name);
-            }
-        });
-
-        $('form').on('submit', function (e) {
-            if (has_error) {
-                e.preventDefault();
-                return false;
-            }
-       });
-    });
 </script>

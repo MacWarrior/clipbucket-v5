@@ -99,7 +99,7 @@ class cbpage
     /**
      * Function used to get all pages from database
      *
-     * @param bool $params
+     * @param $params
      *
      * @return array|bool
      * @throws Exception
@@ -146,6 +146,9 @@ class cbpage
      * Function used to edit page
      *
      * @param $param
+     * @return bool|void
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
      * @throws Exception
      */
     function edit_page($param)
@@ -175,6 +178,8 @@ class cbpage
         }
 
         if (!error()) {
+            require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+
             $translation_name = 'page_name_' . $name;
             if (strtolower($page['page_name']) != $name) {
                 if (empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
