@@ -256,7 +256,7 @@ function initListenerEmailTester() {
 
     $('.send_email').off('click').on('click', function (e) {
         e.preventDefault();
-        hideSpinner();
+        showSpinner();
         $.post({
             url: baseurl+'actions/admin_email_tester_send.php',
             dataType: 'json',

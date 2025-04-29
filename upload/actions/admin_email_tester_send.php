@@ -49,7 +49,9 @@ if (empty($_POST['sender'])) {
 }
 if ($success) {
     //sendMail
-    $success = EmailTemplate::sendMail($email['code'], [
+    $success = EmailTemplate::sendMail(
+        $email['code'],
+        [
             'mail' => $_POST['email_recipient'],
             'name' => $_POST['recipient']
         ],
@@ -59,9 +61,10 @@ if ($success) {
         )
         , $_POST['email_sender']
         , $_POST['sender']
-        , true);
+        , true
+    );
 }
-if ($success) {
+if ($success === true) {
     e(lang('success'), 'm');
 }
 echo json_encode([

@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"22",
+  "revision":"23",
   "status":"stable",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Implement Nginx VirtualHost check"
         ,"Fix code mode on page edition <i>(#595)</i>"
+        ,"Fix email sending error catching <i>(#587)</i>"
       ]
     },
     {
