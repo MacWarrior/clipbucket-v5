@@ -2,7 +2,7 @@
 
 class DiscordLog extends \OxygenzSAS\Discord\Discord
 {
-    private static \OxygenzSAS\Discord\Discord $discordLog;
+    private static $discordLog;
     private string $app_name = '';
     private string $filepath = '';
     private string $filepath_disabled = '';
