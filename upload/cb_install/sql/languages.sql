@@ -1539,4 +1539,5 @@ VALUES ('admin_setting'),
        ('nginx_vhost_first_update'),
        ('nginx_vhost_no_update'),
        ('nginx_vhost_update'),
-       ('nginx_vhost_updated');
+       ('nginx_vhost_updated'),
+       ('access_to_front_end');
