@@ -280,7 +280,7 @@ class Network{
 
     public static function get_server_url(): string
     {
-        if( function_exists('config') && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
+        if( function_exists('config') && Clipbucket_db::isAvailable() && !empty(trim(config('base_url'))) && filter_var(config('base_url'), FILTER_VALIDATE_URL) ){
             return rtrim(config('base_url'), '/') . '/';
         }
         

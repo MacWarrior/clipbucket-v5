@@ -5,6 +5,7 @@ require_once 'constants.php';
 require_once DirPath::get('vendor') . 'autoload.php';
 require_once DirPath::get('classes') . 'DiscordLog.php';
 require_once DirPath::get('classes') . 'WhoopsManager.php';
+require_once DirPath::get('classes') . 'my_queries.class.php';
 
 $whoops = \WhoopsManager::getInstance();
 if (file_exists(DirPath::get('temp') . 'development.dev')) {
@@ -78,7 +79,6 @@ require_once DirPath::get('classes') . 'update.class.php';
 require_once DirPath::get('classes') . 'plugin.class.php';
 require_once DirPath::get('classes') . 'cli.class.php';
 require_once DirPath::get('classes') . 'columns.class.php';
-require_once DirPath::get('classes') . 'my_queries.class.php';
 require_once DirPath::get('classes') . 'actions.class.php';
 require_once DirPath::get('classes') . 'category.class.php';
 require_once DirPath::get('classes') . 'user_level.class.php';

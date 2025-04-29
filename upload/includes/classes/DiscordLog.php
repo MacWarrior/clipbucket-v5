@@ -2,15 +2,15 @@
 
 class DiscordLog extends \OxygenzSAS\Discord\Discord
 {
-    private static $discordLog;
-    private $app_name = '';
-    private $filepath = '';
-    private $filepath_disabled = '';
+    private static \OxygenzSAS\Discord\Discord $discordLog;
+    private string $app_name = '';
+    private string $filepath = '';
+    private string $filepath_disabled = '';
 
     public function __construct()
     {
         $site_title = '';
-        if( function_exists('config') ){
+        if( function_exists('config') && Clipbucket_db::isAvailable() ){
             $site_title = config('site_title');
         }
         if( empty($site_title) ){
@@ -32,9 +32,6 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
         return self::$discordLog;
     }
 
-    /**
-     * @return DiscordLog|null
-     */
     public static function getInstance()
     {
         if( empty(self::$discordLog) ){
@@ -50,9 +47,6 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
     public static function sendDump($var): bool
     {
         $obj = self::getInstance();
-        if (empty($obj)) {
-            return false;
-        }
 
         if (is_string($var) ) {
             $obj->debug($var);
@@ -62,7 +56,7 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
         return true;
     }
 
-    public function enable($url)
+    public function enable($url): void
     {
         if (is_writable(DirPath::get('temp'))) {
             if (file_exists($this->filepath_disabled)) {
@@ -74,7 +68,7 @@ class DiscordLog extends \OxygenzSAS\Discord\Discord
         }
     }
 
-    public function disable()
+    public function disable(): void
     {
         if (file_exists(DirPath::get('temp'))) {
             rename($this->filepath, $this->filepath_disabled);

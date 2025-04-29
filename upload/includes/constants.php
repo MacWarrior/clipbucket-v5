@@ -113,7 +113,7 @@ class DirPath
             if(empty($url)){
                 return $final_url;
             }
-            if(strpos($final_url . $url, '.php') !== false){
+            if(str_contains($final_url . $url, '.php')){
                 return $final_url . $url;
             }
             return $final_url . $url . '/';
