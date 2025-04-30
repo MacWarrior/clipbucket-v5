@@ -66,7 +66,7 @@ And even more !
 
 # ⌛ History
 ClipBucket <a href="https://github.com/arslancb/clipbucket">original repository</a> has been slowly dying since the release 4.1 (May 2018) and has been archived on December 2022.<br/>
-<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/en/" target="_blank">Oxygenz</a>'s projects since 2023
+<a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> was created on 2016 by <a href="https://github.com/MacWarrior">MacWarrior</a> and is part of <a href="https://clipbucket.oxygenz.fr/" target="_blank">Oxygenz</a>'s projects since 2023
 
 ## 🌐 Star History
 <a href="https://www.star-history.com/#MacWarrior/clipbucket-v5&Date">
@@ -195,11 +195,33 @@ Need help or found a bug ? Have an idea ?<br/>
 Create an <a href="https://github.com/MacWarrior/clipbucket-v5/issues">issue</a> and describe it clearly. Add screenshots, steps to reproduce, logs, etc.
 
 # 🔗 Join the Community
-<a href="https://discord.gg/HDm5CjM">!['Discord'](./upload/images/readme/discord.png "Join us on Discord")</a>
+<p align="center">
+    <a href="https://discord.gg/HDm5CjM">
+      <img src="./upload/images/readme/discord.png" alt="Join us on Discord"/>
+    </a>
+</p>
+
+# 💼 Services & Professional Support
+Looking for expert support, hosting, or custom development for your <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> platform ?
+
+🚀 <a href="https://oxygenz.fr/" target="_blank">Oxygenz</a> — the official maintainer of <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a> — offers a full range of professional services to help you get the most out of your video sharing platform:
+- 🔧 Application maintenance & updates
+- ☁️ Managed SaaS hosting — fast, secure and ready to use
+- 🧑‍💻 Custom developments to fit your specific needs
+- 🛡️ Security audits, performance tuning and consulting
+- 🎯 Dedicated support plans for peace of mind
+
+<p align="center"> 
+    <a href="https://clipbucket.oxygenz.fr">
+        <img src="./upload/images/readme/oxygenz.png" alt="Oxygenz - Official ClipBucket V5 Support"/>
+    </a>
+</p>
+
+👉 Discover our full offering at [clipbucket.oxygenz.fr](https://clipbucket.oxygenz.fr) and let us help you bring your project to life!
 
 # ✨ How to help us
 - Report <a href="https://github.com/MacWarrior/clipbucket-v5/issues" target="_blank">issues</a> to help us improve <a href="https://github.com/MacWarrior/clipbucket-v5">ClipBucket V5</a>
 - ⭐ Star us on <a href="https://github.com/MacWarrior/clipbucket-v5" target="_blank">GitHub</a>
 - ⭐ Star us on <a href="https://hub.docker.com/r/oxygenz/clipbucket-v5" target="_blank">DockerHub</a>
 - 👤 Follow us on <a href="https://www.linkedin.com/company/oxygenz/" target="_blank">Linkedin</a>
-- 🔥 Upvote us on <a href="https://www.producthunt.com/posts/clipbucketv5" target="_blank">Product Hunt</a>
+- 🔥 Upvote & review us on <a href="https://www.producthunt.com/posts/clipbucketv5" target="_blank">Product Hunt</a>
