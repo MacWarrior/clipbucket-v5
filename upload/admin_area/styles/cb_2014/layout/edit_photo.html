@@ -21,11 +21,6 @@
                         {/if}
                     </li>
                     <li>
-                        <a href="{DirPath::getUrl('admin_area')}recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
-                            Re-create Photo
-                        </a>
-                    </li>
-                    <li>
                         {if $data.active == 'yes'}
                             <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
                                 {lang code='deactivate'}

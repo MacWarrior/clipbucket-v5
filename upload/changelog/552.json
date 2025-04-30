@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"25",
+  "revision":"26",
   "status":"stable",
   "detail":[
     {
@@ -11,6 +11,7 @@
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
         ,"Fix sub-directory links"
+        ,"Fix outdated links <i>(#591)</i>"
       ]
     },
     {
