@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"26",
+  "revision":"27",
   "status":"stable",
   "detail":[
     {
@@ -24,6 +24,7 @@
         ,"Fix photo upload <i>(#594)</i>"
         ,"Fix next/previous photo buttons <i>(#597)</i>"
         ,"Fix sidebar photos hover style"
+        ,"Fix collection display error on outdated DB"
       ]
     },
     {
