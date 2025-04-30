@@ -59,7 +59,7 @@
                                     {if $player.website}
                                         <p>Website : <a href="{$player.website}">{$player.website}</a></p>
                                     {/if}
-                                    <p><a href="manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
+                                    <p><a href="{DirPath::getUrl('admin_area')}manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
                                 </div>
                             </div>
                         </div>

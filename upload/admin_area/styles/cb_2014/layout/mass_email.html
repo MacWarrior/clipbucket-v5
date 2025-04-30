@@ -3,7 +3,7 @@
 </div>
 
 {if $send_email==""}
-	<form name="mass_email" method="post" action="mass_email.php?action=new">
+	<form name="mass_email" method="post" action="{DirPath::getUrl('admin_area')}mass_email.php?action=new">
 		<h3 class="cb_title">
 			Email manager
 		</h3>
@@ -201,7 +201,7 @@
 			</tr>
 		</table>
 
-		<a class="btn btn-primary" href="mass_email.php">Go back to mass email page</a>
+		<a class="btn btn-primary" href="{DirPath::getUrl('admin_area')}mass_email.php">Go back to mass email page</a>
 
 		{errorhandler::getInstance()->message_list.0}
 		{if $msgs}

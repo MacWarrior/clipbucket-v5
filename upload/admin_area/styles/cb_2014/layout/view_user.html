@@ -10,7 +10,7 @@
                                 <li><a role="menuitem" tabindex="-1" href="{userquery::getInstance()->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
                             {/if}
                             {if $u.userid != user_id()}
-                                <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
+                                <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}login_as_user.php?uid={$u.userid}">Login as user</a></li>
                                 {if $u.usr_status=="Ok"}
                                     <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">{lang code='deactivate'}</a></li>
                                 {else}

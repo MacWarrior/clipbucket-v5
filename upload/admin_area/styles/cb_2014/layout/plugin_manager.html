@@ -6,7 +6,7 @@
 </div>
 <h3>Installed Plugins</h3>
 {if $installed_plugin_list}
-<form name="installed_plugins" id="installed_plugins" method="post" action="plugin_manager.php">
+<form name="installed_plugins" id="installed_plugins" method="post" action="{DirPath::getUrl('admin_area')}plugin_manager.php">
 	<div class="btn-group" style="margin-bottom:  10px">
 		<input class="btn btn-primary btn-sm" type="submit" name="activate_selected" value="{lang code='activate'}"/>
 		<input class="btn btn-primary btn-sm" type="submit" name="deactivate_selected" value="{lang code='deactivate'}"/>
@@ -90,7 +90,7 @@
 	<h2>Available Plugins</h2>
 </div>
 {if $new_plugin_list}
-<form name="available_plugins" id="available_plugins" action="plugin_manager.php" method="post">
+<form name="available_plugins" id="available_plugins" action="{DirPath::getUrl('admin_area')}plugin_manager.php" method="post">
 	<table class="table table-bordered table-striped">
 		<tr>
 			<td width="30" align="center" valign="middle" class="left_head">

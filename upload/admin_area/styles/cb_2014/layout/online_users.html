@@ -14,15 +14,15 @@
     <tr>
       <td width="150">
         {if $user.username}
-          <a href="view_user.php?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
+          <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$user.userid}"><label class="label label-success">{display_clean($user.username)}</label></a>
           <br>
-          <a href="view_user.php?uid={$user.userid}">
+          <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$user.userid}">
              <img src="{userquery::getInstance()->getUserThumb([],'small', $user.userid)}" class="img-thumbnail oneUserImage"/>
           </a>
         {else}
           {$user.session_string}
         {/if}
-        <img class="browser {$theBrowser.bname}" src="{$imageurl}/dot.gif" title="{$theBrowser.name} {$theBrowser.version} on {$theBrowser.platform}" />
+        <img class="browser {$theBrowser.bname}" src="{$imageurl}/dot.gif" title="{$theBrowser.name} {$theBrowser.version} on {$theBrowser.platform}"/>
       </td>
       <td>
         <div class="dropdown marginBottom">

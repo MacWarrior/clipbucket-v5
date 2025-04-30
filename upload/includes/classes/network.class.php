@@ -2,7 +2,7 @@
 class Network{
 
     // Cloudflare IPv4 : https://www.cloudflare.com/ips-v4
-    private static $cloudflare_ipv4 = [
+    private static array $cloudflare_ipv4 = [
         '173.245.48.0/20',
         '103.21.244.0/22',
         '103.22.200.0/22',
@@ -21,7 +21,7 @@ class Network{
     ];
 
     // Cloudflare IPv6 : https://www.cloudflare.com/ips-v6
-    private static $cloudflare_ipv6 = [
+    private static array $cloudflare_ipv6 = [
         '2400:cb00::/32',
         '2606:4700::/32',
         '2803:f800::/32',
@@ -33,7 +33,7 @@ class Network{
 
     private static function is_ipv4_in_range(string $ip, string $range): bool
     {
-        if (strpos($range, '/') === false){
+        if (!str_contains($range, '/')){
             $range .= '/32';
         }
 
@@ -46,7 +46,7 @@ class Network{
 
     private static function is_ipv6_in_range(string $ip, string $range): bool
     {
-        if (strpos($range, '/') === false){
+        if (!str_contains($range, '/')){
             $range .= '/32';
         }
 
@@ -219,7 +219,7 @@ class Network{
 
     public static function is_current_url($needed): bool
     {
-        return strpos($_SERVER['REQUEST_URI'], $needed) !== false;
+        return str_contains($_SERVER['REQUEST_URI'], $needed);
     }
 
     /**
@@ -255,7 +255,7 @@ class Network{
         }
     }
 
-    public static function download_file($url_source, $filepath_destination)
+    public static function download_file($url_source, $filepath_destination): void
     {
         file_put_contents($filepath_destination . '_ongoing', '');
 
@@ -359,7 +359,7 @@ class Network{
         ];
 
         foreach ($forbidden_subdir as $subdir) {
-            if( strpos($server_url, '/' . $subdir . '/') !== false ) {
+            if(str_contains($server_url, '/' . $subdir . '/')) {
                 if( $show_error ){
                     if( function_exists('lang') ){
                         $msg = lang('directory_x_is_forbidden', $subdir);

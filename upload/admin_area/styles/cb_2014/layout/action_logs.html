@@ -23,7 +23,7 @@
     <tr>
       <td>
         {if $log.action_username}
-          <a href="view_user.php?uid={$log.action_userid}"><label class="pointer label label-{if $log.action_userlevel == '1'}success{elseif $log.action_userlevel == ''}danger{else}primary{/if}">{$log.action_username}</label></a>
+          <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$log.action_userid}"><label class="pointer label label-{if $log.action_userlevel == '1'}success{elseif $log.action_userlevel == ''}danger{else}primary{/if}">{$log.action_username}</label></a>
 
           {else}
             <label class="label label-danger">No username found</label>

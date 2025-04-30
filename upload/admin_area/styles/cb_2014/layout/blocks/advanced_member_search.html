@@ -7,7 +7,7 @@
 </div>
 <div class="search_box well" id="membersearchdiv" {if $smarty.cookies.show_memsearchdiv_search!='show'} style="display:none;"{/if}>
 <br>
-<form id="user_search" name="user_search" method="get" action="members.php" class="member_search">
+<form id="user_search" name="user_search" method="get" action="{DirPath::getUrl('admin_area')}members.php" class="member_search">
     <div class="row">
         <div class="col-md-2">
             <div class="form-group">

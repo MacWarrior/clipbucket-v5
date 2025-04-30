@@ -6,7 +6,7 @@
     </a>
 </div>
 <div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
-  <form action="photo_manager.php" method="get" name="search_photos">
+  <form action="{DirPath::getUrl('admin_area')}photo_manager.php" method="get" name="search_photos">
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">

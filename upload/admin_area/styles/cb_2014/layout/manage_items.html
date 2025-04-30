@@ -65,7 +65,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
+                                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
                                     </div>
                                 </div>
                             </td>
@@ -105,7 +105,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
+                                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].username)}</a>
                                     </div>
                                 </div>
                             </td>
@@ -127,9 +127,9 @@
                                             <div class="col-md-3 collections-grid">
                                                 <div class="clearfix collection-item col-lg-6 col-md-6 col-sm-12 col-xs-6">
                                                     {if config('seo') != 'yes'}
-                                                        {$main_url = "/view_collection.php?cid={$collection.collection_id}"}
+                                                        {$main_url = "view_collection.php?cid={$collection.collection_id}"}
                                                     {else}
-                                                        {$main_url = "/collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
+                                                        {$main_url = "collection/{$collection.collection_id}/{$collection.type}/{display_clean($collection.collection_name)}"}
                                                     {/if}
 
                                                     {$first_elem = Collection::getInstance()->getFirstItem(['collection_id' => $collection.collection_id])}
@@ -141,7 +141,7 @@
 
                                                     <div class="collection-holder">
                                                         <div class="photo-block no_select no_overflow">
-                                                            <a href="{$main_url}" title="{display_clean($collection.collection_name)}">
+                                                            <a href="{DirPath::getUrl('root')}{$main_url}" title="{display_clean($collection.collection_name)}">
                                                                 <img alt="{display_clean($collection.collection_name)}" title="{display_clean($collection.collection_name)}" class="img-responsive {if $blur}blur{/if}" id="collection_{$collection.collection_id}" src="{Collections::getInstance()->coll_first_thumb($collection,'l')}"/>
                                                                 {ANCHOR place='in_collection_thumb' data=$collection}
                                                                 <div class="collection-info">
@@ -173,7 +173,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-2">
-                                        <a href="view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].user_username)}</a>
+                                        <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$obj[list].userid}">{display_clean($obj[list].user_username)}</a>
                                     </div>
                                 </div>
                             </td>

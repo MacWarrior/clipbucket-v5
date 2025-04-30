@@ -6,16 +6,16 @@
             <a class="btn btn-primary btn-xs dropdown-toggle pull-right" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
             <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu1">
                 <li role="presentation"><a role="menuitem" tabindex="-1" href="javascript:void(0);" onClick="regenerateThumbs({$data.videoid});">Regenerate thumbnails</a></li>
-                <li role="presentation"><a role="menuitem" tabindex="-1" href="edit_video.php?video={$data.videoid}">Back to edit details</a></li>
+                <li role="presentation"><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}edit_video.php?video={$data.videoid}">Back to edit details</a></li>
             </ul>
         </div>
     {/if}
-<form action="upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
+<form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}" method="post" enctype="multipart/form-data" id="thumb_list">
     {include file="$style_dir/blocks/thumb_list.html"}
 </form>
 
 <hr>
-<form action="upload_thumbs.php?video={$data.videoid}&type={$type}" method="post" enctype="multipart/form-data" name="form1">
+<form action="{DirPath::getUrl('admin_area')}upload_thumbs.php?video={$data.videoid}&type={$type}" method="post" enctype="multipart/form-data" name="form1">
     <h4>
         {if $type == 'thumbs'}
             {lang code="upload_custom_thumbnail"}
