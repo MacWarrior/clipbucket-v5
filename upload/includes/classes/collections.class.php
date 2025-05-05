@@ -2025,7 +2025,12 @@ class Collections extends CBCategory
                 $cid = mysql_clean($cid);
                 Clipbucket_db::getInstance()->update(tbl($this->section_tbl), $query_field, $query_val, ' collection_id = ' . $cid);
 
-                Category::getInstance()->saveLinks('collection', $cid, $array['category']);
+                if (config('enable_collection_categories') == 'yes') {
+                    Category::getInstance()->saveLinks('collection', $cid, ($array['category'] ?? [Category::getInstance()->getDefaultByType('collection')['category_id']]));
+                } else {
+                    Category::getInstance()->saveLinks('collection', $cid, [Category::getInstance()->getDefaultByType('collection')['category_id']]);
+                }
+
                 Tags::saveTags($array['collection_tags'], 'collection', $cid);
 
                 e(lang('collection_updated'), 'm');

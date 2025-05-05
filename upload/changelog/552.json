@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"28",
+  "revision":"29",
   "status":"stable",
   "detail":[
     {
@@ -12,6 +12,7 @@
         ,"Fix incorrect frontend URL <i>(#529)</i>"
         ,"Fix sub-directory links"
         ,"Fix outdated links <i>(#591)</i>"
+        ,"Fix collection saving without categories enabled"
       ]
     },
     {
