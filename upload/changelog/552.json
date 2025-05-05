@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"29",
+  "revision":"30",
   "status":"stable",
   "detail":[
     {
@@ -26,6 +26,7 @@
         ,"Fix next/previous photo buttons <i>(#597)</i>"
         ,"Fix sidebar photos hover style"
         ,"Fix collection display error on outdated DB"
+        ,"Fix photos filters display without categories enabled"
       ]
     },
     {
