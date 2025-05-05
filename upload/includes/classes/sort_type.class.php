@@ -27,7 +27,7 @@ class SortType
         if (empty($id) || !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
             return '';
         }
-        $res = Clipbucket_db::getInstance()->_select('SELECT id, label, type, is_default FROM ' . tbl(self::$tableName) . ' WHERE id = ' . mysql_clean($id)) ;
+        $res = Clipbucket_db::getInstance()->_select('SELECT id, label, type, is_default FROM ' . tbl(self::$tableName) . ' WHERE id = ' . (int)$id) ;
         return $res[0]['label'] ?? '';
     }
 

@@ -24,7 +24,7 @@ if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '299')) {
     assign('sort_link', $_GET['sort'] ?? 0);
     assign('default_sort', SortType::getDefaultByType('channels'));
 }
-$params = User::getInstance()->getFilterParams($_GET['time'], $params);
+$params = User::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 
 if (config('enable_user_category') == 'yes' && !empty($_GET['cat'])) {
     $params['category'] = (int)$_GET['cat'];

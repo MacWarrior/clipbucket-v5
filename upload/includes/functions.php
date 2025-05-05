@@ -1979,9 +1979,10 @@ function call_functions($in, $params = null)
  * @param        $type
  *
  * @return string : { string } { sorting link }
- * @internal param $ : { string } { $data } { specifies data to change to url } { $data } { specifies data to change to url }
+ * @throws Exception
  * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
  * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
+ * @internal param $ : { string } { $data } { specifies data to change to url } { $data } { specifies data to change to url }
  */
 function sort_link($data, $mode, $type): string
 {

@@ -85,16 +85,6 @@ class ClipBucket
 
         $this->clean_requests();
 
-
-        if( !isset($_GET['time']) ){
-            $_GET['time'] = 'all_time';
-        } else {
-            $time_array = time_links();
-            if( !isset($time_array[$_GET['time']]) ){
-                $_GET['time'] = 'all_time';
-            }
-        }
-
         if (!isset($_GET['page']) || !is_numeric($_GET['page'])) {
             $_GET['page'] = 1;
         }

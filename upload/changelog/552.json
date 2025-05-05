@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"31",
+  "revision":"32",
   "status":"stable",
   "detail":[
     {
@@ -28,6 +28,7 @@
         ,"Fix collection display error on outdated DB"
         ,"Fix photos filters display without categories enabled"
         ,"Fix channels page pagination"
+        ,"Fix possible errors with invalid filters"
       ]
     },
     {
