@@ -400,7 +400,7 @@ class User
             }
         }
 
-        if( $param_group ){
+        if( $param_group && !$param_count ){
             $group[] = $param_group;
         }
 

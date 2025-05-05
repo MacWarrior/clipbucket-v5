@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"30",
+  "revision":"31",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Fix sidebar photos hover style"
         ,"Fix collection display error on outdated DB"
         ,"Fix photos filters display without categories enabled"
+        ,"Fix channels page pagination"
       ]
     },
     {
