@@ -66,7 +66,7 @@
                                         </div>
                                     {/foreach}
                                     {foreach from=$other_fields item=field}
-                                        <div class="form-group {if $field.id == 'broadcast' || $field.id == 'allow_comments'} col-md-6 col-sm-6 col-xs-12 no_padding_left {elseif $field.id == 'sort_type' || $field.id == 'public_upload' }col-md-6 col-sm-6 col-xs-12 no_padding_right{/if}">
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-12 {if in_array($field.id, ['broadcast','allow_comments']) || ($field.id == 'public_upload' && config('enable_comments_collection') != 'yes')}no_padding_left{elseif $field.id == 'sort_type' || $field.id == 'public_upload'}no_padding_right{/if}">
                                             <label for="{$field.id}" class="show">{$field.title}</label>
                                             {if $field.hint_1}
                                                 <div class="hint">{$field.hint_1}</div>{/if}

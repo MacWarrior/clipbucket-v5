@@ -821,13 +821,16 @@ class Collection
         return $indentList;
     }
 
+    /**
+     * @throws Exception
+     */
     public function getAvailableParents($collection_id, $type): array
     {
         $list_parent_categories = ['null' => lang('collection_no_parent')];
 
         $params = [
-            'type'      => $type,
-            'userid'    => user_id()
+            'type'   => $type,
+            'userid' => user_id()
         ];
 
         if (!empty($collection_id)) {

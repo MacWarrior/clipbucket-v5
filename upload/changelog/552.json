@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"32",
+  "revision":"33",
   "status":"stable",
   "detail":[
     {
@@ -29,6 +29,7 @@
         ,"Fix photos filters display without categories enabled"
         ,"Fix channels page pagination"
         ,"Fix possible errors with invalid filters"
+        ,"Fix collection creation & edition display"
       ]
     },
     {
