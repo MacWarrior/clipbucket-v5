@@ -1233,3 +1233,8 @@ a[role='menuitem'] {
     padding: 0;
     border: none;
 }
+
+textarea[disabled]{
+    cursor: not-allowed;
+    background-color: #eee;
+}

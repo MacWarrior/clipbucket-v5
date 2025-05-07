@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"34",
+  "revision":"35",
   "status":"stable",
   "detail":[
     {
@@ -13,6 +13,7 @@
         ,"Fix sub-directory links"
         ,"Fix outdated links <i>(#591)</i>"
         ,"Fix collection saving without categories enabled"
+        ,"Fix mass upload description display"
       ]
     },
     {
