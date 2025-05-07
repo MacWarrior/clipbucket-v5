@@ -215,9 +215,11 @@ class Video
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
+
             case 'most_old':
                 $params['order'] = $this->getTableName() . '.date_added ASC';
                 break;
+
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -246,6 +248,14 @@ class Video
                 if( config('enable_comments_video') == 'yes' ) {
                     $params['order'] = $this->getTableName() . '.comments_count DESC';
                 }
+                break;
+
+            case 'alphabetical':
+                $params['order'] = $this->getTableName() . '.title ASC';
+                break;
+
+            case 'reverse_alphabetical':
+                $params['order'] = $this->getTableName() . '.title DESC';
                 break;
 
             case 'all_time':

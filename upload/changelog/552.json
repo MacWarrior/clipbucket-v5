@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"33",
+  "revision":"34",
   "status":"stable",
   "detail":[
     {
@@ -18,7 +18,8 @@
     {
       "title": "Front office",
       "description": [
-        "Fix collection privacy on photos page"
+        "Implement alphabetical and reverse alphabetical filters <i>(#600)</i>"
+        ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
         ,"Fix a potential erroneous error message on collection deletion"

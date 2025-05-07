@@ -1674,7 +1674,7 @@ VALUES ('inapp_content'),
        ('disturbing'),
        ('other');
 
-INSERT IGNORE INTO `{tbl_prefix}sorts` (`label`, `type`, is_default)
+INSERT IGNORE INTO `{tbl_prefix}sorts` (`label`, `type`, `is_default`)
 VALUES ('most_old', 'videos', FALSE),
        ('most_recent', 'videos', TRUE),
        ('most_viewed', 'videos', FALSE),
@@ -1703,4 +1703,12 @@ VALUES ('most_old', 'videos', FALSE),
        ('top_rated', 'channels', FALSE),
        ('featured', 'channels', FALSE),
        ('most_items', 'channels', FALSE),
-       ('most_commented', 'channels', FALSE);
+       ('most_commented', 'channels', FALSE),
+       ('alphabetical', 'videos', false),
+       ('alphabetical', 'photos', false),
+       ('alphabetical', 'collections', false),
+       ('alphabetical', 'channels', false),
+       ('reverse_alphabetical', 'videos', false),
+       ('reverse_alphabetical', 'photos', false),
+       ('reverse_alphabetical', 'collections', false),
+       ('reverse_alphabetical', 'channels', false);

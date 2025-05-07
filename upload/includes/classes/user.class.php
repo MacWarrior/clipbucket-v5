@@ -200,9 +200,11 @@ class User
             default:
                 $params['order'] = $this->getTableName() . '.doj DESC';
                 break;
+
             case 'most_old':
                 $params['order'] = $this->getTableName() . '.doj ASC';
                 break;
+
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.profile_hits DESC';
                 break;
@@ -225,6 +227,14 @@ class User
                 if( config('enable_comments_channel') == 'yes' ){
                     $params['order'] = $this->getTableName() . '.total_comments DESC';
                 }
+                break;
+
+            case 'alphabetical':
+                $params['order'] = $this->getTableName() . '.username ASC';
+                break;
+
+            case 'reverse_alphabetical':
+                $params['order'] = $this->getTableName() . '.username DESC';
                 break;
 
             case 'all_time':

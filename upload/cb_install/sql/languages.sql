@@ -1540,4 +1540,6 @@ VALUES ('admin_setting'),
        ('nginx_vhost_no_update'),
        ('nginx_vhost_update'),
        ('nginx_vhost_updated'),
-       ('access_to_front_end');
+       ('access_to_front_end'),
+       ('sort_by_alphabetical'),
+       ('sort_by_reverse_alphabetical');

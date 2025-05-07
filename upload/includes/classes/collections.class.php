@@ -145,6 +145,7 @@ class Collection
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
+
             case 'most_old':
                 $params['order'] = $this->getTableName() . '.date_added ASC';
                 break;
@@ -165,6 +166,14 @@ class Collection
 
             case 'most_items':
                 $params['order'] = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END)) DESC';
+                break;
+
+            case 'alphabetical':
+                $params['order'] = $this->getTableName() . '.collection_name ASC';
+                break;
+
+            case 'reverse_alphabetical':
+                $params['order'] = $this->getTableName() . '.collection_name DESC';
                 break;
 
             case 'all_time':

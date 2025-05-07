@@ -110,9 +110,11 @@ class Photo
             default:
                 $params['order'] = $this->getTableName() . '.date_added DESC';
                 break;
+
             case 'most_old':
                 $params['order'] = $this->getTableName() . '.date_added ASC';
                 break;
+
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.views DESC';
                 break;
@@ -130,9 +132,19 @@ class Photo
                     $params['order'] = $this->getTableName() . '.total_comments DESC';
                 }
                 break;
+
             case 'viewed_recently':
                 $params['order'] = $this->getTableName() . '.last_viewed DESC';
                 break;
+
+            case 'alphabetical':
+                $params['order'] = $this->getTableName() . '.photo_title ASC';
+                break;
+
+            case 'reverse_alphabetical':
+                $params['order'] = $this->getTableName() . '.photo_title DESC';
+                break;
+
             case 'all_time':
             case 'today':
             case 'yesterday':
