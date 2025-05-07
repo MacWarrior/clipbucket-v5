@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"37",
+  "revision":"38",
   "status":"stable",
   "detail":[
     {
@@ -35,6 +35,7 @@
         ,"Fix possible errors with invalid filters"
         ,"Fix collection creation & edition display"
         ,"Fix signup with allowed spaces in username"
+        ,"Fix channel page display"
       ]
     },
     {

@@ -2,10 +2,19 @@
 
 class cbfeeds
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     /**
      * Function used to add feed in user feed file
      *
-     * @param array
+     * @param array $feed
      * action => upload,joined,comment,created
      * object => video, photo, group
      * object_id => id of object
@@ -13,7 +22,7 @@ class cbfeeds
      * uid => user id
      * udetails => user details array
      *
-     * @return bool
+     * @return bool|void
      */
     function addFeed($feed)
     {
@@ -109,7 +118,7 @@ class cbfeeds
      *
      * @return string
      */
-    function getFeedFile($uid)
+    function getFeedFile($uid): string
     {
         $time = time();
         $ufeedDir = DirPath::get('userfeeds') . $uid;
@@ -125,9 +134,9 @@ class cbfeeds
      *
      * @param null $uid
      *
-     * @return array|bool
+     * @throws Exception
      */
-    function getUserFeedsFiles($uid = null)
+    function getUserFeedsFiles($uid = null): array
     {
         if (!$uid) {
             $uid = user_id();
@@ -146,25 +155,25 @@ class cbfeeds
 
             return $feeds;
         }
-        return false;
+        return $feeds;
     }
 
     /**
      * Function used to get user feed
      *
-     * @param $user
+     * @param array $user
      *
-     * @return array|bool
+     * @return array
      * @throws Exception
      */
-    function getUserFeeds($user)
+    function getUserFeeds(array $user): array
     {
         $allowed_feeds = 15;
         $uid = $user['userid'];
         $feeds = $this->getUserFeedsFiles($uid);
 
-        if (!$feeds) {
-            return false;
+        if( empty($feeds) ){
+            return [];
         }
         $newFeeds = [];
         $count = 0;
@@ -319,7 +328,7 @@ class cbfeeds
      * @param $uid
      * @param $feedid
      */
-    function deleteFeed($uid, $feedid)
+    function deleteFeed($uid, $feedid): void
     {
         $ufeedDir = DirPath::get('userfeeds') . $uid . DIRECTORY_SEPARATOR . getName($feedid) . '.feed';
         if (file_exists($ufeedDir)) {

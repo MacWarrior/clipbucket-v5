@@ -2802,7 +2802,6 @@ function update_last_commented($type, $id): void
  */
 function addFeed($array)
 {
-    global $cbfeeds;
     $action = $array['action'];
     if ($array['uid']) {
         $userid = $array['uid'];
@@ -2842,7 +2841,7 @@ function addFeed($array)
     $feed['uid'] = $userid;
     $feed['object_id'] = $array['object_id'];
     $feed['action'] = $action;
-    $cbfeeds->addFeed($feed);
+    cbfeeds::getInstance()->addFeed($feed);
 }
 
 /**

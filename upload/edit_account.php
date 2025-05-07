@@ -158,10 +158,8 @@ $available_tags = Tags::fill_auto_complete_tags('profile');
 assign('available_tags', $available_tags);
 
 assign('user', $udetails);
-
 assign('signup_fields', userquery::getInstance()->load_signup_fields($udetails));
 assign('cust_signup_fields', userquery::getInstance()->load_custom_signup_fields($udetails,false,true));
-assign('myAccountLinks', userquery::getInstance()->my_account_links());
 
 subtitle(lang('user_manage_my_account'));
 template_files('edit_account.html');

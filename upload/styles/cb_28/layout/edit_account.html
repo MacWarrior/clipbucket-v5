@@ -9,8 +9,7 @@
 
 
     {if in_array($mode, ['profile_settings', 'block_users'])}
-
-                    {if config('channelsSection') == 'yes' && !User::getInstance()->hasPermission('enable_channel_page')}
+                    {if config('channelsSection') == 'yes' && User::getInstance()->hasPermission('enable_channel_page')}
                         <li class="{if $mode=='profile_settings'}active{/if}">
                             <a href="{$baseurl}edit_account.php?mode=profile">
                                 <h5>{lang code='channel_profile_settings'}</h5>

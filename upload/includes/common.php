@@ -214,8 +214,6 @@ $cbemail = new CBEmail();
 $cbpm = new cb_pm();
 $cbindex = new CBreindex();
 
-$cbfeeds = new cbfeeds();
-
 check_install('after');
 
 # Holds Advertisement IDS that are being Viewed
@@ -293,7 +291,6 @@ $Smarty->assign_by_ref('lang_obj', Language::getInstance());
 $Smarty->assign_by_ref('cbtpl', $cbtpl);
 $Smarty->assign_by_ref('cbplayer', $cbplayer);
 $Smarty->assign_by_ref('cbpm', $cbpm);
-$Smarty->assign_by_ref('cbfeeds', $cbfeeds);
 
 # REGISTERING FUNCTION FOR SMARTY TEMPLATES
 function show_video_rating($params)

@@ -1,19 +1,17 @@
 <ul class="nav nav-pills nav-stacked">
+    {$myAccountLinks = userquery::getInstance()->my_account_links()}
     {foreach $myAccountLinks as $key => $value}
-        {if $key!='Groups'}
+        <li class="active"><a>{$key}</a></li>
 
-            <li class="active"><a>{$key}</a></li>
-
-            {foreach $value as $subKey => $subValue}
-                <li>
-                    <a href="{$subValue}">
-                        {if Network::is_current_url($subValue)}
-                            <i class="glyphicon glyphicon-hand-right"></i>
-                        {/if}
-                        {$subKey}
-                    </a>
-                </li>
-            {/foreach}
-        {/if}
+        {foreach $value as $subKey => $subValue}
+            <li>
+                <a href="{$subValue}">
+                    {if Network::is_current_url($subValue)}
+                        <i class="glyphicon glyphicon-hand-right"></i>
+                    {/if}
+                    {$subKey}
+                </a>
+            </li>
+        {/foreach}
     {/foreach}
 </ul>
