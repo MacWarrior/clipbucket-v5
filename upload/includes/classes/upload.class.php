@@ -36,7 +36,7 @@ class Upload
         $location_fields = $this->loadLocationFields($array);
         $option_fields = $this->loadOptionFields($array);
 
-        $date_recorded = DateTime::createFromFormat(DATE_FORMAT, $location_fields['date_recorded']['value']);
+        $date_recorded = DateTime::createFromFormat(config('date_format'), $location_fields['date_recorded']['value']);
         if ($date_recorded) {
             $location_fields['date_recorded']['value'] = $date_recorded->format('Y-m-d');
         }

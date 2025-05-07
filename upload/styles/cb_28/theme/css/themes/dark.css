@@ -51,6 +51,11 @@ html.dark {
         border-radius: var(--border-radius);
     }
 
+    /* Alerts */
+    .alert-success h2{
+        color: var(--color-01);
+    }
+
     /* Sidebar */
     .sidebar-channels,
     .sidebar-items,
@@ -74,7 +79,6 @@ html.dark {
     .cb-popup-container .player-holder .vjs-big-play-button{
         border-radius: var(--border-radius);
     }
-
     .cb-popup-container .video-js{
         border-radius: var(--border-radius);
         overflow: hidden;

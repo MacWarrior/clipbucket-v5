@@ -2730,7 +2730,7 @@ class userquery extends CBCategory
             $uquery_field[] = 'dob';
 
             // Converting date from custom format to MySQL
-            $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $array['dob']);
+            $dob_datetime = DateTime::createFromFormat(config('date_format'), $array['dob']);
             if ($dob_datetime) {
                 $uquery_val[] = $dob_datetime->format('Y-m-d');
             } else {
@@ -3443,7 +3443,7 @@ class userquery extends CBCategory
         if ($dob != '' && $dob != '0000-00-00') {
             $dob_datetime = DateTime::createFromFormat('Y-m-d', $dob);
             if ($dob_datetime) {
-                $dob = $dob_datetime->format(DATE_FORMAT);
+                $dob = $dob_datetime->format(config('date_format'));
             }
         }
 
@@ -3677,7 +3677,7 @@ class userquery extends CBCategory
                 $val = $array[$name];
 
                 if ($name == 'dob') {
-                    $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $val);
+                    $dob_datetime = DateTime::createFromFormat(config('date_format'), $val);
                     if ($dob_datetime) {
                         $val = $dob_datetime->format('Y-m-d');
                     } else {
@@ -3703,7 +3703,7 @@ class userquery extends CBCategory
             }
 
             // Setting Verification type
-            if (EMAIL_VERIFICATION == '1') {
+            if (config('email_verification') == '1') {
                 $usr_status = 'ToActivate';
                 $welcome_email = 'no';
             } else {
@@ -3850,7 +3850,7 @@ class userquery extends CBCategory
 
             Clipbucket_db::getInstance()->insert(tbl(userquery::getInstance()->dbtbl['user_profile']), $fields_list, $fields_data);
 
-            if (!User::getInstance()->hasPermission('admin_access') && EMAIL_VERIFICATION && $send_signup_email) {
+            if (!User::getInstance()->hasPermission('admin_access') && config('email_verification') && $send_signup_email) {
                 $var = ['avcode' => $avcode];
                 EmailTemplate::sendMail('verify_account', $insert_id, $var);
             } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
@@ -3877,6 +3877,9 @@ class userquery extends CBCategory
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function duplicate_email($name): bool
     {
         if (myquery::getInstance()->check_email($name)) {

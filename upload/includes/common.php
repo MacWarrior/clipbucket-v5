@@ -179,7 +179,6 @@ if (!Update::isVersionSystemInstalled()) {
 
 require_once DirPath::get('includes') . 'defined_links.php';
 require_once DirPath::get('classes') . 'search.class.php';
-require_once DirPath::get('classes') . 'signup.class.php';
 require_once DirPath::get('classes') . 'image.class.php';
 require_once DirPath::get('classes') . 'fileupload.class.php';
 require_once DirPath::get('classes') . 'upload.class.php';
@@ -203,7 +202,6 @@ require_once DirPath::get('classes') . 'gravatar.class.php';
 require_once DirPath::get('includes') . 'plugin.functions.php';
 require_once DirPath::get('includes') . 'plugins_functions.php';
 
-$signup = new signup();
 $adsObj = new AdsManager();
 $formObj = new formObj();
 
@@ -231,11 +229,6 @@ if (!defined('SLOGAN')) {
 
 # Seo URLS
 define('SEO', $row['seo']); //Set yes / no
-
-# Registration & Email Settings
-define('EMAIL_VERIFICATION', $row['email_verification']);
-define('ALLOW_REG', getArrayValue($row, 'allow_registration'));
-define('DATE_FORMAT', config('date_format'));
 
 # Defining Photo Limits
 define('MAINPLIST', $row['photo_main_list']);

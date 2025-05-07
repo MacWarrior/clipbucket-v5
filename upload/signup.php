@@ -75,13 +75,23 @@ if (!isset($_POST['login']) && !isset($_POST['signup'])) {
     }
 }
 
-$datepicker_js_lang = '';
-if( Language::getInstance()->getLang() != 'en'){
-    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
-}
-ClipBucket::getInstance()->addJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
 
-subtitle(lang('signup'));
-//Displaying The Template
-template_files('signup.html');
+if($_GET['mode'] ?? '' == 'login'){
+    subtitle(lang('login'));
+    template_files('pages/login.html');
+} else {
+    subtitle(lang('signup'));
+    $datepicker_js_lang = '';
+    if( Language::getInstance()->getLang() != 'en'){
+        $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+    }
+
+    $min_suffixe = in_dev() ? '' : '.min';
+    ClipBucket::getInstance()->addJS([
+        'jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global',
+        'pages/signup/signup' . $min_suffixe . '.js'        => 'admin'
+    ]);
+    template_files('signup.html');
+}
+
 display_it();

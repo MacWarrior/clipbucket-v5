@@ -565,7 +565,18 @@ function is_valid_syntax($code, $text): bool
 {
     switch ($code) {
         case 'username':
-            $pattern = '^[A-Za-z0-9_.]+$';
+            if (config('allow_unicode_usernames') == 'yes') {
+                $pattern = '^[\p{L}\p{N}_.';
+                if (config('allow_username_spaces') == 'yes') {
+                    $pattern .= ' ]';
+                }
+                $pattern .= '+$';
+            } else {
+                $pattern = config('allow_username_spaces') == 'yes'
+                    ? '^[A-Za-z0-9_. ]+$'
+                    : '^[A-Za-z0-9_.]+$';
+            }
+
             break;
         case 'email':
             $pattern = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$';
@@ -895,19 +906,12 @@ function username_check($username): bool
             return false;
         }
     }
-    //Checking if its syntax is valid or not
-    $multi = config('allow_unicode_usernames');
 
-    //Checking Spaces
-    if (!config('allow_username_spaces')) {
-        preg_match('/ /', $username, $matches);
-    }
-    if (!is_valid_syntax('username', $username) && $multi != 'yes' || $matches) {
+    if (!is_valid_syntax('username', $username) ) {
         e(lang("class_invalid_user"));
-    }
-    if (!preg_match('/^[A-Za-z0-9_.]+$/', $username)) {
         return false;
     }
+
     return true;
 }
 
@@ -1645,7 +1649,7 @@ function show_playlist_form($array): void
 function cbdate($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = DATE_FORMAT;
+        $format = config('date_format');
     }
 
     if (is_string($timestamp)) {
@@ -1666,7 +1670,7 @@ function cbdate($format = null, $timestamp = null): string
 function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = DATE_FORMAT . ' h:m:s';
+        $format = config('date_format') . ' h:m:s';
     }
 
     return cbdate($format, $timestamp);
@@ -2584,7 +2588,7 @@ function isUTF8($string): bool
 function datecreated($in): string
 {
     if (!empty($in)) {
-        $datecreated = DateTime::createFromFormat(DATE_FORMAT, $in);
+        $datecreated = DateTime::createFromFormat(config('date_format'), $in);
         if ($datecreated) {
             return $datecreated->format('Y-m-d');
         }

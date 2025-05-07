@@ -72,7 +72,7 @@ class CBEmail
             '{website_title}' => TITLE,
             '{baseurl}'       => DirPath::getUrl('root'),
             '{website_url}'   => DirPath::getUrl('root'),
-            '{date_format}'   => cbdate(DATE_FORMAT),
+            '{date_format}'   => cbdate(config('date_format')),
             '{date}'          => cbdate(),
             '{username}'      => user_name(),
             '{userid}'        => user_id(),

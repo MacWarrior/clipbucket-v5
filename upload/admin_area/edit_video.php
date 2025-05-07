@@ -51,7 +51,7 @@ if (myquery::getInstance()->video_exists($video_id)) {
     assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
-    $data['date_added'] = $date_added->format(DATE_FORMAT);
+    $data['date_added'] = $date_added->format(config('date_format'));
 
     assign('data', $data);
     assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
