@@ -135,6 +135,9 @@ if (isset($_POST['update'])) {
         , 'enable_video_categories'
         , 'enable_collection_categories'
         , 'enable_theme_change'
+        , 'enable_channel_slogan'
+        , 'enable_channel_description'
+        , 'enable_channels_slogan_display'
     ];
 
     $config_booleans_to_refactor = [
@@ -387,6 +390,9 @@ if (isset($_POST['update'])) {
         'chromecast',
         'control_bar_logo',
         'contextual_menu_disabled',
+        'enable_channel_slogan',
+        'enable_channel_description',
+        'enable_channels_slogan_display',
 
         'player_logo_url',
         'player_thumbnails',

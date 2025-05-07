@@ -308,6 +308,7 @@
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -780,6 +781,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane interfaces" id="interfaces_channels">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_channels_slogan_display" title="{lang('option_enable_channels_slogan_display')}">{lang('option_enable_channels_slogan_display')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_channels_slogan_display" id="enable_channels_slogan_display" {if $row.enable_channels_slogan_display=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -999,6 +1016,26 @@
                         </div>
 
                         <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_channel_slogan" title="{lang code='option_enable_channel_slogan'}">{lang code='option_enable_channel_slogan'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="enable_channel_slogan" id="enable_channel_slogan" {if $row.enable_channel_slogan=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_channel_description" title="{lang code='option_enable_channel_description'}">{lang code='option_enable_channel_description'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="enable_channel_description" id="enable_channel_description" {if $row.enable_channel_description=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                             <div class="row">
                                 <div class="col-md-8">
                                     <label class="nowrap" for="enable_country" title="{lang code='option_enable_country'}">{lang code='option_enable_country'}</label>

@@ -29,9 +29,7 @@ class User
             ,'msg_notify'
             ,'avatar'
             ,'avatar_url'
-            ,'sex'
             ,'dob'
-            ,'country'
             ,'level'
             ,'avcode'
             ,'doj'
@@ -69,24 +67,27 @@ class User
             ,'is_live'
         ];
 
+        if( config('enable_country') == 'yes' ){
+            $this->fields[] = 'country';
+        }
+
+        if( config('enable_gender') == 'yes' ){
+            $this->fields[] = 'sex';
+        }
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
+            $this->fields[] = 'active_theme';
+        }
+
         $this->tablename_profile = 'user_profile';
         $this->fields_profile = [
             'show_my_collections'
-            ,'profile_title'
-            ,'profile_desc'
             ,'featured_video'
-            ,'first_name'
-            ,'last_name'
             ,'show_dob'
-            ,'postal_code'
             ,'time_zone'
-            ,'web_url'
             ,'fb_url'
             ,'twitter_url'
             ,'insta_url'
-            ,'hometown'
-            ,'city'
-            ,'online_status'
             ,'show_profile'
             ,'allow_comments'
             ,'allow_ratings'
@@ -94,16 +95,6 @@ class User
             ,'content_filter'
             ,'icon_id'
             ,'browse_criteria'
-            ,'about_me'
-            ,'education'
-            ,'schools'
-            ,'occupation'
-            ,'companies'
-            ,'relation_status'
-            ,'hobbies'
-            ,'fav_movies'
-            ,'fav_music'
-            ,'fav_books'
             ,'background'
             ,'rating'
             ,'voters'
@@ -115,15 +106,67 @@ class User
             ,'show_my_friends'
         ];
 
+        if( config('enable_user_firstname_lastname') == 'yes' ){
+            $this->fields_profile[] = 'first_name';
+            $this->fields_profile[] = 'last_name';
+        }
+        if( config('enable_user_relation_status') == 'yes' ){
+            $this->fields_profile[] = 'relation_status';
+        }
+        if( config('enable_user_postcode') == 'yes' ){
+            $this->fields_profile[] = 'postal_code';
+        }
+        if( config('enable_user_hometown') == 'yes' ){
+            $this->fields_profile[] = 'hometown';
+        }
+        if( config('enable_user_city') == 'yes' ){
+            $this->fields_profile[] = 'city';
+        }
+        if( config('enable_user_education') == 'yes' ){
+            $this->fields_profile[] = 'education';
+        }
+        if( config('enable_user_schools') == 'yes' ){
+            $this->fields_profile[] = 'schools';
+        }
+        if( config('enable_user_occupation') == 'yes' ){
+            $this->fields_profile[] = 'occupation';
+        }
+        if( config('enable_user_compagnies') == 'yes' ){
+            $this->fields_profile[] = 'companies';
+        }
+        if( config('enable_user_hobbies') == 'yes' ){
+            $this->fields_profile[] = 'hobbies';
+        }
+        if( config('enable_user_favorite_movies') == 'yes' ){
+            $this->fields_profile[] = 'fav_movies';
+        }
+        if( config('enable_user_favorite_music') == 'yes' ){
+            $this->fields_profile[] = 'fav_music';
+        }
+        if( config('enable_user_favorite_books') == 'yes' ){
+            $this->fields_profile[] = 'fav_books';
+        }
+        if( config('enable_user_website') == 'yes' ){
+            $this->fields_profile[] = 'web_url';
+        }
+        if( config('enable_user_about') == 'yes' ){
+            $this->fields_profile[] = 'about_me';
+        }
+        if( config('enable_user_status') == 'yes' ){
+            $this->fields_profile[] = 'online_status';
+        }
+        if( config('enable_channel_description') == 'yes' ) {
+            $this->fields_profile[] = 'profile_desc';
+        }
+
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
             $this->fields_profile[] = 'disabled_channel';
         }
-
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
-            $this->fields[] = 'active_theme';
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
+            $this->fields_profile[] = 'profile_slogan';
         }
-        $this->tablename_level = 'user_levels';
 
+        $this->tablename_level = 'user_levels';
         $this->display_block = '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
@@ -340,21 +383,19 @@ class User
             $conditions[] = 'users.level = ' . (int)$param_level;
         }
 
-        $version = Update::getInstance()->getDBVersion();
-
         if( $param_search ){
             /* Search is done on username, profile tags and profile categories */
             $match_name = 'MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
             $like_name = ' LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
             $cond = '( ' . $match_name . ' OR ' . $like_name;
             $order_search = ' ORDER BY MAX(CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . ' END ) DESC ';
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= 'OR ' . $match_tag . ' OR ' . $like_tag;
                 $order_search .= ', MAX(CASE WHEN '. $like_tag . ' THEN 100 ELSE ' . $match_tag . ' END ) DESC ';
             }
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') && config('enable_user_category') == 'yes' ){
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= 'OR ' . $match_categ . ' OR ' . $like_categ;
@@ -382,8 +423,7 @@ class User
             }
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             if ($param_search || $param_condition || !$param_count) {
                 $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('tags') . ' ON user_tags.id_tag = tags.id_tag';
@@ -398,8 +438,7 @@ class User
 
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') && config('enable_user_category') == 'yes' ){
             if ($param_search || $param_category || $param_condition || !$param_count) {
                 $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
@@ -939,7 +978,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function init()
+    function init(): void
     {
         global $sess;
 
@@ -1661,7 +1700,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function confirm_friend($sender_id, $receiver_id, $msg = true)
+    function confirm_friend($sender_id, $receiver_id, $msg = true): void
     {
         if (!$this->is_requested_friend($receiver_id, $sender_id, 'out', 'no')) {
             if ($msg) {
@@ -1689,14 +1728,11 @@ class userquery extends CBCategory
 
             EmailTemplate::sendMail('friend_confirmation', $receiver_id, $var);
 
-            //Logging Friendship
-
             $log_array = [
                 'success'       => 'yes',
                 'action_obj_id' => $friend['userid'],
                 'details'       => 'friend with ' . $friend['username']
             ];
-
             insert_log('add_friend', $log_array);
 
             $log_array = [
@@ -1705,11 +1741,9 @@ class userquery extends CBCategory
                 'userid'        => $friend['userid'],
                 'userlevel'     => $friend['level'],
                 'useremail'     => $friend['email'],
-                'action_obj_id' => $insert_id,
+                'action_obj_id' => user_id(),
                 'details'       => 'friend with ' . user_id()
             ];
-
-            //Login Upload
             insert_log('add_friend', $log_array);
         }
     }
@@ -1722,7 +1756,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function confirm_request($rid, $uid = null)
+    function confirm_request($rid, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();
@@ -2088,6 +2122,8 @@ class userquery extends CBCategory
                 }
                 break;
         }
+
+        return false;
     }
 
     /**
@@ -2524,18 +2560,74 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid','show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = ['userid','show_my_collections','featured_video', 'show_dob', 'time_zone', 'fb_url', 'twitter_url', 'insta_url', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+
+        if( config('enable_user_firstname_lastname') == 'yes' ){
+            $user_profile_fields[] = 'first_name';
+            $user_profile_fields[] = 'last_name';
+        }
+        if( config('enable_user_relation_status') == 'yes' ){
+            $user_profile_fields[] = 'relation_status';
+        }
+        if( config('enable_user_postcode') == 'yes' ){
+            $user_profile_fields[] = 'postal_code';
+        }
+        if( config('enable_user_hometown') == 'yes' ){
+            $user_profile_fields[] = 'hometown';
+        }
+        if( config('enable_user_city') == 'yes' ){
+            $user_profile_fields[] = 'city';
+        }
+        if( config('enable_user_education') == 'yes' ){
+            $user_profile_fields[] = 'education';
+        }
+        if( config('enable_user_schools') == 'yes' ){
+            $user_profile_fields[] = 'schools';
+        }
+        if( config('enable_user_occupation') == 'yes' ){
+            $user_profile_fields[] = 'occupation';
+        }
+        if( config('enable_user_compagnies') == 'yes' ){
+            $user_profile_fields[] = 'companies';
+        }
+        if( config('enable_user_hobbies') == 'yes' ){
+            $user_profile_fields[] = 'hobbies';
+        }
+        if( config('enable_user_favorite_movies') == 'yes' ){
+            $user_profile_fields[] = 'fav_movies';
+        }
+        if( config('enable_user_favorite_music') == 'yes' ){
+            $user_profile_fields[] = 'fav_music';
+        }
+        if( config('enable_user_favorite_books') == 'yes' ){
+            $user_profile_fields[] = 'fav_books';
+        }
+        if( config('enable_user_website') == 'yes' ){
+            $user_profile_fields[] = 'web_url';
+        }
+        if( config('enable_user_about') == 'yes' ){
+            $user_profile_fields[] = 'about_me';
+        }
+        if( config('enable_user_status') == 'yes' ){
+            $user_profile_fields[] = 'online_status';
+        }
+        if( config('enable_channel_description') == 'yes' ) {
+            $user_profile_fields[] = 'profile_desc';
+        }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             $user_profile_fields[] = 'disabled_channel';
+        }
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
+            $user_profile_fields[] = 'profile_slogan';
         }
 
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $group = $select;
             $select[] = 'GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
@@ -3023,7 +3115,8 @@ class userquery extends CBCategory
      * Function used to check weather username exists or not
      *
      * @param $i
-     * @return mixed
+     * @return bool|int
+     * @throws Exception
      */
     function username_exists($i)
     {
@@ -3053,7 +3146,7 @@ class userquery extends CBCategory
         if ($email_domain_restriction != '') {
             $list_domains = explode(',', $email_domain_restriction);
             foreach ($list_domains as $domain) {
-                if (strpos($email, '@' . $domain) !== false) {
+                if (str_contains($email, '@' . $domain)) {
                     return true;
                 }
             }
@@ -3152,9 +3245,10 @@ class userquery extends CBCategory
      *
      * @return array
      */
-    function load_custom_signup_fields($data, $ck_display_admin = false, $ck_display_user = false)
+    function load_custom_signup_fields($data, $ck_display_admin = false, $ck_display_user = false): array
     {
         $array = $this->custom_signup_fields;
+        $new_array = [];
         foreach ($array as $key => $fields) {
             $ok = 'yes';
             if ($ck_display_admin) {
@@ -3273,7 +3367,7 @@ class userquery extends CBCategory
      * @param $array
      * @throws Exception
      */
-    function change_email($array)
+    function change_email($array): void
     {
         //function used to change user email
         if (!isValidEmail($array['new_email']) || $array['new_email'] == '') {
@@ -3299,7 +3393,7 @@ class userquery extends CBCategory
      * @return void
      * @throws Exception
      */
-    function block_users($users, $uid = null)
+    function block_users($users, $uid = null): void
     {
         $this->ban_users($users, $uid);
     }
@@ -3307,7 +3401,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function ban_users($users, $uid = null)
+    function ban_users($users, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();
@@ -3338,30 +3432,30 @@ class userquery extends CBCategory
      * @param $user
      * @throws Exception
      */
-    function ban_user($user)
+    function ban_user($user): void
     {
         $uid = user_id();
-
         if (!$uid) {
             e(lang('you_not_logged_in'));
-        } else {
-            if ($user != user_name() && !is_numeric($user) && $this->user_exists($user)) {
-                $banned_users = $this->udetails['banned_users'];
-                if ($banned_users) {
-                    $banned_users .= ",$user";
-                } else {
-                    $banned_users = "$user";
-                }
+            return;
+        }
 
-                if (!$this->is_user_banned($user)) {
-                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
-                    e(lang('user_blocked'), 'm');
-                } else {
-                    e(lang('user_already_blocked'));
-                }
+        if ($user != user_name() && !is_numeric($user) && $this->user_exists($user)) {
+            $banned_users = $this->udetails['banned_users'];
+            if ($banned_users) {
+                $banned_users .= ",$user";
             } else {
-                e(lang('you_cant_del_user'));
+                $banned_users = "$user";
             }
+
+            if (!$this->is_user_banned($user)) {
+                Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
+                e(lang('user_blocked'), 'm');
+            } else {
+                e(lang('user_already_blocked'));
+            }
+        } else {
+            e(lang('you_cant_del_user'));
         }
     }
 
@@ -3537,7 +3631,7 @@ class userquery extends CBCategory
             }
 
             if (strlen($selected_cont) != 2) {
-                $selected_cont = 'PK';
+                $selected_cont = 'FR';
             }
 
             $user_signup_fields['country'] = [
@@ -3606,8 +3700,9 @@ class userquery extends CBCategory
      *
      * @param null $array
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
-    function validate_form_fields($array = null)
+    function validate_form_fields($array = null): void
     {
         $fields = $this->load_signup_fields($array);
 
@@ -3821,7 +3916,7 @@ class userquery extends CBCategory
             $fields_data[] = $insert_id;
 
             // Specify default values for user_profile fields without one
-            $fields_list[] = 'profile_title';
+            $fields_list[] = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') ? 'profile_slogan' : 'profile_title';
             $fields_data[] = '';
             $fields_list[] = 'profile_desc';
             $fields_data[] = '';
@@ -4035,8 +4130,26 @@ class userquery extends CBCategory
         if (empty($params['count_only'])) {
             $fields = [
                 'users'   => get_user_fields(),
-                'profile' => ['rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc', 'city', 'hometown']
+                'profile' => ['rating', 'rated_by', 'voters']
             ];
+
+            if( config('enable_user_firstname_lastname') == 'yes' ){
+                $fields['profile'][] = 'first_name';
+                $fields['profile'][] = 'last_name';
+            }
+            if( config('enable_user_city') == 'yes' ){
+                $fields['profile'][] = 'city';
+            }
+            if( config('enable_user_hometown') == 'yes' ){
+                $fields['profile'][] = 'hometown';
+            }
+            if( config('enable_channel_description') == 'yes' ){
+                $fields['profile'][] = 'profile_desc';
+            }
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
+                $fields['profile'][] = 'profile_slogan';
+            }
+
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
             $query = ' SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('users');
@@ -4796,16 +4909,18 @@ class userquery extends CBCategory
             ];
         }
 
-        $return['profile_title'] = [
-            'title'     => lang('channel_title'),
-            'type'      => 'textfield',
-            'name'      => 'profile_title',
-            'id'        => 'profile_title',
-            'value'     => $default['profile_title'],
-            'db_field'  => 'profile_title',
-            'auto_view' => 'no',
-            'disabled'  => (strtolower($default['disabled_channel']) == 'yes')
-        ];
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ) {
+            $return['profile_slogan'] = [
+                'title'     => lang('channel_slogan'),
+                'type'      => 'textfield',
+                'name'      => 'profile_slogan',
+                'id'        => 'profile_slogan',
+                'value'     => $default['profile_slogan'],
+                'db_field'  => 'profile_slogan',
+                'auto_view' => 'no',
+                'disabled'  => (strtolower($default['disabled_channel']) == 'yes')
+            ];
+        }
 
         $return['profile_desc'] = [
             'title'     => lang('channel_desc'),

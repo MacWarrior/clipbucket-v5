@@ -2677,6 +2677,10 @@ textarea#comment_box {
   text-align: center;
 }
 
+.item-channel .channel-holder a{
+  position: relative;
+}
+
 .item-channel .user-block {
   display: block;
   padding: 22px 0 0;
@@ -2875,8 +2879,7 @@ textarea#comment_box {
 }
 
 .cover .profile-buttons .btn-holder {
-  overflow: hidden;
-  text-align: right;
+  float: right;
 }
 
 .cover .profile-buttons .btn-default {
@@ -5821,10 +5824,10 @@ textarea#comment_box {
 
   .cover .profile-buttons .btn-holder {
     text-align: center;
+    float: none;
   }
 
   .cover .profile-buttons .btn-default {
-    display: block;
     margin: 0 auto 5px;
     width: 200px;
   }

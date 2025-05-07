@@ -1,10 +1,12 @@
 <div id="messageFav" class="channel-alert"></div>
 <div class="cover" id="coverContainer">
 	<div class="cover-holder clearfix">
-		<img class="img-responsive cb-live-background" src="{if $backgroundPhoto != ''}{$backgroundPhoto}{else}{DirPath::getUrl('images')}background_default.jpg{/if}" size='1140x276' alt="">
+		<img class="img-responsive cb-live-background" src="{if $backgroundPhoto != ''}{$backgroundPhoto}{else}{DirPath::getUrl('images')}background_default.jpg{/if}" alt="channel_banner"/>
 		
 		{if $user.userid == user_id()}
-		<a href="#" class="btn btn-sm changeCover" id="changeCover">{lang code="update_cover"}<span class="icon-photo"></span></a>
+		<a href="#" class="btn btn-sm changeCover" id="changeCover">
+			{lang code="update_cover"}<span class="icon-photo"></span>
+		</a>
 		{/if}
 
 		<div class="ratting-counts clearfix">
@@ -60,11 +62,16 @@
 	</div>
 
 	<div class="avatar">
-		<img class="img-responsive img-circle" src="{userquery::getInstance()->getUserThumb($user)}">
+		<img class="img-responsive img-circle" src="{userquery::getInstance()->getUserThumb($user)}"/>
 	</div>
 
 	<div class="profile-buttons clearfix">
-		<h2>{display_clean($user.username)}</h2>
+		<h2 style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 100%;">
+			{display_clean($user.username)}
+			{if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' && !empty($p.profile_slogan)}
+				<span class="separator"> - </span><span title="{User::getClean($p.profile_slogan)}">{User::getClean($p.profile_slogan)|truncate:35}</span>
+			{/if}
+		</h2>
 		<div class="btn-holder">
 			{if user_id() && $user.userid != user_id()}
 				<button id="report-user" class="btn btn-default">{lang code="report_usr"}</button>

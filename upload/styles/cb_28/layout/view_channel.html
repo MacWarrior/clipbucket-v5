@@ -6,7 +6,6 @@
 {$total_videos = $user.total_videos}
 {$total_photos = $user.total_photos}
 
-
 <div id="main" class="container clearfix">
     <div class="clearfix">
         {include file="$style_dir/blocks/view_channel/channel_header.html"}
@@ -65,11 +64,6 @@
                         <div class="clearfix watch-vid-details">
                             <h2>{lang code='user_activity'}</h2>
                             <ul class="clearfix desc-list">
-                                {if $p.profile_title}
-                                    <li>
-                                        <strong>{lang code='title'}</strong> : {User::getClean($p.profile_title)}
-                                    </li>
-                                {/if}
                                 {if $p.profile_desc}
                                     <li>
                                         <strong>{lang code='description'}</strong> : {User::getClean($p.profile_desc)}

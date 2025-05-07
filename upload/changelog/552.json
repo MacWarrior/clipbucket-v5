@@ -1,12 +1,13 @@
 {
   "version":"5.5.2",
-  "revision":"36",
+  "revision":"37",
   "status":"stable",
   "detail":[
     {
       "title": "Back office",
       "description": [
         "Implement Nginx VirtualHost check"
+        ,"Implement channel slogan"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -20,6 +21,7 @@
       "title": "Front office",
       "description": [
         "Implement alphabetical and reverse alphabetical filters <i>(#600)</i>"
+        ,"Implement channel slogan"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"

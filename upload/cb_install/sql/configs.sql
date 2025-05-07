@@ -311,7 +311,10 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_collection_categories', 'yes'),
     (NULL, 'enable_theme_change', 'yes'),
     (NULL, 'nginx_vhost_version', ''),
-    (NULL, 'nginx_vhost_revision', '');
+    (NULL, 'nginx_vhost_revision', ''),
+    (NULL, 'enable_channel_slogan', 'yes'),
+    (NULL, 'enable_channel_description', 'yes'),
+    (NULL, 'enable_channels_slogan_display', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
