@@ -245,7 +245,6 @@ $cbtpl = new CBTemplate();
 # STOP CACHING
 $cbtpl->caching = 0;
 
-CBvideo::getInstance()->init();
 CBPhotos::getInstance()->init_photos();
 
 ClipBucket::getInstance()->set_the_template();

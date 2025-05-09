@@ -208,17 +208,16 @@ class Upload
                 $query_field[] = 'status';
                 $query_val[] = 'Successful';
             }
-            $version = Update::getInstance()->getDBVersion();
-            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+
+            if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $query_field[] = 'tags';
                 $query_val[] = '';
             }
             Clipbucket_db::getInstance()->insert(tbl('video'),$query_field, $query_val);
             $insert_id = Clipbucket_db::getInstance()->insert_id();
-
             Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
-            $version = Update::getInstance()->getDBVersion();
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
             }
 

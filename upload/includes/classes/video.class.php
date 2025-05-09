@@ -357,8 +357,6 @@ class Video
             $conditions[] = '(' . $param_condition . ')';
         }
 
-        $version = Update::getInstance()->getDBVersion();
-
         if( $param_search ){
             $param_search = mysql_clean($param_search);
             /* Search is done on video title, video tags, uploader username, video categories, video description */
@@ -377,7 +375,7 @@ class Video
             $cond = '(' . $match_title . ' OR ' . $match_description . '  OR ' . $like_title;
 
             /** TAG */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . $param_search . '%\'';
                 $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
@@ -390,7 +388,7 @@ class Video
             $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END) DESC ';
 
             /** CATEG */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . $param_search . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = ' LOWER(categories.category_name) LIKE \'%' . $param_search . '%\' ';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
@@ -402,7 +400,7 @@ class Video
             $conditions[] = $cond;
         }
 
-        if ($param_tags && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264))) {
+        if( $param_tags && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $conditions[] = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
         }
 
@@ -1029,26 +1027,10 @@ class CBvideo extends CBCategory
         return self::$instance;
     }
 
-    var $embed_func_list = []; //Function list that are applied while asking for video embed code
-    var $action = ''; // variable used to call action class
-    var $collection = '';
-    var $email_template_vars = [];
-
-    var $dbtbl = ['video' => 'video'];
-
-    var $video_manager_funcs = [];
-
-    var $video_delete_functions = []; //Holds all delete functions of video
-
-    private $basic_fields = [];
-    private $extra_fields = [];
-
     /**
-     * __Constructor of CBVideo
      * @throws Exception
      */
-    function init(): void
-    {
+    private function __construct(){
         global $cb_columns;
         $this->cat_tbl = 'videos_categories';
         $this->section_tbl = 'video';
@@ -1080,6 +1062,20 @@ class CBvideo extends CBCategory
         register_anchor_function('display_banner', 'in_video_thumb', self::class);
         register_anchor_function('display_convert_percent', 'in_video_thumb', self::class);
     }
+
+    var $embed_func_list = []; //Function list that are applied while asking for video embed code
+    public $action = ''; // variable used to call action class
+    var $collection = '';
+    var $email_template_vars = [];
+
+    var $dbtbl = ['video' => 'video'];
+
+    var $video_manager_funcs = [];
+
+    var $video_delete_functions = []; //Holds all delete functions of video
+
+    private $basic_fields = [];
+    private $extra_fields = [];
 
     /**
      * @throws Exception
@@ -1126,7 +1122,7 @@ class CBvideo extends CBCategory
     /**
      * @throws Exception
      */
-    function init_admin_menu()
+    function init_admin_menu(): void
     {
         if (NEED_UPDATE) {
             return;
@@ -1199,7 +1195,6 @@ class CBvideo extends CBCategory
             , 're_conv_status', 'subscription_email'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.3.0', '1')) {
             $basic_fields[] = 'is_castable';
             $basic_fields[] = 'bits_color';
@@ -1232,11 +1227,11 @@ class CBvideo extends CBCategory
     /**
      * Initiating Collections
      */
-    function init_collections()
+    function init_collections(): void
     {
         $this->collection = new Collections();
         $this->collection->objType = 'videos';
-        $this->collection->objClass = 'cbvideo';
+        $this->collection->objClass = self::class;
         $this->collection->objTable = 'video';
         $this->collection->objName = 'Video';
         $this->collection->objFunction = 'video_exists';
@@ -1287,9 +1282,7 @@ class CBvideo extends CBCategory
         $join_tag = '';
         $join_categ = '';
         $group = [];
-        $version = Update::getInstance()->getDBVersion();
-
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $types = Tags::getVideoTypes();
             foreach ($types as $type) {
                 $select_tag .= ', GROUP_CONCAT( DISTINCT(CASE WHEN tags.id_tag_type = ' . mysql_clean($type['id_tag_type']) . ' THEN tags.name ELSE \'\' END) SEPARATOR \',\') AS tags_' . mysql_clean($type['name']);
@@ -1299,7 +1292,7 @@ class CBvideo extends CBCategory
             $group[] = ' video.videoid ';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $select_categ = ', GROUP_CONCAT( DISTINCT(categories.category_name) SEPARATOR \', \') AS category';
             $join_categ .= ' LEFT JOIN ' . cb_sql_table('videos_categories') . ' ON video.videoid = videos_categories.id_video';
             $join_categ .= ' LEFT JOIN ' . cb_sql_table('categories') . ' ON videos_categories.id_category = categories.category_id';
@@ -1961,10 +1954,9 @@ class CBvideo extends CBCategory
         }
 
         $tag_n_title = '';
-        //Tags
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($params['tags'] && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) ) {
+        //Tags
+        if( $params['tags'] && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             //checking for commas ;)
             $tag_n_title .= 'T.name IN (\'' . $params['tags'] . '\') ' ;
         }
@@ -2133,7 +2125,7 @@ class CBvideo extends CBCategory
         $join_tag = '';
         $group_tag = '';
         $match_tag='';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $match_tag = 'T.name';
             $join_tag = ' LEFT JOIN ' . tbl('video_tags') . ' AS VT ON video.videoid = VT.id_video 
                     LEFT JOIN ' . tbl('tags') .' AS T ON VT.id_tag = T.id_tag';
@@ -2166,7 +2158,7 @@ class CBvideo extends CBCategory
         if ($params['show_related']) {
             $cond = '';
 
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 if ($superCond) {
                     $cond = $superCond . ' AND ';
                 }
@@ -2201,7 +2193,7 @@ class CBvideo extends CBCategory
             if (count($result) == 0) {
                 $cond = '';
 
-                if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+                if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                     if ($superCond) {
                         $cond = $superCond . ' AND ';
                     }
@@ -2316,14 +2308,15 @@ class CBvideo extends CBCategory
      * Function used to initialize action class
      * in order to call actions.class.php to
      * work with Video section, this function will be called first
+     * @throws Exception
      */
-    function init_actions()
+    private function init_actions(): void
     {
         $this->action = new cbactions();
         $this->action->init();
         $this->action->type = 'v';
         $this->action->name = 'video';
-        $this->action->obj_class = 'cbvideo';
+        $this->action->obj_class = self::class;
         $this->action->check_func = 'video_exists';
         $this->action->type_tbl = $this->dbtbl['video'];
         $this->action->type_id_field = 'videoid';

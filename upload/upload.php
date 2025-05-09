@@ -47,8 +47,7 @@ ClipBucket::getInstance()->addCSS([
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
 
-$version = Update::getInstance()->getDBVersion();
-if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
     $default_category_id = Category::getInstance()->getDefaultByType('video')['category_id'];
 } else {
     $default_category_id = 0;

@@ -19,10 +19,9 @@ class Tags
     /**
      * @throws Exception
      */
-    public static function getTags($limit = 'false', $cond = false)
+    public static function getTags($limit = 'false', $cond = false): array
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return [];
         }
@@ -51,19 +50,18 @@ class Tags
      */
     public static function countTags($cond)
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return 0;
         }
 
         return Clipbucket_db::getInstance()->count(tbl('tags') . ' T 
-        INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
-        LEFT JOIN ' . tbl('collection_tags') . ' CT ON CT.id_tag = T.id_tag 
-        LEFT JOIN ' . tbl('photo_tags') . ' PT ON PT.id_tag = T.id_tag 
-        LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
-        LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
-        LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', (is_array($cond) ? implode(' AND ', $cond) : $cond));
+            INNER JOIN ' . tbl('tags_type') . ' TT ON TT.id_tag_type = T.id_tag_type 
+            LEFT JOIN ' . tbl('collection_tags') . ' CT ON CT.id_tag = T.id_tag 
+            LEFT JOIN ' . tbl('photo_tags') . ' PT ON PT.id_tag = T.id_tag 
+            LEFT JOIN ' . tbl('playlist_tags') . ' PLT ON PLT.id_tag = T.id_tag 
+            LEFT JOIN ' . tbl('user_tags') . ' UT ON UT.id_tag = T.id_tag 
+            LEFT JOIN ' . tbl('video_tags') . ' VT ON VT.id_tag = T.id_tag ', 'DISTINCT T.name, TT.name, T.id_tag', (is_array($cond) ? implode(' AND ', $cond) : $cond));
     }
 
     /**
@@ -73,8 +71,7 @@ class Tags
      */
     public static function deleteTag($id_tag)
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return false;
         }
@@ -105,8 +102,7 @@ class Tags
      */
     public static function updateTag($name, $id_tag): bool
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return false;
         }
@@ -187,8 +183,7 @@ class Tags
      */
     public static function saveTags(string $tags, string $tag_type, int $object_id): bool
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return false;
         }
@@ -291,8 +286,7 @@ class Tags
      */
     public static function fill_auto_complete_tags($object_type): array
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return [];
         }
@@ -320,8 +314,7 @@ class Tags
      */
     public static function getTagTypes($cond=[]): array
     {
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+        if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             e(lang('missing_table'));
             return [];
         }

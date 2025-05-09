@@ -82,8 +82,7 @@ class CBLogs
             $action_done_id
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 153)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '153') ){
             $fields[] = 'action_ipv4';
             $values[] = $ipv4;
             $fields[] = 'action_ipv6';

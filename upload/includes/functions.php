@@ -379,7 +379,6 @@ function isValidtag($tag): bool
 function getCategoryList($params = [])
 {
     $params['echo'] = $params['echo'] ?: false;
-    $version = Update::getInstance()->getDBVersion();
     switch ($params['type']) {
         default:
             cb_call_functions('categoryListing', $params);
@@ -407,7 +406,7 @@ function getCategoryList($params = [])
             break;
     }
     $cats = [];
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
         $cats = Category::getInstance()->getAll($params);
@@ -449,7 +448,7 @@ function getSmartyCategoryList($params)
  * @throws Exception
  * @uses : { class : $db } { function : dbInsert }
  */
-function dbInsert($tbl, $flds, $vls, $ep = null)
+function dbInsert($tbl, $flds, $vls, $ep = null): void
 {
     Clipbucket_db::getInstance()->insert($tbl, $flds, $vls, $ep);
 }
@@ -480,7 +479,7 @@ function e($msg = null, $type = 'e', $secure = true)
  * @param : { string / array } { $text } { Element to be printed }
  * @param bool $pretty
  */
-function pr($text, $pretty = false)
+function pr($text, $pretty = false): void
 {
     if (!$pretty) {
         $dump = print_r($text, true);

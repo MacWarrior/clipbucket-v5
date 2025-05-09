@@ -31,7 +31,7 @@ class cbactions
      * Class variable ie $somevar = SomeClass;
      * $obj_class = 'somevar';
      */
-    var $obj_class = 'cbvideo';
+    var $obj_class = '';
 
     /**
      * Defines function name that is used to check
@@ -56,7 +56,7 @@ class cbactions
      * initializing
      * @throws Exception
      */
-    function init()
+    function init(): void
     {
         global $cb_columns;
 
@@ -78,7 +78,7 @@ class cbactions
      * Function used to add content to favorites
      * @throws Exception
      */
-    function add_to_fav($id)
+    function add_to_fav($id): void
     {
         $id = mysql_clean($id);
         //First checking weather object exists or not
@@ -139,12 +139,10 @@ class cbactions
      *
      * @return mixed
      */
-    function exists($id)
+    public function exists($id)
     {
         $id = mysql_clean($id);
-        $obj = $this->obj_class;
-        global ${$obj};
-        $obj = ${$obj};
+        $obj = $this->obj_class::getInstance();
         $func = $this->check_func;
         return $obj->{$func}($id);
     }
@@ -272,7 +270,7 @@ class cbactions
      * @param null $uid
      * @throws Exception
      */
-    function remove_favorite($fav_id, $uid = null)
+    function remove_favorite($fav_id, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();

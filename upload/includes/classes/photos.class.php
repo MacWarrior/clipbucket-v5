@@ -45,8 +45,7 @@ class Photo
             ,'photo_details'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $this->fields[] = 'age_restriction';
         }
 
@@ -258,7 +257,6 @@ class Photo
             $conditions[] = $this->getGenericConstraints(['show_unlisted' => $param_first_only || $param_show_unlisted]);
         }
 
-        $version = Update::getInstance()->getDBVersion();
         if ($param_search) {
             /* Search is done on photo title, photo tags, uploader username, photo categories */
 
@@ -274,7 +272,7 @@ class Photo
             $cond = '( ' . $match_title . 'OR ' . $like_title;
 
             /** TAG */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_tag . ' OR ' . $like_tag;
@@ -287,7 +285,7 @@ class Photo
             $order_search .= ', MAX(CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END ) DESC ';
 
             /** CATEGORIES */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
@@ -312,8 +310,7 @@ class Photo
             $group[] = 'photos.photo_id';
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS photo_tags';
 
@@ -322,7 +319,7 @@ class Photo
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON photo_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $join[] = 'LEFT JOIN ' . cb_sql_table('photos_categories') . ' ON photos.photo_id = photos_categories.id_photo';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON photos_categories.id_category = categories.category_id';
 
@@ -567,14 +564,14 @@ class Photo
     public function getPhotoRelated($photo_id, $limit, $order = 'date_added DESC')
     {
         $photo = $this->getOne(['photo_id'=>$photo_id]);
-        $version = Update::getInstance()->getDBVersion();
         $title = mysql_clean($photo['title']);
         $tags = mysql_clean($photo['tags']);
 
         $cond_title = '(MATCH(photos.photo_title) AGAINST (\'' . $title . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $title . '%\'';
         $cond_title .= ')';
         $cond_tag = '(MATCH(photos.photo_title) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(photos.photo_title) LIKE \'%' . $tags . '%\'';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $cond_tag .= ' OR MATCH(tags.name) AGAINST (\'' . $tags . '\' IN NATURAL LANGUAGE MODE) OR LOWER(tags.name) LIKE \'%' . $tags . '%\'';
         }
         $cond_tag .= ')';
@@ -723,8 +720,7 @@ class CBPhotos
             'last_commented', 'total_comments'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 305)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '305') ){
             $basic_fields[] = 'age_restriction';
         }
 
@@ -807,6 +803,7 @@ class CBPhotos
 
     /**
      * Initiating Actions for Photos
+     * @throws Exception
      */
     function init_actions(): void
     {
@@ -814,7 +811,7 @@ class CBPhotos
         $this->action->init();     // Setting up reporting excuses
         $this->action->type = 'p';
         $this->action->name = 'photo';
-        $this->action->obj_class = 'cbphoto';
+        $this->action->obj_class = self::class;
         $this->action->check_func = 'photo_exists';
         $this->action->type_tbl = "photos";
         $this->action->type_id_field = 'photo_id';
@@ -844,7 +841,7 @@ class CBPhotos
     {
         $this->collection = new Collections();
         $this->collection->objType = "p";
-        $this->collection->objClass = "cbphoto";
+        $this->collection->objClass = self::class;
         $this->collection->objTable = "photos";
         $this->collection->objName = "Photo";
         $this->collection->objFunction = "photo_exists";
@@ -978,8 +975,8 @@ class CBPhotos
 
         $select_tag = '';
         $join_tag = '';
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as photo_tags';
             $join_tag = 'LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON P.photo_id = PT.id_photo  
                     LEFT JOIN ' . tbl('tags') . ' AS T ON PT.id_tag = T.id_tag';
@@ -1144,8 +1141,8 @@ class CBPhotos
         $join_tag = '';
         $group_tag = '';
         $match_tag='';
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $match_tag = 'T.name';
             $select_complement = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as photo_tags';
             $join_tag = ' LEFT JOIN ' . tbl('photo_tags') . ' AS PT ON photos.photo_id = PT.id_photo 

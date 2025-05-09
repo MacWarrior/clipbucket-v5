@@ -131,14 +131,14 @@ function get_thumb($vdetails, $multi = false, $size = false, $type = false, $max
     }
 
     $fields = ['V.videoid', 'V.file_name', 'V.file_directory', 'VT.num', 'V.default_thumb', 'V.status'];
-    $version = Update::getInstance()->getDBVersion();
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 366)) {
+
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '366') ){
         $fields[] = 'V.default_poster';
         $fields[] = 'V.default_backdrop';
     }
 
     //get current video from db
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 163)) {
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '163') ){
         $resVideo = Clipbucket_db::getInstance()->select(tbl('video') . ' AS V LEFT JOIN ' . tbl('video_thumbs') . ' AS VT ON VT.videoid = V.videoid ', implode(',', $fields), 'V.videoid = ' . mysql_clean($vid));
     } else {
         return $multi ? [default_thumb($return_type)] : default_thumb($return_type);

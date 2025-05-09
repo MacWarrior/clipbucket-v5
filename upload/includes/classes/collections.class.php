@@ -43,12 +43,11 @@ class Collection
             ,'type'
         ];
 
-        $version = Update::getInstance()->getDBVersion();
-        if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
             $this->fields[] = 'collection_id_parent';
         }
 
-        if( ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145') ){
             $this->fields[] = 'thumb_objectid';
         }
 
@@ -245,8 +244,6 @@ class Collection
         $param_first_only = $params['first_only'] ?? false;
         $param_with_items = $params['with_items'] ?? false;
 
-        $version = Update::getInstance()->getDBVersion();
-
         $conditions = [];
         if( $param_collection_id !== false ){
             $conditions[] = $this->getTableName() . '.collection_id = '.(int)$param_collection_id;
@@ -281,7 +278,7 @@ class Collection
             $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
 
-        if( ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
             if( $param_collection_id_parent ){
                 $conditions[] = $this->getTableName() . '.collection_id_parent = '.(int)$param_collection_id_parent;
             }
@@ -306,7 +303,7 @@ class Collection
             $order_search = ' ORDER BY CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . 'END DESC ';
 
             /** TAG */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE) ';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_tag . 'OR ' . $like_tag;
@@ -319,7 +316,7 @@ class Collection
             $order_search .= ', CASE WHEN ' . $like_user . ' THEN 1 ELSE 0 END DESC ';
 
             /** CATEG */
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= ' OR ' . $match_categ . ' OR ' . $like_categ;
@@ -338,7 +335,8 @@ class Collection
 
         $need_collection_enfant = false;
         $total_objects = 'COUNT( DISTINCT(CASE WHEN ' . $this->getTableName() . '.type = \'videos\' THEN video.videoid ELSE photos.photo_id END))';
-        if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+
+        if( config('enable_sub_collection') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
             $total_objects .= ' + COUNT(DISTINCT(collections_enfant.collection_id))';
             $need_collection_enfant = true;
         }
@@ -349,8 +347,7 @@ class Collection
             $select = $this->getAllFields();
             $select[] = 'users.username AS user_username, users.email, users.dob';
 
-
-            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+            if( config('enable_sub_collection') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
                 $need_collection_enfant = true;
 
                 $select[] = 'collection_parent.collection_name AS collection_name_parent';
@@ -373,7 +370,7 @@ class Collection
             }
             $param_having[] = $hide_empty_collection;
 
-            if( config('enable_sub_collection') == 'yes' && ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) ){
+            if( config('enable_sub_collection') == 'yes' && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
                 $need_collection_enfant = true;
             }
         }
@@ -383,7 +380,7 @@ class Collection
         }
 
         $group = [$this->getTableName() . '.collection_id'];
-        if( $version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264) ){
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             if( !$param_count ){
                 $select[] = 'GROUP_CONCAT( DISTINCT(tags.name) SEPARATOR \',\') AS tags';
             }
@@ -391,7 +388,7 @@ class Collection
             $join[] = 'LEFT JOIN ' . cb_sql_table('tags') .' ON collection_tags.id_tag = tags.id_tag';
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $join[] = 'LEFT JOIN ' . cb_sql_table('collections_categories') . ' ON ' . $this->getTableName() . '.collection_id = collections_categories.id_collection';
             $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON collections_categories.id_category = categories.category_id';
 
@@ -763,8 +760,7 @@ class Collection
             $tested_collection = $res[0]['child_id'] ?? false;
         } while (empty($thumb_num) && !empty($tested_collection));
 
-        $version = Update::getInstance()->getDBVersion();
-        if( $thumb_num && ($version['version'] > '5.5.1' || ($version['version'] == '5.5.1' && $version['revision'] >= 145)) ){
+        if( $thumb_num && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '145') ){
             $sql = 'UPDATE ' . tbl('collections') . ' SET thumb_objectid = ' . (int)$thumb_num . ' WHERE collection_id = ' . (int)$collection_id;
             Clipbucket_db::getInstance()->execute($sql);
         }
@@ -932,13 +928,13 @@ class Collections extends CBCategory
      *     Settings up Action Class
      * @throws Exception
      */
-    function init_actions()
+    function init_actions(): void
     {
         $this->action = new cbactions();
         $this->action->init();     // Setting up reporting excuses
         $this->action->type = 'cl';
         $this->action->name = 'collection';
-        $this->action->obj_class = 'cbcollection';
+        $this->action->obj_class = self::class;
         $this->action->check_func = 'collection_exists';
         $this->action->type_tbl = 'collections';
         $this->action->type_id_field = 'collection_id';
@@ -948,7 +944,7 @@ class Collections extends CBCategory
      * Setting links up in my account Edited on 12 march 2014 for collections links
      * @throws Exception
      */
-    function setting_up_collections()
+    function setting_up_collections(): void
     {
         $per =  UserLevel::getPermissions(user_id());
         // Adding My Account Links    
@@ -1011,7 +1007,7 @@ class Collections extends CBCategory
      * @param $data
      * @throws Exception
      */
-    function set_share_mail($data)
+    function set_share_mail($data): void
     {
         $this->share_variables = [
             'collection_title' => $data['collection_name'],
@@ -1053,8 +1049,7 @@ class Collections extends CBCategory
     function object_exists($id)
     {
         $obj = $this->objClass;
-        global ${$obj};
-        $obj = ${$obj};
+        $obj = $this->objClass::getInstance();
         $func = $this->objFunction;
         return $obj->{$func}($id);
     }
@@ -1074,10 +1069,9 @@ class Collections extends CBCategory
             return false;
         }
 
-        $version = Update::getInstance()->getDBVersion();
         $select_tag = '';
         $join_tag = '';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $select_tag = ', GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') AS collection_tags';
             $join_tag = ' LEFT JOIN ' . tbl('collection_tags') . ' CT ON collections.collection_id = CT.id_collection  
                     LEFT JOIN ' . tbl('tags') . ' T ON CT.id_tag = T.id_tag';
@@ -1116,11 +1110,9 @@ class Collections extends CBCategory
      */
     private function get_collection_childs($id)
     {
-        $version = Update::getInstance()->getDBVersion();
-
         $cond = '';
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
-            $cond = 'C.collection_id_parent = ' . mysql_clean($id);
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
+            $cond = 'C.collection_id_parent = ' . (int)$id;
         }
 
         $result = Clipbucket_db::getInstance()->select(tbl($this->section_tbl) . ' C
@@ -1315,8 +1307,6 @@ class Collections extends CBCategory
         return false;
     }
 
-
-
     /**
      * @throws Exception
      */
@@ -1324,9 +1314,7 @@ class Collections extends CBCategory
     {
         $data = [];
 
-        $version = Update::getInstance()->getDBVersion();
-
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 43)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '43') ){
             if ($level == 0 && is_null($collection_id)) {
                 $cond = ' C.collection_id_parent IS NULL';
             } else {
@@ -1573,7 +1561,7 @@ class Collections extends CBCategory
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function validate_form_fields($array = null)
+    function validate_form_fields($array = null): void
     {
         $reqFileds = $this->load_required_fields($array);
 
@@ -1691,27 +1679,35 @@ class Collections extends CBCategory
      * @param $cid
      * @throws Exception
      */
-    function add_collection_item($objID, $cid)
+    function add_collection_item($objID, $cid): void
     {
         $objID = mysql_clean($objID);
         $cid = mysql_clean($cid);
 
-        if ($this->collection_exists($cid)) {
-            if (!user_id()) {
-                e(lang('you_not_logged_in'));
-            } elseif (!$this->object_exists($objID)) {
-                e(lang('object_does_not_exists', $this->objName));
-            } elseif ($this->object_in_collection($objID, $cid)) {
-                e(lang('object_exists_collection', $this->objName));
-            } else {
-                $flds = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
-                $vls = [$cid, $objID, $this->objType, user_id(), NOW()];
-                Clipbucket_db::getInstance()->insert(tbl($this->items), $flds, $vls);
-                e(lang('item_added_in_collection', $this->objName), 'm');
-            }
-        } else {
+        if( !$this->collection_exists($cid) ){
             e(lang('collect_not_exist'));
+            return;
         }
+
+        if (!user_id()) {
+            e(lang('you_not_logged_in'));
+            return;
+        }
+
+        if (!$this->object_exists($objID)) {
+            e(lang('object_does_not_exists', $this->objName));
+            return;
+        }
+
+        if ($this->object_in_collection($objID, $cid)) {
+            e(lang('object_exists_collection', $this->objName));
+            return;
+        }
+
+        $flds = ['collection_id', 'object_id', 'type', 'userid', 'date_added'];
+        $vls = [$cid, $objID, $this->objType, user_id(), NOW()];
+        Clipbucket_db::getInstance()->insert(tbl($this->items), $flds, $vls);
+        e(lang('item_added_in_collection', $this->objName), 'm');
     }
 
     /**
@@ -1927,7 +1923,7 @@ class Collections extends CBCategory
      * @param $cid
      * @param $file
      */
-    function upload_thumb($cid, $file)
+    function upload_thumb($cid, $file): void
     {
         global $imgObj;
         $file_ext = getext($file['name']);
@@ -1964,7 +1960,7 @@ class Collections extends CBCategory
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    function update_collection($array = null)
+    function update_collection($array = null): void
     {
         if ($array == null) {
             $array = $_POST;
@@ -2345,7 +2341,7 @@ class Collections extends CBCategory
      * @param null $old
      * @throws Exception
      */
-    function change_collection($new, $obj, $old = null)
+    function change_collection($new, $obj, $old = null): void
     {
         /* THIS MEANS OBJECT IS ORPHAN MOST PROBABLY AND HOPEFULLY - PHOTO
            NOW WE WILL ADD $OBJ TO $NEW */
@@ -2364,7 +2360,7 @@ class Collections extends CBCategory
      * @param $cid
      * @throws Exception
      */
-    function collection_actions($action, $cid)
+    function collection_actions($action, $cid): void
     {
         $cid = mysql_clean($cid);
         switch ($action) {
@@ -2409,7 +2405,7 @@ class Collections extends CBCategory
      * @param null $type
      * @throws Exception
      */
-    function deleteItemFromCollections($objId, $type = null)
+    function deleteItemFromCollections($objId, $type = null): void
     {
         if (!$type) {
             $type = $this->objType;

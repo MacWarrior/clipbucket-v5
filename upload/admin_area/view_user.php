@@ -161,8 +161,7 @@ $params['order'] = ' comment_id DESC';
 $comments = Comments::getAll($params);
 assign('comments', $comments);
 
-$version = Update::getInstance()->getDBVersion();
-assign('show_categ', ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323)));
+assign('show_categ', Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323'));
 subtitle('View User');
 template_files('view_user.html');
 display_it();

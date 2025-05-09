@@ -37,8 +37,7 @@ $breadcrumb[1] = [
     'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type
 ];
 
-$version = Update::getInstance()->getDBVersion();
-if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323))) {
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
     e('Your database is not up-to-date. Please update your database via this link : <a href="' . DirPath::getUrl('admin_area') . 'admin_tool.php?id_tool=5">' . lang('update') . '</a>', 'e', false);
 } else {
     //Making Category as Default

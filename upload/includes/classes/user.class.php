@@ -1028,7 +1028,7 @@ class userquery extends CBCategory
         $this->action = new cbactions();
         $this->action->type = 'u';
         $this->action->name = 'user';
-        $this->action->obj_class = 'userquery';
+        $this->action->obj_class = self::class;
         $this->action->check_func = 'user_exists';
         $this->action->type_tbl = $this->dbtbl['users'];
         $this->action->type_id_field = 'userid';
@@ -1168,9 +1168,8 @@ class userquery extends CBCategory
 
                     // This account still use old password method, let's update it
                     if ($udetails){
-                        $version = Update::getInstance()->getDBVersion();
-                        if ($version['version'] > '5.0.0' || ($version['version'] == '5.0.0' && $version['revision'] >= 1)) {
-                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
+                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . (int)$uid . '\'');
                         }
                     }
                 }
@@ -1433,13 +1432,12 @@ class userquery extends CBCategory
     {
         global $sess;
 
-        $is_email = strpos($id, '@') !== false;
+        $is_email = str_contains($id, '@');
         $select_field = (!$is_email && !is_numeric($id)) ? 'username' : (!is_numeric($id) ? 'email' : 'userid');
-        $version = Update::getInstance()->getDBVersion();
 
         if (!$email) {
             $params = ['users' => ['*']];
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 $params['users_categories'] = ['id_category'];
             }
             $fields = table_fields($params);
@@ -1448,7 +1446,7 @@ class userquery extends CBCategory
         }
 
         $query = 'SELECT '.$fields.' FROM ' . cb_sql_table('users');
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
         $query .= " WHERE users.$select_field = '$id'";
