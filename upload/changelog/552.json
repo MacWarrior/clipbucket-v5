@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"41",
+  "revision":"42",
   "status":"stable",
   "detail":[
     {
@@ -15,6 +15,7 @@
         ,"Fix outdated links <i>(#591)</i>"
         ,"Fix collection saving without categories enabled"
         ,"Fix mass upload description display"
+        ,"Fix possible error 500 on System info page"
       ]
     },
     {

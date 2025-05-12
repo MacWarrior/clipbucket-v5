@@ -1,11 +1,11 @@
 <?php
 class System{
-    static $extensionsWeb = [];
-    static $extensionsCli = [];
-    static $versionCli;
-    static $configsCli = [];
+    static array $extensionsWeb = [];
+    static array $extensionsCli = [];
+    static string $versionCli;
+    static array $configsCli = [];
 
-    private static function init_php_extensions($type, $custom_filepath = null)
+    private static function init_php_extensions($type, $custom_filepath = null): array
     {
         switch($type){
             case 'php_web':
@@ -58,6 +58,7 @@ class System{
                 break;
 
         }
+        return [];
     }
 
     public static function get_php_extensions_list(): array
@@ -884,6 +885,7 @@ class System{
             $space_total = disk_total_space($files_dirpath);
             $space_free = disk_free_space($files_dirpath);
             $space_used = $space_total - $space_free;
+            $space_usage_percent = $space_total > 0 ? round($space_used / $space_total * 100, 2) : 100;
 
             foreach($disks as $disk){
                 if( $disk['space_total'] == $space_total && $disk['space_free'] == $space_free ){
@@ -896,7 +898,7 @@ class System{
                 'space_total' => $space_total,
                 'space_free' => $space_free,
                 'space_used' => $space_used,
-                'space_usage_percent' => round($space_used / $space_total * 100, 2),
+                'space_usage_percent' => $space_usage_percent,
                 'readable_total' => self::get_readable_filesize($space_total, 2),
                 'readable_free' => self::get_readable_filesize($space_free, 2),
                 'readable_used' => self::get_readable_filesize($space_used, 2)
