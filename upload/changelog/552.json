@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"40",
+  "revision":"41",
   "status":"stable",
   "detail":[
     {
@@ -37,6 +37,7 @@
         ,"Fix signup with allowed spaces in username"
         ,"Fix channel page display"
         ,"Fix add to playlist & collection actions <i>(#601)</i>"
+        ,"Fix playlist edition <i>(#603)</i>"
       ]
     },
     {

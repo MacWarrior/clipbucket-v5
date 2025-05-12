@@ -112,7 +112,7 @@
                                 {section name=plist loop=$items}
                                     {include file="$style_dir/blocks/manage/account_video.html" video=$items[plist] bg=$bg control="playlist" pid=$playlist.playlist_id}
                                 {sectionelse}
-                                <div align="center" style="padding:5px"><strong><em>{lang code='no_video_in_playlist'}</em></strong></div>
+                                <div align="center" style="padding:5px;"><strong><em>{lang code='no_video_in_playlist'}</em></strong></div>
                                 {/section}
                             </table>
                         </div>
@@ -122,11 +122,9 @@
             </div>
         </div>
 
-    <!-- Manage playlist backend -->
-    <!-- lines added for pagination -->
     {include file="$style_dir/blocks/pagination.html"}
     <div class="marginBottomLarge"></div>
 <script>
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var id_input = 'playlists_tags';
+    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let id_input = 'playlists_tags';
 </script>
