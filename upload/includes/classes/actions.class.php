@@ -681,7 +681,7 @@ class cbactions
      * Function used to delete playlist
      * @throws Exception
      */
-    function delete_playlist($id)
+    function delete_playlist($id): void
     {
         $playlist = Playlist::getInstance()->getOne($id);
         if (!$playlist) {

@@ -90,6 +90,12 @@ switch ($mode) {
         redirect_to(cblink(['name' => 'my_account']));
 
     case 'account':
+        if( $_POST['drop_account'] ?? '' == 'yes' && config('enable_user_self_deletion') == 'yes' ){
+            User::getInstance()->delete();
+            userquery::getInstance()->logout();
+            session_start();
+            sessionMessageHandler::add_message(lang('account_deleted'), 'm', DirPath::getUrl('root'));
+        }
         assign('on', 'account');
         assign('mode', 'account_settings');
         break;

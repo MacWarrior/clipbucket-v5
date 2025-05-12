@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"42",
+  "revision":"43",
   "status":"stable",
   "detail":[
     {
@@ -23,6 +23,7 @@
       "description": [
         "Implement alphabetical and reverse alphabetical filters <i>(#600)</i>"
         ,"Implement channel slogan"
+        ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"

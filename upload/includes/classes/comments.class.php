@@ -160,12 +160,17 @@ class Comments
         $param_type = $params['type'] ?? false;
         $param_type_id = $params['type_id'] ?? false;
         $param_comment_id = $params['comment_id'] ?? false;
+        $param_userid = $params['userid'] ?? false;
 
         if(!empty($param_type_id) && !is_numeric($param_type_id)){
             return false;
         }
 
         if(!empty($param_comment_id) && !is_numeric($param_comment_id)){
+            return false;
+        }
+
+        if(!empty($param_userid) && !is_numeric($param_userid)){
             return false;
         }
 
@@ -195,10 +200,13 @@ class Comments
             $conditions[] = 'type = \'' . mysql_clean($param_type) . '\'';
         }
         if( $param_type_id ){
-            $conditions[] = 'type_id = ' . mysql_clean($param_type_id);
+            $conditions[] = 'type_id = ' . (int)$param_type_id;
         }
         if( $param_comment_id ){
-            $conditions[] = '(comment_id = '.mysql_clean($param_comment_id) . ' OR ' . ' parent_id = ' . mysql_clean($param_comment_id) . ')';
+            $conditions[] = '(comment_id = '.(int)$param_comment_id . ' OR ' . ' parent_id = ' . (int)$param_comment_id . ')';
+        }
+        if( $param_userid ){
+            $conditions[] = 'userid = '.(int)$param_userid;
         }
 
         $where = '';

@@ -61,6 +61,29 @@
 
         <div class="form-group">
             <button name="update_profile" value="submit" class="btn btn-primary"> {lang code='update'}</button>
+            {if config('enable_user_self_deletion')=='yes'}
+                <input type="hidden" name="drop_account" value="yes" disabled/>
+                <input type="button" id="drop_account" class="btn btn-danger" value="{lang code='drop_my_account'}"/>
+
+                <div class="modal fade" id="confirmDropAccountModal" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="confirmModalLabel">{lang code="account_deletion"}</h4>
+                            </div>
+                            <div class="modal-body">
+                                {lang code="account_deletion_confirmation_info"}<br/>
+                                {lang code="account_deletion_confirmation"}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{lang code="cancel"}</button>
+                                <button type="button" class="btn btn-danger" id="confirmDropAccountBtn">{lang code="account_deletion_yes"}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/if}
         </div>
     </form>
 </div>

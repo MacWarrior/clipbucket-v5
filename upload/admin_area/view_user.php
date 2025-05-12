@@ -148,8 +148,8 @@ assign('channel_settings', $channel_settings);
 $storage_use = 0;
 $storage_history = [];
 if (config('enable_storage_history') == 'yes') {
-    $storage_use = System::get_readable_filesize(User::getInstance()->getLastStorageUseByUser($uid),2);
-    $storage_history = User::getInstance()->getStorageHistoryByUser($uid);
+    $storage_use = System::get_readable_filesize(User::getInstance($uid)->getLastStorageUseByUser(),2);
+    $storage_history = User::getInstance($uid)->getStorageHistoryByUser();
 }
 assign('storage_use',$storage_use);
 assign('storage_history',$storage_history);

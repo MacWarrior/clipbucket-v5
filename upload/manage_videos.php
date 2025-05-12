@@ -18,7 +18,7 @@ $mode = $_GET['mode'];
 $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
 
-$favorites = User::getInstance()->getFavoritesVideos(user_id());
+$favorites = User::getInstance()->getFavoritesVideos();
 assign('favorites', $favorites);
 
 assign('queryString', queryString(null, ['type',

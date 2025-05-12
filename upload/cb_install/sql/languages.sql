@@ -1545,4 +1545,11 @@ VALUES ('admin_setting'),
        ('option_enable_channel_slogan'),
        ('option_enable_channel_description'),
        ('channel_slogan'),
-       ('option_enable_channels_slogan_display');
+       ('option_enable_channels_slogan_display'),
+       ('option_enable_user_self_deletion'),
+       ('drop_my_account'),
+       ('account_deletion'),
+       ('account_deletion_confirmation'),
+       ('account_deletion_confirmation_info'),
+       ('account_deletion_yes'),
+       ('account_deleted');

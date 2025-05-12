@@ -1621,7 +1621,7 @@ class CBvideo extends CBCategory
      * @param $vid
      * @throws Exception
      */
-    function delete_video($vid)
+    function delete_video($vid): void
     {
         if ($this->video_exists($vid)) {
             $vdetails = $this->get_video($vid);
