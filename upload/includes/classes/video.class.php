@@ -2,7 +2,7 @@
 
 class Video
 {
-    private static $video;
+    private static self $video;
     private $tablename = '';
     private $tablename_categories = '';
     private $field_id = '';
@@ -637,7 +637,7 @@ class Video
     /**
      * @throws Exception
      */
-    public function isCurrentUserRestricted($video_id): string
+    public function isCurrentUserRestricted($video_id): bool
     {
         if( User::getInstance()->hasPermission('video_moderation') ){
             return false;
@@ -672,7 +672,7 @@ class Video
     /**
      * @throws Exception
      */
-    public function isToBlur($video_id)
+    public function isToBlur($video_id): bool
     {
         if( config('enable_blur_restricted_content') != 'yes'){
             return false;
@@ -683,10 +683,10 @@ class Video
     /**
      * @throws Exception
      */
-    public function setDefaultPicture($video_id, string $poster, string $type = 'auto')
+    public function setDefaultPicture($video_id, string $poster, string $type = 'auto'): void
     {
         if (empty($poster)) {
-            e(lang('missing_param'));
+            e(lang('missing_params'));
             return;
         }
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
@@ -711,7 +711,7 @@ class Video
     /**
      * @throws Exception
      */
-    public function resetDefaultPicture($video_id, string $type = 'auto')
+    public function resetDefaultPicture($video_id, string $type = 'auto'): void
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
@@ -735,7 +735,7 @@ class Video
      * @return void
      * @throws Exception
      */
-    public function deletePictures(array $video_detail, string $type)
+    public function deletePictures(array $video_detail, string $type): void
     {
         if (!in_array($type, ['auto', 'custom', 'poster', 'backdrop']) ) {
             if( in_dev() ){
@@ -768,7 +768,7 @@ class Video
     /**
      * @throws Exception
      */
-    public static function correctVideoCategorie($id)
+    public static function correctVideoCategorie($id): void
     {
         Category::getInstance()->link('video', $id, Category::getInstance()->getDefaultByType('video')['category_id']);
     }
@@ -778,7 +778,7 @@ class Video
      * @return void
      * @throws Exception
      */
-    public static function deleteUnusedVideoFiles($videoid)
+    public static function deleteUnusedVideoFiles($videoid): void
     {
         $video = CBvideo::getInstance()->get_video($videoid);
         $files = json_decode($video['video_files']);
@@ -962,7 +962,8 @@ class Video
     /**
      * @throws Exception
      */
-    public function set(int $id_video, string $field, $value){
+    public function set(int $id_video, string $field, $value): void
+    {
         if( !in_array($field, $this->fields) ){
             return;
         }
@@ -996,7 +997,6 @@ class Video
                 $result[] = $thumbs[$index];
             }
         }
-
 
         return 'data-thumbs=\'' . json_encode($result) . '\'';
     }
