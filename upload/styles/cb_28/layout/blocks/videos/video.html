@@ -13,11 +13,11 @@
             <strong class="title"><a href="{video_link($pop_video)}">{display_clean($pop_video.title|truncate:50)}</a></strong>
 
             {if config('enable_hide_uploader_name') != 'yes'}
-            <span class="author">
+            <span class="author">{lang code="by"}
             {if isSectionEnabled('channels') && $anonymous_id != $pop_video.userid && $pop_video.disabled_channel !='yes'}
-                {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($pop_video.user_username)}</a>
+                <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($pop_video.user_username)}</a>
             {elseif $anonymous_id != $pop_video.userid}
-                {lang code="by"} {display_clean($pop_video.user_username)}
+                {display_clean($pop_video.user_username)}
             {/if}
             </span>
             {/if}
@@ -50,11 +50,11 @@
         </h2>
 
         {if config('enable_hide_uploader_name') != 'yes'}
-        <span class="author">
-			{if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
+        <span class="author">{lang code="by"}
+            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
-                {lang code="by"} {display_clean($video.user_username)}
+                {display_clean($video.user_username)}
             {/if}
 		</span>
         {/if}
@@ -77,13 +77,13 @@
         <div style="display:none;" class="item-video col-lg-4 col-md-4 col-sm-4 col-xs-12 recentAppending" data-id="{$video.videoid}">
             <div class="clearfix thumb-holder">
                 <a
-                        {if config('popup_video') == 'yes'}
-                            class="video-link cd-popup-trigger no_overflow" onclick="_cb.getModalVideo({$video.videoid})"
-                        {else}
-                            class="video-link no_overflow"
-                        {/if}
-                        href="{video_link($video)}" title="{display_clean($video.title|title)}">
-                    <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}>
+                    {if config('popup_video') == 'yes'}
+                        class="video-link cd-popup-trigger no_overflow" onclick="_cb.getModalVideo({$video.videoid})"
+                    {else}
+                        class="video-link no_overflow"
+                    {/if}
+                    href="{video_link($video)}" title="{display_clean($video.title|title)}">
+                    <img class="lazy img-responsive no_select{if Video::getInstance()->isToBlur($video['videoid'])} blur{/if}" src="{getThumb vdetails=$video size=416x260}" {Video::get_thumbs_preview($video, '416x260')}/>
                 </a>
                 {ANCHOR place='in_video_thumb' data=$video}
                 {if config('enable_quicklist') == 'yes' && !Video::getInstance()->isToBlur($video['videoid']) && $video.status|lower == 'successful'}
@@ -99,11 +99,11 @@
                 </h2>
 
                 {if config('enable_hide_uploader_name') != 'yes'}
-                <span class="author">
+                <span class="author">{lang code="by"}
                     {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                        {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
+                        <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
                     {elseif $anonymous_id != $video.userid}
-                        {lang code="by"} {display_clean($video.user_username)}
+                        {display_clean($video.user_username)}
                     {/if}
                 </span>
                 {/if}
@@ -131,11 +131,11 @@
 
         <div class="details_block">
             <strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>
-            <span class="author">
-			{if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                {lang code='by'} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
+            <span class="author">{lang code='by'}
+                {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+                <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
-                {lang code='by'} {display_clean($video.user_username)}
+                {display_clean($video.user_username)}
             {/if}
 			</span>
             <div class="views-date">
@@ -195,11 +195,11 @@
             </h2>
 
             {if config('enable_hide_uploader_name') != 'yes'}
-            <span class="author">
+            <span class="author">{lang code="by"}
                 {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
-                    {lang code="by"} <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
+                    <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
                 {elseif $anonymous_id != $video.userid}
-                    {lang code="by"} {display_clean($video.user_username)}
+                    {display_clean($video.user_username)}
                 {/if}
             </span>
             {/if}

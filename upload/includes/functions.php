@@ -567,9 +567,9 @@ function is_valid_syntax($code, $text): bool
             if (config('allow_unicode_usernames') == 'yes') {
                 $pattern = '^[\p{L}\p{N}_.';
                 if (config('allow_username_spaces') == 'yes') {
-                    $pattern .= ' ]';
+                    $pattern .= ' ';
                 }
-                $pattern .= '+$';
+                $pattern .= ']+$';
             } else {
                 $pattern = config('allow_username_spaces') == 'yes'
                     ? '^[A-Za-z0-9_. ]+$'
@@ -907,7 +907,6 @@ function username_check($username): bool
     }
 
     if (!is_valid_syntax('username', $username) ) {
-        e(lang("class_invalid_user"));
         return false;
     }
 
@@ -1071,7 +1070,7 @@ function get($val)
  *
  * @return string
  */
-function post_form_val($val, $filter = false)
+function post_form_val($val, $filter = false): string
 {
     if ($filter) {
         return display_clean($_POST[$val]);
@@ -1209,6 +1208,7 @@ function getConstant($constantName = false)
  *
  * @param : { array } { $params } { an array of parameters }
  * @return string|void
+ * @throws Exception
  */
 function cblink($params)
 {
@@ -1731,7 +1731,7 @@ function is_online($time, $margin = '5'): string
  * @internal param $ : { array } { $input } { array of form values } { $input } { array of form values }
  * @internal param $ : { array } { $array } { array of form fields } { $array } { array of form fields }
  */
-function validate_cb_form($input, $array)
+function validate_cb_form($input, $array): void
 {
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {

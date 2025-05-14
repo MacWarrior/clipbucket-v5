@@ -22,6 +22,7 @@ $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Video::getInstance()->getFilterParams($sort_label, []);
 $params = Video::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 $params['limit'] = $get_limit;
+$params['get_detail'] = true;
 if( $child_ids ){
     $params['category'] = $child_ids;
 }

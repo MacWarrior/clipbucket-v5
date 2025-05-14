@@ -113,7 +113,6 @@ if (Collections::getInstance()->is_viewable($collection_id)) {
 }
 
 assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));
-
 assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' .$collection_id);
 assign('link_edit_fo',  DirPath::getUrl('root') . 'manage_collections.php?mode=edit_collection&cid=' . $collection_id);
 

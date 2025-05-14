@@ -248,7 +248,6 @@ class Collection
         if( $param_collection_id !== false ){
             $conditions[] = $this->getTableName() . '.collection_id = '.(int)$param_collection_id;
         }
-
         if( $param_userid ){
             $conditions[] = $this->getTableName() . '.userid = '.(int)$param_userid;
         }
@@ -273,7 +272,6 @@ class Collection
         if( $param_empty_thumb_objectid ){
             $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
-
         if( $param_empty_thumb_objectid ){
             $conditions[] = $this->getTableName() . '.thumb_objectid IS NULL';
         }
@@ -473,6 +471,7 @@ class Collection
                     if (empty($params['order'])) {
                         $params['order'] = $this->getTableNameItems() . '.date_added ASC';
                     }
+                    $params['get_detail'] = true;
                     $collection['items'] = Video::getInstance()->getAll($params);
                 } else {
                     $params['order'] = Photo::getInstance()->getFilterParams($order_item, [])['order'] ?? null;
