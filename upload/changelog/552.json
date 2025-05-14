@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"43",
+  "revision":"44",
   "status":"stable",
   "detail":[
     {
@@ -53,6 +53,7 @@
         ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
+        ,"Fix Nginx vhost <i>(#604)</i>"
       ]
     },
     {

@@ -1,6 +1,6 @@
-## Latest update : 2025-04-23
+## Latest update : 2025-05-14
 ## Latest version : 5.5.2
-## Latest revision : 4
+## Latest revision : 44
 server {
     listen 80;
     server_name DOMAINNAME;
@@ -121,7 +121,8 @@ server {
         rewrite ^(.*/)?photo_upload/(.*)$ $1photo_upload.php?collection=$2&$query_string last;
         rewrite ^(.*/)?photo_upload/?$ $1photo_upload.php?$query_string last;
     }
-    location ~* ^(.*/)?upload/?$ {
+    location ~* ^(.*/)?upload(/(.*))?$ {
+        rewrite ^(.*/)?upload/(.*)$ $1upload.php?collection=$2&$query_string last;
         rewrite ^(.*/)?upload/?$ $1upload.php?$query_string last;
     }
 
