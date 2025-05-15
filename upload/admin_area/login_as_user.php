@@ -3,16 +3,14 @@ define('THIS_PAGE', 'login_as_user');
 
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages;
-
 if (!userquery::getInstance()->is_admin_logged_as_user()) {
     User::getInstance()->hasPermissionOrRedirect('member_moderation',true);
 }
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 if ($_GET['revert']) {
     userquery::getInstance()->revert_from_user();
-    redirect_to('/admin_area');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 $uid = $_GET['uid'];
 
@@ -27,6 +25,6 @@ if ($userLevel > 1 && $userToLoginAsLevel == 1) {
 }
 
 if (userquery::getInstance()->login_as_user($uid)) {
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 display_it();

@@ -484,7 +484,6 @@ iframe {
   border-radius: 4px;
 }
 
-/**/
 #container {
   min-height: 100%;
   position: relative;
@@ -2678,6 +2677,10 @@ textarea#comment_box {
   text-align: center;
 }
 
+.item-channel .channel-holder a{
+  position: relative;
+}
+
 .item-channel .user-block {
   display: block;
   padding: 22px 0 0;
@@ -2876,8 +2879,7 @@ textarea#comment_box {
 }
 
 .cover .profile-buttons .btn-holder {
-  overflow: hidden;
-  text-align: right;
+  float: right;
 }
 
 .cover .profile-buttons .btn-default {
@@ -5822,10 +5824,10 @@ textarea#comment_box {
 
   .cover .profile-buttons .btn-holder {
     text-align: center;
+    float: none;
   }
 
   .cover .profile-buttons .btn-default {
-    display: block;
     margin: 0 auto 5px;
     width: 200px;
   }
@@ -6929,14 +6931,17 @@ textarea#comment_box {
 
 }
 
+/* Generic */
 .no_padding {
   padding: 0 !important;
 }
-
 .no_padding_left {
   padding-left: 0 !important;
 }
-
 .no_padding_right {
   padding-right: 0 !important;
 }
+.mt20 {
+  margin-top: 20px;
+}
+/* Generic */

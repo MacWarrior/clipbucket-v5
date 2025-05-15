@@ -10,14 +10,13 @@
     ,"ext-openssl": "*"
     ,"ext-ffi": "*"
 
-    ,"filp/whoops": "2.15.4"
-    ,"predis/predis": "^v1.1.10"
-    ,"psr/log": "1.1.4"
-    ,"phpmailer/phpmailer": "^6.9.1"
+    ,"filp/whoops": "*"
+    ,"predis/predis": "*"
+    ,"phpmailer/phpmailer": "*"
     ,"smarty/smarty": "3.1.48"
-    ,"oxygenzsas/composer_lib_discord": "dev-php7"
+    ,"oxygenzsas/composer_lib_discord": "*"
     ,"veka-server/onnx-php": "dev-php7"
-    ,"psr/http-server-middleware": "1.0.2"
+    ,"psr/http-server-middleware": "*"
 
     ,"fortawesome/font-awesome": "4.7.0"
 
@@ -26,7 +25,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.0.33"
+      "php": "8.0"
     }
   }
 }

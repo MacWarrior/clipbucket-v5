@@ -7,7 +7,7 @@
 </div>
 
 <div class="search_box well" id="searchdiv" {if $smarty.cookies.show_searchdiv_search!='show'} style="display:none;"{/if}>
-    <form id="video_search" name="video_search" method="get" action="manage_playlist.php" class="video_search">
+    <form id="video_search" name="video_search" method="get" action="{DirPath::getUrl('admin_area')}manage_playlist.php" class="video_search">
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">

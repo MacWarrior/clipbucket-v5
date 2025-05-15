@@ -71,7 +71,7 @@ echo |set /p=Creating GIT directory...
 SET "GIT_DIR=%CB_DIR%\git"
 md %GIT_DIR%
 echo OK
-SET "GIT_VERSION=2.47.1"
+SET "GIT_VERSION=2.49.0"
 echo |set /p=Downloading GIT %GIT_VERSION%...
 SET "GIT_URL=https://github.com/git-for-windows/git/releases/download/v%GIT_VERSION%.windows.1/PortableGit-%GIT_VERSION%-64-bit.7z.exe"
 SET "GIT_EXE_FILENAME=install_git.exe"
@@ -94,7 +94,7 @@ echo |set /p=Creating MariaDB directory...
 SET "MARIADB_DIR=%CB_DIR%\mariadb"
 md %MARIADB_DIR%
 echo OK
-SET "MARIADB_VERSION=11.7.1"
+SET "MARIADB_VERSION=12.0.0"
 echo |set /p=Downloading MariaDB %MARIADB_VERSION%...
 SET "MARIADB_URL=https://mirrors.ircam.fr/pub/mariadb/mariadb-%MARIADB_VERSION%/winx64-packages/mariadb-%MARIADB_VERSION%-winx64.zip"
 SET "MARIADB_ZIP_FILENAME=mariadb-%MARIADB_VERSION%.zip"
@@ -113,7 +113,7 @@ echo |set /p=Creating Nginx directory...
 SET "NGINX_DIR=%CB_DIR%\nginx"
 md %NGINX_DIR%
 echo OK
-SET "NGINX_VERSION=1.27.3"
+SET "NGINX_VERSION=1.27.4"
 echo |set /p=Downloading Nginx %NGINX_VERSION%...
 SET "NGINX_URL=https://nginx.org/download/nginx-%NGINX_VERSION%.zip"
 SET "NGINX_ZIP_FILENAME=nginx-%NGINX_VERSION%.zip"
@@ -132,7 +132,7 @@ echo |set /p=Creating PHP directory...
 SET "PHP_DIR=%CB_DIR%\php"
 md %PHP_DIR%
 echo OK
-SET "PHP_VERSION=8.4.1"
+SET "PHP_VERSION=8.4.6"
 echo /!\ We're using PHP because PHP-FPM doesn't support Windows
 echo |set /p=Downloading PHP %PHP_VERSION%...
 SET "PHP_URL=https://windows.php.net/downloads/releases/php-%PHP_VERSION%-Win32-vs17-x64.zip"
@@ -153,7 +153,7 @@ echo |set /p=Creating FFMpeg directory...
 SET "FFMPEG_DIR=%CB_DIR%\ffmpeg"
 md %FFMPEG_DIR%
 echo OK
-SET "FFMPEG_VERSION=7.1"
+SET "FFMPEG_VERSION=7.1.1"
 echo |set /p=Downloading FFMpeg %FFMPEG_VERSION%...
 SET "FFMPEG_URL=https://github.com/GyanD/codexffmpeg/releases/download/%FFMPEG_VERSION%/ffmpeg-%FFMPEG_VERSION%-full_build.zip"
 SET "FFMPEG_ZIP_FILENAME=ffmpeg-%FFMPEG_VERSION%.zip"
@@ -172,7 +172,7 @@ echo |set /p=Creating MediaInfo directory...
 SET "MEDIAINFO_DIR=%CB_DIR%\mediainfo"
 md %MEDIAINFO_DIR%
 echo OK
-SET "MEDIAINFO_VERSION=24.11"
+SET "MEDIAINFO_VERSION=25.03"
 echo |set /p=Downloading MediaInfo %MEDIAINFO_VERSION%...
 SET "MEDIAINFO_URL=https://mediaarea.net/download/binary/mediainfo/%MEDIAINFO_VERSION%/MediaInfo_CLI_%MEDIAINFO_VERSION%_Windows_x64.zip"
 SET "MEDIAINFO_ZIP_FILENAME=mediainfo-%MEDIAINFO_VERSION%.zip"
@@ -252,6 +252,10 @@ set "SEARCH=;extension=fileinfo"
 set "REPLACEMENT=extension=fileinfo"
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
 
+set "SEARCH=;extension=ffi"
+set "REPLACEMENT=extension=ffi"
+Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
+
 set "SEARCH=;extension_dir = \"./\""
 set "REPLACEMENT=extension_dir = \"%PHP_DIR%\ext\""
 Powershell.exe -command "(Get-Content %PHP_INI_FILEPATH%) -replace '%SEARCH%', '%REPLACEMENT%' | Out-File -encoding UTF8 %PHP_INI_FILEPATH%"
@@ -295,12 +299,6 @@ echo 		client_max_body_size 2M;>> %NGINX_CONF%
 echo 		fastcgi_send_timeout 7200s;>> %NGINX_CONF%
 echo 		fastcgi_read_timeout 7200s;>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		# set expiration of assets to MAX for caching>> %NGINX_CONF%
-echo 		location ~* \.(ico^|css^|js)(\?[0-9]+)?$ {>> %NGINX_CONF%
-echo 			expires max;>> %NGINX_CONF%
-echo 			log_not_found off;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
 echo 		location ~* \.php$ {>> %NGINX_CONF%
 echo 			fastcgi_pass 127.0.0.1:9000;>> %NGINX_CONF%
 echo 			fastcgi_index index.php;>> %NGINX_CONF%
@@ -309,126 +307,133 @@ echo 			fastcgi_param SCRIPT_FILENAME $request_filename;>> %NGINX_CONF%
 echo 			include fastcgi_params;>> %NGINX_CONF%
 echo 		}>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location / {>> %NGINX_CONF%
-echo 			rewrite /(.*)_v([0-9]+) /watch_video.php?v=$2^&$query_string last;>> %NGINX_CONF%
-echo 			rewrite /([a-zA-Z0-9-]+)/?$ /view_channel.php?uid=$1^&seo_diret=yes last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # set expiration of assets to MAX for caching>> %NGINX_CONF%
+echo    location ~* \.(ico^|css^|js)(\?[0-9]+)?$ {>> %NGINX_CONF%
+echo        expires max;>> %NGINX_CONF%
+echo        log_not_found off;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		error_page 404 /404;>> %NGINX_CONF%
-echo 		error_page 403 /403;>> %NGINX_CONF%
-echo 		location /403 {>> %NGINX_CONF%
-echo 			try_files $uri /403.php;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo 		location /404 {>> %NGINX_CONF%
-echo 			try_files $uri /404.php;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    error_page 404 /404;>> %NGINX_CONF%
+echo    error_page 403 /403;>> %NGINX_CONF%
+echo    location ~* ^(.*/)?403$ {>> %NGINX_CONF%
+echo        try_files $uri $1/403.php;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?404$ {>> %NGINX_CONF%
+echo        try_files $uri $1/404.php;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /includes/ {>> %NGINX_CONF%
-echo 			return 302 /404;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Forbidden access>> %NGINX_CONF%
+echo    location ~ ^(.*/)?.(git^|github^|idea^|gitignore^|htaccess) {>> %NGINX_CONF%
+echo        return 302 $1403;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?(includes^|changelog)/ {>> %NGINX_CONF%
+echo        return 302 $1403;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /changelog/ {>> %NGINX_CONF%
-echo 			return 302 /404;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Direct acces to files>> %NGINX_CONF%
+echo    location ~* ^(.*/)?files/ {>> %NGINX_CONF%
+echo        try_files $uri $uri/ =404;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /video/ {>> %NGINX_CONF%
-echo 			rewrite ^^/video/(.*)/(.*) /watch_video.php?v=$1^&$query_string last;>> %NGINX_CONF%
-echo 			rewrite ^^/video/([0-9]+)_(.*) /watch_video.php?v=$1^&$query_string last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # External use>> %NGINX_CONF%
+echo    location ~* ^(.*/)?sitemap.xml$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?sitemap.xml$ $1sitemap.php last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?rss(/([a-zA-Z0-9][^/]*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?rss/?$ $1rss.php?$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?rss/([a-zA-Z0-9][^/]*)$ $1rss.php?mode=$2&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /videos/ {>> %NGINX_CONF%
-echo 			rewrite ^^/videos/(.*)/(.*)/(.*)/(.*)/(.*) /videos.php?cat=$1^&sort=$3^&time=$4^&page=$5^&seo_cat_name=$2 last;>> %NGINX_CONF%
-echo 			rewrite ^^/videos/([0-9]+) /videos.php?page=$1 last;>> %NGINX_CONF%
-echo 			rewrite ^^/videos/?$ /videos.php?$query_string last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Collections>> %NGINX_CONF%
+echo    location ~* ^(.*/)?collections(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?collections/(.*)/(.*)/(.*)/(.*) $1collections.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?collections/(.*)/(.*)/(.*) $1collections.php?sort=$1&time=$2&page=$3&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?collections/([0-9]+) $1collections.php?page=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?collections/?$ $1collections.php last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?collection(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?collection/(.*)/(.*)/(.*) $1view_collection.php?cid=$2&type=$3&page=$4&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /channels/ {>> %NGINX_CONF%
-echo 			rewrite ^^/channels/(.*)/(.*)/(.*)/(.*)/(.*) /channels.php?cat=$1^&sort=$3^&time=$4^&page=$5^&seo_cat_name=$2 last;>> %NGINX_CONF%
-echo 			rewrite ^^/channels/([0-9]+) /channels.php?page=$1 last;>> %NGINX_CONF%
-echo 			rewrite ^^/channels/?$ /channels.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Videos>> %NGINX_CONF%
+echo    location ~* ^(.*/)?videos(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos/(.*)/(.*)/(.*)/(.*) $1videos.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos/(.*)/(.*)/(.*) $1videos.php?sort=$1&time=$2&page=$3&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos/([0-9]+) $1videos.php?page=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?videos/?$ $1videos.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?video(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?video/(.*)/(.*) $1watch_video.php?v=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?video/([0-9]+)_(.*) $1watch_video.php?v=$2&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(/.*/)?(.+)_v([0-9]+)$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?(.*)_v([0-9]+) $1watch_video.php?v=$3&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /members/ {>> %NGINX_CONF%
-echo 			rewrite ^^/members/?$ /channels.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Photos>> %NGINX_CONF%
+echo    location ~* ^(.*/)?item(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?item/(.*)/(.*)/(.*)/(.*) $1view_item.php?item=$4&type=$2&collection=$3&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?photos(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?photos/(.*)/(.*)/(.*)/(.*) $1photos.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?photos/(.*)/(.*)/(.*) $1photos.php?sort=$1&time=$2&page=$3&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?photos/([0-9]+) $1photos.php?page=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?photos/?$ $1photos.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /users/ {>> %NGINX_CONF%
-echo 			rewrite ^^/users/?$ /channels.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Channels>> %NGINX_CONF%
+echo    location ~* ^(.*/)?channels(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?channels/(.*)/(.*)/(.*)/(.*) $1channels.php?cat=$1&sort=$2&time=$3&page=$4&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?channels/(.*)/(.*)/(.*) $1channels.php?sort=$1&time=$2&page=$3&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?channels/([0-9]+) $1channels.php?page=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?channels/?$ $1channels.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?user/(.*)$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?user/(.*) $1view_channel.php?user=$2&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /user/ {>> %NGINX_CONF%
-echo 			rewrite ^^/user/(.*) /view_channel.php?user=$1 last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Uploads>> %NGINX_CONF%
+echo    location ~* ^(.*/)?photo_upload(/(.*))?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?photo_upload/(.*)$ $1photo_upload.php?collection=$2&$query_string last;>> %NGINX_CONF%
+echo        rewrite ^(.*/)?photo_upload/?$ $1photo_upload.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?upload/?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?upload/?$ $1upload.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /channel/ {>> %NGINX_CONF%
-echo 			rewrite ^^/channel/(.*) /view_channel.php?user=$1 last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Account>> %NGINX_CONF%
+echo    location ~* ^(.*/)?my_account$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?my_account$ $1myaccount.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?signup/?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?signup/?$ $1signup.php?$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
+echo    location ~* ^(.*/)?signin/?$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?signin/?$ $1signup.php?mode=login&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /my_account {>> %NGINX_CONF%
-echo 			rewrite ^^/my_account /myaccount.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
+echo    # Custom pages>> %NGINX_CONF%
+echo    location ~* ^(.*/)?page/([0-9]+)/(.*)$ {>> %NGINX_CONF%
+echo        rewrite ^(.*/)?page/([0-9]+)/(.*) $1view_page.php?pid=$2&$query_string last;>> %NGINX_CONF%
+echo        break;>> %NGINX_CONF%
+echo    }>> %NGINX_CONF%
 echo. >> %NGINX_CONF%
-echo 		location /page/ {>> %NGINX_CONF%
-echo 			rewrite ^^/page/([0-9]+)/(.*) /view_page.php?pid=$1 last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /search/ {>> %NGINX_CONF%
-echo 			rewrite ^^/search/result/?$ /search_result.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /upload {>> %NGINX_CONF%
-echo 			rewrite ^^/upload/?$ /upload.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /contact/ {>> %NGINX_CONF%
-echo 			rewrite ^^/contact/?$ /contact.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /categories/ {>> %NGINX_CONF%
-echo 			rewrite ^^/categories/?$ /categories.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /collections/ {>> %NGINX_CONF%
-echo 			rewrite ^^/collections/(.*)/(.*)/(.*)/(.*)/(.*) /collections.php?cat=$1^&sort=$3^&time=$4^&page=$5^&seo_cat_name=$2 last;>> %NGINX_CONF%
-echo 			rewrite ^^/collections/([0-9]+) /collections.php?page=$1 last;>> %NGINX_CONF%
-echo 			rewrite ^^/collections/?$ /collections.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /photos/ {>> %NGINX_CONF%
-echo 			rewrite ^^/photos/(.*)/(.*)/(.*)/(.*)/(.*) /photos.php?cat=$1^&sort=$3^&time=$4^&page=$5^&seo_cat_name=$2 last;>> %NGINX_CONF%
-echo 			rewrite ^^/photos/([0-9]+) /photos.php?page=$1 last;>> %NGINX_CONF%
-echo 			rewrite ^^/photos/?$ /photos.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /collection/ {>> %NGINX_CONF%
-echo 			rewrite ^^/collection/(.*)/(.*)/(.*) /view_collection.php?cid=$1^&type=$2^&page=$3 last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /item/ {>> %NGINX_CONF%
-echo 			rewrite ^^/item/(.*)/(.*)/(.*)/(.*) /view_item.php?item=$3^&type=$1^&collection=$2 last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /photo_upload {>> %NGINX_CONF%
-echo 			rewrite ^^/photo_upload/(.*) /photo_upload.php?collection=$1 last;>> %NGINX_CONF%
-echo 			rewrite ^^/photo_upload/?$ /photo_upload.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location = /sitemap.xml {>> %NGINX_CONF%
-echo 			rewrite ^^(.*)$ /sitemap.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /signup {>> %NGINX_CONF%
-echo 			rewrite ^^/signup/?$ /signup.php last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location /rss/ {>> %NGINX_CONF%
-echo 			rewrite ^^/rss/([a-zA-Z0-9].+)$ /rss.php?mode=$1^&$query_string last;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo. >> %NGINX_CONF%
-echo 		location ~ /rss$ {>> %NGINX_CONF%
-echo 			try_files $uri /rss.php;>> %NGINX_CONF%
-echo 		}>> %NGINX_CONF%
-echo 	}>> %NGINX_CONF%
 echo }>> %NGINX_CONF%
 
 echo OK
@@ -439,7 +444,7 @@ echo Configuring server start script...
 SET "START_SCRIPT=%CB_DIR%\start.bat"
 
 echo start %PHP_DIR%\php-cgi.exe -b 127.0.0.1:9000 -c %PHP_DIR%\php.ini >> %START_SCRIPT%
-echo start cmd.exe /k "cd %NGINX_DIR% & %NGINX_DIR%\nginx.exe" >> %START_SCRIPT%
+echo start cmd.exe /k "cd /d %NGINX_DIR% && nginx.exe" >> %START_SCRIPT%
 echo start %MARIADB_SERVER_EXE% --console >> %START_SCRIPT%
 
 :end

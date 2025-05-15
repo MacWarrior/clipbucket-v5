@@ -2,15 +2,14 @@
 
 global $Smarty;
 
-if (defined('PARENT_PAGE')) {
-    $parent_page = PARENT_PAGE;
-} else {
-    $parent_page = 'home';
-}
-
 function current_page($params)
 {
-    global $parent_page;
+    if (defined('PARENT_PAGE')) {
+        $parent_page = PARENT_PAGE;
+    } else {
+        $parent_page = 'home';
+    }
+
     $page = $params['page'];
     $class = getArrayValue($params, 'class');
 

@@ -9,7 +9,6 @@ class Update
     private $dbVersion = [];
     private $latest = [];
     private $changelog = [];
-    private $state = '';
     private $version = '';
     private $versionCode = '';
     private $revision = '';
@@ -46,7 +45,8 @@ class Update
         }, $this->fields);
     }
 
-    public function flush(){
+    public function flush(): void
+    {
         $this->dbVersion = [];
         $this->version = '';
         $this->revision = '';
@@ -123,7 +123,7 @@ class Update
     public function getCurrentCoreVersionCode(): string
     {
         if( empty($this->versionCode) ){
-            $this->versionCode = $this->getCurrentCoreLatest()['dev'];
+            $this->versionCode = $this->getCurrentCoreLatest()['stable'];
         }
 
         return $this->versionCode;
@@ -147,7 +147,7 @@ class Update
     private function getChangelog($version): array
     {
         if( empty($this->changelog[$version]) ){
-            if (strpos($version, '.') !== false) {
+            if (str_contains($version, '.')) {
                 $version = str_replace('.','', $version);
             }
             $filepath_changelog = DirPath::get('changelog') . $version . '.json';
@@ -204,7 +204,7 @@ class Update
             $changelog = $this->getDistantFile($version.'.json');
             $changelog_url = self::$urlChangelogGit . '/' . $version . '.json';
 
-            if (empty($changelog['revision'])) {
+            if (!isset($changelog['revision'])) {
                 e(lang('error_occured'));
                 e(lang('error_file_download') . ' : ' . $changelog_url);
                 return false;
@@ -255,7 +255,7 @@ class Update
             $folder_cur_version = basename($folder);
             if ($folder_cur_version == $this->getCurrentDBVersion()) {
                 $folder_version = $folder;
-            } elseif ($folder_cur_version > $this->getCurrentDBVersion() && $folder_cur_version <= Update::getInstance()->getCurrentCoreVersion()) {
+            } elseif ($folder_cur_version > $this->getCurrentDBVersion() && $folder_cur_version <= self::getInstance()->getCurrentCoreVersion()) {
                 $this->needCodeDBUpdate = true;
                 return true;
             }
@@ -263,7 +263,7 @@ class Update
         $clean_folder = array_diff(scandir($folder_version), ['..', '.']);
         foreach ($clean_folder as $file) {
             $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
-            if ($file_rev > $this->getCurrentDBRevision() && $file_rev <= Update::getInstance()->getCurrentCoreRevision()) {
+            if ($file_rev > $this->getCurrentDBRevision() && $file_rev <= self::getInstance()->getCurrentCoreRevision()) {
                 $this->needCodeDBUpdate = true;
                 return true;
             }
@@ -280,7 +280,7 @@ class Update
         if (!in_dev()) {
             return false;
         }
-        if (file_exists(DirPath::get('sql') . $this->getCurrentDBVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
+        if (file_exists(DirPath::get('sql') . $this->getCurrentCoreVersion() . DIRECTORY_SEPARATOR . 'MWIP.php')) {
             return true;
         }
         return false;
@@ -321,13 +321,21 @@ class Update
             $folder_files = array_diff(scandir($folder), ['..', '.']);
             $folder_version = str_replace('.', '', basename($folder));
 
+            if( $folder_version < $version ){
+                continue;
+            }
+
             // Exclude older and future versions
             if( $version > $folder_version || $folder_version > $this->getCurrentCoreVersionCode() ){
                 break;
             }
 
             foreach($folder_files AS $file){
+
                 $file_rev = (int) preg_replace('/\D/', '', pathinfo($file)['filename']);
+                if(empty($file_rev)){
+                    continue;
+                }
 
                 // Exclude future revisions
                 if( $folder_version == $this->getCurrentCoreVersionCode() && $file_rev > $this->getCurrentCoreRevision() ){
@@ -419,7 +427,7 @@ class Update
      */
     public static function isVersionSystemInstalled(): bool
     {
-        $dbversion = Update::getInstance()->getDBVersion();
+        $dbversion = self::getInstance()->getDBVersion();
 
         if( $dbversion['version'] == '-1' ){
             if (BACK_END) {
@@ -730,7 +738,7 @@ class Update
      */
     public static function updateGitSources(): bool
     {
-        $update = Update::getInstance();
+        $update = self::getInstance();
         if( !$update->isGitInstalled() || !$update->isManagedWithGit() ){
             return false;
         }
@@ -754,11 +762,12 @@ class Update
     /**
      * @param $version
      * @param $revision
+     * @param bool $force_refresh
      * @return bool
      */
-    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision, $force_refresh = false): bool
+    public static function IsCurrentDBVersionIsHigherOrEqualTo($version, $revision, bool $force_refresh = false): bool
     {
-        $version_db = Update::getInstance()->getDBVersion($force_refresh);
+        $version_db = self::getInstance()->getDBVersion($force_refresh);
         return ($version_db['version'] > $version || ($version_db['version'] == $version && $version_db['revision'] >= $revision));
     }
 
@@ -767,7 +776,7 @@ class Update
      */
     public static function IsUpdateProcessing(): bool
     {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+        if (self::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
             $where = ' tools_histo.id_tools_histo_status IN (SELECT id_tools_histo_status FROM '.tbl('tools_histo_status').' WHERE language_key_title = \'in_progress\')  AND code IN (\'update_core\', \''.AdminTool::CODE_UPDATE_DATABASE_VERSION.'\') ';
         } else {
             $where = ' tools.id_tools_status IN (SELECT id_tools_status FROM '.tbl('tools_status').' WHERE language_key_title = \'in_progress\')   AND id_tool IN (11, 5)  ';
@@ -778,6 +787,9 @@ class Update
         return !empty($tools);
     }
 
+    /**
+     * @throws Exception
+     */
     public function CheckPHPVersion()
     {
         $filename = 'php_version.json';

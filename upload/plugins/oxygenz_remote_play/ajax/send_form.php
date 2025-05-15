@@ -7,8 +7,7 @@ if( !User::getInstance()->hasPermission('allow_video_upload') ){
     die();
 }
 
-global $Upload;
-if( empty($Upload->get_upload_options()) ) {
+if( empty(Upload::getInstance()->get_upload_options()) ) {
     echo json_encode(['error'=>lang('video_upload_disabled')]);
     die();
 }
@@ -69,10 +68,9 @@ switch($step){
         }
 
         $_POST['file_name'] = time() . RandomString(5);
-        $video_id = $Upload->submit_upload();
+        $video_id = Upload::getInstance()->submit_upload();
 
-        global $eh;
-        $errors = $eh->get_error();
+        $errors = errorhandler::getInstance()->get_error();
         if( !empty($errors) ){
             echo json_encode(['error'=>$errors[0]['val']]);
             die();
@@ -105,10 +103,9 @@ switch($step){
         }
 
         $_POST['file_name'] = $vdetails['file_name'];
-        $Upload->submit_upload();
+        Upload::getInstance()->submit_upload();
 
-        global $eh;
-        $errors = $eh->get_error();
+        $errors = errorhandler::getInstance()->get_error();
         if( !empty($errors) ){
             echo json_encode(['error'=>$errors[0]['val']]);
             die();

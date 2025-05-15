@@ -1,13 +1,10 @@
 <?php
 define('THIS_PAGE', 'view_collection');
 define('PARENT_PAGE', 'collections');
-
 require 'includes/config.inc.php';
 
-global $pages, $cbcollection, $cbvideo, $cbphoto, $Cbucket;
-
 User::getInstance()->hasPermissionOrRedirect('view_collections');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $collection_id = (int)$_GET['cid'];
 
@@ -15,13 +12,13 @@ $page = $_GET['page'];
 
 $order = 'collection_items.ci_id DESC';
 
-if ($cbcollection->is_viewable($collection_id)) {
+if (Collections::getInstance()->is_viewable($collection_id)) {
     $params = [];
     $params['collection_id'] = $collection_id;
     $cdetails = Collection::getInstance()->getOne($params);
 
     if (!$cdetails || (!isSectionEnabled($cdetails['type']) && !User::getInstance()->hasAdminAccess()) ){
-        $Cbucket->show_page = false;
+        ClipBucket::getInstance()->show_page = false;
     }
 
     if (!$cdetails) {
@@ -61,7 +58,7 @@ if ($cbcollection->is_viewable($collection_id)) {
 
         $total_pages = count_pages($total_items, config('collection_items_page'));
         //Pagination
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
 
         if (config('enable_sub_collection') == 'yes') {
             $breadcrum = [];
@@ -71,10 +68,10 @@ if ($cbcollection->is_viewable($collection_id)) {
                     'title' => $collection_parent['collection_name']
                     , 'url' => Collections::getInstance()->collection_links($collection_parent,'view')
                 ];
-                $collection_parent = $cbcollection->get_parent_collection($collection_parent);
+                $collection_parent = Collections::getInstance()->get_parent_collection($collection_parent);
             } while ($collection_parent);
             assign('breadcrum', array_reverse($breadcrum));
-            assign('collection_baseurl', $cbcollection->get_base_url());
+            assign('collection_baseurl', Collections::getInstance()->get_base_url());
         }
 
         $ids_to_check_progress = [];
@@ -89,30 +86,35 @@ if ($cbcollection->is_viewable($collection_id)) {
         assign('objects', $items);
         assign('c', $cdetails);
         subtitle($cdetails['collection_name']);
+        $complement_url = base64_encode(json_encode($cdetails['collection_id']));
         if ($cdetails['type'] == 'photos') {
             assign('sort_list', display_sort_lang_array(Photo::getInstance()->getSortList()));
 
-            if (SEO == 'yes') {
-                $link = '/photo_upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            $base_url = cblink(['name' => 'photo_upload']);
+            if (config('seo') == 'yes') {
+                $link = $base_url . '/' . $complement_url;
+            } else {
+                $link = $base_url . '?collection=' . $complement_url;
             }
-            $link = '/photo_upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         } elseif ($cdetails['type'] == 'videos') {
             assign('sort_list', display_sort_lang_array(Video::getInstance()->getSortList()));
-            if (SEO == 'yes') {
-                $link = '/upload/' . base64_encode(json_encode($cdetails['collection_id']));
+            $base_url = cblink(['name' => 'upload']);
+
+            if (config('seo') == 'yes') {
+                $link = $base_url . '/' . $complement_url;
+            } else {
+                $link = $base_url . '?collection=' . $complement_url;
             }
-            $link = '/upload.php?collection=' . base64_encode(json_encode($cdetails['collection_id']));
         }
         assign('link_add_more',  $link);
     }
 } else {
-    $Cbucket->show_page = false;
+    ClipBucket::getInstance()->show_page = false;
 }
 
 assign('featured', Photo::getInstance()->getAll(['featured'=>true, 'limit'=>6]));
-
-assign('link_edit_bo', DirPath::get('admin_area',true) . 'edit_collection.php?collection=' .$collection_id);
-assign('link_edit_fo',  '/manage_collections.php?mode=edit_collection&cid=' . $collection_id);
+assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_collection.php?collection=' .$collection_id);
+assign('link_edit_fo',  DirPath::getUrl('root') . 'manage_collections.php?mode=edit_collection&cid=' . $collection_id);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $min_suffixe = in_dev() ? '' : '.min';
@@ -127,24 +129,7 @@ if( config('enable_comments_collection') == 'yes' ){
         'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
     ]);
 
-    if( config('enable_visual_editor_comments') == 'yes' ){
-        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
-        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
-
-        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
-        if( config('default_theme') != '' && file_exists($filepath) ){
-            ClipBucket::getInstance()->addCSS([
-                'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
-            ]);
-        }
-
-        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
-        if( file_exists($filepath) ){
-            ClipBucket::getInstance()->addJS([
-                'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
-            ]);
-        }
-    }
+    Comments::initVisualComments();
 }
 
 if (config('enable_collection_categories')=='yes') {

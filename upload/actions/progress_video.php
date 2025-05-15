@@ -35,7 +35,6 @@ switch ($_POST['output']) {
     case 'search':
         $display_type = 'normal';
         break;
-    case 'user_videos':
     case 'default_slider':
         $display_type = 'user-videos';
         break;
@@ -45,7 +44,7 @@ switch ($_POST['output']) {
         break;
     case 'account':
         $display_type = '';
-        $favorites = User::getInstance()->getFavoritesVideos(user_id());
+        $favorites = User::getInstance()->getFavoritesVideos();
         assign('favorites', $favorites);
         assign('control', 'full');
         $template = 'blocks/manage/account_video.html';

@@ -276,14 +276,15 @@ function formatfilesize($data): string
 
 function getCommentAdminLink($type, $id): string
 {
+    $base_url = DirPath::getUrl('admin_area');
     switch($type){
         default:
         case 'v':
-            return '/admin_area/edit_video.php?video=' . $id;
+            return $base_url . 'edit_video.php?video=' . $id;
         case 'p':
-            return '/admin_area/edit_photo.php?photo=' . $id;
+            return $base_url . 'edit_photo.php?photo=' . $id;
         case 'cl':
-            return '/admin_area/edit_collection.php?collection=' . $id;
+            return $base_url . 'edit_collection.php?collection=' . $id;
     }
 }
 
@@ -378,7 +379,6 @@ function isValidtag($tag): bool
 function getCategoryList($params = [])
 {
     $params['echo'] = $params['echo'] ?: false;
-    $version = Update::getInstance()->getDBVersion();
     switch ($params['type']) {
         default:
             cb_call_functions('categoryListing', $params);
@@ -406,7 +406,7 @@ function getCategoryList($params = [])
             break;
     }
     $cats = [];
-    if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+    if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
         $params['category_type'] = Category::getInstance()->getIdsCategoriesType($type);
         $params['parent_only'] = true;
         $cats = Category::getInstance()->getAll($params);
@@ -448,7 +448,7 @@ function getSmartyCategoryList($params)
  * @throws Exception
  * @uses : { class : $db } { function : dbInsert }
  */
-function dbInsert($tbl, $flds, $vls, $ep = null)
+function dbInsert($tbl, $flds, $vls, $ep = null): void
 {
     Clipbucket_db::getInstance()->insert($tbl, $flds, $vls, $ep);
 }
@@ -468,9 +468,8 @@ function dbInsert($tbl, $flds, $vls, $ep = null)
  */
 function e($msg = null, $type = 'e', $secure = true)
 {
-    global $eh;
     if (!empty($msg)) {
-        return $eh->e($msg, $type, $secure);
+        return errorhandler::getInstance()->e($msg, $type, $secure);
     }
 }
 
@@ -480,7 +479,7 @@ function e($msg = null, $type = 'e', $secure = true)
  * @param : { string / array } { $text } { Element to be printed }
  * @param bool $pretty
  */
-function pr($text, $pretty = false)
+function pr($text, $pretty = false): void
 {
     if (!$pretty) {
         $dump = print_r($text, true);
@@ -496,7 +495,8 @@ function pr($text, $pretty = false)
 /**
  * Function used to get userid anywhere
  * if there is no user_id it will return false
- * @uses : { class : $userquery } { var : userid }
+ * @throws Exception
+ * @uses : { class : userquery } { var : userid }
  */
 function user_id()
 {
@@ -509,7 +509,8 @@ function user_id()
 /**
  * Function used to get username anywhere
  * if there is no usern_name it will return false
- * @uses : { class : $userquery } { var : $username }
+ * @throws Exception
+ * @uses : { class : userquery } { var : $username }
  */
 function user_name()
 {
@@ -519,6 +520,9 @@ function user_name()
     return userquery::getInstance()->get_logged_username();
 }
 
+/**
+ * @throws Exception
+ */
 function user_email()
 {
     if (userquery::getInstance()->email) {
@@ -526,6 +530,10 @@ function user_email()
     }
     return false;
 }
+
+/**
+ * @throws Exception
+ */
 function user_dob()
 {
     if (userquery::getInstance()->udetails['dob']) {
@@ -534,14 +542,11 @@ function user_dob()
     return false;
 }
 
-
-
 /**
  * Function used to return mysql time
- * @return false|string : { current time }
  * @author : Fwhite
  */
-function now()
+function now(): string
 {
     return date('Y-m-d H:i:s', time());
 }
@@ -559,7 +564,18 @@ function is_valid_syntax($code, $text): bool
 {
     switch ($code) {
         case 'username':
-            $pattern = '^[A-Za-z0-9_.]+$';
+            if (config('allow_unicode_usernames') == 'yes') {
+                $pattern = '^[\p{L}\p{N}_.';
+                if (config('allow_username_spaces') == 'yes') {
+                    $pattern .= ' ';
+                }
+                $pattern .= ']+$';
+            } else {
+                $pattern = config('allow_username_spaces') == 'yes'
+                    ? '^[A-Za-z0-9_. ]+$'
+                    : '^[A-Za-z0-9_.]+$';
+            }
+
             break;
         case 'email':
             $pattern = '^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,10})$';
@@ -638,20 +654,6 @@ function yes_or_no($input, $return = 'yes'): string
 }
 
 /**
- * Function used to validate collection category
- * @param null $array
- *
- * @return bool
- * @throws Exception
- * @uses : { class : $cbcollection } { function : validate_collection_category }
- */
-function validate_collection_category($array = null)
-{
-    global $cbcollection;
-    return $cbcollection->validate_collection_category($array);
-}
-
-/**
  * Function used to get user avatar
  *
  * @param { array } { $param } { array with parameters }
@@ -659,7 +661,7 @@ function validate_collection_category($array = null)
  *
  * @return string
  * @throws Exception
- * @uses : { class : $userquery } { function : avatar }
+ * @uses : { class : userquery } { function : avatar }
  */
 function avatar($param): string
 {
@@ -845,30 +847,11 @@ function display_sort_lang_array(array $list)
  *
  * @return array|bool|int
  * @throws Exception
- * @uses : { class : $userquery } { function : get_user_vids }
+ * @uses : { class : userquery } { function : get_user_vids }
  */
 function get_user_vids($uid, $cond = null, $count_only = false)
 {
     return userquery::getInstance()->get_user_vids($uid, $cond, $count_only);
-}
-
-function error_list(): array
-{
-    global $eh;
-    return $eh->get_error();
-}
-
-function warning_list(): array
-{
-    global $eh;
-    return $eh->get_warning();
-}
-
-
-function msg_list(): array
-{
-    global $eh;
-    return $eh->get_message();
 }
 
 /**
@@ -878,7 +861,7 @@ function msg_list(): array
  * @param bool $folder
  * @param bool $follow_show_page
  */
-function template_files($file, $folder = false, $follow_show_page = true)
+function template_files($file, $folder = false, $follow_show_page = true): void
 {
     if (!$folder) {
         ClipBucket::getInstance()->template_files[] = ['file' => $file, 'follow_show_page' => $follow_show_page];
@@ -914,8 +897,7 @@ function include_template_file($params)
  */
 function username_check($username): bool
 {
-    global $Cbucket;
-    $banned_words = $Cbucket->configs['disallowed_usernames'];
+    $banned_words = ClipBucket::getInstance()->configs['disallowed_usernames'];
     $banned_words = explode(',', $banned_words);
     foreach ($banned_words as $word) {
         preg_match("/$word/Ui", $username, $match);
@@ -923,19 +905,11 @@ function username_check($username): bool
             return false;
         }
     }
-    //Checking if its syntax is valid or not
-    $multi = config('allow_unicode_usernames');
 
-    //Checking Spaces
-    if (!config('allow_username_spaces')) {
-        preg_match('/ /', $username, $matches);
-    }
-    if (!is_valid_syntax('username', $username) && $multi != 'yes' || $matches) {
-        e(lang("class_invalid_user"));
-    }
-    if (!preg_match('/^[A-Za-z0-9_.]+$/', $username)) {
+    if (!is_valid_syntax('username', $username) ) {
         return false;
     }
+
     return true;
 }
 
@@ -945,7 +919,7 @@ function username_check($username): bool
  *
  * @return bool
  * @throws Exception
- * @uses : { class : $userquery } { function : username_exists }
+ * @uses : { class : userquery } { function : username_exists }
  */
 function user_exists($user): bool
 {
@@ -958,13 +932,17 @@ function user_exists($user): bool
  * @param : { string } { $user } { email address to check }
  *
  * @return bool
- * @uses : { class : $userquery } { function : duplicate_email }
+ * @throws Exception
+ * @uses : { class : userquery } { function : duplicate_email }
  */
 function email_exists($user): bool
 {
     return userquery::getInstance()->duplicate_email($user);
 }
 
+/**
+ * @throws Exception
+ */
 function check_email_domain($email): bool
 {
     return userquery::getInstance()->check_email_domain($email);
@@ -979,8 +957,7 @@ function check_email_domain($email): bool
  */
 function error($param = 'array')
 {
-    global $eh;
-    $error = $eh->get_error();
+    $error = errorhandler::getInstance()->get_error();
     if (count($error) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -995,8 +972,7 @@ function error($param = 'array')
 
 function warning($param = 'array')
 {
-    global $eh;
-    $error = $eh->get_warning();
+    $error = errorhandler::getInstance()->get_warning();
     if (count($error) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -1018,8 +994,7 @@ function warning($param = 'array')
  */
 function msg($param = 'array')
 {
-    global $eh;
-    $message = $eh->get_message();
+    $message = errorhandler::getInstance()->get_message();
     if (count($message) > 0) {
         if ($param != 'array') {
             if ($param == 'single') {
@@ -1095,7 +1070,7 @@ function get($val)
  *
  * @return string
  */
-function post_form_val($val, $filter = false)
+function post_form_val($val, $filter = false): string
 {
     if ($filter) {
         return display_clean($_POST[$val]);
@@ -1157,7 +1132,11 @@ function lang($var, $params = [])
         $params = [$params];
     }
 
-    return vsprintf($lang, $params);
+    try {
+        return vsprintf($lang, $params);
+    } catch (ValueError) {
+        return $lang;
+    }
 }
 
 /**
@@ -1181,7 +1160,7 @@ function get_current_language()
 function smarty_lang($param)
 {
     if (getArrayValue($param, 'assign') == '') {
-        return lang($param['code']);
+        return lang($param['code'], $param['params'] ?? []);
     }
     assign($param['assign'], lang($param['code']));
 }
@@ -1228,11 +1207,10 @@ function getConstant($constantName = false)
  * Function used to assign link
  *
  * @param : { array } { $params } { an array of parameters }
- * @param bool $fullurl
- *
  * @return string|void
+ * @throws Exception
  */
-function cblink($params, $fullurl = false)
+function cblink($params)
 {
     $name = getArrayValue($params, 'name');
     if ($name == 'category' || $name == 'sort' || $name == 'time') {
@@ -1242,22 +1220,19 @@ function cblink($params, $fullurl = false)
             , $params['type']
         );
     }
+
+    $link = DirPath::getUrl('root');
+
     if ($name == 'tag') {
-        return '/search_result.php?query=' . urlencode($params['tag']) . '&type=' . $params['type'];
+        return $link . 'search_result.php?query=' . urlencode($params['tag']) . '&type=' . $params['type'];
     }
     if ($name == 'category_search') {
-        return '/search_result.php?category[]=' . $params['category'] . '&type=' . $params['type'];
+        return $link . 'search_result.php?category[]=' . $params['category'] . '&type=' . $params['type'];
     }
 
     $val = 1;
     if (defined('SEO') && SEO != 'yes') {
         $val = 0;
-    }
-
-    if ($fullurl) {
-        $link = Network::get_server_url();
-    } else {
-        $link = '/';
     }
 
     if (isset(ClipBucket::getInstance()->links[$name])) {
@@ -1400,9 +1375,8 @@ function ad($in): string
  */
 function get_functions($name)
 {
-    global $Cbucket;
-    if (isset($Cbucket->$name)) {
-        $funcs = $Cbucket->$name;
+    if (isset(ClipBucket::getInstance()->$name)) {
+        $funcs = ClipBucket::getInstance()->$name;
         if (is_array($funcs) && count($funcs) > 0) {
             return $funcs;
         }
@@ -1417,7 +1391,7 @@ function get_functions($name)
  * @uses { class : $Cbucket } { function : addJS }
  *
  */
-function add_js($files)
+function add_js($files): void
 {
     ClipBucket::getInstance()->addJS($files);
 }
@@ -1433,9 +1407,8 @@ function add_js($files)
  * @uses : { class : $Cbucket } { function : add_header }
  *
  */
-function add_header($files)
+function add_header($files): void
 {
-    global $Cbucket;
     ClipBucket::getInstance()->add_header($files);
 }
 
@@ -1445,9 +1418,8 @@ function add_header($files)
  * @uses : { class : $Cbucket } { function : add_admin_header }
  *
  */
-function add_admin_header($files)
+function add_admin_header($files): void
 {
-    global $Cbucket;
     ClipBucket::getInstance()->add_admin_header($files);
 }
 
@@ -1456,7 +1428,7 @@ function add_admin_header($files)
  * @param : { array } { $u } { array with details of user }
  * @throws Exception
  */
-function call_view_channel_functions($u)
+function call_view_channel_functions($u): void
 {
     $funcs = get_functions('view_channel_functions');
     if (is_array($funcs) && count($funcs) > 0) {
@@ -1474,7 +1446,7 @@ function call_view_channel_functions($u)
  * @param : { array } { $cdetails } { array with details of collection }
  * @throws Exception
  */
-function call_view_collection_functions($cdetails)
+function call_view_collection_functions($cdetails): void
 {
     $funcs = get_functions('view_collection_functions');
     if (is_array($funcs) && count($funcs) > 0) {
@@ -1497,7 +1469,7 @@ function call_view_collection_functions($cdetails)
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
-function increment_views($id, $type = null)
+function increment_views($id, $type = null): void
 {
     switch ($type) {
         case 'v':
@@ -1545,7 +1517,7 @@ function increment_views($id, $type = null)
  * @action : database updating
  * @internal param $ : { integer } { $id } { id of element to update views for } { $id } { id of element to update views for }
  */
-function increment_views_new($id, $type = null)
+function increment_views_new($id, $type = null): void
 {
     switch ($type) {
         case 'v':
@@ -1614,7 +1586,7 @@ function post($var)
  * @param : { array } { $array } { array of parameters }
  * @throws Exception
  */
-function show_share_form($array)
+function show_share_form($array): void
 {
     assign('params', $array);
 
@@ -1627,7 +1599,7 @@ function show_share_form($array)
  * Function used to show flag form
  * @param : { array } { $array } { array of parameters }
  */
-function show_flag_form($array)
+function show_flag_form($array): void
 {
     assign('params', $array);
     Template('blocks/common/report.html');
@@ -1636,11 +1608,10 @@ function show_flag_form($array)
 /**
  * Function used to show playlist form
  * @param : { array } { $array } { array of parameters }
+ * @throws Exception
  */
-function show_playlist_form($array)
+function show_playlist_form($array): void
 {
-    global $cbvid;
-
     assign('params', $array);
     assign('type', $array['type']);
     // decides to show all or user only playlists
@@ -1670,14 +1641,14 @@ function show_playlist_form($array)
  * @param null $format
  * @param null $timestamp
  *
- * @return false|string : { string } { time formatted into date }
+ * @return string : { string } { time formatted into date }
  * @internal param $ : { string } { $format } { current format of date } { $format } { current format of date }
  * @internal param $ : { string } { $timestamp } { time to be converted to date } { $timestamp } { time to be converted to date }
  */
-function cbdate($format = null, $timestamp = null)
+function cbdate($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = DATE_FORMAT;
+        $format = config('date_format');
     }
 
     if (is_string($timestamp)) {
@@ -1695,10 +1666,10 @@ function cbdate($format = null, $timestamp = null)
     return date($format, $timestamp);
 }
 
-function cbdatetime($format = null, $timestamp = null)
+function cbdatetime($format = null, $timestamp = null): string
 {
     if (!$format) {
-        $format = DATE_FORMAT . ' h:m:s';
+        $format = config('date_format') . ' h:m:s';
     }
 
     return cbdate($format, $timestamp);
@@ -1710,11 +1681,11 @@ function cbdatetime($format = null, $timestamp = null)
  * @param $total
  * @param $count
  *
- * @return float : { integer } { $total_pages }
+ * @return int
  * @internal param $ { integer } { $total } { total number of pages }
  * @internal param $ { integer } { $count } { number of pages to be displayed }
  */
-function count_pages($total, $count)
+function count_pages($total, $count): int
 {
     if (empty($total)){
         return 0;
@@ -1760,7 +1731,7 @@ function is_online($time, $margin = '5'): string
  * @internal param $ : { array } { $input } { array of form values } { $input } { array of form values }
  * @internal param $ : { array } { $array } { array of form fields } { $array } { array of form fields }
  */
-function validate_cb_form($input, $array)
+function validate_cb_form($input, $array): void
 {
     //Check the Collpase Category Checkboxes
     if (is_array($input)) {
@@ -1951,7 +1922,7 @@ function get_country($code)
     $result = Clipbucket_db::getInstance()->select(tbl('countries'), 'name_en,iso2', " iso2='$code' OR iso3='$code'");
     if (count($result) > 0) {
         $result = $result[0];
-        $flag = '<img src="/images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
+        $flag = '<img src="' . DirPath::getUrl('root') . 'images/icons/country/' . strtolower($result['iso2']) . '.png" alt="" border="0">&nbsp;';
         return $flag . $result['name_en'];
     }
     return false;
@@ -1963,7 +1934,7 @@ function get_country($code)
  *
  * @return bool|mixed
  * @throws Exception
- * @uses : { class : $userquery } { function : get_users }
+ * @uses : { class : userquery } { function : get_users }
  */
 function get_users($param)
 {
@@ -2003,7 +1974,6 @@ function call_functions($in, $params = null)
     }
 }
 
-
 /**
  * Sorting Links is used to return Sorting based link
  *
@@ -2012,9 +1982,10 @@ function call_functions($in, $params = null)
  * @param        $type
  *
  * @return string : { string } { sorting link }
- * @internal param $ : { string } { $data } { specifies data to change to url } { $data } { specifies data to change to url }
+ * @throws Exception
  * @internal param $ : { string } { $mode } { element to sort e.g time } { $mode } { element to sort e.g time }
  * @internal param $ : { string } { $type } { type of element to sort e.g channels } { $type } { type of element to sort e.g channels }
+ * @internal param $ : { string } { $data } { specifies data to change to url } { $data } { specifies data to change to url }
  */
 function sort_link($data, $mode, $type): string
 {
@@ -2104,9 +2075,8 @@ function sort_link($data, $mode, $type): string
     }
 
     //return url
-    return '/' . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
+    return Dirpath::getUrl('root') . $type . ((SEO != 'yes') ? '.php' : '') . $cat . $sort . $time . $page;
 }
-
 
 /**
  * Function used to load captcha field
@@ -2114,9 +2084,8 @@ function sort_link($data, $mode, $type): string
  */
 function get_captcha()
 {
-    global $Cbucket;
-    if (count($Cbucket->captchas) > 0) {
-        return $Cbucket->captchas[0];
+    if (count(ClipBucket::getInstance()->captchas) > 0) {
+        return ClipBucket::getInstance()->captchas[0];
     }
     return false;
 }
@@ -2204,9 +2173,9 @@ function subtitle($title)
  * Extract user's name using userid
  * @param $uid
  *
- * @return
- * @uses : { class : $userquery } { function : get_username }
- *
+ * @return mixed
+ * @throws Exception
+ * @uses : { class : userquery } { function : get_username }
  */
 function get_username($uid)
 {
@@ -2220,14 +2189,12 @@ function get_username($uid)
  * @param        $cid
  * @param string $field
  *
- * @return bool
+ * @return array|bool
  * @throws Exception
- * @uses : { class : $cbcollection } { function : get_collection_field }
  */
 function get_collection_field($cid, $field = 'collection_name')
 {
-    global $cbcollection;
-    return $cbcollection->get_collection_field($cid, $field);
+    return Collections::getInstance()->get_collection_field($cid, $field);
 }
 
 /**
@@ -2241,150 +2208,6 @@ function get_collection_field($cid, $field = 'collection_name')
 function foot_menu($params = null)
 {
     return Clipbucket::getInstance()->foot_menu($params);
-}
-
-/**
- * Converts given array XML into a PHP array
- *
- * @param : { array } { $array } { array to be converted into XML }
- * @param int $get_attributes
- * @param string $priority
- * @param bool $is_url
- *
- * @return array|bool : { string } { $xml } { array converted into XML }
- */
-function xml2array($url, $get_attributes = 1, $priority = 'tag', $is_url = true)
-{
-    $contents = "";
-
-    if ($is_url) {
-        $fp = @ fopen($url, 'rb');
-        if ($fp) {
-            while (!feof($fp)) {
-                $contents .= fread($fp, 8192);
-            }
-        } else {
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_USERAGENT,
-                'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.8.1.2) Gecko/20070219 Firefox/3.0.0.2');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-            curl_setopt($ch, CURLOPT_TIMEOUT_MS, 600);
-            $contents = curl_exec($ch);
-            curl_close($ch);
-        }
-        fclose($fp);
-
-        if (!$contents) {
-            return false;
-        }
-    } else {
-        $contents = $url;
-    }
-
-    if (!function_exists('xml_parser_create')) {
-        return false;
-    }
-    $parser = xml_parser_create('');
-    xml_parser_set_option($parser, XML_OPTION_TARGET_ENCODING, "UTF-8");
-    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, 0);
-    xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
-    xml_parse_into_struct($parser, trim($contents), $xml_values);
-    xml_parser_free($parser);
-    if (!$xml_values) {
-        return false;
-    }
-    $xml_array = [];
-
-    $current = &$xml_array;
-    $repeated_tag_index = [];
-    foreach ($xml_values as $data) {
-        unset ($attributes, $value);
-        extract($data);
-        $result = [];
-        $attributes_data = [];
-        if (isset ($value)) {
-            if ($priority == 'tag') {
-                $result = $value;
-            } else {
-                $result['value'] = $value;
-            }
-        }
-        if (isset ($attributes) and $get_attributes) {
-            foreach ($attributes as $attr => $val) {
-                if ($priority == 'tag') {
-                    $attributes_data[$attr] = $val;
-                } else {
-                    $result['attr'][$attr] = $val; //Set all the attributes in a array called 'attr'
-                }
-            }
-        }
-        if ($type == "open") {
-            $parent[$level - 1] = &$current;
-            if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
-                $current[$tag] = $result;
-                if ($attributes_data) {
-                    $current[$tag . '_attr'] = $attributes_data;
-                }
-                $repeated_tag_index[$tag . '_' . $level] = 1;
-                $current = &$current[$tag];
-            } else {
-                if (isset ($current[$tag][0])) {
-                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-                    $repeated_tag_index[$tag . '_' . $level]++;
-                } else {
-                    $current[$tag] = [
-                        $current[$tag],
-                        $result
-                    ];
-                    $repeated_tag_index[$tag . '_' . $level] = 2;
-                    if (isset ($current[$tag . '_attr'])) {
-                        $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                        unset ($current[$tag . '_attr']);
-                    }
-                }
-                $last_item_index = $repeated_tag_index[$tag . '_' . $level] - 1;
-                $current = &$current[$tag][$last_item_index];
-            }
-        } elseif ($type == "complete") {
-            if (!isset ($current[$tag])) {
-                $current[$tag] = $result;
-                $repeated_tag_index[$tag . '_' . $level] = 1;
-                if ($priority == 'tag' and $attributes_data) {
-                    $current[$tag . '_attr'] = $attributes_data;
-                }
-            } else {
-                if (isset ($current[$tag][0]) and is_array($current[$tag])) {
-                    $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-                    if ($priority == 'tag' and $get_attributes and $attributes_data) {
-                        $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-                    }
-                    $repeated_tag_index[$tag . '_' . $level]++;
-                } else {
-                    $current[$tag] = [
-                        $current[$tag],
-                        $result
-                    ];
-                    $repeated_tag_index[$tag . '_' . $level] = 1;
-                    if ($priority == 'tag' and $get_attributes) {
-                        if (isset ($current[$tag . '_attr'])) {
-                            $current[$tag]['0_attr'] = $current[$tag . '_attr'];
-                            unset ($current[$tag . '_attr']);
-                        }
-                        if ($attributes_data) {
-                            $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
-                        }
-                    }
-                    $repeated_tag_index[$tag . '_' . $level]++; //0 and 1 index is already taken
-                }
-            }
-        } elseif ($type == 'close') {
-            $current = &$parent[$level - 1];
-        }
-    }
-    return ($xml_array);
 }
 
 /**
@@ -2465,7 +2288,7 @@ function array2xml($array, $level = 1)
  * @return bool : { false }
  * @throws Exception
  */
-function include_header($params)
+function include_header($params): bool
 {
     $file = getArrayValue($params, 'file');
     $type = getArrayValue($params, 'type');
@@ -2491,7 +2314,7 @@ function include_header($params)
  *
  * @return bool : { boolean } { true or false depending on situation }
  */
-function is_includeable($array)
+function is_includeable($array): bool
 {
     if (!is_array($array)) {
         $array = [$array];
@@ -2601,44 +2424,10 @@ function include_css($params)
     return false;
 }
 
-function get_ffmpeg_codecs($type)
-{
-    switch ($type) {
-        case 'audio':
-            $codecs = [
-                'aac',
-                'aac_latm',
-                'libfaac',
-                'libvo_aacenc',
-                'libxvid',
-                'libmp3lame'
-            ];
-            break;
-
-        case 'video':
-        default:
-            $codecs = [
-                'libx264',
-                'libtheora'
-            ];
-            break;
-    }
-
-    $codec_installed = [];
-    foreach ($codecs as $codec) {
-        $get_codec = System::shell_output(System::get_binaries('ffmpeg') . ' -codecs 2>/dev/null | grep "' . $codec . '"');
-        if ($get_codec) {
-            $codec_installed[] = $codec;
-        }
-    }
-
-    return $codec_installed;
-}
-
 /**
  * Calls ClipBucket footer into the battlefield
  */
-function footer()
+function footer(): void
 {
     $funcs = get_functions('clipbucket_footer');
     if (is_array($funcs) && count($funcs) > 0) {
@@ -2695,7 +2484,7 @@ function rss_feeds($params)
  * @throws Exception
  * @uses { class : $cblog } { function : insert }
  */
-function insert_log($type, $details)
+function insert_log($type, $details): void
 {
     global $cblog;
     $cblog->insert($type, $details);
@@ -2722,6 +2511,7 @@ function get_db_size(): int
  * @param : { array } { $comment } { array with all details of comment }
  *
  * @return bool : { boolean } { true if marked as spam, else false }
+ * @throws Exception
  */
 function marked_spammed($comment): bool
 {
@@ -2750,18 +2540,17 @@ function check_install($type)
         return true;
     }
 
-    global $Cbucket;
     switch ($type) {
         case 'before':
             if (!file_exists('includes/config.php') && file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                header('Location: ' . Network::get_server_url() . 'cb_install');
+                header('Location: ' . DirPath::getUrl('root') . 'cb_install');
                 die();
             }
             break;
 
         case 'after':
             if (file_exists('files/temp/install.me') && !file_exists('files/temp/install.me.not')) {
-                $Cbucket->configs['closed'] = 1;
+                ClipBucket::getInstance()->configs['closed'] = 1;
             }
             break;
     }
@@ -2776,7 +2565,7 @@ function check_install($type)
  * if (!$isUTF8) --> we need to apply utf8_encode() to be in UTF8
  * else --> we are in UTF8 :)
  * </code>
- * @param mixed A string, or an array from a file() function.
+ * @param $string
  * @return boolean
  */
 function isUTF8($string): bool
@@ -2789,27 +2578,6 @@ function isUTF8($string): bool
 }
 
 /**
- * Generate embed code of provided video
- *
- * @param : { array } { $vdetails } { all details of video }
- *
- * @return string : { string } { $code } { embed code for video }
- */
-function embeded_code($vdetails): string
-{
-    $code = '<object width="' . EMBED_VDO_WIDTH . '" height="' . EMBED_VDO_HEIGHT . '">';
-    $code .= '<param name="allowFullScreen" value="true">';
-    $code .= '</param><param name="allowscriptaccess" value="always"></param>';
-    //Replacing Height And Width
-    $h_w_p = ["{Width}", "{Height}"];
-    $h_w_r = [EMBED_VDO_WIDTH, EMBED_VDO_HEIGHT];
-    $embed_code = str_replace($h_w_p, $h_w_r, $vdetails['embed_code']);
-    $code .= unhtmlentities($embed_code);
-    $code .= '</object>';
-    return $code;
-}
-
-/**
  * function used to convert input to proper date created format
  *
  * @param : { string } { date in string }
@@ -2819,7 +2587,7 @@ function embeded_code($vdetails): string
 function datecreated($in): string
 {
     if (!empty($in)) {
-        $datecreated = DateTime::createFromFormat(DATE_FORMAT, $in);
+        $datecreated = DateTime::createFromFormat(config('date_format'), $in);
         if ($datecreated) {
             return $datecreated->format('Y-m-d');
         }
@@ -2839,7 +2607,7 @@ function datecreated($in): string
  * @throws Exception
  * @action : database updation
  */
-function updateObjectStats($type, $object, $id, $op = '+')
+function updateObjectStats($type, $object, $id, $op = '+'): void
 {
     switch ($type) {
         case "favorite":
@@ -2903,7 +2671,7 @@ function conv_lock_exists(): bool
  *
  * @return string
  */
-function queryString($var = false, $remove = false)
+function queryString($var = false, $remove = false): string
 {
     $queryString = $_SERVER['QUERY_STRING'];
     if ($var) {
@@ -2945,14 +2713,14 @@ function isCurlInstalled(): bool
 /**
  * Load configuration related files for uploader (video, photo)
  */
-function uploaderDetails()
+function uploaderDetails(): void
 {
     $uploaderDetails = [
-        'uploadScriptPath' => '/actions/file_uploader.php',
+        'uploadScriptPath' => DirPath::getUrl('actions') . 'file_uploader.php',
     ];
 
     $photoUploaderDetails = [
-        'uploadScriptPath' => '/actions/photo_uploader.php',
+        'uploadScriptPath' => DirPath::getUrl('actions') . 'photo_uploader.php',
     ];
 
     assign('uploaderDetails', $uploaderDetails);
@@ -2984,7 +2752,7 @@ function isSectionEnabled($input)
  * @throws Exception
  * @action : database updation
  */
-function update_last_commented($type, $id)
+function update_last_commented($type, $id): void
 {
     if ($type && $id) {
         switch ($type) {
@@ -3029,10 +2797,10 @@ function update_last_commented($type, $id)
  *
  * @param : { array } { $array } { array with all details of feed e.g userid, action etc }
  * @action : inserts feed into database
+ * @throws Exception
  */
 function addFeed($array)
 {
-    global $cbfeeds;
     $action = $array['action'];
     if ($array['uid']) {
         $userid = $array['uid'];
@@ -3072,7 +2840,7 @@ function addFeed($array)
     $feed['uid'] = $userid;
     $feed['object_id'] = $array['object_id'];
     $feed['action'] = $action;
-    $cbfeeds->addFeed($feed);
+    cbfeeds::getInstance()->addFeed($feed);
 }
 
 /**
@@ -3082,7 +2850,7 @@ function addFeed($array)
  *
  * @return string :    { string } { basename($pluginFile) } { directory path of plugin }
  */
-function this_plugin($pluginFile = null)
+function this_plugin($pluginFile = null): string
 {
     if (!$pluginFile) {
         global $pluginFile;
@@ -3096,7 +2864,7 @@ function this_plugin($pluginFile = null)
  * @param : { string } { $in } { false by default, HTTP_USER_AGENT }
  * @param bool $assign
  *
- * @return array : { array } { $array } { array with all details of user }
+ * @return array|void : { array } { $array } { array with all details of user }
  */
 function get_browser_details($in = null, $assign = false)
 {
@@ -3196,7 +2964,7 @@ function get_browser_details($in = null, $assign = false)
 /**
  * @throws Exception
  */
-function update_user_voted($array, $userid = null)
+function update_user_voted($array, $userid = null): void
 {
     userquery::getInstance()->update_user_voted($array, $userid);
 }
@@ -3206,10 +2974,9 @@ function update_user_voted($array, $userid = null)
  * @param : { array } { $vdetails } { video details of video to be deleted }
  * @action : { calls function from video class }
  */
-function delete_video_from_collection($vdetails)
+function delete_video_from_collection($vdetails): void
 {
-    global $cbvid;
-    $cbvid->collection->deleteItemFromCollections($vdetails['videoid']);
+    CBvideo::getInstance()->collection->deleteItemFromCollections($vdetails['videoid']);
 }
 
 /**
@@ -3276,7 +3043,7 @@ function in_dev(): bool
  * @param array $data
  * @param bool $die
  */
-function dump($data = [], $die = false)
+function dump($data = [], $die = false): void
 {
     echo '<pre>';
     var_dump($data);
@@ -3309,7 +3076,7 @@ function debug_backtrace_string(): string
  *
  * @param { Object } { $e } { complete current object }
  */
-function show_cb_error($e)
+function show_cb_error($e): void
 {
     echo $e->getMessage();
     echo '<br>';
@@ -3575,24 +3342,24 @@ function array_val_assign($vals)
     }
 }
 
-function get_website_logo_path($full_url = false): string
+function get_website_logo_path(): string
 {
     $logo_name = config('logo_name');
     if ($logo_name && $logo_name != '') {
         $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
-        return DirPath::getUrl('logos', $full_url) . $logo_name . $version;
+        return DirPath::getUrl('logos') . $logo_name . $version;
     }
-    return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
+    return DirPath::getUrl('styles') . ClipBucket::getInstance()->template . '/theme' . '/images/logo.png';
 }
 
-function get_website_favicon_path($full_url = false): string
+function get_website_favicon_path(): string
 {
     $favicon_name = config('favicon_name');
     if ($favicon_name && $favicon_name != '') {
         $version = config('logo_update_timestamp') ? '?v=' . config('logo_update_timestamp') : '';
-        return DirPath::getUrl('logos', $full_url) . $favicon_name . $version;
+        return DirPath::getUrl('logos') . $favicon_name . $version;
     }
-    return DirPath::getUrl('styles', $full_url) . ClipBucket::getInstance()->template . '/theme' . '/images/favicon.png';
+    return DirPath::getUrl('styles') . ClipBucket::getInstance()->template . '/theme/images/favicon.png';
 }
 
 /**
@@ -3852,6 +3619,24 @@ function ageRestriction($var) {
         return false;
     }
     return $var;
+}
+
+function validatePHPDateFormat($format): bool
+{
+    // https://www.php.net/manual/en/datetime.format.php
+    $validTokens = [
+        'd', 'D', 'j', 'l', 'N', 'S', 'w', 'z', 'W', 'F', 'm', 'M', 'n', 't', 'L', 'o', 'Y', 'y',
+        'c', 'U', 'u', 'H', 'h', 'i', 's', 'v', 'V', 'e', 'I', 'O', 'P', 'T', 'Z', 'B', 'g', 'G'
+    ];
+
+    preg_match_all('/([a-zA-Z]+|[^a-zA-Z]+)/', $format, $matches);
+
+    foreach ($matches[0] as $token) {
+        if (!in_array($token, $validTokens) && !preg_match('/^[\s\-\.\:\/]+$/', $token)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 include('functions_db.php');

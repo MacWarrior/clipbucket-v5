@@ -1,16 +1,14 @@
 <?php
 define('THIS_PAGE', 'download');
 define('PARENT_PAGE', 'videos');
-
 require 'includes/config.inc.php';
-global $pages, $cbvid;
 
 User::getInstance()->hasPermissionOrRedirect('download_video');
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 //Getting Video Key
 $vkey = @$_GET['v'];
-$vdo = $cbvid->get_video($vkey);
+$vdo = CBvideo::getInstance()->get_video($vkey);
 
 if ($vdo && video_playable($vkey)) {
     //Calling Functions When Video Is going to download

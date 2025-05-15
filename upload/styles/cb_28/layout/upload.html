@@ -26,7 +26,7 @@
 				<div class="cb-item-desc-container clearfix flat-tabs" id="mainUploadContainer">
 					<div class="video-info-container">
 						<ul class="nav nav-tabs uploaderTabs">
-							{assign var=opt_list value=$Upload->get_upload_options()}
+							{assign var=opt_list value=Upload::getInstance()->get_upload_options()}
 							{$counter = 1}
 							{foreach from=$opt_list item=opt key=divid}
 								{$class = ""}

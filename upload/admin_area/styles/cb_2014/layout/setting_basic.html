@@ -308,6 +308,7 @@
                                 <li><a data-toggle="tab" href="interfaces_video">{lang('video')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_photo">{lang('photo')|ucfirst}</a></li>
                                 <li><a data-toggle="tab" href="interfaces_collection">{lang('collection')|ucfirst}</a></li>
+                                <li><a data-toggle="tab" href="interfaces_channels">{lang('channels')|ucfirst}</a></li>
                             </ul>
                         </div>
                         <div class="col-md-10 tab-content">
@@ -780,6 +781,22 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab-pane interfaces" id="interfaces_channels">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <label class="nowrap" for="enable_channels_slogan_display" title="{lang('option_enable_channels_slogan_display')}">{lang('option_enable_channels_slogan_display')}</label>
+                                            </div>
+                                            <div class="col-md-2 row-size">
+                                                <input value="yes" name="enable_channels_slogan_display" id="enable_channels_slogan_display" {if $row.enable_channels_slogan_display=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                                <span class="lbl"></span>
+                                            </div>
+                                        </div>
+                                        <hr/>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -801,7 +818,7 @@
                                 </div>
                                 <div class="col-md-8">
                                     <select class="form-control" name="default_country_iso2" id="default_country_iso2">
-                                        {foreach from=$Cbucket->get_countries(iso2) item=country key=code}
+                                        {foreach from=ClipBucket::getInstance()->get_countries(iso2) item=country key=code}
                                             <option {if $code==$row.default_country_iso2}selected{/if} value="{$code}">
                                                 {$country}
                                             </option>
@@ -873,6 +890,16 @@
                                 </div>
                                 <div class="col-md-2 row-size">
                                     <input value="yes" name="enable_storage_history_fo" id="enable_storage_history_fo" {if $row.enable_storage_history_fo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_user_self_deletion" title="{lang code="option_enable_user_self_deletion"}">{lang code="option_enable_user_self_deletion"}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="enable_user_self_deletion" id="enable_user_self_deletion" {if $row.enable_user_self_deletion=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
                             </div>
@@ -999,6 +1026,26 @@
                         </div>
 
                         <div class="col-md-4">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_channel_slogan" title="{lang code='option_enable_channel_slogan'}">{lang code='option_enable_channel_slogan'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="enable_channel_slogan" id="enable_channel_slogan" {if $row.enable_channel_slogan=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="enable_channel_description" title="{lang code='option_enable_channel_description'}">{lang code='option_enable_channel_description'}</label>
+                                </div>
+                                <div class="col-md-4 row-size">
+                                    <input value="yes" name="enable_channel_description" id="enable_channel_description" {if $row.enable_channel_description=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
+                                    <span class="lbl"></span>
+                                </div>
+                            </div>
+                            <hr/>
                             <div class="row">
                                 <div class="col-md-8">
                                     <label class="nowrap" for="enable_country" title="{lang code='option_enable_country'}">{lang code='option_enable_country'}</label>
@@ -2382,7 +2429,7 @@
                                 <div class="col-md-2 row-size">
                                     <select class="form-control" name="player_default_resolution" id="player_default_resolution">
 
-                                        {foreach from=$myquery->getVideoResolutions() item=ratio}
+                                        {foreach from=myquery::getInstance()->getVideoResolutions() item=ratio}
                                             {foreach from=$ratio item=resolution}
                                                 <option {if $resolution.height==$row.player_default_resolution}selected{/if} value="{$resolution.height}">
                                                     {$resolution.title}
@@ -2442,7 +2489,7 @@
                                         <option {if $row.player_default_resolution_hls=="auto"}selected{/if} value="auto">
                                             {lang code='video_resolution_auto'}
                                         </option>
-                                        {foreach from=$myquery->getVideoResolutions() item=ratio}
+                                        {foreach from=myquery::getInstance()->getVideoResolutions() item=ratio}
                                             {foreach from=$ratio item=resolution}
                                                 <option {if $resolution.height==$row.player_default_resolution_hls}selected{/if} value="{$resolution.height}">
                                                     {$resolution.title}

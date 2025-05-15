@@ -2,13 +2,11 @@
 define('THIS_PAGE', 'manage_items');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $pages, $cbcollection, $cbphoto, $eh, $cbvideo;
-
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $id = mysql_clean($_GET['collection']);
-$c = $cbcollection->get_collection($id);
+$c = Collections::getInstance()->get_collection($id);
 
 /* Generating breadcrumb */
 global $breadcrumb;
@@ -36,10 +34,10 @@ switch ($type) {
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                $cbphoto->collection->remove_item($_POST['check_obj'][$i], $id);
-                $cbphoto->make_photo_orphan($id, $_POST['check_obj'][$i]);
+                CBPhotos::getInstance()->collection->remove_item($_POST['check_obj'][$i], $id);
+                CBPhotos::getInstance()->make_photo_orphan($id, $_POST['check_obj'][$i]);
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e($total . ' photos have been removed.', 'm');
         }
 
@@ -47,14 +45,14 @@ switch ($type) {
             $total = count($_POST['check_obj']);
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
-                $cbphoto->collection->change_collection($new, $_POST['check_obj'][$i], $id);
+                CBPhotos::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $id);
                 Clipbucket_db::getInstance()->update(tbl('photos'), ['collection_id'], [$new], ' collection_id = ' . $id . ' AND photo_id = ' . $_POST['check_obj'][$i]);
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e($total . ' photo(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
         }
 
-        $items = $cbphoto->collection->get_collection_items_with_details($id);
+        $items = CBPhotos::getInstance()->collection->get_collection_items_with_details($id);
         break;
 
     default:
@@ -62,7 +60,7 @@ switch ($type) {
         if (isset($_POST['remove_selected']) && is_array($_POST['check_obj'])) {
             $total = count($_POST['check_obj']);
             for ($i = 0; $i < $total; $i++) {
-                $cbvideo->collection->remove_item($_POST['check_obj'][$i], $id);
+                CBvideo::getInstance()->collection->remove_item($_POST['check_obj'][$i], $id);
             }
         }
 
@@ -70,13 +68,13 @@ switch ($type) {
             $total = count($_POST['check_obj']);
             $new = mysql_clean($_POST['collection_id']);
             for ($i = 0; $i < $total; $i++) {
-                $cbvideo->collection->change_collection($new, $_POST['check_obj'][$i], $id);
+                CBvideo::getInstance()->collection->change_collection($new, $_POST['check_obj'][$i], $id);
             }
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e($total . ' video(s) have been moved to \'<strong>' . display_clean(get_collection_field($new, 'collection_name')) . '</strong>\'', 'm', false);
         }
 
-        $items = $cbvideo->collection->get_collection_items_with_details($id);
+        $items = CBvideo::getInstance()->collection->get_collection_items_with_details($id);
         break;
 }
 
@@ -109,7 +107,7 @@ if (!empty($items)) {
     assign('objects', $items);
 }
 
-$collections = $cbcollection->get_collections_list(0, null, null, $type, user_id());
+$collections = Collections::getInstance()->get_collections_list(0, null, null, $type, user_id());
 assign('collections', $collections);
 
 assign('obj', $items);

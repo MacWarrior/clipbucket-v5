@@ -3,9 +3,9 @@
 error_reporting(E_ALL);
 require_once('../../../../includes/admin_config.php');
 
-$todayVideos['uploads'] = $cbvid->get_videos(["count_only" => true, "date_span" => "today"], true);
-$todayVideos['processing'] = $cbvid->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "today"], true);
-$todayVideos['active'] = $cbvid->get_videos(["count_only" => true, "active" => "yes", "date_span" => "today"], true);
+$todayVideos['uploads'] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "today"], true);
+$todayVideos['processing'] = CBvideo::getInstance()->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "today"], true);
+$todayVideos['active'] = CBvideo::getInstance()->get_videos(["count_only" => true, "active" => "yes", "date_span" => "today"], true);
 
 $videoTodayStats = [
     "label" => "User Today Stats",
@@ -17,9 +17,9 @@ $videoTodayStats = [
 ];
 
 
-$weekVideos['uploads'] = $cbvid->get_videos(["count_only" => true, "date_span" => "this_week"], true);
-$weekVideos['processing'] = $cbvid->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "this_week"], true);
-$weekVideos['active'] = $cbvid->get_videos(["count_only" => true, "active" => "yes", "date_span" => "this_week"], true);
+$weekVideos['uploads'] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "this_week"], true);
+$weekVideos['processing'] = CBvideo::getInstance()->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "this_week"], true);
+$weekVideos['active'] = CBvideo::getInstance()->get_videos(["count_only" => true, "active" => "yes", "date_span" => "this_week"], true);
 
 $videoWeekStats = [
     "label" => "User month Stats",
@@ -31,9 +31,9 @@ $videoWeekStats = [
 ];
 
 
-$monthVideos['uploads'] = $cbvid->get_videos(["count_only" => true, "date_span" => "this_month"], true);
-$monthVideos['processing'] = $cbvid->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "this_month"], true);
-$monthVideos['active'] = $cbvid->get_videos(["count_only" => true, "active" => "yes", "date_span" => "this_month"], true);
+$monthVideos['uploads'] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "this_month"], true);
+$monthVideos['processing'] = CBvideo::getInstance()->get_videos(["count_only" => true, "status" => "Processing", "date_span" => "this_month"], true);
+$monthVideos['active'] = CBvideo::getInstance()->get_videos(["count_only" => true, "active" => "yes", "date_span" => "this_month"], true);
 
 $videoMonthStats = [
     "label" => "User month Stats",

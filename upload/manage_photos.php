@@ -50,10 +50,10 @@ switch ($mode) {
         }
 
         $params = [
-            'limit' => $get_limit,
-            'search'=> $_GET['query'],
-            'order'=> 'photos.date_added DESC',
-            'userid'=>user_id()
+            'limit'  => $get_limit,
+            'search' => $_GET['query'],
+            'order'  => 'photos.date_added DESC',
+            'userid' => user_id()
         ];
         $photos = Photo::getInstance()->getAll($params);
         assign('photos', $photos);

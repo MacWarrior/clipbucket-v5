@@ -1,5 +1,4 @@
 <?php
-global $myquery;
 $pass = pass_code(post('password'), 1);
 
 Clipbucket_db::getInstance()->update(
@@ -24,7 +23,7 @@ if (in_dev()) {
         }
     }
     //launch tool clean
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE, true)) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
         $tool = AdminTool::getToolByCode('clean_orphan_files');
     }
     if (!empty($tool)) {
@@ -46,8 +45,10 @@ if (file_exists(DirPath::get('temp') . 'install.me') && !file_exists(DirPath::ge
 <div id="sub_container">
     <div style="margin-top:40px;text-align:center;">
         <?php
-        button_danger(lang('continue_admin_area'), ' onclick="window.location=\'/admin_area\'" ');
-        button(lang('continue_to') . ' ' . display_clean(config('site_title')), ' onclick="window.location=\'/\'" ');
+        $baseurl = DirPath::getUrl('root');
+        $admin_area = DirPath::getUrl('admin_area');
+        button_danger(lang('continue_admin_area'), ' onclick="window.location=\'' . $admin_area . '\'" ');
+        button(lang('continue_to') . ' ' . display_clean(config('site_title')), ' onclick="window.location=\'' . $baseurl . '\'" ');
         ?>
     </div>
 </div>

@@ -7,7 +7,7 @@ if (!User::getInstance()->hasAdminAccess()) {
 }
 SSE::processSSE(function () {
     Update::getInstance()->flush();
-    if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE, true)) {
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
         $column = 'code';
         $core = 'update_core';
         $db = AdminTool::CODE_UPDATE_DATABASE_VERSION;

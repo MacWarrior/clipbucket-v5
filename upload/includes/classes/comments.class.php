@@ -160,12 +160,17 @@ class Comments
         $param_type = $params['type'] ?? false;
         $param_type_id = $params['type_id'] ?? false;
         $param_comment_id = $params['comment_id'] ?? false;
+        $param_userid = $params['userid'] ?? false;
 
         if(!empty($param_type_id) && !is_numeric($param_type_id)){
             return false;
         }
 
         if(!empty($param_comment_id) && !is_numeric($param_comment_id)){
+            return false;
+        }
+
+        if(!empty($param_userid) && !is_numeric($param_userid)){
             return false;
         }
 
@@ -181,7 +186,8 @@ class Comments
         $params['first_only'] = true;
         $comment = self::getAll($params);
 
-        if( !User::getInstance()->hasPermission('admin_del_access')
+        if( !empty($comment)
+            && !User::getInstance()->hasPermission('admin_del_access')
             && $comment['userid'] != $user_id
             && $comment['type_owner_id'] != $user_id
         ){
@@ -194,10 +200,13 @@ class Comments
             $conditions[] = 'type = \'' . mysql_clean($param_type) . '\'';
         }
         if( $param_type_id ){
-            $conditions[] = 'type_id = ' . mysql_clean($param_type_id);
+            $conditions[] = 'type_id = ' . (int)$param_type_id;
         }
         if( $param_comment_id ){
-            $conditions[] = '(comment_id = '.mysql_clean($param_comment_id) . ' OR ' . ' parent_id = ' . mysql_clean($param_comment_id) . ')';
+            $conditions[] = '(comment_id = '.(int)$param_comment_id . ' OR ' . ' parent_id = ' . (int)$param_comment_id . ')';
+        }
+        if( $param_userid ){
+            $conditions[] = 'userid = '.(int)$param_userid;
         }
 
         $where = '';
@@ -221,7 +230,7 @@ class Comments
     /**
      * @throws Exception
      */
-    public static function updateCommentsCount($type, $type_id)
+    public static function updateCommentsCount($type, $type_id): void
     {
         $params = [];
         $params['type'] = $type;
@@ -565,6 +574,36 @@ class Comments
         ];
 
         return CMS::getInstance($comment, $params)->getClean();
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function initVisualComments(): void
+    {
+        if( config('enable_visual_editor_comments') != 'yes' ) {
+            return;
+        }
+
+        $min_suffixe = in_dev() ? '' : '.min';
+        ClipBucket::getInstance()->addJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
+        ClipBucket::getInstance()->addCSS(['toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
+
+        if( User::getInstance()->getActiveTheme() == 'dark' ){
+            ClipBucket::getInstance()->addCSS([
+                'toastui/toastui-editor-dark' . $min_suffixe . '.css' => 'libs'
+            ]);
+        }
+
+        $fileUrl = DirPath::getUrl('libs') . 'toastui/toastui-editor-dark' . $min_suffixe . '.css';
+        assign('toastui_editor_theme_dark', $fileUrl);
+
+        $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'i18n' . DIRECTORY_SEPARATOR . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js';
+        if( file_exists($filepath) ){
+            ClipBucket::getInstance()->addJS([
+                'toastui/i18n/' . strtolower(Language::getInstance()->getLang()) . $min_suffixe . '.js' => 'libs'
+            ]);
+        }
     }
 
 }

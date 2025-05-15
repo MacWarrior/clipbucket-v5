@@ -2,20 +2,24 @@
 
 class errorhandler
 {
-    public $error_list = [];
-    public $message_list = [];
-    public $warning_list = [];
-
-    public static function getInstance(){
-        global $eh;
-        return $eh;
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
     }
+
+    public array $error_list = [];
+    public array $message_list = [];
+    public array $warning_list = [];
 
     /**
      * @param null $message
      * @param bool $secure
      */
-    private function add_error($message = null, $secure = true)
+    private function add_error($message = null, $secure = true): void
     {
         $this->error_list[] = ['val' => $message, 'secure' => $secure];
     }
@@ -28,7 +32,7 @@ class errorhandler
         return $this->error_list;
     }
 
-    public function flush_error()
+    public function flush_error(): void
     {
         $this->error_list = [];
     }
@@ -37,7 +41,7 @@ class errorhandler
      * @param null $message
      * @param bool $secure
      */
-    private function add_warning($message = null, $secure = true)
+    private function add_warning($message = null, $secure = true): void
     {
         $this->warning_list[] = ['val' => $message, 'secure' => $secure];
     }
@@ -47,7 +51,7 @@ class errorhandler
         return $this->warning_list;
     }
 
-    public function flush_warning()
+    public function flush_warning(): void
     {
         $this->warning_list = [];
     }
@@ -58,7 +62,7 @@ class errorhandler
      * @param null $message
      * @param bool $secure
      */
-    public function add_message($message = null, $secure = true)
+    public function add_message($message = null, $secure = true): void
     {
         $this->message_list[] = ['val' => $message, 'secure' => $secure];
     }
@@ -68,12 +72,12 @@ class errorhandler
         return $this->message_list;
     }
 
-    public function flush_msg()
+    public function flush_msg(): void
     {
         $this->message_list = [];
     }
 
-    public function flush()
+    public function flush(): void
     {
         $this->flush_msg();
         $this->flush_error();
@@ -89,7 +93,7 @@ class errorhandler
      *
      * @return array : { array } { $this->error_list } { an array of all currently logged errors }
      */
-    function e($message = null, $type = 'e', $secure = true)
+    function e($message = null, $type = 'e', $secure = true): array
     {
         switch ($type) {
             case 'm':

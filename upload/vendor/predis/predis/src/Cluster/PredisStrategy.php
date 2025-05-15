@@ -3,7 +3,8 @@
 /*
  * This file is part of the Predis package.
  *
- * (c) Daniele Alessandri <suppakilla@gmail.com>
+ * (c) 2009-2020 Daniele Alessandri
+ * (c) 2021-2024 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,17 +17,15 @@ use Predis\Cluster\Distributor\HashRing;
 
 /**
  * Default cluster strategy used by Predis to handle client-side sharding.
- *
- * @author Daniele Alessandri <suppakilla@gmail.com>
  */
 class PredisStrategy extends ClusterStrategy
 {
     protected $distributor;
 
     /**
-     * @param DistributorInterface $distributor Optional distributor instance.
+     * @param DistributorInterface|null $distributor Optional distributor instance.
      */
-    public function __construct(DistributorInterface $distributor = null)
+    public function __construct(?DistributorInterface $distributor = null)
     {
         parent::__construct();
 
@@ -40,9 +39,8 @@ class PredisStrategy extends ClusterStrategy
     {
         $key = $this->extractKeyTag($key);
         $hash = $this->distributor->hash($key);
-        $slot = $this->distributor->getSlot($hash);
 
-        return $slot;
+        return $this->distributor->getSlot($hash);
     }
 
     /**

@@ -41,10 +41,9 @@
 			
 			<div class="form-group clearfix">
 				<div class="avatar_comment_as">
-					<img alt="avatar" src="{$userquery->getUserThumb(false,'m',user_id())}" class="img-circle no_select"/>
+					<img alt="avatar" src="{userquery::getInstance()->getUserThumb(false,'m',user_id())}" class="img-circle no_select"/>
 				</div>
 				<div class="comment_txt_area">
-
 					{if config('enable_visual_editor_comments') == 'yes'}
 					<div id="comment_box_visual_editor"></div>
 					<input type="hidden" name="comment" id="comment_box"/>
@@ -67,9 +66,9 @@
 </div>
 
 <script type="text/javascript">
-	let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
-	let visual_editor_comments_placeholder = "{lang code='type_comment_box'}";
-	let template_dir = "{$theme}";
-	let default_theme = "{config('default_theme')}";
-	let current_language = '{$lang_obj->getLang()}';
+	window.visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
+	window.visual_editor_comments_placeholder = "{lang code='type_comment_box'}";
+	window.default_theme = "{User::getInstance()->getActiveTheme()}";
+	window.current_language = "{$lang_obj->getLang()}";
+	window.toastui_editor_theme_dark_url = "{$toastui_editor_theme_dark}";
 </script>

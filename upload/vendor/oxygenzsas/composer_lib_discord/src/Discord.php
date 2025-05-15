@@ -265,7 +265,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
         $this->sendCurl($hookObject_original, false, $uncut_hookObject);
     }
 
-    public function log($level, $message, array $context = [])
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
         if(!is_string($message)){
             $message = (String) $message;
@@ -343,7 +343,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
             }
             $hookObject = json_encode($obj, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_THROW_ON_ERROR );
         }
-        
+
         $hookObject = array (
             'payload_json' => $hookObject
         );
@@ -413,7 +413,7 @@ class Discord extends \Psr\Log\AbstractLogger implements MiddlewareInterface
         if(!empty($complement)){
             $footer["text"] .= PHP_EOL.$complement;
         }
-
+        
         return [
             "title" => preg_replace('/[^[:print:]\r\nÀ-ÿ]/', '', $title ?? null) ?? null,
 

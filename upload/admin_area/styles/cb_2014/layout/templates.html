@@ -1,6 +1,6 @@
 <h2>Selected Template</h2>
 
-{assign var="selected" value=$Cbucket->configs.template_dir}
+{assign var="selected" value=ClipBucket::getInstance()->configs.template_dir}
 {assign var="curtpl" value=$cbtpl->get_template_details($selected)}
 
 <div class="selectedTemplate">
@@ -35,23 +35,23 @@
         <div>
             <div class="row">
                 {foreach from=$templates item=template}
-                {if $selected != $template.dir}
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-md-10 col-md-offset-1">
-                            <div class="alignCenter well">
-                                <img src="{$cbtpl->get_preview_thumb($curtpl.dir)}" class="img-thumbnail">
-                                <h3>{$template.name}</h3>
-                                <em>
-                                    {$template.name} <br /><em>by <strong>{$template.author}</strong></em>
-                                </em>
-                                <p>Website : <a href="{$template.website.link}">{$template.website.title}</a></p>
-                                <a href="templates.php?change={$template.dir}">Activate This Template</a>
+                    {if $selected != $template.dir}
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="col-md-10 col-md-offset-1">
+                                <div class="alignCenter well">
+                                    <img src="{$cbtpl->get_preview_thumb($curtpl.dir)}" class="img-thumbnail">
+                                    <h3>{$template.name}</h3>
+                                    <em>
+                                        {$template.name} <br /><em>by <strong>{$template.author}</strong></em>
+                                    </em>
+                                    <p>Website : <a href="{$template.website.link}">{$template.website.title}</a></p>
+                                    <a href="{DirPath::getUrl('admin_area')}templates.php?change={$template.dir}">Activate This Template</a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                {/if}
+                    {/if}
                 {/foreach}
             </div>
         </div>

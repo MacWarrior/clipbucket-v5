@@ -1416,7 +1416,6 @@ return /******/ (function() { // webpackBootstrap
   return purify;
 
 }));
-//# sourceMappingURL=purify.js.map
 
 
 /***/ }),

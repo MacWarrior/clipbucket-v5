@@ -31,7 +31,7 @@
                 <div class="tab-pane fade in active clearfix" id="file-upload">
                     <div class="form_header">
                         <div class="instructions alert alert-block alert-info">
-                            {lang(upload_right_guide_photo,$cbpage->get_page_link(3))}
+                            {lang(upload_right_guide_photo,cbpage::getInstance()->get_page_link(3))}
                         </div>
                         <div class="clearfix" id="uploaderContainer">
                             {if $selected_collection}
@@ -74,7 +74,7 @@
                                 <span class="upload-logo"></span>
                                 <strong class="block-title">{lang code="drag_drop"}</strong>
                                 <p>
-                                    {lang(page_upload_photo_limits,$Cbucket->configs['max_photo_size'])}
+                                    {lang(page_upload_photo_limits,ClipBucket::getInstance()->configs['max_photo_size'])}
                                 </p>
                             </div>
                             <div class="selectButtonContainer">
@@ -120,7 +120,7 @@
 {/if}
 
 <script type="text/javascript">
-    var photo_extensions = '{","|implode:$cbphoto->exts}';
+    var photo_extensions = '{","|implode:CBPhotos::getInstance()->exts}';
     var theme = '{$theme}';
     var max_upload_size ="{Clipbucket::getInstance()->getMaxUploadSize()}Mb";
     var max_file_size ="{config('max_upload_size')}Mb";

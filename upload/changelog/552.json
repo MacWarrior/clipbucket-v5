@@ -1,0 +1,97 @@
+{
+  "version":"5.5.2",
+  "revision":"45",
+  "status":"stable",
+  "detail":[
+    {
+      "title": "Back office",
+      "description": [
+        "Implement Nginx VirtualHost check"
+        ,"Implement channel slogan"
+        ,"Fix code mode on page edition <i>(#595)</i>"
+        ,"Fix email sending error catching <i>(#587)</i>"
+        ,"Fix incorrect frontend URL <i>(#529)</i>"
+        ,"Fix sub-directory links"
+        ,"Fix outdated links <i>(#591)</i>"
+        ,"Fix collection saving without categories enabled"
+        ,"Fix mass upload description display"
+        ,"Fix possible error 500 on System info page"
+      ]
+    },
+    {
+      "title": "Front office",
+      "description": [
+        "Implement alphabetical and reverse alphabetical filters <i>(#600)</i>"
+        ,"Implement channel slogan"
+        ,"Implement account deletion <i>(#144, #599)</i>"
+        ,"Fix collection privacy on photos page"
+        ,"Fix visual editor theme change <i>(#590)</i>"
+        ,"Fix manage collection list"
+        ,"Fix a potential erroneous error message on collection deletion"
+        ,"Fix photo upload <i>(#594)</i>"
+        ,"Fix next/previous photo buttons <i>(#597)</i>"
+        ,"Fix sidebar photos hover style"
+        ,"Fix collection display error on outdated DB"
+        ,"Fix photos filters display without categories enabled"
+        ,"Fix channels page pagination"
+        ,"Fix possible errors with invalid filters"
+        ,"Fix collection creation & edition display"
+        ,"Fix signup with allowed spaces in username"
+        ,"Fix channel page display"
+        ,"Fix add to playlist & collection actions <i>(#601)</i>"
+        ,"Fix playlist edition <i>(#603)</i>"
+        ,"Fix channel search"
+        ,"Fix channel privacy"
+      ]
+    },
+    {
+      "title": "Miscellaneous",
+      "description": [
+        "Implement sub-directory compatibility <i>(#529, #156)</i>"
+        ,"Cleanup code"
+        ,"Drop support for PHP 7.0 to 7.4"
+        ,"Update Readme"
+        ,"Fix PHP8.X compatibility"
+        ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
+        ,"Fix URL issue when base_url config is not correctly set"
+        ,"Fix typo <i>(#596)</i>"
+        ,"Fix Nginx vhost <i>(#604)</i>"
+      ]
+    },
+    {
+      "title": "Installation & Update",
+      "description": [
+        "Fix new installation errors <i>(#592)</i>"
+      ]
+    },
+    {
+      "title": "Translations",
+      "description": [
+        "Fix translation"
+      ]
+    },
+    {
+      "title": "Plugins",
+      "description": [
+        "Update compatibility notice to 5.5.2"
+      ]
+    },
+    {
+      "title": "Internal components",
+      "description": [
+        "Update Global Announcement to version 2.0.6"
+      ]
+    },
+    {
+      "title": "External components",
+      "description": [
+        "Update psr/log to 3.0.2"
+        ,"Update filp/whoops to 2.18.0"
+        ,"Update oxygenzsas/composer_lib_discord to 0.3.5"
+        ,"Update predis/predis to 2.3.0"
+        ,"Update VideoJS to version 8.23.3"
+        ,"Update summernote to version 0.9.1"
+      ]
+    }
+  ]
+}

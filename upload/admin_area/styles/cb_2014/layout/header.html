@@ -1,115 +1,140 @@
 <div class="navbar navbar-default">
-	<div class="navbar-container container">
-		<div class="navbar-header pull-left">
+    <div class="navbar-container container">
+        <div class="navbar-header pull-left">
             <div class="logoContainer clearfix">
                 <a href="{DirPath::getUrl('admin_area')}">
-                    <img class="pull-left" src="{get_website_logo_path()}" height="45px">
+                    <img class="pull-left" src="{get_website_logo_path()}" height="45px"/>
                 </a>
             </div>
         </div>
+        {assign var=nb_flags value=0}
+        {assign var=nb_notif value=0}
+        {assign var=nb_video_to_approve value=0}
+        {assign var=nb_user_to_approve value=0}
+        {assign var=nb_photo_to_approve value=0}
         {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')}
-            {assign var=nb_flags value=Flag::getAll(['count'=>true])}
-        {else}
-            {assign var=nb_flags value=0}
+            {if config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation')}
+                {assign var=nb_flags value=$nb_flags+Flag::getAll(['count'=>true, 'element_type'=>'video'])}
+                {assign var=nb_video_to_approve value=Video::getInstance()->getAll(['count'=>true, 'active'=>'no'])}
+            {/if}
+            {if config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation')}
+                {assign var=nb_flags value=$nb_flags+Flag::getAll(['count'=>true, 'element_type'=>'user'])}
+                {assign var=nb_user_to_approve value=User::getInstance()->getAll(['count'=>true, 'status'=>'ToActivate', 'not_userid'=>userquery::getInstance()->get_anonymous_user()])}
+            {/if}
+            {if config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation')}
+                {assign var=nb_flags value=$nb_flags+Flag::getAll(['count'=>true, 'element_type'=>'photo'])}
+                {assign var=nb_photo_to_approve value=Photo::getInstance()->getAll(['count'=>true, 'active'=>'no'])}
+            {/if}
+            {if config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation')}
+                {assign var=nb_flags value=$nb_flags+Flag::getAll(['count'=>true, 'element_type'=>'collection'])}
+            {/if}
         {/if}
-        {$nbnotif={math equation="a + b + c + d" a={get_videos active='no' count_only=true} b={get_users status='ToActivate' count_only=true} c={get_photos active='no' count_only=true} d=$nb_flags}}
+        {$nb_notif=$nb_flags+$nb_video_to_approve+ $nb_user_to_approve+ $nb_photo_to_approve}
         <div class="navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">
                 {if !$NEED_UPDATE}
-                <li class="purple">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                        <i class="glyphicon glyphicon-bell"></i>
-                        <span class="badge badge-important">{$nbnotif}</span>
-                    </a>
-                    <ul class="dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close pull-right">
-                        <li class="dropdown-header">
-                            <i class="icon-warning-sign"></i>
-                            {$nbnotif} Notifications
-                        </li>
-                        <li>
-                            <a href="{DirPath::getUrl('admin_area')}video_manager.php?search=search&active=no">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-pink glyphicon glyphicon-facetime-video"></i>
-                                        Approve Videos
-                                    </span>
-                                    <span class="badge badge-info pull-right">{get_videos active='no' count_only=true}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{DirPath::getUrl('admin_area')}members.php?search=yes&amp;status=ToActivate">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-success glyphicon glyphicon-user"></i>
-                                        Approve Members
-                                    </span>
-                                    <span class="badge badge-success pull-right">{get_users status='ToActivate' count_only=true}</span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{DirPath::getUrl('admin_area')}photo_manager.php?active=no&amp;search=yes">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-info 	glyphicon glyphicon-picture"></i>
-                                        Approve Photos
-                                    </span>
-                                    <span class="badge badge-info pull-right">{get_photos active='no' count_only=true}</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{DirPath::getUrl('admin_area')}flagged_item.php?type=video">
-                                <div class="clearfix">
-                                    <span class="pull-left">
-                                        <i class="btn btn-xs no-hover btn-error glyphicon glyphicon-flag"></i>
-                                        {lang('flagged_obj')}
-                                    </span>
-                                    <span class="badge badge-info pull-right">
-                                        {$nb_flags}
-                                    </span>
-                                </div>
-                            </a>
-                        </li>
-
-                        <li>
-                            <a href="{DirPath::getUrl('admin_area')}notification_settings.php">
-                                See all notifications
-                                <i class="glyphicon glyphicon-chevron-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="dropdown blue">
-                    <a data-toggle="dropdown" class="dropdown-toggle clickable" href="#">
-                        <i class="glyphicon glyphicon-arrow-down"></i>
-                        <span class="badge badge-important">Display Option</span>
-                    </a>
-                    <ul class="dropdown-menu " role="menu" aria-labelledby="dropdownMenu1">
-                        <li class="dropdown-header">
-                            <form id="display_opts" name="display_opts" method="post">
-                                Results Per Page :
-                                <input name="admin_pages" type="text" style="width:50px;" value="{$Cbucket->configs.admin_pages}"/>
-                                <input type="submit" name="update_dp_options" id="button" value="{lang code='update'}" class="btn btn-primary btn-xs"/>
-                            </form>
-                        </li>
-                    </ul>
-                </li>
-
-                <li class="blue">
-                    <a target="_blank" href="/">
-                        <i class="glyphicon glyphicon-home"></i>
-                        <span class="badge badge-success"></span>
-                    </a>
-                </li>
+                    {if
+                    (config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation'))
+                    || (config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation'))
+                    || (config('collectionsSection')=='yes' && User::getInstance()->hasPermission('collection_moderation'))
+                    || (config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation'))
+                    }
+                    <li class="purple">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="glyphicon glyphicon-bell"></i>
+                            <span class="badge badge-important">{$nb_notif}</span>
+                        </a>
+                        <ul class="dropdown-navbar navbar-pink dropdown-menu dropdown-caret dropdown-close pull-right">
+                            <li class="dropdown-header">
+                                <i class="icon-warning-sign"></i>
+                                {$nb_notif} {lang('notifications')}
+                            </li>
+                            {if config('videosSection')=='yes' && User::getInstance()->hasPermission('video_moderation')}
+                                <li>
+                                    <a href="{DirPath::getUrl('admin_area')}video_manager.php?search=search&active=no">
+                                        <div class="clearfix">
+                                            <span class="pull-left">
+                                                <i class="btn btn-xs no-hover btn-pink glyphicon glyphicon-facetime-video"></i>
+                                                {lang('approve_x', lang('videos'))}
+                                            </span>
+                                            <span class="badge badge-info pull-right">{$nb_video_to_approve}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {/if}
+                            {if config('channelsSection')=='yes' && User::getInstance()->hasPermission('member_moderation')}
+                                <li>
+                                    <a href="{DirPath::getUrl('admin_area')}members.php?search=yes&amp;status=ToActivate">
+                                        <div class="clearfix">
+                                            <span class="pull-left">
+                                                <i class="btn btn-xs no-hover btn-success glyphicon glyphicon-user"></i>
+                                                {lang('approve_x', lang('users'))}
+                                            </span>
+                                            <span class="badge badge-success pull-right">{$nb_user_to_approve}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {/if}
+                            {if config('photosSection')=='yes' && User::getInstance()->hasPermission('photos_moderation')}
+                                <li>
+                                    <a href="{DirPath::getUrl('admin_area')}photo_manager.php?active=no&amp;search=yes">
+                                        <div class="clearfix">
+                                            <span class="pull-left">
+                                                <i class="btn btn-xs no-hover btn-info 	glyphicon glyphicon-picture"></i>
+                                                {lang('approve_x', lang('photos'))}
+                                            </span>
+                                            <span class="badge badge-info pull-right">{$nb_photo_to_approve}</span>
+                                        </div>
+                                    </a>
+                                </li>
+                            {/if}
+                            <li>
+                                <a href="{DirPath::getUrl('admin_area')}notifications.php">
+                                    <div class="clearfix">
+                                        <span class="pull-left">
+                                            <i class="btn btn-xs no-hover btn-error glyphicon glyphicon-flag"></i>
+                                            {lang('flagged_obj')}
+                                        </span>
+                                        <span class="badge badge-info pull-right">
+                                            {$nb_flags}
+                                        </span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{DirPath::getUrl('admin_area')}notifications.php">
+                                    {lang('see_all_notifications')}
+                                    <i class="glyphicon glyphicon-chevron-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {/if}
+                    <li class="dropdown blue">
+                        <a data-toggle="dropdown" class="dropdown-toggle clickable" href="#">
+                            <i class="glyphicon glyphicon-arrow-down"></i>
+                            <span class="badge badge-important">Display Option</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-caret dropdown-close pull-right" role="menu" aria-labelledby="dropdownMenu1">
+                            <li class="dropdown-header">
+                                <form id="display_opts" name="display_opts" method="post">
+                                    Results Per Page :
+                                    <input name="admin_pages" type="text" style="width:50px;" value="{ClipBucket::getInstance()->configs.admin_pages}"/>
+                                    <input type="submit" name="update_dp_options" id="button" value="{lang code='update'}" class="btn btn-primary btn-xs"/>
+                                </form>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="blue">
+                        <a target="_blank" href="{DirPath::getUrl('root')}" title="{lang code="access_to_front_end"}">
+                            <i class="glyphicon glyphicon-home"></i>
+                            <span class="badge badge-success"></span>
+                        </a>
+                    </li>
                 {/if}
                 <li class="blue">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle">
-                        <img src="{$userquery->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
+                        <img src="{userquery::getInstance()->getUserThumb('', '',user_id())}" class="img-circle" width="25" height="25"/>
                         <span class="user-info">
                          {display_clean(User::getInstance()->get('username'))|ucfirst}<br/>
                          {display_clean(User::getInstance()->get('user_level_name'))}
@@ -119,13 +144,13 @@
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         {if !$NEED_UPDATE}
                         <li>
-                            <a href="setting_basic.php">
+                            <a href="{DirPath::getUrl('admin_area')}setting_basic.php">
                                 <i class="glyphicon glyphicon-cog"></i> {lang('basic_settings')}
                             </a>
                         </li>
 
                         <li>
-                            <a href="/admin_area/view_user.php?uid={user_id()}">
+                            <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={user_id()}">
                                 <i class="glyphicon glyphicon-user"></i> Profile
                             </a>
                         </li>
@@ -133,7 +158,7 @@
                         <li class="divider"></li>
                         {/if}
                         <li>
-                            <a href="logout.php">
+                            <a href="{DirPath::getUrl('admin_area')}logout.php">
                                 <i class="glyphicon glyphicon-off"></i> {lang code='logout'}
                             </a>
                         </li>

@@ -3,7 +3,8 @@
 /*
  * This file is part of the Predis package.
  *
- * (c) Daniele Alessandri <suppakilla@gmail.com>
+ * (c) 2009-2020 Daniele Alessandri
+ * (c) 2021-2024 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,39 +12,49 @@
 
 namespace Predis\Connection;
 
+use InvalidArgumentException;
+
 /**
  * Container for connection parameters used to initialize connections to Redis.
  *
  * {@inheritdoc}
- *
- * @author Daniele Alessandri <suppakilla@gmail.com>
  */
 class Parameters implements ParametersInterface
 {
-    private $parameters;
-
-    private static $defaults = array(
+    protected static $defaults = [
         'scheme' => 'tcp',
         'host' => '127.0.0.1',
         'port' => 6379,
-    );
+    ];
+
+    /**
+     * Set of connection parameters already filtered
+     * for NULL or 0-length string values.
+     *
+     * @var array
+     */
+    protected $parameters;
 
     /**
      * @param array $parameters Named array of connection parameters.
      */
-    public function __construct(array $parameters = array())
+    public function __construct(array $parameters = [])
     {
-        $this->parameters = $this->filter($parameters) + $this->getDefaults();
+        $this->parameters = $this->filter($parameters + static::$defaults);
     }
 
     /**
-     * Returns some default parameters with their values.
+     * Filters parameters removing entries with NULL or 0-length string values.
+     *
+     * @params array $parameters Array of parameters to be filtered
      *
      * @return array
      */
-    protected function getDefaults()
+    protected function filter(array $parameters)
     {
-        return self::$defaults;
+        return array_filter($parameters, function ($value) {
+            return $value !== null && $value !== '';
+        });
     }
 
     /**
@@ -60,7 +71,7 @@ class Parameters implements ParametersInterface
             $parameters = static::parse($parameters);
         }
 
-        return new static($parameters ?: array());
+        return new static($parameters ?: []);
     }
 
     /**
@@ -72,14 +83,13 @@ class Parameters implements ParametersInterface
      * database number in the "path" part these values override the values of
      * "password" and "database" if they are present in the "query" part.
      *
-     * @link http://www.iana.org/assignments/uri-schemes/prov/redis
-     * @link http://www.iana.org/assignments/uri-schemes/prov/rediss
+     * @see http://www.iana.org/assignments/uri-schemes/prov/redis
+     * @see http://www.iana.org/assignments/uri-schemes/prov/rediss
      *
      * @param string $uri URI string.
      *
-     * @throws \InvalidArgumentException
-     *
      * @return array
+     * @throws InvalidArgumentException
      */
     public static function parse($uri)
     {
@@ -90,7 +100,7 @@ class Parameters implements ParametersInterface
         }
 
         if (!$parsed = parse_url($uri)) {
-            throw new \InvalidArgumentException("Invalid parameters URI: $uri");
+            throw new InvalidArgumentException("Invalid parameters URI: $uri");
         }
 
         if (
@@ -138,15 +148,11 @@ class Parameters implements ParametersInterface
     }
 
     /**
-     * Validates and converts each value of the connection parameters array.
-     *
-     * @param array $parameters Connection parameters.
-     *
-     * @return array
+     * {@inheritdoc}
      */
-    protected function filter(array $parameters)
+    public function toArray()
     {
-        return $parameters ?: array();
+        return $this->parameters;
     }
 
     /**
@@ -170,9 +176,17 @@ class Parameters implements ParametersInterface
     /**
      * {@inheritdoc}
      */
-    public function toArray()
+    public function __toString()
     {
-        return $this->parameters;
+        if ($this->scheme === 'unix') {
+            return "$this->scheme:$this->path";
+        }
+
+        if (filter_var($this->host, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+            return "$this->scheme://[$this->host]:$this->port";
+        }
+
+        return "$this->scheme://$this->host:$this->port";
     }
 
     /**
@@ -180,6 +194,6 @@ class Parameters implements ParametersInterface
      */
     public function __sleep()
     {
-        return array('parameters');
+        return ['parameters'];
     }
 }

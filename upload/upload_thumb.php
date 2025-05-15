@@ -2,8 +2,6 @@
 define('THIS_PAGE', 'upload_thumb');
 require 'includes/config.inc.php';
 
-global $myquery, $Upload;
-
 User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);
 
 if (@$_GET['msg']) {
@@ -20,7 +18,7 @@ $video = mysql_clean($_GET['video']);
  */
 
 
-if ($myquery->video_exists($video)) {
+if (myquery::getInstance()->video_exists($video)) {
 
     $data = get_video_details($video);
     $vid_file = DirPath::get('videos') . $data['file_directory'] . DIRECTORY_SEPARATOR . get_video_file($data, false, false);
@@ -43,10 +41,10 @@ if ($myquery->video_exists($video)) {
         $type='b';
     }
     if ($is_file_to_upload) {
-        $Upload->upload_thumbs($data['file_name'], $files, $data['file_directory'], $type);
+        Upload::getInstance()->upload_thumbs($data['file_name'], $files, $data['file_directory'], $type);
     }
 } else {
     $msg[] = lang('class_vdo_del_err');
 }
 
-redirect_to('/edit_video.php?vid=' . $data['videoid']);
+redirect_to(DirPath::getUrl('root') . 'edit_video.php?vid=' . $data['videoid']);

@@ -51,6 +51,11 @@ html.dark {
         border-radius: var(--border-radius);
     }
 
+    /* Alerts */
+    .alert-success h2{
+        color: var(--color-01);
+    }
+
     /* Sidebar */
     .sidebar-channels,
     .sidebar-items,
@@ -65,13 +70,15 @@ html.dark {
     .sidebar-items .item-photo .photo-holder img{
         border-radius: var(--border-radius);
     }
+    .sidebar-items .item-photo .photo-holder:after{
+        border-radius: var(--border-radius);
+    }
 
     /* Home */
     #featured_vid_sec .item-video .video-link img,
     .cb-popup-container .player-holder .vjs-big-play-button{
         border-radius: var(--border-radius);
     }
-
     .cb-popup-container .video-js{
         border-radius: var(--border-radius);
         overflow: hidden;

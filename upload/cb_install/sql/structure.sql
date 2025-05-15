@@ -441,7 +441,7 @@ CREATE TABLE `{tbl_prefix}user_profile` (
   `user_profile_id` int(11) NOT NULL,
   `show_my_collections` enum('yes','no') NOT NULL DEFAULT 'yes',
   `userid` bigint(20) NOT NULL UNIQUE,
-  `profile_title` mediumtext NOT NULL,
+  `profile_slogan` mediumtext NOT NULL,
   `profile_desc` mediumtext NOT NULL,
   `featured_video` mediumtext NOT NULL,
   `first_name` varchar(100) NOT NULL DEFAULT '',

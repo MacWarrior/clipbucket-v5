@@ -53,4 +53,47 @@ $(document).ready(function(){
         var inputs = $('.accountForm').find('input, textarea, select').not('#disabled_channel');
         inputs.each( (i,e)=> $(e).prop('disabled', ($(this).val() === 'yes')))
     });
+
+    // Account deletion
+    let dropButton = document.getElementById('drop_account');
+    let modalElement = document.getElementById('confirmDropAccountModal');
+    let confirmButton = document.getElementById('confirmDropAccountBtn');
+    let target = null;
+
+    dropButton.addEventListener('click', function (e) {
+        e.preventDefault();
+        target = this;
+        modalElement.classList.add('in');
+        modalElement.style.display = 'block';
+        modalElement.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+        let backdrop = document.createElement('div');
+        backdrop.className = 'modal-backdrop fade in';
+        document.body.appendChild(backdrop);
+        modalElement.querySelectorAll('[data-dismiss="modal"]').forEach(function (btn) {
+            btn.addEventListener('click', closeModal);
+        });
+    });
+
+    confirmButton.addEventListener('click', function () {
+        document.querySelector('input[type="hidden"][name="drop_account"]').removeAttribute('disabled');
+        closeModal();
+        document.querySelectorAll('.taskHandler').forEach(function(el) {
+            el.style.display = '';
+        });
+        if (target) {
+            target.form.submit();
+        }
+    });
+
+    function closeModal() {
+        modalElement.classList.remove('in');
+        modalElement.style.display = 'none';
+        modalElement.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+        let backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+        }
+    }
 });

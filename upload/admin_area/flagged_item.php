@@ -4,14 +4,14 @@ require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 $right = 'admin_access';
 if (empty($_GET['type'])) {
-    redirect_to('/');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 $type = $_GET['type'] ;
 $right = Flag::getPermissionByType($type);
 User::getInstance()->hasPermissionOrRedirect($right,true);
 
 if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '255')) {
-    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area', true));
+    sessionMessageHandler::add_message(lang('must_update_version'), 'e', DirPath::getUrl('admin_area'));
 }
 
 global $breadcrumb;

@@ -1,6 +1,6 @@
-{assign var=msg value=$eh->get_message()}
-{assign var=err value=$eh->get_error()}
-{assign var=war value=$eh->get_warning()}
+{assign var=msg value=errorhandler::getInstance()->get_message()}
+{assign var=err value=errorhandler::getInstance()->get_error()}
+{assign var=war value=errorhandler::getInstance()->get_warning()}
 
 {if count($err) > 0}
 <div class="alert alert-danger alert-dismissable">

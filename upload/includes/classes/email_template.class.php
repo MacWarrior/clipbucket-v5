@@ -616,11 +616,11 @@ class EmailTemplate
      * @param array|string $to
      * @param string $sender_email
      * @param string $sender_name
-     * @return bool
+     * @return array|string|string[]|true
      * @throws \PHPMailer\PHPMailer\Exception
      * @throws Exception
      */
-    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = ''): bool
+    public static function send(string $subject, string $content, $to, $sender_email = '', $sender_name = '')
     {
         if( config('disable_email') == 'yes' ){
             return true;
@@ -649,6 +649,7 @@ class EmailTemplate
         $mail->Subject = $subject;
         $mail->MsgHTML($content);
         if (config('mail_type') == 'smtp') {
+            $mail->isSMTP();
             $mail->Host = config('smtp_host');
             $mail->Port = config('smtp_port');
 
@@ -674,11 +675,15 @@ class EmailTemplate
                 return lang('invalid_email_recipient');
             }
         }
-        if ($mail->send()) {
-            return true;
+        try{
+            if( $mail->send() === true ){
+                return true;
+            }
+            return $mail->ErrorInfo;
         }
-        //send error
-        return $mail->ErrorInfo;
+        catch(Exception $e){
+            return $mail->ErrorInfo;
+        }
     }
 
     /**
@@ -687,7 +692,7 @@ class EmailTemplate
      * @return void
      * @throws \PHPMailer\PHPMailer\Exception
      */
-    private static function addAddressAndNameIfExist(PHPMailer &$mail, $to)
+    private static function addAddressAndNameIfExist(PHPMailer &$mail, $to): void
     {
         if (is_array($to)) {
             $mail->addAddress($to['mail'], $to['name']);
@@ -737,13 +742,13 @@ class EmailTemplate
     private static function getGlobalVariablesArray(): array
     {
         return [
-            'baseurl' => Network::get_server_url(),
-            'login_link' => cblink(['name' => 'login'], true),
+            'baseurl' => DirPath::getUrl('root'),
+            'login_link' => cblink(['name' => 'login']),
             'date_year' => cbdate('Y'),
             'date_time' => now(),
             'website_title' => config('site_title'),
-            'logo_url' => get_website_logo_path(true),
-            'favicon_url' => get_website_favicon_path(true)
+            'logo_url' => get_website_logo_path(),
+            'favicon_url' => get_website_favicon_path()
         ];
     }
 

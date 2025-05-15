@@ -7,18 +7,17 @@
  * @param Array $extra_params
  * @param Array $scope
  */
-function cb_register_action($func_name, $place, $extra_params = [], $scope = ['global'])
+function cb_register_action($func_name, $place, $extra_params = [], $scope = ['global']): void
 {
-    global $Cbucket;
-    if (isset($Cbucket->actions_list)) {
-        $actions_list = $Cbucket->actions_list;
+    if (isset(ClipBucket::getInstance()->actions_list)) {
+        $actions_list = ClipBucket::getInstance()->actions_list;
         $actions_list[$place][] = [
             'action' => $func_name,
             'params' => $extra_params,
             'scope'  => $scope
         ];
 
-        $Cbucket->actions_list = $actions_list;
+        ClipBucket::getInstance()->actions_list = $actions_list;
     }
 }
 
@@ -69,13 +68,11 @@ function cb_do_action($place, $params = [], $scope = ['global'])
  * @param String $place
  * @param Array $scope
  *
- * @return
+ * @return mixed|void
  */
 function cb_get_actions($place, $scope = ['global'])
 {
-    global $Cbucket;
-
-    if (isset($Cbucket->actions_list) && isset($Cbucket->actions_list[$place])) {
-        return $Cbucket->actions_list[$place];
+    if (isset(ClipBucket::getInstance()->actions_list) && isset(ClipBucket::getInstance()->actions_list[$place])) {
+        return ClipBucket::getInstance()->actions_list[$place];
     }
 }

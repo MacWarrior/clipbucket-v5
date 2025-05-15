@@ -32,9 +32,9 @@ for ($i = 0; $i < $days; $i++) {
 $max = 1;
 for ($i = 0; $i < $days; $i++) {
     if ($i == $days - 1) {
-        $uploads[] = $cbvid->get_videos(["count_only" => true, "date_span" => "today"]) + 0;
-        $active[] = $cbvid->get_videos(["count_only" => true, "date_span" => "today", "active" => 'yes', "status" => 'Successful']) + 0;
-        $processing[] = $cbvid->get_videos(["count_only" => true, "date_span" => "today", "status" => 'Processing']) + 0;
+        $uploads[] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "today"]) + 0;
+        $active[] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "today", "active" => 'yes', "status" => 'Successful']) + 0;
+        $processing[] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "today", "status" => 'Processing']) + 0;
     } else {
         $uploads[] = $day[$i]['video']->uploads + 0;
         $active[] = $day[$i]['video']->active + 0;

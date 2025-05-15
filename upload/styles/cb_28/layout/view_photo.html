@@ -71,17 +71,17 @@
                             {if $photo.userid != $anonymous_id && config('enable_hide_uploader_name') != 'yes'}
                                 {if $photo.disabled_channel =='yes'}
                                     <div class="avatar">
-                                        <img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+                                        <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
                                     </div>
                                     <h2 class="user-title">
                                         <span >{display_clean($user.username)}</span>
                                     </h2>
                                 {else}
-                                    <a href="{$userquery->profile_link($user)}" class="avatar">
-                                        <img src="{$userquery->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
+                                    <a href="{userquery::getInstance()->profile_link($user)}" class="avatar">
+                                        <img src="{userquery::getInstance()->getUserThumb(null,'m',$photo.userid)}" class="img-responsive"/>
                                     </a>
                                     <h2 class="user-title">
-                                        <a href="{$userquery->profile_link($user)}">{display_clean($user.username)}</a>
+                                        <a href="{userquery::getInstance()->profile_link($user)}">{display_clean($user.username)}</a>
                                     </h2>
                                 {/if}
                             {/if}
@@ -99,7 +99,7 @@
                                 <div class="clearfix subscribe-col col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     {/if}
                                     {if user_id() && $photo.userid != user_id() && $photo.userid != $anonymous_id}
-                                        {if $userquery->is_subscribed($photo.userid,user_id())}
+                                        {if userquery::getInstance()->is_subscribed($photo.userid,user_id())}
                                             <button onclick="_cb.unsubscribeToChannel('{$photo.userid}','unsubscribe_user');" class="btn btn-subscribe btn-primary subs_{$photo.userid}">
                                                 {lang code="unsubscribe"}
                                             </button>
@@ -163,7 +163,7 @@
                                         {/if}
                                         <li><strong>{lang('photo_description')}</strong> <span id="description"></span>:&nbsp;{display_clean($photo.photo_description)|truncate:90}</li>
                                         <li><strong>{lang('collection_name')}</strong>:&nbsp;
-                                            <a href="{$cbcollection->collection_links($c,'view')}">{display_clean($c.collection_name)}</a>
+                                            <a href="{Collections::getInstance()->collection_links($c,'view')}">{display_clean($c.collection_name)}</a>
                                         </li>
                                         {if !empty($photo.photo_tags)}
                                             <li>
@@ -178,7 +178,7 @@
                             <div class="tab-pane fade in clearfix" id="cb-item-share">
                                 <ul class="social-share">
                                     <li>
-                                        <a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={$cbphoto->photo_links($photo,'view_item')|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
+                                        <a class="btn-fb icon-facebook" href="http://www.facebook.com/sharer/sharer.php?s=100&p[url]={CBPhotos::getInstance()->photo_links($photo,'view_item')|urlencode}&p[images][0]={$shareableThumb}&p[title]={$photo.photo_title|title|urlencode}&p[summary]={$photo.photo_description|description|urlencode}" target="_blank">
                                             <span>Facebook</span>
                                         </a>
                                     </li>
@@ -224,7 +224,7 @@
                 </section>
                 {if config('enable_comments_photo') == 'yes'}
                     <div class="clearfix comments-block">
-                        {if $myquery->is_commentable($photo,'p')}
+                        {if myquery::getInstance()->is_commentable($photo,'p')}
                             <div class="collectionComments addComment">
                                 <h2>
                                     {if $photo.total_comments <= 1 }

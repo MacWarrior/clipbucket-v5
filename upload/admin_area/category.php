@@ -1,7 +1,5 @@
 <?php
 define('THIS_PAGE', 'category');
-
-global $cbvid;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
@@ -24,7 +22,7 @@ switch ($type) {
         break;
 }
 if (config($config) != 'yes') {
-    redirect_to(DirPath::getUrl('admin_area',true));
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 assign('type', $type);
 assign('display_type', $type . 's');
@@ -39,9 +37,8 @@ $breadcrumb[1] = [
     'url'   => DirPath::getUrl('admin_area') . 'category.php?type=' . $type
 ];
 
-$version = Update::getInstance()->getDBVersion();
-if (!($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 323))) {
-    e('Your database is not up-to-date. Please update your database via this link : <a href="admin_tool.php?id_tool=5">' . lang('update') . '</a>', 'e', false);
+if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '323') ){
+    e('Your database is not up-to-date. Please update your database via this link : <a href="' . DirPath::getUrl('admin_area') . 'admin_tool.php?id_tool=5">' . lang('update') . '</a>', 'e', false);
 } else {
     //Making Category as Default
     if (isset($_GET['make_default'])) {

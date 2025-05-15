@@ -30,10 +30,10 @@
             {if $comments !== false}
                 <div id="rcomments" class="tab-pane {$active}">
                     {foreach from=$comments item=comment}
-                        {$userdetails = $userquery->get_user_details($comment.userid)}
+                        {$userdetails = userquery::getInstance()->get_user_details($comment.userid)}
                         <div class="itemdiv dialogdiv">
                             <div class="user">
-                                <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{$userquery->getUserThumb($userdetails,'small')}">
+                                <img alt="{display_clean($userdetails.username)}" title="{display_clean($userdetails.username)}" src="{userquery::getInstance()->getUserThumb($userdetails,'small')}">
                             </div>
                             <div class="body">
                                 <div class="time">
@@ -66,7 +66,7 @@
                         </div>
                     </div>
                 </div>
-                {assign var=todos value=$myquery->get_todos()}
+                {assign var=todos value=myquery::getInstance()->get_todos()}
                 <ul class="row todosList">
                     {foreach from=$todos item=note}
                         <li class="col-md-12 oneTodo">
@@ -85,7 +85,7 @@
                         <a href="#" id="add_new_note" class="btn btn-primary btn-xs">Add a note</a>
                     </div>
                 </div>
-                {assign var=notes value=$myquery->get_notes()}
+                {assign var=notes value=myquery::getInstance()->get_notes()}
                 <ul class="notesList row paddingRightSmall">
                     {foreach from=$notes item=note}
                         <li class="col-md-4">
@@ -153,211 +153,26 @@
 
 <script type="text/javascript">
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
-    is_update_processing = `{$is_update_processing}`;
-    can_sse = `{$can_sse}`;
-    AmCharts.makeChart("piechart", {
-        "type": "pie",
-        "adjustPrecision": true,
-        "angle": 12,
-        "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
-        "depth3D": 15,
-        "maxLabelWidth": 150,
-        "titleField": "category",
-        "valueField": "column-1",
-        "processTimeout": 5,
-        "theme": "light",
-        "allLabels": [],
-        "balloon": {},
-        "legend": {
-            "enabled": true,
-            "align": "left",
-            "markerType": "circle"
-        },
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": "Overall Statistics"
-            }
-        ],
-        "dataProvider": [
-            {
-                "category": "Users",
-                "column-1": '{User::getInstance()->getAll(['count'=>'yes'])}'
-            },
-            {
-                "category": "Photos",
-                "column-1": '{Photo::getInstance()->getAll(['count'=>'yes'])}'
-            },
-            {
-                "category": "Videos",
-                "column-1": '{Video::getInstance()->getAll(['count'=>'yes'])}'
-            },
-            {
-                "category": "Collections",
-                "column-1": '{Collection::getInstance()->getAll(['count'=>'yes'])}'
-            },
+    let is_update_processing = `{$is_update_processing}`;
+    let can_sse = `{$can_sse}`;
 
-        ]
-    });
+    let piechart_users = '{User::getInstance()->getAll(['count'=>'yes'])}';
+    let piechart_photos = '{Photo::getInstance()->getAll(['count'=>'yes'])}';
+    let piechart_videos = '{Video::getInstance()->getAll(['count'=>'yes'])}';
+    let piechart_collections = '{Collection::getInstance()->getAll(['count'=>'yes'])}';
 
-    AmCharts.makeChart("donutchart", {
-        "type": "pie",
-        "angle": 12,
-        "balloonText": "[[title]]<br><span style='font-size:14px;'><b>[[value]]</b> ([[percents]]%)</span>",
-        "depth3D": 15,
-        "innerRadius": "30%",
-        "titleField": "category",
-        "valueField": "column-1",
-        "processTimeout": 5,
-        "theme": "light",
-        "allLabels": [],
-        "balloon": {},
-        "legend": {
-            "enabled": true,
-            "align": "center",
-            "markerType": "circle"
-        },
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": "Flagged Objects"
-            }
-        ],
-        "dataProvider": [
+    let donutchart_photos = '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}';
+    let donutchart_videos = '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}';
 
-            {
-                "category": "Photos",
-                "column-1": '{Flag::getAll(['count'=>true, 'element_type'=>'photo'])}'
-            },
-            {
-                "category": "Videos",
-                "column-1": '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}'
-            }
-        ]
-    });
+    let ubarchart_users = '{get_users count_only=yes}';
+    let ubarchart_users_active = '{get_users count_only=yes status='Ok'}';
+    let ubarchart_users_inactive = '{get_users count_only=yes status='ToActivate'}';
 
-    AmCharts.makeChart("ubarchart", {
-        "type": "serial",
-        "pathToImages": "https://www.amcharts.com/lib/3/images/",
-        "categoryField": "category",
-        "startDuration": 1,
-        "mouseWheelZoomEnabled": true,
-        "startEffect": "easeOutSine",
-        "autoDisplay": true,
-        "theme": "light",
-        "categoryAxis": {
-            "gridPosition": "start"
-        },
-        "trendLines": [],
-        "graphs": [
-            {
-                "colorField": "color",
-                "fillAlphas": 1,
-                "id": "AmGraph-1",
-                "lineColorField": "color",
-                "title": "graph 1",
-                "type": "column",
-                "valueField": "column-1"
-            }
-        ],
-        "guides": [],
-        "valueAxes": [
-            {
-                "id": "ValueAxis-1",
-                "title": "Users"
-            }
-        ],
-        "allLabels": [],
-        "balloon": {},
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": "Users Statistics"
-            }
-        ],
-        "dataProvider": [
-            {
-                "category": "Total",
-                "column-1": '{get_users count_only=yes}'
-            },
-            {
-                "category": "Active",
-                "column-1": '{get_users count_only=yes status='Ok'}'
-            },
-            {
-                "category": "Inactive",
-                "column-1": '{get_users count_only=yes status='ToActivate'}'
-            }
-        ]
-    });
+    let vbarchart_total = '{get_videos count_only=yes}';
+    let vbarchart_active = '{get_videos count_only=yes active="yes"}';
+    let vbarchart_deactive = '{get_videos count_only=yes active='no'}';
+    let vbarchart_reported = donutchart_videos;
 
-    AmCharts.makeChart("vbarchart", {
-        "type": "serial",
-        "pathToImages": "https://www.amcharts.com/lib/3/images/",
-        "categoryField": "category",
-        "startDuration": 1,
-        "mouseWheelZoomEnabled": true,
-        "startEffect": "easeOutSine",
-        "autoDisplay": true,
-        "theme": "light",
-        "categoryAxis": {
-            "gridPosition": "start"
-        },
-        "trendLines": [],
-        "graphs": [
-            {
-                "colorField": "color",
-                "fillAlphas": 1,
-                "id": "AmGraph-1",
-                "lineColorField": "color",
-                "title": "graph 1",
-                "type": "column",
-                "valueField": "column-1"
-            }
-        ],
-        "guides": [],
-        "valueAxes": [
-            {
-                "id": "ValueAxis-1",
-                "title": "Videos"
-            }
-        ],
-        "allLabels": [],
-        "balloon": {},
-        "titles": [
-            {
-                "bold": false,
-                "id": "Title-1",
-                "size": 15,
-                "text": "Video Statistics"
-            }
-        ],
-        "dataProvider": [
-            {
-                "category": "Total",
-                "column-1": '{get_videos count_only=yes}'
-            },
-            {
-                "category": "Active",
-                "column-1": '{get_videos count_only=yes active="yes"}'
-            },
-            {
-                "category": "Deactive",
-                "column-1": '{get_videos count_only=yes active='no'}'
-            },
-            {
-                "category": "Reported",
-                "column-1": '{Flag::getAll(['count'=>true, 'element_type'=>'video'])}'
-            }
-        ]
-    });
-
-    var lang = [];
+    let lang = [];
     lang['technical_error'] = "{lang code='technical_error'}";
 </script>

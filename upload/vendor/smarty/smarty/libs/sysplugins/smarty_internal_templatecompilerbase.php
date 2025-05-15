@@ -1150,12 +1150,8 @@ abstract class Smarty_Internal_TemplateCompilerBase
             echo ob_get_clean();
             flush();
         }
-        if (version_compare(phpversion(), '8.0', '<')) {
-            $e = new SmartyCompilerException($error_text);
-        } else {
-            $e = new SmartyCompilerException80($error_text);
-        }
 
+        $e = new SmartyCompilerException($error_text);
         $e->line = $line;
         $e->source = trim(preg_replace('![\t\r\n]+!', ' ', $match[ $line - 1 ]));
         $e->desc = $args;

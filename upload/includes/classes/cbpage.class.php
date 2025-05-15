@@ -1,6 +1,15 @@
 <?php
 class cbpage
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $page_tbl = '';
 
     /**
@@ -9,12 +18,6 @@ class cbpage
     function __construct()
     {
         $this->page_tbl = 'pages';
-    }
-
-    public static function getInstance()
-    {
-        global $cbpage;
-        return $cbpage;
     }
 
     /**
@@ -96,7 +99,7 @@ class cbpage
     /**
      * Function used to get all pages from database
      *
-     * @param bool $params
+     * @param $params
      *
      * @return array|bool
      * @throws Exception
@@ -143,6 +146,9 @@ class cbpage
      * Function used to edit page
      *
      * @param $param
+     * @return bool|void
+     * @throws \Predis\Connection\ConnectionException
+     * @throws \Predis\Response\ServerException
      * @throws Exception
      */
     function edit_page($param)
@@ -172,6 +178,8 @@ class cbpage
         }
 
         if (!error()) {
+            require_once DirPath::get('classes') . 'migration' . DIRECTORY_SEPARATOR . 'migration.class.php';
+
             $translation_name = 'page_name_' . $name;
             if (strtolower($page['page_name']) != $name) {
                 if (empty(Language::getInstance()->arrayTranslation[$translation_name]) && empty(Language::getInstance()->getTranslationByKey($translation_name, Language::$english_id)['translation'])) {
@@ -229,10 +237,11 @@ class cbpage
      */
     function page_link($pdetails): string
     {
+        $base_url = DirPath::getUrl('root');
         if (SEO == 'yes') {
-            return '/page/' . $pdetails['page_id'] . '/' . SEO(strtolower($pdetails['page_name']));
+            return $base_url . 'page/' . $pdetails['page_id'] . '/' . SEO(strtolower($pdetails['page_name']));
         }
-        return '/view_page.php?pid=' . $pdetails['page_id'];
+        return $base_url . 'view_page.php?pid=' . $pdetails['page_id'];
     }
 
     /**
@@ -257,7 +266,7 @@ class cbpage
      * @param $id
      * @throws Exception
      */
-    function page_actions($type, $id)
+    function page_actions($type, $id): void
     {
         $page = $this->get_page($id);
         if (!$page) {

@@ -2,24 +2,23 @@
 define('THIS_PAGE', 'view_page');
 define('PARENT_PAGE', 'home');
 require 'includes/config.inc.php';
-global $pages, $cbpage;
 
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $pid = $_GET['pid'];
 $pid = mysql_clean($pid);
 
-$page = $cbpage->get_page($pid);
+$page = cbpage::getInstance()->get_page($pid);
 
 if($page['active'] == 'no' && !User::getInstance()->hasAdminAccess()){
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 if ($page) {
     assign('page', $page);
     subtitle($page['page_title']);
 } else {
-   redirect_to('404.php');
+    redirect_to(cblink(['name' => 'error_404']));
 }
 
 //Displaying The Template

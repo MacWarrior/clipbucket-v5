@@ -29,9 +29,7 @@ class User
             ,'msg_notify'
             ,'avatar'
             ,'avatar_url'
-            ,'sex'
             ,'dob'
-            ,'country'
             ,'level'
             ,'avcode'
             ,'doj'
@@ -69,24 +67,27 @@ class User
             ,'is_live'
         ];
 
+        if( config('enable_country') == 'yes' ){
+            $this->fields[] = 'country';
+        }
+
+        if( config('enable_gender') == 'yes' ){
+            $this->fields[] = 'sex';
+        }
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
+            $this->fields[] = 'active_theme';
+        }
+
         $this->tablename_profile = 'user_profile';
         $this->fields_profile = [
             'show_my_collections'
-            ,'profile_title'
-            ,'profile_desc'
             ,'featured_video'
-            ,'first_name'
-            ,'last_name'
             ,'show_dob'
-            ,'postal_code'
             ,'time_zone'
-            ,'web_url'
             ,'fb_url'
             ,'twitter_url'
             ,'insta_url'
-            ,'hometown'
-            ,'city'
-            ,'online_status'
             ,'show_profile'
             ,'allow_comments'
             ,'allow_ratings'
@@ -94,16 +95,6 @@ class User
             ,'content_filter'
             ,'icon_id'
             ,'browse_criteria'
-            ,'about_me'
-            ,'education'
-            ,'schools'
-            ,'occupation'
-            ,'companies'
-            ,'relation_status'
-            ,'hobbies'
-            ,'fav_movies'
-            ,'fav_music'
-            ,'fav_books'
             ,'background'
             ,'rating'
             ,'voters'
@@ -115,15 +106,67 @@ class User
             ,'show_my_friends'
         ];
 
+        if( config('enable_user_firstname_lastname') == 'yes' ){
+            $this->fields_profile[] = 'first_name';
+            $this->fields_profile[] = 'last_name';
+        }
+        if( config('enable_user_relation_status') == 'yes' ){
+            $this->fields_profile[] = 'relation_status';
+        }
+        if( config('enable_user_postcode') == 'yes' ){
+            $this->fields_profile[] = 'postal_code';
+        }
+        if( config('enable_user_hometown') == 'yes' ){
+            $this->fields_profile[] = 'hometown';
+        }
+        if( config('enable_user_city') == 'yes' ){
+            $this->fields_profile[] = 'city';
+        }
+        if( config('enable_user_education') == 'yes' ){
+            $this->fields_profile[] = 'education';
+        }
+        if( config('enable_user_schools') == 'yes' ){
+            $this->fields_profile[] = 'schools';
+        }
+        if( config('enable_user_occupation') == 'yes' ){
+            $this->fields_profile[] = 'occupation';
+        }
+        if( config('enable_user_compagnies') == 'yes' ){
+            $this->fields_profile[] = 'companies';
+        }
+        if( config('enable_user_hobbies') == 'yes' ){
+            $this->fields_profile[] = 'hobbies';
+        }
+        if( config('enable_user_favorite_movies') == 'yes' ){
+            $this->fields_profile[] = 'fav_movies';
+        }
+        if( config('enable_user_favorite_music') == 'yes' ){
+            $this->fields_profile[] = 'fav_music';
+        }
+        if( config('enable_user_favorite_books') == 'yes' ){
+            $this->fields_profile[] = 'fav_books';
+        }
+        if( config('enable_user_website') == 'yes' ){
+            $this->fields_profile[] = 'web_url';
+        }
+        if( config('enable_user_about') == 'yes' ){
+            $this->fields_profile[] = 'about_me';
+        }
+        if( config('enable_user_status') == 'yes' ){
+            $this->fields_profile[] = 'online_status';
+        }
+        if( config('enable_channel_description') == 'yes' ) {
+            $this->fields_profile[] = 'profile_desc';
+        }
+
         if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
             $this->fields_profile[] = 'disabled_channel';
         }
-
-        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313') ){
-            $this->fields[] = 'active_theme';
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
+            $this->fields_profile[] = 'profile_slogan';
         }
-        $this->tablename_level = 'user_levels';
 
+        $this->tablename_level = 'user_levels';
         $this->display_block = '/blocks/user.html';
         $this->display_var_name = 'user';
         $this->search_limit = (int)config('users_items_search_page');
@@ -200,9 +243,11 @@ class User
             default:
                 $params['order'] = $this->getTableName() . '.doj DESC';
                 break;
+
             case 'most_old':
                 $params['order'] = $this->getTableName() . '.doj ASC';
                 break;
+
             case 'most_viewed':
                 $params['order'] = $this->getTableName() . '.profile_hits DESC';
                 break;
@@ -225,6 +270,14 @@ class User
                 if( config('enable_comments_channel') == 'yes' ){
                     $params['order'] = $this->getTableName() . '.total_comments DESC';
                 }
+                break;
+
+            case 'alphabetical':
+                $params['order'] = $this->getTableName() . '.username ASC';
+                break;
+
+            case 'reverse_alphabetical':
+                $params['order'] = $this->getTableName() . '.username DESC';
                 break;
 
             case 'all_time':
@@ -330,21 +383,19 @@ class User
             $conditions[] = 'users.level = ' . (int)$param_level;
         }
 
-        $version = Update::getInstance()->getDBVersion();
-
         if( $param_search ){
             /* Search is done on username, profile tags and profile categories */
             $match_name = 'MATCH(users.username) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
             $like_name = ' LOWER(users.username) LIKE \'%' . mysql_clean($param_search) . '%\'';
             $cond = '( ' . $match_name . ' OR ' . $like_name;
             $order_search = ' ORDER BY MAX(CASE WHEN '.$like_name . ' THEN 100 ELSE ' . $match_name . ' END ) DESC ';
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $match_tag = 'MATCH(tags.name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_tag = 'LOWER(tags.name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= 'OR ' . $match_tag . ' OR ' . $like_tag;
                 $order_search .= ', MAX(CASE WHEN '. $like_tag . ' THEN 100 ELSE ' . $match_tag . ' END ) DESC ';
             }
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') && config('enable_user_category') == 'yes' ){
                 $match_categ = 'MATCH(categories.category_name) AGAINST (\'' . mysql_clean($param_search) . '\' IN NATURAL LANGUAGE MODE)';
                 $like_categ = 'LOWER(categories.category_name) LIKE \'%' . mysql_clean($param_search) . '%\'';
                 $cond .= 'OR ' . $match_categ . ' OR ' . $like_categ;
@@ -372,8 +423,7 @@ class User
             }
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             if ($param_search || $param_condition || !$param_count) {
                 $join[] = 'LEFT JOIN ' . cb_sql_table('user_tags') . ' ON users.userid = user_tags.id_user';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('tags') . ' ON user_tags.id_tag = tags.id_tag';
@@ -388,8 +438,7 @@ class User
 
         }
 
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
-
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') && config('enable_user_category') == 'yes' ){
             if ($param_search || $param_category || $param_condition || !$param_count) {
                 $join[] = 'LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
                 $join[] = 'LEFT JOIN ' . cb_sql_table('categories') . ' ON users_categories.id_category = categories.category_id';
@@ -400,7 +449,7 @@ class User
             }
         }
 
-        if( $param_group ){
+        if( $param_group && !$param_count ){
             $group[] = $param_group;
         }
 
@@ -526,16 +575,16 @@ class User
         return UserLevel::hasPermissionOrRedirect($permission, $this->getCurrentUserLevelID(), $must_be_logged);
     }
 
-    public function isUserConnectedOrRedirect()
+    public function isUserConnectedOrRedirect(): void
     {
         if (!$this->isUserConnected()) {
             self::redirectToLogin();
         }
     }
 
-    public static function redirectToLogin()
+    public static function redirectToLogin(): void
     {
-        redirect_to(Network::get_server_url() . 'signup.php?mode=login');
+        redirect_to(cblink(['name' => 'signin']));
     }
 
     /**
@@ -551,7 +600,7 @@ class User
      * @return void
      * @throws Exception
      */
-    public function hasPermissionAjax(string $permission)
+    public function hasPermissionAjax(string $permission): void
     {
         if (!$this->hasPermission($permission)) {
             e(lang('insufficient_privileges'));
@@ -586,7 +635,7 @@ class User
     /**
      * @throws Exception
      */
-    public function delBackground($userid)
+    public function delBackground($userid): void
     {
         $user = self::getOne(['userid'=>$userid]);
         $user_background = $user['background'];
@@ -639,10 +688,11 @@ class User
         {
             case 'channel':
                 $username = display_clean($this->get('username'));
+                $base_link = cblink(['name' => 'view_channel']);
                 if( $seo_enabled ){
-                    return '/user/' . $username;
+                    return $base_link . $username;
                 }
-                return '/view_channel.php?user=' . $username;
+                return $base_link . '?user=' . $username;
 
             default:
                 if( in_dev() ){
@@ -655,13 +705,13 @@ class User
     }
 
     /**
-     * @param string|int$user_id
      * @return int
      */
-    public function getAvatarUsage($user_id):int
+    public function getAvatarUsage():int
     {
+        $uid = $this->get('userid');
         $total = 0;
-        $path = DirPath::get('avatars') . mysql_clean($user_id) . '[.-]*';
+        $path = DirPath::get('avatars') . $uid . '[.-]*';
         $files = glob($path);
         foreach ($files as $file) {
             if (file_exists($file)){
@@ -671,13 +721,13 @@ class User
         return $total;
     }
     /**
-     * @param string|int$user_id
      * @return int
      */
-    public function getBackgroundImageUsage($user_id):int
+    public function getBackgroundImageUsage():int
     {
+        $uid = $this->get('userid');
         $total = 0;
-        $path = DirPath::get('backgrounds') . mysql_clean($user_id) . '[.-]*';
+        $path = DirPath::get('backgrounds') . $uid . '[.-]*';
         $files = glob($path);
         foreach ($files as $file) {
             if (file_exists($file)){
@@ -705,26 +755,26 @@ class User
             $total += Video::getInstance()->getStorageUsage($video['videoid']);
         }
 
-        $total += self::getInstance()->getBackgroundImageUsage($userid);
-        $total += self::getInstance()->getAvatarUsage($userid);
+        $total += self::getInstance($userid)->getBackgroundImageUsage();
+        $total += self::getInstance($userid)->getAvatarUsage();
 
-        $sql = 'INSERT INTO ' . tbl('users_storage_histo') . '(id_user, storage_used) VALUES (' . mysql_clean($userid) . ', ' . mysql_clean($total) . ')';
+        $sql = 'INSERT INTO ' . tbl('users_storage_histo') . '(id_user, storage_used) VALUES (' . (int)$userid . ', ' . (int)$total . ')';
         return Clipbucket_db::getInstance()->execute($sql);
     }
 
     /**
-     * @param int|string $userid
      * @return int
      * @throws Exception
      */
-    public function getLastStorageUseByUser($userid): int
+    public function getLastStorageUseByUser(): int
     {
+        $uid = $this->get('userid');
         $sql = 'SELECT storage_used
                 FROM ' . tbl('users_storage_histo') . '
-                WHERE id_user = ' . mysql_clean($userid) . ' AND datetime = (
+                WHERE id_user = ' . (int)$uid . ' AND datetime = (
                     SELECT MAX(datetime)
                     FROM ' . tbl('users_storage_histo') . '
-                    WHERE id_user = ' . mysql_clean($userid) . '
+                    WHERE id_user = ' . (int)$uid . '
                 )';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
@@ -734,13 +784,13 @@ class User
     }
 
     /**
-     * @param int|string $userid
      * @return array
      * @throws Exception
      */
-    public function getStorageHistoryByUser($userid): array
+    public function getStorageHistoryByUser(): array
     {
-        $sql = 'select date(datetime) as date_histo, storage_used from ' . tbl('users_storage_histo') . ' where id_user = ' . mysql_clean($userid) ;
+        $uid = $this->get('userid');
+        $sql = 'select date(datetime) as date_histo, storage_used from ' . tbl('users_storage_histo') . ' where id_user = ' . (int)$uid;
         $results = Clipbucket_db::getInstance()->_select($sql);
         if (empty($results)) {
             return [];
@@ -749,51 +799,38 @@ class User
     }
 
     /**
-     * @param $userid
      * @return void
      * @throws Exception
      */
-    public function removeUserFromContact($userid)
+    public function removeUserFromContact(): void
     {
-        $uid = mysql_clean($userid);
+        $uid = $this->get('userid');
         Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
     }
 
     /**
-     * @param $userid
-     * @return void
-     * @throws Exception
-     */
-    public function cleanUserMessages($userid)
-    {
-        $uid = mysql_clean($userid);
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('contacts') . ' WHERE userid = ' . $uid . ' OR contact_userid = ' . $uid);
-    }
-
-    /**
-     * @param $userid
      * @return void
      */
-    public function cleanUserFeed($userid)
+    public function cleanUserFeed(): void
     {
-        $userid = mysql_clean($userid);
-        $userfeeds = rglob(DirPath::get('userfeeds') . $userid . DIRECTORY_SEPARATOR . '*.feed');
+        $uid = $this->get('userid');
+        $userfeeds = rglob(DirPath::get('userfeeds') . $uid . DIRECTORY_SEPARATOR . '*.feed');
         foreach ($userfeeds as $userfeed) {
             unlink($userfeed);
         }
-        if (is_dir(DirPath::get('userfeeds') . $userid)) {
-            rmdir(DirPath::get('userfeeds') . $userid);
+        if (is_dir(DirPath::get('userfeeds') . $uid)) {
+            rmdir(DirPath::get('userfeeds') . $uid);
         }
     }
 
     /**
-     * @param string|int $userid
      * @return array
      * @throws Exception
      */
-    public function getFavoritesVideos($userid): array
+    public function getFavoritesVideos(): array
     {
-        $sql = ' SELECT id AS videoid FROM ' . tbl('favorites') . ' WHERE userid = ' . mysql_clean($userid) . ' AND type=\'v\'';
+        $uid = $this->get('userid');
+        $sql = ' SELECT id AS videoid FROM ' . tbl('favorites') . ' WHERE userid = ' . (int)$uid . ' AND type=\'v\'';
         $results = Clipbucket_db::getInstance()->_select($sql);
         if ( empty($results)) {
             return [];
@@ -809,28 +846,28 @@ class User
 
         if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
             if( in_array($this->get('active_theme'), ['light','dark','auto']) ){
-                if( $this->get('active_theme') && empty($_COOKIE['user_theme_os']) ){
+                if( in_array( $this->get('active_theme'), ['light','dark'] ) ){
+                    return $this->get('active_theme');
+                }
+                if( empty($_COOKIE['user_theme_os']) ){
                     return $this->get('active_theme');
                 }
                 if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
-                    return config('default_theme');
+                    return $this->get('active_theme');
                 }
                 return $_COOKIE['user_theme_os'];
             }
             return config('default_theme');
         }
 
-        if( isset($_COOKIE['user_theme']) ){
-            if( !in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
-                return config('default_theme');
+        if( isset($_COOKIE['user_theme']) && in_array($_COOKIE['user_theme'], ['light','dark','auto']) ){
+            if( in_array( $_COOKIE['user_theme'], ['light','dark'] ) ){
+                return $_COOKIE['user_theme'];
             }
-            if( $_COOKIE['user_theme'] == 'auto' ){
-                if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
-                    return config('default_theme');
-                }
-                return $_COOKIE['user_theme_os'];
+            if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
+                return $_COOKIE['user_theme'];
             }
-            return $_COOKIE['user_theme'];
+            return $_COOKIE['user_theme_os'];
         }
         return config('default_theme');
     }
@@ -861,16 +898,111 @@ class User
         return true;
     }
 
+    /**
+     * @throws Exception
+     */
+    public function delete(): void
+    {
+        if( !$this->hasAdminAccess() &&
+            (config('enable_user_self_deletion') != 'yes' || $this->get('userid') != user_id()) ){
+            e(lang('you_cant_delete_this_user'));
+            return;
+        }
+
+        $uid = $this->get('userid');
+
+        // Delete reports
+        Flag::unFlagByElementId($uid, 'user');
+        // Delete categories
+        Category::getInstance()->unlinkAll('user', $uid);
+        // Delete tags
+        Tags::deleteTags('profile', $uid);
+        // Delete user feeds
+        $this->cleanUserFeed();
+        // Delete user contacts
+        $this->removeUserFromContact();
+        // Delete channel comments
+        $params = [
+            'type' => 'channel',
+            'type_id' => $uid
+        ];
+        Comments::delete($params);
+        // Delete user Comments
+        $params = [
+            'userid' => $uid
+        ];
+        Comments::delete($params);
+        // Delete user collections
+        $collections = Collection::getInstance()->getAll(['userid' => $uid]);
+        foreach ($collections as $collection) {
+            Collections::getInstance()->delete_collection($collection['collection_id']);
+        }
+        // Delete user playlists
+        $playlists = Playlist::getInstance()->getAll(['userid' => $uid]);
+        foreach ($playlists as $playlist) {
+            CBvideo::getInstance()->action->delete_playlist($playlist['playlist_id']);;
+        }
+        // Delete user photos
+        $photos = \Photo::getInstance()->getAll(['userid' => $uid]);
+        foreach ($photos as $photo) {
+            CBPhotos::getInstance()->delete_photo($photo['photo_id']);
+        }
+        // Delete user videos
+        $videos = Video::getInstance()->getAll(['userid' => $uid]);
+        foreach ($videos as $video) {
+            CBvideo::getInstance()->delete_video($video['videoid']);
+        }
+
+        //list of functions to perform while deleting a video
+        $del_user_funcs = userquery::getInstance()->delete_user_functions;
+        if (is_array($del_user_funcs)) {
+            foreach ($del_user_funcs as $func) {
+                if (function_exists($func)) {
+                    $func($this->user_data);
+                }
+            }
+        }
+
+        //Removing Subscriptions and subscribers
+        userquery::getInstance()->remove_user_subscriptions($uid);
+        userquery::getInstance()->remove_user_subscribers($uid);
+        //Deleting User PMS
+        userquery::getInstance()->remove_user_pms($uid);
+
+        $anonymous_id = userquery::getInstance()->get_anonymous_user();
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+
+        //Finally Removing Database entry of user
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
+    }
+
 }
 
 class userquery extends CBCategory
 {
+    private static self $instance;
+
+    /**
+     * @throws Exception
+     */
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+            self::$instance->init();
+        }
+        return self::$instance;
+    }
+
     var $userid = '';
     var $username = '';
     var $email = '';
     var $level = '';
     var $access_type_list = []; //Access list
-    var $usr_levels = [];
     var $custom_signup_fields = [];
     var $custom_profile_fields = [];
     var $custom_profile_fields_groups = [];
@@ -879,7 +1011,6 @@ class userquery extends CBCategory
     var $user_account = [];
     var $sessions = '';
     var $is_login = false;
-    var $custom_subscription_email_vars = [];
 
     var $dbtbl = [
         'user_permission_type'  => 'user_permission_types',
@@ -896,12 +1027,6 @@ class userquery extends CBCategory
 
     private $basic_fields = [];
     private $extra_fields = [];
-
-    public static function getInstance()
-    {
-        global $userquery;
-        return $userquery;
-    }
 
     function __construct()
     {
@@ -922,7 +1047,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function init()
+    function init(): void
     {
         global $sess;
 
@@ -972,7 +1097,7 @@ class userquery extends CBCategory
         $this->action = new cbactions();
         $this->action->type = 'u';
         $this->action->name = 'user';
-        $this->action->obj_class = 'userquery';
+        $this->action->obj_class = self::class;
         $this->action->check_func = 'user_exists';
         $this->action->type_tbl = $this->dbtbl['users'];
         $this->action->type_id_field = 'userid';
@@ -1112,9 +1237,8 @@ class userquery extends CBCategory
 
                     // This account still use old password method, let's update it
                     if ($udetails){
-                        $version = Update::getInstance()->getDBVersion();
-                        if ($version['version'] > '5.0.0' || ($version['version'] == '5.0.0' && $version['revision'] >= 1)) {
-                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . $uid . '\'');
+                        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.0.0', '1') ){
+                            Clipbucket_db::getInstance()->update(tbl('users'), ['password'], [$pass], ' userid=\'' . (int)$uid . '\'');
                         }
                     }
                 }
@@ -1214,7 +1338,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function logout()
+    function logout(): void
     {
         //Calling Logout Functions
         $funcs = $this->logout_functions;
@@ -1237,19 +1361,19 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function delete_user($uid)
+    function delete_user($uid): void
     {
         if( !$this->user_exists($uid) ){
             e(lang('user_doesnt_exist'));
             return;
         }
 
-        $udetails = $this->get_user_details($uid);
-
         if( user_id() == $uid || !User::getInstance()->hasAdminAccess() ){
             e(lang('you_cant_delete_this_user'));
             return;
         }
+
+        $udetails = $this->get_user_details($uid);
 
         //list of functions to perform while deleting a video
         $del_user_funcs = $this->delete_user_functions;
@@ -1270,20 +1394,20 @@ class userquery extends CBCategory
 
         $anonymous_id = $this->get_anonymous_user();
         //Changing User Videos To Anonymous
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('video') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
         //Deleting User Contacts
-        User::getInstance()->removeUserFromContact($uid);
+        User::getInstance($uid)->removeUserFromContact();
 
         //Deleting User PMS
         $this->remove_user_pms($uid);
         //Changing From Messages to Anonymous
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $anonymous_id . '\' WHERE message_from=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('photos') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collections') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('messages') . ' SET message_from=\'' . $anonymous_id . '\' WHERE message_from=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('photos') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collections') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('collection_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlists') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('playlist_items') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('flags') . ' SET userid=\'' . $anonymous_id . '\' WHERE userid=' . (int)$uid);
 
         //Removing channel Comments
         $params = [];
@@ -1297,12 +1421,13 @@ class userquery extends CBCategory
         Category::getInstance()->unlinkAll('user', $uid);
 
         //Finally Removing Database entry of user
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . mysql_clean($uid));
-        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . mysql_clean($uid));
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users_storage_histo') . ' WHERE id_user =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('email_histo') . ' WHERE userid =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('favorites') . ' WHERE userid =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('user_profile') . ' WHERE userid =' . (int)$uid);
+        Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('users') . ' WHERE userid =' . (int)$uid);
 
-        User::getInstance()->cleanUserFeed($uid);
+        User::getInstance($uid)->cleanUserFeed();
 
         if( empty(errorhandler::getInstance()->get_error()) ){
             e(lang('usr_del_msg'), 'm');
@@ -1315,7 +1440,7 @@ class userquery extends CBCategory
      * @param $uid
      * @throws Exception
      */
-    function remove_user_subscriptions($uid)
+    function remove_user_subscriptions($uid): void
     {
         if (!$this->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
@@ -1333,7 +1458,7 @@ class userquery extends CBCategory
      * @param $uid
      * @throws Exception
      */
-    function remove_user_subscribers($uid)
+    function remove_user_subscribers($uid): void
     {
         if (!$this->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
@@ -1377,13 +1502,12 @@ class userquery extends CBCategory
     {
         global $sess;
 
-        $is_email = strpos($id, '@') !== false;
+        $is_email = str_contains($id, '@');
         $select_field = (!$is_email && !is_numeric($id)) ? 'username' : (!is_numeric($id) ? 'email' : 'userid');
-        $version = Update::getInstance()->getDBVersion();
 
         if (!$email) {
             $params = ['users' => ['*']];
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 $params['users_categories'] = ['id_category'];
             }
             $fields = table_fields($params);
@@ -1392,7 +1516,7 @@ class userquery extends CBCategory
         }
 
         $query = 'SELECT '.$fields.' FROM ' . cb_sql_table('users');
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
             $query .= ' LEFT JOIN ' . cb_sql_table('users_categories') . ' ON users.userid = users_categories.id_user';
         }
         $query .= " WHERE users.$select_field = '$id'";
@@ -1421,9 +1545,8 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function activate_user_with_avcode($user, $avcode)
+    function activate_user_with_avcode($user, $avcode): void
     {
-        global $eh;
         $data = $this->get_user_details($user);
         if (!$data || !$user) {
             e(lang("usr_exist_err"));
@@ -1435,7 +1558,7 @@ class userquery extends CBCategory
             e(lang('avcode_incorrect'));
         } else {
             $this->action('activate', $data['userid']);
-            $eh->flush();
+            errorhandler::getInstance()->flush();
             e(lang("usr_activation_msg"), "m");
 
             if ($data['welcome_email_sent'] == 'no') {
@@ -1452,7 +1575,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function send_activation_code($email)
+    function send_activation_code($email): void
     {
         $udetails = $this->get_user_details($email);
 
@@ -1478,7 +1601,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function send_welcome_email($user, $update_email_status = false)
+    function send_welcome_email($user, $update_email_status = false): void
     {
         if (!is_array($user)) {
             $udetails = $this->get_user_details($user);
@@ -1500,7 +1623,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function change_password($array)
+    function change_password($array): void
     {
         $old_pass = $array['old_pass'];
         $new_pass = $array['new_pass'];
@@ -1518,8 +1641,6 @@ class userquery extends CBCategory
             Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password'], [pass_code($array['new_pass'], $uid)], ' userid=\'' . $uid . '\'');
             e(lang('usr_pass_email_msg'), 'm');
         }
-
-        return $msg;
     }
 
     /**
@@ -1530,7 +1651,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function add_contact($uid, $fid)
+    function add_contact($uid, $fid): void
     {
         $friend = $this->get_user_details($fid);
         $sender = $this->get_user_details($uid);
@@ -1647,7 +1768,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function confirm_friend($sender_id, $receiver_id, $msg = true)
+    function confirm_friend($sender_id, $receiver_id, $msg = true): void
     {
         if (!$this->is_requested_friend($receiver_id, $sender_id, 'out', 'no')) {
             if ($msg) {
@@ -1675,14 +1796,11 @@ class userquery extends CBCategory
 
             EmailTemplate::sendMail('friend_confirmation', $receiver_id, $var);
 
-            //Logging Friendship
-
             $log_array = [
                 'success'       => 'yes',
                 'action_obj_id' => $friend['userid'],
                 'details'       => 'friend with ' . $friend['username']
             ];
-
             insert_log('add_friend', $log_array);
 
             $log_array = [
@@ -1691,11 +1809,9 @@ class userquery extends CBCategory
                 'userid'        => $friend['userid'],
                 'userlevel'     => $friend['level'],
                 'useremail'     => $friend['email'],
-                'action_obj_id' => $insert_id,
+                'action_obj_id' => user_id(),
                 'details'       => 'friend with ' . user_id()
             ];
-
-            //Login Upload
             insert_log('add_friend', $log_array);
         }
     }
@@ -1708,7 +1824,7 @@ class userquery extends CBCategory
      *
      * @throws Exception
      */
-    function confirm_request($rid, $uid = null)
+    function confirm_request($rid, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();
@@ -2040,7 +2156,7 @@ class userquery extends CBCategory
                     }
 
                     $var = [
-                        'reset_password_link' => Network::get_server_url() . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
+                        'reset_password_link' => DirPath::getUrl('root') . 'forgot.php?mode=reset_pass&user=' . $udetails['userid'] . '&avcode=' . $avcode,
                     ];
                     //Now Finally Sending Email
                     if (EmailTemplate::sendMail('password_reset_request', $udetails['userid'], $var)) {
@@ -2063,7 +2179,7 @@ class userquery extends CBCategory
                     Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['password', 'avcode'], [$pass, $avcode], " userid='" . $udetails['userid'] . "'");
                     //Sending confirmation email
                     $var = [
-                        'url'   => Network::get_server_url() . 'login.php',
+                        'url'      => DirPath::getUrl('root') . 'login.php',
                         'password' => $newpass
                     ];
 
@@ -2074,6 +2190,8 @@ class userquery extends CBCategory
                 }
                 break;
         }
+
+        return false;
     }
 
     /**
@@ -2145,7 +2263,7 @@ class userquery extends CBCategory
 
         if (config('gravatars') == 'yes' && (!empty($udetails['email']) || !empty($udetails['anonym_email']))) {
             $email = $udetails['email'] ? $udetails['email'] : $udetails['anonym_email'];
-            $gravatar = new Gravatar($email, Network::get_server_url() . $default);
+            $gravatar = new Gravatar($email, $default);
             $gravatar->size = $thesize;
             $gravatar->rating = 'G';
             $gravatar->border = 'FF0000';
@@ -2166,17 +2284,17 @@ class userquery extends CBCategory
     function get_default_thumb($size = null): string
     {
         if ($size == 'small' && file_exists(TEMPLATEDIR . '/images/avatars/no_avatar-small.png')) {
-            return '/images/avatars/no_avatar-small.png';
+            return TEMPLATEURL . '/images/avatars/no_avatar-small.png';
         }
 
         if (file_exists(TEMPLATEDIR . '/images/avatars/no_avatar.png') && !$size) {
-            return '/images/avatars/no_avatar.png';
+            return TEMPLATEURL . '/images/avatars/no_avatar.png';
         }
 
         if ($size == 'small') {
-            return '/images/avatars/no_avatar-small.png';
+            return DirPath::getUrl('images') . 'avatars/no_avatar-small.png';
         }
-        return '/images/avatars/no_avatar.png';
+        return DirPath::getUrl('images') . 'avatars/no_avatar.png';
     }
 
     /**
@@ -2461,10 +2579,10 @@ class userquery extends CBCategory
 
         $username = display_clean($udetails['user_username'] ?? $udetails['username']);
         if (config('seo') != 'yes') {
-            return '/view_channel.php?user=' . $username;
+            return cblink(['name' => 'view_channel']) . '?user=' . $username;
         }
 
-        return '/user/' . $username;
+        return cblink(['name' => 'view_channel']) . $username;
     }
 
     /**
@@ -2510,18 +2628,74 @@ class userquery extends CBCategory
         $select = [];
         $join = '';
         $group = [];
-        $user_profile_fields = ['userid','show_my_collections', 'profile_title', 'profile_desc', 'featured_video', 'first_name', 'last_name', 'show_dob', 'postal_code', 'time_zone', 'web_url', 'fb_url', 'twitter_url', 'insta_url', 'hometown', 'city', 'online_status', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'about_me', 'education', 'schools', 'occupation', 'companies', 'relation_status', 'hobbies', 'fav_movies', 'fav_music', 'fav_books', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+        $user_profile_fields = ['userid','show_my_collections','featured_video', 'show_dob', 'time_zone', 'fb_url', 'twitter_url', 'insta_url', 'show_profile', 'allow_comments', 'allow_ratings', 'allow_subscription', 'content_filter', 'icon_id', 'browse_criteria', 'background', 'rating', 'voters', 'rated_by', 'show_my_videos', 'show_my_photos', 'show_my_subscriptions', 'show_my_subscribers', 'show_my_friends'];
+
+        if( config('enable_user_firstname_lastname') == 'yes' ){
+            $user_profile_fields[] = 'first_name';
+            $user_profile_fields[] = 'last_name';
+        }
+        if( config('enable_user_relation_status') == 'yes' ){
+            $user_profile_fields[] = 'relation_status';
+        }
+        if( config('enable_user_postcode') == 'yes' ){
+            $user_profile_fields[] = 'postal_code';
+        }
+        if( config('enable_user_hometown') == 'yes' ){
+            $user_profile_fields[] = 'hometown';
+        }
+        if( config('enable_user_city') == 'yes' ){
+            $user_profile_fields[] = 'city';
+        }
+        if( config('enable_user_education') == 'yes' ){
+            $user_profile_fields[] = 'education';
+        }
+        if( config('enable_user_schools') == 'yes' ){
+            $user_profile_fields[] = 'schools';
+        }
+        if( config('enable_user_occupation') == 'yes' ){
+            $user_profile_fields[] = 'occupation';
+        }
+        if( config('enable_user_compagnies') == 'yes' ){
+            $user_profile_fields[] = 'companies';
+        }
+        if( config('enable_user_hobbies') == 'yes' ){
+            $user_profile_fields[] = 'hobbies';
+        }
+        if( config('enable_user_favorite_movies') == 'yes' ){
+            $user_profile_fields[] = 'fav_movies';
+        }
+        if( config('enable_user_favorite_music') == 'yes' ){
+            $user_profile_fields[] = 'fav_music';
+        }
+        if( config('enable_user_favorite_books') == 'yes' ){
+            $user_profile_fields[] = 'fav_books';
+        }
+        if( config('enable_user_website') == 'yes' ){
+            $user_profile_fields[] = 'web_url';
+        }
+        if( config('enable_user_about') == 'yes' ){
+            $user_profile_fields[] = 'about_me';
+        }
+        if( config('enable_user_status') == 'yes' ){
+            $user_profile_fields[] = 'online_status';
+        }
+        if( config('enable_channel_description') == 'yes' ) {
+            $user_profile_fields[] = 'profile_desc';
+        }
 
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
             $user_profile_fields[] = 'disabled_channel';
+        }
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
+            $user_profile_fields[] = 'profile_slogan';
         }
 
         foreach($user_profile_fields as $field){
             $select[] = 'UP.' . $field;
         }
 
-        $version = Update::getInstance()->getDBVersion();
-        if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 264)) {
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
             $group = $select;
             $select[] = 'GROUP_CONCAT( DISTINCT(T.name) SEPARATOR \',\') as profile_tags';
             $join = ' LEFT JOIN ' . tbl('user_tags') . ' UT ON UP.userid = UT.id_user
@@ -2569,9 +2743,8 @@ class userquery extends CBCategory
      * @param $array
      * @throws Exception
      */
-    function update_user($array)
+    function update_user($array): void
     {
-        global $Upload;
         if (is_null($array)) {
             $array = $_POST;
         }
@@ -2717,7 +2890,7 @@ class userquery extends CBCategory
             $uquery_field[] = 'dob';
 
             // Converting date from custom format to MySQL
-            $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $array['dob']);
+            $dob_datetime = DateTime::createFromFormat(config('date_format'), $array['dob']);
             if ($dob_datetime) {
                 $uquery_val[] = $dob_datetime->format('Y-m-d');
             } else {
@@ -2754,7 +2927,7 @@ class userquery extends CBCategory
             $uquery_val[] = '';
         } else {
             if (!empty($_FILES['avatar_file']['name'])) {
-                $file = $Upload->upload_user_file('avatar', $_FILES['avatar_file'], $array['userid']);
+                $file = Upload::getInstance()->upload_user_file('avatar', $_FILES['avatar_file'], $array['userid']);
                 if ($file) {
                     $uquery_field[] = 'avatar';
                     $uquery_val[] = $file;
@@ -2784,7 +2957,7 @@ class userquery extends CBCategory
         }
 
         if (!empty($_FILES['background_file']['name'])) {
-            $file = $Upload->upload_user_file('background', $_FILES['background_file'], $array['userid']);
+            $file = Upload::getInstance()->upload_user_file('background', $_FILES['background_file'], $array['userid']);
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;
@@ -2910,7 +3083,7 @@ class userquery extends CBCategory
         */
 
         if( !empty($_FILES['background_file']['name']) ){
-            $file = $Upload->upload_user_file('background', $_FILES['background_file'], user_id());
+            $file = Upload::getInstance()->upload_user_file('background', $_FILES['background_file'], user_id());
             if ($file) {
                 $uquery_field[] = 'background';
                 $uquery_val[] = $file;
@@ -2995,8 +3168,7 @@ class userquery extends CBCategory
             $userId = user_id();
         }
 
-        global $userquery;
-        return $userquery->getUserBg($userquery->get_user_details($userId));
+        return userquery::getInstance()->getUserBg(userquery::getInstance()->get_user_details($userId));
     }
 
     public function getImageExt($imageName = false)
@@ -3011,7 +3183,8 @@ class userquery extends CBCategory
      * Function used to check weather username exists or not
      *
      * @param $i
-     * @return mixed
+     * @return bool|int
+     * @throws Exception
      */
     function username_exists($i)
     {
@@ -3041,7 +3214,7 @@ class userquery extends CBCategory
         if ($email_domain_restriction != '') {
             $list_domains = explode(',', $email_domain_restriction);
             foreach ($list_domains as $domain) {
-                if (strpos($email, '@' . $domain) !== false) {
+                if (str_contains($email, '@' . $domain)) {
                     return true;
                 }
             }
@@ -3138,11 +3311,12 @@ class userquery extends CBCategory
      * @param bool $ck_display_admin
      * @param bool $ck_display_user
      *
-     * @return mixed
+     * @return array
      */
-    function load_custom_signup_fields($data, $ck_display_admin = false, $ck_display_user = false)
+    function load_custom_signup_fields($data, $ck_display_admin = false, $ck_display_user = false): array
     {
         $array = $this->custom_signup_fields;
+        $new_array = [];
         foreach ($array as $key => $fields) {
             $ok = 'yes';
             if ($ck_display_admin) {
@@ -3166,14 +3340,6 @@ class userquery extends CBCategory
         }
 
         return $new_array;
-    }
-
-    /**
-     * Function used to get user videos link
-     */
-    function get_user_videos_link($u)
-    {
-        return cblink(['name' => 'user_videos']) . $u['username'];
     }
 
     /**
@@ -3269,7 +3435,7 @@ class userquery extends CBCategory
      * @param $array
      * @throws Exception
      */
-    function change_email($array)
+    function change_email($array): void
     {
         //function used to change user email
         if (!isValidEmail($array['new_email']) || $array['new_email'] == '') {
@@ -3295,7 +3461,7 @@ class userquery extends CBCategory
      * @return void
      * @throws Exception
      */
-    function block_users($users, $uid = null)
+    function block_users($users, $uid = null): void
     {
         $this->ban_users($users, $uid);
     }
@@ -3303,7 +3469,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function ban_users($users, $uid = null)
+    function ban_users($users, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();
@@ -3334,30 +3500,30 @@ class userquery extends CBCategory
      * @param $user
      * @throws Exception
      */
-    function ban_user($user)
+    function ban_user($user): void
     {
         $uid = user_id();
-
         if (!$uid) {
             e(lang('you_not_logged_in'));
-        } else {
-            if ($user != user_name() && !is_numeric($user) && $this->user_exists($user)) {
-                $banned_users = $this->udetails['banned_users'];
-                if ($banned_users) {
-                    $banned_users .= ",$user";
-                } else {
-                    $banned_users = "$user";
-                }
+            return;
+        }
 
-                if (!$this->is_user_banned($user)) {
-                    Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
-                    e(lang('user_blocked'), 'm');
-                } else {
-                    e(lang('user_already_blocked'));
-                }
+        if ($user != user_name() && !is_numeric($user) && $this->user_exists($user)) {
+            $banned_users = $this->udetails['banned_users'];
+            if ($banned_users) {
+                $banned_users .= ",$user";
             } else {
-                e(lang('you_cant_del_user'));
+                $banned_users = "$user";
             }
+
+            if (!$this->is_user_banned($user)) {
+                Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['banned_users'], [$banned_users], " userid='$uid'");
+                e(lang('user_blocked'), 'm');
+            } else {
+                e(lang('user_already_blocked'));
+            }
+        } else {
+            e(lang('you_cant_del_user'));
         }
     }
 
@@ -3439,7 +3605,7 @@ class userquery extends CBCategory
         if ($dob != '' && $dob != '0000-00-00') {
             $dob_datetime = DateTime::createFromFormat('Y-m-d', $dob);
             if ($dob_datetime) {
-                $dob = $dob_datetime->format(DATE_FORMAT);
+                $dob = $dob_datetime->format(config('date_format'));
             }
         }
 
@@ -3533,7 +3699,7 @@ class userquery extends CBCategory
             }
 
             if (strlen($selected_cont) != 2) {
-                $selected_cont = 'PK';
+                $selected_cont = 'FR';
             }
 
             $user_signup_fields['country'] = [
@@ -3602,8 +3768,9 @@ class userquery extends CBCategory
      *
      * @param null $array
      * @throws \PHPMailer\PHPMailer\Exception
+     * @throws Exception
      */
-    function validate_form_fields($array = null)
+    function validate_form_fields($array = null): void
     {
         $fields = $this->load_signup_fields($array);
 
@@ -3632,8 +3799,6 @@ class userquery extends CBCategory
      */
     function signup_user($array = null, $send_signup_email = true)
     {
-        global $userquery;
-
         $isSocial = false;
         if (isset($array['social_account_id'])) {
             $isSocial = true;
@@ -3675,7 +3840,7 @@ class userquery extends CBCategory
                 $val = $array[$name];
 
                 if ($name == 'dob') {
-                    $dob_datetime = DateTime::createFromFormat(DATE_FORMAT, $val);
+                    $dob_datetime = DateTime::createFromFormat(config('date_format'), $val);
                     if ($dob_datetime) {
                         $val = $dob_datetime->format('Y-m-d');
                     } else {
@@ -3701,7 +3866,7 @@ class userquery extends CBCategory
             }
 
             // Setting Verification type
-            if (EMAIL_VERIFICATION == '1') {
+            if (config('email_verification') == '1') {
                 $usr_status = 'ToActivate';
                 $welcome_email = 'no';
             } else {
@@ -3721,8 +3886,8 @@ class userquery extends CBCategory
                 $query_field[] = 'level';
                 $query_val[] = $array['level'];
             }
-            global $Upload;
-            $custom_fields_array = $Upload->load_custom_form_fields(false, false, false, true);
+
+            $custom_fields_array = Upload::getInstance()->load_custom_form_fields(false, false, false, true);
             foreach ($custom_fields_array as $cfield) {
                 $db_field = $cfield['db_field'];
                 $query_field[] = $db_field;
@@ -3819,7 +3984,7 @@ class userquery extends CBCategory
             $fields_data[] = $insert_id;
 
             // Specify default values for user_profile fields without one
-            $fields_list[] = 'profile_title';
+            $fields_list[] = Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') ? 'profile_slogan' : 'profile_title';
             $fields_data[] = '';
             $fields_list[] = 'profile_desc';
             $fields_data[] = '';
@@ -3846,9 +4011,9 @@ class userquery extends CBCategory
             $fields_list[] = 'voters';
             $fields_data[] = '';
 
-            Clipbucket_db::getInstance()->insert(tbl($userquery->dbtbl['user_profile']), $fields_list, $fields_data);
+            Clipbucket_db::getInstance()->insert(tbl(userquery::getInstance()->dbtbl['user_profile']), $fields_list, $fields_data);
 
-            if (!User::getInstance()->hasPermission('admin_access') && EMAIL_VERIFICATION && $send_signup_email) {
+            if (!User::getInstance()->hasPermission('admin_access') && config('email_verification') && $send_signup_email) {
                 $var = ['avcode' => $avcode];
                 EmailTemplate::sendMail('verify_account', $insert_id, $var);
             } elseif (!User::getInstance()->hasPermissionOrRedirect('admin_access', true) && $send_signup_email) {
@@ -3875,10 +4040,12 @@ class userquery extends CBCategory
         return false;
     }
 
+    /**
+     * @throws Exception
+     */
     function duplicate_email($name): bool
     {
-        $myquery = new myquery();
-        if ($myquery->check_email($name)) {
+        if (myquery::getInstance()->check_email($name)) {
             return true;
         }
         return false;
@@ -4031,8 +4198,26 @@ class userquery extends CBCategory
         if (empty($params['count_only'])) {
             $fields = [
                 'users'   => get_user_fields(),
-                'profile' => ['rating', 'rated_by', 'voters', 'first_name', 'last_name', 'profile_title', 'profile_desc', 'city', 'hometown']
+                'profile' => ['rating', 'rated_by', 'voters']
             ];
+
+            if( config('enable_user_firstname_lastname') == 'yes' ){
+                $fields['profile'][] = 'first_name';
+                $fields['profile'][] = 'last_name';
+            }
+            if( config('enable_user_city') == 'yes' ){
+                $fields['profile'][] = 'city';
+            }
+            if( config('enable_user_hometown') == 'yes' ){
+                $fields['profile'][] = 'hometown';
+            }
+            if( config('enable_channel_description') == 'yes' ){
+                $fields['profile'][] = 'profile_desc';
+            }
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ){
+                $fields['profile'][] = 'profile_slogan';
+            }
+
             $fields['users'][] = 'last_active';
             $fields['users'][] = 'total_collections';
             $query = ' SELECT ' . table_fields($fields) . ' FROM ' . cb_sql_table('users');
@@ -4299,16 +4484,15 @@ class userquery extends CBCategory
      * @param $uid
      * @throws Exception
      */
-    function delete_user_vids($uid)
+    function delete_user_vids($uid): void
     {
-        global $cbvid, $eh;
         $vids = get_videos(['user' => $uid]);
         if (is_array($vids)) {
             foreach ($vids as $vid) {
-                $cbvid->delete_video($vid['videoid']);
+                CBvideo::getInstance()->delete_video($vid['videoid']);
             }
         }
-        $eh->flush_msg();
+        errorhandler::getInstance()->flush_msg();
         e(lang('user_vids_hv_deleted'), 'm');
     }
 
@@ -4318,16 +4502,15 @@ class userquery extends CBCategory
      * @param $uid
      * @throws Exception
      */
-    function remove_contacts($uid)
+    function remove_contacts($uid): void
     {
-        global $eh;
         $contacts = $this->get_contacts($uid);
         if (is_array($contacts)) {
             foreach ($contacts as $contact) {
                 $this->remove_contact($contact['userid'], $contact['contact_userid']);
             }
         }
-        $eh->flush_msg();
+        errorhandler::getInstance()->flush_msg();
         e(lang('user_contacts_hv_removed'), 'm');
     }
 
@@ -4338,9 +4521,9 @@ class userquery extends CBCategory
      * @param string $box
      * @throws Exception
      */
-    function remove_user_pms($uid, $box = 'both')
+    function remove_user_pms($uid, $box = 'both'): void
     {
-        global $cbpm, $eh;
+        global $cbpm;
 
         if ($box == 'inbox' || $box == 'both') {
             $inboxs = $cbpm->get_user_inbox_messages($uid);
@@ -4349,7 +4532,7 @@ class userquery extends CBCategory
                     $cbpm->delete_msg($inbox['message_id'], $uid);
                 }
             }
-            $eh->flush_msg();
+            errorhandler::getInstance()->flush_msg();
             e(lang('all_user_inbox_deleted'), 'm');
         }
 
@@ -4794,16 +4977,18 @@ class userquery extends CBCategory
             ];
         }
 
-        $return['profile_title'] = [
-            'title'     => lang('channel_title'),
-            'type'      => 'textfield',
-            'name'      => 'profile_title',
-            'id'        => 'profile_title',
-            'value'     => $default['profile_title'],
-            'db_field'  => 'profile_title',
-            'auto_view' => 'no',
-            'disabled'  => (strtolower($default['disabled_channel']) == 'yes')
-        ];
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '37') && config('enable_channel_slogan') == 'yes' ) {
+            $return['profile_slogan'] = [
+                'title'     => lang('channel_slogan'),
+                'type'      => 'textfield',
+                'name'      => 'profile_slogan',
+                'id'        => 'profile_slogan',
+                'value'     => $default['profile_slogan'],
+                'db_field'  => 'profile_slogan',
+                'auto_view' => 'no',
+                'disabled'  => (strtolower($default['disabled_channel']) == 'yes')
+            ];
+        }
 
         $return['profile_desc'] = [
             'title'     => lang('channel_desc'),
@@ -5171,11 +5356,11 @@ class userquery extends CBCategory
         //Loading subscription email template
         if ($subscribers) {
             $var = [
-                'sender_username'       => $uploader['username'],
+                'sender_username'   => $uploader['username'],
                 'video_title'       => $vidDetails['title'],
                 'video_description' => $vidDetails['description'],
                 'video_link'        => video_link($vidDetails),
-                'video_thumb'       => Network::get_server_url() . get_thumb($vidDetails)
+                'video_thumb'       => DirPath::getUrl('root') . get_thumb($vidDetails)
             ];
             foreach ($subscribers as $subscriber) {
                 EmailTemplate::sendMail('video_subscription', $subscriber['userid'], $var);

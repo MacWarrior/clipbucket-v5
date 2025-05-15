@@ -14,12 +14,24 @@
     </div>
     <div class="cb-instal-licenc-holder">
         <div class="cb-instal-licenc-sec">
-            <?php echo System::get_license('LICENSE'); ?>
+            <pre><?php echo System::get_file_content(DirPath::get('docs') . 'LICENSE'); ?></pre>
         </div>
     </div>
 
+    <?php if( !Network::check_forbidden_directory(false) ){ ?>
+    <br/>
+    <div class="alert alert-danger alert-dismissable container" style="width:100%;">
+        <button class="close" type="button" data-dismiss="alert" aria-hidden="true">x</button>
+        <ul class="list-unstyled">
+            <li>
+                <?php Network::check_forbidden_directory(); ?>
+            </li>
+        </ul>
+    </div>
+    <?php } ?>
+
     <form method="post" id="installation">
         <input type="hidden" name="mode" value="precheck"/>
-        <div style="padding:10px 0;text-align:right;"><?php button('Ok, I Agree, Now let me Continue !', ' onclick="$(\'#installation\').submit()" '); ?></div>
+        <div style="padding:10px 0;text-align:right;"><?php button('Ok, I Agree, Now let me Continue !', Network::check_forbidden_directory(false) ? ' onclick="$(\'#installation\').submit()" ' : ' disabled'); ?></div>
     </form>
 </div>

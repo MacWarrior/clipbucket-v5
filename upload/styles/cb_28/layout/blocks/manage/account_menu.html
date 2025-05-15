@@ -1,5 +1,4 @@
-{$topMenuLinks = array_slice($myAccountLinks, 0, 6)}
- {if user_id()}
+{if user_id()}
 <div class="userAccountMenu navbar navbar-default cb-box row visible-xs">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -11,7 +10,7 @@
         <div class="userPicContainer">
             {if user_id()}
             <a class="navbar-brand {if user_id()}nopadding{/if}" style="{if user_id()}padding-top:7px !important;{/if}" href="#">
-                <img class="cb_img_thum" src="{$userquery->getUserThumb('','small',user_id())}" style="width:40px; height:40px;"/>
+                <img class="cb_img_thum" src="{userquery::getInstance()->getUserThumb('','small',user_id())}" style="width:40px; height:40px;"/>
                 My Account &nbsp;&nbsp;&nbsp;<small>Total Uploaded Videos: {$user['total_videos']}</small>
             </a>
             {/if}
@@ -19,6 +18,8 @@
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
+            {$myAccountLinks = userquery::getInstance()->my_account_links()}
+            {$topMenuLinks = array_slice($myAccountLinks, 0, 6)}
             {foreach $topMenuLinks as $key => $value}
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">{$key}<b class="caret"></b></a>
@@ -31,7 +32,7 @@
             {/foreach}
         </ul> 
         <div class="pull-right">
-            <a class="btn btn-info" href="{$userquery->profile_link($userquery->udetails)}">{lang code='com_my_channel'}</a>
+            <a class="btn btn-info" href="{userquery::getInstance()->profile_link(userquery::getInstance()->udetails)}">{lang code='com_my_channel'}</a>
         </div>
     </div>
 </div>

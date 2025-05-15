@@ -1,7 +1,12 @@
 <div class="channel-holder">
 	<a href="{User::getInstance($user.userid)->getLink('channel')}" id="user-{$user.userid}" class="user-block">
-		<img class="avatar" src="{$userquery->getUserThumb($user)}"/>
+		<img class="avatar" src="{userquery::getInstance()->getUserThumb($user)}" alt="channel_avatar"/>
 		<h2>{display_clean(User::getInstance($user.userid)->get('username'))}</h2>
+		{if config('enable_channel_slogan') == 'yes' && config('enable_channels_slogan_display') == 'yes' && !empty(User::getInstance($user.userid)->get('profile_slogan'))}
+			<span class="channel_slogan" title="{User::getClean(User::getInstance($user.userid)->get('profile_slogan'))}">
+				{User::getClean(User::getInstance($user.userid)->get('profile_slogan'))}
+			</span>
+		{/if}
 	</a>
 	<div class="info clearfix">
 		<div class="col">

@@ -4,7 +4,7 @@
 		// bootstrapping
 		this.baseurl = baseurl;
 		this.imageurl = '';
-		this.page = '/ajax.php';
+		this.page = baseurl+'ajax.php';
 		this.loading_img = "<img alt='loading' style='vertical-align:middle' src='" + imageurl + "/ajax-loader-big.gif'/>";
 		this.loading = this.loading_img+' Loading...';
 		this.download = 0;
@@ -12,8 +12,8 @@
 		this.cur_speed = 0;
 
 		this.status_refesh = 1 //in seconds
-		this.result_page = '/actions/file_results.php';
-		this.download_page = '/actions/file_downloader.php';
+		this.result_page = baseurl+'actions/file_results.php';
+		this.download_page = baseurl+'actions/file_downloader.php';
 		this.count = 0;
 
 		this.hasLoaded = false;
@@ -154,7 +154,7 @@
 					remoteUploadStop();
 					$('#loading').html('');
 					var vid = data.vid;
-					$.post('/actions/getVideoDetails.php', {
+					$.post(baseurl+'actions/getVideoDetails.php', {
 						'file_name':file_name,
 						'vid' : vid,
 					},function(data){
@@ -185,7 +185,7 @@
 								formData += '&updateVideo=yes';
 
 								$.ajax({
-									url : '/actions/file_uploader.php',
+									url : baseurl+'actions/file_uploader.php',
 									type : 'post',
 									data : formData,
 									success: function(data){
@@ -221,7 +221,7 @@
 								var data = $(this).serialize();
 								data += '&updateVideo=yes';
 								$.ajax({
-									url : '/actions/file_uploader.php',
+									url : baseurl+'actions/file_uploader.php',
 									type : 'post',
 									data : data,
 									dataType: 'json',
@@ -340,7 +340,7 @@
 		};
 
 		this.upload_file = function(Val,file_name){
-			var page ='/actions/file_downloader.php';
+			var page =baseurl+'actions/file_downloader.php';
 			$.post(page, {
 					file_url : Val,
 					file_name : file_name
@@ -1061,7 +1061,7 @@
 		 * Function used to rate object
 		 */
 		this.rate = function(id,rating,type){
-			var page = '/ajax.php';
+			var page = baseurl+'ajax.php';
 			$.post(page,
 				{
 					mode : 'rating',
@@ -1234,7 +1234,7 @@
 
 		this.rateNew = function (id,rating,type) {
 			curObj = this;
-			var page = '/ajax.php';
+			var page = baseurl+'ajax.php';
 			$.post(page, {
 					mode : 'rating',
 					id:id,
@@ -1430,7 +1430,7 @@
 		this.getModalVideo = function(video_id){
 			$.ajax({
 				type: 'post',
-				url: '/ajax/commonAjax.php',
+				url: baseurl+'ajax/commonAjax.php',
 				data: { videoid : video_id , mode : 'get_video'},
 				dataType: 'json',
 				beforeSend: function (data) {

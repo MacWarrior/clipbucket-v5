@@ -2,18 +2,21 @@
 
 class pages
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $url_page_var = 'page';
     var $pre_link = '';
     var $next_link = '';
     var $first_link = '';
     var $last_link = '';
     var $pagination = '';
-
-    public static function getInstance()
-    {
-        global $pages;
-        return $pages;
-    }
 
     function GetServerUrl(): string
     {
@@ -52,10 +55,10 @@ class pages
     }
 
     //This Function Set The PageDirect
-    function page_redir()
+    function page_redir(): void
     {
         set_cookie_secure('pageredir', display_clean($this->GetCurrentUrl()), time() + 7200);
-        Assign('pageredir', @$_COOKIE['pageredir']);
+        assign('pageredir', @$_COOKIE['pageredir']);
     }
 
     /**

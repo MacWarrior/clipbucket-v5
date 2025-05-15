@@ -485,7 +485,7 @@ a:hover{
     color: var(--color-02);
 }
 .watch-vid-details .desc-list li a:hover{
-    color: var(--color-main-02);
+    color: var(--color-02);
 }
 .photo-view .view-photo-nxt,
 .photo-view .view-photo-pre,
@@ -621,6 +621,7 @@ a:hover{
     .user_menu,
     .newuser-links>li>a{
         background-color: var(--color-01);
+        color: var(--color-02);
     }
     .newuser-links>li.upload_link a.btn-default span{
         display: none;

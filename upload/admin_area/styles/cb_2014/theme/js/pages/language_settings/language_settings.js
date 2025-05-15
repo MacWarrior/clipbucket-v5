@@ -3,7 +3,7 @@ function initListenerList() {
     $('input[name="make_default"]').change(function () {
         $('input[name="make_default"]').not(this).prop('checked', false);
         $.ajax({
-            url: "/actions/language_make_default.php",
+            url: baseurl+"actions/language_make_default.php",
             type: "POST",
             data: $('#default_lang').serialize(),
             dataType: 'json',
@@ -19,7 +19,7 @@ function initListenerList() {
     $('#formAdd').on('submit', function (event) {
         event.preventDefault();
         $.ajax({
-            url: "/actions/language_add.php",
+            url: baseurl+"actions/language_add.php",
             type: "POST",
             data: $('#formAdd').serialize(),
             dataType: 'json',
@@ -35,7 +35,7 @@ function initListenerList() {
     $('#formRestore').on('submit', function (event) {
         event.preventDefault();
         $.ajax({
-            url: "/actions/language_restore.php",
+            url: baseurl+"actions/language_restore.php",
             type: "POST",
             data: $('#formRestore').serialize(),
             dataType: 'json',
@@ -54,7 +54,7 @@ function initListenerEdit() {
     $('#form1').on('submit', function (event) {
         event.preventDefault();
         $.ajax({
-            url: "/actions/language_update.php",
+            url: baseurl+"actions/language_update.php",
             type: "POST",
             data: $('#form1').serialize(),
             dataType: 'json',
@@ -70,7 +70,7 @@ function initListenerEdit() {
 
 function updateRestoreList() {
     $.ajax({
-        url: "/actions/language_restorable_list.php",
+        url: baseurl+"actions/language_restorable_list.php",
         type: "POST",
         dataType: 'json',
         success: function (result) {
@@ -84,7 +84,7 @@ function updateRestoreList() {
 function deleteLanguage(language_id, language_name) {
     if (confirm_it('Are you sure you want to delete ' + language_name)) {
         $.ajax({
-            url: "/actions/language_delete.php",
+            url: baseurl+"actions/language_delete.php",
             type: "POST",
             data: {language_id: language_id},
             dataType: 'json',
@@ -125,7 +125,7 @@ $(document).ready(function () {
         var value = $('#input-' + id).val();
         var language_id = $('#language_id').val();
         $.ajax({
-            url: "/actions/update_phrase.php",
+            url: baseurl+"actions/update_phrase.php",
             type: "post",
             data: {id_language_key: id, translation: value, language_id: language_id},
             success: function () {

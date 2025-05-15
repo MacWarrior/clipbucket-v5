@@ -1,9 +1,9 @@
 <?php
 define('THIS_PAGE', 'view_conversion_log');
-global $pages, $myquery, $Cbucket;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
+
 User::getInstance()->hasPermissionOrRedirect('video_moderation', true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $file_name = $_GET['file_name'];
 $data = get_basic_video_details_from_filename($file_name);
@@ -15,7 +15,7 @@ $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url'
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($data['videoid'])];
 $breadcrumb[3] = ['title' => 'Conversion log', 'url' => DirPath::getUrl('admin_area') . 'view_conversion_log.php?file_name=' . display_clean($file_name)];
 
-$file_details = $myquery->file_details($file_name);
+$file_details = myquery::getInstance()->file_details($file_name);
 if ($file_details) {
     $fileDetailsArray = explode("\n", $file_details);
     $file_details = implode('<br>', $fileDetailsArray);

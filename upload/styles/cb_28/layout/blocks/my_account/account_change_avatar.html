@@ -1,7 +1,7 @@
 <form method="post" enctype="multipart/form-data">
     <h2>{lang code='user_user_avatar'}</h2>
     <div class="show-image">
-        <img src="{$userquery->getUserThumb($user)}?{uniqid()}" class="edit-img-thumbnail img-responsive"/>
+        <img src="{userquery::getInstance()->getUserThumb($user)}?{uniqid()}" class="edit-img-thumbnail img-responsive"/>
     </div>
     {if config('picture_upload')=='yes' && User::getInstance()->hasPermission('avatar_upload')}
         <div class="form-group">

@@ -10,6 +10,12 @@ if (empty($type)) {
 } else {
     $sorts = SortType::getSortTypes($type);
     $parents = Collection::getInstance()->getAvailableParents($_POST['id']?:0, $type);
+    foreach ($parents as $id => $name) {
+        $converted_parents[] = [
+            'id' => is_null($id) ? null : (string)$id, // convertir à string pour cohérence JS
+            'name' => $name
+        ];
+    }
 }
 
-echo json_encode(['msg' => getTemplateMsg(), 'sort_types' => display_sort_lang_array($sorts), 'parents' => $parents]);
+echo json_encode(['msg' => getTemplateMsg(), 'sort_types' => display_sort_lang_array($sorts), 'parents' => $converted_parents]);
