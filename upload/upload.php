@@ -2,7 +2,7 @@
 define('THIS_PAGE', 'upload');
 define('PARENT_PAGE', 'upload');
 require 'includes/config.inc.php';
-global $eh;
+
 User::getInstance()->hasPermissionOrRedirect('allow_video_upload', true);
 Pages::getInstance()->page_redir();
 subtitle('upload');
@@ -22,7 +22,7 @@ if (empty(Upload::getInstance()->get_upload_options())) {
 $step = 1;
 if (isset($_POST['submit_data'])) {
     Upload::getInstance()->validate_video_upload_form();
-    if (empty($eh->get_error())) {
+    if (empty(errorhandler::getInstance()->get_error())) {
         $step = 2;
     }
 }
@@ -47,8 +47,7 @@ ClipBucket::getInstance()->addCSS([
 $available_tags = Tags::fill_auto_complete_tags('video');
 assign('available_tags', $available_tags);
 
-$version = Update::getInstance()->getDBVersion();
-if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
     $default_category_id = Category::getInstance()->getDefaultByType('video')['category_id'];
 } else {
     $default_category_id = 0;

@@ -72,7 +72,7 @@
                                 {lang code='force_to_error'}
                             </a>
                         </li>
-                        {if Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)}
+                        {if Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')}
                         <li role="presentation">
                             <a role="menuitem" class="show_log" data-id="{$admin_tool_list[tool_list].id_tool}" >
                                 {lang code='show_log'}

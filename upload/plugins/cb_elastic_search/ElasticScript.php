@@ -60,7 +60,7 @@ try {
                     }
 
                     //Fetching Videos to process
-                    $videos = $cbvid->get_videos($videoRequest);
+                    $videos = CBvideo::getInstance()->get_videos($videoRequest);
                     $extras["method"] = $method;
 
                     if ($videos) {
@@ -118,7 +118,7 @@ try {
                     }
 
                     //Fetching users to process
-                    $users = $userquery->get_users($userRequest);
+                    $users = userquery::getInstance()->get_users($userRequest);
                     $extras["method"] = $method;
 
                     if ($users) {

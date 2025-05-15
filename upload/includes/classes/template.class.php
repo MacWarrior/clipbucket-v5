@@ -10,7 +10,7 @@ class CBTemplate
     /**
      * Function used to set Smarty Functions
      */
-    function init()
+    function init(): void
     {
         global $Smarty;
         if (!isset($Smarty)) {
@@ -18,7 +18,7 @@ class CBTemplate
         }
     }
 
-    function load_smarty()
+    function load_smarty(): void
     {
         global $Smarty;
         $Smarty = new SmartyBC;
@@ -33,7 +33,7 @@ class CBTemplate
         }
     }
 
-    function create()
+    function create(): bool
     {
         global $Smarty;
 
@@ -43,16 +43,7 @@ class CBTemplate
         return true;
     }
 
-    function setType($type)
-    {
-        global $Smarty;
-        if (!isset($Smarty)) {
-            $this->create();
-        }
-        $Smarty->type = $type;
-    }
-
-    function assign($var, $value)
+    function assign($var, $value): void
     {
         global $Smarty;
         if (!isset($Smarty)) {
@@ -61,7 +52,7 @@ class CBTemplate
         $Smarty->assign($var, $value);
     }
 
-    function display($filename)
+    function display($filename): void
     {
         global $Smarty;
         if (!isset($Smarty)) {
@@ -88,7 +79,7 @@ class CBTemplate
         //Scaning Dir
         $dirs = scandir($dir);
         foreach ($dirs as $tpl) {
-            if (substr($tpl, 0, 1) != '.') {
+            if (!str_starts_with($tpl, '.')) {
                 $tpl_dirs[] = $tpl;
             }
         }

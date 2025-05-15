@@ -13,7 +13,7 @@
                 <img src="{$img_url}" id="thumbs_{$video.videoid}" alt="video_thumb" style="max-height:80px; max-width:100%;"/>
             </div>
             <div class="col-md-6">
-                <a href="edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
+                <a href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}" title="{display_clean($video.title)}">
                     {display_clean($video.title|truncate:80)}
                 </a>
                 {if $video.duration>1}({$video.duration|SetTime}){/if}<br/>
@@ -31,8 +31,8 @@
                         <span class="label label-info">{lang code='featured'}</span>
                     {/if}
 
-                    {foreach from=$cbvid->video_manager_link_new item=links}
-                        {$cbvid->video_manager_link_new($links,$video)}
+                    {foreach from=CBvideo::getInstance()->video_manager_link_new item=links}
+                        {CBvideo::getInstance()->video_manager_link_new($links,$video)}
                     {/foreach}
 
                     {if $video.status|lower == 'successful'}
@@ -107,10 +107,10 @@
                 Actions <i class="caret"></i>
             </button>
             <ul class="dropdown-menu pull-right" aria-labelledby="dropdownMenu1" role="menu">
-                <li><a role="menuitem" tabindex="-1" href="edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
+                <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}edit_video.php?video={$video.videoid}">{lang code='edit'}</a></li>
 
                 {if $video.status|lower == 'successful'}
-                    <li><a role="menuitem" tabindex="-1" href="/watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
+                    <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('root')}watch_video.php?v={$video.videokey}" target="_blank">{lang code='watch'}</a></li>
                 {/if}
 
                 {if $video.featured == yes}
@@ -124,7 +124,7 @@
                 {else}
                     <li><a role="menuitem" tabindex="-1" href="?activate={$video.videoid}">{lang code='activate'}</a></li>
                 {/if}
-                <li><a role="menuitem" tabindex="-1" href="view_conversion_log.php?file_name={$video.file_name}">File conversion details</a></li>
+                <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}view_conversion_log.php?file_name={$video.file_name}">File conversion details</a></li>
                 {if $video.status=='Successful'}
                     {if isReconvertAble($video)}
                         <li><a role="menuitem" tabindex="-1" href="?reconvert_video={$video.videoid}">Reconvert</a></li>
@@ -137,8 +137,8 @@
 
                 <li class="divider"></li>
                 <li><a role="menuitem" tabindex="-1" href="?delete_video={$video.videoid}">{lang code='delete'}</a></li>
-                {foreach from=$cbvid->video_manager_link item=links}
-                    {$cbvid->video_manager_link($links,$video)}
+                {foreach from=CBvideo::getInstance()->video_manager_link item=links}
+                    {CBvideo::getInstance()->video_manager_link($links,$video)}
                 {/foreach}
             </ul>
         </div>

@@ -233,7 +233,7 @@ if (!empty($_POST)) {
 assign('discord_error_log', DiscordLog::getInstance()->isEnabled());
 assign('discord_webhook_url', DiscordLog::getInstance()->getCurrentUrl());
 
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE, true)) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367', true)) {
     $tool = AdminTool::getToolByCode('automate');
 }
 if (!empty($tool)) {

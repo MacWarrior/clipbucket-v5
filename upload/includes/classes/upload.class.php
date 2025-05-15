@@ -1,6 +1,15 @@
 <?php
 class Upload
 {
+    private static self $instance;
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     var $custom_form_fields = [];  //Step 1 of Uploading
     var $custom_form_fields_groups = []; //Groups of custom fields
     var $custom_upload_fields = []; //Step 2 of Uploading
@@ -13,11 +22,6 @@ class Upload
         'a' => 'auto'
     ];
 
-    public static function getInstance(){
-        global $Upload;
-        return $Upload;
-    }
-
     /**
      * Function used to validate upload form fields
      *
@@ -25,14 +29,14 @@ class Upload
      * @param bool $is_upload
      * @throws \PHPMailer\PHPMailer\Exception|Exception
      */
-    function validate_video_upload_form($array = null, $is_upload = false)
+    function validate_video_upload_form($array = null, $is_upload = false): void
     {
         //First Load All Fields in an array
         $required_fields = $this->loadRequiredFields($array);
         $location_fields = $this->loadLocationFields($array);
         $option_fields = $this->loadOptionFields($array);
 
-        $date_recorded = DateTime::createFromFormat(DATE_FORMAT, $location_fields['date_recorded']['value']);
+        $date_recorded = DateTime::createFromFormat(config('date_format'), $location_fields['date_recorded']['value']);
         if ($date_recorded) {
             $location_fields['date_recorded']['value'] = $date_recorded->format('Y-m-d');
         }
@@ -65,15 +69,13 @@ class Upload
      */
     function submit_upload($array = null)
     {
-        global $eh;
-
         if (!$array) {
             $array = $_POST;
         }
 
         $this->validate_video_upload_form($array, true);
 
-        $errors = $eh->get_error();
+        $errors = errorhandler::getInstance()->get_error();
         if( !empty($errors) ){
             return false;
         }
@@ -206,17 +208,16 @@ class Upload
                 $query_field[] = 'status';
                 $query_val[] = 'Successful';
             }
-            $version = Update::getInstance()->getDBVersion();
-            if ($version['version'] < '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] < 264)) {
+
+            if( !Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '264') ){
                 $query_field[] = 'tags';
                 $query_val[] = '';
             }
             Clipbucket_db::getInstance()->insert(tbl('video'),$query_field, $query_val);
             $insert_id = Clipbucket_db::getInstance()->insert_id();
-
             Tags::saveTags($array['tags'] ?? '', 'video', $insert_id);
-            $version = Update::getInstance()->getDBVersion();
-            if ($version['version'] > '5.5.0' || ($version['version'] == '5.5.0' && $version['revision'] >= 331)) {
+
+            if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '331') ){
                 Category::getInstance()->saveLinks('video', $insert_id, $array['category']);
             }
 
@@ -791,9 +792,8 @@ class Upload
         switch ($ext) {
             default:
             case 'mp4':
-                global $Cbucket;
                 //Get Temp Ext
-                $tmp_ext = $Cbucket->temp_exts;
+                $tmp_ext = ClipBucket::getInstance()->temp_exts;
                 $tmp_ext = $tmp_ext[rand(0, count($tmp_ext) - 1)];
                 //Creating New File Name
                 $dest_filepath = DirPath::get('temp') . $sub_directory . $name . '.' . $tmp_ext;
@@ -841,15 +841,14 @@ class Upload
      */
     function get_upload_options(): array
     {
-        global $Cbucket;
-        return $Cbucket->upload_opt_list;
+        return ClipBucket::getInstance()->upload_opt_list;
     }
 
     /**
      * Function used to perform some actions , after video is upload
-     * @param int Videoid
+     * @param int $vid Videoid
      */
-    function do_after_video_upload($vid)
+    function do_after_video_upload($vid): void
     {
         foreach ($this->actions_after_video_upload as $funcs) {
             if (function_exists($funcs)) {
@@ -957,14 +956,14 @@ class Upload
      */
     function upload_user_file(string $type, $file, $uid)
     {
-        global $userquery, $cbphoto, $imgObj;
+        global $imgObj;
         if (empty($file['tmp_name'])) {
             e(lang('please_select_img_file'));
             return false;
         }
         $av_details = getimagesize($file['tmp_name']);
 
-        if (!$userquery->user_exists($uid)) {
+        if (!userquery::getInstance()->user_exists($uid)) {
             e(lang('user_doesnt_exist'));
             return false;
         }
@@ -996,8 +995,8 @@ class Upload
                         return false;
                     }
                     $small_size = DirPath::get('avatars') . $uid . '-small.' . $ext;
-                    $cbphoto->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
-                    $cbphoto->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
+                    CBPhotos::getInstance()->CreateThumb($file_path, $file_path, $ext, AVATAR_SIZE, AVATAR_SIZE);
+                    CBPhotos::getInstance()->CreateThumb($file_path, $small_size, $ext, AVATAR_SMALL_SIZE, AVATAR_SMALL_SIZE);
                     return $file_name;
                 }
                 e(lang('class_error_occured'));

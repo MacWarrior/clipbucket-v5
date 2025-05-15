@@ -1,5 +1,3 @@
-{$myAccountLinks = $userquery->my_account_links()}
-{$leftMenuLinks = array_slice($myAccountLinks, 7)}
 <div class="container manage-page marginBottom">
     <div class="marginBottom">
         <div class="row cb-box">
@@ -12,7 +10,7 @@
                     {if $mode == "manage" || $mode == ""}
                         <h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" />
+                            <img src="{$imageurl}/dot.gif" class="arrow_pointing"/>
                             <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary  " />
                             <a class="btn-primary btn" href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a>
                         </div>
@@ -45,7 +43,7 @@
 
                     {if $mode == "edit_collection" || $mode == "add_new"}
                         <div class="page-hidding"><h1>{if $mode == "edit_collection"}{lang code='update_collection'}{else}{lang code='add_new_collection'}{/if}</h1>
-                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="/manage_collections.php">{lang code="back_to_collection"}</a></div>
+                            <div class="pull-right" style="margin-top:-30px;"><a class="btn btn-primary" href="{$baseurl}manage_collections.php">{lang code="back_to_collection"}</a></div>
                         </div>
                         {if User::getInstance()->hasPermission('allow_create_collection')}
                             <input type="hidden" value="{$c.collection_id}" name="collection_id" id="collection_id">
@@ -66,7 +64,7 @@
                                         </div>
                                     {/foreach}
                                     {foreach from=$other_fields item=field}
-                                        <div class="form-group {if $field.id == 'broadcast' || $field.id == 'allow_comments'} col-md-6 col-sm-6 col-xs-12 no_padding_left {elseif $field.id == 'sort_type' || $field.id == 'public_upload' }col-md-6 col-sm-6 col-xs-12 no_padding_right{/if}">
+                                        <div class="form-group col-md-6 col-sm-6 col-xs-12 {if in_array($field.id, ['broadcast','allow_comments']) || ($field.id == 'public_upload' && config('enable_comments_collection') != 'yes')}no_padding_left{elseif $field.id == 'sort_type' || $field.id == 'public_upload'}no_padding_right{/if}">
                                             <label for="{$field.id}" class="show">{$field.title}</label>
                                             {if $field.hint_1}
                                                 <div class="hint">{$field.hint_1}</div>{/if}

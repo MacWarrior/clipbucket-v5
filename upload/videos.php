@@ -7,7 +7,7 @@ User::getInstance()->hasPermissionOrRedirect('view_videos');
 pages::getInstance()->page_redir();
 
 if( !isSectionEnabled('videos') ){
-    redirect_to(Network::get_server_url());
+    redirect_to(DirPath::getUrl('root'));
 }
 
 $child_ids = false;
@@ -20,8 +20,9 @@ $page = mysql_clean($_GET['page']);
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
 $sort_label = SortType::getSortLabelById($_GET['sort']) ?? '';
 $params = Video::getInstance()->getFilterParams($sort_label, []);
-$params = Video::getInstance()->getFilterParams($_GET['time'], $params);
+$params = Video::getInstance()->getFilterParams($_GET['time'] ?? '', $params);
 $params['limit'] = $get_limit;
+$params['get_detail'] = true;
 if( $child_ids ){
     $params['category'] = $child_ids;
 }

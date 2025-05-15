@@ -6,7 +6,7 @@ User::getInstance()->hasPermissionAjax('admin_access');
 $core_tool = new AdminTool();
 
 $error_init = [];
-if (Update::IsCurrentDBVersionIsHigherOrEqualTo(AdminTool::MIN_VERSION_CODE, AdminTool::MIN_REVISION_CODE)) {
+if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.0', '367')) {
     $error_init['core'] = $core_tool->initByCode('update_core');
     $error_init['db'] = AdminTool::getInstance()->initByCode('update_database_version');
 } else {

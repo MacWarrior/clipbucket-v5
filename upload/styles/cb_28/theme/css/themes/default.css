@@ -485,7 +485,7 @@ a:hover{
     color: var(--color-02);
 }
 .watch-vid-details .desc-list li a:hover{
-    color: var(--color-main-02);
+    color: var(--color-02);
 }
 .photo-view .view-photo-nxt,
 .photo-view .view-photo-pre,

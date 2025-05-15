@@ -1,6 +1,6 @@
 {$list_id=$playlist.playlist_id}
 {$first=get_playlist_items($list_id,1)}
-{$count_items = $cbvid->action->count_playlist_items($list_id)}
+{$count_items = CBvideo::getInstance()->action->count_playlist_items($list_id)}
 
 {assign var='playlist_def_thumb' value=get_playlist_thumb($playlist,'416x260')}
 

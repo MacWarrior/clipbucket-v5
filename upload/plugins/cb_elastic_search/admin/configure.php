@@ -12,7 +12,7 @@ if (isset($_POST['submit'])) {
                 $value = 1;
             }
         }
-        $myquery->Set_Website_Details($field, $value);
+        myquery::getInstance()->Set_Website_Details($field, $value);
     }
 }
 

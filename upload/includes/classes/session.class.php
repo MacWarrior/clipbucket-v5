@@ -193,7 +193,7 @@ class Session
      * Destroy Session
      * @throws Exception
      */
-    function destroy()
+    function destroy(): void
     {
         Clipbucket_db::getInstance()->delete(tbl(self::tbl), ['session'], [$this->id]);
         session_destroy();

@@ -7,10 +7,10 @@
                         <a class="btn btn-primary btn-sm dropdown-toggle pull-left" data-toggle="dropdown" href="">Actions <i class="caret"></i></a>
                         <ul class="dropdown-menu pull-left actionDropmenu" role="menu" aria-labelledby="dropdownMenu1">
                             {if isSectionEnabled('channels') && $u.is_channel_enable}
-                                <li><a role="menuitem" tabindex="-1" href="{$userquery->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
+                                <li><a role="menuitem" tabindex="-1" href="{userquery::getInstance()->profile_link($u)}">View {display_clean($u.username)} channel</a></li>
                             {/if}
                             {if $u.userid != user_id()}
-                                <li><a role="menuitem" tabindex="-1" href="login_as_user.php?uid={$u.userid}">Login as user</a></li>
+                                <li><a role="menuitem" tabindex="-1" href="{DirPath::getUrl('admin_area')}login_as_user.php?uid={$u.userid}">Login as user</a></li>
                                 {if $u.usr_status=="Ok"}
                                     <li><a role="menuitem" tabindex="-1" href="?uid={$u.userid}&amp;deactivate=yes">{lang code='deactivate'}</a></li>
                                 {else}
@@ -97,7 +97,7 @@
                         <div id="userinfo" class="tab-pane active">
                             <div class="userInfoSettings">
                                 <div class="form-group pull-right">
-                                    <img src="{$userquery->getUserThumb($u,'small')}" class="btn btn-app btn-primary btn-xs"/>
+                                    <img src="{userquery::getInstance()->getUserThumb($u,'small')}" class="btn btn-app btn-primary btn-xs"/>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="myTable">
@@ -134,7 +134,7 @@
                                             <td class="last">
                                                 <div>
                                                     <select class="form-control" name="level" id="level" {if $u.userid == user_id()} disabled="disabled" {/if}>
-                                                        {assign var=levels value=$userquery->get_levels()}
+                                                        {assign var=levels value=userquery::getInstance()->get_levels()}
                                                         {foreach from=$levels item=level}
                                                         <option value="{$level.user_level_id}" {if $u.level==$level.user_level_id} selected{/if}>{$level.user_level_name}</option>
                                                         {/foreach}
@@ -182,7 +182,7 @@
                                 </div>
 
                                 <div class="custSignup">
-                                    {assign var=cust_signup value=$userquery->load_custom_signup_fields($u,true)}
+                                    {assign var=cust_signup value=userquery::getInstance()->load_custom_signup_fields($u,true)}
                                     {if $cust_signup}
                                         {foreach from=$cust_signup item=field}
                                     <div class="form-group">
@@ -267,7 +267,7 @@
                             <div class="useAvatar">
                                 <div class="changeAvatar row">
                                     <div class="showAvatar col-md-3">
-                                        <img src="{$userquery->getUserThumb($u)}" class="mid_user_thumb" style="max-width:95px;"/><br />
+                                        <img src="{userquery::getInstance()->getUserThumb($u)}" class="mid_user_thumb" style="max-width:95px;"/><br />
                                         <input name="delete_avatar" type="checkbox" id="delete_avatar" value="yes" />
                                         <label for="delete_avatar">Delete This Image - (if user has profile pic)</label>
                                     </div>
@@ -295,8 +295,8 @@
                         <div id="background" class="tab-pane">
                             <div class="changeBackground row">
                                 <div class="showBackground col-md-3">
-                                    {if $userquery->getUserBg($u)}
-                                        <img src="{$userquery->getUserBg($u)}" style="max-width:95px;"/>
+                                    {if userquery::getInstance()->getUserBg($u)}
+                                        <img src="{userquery::getInstance()->getUserBg($u)}" style="max-width:95px;"/>
                                     {else}
                                         No Bg
                                     {/if}
@@ -326,7 +326,7 @@
                                             <option value="no-repeat" {if $u.background_repeat=='no-repeat'}selected{/if}>no-repeat</option>
                                         </select>
                                     </div>
-                                    {if $userquery->getUserBg($u)}
+                                    {if userquery::getInstance()->getUserBg($u)}
                                     <div>
                                         <label class="checkbox" for="delete_bg">
                                             <input name="delete_bg" type="checkbox" id="delete_bg" value="yes"/>
@@ -350,7 +350,7 @@
                                         <td class="last">
                                             <div>
                                                 <select class="form-control" name="country" id="country">
-                                                    {assign var='countries' value=$Cbucket->get_countries(iso2)}
+                                                    {assign var='countries' value=ClipBucket::getInstance()->get_countries(iso2)}
                                                     {foreach from=$countries item=country key=code}
                                                     <option value="{$code}" {if $u.country==$code}selected{/if}>{$country}</option>
                                                     {/foreach}
@@ -508,7 +508,7 @@
                                         <td>IP</td>
                                         <td>{lang code='details'}</td>
                                     </tr>
-                                    {assign var="logs" value=$userquery->get_user_action_log($u.userid,10)}
+                                    {assign var="logs" value=userquery::getInstance()->get_user_action_log($u.userid,10)}
                                     {section loop=$logs name=log}
                                     <tr>
                                         <td>{$logs[log].action_userid}</td>

@@ -18,7 +18,7 @@ if (isset($_POST['reset_control_bar_logo_url'])) {
     if (file_exists(DirPath::get('logos') . 'player-logo.png')) {
         unlink(DirPath::get('logos') . 'player-logo.png');
     }
-    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', '/images/icons/player-logo.png');
+    myquery::getInstance()->Set_Website_Details('control_bar_logo_url', 'images/icons/player-logo.png');
     e(lang('player_logo_reset'), 'm');
 }
 
@@ -135,6 +135,10 @@ if (isset($_POST['update'])) {
         , 'enable_video_categories'
         , 'enable_collection_categories'
         , 'enable_theme_change'
+        , 'enable_channel_slogan'
+        , 'enable_channel_description'
+        , 'enable_channels_slogan_display'
+        , 'enable_user_self_deletion'
     ];
 
     $config_booleans_to_refactor = [
@@ -387,6 +391,10 @@ if (isset($_POST['update'])) {
         'chromecast',
         'control_bar_logo',
         'contextual_menu_disabled',
+        'enable_channel_slogan',
+        'enable_channel_description',
+        'enable_channels_slogan_display',
+        'enable_user_self_deletion',
 
         'player_logo_url',
         'player_thumbnails',

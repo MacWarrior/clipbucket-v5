@@ -1,18 +1,17 @@
 <?php
 define('THIS_PAGE', 'edit_video');
-global $pages, $Upload, $eh, $myquery, $cbvid, $breadcrumb;
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('video_moderation',true);
-$pages->page_redir();
+pages::getInstance()->page_redir();
 
 $video_id = $_GET['video'];
 
 //Updating Video Details
 if (isset($_POST['update'])) {
-    $Upload->validate_video_upload_form();
-    if (empty($eh->get_error())) {
-        $myquery->update_video();
+    Upload::getInstance()->validate_video_upload_form();
+    if (empty(errorhandler::getInstance()->get_error())) {
+        myquery::getInstance()->update_video();
         Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
         if( config('enable_video_poster') == 'yes' ){
@@ -27,6 +26,7 @@ if (isset($_POST['update'])) {
 $data = Video::getInstance()->getOne(['videoid'=>$video_id]);
 
 /* Generating breadcrumb */
+global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
@@ -37,21 +37,21 @@ if (@$_GET['msg']) {
 
 //Performing Video Actions
 if ($_GET['mode'] != '') {
-    $modedata = $cbvid->action($_GET['mode'], $video_id);
+    $modedata = CBvideo::getInstance()->action($_GET['mode'], $video_id);
     assign('modedata', $modedata);
 
     //add parameter to display message after redirect
     if ($_GET['mode'] === 'delete') {
-        sessionMessageHandler::add_message(lang('class_vdo_del_msg'), 'm',  DirPath::getUrl('admin_area', true) . 'video_manager.php');
+        sessionMessageHandler::add_message(lang('class_vdo_del_msg'), 'm',  DirPath::getUrl('admin_area') . 'video_manager.php');
     }
 }
 
 //Check Video Exists or Not
-if ($myquery->video_exists($video_id)) {
+if (myquery::getInstance()->video_exists($video_id)) {
     assign('udata', userquery::getInstance()->get_user_details($data['userid']));
 
     $date_added = DateTime::createFRomFormat('Y-m-d', explode(' ', $data['date_added'])[0]);
-    $data['date_added'] = $date_added->format(DATE_FORMAT);
+    $data['date_added'] = $date_added->format(config('date_format'));
 
     assign('data', $data);
     assign('vidthumbs', get_thumb($data,TRUE,'168x105','auto'));
@@ -78,7 +78,7 @@ if ($myquery->video_exists($video_id)) {
     assign('results', $results['final_results']);
     assign('modal', false);
 } else {
-    sessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  DirPath::getUrl('admin_area', true) . 'video_manager.php');
+    sessionMessageHandler::add_message(lang('class_vdo_del_err'), 'e',  DirPath::getUrl('admin_area') . 'video_manager.php');
 }
 
 $resolution_list = getResolution_list($data);
@@ -122,13 +122,6 @@ ClipBucket::getInstance()->addAdminCSS([
 if( config('enable_visual_editor_comments') == 'yes' ){
     ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
     ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
-
-    $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
-    if( config('default_theme') != '' && file_exists($filepath) ){
-        ClipBucket::getInstance()->addAdminCSS([
-            'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
-        ]);
-    }
 }
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());

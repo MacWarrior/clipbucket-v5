@@ -1,7 +1,6 @@
 <?php
 error_reporting(E_ALL);
 require_once('../../includes/admin_config.php');
-global $cbvid, $userquery;
 
 $days = 10;
 $last_week = time() - 86400 * $days + 86400;
@@ -31,15 +30,15 @@ echo $_post['videos'];
 //Getting the data for Flot Charts
 
 //videos
-$videos['uploads'] = $cbvid->get_videos(["count_only" => true, "date_added" => "'%$date_pattern%'"], true);
-$videos['processing'] = $cbvid->get_videos(["count_only" => true, "status" => "Processing", "date_added" => "'%$date_pattern%'"], true);
-$videos['active'] = $cbvid->get_videos(["count_only" => true, "active" => "yes", "date_added" => "'%$date_pattern%'"], true);
+$videos['uploads'] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_added" => "'%$date_pattern%'"], true);
+$videos['processing'] = CBvideo::getInstance()->get_videos(["count_only" => true, "status" => "Processing", "date_added" => "'%$date_pattern%'"], true);
+$videos['active'] = CBvideo::getInstance()->get_videos(["count_only" => true, "active" => "yes", "date_added" => "'%$date_pattern%'"], true);
 $V = [['uploads', $videos['uploads']], ['processing', $videos['processing']], ['active', $videos['active']]];
 
 //Users
-$users['signups'] = $userquery->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'"]);
-$users['inactive'] = $userquery->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'", "status" => 'ToActivate']);
-$users['active'] = $userquery->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'", "status" => 'Ok']);
+$users['signups'] = userquery::getInstance()->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'"]);
+$users['inactive'] = userquery::getInstance()->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'", "status" => 'ToActivate']);
+$users['active'] = userquery::getInstance()->get_users(["count_only" => true, "date_added" => "'%$date_pattern%'", "status" => 'Ok']);
 //Views
 $user_views = Clipbucket_db::getInstance()->select(tbl("users"), "SUM(profile_hits) as total_views", " doj LIKE '%$date_pattern%'");
 $users['views'] = $user_views[0]['total_views'];
@@ -63,8 +62,8 @@ for ($i = 0; $i < $days; $i++) {
 $max = 1;
 for ($i = 0; $i < $days; $i++) {
     if ($i == $days) {
-        $vid_uploads[] = $cbvid->get_videos(["count_only" => true, "date_span" => "today"]) + 0;
-        $user_signups[] = $userquery->get_users(["count_only" => true, "date_span" => "today"]) + 0;
+        $vid_uploads[] = CBvideo::getInstance()->get_videos(["count_only" => true, "date_span" => "today"]) + 0;
+        $user_signups[] = userquery::getInstance()->get_users(["count_only" => true, "date_span" => "today"]) + 0;
     } else {
         $vid_uploads[] = $day[$i]['video']->uploads + 0;
         $user_signups[] = $day[$i]['users']->signups + 0;

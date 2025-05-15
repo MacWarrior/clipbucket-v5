@@ -3,17 +3,17 @@
 error_reporting(E_ALL);
 require_once('../../../../includes/admin_config.php');
 
-$totalVideos['today'] = $cbvid->get_videos(["count_only" => true, "data_span" => "today"], true);
-$totalVideos['this_week'] = $cbvid->get_videos(["count_only" => true, "data_span" => "this_week"], true);
-$totalVideos['this_month'] = $cbvid->get_videos(["count_only" => true, "data_span" => "this_month"], true);
+$totalVideos['today'] = CBvideo::getInstance()->get_videos(["count_only" => true, "data_span" => "today"], true);
+$totalVideos['this_week'] = CBvideo::getInstance()->get_videos(["count_only" => true, "data_span" => "this_week"], true);
+$totalVideos['this_month'] = CBvideo::getInstance()->get_videos(["count_only" => true, "data_span" => "this_month"], true);
 
-$totalUsers['today'] = $userquery->get_users(["count_only" => true, "data_span" => "today"], true);
-$totalUsers['this_week'] = $userquery->get_users(["count_only" => true, "data_span" => "this_week"], true);
-$totalUsers['this_month'] = $userquery->get_users(["count_only" => true, "data_span" => "this_month"], true);
+$totalUsers['today'] = userquery::getInstance()->get_users(["count_only" => true, "data_span" => "today"], true);
+$totalUsers['this_week'] = userquery::getInstance()->get_users(["count_only" => true, "data_span" => "this_week"], true);
+$totalUsers['this_month'] = userquery::getInstance()->get_users(["count_only" => true, "data_span" => "this_month"], true);
 
-$totalPhotos['today'] = $cbphoto->get_photos(["count_only" => true, "data_span" => "today"], true);
-$totalPhotos['this_week'] = $cbphoto->get_photos(["count_only" => true, "data_span" => "this_week"], true);
-$totalPhotos['this_month'] = $cbphoto->get_photos(["count_only" => true, "data_span" => "this_month"], true);
+$totalPhotos['today'] = CBPhotos::getInstance()->get_photos(["count_only" => true, "data_span" => "today"], true);
+$totalPhotos['this_week'] = CBPhotos::getInstance()->get_photos(["count_only" => true, "data_span" => "this_week"], true);
+$totalPhotos['this_month'] = CBPhotos::getInstance()->get_photos(["count_only" => true, "data_span" => "this_month"], true);
 
 
 $todayStats = [

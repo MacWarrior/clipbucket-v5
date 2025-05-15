@@ -43,9 +43,9 @@
         </div>
         <div class="col-md-4">
             <h4>Current Watermark</h4>
-            {assign var=file value=$cbphoto->watermark_file()}
+            {assign var=file value=CBPhotos::getInstance()->watermark_file()}
             {if $file}
-            <img src="{$cbphoto->watermark_file()}" />
+            <img src="{CBPhotos::getInstance()->watermark_file()}" />
             {else}
             <p>Watermark not found</p>
             {/if}

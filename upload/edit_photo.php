@@ -1,12 +1,9 @@
 <?php
 define('THIS_PAGE', 'edit_photo');
 define('PARENT_PAGE', 'photos');
-
 require 'includes/config.inc.php';
 
 User::getInstance()->isUserConnectedOrRedirect();
-
-global $cbphoto;
 
 User::getInstance()->hasPermissionOrRedirect('edit_video');
 
@@ -24,7 +21,7 @@ if (empty($photo)) {
     ClipBucket::getInstance()->show_page = false;
 } else {
     if (isset($_POST['update_photo'])) {
-        $cbphoto->update_photo();
+        CBPhotos::getInstance()->update_photo();
         $photo = Photo::getInstance()->getOne(['photo_id' => $pid]);
     }
     assign('p', $photo);

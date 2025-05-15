@@ -2,8 +2,8 @@
     <h2>Selected Player</h2>
 </div>
 <div>
-    {assign var="player_dir" value=$Cbucket->configs.player_dir}
-    {assign var="player_file" value=$Cbucket->configs.player_file}
+    {assign var="player_dir" value=ClipBucket::getInstance()->configs.player_dir}
+    {assign var="player_file" value=ClipBucket::getInstance()->configs.player_file}
     {assign var="curplayer" value=$cbplayer->getPlayerDetails($player_file,$player_dir)}
 
     <div class="row">
@@ -59,7 +59,7 @@
                                     {if $player.website}
                                         <p>Website : <a href="{$player.website}">{$player.website}</a></p>
                                     {/if}
-                                    <p><a href="manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
+                                    <p><a href="{DirPath::getUrl('admin_area')}manage_players.php?set=yes&folder={$player.folder}&file={$player.file}">Activate This Player</a></p>
                                 </div>
                             </div>
                         </div>

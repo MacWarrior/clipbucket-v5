@@ -3,6 +3,8 @@ Migration::updateConfig('base_url', post('base_url'));
 Migration::updateConfig('site_title', post('title'));
 Migration::updateConfig('site_slogan', post('slogan'));
 Migration::updateConfig('timezone', post('timezone'));
+Migration::updateConfig('nginx_vhost_version', Update::getInstance()->getCurrentCoreVersion());
+Migration::updateConfig('nginx_vhost_revision', Update::getInstance()->getCurrentCoreRevision());
 ?>
 
 <div class="nav_des clearfix">

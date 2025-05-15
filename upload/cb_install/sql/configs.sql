@@ -72,7 +72,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'allow_unicode_usernames', 'yes'),
 	(NULL, 'min_username', '3'),
 	(NULL, 'max_username', '15'),
-	(NULL, 'allow_username_spaces', 'yes'),
+	(NULL, 'allow_username_spaces', 'no'),
 	(NULL, 'comments_captcha', 'guests'),
 	(NULL, 'own_photo_rating', 'no'),
 	(NULL, 'mail_type', 'mail'),
@@ -140,7 +140,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'player_logo_url', '#'),
 	(NULL, 'ffprobe_path', ''),
 	(NULL, 'media_info', ''),
-	(NULL, 'photo_activation', '1'),
+	(NULL, 'photo_activation', '0'),
 	(NULL, 'popup_video', 'yes'),
 	(NULL, 'video_round_views', 'yes'),
 	(NULL, 'access_to_logged_in', 'no'),
@@ -162,7 +162,7 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
 	(NULL, 'bits_color_warning', '1'),
 	(NULL, 'control_bar_logo', 'yes'),
 	(NULL, 'contextual_menu_disabled', ''),
-	(NULL, 'control_bar_logo_url', '/images/icons/player-logo.png'),
+	(NULL, 'control_bar_logo_url', 'images/icons/player-logo.png'),
 	(NULL, 'player_thumbnails', 'yes'),
 	(NULL, 'enable_update_checker', '1'),
 	(NULL, 'email_domain_restriction', ''),
@@ -309,7 +309,13 @@ INSERT INTO `{tbl_prefix}config` (`configid`, `name`, `value`) VALUES
     (NULL, 'enable_photo_categories', 'yes'),
     (NULL, 'enable_video_categories', 'yes'),
     (NULL, 'enable_collection_categories', 'yes'),
-    (NULL, 'enable_theme_change', 'yes');
+    (NULL, 'enable_theme_change', 'yes'),
+    (NULL, 'nginx_vhost_version', ''),
+    (NULL, 'nginx_vhost_revision', ''),
+    (NULL, 'enable_channel_slogan', 'yes'),
+    (NULL, 'enable_channel_description', 'yes'),
+    (NULL, 'enable_channels_slogan_display', 'yes'),
+    (NULL, 'enable_user_self_deletion', 'yes');
 
 INSERT INTO `{tbl_prefix}video_resolution` (`title`, `ratio`, `enabled`, `width`, `height`, `video_bitrate`) VALUES
 	('240p', '16/9', 1, 426, 240, 240000),
@@ -1672,7 +1678,7 @@ VALUES ('inapp_content'),
        ('disturbing'),
        ('other');
 
-INSERT IGNORE INTO `{tbl_prefix}sorts` (`label`, `type`, is_default)
+INSERT IGNORE INTO `{tbl_prefix}sorts` (`label`, `type`, `is_default`)
 VALUES ('most_old', 'videos', FALSE),
        ('most_recent', 'videos', TRUE),
        ('most_viewed', 'videos', FALSE),
@@ -1701,4 +1707,12 @@ VALUES ('most_old', 'videos', FALSE),
        ('top_rated', 'channels', FALSE),
        ('featured', 'channels', FALSE),
        ('most_items', 'channels', FALSE),
-       ('most_commented', 'channels', FALSE);
+       ('most_commented', 'channels', FALSE),
+       ('alphabetical', 'videos', false),
+       ('alphabetical', 'photos', false),
+       ('alphabetical', 'collections', false),
+       ('alphabetical', 'channels', false),
+       ('reverse_alphabetical', 'videos', false),
+       ('reverse_alphabetical', 'photos', false),
+       ('reverse_alphabetical', 'collections', false),
+       ('reverse_alphabetical', 'channels', false);

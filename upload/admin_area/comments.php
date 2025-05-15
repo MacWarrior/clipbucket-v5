@@ -1,9 +1,7 @@
 <?php
 define('THIS_PAGE', 'comments');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery;
 
 User::getInstance()->hasPermissionOrRedirect('admin_access', true);
 pages::getInstance()->page_redir();
@@ -52,13 +50,6 @@ ClipBucket::getInstance()->addAdminJS(['pages/comments/comments'.$min_suffixe.'.
 if( config('enable_visual_editor_comments') == 'yes' ){
     ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
     ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
-
-    $filepath = DirPath::get('libs') . 'toastui' . DIRECTORY_SEPARATOR . 'toastui-editor-' . config('default_theme') . $min_suffixe . '.css';
-    if( config('default_theme') != '' && file_exists($filepath) ){
-        ClipBucket::getInstance()->addAdminCSS([
-            'toastui/toastui-editor-' . config('default_theme') . $min_suffixe . '.css' => 'libs'
-        ]);
-    }
 }
 
 subtitle(lang('comments'));

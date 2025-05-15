@@ -126,7 +126,7 @@ class CBPlayer
      *
      * @return string
      */
-    function get_preview_thumb($player)
+    function get_preview_thumb($player): string
     {
         $path = $player . '/preview.';
         $exts = ['png', 'jpg', 'gif'];
@@ -147,13 +147,11 @@ class CBPlayer
      * @param $details
      * @throws Exception
      */
-    function set_player($details)
+    function set_player($details): void
     {
-        global $myquery;
-
         if ($this->getPlayerDetails($details['file'], $details['folder'])) {
-            $myquery->Set_Website_Details('player_file', $details['file']);
-            $myquery->Set_Website_Details('player_dir', $details['folder']);
+            myquery::getInstance()->Set_Website_Details('player_file', $details['file']);
+            myquery::getInstance()->Set_Website_Details('player_dir', $details['folder']);
             e(lang('player_activated'), 'm');
         } else {
             e(lang('error_occured_while_activating_player'));

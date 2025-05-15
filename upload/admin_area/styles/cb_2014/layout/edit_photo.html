@@ -7,31 +7,26 @@
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
                     <li>
-                        <a href="/view_item.php?item={$data.photo_key}&amp;type=photos&amp;collection={$data.collection_id}" target="_blank">{lang code='watch'}</a>
+                        <a href="{$baseurl}view_item.php?item={$data.photo_key}&amp;type=photos&amp;collection={$data.collection_id}" target="_blank">{lang code='watch'}</a>
                     </li>
                     <li>
                         {if $data.featured!='yes'}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=fp">
                                 Make Featured
                             </a>
                             {else}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=ufp">
                                 Make Unfeatured
                             </a>
                         {/if}
                     </li>
                     <li>
-                        <a  href="recreate_thumbs.php?mode=single&amp;photo={$data.photo_id}">
-                            Re-create Photo
-                        </a>
-                    </li>
-                    <li>
                         {if $data.active == 'yes'}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=deactivate">
                                 {lang code='deactivate'}
                             </a>
                         {else}
-                            <a  href="edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
+                            <a href="{DirPath::getUrl('admin_area')}edit_photo.php?photo={$data.photo_id}&amp;mode=activate">
                                 {lang code='activate'}
                             </a>
                         {/if}
@@ -43,7 +38,7 @@
                     </li>
                     {if $data.collection_id != null}
                     <li>
-                        <a href="edit_collection.php?collection={$data.collection_id}">
+                        <a href="{DirPath::getUrl('admin_area')}edit_collection.php?collection={$data.collection_id}">
                             {lang('edit_collection')} ({$data.collection_id|get_collection_field})
                         </a>
                     </li>
@@ -59,7 +54,7 @@
         <div class="col-md-6">
             <div class="userInformation">
                 <div>
-                    <h4>User : <a href="view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
+                    <h4>User : <a href="{DirPath::getUrl('admin_area')}view_user.php?uid={$data.userid}">{$data.userid|get_username}</a></h4>
                 </div>
             </div>
             <div class="photoPreview">

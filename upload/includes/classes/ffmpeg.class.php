@@ -353,14 +353,12 @@ class FFMpeg
      */
     public function extract_subtitles()
     {
-        global $cbvideo;
-
         $this->log->newSection('Subtitle extraction');
 
         $subtitles = FFMpeg::get_track_infos($this->input_file, 'subtitle');
 
         if (count($subtitles) > 0) {
-            $video = $cbvideo->get_video($this->file_name, true);
+            $video = CBvideo::getInstance()->get_video($this->file_name, true);
             $subtitle_dir = DirPath::get('subtitles') . $this->file_directory;
             if (!is_dir($subtitle_dir)) {
                 mkdir($subtitle_dir, 0755, true);
@@ -600,14 +598,12 @@ class FFMpeg
                 break;
 
             case 'map_hls':
-                global $myquery;
-
                 $map = '';
                 $var_stream_map = ' -var_stream_map \'';
                 $count = 0;
                 foreach ($resolution as $res) {
                     $map .= ' -map "[v' . $count . ']"';
-                    $var_stream_map .= ' v:' . $count . ',name:video_' . $myquery->getVideoResolutionTitleFromHeight($res['height']) . ',agroup:audios';
+                    $var_stream_map .= ' v:' . $count . ',name:video_' . myquery::getInstance()->getVideoResolutionTitleFromHeight($res['height']) . ',agroup:audios';
 
                     $count++;
                 }
@@ -1154,8 +1150,7 @@ class FFMpeg
      */
     private function get_max_resolution_from_file(): int
     {
-        global $myquery;
-        $video_resolutions = $myquery->getVideoResolutions();
+        $video_resolutions = myquery::getInstance()->getVideoResolutions();
         $max_resolution = 0;
 
         foreach ($video_resolutions as $ratio) {

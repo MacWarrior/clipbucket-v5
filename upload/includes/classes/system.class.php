@@ -1,11 +1,11 @@
 <?php
 class System{
-    static $extensionsWeb = [];
-    static $extensionsCli = [];
-    static $versionCli;
-    static $configsCli = [];
+    static array $extensionsWeb = [];
+    static array $extensionsCli = [];
+    static string $versionCli;
+    static array $configsCli = [];
 
-    private static function init_php_extensions($type, $custom_filepath = null)
+    private static function init_php_extensions($type, $custom_filepath = null): array
     {
         switch($type){
             case 'php_web':
@@ -23,7 +23,7 @@ class System{
                 $configs = ['post_max_size', 'memory_limit', 'upload_max_filesize', 'max_execution_time', 'disable_functions', 'CurrentDatetime', 'ffi.enable'];
 
                 foreach ($php_cli_info as $line) {
-                    if (strpos($line, 'PHP Version') !== false) {
+                    if (str_contains($line, 'PHP Version')) {
                         $line = explode('=>', $line);
                         $tmp_version  = trim(end($line));
 
@@ -34,7 +34,7 @@ class System{
                     }
 
                     foreach($configs as $config){
-                        if (strpos($line, $config) !== false) {
+                        if (str_contains($line, $config)) {
                             $line = explode('=>', $line);
                             self::$configsCli[$config] = trim(end($line));
                             continue 2;
@@ -43,9 +43,8 @@ class System{
 
                     foreach($php_extensions as $key => $extension) {
                         foreach ($extension['version_tags'] as $tag) {
-                            if (strpos($line, $tag) !== false) {
+                            if (str_contains($line, $tag)) {
                                 self::$extensionsCli[$key] = $key;
-
                                 continue 3;
                             }
                         }
@@ -59,6 +58,7 @@ class System{
                 break;
 
         }
+        return [];
     }
 
     public static function get_php_extensions_list(): array
@@ -142,7 +142,7 @@ class System{
                 $regVersionPHP = '/(\d+\.\d+\.\d+)/';
                 preg_match($regVersionPHP, phpversion(), $match);
                 $php_version = $match[1] ?? phpversion();
-                $req = '7.0.0';
+                $req = '8.0.0';
                 $binary_path = $custom_filepath ?? System::get_binaries($software, false);
                 if ($php_version < $req) {
                     return $verbose ? ['err' =>sprintf('Found PHP %s but required is PHP %s : %s', $php_version, $req, $binary_path)] : false;
@@ -170,7 +170,7 @@ class System{
                     return false;
                 }
 
-                $req = '7.0.0';
+                $req = '8.0.0';
                 if (self::$versionCli < $req) {
                     return $verbose ? ['err' => sprintf('Found PHP CLI %s but required is PHP CLI %s : %s', self::$versionCli, $req, $binary_path)] : false;
                 }
@@ -194,7 +194,7 @@ class System{
                     }
                 }
                 catch(Exception $e){
-                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                    if(str_contains($e->getMessage(), 'open_basedir')){
                         return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Mysql Client (' . $binary_path . ')'] : false;
                     }
                     return $verbose ? ['err' => 'Unable to find Mysql Client'] : false;
@@ -242,7 +242,7 @@ class System{
                     }
                 }
                 catch(Exception $e){
-                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                    if(str_contains($e->getMessage(), 'open_basedir')){
                         return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to ' . ucfirst($software) . ' (' . $binary_path . ')'] : false;
                     }
                     return $verbose ? ['err' => 'Unable to find ' . ucfirst($software)] : false;
@@ -304,7 +304,7 @@ class System{
                     }
                 }
                 catch(Exception $e){
-                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                    if(str_contains($e->getMessage(), 'open_basedir')){
                         return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Media Info (' . $binary_path . ')'] : false;
                     }
                     return $verbose ? ['err' => 'Unable to find Media Info'] : false;
@@ -347,7 +347,7 @@ class System{
                     }
                 }
                 catch(Exception $e){
-                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                    if(str_contains($e->getMessage(), 'open_basedir')){
                         return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Git (' . $binary_path . ')'] : false;
                     }
                     return $verbose ? ['err' => 'Unable to find Git'] : false;
@@ -389,7 +389,7 @@ class System{
                     }
                 }
                 catch(Exception $e){
-                    if( strpos($e->getMessage(), "open_basedir") !== false ){
+                    if(str_contains($e->getMessage(), 'open_basedir')){
                         return $verbose ? ['err' => 'PHP open_basedir restriction prevent access to Nginx (' . $binary_path . ')'] : false;
                     }
                     return $verbose ? ['err' => 'Unable to find Nginx'] : false;
@@ -486,7 +486,7 @@ class System{
 
                 $disable_functions = '';
                 foreach ($php_cli_info as $line) {
-                    if (strpos($line, 'disable_functions') !== false) {
+                    if (str_contains($line, 'disable_functions')) {
                         $line = explode('=>', $line);
                         $disable_functions = end($line);
                         break;
@@ -705,7 +705,7 @@ class System{
         }
 
         // Services
-        $phpVersionReq = '7.0.0';
+        $phpVersionReq = '8.0.0';
         $php_web_version = System::get_software_version('php_web', false, null, true);
         if ($php_web_version < $phpVersionReq) {
             self::displayConfigError('error config : php web');
@@ -762,11 +762,8 @@ class System{
         }
 
         $extensionsCLI = System::get_php_extensions('php_cli');
-        assign('extensionsCLI', $extensionsCLI);
         $extensionsWEB = System::get_php_extensions('php_web');
-        assign('extensionsWEB', $extensionsWEB);
         $php_extensions_list = System::get_php_extensions_list();
-        assign('php_extensions_list', $php_extensions_list);
         foreach ($php_extensions_list as $key => $extension) {
             if (!$extension['required']) {
                 continue;
@@ -780,6 +777,24 @@ class System{
             }
         }
 
+        if( !Network::check_forbidden_directory(false) ){
+            return false;
+        }
+
+        $nginx_infos = self::getNginxVhostInfos();
+        $nginx_vhost_version = $nginx_infos['nginx_vhost_version'];
+        $nginx_vhost_revision = $nginx_infos['nginx_vhost_revision'];
+
+        if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '9') ){
+            if( empty(config('nginx_vhost_version')) || empty(config('nginx_vhost_revision')) ){
+                return false;
+            }
+
+            if(config('nginx_vhost_version') < $nginx_vhost_version || (config('nginx_vhost_version') == $nginx_vhost_version && config('nginx_vhost_revision') < $nginx_vhost_revision) ){
+                return false;
+            }
+        }
+
         $permissions = self::checkPermissions(self::getPermissions(false));
         self::setGlobalConfigCache($permissions);
         return $permissions;
@@ -789,7 +804,7 @@ class System{
      * @throws \Predis\Connection\ConnectionException
      * @throws \Predis\Response\ServerException
      */
-    public static function setGlobalConfigCache($val)
+    public static function setGlobalConfigCache($val): void
     {
         if (config('cache_enable') == 'yes') {
             CacheRedis::getInstance()->set('check_global_configs', $val, 60);
@@ -803,17 +818,17 @@ class System{
      * @throws \Predis\Connection\ConnectionException
      * @throws \Predis\Response\ServerException
      */
-    private static function displayConfigError($error)
+    private static function displayConfigError($error): void
     {
-            if (in_dev()) {
-                DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
-            }
-            self::setGlobalConfigCache(0);
+        if (in_dev()) {
+            DiscordLog::sendDump($error . '```' . debug_backtrace_string() . '```');
+        }
+        self::setGlobalConfigCache(0);
     }
 
     public static function is_nginx(): bool
     {
-        return strpos($_SERVER['SERVER_SOFTWARE'], 'nginx') !== false;
+        return str_contains($_SERVER['SERVER_SOFTWARE'], 'nginx');
     }
 
     public static function get_nginx_config(string $config_name): string
@@ -838,7 +853,7 @@ class System{
         $line = strtok($data, $separator);
 
         while ($line !== false) {
-            if (strpos($line, $config_name) !== false) {
+            if (str_contains($line, $config_name)) {
 
                 // Clear RAM usage from strtok
                 unset($data);
@@ -870,6 +885,7 @@ class System{
             $space_total = disk_total_space($files_dirpath);
             $space_free = disk_free_space($files_dirpath);
             $space_used = $space_total - $space_free;
+            $space_usage_percent = $space_total > 0 ? round($space_used / $space_total * 100, 2) : 100;
 
             foreach($disks as $disk){
                 if( $disk['space_total'] == $space_total && $disk['space_free'] == $space_free ){
@@ -882,7 +898,7 @@ class System{
                 'space_total' => $space_total,
                 'space_free' => $space_free,
                 'space_used' => $space_used,
-                'space_usage_percent' => round($space_used / $space_total * 100, 2),
+                'space_usage_percent' => $space_usage_percent,
                 'readable_total' => self::get_readable_filesize($space_total, 2),
                 'readable_free' => self::get_readable_filesize($space_free, 2),
                 'readable_used' => self::get_readable_filesize($space_used, 2)
@@ -982,6 +998,39 @@ class System{
         return $permsArray;
     }
 
+    public static function getNginxVhostInfos(): array
+    {
+        $nginx_vhost = self::get_file_content(DirPath::get('docs') . 'nginx_vhost');
+
+        if (preg_match('/^## Latest update\s*:\s*(.+)$/m', $nginx_vhost, $match_update)) {
+            $nginx_vhost_update = trim($match_update[1]);
+            $nginx_vhost = str_replace($match_update[0] . "\n", '', $nginx_vhost);
+        } else {
+            $nginx_vhost_update = null;
+        }
+
+        if (preg_match('/^## Latest version\s*:\s*(.+)$/m', $nginx_vhost, $match_version)) {
+            $nginx_vhost_version = trim($match_version[1]);
+            $nginx_vhost = str_replace($match_version[0] . "\n", '', $nginx_vhost);
+        } else {
+            $nginx_vhost_version = null;
+        }
+
+        if (preg_match('/^## Latest revision\s*:\s*(.+)$/m', $nginx_vhost, $match_revision)) {
+            $nginx_vhost_revision = trim($match_revision[1]);
+            $nginx_vhost = str_replace($match_revision[0] . "\n", '', $nginx_vhost);
+        } else {
+            $nginx_vhost_revision = null;
+        }
+
+        return [
+            'nginx_vhost' => $nginx_vhost,
+            'nginx_vhost_update' => $nginx_vhost_update,
+            'nginx_vhost_version' => $nginx_vhost_version,
+            'nginx_vhost_revision' => $nginx_vhost_revision
+        ];
+    }
+
     /**
      * @param array $permissions
      * @return int
@@ -999,10 +1048,17 @@ class System{
         return 1;
     }
 
-    public static function get_license($filename)
+    public static function get_file_content($filename): string
     {
-        $license = file_get_contents(DirPath::get('root') . $filename);
-        return str_replace("\n", '<BR>', $license);
+        $root = realpath(DirPath::get('root'));
+        $filepath = realpath($filename);
+
+        if ($filepath === false || !str_starts_with($filepath, $root)) {
+            return '';
+        }
+
+        $content = file_get_contents($filepath);
+        return htmlspecialchars($content);
     }
 
 }

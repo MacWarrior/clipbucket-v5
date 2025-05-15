@@ -2,11 +2,9 @@
 define('THIS_PAGE', 'ajax');
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
-global $myquery, $cbvid, $eh;
-
 if (!User::getInstance()->hasAdminAccess()) {
     e(lang('insufisant_privilege'));
-    echo json_encode(['err'=>$eh->get_error()]);
+    echo json_encode(['err'=>errorhandler::getInstance()->get_error()]);
     die;
 }
 
@@ -14,7 +12,7 @@ $mode = $_POST['mode'];
 switch ($mode) {
     case 'add_sticky':
         $value = $_POST['note'];
-        $myquery->insert_note($value);
+        myquery::getInstance()->insert_note($value);
         $array['note'] = nl2br($value);
         $array['id'] = Clipbucket_db::getInstance()->insert_id();
 
@@ -23,14 +21,14 @@ switch ($mode) {
 
     case 'delete_note':
         $id = mysql_clean($_POST['id']);
-        $myquery->delete_note($id);
+        myquery::getInstance()->delete_note($id);
         break;
 
     case 'delete_comment':
         Comments::delete(['comment_id' => $_POST['cid']]);
-        $error = $eh->get_error();
-        $warning = $eh->get_warning();
-        $message = $eh->get_message();
+        $error = errorhandler::getInstance()->get_error();
+        $warning = errorhandler::getInstance()->get_warning();
+        $message = errorhandler::getInstance()->get_message();
 
         if ($error) {
             $err = $error[0]['val'];
@@ -51,9 +49,9 @@ switch ($mode) {
 
     case 'spam_comment':
         $rating = Comments::setSpam($_POST['cid']);
-        $error = $eh->get_error();
-        $warning = $eh->get_warning();
-        $message = $eh->get_message();
+        $error = errorhandler::getInstance()->get_error();
+        $warning = errorhandler::getInstance()->get_warning();
+        $message = errorhandler::getInstance()->get_message();
 
         if ($error) {
             $err = $error[0]['val'];
@@ -74,9 +72,9 @@ switch ($mode) {
 
     case 'remove_spam':
         Comments::unsetSpam($_POST['cid']);
-        $error = $eh->get_error();
-        $warning = $eh->get_warning();
-        $message = $eh->get_message();
+        $error = errorhandler::getInstance()->get_error();
+        $warning = errorhandler::getInstance()->get_warning();
+        $message = errorhandler::getInstance()->get_message();
 
         if ($error) {
             $err = $error[0]['val'];

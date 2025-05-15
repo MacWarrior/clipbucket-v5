@@ -4,11 +4,11 @@ require '../includes/admin_config.php';
 
 if (userquery::getInstance()->is_admin_logged_as_user()) {
     userquery::getInstance()->revert_from_user();
-    redirect_to('/admin_area');
+    redirect_to(DirPath::getUrl('admin_area'));
 }
 
 if (User::getInstance()->hasAdminAccess()) {
-    redirect_to(DirPath::getUrl('admin_area', true) . 'index.php');
+    redirect_to(DirPath::getUrl('admin_area') . 'index.php');
 }
 
 if (isset($_POST['login'])) {

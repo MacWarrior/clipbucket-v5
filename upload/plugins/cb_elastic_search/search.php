@@ -144,7 +144,7 @@ if (defined('IN_MODULE') && $section == 'elastic') {
         $get_limit = create_query_limit($page, 10);
         $total_rows = $results["hits"]['total'];
         $total_pages = count_pages($total_rows, 10);
-        $pages->paginate($total_pages, $page);
+        pages::getInstance()->paginate($total_pages, $page);
 
         if (in_dev()) {
             assign("time_took", $results["took"] / 1000);

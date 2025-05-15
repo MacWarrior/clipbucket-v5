@@ -7,7 +7,6 @@ define('THIS_PAGE', 'video_convert');
 include(dirname(__FILE__) . '/../includes/config.inc.php');
 require_once DirPath::get('classes') . 'sLog.php';
 
-global $cbvideo;
 
 /*
     getting the arguments
@@ -154,7 +153,7 @@ if (!empty($_filename)) {
 
     update_video_by_filename($_filename, $fields, $values);
 
-    $videoDetails = $cbvideo->get_video($queue_details['cqueue_name'], true);
+    $videoDetails = CBvideo::getInstance()->get_video($queue_details['cqueue_name'], true);
 
     update_bits_color($videoDetails);
     update_castable_status($videoDetails);

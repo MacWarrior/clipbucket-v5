@@ -109,6 +109,10 @@ class formObj
             $textField .= ' disabled';
         }
 
+        if (!empty($field['style'])) {
+            $textField .= ' style="' . $field['style'] . '"';
+        }
+
         if (!empty($field['value'])) {
             if ($field['type'] == 'textfield' || $field['type'] == 'password' || $field['type'] == 'hidden' ) {
                 $textField .= ' value="' . display_clean($field['value']) . '" ';

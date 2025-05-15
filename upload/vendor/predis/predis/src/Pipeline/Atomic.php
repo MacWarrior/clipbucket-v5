@@ -3,7 +3,8 @@
 /*
  * This file is part of the Predis package.
  *
- * (c) Daniele Alessandri <suppakilla@gmail.com>
+ * (c) 2009-2020 Daniele Alessandri
+ * (c) 2021-2024 Till Krüss
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -18,11 +19,10 @@ use Predis\Connection\NodeConnectionInterface;
 use Predis\Response\ErrorInterface as ErrorResponseInterface;
 use Predis\Response\ResponseInterface;
 use Predis\Response\ServerException;
+use SplQueue;
 
 /**
  * Command pipeline wrapped into a MULTI / EXEC transaction.
- *
- * @author Daniele Alessandri <suppakilla@gmail.com>
  */
 class Atomic extends Pipeline
 {
@@ -31,9 +31,9 @@ class Atomic extends Pipeline
      */
     public function __construct(ClientInterface $client)
     {
-        if (!$client->getProfile()->supportsCommands(array('multi', 'exec', 'discard'))) {
+        if (!$client->getCommandFactory()->supports('multi', 'exec', 'discard')) {
             throw new ClientException(
-                "The current profile does not support 'MULTI', 'EXEC' and 'DISCARD'."
+                "'MULTI', 'EXEC' and 'DISCARD' are not supported by the current command factory."
             );
         }
 
@@ -59,10 +59,10 @@ class Atomic extends Pipeline
     /**
      * {@inheritdoc}
      */
-    protected function executePipeline(ConnectionInterface $connection, \SplQueue $commands)
+    protected function executePipeline(ConnectionInterface $connection, SplQueue $commands)
     {
-        $profile = $this->getClient()->getProfile();
-        $connection->executeCommand($profile->createCommand('multi'));
+        $commandFactory = $this->getClient()->getCommandFactory();
+        $connection->executeCommand($commandFactory->create('multi'));
 
         foreach ($commands as $command) {
             $connection->writeRequest($command);
@@ -72,15 +72,14 @@ class Atomic extends Pipeline
             $response = $connection->readResponse($command);
 
             if ($response instanceof ErrorResponseInterface) {
-                $connection->executeCommand($profile->createCommand('discard'));
+                $connection->executeCommand($commandFactory->create('discard'));
                 throw new ServerException($response->getMessage());
             }
         }
 
-        $executed = $connection->executeCommand($profile->createCommand('exec'));
+        $executed = $connection->executeCommand($commandFactory->create('exec'));
 
         if (!isset($executed)) {
-            // TODO: should be throwing a more appropriate exception.
             throw new ClientException(
                 'The underlying transaction has been aborted by the server.'
             );
@@ -95,7 +94,7 @@ class Atomic extends Pipeline
             );
         }
 
-        $responses = array();
+        $responses = [];
         $sizeOfPipe = count($commands);
         $exceptions = $this->throwServerExceptions();
 

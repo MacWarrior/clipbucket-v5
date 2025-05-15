@@ -1,16 +1,14 @@
 <?php
 define('THIS_PAGE', 'sitemap');
-
 require 'includes/config.inc.php';
-header("Content-Type: text/xml charset=utf-8");
-
-$params = ['limit' => 100];
-$videos = Video::getInstance()->getAll($params);
 
 if( config('enable_sitemap') != 'yes' ){
-    header('HTTP/1.0 403 Forbidden');
-    die();
+    redirect_to(cblink(['name' => 'error_403']));
 }
+
+header("Content-Type: text/xml charset=utf-8");
+$params = ['limit' => 100];
+$videos = Video::getInstance()->getAll($params);
 ?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
     <?php

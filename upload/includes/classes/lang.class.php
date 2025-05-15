@@ -2,6 +2,20 @@
 
 class Language
 {
+    private static self $instance;
+
+    /**
+     * @throws Exception
+     */
+    public static function getInstance(): self
+    {
+        if( empty(self::$instance) ){
+            self::$instance = new self();
+            self::$instance->init();
+        }
+        return self::$instance;
+    }
+
     public $lang = 'en';
 
     public $lang_id = 1;
@@ -12,8 +26,6 @@ class Language
     public $lang_name = 'English';
 
     public $arrayTranslation = [];
-
-    private static $_instance = null;
 
     private $uninstalled = false;
 
@@ -31,17 +43,6 @@ class Language
         return self::$redis_key;
     }
 
-    /**
-     * @return Language
-     */
-    public static function getInstance()
-    {
-        if (is_null(self::$_instance)) {
-            self::$_instance = new Language();
-        }
-        return self::$_instance;
-    }
-
     public function getLangISO()
     {
         return $this->lang_iso;
@@ -51,7 +52,7 @@ class Language
      * INIT
      * @throws Exception
      */
-    public function init()
+    public function init(): void
     {
         $lang = getArrayValue($_COOKIE, 'cb_lang');
 

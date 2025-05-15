@@ -1,17 +1,17 @@
-{assign var=friends value=$userquery->get_contacts($user.userid)}
+{assign var=friends value=userquery::getInstance()->get_contacts($user.userid)}
 {if $friends}
 	{foreach from=$friends item=friend}
    		{assign var=user_detail value=$friend}
     <tr>
         <td>
             <div class="col-md-2 col-sm-3">
-                 <a href="{$userquery->profile_link($user_detail)}">
-                    <img src="{$userquery->getUserThumb($user_detail)}" class="img-responsive vthumb" alt=""/>
+                 <a href="{userquery::getInstance()->profile_link($user_detail)}">
+                    <img src="{userquery::getInstance()->getUserThumb($user_detail)}" class="img-responsive vthumb" alt=""/>
                 </a>
             </div>
         
             <div class="col-md-10 col-sm-9">
-                <a href="{$userquery->profile_link($user_detail)}">{display_clean($user_detail.username)}</a>
+                <a href="{userquery::getInstance()->profile_link($user_detail)}">{display_clean($user_detail.username)}</a>
                 <br/>
                 <span class="label {if $friend.confirmed=='yes'}label-success{else}label-warning{/if} mlabel">
                     {if $friend.confirmed != 'yes'}
@@ -37,9 +37,8 @@
                 	Actions <i class="caret"></i>
 				</button>
                 <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}">{lang code="view_profile"}</a></li>
-                    <li><a role="menuitem" href="/user_videos.php?user={display_clean($user_detail.username)}">{lang code="grp_view_vdos"}</a></li>
-                    <li><a role="menuitem" href="/private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
+                    <li><a role="menuitem" href="{userquery::getInstance()->profile_link($user_detail)}">{lang code="view_profile"}</a></li>
+                    <li><a role="menuitem" href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
                     {if $friend.confirmed =='yes'}
                     <li><a role="menuitem" href="?mode=delete&userid={$user_detail.userid}">{lang code="unfriend"}</a></li>
                     {else}
@@ -54,20 +53,20 @@
     <div class="alert alert-info" role="alert">{lang code="no_friends_in_list"}</div>
     {/if}
 
-{assign var=friends value=$userquery->get_pending_contacts($user.userid,0)}
+{assign var=friends value=userquery::getInstance()->get_pending_contacts($user.userid,0)}
 {if $friends}
     {foreach from=$friends item=friend}
     	{assign var=user_detail value=$friend}
     <tr>
         <td>
             <div class="col-md-2 col-sm-3">
-                <a href="{$userquery->profile_link($user_detail)}">
-                    <img src="{$userquery->getUserThumb($user_detail)}" class="img-responsive vthumb" id="thumbs_{$video.videoid}"/>
+                <a href="{userquery::getInstance()->profile_link($user_detail)}">
+                    <img src="{userquery::getInstance()->getUserThumb($user_detail)}" class="img-responsive vthumb" id="thumbs_{$video.videoid}"/>
                 </a>
             </div>
         
             <div class="col-md-10 col-sm-9">
-                <a href="{$userquery->profile_link($user_detail)}">{display_clean($user_detail.username)}</a><br/>
+                <a href="{userquery::getInstance()->profile_link($user_detail)}">{display_clean($user_detail.username)}</a><br/>
                 <div class="labels">
                     {if $video.featured=='yes'}
                     <span class="label label-primary">{lang code='featured'}</span>
@@ -89,10 +88,9 @@
                     Actions <i class="caret"></i>
                 </button>
                 <ul class="dropdown-menu pull-right" role="menu">
-                    <li><a role="menuitem" href="{$userquery->profile_link($user_detail)}">{lang code="view_profile"}</a></li>
+                    <li><a role="menuitem" href="{userquery::getInstance()->profile_link($user_detail)}">{lang code="view_profile"}</a></li>
                     <li><a role="menuitem" href="?mode=requests&confirm={$friend.userid}">{lang code="accept_request"}</a></li>
-                    <li><a role="menuitem" href="/user_videos.php?user={display_clean($user_detail.username)}">{lang code="grp_view_vdos"}</a></li>
-                    <li><a role="menuitem" href="/private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
+                    <li><a role="menuitem" href="{$baseurl}private_message.php?mode=new_msg&to={display_clean($user_detail.username)}">{lang code="user_send_message"}</a></li>
                     <li><a role="menuitem" href="?mode=delete&userid={$user_detail.userid}">Reject Request</a>
 
                 </ul>

@@ -10,8 +10,8 @@ if( THIS_PAGE != 'admin_login' && php_sapi_name() !== 'cli'){
         redirect_to('login.php');
     }
 
-    if (!User::getInstance()->hasPermission('admin_access')) {
-        redirect_to(Network::get_server_url() . '403.php');
+    if( !User::getInstance()->hasPermission('admin_access') ){
+        redirect_to(cblink(['name' => 'error_403']));
     }
 }
 
@@ -23,7 +23,7 @@ if( !in_array(THIS_PAGE, ['update_info', 'admin_launch_update']) && php_sapi_nam
 require_once DirPath::get('classes') . 'mass_upload.class.php';
 require_once DirPath::get('classes') . 'ads.class.php';
 
-global $Smarty, $myquery;
+global $Smarty;
 
 $cbmass = new mass_upload();
 $ads_query = new AdsManager();
@@ -36,7 +36,7 @@ if (isset($_POST['update_dp_options'])) {
         $num = $_POST['admin_pages'];
     }
 
-    $myquery->Set_Website_Details('admin_pages', $num);
+    myquery::getInstance()->Set_Website_Details('admin_pages', $num);
 }
 
 //Do No Edit Below This Line
@@ -52,14 +52,14 @@ if( !in_array(THIS_PAGE, ['system_info', 'update_info', 'admin_launch_update']) 
     $check_global = System::check_global_configs();
     if( $check_global !== 1 ){
         if ($check_global === -1 ) {
-            e(lang('error_server_config', '/admin_area/setting_basic.php#config_hosting'), 'w', false);
+            e(lang('error_server_config', DirPath::getUrl('admin_area') . 'setting_advanced.php#config_hosting'), 'w', false);
         } else {
-            e(lang('error_server_config', '/admin_area/system_info.php#hosting'), 'w', false);
+            e(lang('error_server_config', DirPath::getUrl('admin_area') . 'system_info.php#hosting'), 'w', false);
         }
     }
 }
 
-Assign('baseurl', Network::get_server_url());
+Assign('baseurl', DirPath::getUrl('root'));
 Assign('imageurl', TEMPLATEURL . '/images');
 Assign('image_url', TEMPLATEURL . '/layout');
 Assign('layout', TEMPLATEURL . '/layout');

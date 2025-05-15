@@ -15,7 +15,7 @@ $(document).ready(function () {
 
         var typed = $(this).val();
         $.ajax({
-            url: '/ajax.php',
+            url: baseurl+'ajax.php',
             type: 'post',
             dataType: 'html',
             data: {
@@ -67,7 +67,7 @@ $(document).ready(function () {
         playlist = $(this).attr('dataList');
 
         $.ajax({
-            url: '/ajax/watch.php',
+            url: baseurl+'ajax/watch.php',
             type: 'post',
             dataType: 'html',
             data: {
@@ -116,7 +116,7 @@ $(document).ready(function () {
     if (ids_to_check_progress.length > 0) {
         intervalId = setInterval(function () {
             $.post({
-                url: '/actions/progress_video.php',
+                url: baseurl+'actions/progress_video.php',
                 dataType: 'json',
                 data: {
                     ids: ids_to_check_progress,
@@ -152,7 +152,7 @@ $(document).ready(function () {
 function getViewHistory(video_id, page) {
     showSpinner();
     $.ajax({
-        url: "/actions/video_view_history.php",
+        url: baseurl+"actions/video_view_history.php",
         type: "POST",
         data: {videoid: video_id, page: page },
         dataType: 'json',

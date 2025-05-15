@@ -11,8 +11,8 @@
 include("recaptchalib.php");
 
 // Get a key from https://www.google.com/recaptcha/admin/create
-$publickey = $Cbucket->configs['reCaptcha_public_key'];
-$privatekey = $Cbucket->configs['reCaptcha_private_key'];
+$publickey = ClipBucket::getInstance()->configs['reCaptcha_public_key'];
+$privatekey = ClipBucket::getInstance()->configs['reCaptcha_private_key'];
 
 # the response from reCAPTCHA
 $resp = null;

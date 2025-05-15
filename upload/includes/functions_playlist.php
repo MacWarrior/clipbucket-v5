@@ -33,8 +33,7 @@ function is_playlist_viewable($list_id)
  */
 function get_playlist_items($list_id, $limit = -1, $order = "playlist_items.playlist_item_id DESC")
 {
-    global $cbvid;
-    return $cbvid->get_playlist_items($list_id, $order, $limit);
+    return CBvideo::getInstance()->get_playlist_items($list_id, $order, $limit);
 }
 
 /**

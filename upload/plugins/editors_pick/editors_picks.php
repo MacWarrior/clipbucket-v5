@@ -5,7 +5,7 @@
     Author: Arslan Hassan & MacWarrior
     Website: https://github.com/MacWarrior/clipbucket-v5/
     Version: 2.0.7
-    ClipBucket Version: 5.5.1
+    ClipBucket Version: 5.5.2
 */
 
 /**
@@ -27,10 +27,9 @@ function editors_pick()
 /**
  * @throws Exception
  */
-function add_to_editor_pick($vid)
+function add_to_editor_pick($vid): void
 {
-    global $cbvid;
-    if ($cbvid->video_exists($vid)) {
+    if (CBvideo::getInstance()->video_exists($vid)) {
         if (!is_video_in_editors_pick($vid)) {
             $sort = get_highest_sort_number() + 1;
             Clipbucket_db::getInstance()->insert(tbl('editors_picks'), ['videoid', 'sort', 'date_added'], [$vid, $sort, now()]);
@@ -128,22 +127,20 @@ function admin_area_tab($vid): string
 /**
  * @throws Exception
  */
-function display_editors_pick()
+function display_editors_pick(): void
 {
     assign('editor_picks', get_ep_videos());
     echo Fetch(DirPath::get('plugins') . 'editors_pick/templates/front/editorspicks.html', true);
 }
 
-global $cbvid;
-
 //Adding Editor's Pick Link
-$cbvid->video_manager_link[] = 'video_manager_ep_link';
+CBvideo::getInstance()->video_manager_link[] = 'video_manager_ep_link';
 
 //Temporary purpose
-$cbvid->video_manager_link_new[] = 'admin_area_tab';
+CBvideo::getInstance()->video_manager_link_new[] = 'admin_area_tab';
 
 //Calling Editor Picks Function
-$cbvid->video_manager_funcs[] = 'editors_pick';
+CBvideo::getInstance()->video_manager_funcs[] = 'editors_pick';
 
 $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS(['editors_pick/assets/js/editors_pick' . $min_suffixe . '.js' => 'plugin']);

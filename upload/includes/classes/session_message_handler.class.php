@@ -2,11 +2,12 @@
 
 class sessionMessageHandler
 {
-    private static $type = ['m', 'w', 'e'];
+    private static array $type = ['m', 'w', 'e'];
 
     /**
      * @param string $message
      * @param string $type
+     * @param string $url
      * @return bool
      */
     public static function add_message(string $message, string $type = 'm', string $url = ''): bool

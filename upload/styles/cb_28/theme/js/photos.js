@@ -2,8 +2,8 @@ function buildPhotoUrl(xhr,display) {
 	var collectionId = xhr.collection_id,
 	photo_key = xhr.photo_key,
 	photo_title = xhr.photo['0'].photo_title,
-	nonSeoUrl = "view_item.php?item="+photo_key+"&collection="+collectionId,
-	theSeoUrl = "item/photos/"+collectionId+"/"+photo_key+"/"+photo_title,
+	nonSeoUrl = baseurl+"view_item.php?item="+photo_key+"&collection="+collectionId,
+	theSeoUrl = baseurl+"item/photos/"+collectionId+"/"+photo_key+"/"+photo_title,
 	mainUrl = nonSeoUrl;
 
 	if (seoUrls == 'yes' && display == 'aho') {
@@ -57,7 +57,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 	}
 
 	$.ajax({
-		url: '/ajax.php'+'?moto=ajax',
+		url: baseurl+'ajax.php'+'?moto=ajax',
 		type: "post",
 		data: data,
 		dataType: 'json',
@@ -69,7 +69,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 			$('.view-photo').prop("disabled",true);
 		},
 		success:function(xhr) {	
-			var getUrl = "/" + buildPhotoUrl(xhr);
+			var getUrl = buildPhotoUrl(xhr);
 			$.get( getUrl, function( data ) {
 			  	$('#main').html(data);
 			  	$('.view-photo').prop("disabled",false);
@@ -78,7 +78,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 				//d = xhr.photo[0];
 				$('#gallery-exd').attr("src",key_globel);	
 				$("#gallery").attr("src",key_globel);
-				window.history.pushState("", "", "/"+buildPhotoUrl(xhr,"aho"));
+				window.history.pushState("", "", buildPhotoUrl(xhr,"aho"));
 				$('.dropdown-toggle').dropdown();
 				$('.pic-glyp').remove();
 				galleryDimension();
@@ -89,9 +89,7 @@ $(document).on("click", "#mainNextBtn,#mainPrevBtn", function () {
 
 });
 
-
-// Event which enlarge the image size in model. 
-
+// Event which enlarge the image size in model.
 $(document).on("click", ".en-large", function () {
 	var curr_photo = d;
 	var check = $(this).data('check');
@@ -108,7 +106,7 @@ $(document).on("click", ".en-large", function () {
 	}
 
 	$.ajax({
-		url: '/ajax.php',
+		url: baseurl+'ajax.php',
 		type: "post",
 		data: data,
 		dataType: 'json',
@@ -177,8 +175,6 @@ $( document ).on( 'keydown', function ( e ) {
        	}
     }
 });
-
-
 
 $('.dropdown-menu li').on('click',function(){
     var searchQuery = $('input#query').val();

@@ -6,8 +6,8 @@ include(dirname(__FILE__) . '/../includes/config.inc.php');
 $vid = $_SERVER['argv'][1];
 
 //Check video exists or not
-if ($myquery->video_exists($vid)) {
-    $Upload->do_after_video_upload($vid);
+if (myquery::getInstance()->video_exists($vid)) {
+    Upload::getInstance()->do_after_video_upload($vid);
 } else {
-    e(lang("class_vdo_del_err"));
+    e(lang('class_vdo_del_err'));
 }

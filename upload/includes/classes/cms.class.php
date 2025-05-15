@@ -20,7 +20,7 @@ class CMS
         return self::$CMS[$key];
     }
 
-    private function generateLinks()
+    private function generateLinks(): void
     {
         if (preg_match_all("#(^|\s|\()((http(s?)://)|(www\.))(\w+[^\s\)\<]+)#i", $this->content, $matches)) {
             for ($i = 0; $i < count($matches['0']); $i++) {
@@ -42,7 +42,7 @@ class CMS
         }
     }
 
-    private function generateCensored()
+    private function generateCensored(): void
     {
         $censored_words = explode(',',config('censored_words'));
         foreach ($censored_words as $word) {
@@ -51,7 +51,7 @@ class CMS
         }
     }
 
-    private function clean()
+    private function clean(): void
     {
         $this->content = display_clean($this->content);
     }
