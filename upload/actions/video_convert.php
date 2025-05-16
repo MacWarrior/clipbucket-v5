@@ -59,6 +59,7 @@ if( !$resume ){
     $log->writeLine(date('Y-m-d H:i:s').' - Filename : '.$fileName);
     $log->writeLine(date('Y-m-d H:i:s').' - File directory : '.$file_directory);
     $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
+
     switch ($ext) {
         default:
         case 'mp4':
@@ -69,9 +70,9 @@ if( !$resume ){
             break;
         case 'm3u8':
             $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
-            $temp_files = $temp_dir . '*';
+            $temp_file = $temp_dir . '*';
             mkdir($conversion_path);
-            foreach (glob($temp_files) as $file) {
+            foreach (glob($temp_file) as $file) {
                 $files_part = explode('/', $file);
                 $video_file = $files_part[count($files_part) - 1];
                 $renamed = rename($file, $conversion_path . $video_file);
@@ -81,15 +82,51 @@ if( !$resume ){
     }
 
     if (!$renamed) {
-        $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
+        $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file ' . $temp_file . ' ...');
         setVideoStatus($videoDetails['videoid'], 'Failed');
         die();
     }
 
-    $log->writeLine(date('Y-m-d H:i:s').' => File moved to '.$orig_file);
+    $log->writeLine(date('Y-m-d H:i:s').' => File moved to ' . $orig_file);
 } else {
     $log->newSection('Resuming conversion');
-    $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from '.$orig_file);
+    if( file_exists($orig_file) ){
+        $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from ' . $orig_file);
+    } else {
+        switch ($ext) {
+            default:
+            case 'mp4':
+                $temp_file = DirPath::get('temp') . $fileName . '.' . $tmp_ext;
+                if( file_exists($temp_file) ){
+                    $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from ' . $temp_file);
+                    $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
+                    $renamed = rename($temp_file, $orig_file);
+                    break;
+                }
+                $log->writeLine(date('Y-m-d H:i:s').' => Video file not found, conversion can\'t be resumed...');
+                setVideoStatus($videoDetails['videoid'], 'Failed');
+                die();
+
+            case 'm3u8':
+                $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
+                $temp_files = glob($temp_dir . '*');
+                if( !empty($temp_files) ){
+                    $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from ' . $temp_dir . '*');
+                    $log->writeLine(date('Y-m-d H:i:s').' - Moving files to conversion queue...');
+                    mkdir($conversion_path);
+                    foreach ($temp_files as $file) {
+                        $files_part = explode('/', $file);
+                        $video_file = $files_part[count($files_part) - 1];
+                        $renamed = rename($file, $conversion_path . $video_file);
+                    }
+                    rmdir($temp_dir);
+                    break;
+                }
+                $log->writeLine(date('Y-m-d H:i:s').' => Video file not found, conversion can\'t be resumed...');
+                setVideoStatus($videoDetails['videoid'], 'Failed');
+                die();
+        }
+    }
 
     if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
         Video::getInstance()->set($videoDetails['videoid'], 'convert_percent',0);

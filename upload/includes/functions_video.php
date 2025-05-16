@@ -514,7 +514,7 @@ function file_name_exists($name)
  */
 function get_queued_video(string $fileName): array
 {
-    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', 'cqueue_name = \''.mysql_clean($fileName).'\'', 1);
+    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', ' cqueue_conversion != \'yes\' AND cqueue_name = \''.mysql_clean($fileName).'\'', 1);
     if( empty($results) ){
         return [];
     }
@@ -718,7 +718,7 @@ function update_video_by_filename($file_name, $fields, $values)
  * @param $vid
  * @throws Exception
  */
-function activate_video_with_file($vid)
+function activate_video_with_file($vid): void
 {
     $vdetails = get_video_basic_details($vid);
     $file_name = $vdetails['file_name'];
@@ -805,7 +805,7 @@ function get_thumb_num($name): string
  * @param $type
  * @throws Exception
  */
-function delete_video_thumb($videoDetails, $num, $type)
+function delete_video_thumb($videoDetails, $num, $type): void
 {
     $db = Clipbucket_db::getInstance();
     $type_file = array_search($type,Upload::getInstance()->types_thumb);
@@ -1575,7 +1575,7 @@ function reConvertVideos($data = ''): void
                 continue;
             }
 
-            setVideoStatus($daVideo, 'Processing');
+            setVideoStatus($daVideo, 'Waiting');
 
             if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
                 $fields = ['convert_percent'];
@@ -1591,6 +1591,7 @@ function reConvertVideos($data = ''): void
                     copy($max_quality_file, $conversion_filepath);
                     Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.mp4');
                     break;
+
                 case 'hls':
                     $temp_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
                     mkdir($temp_dir);

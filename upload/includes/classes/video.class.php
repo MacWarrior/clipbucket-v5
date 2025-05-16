@@ -1647,9 +1647,10 @@ class CBvideo extends CBCategory
                 //Remove categories
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
-                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id = ' . (int)$vdetails['videoid'] . ' AND playlist_item_type=\'v\'');
                 Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
+                Clipbucket_db::getInstance()->delete(tbl('conversion_queue'), ['cqueue_name'], [$vdetails['file_name']]);
 
                 //Removing video Comments
                 $params = [];
@@ -1658,8 +1659,8 @@ class CBvideo extends CBCategory
                 Comments::delete($params);
 
                 //Finally Removing Database entry of video
-                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
-                Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid = ' . (int)$vdetails['videoid']);
+                Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid= ' . (int)$vdetails['userid']);
 
                 if( !error() && !warning() ) {
                     errorhandler::getInstance()->flush();
