@@ -669,10 +669,6 @@ class Collection
             e(lang('unknown_type'));
             return false;
         }
-        if (!$this->isValidType($type)) {
-            e(lang('unknown_type'));
-            return false;
-        }
         $collection = $this->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
             e(lang('collect_not_exist'));

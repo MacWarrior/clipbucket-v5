@@ -514,16 +514,13 @@ function file_name_exists($name)
  */
 function get_queued_video(string $fileName): array
 {
-    $queueName = getName($fileName);
-    $ext = getExt($fileName);
-
-    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', "cqueue_conversion='no' AND cqueue_name ='$queueName' AND cqueue_ext ='$ext'", 1);
+    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', 'cqueue_conversion = \'no\' AND cqueue_name = \''.mysql_clean($fileName).'\'', 1);
     if( empty($results) ){
         return [];
     }
 
     $result = $results[0];
-    Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], " cqueue_id = '" . $result['cqueue_id'] . "'");
+    Clipbucket_db::getInstance()->update(tbl('conversion_queue'), ['cqueue_conversion', 'time_started'], ['p', time()], ' cqueue_id = \'' . $result['cqueue_id'] . '\'');
     return $result;
 }
 
@@ -1307,7 +1304,7 @@ function dateNow(): string
  *
  * @action : Updates database
  */
-function setVideoStatus($video, $status, $reconv = false, $byFilename = false)
+function setVideoStatus($video, $status, $reconv = false, $byFilename = false): void
 {
     if ($byFilename) {
         $type = 'file_name';
@@ -1352,7 +1349,7 @@ function get_audio_channels($filepath): int
 /**
  * @throws Exception
  */
-function update_castable_status($vdetails)
+function update_castable_status($vdetails): void
 {
     if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files']) ) {
         return;
@@ -1374,7 +1371,7 @@ function update_castable_status($vdetails)
 /**
  * @throws Exception
  */
-function update_video_files($vdetails)
+function update_video_files($vdetails): void
 {
     $fileDirectory = $vdetails['file_directory'] . DIRECTORY_SEPARATOR;
     $video_qualities = [];
@@ -1428,7 +1425,7 @@ function update_video_files($vdetails)
 /**
  * @throws Exception
  */
-function update_bits_color($vdetails)
+function update_bits_color($vdetails): void
 {
     if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files']) ) {
         return;
@@ -1444,7 +1441,7 @@ function update_bits_color($vdetails)
 /**
  * @throws Exception
  */
-function update_aspect_ratio($vdetails)
+function update_aspect_ratio($vdetails): void
 {
     if (is_null($vdetails) || $vdetails['status'] != 'Successful' || empty($vdetails['video_files'])) {
         return;
@@ -1559,7 +1556,6 @@ function reConvertVideos($data = ''): void
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             $results_curl = curl_exec($request);
             $results_curl_arr = json_decode($results_curl, true);
-            $returnCode = (int)curl_getinfo($request, CURLINFO_HTTP_CODE);
             curl_close($request);
 
             if (isset($results_curl_arr['success']) && $results_curl_arr['success'] == 'yes') {
@@ -1579,10 +1575,13 @@ function reConvertVideos($data = ''): void
                 continue;
             }
 
-            $toConvert++;
-            e('Started re-conversion process for id ' . $vdetails['videoid'], 'm');
-
             setVideoStatus($daVideo, 'Processing');
+
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+                $fields = ['convert_percent'];
+                $values= [0];
+                update_video_by_filename($vdetails['file_name'], $fields, $values);
+            }
 
             switch ($vdetails['file_type']) {
                 default:
@@ -1593,34 +1592,33 @@ function reConvertVideos($data = ''): void
                     Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.mp4');
                     break;
                 case 'hls':
-                    $conversion_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
-                    mkdir($conversion_dir);
-                    $max_quality = max(json_decode($vdetails['video_files']));
-                    $conversion_filepath = $conversion_dir . $max_quality . '.m3u8';
-                    $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . $max_quality . '*';
+                    $temp_dir = DirPath::get('temp') . $vdetails['file_name'] . DIRECTORY_SEPARATOR;
+                    mkdir($temp_dir);
+                    $original_files_path = DirPath::get('videos') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . DIRECTORY_SEPARATOR . '*';
                     foreach (glob($original_files_path) as $file) {
                         $files_part = explode('/', $file);
                         $video_file = $files_part[count($files_part) - 1];
-                        if ($video_file == $max_quality . '.m3u8') {
+                        if ($video_file == 'index.m3u8') {
                             $video_file = $vdetails['file_name'] . '.m3u8';
                         }
-                        copy($file, $conversion_dir . $video_file);
+                        copy($file, $temp_dir . $video_file);
                     }
                     Upload::getInstance()->add_conversion_queue($vdetails['file_name'] . '.m3u8', $vdetails['file_name'] . DIRECTORY_SEPARATOR, $vdetails['file_name']);
                     break;
             }
 
             remove_video_files($vdetails);
+            if( empty(errorhandler::getInstance()->get_error()) ){
+                errorhandler::getInstance()->flush();
+            }
 
-            $logFile = DirPath::get('logs') . $vdetails['file_directory'] . DIRECTORY_SEPARATOR . $vdetails['file_name'] . '.log';
-            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . "video_convert.php {$conversion_filepath} {$vdetails['file_name']} {$vdetails['file_directory']} {$logFile} '' 'reconvert' > /dev/null &");
+            e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
+
+            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . "video_convert.php {$vdetails['file_name']} '' 'reconvert' > /dev/null &");
 
             setVideoStatus($daVideo, 'started', true);
         }
 
-    }
-    if ($toConvert >= 1) {
-        e("Reconversion is underway. Kindly don't run reconversion on videos that are already reconverting. Doing so may cause things to become lunatic fringes :P", "w");
     }
 }
 
@@ -1630,7 +1628,7 @@ function reConvertVideos($data = ''): void
  * @return void
  * @throws Exception
  */
-function generatingMoreThumbs($data, bool $regenerate = false)
+function generatingMoreThumbs($data, bool $regenerate = false): void
 {
     $vid_file = get_high_res_file($data);
     require_once DirPath::get('classes') . 'sLog.php';
@@ -1659,7 +1657,7 @@ function generatingMoreThumbs($data, bool $regenerate = false)
  * @return void
  * @throws Exception
  */
-function update_duration($vdetails)
+function update_duration($vdetails): void
 {
     if (is_null($vdetails)) {
         return;

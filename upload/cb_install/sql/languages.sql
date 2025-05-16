@@ -1551,4 +1551,5 @@ VALUES ('admin_setting'),
        ('account_deletion_confirmation'),
        ('account_deletion_confirmation_info'),
        ('account_deletion_yes'),
-       ('account_deleted');
+       ('account_deleted'),
+       ('reconversion_started_for_x');

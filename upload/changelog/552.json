@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"45",
+  "revision":"46",
   "status":"stable",
   "detail":[
     {
@@ -56,6 +56,13 @@
         ,"Fix URL issue when base_url config is not correctly set"
         ,"Fix typo <i>(#596)</i>"
         ,"Fix Nginx vhost <i>(#604)</i>"
+      ]
+    },
+    {
+      "title": "Conversion",
+      "description": [
+        "Refactor video conversion script"
+        ,"Fix HLS video reconversion"
       ]
     },
     {

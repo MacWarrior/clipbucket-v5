@@ -133,13 +133,16 @@ switch ($mode) {
         }
         Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
 
-        $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
+        $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $file_name;
         if (stristr(PHP_OS, 'WIN')) {
             $complement = '';
         } elseif (stristr(PHP_OS, 'darwin')) {
             $complement = ' </dev/null >/dev/null &';
         } else { // for ubuntu or linux
             $complement = ' > /dev/null &';
+        }
+        if( in_dev() ){
+            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $default_cmd.$complement);
         }
         exec($default_cmd . $complement);
 
