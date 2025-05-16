@@ -18,6 +18,7 @@ if( empty($fileName) ){
 
 $audio_track = $argv[2] ?? false;
 $reconvert = $argv[3] ?? false;
+$resume = $argv[4] ?? false;
 
 $extension = getExt($fileName);
 switch ($extension) {
@@ -31,55 +32,72 @@ switch ($extension) {
 }
 
 $queue_details = get_queued_video($queue_filename);
-$videoDetails = CBvideo::getInstance()->get_video($fileName, true);
-
-$file_directory = $videoDetails['file_directory'] . DIRECTORY_SEPARATOR;
-
-$logFile = DirPath::get('logs') . $file_directory . $fileName . '.log';
-
-$log = new SLog($logFile);
-$log->newSection('Starting ' . ($reconvert ? 'reconversion' : 'conversion'));
-$log->writeLine(date('Y-m-d H:i:s').' - Filename : '.$fileName);
-$log->writeLine(date('Y-m-d H:i:s').' - File directory : '.$file_directory);
-
 $tmp_ext = $queue_details['cqueue_tmp_ext'];
 $ext = $queue_details['cqueue_ext'];
 if (empty($tmp_ext)) {
     $tmp_ext = $ext;
 }
 
-$log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
+$videoDetails = CBvideo::getInstance()->get_video($fileName, true);
+$file_directory = $videoDetails['file_directory'] . DIRECTORY_SEPARATOR;
+$logFile = DirPath::get('logs') . $file_directory . $fileName . '.log';
+$log = new SLog($logFile);
+
 switch ($ext) {
     default:
     case 'mp4':
-        // Delete the uploaded file from temp directory
-        // and move it into the conversion queue directory for conversion
-        $temp_file = DirPath::get('temp') . $fileName . '.' . $tmp_ext;
         $orig_file = DirPath::get('conversion_queue') . $fileName . '.' . $ext;
-        $renamed = rename($temp_file, $orig_file);
         break;
     case 'm3u8':
-        $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
-        $temp_files = $temp_dir . '*';
         $conversion_path = DirPath::get('conversion_queue') . $fileName . DIRECTORY_SEPARATOR;
         $orig_file = $conversion_path . $fileName . '.' . $ext;
-        mkdir($conversion_path);
-        foreach (glob($temp_files) as $file) {
-            $files_part = explode('/', $file);
-            $video_file = $files_part[count($files_part) - 1];
-            $renamed = rename($file, $conversion_path . $video_file);
-        }
-        rmdir($temp_dir);
         break;
 }
 
-if (!$renamed) {
-    $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
-    setVideoStatus($videoDetails['videoid'], 'Failed');
-    die();
-}
+if( !$resume ){
+    $log->newSection('Starting ' . ($reconvert ? 'reconversion' : 'conversion'));
+    $log->writeLine(date('Y-m-d H:i:s').' - Filename : '.$fileName);
+    $log->writeLine(date('Y-m-d H:i:s').' - File directory : '.$file_directory);
+    $log->writeLine(date('Y-m-d H:i:s').' - Moving file to conversion queue...');
+    switch ($ext) {
+        default:
+        case 'mp4':
+            // Delete the uploaded file from temp directory
+            // and move it into the conversion queue directory for conversion
+            $temp_file = DirPath::get('temp') . $fileName . '.' . $tmp_ext;
+            $renamed = rename($temp_file, $orig_file);
+            break;
+        case 'm3u8':
+            $temp_dir = DirPath::get('temp') . $fileName . DIRECTORY_SEPARATOR;
+            $temp_files = $temp_dir . '*';
+            mkdir($conversion_path);
+            foreach (glob($temp_files) as $file) {
+                $files_part = explode('/', $file);
+                $video_file = $files_part[count($files_part) - 1];
+                $renamed = rename($file, $conversion_path . $video_file);
+            }
+            rmdir($temp_dir);
+            break;
+    }
 
-$log->writeLine(date('Y-m-d H:i:s').' => File moved to '.$orig_file);
+    if (!$renamed) {
+        $log->writeLine(date('Y-m-d H:i:s').' => Something went wrong while moving file...');
+        setVideoStatus($videoDetails['videoid'], 'Failed');
+        die();
+    }
+
+    $log->writeLine(date('Y-m-d H:i:s').' => File moved to '.$orig_file);
+} else {
+    $log->newSection('Resuming conversion');
+    $log->writeLine(date('Y-m-d H:i:s').' => Resume conversion from '.$orig_file);
+
+    if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279')) {
+        Video::getInstance()->set($videoDetails['videoid'], 'convert_percent',0);
+    }
+
+    $sql_update = 'UPDATE ' . tbl('conversion_queue') . ' SET time_completed = 0 WHERE cqueue_id = ' . (int)$queue_details['cqueue_id'];
+    Clipbucket_db::getInstance()->execute($sql_update);
+}
 
 $ffmpeg = new FFMpeg($log);
 $ffmpeg->conversion_type = config('conversion_type');

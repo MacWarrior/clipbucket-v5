@@ -84,7 +84,7 @@ if (isset($_POST['mass_upload_video'])) {
             $fname = explode('.', $file_name);
             $cond = 'file_name=' . '\'' . $fname[0] . '\'';
             $result = Clipbucket_db::getInstance()->db_update(tbl('video'), $fields, $cond);
-            $result = exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . 'video_convert.php ' . $file_key. ' ' . $file_track . ' > /dev/null &');
+            FFmpeg::launchConversion($file_key, $file_track);
             if (file_exists(DirPath::get('conversion_queue') . $file_name)) {
                 unlink(DirPath::get('conversion_queue') . $file_name);
                 foreach ($vtitle as $title) {

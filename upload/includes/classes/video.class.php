@@ -132,7 +132,8 @@ class Video
         return $this->tablename_categories;
     }
 
-    public function addFields(array $fields){
+    public function addFields(array $fields): void
+    {
         if( empty($fields) ){
             return;
         }
@@ -1249,7 +1250,7 @@ class CBvideo extends CBCategory
     function video_exists($vid)
     {
         if (is_numeric($vid)) {
-            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid=\'' . mysql_clean($vid) . '\' ');
+            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid = ' . (int)$vid);
         }
         return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
     }

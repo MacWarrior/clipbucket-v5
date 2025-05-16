@@ -1,6 +1,5 @@
 <?php
 define('THIS_PAGE', 'cb_conversion_queue');
-
 require_once dirname(__FILE__, 2) . '/includes/admin_config.php';
 
 User::getInstance()->hasPermissionOrRedirect('advanced_settings', true);
@@ -10,6 +9,8 @@ pages::getInstance()->page_redir();
 global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('tool_box'), 'url' => ''];
 $breadcrumb[1] = ['title' => 'Conversion Queue Manager', 'url' => DirPath::getUrl('admin_area') . 'cb_conversion_queue.php'];
+
+e(lang('conversion_queue_warning'), 'w');
 
 if ($_GET['delete_lock']) {
     if (conv_lock_exists()) {
@@ -25,36 +26,35 @@ if ($_GET['delete_lock']) {
 }
 
 if (isset($_POST['delete_selected']) && is_array($_POST['check_queue'])) {
-    $total = count($_POST['check_queue']);
-    for ($i = 0; $i <= $total; $i++) {
-        myquery::getInstance()->queue_action('delete', $_POST['check_queue'][$i]);
+    if( !empty($_POST['check_queue']) ){
+        foreach($_POST['check_queue'] AS $id){
+            myquery::getInstance()->queue_action('delete', $id);
+        }
     }
     e('Selected items have been deleted', 'm');
 }
 
-if (isset($_POST['processed']) && is_array($_POST['check_queue'])) {
-    $total = count($_POST['check_queue']);
-    for ($i = 0; $i <= $total; $i++) {
-        myquery::getInstance()->queue_action('processed', $_POST['check_queue'][$i]);
+if( isset($_POST['resume']) && is_array($_POST['check_queue']) ){
+    if( !empty($_POST['check_queue']) ){
+        foreach($_POST['check_queue'] AS $id){
+            myquery::getInstance()->queue_action('resume', $id);
+        }
     }
-    e('Selected items have been set changed to processed', 'm');
-}
-
-if (isset($_POST['pending']) && is_array($_POST['check_queue'])) {
-    $total = count($_POST['check_queue']);
-    for ($i = 0; $i <= $total; $i++) {
-        myquery::getInstance()->queue_action('pending', $_POST['check_queue'][$i]);
-    }
-    e('Selected items have been set changed to processed', 'm');
+    e(lang('selected_conversion_resumed'), 'm');
 }
 
 //Getting List of Conversion Queue
-$page = mysql_clean($_GET['page']);
+$page = (int)$_GET['page'];
 $get_limit = create_query_limit($page, config('admin_pages'));
 $queue_list = myquery::getInstance()->get_conversion_queue(null, $get_limit);
 assign('queues', $queue_list);
-$total_rows = get_videos($vcount);
-$total_pages = count_pages(Clipbucket_db::getInstance()->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));
+
+if( count($queue_list) < config('admin_pages') ){
+    $total_pages = 1;
+} else {
+    $total_pages = count_pages(Clipbucket_db::getInstance()->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));
+}
+
 pages::getInstance()->paginate($total_pages, $page);
 assign('admin_url', DirPath::getUrl('admin_area'));
 subtitle('Conversion Queue Manager');

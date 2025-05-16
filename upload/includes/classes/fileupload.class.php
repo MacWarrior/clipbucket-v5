@@ -128,7 +128,7 @@ class FileUpload
     /**
      * @throws Exception
      */
-    private function manageChunkedFile()
+    private function manageChunkedFile(): void
     {
         $chunk = $_POST['chunk'] ?? false;
         $chunks = $_POST['chunks'] ?? false;

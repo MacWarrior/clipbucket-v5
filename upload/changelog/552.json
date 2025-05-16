@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"46",
+  "revision":"47",
   "status":"stable",
   "detail":[
     {
@@ -8,6 +8,7 @@
       "description": [
         "Implement Nginx VirtualHost check"
         ,"Implement channel slogan"
+        ,"Refactor conversion queue manager"
         ,"Fix code mode on page edition <i>(#595)</i>"
         ,"Fix email sending error catching <i>(#587)</i>"
         ,"Fix incorrect frontend URL <i>(#529)</i>"
@@ -61,7 +62,8 @@
     {
       "title": "Conversion",
       "description": [
-        "Refactor video conversion script"
+        "Implement video conversion resume"
+        ,"Refactor video conversion script"
         ,"Fix HLS video reconversion"
       ]
     },

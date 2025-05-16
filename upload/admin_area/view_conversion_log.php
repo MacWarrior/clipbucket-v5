@@ -13,7 +13,7 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($data['videoid'])];
-$breadcrumb[3] = ['title' => 'Conversion log', 'url' => DirPath::getUrl('admin_area') . 'view_conversion_log.php?file_name=' . display_clean($file_name)];
+$breadcrumb[3] = ['title' => lang('conversion_log'), 'url' => DirPath::getUrl('admin_area') . 'view_conversion_log.php?file_name=' . display_clean($file_name)];
 
 $file_details = myquery::getInstance()->file_details($file_name);
 if ($file_details) {
@@ -26,6 +26,6 @@ $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addAdminJS(['pages/view_conversion_log/view_conversion_log'.$min_suffixe.'.js' => 'admin']);
 
 assign('videoDetails', $data);
-subtitle('Conversion Log');
+subtitle(lang('conversion_log'));
 template_files('view_conversion_log.html');
 display_it();

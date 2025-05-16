@@ -275,7 +275,7 @@ function create_thumb($video_db, $multi, $size)
 /**
  * @throws Exception
  */
-function get_player_thumbs_json($data)
+function get_player_thumbs_json($data): void
 {
     $thumbs = get_thumb($data, true, '168x105', 'auto');
     $duration = (int)$data['duration'];
@@ -514,7 +514,7 @@ function file_name_exists($name)
  */
 function get_queued_video(string $fileName): array
 {
-    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', 'cqueue_conversion = \'no\' AND cqueue_name = \''.mysql_clean($fileName).'\'', 1);
+    $results = Clipbucket_db::getInstance()->select(tbl('conversion_queue'), '*', 'cqueue_name = \''.mysql_clean($fileName).'\'', 1);
     if( empty($results) ){
         return [];
     }
@@ -1614,7 +1614,7 @@ function reConvertVideos($data = ''): void
 
             e(lang('reconversion_started_for_x', display_clean($vdetails['title'])), 'm');
 
-            exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions')  . "video_convert.php {$vdetails['file_name']} '' 'reconvert' > /dev/null &");
+            FFmpeg::launchReconvert($vdetails['file_name']);
 
             setVideoStatus($daVideo, 'started', true);
         }

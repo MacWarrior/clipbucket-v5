@@ -396,7 +396,7 @@ class FFMpeg
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                $command = config('ffmpegpath') . ' -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
+                $command = config('ffmpegpath') . ' -y -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
                 if (in_dev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
@@ -405,7 +405,7 @@ class FFMpeg
                 if (in_dev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
                 }
-                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
+                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);;
             }
         } else {
             $this->log->writeLine('No subtitle to extract');
@@ -1249,4 +1249,51 @@ class FFMpeg
         return '0x' . strtoupper($hex_color);
     }
 
+    /**
+     * @throws Exception
+     */
+    public static function launchResume(string $filename)
+    {
+        return self::launchConversion($filename, '', '', 'resume');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function launchReconvert(string $filename)
+    {
+        return self::launchConversion($filename, '', 'reconvert', '');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function launchConversion(string $filename, string $audio_track = '', string $reconvert = '', string $resume = '')
+    {
+        $video = Video::getInstance()->getOne(['file_name' => $filename]);
+        if( empty($video) ){
+            e(lang('class_vdo_del_err'));
+            return;
+        }
+
+        $cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $filename;
+
+        $cmd .= !empty($audio_track) ? ' ' . $audio_track : ' \'\'';
+        $cmd .= !empty($reconvert) ? ' ' . $reconvert : ' \'\'';
+        $cmd .= !empty($resume) ? ' ' . $resume : ' \'\'';
+
+        if (stristr(PHP_OS, 'WIN')) {
+            $complement = '';
+        } elseif (stristr(PHP_OS, 'darwin')) {
+            $complement = ' </dev/null >/dev/null &';
+        } else { // for ubuntu or linux
+            $complement = ' > /dev/null &';
+        }
+
+        $cmd .= $complement;
+
+        exec($cmd);
+
+        return $cmd;
+    }
 }
