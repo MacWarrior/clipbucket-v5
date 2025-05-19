@@ -49,7 +49,7 @@ $get_limit = create_query_limit($page, config('admin_pages'));
 $queue_list = myquery::getInstance()->get_conversion_queue(null, $get_limit);
 assign('queues', $queue_list);
 
-if( count($queue_list) < config('admin_pages') ){
+if( $page == 1 && count($queue_list) < config('admin_pages') ){
     $total_pages = 1;
 } else {
     $total_pages = count_pages(Clipbucket_db::getInstance()->count(tbl('conversion_queue'), 'cqueue_id'), config('admin_pages'));

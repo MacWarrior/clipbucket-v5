@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"48",
+  "revision":"49",
   "status":"stable",
   "detail":[
     {
@@ -25,6 +25,7 @@
         "Implement alphabetical and reverse alphabetical filters <i>(#600)</i>"
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
+        ,"Update video & photos management pages display"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
@@ -43,6 +44,7 @@
         ,"Fix playlist edition <i>(#603)</i>"
         ,"Fix channel search"
         ,"Fix channel privacy"
+        ,"Fix manage videos & photos management pages pagination <i>(#605)</i>"
       ]
     },
     {

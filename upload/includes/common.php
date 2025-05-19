@@ -228,9 +228,6 @@ if (!defined('SLOGAN')) {
 # Seo URLS
 define('SEO', $row['seo']); //Set yes / no
 
-# Defining Photo Limits
-define('MAINPLIST', $row['photo_main_list']);
-
 # Defining Collection Limits
 define('COLLPP', $row['collection_per_page']);
 define('COLLIP', $row['collection_items_page']);
