@@ -607,7 +607,7 @@ function is_valid_value($func, $val): bool
     if (!function_exists($func)) {
         return true;
     }
-    if (!$func($val)) {
+    if ($func($val)===false) {
         return false;
     }
     return true;
@@ -2023,7 +2023,8 @@ function sort_link($data, $mode, $type): string
     if (isset($_GET['sort'])) {
         $sort = $_GET['sort'];
     } else {
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+//@TODO check if correct num revision refactor sort
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '479')) {
             $sort = SortType::getDefaultByType($type)['id'];
         } else {
             $sort = 0;
@@ -3610,7 +3611,7 @@ function get_restorable_languages(array $list_language = []): array
     });
 }
 
-function ageRestriction($var) {
+function ageRestriction($var):bool {
     $var = (int)$var;
     if (empty($var)) {
         return 'null';

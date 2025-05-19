@@ -174,6 +174,28 @@ $( document ).ready(function() {
         init_tags(this.id, available_tags, '#list_'+this.id);
     });
 
+    $('#list_video_users').tagit({
+        singleField: true,
+        fieldName: "tags",
+        readOnly: false,
+        singleFieldNode: $('#video_users'),
+        animate: true,
+        caseSensitive: false,
+        allowSpaces: allow_username_spaces,
+        beforeTagAdded: function (event,info) {
+            if (info.tagLabel.length <= 2) {
+                if (!alert_shown) {
+                    alert_shown = true;
+                    alert(tag_too_short);
+                }
+                return false;
+            }
+            alert_shown = false;
+        }
+    });
+
+    $('[name="broadcast"]').trigger('change');
+
     $('#button_info_tmdb').on('click', function () {
         var video_title = $('#title').val();
         getInfoTmdb(videoid, 'movie',video_title, 1);

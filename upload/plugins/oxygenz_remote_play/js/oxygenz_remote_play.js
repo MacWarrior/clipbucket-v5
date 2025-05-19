@@ -1,5 +1,5 @@
-$( document ).ready(function() {
-    $('.formSection h4').on({
+$(function() {
+    $('#oxygenz_remote_play_form').find('.formSection h4').off('click').on({
         click: function(e){
             e.preventDefault();
             if($(this).find('i').hasClass('glyphicon-chevron-down')){
@@ -11,10 +11,31 @@ $( document ).ready(function() {
             }
         }
     });
-    console.log($('#remote_tags_video'));
     $("[id^=remote_tags]").each(function(elem){
         init_tags(this.id, available_tags,'#remote_list_'+this.name);
     });
+
+    $('#remote_list_video_users').tagit({
+        singleField: true,
+        fieldName: "tags",
+        readOnly: false,
+        singleFieldNode: $('#remote_list_video_users').prevAll('#video_users'),
+        animate: true,
+        caseSensitive: false,
+        allowSpaces: allow_username_spaces,
+        beforeTagAdded: function (event,info) {
+            if (info.tagLabel.length <= 2) {
+                if (!alert_shown) {
+                    alert_shown = true;
+                    alert(tag_too_short);
+                }
+                return false;
+            }
+            alert_shown = false;
+        }
+    });
+
+    $('[name="broadcast"]').trigger('change');
 
     $('#oxygenz_remote_play_submit_form1').click(function(e) {
         e.preventDefault();
@@ -83,29 +104,19 @@ $( document ).ready(function() {
                 $('#oxygenz_remote_play_submit_form2').attr('disabled', true).html(oxygenz_remote_play_lang_saving);
             },
             success: function(data) {
-                if(data.error){
-                    $('#uploadMessage').html(data.error).attr('class', 'alert alert-danger').show();
-                    setTimeout(function(){
-                        $('#uploadMessage').fadeOut(500);
-                    }, 5000);
-                    $('#oxygenz_remote_play_submit_form2').attr('disabled', false).html(oxygenz_remote_play_lang_submit_now);
-                } else {
-                    $('#uploadMessage').html(data.msg).attr('class', 'alert alert-success').show();
-                    setTimeout(function(){
-                        $('#uploadMessage').fadeOut(500);
-                    }, 5000);
-
+                $('#uploadMessage').html(data.msg).show();
+                setTimeout(function(){
+                    $('#uploadMessage').fadeOut(500);
+                }, 5000);
+                if(!data.error){
                     if(step === 'save'){
                         $('#oxygenz_remote_play_form').find('input[name="videokey"]').attr('disabled', false).val(data.videokey);
                         $('#oxygenz_remote_play_form').find('input[name="oxygenz_remote_play_file_url"]').attr('readonly', true);
                         step='update';
                     }
-
                     $('#oxygenz_remote_play_submit_form2').attr('disabled', false).html(oxygenz_remote_play_lang_submit_now);
                 }
             },
-            //error: function(){},
-            //complete: function(){}
         });
     });
 });

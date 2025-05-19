@@ -89,7 +89,7 @@ class Video
         if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '329')) {
             $this->fields[] = 'aspect_ratio';
         }
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             $this->fields[] = 'video_users';
         }
 
@@ -464,7 +464,7 @@ class Video
             }
         }
 
-        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             if( !$param_count ) {
                 $select[] = ' GROUP_CONCAT( DISTINCT(users_video.username) SEPARATOR \',\') AS video_users ';
             }
@@ -589,7 +589,7 @@ class Video
         if ($current_user_id) {
             $select_contacts = 'SELECT contact_userid FROM ' . tbl('contacts') . ' WHERE confirmed = \'yes\' AND userid = ' . $current_user_id;
             $condition_video_users = '';
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
                 if ($sub_request) {
                     $condition_video_users = ' OR video.videoid IN (SELECT videoid FROM '.tbl('video_users').' WHERE userid = ' . $current_user_id . ' )';
                 } else {
@@ -1042,7 +1042,7 @@ class Video
      */
     public function saveVideoUsers(int $video_id, array $video_users)
     {
-        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
+        if (!Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
             return false;
         }
         Clipbucket_db::getInstance()->delete(tbl('video_users'), ['videoid'], [$video_id]);
@@ -1468,6 +1468,9 @@ class CBvideo extends CBCategory
         if (!$array) {
             $array = $_POST;
         }
+        if (is_array($_FILES)) {
+            $array = array_merge($array, $_FILES);
+        }
         Upload::getInstance()->validate_video_upload_form($array, true);
 
         if (empty(errorhandler::getInstance()->get_error())) {
@@ -1499,10 +1502,6 @@ class CBvideo extends CBCategory
                         $vid = null;
                     }
                 }
-            }
-
-            if (is_array($_FILES)) {
-                $array = array_merge($array, $_FILES);
             }
 
             foreach ($upload_fields as $field) {
@@ -1595,11 +1594,6 @@ class CBvideo extends CBCategory
                 return;
             }
 
-            validate_cb_form($upload_fields, $array);
-            if( !empty(errorhandler::getInstance()->get_error()) ){
-                return;
-            }
-
             Clipbucket_db::getInstance()->update(tbl('video'), $query_field, $query_val, ' videoid=\'' . $vid . '\'');
 
             foreach ($array as $key => $item) {
@@ -1622,8 +1616,8 @@ class CBvideo extends CBCategory
                 $array['category'] = [$array['category']];
             }
 
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '999')) {
-                Video::getInstance()->saveVideoUsers($vid, video_users($array['video_users']));
+            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.2', '999')) {
+                Video::getInstance()->saveVideoUsers($vid, video_users($array['video_users'], true));
             }
 
             if (config('enable_video_categories') != 'no') {

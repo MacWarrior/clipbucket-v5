@@ -110,6 +110,27 @@ $(document).ready(function(){
                     }
                 });
             });
+            $(oneUploadForm).find('#list_video_users').tagit({
+                singleField: true,
+                fieldName: "tags",
+                readOnly: false,
+                singleFieldNode: $(oneUploadForm).find('#video_users'),
+                animate: true,
+                caseSensitive: false,
+                allowSpaces: allow_username_spaces,
+                beforeTagAdded: function (event,info) {
+                    if (info.tagLabel.length <= 2) {
+                        if (!alert_shown) {
+                            alert_shown = true;
+                            alert(tag_too_short);
+                        }
+                        return false;
+                    }
+                    alert_shown = false;
+                }
+            });
+            $('[name="broadcast"]').trigger('change');
+
             $(oneUploadForm).find('#button_info_tmdb').on('click', function () {
                 var videoid = $(oneUploadForm).find('#videoid_' + index).val();
                 getInfoTmdb(videoid, 'movie',file.data.title, 1);
@@ -239,7 +260,7 @@ $(document).ready(function(){
             index++;
         }
 
-        $('.formSection h4').on({
+        $('.formSection h4').off('click').on({
             click: function(e){
                 e.preventDefault();
                 if($(this).find('i').hasClass('glyphicon-chevron-down')){

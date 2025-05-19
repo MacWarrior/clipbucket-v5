@@ -997,10 +997,12 @@ function get_videos($param)
  * @return array
  * @throws Exception
  */
-function video_users($users): string
+function video_users($users, $only_format = false): array
 {
     if (!empty($users)) {
         $users_array = explode(',', $users);
+    } else {
+        return [];
     }
     $new_users = [];
     foreach ($users_array as $username) {
@@ -1016,14 +1018,12 @@ function video_users($users): string
         }
         if (!empty($user)) {
             $new_users[] = $user['userid'];
-        } else {
+        } elseif(!$only_format) {
             e(lang('user_no_exist_wid_username', $username),'w');
         }
     }
 
-    $new_users = array_unique($new_users);
-
-   return $new_users;
+    return array_unique($new_users);
 }
 
 /**
