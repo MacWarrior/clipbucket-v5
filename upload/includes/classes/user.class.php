@@ -346,10 +346,10 @@ class User
 
         $conditions = [];
         if( $param_userid ){
-            $conditions[] = 'users.userid = \'' . mysql_clean($param_userid) . '\'';
+            $conditions[] = 'users.userid = ' . (int)$param_userid;
         }
         if( $param_not_userid !== false ){
-            $conditions[] = 'users.userid != \'' . mysql_clean($param_not_userid) . '\'';
+            $conditions[] = 'users.userid != ' . (int)$param_not_userid;
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';

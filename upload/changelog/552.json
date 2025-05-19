@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"51",
+  "revision":"52",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Update video & photos management pages display"
+        ,"Hide banned users from channels page"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
