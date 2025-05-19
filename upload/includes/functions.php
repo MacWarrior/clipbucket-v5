@@ -644,13 +644,13 @@ function apply_func($func, $val)
  *
  * @return string
  */
-function yes_or_no($input, $return = 'yes'): string
+function yes_or_no($input): string
 {
     $input = strtolower($input);
-    if ($input != 'yes' && $input != 'no') {
-        return $return;
+    if( in_array($input, ['yes', 'no']) ) {
+        return $input;
     }
-    return $input;
+    return 'no';
 }
 
 /**

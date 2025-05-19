@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"53",
+  "revision":"54",
   "status":"stable",
   "detail":[
     {
@@ -18,6 +18,7 @@
         ,"Fix mass upload description display"
         ,"Fix possible error 500 on System info page"
         ,"Fix possible error on video edition <i>(#602)</i>"
+        ,"Fix video edition"
       ]
     },
     {
@@ -27,7 +28,7 @@
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
         ,"Update video & photos management pages display"
-        ,"Hide banned users from channels page & search results"
+        ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"
         ,"Fix visual editor theme change <i>(#590)</i>"
         ,"Fix manage collection list"
@@ -48,7 +49,8 @@
         ,"Fix channel privacy"
         ,"Fix manage videos & photos management pages pagination <i>(#605)</i>"
         ,"Fix link to uploader channel page on recent videos"
-        ,"Fix possible JS error on channel page with disabled comments"
+        ,"Fix possible JS error on channel, video, photo & collection pages with disabled comments"
+        ,"Fix video edition"
       ]
     },
     {

@@ -18,7 +18,7 @@ if( empty($u) ){
 
 $params_user = [
     'channel_enable' => true
-    ,'username' => mysql_clean($u)
+    ,'username' => $u
 ];
 
 $udetails = User::getInstance()->getOne($params_user);
@@ -111,29 +111,33 @@ $min_suffixe = in_dev() ? '' : '.min';
 ClipBucket::getInstance()->addJS([
     'pages/view_channel/view_channel'.$min_suffixe.'.js'      => 'admin'
     ,'plupload/js/plupload.full.min.js'                       => 'admin'
-    ,'tag-it'.$min_suffixe.'.js'                              => 'admin'
-    ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
 ]);
 
 if( config('enable_comments_channel') == 'yes' ){
     ClipBucket::getInstance()->addJS([
         'pages/add_comment/add_comment' . $min_suffixe . '.js'  => 'admin'
     ]);
-
     Comments::initVisualComments();
 }
 
-ClipBucket::getInstance()->addCSS([
-    'jquery.tagit'.$min_suffixe.'.css'      => 'admin'
-    ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
-    ,'readonly_tag'.$min_suffixe.'.css'     => 'admin'
-]);
+if( !empty($udetails['tags']) ){
+    ClipBucket::getInstance()->addJS([
+        'tag-it'.$min_suffixe.'.js'                               => 'admin'
+        ,'init_readonly_tag/init_readonly_tag'.$min_suffixe.'.js' => 'admin'
+    ]);
+    ClipBucket::getInstance()->addCSS([
+        'jquery.tagit'.$min_suffixe.'.css'      => 'admin'
+        ,'tagit.ui-zendesk'.$min_suffixe.'.css' => 'admin'
+        ,'readonly_tag'.$min_suffixe.'.css'     => 'admin'
+    ]);
+}
 
 $popular_users = User::getInstance()->getAll([
-    'order'=>'users.profile_hits DESC',
-    'limit'=>'5',
-    'channel_enable'=>true,
-    'condition'=>'usr_status = \'ok\' AND users.userid != '. (int)$udetails['userid']
+    'order'          => 'users.profile_hits DESC',
+    'limit'          => '5',
+    'channel_enable' => true,
+    'ban_status'     => 'no',
+    'condition'      => 'usr_status = \'ok\' AND users.userid != '. (int)$udetails['userid']
 ]);
 assign('popular_users',$popular_users);
 

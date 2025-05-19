@@ -1448,7 +1448,6 @@ class CBvideo extends CBCategory
                 $upload_fields = array_merge($upload_fields, $custom_flds);
             }
 
-
             if (isset($array['videoid'])) {
                 $vid = $array['videoid'];
             } else {
