@@ -1414,6 +1414,7 @@ class CBvideo extends CBCategory
             case 'update_bits_color':
                 update_bits_color($video);
                 break;
+
             case 'delete':
                 $video_clean = mysql_clean($vid);
                 $this->delete_video($video_clean);

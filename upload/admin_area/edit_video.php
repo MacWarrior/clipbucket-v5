@@ -12,14 +12,17 @@ if (isset($_POST['update'])) {
     Upload::getInstance()->validate_video_upload_form();
     if (empty(errorhandler::getInstance()->get_error())) {
         myquery::getInstance()->update_video();
-        Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']?? '');
 
-        if( config('enable_video_poster') == 'yes' ){
-            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'] ?? '', 'poster');
+        if( !empty($_POST['default_thumb']) ){
+            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_thumb']);
         }
 
-        if( config('enable_video_backdrop') == 'yes' ) {
-            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'] ?? '', 'backdrop');
+        if( config('enable_video_poster') == 'yes' && !empty($_POST['default_poster']) ){
+            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_poster'], 'poster');
+        }
+
+        if( config('enable_video_backdrop') == 'yes' && !empty($_POST['default_backdrop']) ) {
+            Video::getInstance()->setDefaultPicture($video_id, $_POST['default_backdrop'], 'backdrop');
         }
     }
 }
@@ -30,10 +33,6 @@ global $breadcrumb;
 $breadcrumb[0] = ['title' => lang('videos'), 'url' => ''];
 $breadcrumb[1] = ['title' => lang('manage_x', strtolower(lang('videos'))), 'url' => DirPath::getUrl('admin_area') . 'video_manager.php'];
 $breadcrumb[2] = ['title' => 'Editing : ' . display_clean($data['title']), 'url' => DirPath::getUrl('admin_area') . 'edit_video.php?video=' . display_clean($video_id)];
-
-if (@$_GET['msg']) {
-    $msg[] = display_clean($_GET['msg']);
-}
 
 //Performing Video Actions
 if ($_GET['mode'] != '') {
@@ -123,6 +122,12 @@ if( config('enable_visual_editor_comments') == 'yes' ){
     ClipBucket::getInstance()->addAdminJS(['toastui/toastui-editor-all' . $min_suffixe . '.js' => 'libs']);
     ClipBucket::getInstance()->addAdminCSS(['/toastui/toastui-editor' . $min_suffixe . '.css' => 'libs']);
 }
+$datepicker_js_lang = '';
+if( Language::getInstance()->getLang() != 'en'){
+    $datepicker_js_lang = '_languages/datepicker-'.Language::getInstance()->getLang();
+}
+ClipBucket::getInstance()->addAdminJS(['jquery_plugs/datepicker'.$datepicker_js_lang.'.js' => 'global']);
+ClipBucket::getInstance()->addAdminCSS(['jquery_ui/jquery_ui' . $min_suffixe . '.css' => 'libs']);
 
 assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 $available_tags = Tags::fill_auto_complete_tags('video');

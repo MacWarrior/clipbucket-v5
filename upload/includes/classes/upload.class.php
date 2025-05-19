@@ -755,8 +755,7 @@ class Upload
                 'db_field'          => 'datecreated',
                 'required'          => 'no',
                 'default_value'     => '',
-                'validate_function' => 'datecreated',
-                'hint_2'            => config('date_format')
+                'validate_function' => 'datecreated'
             ];
         }
         return $fields;

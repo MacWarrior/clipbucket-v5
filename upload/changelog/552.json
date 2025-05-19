@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"49",
+  "revision":"50",
   "status":"stable",
   "detail":[
     {
@@ -17,6 +17,7 @@
         ,"Fix collection saving without categories enabled"
         ,"Fix mass upload description display"
         ,"Fix possible error 500 on System info page"
+        ,"Fix possible error on video edition <i>(#602)</i>"
       ]
     },
     {
