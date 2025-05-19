@@ -31,6 +31,7 @@ if (isset($_POST['load_type'])) {
     }
 
     $params['limit'] = "$start,$end";
+    $params['get_detail'] = true;
 
     if (isset($_POST['first_launch']) && $_POST['first_launch'] = 'true') {
         $params['count_only'] = true;
