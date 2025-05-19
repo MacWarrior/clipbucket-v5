@@ -183,15 +183,16 @@ if( isSectionEnabled('videos') ){
 }
 
 if( isSectionEnabled('photos') && User::getInstance($udetails['userid'])->get('show_my_photos') == 'yes' ){
-    assign('photos', Photo::getInstance()->getAll([
+    $photos = Photo::getInstance()->getAll([
         'userid'=>$udetails['userid'],
         'limit'=>9
-    ]));
+    ]);
+    assign('photos', $photos);
 }
 
-if( isSectionEnabled('videos') && User::getInstance($udetails['userid'])->get('show_my_videos') == 'yes' && User::getInstance($udetails['userid'])->get('total_videos') > 0 ){
+if( isSectionEnabled('videos') && User::getInstance($udetails['userid'])->get('show_my_videos') == 'yes' && !empty($videos) && count($videos) > 0 ){
     $default_tab = 'video';
-} else if( isSectionEnabled('photos') && User::getInstance($udetails['userid'])->get('show_my_photos') == 'yes' && User::getInstance($udetails['userid'])->get('total_photos') > 0 ){
+} else if( isSectionEnabled('photos') && User::getInstance($udetails['userid'])->get('show_my_photos') == 'yes' && !empty($photos) && count($photos) > 0 ){
     $default_tab = 'photo';
 } else {
     $default_tab = 'info';
