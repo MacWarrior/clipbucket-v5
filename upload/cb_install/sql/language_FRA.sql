@@ -2339,3 +2339,5 @@ INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translatio
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'conversion_x_cannot_be_resumed'), 'La conversion de la vidéo "%s" ne peut reprendre à cause de son statut', @language_id);
 INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
 VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'conversion_queue_warning'), 'Ceci est une page de configuration avancée. Veuillez vous assurer de bien comprendre les modifications que vous effectuez. Des actions incorrectes peuvent perturber ou casser les conversions vidéo en cours.', @language_id);
+INSERT INTO `{tbl_prefix}languages_translations` (`id_language_key`, `translation`, `language_id`)
+VALUES ((SELECT id_language_key FROM `{tbl_prefix}languages_keys` WHERE `language_key` = 'no_comment'), 'Aucun commentaire', @language_id);

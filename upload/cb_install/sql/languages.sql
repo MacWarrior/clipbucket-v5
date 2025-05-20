@@ -1558,4 +1558,5 @@ VALUES ('admin_setting'),
        ('conversion_not_found_x'),
        ('video_not_found_with_filename_x'),
        ('conversion_x_cannot_be_resumed'),
-       ('conversion_queue_warning');
+       ('conversion_queue_warning'),
+       ('no_comment');
