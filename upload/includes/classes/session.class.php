@@ -275,14 +275,15 @@ class Session
                 ,'lifetime'    => 'Session'
                 ,'consent'     => self::isCookieConsent('fast_qlist')
             ];
-            $cookies[] = [
+            // Temp disabled for now
+            /*$cookies[] = [
                 'name'         => 'quick_list_box'
                 ,'description' => 'quick_list_box ?'
                 ,'value'       => $_COOKIE['quick_list_box'] ? display_clean($_COOKIE['quick_list_box']) : $undefined
                 ,'required'    => false
                 ,'lifetime'    => 'Session'
                 ,'consent'     => self::isCookieConsent('quick_list_box')
-            ];
+            ];*/
         }
         if( config('enable_theme_change') == 'yes' ){
             $cookies[] = [
