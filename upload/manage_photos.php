@@ -17,7 +17,7 @@ assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 $mode = $_GET['mode'];
 
 $page = mysql_clean($_GET['page']);
-$get_limit = create_query_limit($page, MAINPLIST);
+$get_limit = create_query_limit($page, config('photo_main_list'));
 
 assign(
     'queryString',
@@ -58,10 +58,15 @@ switch ($mode) {
         $photos = Photo::getInstance()->getAll($params);
         assign('photos', $photos);
 
-        //Collecting Data for Pagination
-        $params['count'] = true;
-        $total_rows = Photo::getInstance()->getAll($params);
-        $total_pages = count_pages($total_rows, MAINPLIST);
+        if( $page == 1 && is_array($photos) && count($photos) < config('photo_main_list') ){
+            $total_rows = count($photos);
+        } else {
+            $params['count'] = true;
+            unset($params['limit']);
+            $total_rows = Photo::getInstance()->getAll($params);
+        }
+
+        $total_pages = count_pages($total_rows, config('photo_main_list'));
 
         //Pagination
         pages::getInstance()->paginate($total_pages, $page);
@@ -90,17 +95,28 @@ switch ($mode) {
             e(lang('total_fav_photos_removed', $total), 'm');
         }
 
+        $cond = '';
         if (get('query') != '') {
             $cond = ' (photos.photo_title LIKE \'%' . mysql_clean(get('query')) . '%\' OR photos.photo_tags LIKE \'%' . mysql_clean(get('query')) . '%\' )';
         }
 
-        $photo_arr = ['user' => user_id(), 'limit' => $get_limit, 'cond' => $cond];
+        $photo_arr = [
+            'user' => user_id()
+            ,'limit' => $get_limit
+            ,'cond' => $cond
+        ];
         $photos = CBPhotos::getInstance()->action->get_favorites($photo_arr);
         assign('photos', $photos);
 
-        $photo_arr['count_only'] = true;
-        $total_rows = CBPhotos::getInstance()->action->get_favorites($photo_arr);
-        $total_pages = count_pages($total_rows, MAINPLIST);
+        if( $page == 1 && is_array($photos) && count($photos) < config('photo_main_list') ){
+            $total_rows = count($photos);
+        } else {
+            $photo_arr['count_only'] = true;
+            unset($photo_arr['limit']);
+            $total_rows = CBPhotos::getInstance()->action->get_favorites($photo_arr);
+        }
+
+        $total_pages = count_pages($total_rows, config('photo_main_list'));
 
         //Pagination
         pages::getInstance()->paginate($total_pages, $page);

@@ -133,15 +133,10 @@ switch ($mode) {
         }
         Upload::getInstance()->add_conversion_queue($file_name . '.' . $extension);
 
-        $default_cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $DestinationFilePath . ' ' . $file_name . ' ' . $file_directory . ' ' . $logFile;
-        if (stristr(PHP_OS, 'WIN')) {
-            $complement = '';
-        } elseif (stristr(PHP_OS, 'darwin')) {
-            $complement = ' </dev/null >/dev/null &';
-        } else { // for ubuntu or linux
-            $complement = ' > /dev/null &';
+        $cmd = FFmpeg::launchConversion($file_name);
+        if( in_dev() ){
+            $log->writeLine(date('Y-m-d H:i:s').' - Conversion command : ' . $cmd);
         }
-        exec($default_cmd . $complement);
 
         $log->writeLine(date('Y-m-d H:i:s').' - Video Converson File executed successfully with Target File > ' . $DestinationFilePath);
 

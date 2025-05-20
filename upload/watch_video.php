@@ -88,14 +88,12 @@ subtitle(ucfirst($vdo['title']));
 
 # assigning all variables
 array_val_assign($assign_arry);
-$anonymous_id = userquery::getInstance()->get_anonymous_user();
-assign('anonymous_id', $anonymous_id);
+assign('anonymous_id', userquery::getInstance()->get_anonymous_user());
 //link edit
 assign('link_edit_bo', DirPath::getUrl('admin_area') . 'edit_video.php?video=' . $vdo['videoid']);
 assign('link_edit_fo',  DirPath::getUrl('root') . 'edit_video.php?vid=' . $vdo['videoid']);
 
 $min_suffixe = in_dev() ? '' : '.min';
-
 ClipBucket::getInstance()->addJS([
     'tag-it' . $min_suffixe . '.js'                               => 'admin'
     ,'pages/watch_video/watch_video' . $min_suffixe . '.js'       => 'admin'
@@ -107,9 +105,10 @@ ClipBucket::getInstance()->addCSS([
     ,'readonly_tag' . $min_suffixe . '.css'     => 'admin'
 ]);
 
-if( config('enable_comments_video') == 'yes' ){
-    ClipBucket::getInstance()->addJS(['pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin']);
-
+if( config('enable_comments_video') == 'yes' && $vdo['allow_comments'] == 'yes'){
+    ClipBucket::getInstance()->addJS([
+        'pages/add_comment/add_comment' . $min_suffixe . '.js' => 'admin'
+    ]);
     Comments::initVisualComments();
 }
 

@@ -377,17 +377,20 @@ class Photo
         $order = '';
         if (!empty($order_search)) {
             $order = $order_search;
-        } elseif ($param_order) {
+        } elseif ($param_order && !$param_count) {
             $group[] = str_replace(['asc', 'desc'], '', strtolower($param_order));
             $order = ' ORDER BY ' . $param_order;
         }
-        if (!$param_not_join_user_profile) {
+
+        if( !$param_not_join_user_profile ){
             $join[] = 'LEFT JOIN ' . cb_sql_table('user_profile') . ' ON user_profile.userid = users.userid';
-            if (Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136')) {
+
+            if( !$param_count && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '136') ){
                 $select[] = 'user_profile.disabled_channel';
                 $group[] = 'user_profile.disabled_channel';
             }
         }
+
         $limit = '';
         if ($param_limit) {
             $limit = ' LIMIT ' . $param_limit;

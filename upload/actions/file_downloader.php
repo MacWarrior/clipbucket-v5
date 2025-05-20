@@ -163,8 +163,4 @@ echo json_encode(['vid' => $vid]);
 $file_dir = $vidDetails['file_directory'];
 $logFile = DirPath::get('logs') . $file_dir . DIRECTORY_SEPARATOR . $file_name . '.log';
 
-if (stristr(PHP_OS, 'WIN')) {
-    exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' sleep');
-} else {
-    exec(System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $targetFileName . ' ' . $file_name . ' ' . $file_dir . ' ' . $logFile . ' > /dev/null &');
-}
+FFmpeg::launchConversion($targetFileName);

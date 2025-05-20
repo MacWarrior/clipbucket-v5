@@ -1137,8 +1137,7 @@ class Collections extends CBCategory
     {
         $params = [];
         $params['collection_id'] = $cid;
-        $params['first_only'] = true;
-        $c = Collection::getInstance()->getAll($params);
+        $c = Collection::getInstance()->getOne($params);
 
         if (empty($c)) {
             e(lang('collection_not_exists'));

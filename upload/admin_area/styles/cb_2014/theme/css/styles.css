@@ -1238,3 +1238,8 @@ textarea[disabled]{
     cursor: not-allowed;
     background-color: #eee;
 }
+
+/* Miscellaneous */
+.btn-primary[disabled]{
+    color: white !important;
+}

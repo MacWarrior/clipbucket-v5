@@ -117,7 +117,6 @@
     {/if}
 {/if}
 
-{* Used by editor's pick only *}
 {if $display_type=='featuredVideos_sidebar'}
     <div class="featured-video clearfix" data-id-video="{$video.videoid}">
         <div class="video_thumb">
@@ -132,7 +131,7 @@
         <div class="details_block">
             <strong class="title"><a href="{video_link($video)}">{display_clean($video.title|truncate:50)}</a></strong>
             <span class="author">{lang code='by'}
-                {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
+            {if isSectionEnabled('channels') && $anonymous_id != $video.userid && $video.disabled_channel !='yes'}
                 <a href="{userquery::getInstance()->profile_link($video)}">{display_clean($video.user_username)}</a>
             {elseif $anonymous_id != $video.userid}
                 {display_clean($video.user_username)}

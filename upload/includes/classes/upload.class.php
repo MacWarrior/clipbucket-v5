@@ -651,7 +651,7 @@ class Upload
                 'name'              => 'allow_comments',
                 'value'             => 'yes',
                 'label'             => lang('vdo_allow_comm'),
-                'checked'           => $default['allow_comments'] ?? 'yes',
+                'checked'           => $default['allow_comments'] ?? 'no',
                 'db_field'          => 'allow_comments',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no'
@@ -662,7 +662,7 @@ class Upload
                 'name'              => 'comment_voting',
                 'value'             => 'yes',
                 'label'             => lang('video_allow_comment_vote'),
-                'checked'           => $default['comment_voting'] ?? 'yes',
+                'checked'           => $default['comment_voting'] ?? 'no',
                 'db_field'          => 'comment_voting',
                 'required'          => 'no',
                 'validate_function' => 'yes_or_no'
@@ -674,7 +674,7 @@ class Upload
             'name'              => 'allow_rating',
             'value'             => 'yes',
             'label'             => lang('vdo_allow_rating'),
-            'checked'           => $default['allow_rating'] ?? 'yes',
+            'checked'           => $default['allow_rating'] ?? 'no',
             'db_field'          => 'allow_rating',
             'required'          => 'no',
             'validate_function' => 'yes_or_no'
@@ -685,7 +685,7 @@ class Upload
             'name'              => 'allow_embedding',
             'value'             => 'yes',
             'label'             => lang('vdo_embed_opt1'),
-            'checked'           => $default['allow_embedding'] ?? 'yes',
+            'checked'           => $default['allow_embedding'] ?? 'no',
             'db_field'          => 'allow_embedding',
             'required'          => 'no',
             'validate_function' => 'yes_or_no'
@@ -755,8 +755,7 @@ class Upload
                 'db_field'          => 'datecreated',
                 'required'          => 'no',
                 'default_value'     => '',
-                'validate_function' => 'datecreated',
-                'hint_2'            => config('date_format')
+                'validate_function' => 'datecreated'
             ];
         }
         return $fields;

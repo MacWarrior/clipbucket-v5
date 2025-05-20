@@ -10,7 +10,6 @@
                     {if $mode == "manage" || $mode == ""}
                         <h2>{lang('manage_x', strtolower(lang('collections')))}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing"/>
                             <input type="submit" name="delete_selected" id="delete_selected" value="{lang code='delete'}" class="btn btn-primary  " />
                             <a class="btn-primary btn" href="{cblink(['name' => 'manage_collections', 'extra_params' => 'mode=add_new'])}">{lang('add_new_collection')}</a>
                         </div>
@@ -111,7 +110,6 @@
                     {if $mode == "manage_items" || $mode == "collection_items"}
                         <h2>{lang code='manage_items'} - {display_clean($c.collection_name)}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;" />
                             <input type="submit" class="btn btn-danger" name="delete_selected" id="delete_selected" value="{lang code='remove'}" class="small_button" />
                         </div>
                         <div>
@@ -141,7 +139,6 @@
                     {if $mode == "favorite"}
                         <h2>{lang code="manage_favorite_collections"}</h2>
                         <div>
-                            <img src="{$imageurl}/dot.gif" class="arrow_pointing" style="margin-right:10px;"/>
                             <input type="submit" name="remove_selected_favs" id="remove_selected_favs" value="{lang code='remove'}" class="btn btn-primary btn-sm"/>
                         </div>
                         <br>

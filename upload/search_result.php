@@ -24,7 +24,7 @@ if (!User::getInstance()->hasPermission('view_' . $type) || !isSectionEnabled($t
 
 $params = [];
 $params['search'] = $_GET['query'];
-
+$params['ban_status'] = 'no';
 
 switch($type) {
     case 'videos':

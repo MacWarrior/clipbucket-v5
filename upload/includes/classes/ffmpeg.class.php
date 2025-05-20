@@ -49,21 +49,36 @@ class FFMpeg
 
         $data = json_decode($output, true);
 
+        $extension = getExt($file_path);
+
         $video = null;
         $audio = null;
-        foreach ($data['streams'] as $stream) {
-            if ($stream['codec_type'] == 'video' && empty($video)) {
-                $video = $stream;
-                continue;
-            }
+        if( $extension == 'm3u8' ){
+            foreach ($data['streams'] as $stream) {
+                if ($stream['codec_type'] == 'video' && (empty($video) || $video['width'] < $stream['width'])) {
+                    $video = $stream;
+                    continue;
+                }
 
-            if ($stream['codec_type'] == 'audio' && empty($audio)) {
-                $audio = $stream;
-                continue;
+                if ($stream['codec_type'] == 'audio' && empty($audio)) {
+                    $audio = $stream;
+                }
             }
+        } else {
+            foreach ($data['streams'] as $stream) {
+                if ($stream['codec_type'] == 'video' && empty($video)) {
+                    $video = $stream;
+                    continue;
+                }
 
-            if (!empty($video) && !empty($audio)) {
-                break;
+                if ($stream['codec_type'] == 'audio' && empty($audio)) {
+                    $audio = $stream;
+                    continue;
+                }
+
+                if (!empty($video) && !empty($audio)) {
+                    break;
+                }
             }
         }
 
@@ -151,7 +166,7 @@ class FFMpeg
     /**
      * Function used to log video info
      */
-    function log_input_file_infos()
+    function log_input_file_infos(): void
     {
         $details = $this->input_details;
         $this->log->newSection('Input file details');
@@ -163,7 +178,7 @@ class FFMpeg
     /**
      * Function log outpuit file details
      */
-    function log_ouput_file_info()
+    function log_ouput_file_info(): void
     {
         $details = $this->output_details;
 
@@ -185,7 +200,7 @@ class FFMpeg
     /**
      * Function used to start timing
      */
-    function start_time_check()
+    function start_time_check(): void
     {
         $this->start_time = $this->time_check();
     }
@@ -193,7 +208,7 @@ class FFMpeg
     /**
      * Function used to end timing
      */
-    function end_time_check()
+    function end_time_check(): void
     {
         $this->end_time = $this->time_check();
     }
@@ -201,7 +216,7 @@ class FFMpeg
     /**
      * Function used to check total time
      */
-    function total_time()
+    function total_time(): void
     {
         $this->total_time = round(($this->end_time - $this->start_time), 4);
     }
@@ -222,7 +237,7 @@ class FFMpeg
         return true;
     }
 
-    function unLock()
+    function unLock(): void
     {
         if (file_exists($this->lock_file)) {
             unlink($this->lock_file);
@@ -232,7 +247,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    function ClipBucket()
+    function ClipBucket(): void
     {
         $this->log->newSection('Conversion lock');
         while($this->isLocked()){
@@ -340,7 +355,8 @@ class FFMpeg
         $this->unLock();
     }
 
-    private function set_total_pixels($resolutions){
+    private function set_total_pixels($resolutions): void
+    {
         $total = 0;
         foreach ($resolutions as $res) {
             $total += $res['video_height'] * $res['video_width'];
@@ -351,7 +367,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    public function extract_subtitles()
+    public function extract_subtitles(): void
     {
         $this->log->newSection('Subtitle extraction');
 
@@ -380,7 +396,7 @@ class FFMpeg
 
                 $count++;
                 $display_count = str_pad((string)$count, 2, '0', STR_PAD_LEFT);
-                $command = config('ffmpegpath') . ' -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
+                $command = config('ffmpegpath') . ' -y -i ' . $this->input_file . ' -map 0:' . $map_id . ' -f ' . config('subtitle_format') . ' ' . $subtitle_dir . $this->file_name . '-' . $display_count . '.srt 2>&1';
                 if (in_dev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Command : </p><p class="content">'.$command.'</p></div>', false, true);
                 }
@@ -389,7 +405,7 @@ class FFMpeg
                 if (in_dev()) {
                     $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
                 }
-                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']]);
+                Clipbucket_db::getInstance()->insert(tbl('video_subtitle'), ['videoid', 'number', 'title'], [$video['videoid'], $display_count, $data['title']], null, true);;
             }
         } else {
             $this->log->writeLine('No subtitle to extract');
@@ -507,7 +523,6 @@ class FFMpeg
                 $resolutions = ' -filter_complex "';
                 $log_res = '';
                 $filter_complex = '';
-                $video_track_id = self::get_media_stream_id('video', $this->input_file);
 
                 foreach ($resolution as $res) {
                     $video_bitrate = myquery::getInstance()->getVideoResolutionBitrateFromHeight($res['height']);
@@ -526,7 +541,7 @@ class FFMpeg
                     if( $filter_complex != '' ){
                         $filter_complex .= '; ';
                     }
-                    $filter_complex .= '[' . $video_track_id . ':v]scale=' . $scale . '[v' . $count . ']';
+                    $filter_complex .= '[0:v]scale=' . $scale . '[v' . $count . ']';
                     $count++;
                 }
                 $resolutions .= $filter_complex . '"';
@@ -641,7 +656,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    private function convert_hls(array $resolutions)
+    private function convert_hls(array $resolutions): void
     {
         $command = config('ffmpegpath');
         $command .= $this->get_conversion_option('global');
@@ -676,7 +691,7 @@ class FFMpeg
      * @param array $resolution
      * @throws Exception
      */
-    function convert_mp4(array $resolution)
+    function convert_mp4(array $resolution): void
     {
         $opt_av = $this->get_conversion_option('global');
         $opt_av .= ' -i ' . $this->input_file;
@@ -701,7 +716,7 @@ class FFMpeg
             $this->log->writeLine('<div class="showHide"><p class="title glyphicon-chevron-right">Output : </p><p class="content">'.$output.'</p></div>', false, true);
         }
 
-        if (file_exists($this->output_file) && filesize($this->output_file) > 0 && strpos($output, 'Conversion failed!') === false) {
+        if (file_exists($this->output_file) && filesize($this->output_file) > 0 && !str_contains($output, 'Conversion failed!')) {
             $this->video_files[] = $resolution['height'];
             $this->log->writeLine(date('Y-m-d H:i:s').' => Video converted');
         } else {
@@ -807,7 +822,7 @@ class FFMpeg
         return $output;
     }
 
-    function prepare()
+    function prepare(): void
     {
         //Checking File Exists
         if (!file_exists($this->input_file)) {
@@ -838,7 +853,7 @@ class FFMpeg
      * @return void
      * @throws Exception
      */
-    public function generateAllThumbs()
+    public function generateAllThumbs(): void
     {
         $this->log->newSection('Thumbs generation');
 
@@ -895,7 +910,7 @@ class FFMpeg
      * @return void
      * @throws Exception
      */
-    public function generateThumbs($array)
+    public function generateThumbs($array): void
     {
         $duration = $array['duration'];
         $size_tag = $array['size_tag'];
@@ -954,7 +969,7 @@ class FFMpeg
     /**
      * @throws Exception
      */
-    public function generateAllMissingThumbs()
+    public function generateAllMissingThumbs(): void
     {
         $thumbs_res_settings = thumbs_res_settings_28();
 
@@ -1108,9 +1123,10 @@ class FFMpeg
                     continue;
                 }
 
-                if ($type == 'video') {
+                if ($type == 'video'){
                     return $track['index'];
                 }
+
                 $streams_ids[] = $track['index'];
             }
             return $streams_ids;
@@ -1187,7 +1203,7 @@ class FFMpeg
      * @return void
      * @throws Exception
      */
-    public function generateDefaultsThumbs($videoid, array $thumbs_res_settings, array $thumbs_settings)
+    public function generateDefaultsThumbs($videoid, array $thumbs_res_settings, array $thumbs_settings): void
     {
         foreach ($thumbs_res_settings as $key => $thumbs_size) {
             $height_setting = $thumbs_size[1];
@@ -1233,4 +1249,51 @@ class FFMpeg
         return '0x' . strtoupper($hex_color);
     }
 
+    /**
+     * @throws Exception
+     */
+    public static function launchResume(string $filename)
+    {
+        return self::launchConversion($filename, '', '', 'resume');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function launchReconvert(string $filename)
+    {
+        return self::launchConversion($filename, '', 'reconvert', '');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public static function launchConversion(string $filename, string $audio_track = '', string $reconvert = '', string $resume = '')
+    {
+        $video = Video::getInstance()->getOne(['file_name' => $filename]);
+        if( empty($video) ){
+            e(lang('class_vdo_del_err'));
+            return;
+        }
+
+        $cmd = System::get_binaries('php') . ' -q ' . DirPath::get('actions') . 'video_convert.php ' . $filename;
+
+        $cmd .= !empty($audio_track) ? ' ' . $audio_track : ' \'\'';
+        $cmd .= !empty($reconvert) ? ' ' . $reconvert : ' \'\'';
+        $cmd .= !empty($resume) ? ' ' . $resume : ' \'\'';
+
+        if (stristr(PHP_OS, 'WIN')) {
+            $complement = '';
+        } elseif (stristr(PHP_OS, 'darwin')) {
+            $complement = ' </dev/null >/dev/null &';
+        } else { // for ubuntu or linux
+            $complement = ' > /dev/null &';
+        }
+
+        $cmd .= $complement;
+
+        exec($cmd);
+
+        return $cmd;
+    }
 }

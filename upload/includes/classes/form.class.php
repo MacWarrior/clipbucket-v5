@@ -132,7 +132,7 @@ class formObj
         }
 
         //Checking Label
-        if (!empty($field['label'])) {
+        if (!empty($field['label']) && $field['type'] != 'hidden') {
             $formTextField = '<label>' . $field['label'] . $textField . '</label>';
         } else {
             $formTextField = $textField;
@@ -237,7 +237,7 @@ class formObj
         }
     }
 
-    function createCheckBoxV2($field)
+    function createCheckBoxV2($field): void
     {
         $field_label = $field['label'];
         $field_name = $field['name'];
@@ -246,14 +246,15 @@ class formObj
         $checked = ($field['checked'] == $field_value) ? 'checked' : '';
 
         echo '
-        <div class="col-md-1">
-            <input value="' . $field_value . '" name="' . $field_name . '" id="' . $field_name . '" ' . $checked . ' '. $field_disabled . 'type="checkbox" class="ace ace-switch ace-switch-5"/>
-            <span class="lbl"></span>
-        </div>
-        <div class="col-md-7">
-            <label class="nowrap" for="' . $field_name . '" title="' . $field_label . '">' . $field_label . '</label>
-        </div>
-        ';
+        <div class="row">
+            <div class="col-md-1">
+                <input value="' . $field_value . '" name="' . $field_name . '" id="' . $field_name . '" ' . $checked . ' '. $field_disabled . 'type="checkbox" class="ace ace-switch ace-switch-5"/>
+                <span class="lbl"></span>
+            </div>
+            <div class="col-md-7">
+                <label class="nowrap" for="' . $field_name . '" title="' . $field_label . '">' . $field_label . '</label>
+            </div>
+        </div>';
     }
 
     //Creating checkbox with indent for category childs

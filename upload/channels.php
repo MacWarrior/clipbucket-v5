@@ -33,6 +33,7 @@ if (config('enable_user_category') == 'yes' && !empty($_GET['cat'])) {
 $params['channel_enable'] = true;
 $params['not_userid'] =  userquery::getInstance()->get_anonymous_user();
 $params['count'] = true;
+$params['ban_status'] = 'no';
 $count = User::getInstance()->getAll($params);
 
 unset($params['count']);

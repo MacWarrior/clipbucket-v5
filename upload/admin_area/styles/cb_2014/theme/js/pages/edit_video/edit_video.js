@@ -212,7 +212,6 @@ $( document ).ready(function() {
     }
 
     if (ids_to_check_progress.length > 0) {
-
         intervalId = setInterval(function () {
             $.post({
                 url: baseurl+'actions/admin_progress_video.php',
@@ -236,4 +235,14 @@ $( document ).ready(function() {
             })
         }, 30000);
     }
+
+    $('#datecreated').datepicker({
+        showOtherMonths: true,
+        selectOtherMonths: false,
+        changeMonth: true,
+        dateFormat: format_date_js,
+        changeYear: true,
+        yearRange: "-99y:+0",
+        regional: language
+    });
 });
