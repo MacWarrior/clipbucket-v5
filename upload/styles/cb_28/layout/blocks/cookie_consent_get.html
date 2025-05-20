@@ -1,0 +1,31 @@
+<form id="cookie-preferences-form">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>{lang code='name'}</th>
+                <th>{lang code='description'}</th>
+                <th style="width:250px;">{lang code='details'}</th>
+                <th>{lang code='lifetime'}</th>
+                <th>{lang code='accept'}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {foreach $custom_cookies as $cookie}
+            <tr>
+                <td>{$cookie.name}</td>
+                <td class="nowrap">{$cookie.description}</td>
+                <td class="breakeable" style="width:250px;">{$cookie.value}</td>
+                <td class="nowrap">{$cookie.lifetime}</td>
+                <td>
+                    <div class="form-check form-switch"{if $cookie.required} title="{lang code='cookie_cant_be_disabled'}"{/if}>
+                      <input name="{$cookie.name}" class="form-check-input" type="checkbox" role="switch" {if $cookie.consent} checked{/if}{if $cookie.required} disabled{/if}/>
+                    </div>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <button type="button" id="save_cookie_preferences" class="btn btn-success btn-xs">{lang code='save_preferences'}</button>
+    <button type="button" id="accept_all_cookies" class="btn btn-success btn-xs accept-cookies" style="float:right;margin-left:5px;">{lang code='accept_all'}</button>
+    <button type="button" id="refuse_all_optionnal" class="btn btn-danger btn-xs" style="float:right;">{lang code='refuse_all_optionnal'}</button>
+</form>

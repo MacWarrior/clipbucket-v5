@@ -136,4 +136,3 @@ const IN_CLIPBUCKET = true;
 
 //Setting Cookie Timeout
 const COOKIE_TIMEOUT = 86400 * 1; // 1
-const REMBER_DAYS = 7;

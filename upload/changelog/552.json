@@ -1,6 +1,6 @@
 {
   "version":"5.5.2",
-  "revision":"54",
+  "revision":"55",
   "status":"stable",
   "detail":[
     {
@@ -27,6 +27,7 @@
         "Implement alphabetical and reverse alphabetical filters <i>(#600)</i>"
         ,"Implement channel slogan"
         ,"Implement account deletion <i>(#144, #599)</i>"
+        ,"Implement cookies banner <i>(#312, #151)</i>"
         ,"Update video & photos management pages display"
         ,"Hide banned users from channels page, search results & popular user"
         ,"Fix collection privacy on photos page"
@@ -61,6 +62,7 @@
         ,"Delete conversion queue entry when deleting a video"
         ,"Drop support for PHP 7.0 to 7.4"
         ,"Update Readme"
+        ,"Reduce cookies usage"
         ,"Fix PHP8.X compatibility"
         ,"Fix 404 & 403 redirect on Apache <i>(#215)</i>"
         ,"Fix URL issue when base_url config is not correctly set"

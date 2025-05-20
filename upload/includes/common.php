@@ -165,10 +165,10 @@ if (!Update::isVersionSystemInstalled()) {
 
     $request_uri = $_SERVER['REQUEST_URI'];
 
-    if (strpos($request_uri, '/admin_area/upgrade_db.php') === false
-        && strpos($request_uri, '/admin_area/logout.php') === false
-        && strpos($request_uri, 'actions/upgrade_db.php') === false
-        && strpos($request_uri, 'admin_area/sse/upgrade_db_info.php') === false
+    if (!str_contains($request_uri, '/admin_area/upgrade_db.php')
+        && !str_contains($request_uri, '/admin_area/logout.php')
+        && !str_contains($request_uri, 'actions/upgrade_db.php')
+        && !str_contains($request_uri, 'admin_area/sse/upgrade_db_info.php')
         && User::getInstance()->hasAdminAccess()) {
         header('Location: ' . DirPath::getUrl('admin_area') . 'upgrade_db.php');
         die();

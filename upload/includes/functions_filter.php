@@ -45,7 +45,7 @@ function get_filters($type)
 /**
  * register ae clipbucket filter
  *
- * @param STRING filtername
+ * @param STRING $name filtername
  * @param STRING $func function nam
  * @param array|bool $params parameters to be passed when registering a filter
  */

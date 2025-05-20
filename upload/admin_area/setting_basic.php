@@ -139,6 +139,7 @@ if (isset($_POST['update'])) {
         , 'enable_channel_description'
         , 'enable_channels_slogan_display'
         , 'enable_user_self_deletion'
+        , 'enable_cookie_banner'
     ];
 
     $config_booleans_to_refactor = [
@@ -395,6 +396,7 @@ if (isset($_POST['update'])) {
         'enable_channel_description',
         'enable_channels_slogan_display',
         'enable_user_self_deletion',
+        'enable_cookie_banner',
 
         'player_logo_url',
         'player_thumbnails',

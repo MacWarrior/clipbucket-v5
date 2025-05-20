@@ -1,3 +1,25 @@
+{if config('enable_cookie_banner') == 'yes'}
+{ANCHOR place="before_cookie_banner"}
+<div id="cookie-banner" class="alert alert-info" style="display:none;">
+    <strong>{lang code='website_uses_cookies'}</strong>
+    <span>{lang code='necessary_cookies_only'}</span>
+    <button class="btn btn-success btn-xs accept-cookies" style="margin-left:20px;">{lang code='accept'}</button>
+    <button class="btn btn-success btn-xs show-cookie-list" style="margin-left:5px;">{lang('manage_x', lang('cookies')|lower)}</button>
+</div>
+<div class="modal fade" id="cookieListModal" tabindex="-1" role="dialog" aria-labelledby="cookieListModalLabel" style="display:none;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" id="modal-close-btn" title="{lang code='close'}"><span>×</span></button>
+                <h4 class="modal-title" id="cookieListModalLabel">{lang code='cookies_and_consent'}</h4>
+            </div>
+            <div class="modal-body" id="cookie-list-content"></div>
+        </div>
+    </div>
+</div>
+{ANCHOR place="after_cookie_banner"}
+{/if}
+
 {ANCHOR place="before_footer"}
 <footer id="footer" class="clearfix">
     <div class="container">
@@ -17,19 +39,22 @@
             </ul>
             {ANCHOR place="after_footer_menu"}
             <div class="lang_wrapper column">
-                {if config('enable_theme_change') == 'yes' && in_array(config('default_theme'), ['light','dark'])}
+                {if config('enable_theme_change') == 'yes' && in_array(config('default_theme'), ['light','dark']) && Session::isCookieConsent('user_theme')}
                     <div class="theme-switch">
                         <button data-theme="light" title="{lang('title_theme_x', strtolower(lang('option_default_theme_light')))}" {if User::getInstance()->getUserTheme() == 'light'}class="active"{/if}>{lang code='option_default_theme_light'}</button>
                         <button data-theme="dark" title="{lang('title_theme_x', strtolower(lang('option_default_theme_dark')))}" {if User::getInstance()->getUserTheme() == 'dark'}class="active"{/if}>{lang code='option_default_theme_dark'}</button>
+
+                        {if Session::isCookieConsent('user_theme_os')}
                         <button data-theme="auto" title="{lang code='title_theme_auto'}" {if !in_array(User::getInstance()->getUserTheme(), ['dark','light'])}class="active"{/if}>{lang code='option_theme_auto'}</button>
+                        {/if}
                     </div>
                 {/if}
-                {if config("allow_language_change")}
+                {if config("allow_language_change") && Session::isCookieConsent('cb_lang')}
                     {$langs = $lang_obj->get_langs('yes')}
                     {$total_langs = count($langs)}
                     {if $total_langs >= 2}
                         <div class="langdrop dropup">
-                        <button title="Change website language" class="btn btn-default dropdown-toggle" id="cblang-selector" type="button" data-toggle="dropdown">
+                        <button title="Change website language" class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown">
                             <span>{$lang_obj->lang_name}</span>
                             <i class="icon-down-arrow"></i>
                         </button>
@@ -47,6 +72,7 @@
                     {/if}
                 {/if}
             </div>
+
             {ANCHOR place="before_copyright"}
             <div class="copyright-poweredby column">
                 {if in_dev()}
@@ -57,9 +83,25 @@
                 </span>
             </div>
             {ANCHOR place="after_copyright"}
+
+            {if config('enable_cookie_banner') == 'yes'}
+            {ANCHOR place="before_cookies_button"}
+            <div class="show-cookie-list" title="{lang('manage_x', lang('cookies')|lower)}">
+                <i class="fa fa-cog" title="{lang code='open_debug'}"></i>
+                {lang code='cookies'}
+            </div>
+            {ANCHOR place="after_cookies_button"}
+            {/if}
+
         </div>
         {ANCHOR place="after_footer_elements"}
     </div>
+
+    <script type="text/javascript">
+        let customCookies = {json_encode($custom_cookies, JSON_UNESCAPED_UNICODE)};
+        let cookieConsent = {json_encode($cookie_consent, JSON_UNESCAPED_UNICODE)};
+    </script>
+
 </footer>
 
 {if config('popup_video') == 'yes'}

@@ -72,8 +72,8 @@ $has_translation = class_exists('Language');
 
 require_once DirPath::get('cb_install') . 'functions_install.php';
 if (!empty($_POST['language'])) {
-    if (isset($_COOKIE['cb_lang'])) {
-        unset($_COOKIE['cb_lang']);
+    if( isset($_COOKIE['cb_lang']) ){
+        Session::unsetCookie( 'cb_lang');
     }
     Language::getInstance()->make_default($_POST['language']);
     Language::getInstance()->init();
