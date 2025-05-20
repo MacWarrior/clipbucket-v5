@@ -4,13 +4,6 @@
 {assign var='video_fields' value=Upload::getInstance()->loadRequiredFields($data)}
 
 {if $data.title neq ""}
-<script>
-    $(document).ready(function(){
-        $("#datecreated").datepicker({
-            format: 'yyyy-mm-dd' // TODO : Use config date_format
-        });
-    });
-</script>
 	<div class="row">
 		<div class="heading clearfix">
             <h2 class="pull-left paddingLeftLarge">Editing <small>&gt; <span title="{display_clean($data.title)}">{display_clean($data.title)|truncate:80}</span></small>
@@ -255,6 +248,10 @@
                         </div>
                         <div id="privacyoption" class="tab-pane">
                             {foreach from=$video_privacyoption item=field}
+                                {if $field.type == 'hidden'}
+                                    {$formObj->createField($field)}
+                                    {continue}
+                                {/if}
                             <div class="table">
                                 {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                     {if empty($field.class)}
@@ -263,7 +260,9 @@
                                         {$field.class = $field.class|cat:' form-control'}
                                     {/if}
                                 {/if}
+                                {if !empty($field.title)}
                                 <label><strong>{$field.title|truncate:80}</strong></label><br/>
+                                {/if}
                                 {if $field.type != 'checkbox' && $field.type != 'radiobutton' && $field.type != 'checkbox2'}
                                     {if empty($field.class)}
                                         {$field.class = 'form-control'}
@@ -607,13 +606,15 @@
 <div class="modal fade" id="myModal" role="dialog">
 </div>
 <script>
-    var text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
-    var text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
-    var videoid = '{$data.videoid}';
-    var available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
-    var text_confirm_comment = '{lang('text_confirm_comment')}';
-    var text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
+    let text_confirm_vid_file = '{lang code = "confirm_delete_video_file"}';
+    let text_confirm_sub_file = '{lang code = "confirm_delete_subtitle_file"}';
+    let videoid = '{$data.videoid}';
+    let available_tags = JSON.parse('{$available_tags|json_encode|replace:"'": "\'"}');
+    let text_confirm_comment = '{lang('text_confirm_comment')}';
+    let text_no_comment = '{lang('no_comments',strtolower(lang('video')))}';
     let visual_editor_comments_enabled = "{config('enable_visual_editor_comments') == 'yes'}";
-    var ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    let ids_to_check_progress = JSON.parse('{$ids_to_check_progress}');
+    let format_date_js = '{get_date_js()}';
+    let language = '{$lang_obj->getLang()}';
 </script>
 {/if}

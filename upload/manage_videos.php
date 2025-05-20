@@ -15,14 +15,13 @@ assign('p', userquery::getInstance()->get_user_profile($udetails['userid']));
 
 $mode = $_GET['mode'];
 
-$page = mysql_clean($_GET['page']);
+$page = (int)$_GET['page'];
 $get_limit = create_query_limit($page, config('videos_list_per_page'));
 
 $favorites = User::getInstance()->getFavoritesVideos();
 assign('favorites', $favorites);
 
-assign('queryString', queryString(null, ['type',
-    'vid_delete']));
+assign('queryString', queryString(null, ['type', 'vid_delete']));
 switch ($mode) {
     case 'uploaded':
     default:
@@ -34,39 +33,32 @@ switch ($mode) {
 
         //Deleting Video
         if (!empty($_GET['vid_delete'])) {
-            $videoid = mysql_clean($_GET['vid_delete']);
+            $videoid = (int)$_GET['vid_delete'];
             if (CBvideo::getInstance()->is_video_owner($videoid, user_id())) {
                 CBvideo::getInstance()->delete_video($videoid);
             }
         }
 
-        //Deleting Videos
-        if (isset($_POST['delete_videos'])) {
-            for ($id = 0; $id <= config('videos_list_per_page'); $id++) {
-                if (CBvideo::getInstance()->is_video_owner($_POST['check_vid'][$id], user_id())) {
-                    CBvideo::getInstance()->delete_video($_POST['check_vid'][$id]);
-                }
-            }
-            errorhandler::getInstance()->flush();
-            e(lang('vdo_multi_del_erro'), 'm');
-        }
-
         //Getting Video List
-        $params_video = ['userid' => $udetails['userid'], 'limit' => $get_limit];
+        $params_video = [
+            'userid' => $udetails['userid']
+            ,'limit' => $get_limit
+        ];
         if (get('query') != '') {
            $params_video['search'] = get('query');
         }
 
         $videos = Video::getInstance()->getAll($params_video);
 
-
-        //Collecting Data for Pagination
-        $params_video['count'] = true;
-        $total_rows =  Video::getInstance()->getAll($params_video);
+        if( $page == 1 && is_array($videos) && count($videos) < config('videos_list_per_page') ){
+            $total_rows = count($videos);
+        } else {
+            $params_video['count'] = true;
+            unset($params_video['limit']);
+            $total_rows = Video::getInstance()->getAll($params_video);
+        }
 
         $total_pages = count_pages($total_rows, config('videos_list_per_page'));
-
-        //Pagination
 
         subtitle(lang("vdo_manage_vdeos"));
         break;
@@ -81,23 +73,30 @@ switch ($mode) {
 
         //Removing video from favorites
         if (!empty($_GET['remove_fav_videoid']) && in_array($_GET['remove_fav_videoid'], $favorites) ) {
-            $videoid = mysql_clean($_GET['remove_fav_videoid']);
+            $videoid = (int)$_GET['remove_fav_videoid'];
             CBvideo::getInstance()->action->remove_favorite($videoid);
         }
+        $cond = '';
         if (get('query') != '') {
             $cond = " (video.title LIKE '%" . mysql_clean(get('query')) . "%' OR video.tags LIKE '%" . mysql_clean(get('query')) . "%' )";
         }
-        $params = ['userid' => user_id(), 'limit' => $get_limit, 'cond' => $cond];
+        $params = [
+            'userid' => user_id()
+            ,'limit' => $get_limit
+            ,'cond' => $cond
+        ];
 
         $videos = CBvideo::getInstance()->action->get_favorites($params);
 
+        if( $page == 1 && is_array($videos) && count($videos) < config('videos_list_per_page') ){
+            $favorites_count = count($videos);
+        } else {
+            $params['count_only'] = 'yes';
+            unset($params['limit']);
+            $favorites_count = CBvideo::getInstance()->action->get_favorites($params);
+        }
 
-        //Collecting Data for Pagination
-        $params['count_only'] = 'yes';
-        $favorites_count = CBvideo::getInstance()->action->get_favorites($params);
         $total_pages = count_pages($favorites_count, config('videos_list_per_page'));
-        //Pagination
-
         subtitle(lang('com_manage_fav'));
         break;
 }
@@ -113,7 +112,6 @@ if( Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '279') ){
 Assign('ids_to_check_progress', json_encode($ids_to_check_progress));
 Assign('uservids', $videos);
 pages::getInstance()->paginate($total_pages, $page);
-
 
 template_files('manage_videos.html');
 display_it();

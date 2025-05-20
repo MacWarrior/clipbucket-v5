@@ -346,10 +346,10 @@ class User
 
         $conditions = [];
         if( $param_userid ){
-            $conditions[] = 'users.userid = \'' . mysql_clean($param_userid) . '\'';
+            $conditions[] = 'users.userid = ' . (int)$param_userid;
         }
         if( $param_not_userid !== false ){
-            $conditions[] = 'users.userid != \'' . mysql_clean($param_not_userid) . '\'';
+            $conditions[] = 'users.userid != ' . (int)$param_not_userid;
         }
         if( $param_condition ){
             $conditions[] = '(' . $param_condition . ')';
@@ -1918,7 +1918,7 @@ class userquery extends CBCategory
      * @param $uid {id of user who is removing other from friendlist}
      * @throws Exception
      */
-    function remove_contact($fid, $uid = null)
+    function remove_contact($fid, $uid = null): void
     {
         if (!$uid) {
             $uid = user_id();
@@ -1939,7 +1939,7 @@ class userquery extends CBCategory
      * @param $userid
      * @throws Exception
      */
-    function increment_watched_videos($userid)
+    function increment_watched_videos($userid): void
     {
         Clipbucket_db::getInstance()->update(tbl($this->dbtbl['users']), ['total_watched'], ['|f|total_watched+1'], ' userid=\'' . $userid . '\'');
     }
@@ -1951,7 +1951,7 @@ class userquery extends CBCategory
      * @param null $user
      * @throws Exception
      */
-    function subscribe_user($to, $user = null)
+    function subscribe_user($to, $user = null): void
     {
         if (!$user) {
             $user = user_id();
@@ -2052,7 +2052,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function unsubscribe_user($subid, $uid = null)
+    function unsubscribe_user($subid, $uid = null): bool
     {
         return $this->remove_subscription($subid, $uid);
     }
@@ -2198,7 +2198,7 @@ class userquery extends CBCategory
      * Function used to recover username
      * @throws Exception
      */
-    function recover_username($email)
+    function recover_username($email): void
     {
         $udetails = $this->get_user_details($email);
         if (!$udetails) {
@@ -2218,7 +2218,7 @@ class userquery extends CBCategory
     /**
      * @throws Exception
      */
-    function UpdateLastActive($username)
+    function UpdateLastActive($username): void
     {
         $sql = 'UPDATE ' . tbl('users') . " SET last_active = '" . now() . "' WHERE username='" . $username . "' OR userid='" . $username . "' ";
         Clipbucket_db::getInstance()->execute($sql);

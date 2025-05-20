@@ -433,7 +433,7 @@ class Clipbucket_db
      * @param array $flds
      * @param array $vls
      * @param null $ep
-     *
+     * @param bool $ignore
      * @return mixed|void : { integer } { $insert_id } { id of inserted element }
      *
      * @throws Exception
@@ -442,7 +442,7 @@ class Clipbucket_db
      * @internal param $ : { array } { $vlds } { array of values to update against fields }
      * @internal param $ : { string } { $ep } { extra parameters to consider }
      */
-    function insert(string $tbl, array $flds, array $vls, $ep = null)
+    function insert(string $tbl, array $flds, array $vls, $ep = null, bool $ignore = false)
     {
         $this->ping();
 
@@ -483,7 +483,11 @@ class Clipbucket_db
                 $values_query .= ',';
             }
         }
-        $query = "INSERT INTO $tbl ($fields_query) VALUES ($values_query) $ep";
+        $ignore_sql = '';
+        if( $ignore ){
+            $ignore_sql = 'IGNORE';
+        }
+        $query = "INSERT $ignore_sql INTO $tbl ($fields_query) VALUES ($values_query) $ep";
         if (isset($this->total_queries)) {
             $this->total_queries++;
         }

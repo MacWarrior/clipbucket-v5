@@ -6945,3 +6945,9 @@ textarea#comment_box {
   margin-top: 20px;
 }
 /* Generic */
+
+/* Search form */
+.input-group input.form-control {
+  height: 100%;
+}
+/* Search form */

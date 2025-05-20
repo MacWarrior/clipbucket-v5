@@ -669,10 +669,6 @@ class Collection
             e(lang('unknown_type'));
             return false;
         }
-        if (!$this->isValidType($type)) {
-            e(lang('unknown_type'));
-            return false;
-        }
         $collection = $this->getOne(['collection_id' => $collection_id]);
         if (empty($collection)) {
             e(lang('collect_not_exist'));
@@ -1134,8 +1130,7 @@ class Collections extends CBCategory
     {
         $params = [];
         $params['collection_id'] = $cid;
-        $params['first_only'] = true;
-        $c = Collection::getInstance()->getAll($params);
+        $c = Collection::getInstance()->getOne($params);
 
         if (empty($c)) {
             e(lang('collection_not_exists'));

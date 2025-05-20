@@ -19,8 +19,8 @@ if (isset($_POST['reconvert_selected']) || isset($_GET['reconvert_video'])) {
 }
 
 //Feature / UnFeature Video
-if (isset($_GET['make_feature'])) {
-    $video = mysql_clean($_GET['make_feature']);
+if( !empty($_GET['make_feature']) ){
+    $video = (int)$_GET['make_feature'];
     CBvideo::getInstance()->action('feature', $video);
     $row = myquery::getInstance()->Get_Website_Details();
     if ($row['notification_option'] == '1') {
@@ -28,89 +28,99 @@ if (isset($_GET['make_feature'])) {
     }
 }
 
-if (isset($_GET['make_unfeature'])) {
-    $video = mysql_clean($_GET['make_unfeature']);
+if( !empty($_GET['make_unfeature']) ){
+    $video = (int)$_GET['make_unfeature'];
     CBvideo::getInstance()->action('unfeature', $video);
 }
 
-if (isset($_GET['check_castable'])) {
-    $videoid = mysql_clean($_GET['check_castable']);
+if( !empty($_GET['check_castable']) ){
+    $videoid = (int)$_GET['check_castable'];
     $vdetails = get_video_details($videoid);
     update_castable_status($vdetails);
 }
-if (isset($_POST['check_castable_selected']) && is_array($_POST['check_video'])) {
-    for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $vdetails = get_video_details($_POST['check_video'][$id]);
+if( isset($_POST['check_castable_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
+    foreach($_POST['check_video'] as $id){
+        $vdetails = get_video_details((int)$id);
         update_castable_status($vdetails);
     }
 }
 
-if (isset($_GET['update_bits_color'])) {
-    $videoid = mysql_clean($_GET['update_bits_color']);
+if( !empty($_GET['update_bits_color']) ){
+    $videoid = (int)$_GET['update_bits_color'];
     $vdetails = get_video_details($videoid);
     update_bits_color($vdetails);
 }
-if (isset($_POST['update_bits_color_selected']) && is_array($_POST['check_video'])) {
-    for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        $vdetails = get_video_details($_POST['check_video'][$id]);
+if( isset($_POST['update_bits_color_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
+    foreach($_POST['check_video'] as $id){
+        $vdetails = get_video_details((int)$id);
         update_bits_color($vdetails);
     }
 }
 
 //Using Multiple Action
-if (isset($_POST['make_featured_selected']) && is_array($_POST['check_video'])) {
-    for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        CBvideo::getInstance()->action('feature', $_POST['check_video'][$id]);
+if( isset($_POST['make_featured_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
+    foreach($_POST['check_video'] as $id){
+        CBvideo::getInstance()->action('feature', (int)$id);
     }
-    errorhandler::getInstance()->flush();
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
     e('Selected videos have been set as featured', 'm');
 }
-if (isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_video'])) {
+if( isset($_POST['make_unfeatured_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
     for ($id = 0; $id < count($_POST['check_video']); $id++) {
         CBvideo::getInstance()->action('unfeature', $_POST['check_video'][$id]);
     }
-    errorhandler::getInstance()->flush();
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
     e('Selected videos have been removed from featured list', 'm');
 }
 
 //Activate / Deactivate
-if (isset($_GET['activate'])) {
-    $video = mysql_clean($_GET['activate']);
+if( !empty($_GET['activate']) ){
+    $video = (int)$_GET['activate'];
     CBvideo::getInstance()->action('activate', $video);
 }
-if (isset($_GET['deactivate'])) {
-    $video = mysql_clean($_GET['deactivate']);
+if( !empty($_GET['deactivate']) ){
+    $video = (int)$_GET['deactivate'];
     CBvideo::getInstance()->action('deactivate', $video);
 }
 
 //Using Multiple Action
-if (isset($_POST['activate_selected']) && is_array($_POST['check_video'])) {
-    for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        CBvideo::getInstance()->action('activate', $_POST['check_video'][$id]);
+if( isset($_POST['activate_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ) {
+    foreach($_POST['check_video'] as $id){
+        CBvideo::getInstance()->action('activate', (int)$id);
     }
-    errorhandler::getInstance()->flush();
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
     e('Selected Videos Have Been Activated', 'm');
 }
-if (isset($_POST['deactivate_selected']) && is_array($_POST['check_video'])) {
-    for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        CBvideo::getInstance()->action('deactivate', $_POST['check_video'][$id]);
+if( isset($_POST['deactivate_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ) {
+    foreach($_POST['check_video'] as $id){
+        CBvideo::getInstance()->action('deactivate', (int)$id);
     }
-    errorhandler::getInstance()->flush();
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
     e('Selected Videos Have Been Dectivated', 'm');
 }
 
 //Delete Video
-if (isset($_GET['delete_video'])) {
-    $video = mysql_clean($_GET['delete_video']);
+if( !empty($_GET['delete_video']) ){
+    $video = (int)$_GET['delete_video'];
     CBvideo::getInstance()->delete_video($video);
 }
 
 //Deleting Multiple Videos
-if (isset($_POST['delete_selected']) && is_array($_POST['check_video'])) {
-    for ($id = 0; $id < count($_POST['check_video']); $id++) {
-        CBvideo::getInstance()->delete_video($_POST['check_video'][$id]);
+if( isset($_POST['delete_selected']) && is_array($_POST['check_video']) && !empty($_POST['check_video']) ){
+    foreach($_POST['check_video'] as $id){
+        CBvideo::getInstance()->delete_video((int)$id);
     }
-    errorhandler::getInstance()->flush();
+    if( empty(errorhandler::getInstance()->get_error()) ){
+        errorhandler::getInstance()->flush();
+    }
     e(lang('vdo_multi_del_erro'), 'm');
 }
 

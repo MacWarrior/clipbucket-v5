@@ -1551,4 +1551,11 @@ VALUES ('admin_setting'),
        ('account_deletion_confirmation'),
        ('account_deletion_confirmation_info'),
        ('account_deletion_yes'),
-       ('account_deleted');
+       ('account_deleted'),
+       ('reconversion_started_for_x'),
+       ('resume_conversion'),
+       ('selected_conversion_resumed'),
+       ('conversion_not_found_x'),
+       ('video_not_found_with_filename_x'),
+       ('conversion_x_cannot_be_resumed'),
+       ('conversion_queue_warning');

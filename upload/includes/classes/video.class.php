@@ -134,7 +134,8 @@ class Video
         return $this->tablename_categories;
     }
 
-    public function addFields(array $fields){
+    public function addFields(array $fields): void
+    {
         if( empty($fields) ){
             return;
         }
@@ -1286,7 +1287,7 @@ class CBvideo extends CBCategory
     function video_exists($vid)
     {
         if (is_numeric($vid)) {
-            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid=\'' . mysql_clean($vid) . '\' ');
+            return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videoid = ' . (int)$vid);
         }
         return Clipbucket_db::getInstance()->count(tbl('video'), 'videoid', ' videokey=\'' . mysql_clean($vid) . '\' ');
     }
@@ -1450,6 +1451,7 @@ class CBvideo extends CBCategory
             case 'update_bits_color':
                 update_bits_color($video);
                 break;
+
             case 'delete':
                 $video_clean = mysql_clean($vid);
                 $this->delete_video($video_clean);
@@ -1485,7 +1487,6 @@ class CBvideo extends CBCategory
                 $custom_flds = Upload::getInstance()->load_custom_form_fields($array, true);
                 $upload_fields = array_merge($upload_fields, $custom_flds);
             }
-
 
             if (isset($array['videoid'])) {
                 $vid = $array['videoid'];
@@ -1681,9 +1682,10 @@ class CBvideo extends CBCategory
                 //Remove categories
                 Category::getInstance()->unlinkAll('video', $vdetails['videoid']);
 
-                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id=\'' . mysql_clean($vid) . '\' AND playlist_item_type=\'v\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('playlist_items') . ' WHERE object_id = ' . (int)$vdetails['videoid'] . ' AND playlist_item_type=\'v\'');
                 Clipbucket_db::getInstance()->delete(tbl('favorites'), ['type', 'id'], ['v', $vdetails['videoid']]);
                 Clipbucket_db::getInstance()->delete(tbl('video_views'), ['id_video'], [$vdetails['videoid']]);
+                Clipbucket_db::getInstance()->delete(tbl('conversion_queue'), ['cqueue_name'], [$vdetails['file_name']]);
 
                 //Removing video Comments
                 $params = [];
@@ -1692,8 +1694,8 @@ class CBvideo extends CBCategory
                 Comments::delete($params);
 
                 //Finally Removing Database entry of video
-                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid=\'' . mysql_clean($vid) . '\'');
-                Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid=\'' . $vdetails['userid'] . '\'');
+                Clipbucket_db::getInstance()->execute('DELETE FROM ' . tbl('video') . ' WHERE videoid = ' . (int)$vdetails['videoid']);
+                Clipbucket_db::getInstance()->update(tbl('users'), ['total_videos'], ['|f|total_videos-1'], ' userid= ' . (int)$vdetails['userid']);
 
                 if( !error() && !warning() ) {
                     errorhandler::getInstance()->flush();

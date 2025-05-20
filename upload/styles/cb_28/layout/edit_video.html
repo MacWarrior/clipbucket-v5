@@ -251,6 +251,10 @@
 							<h4>{$sharingOptions.group_name}<i class="glyphicon glyphicon-chevron-down pull-right"></i></h4>
 							<div class="sectionContent hidden">
 								{foreach $sharingOptions.fields as $field}
+									{if $field.type == 'hidden'}
+										{$formObj->createField($field)}
+										{continue}
+									{/if}
 								<div class="form-group">
 									{$field.class='form-control'}
 									{$field.notShowSeprator='yes'}
@@ -259,10 +263,12 @@
 										{$field.class=''}
 										{$formObj->createField($field)}
 									{else}
-										<label for="{$field.id}">{$field.title}</label>
-										{if $field.hint_1}
-											{$field.hint_1}<br/>
+										{if !empty($field.id) && !empty($field.title)}
+											<label for="{$field.id}">{$field.title}</label>
 										{/if}
+                                        {if $field.hint_1}
+                                            {$field.hint_1}<br/>
+                                        {/if}
 										{$formObj->createField($field)}
 										{if $field.id == 'video_users'}
 											<ul id="list_{$field.id}"></ul>
