@@ -37,7 +37,6 @@ class MWIP extends \Migration
             ]
         ]);
 
-
         $limit = 0;
         do {
             $results = \Video::getInstance()->getAll(['limit' => $limit . ', 100']);

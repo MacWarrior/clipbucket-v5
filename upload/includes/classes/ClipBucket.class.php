@@ -10,6 +10,8 @@ class ClipBucket
         return self::$instance;
     }
 
+    public $custom_video_file_funcs;
+
     var $JSArray = [];
     var $AdminJSArray = [];
     var $CSSArray = [];
