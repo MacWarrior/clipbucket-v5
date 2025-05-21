@@ -1048,7 +1048,7 @@ class System{
         return 1;
     }
 
-    public static function get_file_content($filename): string
+    public static function get_file_content($filename, $secure = true): string
     {
         $root = realpath(DirPath::get('root'));
         $filepath = realpath($filename);
@@ -1058,7 +1058,10 @@ class System{
         }
 
         $content = file_get_contents($filepath);
-        return htmlspecialchars($content);
+        if( $secure ){
+            return htmlspecialchars($content);
+        }
+        return $content;
     }
 
 }

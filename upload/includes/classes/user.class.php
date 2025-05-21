@@ -840,7 +840,7 @@ class User
 
     public function getActiveTheme(): string
     {
-        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light'])) {
+        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light']) || !Session::isCookieConsent('user_theme')) {
             return config('default_theme');
         }
 
@@ -849,7 +849,7 @@ class User
                 if( in_array( $this->get('active_theme'), ['light','dark'] ) ){
                     return $this->get('active_theme');
                 }
-                if( empty($_COOKIE['user_theme_os']) ){
+                if( empty($_COOKIE['user_theme_os']) || !Session::isCookieConsent('user_theme_os') ){
                     return $this->get('active_theme');
                 }
                 if( !in_array($_COOKIE['user_theme_os'], ['light','dark']) ){
@@ -874,7 +874,7 @@ class User
 
     public function getUserTheme(): string
     {
-        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light'])) {
+        if( config('enable_theme_change') != 'yes' || !in_array(config('default_theme'), ['dark', 'light']) || !Session::isCookieConsent('user_theme')) {
             return config('default_theme');
         }
 
@@ -886,15 +886,22 @@ class User
      */
     public function setActiveTheme(string $theme, string $os): bool
     {
-        if ( !in_array($theme,['light','dark','auto']) ){
+        if ( !in_array($theme,['light','dark','auto']) || !Session::isCookieConsent('user_theme') ){
             return false;
         }
+        if ( $theme == 'auto' && !Session::isCookieConsent('user_theme_os') ){
+            return false;
+        }
+
         if ($this->isUserConnected() && Update::IsCurrentDBVersionIsHigherOrEqualTo('5.5.1', '313')) {
             //set to bd
             Clipbucket_db::getInstance()->execute('UPDATE ' . tbl('users') . ' SET active_theme = \'' . mysql_clean($theme) . '\'');
         }
-        set_cookie_secure('user_theme', $theme);
-        set_cookie_secure('user_theme_os', $os);
+        Session::setCookie('user_theme', $theme);
+
+        if( Session::isCookieConsent('user_theme_os') ){
+            Session::setCookie('user_theme_os', $os);
+        }
         return true;
     }
 
@@ -1051,7 +1058,6 @@ class userquery extends CBCategory
     {
         global $sess;
 
-        $this->sess_salt = $sess->get('sess_salt');
         $this->sessions = $this->get_sessions();
 
         if ($this->sessions['smart_sess']) {
@@ -1251,12 +1257,12 @@ class userquery extends CBCategory
                     $msg[] = e(lang('usr_ban_err'));
                 } else {
                     if ($remember) {
-                        $sess->timeout = 86400 * REMBER_DAYS;
+                        $sess->timeout = 3600 * 24 * 7;
                     }
 
                     //Starting special sessions for security
                     $session_salt = RandomString(5);
-                    $sess->set('sess_salt', $session_salt);
+                    $_SESSION['sess_salt'] = $session_salt;
                     $sess->set('PHPSESSID', $sess->id);
 
                     $smart_sess = md5($udetails['user_session_key'] . $session_salt);
@@ -1350,7 +1356,6 @@ class userquery extends CBCategory
             }
         }
 
-        Session::getInstance()->un_set('sess_salt');
         Session::getInstance()->destroy();
     }
 
@@ -1531,7 +1536,7 @@ class userquery extends CBCategory
             }
 
             $session = $this->sessions['smart_sess'];
-            $smart_sess = md5($details['user_session_key'] . $sess->get('sess_salt'));
+            $smart_sess = md5($details['user_session_key'] . $_SESSION['sess_salt']);
 
             if ($smart_sess == $session['session_value']) {
                 $this->is_login = true;
@@ -4337,126 +4342,29 @@ class userquery extends CBCategory
      * Function will let admin to login as user
      *
      * @param      $id
-     * @param bool $realtime
      *
      * @return bool
      * @throws Exception
      */
-    function login_as_user($id, $realtime = false): bool
+    function login_as_user($id): bool
     {
         global $sess;
         $udetails = $this->get_user_details($id);
         if ($udetails) {
-            if (!$realtime) {
-                $sess->set('dummy_sess_salt', $sess->get('sess_salt'));
-                $sess->set('dummy_PHPSESSID', $sess->get('PHPSESSID'));
-                $sess->set('dummy_userid', user_id());
-                $sess->set('dummy_user_session_key', $this->udetails['user_session_key']);
+            $userid = $udetails['userid'];
+            $session_salt = RandomString(5);
 
-                $userid = $udetails['userid'];
-                $session_salt = RandomString(5);
-                $sess->set('sess_salt', $session_salt);
-                $sess->set('PHPSESSID', $sess->id);
+            $_SESSION['sess_salt'] = $session_salt;
+            $sess->set('PHPSESSID', $sess->id);
 
-                $smart_sess = md5($udetails['user_session_key'] . $session_salt);
+            $smart_sess = md5($udetails['user_session_key'] . $session_salt);
 
-                Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session'], [$sess->id]);
-                $sess->add_session($userid, 'smart_sess', $smart_sess);
-            } else {
-                if (User::getInstance()->isUserConnected()) {
-                    $msg[] = e(lang('you_already_logged'));
-                } elseif (!$this->user_exists($udetails['username'])) {
-                    $msg[] = e(lang('user_doesnt_exist'));
-                } elseif (strtolower($udetails['usr_status']) != 'ok') {
-                    $msg[] = e(lang('user_inactive_msg'), 'e', false);
-                } elseif ($udetails['ban_status'] == 'yes') {
-                    $msg[] = e(lang('usr_ban_err'));
-                } else {
-                    $userid = $udetails['userid'];
-                    $log_array['userid'] = $userid;
-                    $log_array['useremail'] = $udetails['email'];
-                    $log_array['success'] = 'yes';
-                    $log_array['level'] = $udetails['level'];
-
-                    //Starting special sessions for security
-                    $session_salt = RandomString(5);
-                    $sess->set('sess_salt', $session_salt);
-                    $sess->set('PHPSESSID', $sess->id);
-
-                    $smart_sess = md5($udetails['user_session_key'] . $session_salt);
-
-                    Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session', 'session_string'], [$sess->id, 'guest']);
-                    $sess->add_session($userid, 'smart_sess', $smart_sess);
-
-                    //Setting Vars
-                    $this->userid = $udetails['userid'];
-                    $this->username = $udetails['username'];
-                    $this->level = $udetails['level'];
-
-                    //Updating User last login , num of visits and ip
-                    Clipbucket_db::getInstance()->update(tbl('users'),
-                        ['num_visits', 'last_logged', 'ip'],
-                        ['|f|num_visits+1', now(), Network::get_remote_ip()],
-                        'userid=\'' . $userid . '\''
-                    );
-
-                    $this->init();
-                    //Logging Action
-                    insert_log('Login as', $log_array);
-                    return true;
-                }
-
-                //Error Logging
-                if (!empty($msg)) {
-                    //Logging Action
-                    $log_array['success'] = 'no';
-                    $log_array['details'] = $msg[0]['val'];
-                    insert_log('Login as', $log_array);
-                }
-            }
-
+            Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session'], [$sess->id]);
+            $sess->add_session($userid, 'smart_sess', $smart_sess);
             return true;
         }
 
         e(lang('usr_exist_err'));
-        return false;
-    }
-
-    /**
-     * Function used to revert back to admin
-     * @throws Exception
-     */
-    function revert_from_user()
-    {
-        global $sess;
-        if ($this->is_admin_logged_as_user()) {
-            $userid = $sess->get('dummy_userid');
-            $session_salt = $sess->get('dummy_sess_salt');
-            $user_session_key = $sess->get('dummy_user_session_key');
-            $smart_sess = md5($user_session_key . $session_salt);
-
-            $sess->set('sess_salt', $session_salt);
-            $sess->set('PHPSESSID', $sess->get('dummy_PHPSESSID'));
-
-            Clipbucket_db::getInstance()->delete(tbl('sessions'), ['session'], [$sess->get('dummy_PHPSESSID')]);
-            $sess->add_session($userid, 'smart_sess', $smart_sess);
-
-            $sess->set('dummy_sess_salt', '');
-            $sess->set('dummy_PHPSESSID', '');
-            $sess->set('dummy_userid', '');
-            $sess->set('dummy_user_session_key', '');
-        }
-    }
-
-    /**
-     * Function used to check weather user is logged in as admin or not
-     */
-    function is_admin_logged_as_user(): bool
-    {
-        global $sess;
-        if ($sess->get('dummy_sess_salt') != '') {
-            return true;
-        }
         return false;
     }
 
