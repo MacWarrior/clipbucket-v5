@@ -148,13 +148,6 @@
                                     <input value="yes" name="seo" id="seo" {if $row.seo=='yes'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="store_guest_session" title="Store guest Session">Store guest Session</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input value="yes" id="store_guest_session" {if $row.store_guest_session=='yes'}checked{/if} name="store_guest_session" type="checkbox" class="ace ace-switch ace-switch-5 bootstrap-switch-on"/>
-                                    <span class="lbl"></span>
-                                </div>
                             </div>
                             <hr/>
                             <div class="row">
@@ -255,31 +248,10 @@
                             </div>
                             <hr/>
                             <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="search_list_per_page" title="Search results per page">Search results per page</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input class="form-control" name="search_list_per_page" id="search_list_per_page" value="{$row.search_list_per_page}" size="5"/>
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="cached_pagin_time" title="Pagination caching time">Pagination caching time</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input class="form-control" name="cached_pagin_time" id="cached_pagin_time" value="{$row.cached_pagin_time}" size="5"/>
-                                </div>
-                            </div>
-                            <hr/>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label class="nowrap" for="comments_per_page" title="Comments per page">Comments per page</label>
-                                </div>
-                                <div class="col-md-2 row-size no_padding">
-                                    <input class="form-control" name="comments_per_page" id="comments_per_page" value="{$row.comments_per_page}" size="5"/>
-                                </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <label class="nowrap" for="use_subs" title="Use Sub-Categories">Use Sub-Categories</label>
                                 </div>
-                                <div class="col-md-2 row-size">
+                                <div class="col-md-6 row-size">
                                     <input value="1" name="use_subs" id="use_subs" {if $row.use_subs=='1'}checked{/if} type="checkbox" class="ace ace-switch ace-switch-5"/>
                                     <span class="lbl"></span>
                                 </div>
@@ -2078,7 +2050,7 @@
                             <hr/>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <label class="nowrap" for="videos_items_search_page" title="Search page">Search page</label>
+                                    <label class="nowrap" for="videos_items_search_page" title="Search Result">Search Result</label>
                                 </div>
                                 <div class="col-md-4 row-size">
                                     <input class="form-control" name="videos_items_search_page" id="videos_items_search_page" value="{$row.videos_items_search_page}"/>
@@ -2111,7 +2083,6 @@
                                     <input class="form-control" name="video_list_view_video_history" id="video_list_view_video_history" value="{$row.video_list_view_video_history}"/>
                                 </div>
                             </div>
-                            <hr/>
 
                         </div>
                         <div class="col-md-3">
@@ -2295,6 +2266,24 @@
 
                         </div>
 
+                    </div>
+                    <div class="row">
+                        <hr/>
+                        <div class="col-md-3">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h3>{lang('comments')}</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <label class="nowrap" for="comments_per_page" title="Comments per page">Comments per page</label>
+                                </div>
+                                <div class="col-md-4 row-size no_padding">
+                                    <input class="form-control" name="comments_per_page" id="comments_per_page" value="{$row.comments_per_page}" size="5"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="config_player" class="tab-pane">

@@ -25,7 +25,6 @@ if (isset($_POST['reset_control_bar_logo_url'])) {
 if (isset($_POST['update'])) {
     $config_booleans = [
         'seo'
-        , 'store_guest_session'
         , 'videosSection'
         , 'photosSection'
         , 'playlistsSection'
@@ -257,7 +256,6 @@ if (isset($_POST['update'])) {
         'site_slogan',
         'seo',
         'seo_vido_url',
-        'search_list_per_page',
         'enable_country',
         'enable_gender',
         'enable_user_category',
@@ -291,7 +289,6 @@ if (isset($_POST['update'])) {
         'users_items_contacts_channel',
         'users_items_search_page',
         'use_cached_pagin',
-        'cached_pagin_time',
 
         'vid_cat_height',
         'vid_cat_width',
@@ -309,7 +306,6 @@ if (isset($_POST['update'])) {
         'photo_rating',
         'video_categories',
         'feedsSection',
-        'store_guest_session',
         'popup_video',
         'video_round_views',
         'enable_quicklist',
@@ -412,8 +408,6 @@ if (isset($_POST['update'])) {
         'max_video_desc',
         'min_video_title',
         'min_video_desc',
-
-        'search_list_per_page',
 
         'users_items_subscriptions',
         'users_items_contacts_channel',
